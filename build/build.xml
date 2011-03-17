@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="cc-build" name="Umple">
+
+  <target name="cc-build" >
+    <echo>Building Umple for CC</echo>
+  </target>
+  
+  
+</project>
+
