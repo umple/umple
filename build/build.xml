@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." default="cc-build" name="Umple">
+<project basedir=".." default="build" name="Umple">
 
-  <target name="cc-build" >
+  <target name="build" >
     <echo>Building Umple for CC</echo>
+    
+    <echo>Building Sandbox for Testing Infrastructure</echo>
+    <ant antfile="build/build.sandbox.xml" target="build" inheritAll="false" />
+    
   </target>
   
   
