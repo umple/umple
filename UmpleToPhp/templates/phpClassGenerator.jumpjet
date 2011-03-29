@@ -1,5 +1,6 @@
 <%@ jet package="cruise.umple.compiler.php" class="PhpClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%
+  UmpleClass uClass = (UmpleClass) uElement;
   GeneratedClass gClass = uClass.getGeneratedClass();
   PhpGenerator gen = new PhpGenerator();
   gen.setModel(model);

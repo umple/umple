@@ -1,21 +1,27 @@
 <%@ jet package="cruise.umple.compiler.php" class="PhpInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%
-  GeneratedClass gClass = uClass.getGeneratedClass();
+  UmpleInterface uInterface = (UmpleInterface) uElement;
+  GeneratedInterface gInterface = uInterface.getGeneratedInterface();
   PhpGenerator gen = new PhpGenerator();
   gen.setModel(model);
   
   String extraCode = "";
-  if (uClass.getExtraCode() != null)
+  if (uInterface.getExtraCode() != null)
   {
-    extraCode = uClass.getExtraCode();
+    extraCode = uInterface.getExtraCode();
   }  
-  
 %>
 <?php
 <%@ include file="UmpleNotice.jet" %>
 
-interface <%= uClass.getName() %><%= gen.translate("isA",uClass) %>
+interface <%= uInterface.getName() %>
 {
+<% if (uInterface.hasConstants()) { %>
+    <%@ include file="interface_constantDeclaration.jet" %>
+<% } %>
+ <% if (uInterface.hasMethods()) { %>
+    <%@ include file="interface_AbstractMethodDeclaration.jet" %>
+<% } %>
   <%=extraCode%>
 }
 ?>
