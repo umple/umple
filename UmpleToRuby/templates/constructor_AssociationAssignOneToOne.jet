@@ -1,0 +1,6 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+    @<%=gen.translate("associationOne",av)%> = nil
+    unless <%=gen.translate("parameterOne",av)%>.nil?
+      @<%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>
+      <%=gen.translate("parameterOne",av)%>.instance_variable_set("@<%=gen.relatedTranslate("associationOne",av)%>",self)
+    end

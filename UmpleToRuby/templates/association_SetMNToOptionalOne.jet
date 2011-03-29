@@ -1,0 +1,55 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
+  String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" or {0}.size > {2}.{1}", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av),uClass.getName());
+%>
+  def <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterMany",av)%>)
+    was_set = false
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    if <%=gen.translate("parameterMany",av)%>.length < <%=uClass.getName()%>.<%=gen.translate("minimumNumberOfMethod",av)%><%=orCheckMaxBound%>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      return was_set
+    end
+
+    <%=gen.translate("parameterCheckNewMany",av)%> = []
+    <%=existingToNewMap%> = {}
+    <%=gen.translate("parameterMany",av)%>.each do |<%=gen.translate("parameterOne",av)%>|
+      if <%=gen.translate("parameterCheckNewMany",av)%>.include?(<%=gen.translate("parameterOne",av)%>)
+        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+        return was_set
+      elsif !<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.nil? and !<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.eql?(self)
+        <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>
+        unless <%=existingToNewMap%>.has_key?(<%=gen.relatedTranslate("parameterExisting",av)%>)
+          <%=existingToNewMap%>[<%=gen.relatedTranslate("parameterExisting",av)%>] = <%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("numberOfMethod",av)%>
+        end
+        currentCount = <%=existingToNewMap%>[<%=gen.relatedTranslate("parameterExisting",av)%>]
+        nextCount = currentCount - 1
+        if nextCount < <%=av.getMultiplicity().getLowerBound()%>
+          <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } %>
+          return was_set
+        end
+        <%=existingToNewMap%>[<%=gen.relatedTranslate("parameterExisting",av)%>] = nextCount
+      end
+      <%=gen.translate("parameterCheckNewMany",av)%> << <%=gen.translate("parameterOne",av)%>
+    end
+
+    <%=gen.translate("parameterCheckNewMany",av)%>.each do |<%=gen.translate("parameterOne",av)%>|
+      @<%=gen.translate("associationMany",av)%>.delete(<%=gen.translate("parameterOne",av)%>)
+    end
+
+    @<%=gen.translate("associationMany",av)%>.each do |orphan|
+      orphan.instance_variable_set("@<%=gen.relatedTranslate("associationOne",av)%>",nil)
+    end
+    @<%=gen.translate("associationMany",av)%>.clear
+    <%=gen.translate("parameterMany",av)%>.each do |<%=gen.translate("parameterOne",av)%>|
+      unless <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.nil?
+        <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.instance_variable_get("@<%=gen.translate("associationMany",av)%>").delete(<%=gen.translate("parameterOne",av)%>)
+      end
+      <%=gen.translate("parameterOne",av)%>.instance_variable_set("@<%=gen.relatedTranslate("associationOne",av)%>",self)
+      @<%=gen.translate("associationMany",av)%> << <%=gen.translate("parameterOne",av)%>
+    end
+    was_set = true
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    was_set
+  end
+

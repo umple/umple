@@ -1,0 +1,37 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+
+  boolean isFirstAssociation = true;
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
+ 
+    if (isFirst)
+    {
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "  #------------------------");
+      appendln(stringBuffer, "  # MEMBER VARIABLES");
+      append(stringBuffer, "  #------------------------");
+      isFirst = false;
+    }
+    
+    if (isFirstAssociation)
+    {
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "");
+      appendln(stringBuffer,"  #{0} Associations - for documentation purposes", uClass.getName());
+      append(stringBuffer,"  #attr_reader :{0}",attribute);
+      isFirstAssociation = false;
+    }
+    else
+    {
+      append(stringBuffer,", :{0}",attribute);
+    }
+  }
+%>

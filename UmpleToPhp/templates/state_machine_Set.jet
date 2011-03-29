@@ -1,0 +1,105 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  boolean hasEntry = false;
+  boolean hasExit = false;
+  boolean isFirstEntry = true;
+  boolean isFirstExit = true;
+
+  StringBuilder entryActions = new StringBuilder();
+  StringBuilder exitActions = new StringBuilder();
+  for(State state : sm.getStates())
+  {
+    boolean hasThisEntry = false;
+    boolean hasThisExit = false;
+    
+    for(Action action : state.getActions())
+    {
+      if ("entry".equals(action.getActionType()))
+      {
+        if (!hasThisEntry)
+        {
+          if (isFirstEntry)
+          {
+            entryActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+          }
+          else
+          {
+            entryActions.append("\n    ");
+            entryActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+          }
+        }
+        hasEntry = true;
+        hasThisEntry = true;
+        isFirstEntry = false;
+        entryActions.append("\n      " + action.getActionCode());
+      }
+      else if ("exit".equals(action.getActionType()))
+      {
+        if (!hasThisExit)
+        {
+          if (isFirstExit)
+          {
+            exitActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+          }
+          else
+          {
+            exitActions.append("\n    ");
+            exitActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+          }
+          isFirstExit = false;
+        }
+        hasExit = true;
+        hasThisExit = true;
+        isFirstExit = false;
+        exitActions.append("\n      " + action.getActionCode());
+      }
+    }
+  
+    if (state.getActivity() != null)
+    {
+      if (!hasThisEntry)
+      {
+        if (isFirstEntry)
+        {
+          entryActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+        }
+        else
+        {
+          entryActions.append("\n    ");
+          entryActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+        }
+      }
+      hasEntry = true;
+      hasThisEntry = true;
+      isFirstEntry = false;
+      entryActions.append(StringFormatter.format("\n      {0}",state.getActivity().getActivityCode()));
+    }
+    
+    if (hasThisEntry)
+    {
+      entryActions.append("\n    }");
+    }
+    
+    if (hasThisExit)
+    {
+      exitActions.append("\n    }");
+    }
+  }
+%>
+<% if (hasExit) { %>
+  private function <%=gen.translate("exitMethod",sm)%>()
+  {
+    <%= exitActions %>
+  }
+
+<% } %>
+  private function <%=gen.translate("setMethod",sm)%>($<%= gen.translate("parameterOne",sm) %>)
+  {
+    $this-><%= gen.translate("stateMachineOne",sm) %> = $<%= gen.translate("parameterOne",sm) %>;
+<% if (hasEntry) { %>
+
+    // entry actions and do activities
+    <%= entryActions %>
+<% } %>
+  }
+

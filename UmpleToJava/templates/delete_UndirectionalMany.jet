@@ -1,0 +1,2 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    <%=gen.translate("associationMany",av)%>.clear();

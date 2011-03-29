@@ -1,0 +1,14 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    $<%=gen.translate("parameterCopyOfMany",av)%> = $this-><%=gen.translate("associationMany",av)%>;
+    $this-><%=gen.translate("associationMany",av)%> = array();
+    foreach ($<%=gen.translate("parameterCopyOfMany",av)%> as $<%=gen.translate("parameterOne",av)%>)
+    {
+      if ($<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("numberOfMethod",av)%>() <= <%=gen.translate("type",av)%>::<%=gen.relatedTranslate("minimumNumberOfMethod",av)%>())
+      {
+        $<%=gen.translate("parameterOne",av)%>->delete();
+      }
+      else
+      {
+        $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
+      }
+    }

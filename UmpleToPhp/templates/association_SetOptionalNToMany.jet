@@ -1,0 +1,47 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public function <%=gen.translate("setManyMethod",av)%>($<%=gen.translate("parameterMany",av)%>)
+  {
+    $wasSet = false;
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    $<%=gen.translate("parameterVerifiedMany",av)%> = array();
+    foreach ($<%=gen.translate("parameterMany",av)%> as $<%=gen.translate("parameterOne",av)%>)
+    {
+      if (array_search($<%=gen.translate("parameterOne",av)%>,$<%=gen.translate("parameterVerifiedMany",av)%>) !== false)
+      {
+        continue;
+      }
+      $<%=gen.translate("parameterVerifiedMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
+    }
+
+    if (count($<%=gen.translate("parameterVerifiedMany",av)%>) != count($<%=gen.translate("parameterMany",av)%>) || count($<%=gen.translate("parameterVerifiedMany",av)%>) > self::<%=gen.translate("maximumNumberOfMethod",av)%>())
+    {
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      return $wasSet;
+    }
+
+    $<%=gen.translate("parameterOldMany",av)%> = $this-><%=gen.translate("associationMany",av)%>;
+    $this-><%=gen.translate("associationMany",av)%> = array();
+    foreach ($<%=gen.translate("parameterVerifiedMany",av)%> as $<%=gen.translate("parameterNew",av)%>)
+    {
+      $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterNew",av)%>;
+      $removeIndex = array_search($<%=gen.translate("parameterNew",av)%>,$<%=gen.translate("parameterOldMany",av)%>);
+      if ($removeIndex !== false)
+      {
+        unset($<%=gen.translate("parameterOldMany",av)%>[$removeIndex]);
+        $<%=gen.translate("parameterOldMany",av)%> = array_values($<%=gen.translate("parameterOldMany",av)%>);
+      }
+      else
+      {
+        $<%=gen.translate("parameterNew",av)%>-><%=gen.relatedTranslate("addMethod",av)%>($this);
+      }
+    }
+
+    foreach ($<%=gen.translate("parameterOldMany",av)%> as $<%=gen.translate("parameterOld",av)%>)
+    {
+      $<%=gen.translate("parameterOld",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
+    }
+    $wasSet = true;
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    return $wasSet;
+  }
+

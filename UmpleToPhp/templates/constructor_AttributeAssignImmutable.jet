@@ -1,0 +1,14 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  String parameterValue = "";
+  if (av.getValue() == null)
+  {
+    parameterValue = "$" + gen.translate("parameterOne",av);
+  }
+  else
+  {
+    parameterValue = gen.translate("parameterValue",av);
+  }
+%>
+    $this-><%=gen.translate("attributeOne",av)%> = <%=parameterValue%>;
+    $this-><%=gen.translate("attributeCanSet",av)%> = false;

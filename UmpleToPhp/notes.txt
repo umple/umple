@@ -1,0 +1,95 @@
+
+ 
+association_AddManyToMany.jet
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public function <%=gen.translate("addMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
+    if ($<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>($this) != -1)
+    {
+      return true;
+    }
+    else
+    {
+      $wasAdded = $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("addMethod",av)%>($this);
+      if (!$wasAdded)
+      {
+        unset($this-><%=gen.translate("attributeMany",av)%>[$this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>)]);
+        $this-><%=gen.translate("attributeMany",av)%> = array_values($this-><%=gen.translate("attributeMany",av)%>);
+      }
+      return $wasAdded;
+    }
+  }
+
+  public function <%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    if ($this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>) == -1)
+    {
+      return false;
+    }
+
+    $oldIndex = $this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>);
+    unset($this-><%=gen.translate("attributeMany",av)%>[$oldIndex]);
+    if ($<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>($this) == -1)
+    {
+      return true;
+    }
+    else
+    {
+      $wasRemoved = $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
+      if ($wasRemoved)
+      {
+        $this-><%=gen.translate("attributeMany",av)%> = array_values($this-><%=gen.translate("attributeMany",av)%>);
+      }
+      else
+      {
+        $this-><%=gen.translate("associationMany",av)%>[$oldIndex] = $<%=gen.translate("parameterOne",av)%>;
+      }
+      return $wasRemoved;
+    }
+  }
+
+association_AddMNToMany.jet
+  public function <%=gen.translate("addMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    if ($this-><%=gen.translate("numberOfMethod",av)%>() >= self::<%=gen.translate("maximumNumberOfMethod",av)%>())
+    {
+      return false;
+    }
+
+    $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
+    if ($<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>($this) != -1)
+    {
+      return true;
+    }
+    else
+    {
+      $wasAdded = $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("addMethod",av)%>($this);
+      if (!$wasAdded)
+      {
+        array_pop($this-><%=gen.translate("associationMany",av)%>);
+      }
+      return $wasAdded;
+    }
+  } 
+  
+association_AddMNToOnlyOne.jet
+  public function <%=gen.translate("isNumberOfValidMethod",av)%>()
+  {
+    <% if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } %>
+    $isValid = $this-><%=gen.translate("numberOfMethod",av)%>() >= self::<%=gen.translate("minimumNumberOfMethod",av)%>() && $this-><%=gen.translate("numberOfMethod",av)%>() <= self::<%=gen.translate("maximumNumberOfMethod",av)%>();
+    <% if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } %>
+    return $isValid;
+  }
+
+association_AddMStarToMany.jet
+  public function <%=gen.translate("isNumberOfValidMethod",av)%>()
+  {
+    <% if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } %>
+    $isValid = $this-><%=gen.translate("numberOfMethod",av)%>() >= self::<%=gen.translate("minimumNumberOfMethod",av)%>();
+    <% if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } %>
+    return $isValid;
+  }

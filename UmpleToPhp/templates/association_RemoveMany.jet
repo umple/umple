@@ -1,0 +1,30 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public function <%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    $wasRemoved = false;
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    if ($this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>) == -1)
+    {
+      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } %>
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>);
+    unset($this-><%=gen.translate("attributeMany",av)%>[$oldIndex]);
+    if ($<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
+      if (!$wasRemoved)
+      {
+        $this-><%=gen.translate("associationMany",av)%>[$oldIndex] = $<%=gen.translate("parameterOne",av)%>;
+        ksort($this-><%=gen.translate("associationMany",av)%>);
+      }
+    }
+    $this-><%=gen.translate("attributeMany",av)%> = array_values($this-><%=gen.translate("attributeMany",av)%>);
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    return $wasRemoved;
+  }

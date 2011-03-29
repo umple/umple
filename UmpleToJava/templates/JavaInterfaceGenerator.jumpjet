@@ -1,0 +1,22 @@
+<%@ jet package="cruise.umple.compiler.java" class="JavaInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+  
+  String extraCode = "";
+  if (uClass.getExtraCode() != null)
+  {
+    extraCode = uClass.getExtraCode();
+  }
+
+%>
+
+<%=gen.translate("packageDefinition",uClass)%>
+<%@ include file="import_packages.jet" %>
+
+public interface <%=uClass.getName()%>
+{
+  <%=extraCode%>
+}

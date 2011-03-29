@@ -1,0 +1,21 @@
+<%@ jet package="cruise.umple.compiler.php" class="PhpInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  PhpGenerator gen = new PhpGenerator();
+  gen.setModel(model);
+  
+  String extraCode = "";
+  if (uClass.getExtraCode() != null)
+  {
+    extraCode = uClass.getExtraCode();
+  }  
+  
+%>
+<?php
+<%@ include file="UmpleNotice.jet" %>
+
+interface <%= uClass.getName() %><%= gen.translate("isA",uClass) %>
+{
+  <%=extraCode%>
+}
+?>

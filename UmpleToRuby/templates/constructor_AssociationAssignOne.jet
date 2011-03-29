@@ -1,0 +1,4 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+    @<%=gen.translate("associationOne",av)%> = nil
+    <%=gen.translate("didAdd",av)%> = <%=gen.translate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>)
+    raise "Unable to create <%=gen.relatedTranslate("associationOne",av)%> due to @<%=gen.translate("associationOne",av)%>" unless <%=gen.translate("didAdd",av)%>

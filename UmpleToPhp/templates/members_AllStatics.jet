@@ -1,0 +1,51 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+{
+  boolean isFirst = true;
+  for(Attribute av : uClass.getAttributes())
+  {
+  
+    if (!av.isConstant() && !av.getIsAutounique())
+    {
+      continue;
+    }
+
+    if (isFirst)
+    {
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "  //------------------------");
+      appendln(stringBuffer, "  // STATIC VARIABLES");
+      appendln(stringBuffer, "  //------------------------");
+      isFirst = false;
+    }
+  
+    if (av.isConstant())
+    {
+      appendln(stringBuffer, "");
+      append(stringBuffer, "  public static ${0} = {1};", av.getName(), gen.translate("parameterValue",av));
+    }
+    else if (av.getIsAutounique())
+    {
+      String defaultValue = av.getValue() == null ? "1" : av.getValue();
+      appendln(stringBuffer, "");
+      append(stringBuffer, "  private static $next{0} = {1};", av.getUpperCaseName(), defaultValue);
+    }
+  }
+  
+  if (uClass.getIsSingleton())
+  {
+    if (isFirst)
+    {
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "  //------------------------");
+      appendln(stringBuffer, "  // STATIC VARIABLES");
+      appendln(stringBuffer, "  //------------------------");
+      isFirst = false;
+    }
+    appendln(stringBuffer, "");
+    append(stringBuffer, "  private static $theInstance = null;");
+  }
+}
+%>

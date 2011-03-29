@@ -1,0 +1,87 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  StringBuffer allCases = new StringBuffer();
+
+  boolean firstStateMachine = true;
+  for(StateMachine sm : uClass.getStateMachines(e))
+  {
+    boolean first = true;
+    if (!firstStateMachine)
+    {
+      allCases.append("\n\n    ");
+    }
+
+    for(State state : sm.getStates())
+    {
+  
+      List<Transition> allT = state.getTransitionsFor(e);
+      
+      if (allT.size() == 0)
+      {
+        continue;
+      }
+      
+      boolean hasExitAction = false;
+      for(Action action : state.getActions())
+      {
+        if ("exit".equals(action.getActionType()))
+        {
+          hasExitAction = true;
+          break;
+        }
+      }
+  
+      if (first)
+      {
+        allCases.append(StringFormatter.format("if ($this->{0} == self::${1})\n",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+      }
+      else
+      {
+        allCases.append(StringFormatter.format("\n    elseif ($this->{0} == self::${1})\n",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+      }
+      allCases.append(StringFormatter.format("    {\n"));
+  
+      boolean needsBreak = true;
+      for (Transition t : allT)
+      {
+        State nextState = t.getNextState();
+        String spaceOffset = t.getGuard() == null ? "" : "  ";
+        if (t.getGuard() != null)
+        {
+          allCases.append(StringFormatter.format("      if ({0})\n",t.getGuard().getCondition()));
+          allCases.append(StringFormatter.format("      {\n"));
+        }
+        if (hasExitAction)
+        {
+          allCases.append(StringFormatter.format("{0}      $this->{1}();\n",spaceOffset,gen.translate("exitMethod",sm)));
+        }
+        if (t.getAction() != null)
+        {
+          Action a1= t.getAction();
+          allCases.append(StringFormatter.format("{0}      {1}\n",spaceOffset,a1.getActionCode()));
+        }
+  
+        allCases.append(StringFormatter.format("{0}      $this->{1}(self::${2});\n",spaceOffset,gen.translate("setMethod",sm),gen.translate("stateOne",nextState)));
+        allCases.append(StringFormatter.format("{0}      $wasEventProcessed = true;\n",spaceOffset));
+  
+        if (t.getGuard() != null)
+        {
+          allCases.append(StringFormatter.format("      }\n"));
+        }
+      }
+      allCases.append(StringFormatter.format("    }"));
+      first = false;
+    }
+    firstStateMachine = false;
+  }
+  String outputCases = allCases.toString().trim();
+%>
+  public function <%=gen.translate("eventMethod",e)%>()
+  {
+    $wasEventProcessed = false;
+
+    <%= outputCases %>
+
+    return $wasEventProcessed;
+  }
+

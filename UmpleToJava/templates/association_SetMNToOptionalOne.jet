@@ -1,0 +1,65 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
+  String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av));
+%>
+  public boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
+  {
+    boolean wasSet = false;
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    if (<%=gen.translate("parameterMany",av)%>.length < <%=gen.translate("minimumNumberOfMethod",av)%>()<%=orCheckMaxBound%>)
+    {
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      return wasSet;
+    }
+
+    ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterCheckNewMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
+    HashMap<<%=gen.relatedTranslate("type",av)%>,Integer> <%=existingToNewMap%> = new HashMap<<%=gen.relatedTranslate("type",av)%>,Integer>();
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
+    {
+      if (<%=gen.translate("parameterCheckNewMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
+      {
+        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+        return wasSet;
+      }
+      else if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>() != null && !<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>().equals(this))
+      {
+        <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
+        if (!<%=existingToNewMap%>.containsKey(<%=gen.relatedTranslate("parameterExisting",av)%>))
+        {
+          <%=existingToNewMap%>.put(<%=gen.relatedTranslate("parameterExisting",av)%>, new Integer(<%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("numberOfMethod",av)%>()));
+        }
+        Integer currentCount = <%=existingToNewMap%>.get(<%=gen.relatedTranslate("parameterExisting",av)%>);
+        int nextCount = currentCount - 1;
+        if (nextCount < <%=av.getMultiplicity().getLowerBound()%>)
+        {
+          <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } %>
+          return wasSet;
+        }
+        <%=existingToNewMap%>.put(<%=gen.relatedTranslate("parameterExisting",av)%>, new Integer(nextCount));
+      }
+      <%=gen.translate("parameterCheckNewMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    }
+
+    <%=gen.translate("associationMany",av)%>.removeAll(<%=gen.translate("parameterCheckNewMany",av)%>);
+
+    for (<%=gen.translate("type",av)%> orphan : <%=gen.translate("associationMany",av)%>)
+    {
+      <%=gen.relatedTranslate("setMethod",av)%>(orphan, null);
+    }
+    <%=gen.translate("associationMany",av)%>.clear();
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
+    {
+      if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>() != null)
+      {
+        <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>().<%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+      }
+      <%=gen.relatedTranslate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>, this);
+      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    }
+    wasSet = true;
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    return wasSet;
+  }
+
+<%@ include file="association_GetPrivate.jet" %>

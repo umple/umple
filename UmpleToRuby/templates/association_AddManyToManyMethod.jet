@@ -1,0 +1,23 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  def <%=gen.translate("addMethod",av)%>(<%=gen.translate("parameterOne",av)%>)
+    was_added = false
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+<% if (!av.getMultiplicity().isUpperBoundMany()) { %>
+    if <%=gen.translate("numberOfMethod",av)%> >= <%=uClass.getName()%>.<%=gen.translate("maximumNumberOfMethod",av)%>
+      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } %>
+      return was_added
+    end
+
+<% } %>
+    @<%=gen.translate("associationMany",av)%> << <%=gen.translate("parameterOne",av)%>
+    if <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(self) != -1
+      was_added = true
+    else
+      was_added = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(self)
+      unless was_added
+        @<%=gen.translate("associationMany",av)%>.delete(<%=gen.translate("parameterOne",av)%>)
+      end
+    end
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    was_added
+  end

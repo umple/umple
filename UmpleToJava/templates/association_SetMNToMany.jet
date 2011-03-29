@@ -1,0 +1,45 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
+  {
+    boolean wasSet = false;
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterVerifiedMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
+    {
+      if (<%=gen.translate("parameterVerifiedMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
+      {
+        continue;
+      }
+      <%=gen.translate("parameterVerifiedMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    }
+
+    if (<%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=gen.translate("parameterMany",av)%>.length || <%=gen.translate("parameterVerifiedMany",av)%>.size() < <%=gen.translate("minimumNumberOfMethod",av)%>() || <%=gen.translate("parameterVerifiedMany",av)%>.size() > <%=gen.translate("maximumNumberOfMethod",av)%>())
+    {
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      return wasSet;
+    }
+
+    ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterOldMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>(<%=gen.translate("associationMany",av)%>);
+    <%=gen.translate("associationMany",av)%>.clear();
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%> : <%=gen.translate("parameterVerifiedMany",av)%>)
+    {
+      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterNew",av)%>);
+      if (<%=gen.translate("parameterOldMany",av)%>.contains(<%=gen.translate("parameterNew",av)%>))
+      {
+        <%=gen.translate("parameterOldMany",av)%>.remove(<%=gen.translate("parameterNew",av)%>);
+      }
+      else
+      {
+        <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
+      }
+    }
+
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOld",av)%> : <%=gen.translate("parameterOldMany",av)%>)
+    {
+      <%=gen.translate("parameterOld",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
+    }
+    wasSet = true;
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    return wasSet;
+  }
+

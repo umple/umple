@@ -1,0 +1,21 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  boolean isOneToOne = false;
+  String instanceIdentifier = "this";
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    AssociationVariable relatedAssocation = av.getRelatedAssociation();
+    if (av.isOnlyOne() && relatedAssocation.isOnlyOne() && av.getIsNavigable() && relatedAssocation.getIsNavigable())
+    {
+      isOneToOne = true;
+      break;
+    }
+  }
+  %><%@ include file="constructor_DeclareDefault.jet" %><%
+  if (isOneToOne)
+  {
+    instanceIdentifier = "thisInstance";
+    %><%@ include file="constructor_DeclareOneToOne.jet" %><%
+  }
+
+%>

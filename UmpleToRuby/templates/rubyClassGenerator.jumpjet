@@ -1,0 +1,73 @@
+<%@ jet package="cruise.umple.compiler.ruby" class="RubyClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  RubyGenerator gen = new RubyGenerator();
+  gen.setModel(model);
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+    }
+    else
+    {
+      newCodeToInject = inject.getCode();
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }
+
+  boolean isFirst = true;
+
+%>
+
+<%=gen.translate("packageDefinition",uClass)%>
+<%@ include file="import_packages.jet" %>
+
+class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
+
+  <%@ include file="members_AllStatics.jet" %>
+  <%@ include file="members_AllAttributes.jet" %>
+  <%@ include file="members_AllStateMachines.jet" %>
+  <%@ include file="members_AllAssociations.jet" %>
+  <%@ include file="members_AllHelpers.jet" %>
+
+<% if (!uClass.getIsSingleton()) { %>
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  <%@ include file="constructor_Declare_All.jet" %>
+
+<% } %>
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  <%@ include file="attribute_Set_All.jet" %>
+  <%@ include file="attribute_Get_All.jet" %>
+  <%@ include file="state_machine_Get_All.jet" %>
+  <%@ include file="state_machine_Events_All.jet" %>
+  <%@ include file="state_machine_Set_All.jet" %>
+  <%@ include file="association_Get_All.jet" %>
+  <%@ include file="association_Set_All.jet" %>
+<% if (uClass.getKey().isProvided()) { %>
+  <%@ include file="equals.jet" %>
+<% } %>
+  <%@ include file="state_machine_doActivity_All.jet" %>
+  <%@ include file="state_machine_timedEvent_All.jet" %>
+  <%@ include file="delete_All.jet" %>
+<% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>
+  #------------------------
+  # DEVELOPER CODE - PROVIDED AS-IS
+  #------------------------
+  
+  <%=uClass.getExtraCode()%>
+<% } %>
+end
+<%=gen.translate("packageDefinitionEnd",uClass)%>

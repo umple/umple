@@ -1,0 +1,17 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  def <%=gen.translate("addMethod",av)%>(<%=gen.translate("parameterOne",av)%>)
+    was_added = false
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    was_added = <%=gen.translate("attributeMany",av)%> << <%=gen.translate("parameterOne",av)%>
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    was_added
+  end
+
+  def <%=gen.translate("removeMethod",av)%>(<%=gen.translate("parameterOne",av)%>)
+    was_removed = false
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    was_removed = <%=gen.translate("attributeMany",av)%>.delete(<%=gen.translate("parameterOne",av)%>)
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    was_removed
+  end
+

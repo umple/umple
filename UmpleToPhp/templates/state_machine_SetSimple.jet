@@ -1,0 +1,32 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  
+  StringBuffer allCases = new StringBuffer();
+
+  for (State state : sm.getStates())
+  {
+    if (state.getIsStartState())
+    {
+      allCases.append(StringFormatter.format("if"));
+    }
+    else
+    {
+      allCases.append(StringFormatter.format("    elseif"));
+    }
+    allCases.append(StringFormatter.format(" (${0} == \"{1}\")\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
+    allCases.append(StringFormatter.format("    {\n"));
+    allCases.append(StringFormatter.format("      $this->{0} = self::${1};\n",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+    allCases.append(StringFormatter.format("      return true;\n"));
+    allCases.append(StringFormatter.format("    }\n"));
+  }
+  String outputCases = allCases.toString().trim();
+%>
+  public function <%=gen.translate("setMethod",sm)%>($<%= gen.translate("parameterOne",sm) %>)
+  {
+    <%= outputCases %>
+    else
+    {
+      return false;
+    }
+  }
+

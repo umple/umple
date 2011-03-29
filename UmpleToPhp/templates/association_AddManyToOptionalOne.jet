@@ -1,0 +1,42 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public function <%=gen.translate("addMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    $wasAdded = false;
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    $<%=gen.relatedTranslate("parameterExisting",av)%> = $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
+    if ($<%=gen.relatedTranslate("parameterExisting",av)%> == null)
+    {
+      $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>($this);
+    }
+    elseif ($this !== $<%=gen.relatedTranslate("parameterExisting",av)%>)
+    {
+      $<%=gen.relatedTranslate("parameterExisting",av)%>-><%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>);
+      $this-><%=gen.translate("addMethod",av)%>($<%=gen.translate("parameterOne",av)%>);
+    }
+    else
+    {
+      $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
+    }
+    $wasAdded = true;
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    return $wasAdded;
+  }
+
+  public function <%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
+  {
+    $wasRemoved = false;
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    if ($this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>) != -1)
+    {
+      unset($this-><%=gen.translate("attributeMany",av)%>[$this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>)]);
+      $this-><%=gen.translate("attributeMany",av)%> = array_values($this-><%=gen.translate("attributeMany",av)%>);
+      if ($this === $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>())
+      {
+        $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(null);
+      }
+      $wasRemoved = true;
+    }
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    return $wasRemoved;
+  }
+
