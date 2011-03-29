@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleCore" >
+
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+
+  <property name="project.path" value="cruise.umple"/>
+  <property name="bin.path" value="${project.path}/bin"/>
+  <property name="dist.path" value="dist/${project.path}"/>
+  <property name="test.output.path" value="${dist.path}/qa"/>
+
+  <path id="junit4.classpath">
+    <pathelement location="lib/junit.jar"/>
+    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+  </path>
+  
+  <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="junit4.classpath"/>
+  </path>
+
+
+  <!-- ```````````````````````````
+    Clean up and initialize any potential byproduct
+  ``````````````````````````` -->
+
+  <target name="clean">
+    <delete dir="${bin.path}"/>
+    <delete dir="${dist.path}"/>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${bin.path}"/>
+    <mkdir dir="${dist.path}"/>
+    <mkdir dir="${test.output.path}"/>
+  </target>
+
+  <target name="updateCodegen">
+    <copy todir="cruise.umple/gen/cruise/umple/compiler/java" overwrite="true">
+      <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/gen/cruise/umple/compiler/php" overwrite="true">
+      <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/gen/cruise/umple/compiler/ruby" overwrite="true">
+      <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes="*.svn" />
+    </copy>
+  </target>
+
+  <target name="initVersion">
+    <exec executable="svn" output="build/svn.properties">
+      <arg value="info" />
+    </exec>
+    <property prefix="svn" file="build/svn.properties"/>
+    <property prefix="base" file="build/umpleversion.txt"/>
+    <property name="umple.version" value="${base.version}.${svn.Revision}" />
+    <echo message="Current Version: ${umple.version}" />
+  </target>  
+
+  <target name="setVersion" depends="initVersion">
+    <property name="umple.version" value="@UMPLE_VERSION@" />
+    <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+      <include name="**/*.java"/>
+    </replace>
+    <replace dir="cruise.umple/test/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+      <include name="**/*.txt"/>
+    </replace>
+
+    <!-- TODO: UNCOMMENT ONCE ECLIPSE IN THE MIX -->
+    <!-- <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+    <replace file="cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" /> -->
+  </target>
+  
+  <target name="resetVersion" depends="initVersion">
+    <property name="umple.version" value="@UMPLE_VERSION@" />
+    <replace dir="cruise.umple/gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.java"/>
+    </replace>
+    <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.txt"/>
+    </replace>
+    <!-- TODO: UNCOMMENT ONCE ECLIPSE IN THE MIX -->
+    <!-- <replace file="../cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
+    <replace file="../cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" /> -->
+  </target>
+
+  <!-- ```````````````````````````
+    Compile the application
+  ``````````````````````````` -->
+
+  <target name="compile">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+      <src path="${project.path}/src"/>
+      <src path="${project.path}/gen"/>
+      <src path="${project.path}/test"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <exclude name="**/data" />
+      <classpath refid="project.classpath"/>
+    </javac>
+  </target>
+
+  <!-- ```````````````````````````
+    Test the application
+  ``````````````````````````` -->
+
+  <target name="test">
+    
+    <junit fork="yes" forkmode="perBatch" haltonfailure="false">
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${test.output.path}">
+        <fileset dir="${project.path}/test">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+      <classpath refid="project.classpath"/>
+    </junit>
+
+    <junitreport todir="${test.output.path}">
+      <fileset dir="${test.output.path}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${test.output.path}"/>
+    </junitreport>
+  </target>
+
+  <!-- ```````````````````````````
+    Package the application
+  ``````````````````````````` -->
+
+  <target name="packageDocs">
+    <java classname="cruise.umple.docs.DocumenterMain" fork="true" classpath="dist/umpledocs.jar">
+      <arg value="build/reference"/>
+      <arg value="${dist.path}/reference"/>
+    </java>
+  </target>
+
+  <target name="package" depends="setVersion">
+  
+    <property name="umple_classpath" value=" " />
+    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/**" excludes="**/*Test.class">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.UmpleConsoleMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/**">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.stats.StatsMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/**">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+  
+    <jar destfile="dist/playground/umpleplayground.jar" basedir="${bin.path}" includes="cruise/umple/**">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/vml/**">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.vml.VmlConsole"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+	  <!-- TODO: UNCOMMENT ONCE XTEXT IN THE MIX -->
+    <!-- <copy todir="dist/update">
+      <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
+    </copy> -->
+	  
+	  <!-- TODO: UNCOMMENT ONCE UMPLEONLINE IN THE MIX -->
+    <!-- <copy file="dist/playground/umpleplayground.jar" tofile="umpleonline/scripts/umpleplayground.jar" overwrite="true" />
+    <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
+    <copy todir="../umpleonline/update">
+      <fileset dir="dist/update"/>
+    </copy> -->
+	
+	  <antcall target="packageDocs" />
+	
+  </target>
+
+  <!-- ```````````````````````````
+    Build the application
+  ``````````````````````````` -->
+  
+  <target name="build" >
+    <echo>Building the core Umple project</echo>
+    <antcall target="clean" />
+    <antcall target="init" />
+    <antcall target="updateCodegen" />
+    <antcall target="setVersion" />
+    <antcall target="compile" />
+    <antcall target="test" />
+    <antcall target="package" />
+  </target>
+  
+  
+</project>
+

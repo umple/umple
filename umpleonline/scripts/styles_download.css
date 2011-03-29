@@ -1,0 +1,13 @@
+
+body { }
+
+/* HEADER STYLE */
+span.header {white-space:pre-line; margin:0 0 0 0.3em; padding:0;}
+span.header img.uOttawaAbbr {border:0;height:53px;width:130px;}
+span.header img.uOttawa {border:10;height:53px;width:650px;}
+
+img.li { margin: 0 0 0 40px; }
+
+div.code { border: 1px solid black; font-family: Courier New; font-size: 12pt; background-color:#f0f0f0; margin: 40px; width: 400px; white-space:pre;}
+
+p.intro { width: 600px;}

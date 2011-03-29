@@ -1,0 +1,92 @@
+class Canvas
+{
+  width;
+  height;
+  
+  public function createDiagram()
+  {
+    $diagram = @ImageCreate($this->getWidth(), $this->getHeight());
+    $white = ImageColorAllocate($diagram, 255, 255, 255);
+    $black = ImageColorAllocate($diagram, 0, 0, 0);
+    ImageRectangle($diagram,0,0,$this->getWidth() - 1, $this->getHeight() - 1,$black);
+    return $diagram;
+  }
+  
+}
+
+class ClassEntity
+{
+  name;
+  Position position;
+
+  public function draw($diagram)
+  {
+    $name = $this->getName();
+    $x = $this->getPosition()->getX();
+    $y = $this->getPosition()->getY();
+    $width = $this->getPosition()->getWidth();
+    $height = $this->getPosition()->getHeight();
+
+    $fontSize = 5;
+    $calculatedWidth = strlen($name) * ImageFontWidth($fontSize);
+    $calculatedHeight = ImageFontHeight($fontSize);
+    $labelOffset = 3;
+    $imageSize = 16;
+    
+    $this->getPosition()->setWidth($width);
+    $this->getPosition()->setHeight($height);
+
+    $black = ImageColorAllocate($diagram, 0, 0, 0);
+    $red=ImageColorAllocate($diagram,255,0,0);
+    $im = ImageCreateFromJpeg("class.jpg");
+    
+    
+    ImageCopy($diagram,$im, $x+$labelOffset, $y+$labelOffset, 0, 0, 15, $imageSize);
+    ImageString($diagram,$fontSize,$x+$imageSize+2*$labelOffset,$y+$labelOffset,$name,$black);
+    ImageRectangle($diagram,$x,$y,$x+$width,$y+$height,$red);
+    ImageRectangle($diagram,$x,$y,$x+$width,$y+$calculatedHeight+2*$labelOffset,$red);  
+  }
+}
+
+class Association
+{
+  MultiplicityEnd one;
+  MultiplicityEnd two;
+  Point[] connector;
+  
+  
+  function draw($diagram)
+  {
+    $red=ImageColorAllocate($diagram,255,0,0);
+    
+    $firstPoint = null;
+    foreach($this->connectors as $point)
+    {
+      if ($firstPoint == null)
+      {
+        $firstPoint = $point;
+        continue;
+      }
+      ImageLine($diagram,$firstPoint->getX(),$firstPoint->getY(),$point->getX(),$point->getY(),$red);
+    }
+  }
+}
+
+class MultiplicityEnd
+{
+  ClassEntity classEntity;
+}
+
+class Point
+{
+  x;
+  y;
+}
+
+class Position
+{
+  x;
+  y;
+  width;
+  height;
+}

@@ -1,0 +1,100 @@
+namespace Airline;
+
+class Airline{
+  1 -- * RegularFlight;
+  1 -- * Person;
+}
+
+class RegularFlight{
+  Time time;
+  unique Integer flightNumber;
+  1 -- * SpecificFlight;
+}
+
+class SpecificFlight{
+  unique Date date;
+}
+
+class PassengerRole
+{
+  isA PersonRole;
+  immutable String name ;
+  1 -- * Booking;
+}
+  
+
+class EmployeeRole
+{
+  String jobFunction ;
+  isA PersonRole;
+  * -- 0..1 EmployeeRole supervisor;
+  * -- * SpecificFlight;
+}
+
+class Person
+{
+  settable String name;
+  Integer idNumber;
+  1 -- 0..2 PersonRole;
+}
+
+class PersonRole{}
+
+class Booking{
+  String seatNumber;
+  * Booking -- 1 SpecificFlight;
+}
+//$?[End_of_model]$?
+// LAYOUT INFORMATION
+class Person
+{
+  position 414 11 152 80;
+  position.association Person__PersonRole 0,32 109,19;
+}
+
+
+class RegularFlight
+{
+  position 414 248 109 60;
+  position.association RegularFlight__SpecificFlight 0,18 109,18;
+}
+
+class PersonRole
+{
+  position 60 24 109 42;
+}
+
+class Booking
+{
+  position 13 248 159 60;
+  position.association Booking__SpecificFlight 159,18 0,18;
+}
+
+
+class EmployeeRole
+{
+  position 154 114 154 76;
+  position.association EmployeeRole__EmployeeRole:supervisor 0,64 9,76;
+  position.association EmployeeRole__SpecificFlight 141,76 49,0;
+}
+
+
+class PassengerRole
+{
+  position 8 112 122 70;
+  position.association Booking__PassengerRole 27,70 22,0;
+}
+
+
+class SpecificFlight
+{
+  position 246 248 109 60;
+}
+
+
+class Airline
+{
+  position 414 136 109 42;
+  position.association Airline__RegularFlight 49,42 49,0;
+  position.association Airline__Person 49,0 49,80;
+}

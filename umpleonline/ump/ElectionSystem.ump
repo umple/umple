@@ -1,0 +1,153 @@
+namespace electorial;
+
+// association should be ->
+class PollingStation {
+ Integer number;
+ address;
+
+ 1 -- * PollInElection; 
+} 
+ 
+class ElectedBody{
+ description;
+
+ 1 -- * Position;
+}
+
+ //Different elections may have different sets of polls
+class Election{
+ Date date;
+ 
+ 1 -- * PollInElection;
+ 1 -- * ElectionForPosition;
+}
+
+class ElectionForPosition{
+ 1 -- * Candidature;
+}
+
+//Eg. Mayor, Councilor. AKA seats
+//A position can have different elections for it at different times, eg. once every four years.
+class Position {
+ description;
+ 1 -- * ElectionForPosition;
+}
+
+//We need candidature class since a candidate can run for different 
+//positions and for the smae positions at subsequent elections
+class Candidature {
+ internal Boolean isIncumbent = false;
+ 
+ public void markAsIncumbent()
+ {
+   isIncumbent = true;
+ }
+ 
+ public String toString()
+ {
+   return isIncumbent ? "Incumbent" : "Candidature";
+ }
+}
+
+class Candidate {
+ name;
+ Integer phoneNumber;
+ address;
+ 
+ 1 -- * Candidature;
+}
+
+class PollInElection {
+ Integer number;
+ 
+ 1 -- * Voter;
+}
+
+associationClass VotesInPoll{
+ * Candidature;
+ * PollInElection;
+ Integer numVotes;
+}
+
+class Voter{
+ name;
+ address;
+ * -- * Candidature;
+}
+
+class ElectoralDistrict{
+ 1 -- * Voter; 
+ 0..1 -- * Position; 
+ 0..1 -- * ElectoralDistrict subDistrict;
+}    
+//$?[End_of_model]$?
+//Positioning
+
+//Positioning
+class Candidate
+{
+  position 28 429 175 93;
+  position.association Candidate__Candidature 175,30 0,12;
+}
+
+class PollingStation
+{
+  position 524 54 134 79;
+  position.association PollInElection__PollingStation 70,79 68,0;
+}
+
+class Voter
+{
+  position 287 59 128 79;
+  position.association Candidature__Voter 9,76 18,0;
+}
+
+class Candidature
+{
+  position 278 447 169 58;
+}
+
+class PollInElection
+{
+  position 526 204 134 62;
+  position.association PollInElection__Voter 0,0 129,77;
+}
+
+class VotesInPoll{
+  position 518 327 151 62;
+  position.association PollInElection__VotesInPoll 40,0 32,62;
+  position.association Candidature__VotesInPoll 12,62 170,19;
+}
+
+class Position
+{
+  position 42 193 149 62;
+  position.association ElectionForPosition__Position 150,59 0,0;
+}
+
+class ElectedBody
+{
+  position 39 321 149 62;
+  position.association ElectedBody__Position 70,0 67,62;
+}
+
+class Election
+{
+  position 307 194 109 62;
+  position.association Election__PollInElection 110,43 0,33;
+  position.association Election__ElectionForPosition 50,62 51,0;
+}
+
+class ElectionForPosition
+{
+  position 306 316 136 45;
+  position.association Candidature__ElectionForPosition 50,45 78,0;
+}
+
+class ElectoralDistrict
+{
+  position 104 74 115 59;
+  position.association ElectoralDistrict__Voter 109,15 0,30;
+  position.association ElectoralDistrict__Position 50,59 112,0;
+  position.association ElectoralDistrict__ElectoralDistrict:subDistrict 2 0,38 15,59;
+}

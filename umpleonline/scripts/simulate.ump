@@ -1,0 +1,479 @@
+generate Php;
+
+external Object {}
+
+class History
+{
+  String[] event;
+  String[] state;
+  String[] log;
+  String[] action;
+}
+
+class ModelOverview
+{
+  1 -- * ClassOverview classOverview;
+}
+
+class ClassOverview
+{
+  name;
+  1 -- * Attribute attribute;
+  1 -- * StateMachine stateMachine;
+  1 -- * AssociationEnd associationEnd;
+  key { name }
+}
+
+class StateMachine
+{
+  String name;
+  String[] event;
+}
+
+class Attribute
+{
+  type;
+  name;
+  Boolean isList;
+}
+
+class AssociationEnd
+{
+  Integer lowerBound;
+  Integer upperBound;
+  String roleType;
+  String roleName;
+}
+
+class Simulator
+{
+  * -> 1 History;
+  * -> 0..1 Object model;
+  * -> * Object instance;
+}
+
+// PHP IMPLEMENTATION
+
+class History
+{
+  public function getLatestLogs()
+  {
+    return array_reverse($this->logs);
+  }
+}
+
+class ModelOverview
+{
+  
+  public function getClass($obj)
+  {
+    if ($obj == null)
+    {
+      return null;
+    }
+    $className = get_class($obj);
+    foreach ($this->classOverviews as $aClass)
+    {
+      if ($aClass->getName() == $className)
+      {
+        return $aClass;
+      } 
+    }
+    return null;
+  }
+}
+
+class Attribute
+{
+
+  function getDisplayName()
+  {
+    return $this->getIsList() ? "{$this->name}s" : $this->name;
+  }
+
+  function getValue($simulator)
+  {
+    $obj = $simulator->getModel();
+
+    if ($this->getIsList())
+    {
+      $uc = ucfirst($this->getName());
+      $value = call_user_func(array($obj,"get{$uc}s"));
+    }
+    else
+    {
+      $uc = ucfirst($this->getName());
+      $value = call_user_func(array($obj,"get{$uc}"));
+    }
+
+    if ($value == null)
+    {
+      return "--";
+    }
+    elseif (is_array($value))
+    {
+      $answer = "<ul>";
+      foreach ($value as $obj)
+      {
+        $answer .= "<li>";
+        $answer .= $this->getInstanceValue($simulator,$obj);
+        $answer .= "</li>";
+      }
+      
+      $answer .= "</ul>";
+      return $answer;
+    }
+    else
+    {
+      return $this->getInstanceValue($simulator,$value);
+    }
+
+  }
+  
+  public function getInstanceValue($simulator,$obj)
+  {
+    $model = $this->getClassOverview()->getModelOverview();
+    $classOverview = $model->getClass($obj);
+  
+    if ($classOverview != null)
+    {
+      $offset = $simulator->indexOfInstance($obj) + 1;
+      return "[{$offset}] <a href=\"javascript:simulateCommand('load {$offset}');\">{$this->getType()}</a>";
+    }
+    else
+    {
+      return $obj;
+    }
+  }
+    
+}
+
+class AssociationEnd
+{
+  function getValue($simulator)
+  {
+    $obj = $simulator->getModel();
+
+    if ($this->getUpperBound() == 1)
+    {
+      $uc = ucfirst($this->getRoleName());
+      $value = call_user_func(array($obj,"get{$uc}"));
+    }
+    else
+    {
+      $uc = ucfirst($this->getRoleName());
+      $value = call_user_func(array($obj,"get{$uc}s"));
+    }
+    
+    if ($value == null)
+    {
+      return "--";
+    }
+    elseif (is_array($value))
+    {
+      $answer = "<ul>";
+      foreach ($value as $obj)
+      {
+        $answer .= "<li>";
+        $answer .= $this->getInstanceValue($simulator,$obj);
+        $answer .= "</li>";
+      }
+      
+      $answer .= "</ul>";
+      return $answer;
+    }
+    else
+    {
+      return $this->getInstanceValue($simulator,$value);
+    }
+  }
+  
+  public function getInstanceValue($simulator,$obj)
+  {
+    $model = $this->getClassOverview()->getModelOverview();
+    $classOverview = $model->getClass($obj);
+
+    if ($classOverview != null)
+    {
+      $offset = $simulator->indexOfInstance($obj) + 1;
+      return "{$offset} <a href=\"javascript:simulateCommand('load {$offset}');\">{$this->getRoleType()}</a>";
+    }
+    else
+    {
+      return "?{$value}?";
+    }
+  }
+
+}
+
+class StateMachine
+{
+
+  function getCurrentState($obj)
+  {
+    $stateName = call_user_func(array($obj,"get{$this->getName()}"));
+    $size = strlen($this->getName());
+    $startOfName = substr($stateName,0,$size);
+    if ($startOfName == $this->getName())
+    {
+      $stateName = substr($stateName,$size);
+    }
+    return $stateName;
+  }
+
+}
+
+class Simulator
+{
+
+  function isClassName($className)
+  {
+    foreach ($GLOBALS['modelOverview']->getClassOverviews() as $classOverview)
+    {
+      if ($classOverview->getName() == $className)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  function getAvailableMethods()
+  {
+    $methods = array();
+    foreach ($GLOBALS['modelOverview']->getClassOverviews() as $classOverview)
+    {
+      $className = $classOverview->getName();
+      $reflectionObj = new ReflectionClass($className);
+      $classMethods = $reflectionObj->getMethods();
+      
+      $methods[] = "{$className}!name";
+      foreach ($classMethods as $classMethod)
+      {
+        $name = "{$classMethod->getName()}";
+        if ($name == "__construct")
+        {
+          $name = $className;
+        }
+        $parameters = "";
+        foreach ($classMethod->getParameters() as $parameter)
+        {
+          $paramName = $parameter->getName();
+          $parameters = "{$parameters} [{$paramName}]";
+        }
+       $methods[] = "{$name} {$parameters}";
+      }
+      
+    }
+    return $methods;
+  }
+
+  function processAction($action)
+  {
+    try
+    {
+      $this->history->addAction($action);
+      $parts = explode(' ',$action);
+
+      if (count($parts) < 1 || $parts[0] == '')
+      {
+        $parts = array('');
+      }
+
+      $type = $parts[0];
+      array_shift($parts);
+      if ($type == 'clear')
+      {
+        $this->processClear($parts);
+        return;
+      }
+      elseif ($type == 'delete')
+      {
+        $this->processDelete($parts);
+        return;
+      }
+      elseif ($type == 'load')
+      {
+        $this->processLoad($parts);
+        return;
+      }
+      elseif ($type == 'undo')
+      {
+        $this->processUndo($parts);
+        return;
+      }
+      elseif ($type == 'event')
+      {
+        $this->processEvent($parts);
+        return;
+      }
+      elseif ($type == 'new')
+      {
+        $this->processNew($parts);
+        return;
+      }
+      else
+      {
+        $this->processMethod($type,$parts);
+        return;
+      }
+    }
+    catch (Exception $e) 
+    {
+      $this->getHistory()->addLog("Exception:" . $e->getMessage());
+    }    
+    return;
+  }
+
+  public function processClear($parts)
+  {
+    if (count($parts) == 0)
+    {
+      $this->history = new History();
+      $this->model = null;
+      $this->instances = array();
+    }
+    else if ($parts[0] == "history")
+    {
+      $this->history = new History();
+    }
+  }
+  
+  public function processUndo($parts)
+  {
+    $size = count($parts) > 0 ? $parts[0] : 1;
+    $allActions = $this->history->getActions();
+    $this->processClear(array());
+    array_pop($allActions); # this call, undo
+    for ($i=0;$i<$size;$i++)
+    {
+      array_pop($allActions); # the last actions
+    }
+    foreach ($allActions as $action)
+    {
+      $this->processAction($action);
+    }
+  }
+  
+  public function processDelete($parts)
+  {
+    if ($this->numberOfInstances() == 0)
+    {
+      $this->history->addLog("Please create objects before trying to delete them");
+    }
+    elseif (count($parts) == 0 || $parts[0] < 1 || $parts[0] > $this->numberOfInstances())
+    {
+      $this->history->addLog("Please specify an object between 1 and " . $this->numberOfInstances());
+    }
+    else
+    {
+      $index = $parts[0] - 1;
+      $this->model = $this->getInstance($index);
+      $this->removeInstance($this->model);
+      $this->model->delete();
+      $this->model = null;
+      $this->history->addLog("Deleted instance " . $parts[0] );
+    }  
+  }
+  
+  public function processLoad($parts)
+  {
+    if ($this->numberOfInstances() == 0)
+    {
+      $this->history->addLog("Please create objects before trying to load them");
+    }
+    elseif (count($parts) == 0 || $parts[0] < 1 || $parts[0] > $this->numberOfInstances())
+    {
+      $this->history->addLog("Please specify an object between 1 and " . $this->numberOfInstances());
+    }
+    else
+    {
+      $index = $parts[0] - 1;
+      $this->model = $this->getInstance($index);
+      $this->history->addLog("Loaded instance " . $parts[0] );
+    }  
+  }
+
+  public function processEvent($parts)
+  {
+    if (count($parts) < 1)
+    {
+      $this->history->addLog("No event name provided");
+      return;
+    }
+
+    $eventName = $parts[0];
+    
+    if ($this->model == null)
+    {
+      $this->history->addLog("No object available to react to event {$eventName}");
+      return;
+    }
+
+    if (!method_exists($this->model,$eventName))
+    {
+      $this->history->addLog("Unknown event {$eventName} for " . get_class($this->model));
+    }
+    else
+    {
+      call_user_func(array($this->model,"{$eventName}"));
+      $this->history->addLog("Called event {$eventName}");
+    }
+  }
+  
+  public function processNew($parts)
+  {
+    if (count($parts) < 1)
+    {
+      $this->history->addLog("No object to create");
+      return;
+    }
+    
+    $className = $parts[0];
+    if (!$this->isClassName($className))
+    {
+      $this->history->addLog("Unknown class: {$className}");
+      return;
+    }
+
+    array_shift($parts);
+    $args = $this->processArguments($parts);
+    $reflectionObj = new ReflectionClass($className);
+    $obj = $reflectionObj->newInstanceArgs($args);    
+    $this->setModel($obj);
+    $this->addInstance($obj);
+    $this->history->addLog("Created object: " . get_class($this->getModel()));
+  }
+  
+  public function processMethod($methodName,$parts)
+  {
+    $args = $this->processArguments($parts);
+    $modelIndex = $this->indexOfInstance($this->model);
+    $data = array_merge(array($this->model),$parts);
+    $result = call_user_func_array(array($this->model,$methodName),$args);
+    $log = "Call to {$methodName} returned {$result}";
+    $this->history->addLog($log);    
+  }
+
+  public function processArguments($parts)
+  {
+    $args = array();
+    $size = count($parts);
+    for ($i=0; $i<$size; $i++)
+    {
+      $entry = $parts[$i];
+      if ($entry == "load")
+      {
+        $objIndex = $parts[$i+1] - 1;
+        $obj = $this->getInstance($objIndex);
+        $args[] = $obj;
+      }
+      else
+      {
+        $args[] = $entry;
+      }
+    }
+    return $args;
+  }
+
+}

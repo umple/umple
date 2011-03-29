@@ -1,0 +1,110 @@
+/*
+  Elevator System - sample system (B)
+  Last updated: June 8, 2010
+*/
+//Namespace for facade class.
+namespace Elevator;
+
+//Namespace for core of the system.
+namespace Elevator.core;
+
+class Elevator{
+ identifier;
+ state;
+ directionOfMovement;
+ 1 -- * ConsoleCallButton;
+ 1..* -- 0..* DownCallButton;
+ 1..* -- 0..* UpCallButton;
+}
+class Floor{
+ 1 -- * ConsoleCallButton;
+ * -- * Elevator;
+}
+class FullSystem{
+ 1 -- * Elevator;
+}
+class FloorNumberDisplay{
+ 0..1 -- 1 Floor;
+}
+
+//Separate out the buttons
+namespace Elevator.core.Buttons;
+class Button{
+ Boolean lightOn;
+}
+class  CloseDoorButton{
+ isA Button;
+ 1 -- 1 Elevator;
+}
+class OpenDoorButton{
+ isA Button;
+ 1 -- 1 Elevator;
+}
+class UpCallButton {
+ isA Button;
+}
+class DownCallButton {
+ isA Button;
+}
+class StopCallbutton {
+ isA Button;
+}
+class ConsoleCallButton
+{ 
+ isA Button;
+}
+//$?[End_of_model]$?
+//Positioning
+class Elevator
+{
+  position 276 380 217 96;
+  position.association ConsoleCallButton__Elevator 0,0 60,45;
+  position.association DownCallButton__Elevator 180,0 49,45;
+  position.association Elevator__UpCallButton 140,0 52,45;
+}
+class Button
+{
+  position 303 35 135 62;
+}
+class FloorNumberDisplay
+{
+  position 37 491 140 45;
+  position.association Floor__FloorNumberDisplay 70,0 56,45;
+}
+class ConsoleCallButton
+{
+  position 13 201 130 45;
+}
+class StopCallbutton
+{
+  position 693 202 109 41;
+}
+class DownCallButton
+{
+  position 562 202 115 45;
+}
+class UpCallButton
+{
+  position 437 201 109 45;
+}
+class OpenDoorButton
+{
+  position 162 201 119 45;
+  position.association Elevator__OpenDoorButton 57,45 35,0;
+}
+class CloseDoorButton
+{
+  position 298 202 121 45;
+  position.association CloseDoorButton__Elevator 54,45 84,0;
+}
+class FullSystem
+{
+  position 576 399 109 41;
+  position.association Elevator__FullSystem 0,10 218,29;
+}
+class Floor
+{
+  position 51 384 109 45;
+  position.association ConsoleCallButton__Floor 12,0 18,45;
+  position.association Elevator__Floor 110,10 0,14;
+}

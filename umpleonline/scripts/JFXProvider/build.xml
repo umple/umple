@@ -1,0 +1,94 @@
+<project name="JSF" default="compile" basedir=".">
+	<description>
+		Ant sript to create the JFX application file
+    </description>
+	<!-- set global properties for this build -->
+	<xmlproperty file="${xmlFile}" keepRoot="true"
+		semanticAttributes="true" />
+		
+	<property name="currentLocation" location="." />
+	<property name="outputFolder" value="${UmpleProject.OutputFolder}" />
+	<property name="umpleFile" value="${UmpleProject.UmpleFile}" />
+	<property name="projectName" value="${UmpleProject.name}"  />
+	<property name="javafx.path" value="lib" />
+	<property name="src" value="${outputFolder}" />
+	<property name="build" value="${outputFolder}/bin" />
+	<property name="compile-libs" value="${outputFolder}/compile-libs" />
+
+	<target name="run">
+
+		<java classname="cruise.generator.UIGU" fork="true">
+			<arg value="${xmlFile}" />
+			<arg value="${umpleFile}" />
+			<arg value="${outputFolder}" />
+			<arg value="${projectName}" />
+			<classpath>
+				<pathelement location="GUIGenerator.jar" />
+				<pathelement location="JFXProvider.jar" />
+				<pathelement location="GUIModel.jar" />
+				<pathelement location="Umple.jar" />
+			</classpath>
+		</java>
+		</target>
+
+	<target name="prepare">
+		<mkdir dir="${build}" />
+		 <copy todir="${build}/main/images" >
+		<fileset dir="images"/>
+		</copy>
+		<copy todir="${build}/com" >
+		<fileset dir="com"/>
+		</copy>
+	</target>
+
+	<path id="javafx.classpath">
+		<fileset dir="${javafx.path}">
+			<include name="javafxc.jar" />
+			<include name="javafxrt.jar" />
+			<include name="javafx-common.jar" />
+			<include name="javafx-geom.jar" />
+			<include name="javafx-ui-swing.jar" />
+			<include name="javafx-ui-common.jar" />
+			<include name="javafx-ui-controls.jar" />
+			<include name="javafx-ui-desktop.jar" />
+			<include name="javafxrt-main.jar" />
+			<!-- include name="javafx-sg-swing.jar" / -->
+			<!-- include name="javafx-sg-common.jar" / -->
+
+		</fileset>
+		<pathelement location="${outputFolder}"/>
+		<dirset dir="${outputFolder}">
+        <include name="*"/>
+      </dirset>
+	</path>
+ 
+
+ 
+	<target name="compile" depends="compile-java" description="compiles javaFX files">
+		<taskdef name="javafxc" classname="com.sun.tools.javafx.ant.JavaFxAntTask" classpathref="javafx.classpath" />
+		<javafxc srcdir="${src}" compilerclasspathref="javafx.classpath" destdir="${build}" includes="**/*"/>
+		   <jar   destfile="${projectName}.jar" >
+    <manifest>
+      <attribute name="Main-Class" value="main.MainView"/>
+    </manifest>
+    <fileset dir="${build}" />
+
+  </jar>
+   <move file="${outputFolder}/runtime/Runtime.jnlp" tofile="${projectName}.jnlp"/>
+	<replace file="${projectName}.jnlp" token="@@dir@@" value="file:/${currentLocation}"/>
+	<replace file="${projectName}.jnlp" token="\" value="/"/>
+	</target>
+
+	
+	<target name="compile-java" depends="run, prepare">
+		<javac debug="on" srcdir="${src}" destdir="${build}" includes="**/*">
+			<classpath>
+				<pathelement location="${javafx.path}/javafx-ui-swing.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+
+
+</project>
+

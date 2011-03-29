@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="scripts/styles_download.css" rel="stylesheet" type="text/css" />
+  <title>Download Umple Eclipse</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+</head>
+<body>
+
+  <span class="header" summary="University of Ottawa banner"><a href="http://www.uottawa.ca/welcome.html" target="_blank"><img src="scripts/left_generic.jpg" alt="uOttawa" class="uOttawaAbbr" /></a><img src="scripts/bg_header_title.jpg" class="uOttawa" alt="University of Ottawa - Canadas University" /></span>
+  <br/><br/>
+  <img src="scripts/umpleonline_title.jpg" title="UmpleOnline - Draw and Type your next model" />
+
+  <p class="intro">
+    Below are instructions for installing Umple, a model-oriented programming language that lets you model
+    in code.  Here is <a href="http://cruise.site.uottawa.ca/umple/">more information</a> 
+    about umple, or try it hassle free with our <a href="http://cruise.site.uottawa.ca/umpleonline/">UmpleOnline version</a>
+  </p>
+
+  <h2>Requirements</h2>
+  <ul>
+    <li>Java 5 or later (Mac OS X users: Eclipse 3.4 does not run on Java 6)</li>
+    <li>Eclipse 3.4 or 3.5</li>
+  </ul>
+  
+  <h2>Install Eclipse</h2>
+  <ul>
+    <li>If you don't have Eclipse 3.5 (Galileo) or newer, install it from <a href="http://eclipse.org/downloads/">http://eclipse.org/downloads/</a></li>
+    <li>Start Eclipse</li>
+  </ul>
+
+  <h2>Add the Umple Update Site</h2>
+  <ul>
+    <li>Open the Install New Software dialog (Help > Install New Software...) </li>
+    <li>Add the Umple update site: <a href="http://cruise.site.uottawa.ca/umpleonline/UmpleUpdateSite/site.xml">http://cruise.site.uottawa.ca/umpleonline/UmpleUpdateSite/</a></li> 
+  </ul>
+  <img src="scripts/download_software_update_sites.png" class="li" />
+
+  <ul>
+    <li>Now that you have added the Umple update site, select the following features from the Umple update site:
+      <ul>
+        <li>UmpleEditorAndCompiler</li>
+      </ul>
+    </li>
+    <li>Push the "Next..." button</li>
+  </ul>
+  
+  <img src="scripts/download_select_features.png" class="li" />  
+
+  <ul>
+    <li>Review the items to be installed and push the "Finish" button</li>
+    <li>Acknowledge that you trust the security certificate and push the "OK" button</li>
+  </ul>
+  
+  <img src="scripts/download_accept_security.png" class="li" />
+  
+  <ul>
+    <li>Accept to restart Eclipse to make the changes effective.</li>
+  </ul>
+
+  <h2>Check The Installation</h2>
+  <ul>
+    <li>Launch Eclipse with a new project (any project)</li>
+    <li>Look for the Umple menu and the compile button</li>
+    
+  </ul>
+
+  <img src="scripts/download_check_install.png" class="li" />
+
+  <div class="code">
+    namespace example;
+    
+    class Student
+    {
+      Integer id;
+      name;
+      0..1 -- 0..1 Mentor;
+    }
+    
+    class Mentor
+    {
+    }
+  </div>
+
+  <ul>
+    <li>Write a small Umple application (you can use the example given above)</li>
+    <li>Click on Umple Menu > Compile Umple (or click on the Umple icon)</li>
+    <li>Your Java classes should be generated</li>
+    <li>Refer to the <a href="http://cruise.site.uottawa.ca/umple/">Umple Home Page</a> to learn more about Umple</li>
+  </ul>
+
+  <img src="scripts/download_example.png" class="li" />
+
+</body>
+</html>
+

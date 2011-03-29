@@ -1,0 +1,178 @@
+// This example refers to figure 4 of 'A Metamodel 
+// for Dynamic Information Generated from Object-
+// Oriented Systems', ATEM 2003, First International 
+// Workshop on Meta-Models and Schemas for Reverse 
+// Engineering, in conjunction with WCRE, Victoria, 
+// B.C., revised version published in Electronic Notes 
+// in Theoretical Computer Science, Elsevier, Vol. 
+// 94, pp 59-69.
+// Authors: Hamou-Lhadj, A., and Lethbridge, T.C., (2003) 
+
+// To load the entire DMM example at once, copy and paste all 
+// five DMM components (DMM*) into the editor.  Please note that the
+// position attributes of classes and associations will need to be 
+// re-adjusted, as the example has been made to display the diagrams 
+// as separate entities.
+
+class Scenario{
+  description;
+}
+
+class Trace{
+  * -- 0..1 Scenario;
+}
+
+class RoutineCallTrace{
+  isA Trace;
+  0..1 -> 1 ComprehensionUnitInitiator root;
+}
+
+class MethodInvocationTrace{
+  isA RoutineCallTrace;
+}
+
+class PatternOccurrence{
+  * -- 1 RoutineCallTrace;
+  * -> 1 TracePattern;
+  0..1 -> 1 ComprehensionUnitInitiator initiator;
+}
+
+class TracePattern{
+  description;
+}
+
+class ComprehensionUnitInitiator{
+}
+
+class TraceEdge{
+  Integer repetitionsDueToLoops;
+  * trace -- 1 ComprehensionUnitInitiator parent;
+  1 -- 1 ComprehensionUnitInitiator child;
+}
+
+class RoutineCallNode{
+  isA ComprehensionUnitInitiator;
+  * -- 0..1 BehaviouralElement;
+}
+
+class BehaviouralElement{
+}
+
+class ControlNode{
+  isA ComprehensionUnitInitiator;
+}
+
+class RecursionOccurrence{
+  isA ComprehensionUnitInitiator;
+  0..1 repeatedUnit -> 1 ComprehensionUnitInitiator;
+  Integer repetitionsDueToRecursion;
+}
+
+class MethodInvocationNode{
+  isA RoutineCallNode;
+}
+
+class SequenceControlNode{
+  isA ControlNode;
+}
+
+class CTFObject{
+  objectID;
+  0..1 -- * MethodInvocationNode invokes;
+}
+
+class CTFClass{
+  0..1 instanceOf -- * CTFObject instancedBy;
+}
+//$?[End_of_model]$?
+//Positioning
+class RecursionOccurrence
+{
+  position 326 373 261 58;
+  position.association ComprehensionUnitInitiator__RecursionOccurrence:repeatedUnit 15,0 137,45;
+}
+
+class TraceEdge
+{
+  position 479 265 236 62;
+  position.association ComprehensionUnitInitiator:parent__TraceEdge:trace 0,16 189,7;
+  position.association ComprehensionUnitInitiator:child__TraceEdge 0,43 189,34;
+}
+
+class TracePattern
+{
+  position 651 109 149 62;
+}
+
+class Scenario
+{
+  position 9 21 149 62;
+}
+
+class ComprehensionUnitInitiator
+{
+  position 173 274 188 45;
+}
+
+class SequenceControlNode
+{
+  position 238 458 152 45;
+}
+
+class MethodInvocationNode
+{
+  position 51 459 153 45;
+}
+
+class MethodInvocationTrace
+{
+  position 220 200 155 45;
+}
+
+class BehaviouralElement
+{
+  position 21 277 138 45;
+}
+
+class ControlNode
+{
+  position 200 373 109 41;
+}
+
+class RoutineCallNode
+{
+  position 57 373 109 41;
+  position.association BehaviouralElement__RoutineCallNode 20,0 56,45;
+}
+
+class PatternOccurrence
+{
+  position 469 115 132 45;
+  position.association PatternOccurrence__RoutineCallTrace 0,10 132,9;
+  position.association PatternOccurrence__TracePattern 133,9 0,15;
+  position.association ComprehensionUnitInitiator:initiator__PatternOccurrence 0,41 182,0;
+}
+
+class RoutineCallTrace
+{
+  position 195 116 131 45;
+  position.association ComprehensionUnitInitiator:root__RoutineCallTrace 15,45 37,0;
+}
+
+class Trace
+{
+  position 253 28 109 41;
+  position.association Scenario__Trace 0,10 150,15;
+}
+
+class CTFObject
+{
+  position 52 554 133 62;
+  position.association CTFObject__MethodInvocationNode:invokes 30,0 30,45;
+}
+
+class CTFClass
+{
+  position 417 559 109 45;
+  position.association CTFClass:instanceOf__CTFObject:instancedBy 0,13 133,18;
+}

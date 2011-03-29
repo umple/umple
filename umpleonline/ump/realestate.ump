@@ -1,0 +1,128 @@
+namespace realestate;
+
+class Address
+{
+  Integer numberOnStreet;
+  Integer apartmentOrUnit;
+  String Street;
+  String City;
+  String PostalCode;
+}
+
+class GPSCoord
+{
+  Double lattitude;
+  Double longitude;
+}
+
+class Property
+{
+  Address propertyAddress;
+  Integer numberBedrooms;
+  Integer numberBathrooms;
+  Integer squareFeet;
+  Integer numFloors;
+  GPSCoord gpsCoord;
+
+  * -- 1 Neighbourhood;
+}
+
+class Neighbourhood
+{
+  String description;
+  GPSCoord[] gpsCoordsOfBoundary;
+}
+
+class PropertySale
+{
+
+  Integer SalePrice;
+  String seller;
+  String buyer;
+
+  * -- 1 Property;
+}
+
+
+class OpenHouse
+{
+  Date date;
+  Time startTime;
+  Time endTime;
+
+  * -- 1 PropertyForSale;
+  * -- 0..1 Agent agentInCharge;
+}
+
+class Agent
+{
+  String name;
+  String licenseNumber;
+  String emailAddress;
+  String officePhoneNumber;
+  String cellPhoneNumber;
+  Address officeAddress;
+
+  * -- * Neighbourhood specializingNeighbourhoods;
+}
+
+class PropertyForSale
+{
+  Integer listingNumber;
+  Integer askingPrice;
+  Date dateListedForSale;
+
+  * -- 1 Property listedProperty;
+  * -- 0..1 Agent listingAgent;
+  0..1 --  0..1 PropertySale;
+}
+//$?[End_of_model]$?
+//Positioning
+class Agent
+{
+  position 24 219 203 145;
+  position.association Agent__Neighbourhood:specializingNeighbourhoods 204,146 8,0;
+}
+
+class Property
+{
+  position 521 231 203 145;
+  position.association Neighbourhood__Property 0,145 206,0;
+}
+
+class Address
+{
+  position 27 40 195 128;
+}
+
+class PropertyForSale
+{
+  position 296 57 187 96;
+  position.association Property:listedProperty__PropertyForSale 150,96 0,0;
+  position.association Agent:listingAgent__PropertyForSale 0,93 203,0;
+  position.association PropertySale__PropertyForSale 187,10 0,10;
+  position.association PropertyForSale__PropertySale 188,10 0,10;
+}
+
+class OpenHouse
+{
+  position 364 282 132 96;
+  position.association OpenHouse__PropertyForSale 18,0 86,96;
+  position.association Agent:agentInCharge__OpenHouse 0,30 204,93;
+}
+
+class PropertySale
+{
+  position 561 57 146 93;
+  position.association Property__PropertySale 80,93 120,0;
+}
+
+class Neighbourhood
+{
+  position 268 441 246 79;
+}
+
+class GPSCoord
+{
+  position 49 427 142 76;
+}
