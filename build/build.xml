@@ -2,10 +2,11 @@
 <project basedir=".." default="build" name="Umple">
 
   <target name="build" >
-    <echo>Building Umple for CC</echo>
-    
     <echo>Building Sandbox for Testing Infrastructure</echo>
     <ant antfile="build/build.sandbox.xml" target="build" inheritAll="false" />
+
+    <echo>Building Umple</echo>
+    <ant antfile="build/build.umple.xml" target="build" inheritAll="false" />
     
   </target>
   
