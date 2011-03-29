@@ -1,6 +1,7 @@
 <%@ jet package="cruise.umple.compiler.ruby" class="RubyClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
+  UmpleClass uClass = (UmpleClass) uElement;
   GeneratedClass gClass = uClass.getGeneratedClass();
   RubyGenerator gen = new RubyGenerator();
   gen.setModel(model);
@@ -62,6 +63,9 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   <%@ include file="state_machine_doActivity_All.jet" %>
   <%@ include file="state_machine_timedEvent_All.jet" %>
   <%@ include file="delete_All.jet" %>
+  <% if (uClass.hasMethods()) { %>
+  <%@ include file="class_MethodDeclaration.jet" %>
+  <% } %>
 <% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>
   #------------------------
   # DEVELOPER CODE - PROVIDED AS-IS

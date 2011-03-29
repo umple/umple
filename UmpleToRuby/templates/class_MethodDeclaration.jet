@@ -1,0 +1,32 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+    if (uClass.hasMethods())
+    {
+    	for (Method aMethod : uClass.getMethods()) 
+    	{
+    		String methodName = aMethod.getName();
+    		String paramName="";
+    	    String parameters = "";
+    		if (aMethod.hasMethodParameters())
+    		{
+    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+    			{
+    				paramName = aMethodParam.getName();
+        			parameters += paramName + ",";
+    			}
+    			String finalParams = parameters.substring(0, parameters.length()-1);
+    			appendln(stringBuffer, "");
+    			append(stringBuffer, " def {0} ({1})", methodName, finalParams);	
+				appendln(stringBuffer, "end");
+    			
+    		}
+    		else{
+    			appendln(stringBuffer, "");
+    			append(stringBuffer, " def {0}()", methodName);
+    			appendln(stringBuffer, "end");
+    		}
+    	}
+    }
+%>
+
+

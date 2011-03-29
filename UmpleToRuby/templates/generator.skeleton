@@ -18,7 +18,7 @@ public class CLASS implements ILang
   /* 
   * This method will return the generated code.
   */
-  public String getCode(UmpleModel model, UmpleClass uClass)
+  public String getCode(UmpleModel model, UmpleElement uElement)
   {
     return "";
   }
