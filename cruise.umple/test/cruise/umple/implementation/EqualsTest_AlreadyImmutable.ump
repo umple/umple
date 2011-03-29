@@ -1,0 +1,11 @@
+namespace example;
+
+class Student
+{
+  lazy immutable Integer intId;
+  immutable Double doubleId;
+  immutable Boolean booleanId;
+  immutable String stringId;
+  
+  key { intId, doubleId, booleanId, stringId }
+}

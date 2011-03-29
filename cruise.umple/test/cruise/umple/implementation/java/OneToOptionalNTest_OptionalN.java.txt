@@ -1,0 +1,91 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+
+  //Student Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber, Mentor aMentor)
+  {
+    number = aNumber;
+    boolean didAddMentor = setMentor(aMentor);
+    if (!didAddMentor)
+    {
+      throw new RuntimeException("Unable to create student due to mentor");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(String aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public boolean setMentor(Mentor aMentor)
+  {
+    boolean wasSet = false;
+    //Must provide mentor to student
+    if (aMentor == null)
+    {
+      return wasSet;
+    }
+
+    //mentor already at maximum (6)
+    if (aMentor.numberOfStudents() >= Mentor.maximumNumberOfStudents())
+    {
+      return wasSet;
+    }
+    
+    Mentor existingMentor = mentor;
+    mentor = aMentor;
+    if (existingMentor != null && !existingMentor.equals(aMentor))
+    {
+      boolean didRemove = existingMentor.removeStudent(this);
+      if (!didRemove)
+      {
+        mentor = existingMentor;
+        return wasSet;
+      }
+    }
+    mentor.addStudent(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    mentor.removeStudent(this);
+  }
+
+}

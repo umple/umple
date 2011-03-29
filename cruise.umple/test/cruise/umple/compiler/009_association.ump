@@ -1,0 +1,9 @@
+
+class Student
+{
+  2..3 -- 0..1 Mentor aMentor;
+  * me -- * Student them; 
+}
+
+class Mentor
+{}

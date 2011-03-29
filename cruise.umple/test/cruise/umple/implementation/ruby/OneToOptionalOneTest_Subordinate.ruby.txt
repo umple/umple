@@ -1,0 +1,86 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class MySubordinate
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #MySubordinate Attributes - for documentation purposes
+  #attr_reader :number
+
+  #MySubordinate Associations - for documentation purposes
+  #attr_reader :myDriver
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number, a_myDriver)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @myDriver = nil
+    did_add_myDriver = set_myDriver(a_myDriver)
+    raise "Unable to create mySubordinate due to @myDriver" unless did_add_myDriver
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_number(a_number)
+    was_set = false
+    @number = a_number
+    was_set = true
+    was_set
+  end
+
+  def get_number
+    @number
+  end
+
+  def get_myDriver
+    @myDriver
+  end
+
+  def set_myDriver(new_myDriver)
+    was_set = false
+    if new_myDriver.nil?
+      #Unable to set_myDriver to nil, as mySubordinate must always be associated to a @myDriver
+      return was_set
+    end
+    
+    existing_mySubordinate = new_myDriver.get_mySubordinate
+    if !existing_mySubordinate.nil? and !self.eql?(existing_mySubordinate)
+      #Unable to set_myDriver, the current @myDriver already has a mySubordinate, which would be orphaned if it were re-assigned
+      return was_set
+    end
+    
+    old_myDriver = @myDriver
+    @myDriver = new_myDriver
+    @myDriver.set_mySubordinate(self)
+
+    unless old_myDriver.nil?
+      old_myDriver.set_mySubordinate(nil)
+    end
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    existing_myDriver = @myDriver
+    @myDriver = nil
+    unless existing_myDriver.nil?
+      existing_myDriver.set_mySubordinate(nil)
+    end
+  end
+
+end
+end

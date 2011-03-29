@@ -1,0 +1,38 @@
+package example;
+  import example::dataType;
+  package dataType;
+    primitive String;
+    primitive Integer;
+    primitive Double;
+    primitive Date;
+    primitive Time;
+    primitive Boolean;
+  end;
+
+  class Student
+  end;
+
+  association Mentor:n__Student:b
+    navigable role b : Student[0,*];
+    navigable role n : Mentor[1,1];
+  end;
+
+  association Mentor:o__Student:c
+    navigable role c : Student[1,1];
+    navigable role o : Mentor[3,3];
+  end;
+
+  association Mentor:p__Student:d
+    navigable role d : Student[3,5];
+    navigable role p : Mentor[0,*];
+  end;
+
+  association Supervisor
+    navigable role a : Student[0,1];
+    navigable role m : Mentor[0,4];
+  end;
+
+  class Mentor
+  end;
+
+end.

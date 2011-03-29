@@ -1,0 +1,137 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Associations
+  private $mentors;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->mentors = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getMentor($index)
+  {
+    $aMentor = $this->mentors[$index];
+    return $aMentor;
+  }
+
+  public function getMentors()
+  {
+    $newMentors = $this->mentors;
+    return $newMentors;
+  }
+
+  public function numberOfMentors()
+  {
+    $number = count($this->mentors);
+    return $number;
+  }
+
+  public function hasMentors()
+  {
+    $has = $this->numberOfMentors() > 0;
+    return $has;
+  }
+
+  public function indexOfMentor($aMentor)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->mentors as $mentor)
+    {
+      if ($mentor->equals($aMentor))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfMentors()
+  {
+    return 0;
+  }
+
+  public function addMentor($aMentor)
+  {
+    $wasAdded = false;
+    if ($this->indexOfMentor($aMentor) !== -1) { return false; }
+    $this->mentors[] = $aMentor;
+    if ($aMentor->indexOfStudent($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aMentor->addStudent($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->mentors);
+      }
+    }
+    return $wasAdded;
+  }
+
+  public function removeMentor($aMentor)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfMentor($aMentor) == -1)
+    {
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfMentor($aMentor);
+    unset($this->mentors[$oldIndex]);
+    if ($aMentor->indexOfStudent($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aMentor->removeStudent($this);
+      if (!$wasRemoved)
+      {
+        $this->mentors[$oldIndex] = $aMentor;
+        ksort($this->mentors);
+      }
+    }
+    $this->mentors = array_values($this->mentors);
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $copyOfMentors = $this->mentors;
+    $this->mentors = array();
+    foreach ($copyOfMentors as $aMentor)
+    {
+      $aMentor->removeStudent($this);
+    }
+  }
+
+}
+?>

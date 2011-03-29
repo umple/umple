@@ -1,0 +1,30 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.compiler.exceptions;
+
+external RuntimeException
+{
+  str;
+  Exception parent;
+}
+
+class UmpleCompilerException
+{
+  isA RuntimeException;
+
+  static final long serialVersionUID = 1;  
+}
+
+class SemanticException
+{
+  isA RuntimeExceptin;
+  
+  static final long serialVersionUID = 2;
+}

@@ -1,0 +1,232 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $intId;
+  private $doubleId;
+  private $booleanId;
+  private $stringId;
+  private $stringListIds;
+
+  //Helper Variables
+  private $cachedHashCode;
+  private $canSetIntId;
+  private $canSetDoubleId;
+  private $canSetBooleanId;
+  private $canSetStringId;
+  private $canSetStringListIds;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aIntId, $aDoubleId, $aBooleanId, $aStringId)
+  {
+    $this->intId = $aIntId;
+    $this->doubleId = $aDoubleId;
+    $this->booleanId = $aBooleanId;
+    $this->stringId = $aStringId;
+    $this->stringListIds = array();
+    $this->cachedHashCode = -1;
+    $this->canSetIntId = true;
+    $this->canSetDoubleId = true;
+    $this->canSetBooleanId = true;
+    $this->canSetStringId = true;
+    $this->canSetStringListIds = true;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setIntId($aIntId)
+  {
+    $wasSet = false;
+    if (!$this->canSetIntId) { return false; }
+    $this->intId = $aIntId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setDoubleId($aDoubleId)
+  {
+    $wasSet = false;
+    if (!$this->canSetDoubleId) { return false; }
+    $this->doubleId = $aDoubleId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setBooleanId($aBooleanId)
+  {
+    $wasSet = false;
+    if (!$this->canSetBooleanId) { return false; }
+    $this->booleanId = $aBooleanId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setStringId($aStringId)
+  {
+    $wasSet = false;
+    if (!$this->canSetStringId) { return false; }
+    $this->stringId = $aStringId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function addStringListId($aStringListId)
+  {
+    $wasAdded = false;
+    if (!$this->canSetStringListIds) { return false; }
+    $this->stringListIds[] = $aStringListId;
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeStringListId($aStringListId)
+  {
+    $wasRemoved = false;
+    if (!$this->canSetStringListIds) { return false; }
+    unset($this->stringListIds[$this->indexOfStringListId($aStringListId)]);
+    $this->stringListIds = array_values($this->stringListIds);
+    $wasRemoved = true;
+    return $wasRemoved;
+  }
+
+  public function getIntId()
+  {
+    return $this->intId;
+  }
+
+  public function getDoubleId()
+  {
+    return $this->doubleId;
+  }
+
+  public function getBooleanId()
+  {
+    return $this->booleanId;
+  }
+
+  public function getStringId()
+  {
+    return $this->stringId;
+  }
+
+  public function getStringListId($index)
+  {
+    $aStringListId = $this->stringListIds[$index];
+    return $aStringListId;
+  }
+
+  public function getStringListIds()
+  {
+    $newStringListIds = $this->stringListIds;
+    return $newStringListIds;
+  }
+
+  public function numberOfStringListIds()
+  {
+    $number = count($this->stringListIds);
+    return $number;
+  }
+
+  public function hasStringListIds()
+  {
+    $has = stringListIds.size() > 0;
+    return $has;
+  }
+
+  public function indexOfStringListId($aStringListId)
+  {
+    $rawAnswer = array_search($aStringListId,$this->stringListIds);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    return $index;
+  }
+
+  public function equals($compareTo)
+  {
+    if ($compareTo == null) { return false; }
+    if (get_class($this) != get_class($compareTo)) { return false; }
+
+    if ($this->intId != $compareTo->intId)
+    {
+      return false;
+    }
+
+    if ($this->doubleId != $compareTo->doubleId)
+    {
+      return false;
+    }
+
+    if ($this->booleanId != $compareTo->booleanId)
+    {
+      return false;
+    }
+
+    if ($this->stringId != $compareTo->stringId)
+    {
+      return false;
+    }
+
+    if ($this->stringListIds != $compareTo->stringListIds)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public function hashCode()
+  {
+    if ($this->cachedHashCode != -1)
+    {
+      return $this->cachedHashCode;
+    }
+    $this->cachedHashCode = 17;
+    $this->cachedHashCode = $this->cachedHashCode * 23 + $this->intId;
+
+    $this->cachedHashCode = $this->cachedHashCode * 23 + $this->doubleId;
+
+    $this->cachedHashCode = $this->cachedHashCode * 23 + ($this->booleanId ? 1 : 0);
+
+    if ($this->stringId != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->stringId);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+
+    if ($this->stringListIds != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->stringListIds);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+
+    $this->canSetIntId = false;
+    $this->canSetDoubleId = false;
+    $this->canSetBooleanId = false;
+    $this->canSetStringId = false;
+    $this->canSetStringListIds = false;
+    return $this->cachedHashCode;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

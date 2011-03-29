@@ -1,0 +1,6 @@
+
+class Student
+{
+  status { FullTime, PartTime, MidTime }
+  grade { High }
+}

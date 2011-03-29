@@ -1,0 +1,7 @@
+generate Php;
+namespace example;
+
+interface IMentor 
+{
+ constant String aName = "aValue";
+}

@@ -1,0 +1,418 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.docs;
+
+class DocumenterMain 
+{
+  private static String console = "";
+  
+  public static void main(String[] args) 
+  {
+    console = "";
+     
+    if (args.length < 2)
+    {
+      println("Usage: java -jar umpledocs.jar <data_dir> <output_dir>\nExample: java -jar umple-docs.jar docs output");
+      return;
+    }
+     
+    String dataDirectory = args[0];
+    String outputDirectory = args[1];
+    Documenter doc = new Documenter(dataDirectory,outputDirectory);
+    boolean didGenerate = doc.generate();
+    
+    if (didGenerate)
+    {
+      println("Success!");
+    }
+    for (String message : doc.getMessages())
+    {
+      println(message);
+    }
+  }
+   
+  private static void println(String output)
+  {
+    console += output + "\n";
+    System.out.println(output);
+  }
+}
+
+
+
+class Documenter
+{
+  
+  public boolean generate()
+  {
+    File inputDirectory = new File(getInputPath());
+    if (!inputDirectory.exists())
+    {
+      addMessage("Unknown directory: " + getInputPath());
+      return false;
+    }
+
+    setParser(new ContentParser("content"));
+
+    parseGroupOrder(inputDirectory);
+    parseContent(inputDirectory);
+    
+    if (getParser().analyze().getWasSuccess())
+    {
+      String message = "Created Goups:";
+      for (Group g : getParser().getGroups())
+      {
+        message += " [" + g.getName() + "]";
+      }
+      addMessage(message);
+      publish(getOutputPath());
+      return true;
+    }
+    else
+    {
+      addMessage("Unable to analyze files in " + getInputPath());
+      return false;
+    }
+  }
+
+  public boolean publish(String path)
+  {
+    File file = new File(path);
+    file.mkdirs();
+    
+    String navigationOutput = toNavigationHtml();
+    Hashtable<String,String> referenceLookup = createReferenceLookup();
+    for (Group group : getParser().getGroups())
+    {
+      for (Content content : group.getContents())
+      {
+        if (content.getShouldIncludeReferences())
+        {
+          updateReferences(content,referenceLookup);
+        }
+        String htmlOutput = toHtml(content, navigationOutput);
+        
+        if (htmlOutput.length() == 0)
+        {
+          addMessage("Failed on: " + content.getTitle());
+          return false;
+        }
+        
+        String filename = path + File.separator + content.getTitleFilename();
+        SampleFileWriter.createFile(filename,htmlOutput);
+        addMessage("Created: " + filename);
+      }
+    }
+    return true;
+  }
+  
+  public String toHtml(String title)
+  {
+    Content selectedContent = null;
+    
+    for (Group group : getParser().getGroups())
+    {
+      for (Content content : group.getContents())
+      {
+        if (content.getTitle().equals(title))
+        {
+          selectedContent = content;
+          break;
+        }
+      }
+    }
+    
+    return toHtml(selectedContent, toNavigationHtml());
+  }
+
+  private Hashtable<String, String> createReferenceLookup()
+  {
+    Hashtable<String, String> referenceLookup = new Hashtable<String, String>();
+    for (Group group : getParser().getGroups())
+    {
+      for (Content content : group.getContents())
+      {
+        referenceLookup.put(content.getTitle(), content.getTitleFilename());
+      }
+    }
+    return referenceLookup;
+  }
+
+  private void updateReferences(Content content, Hashtable<String,String> referenceLookup)
+  {
+    String newSyntax = content.getSyntax();
+    String newDescription = content.getDescription();
+    for(Iterator<String> iTitle = referenceLookup.keySet().iterator(); iTitle.hasNext();)
+    {
+      String title = iTitle.next();
+      String titleFilename = referenceLookup.get(title);
+      
+      if (title.equals(content.getTitle()))
+      {
+        continue;
+      }
+      
+      if (newSyntax != null)
+      {
+        newSyntax = newSyntax.replaceAll(title, StringFormatter.format("<a href=\"{1}\">{0}</a>",title,titleFilename));
+      }
+      if (newDescription != null)
+      {
+        newDescription = newDescription.replaceAll(title, StringFormatter.format("<a href=\"{1}\">{0}</a>",title,titleFilename));
+      }
+    }
+    content.setSyntax(newSyntax);
+    content.setDescription(newDescription);
+  }
+
+  private void parseContent(File inputDirectory)
+  {
+    File[] allFiles = inputDirectory.listFiles();
+    for (File aFile : allFiles)
+    {
+      if (aFile.getName().endsWith(".txt"))
+      {
+        if (!getParser().parse("content", SampleFileWriter.readContent(aFile)).getWasSuccess())
+        {
+          addMessage("Unable to parse "+ getParser().getParseResult().getPosition() +": " + aFile.getName() );
+        }
+      }
+    }
+  }
+  
+  private void parseGroupOrder(File inputDirectory)
+  {
+    File[] allFiles = inputDirectory.listFiles();
+    for (File aFile : allFiles)
+    {
+      if ("order.group".equals(aFile.getName()))
+      {
+        getParser().parse("groupOrder", SampleFileWriter.readContent(aFile));
+      }
+    }
+  }
+  
+  private String toHtml(Content selectedContent, String navigationOutput)
+  {
+    if (selectedContent == null)
+    {
+      return "";
+    }
+    
+    String htmlOutput = Template.HtmlTemplate;
+    htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
+    htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
+    htmlOutput = htmlOutput.replace("@@DESCRIPTION@@", selectedContent.getDescription());
+    
+    if (selectedContent.getSyntax() == null)
+    {
+      htmlOutput = htmlOutput.replace("@@SYNTAX@@", "");
+    }
+    else
+    {
+      String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",selectedContent.getSyntax());
+      htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
+    }
+    
+    String exampleOutput = "";
+    for (String example : selectedContent.getExamples())
+    {
+      String nextExample = Template.ExampleTemplate;
+      String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
+      nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
+      nextExample = nextExample.replace("@@EXAMPLE_CODE@@",example);
+      exampleOutput += nextExample;
+    }
+    htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
+    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", (new UmpleParser()).toGrammar());
+    return htmlOutput;
+  }
+  
+  private String toNavigationHtml()
+  {
+    String navigationOutput = "";
+    for (Group group : getParser().getGroups())
+    {
+      String nextGroupHeader = Template.NavigationHeaderTemplate;
+      nextGroupHeader = nextGroupHeader.replace("@@NAVIGATION_HEADER_NAME@@",group.getName());
+      navigationOutput += nextGroupHeader;
+
+      for (Content content : group.getContents())
+      {
+        String nextGroupItem = Template.NavigationItemTemplate;
+        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle()); 
+        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
+        navigationOutput += nextGroupItem;
+      }
+    }
+    return navigationOutput;
+  }
+}
+
+class Content
+{
+  
+  public String getTitleFilename()
+  {
+    return title.replace(" ","") + ".html";
+  }
+}
+
+class ContentParser
+{
+  internal Integer init = init();
+
+  private int init()
+  {
+    addRule("groupOrder : ( [**group] ; )*");
+    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]*");
+    addRule("example- : @@example [**example] @@endexample");
+    init += 1;
+    return init;
+  }
+
+  public Group getGroup(String name)
+  {
+    for (Group g : getGroups())
+    {
+      if (g.getName().equals(name))
+      {
+        return g;
+      }
+    }
+    Group newGroup = new Group(name);
+    addGroup(newGroup);
+    return newGroup;
+  }
+  
+  public ParseResult analyze()
+  {
+    for (Token t : getRootToken().getSubTokens())
+    {
+      if (t.is("content"))
+      {
+        Group g = getGroup(t.getValue("group"));
+        Content content = new Content(t.getValue("title"), t.getValue("description"), t.getValue("syntax"));
+        
+        if (t.getValue("noreferences") != null)
+        {
+          content.setShouldIncludeReferences(false);
+        }
+        
+        for (Token exampleToken : t.getSubTokens())
+        {
+          if (exampleToken.is("example"))
+          {
+            content.addExample(exampleToken.getValue());
+          }
+        }
+        g.addContent(content);
+      }
+      else if (t.is("groupOrder"))
+      {
+        for (Token groupToken : t.getSubTokens())
+        {
+          if (!groupToken.isStatic())
+          {
+            addGroup(new Group(groupToken.getValue()));
+          }
+        }
+      }
+    }
+    return getParseResult();
+  }
+}
+
+class Template
+{
+  
+  private static String navigationHeaderTemplate()
+  {
+    return "        <div class=\"level1\">@@NAVIGATION_HEADER_NAME@@</div>" + "\n";
+  }
+  
+  private static String navigationItemTemplate()
+  {
+    return "        <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
+  }
+  
+  private static String exampleTemplate()
+  {
+    String template = "" + 
+      "      <h3>@@EXAMPLE_NUMBER@@</h3>" + "\n" +
+      "      <pre name=\"code\" class=\"c-sharp\">" + "\n" +
+      "@@EXAMPLE_CODE@@" + "\n" +
+      "      </pre>" + "\n" +
+      "" + "\n";
+    return template;
+  }
+  
+  private static String syntaxTemplate()
+  {
+    String template = "" + 
+      "      <h3>Syntax</h3>" + "\n" +
+      "      <pre class=\"syntax\">" + "\n" +
+      "@@SYNTAX_CODE@@" + "\n" +
+       "      </pre>" + "\n" +
+        "" + "\n";
+    return template;
+  }
+
+  private static String htmlTemplate()
+  {
+    String template = "" + 
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<head>" + "\n" +
+        "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
+        "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
+        "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
+        "  <title>@@TITLE@@</title>" + "\n" +
+        "</head>" + "\n" +
+        "" + "\n" +
+        "<body>" + "\n" +
+        "" + "\n" +
+        "  <span class=\"header\" summary=\"University of Ottawa banner\"><a href=\"http://www.uottawa.ca/welcome.html\" target=\"_blank\"><img src=\"files/left_generic.jpg\" alt=\"uOttawa\" class=\"uOttawaAbbr\" /></a><img src=\"files/bg_header_title.jpg\" class=\"uOttawa\" alt=\"University of Ottawa - Canadas University\" /></span>" + "\n" +
+        "  " + "\n" +
+        "  <table class=\"body\" >" + "\n" +
+        "  <tbody>" + "\n" +
+        "  <tr>" + "\n" +
+        "    <td class=\"indicatorBlocks\"><img src=\"files/indicator_blocks.gif\" /></td>" + "\n" +
+        "" + "\n" +
+        "    <td class=\"menu\">" + "\n" +
+        "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">Umple Home<br/>Page</a></div>" + "\n" +
+        "@@NAVIGATION@@" + "\n" +
+        "    </td>" + "\n" +
+        "" + "\n" +
+        "    <td class=\"dotSeparator\"><img src=\"files/dots.gif\" alt=\"list of dots\" /></td>" + "\n" +
+        "" + "\n" +
+        "      <td class=\"content\">" + "\n" +
+        "" + "\n" +
+        "      <h1>@@TITLE@@</h1>" + "\n" +
+        "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
+        "" + "\n" +
+        "@@SYNTAX@@" + "\n" +
+        "@@EXAMPLE@@" + "\n" +
+        "      </td>" + "\n" +
+        "    </tr>" + "\n" +
+        "  </tbody></table>" + "\n" +
+        "<link type=\"text/css\" rel=\"stylesheet\" href=\"syntaxhighlighter/SyntaxHighlighter.css\"></link>" + "\n" +
+        "<script language=\"javascript\" src=\"syntaxhighlighter/shCore.js\"></script>" + "\n" +
+        "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushCSharp.js\"></script>" + "\n" +
+        "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushXml.js\"></script>" + "\n" +
+        "<script language=\"javascript\">" + "\n" +
+        "dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';" + "\n" +
+        "dp.SyntaxHighlighter.HighlightAll('code');" + "\n" +
+        "</script>" + "\n" +
+        "</body>" + "\n" +
+        "</html>";
+    return template; 
+  }
+}

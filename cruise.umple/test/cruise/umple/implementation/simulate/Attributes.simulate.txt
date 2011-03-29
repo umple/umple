@@ -1,0 +1,5 @@
+<?php
+$modelOverview = new ModelOverview();
+$aClass = new ClassOverview("Student",$modelOverview);
+new Attribute("String","name",false,$aClass);
+new Attribute("String","id",true,$aClass);

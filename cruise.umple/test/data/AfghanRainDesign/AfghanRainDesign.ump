@@ -1,0 +1,205 @@
+namespace afghan_rainfall;
+
+class Watershed
+{
+  Integer id;
+  details;
+  key {id}
+}
+
+class District
+{
+  Integer id;
+  name;
+  key{id}
+}
+
+class Office
+{
+  Integer id;
+  name;
+  other_office_details;
+  
+  key {id}
+}
+
+class WorkerRole
+{
+  code;
+  description;
+  key {code}
+}
+
+//associationClass Workder
+class Worker
+{
+  Integer id;
+  gender;
+  name;
+  other_work_details;
+  
+  key {id}
+  
+  1 -- * Office;
+  1 -- * WorkerRole;
+}
+
+class WorkersOnSurvey
+{
+  Integer id;
+  Date date_assigned_from;
+  Date date_assigned_to;
+
+  1 -- * VillageSurvey;
+  1 -- * Worker;
+  
+  key {id}
+}
+
+class VillageSurvey
+{
+  Integer id;
+  * -> 0..1 Village;
+  Date due_date;
+  Date completion_date;
+  
+  key {id}
+}
+
+class SurveyObservation
+{
+  Integer id;
+  Integer rainfall_centimetres;
+  Integer humidity;
+  Integer temperature;
+  other_observation_details;
+  * -> 0..1 VillageSurvey;
+}
+
+class Farm
+{
+  id;
+  farm_details;
+  * -> 0..1 Village;
+  key {id}
+}
+
+class Bulletin
+{
+  Integer id;
+  Date next_bulletin_due_date;
+  Date issued_date;
+  comments;
+  
+  * -> 0..1 AgriculturalResearchStation;
+  
+  key {id}
+}
+
+class AgriculturalResearchStation
+{
+  name;
+  details { Herat, Kabul, Kunduz }
+  
+  key {name}
+}
+
+class AgriculturalZone
+{
+  Integer id;
+  details;
+  * -> 0..1 District;
+  
+  key {id}
+}
+
+//assocationClass
+class Village
+{
+  Integer id;
+  name;
+  other_village_details;
+
+  1 -- * AgriculturalZone;
+  1 -- * Watershed;
+
+  
+  key {id}
+}
+//$?[End_of_model]$?
+//Positioning
+class SurveyObservation
+{
+  position 42 20 248 128;
+  position.association SurveyObservation__VillageSurvey 118,130 91,0;
+}
+
+class Bulletin
+{
+  position 665 32 223 113;
+  position.association AgriculturalResearchStation__Bulletin 98,113 81,0;
+}
+
+class Worker
+{
+  position 366 188 203 124;
+  position.association Office__Worker 203,108 0,0;
+  position.association Worker__WorkerRole 160,124 40,0;
+}
+
+class VillageSurvey
+{
+  position 69 198 178 110;
+  position.association Village__VillageSurvey 80,110 124,0;
+}
+
+class Village
+{
+  position 25 355 212 93;
+  position.association AgriculturalZone__Village 190,93 57,0;
+  position.association Village__Watershed 60,93 59,0;
+}
+
+class WorkersOnSurvey
+{
+  position 364 36 201 96;
+  position.association VillageSurvey__WorkersOnSurvey 0,93 178,0;
+  position.association Worker__WorkersOnSurvey 108,96 108,0;
+}
+
+class Office
+{
+  position 677 344 208 93;
+}
+
+class AgriculturalResearchStation
+{
+  position 682 198 189 54;
+}
+
+class Farm
+{
+  position 299 357 157 76;
+  position.association Farm__Village 0,8 212,10;
+}
+
+class WorkerRole
+{
+  position 486 359 149 79;
+}
+
+class AgriculturalZone
+{
+  position 158 510 120 76;
+  position.association AgriculturalZone__Disctrict 120,12 0,12;
+}
+
+class District
+{
+  position 350 510 112 76;
+}
+
+class Watershed
+{
+  position 26 510 120 76;
+}

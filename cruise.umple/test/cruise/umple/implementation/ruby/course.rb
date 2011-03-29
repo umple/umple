@@ -1,0 +1,103 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+module ExampleThree
+
+class Course
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Course Associations - for documentation purposes
+  #attr_reader :students
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @students = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_student(index)
+    a_student = @students[index]
+    a_student
+  end
+
+  def get_students
+    new_students = @students.dup
+    new_students
+  end
+
+  def number_of_students
+    number = @students.size
+    number
+  end
+
+  def has_students
+    has = @students.size > 0
+    has
+  end
+
+  def index_of_student(a_student)
+    index = @students.index(a_student)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_students
+    0
+  end
+
+  def add_student(a_student)
+    was_added = false
+    return false if index_of_student(a_student) != -1
+    @students << a_student
+    if a_student.index_of_course(self) != -1
+      was_added = true
+    else
+      was_added = a_student.add_course(self)
+      unless was_added
+        @students.delete(a_student)
+      end
+    end
+    was_added
+  end
+
+  def remove_student(a_student)
+    was_removed = false
+    unless @students.include?(a_student)
+      return was_removed
+    end
+
+    oldIndex = @students.index(a_student)
+    @students.delete_at(oldIndex)
+    if a_student.index_of_course(self) == -1
+      was_removed = true
+    else
+      was_removed = a_student.remove_course(self)
+      @students.insert(oldIndex,a_student) unless was_removed
+    end
+    was_removed
+  end
+
+  def delete
+    @deleted = true
+    copy_of_students = @students.dup
+    @students.clear
+    copy_of_students.each do |a_student|
+      a_student.remove_course(self)
+    end
+  end
+
+end
+end

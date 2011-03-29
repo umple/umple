@@ -1,0 +1,308 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+The main Umple metamodel.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleModel
+{
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  isA Runnable;
+  
+  UmpleFile umpleFile;
+  defaultPackage = null;
+  String[] generates;
+  Boolean shouldGenerate = true;
+  Glossary glossary = new Glossary();
+  String defaultNamespace = null;
+  String code = null;
+  
+  // data for default class positioning
+  internal Coordinate levelOffset = new Coordinate(200,100,0,0);
+  internal Coordinate initialOffset = new Coordinate(50,30,0,0);
+  internal Coordinate classSize = new Coordinate(0,0,109,45);
+  internal int maxYLevels = 5;
+  
+  // data for default association positioning
+  internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
+  internal int reflexiveSegmentLength = 15;
+  
+  1 -> * Association;
+  1 -> * UmpleClass;
+  1 -> * StateMachine stateMachineDefinitions;
+  1 -> * UmpleInterface;
+}
+
+class UmpleElement
+{
+  name;
+  Coordinate position = new Coordinate(-1,-1,-1,-1);
+}
+
+/* Code supporting interfaces  */
+class Method {
+  modifier; 
+  name;
+  type;
+  Boolean isImplemented;
+   1 -> 0..* MethodParameter;
+   1 -> 0..1 MethodBody;
+}
+
+class Modifier{
+String [] name;
+}
+ 
+class MethodBody{
+    extraCode;
+}
+ 
+class Constant{
+  name;
+  type;
+  modifier; 
+  value;
+  
+class UniqueIdentifier { } 
+}
+
+class MethodParameter{
+    isA Attribute;
+}
+ 
+// NOT used right now
+// Type is a simple string 
+class Type{
+}
+
+// NOT used right now
+class PrimitiveType{
+   isA Type;
+   typeName;
+}
+ 
+// NOT used right now
+class ReferenceType{
+   isA Type;
+   * -> 0..1 UmpleClass;
+   * -> 0..1 UmpleInterface;
+}
+
+class UmpleInterface
+{
+  isA UmpleElement;
+  String[] namespaces;
+  packageName = "";
+  extraCode = "";
+ 
+  1 -> 0..* Method;
+  * -> * Depend;
+  1 -> 0..* Constant;
+ 
+  before setPackageName { if (aPackageName == null) { return false; } }
+  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+}
+
+/* Code supporting interfaces ends here  */
+
+class CodeInjection
+{
+  type;
+  operation;
+  code;
+  Boolean isInternal = false;
+}
+
+class Key
+{
+  Boolean isDefault = false;
+  String[] members;
+}
+
+class UmpleClass
+{
+  depend cruise.umple.util.*;
+
+  isA UmpleElement;
+  Boolean isSingleton = false;
+  String[] namespaces;
+  modifier = "class";
+  Association[] associations;
+  Key key = new Key();
+  extraCode = "";
+  packageName = "";
+
+  1 -> * CodeInjection;
+  * -> 0..1 UmpleClass extendsClass;
+  * -> 0..* UmpleInterface parentInterface;
+  * -> * Depend;
+  1 -> 0..* Method;
+  1 -> 0..* Constant;
+  1 -> 0..1 UniqueIdentifier;
+  1 -> * Attribute;
+  1 -> * AssociationVariable;
+  
+  before setPackageName { if (aPackageName == null) { return false; } }
+  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+}
+
+class Depend
+{
+  name;
+  Boolean isInternal = false;
+  
+  key { name }
+}
+
+class AssociationClass
+{
+  isA UmpleClass;
+  1 -> 0..2 Association associatedTo;
+}
+
+// Superclass for tracking member variables in all target languages
+// TODO: Code smell because we have both an association variable and also an association
+// This class should go and instead AssociationEnd should be the member variable
+class UmpleVariable
+{
+  name;
+  type;
+  modifier; // potential enum, 'settable'
+  value;
+  
+  before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
+  before getModifier { if (modifier == null) { return "settable"; } }
+  
+  class UniqueIdentifier { }  
+}
+
+class Attribute
+{
+  isA UmpleVariable;
+  
+  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+  Boolean isList = false;
+  Boolean isDerived = false;
+  Boolean isLazy = false;  
+}
+
+class Association
+{
+  name = null;
+  Boolean isLeftNavigable;
+  Boolean isRightNavigable;
+  Coordinate[] positions;
+  0..1 -- 2 AssociationEnd ends;
+  
+  before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
+  after constructor { this.setLeftAndRight(); }
+}
+
+
+// TODO: Code smell referenceToClassName is a duplication, can access via the association 
+// Create a derived attribute otherend (the other AssociationEnd)
+class AssociationEnd
+{
+  roleName;
+  className;
+  modifier; // potential enum 'internal'
+  referenceToClassName;
+  Multiplicity multiplicity;
+  Boolean isDefaultRoleName = false;
+  
+  key { multiplicity, roleName, className, modifier, referenceToClassName }
+  //modifier { Settable, Immutable, Internal, Defaulted, Constant }
+  
+  before getRoleName { if (roleName == null) { return ""; } }
+  before getClassName { if (className == null) { return ""; } }
+  before getModifier { if (modifier == null || "".equals(modifier)) { return "internal"; } }
+  before getReferenceToClassName { if (referenceToClassName == null) { return ""; } }
+}
+
+// TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
+class AssociationVariable
+{
+  isA UmpleVariable;
+  Multiplicity multiplicity;
+  Boolean isNavigable;
+  0..1 self relatedAssociation;
+}
+
+// TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+class Multiplicity
+{
+  depend cruise.umple.util.*;
+
+  bound = null; // used when minimum=maximum; 
+  minimum = null;
+  maximum = null;
+  
+  key { bound, minimum, maximum } 
+  
+}
+
+// TODO: Code smell: This duplicates the structure of the class from UmpleClass
+// This is a problem for model-to-model transformations
+// Should be abolished
+class GeneratedElement
+{
+  depend java.util.*;
+}
+
+class GeneratedClass
+{
+  isA GeneratedElement;
+  code = null;
+  * -> 1 UmpleModel model;
+  0..1 -> 1 UmpleClass uClass;
+  0..1 -> 0..1 GeneratedClass parentClass;
+}
+
+class GeneratedInterface
+{
+  isA GeneratedElement;
+  code = null;
+  * -> 1 UmpleModel model;
+  0..1 -> 1 UmpleInterface uInterface;
+}
+
+
+class Point
+{
+  Integer x;
+  Integer y;
+  
+  key { x, y }
+}
+
+class Coordinate
+{
+  Integer x;
+  Integer y;
+  Integer width;
+  Integer height;
+  status {Explicit, Undefined, Defaulted}
+  
+  after constructor { updateStatus(); }
+  after setX { if(wasSet) updateStatus(); }
+  after setY { if(wasSet) updateStatus(); }
+  after setWidth { if(wasSet) updateStatus(); }
+  after setHeight { if(wasSet) updateStatus(); }
+   
+  key { x, y, width, height }
+}
+
+use UmpleHelper.ump;
+use UmpleDiagram.ump;
+use StateMachine.ump;
+use Util_Code.ump;
+use Umple_Code.ump;
+

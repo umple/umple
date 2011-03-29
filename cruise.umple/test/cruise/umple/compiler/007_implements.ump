@@ -1,0 +1,7 @@
+class Student
+{
+  implements IStudent;
+}
+
+interface IStudent
+{}

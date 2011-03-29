@@ -1,0 +1,8 @@
+generate Ruby;
+namespace example;
+
+class Mentor 
+{
+  public static main()
+  {}
+}

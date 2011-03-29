@@ -1,0 +1,105 @@
+
+namespace example;
+
+class Student
+{
+  * one -- 0..1 Mentor m1;
+  * two -- 1 Mentor m2;
+  * three -- 1..3 Mentor m3s;
+  * four -- 4..7 Mentor m4s;
+  * five -- 2..* Mentor m5s;
+  * six --  * Mentor m6s;
+
+  before getM1 { print "getM1"; }
+  before getM2 { print "getM2"; }
+  before getM3 { print "getM3"; }
+  before getM3s { print "getM3s"; }
+  before numberOfM3s { print "numberOfM3s"; }
+  before hasM3s { print "hasM3s"; }
+  before indexOfM3 { print "indexOfM3"; }
+  before getM4 { print "getM4"; }
+  before getM4s { print "getM4s"; }
+  before numberOfM4s { print "numberOfM4s"; }
+  before hasM4s { print "hasM4s"; }
+  before indexOfM4 { print "indexOfM4"; }
+  before getM5 { print "getM5"; }
+  before getM5s { print "getM5s"; }
+  before numberOfM5s { print "numberOfM5s"; }
+  before hasM5s { print "hasM5s"; }
+  before indexOfM5 { print "indexOfM5"; }
+  before getM6 { print "getM6"; }
+  before getM6s { print "getM6s"; }
+  before numberOfM6s { print "numberOfM6s"; }
+  before hasM6s { print "hasM6s"; }
+  before indexOfM6 { print "indexOfM6"; }
+  before setM1 { print "setM1"; }
+  before setM2 { print "setM2"; }
+  before isNumberOfM3sValid { print "isNumberOfM3sValid"; }
+  before minimumNumberOfM3s { print "minimumNumberOfM3s"; }
+  before maximumNumberOfM3s { print "maximumNumberOfM3s"; }
+  before addM3 { print "addM3"; }
+  before removeM3 { print "before removeM3"; }
+  before setM3s { print "setM3s"; }
+  before isNumberOfM4sValid { print "isNumberOfM4sValid"; }
+  before minimumNumberOfM4s { print "minimumNumberOfM4s"; }
+  before maximumNumberOfM4s { print "maximumNumberOfM4s"; }
+  before addM4 { print "addM4"; }
+  before removeM4 { print "removeM4"; }
+  before setM4s { print "setM4s"; }
+  before isNumberOfM5sValid { print "isNumberOfM5sValid"; }
+  before minimumNumberOfM5s { print "minimumNumberOfM5s"; }
+  before addM5 { print "addM5"; }
+  before removeM5 { print "removeM5"; }
+  before setM5s { print "setM5s"; }
+  before addM6 { print "addM6"; }
+  before removeM6 { print "removeM6"; }
+  
+  after getM1 { print "after getM1"; }
+  after getM2 { print "after getM2"; }
+  after getM3 { print "after getM3"; }
+  after getM3s { print "after getM3s"; }
+  after numberOfM3s { print "after numberOfM3s"; }
+  after hasM3s { print "after hasM3s"; }
+  after indexOfM3 { print "after indexOfM3"; }
+  after getM4 { print "after getM4"; }
+  after getM4s { print "after getM4s"; }
+  after numberOfM4s { print "after numberOfM4s"; }
+  after hasM4s { print "after hasM4s"; }
+  after indexOfM4 { print "after indexOfM4"; }
+  after getM5 { print "after getM5"; }
+  after getM5s { print "after getM5s"; }
+  after numberOfM5s { print "after numberOfM5s"; }
+  after hasM5s { print "after hasM5s"; }
+  after indexOfM5 { print "after indexOfM5"; }
+  after getM6 { print "after getM6"; }
+  after getM6s { print "after getM6s"; }
+  after numberOfM6s { print "after numberOfM6s"; }
+  after hasM6s { print "after hasM6s"; }
+  after indexOfM6 { print "after indexOfM6"; }
+  after setM1 { print "after setM1"; }
+  after setM2 { print "after setM2"; }
+  after isNumberOfM3sValid { print "after isNumberOfM3sValid"; }
+  after minimumNumberOfM3s { print "after minimumNumberOfM3s"; }
+  after maximumNumberOfM3s { print "after maximumNumberOfM3s"; }
+  after addM3 { print "after addM3"; }
+  after removeM3 { print "after removeM3"; }
+  after setM3s { print "after setM3s"; }
+  after isNumberOfM4sValid { print "after isNumberOfM4sValid"; }
+  after minimumNumberOfM4s { print "after minimumNumberOfM4s"; }
+  after maximumNumberOfM4s { print "after maximumNumberOfM4s"; }
+  after addM4 { print "after addM4"; }
+  after removeM4 { print "after removeM4"; }
+  after setM4s { print "after setM4s"; }
+  after isNumberOfM5sValid { print "after isNumberOfM5sValid"; }
+  after minimumNumberOfM5s { print "after minimumNumberOfM5s"; }
+  after addM5 { print "after addM5"; }
+  after removeM5 { print "after removeM5"; }
+  after setM5s { print "after setM5s"; }
+  after addM6 { print "after addM6"; }
+  after removeM6 { print "after removeM6"; }
+}
+
+class Mentor
+{
+
+}

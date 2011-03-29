@@ -1,0 +1,5 @@
+
+class Student
+{
+  Time t = new Time("now");
+}

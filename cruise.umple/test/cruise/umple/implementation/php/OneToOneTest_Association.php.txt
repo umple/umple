@@ -1,0 +1,79 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $name;
+
+  //Mentor Associations
+  private $student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName = null, $aStudent = null)
+  {
+    if (func_num_args() == 0) { return; }
+
+    $this->name = $aName;
+    if ($aStudent == null || $aStudent->getMentor() != null)
+    {
+      throw new Exception("Unable to create Mentor due to aStudent");
+    }
+    $this->student = $aStudent;
+  }
+  public static function newInstance($aName, $aNameForStudent, $aNumberForStudent)
+  {
+    $thisInstance = new Mentor();
+    $thisInstance->name = $aName;
+    $thisInstance->student = new Student($aNameForStudent, $aNumberForStudent, $thisInstance);
+    return $thisInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getStudent()
+  {
+    return $this->student;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingStudent = $this->student;
+    $this->student = null;
+    if ($existingStudent != null)
+    {
+      $existingStudent->delete();
+    }
+  }
+
+}
+?>

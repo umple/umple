@@ -1,0 +1,34 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This is the Umple master files that calls all other Umple files. By compiling this file,
+Umple will regenerate all Java files.
+
+*/
+
+generate Java;
+generate Ecore;
+
+use Documenter.ump;
+use Generator.ump;
+use Json.ump;
+use Parser.ump;
+use StateMachine.ump;
+use TextParser.ump;
+use Umlet.ump;
+use Umple.ump;
+use UmpleDiagram.ump;
+use UmpleExceptions.ump;
+use UmpleHelper.ump;
+use UmpleParser.ump;
+use UmpleSync.ump;
+use Violet.ump;
+use Vml.ump;
+
+use Main_Code.ump;
+use UmpleStats_Code.ump;
+use Util_Code.ump;

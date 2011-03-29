@@ -1,0 +1,178 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $name;
+
+  //Mentor Associations
+  private $pupils;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName)
+  {
+    $this->name = $aName;
+    $this->pupils = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getPupil($index)
+  {
+    $aPupil = $this->pupils[$index];
+    return $aPupil;
+  }
+
+  public function getPupils()
+  {
+    $newPupils = $this->pupils;
+    return $newPupils;
+  }
+
+  public function numberOfPupils()
+  {
+    $number = count($this->pupils);
+    return $number;
+  }
+
+  public function hasPupils()
+  {
+    $has = $this->numberOfPupils() > 0;
+    return $has;
+  }
+
+  public function indexOfPupil($aPupil)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->pupils as $pupil)
+    {
+      if ($pupil->equals($aPupil))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public function isNumberOfPupilsValid()
+  {
+    $isValid = $this->numberOfPupils() >= self::minimumNumberOfPupils() && $this->numberOfPupils() <= self::maximumNumberOfPupils();
+    return $isValid;
+  }
+
+  public static function minimumNumberOfPupils()
+  {
+    return 5;
+  }
+
+  public static function maximumNumberOfPupils()
+  {
+    return 7;
+  }
+
+  public function addPupilVia($aNumber)
+  {
+    if ($this->numberOfPupils() >= self::maximumNumberOfPupils())
+    {
+      return null;
+    }
+    else
+    {
+      return new Pupil($aNumber, $this);
+    }
+  }
+
+  public function addPupil($aPupil)
+  {
+    $wasAdded = false;
+    if ($this->indexOfPupil($aPupil) !== -1) { return false; }
+    if ($this->numberOfPupils() >= self::maximumNumberOfPupils())
+    {
+      return $wasAdded;
+    }
+
+    $existingMentor = $aPupil->getMentor();
+    $isNewMentor = $existingMentor != null && $this !== $existingMentor;
+
+    if ($isNewMentor && $existingMentor->numberOfPupils() <= self::minimumNumberOfPupils())
+    {
+      return $wasAdded;
+    }
+
+    if ($isNewMentor)
+    {
+      $aPupil->setMentor($this);
+    }
+    else
+    {
+      $this->pupils[] = $aPupil;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removePupil($aPupil)
+  {
+    $wasRemoved = false;
+    //Unable to remove aPupil, as it must always have a mentor
+    if ($this === $aPupil->getMentor())
+    {
+      return $wasRemoved;
+    }
+
+    //mentor already at minimum (5)
+    if ($this->numberOfPupils() <= self::minimumNumberOfPupils())
+    {
+      return $wasRemoved;
+    }
+
+    unset($this->pupils[$this->indexOfPupil($aPupil)]);
+    $this->pupils = array_values($this->pupils);
+    $wasRemoved = true;
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->pupils as $aPupil)
+    {
+      $aPupil->delete();
+    }
+  }
+
+}
+?>

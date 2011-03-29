@@ -1,0 +1,13 @@
+namespace example;
+
+class LightFixture
+{
+  Integer brightness = 0;
+  bulb
+  {
+    On {
+      [brightness < 1] push -> Off;
+    }
+    Off {}
+  }
+}

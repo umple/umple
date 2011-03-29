@@ -1,0 +1,8 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class ISomething
+  
+end

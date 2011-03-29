@@ -1,0 +1,14 @@
+namespace example;
+
+class LightFixture
+{
+  bulb
+  {
+    On {
+      entry / { doEntry(); }
+      exit / { doExit(); }
+      push -> /{ doTransition(); } Off;
+    }
+    Off {}
+  }
+}

@@ -1,0 +1,65 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+
+  //Student Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber)
+  {
+    number = aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(String aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public void delete()
+  {
+    if (mentor != null)
+    {
+      if (mentor.numberOfStudents() <= 3)
+      {
+        mentor.delete();
+      }
+      else
+      {
+        mentor.removeStudent(this);
+      }
+    }
+  }
+
+}

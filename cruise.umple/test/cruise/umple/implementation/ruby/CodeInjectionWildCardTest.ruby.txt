@@ -1,0 +1,61 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :firstName, :lastName
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_firstName, a_lastName)
+    @initialized = false
+    @deleted = false
+    @firstName = a_firstName
+    @lastName = a_lastName
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_firstName(a_firstName)
+    was_set = false
+    @firstName = a_firstName
+    was_set = true
+    was_set
+  end
+
+  def set_lastName(a_lastName)
+    was_set = false
+    @lastName = a_lastName
+    was_set = true
+    was_set
+  end
+
+  def get_firstName
+    print "before";
+    @firstName
+  end
+
+  def get_lastName
+    print "before";
+    @lastName
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

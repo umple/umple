@@ -1,0 +1,64 @@
+namespace example;
+
+class LightFixture
+{ 
+  bulb 
+  {
+    Off { flip -> On; }
+    On 
+    {
+      exit / { print("Show Me Last (Exit)"); }
+      flip -> Off;
+      Normal { touch -> Dimmed; }
+      Dimmed { touch -> Off; }
+    }
+  }
+}
+
+
+namespace example;
+
+class StrobeLight
+{
+
+  String[] logs;
+  
+  dvdPlayer
+  {
+    Off
+    {
+      entry / { addLog("Enter Off"); }
+      exit / { addLog("Exit Off"); }
+      turnOn -> On;
+      turnSleep -> Sleep;
+    }
+    Sleep
+    {
+      entry / { addLog("Enter Sleep"); }
+      exit / { addLog("Exit Sleep"); }
+      wake -> Pause;
+    }
+    On
+    {
+      entry / { addLog("Enter On"); }
+      exit / { addLog("Exit On"); }
+      
+      turnOff -> Off;
+      Play 
+      { 
+        entry / { addLog("Enter Play"); }
+        exit / { addLog("Exit Play"); }
+        push -> Pause;
+      }
+      Pause
+      {
+        entry / { addLog("Enter Pause"); }
+        exit / { addLog("Exit Pause"); }
+        push -> Play;      
+        standby -> Sleep;
+      }      
+      
+    }
+ }
+ 
+}

@@ -1,0 +1,11 @@
+namespace example;
+
+class Mentor 
+{
+  depend java.util.Map;
+}
+
+interface IMentor
+{
+  depend java.util.*;
+}

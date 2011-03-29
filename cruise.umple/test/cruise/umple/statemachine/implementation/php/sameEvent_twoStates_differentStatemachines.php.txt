@@ -1,0 +1,109 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private $bulb;
+
+  // bulb constants
+  private static $BulbOn = 1;
+  private static $BulbOff = 2;
+
+  private $anotherBulb;
+
+  // anotherBulb constants
+  private static $AnotherBulbOn = 1;
+  private static $AnotherBulbAmber = 2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOn);
+    $this->setAnotherBulb(self::$AnotherBulbOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    elseif ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    return null;
+  }
+
+  public function getAnotherBulb()
+  {
+    if ($this->anotherBulb == self::$AnotherBulbOn) { return "AnotherBulbOn"; }
+    elseif ($this->anotherBulb == self::$AnotherBulbAmber) { return "AnotherBulbAmber"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->bulb == self::$BulbOn)
+    {
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->bulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbOn);
+      $wasEventProcessed = true;
+    }
+
+    if ($this->anotherBulb == self::$AnotherBulbOn)
+    {
+      $this->setAnotherBulb(self::$AnotherBulbAmber);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function unflip()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->anotherBulb == self::$AnotherBulbAmber)
+    {
+      $this->setAnotherBulb(self::$AnotherBulbOn);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+  }
+
+  private function setAnotherBulb($aAnotherBulb)
+  {
+    $this->anotherBulb = $aAnotherBulb;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

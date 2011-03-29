@@ -1,0 +1,72 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.vml;
+
+class VmlSystem
+{
+  code = null;
+  
+  0..1 -> * CodeSnippet;
+  0..1 -- * Concern;
+  
+  before getCode 
+  {
+    code = "";
+    for (CodeSnippet snippet : codeSnippets)
+    {
+      code += snippet.getCode();
+      code += "\n";
+    }
+  }
+  
+}
+
+class Concern
+{
+  name;
+  0..1 -- * VariationPoint;
+  
+  key { name }
+}
+
+class VariationPoint
+{
+  name;
+  kind { Optional, Alternative }
+  0..1 -> 0..1 CodeSnippet;
+  0..1 -- * Variant;
+  * -> * VariationPoint requires;
+  
+  key { concern, name, kind, codeSnippet }
+}
+
+class Variant
+{
+  name;
+  0..1 -> 0..1 CodeSnippet;
+  key { name, codeSnippet }
+}
+
+class CodeSnippet
+{
+  code;
+  
+  key {code}
+}
+
+class VmlParser
+{
+  isA Parser;
+  
+  0..1 -> 0..1 VmlSystem system;
+}
+
+use Parser.ump;
+use Vml_Code.ump;

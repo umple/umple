@@ -1,0 +1,95 @@
+class Central
+{
+  * -- * A;
+  * -- * B;
+  * -- * C;
+  * -- * D;
+  * -- * E;
+  * -- * F f1;
+  * -- * F f2;
+  * -- * G;
+  * -- * H;
+}
+
+class A
+{
+  * -- * A ref1;
+  * -- * A ref2;
+  * -- * A ref3;
+  * -- * A ref4;
+}
+
+class B
+{
+}
+
+class C
+{
+}
+
+class D
+{
+}
+
+class E
+{
+}
+
+class F
+{
+}
+
+class G
+{
+}
+
+class H
+{
+}
+
+
+
+class Central
+{
+  position 219 184 109 45;
+}
+
+class A
+{
+  position 69 66 109 45;
+}
+
+class B
+{
+  position 241 65 109 45;
+}
+
+class C
+{
+  position 425 77 109 45;
+}
+
+class D
+{
+  position 428 190 109 45;
+}
+
+class F
+{
+  position 259 319 109 45;
+}
+
+class G
+{
+  position 82 341 109 45;
+}
+
+class H
+{
+  position 38 221 109 45;
+}
+
+class E
+{
+  position 428 307 109 45;
+}

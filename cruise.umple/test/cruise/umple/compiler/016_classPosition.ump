@@ -1,0 +1,5 @@
+
+class Student
+{
+  position 10 20 30 40;
+}

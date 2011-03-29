@@ -1,0 +1,27 @@
+class Student
+{
+  isA Mentor;
+  * -- * Course;
+}
+
+class Mentor
+{
+}
+
+class Course
+{
+  position 65 200 109 42;
+}
+
+
+class Mentor
+{
+  position 177 81 109 41;
+}
+
+
+class Student
+{
+  position 262 199 109 41;
+  position.association Course__Student 25,0 97,0;
+}

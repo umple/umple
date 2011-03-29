@@ -1,0 +1,156 @@
+namespace warehouse;
+
+class MovementLocation{}
+
+class SlotSet{
+ isA MovementLocation;
+ 0..1 -- 0..1 BoxOrPallet;
+ 1 -- * Slot;
+}
+
+class Slot{
+ Integer number;
+ Double width;
+}
+
+class Level{
+ Integer height;
+ Integer number;
+ 1 -- * Slot;
+}
+
+class LoadingGate{
+ Integer number;
+ isA MovementLocation;
+}
+
+class Truck{
+ Integer registerNum;
+ Boolean isWaiting;
+
+ 1 -- * DeliverOrShipmentBom;
+}
+class Rwbm{
+ Integer ID;
+}
+
+class Item{
+ Double value;
+ Integer hazardID;
+ Integer breakability;
+}
+
+class Row{
+ Integer depth;
+ Integer number;
+ 
+ 1 -- * Level;
+}
+
+//Note that here we have the choice to use
+// Time or Double, if the customer requires Double due to 
+// some interoperability issues with a legacy syste, we can easily
+// accomodate them and use Double instead of Time.
+class RwbmMovement{
+ Double startTime;
+ Double endTime;
+ 
+ * toMovement -- 1 MovementLocation to;
+ * fromMovement -- 1 MovementLocation from;
+ * -- 1 BoxOrPallet movedBox;
+ 1 -- * Rwbm;
+}
+
+// Both associations should be ->
+class DeliverOrShipmentBom {
+ Double startTimeLoadOrUnload;
+ Double endTimeExpected;
+ * delivery -- 0..1 LoadingGate sentThrough;
+ * arrival -- 0..1 LoadingGate arriveAt;
+}
+
+class BoxOrPallet{
+ Integer rfidTagNumber;
+ Double lengthINmm;
+ Double widthINmm;
+ Double heightINmm;
+ Double weightINkg;
+ String contentType;
+ 
+ * -- * DeliverOrShipmentBom;
+ 1 -- * Item; 
+}
+//$?[End_of_model]$?
+//Positioning
+class DeliverOrShipmentBom
+{
+  position 279 314 235 79;
+  position.association DeliverOrShipmentBom:delivery__LoadingGate:sentThrough 197,0 90,62;
+  position.association DeliverOrShipmentBom:arrival__LoadingGate:arriveAt 116,0 9,62;
+}
+
+class BoxOrPallet
+{
+  position 13 393 181 145;
+  position.association BoxOrPallet__DeliverOrShipmentBom 182,110 0,36;
+  position.association BoxOrPallet__Item 5,0 5,96;
+}
+
+class Item
+{
+  position 13 21 161 96;
+}
+
+class Truck
+{
+  position 318 453 164 79;
+  position.association DeliverOrShipmentBom__Truck 82,0 121,79;
+}
+
+class RwbmMovement
+{
+  position 39 145 145 98;
+  position.association MovementLocation:to__RwbmMovement:toMovement 112,0 0,21;
+  position.association MovementLocation:from__RwbmMovement:fromMovement 146,20 22,45;
+  position.association BoxOrPallet:movedBox__RwbmMovement 20,98 46,0;
+  position.association Rwbm__RwbmMovement 80,98 45,0;
+}
+
+class Row
+{
+  position 552 30 134 76;
+  position.association Level__Row 70,76 68,0;
+}
+
+class LoadingGate
+{
+  position 386 162 134 58;
+}
+
+class Level
+{
+  position 554 143 134 79;
+  position.association Level__Slot 70,79 71,0;
+}
+
+class Slot
+{
+  position 553 317 134 76;
+}
+
+class Rwbm
+{
+  position 74 297 109 62;
+}
+
+class SlotSet
+{
+  position 255 187 109 45;
+  position.association BoxOrPallet__SlotSet 17,45 163,0;
+  position.association Slot__SlotSet 86,45 57,0;
+}
+
+class MovementLocation
+{
+  position 323 42 131 45;
+}

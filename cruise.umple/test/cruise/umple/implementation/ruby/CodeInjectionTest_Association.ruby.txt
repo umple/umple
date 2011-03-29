@@ -1,0 +1,600 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Associations - for documentation purposes
+  #attr_reader :m1, :m2, :m3s, :m4s, :m5s, :m6s
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_m2, all_m3s, all_m4s, all_m5s)
+    @initialized = false
+    @deleted = false
+    @m1 = nil
+    @m2 = nil
+    did_add_m2 = set_m2(a_m2)
+    raise "Unable to create two due to @m2" unless did_add_m2
+    @m3s = []
+    did_add_m3s = set_m3s(all_m3s)
+    raise "Unable to create Student, must have 1 to 3 @m3s" unless did_add_m3s 
+    @m4s = []
+    did_add_m4s = set_m4s(all_m4s)
+    raise "Unable to create Student, must have 4 to 7 @m4s" unless did_add_m4s 
+    @m5s = []
+    did_add_m5s = set_m5s(all_m5s)
+    raise "Unable to create Student, must have at least 2 @m5s" unless did_add_m5s 
+    @m6s = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_m1
+    print "getM1";
+    a_m1 = @m1
+    print "after getM1";
+    print "after getM1";
+    a_m1
+  end
+
+  def get_m2
+    print "getM2";
+    a_m2 = @m2
+    print "after getM2";
+    print "after getM2";
+    a_m2
+  end
+
+  def get_m3(index)
+    print "getM3";
+    a_m3 = @m3s[index]
+    print "after getM3";
+    a_m3
+  end
+
+  def get_m3s
+    print "getM3s";
+    new_m3s = @m3s.dup
+    print "after getM3s";
+    new_m3s
+  end
+
+  def number_of_m3s
+    print "numberOfM3s";
+    number = @m3s.size
+    print "after numberOfM3s";
+    number
+  end
+
+  def has_m3s
+    print "hasM3s";
+    has = @m3s.size > 0
+    print "after hasM3s";
+    has
+  end
+
+  def index_of_m3(a_m3)
+    print "indexOfM3";
+    index = @m3s.index(a_m3)
+    index = -1 if index.nil?
+    print "after indexOfM3";
+    index
+  end
+
+  def get_m4(index)
+    print "getM4";
+    a_m4 = @m4s[index]
+    print "after getM4";
+    a_m4
+  end
+
+  def get_m4s
+    print "getM4s";
+    new_m4s = @m4s.dup
+    print "after getM4s";
+    new_m4s
+  end
+
+  def number_of_m4s
+    print "numberOfM4s";
+    number = @m4s.size
+    print "after numberOfM4s";
+    number
+  end
+
+  def has_m4s
+    print "hasM4s";
+    has = @m4s.size > 0
+    print "after hasM4s";
+    has
+  end
+
+  def index_of_m4(a_m4)
+    print "indexOfM4";
+    index = @m4s.index(a_m4)
+    index = -1 if index.nil?
+    print "after indexOfM4";
+    index
+  end
+
+  def get_m5(index)
+    print "getM5";
+    a_m5 = @m5s[index]
+    print "after getM5";
+    a_m5
+  end
+
+  def get_m5s
+    print "getM5s";
+    new_m5s = @m5s.dup
+    print "after getM5s";
+    new_m5s
+  end
+
+  def number_of_m5s
+    print "numberOfM5s";
+    number = @m5s.size
+    print "after numberOfM5s";
+    number
+  end
+
+  def has_m5s
+    print "hasM5s";
+    has = @m5s.size > 0
+    print "after hasM5s";
+    has
+  end
+
+  def index_of_m5(a_m5)
+    print "indexOfM5";
+    index = @m5s.index(a_m5)
+    index = -1 if index.nil?
+    print "after indexOfM5";
+    index
+  end
+
+  def get_m6(index)
+    print "getM6";
+    a_m6 = @m6s[index]
+    print "after getM6";
+    a_m6
+  end
+
+  def get_m6s
+    print "getM6s";
+    new_m6s = @m6s.dup
+    print "after getM6s";
+    new_m6s
+  end
+
+  def number_of_m6s
+    print "numberOfM6s";
+    number = @m6s.size
+    print "after numberOfM6s";
+    number
+  end
+
+  def has_m6s
+    print "hasM6s";
+    has = @m6s.size > 0
+    print "after hasM6s";
+    has
+  end
+
+  def index_of_m6(a_m6)
+    print "indexOfM6";
+    index = @m6s.index(a_m6)
+    index = -1 if index.nil?
+    print "after indexOfM6";
+    index
+  end
+
+  def set_m1(a_m1)
+    was_set = false
+    print "setM1";
+    existing_m1 = @m1
+    @m1 = a_m1
+    if !existing_m1.nil? and !existing_m1.eql?(a_m1)
+      existing_m1.remove_one(self)
+    end
+    unless a_m1.nil?
+      a_m1.add_one(self)
+    end
+    was_set = true
+    print "after setM1";
+    was_set
+  end
+
+  def set_m2(a_m2)
+    was_set = false
+    print "setM2";
+    if a_m2.nil?
+      print "after setM2";
+      return was_set
+    end
+
+    existing_m2 = @m2
+    @m2 = a_m2
+    if !existing_m2.nil? and !existing_m2.eql?(a_m2)
+      existing_m2.remove_two(self)
+    end
+    @m2.add_two(self)
+    was_set = true
+    print "after setM2";
+    was_set
+  end
+
+  def is_number_of_m3s_valid
+    print "isNumberOfM3sValid";
+    is_valid = number_of_m3s >= Student.minimum_number_of_m3s and number_of_m3s <= Student.maximum_number_of_m3s
+    print "after isNumberOfM3sValid";
+    is_valid
+  end
+
+  def self.minimum_number_of_m3s
+    print "minimumNumberOfM3s";
+    minimum = 1
+    print "after minimumNumberOfM3s";
+    minimum
+  end
+
+  def self.maximum_number_of_m3s
+    print "maximumNumberOfM3s";
+    maximum = 3
+    print "after maximumNumberOfM3s";
+    maximum
+  end
+
+  def add_m3(a_m3)
+    was_added = false
+    print "addM3";
+    return false if index_of_m3(a_m3) != -1
+    if number_of_m3s >= Student.maximum_number_of_m3s
+      print "after addM3";
+      return was_added
+    end
+
+    @m3s << a_m3
+    if a_m3.index_of_three(self) != -1
+      was_added = true
+    else
+      was_added = a_m3.add_three(self)
+      unless was_added
+        @m3s.delete(a_m3)
+      end
+    end
+    print "after addM3";
+    was_added
+  end
+
+  def remove_m3(a_m3)
+    was_removed = false
+    print "before removeM3";
+    unless @m3s.include?(a_m3)
+      print "after removeM3";
+      return was_removed
+    end
+
+    if number_of_m3s <= Student.minimum_number_of_m3s
+      print "after removeM3";
+      return was_removed
+    end
+
+    oldIndex = @m3s.index(a_m3)
+    @m3s.delete_at(oldIndex)
+    if a_m3.index_of_three(self) == -1
+      was_removed = true
+    else
+      was_removed = a_m3.remove_three(self)
+      @m3s.insert(oldIndex,a_m3) unless was_removed
+    end
+    print "after removeM3";
+    was_removed
+  end
+
+  def set_m3s(new_m3s)
+    was_set = false
+    print "setM3s";
+    verified_m3s = []
+    new_m3s.each do |a_m3|
+      next if (verified_m3s.include?(a_m3)) 
+      verified_m3s << a_m3
+    end
+
+    if verified_m3s.size != new_m3s.length or verified_m3s.size < Student.minimum_number_of_m3s or verified_m3s.size() > Student.maximum_number_of_m3s
+      print "after setM3s";
+      return was_set
+    end
+
+    old_m3s = @m3s.dup
+    @m3s.clear
+    verified_m3s.each do |new_m3|
+      @m3s << new_m3
+      if old_m3s.include?(new_m3)
+        old_m3s.delete(new_m3)
+      else
+        new_m3.add_three(self)
+      end
+    end
+
+    old_m3s.each do |old_m3|
+      old_m3.remove_three(self)
+    end
+    was_set = true
+    print "after setM3s";
+    was_set
+  end
+
+  def is_number_of_m4s_valid
+    print "isNumberOfM4sValid";
+    is_valid = number_of_m4s >= Student.minimum_number_of_m4s and number_of_m4s <= Student.maximum_number_of_m4s
+    print "after isNumberOfM4sValid";
+    is_valid
+  end
+
+  def self.minimum_number_of_m4s
+    print "minimumNumberOfM4s";
+    minimum = 4
+    print "after minimumNumberOfM4s";
+    minimum
+  end
+
+  def self.maximum_number_of_m4s
+    print "maximumNumberOfM4s";
+    maximum = 7
+    print "after maximumNumberOfM4s";
+    maximum
+  end
+
+  def add_m4(a_m4)
+    was_added = false
+    print "addM4";
+    return false if index_of_m4(a_m4) != -1
+    if number_of_m4s >= Student.maximum_number_of_m4s
+      print "after addM4";
+      return was_added
+    end
+
+    @m4s << a_m4
+    if a_m4.index_of_four(self) != -1
+      was_added = true
+    else
+      was_added = a_m4.add_four(self)
+      unless was_added
+        @m4s.delete(a_m4)
+      end
+    end
+    print "after addM4";
+    was_added
+  end
+
+  def remove_m4(a_m4)
+    was_removed = false
+    print "removeM4";
+    unless @m4s.include?(a_m4)
+      print "after removeM4";
+      return was_removed
+    end
+
+    if number_of_m4s <= Student.minimum_number_of_m4s
+      print "after removeM4";
+      return was_removed
+    end
+
+    oldIndex = @m4s.index(a_m4)
+    @m4s.delete_at(oldIndex)
+    if a_m4.index_of_four(self) == -1
+      was_removed = true
+    else
+      was_removed = a_m4.remove_four(self)
+      @m4s.insert(oldIndex,a_m4) unless was_removed
+    end
+    print "after removeM4";
+    was_removed
+  end
+
+  def set_m4s(new_m4s)
+    was_set = false
+    print "setM4s";
+    verified_m4s = []
+    new_m4s.each do |a_m4|
+      next if (verified_m4s.include?(a_m4)) 
+      verified_m4s << a_m4
+    end
+
+    if verified_m4s.size != new_m4s.length or verified_m4s.size < Student.minimum_number_of_m4s or verified_m4s.size() > Student.maximum_number_of_m4s
+      print "after setM4s";
+      return was_set
+    end
+
+    old_m4s = @m4s.dup
+    @m4s.clear
+    verified_m4s.each do |new_m4|
+      @m4s << new_m4
+      if old_m4s.include?(new_m4)
+        old_m4s.delete(new_m4)
+      else
+        new_m4.add_four(self)
+      end
+    end
+
+    old_m4s.each do |old_m4|
+      old_m4.remove_four(self)
+    end
+    was_set = true
+    print "after setM4s";
+    was_set
+  end
+
+  def is_number_of_m5s_valid
+    print "isNumberOfM5sValid";
+    is_valid = number_of_m5s >= Student.minimum_number_of_m5s
+    print "after isNumberOfM5sValid";
+    is_valid
+  end
+
+  def self.minimum_number_of_m5s
+    print "minimumNumberOfM5s";
+    minimum = 2
+    print "after minimumNumberOfM5s";
+    minimum
+  end
+
+  def add_m5(a_m5)
+    was_added = false
+    print "addM5";
+    return false if index_of_m5(a_m5) != -1
+    @m5s << a_m5
+    if a_m5.index_of_five(self) != -1
+      was_added = true
+    else
+      was_added = a_m5.add_five(self)
+      unless was_added
+        @m5s.delete(a_m5)
+      end
+    end
+    print "after addM5";
+    was_added
+  end
+
+  def remove_m5(a_m5)
+    was_removed = false
+    print "removeM5";
+    unless @m5s.include?(a_m5)
+      print "after removeM5";
+      return was_removed
+    end
+
+    if number_of_m5s <= Student.minimum_number_of_m5s
+      print "after removeM5";
+      return was_removed
+    end
+
+    oldIndex = @m5s.index(a_m5)
+    @m5s.delete_at(oldIndex)
+    if a_m5.index_of_five(self) == -1
+      was_removed = true
+    else
+      was_removed = a_m5.remove_five(self)
+      @m5s.insert(oldIndex,a_m5) unless was_removed
+    end
+    print "after removeM5";
+    was_removed
+  end
+
+  def set_m5s(new_m5s)
+    was_set = false
+    print "setM5s";
+    verified_m5s = []
+    new_m5s.each do |a_m5|
+      next if (verified_m5s.include?(a_m5))
+      verified_m5s << a_m5
+    end
+
+    if verified_m5s.size != new_m5s.size or verified_m5s.size < Student.minimum_number_of_m5s
+      print "after setM5s";
+      return was_set
+    end
+
+    old_m5s = @m5s.dup
+    @m5s.clear
+    verified_m5s.each do |new_m5|
+      @m5s << new_m5
+      if old_m5s.include?(new_m5)
+        old_m5s.delete(new_m5)
+      else
+        new_m5.add_five(self)
+      end
+    end
+
+    old_m5s.each do |old_m5|
+      old_m5.remove_five(self)
+    end
+    was_set = true
+    print "after setM5s";
+    was_set
+  end
+
+  def self.minimum_number_of_m6s
+    0
+  end
+
+  def add_m6(a_m6)
+    was_added = false
+    print "addM6";
+    return false if index_of_m6(a_m6) != -1
+    @m6s << a_m6
+    if a_m6.index_of_six(self) != -1
+      was_added = true
+    else
+      was_added = a_m6.add_six(self)
+      unless was_added
+        @m6s.delete(a_m6)
+      end
+    end
+    print "after addM6";
+    was_added
+  end
+
+  def remove_m6(a_m6)
+    was_removed = false
+    print "removeM6";
+    unless @m6s.include?(a_m6)
+      print "after removeM6";
+      return was_removed
+    end
+
+    oldIndex = @m6s.index(a_m6)
+    @m6s.delete_at(oldIndex)
+    if a_m6.index_of_six(self) == -1
+      was_removed = true
+    else
+      was_removed = a_m6.remove_six(self)
+      @m6s.insert(oldIndex,a_m6) unless was_removed
+    end
+    print "after removeM6";
+    was_removed
+  end
+
+  def delete
+    @deleted = true
+    unless @m1.nil?
+      @m1.remove_one(self)
+    end
+    @m2.remove_two(self)
+    copy_of_m3s = @m3s.dup
+    @m3s.clear
+    copy_of_m3s.each do |a_m3|
+      a_m3.remove_three(self)
+    end
+    copy_of_m4s = @m4s.dup
+    @m4s.clear
+    copy_of_m4s.each do |a_m4|
+      a_m4.remove_four(self)
+    end
+    copy_of_m5s = @m5s.dup
+    @m5s.clear
+    copy_of_m5s.each do |a_m5|
+      a_m5.remove_five(self)
+    end
+    copy_of_m6s = @m6s.dup
+    @m6s.clear
+    copy_of_m6s.each do |a_m6|
+      a_m6.remove_six(self)
+    end
+  end
+
+end
+end

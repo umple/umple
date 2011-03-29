@@ -1,0 +1,8 @@
+Concern C
+{
+  VariationPoint VP1 {
+    Kind: Alternative;
+    Variant var1 { do this; }
+    Variant var2 { do that; }
+  }
+}

@@ -1,0 +1,88 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+
+public class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { On, Off }
+  private Bulb bulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulb(Bulb.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  public boolean push()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (bulb)
+    {
+      case On:
+        if (isTurnedOn)
+        {
+          exitBulb();
+          doTransition();
+          setBulb(Bulb.Off);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitBulb()
+  {
+    switch(bulb)
+    {
+      case On:
+        doExit();
+        break;
+    }
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+
+    // entry actions and do activities
+    switch(bulb)
+    {
+      case On:
+        doEntry();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

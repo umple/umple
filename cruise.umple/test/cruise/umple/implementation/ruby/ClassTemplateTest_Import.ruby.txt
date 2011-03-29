@@ -1,0 +1,62 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module ExampleOne
+
+class Mentor
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :student
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_name)
+    @initialized = false
+    @deleted = false
+    @name = a_name
+    @student = nil
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_student
+    @student
+  end
+
+  def delete
+    @deleted = true
+    unless @student.nil?
+      if @student.number_of_mentors <= 1
+        @student.delete
+      else
+        @student.remove_mentor(self)
+      end
+    end
+  end
+
+end
+end

@@ -1,0 +1,41 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+Generates output for the Umlet language for viewing UML diagrams
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmletGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+  
+  filename = null;
+  UmpleModel model = null;
+  * -> * UmletElement classElements;
+  * -> * UmletElement associationElements;
+}
+
+class UmletDiagram
+{
+  * -- * UmletElement;
+}
+
+class UmletElement
+{
+  type;
+  panelAttributes;
+  additionalAttributes;
+  * -> 1 Coordinate;
+}
+
+use Umple.ump;
+use UmpleDiagram.ump;
+use Umlet_Code.ump;

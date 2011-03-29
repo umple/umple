@@ -1,0 +1,237 @@
+/*
+
+Copyright 2010 Omar Badreddin, Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+State machine extensions
+
+*/
+
+namespace cruise.umple.compiler;
+
+class StateMachine
+{
+  
+  public Event getEvent(String eventName)
+  {
+    if (eventName == null)
+    {
+      return null;
+    }
+    for (State aState : states)
+    {
+      for (int i=0; i<aState.numberOfTransitions(); i++)
+      {
+        Transition aTransition = aState.getTransition(i);
+        Event e = aTransition.getEvent();
+        if (e != null && eventName.equals(e.getName()))
+        {
+          return e;
+        }
+      }
+    }
+    return null;
+  }
+  
+  public List<Event> getEvents()
+  {
+    ArrayList<Event> allEvents = new ArrayList<Event>();
+    
+    for (State aState : states)
+    {
+      for (int i=0; i<aState.numberOfTransitions(); i++)
+      {
+        Transition aTransition = aState.getTransition(i);
+        Event e = aTransition.getEvent();
+        if (e != null && !allEvents.contains(e))
+        {
+          allEvents.add(e);
+        }
+      }
+    }
+    return allEvents;
+  }
+
+  public State findState(String aName)
+  {
+    return findState(aName,true);
+  }
+
+  public State findState(String aName, boolean searchNestedStateMachines)
+  {
+    return findState(aName,searchNestedStateMachines,false); 
+  } 
+  
+  public Event findOrCreateEvent(String aName)
+  {
+    for (Event aEvent : getEvents())
+    {
+      if (aEvent.getName().equals(aName))
+      {
+        return aEvent;
+      }
+    }  
+    return new Event(aName);
+  }
+  
+  public State getStartState()
+  {
+    for (State aState : states)
+    {
+      if (aState.getIsStartState())
+      {
+        return aState;
+      }
+    }
+    return null;
+  }
+  
+  public String getType()
+  {
+    for (State aState : states)
+    {
+      if (aState.getType() == "Complex")
+      {
+        return "Complex";
+      }
+    }
+    return "Simple";
+  }
+  
+  public List<StateMachine> getNestedStateMachines()
+  {
+    ArrayList<StateMachine> all = new ArrayList<StateMachine>();
+    addNestedStateMachinesTo(all,this);
+    return all;
+  }
+  
+  private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm)
+  {
+    for (State s : sm.states)
+    {
+      StateMachine nestedState = s.getNestedStateMachine();
+      if (nestedState != null)
+      {
+        all.add(nestedState);
+        addNestedStateMachinesTo(all,nestedState);
+      }
+    }
+  }
+  
+  private State findState(String aName, boolean searchNestedStateMachines, boolean didFindRoot)
+  {
+  
+    StateMachine root = this;
+    State parent = getParentState();
+    if (!didFindRoot && searchNestedStateMachines && parent != null)
+    {
+      root = parent.getStateMachine();
+      parent = root.getParentState();
+    }
+    
+    for (State aState : root.states)
+    {
+      if (aState.getName().equals(aName))
+      {
+        return aState;
+      }
+      
+      if (searchNestedStateMachines)
+      {
+        StateMachine nestedSm = aState.getNestedStateMachine(); 
+        if (nestedSm != null)
+        {
+          State potentialMatch = nestedSm.findState(aName,true,true);
+          if (potentialMatch != null)
+          {
+            return potentialMatch;
+          } 
+        }
+      }
+    }
+    return null;
+  }
+  
+  public String getFullName()
+  {
+    if (getParentState() == null)
+    {
+      return name;
+    }
+    else
+    {
+      return getParentState().getStateMachine().getFullName() + StringFormatter.toPascalCase(name);
+    }
+  }
+  
+  public State addState(String aName, int index)
+  {
+    State newState = new State(aName,this);
+    states.remove(newState);
+    states.add(index,newState);
+    return newState;
+  }
+  
+}
+
+class State
+{
+
+  public Transition addTransition(State nextState, int index)
+  {
+    Transition newTransition = new Transition(this,nextState);
+    transitions.remove(newTransition);
+    transitions.add(index,newTransition);
+    return newTransition;
+  }
+
+  public void addAction(Action newAction, int index)
+  {
+    addAction(newAction);
+    actions.remove(newAction);
+    actions.add(index,newAction);
+  }
+
+  public String getType()
+  {
+    return numberOfTransitions() == 0 ? "Simple" : "Complex";
+  }
+  
+  public String newTimedEventName(State toState)
+  {
+    String templateName;
+    if (toState == null)
+    {
+      templateName = "timeout"+ name  + "To";
+    }
+    else
+    {
+      templateName = "timeout"+ name  + "To" + toState.name;
+    }
+  
+    String currentName = templateName;
+    int index = 2;
+    while (stateMachine.getEvent(currentName) != null)
+    {
+      currentName = templateName + index;
+      index += 1;
+    }
+    return currentName;
+  }
+  
+  public List<Transition> getTransitionsFor(Event e)
+  {
+    List<Transition> all = new ArrayList<Transition>();
+    for(Transition aTransition : transitions)
+    {
+      if (e.equals(aTransition.getEvent()))
+      {
+        all.add(aTransition);
+      }
+    }
+    return all;
+  }
+ 
+}

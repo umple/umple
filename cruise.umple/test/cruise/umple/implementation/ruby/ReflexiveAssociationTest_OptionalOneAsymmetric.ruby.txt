@@ -1,0 +1,122 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :number
+
+  #Student Associations - for documentation purposes
+  #attr_reader :pupil, :ta
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @pupil = nil
+    @ta = nil
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_number(a_number)
+    was_set = false
+    @number = a_number
+    was_set = true
+    was_set
+  end
+
+  def get_number
+    @number
+  end
+
+  def get_pupil
+    @pupil
+  end
+
+  def get_ta
+    @ta
+  end
+
+  def set_pupil(new_pupil)
+    was_set = false
+    if new_pupil.nil?
+      existing_pupil = @pupil
+      @pupil = nil
+      
+      if !existing_pupil.nil? and !existing_pupil.get_ta.nil?
+        existing_pupil.set_ta(nil)
+      end
+      was_set = true
+      return was_set
+    end
+
+    current_pupil = self.get_pupil
+    if !current_pupil.nil? and !current_pupil.eql?(new_pupil)
+      current_pupil.set_ta(nil)
+    end
+
+    @pupil = new_pupil
+    existing_ta = new_pupil.get_ta
+
+    unless self.eql?(existing_ta)
+      new_pupil.set_ta(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def set_ta(new_ta)
+    was_set = false
+    if new_ta.nil?
+      existing_ta = @ta
+      @ta = nil
+      
+      if !existing_ta.nil? and !existing_ta.get_pupil.nil?
+        existing_ta.set_pupil(nil)
+      end
+      was_set = true
+      return was_set
+    end
+
+    current_ta = self.get_ta
+    if !current_ta.nil? and !current_ta.eql?(new_ta)
+      current_ta.set_pupil(nil)
+    end
+
+    @ta = new_ta
+    existing_pupil = new_ta.get_pupil
+
+    unless self.eql?(existing_pupil)
+      new_ta.set_pupil(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    unless @pupil.nil?
+      @pupil.set_ta(nil)
+    end
+    unless @ta.nil?
+      @ta.set_pupil(nil)
+    end
+  end
+
+end
+end

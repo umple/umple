@@ -1,0 +1,70 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $number;
+
+  //Student Associations
+  public $mentor; //until PHP 5.3 (setAccessible)
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aNumber)
+  {
+    $this->number = $aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setNumber($aNumber)
+  {
+    $wasSet = false;
+    $this->number = $aNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getNumber()
+  {
+    return $this->number;
+  }
+
+  public function getMentor()
+  {
+    return $this->mentor;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    if ($this->mentor != null)
+    {
+      if ($this->mentor->numberOfStudents() <= 5)
+      {
+        $this->mentor->delete();
+      }
+      else
+      {
+        $this->mentor->removeStudent($this);
+      }
+    }
+  }
+
+}
+?>

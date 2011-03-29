@@ -1,0 +1,47 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Application
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static $theInstance = null;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  private function __construct()
+  {}
+
+  public static function getInstance()
+  {
+    if(self::$theInstance == null)
+    {
+      self::$theInstance = new Application();
+    }
+    return self::$theInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

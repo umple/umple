@@ -1,0 +1,801 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Associations
+  private $m1;
+  private $m2;
+  private $m3s;
+  private $m4s;
+  private $m5s;
+  private $m6s;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aM2, $allM3s, $allM4s, $allM5s)
+  {
+    $didAddM2 = $this->setM2($aM2);
+    if (!$didAddM2)
+    {
+      throw new Exception("Unable to create two due to m2");
+    }
+    $this->m3s = array();
+    $didAddM3s = $this->setM3s($allM3s);
+    if (!$didAddM3s)
+    {
+      throw new Exception("Unable to create Student, must have 1 to 3 m3s");
+    }
+    $this->m4s = array();
+    $didAddM4s = $this->setM4s($allM4s);
+    if (!$didAddM4s)
+    {
+      throw new Exception("Unable to create Student, must have 4 to 7 m4s");
+    }
+    $this->m5s = array();
+    $didAddM5s = $this->setM5s($allM5s);
+    if (!$didAddM5s)
+    {
+      throw new Exception("Unable to create Student, must have at least 2 m5s");
+    }
+    $this->m6s = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getM1()
+  {
+    print "getM1";
+    $aM1 = $this->m1;
+    print "after getM1";
+    return $aM1;
+  }
+
+  public function getM2()
+  {
+    print "getM2";
+    $aM2 = $this->m2;
+    print "after getM2";
+    return $aM2;
+  }
+
+  public function getM3($index)
+  {
+    print "getM3";
+    $aM3 = $this->m3s[$index];
+    print "after getM3";
+    return $aM3;
+  }
+
+  public function getM3s()
+  {
+    print "getM3s";
+    $newM3s = $this->m3s;
+    print "after getM3s";
+    return $newM3s;
+  }
+
+  public function numberOfM3s()
+  {
+    print "numberOfM3s";
+    $number = count($this->m3s);
+    print "after numberOfM3s";
+    return $number;
+  }
+
+  public function hasM3s()
+  {
+    print "hasM3s";
+    $has = $this->numberOfM3s() > 0;
+    print "after hasM3s";
+    return $has;
+  }
+
+  public function indexOfM3($aM3)
+  {
+    print "indexOfM3";
+    $wasFound = false;
+    $index = 0;
+    foreach($this->m3s as $m3)
+    {
+      if ($m3->equals($aM3))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    print "after indexOfM3";
+    return $index;
+  }
+
+  public function getM4($index)
+  {
+    print "getM4";
+    $aM4 = $this->m4s[$index];
+    print "after getM4";
+    return $aM4;
+  }
+
+  public function getM4s()
+  {
+    print "getM4s";
+    $newM4s = $this->m4s;
+    print "after getM4s";
+    return $newM4s;
+  }
+
+  public function numberOfM4s()
+  {
+    print "numberOfM4s";
+    $number = count($this->m4s);
+    print "after numberOfM4s";
+    return $number;
+  }
+
+  public function hasM4s()
+  {
+    print "hasM4s";
+    $has = $this->numberOfM4s() > 0;
+    print "after hasM4s";
+    return $has;
+  }
+
+  public function indexOfM4($aM4)
+  {
+    print "indexOfM4";
+    $wasFound = false;
+    $index = 0;
+    foreach($this->m4s as $m4)
+    {
+      if ($m4->equals($aM4))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    print "after indexOfM4";
+    return $index;
+  }
+
+  public function getM5($index)
+  {
+    print "getM5";
+    $aM5 = $this->m5s[$index];
+    print "after getM5";
+    return $aM5;
+  }
+
+  public function getM5s()
+  {
+    print "getM5s";
+    $newM5s = $this->m5s;
+    print "after getM5s";
+    return $newM5s;
+  }
+
+  public function numberOfM5s()
+  {
+    print "numberOfM5s";
+    $number = count($this->m5s);
+    print "after numberOfM5s";
+    return $number;
+  }
+
+  public function hasM5s()
+  {
+    print "hasM5s";
+    $has = $this->numberOfM5s() > 0;
+    print "after hasM5s";
+    return $has;
+  }
+
+  public function indexOfM5($aM5)
+  {
+    print "indexOfM5";
+    $wasFound = false;
+    $index = 0;
+    foreach($this->m5s as $m5)
+    {
+      if ($m5->equals($aM5))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    print "after indexOfM5";
+    return $index;
+  }
+
+  public function getM6($index)
+  {
+    print "getM6";
+    $aM6 = $this->m6s[$index];
+    print "after getM6";
+    return $aM6;
+  }
+
+  public function getM6s()
+  {
+    print "getM6s";
+    $newM6s = $this->m6s;
+    print "after getM6s";
+    return $newM6s;
+  }
+
+  public function numberOfM6s()
+  {
+    print "numberOfM6s";
+    $number = count($this->m6s);
+    print "after numberOfM6s";
+    return $number;
+  }
+
+  public function hasM6s()
+  {
+    print "hasM6s";
+    $has = $this->numberOfM6s() > 0;
+    print "after hasM6s";
+    return $has;
+  }
+
+  public function indexOfM6($aM6)
+  {
+    print "indexOfM6";
+    $wasFound = false;
+    $index = 0;
+    foreach($this->m6s as $m6)
+    {
+      if ($m6->equals($aM6))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    print "after indexOfM6";
+    return $index;
+  }
+
+  public function setM1($aM1)
+  {
+    $wasSet = false;
+    print "setM1";
+    $existingM1 = $this->m1;
+    $this->m1 = $aM1;
+    if ($existingM1 != null && $existingM1 !== $aM1)
+    {
+      $existingM1->removeOne($this);
+    }
+    if ($aM1 != null && $aM1 !== $existingM1)
+    {
+      $aM1->addOne($this);
+    }
+    $wasSet = true;
+    print "after setM1";
+    return $wasSet;
+  }
+
+  public function setM2($aM2)
+  {
+    $wasSet = false;
+    print "setM2";
+    if ($aM2 == null)
+    {
+      print "after setM2";
+      return $wasSet;
+    }
+    
+    $existingM2 = $this->m2;
+    $this->m2 = $aM2;
+    if ($existingM2 != null && $existingM2 != $aM2)
+    {
+      $existingM2->removeTwo($this);
+    }
+    $this->m2->addTwo($this);
+    $wasSet = true;
+      print "after setM2";
+    return $wasSet;
+  }
+
+  public function isNumberOfM3sValid()
+  {
+    print "isNumberOfM3sValid";
+    $isValid = $this->numberOfM3s() >= self::minimumNumberOfM3s() && $this->numberOfM3s() <= self::maximumNumberOfM3s();
+    print "after isNumberOfM3sValid";
+    return $isValid;
+  }
+
+  public static function minimumNumberOfM3s()
+  {
+    print "minimumNumberOfM3s";
+    $minimum = 1;
+    print "after minimumNumberOfM3s";
+    return $minimum;
+  }
+
+  public static function maximumNumberOfM3s()
+  {
+    print "maximumNumberOfM3s";
+    $maximum = 3;
+    print "after maximumNumberOfM3s";
+    return $maximum;
+  }
+
+  public function addM3($aM3)
+  {
+    $wasAdded = false;
+    print "addM3";
+    if ($this->indexOfM3($aM3) !== -1) { return false; }
+    if ($this->numberOfM3s() >= self::maximumNumberOfM3s())
+    {
+      print "after addM3";
+      return $wasAdded;
+    }
+
+    $this->m3s[] = $aM3;
+    if ($aM3->indexOfThree($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aM3->addThree($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->m3s);
+      }
+    }
+      print "after addM3";
+    return $wasAdded;
+  }
+
+  public function removeM3($aM3)
+  {
+    $wasRemoved = false;
+    print "before removeM3";
+    if ($this->indexOfM3($aM3) == -1)
+    {
+      print "after removeM3";
+      return $wasRemoved;
+    }
+
+    if ($this->numberOfM3s() <= self::minimumNumberOfM3s())
+    {
+      print "after removeM3";
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfM3($aM3);
+    unset($this->m3s[$oldIndex]);
+    if ($aM3->indexOfThree($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aM3->removeThree($this);
+      if (!$wasRemoved)
+      {
+        $this->m3s[$oldIndex] = $aM3;
+        ksort($this->m3s);
+      }
+    }
+    $this->m3s = array_values($this->m3s);
+    print "after removeM3";
+    return $wasRemoved;
+  }
+
+  public function setM3s($newM3s)
+  {
+    $wasSet = false;
+    print "setM3s";
+    $verifiedM3s = array();
+    foreach ($newM3s as $aM3)
+    {
+      if (array_search($aM3,$verifiedM3s) !== false)
+      {
+        continue;
+      }
+      $verifiedM3s[] = $aM3;
+    }
+
+    if (count($verifiedM3s) != count($newM3s) || count($verifiedM3s) < self::minimumNumberOfM3s() || count($verifiedM3s) > self::maximumNumberOfM3s())
+    {
+      print "after setM3s";
+      return $wasSet;
+    }
+
+    $oldM3s = $this->m3s;
+    $this->m3s = array();
+    foreach ($verifiedM3s as $newM3)
+    {
+      $this->m3s[] = $newM3;
+      $removeIndex = array_search($newM3,$oldM3s);
+      if ($removeIndex !== false)
+      {
+        unset($oldM3s[$removeIndex]);
+        $oldM3s = array_values($oldM3s);
+      }
+      else
+      {
+        $newM3->addThree($this);
+      }
+    }
+
+    foreach ($oldM3s as $oldM3)
+    {
+      $oldM3->removeThree($this);
+    }
+    $wasSet = true;
+    print "after setM3s";
+    return $wasSet;
+  }
+
+  public function isNumberOfM4sValid()
+  {
+    print "isNumberOfM4sValid";
+    $isValid = $this->numberOfM4s() >= self::minimumNumberOfM4s() && $this->numberOfM4s() <= self::maximumNumberOfM4s();
+    print "after isNumberOfM4sValid";
+    return $isValid;
+  }
+
+  public static function minimumNumberOfM4s()
+  {
+    print "minimumNumberOfM4s";
+    $minimum = 4;
+    print "after minimumNumberOfM4s";
+    return $minimum;
+  }
+
+  public static function maximumNumberOfM4s()
+  {
+    print "maximumNumberOfM4s";
+    $maximum = 7;
+    print "after maximumNumberOfM4s";
+    return $maximum;
+  }
+
+  public function addM4($aM4)
+  {
+    $wasAdded = false;
+    print "addM4";
+    if ($this->indexOfM4($aM4) !== -1) { return false; }
+    if ($this->numberOfM4s() >= self::maximumNumberOfM4s())
+    {
+      print "after addM4";
+      return $wasAdded;
+    }
+
+    $this->m4s[] = $aM4;
+    if ($aM4->indexOfFour($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aM4->addFour($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->m4s);
+      }
+    }
+      print "after addM4";
+    return $wasAdded;
+  }
+
+  public function removeM4($aM4)
+  {
+    $wasRemoved = false;
+    print "removeM4";
+    if ($this->indexOfM4($aM4) == -1)
+    {
+      print "after removeM4";
+      return $wasRemoved;
+    }
+
+    if ($this->numberOfM4s() <= self::minimumNumberOfM4s())
+    {
+      print "after removeM4";
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfM4($aM4);
+    unset($this->m4s[$oldIndex]);
+    if ($aM4->indexOfFour($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aM4->removeFour($this);
+      if (!$wasRemoved)
+      {
+        $this->m4s[$oldIndex] = $aM4;
+        ksort($this->m4s);
+      }
+    }
+    $this->m4s = array_values($this->m4s);
+    print "after removeM4";
+    return $wasRemoved;
+  }
+
+  public function setM4s($newM4s)
+  {
+    $wasSet = false;
+    print "setM4s";
+    $verifiedM4s = array();
+    foreach ($newM4s as $aM4)
+    {
+      if (array_search($aM4,$verifiedM4s) !== false)
+      {
+        continue;
+      }
+      $verifiedM4s[] = $aM4;
+    }
+
+    if (count($verifiedM4s) != count($newM4s) || count($verifiedM4s) < self::minimumNumberOfM4s() || count($verifiedM4s) > self::maximumNumberOfM4s())
+    {
+      print "after setM4s";
+      return $wasSet;
+    }
+
+    $oldM4s = $this->m4s;
+    $this->m4s = array();
+    foreach ($verifiedM4s as $newM4)
+    {
+      $this->m4s[] = $newM4;
+      $removeIndex = array_search($newM4,$oldM4s);
+      if ($removeIndex !== false)
+      {
+        unset($oldM4s[$removeIndex]);
+        $oldM4s = array_values($oldM4s);
+      }
+      else
+      {
+        $newM4->addFour($this);
+      }
+    }
+
+    foreach ($oldM4s as $oldM4)
+    {
+      $oldM4->removeFour($this);
+    }
+    $wasSet = true;
+    print "after setM4s";
+    return $wasSet;
+  }
+
+  public function isNumberOfM5sValid()
+  {
+    print "isNumberOfM5sValid";
+    $isValid = $this->numberOfM5s() >= self::minimumNumberOfM5s();
+    print "after isNumberOfM5sValid";
+    return $isValid;
+  }
+
+  public static function minimumNumberOfM5s()
+  {
+    print "minimumNumberOfM5s";
+    $minimum = 2;
+    print "after minimumNumberOfM5s";
+    return $minimum;
+  }
+
+  public function addM5($aM5)
+  {
+    $wasAdded = false;
+    print "addM5";
+    if ($this->indexOfM5($aM5) !== -1) { return false; }
+    $this->m5s[] = $aM5;
+    if ($aM5->indexOfFive($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aM5->addFive($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->m5s);
+      }
+    }
+      print "after addM5";
+    return $wasAdded;
+  }
+
+  public function removeM5($aM5)
+  {
+    $wasRemoved = false;
+    print "removeM5";
+    if ($this->indexOfM5($aM5) == -1)
+    {
+      print "after removeM5";
+      return $wasRemoved;
+    }
+
+    if ($this->numberOfM5s() <= self::minimumNumberOfM5s())
+    {
+      print "after removeM5";
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfM5($aM5);
+    unset($this->m5s[$oldIndex]);
+    if ($aM5->indexOfFive($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aM5->removeFive($this);
+      if (!$wasRemoved)
+      {
+        $this->m5s[$oldIndex] = $aM5;
+        ksort($this->m5s);
+      }
+    }
+    $this->m5s = array_values($this->m5s);
+    print "after removeM5";
+    return $wasRemoved;
+  }
+
+  public function setM5s($newM5s)
+  {
+    $wasSet = false;
+    print "setM5s";
+    $verifiedM5s = array();
+    foreach ($newM5s as $aM5)
+    {
+      if (array_search($aM5,$verifiedM5s) !== false)
+      {
+        continue;
+      }
+      $verifiedM5s[] = $aM5;
+    }
+
+    if (count($verifiedM5s) != count($newM5s) || count($verifiedM5s) < self::minimumNumberOfM5s())
+    {
+      print "after setM5s";
+      return $wasSet;
+    }
+
+    $oldM5s = $this->m5s;
+    $this->m5s = array();
+    foreach ($verifiedM5s as $newM5)
+    {
+      $this->m5s[] = $newM5;
+      $removeIndex = array_search($newM5,$oldM5s);
+      if ($removeIndex !== false)
+      {
+        unset($oldM5s[$removeIndex]);
+        $oldM5s = array_values($oldM5s);
+      }
+      else
+      {
+        $newM5->addFive($this);
+      }
+    }
+
+    foreach ($oldM5s as $oldM5)
+    {
+      $oldM5->removeFive($this);
+    }
+    $wasSet = true;
+    print "after setM5s";
+    return $wasSet;
+  }
+
+  public static function minimumNumberOfM6s()
+  {
+    return 0;
+  }
+
+  public function addM6($aM6)
+  {
+    $wasAdded = false;
+    print "addM6";
+    if ($this->indexOfM6($aM6) !== -1) { return false; }
+    $this->m6s[] = $aM6;
+    if ($aM6->indexOfSix($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aM6->addSix($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->m6s);
+      }
+    }
+      print "after addM6";
+    return $wasAdded;
+  }
+
+  public function removeM6($aM6)
+  {
+    $wasRemoved = false;
+    print "removeM6";
+    if ($this->indexOfM6($aM6) == -1)
+    {
+      print "after removeM6";
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfM6($aM6);
+    unset($this->m6s[$oldIndex]);
+    if ($aM6->indexOfSix($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aM6->removeSix($this);
+      if (!$wasRemoved)
+      {
+        $this->m6s[$oldIndex] = $aM6;
+        ksort($this->m6s);
+      }
+    }
+    $this->m6s = array_values($this->m6s);
+    print "after removeM6";
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    if ($this->m1 != null)
+    {
+      $this->m1->removeOne($this);
+    }
+    $this->m2->removeTwo($this);
+    $copyOfM3s = $this->m3s;
+    $this->m3s = array();
+    foreach ($copyOfM3s as $aM3)
+    {
+      $aM3->removeThree($this);
+    }
+    $copyOfM4s = $this->m4s;
+    $this->m4s = array();
+    foreach ($copyOfM4s as $aM4)
+    {
+      $aM4->removeFour($this);
+    }
+    $copyOfM5s = $this->m5s;
+    $this->m5s = array();
+    foreach ($copyOfM5s as $aM5)
+    {
+      $aM5->removeFive($this);
+    }
+    $copyOfM6s = $this->m6s;
+    $this->m6s = array();
+    foreach ($copyOfM6s as $aM6)
+    {
+      $aM6->removeSix($this);
+    }
+  }
+
+}
+?>

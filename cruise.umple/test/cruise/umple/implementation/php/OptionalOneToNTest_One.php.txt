@@ -1,0 +1,180 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $name;
+
+  //Mentor Associations
+  private $students;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName, $allStudents)
+  {
+    $this->name = $aName;
+    $this->students = array();
+    $didAddStudents = $this->setStudents($allStudents);
+    if (!$didAddStudents)
+    {
+      throw new Exception("Unable to create Mentor, must have 3 students");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getStudent($index)
+  {
+    $aStudent = $this->students[$index];
+    return $aStudent;
+  }
+
+  public function getStudents()
+  {
+    $newStudents = $this->students;
+    return $newStudents;
+  }
+
+  public function numberOfStudents()
+  {
+    $number = count($this->students);
+    return $number;
+  }
+
+  public function hasStudents()
+  {
+    $has = $this->numberOfStudents() > 0;
+    return $has;
+  }
+
+  public function indexOfStudent($aStudent)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->students as $student)
+    {
+      if ($student->equals($aStudent))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function requiredNumberOfStudents()
+  {
+    return 3;
+  }
+
+  public static function minimumNumberOfStudents()
+  {
+    return 3;
+  }
+
+  public static function maximumNumberOfStudents()
+  {
+    return 3;
+  }
+
+  public function setStudents($newStudents)
+  {
+    $wasSet = false;
+    $checkNewStudents = array();
+    foreach ($newStudents as $newStudent)
+    {
+      if (array_search($newStudent,$checkNewStudents) !== false)
+      {
+        return $wasSet;
+      }
+      else if ($newStudent->getMentor() != null && $this !== $newStudent->getMentor())
+      {
+        return $wasSet;
+      }
+      $checkNewStudents[] = $newStudent;
+    }
+
+    if (count($checkNewStudents) != self::minimumNumberOfStudents())
+    {
+      return $wasSet;
+    }
+
+    foreach ($this->students as $orphan) 
+    {
+      $wasFound = false;
+      foreach ($checkNewStudents as $fosterCare)
+      {
+        if ($orphan == $fosterCare)
+        {
+          $wasFound = true;
+          break;
+        }
+      }
+
+      if (!$wasFound)
+      {
+        $this->setMentor($orphan, null);
+      }
+    }
+
+    $this->students = array();
+    foreach ($newStudents as $newStudent)
+    {
+      $this->setMentor($newStudent, $this);
+      $this->students[] = $newStudent;
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  private function setMentor($aStudent, $aMentor)
+  {
+    $aStudent->mentor = $aMentor;
+    //$prop = new ReflectionProperty($aStudent, 'mentor');
+    //$prop->setAccessible(true);
+    //$prop->setValue($aStudent,$aMentor);
+    //$prop->setAccessible(false);
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->students as $aStudent)
+    {
+      $this->setMentor($aStudent,null);
+    }
+    $this->students = array();
+  }
+
+}
+?>

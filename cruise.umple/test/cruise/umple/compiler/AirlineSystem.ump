@@ -1,0 +1,76 @@
+class PassangerRole
+{
+  isA PersonRole;
+  immutable String name ;
+}
+  
+
+class EmployeeRole
+{
+  String jobFunction ;
+  isA PersonRole;
+}
+
+class Person
+{
+  settable String name;
+  integer idNumber;
+}
+
+class Airline{}
+
+class RegularFlight{
+  Time time;
+  Integer flightNumber;
+}
+
+class SpecificFlight{
+  Date date;
+}
+
+class Booking{
+  String seatNumber;
+}
+class PersonRole{}
+
+association {
+  0..2 PersonRole;
+  1 Person;
+}
+
+association {
+  * Person;
+  1 Airline;
+}
+
+association {
+  1 Airline;
+  * RegularFlight;
+}
+
+association {
+  1 RegularFlight;
+  * SpecificFlight;
+}
+
+association {
+  * EmployeeRole;
+  * SpecificFlight;
+}
+
+association {
+  * Booking;
+  1 SpecificFlight;
+}
+
+association {
+  1 PassangerRole;
+  * Booking;
+}
+
+association {
+  reflexive;
+  * EmployeeRole ;
+  1 EmployeeRole supervisor;
+  
+}

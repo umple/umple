@@ -1,0 +1,11 @@
+Concern C
+{
+  VariationPoint VP1 {
+    Kind: Alternative;
+  }
+  VariationPoint VP2 {
+    Kind: Alternative;
+  }  
+  VariationPoint VP3 {
+  }  
+}

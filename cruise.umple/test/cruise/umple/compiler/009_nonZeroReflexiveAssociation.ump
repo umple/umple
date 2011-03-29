@@ -1,0 +1,6 @@
+
+
+class Student
+{
+  0..1 -- 3..4 Student partner;
+}

@@ -1,0 +1,66 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Course
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Course State Machines
+  private $status;
+
+  // status constants
+  private static $StatusOpen = 1;
+  private static $StatusFull = 2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusOpen);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
+    elseif ($this->status == self::$StatusFull) { return "StatusFull"; }
+    return null;
+  }
+
+  public function setStatus($aStatus)
+  {
+    if ($aStatus == "StatusOpen")
+    {
+      $this->status = self::$StatusOpen;
+      return true;
+    }
+    elseif ($aStatus == "StatusFull")
+    {
+      $this->status = self::$StatusFull;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

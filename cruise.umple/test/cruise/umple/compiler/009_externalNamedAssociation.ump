@@ -1,0 +1,12 @@
+
+class Student
+{
+}
+
+class Mentor
+{}
+
+association Counsellor
+{
+  4..5 Student -- 6..9 Mentor;
+}

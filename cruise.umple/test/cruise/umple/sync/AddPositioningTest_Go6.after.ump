@@ -1,0 +1,16 @@
+class A
+{
+  class B
+  {
+  }
+}
+
+class A
+{
+  position 60 60 109 41;
+}
+
+class B
+{
+  position 60 160 109 41;
+}

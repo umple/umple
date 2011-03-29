@@ -1,0 +1,97 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.sync;
+
+class SynchronizationAction
+{
+  deltaCode;
+  umpleCode;
+}
+
+class UpdatePositioningAction
+{
+  isA SynchronizationAction;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+  
+  internal UmpleParser umpleParser = null;
+  internal TextParser textParser = null;
+  internal JsonParser jsonParser = null;
+  internal Json json = null;
+  internal String[] addedPositions = new ArrayList<String>();
+}
+
+class NewAction
+{
+  isA SynchronizationAction;
+  
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.*;
+}
+
+class EditAction
+{
+  isA SynchronizationAction;
+
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+}
+
+
+class DeleteAction
+{
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+
+  isA SynchronizationAction;
+}
+
+
+class NewAssociationAction
+{
+  isA SynchronizationAction;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+}
+
+
+class EditAssociationAction
+{
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+
+  isA SynchronizationAction;
+}
+
+class DeleteAssociationAction
+{
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+
+  isA SynchronizationAction;
+}
+
+class DeleteGeneralizationAction
+{
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+
+  isA SynchronizationAction;
+}
+
+class NewGeneralizationAction
+{
+  isA SynchronizationAction;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+}
+
+use Parser.ump;
+use UmpleSync_Code.ump;

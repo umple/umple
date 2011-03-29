@@ -1,0 +1,282 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+import java.sql.Date;
+import java.sql.Time;
+
+public class Mentor
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final int MAX = 100;
+  public static final int MIN = -99;
+  public static final String HELLO = "Hello";
+  private static int nextX = 1;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String str;
+  private String str2;
+  private Date d;
+  private Time t;
+  private int i;
+  private String p;
+  private String q;
+  private String r;
+  private String s;
+  private Date t;
+  private Time u;
+  private Date v;
+  private Time w;
+
+  //Autounique Attributes
+  private int x;
+
+  //Helper Variables
+  private boolean canSetStr;
+  private boolean canSetStr2;
+  private boolean canSetS;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aStr, Date aD, int aI)
+  {
+    str = aStr;
+    canSetStr = false;
+    canSetStr2 = true;
+    d = aD;
+    t = new Time();
+    i = aI;
+    resetP();
+    q = "chicken";
+    resetR();
+    s = "123";
+    canSetS = false;
+    t = Date.valueOf("1978-12-25");
+    u = Time.valueOf("12:13:14");
+    resetV();
+    resetW();
+    x = nextX++;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStr2(String aStr2)
+  {
+    boolean wasSet = false;
+    if (!canSetStr2) { return false; }
+    canSetStr2 = false;
+    str2 = aStr2;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setD(Date aD)
+  {
+    boolean wasSet = false;
+    d = aD;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setI(int aI)
+  {
+    boolean wasSet = false;
+    i = aI;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setP(String aP)
+  {
+    boolean wasSet = false;
+    p = aP;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean resetP()
+  {
+    boolean wasReset = false;
+    p = getDefaultP();
+    wasReset = true;
+    return wasReset;
+  }
+
+  public boolean setQ(String aQ)
+  {
+    boolean wasSet = false;
+    q = aQ;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setR(String aR)
+  {
+    boolean wasSet = false;
+    r = aR;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean resetR()
+  {
+    boolean wasReset = false;
+    r = getDefaultR();
+    wasReset = true;
+    return wasReset;
+  }
+
+  public boolean setT(Date aT)
+  {
+    boolean wasSet = false;
+    t = aT;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setU(Time aU)
+  {
+    boolean wasSet = false;
+    u = aU;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setV(Date aV)
+  {
+    boolean wasSet = false;
+    v = aV;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean resetV()
+  {
+    boolean wasReset = false;
+    v = getDefaultV();
+    wasReset = true;
+    return wasReset;
+  }
+
+  public boolean setW(Time aW)
+  {
+    boolean wasSet = false;
+    w = aW;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean resetW()
+  {
+    boolean wasReset = false;
+    w = getDefaultW();
+    wasReset = true;
+    return wasReset;
+  }
+
+  public String getStr()
+  {
+    return str;
+  }
+
+  public String getStr2()
+  {
+    return str2;
+  }
+
+  public Date getD()
+  {
+    return d;
+  }
+
+  public int getI()
+  {
+    return i;
+  }
+
+  public int getDerivedTwiceI()
+  {
+    return i*2;
+  }
+
+  public String getP()
+  {
+    return p;
+  }
+
+  public String getDefaultP()
+  {
+    return "robot";
+  }
+
+  public String getQ()
+  {
+    return q;
+  }
+
+  public String getR()
+  {
+    return r;
+  }
+
+  public String getDefaultR()
+  {
+    return "";
+  }
+
+  public String getS()
+  {
+    return s;
+  }
+
+  public Date getT()
+  {
+    return t;
+  }
+
+  public Time getU()
+  {
+    return u;
+  }
+
+  public Date getV()
+  {
+    return v;
+  }
+
+  public Date getDefaultV()
+  {
+    return Date.valueOf("1978-12-26");
+  }
+
+  public Time getW()
+  {
+    return w;
+  }
+
+  public Time getDefaultW()
+  {
+    return Time.valueOf("12:59:59");
+  }
+
+  public int getX()
+  {
+    return x;
+  }
+
+  public void delete()
+  {}
+
+}

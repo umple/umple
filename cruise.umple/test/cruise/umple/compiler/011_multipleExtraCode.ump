@@ -1,0 +1,12 @@
+namespace example;
+
+
+class Student
+{
+  defaulted name = "defaultName()";
+  type;
+  defaulted modifier = "settable";
+  value;
+  
+  public String getUpperCaseName(){{}}
+}

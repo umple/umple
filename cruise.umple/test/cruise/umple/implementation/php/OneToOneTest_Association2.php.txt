@@ -1,0 +1,95 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $name;
+  private $number;
+
+  //Student Associations
+  private $mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName = null, $aNumber = null, $aMentor = null)
+  {
+    if (func_num_args() == 0) { return; }
+
+    $this->name = $aName;
+    $this->number = $aNumber;
+    if ($aMentor == null || $aMentor->getStudent() != null)
+    {
+      throw new Exception("Unable to create Student due to aMentor");
+    }
+    $this->mentor = $aMentor;
+  }
+  public static function newInstance($aName, $aNumber, $aNameForMentor)
+  {
+    $thisInstance = new Student();
+    $thisInstance->name = $aName;
+    $thisInstance->number = $aNumber;
+    $thisInstance->mentor = new Mentor($aNameForMentor, $thisInstance);
+    return $thisInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setNumber($aNumber)
+  {
+    $wasSet = false;
+    $this->number = $aNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getNumber()
+  {
+    return $this->number;
+  }
+
+  public function getMentor()
+  {
+    return $this->mentor;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingMentor = $this->mentor;
+    $this->mentor = null;
+    if ($existingMentor != null)
+    {
+      $existingMentor->delete();
+    }
+  }
+
+}
+?>

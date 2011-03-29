@@ -1,0 +1,11 @@
+
+
+class Student{
+
+  //A name
+  name;
+  
+  //the time
+  Time t;
+
+}

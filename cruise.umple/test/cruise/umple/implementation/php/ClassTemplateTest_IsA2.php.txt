@@ -1,0 +1,53 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class SubMentor2 extends Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SubMentor2 Attributes
+  private $subName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName, $aSubName)
+  {
+    parent::__construct($aName);
+    $this->subName = $aSubName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setSubName($aSubName)
+  {
+    $wasSet = false;
+    $this->subName = $aSubName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getSubName()
+  {
+    return $this->subName;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    parent::delete();
+  }
+
+}
+?>

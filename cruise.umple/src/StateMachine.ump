@@ -1,0 +1,77 @@
+/*
+
+Copyright 2010 Omar Badreddin, Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+State machine meta-model
+
+*/
+
+namespace cruise.umple.compiler;
+
+class StateMachine
+{
+  depend cruise.umple.util.*;
+
+  name;
+  * -- 0..1 UmpleClass;
+  
+  0..1 nestedStateMachine -- 0..1 State parentState;
+  
+  key { parentState, name } 
+  
+}
+
+class State
+{
+  name;
+
+  1 -- 0..1 Activity;
+  0..1 -> * Action;
+  * -- 1 StateMachine;
+
+  Boolean isStartState = false;
+  Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+ 
+}
+
+class Activity
+{
+  activityCode;  // target language code
+}
+
+class Transition
+{
+  * -> 0..1 Event; 
+  * -- 1 State fromState;  
+  * -> 1 State nextState;
+  * -> 0..1 Guard;
+  0..1 -> 0..1 Action;
+  
+}
+
+class Action
+{
+  actionType = null;
+  actionCode;  // target language code
+  Boolean isInternal = false;
+}
+
+class Event
+{
+  name;
+  Boolean isTimer = false;
+  timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
+
+  Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+}
+
+class Guard
+{
+  condition; // target language code
+}
+
+use Umple.ump;
+use StateMachine_Code.ump;

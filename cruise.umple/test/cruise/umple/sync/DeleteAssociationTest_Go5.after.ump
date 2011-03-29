@@ -1,0 +1,13 @@
+class Student
+{
+  3..5 -- 1..2 Mentor;
+
+  position 52 30 109 41;
+  position.association Mentor__Student 0,21 41,0;
+  }
+
+
+class Mentor
+{
+  position 143 144 109 41;
+}

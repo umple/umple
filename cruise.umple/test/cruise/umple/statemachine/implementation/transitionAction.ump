@@ -1,0 +1,11 @@
+
+namespace example;
+
+class Course
+{
+  status
+  {
+    Open { register -> /{System.out.println("transition");} Open;  }
+  }
+}
+

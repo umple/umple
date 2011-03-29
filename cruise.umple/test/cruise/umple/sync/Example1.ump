@@ -1,0 +1,60 @@
+namespace Airline;
+
+//Classes which deal with flights and the airline
+namespace Airline.flights;
+class Airline{
+  1 -- * RegularFlight;
+}
+
+class RegularFlight{
+  Time time;
+  unique Integer flightNumber;
+  1 -- * SpecificFlight;
+}
+
+class SpecificFlight{
+  unique Date date;
+}
+
+//Classes which deal with people
+namespace Airline.humanResources;
+class PassengerRole
+{
+  isA PersonRole;
+  immutable String name ;
+  1 -- * Booking;
+}
+  
+
+class EmployeeRole
+{
+  String jobFunction ;
+  isA PersonRole;
+  * -- 0..1 EmployeeRole supervisor;
+}
+
+class Person
+{
+  settable String name;
+  Integer idNumber;
+  1 -- 0..2 PersonRole;
+}
+
+class PersonRole{}
+
+class Booking{
+  String seatNumber;
+}
+
+//Associations between subcomponents
+association {
+  * EmployeeRole -- * SpecificFlight;
+}
+
+association {
+  * Booking -- 1 SpecificFlight;
+}
+
+association {
+  1 Airline -- * Person;
+}

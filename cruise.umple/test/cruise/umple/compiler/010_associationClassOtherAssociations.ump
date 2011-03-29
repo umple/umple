@@ -1,0 +1,18 @@
+
+associationClass VotesInPoll
+{
+ * Candidature;
+ * PollInElection;
+ 
+ * -- * Location;
+ 
+}
+
+class Candidature
+{}
+
+class PollInElection
+{}
+
+class Location
+{}

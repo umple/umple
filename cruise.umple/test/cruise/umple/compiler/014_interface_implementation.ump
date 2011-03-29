@@ -1,0 +1,9 @@
+
+interface ISomething
+{
+
+}
+
+class Something {
+	implements ISomething;
+}

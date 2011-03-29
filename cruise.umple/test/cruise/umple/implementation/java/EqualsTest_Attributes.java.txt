@@ -1,0 +1,249 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private int intId;
+  private double doubleId;
+  private boolean booleanId;
+  private String stringId;
+  private List<String> stringListIds;
+
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetIntId;
+  private boolean canSetDoubleId;
+  private boolean canSetBooleanId;
+  private boolean canSetStringId;
+  private boolean canSetStringListIds;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(int aIntId, double aDoubleId, boolean aBooleanId, String aStringId)
+  {
+    intId = aIntId;
+    doubleId = aDoubleId;
+    booleanId = aBooleanId;
+    stringId = aStringId;
+    stringListIds = new ArrayList<String>();
+    cachedHashCode = -1;
+    canSetIntId = true;
+    canSetDoubleId = true;
+    canSetBooleanId = true;
+    canSetStringId = true;
+    canSetStringListIds = true;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setIntId(int aIntId)
+  {
+    boolean wasSet = false;
+    if (!canSetIntId) { return false; }
+    intId = aIntId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setDoubleId(double aDoubleId)
+  {
+    boolean wasSet = false;
+    if (!canSetDoubleId) { return false; }
+    doubleId = aDoubleId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setBooleanId(boolean aBooleanId)
+  {
+    boolean wasSet = false;
+    if (!canSetBooleanId) { return false; }
+    booleanId = aBooleanId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setStringId(String aStringId)
+  {
+    boolean wasSet = false;
+    if (!canSetStringId) { return false; }
+    stringId = aStringId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean addStringListId(String aStringListId)
+  {
+    boolean wasAdded = false;
+    if (!canSetStringListIds) { return false; }
+    wasAdded = stringListIds.add(aStringListId);
+    return wasAdded;
+  }
+
+  public boolean removeStringListId(String aStringListId)
+  {
+    boolean wasRemoved = false;
+    if (!canSetStringListIds) { return false; }
+    wasRemoved = stringListIds.remove(aStringListId);
+    return wasRemoved;
+  }
+
+  public int getIntId()
+  {
+    return intId;
+  }
+
+  public double getDoubleId()
+  {
+    return doubleId;
+  }
+
+  public boolean getBooleanId()
+  {
+    return booleanId;
+  }
+
+  public String getStringId()
+  {
+    return stringId;
+  }
+
+  public String getStringListId(int index)
+  {
+    String aStringListId = stringListIds.get(index);
+    return aStringListId;
+  }
+
+  public String[] getStringListIds()
+  {
+    String[] newStringListIds = stringListIds.toArray(new String[stringListIds.size()]);
+    return newStringListIds;
+  }
+
+  public int numberOfStringListIds()
+  {
+    int number = stringListIds.size();
+    return number;
+  }
+
+  public boolean hasStringListIds()
+  {
+    boolean has = stringListIds.size() > 0;
+    return has;
+  }
+
+  public int indexOfStringListId(String aStringListId)
+  {
+    int index = stringListIds.indexOf(aStringListId);
+    return index;
+  }
+
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Student compareTo = (Student)obj;
+  
+    if (intId != compareTo.intId)
+    {
+      return false;
+    }
+
+    if (doubleId != compareTo.doubleId)
+    {
+      return false;
+    }
+
+    if (booleanId != compareTo.booleanId)
+    {
+      return false;
+    }
+
+    if (stringId == null && compareTo.stringId != null)
+    {
+      return false;
+    }
+    else if (stringId != null && !stringId.equals(compareTo.stringId))
+    {
+      return false;
+    }
+
+    if (stringListIds.size() != compareTo.stringListIds.size())
+    {
+      return false;
+    }
+
+    for (int i=0; i<stringListIds.size(); i++)
+    {
+      String me = stringListIds.get(i);
+      String them = compareTo.stringListIds.get(i);
+      if (me == null && them != null)
+      {
+       return false;
+      }
+      else if (me != null && !me.equals(them))
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    cachedHashCode = cachedHashCode * 23 + intId;
+
+    cachedHashCode = cachedHashCode * 23 + (new Double(doubleId)).hashCode();
+
+    cachedHashCode = cachedHashCode * 23 + (booleanId ? 1 : 0);
+
+    if (stringId != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + stringId.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    if (stringListIds != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + stringListIds.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetIntId = false;
+    canSetDoubleId = false;
+    canSetBooleanId = false;
+    canSetStringId = false;
+    canSetStringListIds = false;
+    return cachedHashCode;
+  }
+
+  public void delete()
+  {}
+
+}

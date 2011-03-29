@@ -1,0 +1,49 @@
+package example;
+  import example::dataType;
+  package dataType;
+    primitive String;
+    primitive Integer;
+    primitive Double;
+    primitive Date;
+    primitive Time;
+    primitive Boolean;
+  end;
+
+  class Person
+    attribute status : Status;
+  end;
+
+  enumeration Status
+    Registered, Active, Inactive
+  end;
+
+  class Product
+    attribute description : String;
+    attribute available : Integer;
+    attribute price : Double;
+    attribute createdDate : Date;
+    attribute createdTime : Time;
+    attribute isActive : Boolean;
+  end;
+
+  association CartItem:item__Product
+    navigable role item : CartItem[3,*];
+    navigable role product : Product[0,1];
+  end;
+
+  class Cart implements ICart
+  end;
+
+  class CartItem
+  end;
+
+  class PaymentMethod
+  end;
+
+  class Cheque specializes PaymentMethod
+  end;
+
+  interface ICart
+  end;
+
+end.

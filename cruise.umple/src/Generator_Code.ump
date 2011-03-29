@@ -1,0 +1,988 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
+{
+  depend cruise.umple.util.*;
+  depend java.util.*;
+
+  public static String toCode(List<CodeInjection> allCodeInjections)
+  {
+    String asCode = null;
+    if (allCodeInjections != null)
+    {
+      for (CodeInjection inject : allCodeInjections)
+      {
+        if (asCode == null)
+        {
+          asCode = inject.getCode();
+        }
+        else
+        {
+          asCode = StringFormatter.format("{0}\n    {1}",asCode,inject.getCode());
+        }
+      }
+    }
+    return asCode;
+  }
+
+}
+
+
+class EcoreGenerator
+{
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    StringBuilder subCode;
+    List<String> allTypes = new ArrayList<String>();
+    
+    code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    
+    boolean isFirst = true;
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      subCode = new StringBuilder();
+      if (isFirst)
+      {
+        isFirst = false;
+        code.append(StringFormatter.format("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"{0}\">\n",model.getUmpleFile().getSimpleFileName()));
+        code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>\n"));
+      }
+
+      String superStructureFlag = "";
+      String interfaceFlag = "";
+      if (uClass.getExtendsClass() != null)
+      {
+        superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uClass.getExtendsClass().getName()); 
+      }
+      else if (uClass.hasParentInterface()){
+		  UmpleInterface uInterface = uClass.getParentInterface(0);
+		  superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
+	      interfaceFlag =   " interface=\"true\"" ; 
+	      code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uInterface.getName(),interfaceFlag));
+	      code.append("  </eClassifiers>\n");
+      }
+     
+      code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uClass.getName(),superStructureFlag));
+
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        String upperBound = av.getIsList() ? " upperBound=\"-1\"" : "";
+        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        
+        if (typeName.equals("String") || typeName.equals("Boolean") || typeName.equals("Double") || typeName.equals("Date"))
+        {
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//E{1}\"{2}/>\n",attrName,typeName,upperBound));
+        }
+        else if (typeName.equals("Integer"))
+        {
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt\"{1}/>`\n",attrName,upperBound));
+        }
+        else if (typeName.equals("Time"))
+        {
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"#//Time\"{1}/>\n",attrName,upperBound));        
+        }
+        else if (model.getUmpleClass(typeName) != null)
+        {
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" eType=\"#//{1}\"{2}/>\n",attrName,typeName,upperBound));
+        }
+        else
+        {
+          String safeType = typeName;
+          safeType = safeType.replace("<", "%3C");
+          safeType = safeType.replace(",","%2C");
+          safeType = safeType.replace(">", "%3E");
+          
+          String safeType2 = typeName;
+          safeType2 = safeType2.replace("<", "&lt;");
+          
+          String lookupType = typeName;
+          int ltIndex = lookupType.indexOf("<");
+          
+          if (ltIndex >= 0)
+          {
+            lookupType = lookupType.substring(0,ltIndex);
+          }
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"#//{1}\"{2}/>\n",attrName,safeType,upperBound));
+          
+          if (!allTypes.contains(safeType))
+          {
+            allTypes.add(safeType);
+            String typeInstanceClassName = getFullyQualifiedName("java.lang",lookupType);
+          
+            if (typeInstanceClassName == null)
+            {
+              for (Depend d : uClass.getDepends())
+              {
+                typeInstanceClassName = getFullyQualifiedName(d.getPackageName(), lookupType);
+                if (typeInstanceClassName != null)
+                {
+                  break;
+                }
+              }
+            }
+            if (typeInstanceClassName != null)
+            {
+              subCode.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EDataType\" name=\"{0}\" instanceClassName=\"{1}\"/>\n",safeType2,typeInstanceClassName)); 
+            }
+            else
+            {
+              subCode.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EDataType\" name=\"{0}\"/>\n",safeType2));
+            }
+          }
+          
+        }
+      }
+      
+      ArrayList<Association> internalAssociations = new ArrayList<Association>();
+      for(Association as : uClass.getAssociations())
+      {
+        AssociationEnd myEnd = as.getEnd(0);
+        AssociationEnd theirEnd = as.getEnd(1);
+        
+        if (internalAssociations.contains(as))
+        {
+          continue;
+        }
+
+        if (myEnd.getClassName().equals(theirEnd.getClassName()))
+        {
+          internalAssociations.add(as);
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",myEnd.getRoleName(),myEnd.getMultiplicity().getLowerBound(),myEnd.getMultiplicity().getUpperBound(),myEnd.getClassName(),myEnd.getClassName(),theirEnd.getRoleName()));
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+        }
+        else
+        {
+          if (theirEnd.getClassName().equals(uClass.getName()))
+          {
+            myEnd = as.getEnd(1);
+            theirEnd = as.getEnd(0);
+          }
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+        }
+      }
+      
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        if ("Simple".equals(sm.getType()))
+        {
+          String enumerationName = StringFormatter.toPascalCase(sm.getName());
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"#//{1}\" />\n",sm.getName(),enumerationName));          
+
+          int index = 0;
+          subCode.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EEnum\" name=\"{0}\">\n",enumerationName));
+          for (State s : sm.getStates())
+          {
+            subCode.append(StringFormatter.format("    <eLiterals name=\"{0}\" value=\"{1}\"/>\n",s.getName(),index));
+            index += 1;
+          }
+          subCode.append("  </eClassifiers>\n");
+        }
+      }
+
+      code.append("  </eClassifiers>\n");
+      code.append(subCode.toString());
+    }
+    
+    if (!isFirst)
+    {
+      code.append("</ecore:EPackage>\n");
+    }
+
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  private String getFullyQualifiedName(String packageName, String className)
+  {
+    try
+    {
+      String fullName = packageName + "." + className;
+      Class.forName(fullName);
+      return fullName;
+    }
+    catch (Exception e) 
+    {
+      return null;  
+    }
+  }
+  
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".ecore";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+  } 
+}
+
+class PapyrusGenerator
+{
+  
+ public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    StringBuilder subCode;
+    ArrayList<Association> allAssociations = new ArrayList<Association>();
+    
+    code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    
+    boolean isFirst = true;
+    int packageAssociationIndex = 0;
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      subCode = new StringBuilder();
+      if (isFirst)
+      {
+        isFirst = false;
+        
+        code.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:uml=\"http://www.eclipse.org/uml2/2.1.0/UML\" xmi:id=\"_{0}\" name=\"{0}\">\n",model.getUmpleFile().getSimpleFileName()));
+        code.append(StringFormatter.format("  <packageImport xmi:id=\"_packageImport.0\">\n"));
+        code.append(StringFormatter.format("    <importedPackage xmi:type=\"uml:Model\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0\"/>\n"));
+        code.append(StringFormatter.format("  </packageImport>\n"));
+        code.append("  <packagedElement xmi:type=\"uml:Model\" xmi:id=\"dataType\" name=\"dataType\">\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-Time\" name=\"Time\"/>\n");
+        code.append("  </packagedElement>\n");
+      }
+
+      String packageType = "uml:Class"; 
+      code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\">\n",uClass.getName(),packageType));
+
+      if (uClass.getExtendsClass() != null)
+      {
+    	  code.append(StringFormatter.format("    <generalization xmi:id=\"{0}-_generalization.0\" general=\"{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
+      }
+
+      String implementedInterfaces="";
+      if (uClass.hasParentInterface()){
+    	  for (UmpleInterface uInterface : uClass.getParentInterface())
+    	  {
+    		  implementedInterfaces += uInterface.getName() + "," ; 
+    	  }
+    	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
+    	  code.append(StringFormatter.format("    <interfaceRealization xmi:id=\"{0}-_interfaceRealization.0\" supplier=\"{1}\" client=\"{0}\" contract=\"{1}\"/>\n",uClass.getName(),implementedInterfaces));
+      }
+      
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+
+        if (typeName.equals("String") || typeName.equals("Integer") || typeName.equals("Boolean"))
+        {
+          code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
+          code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#{0}\"/>\n",typeName));
+        }
+        else if (typeName.equals("Double") || typeName.equals("Date"))
+        { 
+          code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
+          code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_METAMODELS/Ecore.metamodel.uml#E{0}\"/>\n",typeName));
+        }
+        else if (av.isPrimitive())
+        {
+          typeName = StringFormatter.format("dataType-{0}",typeName);
+          code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),av.getName(),typeName));
+        } 
+
+        code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
+        code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
+        code.append("    </ownedAttribute>\n");
+      }
+      
+      for(Association as : uClass.getAssociations())
+      {
+        if (allAssociations.contains(as))
+        {
+          continue;
+        }
+        allAssociations.add(as);
+        AssociationEnd left = as.getEnd(0);
+        AssociationEnd right = as.getEnd(1);
+        String[] leftRange = left.getMultiplicity().getRangeParts();
+        String[] rightRange = right.getMultiplicity().getRangeParts();
+        
+        String associationId = as.getName() == null ? StringFormatter.format("_packagedElement.{0}",packageAssociationIndex) : as.getName();
+        String associationName = as.getName() == null ? "" : StringFormatter.format(" name=\"{0}\"",as.getName());
+
+        subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"{0}\"{3} memberEnd=\"{0}-{1} {0}-{2}\" navigableOwnedEnd=\"{0}-{1} {0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
+        
+        subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
+        subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));
+        subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[0]));
+        subCode.append("    </ownedEnd>\n");
+        subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,right.getRoleName(),right.getClassName()));
+        subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[1]));
+        subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[0]));
+        subCode.append("    </ownedEnd>\n");
+        subCode.append("  </packagedElement>\n");
+        packageAssociationIndex += 1;          
+      }
+      
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        if ("Simple".equals(sm.getType()))
+        {
+          String enumerationName = StringFormatter.toPascalCase(sm.getName());
+          code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),sm.getName(),enumerationName));
+          code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),sm.getName()));
+          code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),sm.getName()));
+          code.append("    </ownedAttribute>\n");
+
+          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Enumeration\" xmi:id=\"{0}\" name=\"{0}\">\n",enumerationName));
+          for (State s : sm.getStates())
+          {
+            subCode.append(StringFormatter.format("    <ownedLiteral xmi:id=\"{0}-{1}\" name=\"{1}\"/>\n",enumerationName,s.getName()));
+          }
+          subCode.append("  </packagedElement>\n");
+        }
+      }
+
+      code.append("  </packagedElement>\n");
+      code.append(subCode.toString());
+    }
+    
+    boolean isFirstInterface = model.hasUmpleInterfaces() ? true : false;
+	 for (UmpleInterface uInterface : model.getUmpleInterfaces())
+    {
+        if (isFirstInterface)
+    	 {
+        isFirstInterface = false;
+        String clientDependency = StringFormatter.format(" clientDependency=\"{0}-_interfaceRealization.0\"",uInterface.getName()) ;
+        String packageType = "uml:Interface"; 
+        code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\">\n",uInterface.getName(),packageType,clientDependency));
+        }
+    }
+  
+    if (!isFirst && !isFirstInterface)
+    {
+      code.append("  <profileApplication xmi:id=\"_profileApplication.0\">\n");
+      code.append("    <eAnnotations xmi:id=\"_eAnnotations.0\" source=\"http://www.eclipse.org/uml2/2.0.0/UML\">\n");
+      code.append("      <references xmi:type=\"ecore:EPackage\" href=\"http://www.eclipse.org/uml2/schemas/Standard/1#/\"/>\n");
+      code.append("    </eAnnotations>\n");
+      code.append("    <appliedProfile href=\"pathmap://UML_PROFILES/Standard.profile.uml#_0\"/>\n");
+      code.append("  </profileApplication>\n");
+      code.append("</uml:Model>\n");
+    }
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+  
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".uml";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+  } 
+}
+
+class XmiGenerator
+{
+  
+     public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    StringBuilder subCode;
+    ArrayList<Association> allAssociations = new ArrayList<Association>();
+    
+    code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    
+    boolean isFirst = true;
+    int packageAssociationIndex = 0;
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      subCode = new StringBuilder();
+      if (isFirst)
+      {
+        isFirst = false;
+        
+        code.append(StringFormatter.format("<uml:Package xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_0\" name=\"{0}\">\n",uClass.getPackageName()));
+        code.append("  <packageImport xmi:id=\"_packageImport.0\" importedPackage=\"dataType\"/>\n");
+        code.append("  <packagedElement xmi:type=\"uml:Package\" xmi:id=\"dataType\" name=\"dataType\">\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-String\" name=\"String\"/>\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-Integer\" name=\"Integer\"/>\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-Double\" name=\"Double\"/>\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-Date\" name=\"Date\"/>\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-Time\" name=\"Time\"/>\n");
+        code.append("    <packagedElement xmi:type=\"uml:PrimitiveType\" xmi:id=\"dataType-Boolean\" name=\"Boolean\"/>\n");
+        code.append("  </packagedElement>\n");
+      }
+
+      String packageType = "uml:Class"; 
+      code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\">\n",uClass.getName(),packageType));
+
+      if (uClass.getExtendsClass() != null)
+      {
+          code.append(StringFormatter.format("    <generalization xmi:id=\"{0}-_generalization.0\" general=\"{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
+      }
+      
+      String implementedInterfaces="";
+      if (uClass.hasParentInterface()){
+    	  for (UmpleInterface uInterface : uClass.getParentInterface())
+    	  {
+    		  implementedInterfaces += uInterface.getName() + "," ; 
+    	  }
+    	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
+    	  code.append(StringFormatter.format("    <interfaceRealization xmi:id=\"{0}-_interfaceRealization.0\" supplier=\"{1}\" client=\"{0}\" contract=\"{1}\"/>\n",uClass.getName(),implementedInterfaces));
+      }
+
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        if (av.isPrimitive())
+        {
+          typeName = StringFormatter.format("dataType-{0}",typeName);
+        } 
+          
+        code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),av.getName(),typeName));
+        code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
+        code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
+        code.append("    </ownedAttribute>\n");
+      }
+      
+      for(Association as : uClass.getAssociations())
+      {
+        if (allAssociations.contains(as))
+        {
+          continue;
+        }
+        allAssociations.add(as);
+        AssociationEnd left = as.getEnd(0);
+        AssociationEnd right = as.getEnd(1);
+        String[] leftRange = left.getMultiplicity().getRangeParts();
+        String[] rightRange = right.getMultiplicity().getRangeParts();
+        
+        String associationId = as.getName() == null ? StringFormatter.format("_packagedElement.{0}",packageAssociationIndex) : as.getName();
+        String associationName = as.getName() == null ? "" : StringFormatter.format(" name=\"{0}\"",as.getName());
+
+        subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"{0}\"{3} memberEnd=\"{0}-{1} {0}-{2}\" navigableOwnedEnd=\"{0}-{1} {0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
+        
+        subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
+        subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));
+        subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[0]));
+        subCode.append("    </ownedEnd>\n");
+        subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,right.getRoleName(),right.getClassName()));
+        subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[1]));
+        subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,right.getRoleName(),rightRange[0]));
+        subCode.append("    </ownedEnd>\n");
+        subCode.append("  </packagedElement>\n");
+        packageAssociationIndex += 1;          
+      }
+      
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        if ("Simple".equals(sm.getType()))
+        {
+          String enumerationName = StringFormatter.toPascalCase(sm.getName());
+          code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),sm.getName(),enumerationName));
+          code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),sm.getName()));
+          code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),sm.getName()));
+          code.append("    </ownedAttribute>\n");
+
+          subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Enumeration\" xmi:id=\"{0}\" name=\"{0}\">\n",enumerationName));
+          for (State s : sm.getStates())
+          {
+            subCode.append(StringFormatter.format("    <ownedLiteral xmi:id=\"{0}-{1}\" name=\"{1}\"/>\n",enumerationName,s.getName()));
+          }
+          subCode.append("  </packagedElement>\n");
+        }
+      }
+
+      code.append("  </packagedElement>\n");
+      code.append(subCode.toString());
+    }
+    boolean isFirstInterface = model.hasUmpleInterfaces() ? true : false;
+ 	 for (UmpleInterface uInterface : model.getUmpleInterfaces())
+     {
+         if (isFirstInterface)
+     	 {
+         isFirstInterface = false;
+         String clientDependency = StringFormatter.format(" clientDependency=\"{0}-_interfaceRealization.0\"",uInterface.getName()) ;
+         String packageType = "uml:Interface"; 
+         code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\">\n",uInterface.getName(),packageType,clientDependency));
+         }
+     }
+   
+   if (!isFirst && !isFirstInterface)
+   {
+	   code.append("</uml:Package>\n");
+   }
+  
+    model.setCode(code.toString());
+    writeModel();
+  }
+  
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".uml";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+  } 
+}
+
+class TextUmlGenerator
+{
+
+ public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    StringBuilder subCode;
+    ArrayList<Association> allAssociations = new ArrayList<Association>();
+    
+    boolean isFirst = true;
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      subCode =  new StringBuilder();
+      if (isFirst)
+      {
+        isFirst = false;
+        code.append(StringFormatter.format("package {0};\n",uClass.getPackageName()));
+        code.append(StringFormatter.format("  import {0}::dataType;\n",uClass.getPackageName()));
+
+        code.append("  package dataType;\n");
+        code.append("    primitive String;\n");
+        code.append("    primitive Integer;\n");
+        code.append("    primitive Double;\n");
+        code.append("    primitive Date;\n");
+        code.append("    primitive Time;\n");
+        code.append("    primitive Boolean;\n");
+        code.append("  end;\n\n");
+      }
+       
+      String classDeclaration = "class ";
+      classDeclaration += uClass.getName();
+      if (uClass.getExtendsClass() != null)
+      {
+          classDeclaration += StringFormatter.format(" specializes {0}",uClass.getExtendsClass().getName());
+      }
+      String implementedInterfaces="";
+      if (uClass.hasParentInterface()){
+    	  for (UmpleInterface uInterface : uClass.getParentInterface())
+    	  {
+    		  implementedInterfaces += uInterface.getName() + "," ; 
+    	  }
+    	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
+    	  classDeclaration += StringFormatter.format(" implements {0}",implementedInterfaces);
+      }
+      code.append(StringFormatter.format("  {0}\n",classDeclaration));
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        code.append(StringFormatter.format("    attribute {1} : {0};\n",typeName,av.getName()));
+      }
+      
+      for(Association as : uClass.getAssociations())
+      {
+        if (allAssociations.contains(as))
+        {
+          continue;
+        }
+        allAssociations.add(as);
+        AssociationEnd left = as.getEnd(0);
+        AssociationEnd right = as.getEnd(1);
+        
+        String assocName = as.getName() == null ? "" : StringFormatter.format(" {0}",as.getName());
+        subCode.append(StringFormatter.format("  association{0}\n",assocName));
+        subCode.append(StringFormatter.format("    navigable role {0} : {1}{2};\n",left.getRoleName(),left.getClassName(),left.getMultiplicity().getRange()));
+        subCode.append(StringFormatter.format("    navigable role {0} : {1}{2};\n",right.getRoleName(),right.getClassName(),right.getMultiplicity().getRange()));
+        subCode.append("  end;\n\n");
+      }
+      
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        if ("Simple".equals(sm.getType()))
+        {
+          String enumerationName = StringFormatter.toPascalCase(sm.getName());
+          code.append(StringFormatter.format("    attribute {0} : {1};\n",sm.getName(),enumerationName));
+          subCode.append(StringFormatter.format("  enumeration {0}\n",enumerationName));
+          boolean isFirstEvent = true;
+          for (State s : sm.getStates())
+          {
+            if (isFirstEvent)
+            {
+              subCode.append("    ");
+            }
+            else
+            {
+              subCode.append(", ");
+            }
+            isFirstEvent = false;
+            subCode.append(StringFormatter.format("{0}",s.getName())); 
+          }
+          subCode.append("\n  end;\n\n");
+        }
+      }     
+      
+      code.append("  end;\n\n");
+      code.append(subCode.toString());
+    }
+      
+     boolean isFirstInterface = model.hasUmpleInterfaces() ? true : false;
+  	 for (UmpleInterface uInterface : model.getUmpleInterfaces())
+      {
+  		 subCode =  new StringBuilder();
+         if (isFirstInterface)
+      	 {
+          isFirstInterface = false;
+          String interfaceDeclaration = "interface ";
+          interfaceDeclaration += uInterface.getName();
+          subCode.append(StringFormatter.format("  {0}\n",interfaceDeclaration));
+          subCode.append("  end;\n\n");
+          }
+         code.append(subCode.toString());
+      }
+    
+    if (!isFirst && !isFirstInterface)
+    {
+      code.append("end.\n");
+    }
+    
+    model.setCode(code.toString());
+    writeModel();
+  }
+  
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".tuml";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating TextUml code." + e, e);
+    }
+  } 
+}
+
+class SimulateGenerator
+{
+  
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    
+    code.append("<?php\n");
+    code.append("$modelOverview = new ModelOverview();\n");
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      code.append(StringFormatter.format("$aClass = new ClassOverview(\"{0}\",$modelOverview);\n",uClass.getName()));
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        String isList = av.getIsList() ? "true" : "false";
+        code.append(StringFormatter.format("new Attribute(\"{0}\",\"{1}\",{2},$aClass);\n",typeName,av.getName(),isList));
+      }
+
+      ArrayList<Association> internalAssociations = new ArrayList<Association>();
+      for(Association as : uClass.getAssociations())
+      {
+        AssociationEnd myEnd = as.getEnd(0);
+        AssociationEnd theirEnd = as.getEnd(1);
+        
+        if (internalAssociations.contains(as))
+        {
+          continue;
+        }
+
+        if (myEnd.getClassName().equals(theirEnd.getClassName()))
+        {
+          internalAssociations.add(as);
+          code.append(StringFormatter.format("new AssociationEnd({0},{1},\"{2}\",\"{3}\",$aClass);\n",myEnd.getMultiplicity().getLowerBound(),myEnd.getMultiplicity().getUpperBound(),myEnd.getClassName(),myEnd.getRoleName()));
+          code.append(StringFormatter.format("new AssociationEnd({0},{1},\"{2}\",\"{3}\",$aClass);\n",theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getRoleName()));
+        }
+        else
+        {
+          if (theirEnd.getClassName().equals(uClass.getName()))
+          {
+            myEnd = as.getEnd(1);
+            theirEnd = as.getEnd(0);
+          }
+          code.append(StringFormatter.format("new AssociationEnd({0},{1},\"{2}\",\"{3}\",$aClass);\n",theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getRoleName()));
+        }
+      }
+      
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        code.append(StringFormatter.format("$aStateMachine = new StateMachine(\"{0}\",$aClass);\n",StringFormatter.toPascalCase(sm.getName())));
+        for (Event e : sm.getEvents())
+        {
+          code.append(StringFormatter.format("$aStateMachine->addEvent(\"{0}\");\n",e.getName())); 
+        }
+      }
+    }
+
+    /*    
+    if (model.numberOfUmpleClasses() > 0 && model.getUmpleClass(0).numberOfStateMachines() > 0)
+    {
+      UmpleClass uClass = model.getUmpleClass(0);
+      StateMachine machine = uClass.getStateMachine(0);
+      code.append("<?php\n");
+      code.append(StringFormatter.format("$model = retrieveModel('inputModel',new {0}());\n",uClass.getName()));
+      code.append(StringFormatter.format("$stateMachineName = '{0}';\n",StringFormatter.toPascalCase(machine.getName())));
+      
+      boolean isFirst = true;
+      code.append("$allEventNames = array(");
+      for (Event e : machine.getEvents())
+      {
+        if (!isFirst)
+        {
+          code.append(",");
+        }
+        isFirst = false;
+        code.append(StringFormatter.format("'{0}'",e.getName()));
+      }
+      code.append(");\n");
+    }
+    */
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+  
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+
+      BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + "model.php"));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating simulate code." + e, e);
+    }
+  }  
+}
+
+class YumlGenerator
+{
+  
+  public void generate()
+  {
+    StringBuilder yuml = new StringBuilder();
+    for (UmpleClass aClass : model.getUmpleClasses())
+    {
+      yuml.append("[");
+      yuml.append(aClass.getName());
+      if (aClass.numberOfAttributes() > 0)
+      {
+        yuml.append("|");
+        for (Attribute aVar : aClass.getAttributes())
+        {
+          if (aVar.getType() == null)
+          {
+            yuml.append(StringFormatter.format("{0};",aVar.getName(),aVar.getType()));  
+            
+          }
+          else
+          {
+            yuml.append(StringFormatter.format("{0}:{1};",aVar.getName(),aVar.getType()));  
+          }
+        }
+      }
+      yuml.append("],");
+       
+      if (aClass.getExtendsClass() != null)
+      {
+        UmpleClass parent = aClass.getExtendsClass();
+        yuml.append(StringFormatter.format("[{0}]^-[{1}],",parent.getName(),aClass.getName()));
+      }
+      
+    }
+    
+    for (Association aAssoc : model.getAssociations())
+    {
+      UmpleClass c1 = model.getUmpleClass(aAssoc.getEnd(0).getClassName());
+      UmpleClass c2 = model.getUmpleClass(aAssoc.getEnd(1).getClassName());
+      String mult1 = aAssoc.getEnd(0).toSimpleString();
+      String mult2 = aAssoc.getEnd(1).toSimpleString();
+      
+      String direction = "-";
+      if (aAssoc.getIsLeftNavigable() && !aAssoc.getIsRightNavigable())
+      {
+        direction = "<-";
+      }
+      else if (!aAssoc.getIsLeftNavigable() && aAssoc.getIsRightNavigable())
+      {
+        direction = "->";
+      }
+      yuml.append(StringFormatter.format("[{0}]{2}{4}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction));
+    }
+    
+    model.setCode(yuml.toString());
+  }
+}
+
+
+class JsonGenerator
+{
+  
+  public void generate()
+  {
+    String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
+    String jsonForInterfaces = StringFormatter.format("{0}umpleInterfaces{0}:[", "\"");
+    String jsonForAssociations = StringFormatter.format("{0}umpleAssociations{0}:[", "\"");
+
+    boolean isFirst = true;
+    for (UmpleClass aClass : model.getUmpleClasses())
+    {
+      String x = aClass.getPosition().getX() + "";
+      String y = aClass.getPosition().getY() + "";
+      String width = aClass.getPosition().getWidth() + "";
+      String height = aClass.getPosition().getHeight() + "";
+      String name = aClass.getName();
+
+      String jsonForAttributes = "";
+      for (Attribute attribute : aClass.getAttributes())
+      {
+        if (jsonForAttributes.length() > 0)
+        {
+          jsonForAttributes += ", "; 
+        }
+        String attributeType = attribute.getType() == null ? "String" : attribute.getType();
+        jsonForAttributes += StringFormatter.format("{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0} }","\"",attributeType,attribute.getName());
+      }
+      
+      if (!isFirst)
+      {
+        jsonForClasses += ", ";
+      }
+      
+      String extendsJson = "";
+      if (aClass.getExtendsClass() != null)
+      {
+        String extendsClassName = aClass.getExtendsClass().getName();
+        extendsJson = StringFormatter.format(", {0}extendsClass{0}: {0}{1}{0}","\"",extendsClassName);
+      }
+      
+      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}{8}}", "\"", x, y, width, height, name, name, jsonForAttributes,extendsJson);
+      isFirst = false;
+    }
+    
+    boolean isFirstInterface = true;
+    for (UmpleInterface aInterface : model.getUmpleInterfaces())
+    {
+      String x = aInterface.getPosition().getX() + "";
+      String y = aInterface.getPosition().getY() + "";
+      String width = aInterface.getPosition().getWidth() + "";
+      String height = aInterface.getPosition().getHeight() + "";
+      String name = aInterface.getName();
+           
+      if (!isFirstInterface)
+      {
+    	  jsonForInterfaces += ", ";
+      }
+      jsonForInterfaces += StringFormatter.format("{{0}position{0}: {{0}x{0}: {2}, {0}y{0}: {3}, {0}width{0}: {4}, {0}height{0}: {5}},{0}id{0}: {0}{1}{0}, {0}name{0}: {0}{1}{0}}","\"",name, x, y, width, height);
+      isFirstInterface = false;
+    }
+    
+    int index = 0;
+    for (Association aAssoc : model.getAssociations())
+    {
+      UmpleClass c1 = model.getUmpleClass(aAssoc.getEnd(0).getClassName());
+      UmpleClass c2 = model.getUmpleClass(aAssoc.getEnd(1).getClassName());
+      
+      if (index > 0)
+      {
+        jsonForAssociations += ", ";
+      }
+      
+      int x1 = -1;
+      int y1 = -1;
+      int x2 = -1;
+      int y2 = -1;
+      String name = aAssoc.getName();
+      String multOne = aAssoc.getEnd(0).toSimpleString();
+      String multTwo = aAssoc.getEnd(1).toSimpleString();
+      String roleOne = aAssoc.getEnd(0).getRoleName();
+      String roleTwo = aAssoc.getEnd(1).getRoleName();
+      
+      if (roleOne.equals("") || aAssoc.getEnd(0).getIsDefaultRoleName()) roleOne = "undefined";
+      if (roleTwo.equals("") || aAssoc.getEnd(1).getIsDefaultRoleName()) roleTwo = "undefined";
+      
+      if (aAssoc.numberOfPositions() > 0)
+      {
+        Coordinate position = aAssoc.getPosition(0);
+        x1 = position.getX();
+        y1 = position.getY();
+      }
+      
+      if (aAssoc.numberOfPositions() > 1)
+      {
+        Coordinate position = aAssoc.getPosition(1);
+        x2 = position.getX();
+        y2 = position.getY();
+      }
+      
+      String associationId = "umpleAssociation_" + index;
+      
+      jsonForAssociations += StringFormatter.format("{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, \"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, \"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", \"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", \"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", \"isLeftNavigable\":\"{12}\", \"isRightNavigable\":\"{13}\"}", c1.getName(), c2.getName(), x1, y1, x2, y2,associationId, multOne, multTwo, name, roleOne, roleTwo, aAssoc.getIsLeftNavigable(), aAssoc.getIsRightNavigable());
+      index += 1;
+    }
+
+    jsonForClasses += "]";
+    jsonForAssociations += "]";
+    jsonForInterfaces += "]";
+    //String json = "{" + jsonForClasses + ", " + jsonForInterfaces + ", " + jsonForAssociations + " }";
+    String json = "{" + jsonForClasses  + ", " + jsonForAssociations + " }";
+    model.setCode(json);
+  }
+}
+

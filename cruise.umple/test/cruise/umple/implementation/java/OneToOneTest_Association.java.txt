@@ -1,0 +1,71 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+
+  //Mentor Associations
+  private Student student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName, Student aStudent)
+  {
+    name = aName;
+    if (aStudent == null || aStudent.getMentor() != null)
+    {
+      throw new RuntimeException("Unable to create Mentor due to aStudent");
+    }
+    student = aStudent;
+  }
+
+  public Mentor(String aName, String aNameForStudent, int aNumberForStudent)
+  {
+    name = aName;
+    student = new Student(aNameForStudent, aNumberForStudent, this);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public void delete()
+  {
+    Student existingStudent = student;
+    student = null;
+    if (existingStudent != null)
+    {
+      existingStudent.delete();
+    }
+  }
+
+}

@@ -1,0 +1,47 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class Token
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Token Attributes - for documentation purposes
+  #attr_reader :p
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_p)
+    @initialized = false
+    @deleted = false
+    @p = a_p
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_p(a_p)
+    was_set = false
+    @p = a_p
+    was_set = true
+    was_set
+  end
+
+  def get_p
+    @p
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

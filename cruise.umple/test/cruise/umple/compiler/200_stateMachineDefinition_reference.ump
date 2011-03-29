@@ -1,0 +1,10 @@
+statemachine OnOffSwitch
+{
+  On { push -> Off;}
+  Off { push -> On; }
+}
+
+class Lightbulb
+{
+  fixture as OnOffSwitch;
+}

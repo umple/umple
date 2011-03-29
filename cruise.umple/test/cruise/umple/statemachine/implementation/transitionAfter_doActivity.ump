@@ -1,0 +1,19 @@
+namespace example;
+
+class Switch
+{
+  status
+  {
+    On
+    {
+      press -> Off;
+    }
+    
+    Off 
+    {
+      do { keepDoing(); } -> doEnded;
+    }
+    
+    doEnded {}
+  }
+}

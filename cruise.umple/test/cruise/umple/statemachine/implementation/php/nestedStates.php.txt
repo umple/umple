@@ -1,0 +1,95 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private $bulb;
+
+  // bulb constants
+  private static $BulbOff = 1;
+  private static $BulbOn = 2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOff);
+    if ($this->bulb == null) { $this->setBulb(self::$UNKNOWN ID: stateNull); }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    elseif ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->bulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbOn);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->bulb == self::$BulbOn)
+    {
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function touch()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->bulbOn == self::$OnNormal)
+    {
+      $this->setBulbOn(self::$OnDimmed);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->bulbOn == self::$OnDimmed)
+    {
+      $this->setBulbOn(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+  }
+
+  private function setBulbOn($aBulbOn)
+  {
+    $this->bulbOn = $aBulbOn;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

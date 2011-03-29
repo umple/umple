@@ -1,0 +1,21 @@
+statemachine OnOffSwitch
+{
+  On {
+   entry / {codeB}
+   push -> Off;
+  }
+  Off { push -> On; }
+}
+
+class Lightbulb
+{
+  fixture as OnOffSwitch
+  {
+    On  
+    { 
+        exit / {codeA}
+      - entry / {codeB}
+      * push -> On;
+    }
+  }
+}

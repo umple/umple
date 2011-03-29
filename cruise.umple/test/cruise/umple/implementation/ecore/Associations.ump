@@ -1,0 +1,17 @@
+generate Ecore;
+namespace example;
+
+class Student
+{
+  * b -- 1 Mentor n;
+  1 c -- 3 Mentor o;
+  3..5 d -- 0..* Mentor p;    
+}
+
+association Supervisor
+{
+  0..1 Student a -- 0..4 Mentor m;
+}
+
+class Mentor
+{}

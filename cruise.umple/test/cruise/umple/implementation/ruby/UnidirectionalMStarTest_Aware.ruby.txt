@@ -1,0 +1,128 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class Mentor
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :students
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_name, all_students)
+    @initialized = false
+    @deleted = false
+    @name = a_name
+    @students = []
+    did_add_students = set_students(all_students)
+    raise "Unable to create Mentor, must have at least 1 @students" unless did_add_students 
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_student(index)
+    a_student = @students[index]
+    a_student
+  end
+
+  def get_students
+    new_students = @students.dup
+    new_students
+  end
+
+  def number_of_students
+    number = @students.size
+    number
+  end
+
+  def has_students
+    has = @students.size > 0
+    has
+  end
+
+  def index_of_student(a_student)
+    index = @students.index(a_student)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_students
+    1
+  end
+
+  def add_student(a_student)
+    was_added = false
+    return false if index_of_student(a_student) != -1
+    @students << a_student
+    was_added = true
+    was_added
+  end
+
+  def remove_student(a_student)
+    was_removed = false
+    unless @students.include?(a_student)
+      return was_removed
+    end
+
+    if number_of_students <= Mentor.minimum_number_of_students
+      return was_removed
+    end
+
+    @students.delete(a_student)
+    was_removed = true
+    was_removed
+  end
+
+  def set_students(new_students)
+    was_set = false
+    verified_students = []
+    new_students.each do |a_student|
+      next if (verified_students.include?(a_student))
+      verified_students << a_student
+    end
+
+    if verified_students.size != new_students.size or verified_students.size() < Mentor.minimum_number_of_students
+      return was_set
+    end
+
+    @students.clear
+    verified_students.each do |a_student|
+      @students << a_student
+    end
+
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    @students.clear
+  end
+
+end
+end

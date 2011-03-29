@@ -1,0 +1,14 @@
+namespace example;
+
+class Light
+{
+  status
+  {
+    On { 
+      entry / { System.out.println("entry"); } 
+      entry / { System.out.println("entry2"); }
+      flip -> Off;
+    }
+    Off { flip -> On; }
+  }
+}

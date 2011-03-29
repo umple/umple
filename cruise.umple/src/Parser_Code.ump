@@ -1,0 +1,1145 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.compiler;
+
+class Couple
+{
+  
+  public boolean isBalanced(String input)
+  {
+    
+    if (input == null)
+    {
+      return true;
+    }
+    
+    input = removeIgnoredText(input);
+    
+    int numberOfOpen = 0;
+    int numberOfClosed = 0;
+    
+    int currentIndex = 0;
+    while ((currentIndex = input.indexOf(open,currentIndex)) != -1)
+    {
+      numberOfOpen += 1;
+      currentIndex += 1;
+    }
+    
+    currentIndex = 0;
+    while (numberOfClosed <= numberOfOpen && (currentIndex = input.indexOf(close,currentIndex)) != -1)
+    {
+      numberOfClosed += 1;
+      currentIndex += 1;
+    }
+    return numberOfOpen <= numberOfClosed;
+  }
+
+  
+  public String removeIgnoredText(String input)
+  {
+    String output = input;
+    
+    for (Couple ignore : ignores)
+    {
+      output = ignore.removeIgnoredText(output);
+      int startIndex = 0;
+      while ((startIndex = output.indexOf(ignore.getOpen())) != -1)
+      {
+        int endIndex = output.indexOf(ignore.getClose(),startIndex+ignore.getOpen().length());
+        int endIndexOffset = ignore.getClose().length();
+        
+        if (startIndex == 0 && (endIndex == -1 || endIndex == output.length() - 1))
+        {
+          output = "";
+        }
+        else if (startIndex == 0)
+        {
+          output = output.substring(endIndex+ignore.getClose().length());
+        }
+        else if (endIndex == -1)
+        {
+          output = output.substring(0,startIndex);
+        }
+        else
+        {
+          output = output.substring(0,startIndex) + output.substring(endIndex+endIndexOffset);
+        }
+      }
+    }
+    return output;
+  }  
+  
+}
+
+class Token
+{
+  
+  public Token(String aName, String aValue, Position aPosition)
+  {
+    this(aName,aValue);
+    setPosition(aPosition);
+  }
+  
+  public void addSubToken(int index, Token aSubToken)
+  {
+    subTokens.add(index,aSubToken);
+  }
+  
+  public Position getPosition(String tokenName)
+  {
+    Token t = getSubToken(tokenName);
+    if (t != null)
+    {
+      return t.getPosition();
+    }
+    else
+    {
+      return null;
+    }
+  }
+  
+  public int getInnerLength()
+  {
+    if ("START_TOKEN".equals(getValue()))
+    {
+      return getLength(); 
+    }
+    else if (isStatic())
+    {
+      return getName().length();
+    }
+    else
+    {
+      return getValue().length();
+    }
+  }
+  
+  public int getLength()
+  {
+    if (getParentToken() != null)
+    {
+      Token parent = getParentToken();
+      Token grandParent = parent.getParentToken();
+      int startOffset = this.getPosition().getOffset();
+      int myIndex = getParentToken().indexOfSubToken(this);
+      int nextIndex = myIndex + 1;
+      
+      boolean hasMoreSiblings = nextIndex < getParentToken().numberOfSubTokens();
+
+      if (hasMoreSiblings)
+      {
+        return parent.getSubToken(nextIndex).getPosition().getOffset() - startOffset;
+      }
+      else 
+      {
+        if (grandParent != null)
+        {
+          int myParentIndex = grandParent.indexOfSubToken(parent);
+          int nextParentIndex = myParentIndex + 1;
+          boolean hasMoreParentSiblings = nextParentIndex < grandParent.numberOfSubTokens();
+          if (hasMoreParentSiblings)
+          {
+            return grandParent.getSubToken(nextParentIndex).getPosition().getOffset() - startOffset;
+          }
+        }
+        Token currentToken = this;
+        Token lastToken = this;
+        while (currentToken.numberOfSubTokens() > 0)
+        {
+          lastToken = currentToken.getSubToken(currentToken.numberOfSubTokens() - 1);
+          currentToken = lastToken;
+        }
+        return lastToken.getPosition().getOffset() + lastToken.getValue().length() - getPosition().getOffset();
+      }
+    }
+    else if (numberOfSubTokens() == 0)
+    {
+      return getValue().length();
+    }
+    else
+    {
+      Token currentParent = this;
+      Token lastSubToken = null;
+      while (currentParent.numberOfSubTokens() > 0)
+      {
+        lastSubToken = currentParent.getSubToken(currentParent.numberOfSubTokens() - 1);
+        currentParent = lastSubToken;
+      }
+      return lastSubToken.getPosition().getOffset() + lastSubToken.getValue().length() - getPosition().getOffset();  
+    }
+  }
+  
+  public int getIntValue(String tokenName)
+  {
+    return getIntValue(tokenName,0);
+  }
+  
+  public int getIntValue(String tokenName, int defaultIfInvalid)
+  {
+    String value = getValue(tokenName);
+    if (value == null)
+    {
+      return defaultIfInvalid;
+    }
+    else
+    {
+      try
+      {
+        return Integer.parseInt(value);
+      }
+      catch (NumberFormatException e)
+      {
+        return defaultIfInvalid;
+      }
+    }
+  }
+  
+  public Token getSubToken(String tokenName, int offset)
+  {
+    if (is(tokenName))
+    {
+      return this;
+    }
+    else
+    {
+      int currentOffset = 0;
+      for (Token t : subTokens)
+      {
+        if (t.is(tokenName))
+        {
+          if (currentOffset == offset)
+          {
+            return t;  
+          }
+          currentOffset += 1;  
+        }
+      }
+    }
+    return null;
+  }
+  
+  public Token getSubToken(String tokenName)
+  {
+    return getSubToken(tokenName,0);
+  }
+  
+  public String getValue(String tokenName)
+  {
+    Token t = getSubToken(tokenName);
+    if (t != null)
+    {
+      return t.getValue();
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+  public boolean is(String aName)
+  {
+    return getName().equals(aName) && !isStatic();
+  }
+  
+  public boolean isStatic(String aName)
+  {
+    return getName().equals(aName) && isStatic();
+  }
+  
+  public boolean isStatic()
+  {
+    return "STATIC".equals(getValue());
+  }
+  
+  public boolean isValue(String compareTo)
+  {
+    return getValue().equals(compareTo);
+  }
+  
+  public void remove(int index)
+  {
+    if (index < 0 || index >= subTokens.size())
+    {
+      return;
+    }
+    subTokens.remove(index);
+  }
+  
+}
+
+class Position
+{
+
+  public Position copy()
+  {
+    return new Position(lineNumber,characterOffset,offset);
+  }
+  
+  public Position add(Position more)
+  {
+    return new Position(getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
+  }
+
+  public String toString()
+  {
+    return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
+  }
+  
+}
+
+class RulePart
+{
+
+  public boolean isWithinLimits(int numberSoFar)
+  {
+    return getMaximumPartsFound() == -1 || numberSoFar < getMaximumPartsFound();
+  }
+
+  public String getDisplayName()
+  {
+    if (isEnum())
+    {
+      TextParser parser = new TextParser(name);
+      parser.nextAt("=");
+      return parser.nextUntil(":");
+    }
+    else if (isToEndOfLine())
+    {
+      return name.substring(1);
+    }
+    else if (isMultiWord())
+    {
+      return name.substring(2);
+    }
+    else
+    {
+      return name;
+    }
+  }
+
+  public void removeNextIdentifiers()
+  {
+    nextIdentifiers.clear();
+  }
+  
+  public String[] getInnerNames()
+  {
+    if (!hasInnerNames())
+    {
+      return new String[0];
+    }
+    
+    TextParser parser = new TextParser(name);
+    parser.load(parser.nextUntil(">"));
+    ArrayList<String> allNames = new ArrayList<String>();
+    
+    
+    while(parser.nextUntil(",") != null)
+    {
+      allNames.add(parser.name());
+      parser.nextAt(",");
+    }
+    return allNames.toArray(new String[allNames.size()]);
+  }
+
+  public boolean isValidInnerValues(String value)
+  {
+    if (value == null)
+    {
+      return false;
+    }
+    TextParser parser = new TextParser(value);
+    int number = 0;
+    while (parser.next() != null)
+    {
+      number++;
+    }
+    return number > 0 && number <= getInnerNames().length;
+  }
+  
+  public RulePartValue[] getInnerValues(String value)
+  {
+    if (!hasInnerNames())
+    {
+      return new RulePartValue[0];
+    }
+
+    String[] allNames = getInnerNames();
+    RulePartValue[] allRulePartValues = new RulePartValue[allNames.length];
+
+    for (int i=0; i<allNames.length; i++)
+    {
+      allRulePartValues[i] = new RulePartValue();
+      allRulePartValues[i].setName(allNames[i]);
+    }
+
+
+    if (value == null)
+    {
+      return allRulePartValues;
+    }
+    
+    ArrayList<String> allUnorderedValues = new ArrayList<String>();
+    ArrayList<Position> allUnorderedPositions = new ArrayList<Position>();
+    
+    TextParser parser = new TextParser(value);
+    while(parser.peek() != null)
+    {
+      allUnorderedPositions.add(parser.currentPosition().copy());
+      allUnorderedValues.add(parser.next());
+    }
+    
+    int[] allValueIndicies = new int[allNames.length];
+
+    TextParser namesParser = new TextParser(name);
+    namesParser.nextUntil(">");
+    namesParser.nextAt(">");
+    for (int i=0; i<allValueIndicies.length; i++)
+    {
+      String nextOrderText = namesParser.nextUntil(",");
+      int next = nextOrderText == null ? i : Integer.parseInt(nextOrderText);
+      namesParser.nextAt(",");
+      allValueIndicies[i] = next;
+    }
+
+    int maximumIndex = allUnorderedValues.size() - 1;
+    int unorderedIndex = 0;
+    for (int i=0; i<allValueIndicies.length; i++)
+    {
+      int currentIndex = allValueIndicies[i];
+      String orderedValue = currentIndex <= maximumIndex ? allUnorderedValues.get(unorderedIndex) : null;
+      Position orderedPosition = currentIndex <= maximumIndex ? allUnorderedPositions.get(unorderedIndex++) : null;
+      
+      allRulePartValues[i].setValue(orderedValue);
+      allRulePartValues[i].setPosition(orderedPosition);
+    }
+    
+    return allRulePartValues;
+  }
+  
+  public boolean hasInnerNames()
+  {
+    return getName() != null && getName().indexOf(",") != -1;
+  }
+  
+  public boolean isStatic()
+  {
+    return Type.Static.equals(getType()); 
+  }
+
+  public boolean isMultiWord()
+  {
+    return getName().startsWith("**");
+  }
+  
+  public boolean isToEndOfLine()
+  {
+    return !isMultiWord() && getName().startsWith("*");
+  }
+  
+  public boolean isVariable()
+  {
+    return Type.Variable.equals(getType()); 
+  }
+
+  public boolean isEnum()
+  {
+    return isVariable() && name != null && name.startsWith("="); 
+  }
+  
+  public String[] getEnums()
+  {
+    if (name == null)
+    {
+      return new String[0];
+    }
+    
+    TextParser parser = new TextParser(name);
+    parser.nextAfter(":");
+    
+    if (parser.peek() == null)
+    {
+      return new String[] {getDisplayName()}; 
+    }
+    
+    ArrayList<String> allEnums = new ArrayList<String>();
+    while (parser.nextUntil("|") != null)
+    {
+      allEnums.add(parser.name());
+      parser.nextAt("|");
+    }
+    return allEnums.toArray(new String[allEnums.size()]);
+  }
+  
+  public boolean isEnumValue(String input)
+  {
+    if (!isEnum() || input == null)
+    {
+      return false;
+    }
+    
+    for (String aEnum : getEnums())
+    {
+      if (aEnum.equals(input))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public boolean isRule()
+  {
+    return Type.Rule.equals(getType()); 
+  }  
+  
+  
+  public boolean isOne()
+  {
+    return "1".equals(getMultiplicity());
+  }
+  
+  public boolean isOptional()
+  {
+    return "?".equals(getMultiplicity());
+  }
+  
+  public boolean isMany()
+  {
+    return "*".equals(getMultiplicity());
+  }
+  
+  public boolean isAnonymous()
+  {
+    return getName().startsWith("anonymous::");
+  }
+  
+  public String toString()
+  {
+    StringBuffer answer = new StringBuffer();
+    answer.append("Nexts:");
+    for (int i=0; i<nextIdentifiers.size(); i++)
+    {
+     answer.append("[" + nextIdentifiers.get(i) + "]");
+    }
+    answer.append("\n");
+    return answer.toString();
+  }
+
+}
+
+class Parser
+{
+  
+  public Token reset()
+  {
+    rootToken = new Token(getName(),"ROOT", new Position(1,0,0));
+    return rootToken;
+  }
+  
+  public Rule getRule(String ruleName)
+  {
+    for (Rule r : rules)
+    {
+      if (r.getName().equals(ruleName))
+      {
+        return r;
+      }
+    }
+    return null;
+  }
+
+  public String toString()
+  {
+    StringBuffer answer = new StringBuffer();
+    toString(answer,rootToken);
+    return answer.toString();
+  }
+  
+  public String toGrammar()
+  {
+    StringBuilder answer = new StringBuilder();
+    for(String rule : grammarRules)
+    {
+      if (answer.length() > 0)
+      {
+        answer.append("<br />\n");
+      }
+      
+      String cleanedUpRule = rule;
+      cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "-(");
+      cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", "-)");
+      answer.append(cleanedUpRule);
+    }
+    return answer.toString();
+  }
+  
+  public StringBuffer toString(StringBuffer stringSoFar, Token currentToken)
+  {
+    if ("START_TOKEN".equals(currentToken.getValue()))
+    {
+      stringSoFar.append("[" + currentToken.getName() + "]");
+    }
+    else if ("STATIC".equals(currentToken.getValue()))
+    {
+      //ignore
+    }
+    else if (!currentToken.equals(rootToken))
+    {
+      stringSoFar.append("[" + currentToken.getName() + ":" + currentToken.getValue() + "]");
+    }
+    
+    for(Token subToken : currentToken.getSubTokens())
+    {
+      toString(stringSoFar,subToken);
+    }
+    return stringSoFar;
+  }
+
+  public void addRule(String input)
+  {
+    input = input.replace("-(","OPEN_ROUND_BRACKET");
+    input = input.replace("-)","CLOSE_ROUND_BRACKET");
+    
+    grammarRules.add(input);
+    TextParser ruleParser = new TextParser(input);
+    String name = ruleParser.next();
+    boolean shouldHide = false;
+    if (name.endsWith("-"))
+    {
+      shouldHide = true;
+      name = name.substring(0,name.length() - 1);
+    }
+    
+    ruleParser.nextAt(":");
+    int startIndex = ruleParser.previousIndex();
+    
+    int index = 0;
+    Parser innerParser = new Parser("innerParser");
+    while (ruleParser.lookFor("(",")",true) != null)
+    {
+      String anonymousRuleName = cruise.umple.util.StringFormatter.format("anonymous::{0}::{1}",name,++index);
+      String anonymousRuleDefinition = ruleParser.name().substring(1,ruleParser.name().length() - 1).trim();
+      innerParser.addRule(cruise.umple.util.StringFormatter.format("{0}- : {1}",anonymousRuleName,anonymousRuleDefinition));
+      ruleParser.replace("[[" + anonymousRuleName + "]]");
+    }
+    ruleParser.reset(startIndex);
+    ruleParser.nextAt(":");
+    
+    Rule newRule = new Rule(name);
+    newRule.setShouldHide(shouldHide);
+    while (ruleParser.nextUntil(false,"|") != null)
+    {
+      String definition = ruleParser.name();
+      int innerStartIndex = ruleParser.previousIndex();
+      while (isWithinVariable(definition))
+      {
+        ruleParser.nextAfter("]");
+        ruleParser.nextUntil(false,"|");
+        definition = ruleParser.extractFrom(innerStartIndex);
+      }
+      definition = definition.replace("OPEN_ROUND_BRACKET","(");
+      definition = definition.replace("CLOSE_ROUND_BRACKET",")");
+      newRule.addDefinition(definition);
+      ruleParser.nextAt("|");
+    }
+    rules.add(newRule);
+    rules.addAll(innerParser.rules);
+  }
+
+  public ParseResult parse(String ruleName, String input)
+  {
+    TextParser inputParser = new TextParser(input);
+    parseResult.setPosition(inputParser.currentPosition());
+    boolean didParse = parse(ruleName, inputParser, rootToken, 0);
+    parseResult.setWasSuccess(didParse);
+    return parseResult;
+  }
+
+  private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
+  {
+    for (Rule r : rules)
+    {
+      if (!r.getName().equals(ruleName))
+      {
+        continue;
+      }
+      
+      Token currentToken = null;
+      if (r.getShouldHide())
+      {
+        currentToken = parentToken;
+      }
+      else
+      {
+        currentToken = new Token(ruleName,"START_TOKEN",inputParser.currentPosition().copy()); 
+      }
+      
+      for (String definition : r.getDefinitions())
+      {
+        int currentTokenSize = currentToken.numberOfSubTokens();
+        boolean isSucceeding = true;
+        int savedIndex = inputParser.currentIndex();
+        
+        RuleInstance instance = new RuleInstance(this);
+        instance.configureDefinition(definition, stopAts);
+        while (instance.hasMoreRuleParts())
+        {
+          Position startTokenPosition = inputParser.currentPosition().copy();
+          RulePart part = instance.nextRulePart();
+          String currentRule = part.getName();
+          if (part.isStatic())
+          {
+            String inputValue = inputParser.nextAt(currentRule);
+            if (inputValue == null)
+            { 
+              isSucceeding = false;
+              break;
+            }
+            currentToken.addSubToken(new Token(inputValue, "STATIC", startTokenPosition));
+            parseResult.setPosition(inputParser.currentPosition());
+          }
+          else if (part.isVariable())
+          {
+            String value = null;
+            int startIndex = inputParser.currentIndex();
+            if (part.isToEndOfLine())
+            {
+              value = inputParser.nextLine();
+            }
+            else if (part.getNextIdentifiers().length > 0)
+            {
+              boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
+              value = inputParser.nextUntil(stopAtSpace,part.getNextIdentifiers());
+
+              while (part.isMultiWord() && !isBalanced(value))
+              {
+                int internalIndex = inputParser.currentIndex();
+                inputParser.nextAt(part.getNextIdentifiers());
+                String nextValue = inputParser.nextUntil(stopAtSpace,part.getNextIdentifiers());
+                
+                if (inputParser.peekAt(part.getNextIdentifiers()) == null)
+                {
+                  inputParser.reset(internalIndex);
+                  break;
+                }
+                
+                value = inputParser.extractFrom(startIndex);
+                if (nextValue == null && inputParser.peekAt(part.getNextIdentifiers()) == null)
+                {
+                  break;
+                }
+              }
+            }
+            else if (part.isMultiWord())
+            {
+              value = inputParser.nextUntil(false,(String[])null);
+            }
+            else
+            {
+              value = inputParser.next();
+            }
+            
+            if (part.isEnum() && !part.isEnumValue(value))
+            {
+              value = null;
+            }
+            
+            if (part.hasInnerNames() && !part.isValidInnerValues(value))
+            {
+              value = null;
+            }
+            
+            if (value == null && part.isOne())
+            {
+              isSucceeding = instance.removeOptionalPart();
+              if (isSucceeding)
+              {
+                instance.resetRulePart();
+                restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+                continue;
+              }
+              else
+              {
+                break;
+              }
+            }
+            else if (value == null)
+            {
+              instance.removeRulePart(part);
+              instance.resetRulePart();
+              restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+              continue;
+            }
+            
+            if (part.hasInnerNames())
+            {
+              RulePartValue[] allValues = part.getInnerValues(value);
+              for (int innerI=0; innerI<allValues.length; innerI++)
+              {
+                String innerValue = allValues[innerI].getValue();
+                if (innerValue == null)
+                {
+                  continue;
+                }
+                String innerName = allValues[innerI].getName();
+                Position innerPosition = allValues[innerI].getPosition();
+                currentToken.addSubToken(new Token(innerName,innerValue, startTokenPosition.add(innerPosition)));
+              }
+            }
+            else
+            {
+              currentToken.addSubToken(new Token(part.getDisplayName(), value, startTokenPosition));
+            }
+          }
+          else if (part.isRule())
+          {
+            if (part.isOne())
+            {
+              isSucceeding = parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers());
+            }
+            else if (part.isOptional())
+            {
+              isSucceeding = true;
+              boolean didParse = parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers());
+              if (!didParse)
+              {
+                instance.removeRulePart(part);
+                instance.resetRulePart();
+                restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+                continue;
+              }
+            }
+            else if (part.isMany())
+            {
+              int maxFound = part.getMaximumPartsFound();
+              if (maxFound == 0)
+              {
+                instance.removeRulePart(part);
+                instance.resetRulePart();
+                restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+                continue;
+              }
+            
+              isSucceeding = true;
+              int numberFoundSoFar = 0;
+              while (part.isWithinLimits(numberFoundSoFar) && parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers()))
+              {
+                numberFoundSoFar += 1;
+              }
+              part.setMaximumPartsFound(numberFoundSoFar - 2);
+            }
+          }
+        }
+        
+        if (!isSucceeding)
+        {
+          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+        }
+        else if (inputParser.peek() != null && level == 0)
+        {
+          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+          return false;
+        }
+        else
+        {
+          if (!r.getShouldHide())
+          {
+            parentToken.addSubToken(currentToken);
+          }
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  
+  private void restorePrevious(TextParser inputParser, int savedIndex, Token currentToken, int size)
+  {
+    inputParser.reset(savedIndex);
+    while (size < currentToken.numberOfSubTokens())
+    {
+      currentToken.remove(size);
+    }
+  }
+  
+  private boolean isWithinVariable(String definition)
+  {
+    int openBracket = definition.lastIndexOf("[");
+    int closeBracket = definition.lastIndexOf("]");
+    return openBracket > closeBracket;
+  }
+  
+  private boolean isBalanced(String input)
+  {
+    for (Couple couple : couples)
+    {
+      if (!couple.isBalanced(input))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  public Token getToken(int index)
+  {
+    return rootToken.getSubToken(index);
+  }
+  
+  public List<Token> getTokens()
+  {
+    return rootToken.getSubTokens();
+  }
+
+  public int numberOfTokens()
+  {
+    return rootToken.numberOfSubTokens();
+  }
+
+  public boolean hasTokens()
+  {
+    return numberOfTokens() > 0;
+  }
+
+  public int indexOf(Token aToken)
+  {
+    return rootToken.indexOfSubToken(aToken);
+  }
+  
+  
+}
+
+class RuleInstance
+{
+
+  public void configureDefinition(String definition, String... allStopAts)
+  {
+    stopAts.clear();
+    for(String stopAt : allStopAts)
+    {
+      stopAts.add(stopAt);
+    }
+    TextParser ruleParser = new TextParser(definition);
+    while (ruleParser.next() != null)
+    {
+      String currentRule = ruleParser.name();
+      RulePart currentPart = analyzeRule(currentRule);
+      addRulePart(currentPart);
+    }
+    updateNextIdentifier();
+  }
+  
+  public boolean hasMoreRuleParts()
+  {
+    return rulePartsIndex < ruleParts.size();
+  }
+
+  public void resetRulePart()
+  {
+    rulePartsIndex = 0;
+  }
+
+  public RulePart nextRulePart()
+  {
+    if (rulePartsIndex >= numberOfRuleParts() || rulePartsIndex < 0)
+    {
+      return new RulePart(null,null);
+    }
+    return getRulePart(rulePartsIndex++);
+  }
+
+  public boolean nextCombination()
+  {
+    if (updateIndex == -1)
+    {
+      updateIndex = 0;
+      return true;
+    }
+
+    boolean didChange = false;
+    while (updateIndex < ruleParts.size() - 1)
+    {
+      RulePart part = ruleParts.get(updateIndex);
+      if (part.isOptional())
+      {
+        ruleParts.remove(updateIndex);
+        didChange = true;
+        break;
+      }
+      else
+      {
+        updateIndex++;
+      }
+    }
+    return didChange;
+  }
+
+  public void updateNextIdentifier()
+  {
+    for (int i = 0; i < numberOfRuleParts(); i++)
+    {
+      updateNextPart(i);
+    }
+  }
+
+  private void updateNextPart(int i)
+  {
+    RulePart currentPart = getRulePart(i);
+    currentPart.removeNextIdentifiers();
+    int lastIndex = numberOfRuleParts() - 1;
+    
+    if (i == lastIndex)
+    {
+      updateLastNextPart(currentPart);
+      return;
+    }
+    
+    if (currentPart.isRule() && currentPart.isMany())
+    {
+      Rule r = parser.getRule(currentPart.getName());
+      
+      if (r.numberOfDefinitions() > 0)
+      {
+        TextParser textParser = new TextParser(r.getDefinition(0));
+        RulePart ruleFirstPart = analyzeRule(textParser.next());
+        addNextIdentifierFor(currentPart,ruleFirstPart);
+      }
+    }
+
+    int nextPartOffset = 1;
+    RulePart nextPart = getRulePart(i + nextPartOffset);
+    
+    if (nextPart.isMany() && (i + nextPartOffset) == lastIndex)
+    {
+      updateLastNextPart(currentPart);
+    }
+    
+    while (nextPart.isRule())
+    {
+      
+      Rule r = parser.getRule(nextPart.getName());
+      
+      boolean keepTrying = false;
+      while (r != null)
+      {
+        for (String definition : r.getDefinitions())
+        {
+          TextParser textParser = new TextParser(definition);
+          RulePart ruleFirstPart = analyzeRule(textParser.next());
+          
+          
+          if (ruleFirstPart.isRule())
+          {
+            r = parser.getRule(ruleFirstPart.getName());
+            keepTrying = true;
+            break;
+          }
+          else
+          {
+            addNextIdentifierFor(currentPart,ruleFirstPart);
+          }
+        }
+        
+        if (keepTrying)
+        {
+          keepTrying = false;
+        }
+        else
+        {
+          r = null;
+        }
+      }
+      
+      nextPartOffset++;
+      if ( (i+nextPartOffset) < ruleParts.size() && (nextPart.isOptional() || nextPart.isMany()) && !currentPart.isMany())
+      {
+        nextPart = getRulePart(i + nextPartOffset);
+      }
+      else
+      {
+        nextPart = new RulePart(null,null);
+      }
+    }
+    
+    if (!nextPart.isRule())
+    {
+      addNextIdentifierFor(currentPart,nextPart);
+    }
+  }
+  
+  private void updateLastNextPart(RulePart part)
+  {
+    for (String stop : stopAts)
+    {
+      part.addNextIdentifier(stop);
+    }
+  }
+
+  public boolean removeOptionalPart()
+  {
+    for (int i=0; i<numberOfRuleParts(); i++)
+    {
+      RulePart part = getRulePart(i);
+      if (part.isOptional() && part.isVariable() && !part.isEnum())
+      {
+        removeRulePart(part);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void addNextIdentifierFor(RulePart currentPart, RulePart nextPart)
+  {
+    if (nextPart.isStatic())
+    {
+      currentPart.addNextIdentifier(nextPart.getName());
+    }
+    else if (nextPart.isEnum())
+    {
+      for(String aName : nextPart.getEnums())
+      {
+        currentPart.addNextIdentifier(aName);
+      }
+    }
+  }
+
+  private RulePart analyzeRule(String input)
+  {
+    RulePart part = new RulePart(input, null);
+
+    if (input == null)
+    {
+      return part;
+    }
+
+    if (input.endsWith("*") || input.endsWith("?"))
+    {
+      String multiplicity = input.substring(input.length() - 1);
+      part.setMultiplicity(multiplicity);
+      input = input.substring(0, input.length() - 1);
+    }
+
+    if (input.startsWith("[[") && input.endsWith("]]"))
+    {
+      part.setName(input.substring(2, input.length() - 2));
+      part.setType(RulePart.Type.Rule);
+    }
+    else if (input.startsWith("[") && input.endsWith("]"))
+    {
+      part.setName(input.substring(1, input.length() - 1));
+      part.setType(RulePart.Type.Variable);
+    }
+
+    return part;
+  }
+  
+}

@@ -1,0 +1,7 @@
+
+class Position
+{
+  Integer perimeter = { 2*l + 2*w }
+  Integer w;
+  Integer l;
+}

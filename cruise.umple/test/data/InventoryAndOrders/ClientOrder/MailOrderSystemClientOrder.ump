@@ -1,0 +1,90 @@
+/*
+  Mail Order System , Client Order - sample system 
+  Last updated: June 8, 2010
+*/
+//Namespace for facade class.
+namespace ClientOrder;
+
+//Namespace for core of the system.
+namespace ClientOrder.core;
+
+class Client{ 
+ number;  name;  address;  phone;  creditLimit; 
+ 1 -- * OrderFromClient;
+ 1 -- * ShipmentToClient;
+}
+class OrderFromClient{ 
+ ourOrderNumber; datePlaced; clientsPurchaseOrder; creditCardToCharge; 
+ 1 -- * ClientOrderLineItem;
+}
+class SalesPerson { 
+ name; 
+ 0..1 -- * OrderFromClient;
+}
+class ClientOrderLineItem{
+ numberOrdered; 
+ pricePerUnitCharged; 
+ 1 -- * ShipmentLineItem;
+}
+class ShipmentToClient{ 
+ dateShipped; invoiceNumber; totalPriceOfShipment; amountPaid; 
+ 1 -- * ShipmentLineItem;
+}
+class ShipmentLineItem{ numShipped;}
+class Product{ 
+ ourCode; description; picture; ourListPricePerunit; numberInInventory; numberToKeepInv;
+ 1 -- * ClientOrderLineItem;
+}
+class ProductCategory{ 
+ name; 
+ 1 -- * Product;
+}
+//$?[End_of_model]$?
+//Positioning
+class Product
+{
+  position 17 127 202 145;
+  position.association ClientOrderLineItem__Product 180,147 12,0;
+}
+
+class Client
+{
+  position 625 35 145 128;
+  position.association Client__OrderFromClient 0,114 216,10;
+  position.association Client__ShipmentToClient 20,130 190,0;
+}
+
+class ShipmentToClient
+{
+  position 455 309 216 113;
+  position.association ShipmentLineItem__ShipmentToClient 0,110 156,0;
+}
+
+class OrderFromClient
+{
+  position 311 139 216 110;
+  position.association ClientOrderLineItem__OrderFromClient 50,113 176,0;
+}
+
+class ClientOrderLineItem
+{
+  position 185 328 210 79;
+  position.association ClientOrderLineItem__ShipmentLineItem 110,79 84,0;
+}
+
+class ShipmentLineItem
+{
+  position 211 468 156 58;
+}
+
+class ProductCategory
+{
+  position 66 14 112 58;
+  position.association Product__ProductCategory 51,62 100,0;
+}
+
+class SalesPerson
+{
+  position 354 20 112 58;
+  position.association OrderFromClient__SalesPerson 55,62 98,0;
+}

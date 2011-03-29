@@ -1,0 +1,1 @@
+{"umpleClasses":[{"position": {"x": 100, "y": 100, "width": 109, "height": 41}, "attributes": [], "id": "Student", "name": "Student", "extendsClass": "Mentor"}, {"position": {"x": 100, "y": 100, "width": 109, "height": 41}, "attributes": [], "id": "Mentor", "name": "Mentor"}], "umpleAssociations":[] }

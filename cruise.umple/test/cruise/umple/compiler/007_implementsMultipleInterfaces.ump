@@ -1,0 +1,15 @@
+class Student
+{
+  implements IStudent, IPerson, IMan;
+}
+
+interface IStudent
+{}
+
+interface IPerson
+{}
+
+interface IMan
+{}
+
+

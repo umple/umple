@@ -1,0 +1,9 @@
+class Student
+{
+  * -- 0..1 Student partner;
+}
+
+class Student
+{
+  position 100 100 109 41;
+}

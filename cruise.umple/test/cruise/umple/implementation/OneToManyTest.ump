@@ -1,0 +1,23 @@
+namespace example;
+
+class Mentor 
+{
+  name;
+  1 -- * Student;
+}
+
+class Student
+{
+  number;
+}
+
+class Bank
+{
+  name;
+  1 -- * BankOfStuff;
+}
+
+class BankOfStuff
+{
+  number;
+}

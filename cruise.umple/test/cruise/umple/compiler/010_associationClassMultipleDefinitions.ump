@@ -1,0 +1,18 @@
+associationClass Relationship
+{
+  * Student;
+  * Mentor;
+}
+
+class Student
+{
+}
+
+class Mentor
+{
+}
+
+class Relationship
+{
+  position 1 2 3 4;
+}

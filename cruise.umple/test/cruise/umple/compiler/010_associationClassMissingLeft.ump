@@ -1,0 +1,8 @@
+
+associationClass VotesInPoll
+{
+  
+}
+
+class Candidature
+{}

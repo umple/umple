@@ -1,0 +1,56 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.docs;
+
+class Documenter
+{
+  depend java.io.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.*;
+  
+  inputPath;
+  outputPath;
+  String[] messages;
+  
+  1 -> 0..1 ContentParser parser;
+}
+
+class Content
+{
+  title;
+  Boolean shouldIncludeReferences = true;
+  description;
+  syntax;
+  String[] examples;
+}
+
+class Group
+{
+  name;
+  1 -> * Content;
+}
+
+class ContentParser
+{
+  isA Parser;
+  1 -> * Group;
+}
+
+class Template
+{
+  const HtmlTemplate = htmlTemplate();
+  const ExampleTemplate = exampleTemplate();
+  const SyntaxTemplate = syntaxTemplate();
+  const NavigationHeaderTemplate = navigationHeaderTemplate();
+  const NavigationItemTemplate = navigationItemTemplate();
+}
+
+use Parser.ump;
+use Documenter_Code.ump;

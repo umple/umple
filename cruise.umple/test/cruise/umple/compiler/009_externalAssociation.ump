@@ -1,0 +1,13 @@
+
+class Student
+{
+}
+
+class Mentor
+{}
+
+association
+{
+  4..5 Student -- 6..9 Mentor myMentor;
+  * Student me -- * Student them;
+}

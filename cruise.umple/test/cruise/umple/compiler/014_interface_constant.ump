@@ -1,0 +1,4 @@
+interface ISomething
+{
+  constant String aVariable = aValue;
+}

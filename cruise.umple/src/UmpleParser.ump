@@ -1,0 +1,46 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+'Model' for the Umple Parser 
+See also UmpleParser_Code for the grammar definition and methods
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleParser
+{
+  isA Parser;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+ 
+  currentPackageName = "";
+  internal AssociationVariable[] unlinkedAssociationVariables;
+  internal Association[] unlinkedAssociations;
+  internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
+  internal String[] unparsedUmpleFiles;
+  internal String[] parsedUmpleFiles;
+  internal Map<UmpleClass,List<String>> unlinkedImplements = new HashMap<UmpleClass,List<String>>();
+  internal Map<UmpleClass,String> unlinkedExtends = new HashMap<UmpleClass, String>();
+  internal Map<UmpleClass,Pair> umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
+  internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>(); 
+  UmpleModel model;
+  
+  after constructor { init(); }
+}
+
+class Pair
+{
+  name;
+  value;
+}
+
+use Parser.ump;
+use Umple.ump;
+use UmpleDiagram.ump;
+use StateMachine.ump;
+use UmpleParser_Code.ump;

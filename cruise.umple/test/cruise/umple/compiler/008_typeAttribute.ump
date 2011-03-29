@@ -1,0 +1,9 @@
+
+class Student
+{
+  Integer name;
+  String name2;
+  Time name3;
+  Date name4;
+  Double name5;
+}

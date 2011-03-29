@@ -1,0 +1,548 @@
+package cruise.umple.compiler;
+
+import java.io.File;
+import java.util.List;
+
+import org.junit.*;
+
+import cruise.umple.util.*;
+
+public class UmpleParserStateMachineTest
+{
+  UmpleParser parser;
+  UmpleModel model;
+  String pathToInput;
+
+  @Before
+  public void setUp()
+  {
+    pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
+  }
+  
+  @Test
+  public void transitionToUnknownState()
+  {
+    assertParse("100_transitionToUnknownState.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Off]");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    Assert.assertEquals(2, sm.numberOfStates());
+    Assert.assertEquals("On",sm.getState(0).getName());
+    Assert.assertEquals("Off",sm.getState(1).getName());
+  }
+  
+  @Test
+  public void oneStateNoEventStateMachine()
+  {
+    assertParse("100_emptyStateMachine.ump","[classDefinition][name:LightFixture][stateMachine][enum][name:bulb]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    Assert.assertEquals(0, sm.numberOfStates());
+  }
+
+  @Test
+  public void oneState_StateMachine()
+  {
+    assertParse("100_oneState_StateMachine.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On]");
+
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    Assert.assertEquals(1, sm.numberOfStates());
+    State state = sm.getState(0);
+    Assert.assertEquals("On", state.getName());
+    Assert.assertEquals(0,state.numberOfTransitions());
+    Assert.assertEquals(true,state.getIsStartState());
+   
+  }
+  
+  
+  @Test
+  public void oneStateOneEvent()
+  {
+    assertParse("100_oneStateOneEvent.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:On]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+
+    Assert.assertEquals(1, sm.numberOfStates());
+    State state = sm.getState(0);
+    Assert.assertEquals("On", state.getName());
+
+    Assert.assertEquals(1, state.numberOfTransitions());
+    Transition t1 = state.getTransition(0);
+    Assert.assertEquals("push", t1.getEvent().getName());
+    Assert.assertEquals(state, t1.getNextState());
+  }
+
+  @Test
+  public void oneStateTwoEvent()
+  {
+    assertParse("100_oneStateTwoEvent.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:On][transition][event:pull][stateName:On]");
+  }
+  
+  @Test
+  public void transitionAction()
+  {
+    assertParse("100_transitionAction.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][action][actionCode:blabla][stateName:On]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(0);
+    
+    Transition t1 = state.getTransition(0);
+    
+    Action a1= t1.getAction();
+    
+    Assert.assertNotNull(a1);
+    Assert.assertEquals("blabla", a1.getActionCode());
+  }
+
+  @Test
+  public void doActivity() 
+  {
+    assertParse("100_doActivity.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][activity][activityCode:iAmaDoActivity]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(0);
+    
+    Activity a1 = state.getActivity();
+    Assert.assertEquals("iAmaDoActivity", a1.getActivityCode());
+  }
+
+  @Test
+  
+  public void transitionAfterDo() // Omar sept 22nd..
+  {
+	  assertParse("100_transition_after_do.ump","[classDefinition][name:Switch][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:press][stateName:Off][state][stateName:Off][transition][activity][activityCode:keepDoing][stateName:On;]");
+   
+	  
+	  
+  }
+  
+  @Test
+  public void oneStateOneEntry()
+  {
+    assertParse("100_oneStateOneEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][actionCode:blahblah]");
+  
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(0);
+    
+    Assert.assertEquals(1, state.numberOfActions());
+    Action a1 = state.getAction(0);
+    Assert.assertEquals("blahblah",a1.getActionCode());
+    Assert.assertEquals("entry", a1.getActionType());
+  
+  }
+  
+  @Test
+  public void oneStateManyEntry()
+  {
+    assertParse("100_oneStateManyEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][actionCode:blahblah][entryOrExitAction][type:entry][actionCode:blahblah2][entryOrExitAction][type:exit][actionCode:blahblahexit]");
+  
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(0);
+    
+    Assert.assertEquals(3, state.numberOfActions());
+    Action a1 = state.getAction(0);
+    Assert.assertEquals("entry",a1.getActionType());
+    Assert.assertEquals("blahblah",a1.getActionCode());
+
+    Action a2 = state.getAction(1);
+    Assert.assertEquals("entry",a2.getActionType());
+    Assert.assertEquals("blahblah2",a2.getActionCode());
+
+    Action a3 = state.getAction(2);
+    Assert.assertEquals("exit",a3.getActionType());
+    Assert.assertEquals("blahblahexit",a3.getActionCode());
+    
+  }  
+  
+  @Test
+  public void oneStateOneExit()
+  {
+    assertParse("100_oneStateOneExit.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:exit][actionCode:blahblah][transition][event:push][stateName:On]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(0);
+    
+    Assert.assertEquals(1, state.numberOfActions());
+    Action a1 = state.getAction(0);
+    Assert.assertEquals("blahblah",a1.getActionCode());
+    Assert.assertEquals("exit", a1.getActionType());
+  }
+  
+  @Test
+  public void twoStateNoEventStateMachine()
+  {
+    assertParse("100_twoState_StateMachine.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:Off]");
+
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+
+    Assert.assertEquals(2, sm.numberOfStates());
+    State state = sm.getState(0);
+    Assert.assertEquals("On", state.getName());
+    Assert.assertEquals(true, state.getIsStartState());
+
+    state = sm.getState(1);
+    Assert.assertEquals("Off", state.getName());
+    Assert.assertEquals(false, state.getIsStartState());
+  
+  }
+  
+  @Test
+  public void reuseEvents()
+  {
+    assertParse("100_reuseEvents.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][stateName:On]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+
+    Assert.assertEquals(2, sm.numberOfStates());
+    State state = sm.getState(0);
+    Assert.assertEquals("On", state.getName());
+    
+    Assert.assertEquals(1, state.numberOfTransitions());
+    Transition t1 = state.getTransition(0);
+    Event flip1 = t1.getEvent();
+    Assert.assertEquals("flip", flip1.getName());
+  
+    State state2 = sm.getState(1);
+    Assert.assertEquals("Off", state2.getName());
+    Assert.assertEquals(1, state2.numberOfTransitions());
+    Transition t2 = state2.getTransition(0);
+    Event flip2 = t2.getEvent();
+    Assert.assertEquals("flip", flip2.getName());
+
+    Assert.assertSame(flip1, flip2);
+    Assert.assertEquals(1, sm.getEvents().size());
+  }  
+  
+  @Test
+  public void transitionNextState()
+  {
+    assertParse("100_reuseEvents.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][stateName:On]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+
+    Assert.assertEquals(2, sm.numberOfStates());
+    State onState = sm.getState(0);
+    State offState = sm.getState(1);
+    
+    Assert.assertEquals("On", onState.getName());
+    Assert.assertEquals("Off", offState.getName());
+    
+    Assert.assertEquals(1, onState.numberOfTransitions());
+    Transition t1 = onState.getTransition(0);
+    Assert.assertEquals(onState, t1.getFromState());
+    Assert.assertEquals(offState, t1.getNextState());
+    
+    Assert.assertEquals(1, offState.numberOfTransitions());
+    Transition t2 = offState.getTransition(0);
+    Assert.assertEquals(offState, t2.getFromState());
+    Assert.assertEquals(onState, t2.getNextState());
+    
+  }
+  
+  @Test
+  public void oneStateOneGuardAfter()
+  {
+    assertParse("100_oneGuardAfter.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][guard][guardCode:brightness < 1][event:push][stateName:Off][state][stateName:Off]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+ 
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    
+    State on = sm.getState(0);
+    Assert.assertEquals("On",on.getName());
+    
+    Transition t = on.getTransition(0);
+    Assert.assertEquals("push", t.getEvent().getName());
+    Assert.assertEquals("brightness < 1", t.getGuard().getCondition());
+  }
+  
+  @Test
+  public void oneStateOneGuardBefore()
+  {
+                            
+    assertParse("100_oneGuardBefore.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][guard][guardCode:brightness < 1][stateName:Off][state][stateName:Off]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    
+    State on = sm.getState(0);
+    Assert.assertEquals("On",on.getName());
+    
+    Transition t = on.getTransition(0);
+    Assert.assertEquals("push", t.getEvent().getName());
+    Assert.assertEquals("brightness < 1", t.getGuard().getCondition());
+  }
+  
+  @Test
+  public void emptyAndNonEmptyStates()
+  {
+    assertParse("100_emptyAndNonEmptyStates.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off]");
+
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("status", sm.getName());
+
+    Assert.assertEquals(2, sm.numberOfStates());
+    State onState = sm.getState(0);
+    State offState = sm.getState(1);
+    
+    Assert.assertEquals("On", onState.getName());
+    Assert.assertEquals("Off", offState.getName());
+    
+    Assert.assertEquals(1, onState.numberOfTransitions());
+    Transition t1 = onState.getTransition(0);
+    Assert.assertEquals(onState, t1.getFromState());
+    Assert.assertEquals(offState, t1.getNextState());
+    Assert.assertEquals("flip", t1.getEvent().getName());
+    
+    Assert.assertEquals(0, offState.numberOfTransitions());
+    
+  }  
+
+  @Test
+  public void sameEvent_TwoStates()
+  {
+	  assertParse("100_sameEvent_twoStates.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][stateName:On][stateMachine][inlineStateMachine][name:AnotherBulb][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][stateName:On]");
+	  
+	  UmpleClass c = model.getUmpleClass("LightFixture");
+	    StateMachine sm = c.getStateMachine(0);
+	    Assert.assertEquals("bulb", sm.getName());
+
+	    Assert.assertEquals(2, sm.numberOfStates());
+	    State onState = sm.getState(0);
+	    State offState = sm.getState(1);
+	    
+	    Assert.assertEquals("On", onState.getName());
+	    Assert.assertEquals("Off", offState.getName());
+	    
+	    Assert.assertEquals("flip", onState.getTransition(0).getEvent().getName());
+	    Assert.assertEquals("flip", offState.getTransition(0).getEvent().getName());
+  }
+  
+  
+  @Test
+  public void Nested_oneState()
+  {
+    assertParse("101_Nested_oneState.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:Off]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State on = sm.getState(0);
+    StateMachine innerSm = on.getNestedStateMachine();
+    State off = innerSm.getState(0);
+    
+    Assert.assertEquals("On",innerSm.getName());
+    Assert.assertEquals("On",on.getName());
+    Assert.assertEquals("Off",off.getName());
+  }
+  
+  @Test
+  public void Nested_TwoStates()
+  {
+    assertParse("101_Nested_twoStates.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:Off][state][stateName:On][transition][event:push][stateName:Off]");
+
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State on = sm.getState(0);
+    StateMachine innerSm = on.getNestedStateMachine();
+    State off = innerSm.getState(0);
+    State innerOn = innerSm.getState(1);
+    
+    Assert.assertEquals("On",innerSm.getName());
+    Assert.assertEquals("On",on.getName());
+    Assert.assertEquals("Off",off.getName());
+    Assert.assertEquals("On",innerOn.getName());
+  }
+  
+  @Test
+  public void Nested_TwoStatesComplex()
+  {
+    assertParse("101_Nested_twoStatesComplex.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:OutsideOn][transition][event:push][stateName:On][state][stateName:Off][state][stateName:On][transition][event:push][stateName:Off][transition][event:pull][stateName:OutsideOff][state][stateName:OutsideOff]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State on = sm.getState(0);
+    State off = sm.getState(1);
+
+    Assert.assertEquals(2,sm.numberOfStates());
+    Assert.assertEquals("OutsideOn",on.getName());
+    Assert.assertEquals("OutsideOff",off.getName());
+
+    StateMachine innerSm = on.getNestedStateMachine();
+    State innerOff = innerSm.getState(0);
+    State innerOn = innerSm.getState(1);
+
+    
+    Assert.assertEquals("OutsideOn",innerSm.getName());
+    Assert.assertEquals("Off",innerOff.getName());
+    Assert.assertEquals("On",innerOn.getName());    
+    
+  }
+  
+  @Test
+  public void Nested_realExample2()
+  {
+    assertParse("101_Nested_realExample2.ump","[classDefinition][name:StrobeLight][stateMachine][inlineStateMachine][name:dvdPlayer][state][stateName:Off][transition][event:turnOn][stateName:On][state][stateName:Sleep][transition][event:wake][stateName:Pause][state][stateName:On][transition][event:turnOff][stateName:Off][state][stateName:Play][transition][event:push][stateName:Pause][state][stateName:Pause][transition][event:push][stateName:Play][transition][event:standby][stateName:Sleep]");
+
+    
+  }
+  
+  @Test
+  public void stateMachineDefinition()
+  {
+    assertParse("200_stateMachineDefinition.ump","[stateMachineDefinition][name:myname][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off]");
+
+    StateMachine sm = model.getStateMachineDefinition(0);
+    
+    Assert.assertEquals("myname", sm.getName());
+    Assert.assertEquals("On",sm.getState(0).getName());
+    Assert.assertEquals("Off",sm.getState(1).getName());
+    
+    Assert.assertEquals("Off", sm.getState(0).getTransition(0).getNextState().getName());
+    Assert.assertEquals(true, sm.getState(0).hasTransitions());
+  }
+  
+  @Test
+  public void stateMachineManyTransitionsToUndefinedStates()
+  {
+    assertParse("101_Nested_manyTransitions.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:OutsideOn][transition][event:push][stateName:On][transition][event:pull][stateName:On][state][stateName:Off][state][stateName:On][transition][event:push][stateName:Off][transition][event:pull][stateName:OutsideOff][state][stateName:OutsideOff]");
+    StateMachine sm = model.getUmpleClass("LightFixture").getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    
+    Assert.assertEquals(2,sm.numberOfStates());
+    Assert.assertEquals("OutsideOn",sm.getState(0).getName());
+    Assert.assertEquals("OutsideOff",sm.getState(1).getName());
+    State s = sm.getState(0);
+    StateMachine innerSm = s.getNestedStateMachine();
+    Assert.assertEquals(2,innerSm.numberOfStates());
+    Assert.assertEquals("Off",innerSm.getState(0).getName());
+    Assert.assertEquals("On",innerSm.getState(1).getName());
+
+  }
+  
+  @Test
+  public void twoStateMachinesSameEvent()
+  {
+    assertParse("102_twoStateMachinesSameEvent.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:On][transition][event:flip][stateName:On][stateMachine][inlineStateMachine][name:anotherBulb][state][stateName:Off][transition][event:push][stateName:Off]");
+
+    StateMachine sm1 = model.getUmpleClass("LightFixture").getStateMachine(0);
+    StateMachine sm2 = model.getUmpleClass("LightFixture").getStateMachine(1);
+    
+    Event e1 = sm1.getEvent("push");
+    Event alsoE1 = sm2.getEvent("push");
+    
+    Assert.assertSame(e1, alsoE1);
+  }  
+  
+  
+  @Test
+  public void OnOffTimer()
+  {
+    assertParse("200_OnOffTimer.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off][transition][timer:5][stateName:On]");
+
+    UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
+    StateMachine sm = uClass.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    Assert.assertEquals("On",sm.getState(0).getName());
+    Assert.assertEquals("Off",sm.getState(1).getName());
+    
+    Assert.assertEquals("Complex",sm.getType());
+    
+    List<Event> allEvents = sm.getEvents();
+    Assert.assertEquals(2,allEvents.size());
+    
+    Event e = sm.getEvent("timeoutOffToOn");
+    
+    Assert.assertEquals("timeoutOffToOn",e.getName());
+    Assert.assertEquals(true,e.getIsTimer());
+    Assert.assertEquals("5",e.getTimerInSeconds());
+  }
+  
+  @Test
+  public void stateMachineDefinition_reference()
+  {
+    assertParse("200_stateMachineDefinition_reference.ump","[stateMachineDefinition][name:OnOffSwitch][state][stateName:On][transition][event:push][stateName:Off][state][stateName:Off][transition][event:push][stateName:On][classDefinition][name:Lightbulb][stateMachine][referencedStateMachine][name:fixture][definitionName:OnOffSwitch]");
+
+    StateMachine sm = model.getStateMachineDefinition(0);
+    
+    Assert.assertEquals("OnOffSwitch", sm.getName());
+    Assert.assertEquals("On",sm.getState(0).getName());
+    Assert.assertEquals("Off",sm.getState(1).getName());
+    
+    Assert.assertEquals("Off", sm.getState(0).getTransition(0).getNextState().getName());
+    Assert.assertEquals("On", sm.getState(1).getTransition(0).getNextState().getName());
+    
+    UmpleClass lightbulb = model.getUmpleClass("Lightbulb");
+    Assert.assertEquals(1,lightbulb.numberOfStateMachines());
+    
+    sm = lightbulb.getStateMachine(0);
+    Assert.assertEquals("fixture", sm.getName());
+    Assert.assertEquals("On",sm.getState(0).getName());
+    Assert.assertEquals("Off",sm.getState(1).getName());
+    
+    Assert.assertEquals("Off", sm.getState(0).getTransition(0).getNextState().getName());
+    Assert.assertEquals("On", sm.getState(1).getTransition(0).getNextState().getName());
+    
+    
+  }  
+    
+  private void assertParse(String filename, String expectedOutput)
+  {
+    assertParse(filename, expectedOutput, true);
+  }
+
+//  private void assertFailedParse(String filename, Position expectedPosition)
+//  {
+//    assertParse(filename, "", false);
+//    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
+//  }  
+  
+  private void assertParse(String filename, String expectedOutput, boolean expected)
+  {
+    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+    model.setShouldGenerate(false);
+    parser = new UmpleParser(model);
+    boolean answer = parser.parse("program", input).getWasSuccess();
+    
+    if (answer)
+    {
+      answer = parser.analyze(false).getWasSuccess();
+    }
+
+    if (answer == false && expected)
+    {
+      System.out.println("failed at:" + parser.getParseResult().getPosition());
+    }
+    
+    Assert.assertEquals(expected, answer);
+    if (expected)
+    {
+      Assert.assertEquals(expectedOutput, parser.toString());  
+    }
+  }
+  
+  
+}

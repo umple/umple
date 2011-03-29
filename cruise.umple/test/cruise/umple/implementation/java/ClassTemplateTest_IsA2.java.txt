@@ -1,0 +1,48 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+
+public class SubMentor2 extends Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SubMentor2 Attributes
+  private String subName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public SubMentor2(String aName, String aSubName)
+  {
+    super(aName);
+    subName = aSubName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setSubName(String aSubName)
+  {
+    boolean wasSet = false;
+    subName = aSubName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getSubName()
+  {
+    return subName;
+  }
+
+  public void delete()
+  {
+    super.delete();
+  }
+
+}

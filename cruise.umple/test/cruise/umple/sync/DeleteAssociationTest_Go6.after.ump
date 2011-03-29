@@ -1,0 +1,10 @@
+class Student
+{
+  0..1 -- * Mentor;
+  position 52 30 109 41;
+}
+
+class Mentor
+{
+  position 143 144 109 41;
+}

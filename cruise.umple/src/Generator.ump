@@ -1,0 +1,138 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+Definitions of the different code- or model-transformation generators
+Note that some generators such as Umlet and Violet are in their own files
+
+*/
+
+
+namespace cruise.umple.compiler;
+
+// Allows independent code generation tools
+// Different generators will do different things regarding where the files are put, etc.
+interface CodeGenerator
+{
+  boolean setModel(UmpleModel aUmpleModel);
+  void generate();
+}
+
+class EcoreGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+}
+
+class PapyrusGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+}
+
+class XmiGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+}
+
+class TextUmlGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+}
+
+class SimulateGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+}
+
+class YumlGenerator
+{
+  depend cruise.umple.util.*;
+  isA CodeGenerator;
+  UmpleModel model = null;
+}
+
+
+class JsonGenerator
+{
+  isA CodeGenerator;
+  depend cruise.umple.util.*;
+  UmpleModel model = null;
+}
+
+class JavaGenerator
+{
+  isA CodeGenerator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.java.*;  
+  
+  UmpleModel model = null;
+}
+
+class PhpGenerator
+{
+  isA CodeGenerator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.php.*;  
+  
+  UmpleModel model = null;
+}
+
+class RubyGenerator
+{
+  isA CodeGenerator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.ruby.*;  
+  
+  UmpleModel model = null;
+}
+
+use Umple.ump;
+use StateMachine.ump;
+use Generator_Code.ump;
+use Generator_CodeRuby.ump;
+use Generator_CodeJava.ump;
+use Generator_CodePhp.ump;

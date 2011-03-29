@@ -1,0 +1,24 @@
+namespace example;
+
+interface ISomething
+{
+  constant String aVariable = aValue;
+  constant Integer MAX = 3;
+  
+  String getCode (String[] aParam, Integer anotherParam);
+  String isValid();
+}
+
+interface IGarbage
+{
+}
+
+class Something
+{
+  implements ISomething;
+}
+
+class Garbage
+{
+  implements ISomething, IGarbage;
+}

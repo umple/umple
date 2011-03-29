@@ -1,0 +1,185 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :intId, :doubleId, :booleanId, :stringId, :stringListIds
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_intId, a_doubleId, a_booleanId, a_stringId)
+    @initialized = false
+    @deleted = false
+    @intId = a_intId
+    @doubleId = a_doubleId
+    @booleanId = a_booleanId
+    @stringId = a_stringId
+    @stringListIds = []
+    @cachedHashCode = -1
+    @can_set_intId = true
+    @can_set_doubleId = true
+    @can_set_booleanId = true
+    @can_set_stringId = true
+    @can_set_stringListIds = true
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_intId(a_intId)
+    was_set = false
+    return false unless @can_set_intId
+    @intId = a_intId
+    was_set = true
+    was_set
+  end
+
+  def set_doubleId(a_doubleId)
+    was_set = false
+    return false unless @can_set_doubleId
+    @doubleId = a_doubleId
+    was_set = true
+    was_set
+  end
+
+  def set_booleanId(a_booleanId)
+    was_set = false
+    return false unless @can_set_booleanId
+    @booleanId = a_booleanId
+    was_set = true
+    was_set
+  end
+
+  def set_stringId(a_stringId)
+    was_set = false
+    return false unless @can_set_stringId
+    @stringId = a_stringId
+    was_set = true
+    was_set
+  end
+
+  def add_stringListId(a_stringListId)
+    was_added = false
+    return false unless @can_set_stringListIds
+    was_added = stringListIds << a_stringListId
+    was_added
+  end
+
+  def remove_stringListId(a_stringListId)
+    was_removed = false
+    return false unless @can_set_stringListIds
+    was_removed = stringListIds.delete(a_stringListId)
+    was_removed
+  end
+
+  def get_intId
+    @intId
+  end
+
+  def get_doubleId
+    @doubleId
+  end
+
+  def get_booleanId
+    @booleanId
+  end
+
+  def get_stringId
+    @stringId
+  end
+
+  def get_stringListId(index)
+    a_stringListId = stringListIds[index]
+    a_stringListId
+  end
+
+  def get_stringListIds
+    String[] new_stringListIds = stringListIds.toArray(new String[stringListIds.size])
+    new_stringListIds
+  end
+
+  def number_of_stringListIds
+    number = stringListIds.size
+    number;
+  end
+
+  def has_stringListIds
+    has = stringListIds.size > 0
+    has
+  end
+
+  def index_of_stringListId(a_stringListId)
+    index = stringListIds.index(a_stringListId)
+    index = -1 if index.nil?
+    index
+  end
+
+  def eql?(obj)
+    return false if obj.nil?
+    return false unless self.class == obj.class
+
+    compareTo = obj
+    return false unless @intId == compareTo.instance_variable_get("@intId")
+
+    return false unless @doubleId == compareTo.instance_variable_get("@doubleId")
+
+    return false unless @booleanId == compareTo.instance_variable_get("@booleanId")
+
+    return false if (@stringId.nil? and !compareTo.instance_variable_get("@stringId").nil?)
+    return false if (!@stringId.nil? and !@stringId.eql?(compareTo.instance_variable_get("@stringId")))
+
+    return false unless @stringListIds.size == compareTo.instance_variable_get("@stringListIds").size
+    @stringListIds.each do |me|
+      them = compareTo.instance_variable_get("@stringListIds").get(i)
+      return false if (me.nil? and !them.nil?)
+      return false if (!me.nil? and !me.eql?(them))
+    end
+    true
+  end
+
+  def hash
+    return @cachedHashCode unless @cachedHashCode == -1
+    @cachedHashCode = 17
+    @cachedHashCode = @cachedHashCode * 23 + @intId
+
+    @cachedHashCode = @cachedHashCode * 23 + @doubleId.hash
+
+    @cachedHashCode = @cachedHashCode * 23 + (@booleanId ? 1 : 0)
+
+    if (!@stringId.nil?)
+      @cachedHashCode = @cachedHashCode * 23 + @stringId.hash
+    else
+      @cachedHashCode = @cachedHashCode * 23
+    end
+
+    if (!@stringListIds.nil?)
+      @cachedHashCode = @cachedHashCode * 23 + @stringListIds.hash
+    else
+      @cachedHashCode = @cachedHashCode * 23
+    end
+    @can_set_intId = false
+    @can_set_doubleId = false
+    @can_set_booleanId = false
+    @can_set_stringId = false
+    @can_set_stringListIds = false
+    @cachedHashCode
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

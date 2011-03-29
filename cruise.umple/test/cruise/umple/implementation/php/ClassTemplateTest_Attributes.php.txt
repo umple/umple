@@ -1,0 +1,285 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static $MAX = 100;
+  public static $MIN = -99;
+  public static $HELLO = "Hello";
+  private static $nextX = 1;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $str;
+  private $str2;
+  private $d;
+  private $t;
+  private $i;
+  private $p;
+  private $q;
+  private $r;
+  private $s;
+  private $t;
+  private $u;
+  private $v;
+  private $w;
+
+  //Autounique Attributes
+  private $x;
+
+  //Helper Variables
+  private $canSetStr;
+  private $canSetStr2;
+  private $canSetS;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aStr, $aD, $aI)
+  {
+    $this->str = $aStr;
+    $this->canSetStr = false;
+    $this->canSetStr2 = true;
+    $this->d = $aD;
+    $this->t = new Time();
+    $this->i = $aI;
+    $this->resetP();
+    $this->q = "chicken";
+    $this->resetR();
+    $this->s = "123";
+    $this->canSetS = false;
+    $this->t = date("y-m-d", strtotime("1978-12-25"));
+    $this->u = date("h:i:s", strtotime("12:13:14"));
+    $this->resetV();
+    $this->resetW();
+    $this->x = self::$nextX++;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setStr2($aStr2)
+  {
+    $wasSet = false;
+    if (!$this->canSetStr2) { return false; }
+    $this->canSetStr2 = false;
+    $this->str2 = $aStr2;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setD($aD)
+  {
+    $wasSet = false;
+    $this->d = $aD;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setI($aI)
+  {
+    $wasSet = false;
+    $this->i = $aI;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setP($aP)
+  {
+    $wasSet = false;
+    $this->p = $aP;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function resetP()
+  {
+    $wasReset = false;
+    $this->p = $this->getDefaultP();
+    $wasReset = true;
+    return $wasReset;
+  }
+
+  public function setQ($aQ)
+  {
+    $wasSet = false;
+    $this->q = $aQ;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setR($aR)
+  {
+    $wasSet = false;
+    $this->r = $aR;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function resetR()
+  {
+    $wasReset = false;
+    $this->r = $this->getDefaultR();
+    $wasReset = true;
+    return $wasReset;
+  }
+
+  public function setT($aT)
+  {
+    $wasSet = false;
+    $this->t = $aT;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setU($aU)
+  {
+    $wasSet = false;
+    $this->u = $aU;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setV($aV)
+  {
+    $wasSet = false;
+    $this->v = $aV;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function resetV()
+  {
+    $wasReset = false;
+    $this->v = $this->getDefaultV();
+    $wasReset = true;
+    return $wasReset;
+  }
+
+  public function setW($aW)
+  {
+    $wasSet = false;
+    $this->w = $aW;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function resetW()
+  {
+    $wasReset = false;
+    $this->w = $this->getDefaultW();
+    $wasReset = true;
+    return $wasReset;
+  }
+
+  public function getStr()
+  {
+    return $this->str;
+  }
+
+  public function getStr2()
+  {
+    return $this->str2;
+  }
+
+  public function getD()
+  {
+    return $this->d;
+  }
+
+  public function getI()
+  {
+    return $this->i;
+  }
+
+  public function getDerivedTwiceI()
+  {
+    return i*2;
+  }
+
+  public function getP()
+  {
+    return $this->p;
+  }
+
+  public function getDefaultP()
+  {
+    return "robot";
+  }
+
+  public function getQ()
+  {
+    return $this->q;
+  }
+
+  public function getR()
+  {
+    return $this->r;
+  }
+
+  public function getDefaultR()
+  {
+    return "";
+  }
+
+  public function getS()
+  {
+    return $this->s;
+  }
+
+  public function getT()
+  {
+    return $this->t;
+  }
+
+  public function getU()
+  {
+    return $this->u;
+  }
+
+  public function getV()
+  {
+    return $this->v;
+  }
+
+  public function getDefaultV()
+  {
+    return date("y-m-d", strtotime("1978-12-26"));
+  }
+
+  public function getW()
+  {
+    return $this->w;
+  }
+
+  public function getDefaultW()
+  {
+    return date("h:i:s", strtotime("12:59:59"));
+  }
+
+  public function getX()
+  {
+    return $this->x;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

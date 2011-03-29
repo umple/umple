@@ -1,0 +1,6 @@
+namespace example;
+
+class Application
+{
+  singleton;
+}

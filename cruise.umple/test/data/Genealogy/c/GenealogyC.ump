@@ -1,0 +1,55 @@
+/*
+  Geneology - sample system (C)
+  Last updated: June 8, 2010
+*/
+//Namespace for facade class.
+namespace Geneology;
+
+//Namespace for core of the system.
+namespace Geneology.core;
+
+class Person{
+ name;
+ sex;
+ placeOfBirth;
+ dateOfBirth;
+ placeOfDeath;
+ dateOfDeath;
+}
+
+class Union{
+ placeOfMarriage;
+ dateOfMarriage;
+ dateOfDivorce;
+ * -- 0..2 Person parent;
+}
+
+class Adoption {
+ dateOfAdoption;
+ * -- 0..1 Union adoptiveParents;
+ * -- 0..1 Person adoptedChild;
+}
+
+association {
+ * Person child -- 0..1 Union parents;
+}
+//$?[End_of_model]$?
+
+//Positioning
+class Person
+{
+  position 223 18 167 147;
+}
+
+class Union
+{
+  position 218 340 183 96;
+  position.association Person:parent__Union 150,0 146,147;
+}
+
+class Adoption
+{
+  position 198 203 180 58;
+  position.association Adoption__Union:adoptiveParents 96,62 0,49;
+  position.association Adoption__Person:adoptedChild 90,0 0,73;
+}

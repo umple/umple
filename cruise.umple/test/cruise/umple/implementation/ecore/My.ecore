@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model">
+  <eClassifiers xsi:type="ecore:EDataType" name="Time" instanceClassName="java.sql.Time"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Airline">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="regularFlight" lowerBound="0" upperBound="-1" eType="#//RegularFlight" eOpposite="#//RegularFlight/airline"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="person" lowerBound="0" upperBound="-1" eType="#//Person" eOpposite="#//Person/airline"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RegularFlight">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="time" eType="#//Time"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specificFlight" lowerBound="0" upperBound="-1" eType="#//SpecificFlight" eOpposite="#//SpecificFlight/regularFlight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="airline" lowerBound="1" upperBound="1" eType="#//Airline" eOpposite="#//Airline/regularFlight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SpecificFlight">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="regularFlight" lowerBound="1" upperBound="1" eType="#//RegularFlight" eOpposite="#//RegularFlight/specificFlight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="employeeRole" lowerBound="0" upperBound="-1" eType="#//EmployeeRole" eOpposite="#//EmployeeRole/specificFlight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Booking" lowerBound="0" upperBound="-1" eType="#//Booking" eOpposite="#//Booking/specificFlight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PassengerRole" eSuperTypes="#//PersonRole">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="booking" lowerBound="0" upperBound="-1" eType="#//Booking" eOpposite="#//Booking/passengerRole"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EmployeeRole" eSuperTypes="#//PersonRole">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jobFunction" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="employeeRole" lowerBound="0" upperBound="-1" eType="#//EmployeeRole" eOpposite="#//EmployeeRole/supervisor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supervisor" lowerBound="0" upperBound="1" eType="#//EmployeeRole" eOpposite="#//EmployeeRole/employeeRole"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specificFlight" lowerBound="0" upperBound="-1" eType="#//SpecificFlight" eOpposite="#//SpecificFlight/employeeRole"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Person">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="idNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EReference" name="personRole" lowerBound="0" upperBound="2" eType="#//PersonRole" eOpposite="#//PersonRole/person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="airline" lowerBound="1" upperBound="1" eType="#//Airline" eOpposite="#//Airline/person"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PersonRole">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="person" lowerBound="1" upperBound="1" eType="#//Person" eOpposite="#//Person/personRole"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Booking">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="seatNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specificFlight" lowerBound="1" upperBound="1" eType="#//SpecificFlight" eOpposite="#//SpecificFlight/Booking"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="passengerRole" lowerBound="1" upperBound="1" eType="#//PassengerRole" eOpposite="#//PassengerRole/booking"/>
+  </eClassifiers>
+</ecore:EPackage>

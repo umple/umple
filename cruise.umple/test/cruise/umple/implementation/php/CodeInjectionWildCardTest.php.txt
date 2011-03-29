@@ -1,0 +1,67 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $firstName;
+  private $lastName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aFirstName, $aLastName)
+  {
+    $this->firstName = $aFirstName;
+    $this->lastName = $aLastName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setFirstName($aFirstName)
+  {
+    $wasSet = false;
+    $this->firstName = $aFirstName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setLastName($aLastName)
+  {
+    $wasSet = false;
+    $this->lastName = $aLastName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getFirstName()
+  {
+    print "before";
+    return $this->firstName;
+  }
+
+  public function getLastName()
+  {
+    print "before";
+    return $this->lastName;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

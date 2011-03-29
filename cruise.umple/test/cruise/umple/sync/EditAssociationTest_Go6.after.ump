@@ -1,0 +1,13 @@
+class Student
+{
+  * -- 1 Mentor;
+}
+
+class Mentor
+{
+}
+
+class Student
+{
+  position.association Mentor__Student 0,0 67,0;
+}

@@ -1,0 +1,8 @@
+class Student
+{
+}
+
+class Course
+{
+  position 117 201 109 42;
+}

@@ -1,0 +1,5 @@
+namespace example;
+
+class Mentor 
+{
+}

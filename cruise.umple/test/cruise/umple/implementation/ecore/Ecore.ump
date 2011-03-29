@@ -1,0 +1,61 @@
+generate Ecore;
+namespace example;
+
+class Person
+{
+  depend java.util.*;
+  Float myF;
+  Float[] allMyF;
+  Map<List,List> myMap;
+  Map<String,String> anotherMap;
+  0..1 mentor -- * Person student;
+  status { Registered, Active, Inactive }
+}
+
+class Product
+{
+  description;
+  Integer available;
+  Double price;
+  Date createdDate;
+  Time createdTime;
+  Boolean isActive;
+  Address addr;
+
+  Integer[] allAvailable;
+  Double[] allPrice;
+  Date[] allCreatedDate;
+  Time[] allCreatedTime;
+  Boolean[] allIsActive;
+  Address[] allAddr;
+}
+
+class Address
+{
+
+}
+
+interface ICart
+{
+
+}
+
+class Cart
+{
+  implements ICart;
+}
+
+class CartItem
+{
+  3..* item -- 0..1 Product;
+}
+
+class PaymentMethod
+{
+  4 -- * CartItem item; 
+} 
+
+class Cheque
+{
+  isA PaymentMethod;
+}

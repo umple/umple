@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="files/layout.css" />
+  <script type="text/javascript" src="files/script.js"></script>
+  <title>myGrammar</title>
+</head>
+
+<body>
+
+  <span class="header" summary="University of Ottawa banner"><a href="http://www.uottawa.ca/welcome.html" target="_blank"><img src="files/left_generic.jpg" alt="uOttawa" class="uOttawaAbbr" /></a><img src="files/bg_header_title.jpg" class="uOttawa" alt="University of Ottawa - Canadas University" /></span>
+  
+  <table class="body" >
+  <tbody>
+  <tr>
+    <td class="indicatorBlocks"><img src="files/indicator_blocks.gif" /></td>
+
+    <td class="menu">
+      <div class="title"><a href="http://cruise.site.uottawa.ca/umple">Umple Home<br/>Page</a></div>
+        <div class="level1">Misc</div>
+        <div class="level2"><a href="myGrammar.html" >myGrammar</a></div>
+
+    </td>
+
+    <td class="dotSeparator"><img src="files/dots.gif" alt="list of dots" /></td>
+
+      <td class="content">
+
+      <h1>myGrammar</h1>
+      <p class="description">program- : ( [[comment]] | [[directive]] )*<br />
+directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[entity]]<br />
+glossary : glossary { [[word]]* }<br />
+word : [singular] : [plural] ;<br />
+generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
+useStatement- : use [use] ;<br />
+namespace- : namespace [namespace] ;<br />
+entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />
+<br />
+classDefinition : class [name] { [[classContent]]* }<br />
+externalDefinition : external [name] { [[classContent]]* }<br />
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }<br />
+associationDefinition : association [name]? { [[association]]* }<br />
+associationClassDefinition : associationClass [name] { [[associationClassContent]]* }<br />
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]<br />
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]<br />
+<br />
+trace : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
+interfaceBody- : [[interfaceMemberDeclaration]]*<br />
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]] <br />
+constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;<br />
+concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] } <br />
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ; <br />
+methodDeclarator : [methodName] [[parameterList]] | [methodName] -( -) <br />
+parameterList : -( [[parameter]] ( , [[parameter]] )* -) <br />
+parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) <br />
+<br />
+association : [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;<br />
+inlineAssociation : [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
+inlineAssociationEnd : [[multiplicity]] [roleName]?<br />
+singleAssociationEnd : [[multiplicity]] [type,roleName] ;<br />
+associationEnd : [[multiplicity]] [type,roleName]<br />
+multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]<br />
+<br />
+softwarePattern- : [[isA]] | [[implements]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]<br />
+isA- : isA [extendsName] ;<br />
+implements- : [[singleImplements]] | [[multipleImplements]]<br />
+singleImplements- : implements [implementsName] ;<br />
+multipleImplements- : implements [implementsName] ( , [implementsName] )* ;<br />
+singleton- : [=singleton] ;<br />
+keyDefinition- : [[defaultKey]] | [[key]]<br />
+codeInjection- : [[beforeCode]] | [[afterCode]]<br />
+attribute : [[derivedAttribute]] | [=autounique] [name] ; | [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;<br />
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }<br />
+<br />
+beforeCode : before [operationName] { [**code] }<br />
+afterCode : after [operationName] { [**code] }<br />
+defaultKey : key { }<br />
+key : key { [keyId] ( , [keyId] )* }<br />
+depend- : depend [depend] ;<br />
+extraCode- : [**extraCode]<br />
+<br />
+comment- : [[inlineComment]] | [[multilineComment]]<br />
+inlineComment- : // [*inlineComment]<br />
+multilineComment- : /* [**multilineComment] */<br />
+<br />
+stateMachineDefinition : statemachine [name] { [[state]]* }<br />
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] <br />
+inlineStateMachine : [name] { [[state]]* }<br />
+referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } <br />
+enum : [name] { } | [name] { [stateName] (, [stateName])* }<br />
+state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }<br />
+stateEntity- : [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br />
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]<br />
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]<br />
+afterEveryEvent- : afterEvery -( [timer] -)<br />
+afterEvent- : after -( [timer] -)<br />
+action : / { [**actionCode] }<br />
+entryOrExitAction : [=type:entry|exit] / { [**actionCode] }<br />
+activity : do { [**activityCode] }<br />
+guard : [ [**guardCode] ] <br />
+<br />
+position- : [[associationPosition]] | [[elementPosition]] <br />
+elementPosition : position [x] [y] [width] [height] ;<br />
+associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;<br />
+coordinate : [x] , [y]<br />
+</p>
+
+
+
+      </td>
+    </tr>
+  </tbody></table>
+<link type="text/css" rel="stylesheet" href="syntaxhighlighter/SyntaxHighlighter.css"></link>
+<script language="javascript" src="syntaxhighlighter/shCore.js"></script>
+<script language="javascript" src="syntaxhighlighter/shBrushCSharp.js"></script>
+<script language="javascript" src="syntaxhighlighter/shBrushXml.js"></script>
+<script language="javascript">
+dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';
+dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>

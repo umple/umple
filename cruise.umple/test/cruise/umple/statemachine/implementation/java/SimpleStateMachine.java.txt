@@ -1,0 +1,42 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+package example;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor State Machines
+  enum Status {  }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,13 @@
+class LightFixture
+{
+  bulb
+  {
+      On {
+      entry / doOn; // a function call
+      exit / { "a"; }  // code to be pushed into exit function
+    }
+    
+    public void doOn()
+
+  }
+}

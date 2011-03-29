@@ -1,0 +1,194 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $id;
+  private $name;
+  private $type;
+  private $roles;
+
+  //Helper Variables
+  private $canSetId;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName)
+  {
+    print "before constructor";
+    $this->canSetId = true;
+    $this->name = $aName;
+    $this->resetType();
+    $this->roles = array();
+    print "after constructor";
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    print "start setId";
+    if (!$this->canSetId) { return false; }
+    $this->canSetId = false;
+    $this->id = $aId;
+    $wasSet = true;
+    print "end setId";
+    return $wasSet;
+  }
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    print "start setName";
+    print "start setName2";
+    $this->name = $aName;
+    $wasSet = true;
+    print "end setName";
+    return $wasSet;
+  }
+
+  public function setType($aType)
+  {
+    $wasSet = false;
+    print "start setType";
+    $this->type = $aType;
+    $wasSet = true;
+    print "end setType";
+    return $wasSet;
+  }
+
+  public function resetType()
+  {
+    $wasReset = false;
+    print "start resetType";
+    $this->type = $this->getDefaultType();
+    $wasReset = true;
+    print "end resetType";
+    return $wasReset;
+  }
+
+  public function addRole($aRole)
+  {
+    $wasAdded = false;
+    print "start add";
+    $this->roles[] = $aRole;
+    $wasAdded = true;
+    print "end add";
+    return $wasAdded;
+  }
+
+  public function removeRole($aRole)
+  {
+    $wasRemoved = false;
+    print "start remove";
+    unset($this->roles[$this->indexOfRole($aRole)]);
+    $this->roles = array_values($this->roles);
+    $wasRemoved = true;
+    print "end remove";
+    return $wasRemoved;
+  }
+
+  public function getId()
+  {
+    print "start getId";
+    $aId = $this->id;
+    print "end getId";
+    return $aId;
+  }
+
+  public function getName()
+  {
+    print "start getName";
+    $aName = $this->name;
+    print "end getName";
+    return $aName;
+  }
+
+  public function getType()
+  {
+    print "start getType";
+    $aType = $this->type;
+    print "end getType";
+    return $aType;
+  }
+
+  public function getDefaultType()
+  {
+    print "start getDefaultType";
+    $aType = "None";
+    print "end getDefaultType";
+    return $aType;
+  }
+
+  public function getRole($index)
+  {
+    print "start getRole";
+    $aRole = $this->roles[$index];
+    print "end getRole";
+    return $aRole;
+  }
+
+  public function getRoles()
+  {
+    print "start getRoles";
+    $newRoles = $this->roles;
+    print "end getRoles";
+    return $newRoles;
+  }
+
+  public function numberOfRoles()
+  {
+    print "start numberOfRoles";
+    $number = count($this->roles);
+    print "end numberOfRoles";
+    return $number;
+  }
+
+  public function hasRoles()
+  {
+    $has = roles.size() > 0;
+    return $has;
+  }
+
+  public function indexOfRole($aRole)
+  {
+    print "start indexOfRole";
+    $rawAnswer = array_search($aRole,$this->roles);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    print "end indexOfRole";
+    return $index;
+  }
+
+  public function getFunName()
+  {
+    print "start funName";
+    $aFunName = name + "sillypans";
+    print "end funName";
+    return $aFunName;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    print "start delete";
+    print "after delete";
+  }
+
+}
+?>

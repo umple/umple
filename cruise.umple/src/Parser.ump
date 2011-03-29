@@ -1,0 +1,92 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+Parser for the grammar that can be used to define any grammar
+UmpleParser.ump is the key example
+
+*/
+namespace cruise.umple.compiler;
+
+class Couple
+{
+  open;
+  close;
+  0..1 -- 0..* Couple ignores;
+}
+
+class ParseResult
+{
+  Boolean wasSuccess;
+  * -> 0..1 Position;
+}
+
+class Token
+{
+  name;
+  value;
+  0..1 parentToken -- * Token subTokens;
+  * -> 0..1 Position;
+  
+  before getName { if (name == null) { return ""; } }
+  before getValue { if (value == null) { return ""; } }
+}
+
+class Position
+{
+  Integer lineNumber;
+  Integer characterOffset;
+  Integer offset;
+
+  key { lineNumber, characterOffset, offset }
+}
+
+class Rule
+{
+  name;
+  Boolean shouldHide = false;
+  String[] definitions;
+}
+
+class RulePartValue
+{
+  String name = null;
+  String value = null;
+  * -> 0..1 Position;
+}
+
+class RulePart
+{
+  name;
+  multiplicity;
+  String[] nextIdentifiers;
+  Integer maximumPartsFound = -1;
+  type { Static, Variable, Rule }
+
+  before addNextIdentifier { if (aNextIdentifier == null) { return false; } }
+  before getMultiplicity { if (multiplicity == null) { return "1"; } }
+}
+
+class Parser
+{
+  name; // default 'program'
+  String[] grammarRules;
+  * -> * Rule;
+  * -> * Couple;
+  ParseResult parseResult = new ParseResult(true);
+  Token rootToken = reset();
+}
+
+class RuleInstance
+{
+  String[] stopAts;
+  internal Integer updateIndex = -1;
+  internal Integer rulePartsIndex = 0;
+  * -> * RulePart;
+  * -> 1 Parser;
+}
+
+use Parser_Code.ump;

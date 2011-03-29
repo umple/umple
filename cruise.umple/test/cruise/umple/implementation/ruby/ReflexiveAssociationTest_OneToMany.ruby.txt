@@ -1,0 +1,52 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.12.0.176 modeling language!
+
+module Example
+
+class OneToMany
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #OneToMany Associations - for documentation purposes
+  #attr_reader :oneToMany
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_oneToMany)
+    @initialized = false
+    @deleted = false
+    unless set_oneToMany(a_oneToMany)
+      raise "Unable to create OneToMany due to a_oneToMany" 
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_oneToMany
+    @oneToMany
+  end
+
+  def set_oneToMany(new_oneToMany)
+    was_set = false
+    unless new_oneToMany.nil?
+      @oneToMany = new_oneToMany
+      was_set = true
+    end
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    @oneToMany = nil
+  end
+
+end
+end

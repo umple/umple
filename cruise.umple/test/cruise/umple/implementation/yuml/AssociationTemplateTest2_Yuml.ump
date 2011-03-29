@@ -1,0 +1,14 @@
+namespace example;
+
+class Student
+{
+  position 73 52 109 42;
+  * <- 0..1 Mentor;
+  position.association Mentor__Student 1,2 3,4;
+}
+
+
+class Mentor
+{
+  position 219 178 109 42;
+}

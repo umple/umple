@@ -1,0 +1,11 @@
+
+class Mentor
+{
+  id;
+  1 -> * Student;
+}
+
+class Student
+{
+  name;  
+}

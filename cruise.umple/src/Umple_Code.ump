@@ -1,0 +1,1316 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Dusan Brestovansky, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+Methods for the metamodel found in Umple.ump. Most of these are mixins.
+
+*/
+
+
+namespace cruise.umple.compiler;
+
+class UmpleModel
+{
+
+  public UmpleClass addUmpleClass(String name)
+  {
+    UmpleClass newClass = getUmpleClass(name);
+    if (newClass == null)
+    {
+      newClass = new UmpleClass(name);
+      addUmpleClass(newClass);
+    }
+    return newClass;
+  }
+  
+  public Association getAssociation(String name)
+  {
+    for (Association a : associations)
+    {
+      if (a.getName().equals(name))
+      {
+        return a;
+      }
+    }
+    return null;
+  }
+  
+  public AssociationClass addAssociationClass(String className)
+  {
+    AssociationClass newClass = (AssociationClass) getUmpleClass(className);
+    if (newClass == null)
+    {
+      newClass = new AssociationClass(className);
+      addUmpleClass(newClass);
+    }
+    return newClass;
+  }
+
+  public String getDefaultGenerate()
+  {
+    if (numberOfGenerates() == 0)
+    {
+      return null;
+    }
+    else
+    {
+      return getGenerate(0);
+    }
+  }
+  
+  public UmpleClass getUmpleClass(String name)
+  {
+    for (UmpleClass aClass : getUmpleClasses())
+    {
+      if (aClass.getName().equals(name))
+      {
+        return aClass;
+      }
+    }
+    return null;
+  }
+  
+  public UmpleInterface getUmpleInterface(String name)
+  {
+    for (UmpleInterface aInterface : getUmpleInterfaces())
+    {
+      if (aInterface.getName().equals(name))
+      {
+        return aInterface;
+      }
+    }
+    return null;
+  }
+  
+  
+  public StateMachine getStateMachineDefinition(String name)
+  {
+    for (StateMachine aStateMachine : getStateMachineDefinitions())
+    {
+      if (aStateMachine.getName().equals(name))
+      {
+        return aStateMachine;
+      }
+    }
+    return null;
+  }
+    
+  public void run()
+  {
+    UmpleParser parser = new UmpleParser(this);
+    String input = SampleFileWriter.readContent(getUmpleFile().getFile());
+    ParseResult result = parser.parse("program", input);
+    
+    if (!result.getWasSuccess())
+    {
+      Position position = result.getPosition();
+      String errorMessage = "Syntax error:\n" + "Line:" + position.getLineNumber() + " Char:" + position.getCharacterOffset();
+      throw new UmpleCompilerException(errorMessage,null);
+    }
+    
+    result = parser.analyze(getShouldGenerate());
+    
+    if (result.getWasSuccess())
+    {
+    
+    }
+    else
+    {
+      Position position = result.getPosition();
+      String errorMessage = "Semantic error:\n" + "Line:" + position.getLineNumber() + " Char:" + position.getCharacterOffset();
+      throw new UmpleCompilerException(errorMessage,null);
+    }
+  }  
+  
+   // Generates the actual code
+  public void generate()
+  {
+    try
+    {
+      for (String target : getGenerates())
+      {
+        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target);
+        Class<?> classDefinition = Class.forName(className);
+        CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
+        generator.setModel(this);
+        generator.generate();
+      }
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("Unable to generate code",e);
+    }
+  }
+  
+  public Coordinate getDefaultClassPosition(int numDefaults)
+  {
+    int xIndex  = 0;
+    int yIndex = 0;
+    int yOffset = 0;
+    int xOffset = 0;
+    
+    xIndex = (numDefaults-1) / (maxYLevels);
+    yIndex = (numDefaults-1) % (maxYLevels);
+    yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
+    xOffset = (xIndex * levelOffset.getX()) + initialOffset.getX();
+
+    return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
+  }
+  
+  public Coordinate[] getDefaultAssociationPosition(Association a)
+  {
+    Coordinate[] defaults = new Coordinate[2];
+    int offsetY = offsetFromEdge.getX();
+  	int offsetX = offsetFromEdge.getY();
+  	
+  	String classOne = a.getEnd(0).getClassName();
+  	String classTwo = a.getEnd(1).getClassName();
+  	Coordinate classOnePos = getUmpleClass(classOne).getPosition();
+  	Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
+  	
+  	if (classOne.equals(classTwo))
+  	{
+  	  return getDefaultReflexiveAssociationPosition(a);
+  	}
+  	
+  	int num = 1;
+  	String tempClass1 = "";
+  	String tempClass2 = "";
+  	for (Association temp : getAssociations())
+  	{
+  	  tempClass1 = temp.getEnd(0).getClassName();
+  	  tempClass2 = temp.getEnd(1).getClassName();
+  	  
+  	  if (temp.getName().equals(a.getName()) &&
+  	  	  tempClass1.equals(classOne)        && 
+  	  	  tempClass2.equals(classTwo)) 
+  	  {
+  	  	 break; 
+  	  }
+  	  
+  	  if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
+  	  else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
+  	}
+  	
+  	Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+  	Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+  	Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+  	Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+  	classOneNoX.setX(0);
+  	classTwoNoX.setX(0);
+  	classOneNoY.setY(0);
+  	classTwoNoY.setY(0);
+  	String whereVert = classOneNoX.whereIs(classTwoNoX);
+  	String whereHorz = classOneNoY.whereIs(classTwoNoY);
+  	 
+  	// alternative 1: left/right wall of class one to left/right wall of class two
+  	int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
+  	int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
+  	int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
+  	int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
+  	Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
+  	Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
+  	Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
+  									  classOnePos.getY() + offsetOne.getY(),
+  									  0,0);
+  	Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
+  									  classTwoPos.getY() + offsetTwo.getY(),
+  									  0,0);
+  	
+  	int distance = start.distanceTo(end);
+  	
+  	// alternative 2: top/bottom wall of class one to top/bottom wall of class two
+  	int altXOne = num*offsetX;
+  	int altXTwo = num*offsetX;
+  	int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
+  	int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
+  	Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
+  	Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
+  	Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
+  									     classOnePos.getY() + altOffsetOne.getY(),
+  									     0,0);
+  	Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
+  									     classTwoPos.getY() + altOffsetTwo.getY(),
+  									     0,0);
+  	
+  	int altDistance = altStart.distanceTo(altEnd);
+  	
+  	// choose alternative that generates the shortest line
+  	if (altDistance < distance)
+  	{
+      defaults[0] = altOffsetOne;
+  	  defaults[1] = altOffsetTwo;
+  	} 
+  	else
+    {
+      defaults[0] = offsetOne;
+      defaults[1] = offsetTwo;
+  	}
+    
+    return defaults;
+  }
+  
+  private Coordinate[] getDefaultReflexiveAssociationPosition(Association a)
+  {
+    Coordinate[] defaults = new Coordinate[2];
+    String name  = a.getEnd(0).getClassName();
+    Coordinate position = getUmpleClass(name).getPosition();
+    
+    // determine which corner the association should be positioned at
+    int index = 0;
+    for (int i=0; i < numberOfAssociations(); i++)
+    {
+      Association current = getAssociation(i);
+      if (current.getEnd(0).getClassName().equals(name) && current.getEnd(1).getClassName().equals(name))
+      {    
+        if (current.numberOfPositions() > 0)
+        {
+          if (current.getPosition(0).getStatus().equals(Coordinate.Status.Defaulted))
+          {
+            index += 1;
+          }
+        }
+      }
+    }
+    
+    Coordinate offsetOne = new Coordinate(0,0,0,0);
+    Coordinate offsetTwo = new Coordinate(0,0,0,0);
+    
+    if (index % 4 == 0)
+    {
+      offsetOne.setX(reflexiveSegmentLength);
+      offsetOne.setY(position.getHeight());
+      offsetTwo.setX(0);
+      offsetTwo.setY(position.getHeight() - reflexiveSegmentLength);
+    }
+    else if (index % 4 == 1)
+    {
+      offsetOne.setX(position.getWidth() - reflexiveSegmentLength);
+      offsetOne.setY(position.getHeight());
+      offsetTwo.setX(position.getWidth());
+      offsetTwo.setY(position.getHeight() - reflexiveSegmentLength);
+    }
+    else if (index % 4 == 2)
+    {
+      offsetOne.setX(position.getWidth() - reflexiveSegmentLength);
+      offsetOne.setY(0);
+      offsetTwo.setX(position.getWidth());
+      offsetTwo.setY(reflexiveSegmentLength);
+    }
+    else
+    {
+      offsetOne.setX(reflexiveSegmentLength);
+      offsetOne.setY(0);
+      offsetTwo.setX(0);
+      offsetTwo.setY(reflexiveSegmentLength);
+    }
+    
+    defaults[0] = offsetOne;
+    defaults[1] = offsetTwo;
+    
+    return defaults;
+   }
+}
+
+class Key
+{
+  public boolean isProvided()
+  {
+    return isDefault || members.size() > 0;
+  }
+
+  public boolean isMember(UmpleVariable av)
+  {
+    if (av == null)
+    {
+      return false;
+    }
+    return indexOfMember(av.getName()) != -1;
+  }  
+}
+
+class Depend
+{
+  public String getPackageName()
+  {
+    if (name == null || "".equals(name))
+    {
+      return "";
+    }
+    int dotIndex = name.lastIndexOf(".");
+    return dotIndex >= 0 ? name.substring(0,dotIndex) : name;
+  }
+}
+
+class Method{  
+   public String toString()
+  {
+	  StringBuffer methodBuffer = new StringBuffer();
+	  methodBuffer.append(" " + this.getType()+ " " + this.getName());
+	  methodBuffer.append("(");
+	  String paramName="";
+	  String paramType="";
+	  String aSingleParameter="";
+	  String isList="";
+	  String parameters = "";
+	  String finalParams= "";
+	  if (this.hasMethodParameters()){
+		  for (MethodParameter aMethodParam : this.getMethodParameters()) 
+		  {
+			  paramName = aMethodParam.getName();
+			  paramType = aMethodParam.getType();
+			  isList = aMethodParam.getIsList() ? " [] " : " ";
+			  aSingleParameter = paramType + isList + paramName;
+			  parameters += aSingleParameter + ",";
+		  }
+		  finalParams = parameters.substring(0, parameters.length()-1);
+		  methodBuffer.append(finalParams);
+	  }
+	  methodBuffer.append(")");
+	  methodBuffer.append("  {");
+	  methodBuffer.append(System.getProperty("line.separator"));
+	  methodBuffer.append(    this.getMethodBody().getExtraCode());
+	  methodBuffer.append(System.getProperty("line.separator"));
+	  methodBuffer.append("  }");
+	  return methodBuffer.toString();
+  }
+}
+
+class UmpleInterface
+{
+  public boolean hasMethod(Method comparedMethod){
+	  String methodName = comparedMethod.getName();
+	  int numberOfParams = comparedMethod.getMethodParameters().size();
+	  for (Method aMethod : this.getMethods()){
+		  if (aMethod.getName().equals(methodName)){
+			  if (numberOfParams == aMethod.getMethodParameters().size()){
+				  return true;				  
+			  }
+		  }
+	  }
+	  return false;  
+  }
+
+ protected GeneratedInterface gInterface = null;
+  public GeneratedInterface getGeneratedInterface()
+  {
+    return gInterface;
+  }
+
+  public GeneratedInterface createGeneratedInterface(UmpleModel model)
+  {
+    gInterface = new GeneratedInterface(model, this);
+    return getGeneratedInterface();
+  }
+}
+
+
+class UmpleClass
+{
+
+  public List<StateMachine> getAllStateMachines()
+  {
+    ArrayList<StateMachine> all = new ArrayList<StateMachine>();
+    all.addAll(getStateMachines());
+    for (StateMachine sm : getStateMachines())
+    {
+      all.addAll(sm.getNestedStateMachines());
+    }
+    return all;
+  }
+
+  public List<CodeInjection> getApplicableCodeInjections(String type, String method)
+  {  
+    ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
+    if (type == null || method == null)
+    {
+      return all;
+    }
+    String formattedMethod = StringFormatter.toUnderscore(method);
+    
+    for (CodeInjection code : getCodeInjections())
+    {
+      if (code.getOperation() == null || !type.equals(code.getType()))
+      {
+        continue;
+      }
+
+      boolean isAllExcludes = true;
+      TriState isMatch = new TriState(false);
+      TriState isMatchOnExclude = new TriState(true);
+      
+      String[] allOperations = code.getOperation().split(",");
+      for (String operation : allOperations)
+      {
+        
+        boolean isNot = false;
+        if (operation.startsWith("!"))
+        {
+          isNot = true;
+          operation = operation.substring(1);
+        }
+        else
+        {
+          isAllExcludes = false;
+        }
+        isMatchOnExclude.setIsSet(true);
+        
+        String regexOperation = StringFormatter.toUnderscore(operation);
+        regexOperation = regexOperation.replace("_*", "*");
+        regexOperation = regexOperation.replace("*", ".*");
+        boolean isCurrentMatch = formattedMethod.matches(regexOperation);
+
+        if (isNot && isCurrentMatch)
+        {
+          isMatch.setStatus(false);
+          isMatchOnExclude.setStatus(false);
+        }
+        else if (!isNot && isCurrentMatch)
+        {
+          isMatch.setStatus(true);
+        }
+      }
+      
+      if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue()) 
+      {
+        all.add(code);
+      }
+    } 
+    
+    return all;
+  }
+
+  public List<StateMachine> getStateMachines(Event e)
+  { 
+    List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
+    for (StateMachine sm : getAllStateMachines())
+    {
+      List<Event> allEvents = sm.getEvents();
+      if (allEvents.contains(e))
+      {
+        allStateMachines.add(sm);
+      }
+    }
+    return allStateMachines;
+  }
+
+  public List<Event> getEvents()
+  {
+    List<Event> allEvents = new ArrayList<Event>();
+    for (StateMachine sm : getAllStateMachines())
+    {
+      allEvents.addAll(sm.getEvents());
+    }
+    
+    List<Event> allUniqueEvents = new ArrayList<Event>();
+    for (Event e : allEvents)
+    {
+      if (!allUniqueEvents.contains(e))
+      {
+        allUniqueEvents.add(e);
+      }
+    }
+    return allUniqueEvents;
+  }
+
+  public Event findOrCreateEvent(String aName)
+  {
+    if (aName == null)
+    {
+      return null;
+    }
+    
+    for (StateMachine sm : getStateMachines())
+    {
+      for (Event aEvent : sm.getEvents())
+      {
+        if (aName.equals(aEvent.getName()))
+        {
+          return aEvent;
+        }
+      }
+    }
+    return new Event(aName);
+  }
+
+  public void addReferencedPackage(String aNamespace)
+  {
+    if (indexOfNamespace(aNamespace) == -1 && !aNamespace.equals(getPackageName()))
+    {
+      addNamespace(aNamespace);
+    }
+  }
+  
+  public AssociationVariable getAssociationVariable(String name)
+  {
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+  
+  public AssociationVariable getAssociationVariableFor(UmpleClass uClass)
+  {
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getType().equals(uClass.getName()))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+  
+  
+  public boolean hasMethod(Method comparedMethod){
+	  String methodName = comparedMethod.getName();
+	  int numberOfParams = comparedMethod.getMethodParameters().size();
+	  for (Method aMethod : this.getMethods()){
+		  if (aMethod.getName().equals(methodName)){
+			  if (numberOfParams == aMethod.getMethodParameters().size()){
+				  return true;				  
+			  }
+		  }
+	  }
+	  return false;  
+  }
+  
+  public Attribute getAttribute(String name)
+  {
+    for (Attribute av : attributes)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+  
+  public boolean isRoot()
+  {
+    return extendsClass == null;
+  }
+  
+  protected GeneratedClass gClass = null;
+  public GeneratedClass getGeneratedClass()
+  {
+    return gClass;
+  }
+
+  public GeneratedClass createGeneratedClass(UmpleModel model)
+  {
+    gClass = new GeneratedClass(model, this);
+    if (getExtendsClass() != null)
+    {
+      gClass.setParentClass(getExtendsClass().getGeneratedClass());
+    }
+    return getGeneratedClass();
+  }
+  
+  
+  
+  public boolean hasUniqueIdentifier()
+  {
+    return getUniqueIdentifier() != null;
+  }
+  
+  public boolean isAttributeClass()
+  {
+    for (AssociationVariable association : getAssociationVariables())
+    {
+      if (association.getIsNavigable())
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+
+class UmpleVariable
+{
+  public String getUpperCaseName()
+  {
+    if (name == null || name.length() == 0)
+    {
+      return name;
+    }
+    else if (name.length() == 1)
+    {
+      return name.toUpperCase();
+    }
+    else
+    {
+      return name.toUpperCase().charAt(0) + name.substring(1);
+    }
+  }
+  
+}
+
+class Attribute
+{
+  public boolean isConstant()
+  {
+    return "const".equals(getModifier());
+  }  
+  
+  public boolean isPrimitive()
+  {
+    return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
+  }
+  
+}
+
+class Association
+{
+
+  public void setLeftAndRight()
+  {
+    String name = this.getName();
+    
+    int underscore = name.indexOf("__");
+    String nameOne = name.substring(0,underscore);
+    String nameTwo = name.substring(underscore + "__".length(), name.length());
+    
+    if (nameOne.compareTo(nameTwo) > 0)
+    {
+      
+    }
+   
+  }
+
+  public int whoIsInvalid()
+  {
+    if (!getIsLeftNavigable() || !getIsRightNavigable())
+    {
+      return -1;
+    }
+    
+    if (getEnd(0).getClassName().equals(getEnd(1).getClassName()))
+    {
+      if (getEnd(0).getMultiplicity().getLowerBound() != 0)
+      {
+        return 0;
+      }
+      else if (getEnd(1).getMultiplicity().getLowerBound() != 0)
+      {
+        return 1;
+      }
+    }
+    return -1;
+  }
+  
+  public boolean isValid()
+  {
+    return whoIsInvalid() == -1;
+  }
+  
+  public String getArrowString()
+  {
+    String arrow = "--";
+    if (getIsLeftNavigable() && !getIsRightNavigable())
+    {
+      arrow = "<-";
+    }
+    else if (!getIsLeftNavigable() && getIsRightNavigable())
+    {
+      arrow = "->";
+    }
+    else if (!getIsLeftNavigable() && !getIsRightNavigable())
+    {
+      arrow = "><";
+    }
+    return arrow;
+  }
+
+  public String toGenericString()
+  {
+    String leftSide = getEnd(0).toGenericString();
+    String rightSide = getEnd(1).toGenericString();
+
+    
+    if (leftSide.equals("n") && rightSide.equals("n") && !getEnd(0).toSimpleString().equals(getEnd(1).toSimpleString()))
+    {
+      return cruise.umple.util.StringFormatter.format("n {0} m",getArrowString());
+    }
+    else
+    {
+      return cruise.umple.util.StringFormatter.format("{0} {1} {2}",leftSide,getArrowString(),rightSide);
+    }
+  }
+  
+  public String deriveName()
+  {
+    AssociationEnd firstEnd = this.getEnd(0);
+    AssociationEnd secondEnd = this.getEnd(1);
+    
+    String firstClassName = firstEnd.getClassName();
+    String secondClassName = secondEnd.getClassName();
+    
+    String firstRole = firstEnd.getDisplayRoleName().equals("") ? "" : ":" + firstEnd.getDisplayRoleName();
+    String secondRole = secondEnd.getDisplayRoleName().equals("") ? "" : ":" + secondEnd.getDisplayRoleName();
+    
+    if (firstClassName.compareTo(secondClassName) <= 0)
+    {
+      return firstClassName + firstRole + "__" + secondClassName + secondRole;
+    }
+    else
+    {
+      return secondClassName + secondRole + "__" + firstClassName + firstRole;
+    }
+  }
+}
+
+class AssociationEnd
+{
+
+  private static int MULT_MANY = -1;
+
+  public boolean isNavigable()
+  {
+    return !getModifier().toLowerCase().equals("nonnavigable");
+  }  
+
+  public String getLowerBoundString()
+  {
+    return getMultiplicity().getLowerBound() == -1 ? "*" : getMultiplicity().getLowerBound() + "";
+  }
+
+  public String getUpperBoundString()
+  {
+    return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
+  }
+  
+  public String getDisplayRoleName()
+  {
+    return isDefaultRoleName ? "" : getRoleName();
+  }
+  
+  public String toSimpleString()
+  {
+    if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == MULT_MANY && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == getMultiplicity().getUpperBound())
+    {
+      return formatEnd(getMultiplicity().getLowerBound());
+    }
+    else
+    {
+      return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
+    }
+  }
+  
+  public String toGenericString()
+  {
+    if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == MULT_MANY && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == getMultiplicity().getUpperBound())
+    {
+      return formatGenericEnd(getMultiplicity().getLowerBound(),"n");
+    }
+    else if (getMultiplicity().getLowerBound() == 0 || getMultiplicity().getLowerBound() == 1)
+    {
+      return getMultiplicity().getLowerBound() + ".." + formatGenericEnd(getMultiplicity().getUpperBound(),"n");
+    }
+    else
+    {
+      return formatGenericEnd(getMultiplicity().getLowerBound(),"n") + ".." + formatGenericEnd(getMultiplicity().getUpperBound(),"m");
+    }
+  }
+
+  public String toString()
+  {
+    String asText = "";
+    
+    if (!getModifier().equals("internal"))
+    {
+      asText += getModifier() + " " + asText;
+    }
+    asText += toSimpleString();
+
+    if (getRoleName().length() > 0)
+    {
+      asText += " [" + roleName + "]";
+    }
+
+    if (getClassName().length() > 0)
+    {
+      asText += " " + className;
+    }
+
+    if (getReferenceToClassName().length() > 0)
+    {
+      asText += " -- " + referenceToClassName;
+    }
+
+    return asText;
+  }
+  
+  private String formatEnd(int aValue)
+  {
+    return aValue == MULT_MANY ? "*" : aValue + "";
+  }
+  
+  private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
+  {
+    
+    if (aValue == MULT_MANY)
+    {
+      return "*";
+    }
+    else if (aValue == 0 || aValue == 1)
+    {
+      return aValue + "";
+    }
+    else
+    {
+      return defaultIfNotOneOrMany;
+    }
+  }  
+  
+}
+
+
+class AssociationVariable
+{
+  public boolean isReflexive()
+  {
+    return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());
+  }
+  
+  public boolean isSymmetricReflexive()
+  {
+    return getRelatedAssociation() != null && "symmetricreflexive".equals(getModifier());
+  }
+
+  public void configureRelatedAssociation(AssociationVariable newRelatedAssociation)
+  {
+    if (newRelatedAssociation == null || !getType().equals(newRelatedAssociation.getType()))
+    {
+      setRelatedAssociation(newRelatedAssociation);
+    }
+    else
+    {
+      multiplicity.minimizeRange(newRelatedAssociation.getMultiplicity());
+      setRelatedAssociation(this);
+    }
+  }
+    
+  public static int min(int first, int second)
+  {
+    return first == -1 ? second : second == -1 ? first : Math.min(first, second);
+  }
+
+  public static int max(int first, int second)
+  {
+    return first == -1 ? first : second == -1 ? second : Math.max(first, second);
+  }
+  
+  public boolean isMany()
+  {
+    return multiplicity.getUpperBound() == -1 || multiplicity.getUpperBound() > 1;
+  }
+  
+  public boolean isOptionalN()
+  {
+    return multiplicity.getLowerBound() == 0 && multiplicity.getUpperBound() > 1;
+  }
+
+  public boolean isOne()
+  {
+    return multiplicity.getUpperBound() == 1;
+  }
+  
+  public boolean isOnlyOne()
+  {
+    return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 1;
+  }
+  
+  public boolean isOptionalOne()
+  {
+    return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 0;
+  }
+  
+  public boolean isOptionalMany()
+  {
+    return multiplicity.getLowerBound() == 0 && isMany();
+  }
+
+  public boolean isN()
+  {
+    return multiplicity.getLowerBound() > 1 && multiplicity.getLowerBound() == multiplicity.getUpperBound();
+  }
+  
+  public boolean isMN()
+  {
+    return multiplicity.getLowerBound() > 0 && (multiplicity.getUpperBound() > multiplicity.getLowerBound() || multiplicity.getUpperBound() == -1);
+  }
+  
+  public boolean isMStar()
+  {
+    return multiplicity.getLowerBound() > 0 && multiplicity.getUpperBound() == -1;
+  }
+  
+  public boolean isStar()
+  {
+    return multiplicity.getUpperBound() == -1;
+  }
+  
+  public boolean isMandatory()
+  {
+    return multiplicity.getLowerBound() > 0;
+  }
+  
+  public boolean isMandatoryOne()
+  {
+    return multiplicity.getLowerBound() == 1 && multiplicity.getUpperBound() == 1;
+  }
+  
+  public boolean isMandatoryMany()
+  {
+    return multiplicity.getLowerBound() > 0 && isMany();
+  }
+}
+
+class Multiplicity
+{
+ 
+  public void setRange(String lowerBound, String upperBound)
+  {
+    minimum = lowerBound;
+    maximum = upperBound;
+  }
+  
+  public String getRange()
+  {
+    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
+    String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
+    return StringFormatter.format("[{0},{1}]",lowerBound,upperBound);
+  }
+
+  public String[] getRangeParts()
+  {
+    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
+    String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
+    return new String[] { lowerBound, upperBound };
+  }
+  
+  public boolean isValid()
+  {
+    if ("*".equals(getMinimum()))
+    {
+      return false;
+    }
+    
+    if ("-1".equals(getMinimum()) || "-1".equals(getMaximum()) || "-1".equals(getBound()))
+    {
+      return false;
+    }
+    
+    if (getLowerBound() < -1 || getUpperBound() < -1)
+    {
+      return false;
+    }
+  
+    if (getLowerBound() > getUpperBound() && !isUpperBoundMany())
+    {
+      return false;
+    }
+  
+    return true;
+  }
+
+  public void minimizeRange(Multiplicity compareTo)
+  {
+    if (compareTo.getLowerBound() > getLowerBound() && compareTo.minimum != null)
+    {
+      minimum = compareTo.minimum;
+    }
+    if (compareTo.getUpperBound() < getUpperBound() && compareTo.maximum != null && compareTo.getUpperBound() != -1)
+    {
+      maximum = compareTo.maximum;
+    }
+  }
+    
+  public int getLowerBound()
+  {
+    if (getBound() != null)
+    {
+      return parseInt(getBound(),0);
+    }
+    else
+    {
+      return parseInt(getMinimum(),-1);
+    }
+  }
+  
+  public int getUpperBound()
+  {
+    if (getBound() != null)
+    {
+      return parseInt(getBound(),-1);
+    }
+    else
+    {
+      return parseInt(getMaximum(),-1);
+    }
+  }
+  
+  public boolean isLowerBoundMany()
+  {
+    return getLowerBound() == -1;
+  }
+
+  public boolean isUpperBoundMany()
+  {
+    return getUpperBound() == -1;
+  }
+  
+  public boolean isLowerBoundNumeric()
+  {
+    return getLowerBound() >= -1;
+  }
+
+  public boolean isUpperBoundNumeric()
+  {
+    return getUpperBound() >= -1;
+  }
+  
+  public boolean isMany()
+  {
+    return getUpperBound() > 1 || getUpperBound() == -1;
+  }
+  
+  public boolean isOne()
+  {
+    return getUpperBound() == 1;
+  }
+
+  private int parseInt(String input, int defaultIfStar)
+  {
+    try
+    {
+      if ("*".equals(input))
+      {
+        return defaultIfStar;
+      }
+      else
+      {
+        return Integer.parseInt(input);
+      }
+    }
+    catch(Exception e)
+    {
+      return -2;
+    }
+  }
+}
+
+class GeneratedElement
+{
+
+  private Map<String, String> lookups = new HashMap<String, String>();
+  private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
+
+  public void setLookup(String aKey, String aValue)
+  {
+    lookups.put(aKey, aValue);
+  }
+  
+  public String getLookup(String aKey)
+  {
+    if (aKey == null)
+    {
+      return null;
+    }
+    else
+    {
+      return lookups.get(aKey);  
+    }
+  }
+  
+  public boolean addMultiLookup(String aKey, String aValue)
+  {
+    List<String> oldList = null;
+    if (multiLookups.containsKey(aKey))
+    {
+      oldList = multiLookups.get(aKey);
+    }
+    else
+    {
+      oldList = new ArrayList<String>();
+    }
+    
+    if (aValue == null || "".equals(aValue) || oldList.contains(aValue))
+    {
+      return false;
+    }
+    
+    oldList.add(aValue);
+    multiLookups.put(aKey, oldList);
+    return true;
+  }
+  
+  public String[] getMultiLookup(String aKey)
+  {
+    if (aKey == null || !multiLookups.containsKey(aKey))
+    {
+      return new String[0];
+    }
+    else
+    {
+      List<String> list = multiLookups.get(aKey);
+      
+      return list.toArray(new String[list.size()]);
+    }
+  }
+  
+  public String toString()
+  {
+    String answer = "<<";
+    for (String aKey : lookups.keySet())
+    {
+      answer += "[" + aKey + ":" + lookups.get(aKey) + "]";
+    }    
+    answer += ">>";
+    return answer;
+  }
+}
+
+class Point
+{
+
+  public static Point create(int n)
+  {
+    int p = (int)Math.sqrt(n) + 1;
+    if (n - (p-2)*p <= p)
+    {
+      return new Point(n - (p-2)*p, p);
+    }
+    else
+    {
+      return new Point(p, n - (p-1) * p);
+    }
+  }
+  
+  public String toString()
+  {
+    return "(" + getX() + "," + getY() + ")";
+  }
+}
+
+class Coordinate
+{
+
+  public Point getTopLeft()
+  {
+    return new Point(x,y);
+  }
+  
+  public Point getTopRight()
+  {
+    return new Point(x+width,y);
+  }
+  
+  public Point getBottomLeft()
+  {
+    return new Point(x,y+height);
+  }
+  
+  public Point getBottomRight()
+  {
+    return new Point(x+width,y+height);
+  }
+  
+  public Point getTopMiddle()
+  {
+    return new Point(x+width/2,y);
+  }
+  
+  public Point getBottomMiddle()
+  {
+    return new Point(x+width/2,y+height);
+  }
+  
+  public Point getRightMiddle()
+  {
+    return new Point(x+width,y+height/2);
+  }
+  
+  public Point getLeftMiddle()
+  {
+    return new Point(x,y+height/2);
+  }
+  
+  public String whereIs(Coordinate neighbour)
+  {
+    int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
+    int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
+
+    int bottomDeltaY = neighbour.getTopMiddle().getY() - getBottomMiddle().getY();
+    int bottomDeltaX = getBottomMiddle().getX() - neighbour.getTopMiddle().getX(); 
+
+    if (topDeltaY > 0 && Math.abs(topDeltaY) > Math.abs(topDeltaX))
+    {
+      return "top";
+    }
+    else if (bottomDeltaY > 0 && Math.abs(bottomDeltaY) > Math.abs(bottomDeltaX))
+    {
+      return "bottom";
+    }
+    else if (neighbour.getX() < getX())
+    {
+      return "left";
+    }
+    else
+    {
+      return "right";
+    }
+  }
+  
+  public int distanceTo(Coordinate other)
+  {
+    int a = other.getX() - getX();
+    int b = other.getY() - getY();
+    int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
+    return c; 
+  }
+  
+  public String toString()
+  {
+    return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
+  }
+  
+  private void updateStatus()
+  {
+    if (x == -1 && y == -1 && width == -1 && height == -1)
+    {
+      setStatus(Status.Undefined);
+    }
+    else 
+    {
+      setStatus(Status.Explicit);
+    }
+  }
+}

@@ -1,0 +1,27 @@
+Class RegistrationSystem
+{
+  course;
+  {
+    planned{
+    openRegistration -> notEnoughStudents;
+    }
+    
+    Open{
+      notEnoughStudents{
+        closeRegistration -> Cancelled;
+        aboveMinimum -> enoughStudents;
+      }
+      enoughStudents{
+      aboveMaximum -> closed;
+      closeRegistration -> closed;
+      }
+    closed{
+    }
+    cancelled{
+    }   
+  }
+    
+}
+
+
+

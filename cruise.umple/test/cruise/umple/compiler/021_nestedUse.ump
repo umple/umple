@@ -1,0 +1,7 @@
+
+class Student
+{
+  fisrtName;
+}
+
+use 021_nestedUse_B.ump;

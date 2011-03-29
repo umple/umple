@@ -1,0 +1,9 @@
+
+class Student
+{
+  id;
+  name;
+  key { id, name }
+  
+  key {  }
+}
