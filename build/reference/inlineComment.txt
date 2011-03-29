@@ -1,0 +1,12 @@
+inlineComment
+Misc
+
+@@description
+Inline comments to document your work.
+
+@@syntax
+// [comment-text]
+
+@@example
+// The Umple system is both fun and efficient to development with
+@@endexample

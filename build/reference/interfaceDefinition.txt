@@ -1,0 +1,34 @@
+interfaceDefinition
+Entities
+
+@@description
+<p>      
+The interface command defines an object-oriented interface.  An interface can be 
+composed of the following things: 
+</p>
+
+<ul>
+<li>Dependencies</li>
+<li>Arbitrary "code" in a native language (e.g. Java, PHP) to define the interface methods</li>
+</ul>
+
+<p class="description">Umple currently supports Java and PHP as native languages.</p>
+
+@@syntax
+interfaceDefinition : interface [name] { [[depend]]* [[extraCode]]? }
+
+@@example
+
+interface Student
+{
+  depend school.util.*;
+  
+  boolean registerForCource(Course aCourse);
+}
+
+class Course
+{
+  name;
+  description;
+}
+@@endexample

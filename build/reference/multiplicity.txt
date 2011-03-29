@@ -1,0 +1,28 @@
+multiplicity
+Associations
+
+@@description
+Describes the allowable number of entities that can participate in one end of an association.
+In most cases you provide both a lower and upper bound, but the "many" (or "*") case assumes a zero
+lower bound.
+
+@@syntax
+[=bound:*] | [lowerBound] .. [upperBound] | [bound]
+
+@@example
+// There can be any number of links from an instance at the other end
+// of the association to instances at this end 
+//
+// The lower bound is zero and the upper bound is 'many'
+*
+@@endexample
+
+@@example
+// The lower bound is zero and the upper bound is 5
+3..5
+@@endexample
+
+@@example
+// There must be exactly two objects (lower and upper bound are both 2)
+2
+@@endexample

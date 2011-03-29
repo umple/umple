@@ -1,0 +1,138 @@
+Grammar Notation
+Introduction
+noreferences
+@@description
+<style>
+p {margin-bottom:1em;}
+pre.x {color:red;}
+</style>
+<p>
+The notation we present for the Umple grammar is derived directly
+from our parser.  The benefit is that we ensure our documentation
+is always up to date; but at a cost of using a slightly non-standard
+EBNF syntax.
+</p>
+<p>
+We have strived to keep our notation in line with the EBNF format.
+Our syntax offers a very simple mechanism to define a new language,
+as well as extend an existing one.  We will be using examples to 
+help explain our syntax.
+</p>
+<p>Let's start with a simple assignment rule:</p>
+<pre class="x">assignment : [name] = [value] ;</pre>
+
+<p>
+Above, the rule name is "assignment".  An assignment is comprised of 
+a non-terminal called "name", then the equals symbol ("="), a non-terminal "value" and 
+finally a semi-colon symbol (";").
+</p>
+
+<p>
+A <b>non-terminal</b> by default as shown above is a sequence of <b>characters</b> that is a <b>non-whitespace</b> that is 
+delimited by the next <b>symbol</b> (based on your grammar). In our case above, the non-terminal "name"
+will be defined by the characters leading up to either a space, newline,
+or an equals ("=").
+</p>
+
+<p>
+The syntax allows for rapid Domain-Specific-language (DSL) creation, as you need not worry about 
+complex (and repetitive, and error prone) regular expressions for defining common structures such as
+string sequences, decimal numbers, alphanumerics, etc. 
+</p>
+
+<p>
+Here are a few examples that satisfy the assignment rule above:
+</p>
+
+<ul>
+<li>key = "one";</li>
+<li>wasSet=true;</li>
+<li>numberOfItems =7;</li>
+</ul>
+
+<p>Let us now consider nesting sub-rules within a rule.</p>
+
+<pre class="x">
+directive- : [[facadeStatement]] | [[useStatement]]<br />
+facadeStatement- : [=facade] ;<br />
+useStatement : use [=type:file|url] [location] ;<br />
+</pre>
+
+<p>
+Above, we have three rules, "directive", "facadeStatement", and "useStatement".  A "directive"
+is either a "facadeStatement" or a "useStatement" (the "or" expression is defined by the vertical bar "|").
+To nest a rule within another rule, we use double square brackets ("[[" and "]]"). 
+</p>
+
+<p>
+By default, rule names are added to the tokenization string.  But, some rules act more like placeholders to help modularize
+the grammar (and to promote reuse).  To exclude a rule name (and just the name, the rule itself will still be evaluated 
+and tokenized as required), simply add a minus ("-") at the end of its name.
+</p>
+
+<p>
+Above, we see that the rule names "directive", and "facadeStatement" are not added to the tokenization string.
+</p>
+
+<p>
+For example, the text "facade;" is tokenized as follows:<br />
+[facade:facade]
+</p>
+
+<p>
+Without the ability to exclude rule names, that same text would be tokenized with the following additional (and unnecessary)
+text:<br/>
+[directive][facadeStatement][facade:facade]
+</p>
+
+<p>Symbols (i.e.terminals), such as "=" and ";" are used in the analysis phase of the parsing (to decide which parsing rule to invoke), but they are not added to the resulting tokenziation string for later processing.  If we want to tokenize symbols, we
+can create a constant using the [=name] notation.  
+</p>
+
+<p>
+Above, we see that a "facadeStatement" is represented
+by the sequence of characters "facade" (i.e. a constant).  To support lists of potential matches we use a 
+similar notation [=name:list|separated|by|bars].  Above, we see that the "type" non-terminal can be 
+the constant string sequence "file" or "url".
+</p> 
+
+<p>
+Here are a few examples that satisfy the assignment rule above:
+</p>
+
+<ul>
+<li>facade;</li>
+<li>use file Parser.ump;</li>
+<li>use url http://cruise.site.uottawa.ca/Parser.ump;</li>
+</ul>
+
+<p>
+Our grammar syntax supports a simple mechanism for non-terminals that can include whitespace (e.g. comments).
+Let us consider the rules to define inline and multi-line comments.
+</p>
+
+<pre class="x">
+inlineComment- : // [*inlineComment]<br />
+multilineComment- : /* [**multilineComment] */<br />
+</pre>
+
+<p>
+The [*name] (e.g. [*inlineComment]) non-terminal will match everything until a newline character.
+The [**name] (e.g. [**multilineComment]) non-terminal will match everything (including newlines) until the 
+next character sequence is matched.  In the case above, a "multilineComment" will match everything between "/*" and "*/".
+</p>
+
+<p>
+Here are a few examples that satisfy the assignment rule above:
+</p>
+
+<ul>
+<li>// remove all references to "x" once complete</li>
+<li>/* This class will help calculate<br/> your overdue library fees */</li>
+</ul>
+
+<p>
+The grammar langauge provides additional internal features well suited for the creation of programming
+languages / extenstions. The above examples should be sufficient to allow you to review and
+understand the Umple language syntax.
+</p>

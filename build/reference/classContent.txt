@@ -1,0 +1,19 @@
+classContent
+Classes
+
+@@description
+<p>      
+A class can contain several components including:
+</p>
+
+<ul>
+<li>comment: describe the intent of your class</li>
+<li>classDefinition: define a subclass to your class</li>
+<li>isA: specify a superclass to your class (i.e. a Supervisor could be descrbied as "isA Person")</li>
+<li>singleton: limit the system to only one instance of this class (e.g. Booking)</li>
+<li>depend: describe external dependencies that might be used by your class within the extraCode section</li>
+<li>symmetricReflexiveAssociation: associations to yourself</li>
+<li>attribute: member variables of the class (i.e. name, dob, amount)</li>
+<li>myAssociation: an assocation to an external class</li>
+<li>extraCode: arbitrary code to provide custom functionality to the class</li>
+</ul>

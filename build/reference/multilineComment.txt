@@ -1,0 +1,16 @@
+multilineComment
+Misc
+@@description
+For larger comments to document your work.
+
+@@syntax
+/*
+  [comment-text]
+*/
+
+@@example
+/* 
+  This apple can only be compared to 
+  other apples
+*/
+@@endexample

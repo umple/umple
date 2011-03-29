@@ -1,0 +1,37 @@
+associationDefinition
+Entities
+
+@@description
+<p>      
+An association defines a relationship from a class to a class. More specifically, it defines which links (i.e. references or pointers) may exist at run time between instances of the classes.
+</p>
+
+<p>
+Umple supports binary associations (associations with just two ends). This definition includes reflexive associations, in which both ends are the same class.
+</p>
+
+<p>
+An association can specify the following information:
+</p>
+
+<ul>
+  <li>The classes involved (i.e. one or two classes)</li>
+  <li>The restrictions on the number of objects allowed in the relationship (multiplicity)</li>
+  <li>Association end names (to clarify the relationship and avoid collision if two classes are
+  associated in multiple ways</li>
+</ul>
+
+<p>
+An association can be presented in four ways in Umple.
+</p>
+
+<ul>
+  <li>Inline - Defined within one of the classes of the relationship</li>
+  <li>Reflexive - A class that is associated with itself</li>
+  <li>External - An external notation to associate two classes together</li>
+  <li>Association Class - A special notation to define the two star "*" ends within an Association Class</li>
+</ul>
+  
+<p>
+Please refer to Association Section for examples and syntax for each of the notations above.
+</p>

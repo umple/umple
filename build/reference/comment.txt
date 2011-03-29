@@ -1,0 +1,22 @@
+comment
+Misc
+
+@@description
+Comments provide a mechanism to document your work to provide some insight into
+<i>why</i> you are performing a certain action, as opposed to simply showing
+<i>how</i>.
+
+<p>
+Comments can be either inlineComments, or multilineComments.
+</p>
+
+@@example
+// The Umple system is both fun and efficient to development with
+@@endexample
+
+@@example
+/* 
+  This apple can only be compared to 
+  other apples
+*/
+@@endexample

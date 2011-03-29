@@ -1,0 +1,21 @@
+extraCode
+Classes
+
+@@description
+The Umple language allows a developer to extend the functionality of a class with arbitrary
+logic written the natively compiled language (e.g. Java or Php).  Within this arbitrary
+code, a developer is available to use the available attributes and associations; helping
+to unify the programmer interface, and simplify the resulting code.
+
+@@example
+language Java;
+class Person
+{
+  name;
+  
+  public String displayName()
+  {
+    System.out.println("Hello, my name is " + getName());
+  }
+}
+@@endexample

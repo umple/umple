@@ -1,0 +1,17 @@
+singleton
+Patterns
+
+@@description
+Used to mark this class as a singleon class and ensures that only one object of the class is 
+instantiated at runtime.
+
+@@syntax
+singleton ;
+
+@@example
+
+class Airline
+{
+  singleton;
+}
+@@endexample

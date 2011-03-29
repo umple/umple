@@ -1,0 +1,14 @@
+entity
+Directives
+
+@@description
+<p>      
+A entity can be one of:
+</p>
+
+<ul>
+<li>classDefinition (e.g. Student)</li>
+<li>associationDefinition</li>
+<li>associationClassDefinition (e.g. Booking)</li>
+<li>interfaceDefinition</li>
+</ul>

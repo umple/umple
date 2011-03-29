@@ -1,0 +1,24 @@
+association (inline)
+Classes
+
+@@description
+An association represents a relationship between two classes.  Associations can be defined within a class, in a similar manner
+as you would define an attribute.
+
+@@syntax
+(* | [lowerBound] .. [upperBound] | [bound]) [name]? [=arrow:--|->] (* | [lowerBound] .. [upperBound] | [bound]) [type] [name] ;
+
+@@example
+
+class Group 
+{
+  * -- * Item item;
+  1 -> 0..1 Description;
+}
+
+class Item
+{}
+
+class Description
+{}
+@@endexample

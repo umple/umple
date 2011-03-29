@@ -1,0 +1,30 @@
+attribute
+Classes
+
+@@description
+An attribute represents some information held by a class.  <br />
+The attribute can have many properties, 
+and can be defaulted to a certain value
+
+
+@@syntax
+autounique [name] ; | 
+unique? [immutable|settable|internal|defaulted|const]? 
+([type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+
+@@example
+
+class Group 
+{
+  const Integer MAX = 100;
+
+  immutable String str;
+  settable Date d;
+  internal Time t = new Time();
+  Integer i;
+  autounique x;
+  defaulted String p = "robot";
+  String q = "chicken"; 
+  defaulted r = "";
+}
+@@endexample

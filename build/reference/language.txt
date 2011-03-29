@@ -1,0 +1,12 @@
+language
+Directives
+
+@@description
+<p>      
+The Umple language can be translated into one of the following implementation languages:
+</p>
+
+<ul>
+<li>Java</li>
+<li>Php</li>
+</ul>

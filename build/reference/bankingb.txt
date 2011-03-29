@@ -1,0 +1,82 @@
+Banking System (b)
+Examples
+
+@@description
+
+<img src="examples/bankingb.png" width="90%" title="Banking System UML Model"/>
+
+@@syntax
+N/A
+
+@@example
+namespace banking.b;
+
+class FinancialInstitution {
+ name;
+ 1 -- * ReusableFinancialInstrument;
+}
+
+class CreditCardCompany{
+ isA FinancialInstitution;
+}
+
+class Bank{
+ isA FinancialInstitution;
+ 1 -- * Branch;
+}
+
+class FinancialInstrument{
+  * -- 1 Currency denomination;
+}
+
+// association should be ->
+class ReusableFinancialInstrument{
+ isA FinancialInstrument;
+ number;
+ PIN;
+}
+
+class CreditCard {
+ isA ReusableFinancialInstrument;
+ creditLimit;
+ name;
+}
+
+class DebitCard {
+ isA ReusableFinancialInstrument;
+}
+
+class Cheque {
+ isA FinancialInstrument;
+ amount;
+ Date date;
+ sequenceNumber;
+}
+
+class BankAccount{
+ isA FinancialInstrument;
+ accountNumber;
+ balance;
+ Float overdraftOrCreditLimit;
+ 
+ 1..* -- * DebitCard;
+ 1 -- * Cheque; 
+}
+
+class Currency
+{
+ code;
+ exchangeRate;
+}
+
+class Branch
+{
+ name;
+ address;
+ 1 -- * BankAccount;
+}
+
+class Loan{
+ isA BankAccount;
+}
+@@endexample

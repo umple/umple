@@ -1,0 +1,14 @@
+directive
+Directives
+
+@@description
+<p>      
+A directive can be one of:
+</p>
+
+<ul>
+<li>facade (affects code generation)</li>
+<li>useStatement (includes other model files to allow for reuse)</li>
+<li>namespace</li>
+<li>entity (e.g. class or interface)</li>
+</ul>

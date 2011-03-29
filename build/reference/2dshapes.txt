@@ -1,0 +1,49 @@
+2D Shapes System
+Examples
+
+@@description
+<img src="examples/2dshapes.png" width="90%" title=""/>
+
+@@syntax
+N/A
+
+@@example
+namespace shapes;
+
+class Shape2D {
+ center;
+}
+//Abstract
+class EllipticalShape {
+ isA Shape2D;
+ semiMajorAxis;
+}
+//Abstract
+class Polygon { 
+ isA Shape2D;
+}
+class Circle {
+ isA EllipticalShape;
+}
+class Ellipse{
+ isA EllipticalShape;
+}
+class SimplePolygon {
+ orientation;
+ isA Polygon;
+}
+class ArbitraryPolygon {
+ points;
+ isA Polygon;
+}
+class Rectangle {
+ isA SimplePolygon;
+ height;
+ width;
+}
+class RegularPolygon {
+ numPoints;
+ radius;
+ isA SimplePolygon;
+}
+@@endexample

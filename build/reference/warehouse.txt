@@ -1,0 +1,94 @@
+Warehouse System
+Examples
+
+@@description
+<img src="examples/warehouse.png" width="90%" title="Warehouse System UML Model"/>
+
+@@syntax
+N/A
+
+@@example
+namespace warehouse;
+
+class MovementLocation{}
+
+class SlotSet{
+ isA MovementLocation;
+ 0..1 -- 0..1 BoxOrPallet;
+ 1 -- * Slot;
+}
+
+class Slot{
+ Integer number;
+ Double width;
+ 
+}
+
+class Level{
+ Integer height;
+ Integer number;
+ 1 -- * Slot;
+}
+
+class LoadingGate{
+ Integer number;
+ isA MovementLocation;
+}
+
+class Truck{
+ Integer registerNum;
+ Boolean isWaiting;
+
+ 1 -- * DeliverOrShipmentBom;
+}
+class Rwbm{
+ Integer ID;
+}
+
+class Item{
+ Double value;
+ Integer hazardID;
+ Integer breakability;
+}
+
+class Row{
+ Integer depth;
+ Integer number;
+ 
+ 1 -- * Level;
+}
+
+//Note that here we have the choice to use
+// Time or Double, if the customer requires Double due to 
+// some interoperability issues with a legacy syste, we can easily
+// accomodate them and use Double instead of Time.
+class RwbmMovement{
+ Double startTime;
+ Double endTime;
+ 
+ * toMovement -- 1 MovementLocation to;
+ * fromMovement -- 1 MovementLocation from;
+ * -- 1 BoxOrPallet movedBox;
+ 1 -- * Rwbm;
+}
+
+// Both associations should be ->
+class DeliverOrShipmentBom {
+ Double startTimeLoadOrUnload;
+ Double endTimeExpected;
+ * delivery -- 0..1 LoadingGate sentThrough;
+ * arrival -- 0..1 LoadingGate arriveAt;
+}
+
+class BoxOrPallet{
+ Integer rfidTagNumber;
+ Double lengthINmm;
+ Double widthINmm;
+ Double heightINmm;
+ Double weightINkg;
+ String contentType;
+ 
+ * -- * DeliverOrShipmentBom;
+ 1 -- * Item; 
+}
+@@endexample

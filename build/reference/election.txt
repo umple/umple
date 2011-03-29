@@ -1,0 +1,95 @@
+Election System
+Examples
+
+@@description
+<br />
+<img src="examples/election.png" title="Election System UML Model"/>
+
+@@syntax
+N/A
+
+@@example
+namespace electorial;
+
+// association should be ->
+class PollingStation {
+ Integer number;
+ address;
+
+ 1 -- * PollInElection; 
+} 
+ 
+class ElectedBody{
+ description;
+
+ 1 -- * Position;
+}
+
+ //Different elections may have different sets of polls
+ class Election{
+ Date date;
+ 
+
+ 1 -- * PollInElection;
+ 1 -- * ElectionForPosition;
+}
+
+class ElectionForPosition{
+ 1 -- * Candidature;
+}
+
+//Eg. Mayor, Councilor. AKA seats
+//A position can have different elections for it at different times, eg. once every four years.
+class Position {
+ description;
+ 1 -- * ElectionForPosition;
+}
+
+//We need candidature class since a candidate can run for different 
+//positions and for the smae positions at subsequent elections
+class Candidature {
+ internal Boolean isIncumbent = false;
+ 
+ public void markAsIncumbent()
+ {
+   isIncumbent = true;
+ }
+ 
+ public String toString()
+ {
+   return isIncumbent ? "Incumbent" : "Candidature";
+ }
+}
+
+class Candidate {
+ name;
+ Integer phoneNumber;
+ address;
+ 
+ 1 -- * Candidature;
+}
+
+class PollInElection {
+ Integer number;
+ 
+ 1 -- * Voter;
+}
+
+association VotesInPoll{
+ Integer numVotes;
+ * Candidature;
+ * PollInElection;
+}
+
+class Voter{
+ name;
+ address;
+ * -- * Candidature;
+}
+
+class ElectoralDistrict{
+ 1 -- * Voter; 
+ 0..1 -- * Position; 
+ 0..1 -- * ElectoralDistrict subDistrict;
+}
+@@endexample

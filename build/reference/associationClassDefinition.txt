@@ -1,0 +1,50 @@
+associationClassDefinition
+Entities
+
+@@description
+<p>      
+An association class defines an object-oriented pattern to manage * to * relationships.
+</p>
+
+<img src="examples/venueticket.jpg" />
+
+<p>
+An association class can be composed of the following things: 
+</p>
+
+<ul>
+<li>Inheritance</li>
+<li>Dependencies</li>
+<li>Attributes</li>
+<li>Associations</li>
+<li>Arbitrary "code" in a native language (e.g. Java)</li>
+</ul>
+
+<p>
+Please note that an association class must define both star "*" ends; otherwise use a simple class instead.
+</p>
+
+@@syntax
+associationClassDefinition : association [name] { [[associationClassContent]]* }<br/><br/>
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[isA]] |  [[depend]] | [[separateMultiplicity]] [[separateMultiplicity]] | [[attribute]] | [[myAssociation]] | [[extraCode]]
+
+@@example
+
+association Ticket
+{
+  Date when;
+  Double price;
+  * Person attendee;
+  * Venue;
+}
+
+class Person
+{
+  name;
+}
+
+class Venue
+{
+  address;
+}
+@@endexample
