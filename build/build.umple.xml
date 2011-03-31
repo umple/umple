@@ -10,6 +10,7 @@
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}"/>
   <property name="test.output.path" value="${dist.path}/qa"/>
+  <property name="haltonfailure" value="true"/>
 
   <path id="junit4.classpath">
     <pathelement location="lib/junit.jar"/>
@@ -110,7 +111,7 @@
 
   <target name="test">
     
-    <junit fork="yes" forkmode="perBatch" haltonfailure="false">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path}">
         <fileset dir="${project.path}/test">
@@ -209,8 +210,25 @@
     Build the application
   ``````````````````````````` -->
   
+  <!-- run by the build machine, should work as-is on your machine -->
   <target name="build" >
     <echo>Building the core Umple project</echo>
+    <antcall target="clean" />
+    <antcall target="init" />
+    <antcall target="updateCodegen" />
+    <antcall target="compile" />
+    <antcall target="test" />
+    <antcall target="package" />
+  </target>
+  
+  <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
+  <target name="pre-buid" >
+    <antcall target="compile" />
+    <antcall target="test" />
+  </target>
+  
+  <target name="release">
+    <echo>Preparing the next release</echo>
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="updateCodegen" />

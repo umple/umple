@@ -10,6 +10,7 @@
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}"/>
   <property name="test.output.path" value="${dist.path}/qa"/>
+  <property name="haltonfailure" value="true"/>
 
   <path id="junit4.classpath">
     <pathelement location="lib/junit.jar"/>
@@ -58,7 +59,7 @@
   ``````````````````````````` -->
 
   <target name="test">
-    <junit fork="yes" haltonfailure="false">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path}">
         <fileset dir="${project.path}/test">

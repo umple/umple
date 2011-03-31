@@ -120,17 +120,24 @@ public class SampleFileWriter
     }
   }
   
-  public static String rationalize(String path)
+  public static String rationalize(String rawPath)
   {
+    String path = rawPath;
     File f = new File(path);
     if (f.exists())
     {
       return path;
     }
-    else
+    
+    path = "../cruise.umple/" + path;
+    f = new File(path);
+    if (f.exists())
     {
-      return "../cruise.umple/" + path;
-    }    
+      return path;
+    }
+
+    path = "/h/ralph/umple/trunk/cruise.umple/" + path;
+    return path;
   }
   
   public static void createFile(String filename, String input)
