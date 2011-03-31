@@ -217,9 +217,9 @@
     <antcall target="setVersion" />
     <antcall target="compile" />
     <antcall target="test" />
+    <antcall target="resetVersion" />
     <antcall target="package" />
   </target>
-  
   
 </project>
 

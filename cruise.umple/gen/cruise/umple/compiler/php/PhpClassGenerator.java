@@ -19,7 +19,7 @@ public class PhpClassGenerator implements ILang
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "<?php";
-  protected final String TEXT_2 = NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.12.0.176 modeling language!*/" + NL + "" + NL + "class ";
+  protected final String TEXT_2 = NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/" + NL + "" + NL + "class ";
   protected final String TEXT_3 = NL + "{";
   protected final String TEXT_4 = NL + NL + "  //------------------------" + NL + "  // CONSTRUCTOR" + NL + "  //------------------------" + NL;
   protected final String TEXT_5 = NL + "    $";
