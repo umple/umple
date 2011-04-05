@@ -127,7 +127,7 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void sameEvent_twoStates_differentStatemachines()
   {
-    assertUmpleTemplateFor("sameEvent_twoStates_differentStatemachines.ump",languagePath + "/sameEvent_twoStates_differentStatemachines."+ languagePath +".txt","LightFixture");
+    assertUmpleTemplateFor("sameEvent_twoStates_differentStateMachines.ump",languagePath + "/sameEvent_twoStates_differentStatemachines."+ languagePath +".txt","LightFixture");
   }
 
   @Test
