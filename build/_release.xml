@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." name="Properties">
+<project basedir=".." name="ReleaseProperties">
 
   <!-- Package a new release, run locally and then committed when 'smoke' test passes -->
   <property name="haltonfailure" value="false"/>    

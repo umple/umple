@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." name="Properties">
+<project basedir=".." name="CruiseControlProperties">
 
   <!-- 
     run by the build machine, should work as-is on your machine, but be careful
