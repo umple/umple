@@ -10,7 +10,6 @@
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}"/>
   <property name="test.output.path" value="${dist.path}/qa"/>
-  <property name="haltonfailure" value="false"/>
 
   <path id="junit4.classpath">
     <pathelement location="lib/junit.jar"/>
@@ -56,17 +55,25 @@
     </copy>
   </target>
 
-  <target name="initVersion">
+  <target name="newVersion">
     <exec executable="svn" output="build/svn.properties">
       <arg value="info" />
     </exec>
     <property prefix="svn" file="build/svn.properties"/>
     <property prefix="base" file="build/umpleversion.txt"/>
+
     <property name="umple.version" value="${base.version}.${svn.Revision}" />
+    <property prefix="umple.version.last" value="${last.version}" />
     <echo message="Current Version: ${umple.version}" />
   </target>  
+  
+  <target name="lastVersion">
+    <property prefix="last" file="build/umpleversion.last.txt"/>
+    <property name="umple.version" value="${last.version}" />
+    <echo message="Last Version: ${umple.version}" />
+  </target>
 
-  <target name="setVersion" depends="initVersion">
+  <target name="setVersion">
     <property name="umple.version" value="@UMPLE_VERSION@" />
     <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
       <include name="**/*.java"/>
@@ -80,7 +87,7 @@
     <replace file="cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" /> -->
   </target>
   
-  <target name="resetVersion" depends="initVersion">
+  <target name="resetVersion" depends="lastVersion">
     <property name="umple.version" value="@UMPLE_VERSION@" />
     <replace dir="cruise.umple/gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
@@ -92,7 +99,7 @@
     <!-- <replace file="../cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <replace file="../cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" /> -->
   </target>
-
+  
   <!-- ```````````````````````````
     Compile the application
   ``````````````````````````` -->
@@ -147,7 +154,7 @@
     </java>
   </target>
 
-  <target name="package" depends="initVersion">
+  <target name="package">
   
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/**" excludes="**/*Test.class">
@@ -221,33 +228,44 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <echo>Building the core Umple project</echo>
-    <antcall target="clean" />
-    <antcall target="init" />
-    <antcall target="updateCodegen" />
-    <antcall target="setVersion" />
-    <antcall target="compile" />
-    <antcall target="package" />
-    <!-- <antcall target="updateSelf" />
-    <antcall target="compile" /> -->
-    <antcall target="test" />
-    <antcall target="package" />
-    <antcall target="resetVersion" />
+    <echo>Building the core Umple project on the build server</echo>
+    <property name="version.type" value="newVersion"/>
+    <property name="haltonfailure" value="true"/>    
+    <antcall target="do_build" />
   </target>
-  tatu
+  
+  <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
+  <target name="local_build">
+    <echo>Simulating the build server on your local machine</echo>
+    <property name="version.type" value="lastVersion"/>
+    <property name="haltonfailure" value="false"/>    
+    <antcall target="do_build" />
+  </target>
+
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
   <target name="pre_build" >
     <antcall target="compile" />
     <antcall target="test" />
   </target>
   
+  <!-- Package a new release, run locally and then committed when 'smoke' test passes -->
   <target name="release">
     <echo>Preparing the next release</echo>
+    <property name="version.type" value="lastVersion"/>    
+    <property name="haltonfailure" value="false"/>    
+    <antcall target="do_build" />
+  </target>
+  
+  <target name="do_build">
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="updateCodegen" />
+    <antcall target="${version.type}" />
     <antcall target="setVersion" />
     <antcall target="compile" />
+    <antcall target="package" />
+    <!-- <antcall target="updateSelf" />
+    <antcall target="compile" /> -->
     <antcall target="test" />
     <antcall target="package" />
     <antcall target="resetVersion" />

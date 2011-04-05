@@ -25,4 +25,5 @@ public class StateMachineTemplateTest extends TemplateTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/statemachine/implementation");
     pathToRoot = SampleFileWriter.rationalize("../../cruise.umple");    
   }
+
 }
