@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="VersionLast" >
+
+  <property prefix="last" file="build/umpleversion.last.txt"/>
+  <property name="umple.version" value="${last.version}" />
+  <echo message="Last Version: ${umple.version}" />
+
+</project>
+

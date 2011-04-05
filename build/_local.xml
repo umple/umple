@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="init" name="Properties" >
+
+  <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
+  <property name="haltonfailure" value="false"/>    
+  <import file="_versionLast.xml" />
+
+</project>

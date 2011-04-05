@@ -10,6 +10,8 @@
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}"/>
   <property name="test.output.path" value="${dist.path}/qa"/>
+  <property name="myenv" value="cc" />
+  <import file="_${myenv}.xml" />
 
   <path id="junit4.classpath">
     <pathelement location="lib/junit.jar"/>
@@ -55,26 +57,8 @@
     </copy>
   </target>
 
-  <target name="newVersion">
-    <exec executable="svn" output="build/svn.properties">
-      <arg value="info" />
-    </exec>
-    <property prefix="svn" file="build/svn.properties"/>
-    <property prefix="base" file="build/umpleversion.txt"/>
-
-    <property name="umple.version" value="${base.version}.${svn.Revision}" />
-    <property prefix="umple.version.last" value="${last.version}" />
-    <echo message="Current Version: ${umple.version}" />
-  </target>  
-  
-  <target name="lastVersion">
-    <property prefix="last" file="build/umpleversion.last.txt"/>
-    <property name="umple.version" value="${last.version}" />
-    <echo message="Last Version: ${umple.version}" />
-  </target>
-
   <target name="setVersion">
-    <property name="umple.version" value="@UMPLE_VERSION@" />
+    <echo message="Setting Version: ${umple.version}" />
     <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
       <include name="**/*.java"/>
     </replace>
@@ -87,8 +71,8 @@
     <replace file="cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" /> -->
   </target>
   
-  <target name="resetVersion" depends="lastVersion">
-    <property name="umple.version" value="@UMPLE_VERSION@" />
+  <target name="resetVersion">
+    <echo message="Resetting Version: ${umple.version}" />
     <replace dir="cruise.umple/gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
     </replace>
@@ -155,6 +139,7 @@
   </target>
 
   <target name="package">
+    <echo message="Package Version: ${umple.version}" />
   
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/**" excludes="**/*Test.class">
@@ -224,43 +209,14 @@
   ``````````````````````````` -->
   
   <!-- 
+    Build
     run by the build machine, should work as-is on your machine, but be careful
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <echo>Building the core Umple project on the build server</echo>
-    <property name="version.type" value="newVersion"/>
-    <property name="haltonfailure" value="true"/>    
-    <antcall target="do_build" />
-  </target>
-  
-  <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
-  <target name="local_build">
-    <echo>Simulating the build server on your local machine</echo>
-    <property name="version.type" value="lastVersion"/>
-    <property name="haltonfailure" value="false"/>    
-    <antcall target="do_build" />
-  </target>
-
-  <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
-  <target name="pre_build" >
-    <antcall target="compile" />
-    <antcall target="test" />
-  </target>
-  
-  <!-- Package a new release, run locally and then committed when 'smoke' test passes -->
-  <target name="release">
-    <echo>Preparing the next release</echo>
-    <property name="version.type" value="lastVersion"/>    
-    <property name="haltonfailure" value="false"/>    
-    <antcall target="do_build" />
-  </target>
-  
-  <target name="do_build">
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="updateCodegen" />
-    <antcall target="${version.type}" />
     <antcall target="setVersion" />
     <antcall target="compile" />
     <antcall target="package" />
@@ -270,6 +226,14 @@
     <antcall target="package" />
     <antcall target="resetVersion" />
   </target>
+  
+
+  <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
+  <target name="pre_build" >
+    <antcall target="compile" />
+    <antcall target="test" />
+  </target>
+  
   
 </project>
 
