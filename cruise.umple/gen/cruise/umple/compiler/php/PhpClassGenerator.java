@@ -1457,6 +1457,8 @@ public class PhpClassGenerator implements ILang
     codeInjectionMap.put(key,newCodeToInject);
   }
 
+  boolean isFirst = true;
+
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append(TEXT_2);
@@ -1465,7 +1467,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_3);
     
 {
-  boolean isFirst = true;
+  isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
   
@@ -1522,7 +1524,7 @@ public class PhpClassGenerator implements ILang
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
 
-  boolean isFirst = true;
+  isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
     if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
@@ -1569,7 +1571,7 @@ public class PhpClassGenerator implements ILang
 
     
 {
-  boolean isFirst = true;
+  isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
     if (isFirst)
@@ -1608,7 +1610,7 @@ public class PhpClassGenerator implements ILang
 
     
 {
-  boolean isFirst = true;
+  isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
     if (!av.getIsNavigable())
@@ -1641,7 +1643,7 @@ public class PhpClassGenerator implements ILang
     
 {
 
-  boolean isFirst = true;
+  isFirst = true;
   if (uClass.getKey().isProvided())
   {
     isFirst = false;
@@ -2330,7 +2332,7 @@ public class PhpClassGenerator implements ILang
 
     stringBuffer.append(TEXT_128);
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (Attribute av : uClass.getAttributes())
   {
   
@@ -2459,7 +2461,7 @@ public class PhpClassGenerator implements ILang
   }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (Attribute av : uClass.getAttributes()) 
   {
     if (av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
@@ -2686,9 +2688,18 @@ public class PhpClassGenerator implements ILang
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
-  boolean isFirst = true;
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
+  isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
+  {
+    
+    
+// NOT IMPLEMENTED YET
+
+     
+  }
+  
+  for(StateMachine sm : uClass.getAllStateMachines())
   {
     
     
@@ -2721,7 +2732,7 @@ public class PhpClassGenerator implements ILang
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for(Event e : uClass.getEvents())
   {
     
@@ -2814,8 +2825,8 @@ public class PhpClassGenerator implements ILang
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
-  for(StateMachine sm : uClass.getAllStateMachines())
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
+  for (StateMachine sm : uClass.getAllStateMachines())  
   {
     if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
     {
@@ -2971,7 +2982,7 @@ public class PhpClassGenerator implements ILang
 }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
 
@@ -2997,6 +3008,8 @@ public class PhpClassGenerator implements ILang
 
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+
+    boolean hasCodeInjections = customGetPrefixCode != null || customGetPostfixCode != null;
   
     if (av.isOne())
     {
@@ -3094,7 +3107,7 @@ public class PhpClassGenerator implements ILang
  }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   

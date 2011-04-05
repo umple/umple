@@ -6,7 +6,8 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <property name="haltonfailure" value="true"/>    
-  <import file="_versionNew.xml" />
+  <!-- <import file="_versionNew.xml" /> -->
+  <import file="_versionLast.xml" />
 
 
 </project>

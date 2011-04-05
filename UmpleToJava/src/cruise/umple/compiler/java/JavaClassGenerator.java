@@ -1748,6 +1748,8 @@ public class JavaClassGenerator implements ILang
     codeInjectionMap.put(key,newCodeToInject);
   }
 
+  boolean isFirst = true;
+
 
     stringBuffer.append(TEXT_2);
     stringBuffer.append(TEXT_3);
@@ -1771,7 +1773,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_5);
     
 {
-  boolean isFirst = true;
+  isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
   
@@ -1828,7 +1830,7 @@ public class JavaClassGenerator implements ILang
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
 
-  boolean isFirst = true;
+  isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
     if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
@@ -1876,7 +1878,7 @@ public class JavaClassGenerator implements ILang
 
     
 {
-  boolean isFirst = true;
+  isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
     List<StateMachine> allNested = sm.getNestedStateMachines();
@@ -1907,7 +1909,7 @@ public class JavaClassGenerator implements ILang
 
     
 {
-  boolean isFirst = true;
+  isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
     if (!av.getIsNavigable())
@@ -1939,7 +1941,7 @@ public class JavaClassGenerator implements ILang
     
 {
 
-  boolean isFirst = true;
+  isFirst = true;
   if (uClass.getKey().isProvided())
   {
     isFirst = false;
@@ -2638,7 +2640,7 @@ public class JavaClassGenerator implements ILang
 
     stringBuffer.append(TEXT_122);
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (Attribute av : uClass.getAttributes())
   {
   
@@ -2772,7 +2774,7 @@ public class JavaClassGenerator implements ILang
   }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (Attribute av : uClass.getAttributes()) 
   {
     if (av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
@@ -3035,9 +3037,8 @@ public class JavaClassGenerator implements ILang
 
     
 {
-  // TODO: UPDATE FOR PHP AND RUBY
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
-  boolean isFirst = true;
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
+  isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
     
@@ -3085,7 +3086,7 @@ public class JavaClassGenerator implements ILang
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for(Event e : uClass.getEvents())
   {
     
@@ -3178,7 +3179,7 @@ public class JavaClassGenerator implements ILang
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (StateMachine sm : uClass.getAllStateMachines())  
   {
     if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
@@ -3336,7 +3337,7 @@ public class JavaClassGenerator implements ILang
 }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
 
@@ -3362,6 +3363,8 @@ public class JavaClassGenerator implements ILang
 
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+
+    boolean hasCodeInjections = customGetPrefixCode != null || customGetPostfixCode != null;
   
     if (av.isOne())
     {
@@ -3469,7 +3472,7 @@ public class JavaClassGenerator implements ILang
  }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
@@ -6307,7 +6310,7 @@ public class JavaClassGenerator implements ILang
        
   StringBuffer output = new StringBuffer();
 
-  boolean isFirst = true;
+  isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
     for (State state : sm.getStates())

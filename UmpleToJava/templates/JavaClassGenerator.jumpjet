@@ -23,6 +23,8 @@
     codeInjectionMap.put(key,newCodeToInject);
   }
 
+  boolean isFirst = true;
+
 %>
 
 <%=gen.translate("packageDefinition",uClass)%>

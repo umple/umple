@@ -37,6 +37,13 @@ class LightFixture
     return null;
   }
 
+  public function getBulbOn()
+  {
+    if ($this->bulbOn == self::$OnNormal) { return "OnNormal"; }
+    elseif ($this->bulbOn == self::$OnDimmed) { return "OnDimmed"; }
+    return null;
+  }
+
   public function flip()
   {
     $wasEventProcessed = false;

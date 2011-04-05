@@ -45,18 +45,6 @@
     </java>
   </target>
 
-  <target name="updateCodegen">
-    <copy todir="cruise.umple/gen/cruise/umple/compiler/java" overwrite="true">
-      <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes="*.svn" />
-    </copy>
-    <copy todir="cruise.umple/gen/cruise/umple/compiler/php" overwrite="true">
-      <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes="*.svn" />
-    </copy>
-    <copy todir="cruise.umple/gen/cruise/umple/compiler/ruby" overwrite="true">
-      <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes="*.svn" />
-    </copy>
-  </target>
-
   <target name="setVersion">
     <echo message="Setting Version: ${umple.version}" />
     <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
@@ -216,7 +204,7 @@
   <target name="build" >
     <antcall target="clean" />
     <antcall target="init" />
-    <antcall target="updateCodegen" />
+    <ant antfile="build/dev.xml" target="codegen" inheritAll="true" />
     <antcall target="setVersion" />
     <antcall target="compile" />
     <antcall target="package" />

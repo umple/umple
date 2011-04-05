@@ -22,6 +22,8 @@
     codeInjectionMap.put(key,newCodeToInject);
   }
 
+  boolean isFirst = true;
+
 %>
 <?php
 <%@ include file="UmpleNotice.jet" %>

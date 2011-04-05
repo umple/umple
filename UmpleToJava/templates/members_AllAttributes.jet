@@ -8,7 +8,7 @@
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
 
-  boolean isFirst = true;
+  isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
     if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
