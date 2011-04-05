@@ -234,7 +234,7 @@
     <antcall target="package" />
     <antcall target="resetVersion" />
   </target>
-  
+  tatu
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
   <target name="pre_build" >
     <antcall target="compile" />
