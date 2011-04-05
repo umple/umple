@@ -6,7 +6,7 @@ on Google Code, then email tcl@site.uottawa.ca
 Please refer to Umple home page for additional information: 
 http://cruise.site.uottawa.ca/umple/
 
-For further information, plz contact Timothy C. Lethbridge 
+For further information, please contact Timothy C. Lethbridge 
 tcl@site.uottawa.ca
 
 
