@@ -88,17 +88,14 @@ public class UmpleParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public UmpleParser()
-  {
-    this("UmpleParser",new UmpleModel(null));
+  
+ public UmpleParser()  {
+this("UmpleParser",new UmpleModel(null));
   }
-
-  public UmpleParser(UmpleModel aModel)
-  {
-    this("UmpleParser",aModel);
+ public UmpleParser(UmpleModel aModel)  {
+this("UmpleParser",aModel);
   }
-
-	private void init()
+private void init()
 	{
 		addCouple(new Couple("\"","\""));
 		addCouple(new Couple("{","}"));

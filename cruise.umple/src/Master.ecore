@@ -32,36 +32,34 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NavigationHeaderTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NavigationItemTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CodeGenerator" interface="true">
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EcoreGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="EcoreGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PapyrusGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="PapyrusGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="XmiGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="XmiGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TextUmlGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="TextUmlGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimulateGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="SimulateGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="YumlGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="YumlGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="JsonGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="JsonGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="JavaGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="JavaGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PhpGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="PhpGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RubyGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="RubyGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JsonParser" eSuperTypes="#//Parser">
@@ -194,7 +192,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="_text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Hashtable&lt;Integer,Integer>" instanceClassName="java.util.Hashtable"/>
-  <eClassifiers xsi:type="ecore:EClass" name="UmletGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="UmletGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classElements" lowerBound="0" upperBound="-1" eType="#//UmletElement" eOpposite="#//UmletElement/umletGenerators"/>
@@ -414,8 +412,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SemanticException">
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ILang" interface="true">
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleFile">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" eType="#//File"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -474,7 +470,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NewGeneralizationAction" eSuperTypes="#//SynchronizationAction">
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VioletGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="VioletGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="0" upperBound="-1" eType="#//VioletClass" eOpposite="#//VioletClass/violetGenerators"/>

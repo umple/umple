@@ -498,8 +498,21 @@ class StringFormatter
 class SampleFileWriter 
 {
 
+  depend java.util.*;
   depend java.io.*;
   depend org.junit.*;
+
+  public static File[] getAllFiles(File inputDirectory)
+  {
+    File[] allFiles = inputDirectory.listFiles();
+    Arrays.sort(allFiles, new Comparator<File>(){
+      public int compare(File f1, File f2)
+      {
+        return f1.getName().compareTo(f2.getName());
+      } 
+    });
+    return allFiles;
+  }
 
   public static String readContent(File filename)
   {
@@ -591,17 +604,24 @@ class SampleFileWriter
     }
   }
   
-  public static String rationalize(String path)
+  public static String rationalize(String rawPath)
   {
+    String path = rawPath;
     File f = new File(path);
     if (f.exists())
     {
       return path;
     }
-    else
+    
+    path = "../cruise.umple/" + path;
+    f = new File(path);
+    if (f.exists())
     {
-      return "../" + path;
-    }    
+      return path;
+    }
+
+    path = "/h/ralph/umple/trunk/cruise.umple/" + path;
+    return path;
   }
   
   public static void createFile(String filename, String input)

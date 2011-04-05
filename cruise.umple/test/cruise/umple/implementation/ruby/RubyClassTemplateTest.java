@@ -20,7 +20,11 @@ public class RubyClassTemplateTest extends ClassTemplateTest
   public void tearDown()
   {
     super.tearDown();
-    SampleFileWriter.destroy(pathToInput + "/ruby/Mentor.rb");
+    SampleFileWriter.destroy(pathToInput + "/ruby/student.rb");
+    SampleFileWriter.destroy(pathToInput + "/ruby/course.rb");
+    SampleFileWriter.destroy(pathToInput + "/ruby/mentor.rb");
+    SampleFileWriter.destroy(pathToInput + "/sub_mentor_2.rb");
+    SampleFileWriter.destroy(pathToInput + "/sub_mentor.rb");
   }
   
   

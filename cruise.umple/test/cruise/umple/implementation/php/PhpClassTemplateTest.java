@@ -21,6 +21,8 @@ public class PhpClassTemplateTest extends ClassTemplateTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/php/Mentor.php");
+    SampleFileWriter.destroy(pathToInput + "/Lamp.php");
+    SampleFileWriter.destroy(pathToInput + "/Switch.php");
   }
   
   

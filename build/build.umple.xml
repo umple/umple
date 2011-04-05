@@ -10,7 +10,7 @@
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}"/>
   <property name="test.output.path" value="${dist.path}/qa"/>
-  <property name="haltonfailure" value="true"/>
+  <property name="haltonfailure" value="false"/>
 
   <path id="junit4.classpath">
     <pathelement location="lib/junit.jar"/>
@@ -36,6 +36,12 @@
     <mkdir dir="${bin.path}"/>
     <mkdir dir="${dist.path}"/>
     <mkdir dir="${test.output.path}"/>
+  </target>
+
+  <target name="updateSelf">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="cruise.umple/src/Master.ump"/>
+    </java>
   </target>
 
   <target name="updateCodegen">
@@ -141,7 +147,7 @@
     </java>
   </target>
 
-  <target name="package" depends="setVersion">
+  <target name="package" depends="initVersion">
   
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/**" excludes="**/*Test.class">
@@ -210,19 +216,27 @@
     Build the application
   ``````````````````````````` -->
   
-  <!-- run by the build machine, should work as-is on your machine -->
+  <!-- 
+    run by the build machine, should work as-is on your machine, but be careful
+    as your code will be run against the "latest" Umpled Umple.
+   -->
   <target name="build" >
     <echo>Building the core Umple project</echo>
     <antcall target="clean" />
     <antcall target="init" />
     <antcall target="updateCodegen" />
+    <antcall target="setVersion" />
     <antcall target="compile" />
+    <antcall target="package" />
+    <!-- <antcall target="updateSelf" />
+    <antcall target="compile" /> -->
     <antcall target="test" />
     <antcall target="package" />
+    <antcall target="resetVersion" />
   </target>
   
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
-  <target name="pre-buid" >
+  <target name="pre_build" >
     <antcall target="compile" />
     <antcall target="test" />
   </target>
@@ -235,8 +249,8 @@
     <antcall target="setVersion" />
     <antcall target="compile" />
     <antcall target="test" />
-    <antcall target="resetVersion" />
     <antcall target="package" />
+    <antcall target="resetVersion" />
   </target>
   
 </project>

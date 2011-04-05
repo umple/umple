@@ -253,7 +253,7 @@ public class Documenter
 
   private void parseContent(File inputDirectory)
   {
-    File[] allFiles = inputDirectory.listFiles();
+    File[] allFiles = SampleFileWriter.getAllFiles(inputDirectory);
     for (File aFile : allFiles)
     {
       if (aFile.getName().endsWith(".txt"))
@@ -268,7 +268,7 @@ public class Documenter
   
   private void parseGroupOrder(File inputDirectory)
   {
-    File[] allFiles = inputDirectory.listFiles();
+    File[] allFiles = SampleFileWriter.getAllFiles(inputDirectory);
     for (File aFile : allFiles)
     {
       if ("order.group".equals(aFile.getName()))
