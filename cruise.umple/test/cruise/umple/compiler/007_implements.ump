@@ -1,6 +1,6 @@
 class Student
 {
-  implements IStudent;
+  isA IStudent;
 }
 
 interface IStudent

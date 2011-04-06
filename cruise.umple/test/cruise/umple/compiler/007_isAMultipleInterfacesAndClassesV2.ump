@@ -1,7 +1,6 @@
 class Student
 {
-  isA Human;
-  implements IStudent, IPerson, IMan;
+  isA Human,isA IStudent,isA IPerson,isA IMan;
 }
 
 interface IStudent

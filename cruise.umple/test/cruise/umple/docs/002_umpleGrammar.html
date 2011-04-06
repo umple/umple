@@ -63,11 +63,10 @@ singleAssociationEnd : [[multiplicity]] [type,roleName] ;<br />
 associationEnd : [[multiplicity]] [type,roleName]<br />
 multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]<br />
 <br />
-softwarePattern- : [[isA]] | [[implements]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]<br />
-isA- : isA [extendsName] ;<br />
-implements- : [[singleImplements]] | [[multipleImplements]]<br />
-singleImplements- : implements [implementsName] ;<br />
-multipleImplements- : implements [implementsName] ( , [implementsName] )* ;<br />
+softwarePattern- : [[isA]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]<br />
+isA- : [[singleIsA]] | [[multipleIsA]]<br />
+singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;<br />
+multipleIsA- : isA [extendsName] ( , [extendsName] )* ;<br />
 singleton- : [=singleton] ;<br />
 keyDefinition- : [[defaultKey]] | [[key]]<br />
 codeInjection- : [[beforeCode]] | [[afterCode]]<br />

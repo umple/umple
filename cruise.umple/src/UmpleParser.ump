@@ -24,8 +24,7 @@ class UmpleParser
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
   internal String[] unparsedUmpleFiles;
   internal String[] parsedUmpleFiles;
-  internal Map<UmpleClass,List<String>> unlinkedImplements = new HashMap<UmpleClass,List<String>>();
-  internal Map<UmpleClass,String> unlinkedExtends = new HashMap<UmpleClass, String>();
+  internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
   internal Map<UmpleClass,Pair> umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
   internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>(); 
   UmpleModel model;

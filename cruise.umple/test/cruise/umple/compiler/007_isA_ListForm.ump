@@ -1,0 +1,10 @@
+class Student
+{
+  isA Person, Worker;
+}
+
+class Person
+{}
+
+interface Worker
+{}

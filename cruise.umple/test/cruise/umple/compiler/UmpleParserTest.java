@@ -147,31 +147,53 @@ public class UmpleParserTest
   }
 
   @Test
-  public void isA()
+  public void isA_OnlyOne()
   {
-    assertParse("007_isA.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Person]");
+	//ie. isA Y;
+    assertParse("007_isA_OnlyOne.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Person]");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Person",aClass.getExtendsClass().getName());
     Assert.assertEquals(false,aClass.isRoot());
   }
   
   @Test
+  public void isA_MultipleTimesInTheSameLine()
+  {
+	//ie. isA Y, isA Z;
+    assertParse("007_isA_MultipleTimesInTheSameLine.ump", "[classDefinition][name:Student][extendsName:Person][extendsName:Worker][classDefinition][name:Person][interfaceDefinition][name:Worker]");
+    UmpleClass aClass = model.getUmpleClass("Student");
+    Assert.assertEquals("Person",aClass.getExtendsClass().getName());
+    Assert.assertEquals("Worker",aClass.getParentInterface(0).getName());
+    Assert.assertEquals(false,aClass.isRoot());
+  }
+  
+  @Test
+  public void isA_ListForm()
+  {
+    assertParse("007_isA_ListForm.ump", "[classDefinition][name:Student][extendsName:Person][extendsName:Worker][classDefinition][name:Person][interfaceDefinition][name:Worker]");
+    UmpleClass aClass = model.getUmpleClass("Student");
+    Assert.assertEquals("Person",aClass.getExtendsClass().getName());
+    Assert.assertEquals("Worker",aClass.getParentInterface(0).getName());
+    Assert.assertEquals(false,aClass.isRoot());
+  }
+  
+  @Test
   public void implementsInterface()
   {
-    assertParse("007_implements.ump", "[classDefinition][name:Student][implementsName:IStudent][interfaceDefinition][name:IStudent]");
+    assertParse("007_implements.ump", "[classDefinition][name:Student][extendsName:IStudent][interfaceDefinition][name:IStudent]");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("IStudent",aClass.getParentInterface(0).getName());
   }
  
   @Test
-  public void implementsMultipleInterfaces()
+  public void isA_MultipleInterfaces()
   {
 	  String expectedResult = "[classDefinition][name:Student]" +
-	  		"[implementsName:IStudent][implementsName:IPerson][implementsName:IMan]" +
+	  		"[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
 	  		"[interfaceDefinition][name:IStudent]" +
 	  		"[interfaceDefinition][name:IPerson]" +
 	  		"[interfaceDefinition][name:IMan]";
-    assertParse("007_implementsMultipleInterfaces.ump", expectedResult);
+    assertParse("007_isAMultipleInterfaces.ump", expectedResult);
     UmpleClass aClass = model.getUmpleClass("Student");
     
     Assert.assertEquals("IStudent",aClass.getParentInterface(0).getName());
@@ -180,15 +202,36 @@ public class UmpleParserTest
   }
   
   @Test
-  public void implementsMultipleInterfacesAndIsA()
+  public void isA_MultipleInterfacesAndClasses()
   {
     String expectedResult = "[classDefinition][name:Student][extendsName:Human]" +
-	  		"[implementsName:IStudent][implementsName:IPerson][implementsName:IMan]" +
+	  		"[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
 	  		"[interfaceDefinition][name:IStudent]" +
 	  		"[interfaceDefinition][name:IPerson]" +
 	  		"[interfaceDefinition][name:IMan]" +
 	  		"[classDefinition][name:Human]";
-    assertParse("007_implementsMultipleInterfacesIsA.ump", expectedResult);
+    assertParse("007_isAMultipleInterfacesAndClasses.ump", expectedResult);
+    UmpleClass aClass = model.getUmpleClass("Student");
+    // EXTENDS
+    Assert.assertEquals("Human",aClass.getExtendsClass().getName());
+    // IMPLEMENTS
+    Assert.assertEquals("IStudent",aClass.getParentInterface(0).getName());
+    Assert.assertEquals("IPerson",aClass.getParentInterface(1).getName());
+    Assert.assertEquals("IMan",aClass.getParentInterface(2).getName());
+    // Root?
+    Assert.assertEquals(false,aClass.isRoot());
+  }
+  
+  @Test
+  public void isA_MultipleInterfacesAndClassesV2()
+  {
+    String expectedResult = "[classDefinition][name:Student][extendsName:Human]" +
+	  		"[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
+	  		"[interfaceDefinition][name:IStudent]" +
+	  		"[interfaceDefinition][name:IPerson]" +
+	  		"[interfaceDefinition][name:IMan]" +
+	  		"[classDefinition][name:Human]";
+    assertParse("007_isAMultipleInterfacesAndClassesV2.ump", expectedResult);
     UmpleClass aClass = model.getUmpleClass("Student");
     // EXTENDS
     Assert.assertEquals("Human",aClass.getExtendsClass().getName());
@@ -202,7 +245,7 @@ public class UmpleParserTest
   
   
   @Test
-  public void isAGrouped()
+  public void isA_Grouped()
   {
     assertParse("007_isAGrouped.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Student][classDefinition][name:Person]");
     UmpleClass aClass = model.getUmpleClass("Student");
@@ -721,7 +764,7 @@ public class UmpleParserTest
   @Test
   public void interfaceImplementation()
   {
-	assertParse("014_interface_implementation.ump", "[interfaceDefinition][name:ISomething][classDefinition][name:Something][implementsName:ISomething]");
+	assertParse("014_interface_implementation.ump", "[interfaceDefinition][name:ISomething][classDefinition][name:Something][extendsName:ISomething]");
 	   
     UmpleClass aClass = model.getUmpleClass("Something");
     Assert.assertEquals("ISomething",aClass.getParentInterface(0).getName());

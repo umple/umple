@@ -42,7 +42,7 @@ interface ICart
 
 class Cart
 {
-  implements ICart;
+  isA ICart;
 }
 
 class CartItem

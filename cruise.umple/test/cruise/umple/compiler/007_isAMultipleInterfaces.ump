@@ -1,0 +1,15 @@
+class Student
+{
+  isA IStudent, IPerson, IMan;
+}
+
+interface IStudent
+{}
+
+interface IPerson
+{}
+
+interface IMan
+{}
+
+

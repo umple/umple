@@ -15,10 +15,10 @@ interface IGarbage
 
 class Something
 {
-  implements ISomething;
+  isA ISomething;
 }
 
 class Garbage
 {
-  implements ISomething, IGarbage;
+  isA ISomething, IGarbage;
 }

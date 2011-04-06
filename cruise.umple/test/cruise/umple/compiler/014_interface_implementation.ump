@@ -5,5 +5,5 @@ interface ISomething
 }
 
 class Something {
-	implements ISomething;
+	isA ISomething;
 }
