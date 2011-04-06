@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.11.1.3376 modeling language!*/
+/*This code was generated using the UMPLE 1.10.3.3108 modeling language!*/
 
 package cruise.umple.compiler;
 import java.io.*;
@@ -20,8 +20,7 @@ public class UmpleParser extends Parser
   private Map<Position,String> positionToClassNameReference;
   private List<String> unparsedUmpleFiles;
   private List<String> parsedUmpleFiles;
-  private Map<UmpleClass,List<String>> unlinkedImplements;
-  private Map<UmpleClass,String> unlinkedExtends;
+  private Map<UmpleClass,List<String>> unlinkedExtends;
   private Map<UmpleClass,Pair> umpleClassToStateMachineDefinition;
   private Map<String,Token> stateMachineNameToToken;
   private UmpleModel model;
@@ -40,8 +39,7 @@ public class UmpleParser extends Parser
     positionToClassNameReference = new HashMap<Position, String>();
     unparsedUmpleFiles = new ArrayList<String>();
     parsedUmpleFiles = new ArrayList<String>();
-    unlinkedImplements = new HashMap<UmpleClass,List<String>>();
-    unlinkedExtends = new HashMap<UmpleClass, String>();
+    unlinkedExtends = new HashMap<UmpleClass,List<String>>();
     umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
     stateMachineNameToToken = new HashMap<String, Token>();
     model = aModel;
@@ -88,14 +86,17 @@ public class UmpleParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  
- public UmpleParser()  {
-this("UmpleParser",new UmpleModel(null));
+  public UmpleParser()
+  {
+    this("UmpleParser",new UmpleModel(null));
   }
- public UmpleParser(UmpleModel aModel)  {
-this("UmpleParser",aModel);
+
+  public UmpleParser(UmpleModel aModel)
+  {
+    this("UmpleParser",aModel);
   }
-private void init()
+
+	private void init()
 	{
 		addCouple(new Couple("\"","\""));
 		addCouple(new Couple("{","}"));
@@ -149,11 +150,10 @@ private void init()
 		addRule("multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]");
 		addGrammarRule("");
 
-		addRule("softwarePattern- : [[isA]] | [[implements]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]");
-		addRule("isA- : isA [extendsName] ;");
-		addRule("implements- : [[singleImplements]] | [[multipleImplements]]");
-		addRule("singleImplements- : implements [implementsName] ;");
-		addRule("multipleImplements- : implements [implementsName] ( , [implementsName] )* ;");
+		addRule("softwarePattern- : [[isA]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]");
+		addRule("isA- : [[singleIsA]] | [[multipleIsA]]");
+		addRule("singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;");
+		addRule("multipleIsA- : isA [extendsName] ( , [extendsName] )* ;");
 		addRule("singleton- : [=singleton] ;");
 		addRule("keyDefinition- : [[defaultKey]] | [[key]]");
 		addRule("codeInjection- : [[beforeCode]] | [[afterCode]]");
@@ -284,7 +284,6 @@ private void init()
 			addUnlinkedAssociationVariables();
 			addUnlinkedAssociations();
 			addUnlinkedExtends();
-			addUnlikedImplements();
 			layoutNewElements();
 
 			if (shouldGenerate)
@@ -377,40 +376,36 @@ private void init()
 		}
 	}
 
-	private void addUnlikedImplements(){
 
-		for (UmpleClass child : unlinkedImplements.keySet())
+	private void addUnlinkedExtends()
+	{	
+		for (UmpleClass child : unlinkedExtends.keySet())
 		{
+			List<String> extendsNames = unlinkedExtends.get(child);
 
-			List<String> implementsNames = unlinkedImplements.get(child);
-
-			if (implementsNames == null)
+			if (extendsNames == null)
 			{
 				continue;
 			}
 
-			for (int i=0; i < implementsNames.size();i++){
-				String implementsName= implementsNames.get(i);
-				UmpleInterface uInterface=  model.getUmpleInterface(implementsName);
-				child.addParentInterface(uInterface);
-				addImplementedMethodsFromInterface(uInterface, child);
+			for (int i=0; i < extendsNames.size();i++){
+				String extendName= extendsNames.get(i);
+				if (isUmpleClass(extendName))
+				{
+					UmpleClass parent = model.getUmpleClass(extendName); 
+					child.setExtendsClass(parent);
+				}
+				else {
+					UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+					child.addParentInterface(uInterface);
+					addImplementedMethodsFromInterface(uInterface, child);
+				}
 			}
 		}
 	}
 
-
-	private void addUnlinkedExtends()
-	{
-		for (UmpleClass child : unlinkedExtends.keySet())
-		{
-			String extendClassName = unlinkedExtends.get(child);
-			if (extendClassName == null)
-			{
-				continue;
-			}
-			UmpleClass parent = model.getUmpleClass(extendClassName); 
-			child.setExtendsClass(parent);
-		}
+	private boolean isUmpleClass(String elementName){
+		return (model.getUmpleInterface(elementName) != null) ? false: true;
 	}
 
 
@@ -560,11 +555,15 @@ private void init()
 	private void analyzeAssociationClass(Token classToken)
 	{
 		AssociationClass aClass = model.addAssociationClass(classToken.getValue("name"));
-		if (classToken.getValue("extendsName") != null)
-		{
-			unlinkedExtends.put(aClass, classToken.getValue("extendsName"));
+		List<String> extendsList = new ArrayList<String>();
+		
+		for (Token extendsToken : classToken.getSubTokens()){
+			if (extendsToken.getValue("extendsName") != null)
+			{ 
+				extendsList.add(extendsToken.getValue("extendsName"));
+				unlinkedExtends.put(aClass, extendsList);
+			}	
 		}
-
 		aClass.setPackageName(currentPackageName);
 
 		Token leftAssociationToken = null;
@@ -782,20 +781,15 @@ private void init()
 	private UmpleClass analyzeClass(Token classToken)
 	{
 		UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
-		List<String> implementsList = new ArrayList<String>();
-
-		if (classToken.getValue("extendsName") != null)
-		{
-			unlinkedExtends.put(aClass, classToken.getValue("extendsName"));
-		} 	
-		for (Token implementsToken : classToken.getSubTokens()){
-			if (implementsToken.getValue("implementsName") != null)
+		List<String> extendsList = new ArrayList<String>();
+			
+		for (Token extendsToken : classToken.getSubTokens()){
+			if (extendsToken.getValue("extendsName") != null)
 			{ 
-				implementsList.add(implementsToken.getValue("implementsName"));
-				unlinkedImplements.put(aClass, implementsList);
+				extendsList.add(extendsToken.getValue("extendsName"));
+				unlinkedExtends.put(aClass, extendsList);
 			}	
 		}
-
 		if (classToken.getValue("singleton") != null)
 		{
 			aClass.setIsSingleton(true);
