@@ -208,8 +208,8 @@
     <antcall target="setVersion" />
     <antcall target="compile" />
     <antcall target="package" />
-    <!-- <antcall target="updateSelf" />
-    <antcall target="compile" /> -->
+    <antcall target="updateSelf" />
+    <antcall target="compile" />
     <antcall target="test" />
     <antcall target="package" />
     <antcall target="resetVersion" />

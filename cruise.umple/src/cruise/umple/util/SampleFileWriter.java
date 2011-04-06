@@ -42,7 +42,7 @@ public class SampleFileWriter
     });
     return allFiles;
   }
-  
+
   public static String readContent(File filename)
   {
     BufferedReader reader = null;

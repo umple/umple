@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.10.3.3108 modeling language!*/
+/*This code was generated using the UMPLE 1.11.1.3376 modeling language!*/
 
 package cruise.umple.compiler;
 import java.io.*;
@@ -86,17 +86,14 @@ public class UmpleParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public UmpleParser()
-  {
-    this("UmpleParser",new UmpleModel(null));
+  
+ public UmpleParser()  {
+this("UmpleParser",new UmpleModel(null));
   }
-
-  public UmpleParser(UmpleModel aModel)
-  {
-    this("UmpleParser",aModel);
+ public UmpleParser(UmpleModel aModel)  {
+this("UmpleParser",aModel);
   }
-
-	private void init()
+private void init()
 	{
 		addCouple(new Couple("\"","\""));
 		addCouple(new Couple("{","}"));
