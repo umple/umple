@@ -10,5 +10,5 @@ loadTestsIn($test,'associations');
 loadTestsIn($test,'statemachine');
 loadTestsIn($test,'attributes');
 
-$reporter = new HtmlReporter();
+$reporter = new XmlReporter();
 $test->run($reporter);
