@@ -1,0 +1,6 @@
+generate Php;
+
+use ../../TestBed/src/TestHarnessAssociations.ump;
+use ../../TestBed/src/TestHarnessAttributes.ump;
+use ../../TestBed/src/TestHarnessStateMachinePhp.ump;
+use LocalHarness.ump;

@@ -24,7 +24,7 @@ class CourseB
 
 class CourseC
 {
-  String[] log;
+  String[] logs;
   
   status {
     Open {

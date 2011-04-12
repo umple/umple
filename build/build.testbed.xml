@@ -9,7 +9,8 @@
   <property name="project.path" value="testbed"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}/java"/>
-  <property name="test.output.path" value="dist/qa/testbed_java"/>
+  <property name="test.output.path.java" value="dist/qa/testbed_java"/>
+  <property name="test.output.path.php" value="dist/qa/testbed_php"/>
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
 
@@ -36,12 +37,24 @@
   <target name="init">
     <mkdir dir="${bin.path}"/>
     <mkdir dir="${dist.path}"/>
-    <mkdir dir="${test.output.path}"/>
+    <mkdir dir="${test.output.path.java}"/>
+    <mkdir dir="${test.output.path.php}"/>
+  </target>
+
+  <target name="umpleCodegen">
+    <antcall target="umpleCodegenJava" />
+    <antcall target="umpleCodegenPhp" />
   </target>
   
-  <target name="umpleCodegen">
+  <target name="umpleCodegenJava">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
+    </java>
+  </target>
+
+  <target name="umpleCodegenPhp">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
   </target>
   
@@ -68,10 +81,14 @@
   ``````````````````````````` -->
 
   <target name="test">
-    
+    <antcall target="testJava" />
+    <antcall target="testPhp" />
+  </target>
+
+  <target name="testJava">
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
       <formatter type="xml"/>
-      <batchtest fork="yes" todir="${test.output.path}">
+      <batchtest fork="yes" todir="${test.output.path.java}">
         <fileset dir="${project.path}/test">
           <include name="**/*Test*.java"/>
           <exclude name="**/AllTests.java"/>
@@ -80,13 +97,22 @@
       <classpath refid="project.classpath"/>
     </junit>
 
-    <junitreport todir="${test.output.path}">
-      <fileset dir="${test.output.path}">
+    <junitreport todir="${test.output.path.java}">
+      <fileset dir="${test.output.path.java}">
         <include name="TEST-*.xml"/>
       </fileset>
-      <report format="frames" todir="${test.output.path}"/>
+      <report format="frames" todir="${test.output.path.java}"/>
     </junitreport>
+
   </target>
+  
+  <target name="testPhp">
+    <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.html">
+      <arg value="AllTests.php"/>
+    </exec>
+  </target>
+  
+  
 
   <!-- ```````````````````````````
     Build the application
