@@ -1,0 +1,26 @@
+
+namespace cruise.attributes.test;
+
+class DoorA
+{
+  immutable DoorB doorId = new DoorB(5);
+  immutable Date dateId = new Date(1234);
+  immutable Time timeId = new Time(1235);
+}
+
+class DoorD
+{
+  defaulted DoorB doorId = new DoorB(5);
+  defaulted Date dateId = new Date(1234);
+  defaulted Time timeId = new Time(1235);
+}
+
+class DoorE
+{
+  Date d4 = Date.valueOf("1978-12-04");
+}
+
+class DoorF
+{
+  Time d4 = Time.valueOf("12:54:54");
+}

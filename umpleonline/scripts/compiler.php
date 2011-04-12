@@ -30,7 +30,7 @@ else if (isset($_REQUEST["umpleCode"]))
   elseif (!in_array($language,array("Php","Java","Ruby")))
   {  
     $filename = createTemporaryFile($input);
-    $sourceCode = executeCommand("java -jar umpleplayground.jar -generate {$language} {$filename}");
+    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename}");
     if ($language != "Json")
     {
       $sourceCode = htmlspecialchars($sourceCode);
@@ -41,7 +41,7 @@ else if (isset($_REQUEST["umpleCode"]))
 
   $filename = createTemporaryFile("generate {$language};\n" . $input);
   $outputFilename = "{$filename}.output";
-  $command = "java -jar umpleplayground.jar -source {$filename} > {$outputFilename}";    
+  $command = "java -jar umplesync.jar -source {$filename} > {$outputFilename}";    
   exec($command);
   
   $sourceCode = readTemporaryFile($outputFilename);

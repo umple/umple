@@ -1,0 +1,56 @@
+
+namespace cruise.statemachine.test;
+
+class CourseA
+{
+  status { }
+}
+
+class CourseB
+{
+  log = "initial value";
+  
+  status {
+    Open {
+      entry / { $this->log = "entry called"; }
+      exit / { $this->log = "exit called"; }
+      anEvent -> Closed;
+    }
+    Closed {
+      anEvent -> Open;
+    }
+  }
+}
+
+class CourseC
+{
+  String[] log;
+  
+  status {
+    Open {
+      entry / { $this->addLog("Open Entry"); }
+      flip -> Closed;
+      do 
+      { 
+        usleep(400000);
+        $this->addLog("Do Activity On Open");
+      }
+    }
+    Closed {
+      entry / { $this->addLog("Closed Entry"); }
+      flip -> Open;
+    }
+  }
+}
+
+class CourseD
+{
+  status {
+    Open
+    { 
+      after(1) -> Closed; 
+    }
+    Closed {}
+  }
+}
+

@@ -33,13 +33,13 @@ else if (isset($_REQUEST["vmlCode"]))
     if (!in_array($language,array("Php","Java","Ruby")))
     {  
       createFile($outputFilename, "generate {$language};\n" . $genericCode);
-      $command = "java -jar umpleplayground.jar -source {$outputFilename} > {$secondOutFilename}";
+      $command = "java -jar umplesync.jar -source {$outputFilename} > {$secondOutFilename}";
     } 
     else
     {
       createFile($outputFilename, $genericCode);
       
-      $command = "java -jar umpleplayground.jar -generate {$language} {$outputFilename}  > {$secondOutFilename}";
+      $command = "java -jar umplesync.jar -generate {$language} {$outputFilename}  > {$secondOutFilename}";
     }
 
     exec($command);

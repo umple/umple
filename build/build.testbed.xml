@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleCore" >
+
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+
+  <property name="project.path" value="testbed"/>
+  <property name="bin.path" value="${project.path}/bin"/>
+  <property name="dist.path" value="dist/${project.path}/java"/>
+  <property name="test.output.path" value="dist/qa/testbed_java"/>
+  <property name="myenv" value="cc" />
+  <import file="_${myenv}.xml" />
+
+  <path id="junit4.classpath">
+    <pathelement location="lib/junit.jar"/>
+    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+  </path>
+  
+  <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="junit4.classpath"/>
+  </path>
+
+
+  <!-- ```````````````````````````
+    Clean up and initialize any potential byproduct
+  ``````````````````````````` -->
+
+  <target name="clean">
+    <delete dir="${bin.path}"/>
+    <delete dir="${dist.path}"/>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${bin.path}"/>
+    <mkdir dir="${dist.path}"/>
+    <mkdir dir="${test.output.path}"/>
+  </target>
+  
+  <target name="umpleCodegen">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="testbed/src/TestHarness.ump"/>
+    </java>
+  </target>
+  
+    
+  <!-- ```````````````````````````
+    Compile the application
+  ``````````````````````````` -->
+
+  <target name="compile">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+      <src path="${project.path}/src"/>
+      <src path="${project.path}/test"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <exclude name="**/data" />
+      <classpath refid="project.classpath"/>
+    </javac>
+  </target>
+
+  <!-- ```````````````````````````
+    Test the application
+  ``````````````````````````` -->
+
+  <target name="test">
+    
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${test.output.path}">
+        <fileset dir="${project.path}/test">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+      <classpath refid="project.classpath"/>
+    </junit>
+
+    <junitreport todir="${test.output.path}">
+      <fileset dir="${test.output.path}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${test.output.path}"/>
+    </junitreport>
+  </target>
+
+  <!-- ```````````````````````````
+    Build the application
+  ``````````````````````````` -->
+  
+  <!-- 
+    Build
+    run by the build machine, should work as-is on your machine, but be careful
+    as your code will be run against the "latest" Umpled Umple.
+   -->
+  <target name="build" >
+    <antcall target="clean" />
+    <antcall target="init" />
+    <antcall target="umpleCodegen" />
+    <antcall target="compile" />
+    <antcall target="test" />
+  </target>
+
+  <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
+  <target name="pre_build" >
+    <antcall target="compile" />
+    <antcall target="test" />
+  </target>
+  
+  
+</project>
+

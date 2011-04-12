@@ -8,8 +8,8 @@
 
   <property name="project.path" value="cruise.umple"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/${project.path}"/>
-  <property name="test.output.path" value="${dist.path}/qa"/>
+  <property name="dist.path" value="dist/cruise.umple"/>
+  <property name="test.output.path" value="dist/qa/cruise.umple"/>
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
 
@@ -157,7 +157,7 @@
       </manifest>
     </jar>
   
-    <jar destfile="dist/playground/umpleplayground.jar" basedir="${bin.path}" includes="cruise/umple/**">
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -181,7 +181,7 @@
     </copy> -->
 	  
 	  <!-- TODO: UNCOMMENT ONCE UMPLEONLINE IN THE MIX -->
-    <!-- <copy file="dist/playground/umpleplayground.jar" tofile="umpleonline/scripts/umpleplayground.jar" overwrite="true" />
+    <!-- <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
     <copy todir="../umpleonline/update">

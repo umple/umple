@@ -8,8 +8,8 @@
 
   <property name="project.path" value="sandbox"/>
   <property name="bin.path" value="${project.path}/bin"/>
-  <property name="dist.path" value="dist/${project.path}"/>
-  <property name="test.output.path" value="${dist.path}/qa"/>
+  <property name="dist.path" value="dist/sandbox"/>
+  <property name="test.output.path" value="dist/qa/sandbox"/>
   <property name="haltonfailure" value="true"/>
 
   <path id="junit4.classpath">

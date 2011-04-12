@@ -92,7 +92,7 @@ function nextFilename($basedir = "../ump")
 
 function showYumlImage($filename)
 {
-  $yuml = executeCommand("java -jar umpleplayground.jar -generate Yuml {$filename}");
+  $yuml = executeCommand("java -jar umplesync.jar -generate Yuml {$filename}");
 
 	$title = "View As YUML Image";
   $icon = "yuml.png";
@@ -245,7 +245,7 @@ function handleUmpleTextChange()
   $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\""; 
 
   $filename = createTemporaryFile($input);
-  $umpleOutput = executeCommand("java -jar umpleplayground.jar -{$action} {$actionCode} {$filename}");
+  $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} {$actionCode} {$filename}");
 
   echo urldecode($umpleOutput);
   return;
