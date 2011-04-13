@@ -1,0 +1,6 @@
+generate Ruby;
+
+use ../../testbed/src/TestHarnessAssociations.ump;
+use ../../testbed/src/TestHarnessAttributes.ump;
+use ../../testbed/src/TestHarnessStateMachinePhp.ump;
+use LocalHarness.ump;

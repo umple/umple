@@ -11,6 +11,7 @@
   <property name="dist.path" value="dist/${project.path}/java"/>
   <property name="test.output.path.java" value="dist/qa/testbed_java"/>
   <property name="test.output.path.php" value="dist/qa/testbed_php"/>
+  <property name="test.output.path.ruby" value="dist/qa/testbed_ruby"/>
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
 
@@ -39,11 +40,13 @@
     <mkdir dir="${dist.path}"/>
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
+    <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
   <target name="umpleCodegen">
     <antcall target="umpleCodegenJava" />
     <antcall target="umpleCodegenPhp" />
+    <antcall target="umpleCodegenRuby" />
   </target>
   
   <target name="umpleCodegenJava">
@@ -55,6 +58,12 @@
   <target name="umpleCodegenPhp">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
+    </java>
+  </target>
+  
+  <target name="umpleCodegenRuby">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
   </target>
   
@@ -83,9 +92,11 @@
   <target name="test">
     <antcall target="testJava" />
     <antcall target="testPhp" />
+    <antcall target="testRuby" />
   </target>
 
   <target name="testJava">
+    <echo message="Running JAVA tests via junit"/> 
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path.java}">
@@ -103,19 +114,33 @@
       </fileset>
       <report format="frames" todir="${test.output.path.java}"/>
     </junitreport>
-
+    <echo message="JAVA tests completed!"/> 
   </target>
   
   <target name="testPhp">
+    <echo message="Running PHP tests from command line"/> 
     <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.xml">
       <arg value="AllXmlTests.php"/>
     </exec>
     <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.html">
       <arg value="AllTests.php"/>
     </exec>
+    <echo message="PHP tests completed!"/> 
   </target>
   
-  
+  <target name="testRuby">
+    <echo message="Running RUBY tests via rake task"/> 
+    <exec executable="rake" dir="testbed_ruby/" output="${test.output.path.ruby}/index.log" outputproperty="test.output.ruby" />
+
+    <!-- check for error string 'rake aborted', and fail build if itis found --> 
+    <fail message="Ruby tests failed ('rake aborted' found)">
+      <condition> 
+        <contains string="${test.output.ruby}" substring="rake aborted" casesensitive="false"/> 
+      </condition> 
+    </fail> 
+
+    <echo message="RUBY tests completed!"/> 
+  </target>
 
   <!-- ```````````````````````````
     Build the application
