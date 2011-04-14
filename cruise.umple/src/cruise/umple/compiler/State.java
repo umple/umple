@@ -75,6 +75,11 @@ public class State
     return name;
   }
 
+  public boolean getIsConcurrent()
+  {
+    return numberOfNestedStateMachines() > 1;
+  }
+
   public boolean getIsStartState()
   {
     return isStartState;

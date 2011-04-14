@@ -25,6 +25,28 @@ public class StateTest
   }
   
   @Test
+  public void getIsConcurrent_NoNestedStates()
+  {
+    Assert.assertEquals(false,state.getIsConcurrent());
+  }
+  
+  @Test
+  public void getIsConcurrent_OneNestedState()
+  {
+    state.addNestedStateMachine(new StateMachine("x"));
+    Assert.assertEquals(false,state.getIsConcurrent());
+  }
+
+  @Test
+  public void getIsConcurrent_MultipleNestedStates()
+  {
+    state.addNestedStateMachine(new StateMachine("x"));
+    state.addNestedStateMachine(new StateMachine("y"));
+    Assert.assertEquals(true,state.getIsConcurrent());
+  }
+  
+
+  @Test
   public void getTransitionsFor_none()
   {
     Assert.assertEquals(0,state.getTransitionsFor(e1).size());

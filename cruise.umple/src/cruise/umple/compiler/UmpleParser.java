@@ -1176,6 +1176,8 @@ public class UmpleParser extends Parser
 
 	private void analyzeState(Token stateToken, State fromState)
 	{
+	    boolean addNewSm = true;
+	    boolean isConcurrentState = false;
 		for(Token subToken : stateToken.getSubTokens())
 		{
 			if (subToken.is("transition"))
@@ -1193,11 +1195,20 @@ public class UmpleParser extends Parser
 				action.setActionType(subToken.getValue("type"));
 				fromState.addAction(action);
 			}
+			else if (subToken.is("||"))
+			{
+			  if (fromState.numberOfNestedStateMachines() == 0) { continue; }
+			  int previousSmIndex = fromState.numberOfNestedStateMachines() - 1;
+              StateMachine nestedSm = fromState.getNestedStateMachine(previousSmIndex);
+              if (nestedSm.numberOfStates() == 0) { continue; }
+              nestedSm.setName(nestedSm.getState(0).getName());
+              addNewSm = true;
+              isConcurrentState = true;
+			}
 			else if (subToken.is("state"))
 			{
 				StateMachine nestedStateMachine = null;
-				boolean isFirst = fromState.numberOfNestedStateMachines() == 0; 
-				if (isFirst)
+				if (addNewSm)
 				{
 					nestedStateMachine = new StateMachine(fromState.getName());
 					fromState.addNestedStateMachine(nestedStateMachine);
@@ -1209,10 +1220,15 @@ public class UmpleParser extends Parser
 				}
 				State s = createStateFromDefinition(subToken,nestedStateMachine);
 				//alignStateDefinitionWithStateMachine(s,nestedStateMachine);
-				if (isFirst)
+				if (addNewSm)
 				{
+                  if (isConcurrentState)
+                  {
+                    nestedStateMachine.setName(s.getName());
+                  }
 					s.setIsStartState(true);
 				}
+				addNewSm = false;
 				analyzeState(subToken, s);
 			}
 		}

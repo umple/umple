@@ -408,22 +408,59 @@ public class UmpleParserStateMachineTest
 
     
   }
-  
+
   @Test
-  public void Concurrent_OneState()
+  public void Concurrent_NoSm()
   {
-    assertParse("103_Concurrent_OneState.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:A][||:||]");
+    assertParse("103_Concurrent_NoSm.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][||:||]");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State on = sm.getState(0);
+    Assert.assertEquals(0,on.numberOfNestedStateMachines());
+  }
+
+  @Test
+  public void Concurrent_OneSm()
+  {
+    assertParse("103_Concurrent_OneSm.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:A][||:||]");
     
-//    UmpleClass c = model.getUmpleClass("LightFixture");
-//    StateMachine sm = c.getStateMachine(0);
-//    StateMachine concurrentSm = sm.getStateMachine(0);
-//    State on = sm.getState(0);
-//    Assert.assertEquals(1,on.numberOfStateMachines());
-//    StateMachine innerSm = on.getNestedStateMachine(0);
-//    Assert.assertEquals(true,sm.getIsConcurrent());
-//    Assert.assertEquals("BulbOn",innerSm.getName());
-//    Assert.assertEquals(1,innerSm.numberOfStates());
-//    Assert.assertEquals("On",innerSm.getState(0).getName());
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State on = sm.getState(0);
+    Assert.assertEquals(1,on.numberOfNestedStateMachines());
+    StateMachine innerSm = on.getNestedStateMachine(0);
+    Assert.assertEquals(false,on.getIsConcurrent());
+    Assert.assertEquals("A",innerSm.getName());
+    Assert.assertEquals(1,innerSm.numberOfStates());
+    Assert.assertEquals("A",innerSm.getState(0).getName());
+  }
+  
+
+  @Test
+  public void Concurrent_TwoSm()
+  {
+    assertParse("103_Concurrent_TwoSm.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:A][state][stateName:B][||:||][state][stateName:C][state][stateName:D]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    StateMachine sm = c.getStateMachine(0);
+    State on = sm.getState(0);
+    Assert.assertEquals(2,on.numberOfNestedStateMachines());
+    StateMachine innerSm = on.getNestedStateMachine(0);
+    StateMachine innerSm2 = on.getNestedStateMachine(1);
+
+    Assert.assertEquals(true,on.getIsConcurrent());
+
+    Assert.assertEquals("A",innerSm.getName());
+    Assert.assertEquals(2,innerSm.numberOfStates());
+    Assert.assertEquals("A",innerSm.getState(0).getName());
+    Assert.assertEquals("B",innerSm.getState(1).getName());
+
+    Assert.assertEquals("C",innerSm2.getName());
+    Assert.assertEquals(2,innerSm2.numberOfStates());
+    Assert.assertEquals("C",innerSm2.getState(0).getName());
+    Assert.assertEquals("D",innerSm2.getState(1).getName());
+    
+  
   }
   
   
