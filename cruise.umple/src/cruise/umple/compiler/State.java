@@ -20,7 +20,7 @@ public class State
   private Activity activity;
   private List<Action> actions;
   private StateMachine stateMachine;
-  private StateMachine nestedStateMachine;
+  private List<StateMachine> nestedStateMachines;
   private List<Transition> transitions;
 
   //------------------------
@@ -38,6 +38,7 @@ public class State
     {
       throw new RuntimeException("Unable to create state due to stateMachine");
     }
+    nestedStateMachines = new ArrayList<StateMachine>();
     transitions = new ArrayList<Transition>();
   }
 
@@ -124,9 +125,34 @@ public class State
     return stateMachine;
   }
 
-  public StateMachine getNestedStateMachine()
+  public StateMachine getNestedStateMachine(int index)
   {
-    return nestedStateMachine;
+    StateMachine aNestedStateMachine = nestedStateMachines.get(index);
+    return aNestedStateMachine;
+  }
+
+  public List<StateMachine> getNestedStateMachines()
+  {
+    List<StateMachine> newNestedStateMachines = Collections.unmodifiableList(nestedStateMachines);
+    return newNestedStateMachines;
+  }
+
+  public int numberOfNestedStateMachines()
+  {
+    int number = nestedStateMachines.size();
+    return number;
+  }
+
+  public boolean hasNestedStateMachines()
+  {
+    boolean has = nestedStateMachines.size() > 0;
+    return has;
+  }
+
+  public int indexOfNestedStateMachine(StateMachine aNestedStateMachine)
+  {
+    int index = nestedStateMachines.indexOf(aNestedStateMachine);
+    return index;
   }
 
   public Transition getTransition(int index)
@@ -230,37 +256,43 @@ public class State
     return wasSet;
   }
 
-  public boolean setNestedStateMachine(StateMachine newNestedStateMachine)
+  public static int minimumNumberOfNestedStateMachines()
   {
-    boolean wasSet = false;
-    if (newNestedStateMachine == null)
-    {
-      StateMachine existingNestedStateMachine = nestedStateMachine;
-      nestedStateMachine = null;
-      
-      if (existingNestedStateMachine != null && existingNestedStateMachine.getParentState() != null)
-      {
-        existingNestedStateMachine.setParentState(null);
-      }
-      wasSet = true;
-      return wasSet;
-    }
+    return 0;
+  }
 
-    StateMachine currentNestedStateMachine = getNestedStateMachine();
-    if (currentNestedStateMachine != null && !currentNestedStateMachine.equals(newNestedStateMachine))
+  public boolean addNestedStateMachine(StateMachine aNestedStateMachine)
+  {
+    boolean wasAdded = false;
+    if (nestedStateMachines.contains(aNestedStateMachine)) { return false; }
+    State existingParentState = aNestedStateMachine.getParentState();
+    if (existingParentState == null)
     {
-      currentNestedStateMachine.setParentState(null);
+      aNestedStateMachine.setParentState(this);
     }
-
-    nestedStateMachine = newNestedStateMachine;
-    State existingParentState = newNestedStateMachine.getParentState();
-
-    if (!equals(existingParentState))
+    else if (!existingParentState.equals(this))
     {
-      newNestedStateMachine.setParentState(this);
+      existingParentState.removeNestedStateMachine(aNestedStateMachine);
+      addNestedStateMachine(aNestedStateMachine);
     }
-    wasSet = true;
-    return wasSet;
+    else
+    {
+      nestedStateMachines.add(aNestedStateMachine);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeNestedStateMachine(StateMachine aNestedStateMachine)
+  {
+    boolean wasRemoved = false;
+    if (nestedStateMachines.contains(aNestedStateMachine))
+    {
+      nestedStateMachines.remove(aNestedStateMachine);
+      aNestedStateMachine.setParentState(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
   }
 
   public static int minimumNumberOfTransitions()
@@ -314,9 +346,9 @@ public class State
     }
     actions.clear();
     stateMachine.removeState(this);
-    if (nestedStateMachine != null)
+    for(StateMachine aNestedStateMachine : nestedStateMachines)
     {
-      nestedStateMachine.setParentState(null);
+      aNestedStateMachine.setParentState(null);
     }
     for(Transition aTransition : transitions)
     {

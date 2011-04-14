@@ -18,7 +18,7 @@ class StateMachine
   name;
   * -- 0..1 UmpleClass;
   
-  0..1 nestedStateMachine -- 0..1 State parentState;
+  * nestedStateMachines -- 0..1 State parentState;
   
   key { parentState, name } 
   

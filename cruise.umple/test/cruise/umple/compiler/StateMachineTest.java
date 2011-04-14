@@ -148,7 +148,7 @@ public class StateMachineTest
     State s1 = new State("s1",sm);
     
     StateMachine innerSm = new StateMachine("innerSm");
-    s1.setNestedStateMachine(innerSm);
+    s1.addNestedStateMachine(innerSm);
     
     new State("innerS2",innerSm);
     
@@ -166,7 +166,7 @@ public class StateMachineTest
     State s1 = new State("s1",sm);
     
     StateMachine innerSm = new StateMachine("innerSm");
-    s1.setNestedStateMachine(innerSm);
+    s1.addNestedStateMachine(innerSm);
     
     State innerS2 = new State("innerS2",innerSm);
     
@@ -271,7 +271,7 @@ public class StateMachineTest
     State on = new State("On",sm);
     
     StateMachine innerSm = new StateMachine("innerSm");
-    outsideOn.setNestedStateMachine(innerSm);
+    outsideOn.addNestedStateMachine(innerSm);
     innerSm.findState("Off");
     State alsoOn = innerSm.findState("On");
     
@@ -294,10 +294,10 @@ public class StateMachineTest
     new State("state3",sm);
     
     StateMachine innerSm1 = new StateMachine("innerSm1");
-    state1.setNestedStateMachine(innerSm1);
+    state1.addNestedStateMachine(innerSm1);
     
     StateMachine innerSm2 = new StateMachine("innerSm2");
-    state2.setNestedStateMachine(innerSm2);
+    state2.addNestedStateMachine(innerSm2);
     
     List<StateMachine> all = sm.getNestedStateMachines();
     Assert.assertEquals(2,all.size());
@@ -312,13 +312,13 @@ public class StateMachineTest
     new State("state3",sm);
     
     StateMachine innerSm1 = new StateMachine("innerSm1");
-    state1.setNestedStateMachine(innerSm1);
+    state1.addNestedStateMachine(innerSm1);
 
     State state2 = new State("state2",innerSm1);
     new State("state4",innerSm1);
     
     StateMachine innerSm2 = new StateMachine("innerSm2");
-    state2.setNestedStateMachine(innerSm2);
+    state2.addNestedStateMachine(innerSm2);
     
     List<StateMachine> all = sm.getNestedStateMachines();
     Assert.assertEquals(2,all.size());
@@ -333,10 +333,10 @@ public class StateMachineTest
     StateMachine innerSm2 = new StateMachine("innerSm2");
 
     State state1 = new State("state1",sm);
-    state1.setNestedStateMachine(innerSm1);
+    state1.addNestedStateMachine(innerSm1);
 
     State state2 = new State("state2",innerSm1);
-    state2.setNestedStateMachine(innerSm2);
+    state2.addNestedStateMachine(innerSm2);
 
     Assert.assertEquals("sm",sm.getFullName());
     Assert.assertEquals("smInnerSm1",innerSm1.getFullName());

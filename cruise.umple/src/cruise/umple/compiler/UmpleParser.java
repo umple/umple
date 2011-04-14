@@ -86,14 +86,17 @@ public class UmpleParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  
- public UmpleParser()  {
-this("UmpleParser",new UmpleModel(null));
+  public UmpleParser()
+  {
+    this("UmpleParser",new UmpleModel(null));
   }
- public UmpleParser(UmpleModel aModel)  {
-this("UmpleParser",aModel);
+
+  public UmpleParser(UmpleModel aModel)
+  {
+    this("UmpleParser",aModel);
   }
-private void init()
+
+	private void init()
 	{
 		addCouple(new Couple("\"","\""));
 		addCouple(new Couple("{","}"));
@@ -177,7 +180,7 @@ private void init()
 		addRule("referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } ");
 		addRule("enum : [name] { } | [name] { [stateName] (, [stateName])* }");
 		addRule("state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }");
-		addRule("stateEntity- : [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]");
+		addRule("stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]");
 		addRule("transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]");
 		addRule("eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]");
 		addRule("afterEveryEvent- : afterEvery -( [timer] -)");
@@ -1192,12 +1195,17 @@ private void init()
 			}
 			else if (subToken.is("state"))
 			{
-				StateMachine nestedStateMachine = fromState.getNestedStateMachine();
-				boolean isFirst = nestedStateMachine == null; 
+				StateMachine nestedStateMachine = null;
+				boolean isFirst = fromState.numberOfNestedStateMachines() == 0; 
 				if (isFirst)
 				{
 					nestedStateMachine = new StateMachine(fromState.getName());
-					fromState.setNestedStateMachine(nestedStateMachine);
+					fromState.addNestedStateMachine(nestedStateMachine);
+				}
+				else
+				{
+				  int lastIndex = fromState.numberOfNestedStateMachines() - 1;
+				  nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
 				}
 				State s = createStateFromDefinition(subToken,nestedStateMachine);
 				//alignStateDefinitionWithStateMachine(s,nestedStateMachine);

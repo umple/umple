@@ -111,11 +111,10 @@ class StateMachine
   {
     for (State s : sm.states)
     {
-      StateMachine nestedState = s.getNestedStateMachine();
-      if (nestedState != null)
+      for (StateMachine nestedSm : s.getNestedStateMachines())
       {
-        all.add(nestedState);
-        addNestedStateMachinesTo(all,nestedState);
+        all.add(nestedSm);
+        addNestedStateMachinesTo(all,nestedSm);
       }
     }
   }
@@ -140,8 +139,7 @@ class StateMachine
       
       if (searchNestedStateMachines)
       {
-        StateMachine nestedSm = aState.getNestedStateMachine(); 
-        if (nestedSm != null)
+        for (StateMachine nestedSm : aState.getNestedStateMachines()) 
         {
           State potentialMatch = nestedSm.findState(aName,true,true);
           if (potentialMatch != null)

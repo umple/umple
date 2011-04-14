@@ -90,7 +90,7 @@ inlineStateMachine : [name] { [[state]]* }<br />
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } <br />
 enum : [name] { } | [name] { [stateName] (, [stateName])* }<br />
 state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }<br />
-stateEntity- : [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br />
+stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br />
 transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]<br />
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]<br />
 afterEveryEvent- : afterEvery -( [timer] -)<br />

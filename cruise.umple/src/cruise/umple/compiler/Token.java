@@ -184,12 +184,13 @@ public class Token
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  
- public Token(String aName,String aValue,Position aPosition)  {
-this(aName,aValue);
+  public Token(String aName, String aValue, Position aPosition)
+  {
+    this(aName,aValue);
     setPosition(aPosition);
   }
-public void addSubToken(int index, Token aSubToken)
+  
+  public void addSubToken(int index, Token aSubToken)
   {
     subTokens.add(index,aSubToken);
   }

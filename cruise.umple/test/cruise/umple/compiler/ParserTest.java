@@ -880,6 +880,30 @@ public class ParserTest
     Assert.assertEquals(true, result.getWasSuccess());
 
   }
+  
+  @Test
+  public void parse_parallel_bars()
+  {
+    parser.addRule("test : [name] -|| [value]");
+    assertParse(true,parser.parse("test","a || b"));
+    Assert.assertEquals("[test][name:a][value:b]", parser.toString());
+  }
+
+  @Test
+  public void parse_unnamed_constant()
+  {
+    parser.addRule("test : [name] [=-||] [value]");
+    assertParse(true,parser.parse("test","a || b"));
+    assertParse(false,parser.parse("test","a blah b"));
+    Assert.assertEquals("[test][name:a][||:||][value:b]", parser.toString());
+  }
+  
+  @Test
+  public void parse_does_not_support_named_parallel_bars()
+  {
+    parser.addRule("test : [name] [=concurrent:-||] [value]");
+    assertParse(false,parser.parse("test","a || b"));
+  }  
 
   private void assertParse(Position expected, ParseResult result)
   {

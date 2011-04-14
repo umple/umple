@@ -630,13 +630,13 @@ public class UmpleClassTest
     umpleClass.addStateMachine(sm);
     
     State s = new State("One",sm);
-    s.setNestedStateMachine(sm2);
+    s.addNestedStateMachine(sm2);
     
     State s2 = new State("Two",sm2);
-    s2.setNestedStateMachine(sm3);
+    s2.addNestedStateMachine(sm3);
     
     State s3 = new State("Two",sm3);
-    s3.setNestedStateMachine(sm4);
+    s3.addNestedStateMachine(sm4);
 
     Assert.assertEquals(4,umpleClass.getAllStateMachines().size());
   }  

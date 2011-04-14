@@ -604,7 +604,7 @@ public class JavaGeneratorTest
     new State("s2",outerSm);
     
     StateMachine sm = new StateMachine("On");
-    s1.setNestedStateMachine(sm);
+    s1.addNestedStateMachine(sm);
     
     new State("s3",sm);
     new State("s4",sm);
@@ -903,7 +903,7 @@ public class JavaGeneratorTest
     sm.setUmpleClass(c);
     
     State onState = new State("On",sm);
-    onState.setNestedStateMachine(nestedSm);
+    onState.addNestedStateMachine(nestedSm);
     State normalState = new State("Normal",nestedSm);
     normalState.setIsStartState(true);
 

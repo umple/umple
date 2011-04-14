@@ -113,35 +113,19 @@ public class StateMachine
     return wasSet;
   }
 
-  public boolean setParentState(State newParentState)
+  public boolean setParentState(State aParentState)
   {
     boolean wasSet = false;
     if (!canSetParentState) { return false; }
-    if (newParentState == null)
+    State existingParentState = parentState;
+    parentState = aParentState;
+    if (existingParentState != null && !existingParentState.equals(aParentState))
     {
-      State existingParentState = parentState;
-      parentState = null;
-      
-      if (existingParentState != null && existingParentState.getNestedStateMachine() != null)
-      {
-        existingParentState.setNestedStateMachine(null);
-      }
-      wasSet = true;
-      return wasSet;
+      existingParentState.removeNestedStateMachine(this);
     }
-
-    State currentParentState = getParentState();
-    if (currentParentState != null && !currentParentState.equals(newParentState))
+    if (aParentState != null)
     {
-      currentParentState.setNestedStateMachine(null);
-    }
-
-    parentState = newParentState;
-    StateMachine existingNestedStateMachine = newParentState.getNestedStateMachine();
-
-    if (!equals(existingNestedStateMachine))
-    {
-      newParentState.setNestedStateMachine(this);
+      aParentState.addNestedStateMachine(this);
     }
     wasSet = true;
     return wasSet;
@@ -252,7 +236,7 @@ public class StateMachine
     }
     if (parentState != null)
     {
-      parentState.setNestedStateMachine(null);
+      parentState.removeNestedStateMachine(this);
     }
     for(State aState : states)
     {
@@ -361,11 +345,10 @@ public class StateMachine
   {
     for (State s : sm.states)
     {
-      StateMachine nestedState = s.getNestedStateMachine();
-      if (nestedState != null)
+      for (StateMachine nestedSm : s.getNestedStateMachines())
       {
-        all.add(nestedState);
-        addNestedStateMachinesTo(all,nestedState);
+        all.add(nestedSm);
+        addNestedStateMachinesTo(all,nestedSm);
       }
     }
   }
@@ -390,8 +373,7 @@ public class StateMachine
       
       if (searchNestedStateMachines)
       {
-        StateMachine nestedSm = aState.getNestedStateMachine(); 
-        if (nestedSm != null)
+        for (StateMachine nestedSm : aState.getNestedStateMachines()) 
         {
           State potentialMatch = nestedSm.findState(aName,true,true);
           if (potentialMatch != null)

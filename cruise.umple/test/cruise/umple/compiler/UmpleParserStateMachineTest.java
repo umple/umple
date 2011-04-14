@@ -350,7 +350,7 @@ public class UmpleParserStateMachineTest
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
     State on = sm.getState(0);
-    StateMachine innerSm = on.getNestedStateMachine();
+    StateMachine innerSm = on.getNestedStateMachine(0);
     State off = innerSm.getState(0);
     
     Assert.assertEquals("On",innerSm.getName());
@@ -366,7 +366,7 @@ public class UmpleParserStateMachineTest
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
     State on = sm.getState(0);
-    StateMachine innerSm = on.getNestedStateMachine();
+    StateMachine innerSm = on.getNestedStateMachine(0);
     State off = innerSm.getState(0);
     State innerOn = innerSm.getState(1);
     
@@ -390,7 +390,7 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("OutsideOn",on.getName());
     Assert.assertEquals("OutsideOff",off.getName());
 
-    StateMachine innerSm = on.getNestedStateMachine();
+    StateMachine innerSm = on.getNestedStateMachine(0);
     State innerOff = innerSm.getState(0);
     State innerOn = innerSm.getState(1);
 
@@ -408,6 +408,24 @@ public class UmpleParserStateMachineTest
 
     
   }
+  
+  @Test
+  public void Concurrent_OneState()
+  {
+    assertParse("103_Concurrent_OneState.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:A][||:||]");
+    
+//    UmpleClass c = model.getUmpleClass("LightFixture");
+//    StateMachine sm = c.getStateMachine(0);
+//    StateMachine concurrentSm = sm.getStateMachine(0);
+//    State on = sm.getState(0);
+//    Assert.assertEquals(1,on.numberOfStateMachines());
+//    StateMachine innerSm = on.getNestedStateMachine(0);
+//    Assert.assertEquals(true,sm.getIsConcurrent());
+//    Assert.assertEquals("BulbOn",innerSm.getName());
+//    Assert.assertEquals(1,innerSm.numberOfStates());
+//    Assert.assertEquals("On",innerSm.getState(0).getName());
+  }
+  
   
   @Test
   public void stateMachineDefinition()
@@ -435,7 +453,7 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("OutsideOn",sm.getState(0).getName());
     Assert.assertEquals("OutsideOff",sm.getState(1).getName());
     State s = sm.getState(0);
-    StateMachine innerSm = s.getNestedStateMachine();
+    StateMachine innerSm = s.getNestedStateMachine(0);
     Assert.assertEquals(2,innerSm.numberOfStates());
     Assert.assertEquals("Off",innerSm.getState(0).getName());
     Assert.assertEquals("On",innerSm.getState(1).getName());

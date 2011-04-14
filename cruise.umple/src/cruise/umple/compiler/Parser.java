@@ -280,6 +280,7 @@ public class Parser
       String cleanedUpRule = rule;
       cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "-(");
       cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", "-)");
+      cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "-||");
       answer.append(cleanedUpRule);
     }
     return answer.toString();
@@ -311,6 +312,7 @@ public class Parser
   {
     input = input.replace("-(","OPEN_ROUND_BRACKET");
     input = input.replace("-)","CLOSE_ROUND_BRACKET");
+    input = input.replace("-||","DOUBLE_OR_BARS");
     
     grammarRules.add(input);
     TextParser ruleParser = new TextParser(input);
@@ -351,6 +353,7 @@ public class Parser
       }
       definition = definition.replace("OPEN_ROUND_BRACKET","(");
       definition = definition.replace("CLOSE_ROUND_BRACKET",")");
+      definition = definition.replace("DOUBLE_OR_BARS","||");
       newRule.addDefinition(definition);
       ruleParser.nextAt("|");
     }

@@ -742,8 +742,7 @@ public class JavaGenerator implements CodeGenerator
     
     for (State s : sm.getStates())
     {
-      StateMachine nestedSm = s.getNestedStateMachine();
-      if (nestedSm != null)
+      for (StateMachine nestedSm : s.getNestedStateMachines())
       {
         prepareNestedStatesFor(nestedSm);  
       }

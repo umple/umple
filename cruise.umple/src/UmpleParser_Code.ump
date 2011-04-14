@@ -108,7 +108,7 @@ class UmpleParser
 		addRule("referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } ");
 		addRule("enum : [name] { } | [name] { [stateName] (, [stateName])* }");
 		addRule("state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }");
-		addRule("stateEntity- : [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]");
+		addRule("stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]");
 		addRule("transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]");
 		addRule("eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]");
 		addRule("afterEveryEvent- : afterEvery -( [timer] -)");
@@ -1123,12 +1123,17 @@ class UmpleParser
 			}
 			else if (subToken.is("state"))
 			{
-				StateMachine nestedStateMachine = fromState.getNestedStateMachine();
-				boolean isFirst = nestedStateMachine == null; 
+				StateMachine nestedStateMachine = null;
+				boolean isFirst = fromState.numberOfNestedStateMachines() == 0; 
 				if (isFirst)
 				{
 					nestedStateMachine = new StateMachine(fromState.getName());
-					fromState.setNestedStateMachine(nestedStateMachine);
+					fromState.addNestedStateMachine(nestedStateMachine);
+				}
+				else
+				{
+				  int lastIndex = fromState.numberOfNestedStateMachines() - 1;
+				  nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
 				}
 				State s = createStateFromDefinition(subToken,nestedStateMachine);
 				//alignStateDefinitionWithStateMachine(s,nestedStateMachine);
