@@ -178,15 +178,15 @@
 	  <!-- TODO: UNCOMMENT ONCE XTEXT IN THE MIX -->
     <!-- <copy todir="dist/update">
       <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
+    </copy>
+    <copy todir="../umpleonline/update">
+      <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
     </copy> -->
 	  
 	  <!-- TODO: UNCOMMENT ONCE UMPLEONLINE IN THE MIX -->
-    <!-- <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
-    <copy todir="../umpleonline/update">
-      <fileset dir="dist/update"/>
-    </copy> -->
 	
 	  <antcall target="packageDocs" />
 	
