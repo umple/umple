@@ -671,7 +671,7 @@ public class UmpleClass extends UmpleElement
     {
       aStateMachine.setUmpleClass(this);
     }
-    else if (!existingUmpleClass.equals(this))
+    else if (!this.equals(existingUmpleClass))
     {
       existingUmpleClass.removeStateMachine(aStateMachine);
       addStateMachine(aStateMachine);

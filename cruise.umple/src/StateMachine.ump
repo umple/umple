@@ -45,6 +45,9 @@ class Activity
 
 class Transition
 {
+    
+  Boolean isInternal = false;
+
   * -> 0..1 Event; 
   * -- 1 State fromState;  
   * -> 1 State nextState;

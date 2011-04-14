@@ -117,7 +117,7 @@ public class Token
     {
       aSubToken.setParentToken(this);
     }
-    else if (!existingParentToken.equals(this))
+    else if (!this.equals(existingParentToken))
     {
       existingParentToken.removeSubToken(aSubToken);
       addSubToken(aSubToken);
@@ -176,7 +176,9 @@ public class Token
     position = null;
     if (parentToken != null)
     {
-      parentToken.removeSubToken(this);
+      Token placeholderParentToken = parentToken;
+      this.parentToken = null;
+      placeholderParentToken.removeSubToken(this);
     }
   }
 
@@ -184,13 +186,12 @@ public class Token
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public Token(String aName, String aValue, Position aPosition)
-  {
-    this(aName,aValue);
+  
+ public Token(String aName,String aValue,Position aPosition)  {
+this(aName,aValue);
     setPosition(aPosition);
   }
-  
-  public void addSubToken(int index, Token aSubToken)
+public void addSubToken(int index, Token aSubToken)
   {
     subTokens.add(index,aSubToken);
   }

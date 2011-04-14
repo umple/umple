@@ -43,25 +43,25 @@
     <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
-  <target name="umpleCodegen">
-    <antcall target="umpleCodegenJava" />
-    <antcall target="umpleCodegenPhp" />
-    <antcall target="umpleCodegenRuby" />
+  <target name="umpleTestbed">
+    <antcall target="umpleTestbedJava" />
+    <antcall target="umpleTestbedPhp" />
+    <antcall target="umpleTestbedRuby" />
   </target>
   
-  <target name="umpleCodegenJava">
+  <target name="umpleTestbedJava">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
   </target>
 
-  <target name="umpleCodegenPhp">
+  <target name="umpleTestbedPhp">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_php/src/TestHarnessPhp.ump"/>
     </java>
   </target>
   
-  <target name="umpleCodegenRuby">
+  <target name="umpleTestbedRuby">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
@@ -154,7 +154,7 @@
   <target name="build" >
     <antcall target="clean" />
     <antcall target="init" />
-    <antcall target="umpleCodegen" />
+    <antcall target="umpleTestbed" />
     <antcall target="compile" />
     <antcall target="test" />
   </target>

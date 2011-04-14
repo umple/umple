@@ -275,7 +275,7 @@ public class State
     {
       aNestedStateMachine.setParentState(this);
     }
-    else if (!existingParentState.equals(this))
+    else if (!this.equals(existingParentState))
     {
       existingParentState.removeNestedStateMachine(aNestedStateMachine);
       addNestedStateMachine(aNestedStateMachine);
@@ -316,7 +316,7 @@ public class State
     if (transitions.contains(aTransition)) { return false; }
     if (transitions.contains(aTransition)) { return false; }
     State existingFromState = aTransition.getFromState();
-    boolean isNewFromState = existingFromState != null && !existingFromState.equals(this);
+    boolean isNewFromState = existingFromState != null && !this.equals(existingFromState);
     if (isNewFromState)
     {
       aTransition.setFromState(this);
@@ -333,7 +333,7 @@ public class State
   {
     boolean wasRemoved = false;
     //Unable to remove aTransition, as it must always have a fromState
-    if (!aTransition.getFromState().equals(this))
+    if (!this.equals(aTransition.getFromState()))
     {
       transitions.remove(aTransition);
       wasRemoved = true;
@@ -350,7 +350,9 @@ public class State
       existingActivity.delete();
     }
     actions.clear();
-    stateMachine.removeState(this);
+    StateMachine placeholderStateMachine = stateMachine;
+    this.stateMachine = null;
+    placeholderStateMachine.removeState(this);
     for(StateMachine aNestedStateMachine : nestedStateMachines)
     {
       aNestedStateMachine.setParentState(null);

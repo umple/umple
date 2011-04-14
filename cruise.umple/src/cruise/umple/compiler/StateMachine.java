@@ -146,7 +146,7 @@ public class StateMachine
     boolean wasAdded = false;
     if (states.contains(aState)) { return false; }
     StateMachine existingStateMachine = aState.getStateMachine();
-    boolean isNewStateMachine = existingStateMachine != null && !existingStateMachine.equals(this);
+    boolean isNewStateMachine = existingStateMachine != null && !this.equals(existingStateMachine);
     if (isNewStateMachine)
     {
       aState.setStateMachine(this);
@@ -163,7 +163,7 @@ public class StateMachine
   {
     boolean wasRemoved = false;
     //Unable to remove aState, as it must always have a stateMachine
-    if (!aState.getStateMachine().equals(this))
+    if (!this.equals(aState.getStateMachine()))
     {
       states.remove(aState);
       wasRemoved = true;
@@ -232,11 +232,15 @@ public class StateMachine
   {
     if (umpleClass != null)
     {
-      umpleClass.removeStateMachine(this);
+      UmpleClass placeholderUmpleClass = umpleClass;
+      this.umpleClass = null;
+      placeholderUmpleClass.removeStateMachine(this);
     }
     if (parentState != null)
     {
-      parentState.removeNestedStateMachine(this);
+      State placeholderParentState = parentState;
+      this.parentState = null;
+      placeholderParentState.removeNestedStateMachine(this);
     }
     for(State aState : states)
     {

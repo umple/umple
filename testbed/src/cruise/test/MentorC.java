@@ -94,7 +94,7 @@ public class MentorC
     {
       aStudent.setMentor(this);
     }
-    else if (!existingMentor.equals(this))
+    else if (!this.equals(existingMentor))
     {
       existingMentor.removeStudent(aStudent);
       addStudent(aStudent);

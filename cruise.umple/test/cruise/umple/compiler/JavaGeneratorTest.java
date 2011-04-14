@@ -544,6 +544,7 @@ public class JavaGeneratorTest
     c.addAttribute(attr);
     
     Assert.assertEquals("aName",generator.translate("parameterOne",attr));
+    Assert.assertEquals("placeholderName",generator.translate("removeParameterOne",attr));
     Assert.assertEquals("name",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
     Assert.assertEquals("name",generator.translate("attributeOne",attr));
@@ -612,6 +613,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
     Assert.assertEquals("VcrOn",generator.translate("stateMachineOne",sm));
     Assert.assertEquals("aVcrOn",generator.translate("parameterOne",sm));
+    Assert.assertEquals("placeholderVcrOn",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getVcrOn",generator.translate("getMethod",sm));
     Assert.assertEquals("getVcrOnFullName",generator.translate("getFullMethod",sm));
     Assert.assertEquals("String",generator.translate("typeGet",sm));
@@ -633,6 +635,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
     Assert.assertEquals("Vcr",generator.translate("stateMachineOne",sm));
     Assert.assertEquals("aVcr",generator.translate("parameterOne",sm));
+    Assert.assertEquals("placeholderVcr",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getVcr",generator.translate("getMethod",sm));
     Assert.assertEquals("getVcrFullName",generator.translate("getFullMethod",sm));
     Assert.assertEquals("String",generator.translate("typeFull",sm));
@@ -656,6 +659,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
     Assert.assertEquals("grade",generator.translate("stateMachineOne",sm));
     Assert.assertEquals("aGrade",generator.translate("parameterOne",sm));
+    Assert.assertEquals("placeholderGrade",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getGrade",generator.translate("getMethod",sm));
     Assert.assertEquals("String",generator.translate("typeGet",sm));
     Assert.assertEquals("Grade",generator.translate("type",sm));
@@ -920,10 +924,81 @@ public class JavaGeneratorTest
     Assert.assertEquals(0,onState.numberOfActions());
   }  
   
+  @Test
+  public void prepare_postpare_concurrentStateMachine()
+  {
+    UmpleClass c = model.addUmpleClass("LightFixture");
+    StateMachine sm = new StateMachine("bulb");
+    StateMachine nestedSm = new StateMachine("A");
+    StateMachine nestedSm2 = new StateMachine("B");
+
+    sm.setUmpleClass(c);
+    
+    State onState = new State("On",sm);
+    onState.addNestedStateMachine(nestedSm);
+    onState.addNestedStateMachine(nestedSm2);
+    State normalState = new State("Normal",nestedSm);
+    normalState.setIsStartState(true);
+
+    State normalState2 = new State("Normal2",nestedSm2);
+    normalState2.setIsStartState(true);
+
+    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(0,onState.numberOfTransitions());
+    Assert.assertEquals(0,normalState.numberOfTransitions());
+    Assert.assertEquals(0,normalState2.numberOfTransitions());
+    Assert.assertEquals(0,nestedSm.getEvents().size());
+    Assert.assertEquals(0,nestedSm2.getEvents().size());
+    Assert.assertEquals(1,nestedSm.numberOfStates());
+    Assert.assertEquals(1,nestedSm2.numberOfStates());
+
+    generator.prepare();
+
+    Assert.assertEquals(3,onState.numberOfActions());
+    Assert.assertEquals(0,onState.numberOfTransitions());
+    Assert.assertEquals(1,normalState.numberOfTransitions());
+    Assert.assertEquals(1,normalState2.numberOfTransitions());
+    Assert.assertEquals(2,nestedSm.getEvents().size());
+    Assert.assertEquals(2,nestedSm2.getEvents().size());
+    Assert.assertEquals(2,nestedSm.numberOfStates());
+    Assert.assertEquals(2,nestedSm2.numberOfStates());
+
+    
+    Assert.assertEquals("Null",nestedSm.getState(0).getName());
+
+    Assert.assertEquals("enterOn",nestedSm.getEvents().get(0).getName());
+    Assert.assertEquals("exitOn",nestedSm.getEvents().get(1).getName());
+    Assert.assertEquals(true, nestedSm.getEvents().get(0) == nestedSm2.getEvents().get(0));
+    Assert.assertEquals(true, nestedSm.getEvents().get(1) == nestedSm2.getEvents().get(1));
+    
+    Assert.assertEquals("Null",nestedSm2.getState(0).getName());
+    
+    Assert.assertEquals("exit",onState.getAction(0).getActionType());
+    Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
+    
+    Assert.assertEquals("entry",onState.getAction(1).getActionType());
+    Assert.assertEquals("if (bulbA == BulbA.Null) { setBulbA(BulbA.Normal); }",onState.getAction(1).getActionCode());
+
+    Assert.assertEquals("entry",onState.getAction(2).getActionType());
+    Assert.assertEquals("if (bulbB == BulbB.Null) { setBulbB(BulbB.Normal2); }",onState.getAction(2).getActionCode());
+    
+    generator.postpare();
+    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(0,onState.numberOfTransitions());
+//    System.out.println("Found" + normalState.getTransition(0).getFromState().getName() + ":" + normalState.getTransition(0).getNextState().getName());
+    Assert.assertEquals(0,normalState.numberOfTransitions());
+    Assert.assertEquals(0,normalState2.numberOfTransitions());
+    Assert.assertEquals(0,nestedSm.getEvents().size());
+    Assert.assertEquals(0,nestedSm2.getEvents().size());
+    Assert.assertEquals(1,nestedSm.numberOfStates());
+    Assert.assertEquals(1,nestedSm2.numberOfStates());
+  }  
+  
   private void assertOtherTranslate(AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));
     Assert.assertEquals("aStudent",generator.relatedTranslate("parameterOne",av));
+    Assert.assertEquals("placeholderStudent",generator.relatedTranslate("removeParameterOne",av));    
     Assert.assertEquals("2",generator.relatedTranslate("parameterValue",av));
     Assert.assertEquals("student",generator.relatedTranslate("associationOne",av));
     Assert.assertEquals("students",generator.relatedTranslate("associationMany",av));
@@ -969,6 +1044,7 @@ public class JavaGeneratorTest
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
     Assert.assertEquals("aMentor",generator.translate("parameterOne",av));
+    Assert.assertEquals("placeholderMentor",generator.translate("removeParameterOne",av));    
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
     Assert.assertEquals("mentors",generator.translate("associationMany",av));
@@ -1008,6 +1084,7 @@ public class JavaGeneratorTest
     }
     
     Assert.assertEquals("aStudent",generator.translate("parameterOne",relatedAv));
+    Assert.assertEquals("placeholderStudent",generator.translate("removeParameterOne",relatedAv));    
     Assert.assertEquals("2",generator.translate("parameterValue",relatedAv));
     Assert.assertEquals("student",generator.translate("associationOne",relatedAv));
     Assert.assertEquals("students",generator.translate("associationMany",relatedAv));
@@ -1050,6 +1127,7 @@ public class JavaGeneratorTest
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
     Assert.assertEquals("aMentor",generator.translate("parameterOne",av));
+    Assert.assertEquals("placeholderMentor",generator.translate("removeParameterOne",av));    
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
     Assert.assertEquals("mentors",generator.translate("associationMany",av));
@@ -1089,6 +1167,7 @@ public class JavaGeneratorTest
     }
     
     Assert.assertEquals("aStudent",generator.translate("parameterOne",relatedAv));
+    Assert.assertEquals("placeholderStudent",generator.translate("removeParameterOne",relatedAv));    
     Assert.assertEquals("2",generator.translate("parameterValue",relatedAv));
     Assert.assertEquals("student",generator.translate("associationOne",relatedAv));
     Assert.assertEquals("students",generator.translate("associationMany",relatedAv));

@@ -61,6 +61,7 @@ public class JavaGenerator implements CodeGenerator
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
     UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
+    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");    
     UpperCaseSingularLookupMap.put("parameterNew", "new{0}");
     UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
     UpperCaseSingularLookupMap.put("addMethod", "add{0}");
@@ -148,8 +149,8 @@ public class JavaGenerator implements CodeGenerator
       }
       for (UmpleInterface currentInterface : model.getUmpleInterfaces())
       {
-    	writeInterfaceFile(currentInterface);
-    	lastInterface = currentInterface;
+        writeInterfaceFile(currentInterface);
+        lastInterface = currentInterface;
       }
     }
     catch (Exception e)
@@ -178,7 +179,7 @@ public class JavaGenerator implements CodeGenerator
       return new JavaClassGenerator();
     } 
     else{
-    	return null;    	
+        return null;        
     }
   }
   
@@ -362,42 +363,42 @@ public class JavaGenerator implements CodeGenerator
 
   private String getExtendAndImplements(UmpleClass uClass)
   {
-	  String extendsString = "";
-	  String implementsString = "";
+      String extendsString = "";
+      String implementsString = "";
 
-	  extendsString = getExtendClassesNames(uClass);
-	  implementsString = getImplementsInterfacesNames(uClass);
+      extendsString = getExtendClassesNames(uClass);
+      implementsString = getImplementsInterfacesNames(uClass);
 
-	  return extendsString + implementsString; 
+      return extendsString + implementsString; 
   }
 
   private String getExtendClassesNames(UmpleClass uClass)
   {
-	  UmpleClass parent = uClass.getExtendsClass();
-	  if (parent == null)
-	  {
-		  return "";
-	  }
-	  else{
-		  return   " extends " + parent.getName();  
-	  }
+      UmpleClass parent = uClass.getExtendsClass();
+      if (parent == null)
+      {
+          return "";
+      }
+      else{
+          return   " extends " + parent.getName();  
+      }
   }
 
   private String getImplementsInterfacesNames(UmpleClass uClass)
   {
-	  String implementedInterfaces = "";
+      String implementedInterfaces = "";
 
-	  if (uClass.hasParentInterface() == false){
-		  return "";
-	  }
-	  else{
-		  for (UmpleInterface uInterface : uClass.getParentInterface())
-		  {
-			  implementedInterfaces += uInterface.getName() + "," ; 
-		  }
-		  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
-		  return " implements " + implementedInterfaces;
-	  }
+      if (uClass.hasParentInterface() == false){
+          return "";
+      }
+      else{
+          for (UmpleInterface uInterface : uClass.getParentInterface())
+          {
+              implementedInterfaces += uInterface.getName() + "," ; 
+          }
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+          return " implements " + implementedInterfaces;
+      }
   }
 
   public String translate(String keyName, Attribute av)
@@ -657,7 +658,7 @@ public class JavaGenerator implements CodeGenerator
     for (StateMachine sm : aClass.getStateMachines())
     {
       // Add a null entry state for nested states
-      prepareNestedStatesFor(sm);
+      prepareNestedStatesFor(sm,0);
       for (State s : sm.getStates())
       {
         for (Transition t : s.getTransitions())
@@ -687,64 +688,75 @@ public class JavaGenerator implements CodeGenerator
   }
    
   private void prepare(UmpleInterface aInterface)
-  	{
+    {
     if (aInterface.getGeneratedInterface() != null)
     {
       return;
     }
     else 
     {
-    	GeneratedInterface genInterface = aInterface.createGeneratedInterface(model);
+        GeneratedInterface genInterface = aInterface.createGeneratedInterface(model);
     }
   }
   
-  private void prepareNestedStatesFor(StateMachine sm)
+  private void prepareNestedStatesFor(StateMachine sm,int concurrentIndex)
   {
     if (sm.getParentState() != null)
     {
       State parentState = sm.getParentState();
+      StateMachine firstSm = parentState.getNestedStateMachine(0);
       State nullState = sm.addState("Null",0);
       nullState.setIsInternal(true);
       
       if (sm.getStartState() != null)
       {
-        Action parentExitAction = new Action(StringFormatter.format("{0}();",translate("exitMethod",parentState)));
-        parentExitAction.setIsInternal(true);
-        parentExitAction.setActionType("exit");
-        parentState.addAction(parentExitAction,0);
         
-        Transition enterTransition = new Transition(nullState,sm.getStartState());
-        enterTransition.setEvent(new Event(translate("enterMethod",parentState)));
+        if (concurrentIndex == 0)
+        {
+          Action parentExitAction = new Action(StringFormatter.format("{0}();",translate("exitMethod",parentState)));
+          parentExitAction.setIsInternal(true);
+          parentExitAction.setActionType("exit");
+          parentState.addAction(parentExitAction,0);
+        }
 
-        Event exitEvent = new Event(translate("exitMethod",parentState));
+        Event enterEvent = firstSm.findOrCreateEvent(translate("enterMethod",parentState));
+        enterEvent.setIsInternal(true);
+        Transition enterTransition = new Transition(nullState,sm.getStartState());
+        enterTransition.setIsInternal(true);
+        enterTransition.setEvent(enterEvent);
+
+        Event exitEvent = firstSm.findOrCreateEvent(translate("exitMethod",parentState));
+        exitEvent.setIsInternal(true);
         
         for (State state : sm.getStates())
         {
           if (state == nullState) { continue; }
           Transition exitTransition = state.addTransition(nullState,0);
+          exitTransition.setIsInternal(true);
           exitTransition.setEvent(exitEvent);
         }
 
-        Action entryAction = new Action(StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
+        Action parentEntryAction = new Action(StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
             ,translate("stateMachineOne",sm)
             ,translate("type",sm)
             ,translate("stateNull",sm)
             ,translate("setMethod",sm)
             ,translate("stateOne",sm.getStartState())
         ));
-        entryAction.setActionType("entry");
-        entryAction.setIsInternal(true);
-        parentState.addAction(entryAction); 
+        parentEntryAction.setActionType("entry");
+        parentEntryAction.setIsInternal(true);
+        parentState.addAction(parentEntryAction); 
       }
 
     }
     
-    
     for (State s : sm.getStates())
     {
+      int nestedSmIndex = 0;
       for (StateMachine nestedSm : s.getNestedStateMachines())
       {
-        prepareNestedStatesFor(nestedSm);  
+        prepareNestedStatesFor(nestedSm,nestedSmIndex);
+        nestedSmIndex += 1;
       }
     }
   }
@@ -770,13 +782,27 @@ public class JavaGenerator implements CodeGenerator
         aClass.removeDepend(d);
       }      
     }  
-  
+
+    List<State> shouldDelete = new ArrayList<State>();
+    for (StateMachine sm : aClass.getAllStateMachines())
+    {
+      postpareInternalStates(sm,shouldDelete);
+    }
+
     // Remove all internally created actions that are Java specific
     for (StateMachine sm : aClass.getAllStateMachines())
     {
-      postpareInternalStates(sm);
       for (State s : sm.getStates())
       {
+        for (int i=s.numberOfTransitions()-1; i>=0; i--)
+        {
+          Transition t = s.getTransition(i);
+          if (t.getIsInternal())
+          {
+            t.delete();
+          }
+        }
+
         for (int i=s.numberOfActions()-1; i>=0; i--)
         {
           Action a = s.getAction(i);
@@ -787,17 +813,24 @@ public class JavaGenerator implements CodeGenerator
         }
       }
     }
+    
+    for (int i=shouldDelete.size()-1; i>=0; i--)
+    {
+      State s = shouldDelete.get(i);
+      s.delete();
+    }
+    
   }
 
-   private void postpareInternalStates(StateMachine sm)
+   private void postpareInternalStates(StateMachine sm, List<State> shouldDelete)
    {
      for (int i=sm.numberOfStates() - 1; i >= 0; i--)
      {
        State s = sm.getState(i);
        if (s.getIsInternal())
        {
-         sm.removeState(s);
-       }
+         shouldDelete.add(s);
+       }       
      }
    }
    
@@ -1033,7 +1066,7 @@ public class JavaGenerator implements CodeGenerator
     }
   }
   
- private void writeInterfaceFile(UmpleInterface aInterface) throws IOException
+  private void writeInterfaceFile(UmpleInterface aInterface) throws IOException
   {
     ILang language = getLanguageFor(aInterface);
     String path = model.getUmpleFile().getPath() + File.separator + aInterface.getPackageName().replace(".", File.separator);

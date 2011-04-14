@@ -142,5 +142,12 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("nestedStates_exitInnerBeforeOutter.ump",languagePath + "/nestedStates_exitInnerBeforeOutter."+ languagePath +".txt","LightFixture");
   }
 
+  @Test
+  public void concurrentStates()
+  {
+    assertUmpleTemplateFor("concurrentStates_normal.ump",languagePath + "/concurrentStates_normal."+ languagePath +".txt","LightFixture");
+  }
 
+
+  
 }

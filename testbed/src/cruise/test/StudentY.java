@@ -116,7 +116,9 @@ public class StudentY
     }
     if (mentor != null)
     {
-      mentor.removeStudent(this);
+      MentorY placeholderMentor = mentor;
+      this.mentor = null;
+      placeholderMentor.removeStudent(this);
     }
   }
 

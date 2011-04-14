@@ -85,7 +85,9 @@ public class Student
 
   public void delete()
   {
-    mentor.removeStudent(this);
+    Mentor placeholderMentor = mentor;
+    this.mentor = null;
+    placeholderMentor.removeStudent(this);
   }
 
 }

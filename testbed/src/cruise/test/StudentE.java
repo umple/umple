@@ -98,7 +98,9 @@ public class StudentE
       }
       else
       {
-        mentor.removeStudent(this);
+        MentorE placeholderMentor = mentor;
+        this.mentor = null;
+        placeholderMentor.removeStudent(this);
       }
     }
   }

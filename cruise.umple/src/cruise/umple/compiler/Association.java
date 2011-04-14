@@ -182,7 +182,7 @@ public class Association
       {
         return wasSet;
       }
-      else if (newEnd.getAssociation() != null && !newEnd.getAssociation().equals(this))
+      else if (newEnd.getAssociation() != null && !this.equals(newEnd.getAssociation()))
       {
         return wasSet;
       }

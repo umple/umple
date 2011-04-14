@@ -151,7 +151,9 @@ public class Variant
     codeSnippet = null;
     if (variationPoint != null)
     {
-      variationPoint.removeVariant(this);
+      VariationPoint placeholderVariationPoint = variationPoint;
+      this.variationPoint = null;
+      placeholderVariationPoint.removeVariant(this);
     }
   }
 

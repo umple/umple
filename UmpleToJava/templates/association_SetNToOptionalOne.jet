@@ -11,7 +11,7 @@
         <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
         return wasSet;
       }
-      else if (<%=gen.translate("associationNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>() != null && !<%=gen.translate("associationNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>().equals(this))
+      else if (<%=gen.translate("associationNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>() != null && !this.equals(<%=gen.translate("associationNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
       {
         <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
         return wasSet;

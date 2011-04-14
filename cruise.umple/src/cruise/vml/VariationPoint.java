@@ -174,7 +174,7 @@ public class VariationPoint
     {
       aVariant.setVariationPoint(this);
     }
-    else if (!existingVariationPoint.equals(this))
+    else if (!this.equals(existingVariationPoint))
     {
       existingVariationPoint.removeVariant(aVariant);
       addVariant(aVariant);
@@ -328,7 +328,9 @@ public class VariationPoint
     requires.clear();
     if (concern != null)
     {
-      concern.removeVariationPoint(this);
+      Concern placeholderConcern = concern;
+      this.concern = null;
+      placeholderConcern.removeVariationPoint(this);
     }
   }
 

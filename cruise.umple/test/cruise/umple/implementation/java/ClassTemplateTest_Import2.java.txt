@@ -165,7 +165,7 @@ public class Student
       {
         return wasSet;
       }
-      else if (aMentor.getStudent() != null && !aMentor.getStudent().equals(this))
+      else if (aMentor.getStudent() != null && !this.equals(aMentor.getStudent()))
       {
         Student existingStudent = aMentor.getStudent();
         if (!studentToNewMentors.containsKey(existingStudent))

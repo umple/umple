@@ -67,17 +67,14 @@ public class UmpleFile
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public UmpleFile(String aPath, String aFilename)
-  {
-    this(new File(aPath,aFilename));
-  }
   
-  public UmpleFile(String aFullFilename)
-  {
-    this(new File(aFullFilename));
+ public UmpleFile(String aPath,String aFilename)  {
+this(new File(aPath,aFilename));
   }
-  
-  private StringBuilder init()
+ public UmpleFile(String aFullFilename)  {
+this(new File(aFullFilename));
+  }
+private StringBuilder init()
   {
     String fullFilename = file.getAbsolutePath();
     fileName = file.getName();

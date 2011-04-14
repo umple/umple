@@ -101,7 +101,7 @@ public class MentorM
     boolean wasAdded = false;
     if (students.contains(aStudent)) { return false; }
     MentorM existingMentor = aStudent.getMentor();
-    boolean isNewMentor = existingMentor != null && !existingMentor.equals(this);
+    boolean isNewMentor = existingMentor != null && !this.equals(existingMentor);
 
     if (isNewMentor && existingMentor.numberOfStudents() <= minimumNumberOfStudents())
     {
@@ -124,7 +124,7 @@ public class MentorM
   {
     boolean wasRemoved = false;
     //Unable to remove aStudent, as it must always have a mentor
-    if (aStudent.getMentor().equals(this))
+    if (this.equals(aStudent.getMentor()))
     {
       return wasRemoved;
     }

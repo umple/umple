@@ -98,3 +98,41 @@ class CourseE
  }
  
 }
+
+class CourseF
+{
+  status
+  {
+    Off
+    {
+      turnOn -> On;
+    }
+    On
+    {
+      turnOff -> Off;
+      MotorIdle
+      {
+        flip -> MotorRunning; 
+      }
+      MotorRunning
+      {
+        flip -> MotorIdle;
+      }
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> FanRunning;  
+      }
+      
+      FanRunning
+      {
+        flop -> FanIdle;
+      }
+      
+      
+    }
+  
+  }
+}

@@ -101,7 +101,7 @@ public class Concern
     {
       aVariationPoint.setConcern(this);
     }
-    else if (!existingConcern.equals(this))
+    else if (!this.equals(existingConcern))
     {
       existingConcern.removeVariationPoint(aVariationPoint);
       addVariationPoint(aVariationPoint);
@@ -190,7 +190,9 @@ public class Concern
     }
     if (vmlSystem != null)
     {
-      vmlSystem.removeConcern(this);
+      VmlSystem placeholderVmlSystem = vmlSystem;
+      this.vmlSystem = null;
+      placeholderVmlSystem.removeConcern(this);
     }
   }
 

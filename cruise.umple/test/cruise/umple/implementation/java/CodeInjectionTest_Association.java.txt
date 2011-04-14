@@ -707,9 +707,13 @@ public class Student
   {
     if (m1 != null)
     {
-      m1.removeOne(this);
+      Mentor placeholderM1 = m1;
+      this.m1 = null;
+      placeholderM1.removeOne(this);
     }
-    m2.removeTwo(this);
+    Mentor placeholderM2 = m2;
+    this.m2 = null;
+    placeholderM2.removeTwo(this);
     ArrayList<Mentor> copyOfM3s = new ArrayList<Mentor>(m3s);
     m3s.clear();
     for(Mentor aM3 : copyOfM3s)

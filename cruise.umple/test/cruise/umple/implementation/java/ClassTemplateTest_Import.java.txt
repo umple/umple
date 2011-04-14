@@ -58,7 +58,9 @@ public class Mentor
       }
       else
       {
-        student.removeMentor(this);
+        Student placeholderStudent = student;
+        this.student = null;
+        placeholderStudent.removeMentor(this);
       }
     }
   }

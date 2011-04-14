@@ -1,0 +1,128 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private $status;
+
+  // status constants
+  private static $StatusOff = 1;
+  private static $StatusOn = 2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusOff);
+    if ($this->status == null) { $this->setStatus(self::$UNKNOWN ID: stateNull); }
+    if ($this->status == null) { $this->setStatus(self::$UNKNOWN ID: stateNull); }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOff) { return "StatusOff"; }
+    elseif ($this->status == self::$StatusOn) { return "StatusOn"; }
+    return null;
+  }
+
+  public function getStatusMotorIdle()
+  {
+    if ($this->statusMotorIdle == self::$MotorIdleMotorIdle) { return "MotorIdleMotorIdle"; }
+    elseif ($this->statusMotorIdle == self::$MotorIdleMotorRunning) { return "MotorIdleMotorRunning"; }
+    return null;
+  }
+
+  public function getStatusFanIdle()
+  {
+    if ($this->statusFanIdle == self::$FanIdleFanIdle) { return "FanIdleFanIdle"; }
+    elseif ($this->statusFanIdle == self::$FanIdleFanRunning) { return "FanIdleFanRunning"; }
+    return null;
+  }
+
+  public function turnOn()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->status == self::$StatusOff)
+    {
+      $this->setStatus(self::$StatusOn);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->statusMotorIdle == self::$MotorIdleMotorIdle)
+    {
+      $this->setStatusMotorIdle(self::$MotorIdleMotorRunning);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->statusMotorIdle == self::$MotorIdleMotorRunning)
+    {
+      $this->setStatusMotorIdle(self::$MotorIdleMotorIdle);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function flop()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->statusFanIdle == self::$FanIdleFanIdle)
+    {
+      $this->setStatusFanIdle(self::$FanIdleFanRunning);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->statusFanIdle == self::$FanIdleFanRunning)
+    {
+      $this->setStatusFanIdle(self::$FanIdleFanIdle);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+  }
+
+  private function setStatusMotorIdle($aStatusMotorIdle)
+  {
+    $this->statusMotorIdle = $aStatusMotorIdle;
+  }
+
+  private function setStatusFanIdle($aStatusFanIdle)
+  {
+    $this->statusFanIdle = $aStatusFanIdle;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

@@ -128,7 +128,9 @@ public class StudentZ
     {
       program.setStudent(null);
     }
-    mentor.removeStudent(this);
+    MentorZ placeholderMentor = mentor;
+    this.mentor = null;
+    placeholderMentor.removeStudent(this);
   }
 
 }

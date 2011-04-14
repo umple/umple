@@ -109,7 +109,7 @@ public class Couple
     {
       aIgnore.setCouple(this);
     }
-    else if (!existingCouple.equals(this))
+    else if (!this.equals(existingCouple))
     {
       existingCouple.removeIgnore(aIgnore);
       addIgnore(aIgnore);
@@ -159,7 +159,9 @@ public class Couple
     }
     if (couple != null)
     {
-      couple.removeIgnore(this);
+      Couple placeholderCouple = couple;
+      this.couple = null;
+      placeholderCouple.removeIgnore(this);
     }
   }
 

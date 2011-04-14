@@ -120,7 +120,7 @@ public class Mentor
     {
       aSecondary.setMentor(this);
     }
-    else if (!existingMentor.equals(this))
+    else if (!this.equals(existingMentor))
     {
       existingMentor.removeSecondary(aSecondary);
       addSecondary(aSecondary);

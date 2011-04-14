@@ -10,6 +10,9 @@ public class Transition
   // MEMBER VARIABLES
   //------------------------
 
+  //Transition Attributes
+  private boolean isInternal;
+
   //Transition Associations
   private Event event;
   private State fromState;
@@ -23,6 +26,7 @@ public class Transition
 
   public Transition(State aFromState, State aNextState)
   {
+    isInternal = false;
     boolean didAddFromState = setFromState(aFromState);
     if (!didAddFromState)
     {
@@ -37,6 +41,19 @@ public class Transition
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setIsInternal(boolean aIsInternal)
+  {
+    boolean wasSet = false;
+    isInternal = aIsInternal;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getIsInternal()
+  {
+    return isInternal;
+  }
 
   public Event getEvent()
   {
@@ -120,7 +137,9 @@ public class Transition
   public void delete()
   {
     event = null;
-    fromState.removeTransition(this);
+    State placeholderFromState = fromState;
+    this.fromState = null;
+    placeholderFromState.removeTransition(this);
     nextState = null;
     guard = null;
     action = null;

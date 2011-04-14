@@ -151,7 +151,7 @@ public class VmlSystem
     {
       aConcern.setVmlSystem(this);
     }
-    else if (!existingVmlSystem.equals(this))
+    else if (!this.equals(existingVmlSystem))
     {
       existingVmlSystem.removeConcern(aConcern);
       addConcern(aConcern);

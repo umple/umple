@@ -108,7 +108,7 @@ public class MentorD
       {
         return wasSet;
       }
-      else if (newStudent.getMentor() != null && !newStudent.getMentor().equals(this))
+      else if (newStudent.getMentor() != null && !this.equals(newStudent.getMentor()))
       {
         return wasSet;
       }
