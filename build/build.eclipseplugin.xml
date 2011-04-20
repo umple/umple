@@ -12,6 +12,11 @@
   <property name="dist.path" value="dist/cruise.umple.eclipse"/>
   <property name="test.output.path" value="dist/qa/cruise.umple.eclipse"/>
 
+  <condition property="jvmarg.01" value="-d32"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <condition property="jvmarg.02" value="-XstartOnFirstThread"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <property name="jvmarg.01" value="-Dignore1"/>
+  <property name="jvmarg.02" value="-Dignore2"/>
+
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <pathelement location="cruise.umple/bin"/>
@@ -49,7 +54,6 @@
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />
   </path>  
 
-  
   <!-- ```````````````````````````
     Compile the application
   ``````````````````````````` -->
@@ -75,8 +79,9 @@
   
   <target name="test">
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
-      <jvmarg value="-d32"/>
-      <jvmarg value="-XstartOnFirstThread"/>
+      <jvmarg value="${jvmarg.01}"/>
+      <jvmarg value="${jvmarg.02}" />
+      
       <formatter type="xml"/>
       <batchtest fork="yes" todir="${test.output.path}">
         <fileset dir="${project.path}/test">

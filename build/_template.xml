@@ -5,6 +5,8 @@
     Environment Variables
   ``````````````````````````` -->
 
+  <condition property="is.osx"><os family="mac" /></condition>
+
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
 
