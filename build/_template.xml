@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="Template">
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+
+  <property name="myenv" value="cc" />
+  <import file="_${myenv}.xml" />
+
+  <path id="junit4.classpath">
+    <pathelement location="lib/junit.jar"/>
+    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+  </path>
+
+  <!-- ```````````````````````````
+    Clean up and initialize any potential byproduct
+  ``````````````````````````` -->
+
+  <target name="template.clean">
+    <delete dir="${bin.path}"/>
+    <delete dir="${dist.path}"/>
+  </target>
+
+  <target name="template.init">
+    <mkdir dir="${bin.path}"/>
+    <mkdir dir="${dist.path}"/>
+    <mkdir dir="${test.output.path}"/>
+  </target>
+
+  <target name="template.setVersion">
+    <echo message="Setting Version: ${umple.version}" />
+    <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+      <include name="**/*.java"/>
+    </replace>
+    <replace dir="cruise.umple/test/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+      <include name="**/*.txt"/>
+    </replace>
+
+    <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+
+    <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
+    <!-- 
+    <replace file="cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" /> 
+    -->
+
+  </target>
+  
+  <target name="template.resetVersion">
+    <echo message="Resetting Version: ${umple.version}" />
+    <replace dir="cruise.umple/gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.java"/>
+    </replace>
+    <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.txt"/>
+    </replace>
+    <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
+    
+    <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
+    <!-- 
+    <replace file="../cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" /> 
+    -->
+  </target>
+  
+
+  <!-- ```````````````````````````
+    Test the application
+  ``````````````````````````` -->
+  
+  <target name="template.test">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
+      <jvmarg value="-d32"/>
+      <!-- <jmvarg value="-XstartOnFirstThread"/> -->
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${test.output.path}">
+        <fileset dir="${project.path}/test">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+      <classpath refid="project.classpath"/>
+    </junit>
+
+    <junitreport todir="${test.output.path}">
+      <fileset dir="${test.output.path}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${test.output.path}"/>
+    </junitreport>
+  </target>  
+
+
+</project>

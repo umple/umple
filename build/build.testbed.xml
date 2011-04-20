@@ -9,17 +9,14 @@
   <property name="project.path" value="testbed"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/${project.path}/java"/>
+  <property name="test.output.path" value="dist/qa/testbed_java"/>
   <property name="test.output.path.java" value="dist/qa/testbed_java"/>
   <property name="test.output.path.php" value="dist/qa/testbed_php"/>
   <property name="test.output.path.ruby" value="dist/qa/testbed_ruby"/>
   <property name="myenv" value="cc" />
   <import file="_${myenv}.xml" />
+  <import file="_template.xml" />
 
-  <path id="junit4.classpath">
-    <pathelement location="lib/junit.jar"/>
-    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-  </path>
-  
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <path refid="junit4.classpath"/>
@@ -30,14 +27,8 @@
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->
 
-  <target name="clean">
-    <delete dir="${bin.path}"/>
-    <delete dir="${dist.path}"/>
-  </target>
-
   <target name="init">
-    <mkdir dir="${bin.path}"/>
-    <mkdir dir="${dist.path}"/>
+    <antcall target="template.init" />
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
     <mkdir dir="${test.output.path.ruby}"/>
@@ -130,7 +121,7 @@
   
   <target name="testRuby">
     <echo message="Running RUBY tests via rake task"/> 
-    <exec executable="rake" dir="testbed_ruby/" output="${test.output.path.ruby}/index.log" outputproperty="test.output.ruby" />
+    <exec executable="rake" dir="testbed_ruby/" output="${test.output.path.ruby}/index.html" outputproperty="test.output.ruby" />
 
     <!-- check for error string 'rake aborted', and fail build if itis found --> 
     <fail message="Ruby tests failed ('rake aborted' found)">
@@ -152,7 +143,7 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <antcall target="clean" />
+    <antcall target="template.clean" />
     <antcall target="init" />
     <antcall target="umpleTestbed" />
     <antcall target="compile" />

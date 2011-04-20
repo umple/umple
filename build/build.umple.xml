@@ -5,19 +5,13 @@
   <!-- ```````````````````````````
     Environment Variables
   ``````````````````````````` -->
+  <import file="_template.xml" />
 
   <property name="project.path" value="cruise.umple"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple"/>
   <property name="test.output.path" value="dist/qa/cruise.umple"/>
-  <property name="myenv" value="cc" />
-  <import file="_${myenv}.xml" />
 
-  <path id="junit4.classpath">
-    <pathelement location="lib/junit.jar"/>
-    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-  </path>
-  
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <path refid="junit4.classpath"/>
@@ -28,48 +22,10 @@
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->
 
-  <target name="clean">
-    <delete dir="${bin.path}"/>
-    <delete dir="${dist.path}"/>
-  </target>
-
-  <target name="init">
-    <mkdir dir="${bin.path}"/>
-    <mkdir dir="${dist.path}"/>
-    <mkdir dir="${test.output.path}"/>
-  </target>
-
   <target name="umpleSelf">
     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
-  </target>
-
-  <target name="setVersion">
-    <echo message="Setting Version: ${umple.version}" />
-    <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
-      <include name="**/*.java"/>
-    </replace>
-    <replace dir="cruise.umple/test/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
-      <include name="**/*.txt"/>
-    </replace>
-
-    <!-- TODO: UNCOMMENT ONCE ECLIPSE IN THE MIX -->
-    <!-- <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
-    <replace file="cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" /> -->
-  </target>
-  
-  <target name="resetVersion">
-    <echo message="Resetting Version: ${umple.version}" />
-    <replace dir="cruise.umple/gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
-      <include name="**/*.java"/>
-    </replace>
-    <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
-      <include name="**/*.txt"/>
-    </replace>
-    <!-- TODO: UNCOMMENT ONCE ECLIPSE IN THE MIX -->
-    <!-- <replace file="../cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
-    <replace file="../cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" /> -->
   </target>
 
   <!-- ```````````````````````````
@@ -121,31 +77,6 @@
   </target>
 
   <!-- ```````````````````````````
-    Test the application
-  ``````````````````````````` -->
-
-  <target name="test">
-    
-    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
-      <formatter type="xml"/>
-      <batchtest fork="yes" todir="${test.output.path}">
-        <fileset dir="${project.path}/test">
-          <include name="**/*Test*.java"/>
-          <exclude name="**/AllTests.java"/>
-        </fileset>
-      </batchtest>
-      <classpath refid="project.classpath"/>
-    </junit>
-
-    <junitreport todir="${test.output.path}">
-      <fileset dir="${test.output.path}">
-        <include name="TEST-*.xml"/>
-      </fileset>
-      <report format="frames" todir="${test.output.path}"/>
-    </junitreport>
-  </target>
-
-  <!-- ```````````````````````````
     Package the application
   ``````````````````````````` -->
 
@@ -155,7 +86,7 @@
       <arg value="${dist.path}/reference"/>
     </java>
   </target>
-
+  
   <target name="package">
     <echo message="Package Version: ${umple.version}" />
   
@@ -213,13 +144,11 @@
       <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
     </copy> -->
 	  
-	  <!-- TODO: UNCOMMENT ONCE UMPLEONLINE IN THE MIX -->
     <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
 	
 	  <antcall target="packageDocs" />
-	
   </target>
 
   <!-- Move Umpleonline files back into the test data -->
@@ -299,27 +228,39 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
-    <antcall target="clean" />
-    <antcall target="init" />
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
     <antcall target="codegen" />
-    <antcall target="setVersion" />
+    <antcall target="template.setVersion" />
     <antcall target="compile" />
     <antcall target="package" />
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-    <antcall target="test" />
+    <antcall target="template.test" />
     <antcall target="package" />
-    <antcall target="resetVersion" />
+    <antcall target="template.resetVersion" />
   </target>
   
-
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
   <target name="pre_build" >
     <antcall target="compile" />
-    <antcall target="test" />
+    <antcall target="template.test" />
   </target>
   
-  
-  
+  <!-- Other projects that rely on UmpleCore can call this target to ensure the the application
+       Is compiled -->
+
+  <target name="precondition" >
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
+    <antcall target="codegen" />
+    <antcall target="template.setVersion" />
+    <antcall target="compile" />
+  </target>
+
+  <target name="postcondition" >
+    <antcall target="template.resetVersion" />
+  </target>
+
 </project>
 

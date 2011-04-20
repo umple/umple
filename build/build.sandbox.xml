@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="UmpleSandbox" >
 
-
   <!-- ```````````````````````````
     Environment Variables
   ``````````````````````````` -->
+  <import file="_template.xml" />
 
   <property name="project.path" value="sandbox"/>
   <property name="bin.path" value="${project.path}/bin"/>
@@ -12,31 +12,10 @@
   <property name="test.output.path" value="dist/qa/sandbox"/>
   <property name="haltonfailure" value="true"/>
 
-  <path id="junit4.classpath">
-    <pathelement location="lib/junit.jar"/>
-    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-  </path>
-  
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <path refid="junit4.classpath"/>
   </path>
-
-
-  <!-- ```````````````````````````
-    Clean up and initialize any potential byproduct
-  ``````````````````````````` -->
-
-  <target name="clean">
-    <delete dir="${bin.path}"/>
-    <delete dir="${dist.path}"/>
-  </target>
-
-  <target name="init">
-    <mkdir dir="${bin.path}"/>
-    <mkdir dir="${dist.path}"/>
-    <mkdir dir="${test.output.path}"/>
-  </target>
 
   <!-- ```````````````````````````
     Compile the application
@@ -55,39 +34,15 @@
   </target>
 
   <!-- ```````````````````````````
-    Test the application
-  ``````````````````````````` -->
-
-  <target name="test">
-    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
-      <formatter type="xml"/>
-      <batchtest fork="yes" todir="${test.output.path}">
-        <fileset dir="${project.path}/test">
-          <include name="**/*Test*.java"/>
-          <exclude name="**/AllTests.java"/>
-        </fileset>
-      </batchtest>
-      <classpath refid="project.classpath"/>
-    </junit>
-
-    <junitreport todir="${test.output.path}">
-      <fileset dir="${test.output.path}">
-        <include name="TEST-*.xml"/>
-      </fileset>
-      <report format="frames" todir="${test.output.path}"/>
-    </junitreport>
-  </target>
-
-  <!-- ```````````````````````````
     Build the application
   ``````````````````````````` -->
   
   <target name="build" >
-    <echo>A sample build file for the Sanbox</echo>
-    <antcall target="clean" />
-    <antcall target="init" />
+    <echo>A sample build file for the Sandbox</echo>
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
     <antcall target="compile" />
-    <antcall target="test" />
+    <antcall target="template.test" />
   </target>
   
   

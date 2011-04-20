@@ -8,12 +8,20 @@
     <echo>Building Umple</echo>
     <ant antfile="build/build.umple.xml" target="build" inheritAll="false" />
 
+    <echo>Building Eclipse Plugin</echo>
+    <ant antfile="build/build.eclipseplugin.xml" target="build" inheritAll="false" />
+
     <echo>Building Java Testbed (Testing that Umple Generated Code Works)</echo>
     <ant antfile="build/build.testbed.xml" target="build" inheritAll="false" />
 
+    <antcall target="qaLandingPage" />
     
   </target>
   
+  <target name="qaLandingPage">
+    <echo>Creating a QA Landing Page</echo>
+    <copy file="build/qa_index.php" tofile="dist/qa/index.php" />
+  </target>
   
 </project>
 
