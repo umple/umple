@@ -17,6 +17,12 @@
   <property name="jvmarg.01" value="-Dignore1"/>
   <property name="jvmarg.02" value="-Dignore2"/>
 
+  <condition property="path.eclipse.01" value="org.eclipse.swt_3.5.2.v3557f.jar"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <condition property="path.eclipse.02" value="org.eclipse.swt.cocoa.macosx_3.5.2.v3557f.jar"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <property name="path.eclipse.01" value="linux/org.eclipse.swt_3.6.2.v3659c.jar"/>
+  <property name="path.eclipse.02" value="linux/org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b.jar"/>
+
+
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <pathelement location="cruise.umple/bin"/>
@@ -43,8 +49,6 @@
     <pathelement location="lib/eclipseplugins/org.eclipse.jface_3.5.2.M20100120-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.jface.text_3.5.2.r352_v20091118-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.swt_3.5.2.v3557f.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.swt.cocoa.macosx_3.5.2.v3557f.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.text_3.5.0.v20090513-2000.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui_3.5.2.M20100120-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.editors_3.5.0.v20090527-2000.jar" />
@@ -52,6 +56,9 @@
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.views_3.4.1.M20090826-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench_3.5.2.M20100113-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />
+
+    <pathelement location="lib/eclipseplugins/${path.eclipse.01}" />
+    <pathelement location="lib/eclipseplugins/${path.eclipse.02}" />
   </path>  
 
   <!-- ```````````````````````````
