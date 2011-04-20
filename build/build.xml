@@ -2,6 +2,8 @@
 <project basedir=".." default="build" name="Umple">
 
   <target name="build" >
+    <antcall target="qaBuildingPage" />
+
     <echo>Building Sandbox for Testing Infrastructure</echo>
     <ant antfile="build/build.sandbox.xml" target="build" inheritAll="false" />
 
@@ -16,6 +18,11 @@
 
     <antcall target="qaLandingPage" />
     
+  </target>
+
+  <target name="qaBuildingPage">
+    <echo>Starting Build</echo>
+    <copy file="build/qa_updating.php" tofile="dist/qa/index.php" />
   </target>
   
   <target name="qaLandingPage">
