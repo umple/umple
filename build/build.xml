@@ -30,12 +30,12 @@
 
   <target name="qaBuildingPage">
     <echo>Starting Build</echo>
-    <copy file="build/qa_updating.php" tofile="dist/qa/index.php" />
+    <copy file="build/qa_updating.php" tofile="dist/qa/index.php" overwrite="true" />
   </target>
   
   <target name="qaLandingPage">
     <echo>Creating a QA Landing Page</echo>
-    <copy file="build/qa_index.php" tofile="dist/qa/index.php" />
+    <copy file="build/qa_index.php" tofile="dist/qa/index.php" overwrite="true" />
   </target>
   
 </project>
