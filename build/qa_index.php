@@ -1,7 +1,7 @@
 <?php
   $allProjects = array();
   $allProjects["Umple Core Tests"] = "cruise.umple/index.html";
-  $allProjects["Umple Eclipse Plugin Tests"] = "cruise.umple.eclipse/index.html";
+  // $allProjects["Umple Eclipse Plugin Tests"] = "cruise.umple.eclipse/index.html";
   $allProjects["Java+Umple Tests"] = "testbed_java/index.html";
   $allProjects["PHP+Umple Tests"] = "testbed_php/index.html";
   $allProjects["Ruby+Umple Tests"] = "testbed_ruby/index.html";
