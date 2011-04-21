@@ -6,7 +6,7 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <property name="haltonfailure" value="true"/>    
-  <!-- <import file="_versionNew.xml" /> -->
+  <property name="shouldPackageUmpleonline" value="false"/>    
   <import file="_versionNone.xml" />
 
 

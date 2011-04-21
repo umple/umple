@@ -87,6 +87,12 @@
     </java>
   </target>
   
+  <target name="packageUmpleonline" if="${shouldPackageUmpleonline}">
+    <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
+  </target>
+  
   <target name="package">
     <echo message="Package Version: ${umple.version}" />
   
@@ -144,10 +150,7 @@
       <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
     </copy> -->
 	  
-    <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
-    <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
-	
+	  <antcall target="packageUmpleonline" />
 	  <antcall target="packageDocs" />
   </target>
 
