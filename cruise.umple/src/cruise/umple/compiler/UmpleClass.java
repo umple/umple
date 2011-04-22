@@ -31,6 +31,7 @@ public class UmpleClass extends UmpleElement
   private UniqueIdentifier uniqueIdentifier;
   private List<Attribute> attributes;
   private List<AssociationVariable> associationVariables;
+  private List<TraceItem> traceItems;
   private List<StateMachine> stateMachines;
 
   //------------------------
@@ -54,6 +55,7 @@ public class UmpleClass extends UmpleElement
     constants = new ArrayList<Constant>();
     attributes = new ArrayList<Attribute>();
     associationVariables = new ArrayList<AssociationVariable>();
+    traceItems = new ArrayList<TraceItem>();
     stateMachines = new ArrayList<StateMachine>();
   }
 
@@ -435,6 +437,36 @@ public class UmpleClass extends UmpleElement
     return index;
   }
 
+  public TraceItem getTraceItem(int index)
+  {
+    TraceItem aTraceItem = traceItems.get(index);
+    return aTraceItem;
+  }
+
+  public List<TraceItem> getTraceItems()
+  {
+    List<TraceItem> newTraceItems = Collections.unmodifiableList(traceItems);
+    return newTraceItems;
+  }
+
+  public int numberOfTraceItems()
+  {
+    int number = traceItems.size();
+    return number;
+  }
+
+  public boolean hasTraceItems()
+  {
+    boolean has = traceItems.size() > 0;
+    return has;
+  }
+
+  public int indexOfTraceItem(TraceItem aTraceItem)
+  {
+    int index = traceItems.indexOf(aTraceItem);
+    return index;
+  }
+
   public StateMachine getStateMachine(int index)
   {
     StateMachine aStateMachine = stateMachines.get(index);
@@ -657,6 +689,45 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public static int minimumNumberOfTraceItems()
+  {
+    return 0;
+  }
+
+  public boolean addTraceItem(TraceItem aTraceItem)
+  {
+    boolean wasAdded = false;
+    if (traceItems.contains(aTraceItem)) { return false; }
+    UmpleClass existingUmpleClass = aTraceItem.getUmpleClass();
+    if (existingUmpleClass == null)
+    {
+      aTraceItem.setUmpleClass(this);
+    }
+    else if (!this.equals(existingUmpleClass))
+    {
+      existingUmpleClass.removeTraceItem(aTraceItem);
+      addTraceItem(aTraceItem);
+    }
+    else
+    {
+      traceItems.add(aTraceItem);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeTraceItem(TraceItem aTraceItem)
+  {
+    boolean wasRemoved = false;
+    if (traceItems.contains(aTraceItem))
+    {
+      traceItems.remove(aTraceItem);
+      aTraceItem.setUmpleClass(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public static int minimumNumberOfStateMachines()
   {
     return 0;
@@ -707,6 +778,10 @@ public class UmpleClass extends UmpleElement
     uniqueIdentifier = null;
     attributes.clear();
     associationVariables.clear();
+    for(TraceItem aTraceItem : traceItems)
+    {
+      aTraceItem.setUmpleClass(null);
+    }
     for(StateMachine aStateMachine : stateMachines)
     {
       aStateMachine.setUmpleClass(null);

@@ -288,6 +288,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="UniqueIdentifier" eSuperTypes="#//UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/uniqueIdentifier"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" lowerBound="0" upperBound="1" eType="#//Attribute" eOpposite="#//Attribute/traceItem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/traceItems"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MethodParameter" eSuperTypes="#//Attribute">
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/methodParameters"/>
   </eClassifiers>
@@ -341,6 +345,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier" eOpposite="#//UniqueIdentifier/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariables" lowerBound="0" upperBound="-1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/umpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="traceItems" lowerBound="0" upperBound="-1" eType="#//TraceItem" eOpposite="#//TraceItem/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/umpleClasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTypes" lowerBound="0" upperBound="-1" eType="#//ReferenceType" eOpposite="#//ReferenceType/umpleClass"/>
@@ -366,6 +371,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isList" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDerived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLazy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="traceItem" lowerBound="0" upperBound="1" eType="#//TraceItem" eOpposite="#//TraceItem/attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/attributes"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Association">
@@ -454,6 +460,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtend" eType="#//Map%3CUmpleClass%2CList%3CString%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleClassToStateMachineDefinition" eType="#//Map%3CUmpleClass%2CPair%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unparsedTraceItem" eType="#//Map%3CTraceItem%2CToken%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
   </eClassifiers>
@@ -461,6 +468,7 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,List&lt;String>>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,Pair>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,Token>"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;TraceItem,Token>"/>
   <eClassifiers xsi:type="ecore:EClass" name="Pair">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

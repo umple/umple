@@ -74,6 +74,11 @@ class Constant{
 class UniqueIdentifier { } 
 }
 
+class TraceItem
+{
+  0..1 -- 0..1 Attribute;
+}
+
 class MethodParameter{
     isA Attribute;
 }
@@ -149,6 +154,7 @@ class UmpleClass
   1 -> 0..1 UniqueIdentifier;
   1 -> * Attribute;
   1 -> * AssociationVariable;
+  0..1 -- * TraceItem;
   
   before setPackageName { if (aPackageName == null) { return false; } }
   before addDepend { if (depends.contains(aDepend)) { return false; } }  

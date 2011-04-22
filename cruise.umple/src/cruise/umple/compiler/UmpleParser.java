@@ -23,6 +23,7 @@ public class UmpleParser extends Parser
   private Map<UmpleClass,List<String>> unlinkedExtends;
   private Map<UmpleClass,Pair> umpleClassToStateMachineDefinition;
   private Map<String,Token> stateMachineNameToToken;
+  private Map<TraceItem,Token> unparsedTraceItems;
   private UmpleModel model;
   private StateMachine placeholderStateMachine;
 
@@ -42,6 +43,7 @@ public class UmpleParser extends Parser
     unlinkedExtends = new HashMap<UmpleClass,List<String>>();
     umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
     stateMachineNameToToken = new HashMap<String, Token>();
+    unparsedTraceItems = new HashMap<TraceItem,Token>();
     model = aModel;
     placeholderStateMachine = null;
     init();
@@ -117,9 +119,9 @@ private void init()
 		addRule("associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]");
 		addGrammarRule("");
 
-        //addRule("trace : trace [**trace_code] ( from [**trace_from] )? execute [**trace_execute] ( where [**trace_where] )?");
-        addRule("trace : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?");
-
+        addRule("trace : [[fullTrace]] | [[simpleTrace]]");
+        addRule("simpleTrace- : trace [**trace_code] ;");
+        addRule("fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?");
 
 		// Section for Members in Interfaces
 		// NOTE: We are considering type as simple String
@@ -281,6 +283,7 @@ private void init()
 			addUnlinkedAssociationVariables();
 			addUnlinkedAssociations();
 			addUnlinkedExtends();
+			addUnparsedTraceItems();
 			layoutNewElements();
 
 			if (shouldGenerate)
@@ -400,6 +403,15 @@ private void init()
 			}
 		}
 	}
+	
+    private void addUnparsedTraceItems()
+    {   
+      for (TraceItem traceItem : unparsedTraceItems.keySet())
+      {
+        Token t = unparsedTraceItems.get(traceItem);
+        traceItem.setAttribute(traceItem.getUmpleClass().getAttribute(t.getValue("trace_code")));
+      }
+    }
 
 	private boolean isUmpleClass(String elementName){
 		return (model.getUmpleInterface(elementName) != null) ? false: true;
@@ -869,6 +881,12 @@ private void init()
 			else if (token.is("concreteMethodDeclaration"))
 			{
 				analyzeMethod(token,aClass);
+			}
+			else if (token.is("trace"))
+			{
+			  TraceItem traceItem = new TraceItem();
+			  traceItem.setUmpleClass(aClass);
+			  unparsedTraceItems.put(traceItem,token);
 			}
 		}
 		else if (level == 1)

@@ -56,7 +56,8 @@ public class JavaGenerator implements CodeGenerator
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
   private static Map<String,String> UmpleToJavaPrimitiveMap;
-
+  private static List<String> OneOrManyLookup;
+  
   static
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
@@ -121,6 +122,9 @@ public class JavaGenerator implements CodeGenerator
     AsIsPluralLookupMap = new HashMap<String, String>();
     AsIsPluralLookupMap.put("associationMany","{0}");
     AsIsPluralLookupMap.put("attributeMany","{0}");
+    
+    OneOrManyLookup = new ArrayList<String>();
+    OneOrManyLookup.add("attribute");
     
     UmpleToJavaPrimitiveMap = new HashMap<String, String>();
     UmpleToJavaPrimitiveMap.put("Integer","int");
@@ -413,6 +417,12 @@ public class JavaGenerator implements CodeGenerator
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
+    if (OneOrManyLookup.contains(keyName))
+    {
+      String realKeyName = isMany ? keyName + "Many" : keyName + "One";
+      return translate(realKeyName,av,isMany);
+    }
+    
     String singularName = isMany ? model.getGlossary().getSingular(av.getName()) : av.getName();
     String pluralName = isMany ? av.getName() : model.getGlossary().getPlural(av.getName());
 
@@ -526,7 +536,7 @@ public class JavaGenerator implements CodeGenerator
     
     for (UmpleInterface aInterface : model.getUmpleInterfaces())
     {
-      GeneratedInterface genInterface = aInterface.getGeneratedInterface();
+      aInterface.getGeneratedInterface();
     }
     
     
@@ -612,6 +622,18 @@ public class JavaGenerator implements CodeGenerator
       genClass.setParentClass(parent.getGeneratedClass());
       generateConstructorSignature(genClass);
     }
+    
+    for (TraceItem traceItem : aClass.getTraceItems())
+    {
+      Attribute attr = traceItem.getAttribute();
+      if (attr != null)
+      {
+        String code = StringFormatter.format("System.out.println(\"TRACING {0}\");",translate("attribute",attr));
+        CodeInjection set = new CodeInjection("after",translate("setMethod",attr) , code);
+        set.setIsInternal(true);
+        aClass.addCodeInjection(set);
+      }
+    }
 
     for(Attribute av : aClass.getAttributes())
     {
@@ -688,14 +710,10 @@ public class JavaGenerator implements CodeGenerator
   }
    
   private void prepare(UmpleInterface aInterface)
+  {
+    if (aInterface.getGeneratedInterface() == null)
     {
-    if (aInterface.getGeneratedInterface() != null)
-    {
-      return;
-    }
-    else 
-    {
-        GeneratedInterface genInterface = aInterface.createGeneratedInterface(model);
+      aInterface.createGeneratedInterface(model);
     }
   }
   

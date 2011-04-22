@@ -45,7 +45,9 @@ associationClassDefinition : associationClass [name] { [[associationClassContent
 classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]<br />
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]<br />
 <br />
-trace : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
+trace : [[fullTrace]] | [[simpleTrace]]<br />
+simpleTrace- : trace [**trace_code] ;<br />
+fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
 interfaceBody- : [[interfaceMemberDeclaration]]*<br />
 interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]] <br />
 constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;<br />

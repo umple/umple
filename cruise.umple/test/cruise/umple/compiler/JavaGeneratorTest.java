@@ -547,6 +547,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("placeholderName",generator.translate("removeParameterOne",attr));
     Assert.assertEquals("name",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
+    Assert.assertEquals("names",generator.translate("attribute",attr));
     Assert.assertEquals("name",generator.translate("attributeOne",attr));
     Assert.assertEquals("names",generator.translate("attributeMany",attr));
     Assert.assertEquals("addName",generator.translate("addMethod",attr));
@@ -925,6 +926,27 @@ public class JavaGeneratorTest
   }  
   
   @Test
+  public void prepare_postpare_traceItem_attribute()
+  {
+    UmpleClass c = model.addUmpleClass("LightFixture");
+    Attribute attr = new Attribute("name","String",null,null,false);
+    TraceItem traceItem = new TraceItem();
+    
+    traceItem.setUmpleClass(c);
+    traceItem.setAttribute(attr);
+    generator.prepare();
+
+    Assert.assertEquals(1,c.numberOfCodeInjections());
+    CodeInjection inject = c.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName", inject.getOperation());
+    Assert.assertEquals("System.out.println(\"TRACING name\");",inject.getCode());
+    
+    generator.postpare();
+    Assert.assertEquals(0,c.numberOfCodeInjections());
+  }    
+  
+  @Test
   public void prepare_postpare_concurrentStateMachine()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");
@@ -1002,6 +1024,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("2",generator.relatedTranslate("parameterValue",av));
     Assert.assertEquals("student",generator.relatedTranslate("associationOne",av));
     Assert.assertEquals("students",generator.relatedTranslate("associationMany",av));
+    Assert.assertEquals("students",generator.relatedTranslate("attribute",av));
     Assert.assertEquals("student",generator.relatedTranslate("attributeOne",av));
     Assert.assertEquals("students",generator.relatedTranslate("attributeMany",av));
     Assert.assertEquals("addStudent",generator.relatedTranslate("addMethod",av));
@@ -1048,6 +1071,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
     Assert.assertEquals("mentors",generator.translate("associationMany",av));
+    Assert.assertEquals("mentor",generator.translate("attribute",av));
     Assert.assertEquals("mentor",generator.translate("attributeOne",av));
     Assert.assertEquals("mentors",generator.translate("attributeMany",av));
     Assert.assertEquals("addMentor",generator.translate("addMethod",av));

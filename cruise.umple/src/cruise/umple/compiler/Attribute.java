@@ -16,6 +16,9 @@ public class Attribute extends UmpleVariable
   private boolean isDerived;
   private boolean isLazy;
 
+  //Attribute Associations
+  private TraceItem traceItem;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -85,8 +88,50 @@ public class Attribute extends UmpleVariable
     return isLazy;
   }
 
+  public TraceItem getTraceItem()
+  {
+    return traceItem;
+  }
+
+  public boolean setTraceItem(TraceItem newTraceItem)
+  {
+    boolean wasSet = false;
+    if (newTraceItem == null)
+    {
+      TraceItem existingTraceItem = traceItem;
+      traceItem = null;
+      
+      if (existingTraceItem != null && existingTraceItem.getAttribute() != null)
+      {
+        existingTraceItem.setAttribute(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    TraceItem currentTraceItem = getTraceItem();
+    if (currentTraceItem != null && !currentTraceItem.equals(newTraceItem))
+    {
+      currentTraceItem.setAttribute(null);
+    }
+
+    traceItem = newTraceItem;
+    Attribute existingAttribute = newTraceItem.getAttribute();
+
+    if (!equals(existingAttribute))
+    {
+      newTraceItem.setAttribute(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete()
   {
+    if (traceItem != null)
+    {
+      traceItem.setAttribute(null);
+    }
     super.delete();
   }
 
