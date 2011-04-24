@@ -244,6 +244,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="glossary" eType="#//Glossary"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="generatedCode" eType="#//Map%3CString%2CString%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="levelOffset" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initialOffset" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classSize" eType="#//Coordinate"/>
@@ -255,11 +256,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineDefinitions" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedClasses" lowerBound="0" upperBound="-1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/model"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedInterfaces" lowerBound="0" upperBound="-1" eType="#//GeneratedInterface" eOpposite="#//GeneratedInterface/model"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,String>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="int"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespaces" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extraCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Coordinate"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Method">
@@ -306,18 +311,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/referenceTypes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterface" lowerBound="0" upperBound="1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/referenceTypes"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespaces" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extraCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleInterface"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleInterfaces"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleInterface"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/umpleInterfaces"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTypes" lowerBound="0" upperBound="-1" eType="#//ReferenceType" eOpposite="#//ReferenceType/umpleInterface"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/parentInterface"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedInterface" lowerBound="0" upperBound="1" eType="#//GeneratedInterface" eOpposite="#//GeneratedInterface/uInterface"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeInjection">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -329,14 +322,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefault" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="members" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleInterfaces"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/umpleInterfaces"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTypes" lowerBound="0" upperBound="-1" eType="#//ReferenceType" eOpposite="#//ReferenceType/umpleInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/parentInterface"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleClass" eSuperTypes="#//UmpleElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSingleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespaces" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associations" eType="#//Association" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="key" eType="#//Key"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extraCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection" eOpposite="#//CodeInjection/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/umpleClasses"/>
@@ -407,16 +404,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedElement">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedClass" eSuperTypes="#//GeneratedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/generatedClasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="uClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/generatedClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedClass" lowerBound="0" upperBound="1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/parentClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentClass" lowerBound="0" upperBound="1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/generatedClass"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GeneratedInterface" eSuperTypes="#//GeneratedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="model" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/generatedInterfaces"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="uInterface" lowerBound="1" upperBound="1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/generatedInterface"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Point">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`

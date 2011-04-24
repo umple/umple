@@ -47,7 +47,7 @@ public class JavaInterfaceGenerator implements ILang
     stringBuffer.append(TEXT_1);
     
   UmpleInterface uInterface = (UmpleInterface) uElement;
-  GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  //GeneratedInterface gInterface = uInterface.getGeneratedInterface();
   JavaGenerator gen = new JavaGenerator();
   gen.setModel(model);
 
@@ -67,11 +67,12 @@ public class JavaInterfaceGenerator implements ILang
     append(stringBuffer, "import {0};",depend.getName());
   }
   
-  for (String anImport : gInterface.getMultiLookup("import"))
-  {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",anImport);
-  }
+  // TODO: No test failed from removing this
+  // for (String anImport : gInterface.getMultiLookup("import"))
+  // {
+  //  appendln(stringBuffer, "");
+  //  append(stringBuffer, "import {0};",anImport);
+  // }
 
     stringBuffer.append(TEXT_3);
     stringBuffer.append(uInterface.getName());

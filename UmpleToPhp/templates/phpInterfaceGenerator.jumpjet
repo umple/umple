@@ -1,7 +1,7 @@
 <%@ jet package="cruise.umple.compiler.php" class="PhpInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%
   UmpleInterface uInterface = (UmpleInterface) uElement;
-  GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  // GeneratedInterface gInterface = uInterface.getGeneratedInterface();
   PhpGenerator gen = new PhpGenerator();
   gen.setModel(model);
   

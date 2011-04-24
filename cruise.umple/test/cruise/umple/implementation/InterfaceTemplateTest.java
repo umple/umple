@@ -8,7 +8,7 @@ public class InterfaceTemplateTest extends TemplateTest
   @Test
   public void Interface()
   {
-    assertUmpleInterfaceTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest."+ languagePath +".txt","ISomething");
+    assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest."+ languagePath +".txt","ISomething");
   }
   
   @Test

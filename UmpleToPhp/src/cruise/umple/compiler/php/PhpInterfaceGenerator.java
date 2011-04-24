@@ -45,7 +45,7 @@ public class PhpInterfaceGenerator implements ILang
     final StringBuffer stringBuffer = new StringBuffer();
     
   UmpleInterface uInterface = (UmpleInterface) uElement;
-  GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  // GeneratedInterface gInterface = uInterface.getGeneratedInterface();
   PhpGenerator gen = new PhpGenerator();
   gen.setModel(model);
   

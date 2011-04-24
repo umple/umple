@@ -6762,7 +6762,7 @@ public class JavaClassGenerator implements ILang
     hasSomethingToDelete = true;
   }
   
-  if (!uClass.isRoot() && "class".equals(uClass.getExtendsClass().getModifier()))
+  if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
   {
     hasSomethingToDelete = true;
     appendln(stringBuffer,"");

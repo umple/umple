@@ -2,7 +2,7 @@
 <%@ include file="UmpleNotice.jet" %>
 <%
   UmpleInterface uInterface = (UmpleInterface) uElement;
-  GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  // GeneratedInterface gInterface = uInterface.getGeneratedInterface();
   RubyGenerator gen = new RubyGenerator();
   gen.setModel(model);
   

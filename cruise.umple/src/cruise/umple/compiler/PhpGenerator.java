@@ -127,7 +127,7 @@ public class PhpGenerator implements CodeGenerator
     OneOrManyLookup.add("attribute");
     
   }
-  
+
   public void prepare()
   {
     for (UmpleClass aClass : model.getUmpleClasses())
@@ -142,21 +142,8 @@ public class PhpGenerator implements CodeGenerator
       generateNullableConstructorSignature(genClass);
       addImports(aClass,genClass);
     }
-    
-    for (UmpleInterface aInterface : model.getUmpleInterfaces())
-    {
-      prepare(aInterface);
-    }
 
     addRelatedImports();
-  }
-  
-  private void prepare(UmpleInterface aInterface)
-  {
-    if (aInterface.getGeneratedInterface() == null)
-    {
-      aInterface.createGeneratedInterface(model);
-    }
   }
   
   public String getType(UmpleVariable av)
@@ -484,24 +471,19 @@ private String getExtendClassesNames(UmpleClass uClass)
   {
     prepare();
     try{
-    for (UmpleClass currentClass : model.getUmpleClasses())
-    {
-      if ("external".equals(currentClass.getModifier()))
+      for (UmpleElement currentElement : model.getUmpleElements())
       {
-        continue;
+        if ("external".equals(currentElement.getModifier()))
+        {
+          continue;
+        }
+        writeFile(currentElement);
       }
-      writeFile(currentClass);
-    }
-    for (UmpleInterface currentInterface : model.getUmpleInterfaces())
-    {
-      writeInterfaceFile(currentInterface);
-    }
     }
     catch (Exception e)
     {
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
-    
     GeneratorHelper.postpare(model);
   }
 
@@ -547,18 +529,19 @@ private String getExtendClassesNames(UmpleClass uClass)
     }
   }
   
-  private void writeFile(UmpleClass aClass)
+  private void writeFile(UmpleElement aElement)
   {
     try
     {
-      ILang language = getLanguageFor(aClass);
+      ILang language = getLanguageFor(aElement);
       String path = model.getUmpleFile().getPath();
+      String filename = path + File.separator + aElement.getName() + ".php";
       File file = new File(path);
       file.mkdirs();
 
-      BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + aClass.getName() + ".php"));
-      String contents = language.getCode(model, aClass);
-      aClass.getGeneratedClass().setCode(contents);
+      BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+      String contents = language.getCode(model, aElement);
+      model.getGeneratedCode().put(aElement.getName(),contents);
       bw.write(contents);
       bw.flush();
       bw.close();
@@ -568,29 +551,7 @@ private String getExtendClassesNames(UmpleClass uClass)
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
   }
-  
- private void writeInterfaceFile(UmpleInterface aInterface) throws IOException
-  {
-   try
-    {
-    ILang language = getLanguageFor(aInterface);
-    String path = model.getUmpleFile().getPath() + File.separator + aInterface.getPackageName().replace(".", File.separator);
-    File file = new File(path);
-    file.mkdirs();
 
-    BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + aInterface.getName() + ".java"));
-    String contents = language.getCode(model, aInterface);
-    aInterface.getGeneratedInterface().setCode(contents);
-    bw.write(contents);
-    bw.flush();
-    }
-    catch (Exception e)
-    {
-      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
-    }
-
-  }
-  
   private String getUpperCaseName(String name)
   {
     if (name == null || name.length() == 0)

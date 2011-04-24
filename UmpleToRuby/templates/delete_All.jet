@@ -94,7 +94,7 @@
     }
   }
   
-  if (!uClass.isRoot() && "class".equals(uClass.getExtendsClass().getModifier()))
+  if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
   {
     appendln(stringBuffer,"");
     append(stringBuffer, "    super.delete");

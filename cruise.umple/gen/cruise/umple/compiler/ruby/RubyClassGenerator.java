@@ -259,1119 +259,1120 @@ public class RubyClassGenerator implements ILang
   protected final String TEXT_239 = ".index(";
   protected final String TEXT_240 = ")" + NL + "    index = -1 if index.nil?";
   protected final String TEXT_241 = NL + "    index" + NL + "  end" + NL;
-  protected final String TEXT_242 = "//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP ";
-  protected final String TEXT_243 = " : ";
-  protected final String TEXT_244 = NL + "  def ";
-  protected final String TEXT_245 = NL + "    is_valid = ";
-  protected final String TEXT_246 = " >= ";
-  protected final String TEXT_247 = ".";
-  protected final String TEXT_248 = NL + "    is_valid = ";
-  protected final String TEXT_249 = " >= ";
-  protected final String TEXT_250 = ".";
-  protected final String TEXT_251 = " and ";
-  protected final String TEXT_252 = " <= ";
-  protected final String TEXT_253 = ".";
-  protected final String TEXT_254 = NL + "    is_valid" + NL + "  end";
-  protected final String TEXT_255 = NL + "  def self.";
-  protected final String TEXT_256 = NL + "    ";
-  protected final String TEXT_257 = NL + "  end";
-  protected final String TEXT_258 = NL + "  def self.";
-  protected final String TEXT_259 = NL + "    minimum = ";
-  protected final String TEXT_260 = NL + "    minimum" + NL + "  end";
-  protected final String TEXT_261 = NL + "  def self.";
-  protected final String TEXT_262 = NL + "    ";
-  protected final String TEXT_263 = NL + "  end";
-  protected final String TEXT_264 = NL + "  def self.";
-  protected final String TEXT_265 = NL + "    minimum = ";
-  protected final String TEXT_266 = NL + "    minimum" + NL + "  end";
-  protected final String TEXT_267 = NL + "  def self.";
-  protected final String TEXT_268 = NL + "    ";
-  protected final String TEXT_269 = NL + "  end";
-  protected final String TEXT_270 = NL + "  def self.";
-  protected final String TEXT_271 = NL + "    maximum = ";
-  protected final String TEXT_272 = NL + "    maximum" + NL + "  end";
-  protected final String TEXT_273 = NL + "  def ";
-  protected final String TEXT_274 = "(";
-  protected final String TEXT_275 = ")" + NL + "    was_added = false";
-  protected final String TEXT_276 = NL + "    if ";
-  protected final String TEXT_277 = " >= ";
-  protected final String TEXT_278 = ".";
-  protected final String TEXT_279 = NL + "      return was_added" + NL + "    end" + NL;
-  protected final String TEXT_280 = NL + "    @";
-  protected final String TEXT_281 = " << ";
-  protected final String TEXT_282 = NL + "    if ";
-  protected final String TEXT_283 = ".";
-  protected final String TEXT_284 = "(self) != -1" + NL + "      was_added = true" + NL + "    else" + NL + "      was_added = ";
-  protected final String TEXT_285 = ".";
-  protected final String TEXT_286 = "(self)" + NL + "      unless was_added" + NL + "        @";
-  protected final String TEXT_287 = ".delete(";
-  protected final String TEXT_288 = ")" + NL + "      end" + NL + "    end";
-  protected final String TEXT_289 = NL + "    was_added" + NL + "  end";
-  protected final String TEXT_290 = NL + "  def ";
-  protected final String TEXT_291 = "(";
-  protected final String TEXT_292 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_293 = NL + "    unless @";
-  protected final String TEXT_294 = ".include?(";
-  protected final String TEXT_295 = ")";
-  protected final String TEXT_296 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    oldIndex = @";
-  protected final String TEXT_297 = ".index(";
-  protected final String TEXT_298 = ")" + NL + "    @";
-  protected final String TEXT_299 = ".delete_at(oldIndex)" + NL + "    if ";
-  protected final String TEXT_300 = ".";
-  protected final String TEXT_301 = "(self) == -1" + NL + "      was_removed = true" + NL + "    else" + NL + "      was_removed = ";
-  protected final String TEXT_302 = ".";
-  protected final String TEXT_303 = "(self)" + NL + "      @";
-  protected final String TEXT_304 = ".insert(oldIndex,";
-  protected final String TEXT_305 = ") unless was_removed" + NL + "    end";
-  protected final String TEXT_306 = NL + "    was_removed" + NL + "  end";
-  protected final String TEXT_307 = NL + "  def ";
-  protected final String TEXT_308 = "(";
-  protected final String TEXT_309 = ")" + NL + "    was_set = false";
-  protected final String TEXT_310 = NL + "    @";
-  protected final String TEXT_311 = " = ";
-  protected final String TEXT_312 = NL + "    was_set = true";
-  protected final String TEXT_313 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_314 = NL + "  def ";
-  protected final String TEXT_315 = "(";
-  protected final String TEXT_316 = ")" + NL + "    was_set = false";
-  protected final String TEXT_317 = NL + "    unless ";
-  protected final String TEXT_318 = ".nil?" + NL + "      @";
-  protected final String TEXT_319 = " = ";
-  protected final String TEXT_320 = NL + "      was_set = true" + NL + "    end";
-  protected final String TEXT_321 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_322 = NL + "  def ";
-  protected final String TEXT_323 = "(";
-  protected final String TEXT_324 = ")" + NL + "    was_set = false";
-  protected final String TEXT_325 = NL + "    if !@";
-  protected final String TEXT_326 = ".nil? and !@";
-  protected final String TEXT_327 = ".eql?(";
-  protected final String TEXT_328 = ") and self.eql?(@";
-  protected final String TEXT_329 = ".";
-  protected final String TEXT_330 = ")" + NL + "      #Unable to ";
-  protected final String TEXT_331 = ", as existing @";
-  protected final String TEXT_332 = " would become an orphan";
-  protected final String TEXT_333 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_334 = " = ";
-  protected final String TEXT_335 = NL + "    ";
-  protected final String TEXT_336 = " = !";
-  protected final String TEXT_337 = ".nil? ? ";
-  protected final String TEXT_338 = ".";
-  protected final String TEXT_339 = " : nil" + NL + "" + NL + "    unless self.eql?(";
-  protected final String TEXT_340 = ")" + NL + "      unless ";
-  protected final String TEXT_341 = ".nil?";
-  protected final String TEXT_342 = NL + "        ";
-  protected final String TEXT_343 = ".instance_variable_set(\"@";
-  protected final String TEXT_344 = "\",nil)" + NL + "      end" + NL + "      unless @";
-  protected final String TEXT_345 = ".nil?" + NL + "        @";
-  protected final String TEXT_346 = ".";
-  protected final String TEXT_347 = "(self)" + NL + "      end" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_348 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_349 = NL + "  def ";
-  protected final String TEXT_350 = "(";
-  protected final String TEXT_351 = ")" + NL + "    was_set = false";
-  protected final String TEXT_352 = NL + "    if ";
-  protected final String TEXT_353 = ".nil?" + NL + "      #Unable to ";
-  protected final String TEXT_354 = " to nil, as ";
-  protected final String TEXT_355 = " must always be associated to a @";
-  protected final String TEXT_356 = NL + "      return was_set" + NL + "    end" + NL + "    ";
-  protected final String TEXT_357 = NL + "    ";
-  protected final String TEXT_358 = " = ";
-  protected final String TEXT_359 = ".";
-  protected final String TEXT_360 = NL + "    if !";
-  protected final String TEXT_361 = ".nil? and !self.eql?(";
-  protected final String TEXT_362 = ")" + NL + "      #Unable to ";
-  protected final String TEXT_363 = ", the current @";
-  protected final String TEXT_364 = " already has a ";
-  protected final String TEXT_365 = ", which would be orphaned if it were re-assigned";
-  protected final String TEXT_366 = NL + "      return was_set" + NL + "    end" + NL + "    ";
-  protected final String TEXT_367 = NL + "    ";
-  protected final String TEXT_368 = " = @";
-  protected final String TEXT_369 = NL + "    @";
-  protected final String TEXT_370 = " = ";
-  protected final String TEXT_371 = NL + "    @";
-  protected final String TEXT_372 = ".";
-  protected final String TEXT_373 = "(self)" + NL + "" + NL + "    unless ";
-  protected final String TEXT_374 = ".nil?";
-  protected final String TEXT_375 = NL + "      ";
-  protected final String TEXT_376 = ".";
-  protected final String TEXT_377 = "(nil)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_378 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_379 = NL + "  def ";
-  protected final String TEXT_380 = "(";
-  protected final String TEXT_381 = ")" + NL + "    was_added = false";
-  protected final String TEXT_382 = NL + "    ";
-  protected final String TEXT_383 = " = ";
-  protected final String TEXT_384 = ".";
-  protected final String TEXT_385 = NL + "    ";
-  protected final String TEXT_386 = " = (!";
-  protected final String TEXT_387 = ".nil? and !";
-  protected final String TEXT_388 = ".eql?(self))" + NL + "" + NL + "    if ";
-  protected final String TEXT_389 = " and ";
-  protected final String TEXT_390 = ".";
-  protected final String TEXT_391 = " <= ";
-  protected final String TEXT_392 = ".";
-  protected final String TEXT_393 = NL + "      return was_added" + NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_394 = NL + "      ";
-  protected final String TEXT_395 = ".";
-  protected final String TEXT_396 = "(self)" + NL + "    else" + NL + "      @";
-  protected final String TEXT_397 = " << ";
-  protected final String TEXT_398 = NL + "    end" + NL + "    was_added = true";
-  protected final String TEXT_399 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_400 = "(";
-  protected final String TEXT_401 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_402 = NL + "    # Unable to remove ";
-  protected final String TEXT_403 = ", as it must always have a ";
-  protected final String TEXT_404 = NL + "    if ";
-  protected final String TEXT_405 = ".";
-  protected final String TEXT_406 = ".eql?(self)";
-  protected final String TEXT_407 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    # ";
-  protected final String TEXT_408 = " already at minimum (";
-  protected final String TEXT_409 = ")" + NL + "    if ";
-  protected final String TEXT_410 = " <= ";
-  protected final String TEXT_411 = ".";
-  protected final String TEXT_412 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_413 = ".delete(";
-  protected final String TEXT_414 = ")" + NL + "    was_removed = true";
-  protected final String TEXT_415 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_416 = NL + "  def ";
-  protected final String TEXT_417 = "(";
-  protected final String TEXT_418 = ")" + NL + "    was_added = false";
-  protected final String TEXT_419 = NL + "    if ";
-  protected final String TEXT_420 = " >= ";
-  protected final String TEXT_421 = ".";
-  protected final String TEXT_422 = NL + "      return was_added" + NL + "    end" + NL;
-  protected final String TEXT_423 = NL + "    ";
-  protected final String TEXT_424 = " = ";
-  protected final String TEXT_425 = ".";
-  protected final String TEXT_426 = NL + "    ";
-  protected final String TEXT_427 = " = (!";
-  protected final String TEXT_428 = ".nil? and !";
-  protected final String TEXT_429 = ".eql?(self))" + NL + "" + NL + "    if ";
-  protected final String TEXT_430 = " and ";
-  protected final String TEXT_431 = ".";
-  protected final String TEXT_432 = " <= ";
-  protected final String TEXT_433 = ".";
-  protected final String TEXT_434 = NL + "      return was_added" + NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_435 = NL + "      ";
-  protected final String TEXT_436 = ".";
-  protected final String TEXT_437 = "(self)" + NL + "    else" + NL + "      @";
-  protected final String TEXT_438 = " << ";
-  protected final String TEXT_439 = NL + "    end" + NL + "    was_added = true";
-  protected final String TEXT_440 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_441 = "(";
-  protected final String TEXT_442 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_443 = NL + "    # Unable to remove ";
-  protected final String TEXT_444 = ", as it must always have a ";
-  protected final String TEXT_445 = NL + "    if ";
-  protected final String TEXT_446 = ".";
-  protected final String TEXT_447 = ".eql?(self)";
-  protected final String TEXT_448 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    # ";
-  protected final String TEXT_449 = " already at minimum (";
-  protected final String TEXT_450 = ")" + NL + "    if ";
-  protected final String TEXT_451 = " <= ";
-  protected final String TEXT_452 = ".";
-  protected final String TEXT_453 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_454 = ".delete(";
-  protected final String TEXT_455 = ")" + NL + "    was_removed = true";
-  protected final String TEXT_456 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_457 = NL + "  def ";
-  protected final String TEXT_458 = "(";
-  protected final String TEXT_459 = ")" + NL + "    was_added = false";
-  protected final String TEXT_460 = NL + "    if ";
-  protected final String TEXT_461 = " >= ";
-  protected final String TEXT_462 = ".";
-  protected final String TEXT_463 = NL + "      return was_added" + NL + "    end" + NL;
-  protected final String TEXT_464 = NL + "    ";
-  protected final String TEXT_465 = " = ";
-  protected final String TEXT_466 = ".";
-  protected final String TEXT_467 = NL + "    ";
-  protected final String TEXT_468 = " = (!";
-  protected final String TEXT_469 = ".nil? and !";
-  protected final String TEXT_470 = ".eql?(self))" + NL + "    if ";
-  protected final String TEXT_471 = NL + "      ";
-  protected final String TEXT_472 = ".";
-  protected final String TEXT_473 = "(self)" + NL + "    else" + NL + "      @";
-  protected final String TEXT_474 = " << ";
-  protected final String TEXT_475 = NL + "    end" + NL + "    was_added = true";
-  protected final String TEXT_476 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_477 = "(";
-  protected final String TEXT_478 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_479 = NL + "    # Unable to remove ";
-  protected final String TEXT_480 = ", as it must always have a ";
-  protected final String TEXT_481 = NL + "    unless ";
-  protected final String TEXT_482 = ".";
-  protected final String TEXT_483 = ".eql?(self)" + NL + "      @";
-  protected final String TEXT_484 = ".delete(";
-  protected final String TEXT_485 = ")" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_486 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_487 = NL + "  def ";
-  protected final String TEXT_488 = "(";
-  protected final String TEXT_489 = ")" + NL + "    was_set = false";
-  protected final String TEXT_490 = NL + "    ";
-  protected final String TEXT_491 = " = []";
-  protected final String TEXT_492 = NL + "    ";
-  protected final String TEXT_493 = ".each do |";
-  protected final String TEXT_494 = "|" + NL + "      next if (";
-  protected final String TEXT_495 = ".include?(";
-  protected final String TEXT_496 = "))";
-  protected final String TEXT_497 = NL + "      ";
-  protected final String TEXT_498 = " << ";
-  protected final String TEXT_499 = NL + "    end" + NL + "" + NL + "    if (";
-  protected final String TEXT_500 = ".size != ";
-  protected final String TEXT_501 = ".size or ";
-  protected final String TEXT_502 = ".size() > ";
-  protected final String TEXT_503 = ".";
-  protected final String TEXT_504 = ")";
-  protected final String TEXT_505 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_506 = NL + "    ";
-  protected final String TEXT_507 = " = @";
-  protected final String TEXT_508 = ".dup" + NL + "    @";
-  protected final String TEXT_509 = ".clear";
-  protected final String TEXT_510 = NL + "    ";
-  protected final String TEXT_511 = ".each do |";
-  protected final String TEXT_512 = "|" + NL + "      @";
-  protected final String TEXT_513 = " << ";
-  protected final String TEXT_514 = NL + "      if (";
-  protected final String TEXT_515 = ".include?(";
-  protected final String TEXT_516 = "))";
-  protected final String TEXT_517 = NL + "        ";
-  protected final String TEXT_518 = ".delete(";
-  protected final String TEXT_519 = ")" + NL + "      else";
-  protected final String TEXT_520 = NL + "        ";
-  protected final String TEXT_521 = ".";
-  protected final String TEXT_522 = "(self)" + NL + "      end" + NL + "    end" + NL;
-  protected final String TEXT_523 = NL + "    ";
-  protected final String TEXT_524 = ".each do |";
-  protected final String TEXT_525 = "|";
-  protected final String TEXT_526 = NL + "      ";
-  protected final String TEXT_527 = ".";
-  protected final String TEXT_528 = "(self)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_529 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_530 = NL + "  def ";
-  protected final String TEXT_531 = "(";
-  protected final String TEXT_532 = ")" + NL + "    was_added = false";
-  protected final String TEXT_533 = NL + "    ";
-  protected final String TEXT_534 = " = ";
-  protected final String TEXT_535 = ".";
-  protected final String TEXT_536 = NL + "    ";
-  protected final String TEXT_537 = " = (!";
-  protected final String TEXT_538 = ".nil? and !";
-  protected final String TEXT_539 = ".eql?(self))" + NL + "    if ";
-  protected final String TEXT_540 = NL + "      ";
-  protected final String TEXT_541 = ".";
-  protected final String TEXT_542 = "(self)" + NL + "    else" + NL + "      @";
-  protected final String TEXT_543 = " << ";
-  protected final String TEXT_544 = NL + "    end" + NL + "    was_added = true";
-  protected final String TEXT_545 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_546 = "(";
-  protected final String TEXT_547 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_548 = NL + "    # Unable to remove ";
-  protected final String TEXT_549 = ", as it must always have a ";
-  protected final String TEXT_550 = NL + "    unless ";
-  protected final String TEXT_551 = ".";
-  protected final String TEXT_552 = ".eql?(self)" + NL + "      @";
-  protected final String TEXT_553 = ".delete(";
-  protected final String TEXT_554 = ")" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_555 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_556 = NL + "  def ";
-  protected final String TEXT_557 = "(";
-  protected final String TEXT_558 = ")" + NL + "    was_set = false";
-  protected final String TEXT_559 = NL + "    if ";
-  protected final String TEXT_560 = ".nil?";
-  protected final String TEXT_561 = NL + "      ";
-  protected final String TEXT_562 = " = @";
-  protected final String TEXT_563 = NL + "      @";
-  protected final String TEXT_564 = " = nil" + NL + "      " + NL + "      if !";
-  protected final String TEXT_565 = ".nil? and !";
-  protected final String TEXT_566 = ".";
-  protected final String TEXT_567 = ".nil?";
-  protected final String TEXT_568 = NL + "        ";
-  protected final String TEXT_569 = ".";
-  protected final String TEXT_570 = "(nil)" + NL + "      end" + NL + "      was_set = true";
-  protected final String TEXT_571 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_572 = NL + "    ";
-  protected final String TEXT_573 = " = self.";
-  protected final String TEXT_574 = NL + "    if !";
-  protected final String TEXT_575 = ".nil? and !";
-  protected final String TEXT_576 = ".eql?(";
-  protected final String TEXT_577 = ")";
-  protected final String TEXT_578 = NL + "      ";
-  protected final String TEXT_579 = ".";
-  protected final String TEXT_580 = "(nil)" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_581 = " = ";
-  protected final String TEXT_582 = NL + "    ";
-  protected final String TEXT_583 = " = ";
-  protected final String TEXT_584 = ".";
-  protected final String TEXT_585 = NL + NL + "    unless self.eql?(";
-  protected final String TEXT_586 = ")";
-  protected final String TEXT_587 = NL + "      ";
-  protected final String TEXT_588 = ".";
-  protected final String TEXT_589 = "(self)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_590 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_591 = NL + "  def ";
-  protected final String TEXT_592 = "(";
-  protected final String TEXT_593 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_594 = NL + "    unless @";
-  protected final String TEXT_595 = ".include?(";
-  protected final String TEXT_596 = ")";
-  protected final String TEXT_597 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_598 = " <= ";
-  protected final String TEXT_599 = ".";
-  protected final String TEXT_600 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    oldIndex = @";
-  protected final String TEXT_601 = ".index(";
-  protected final String TEXT_602 = ")" + NL + "    @";
-  protected final String TEXT_603 = ".delete_at(oldIndex)" + NL + "    if ";
-  protected final String TEXT_604 = ".";
-  protected final String TEXT_605 = "(self) == -1" + NL + "      was_removed = true" + NL + "    else" + NL + "      was_removed = ";
-  protected final String TEXT_606 = ".";
-  protected final String TEXT_607 = "(self)" + NL + "      @";
-  protected final String TEXT_608 = ".insert(oldIndex,";
-  protected final String TEXT_609 = ") unless was_removed" + NL + "    end";
-  protected final String TEXT_610 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_611 = NL + "  def ";
-  protected final String TEXT_612 = "(";
-  protected final String TEXT_613 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_614 = NL + "    unless @";
-  protected final String TEXT_615 = ".include?(";
-  protected final String TEXT_616 = ")";
-  protected final String TEXT_617 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_618 = " <= ";
-  protected final String TEXT_619 = ".";
-  protected final String TEXT_620 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    oldIndex = @";
-  protected final String TEXT_621 = ".index(";
-  protected final String TEXT_622 = ")" + NL + "    @";
-  protected final String TEXT_623 = ".delete_at(oldIndex)" + NL + "    if ";
-  protected final String TEXT_624 = ".";
-  protected final String TEXT_625 = "(self) == -1" + NL + "      was_removed = true" + NL + "    else" + NL + "      was_removed = ";
-  protected final String TEXT_626 = ".";
-  protected final String TEXT_627 = "(self)" + NL + "      @";
-  protected final String TEXT_628 = ".insert(oldIndex,";
-  protected final String TEXT_629 = ") unless was_removed" + NL + "    end";
-  protected final String TEXT_630 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_631 = NL + "  def ";
-  protected final String TEXT_632 = "(";
-  protected final String TEXT_633 = ")" + NL + "    was_set = false";
-  protected final String TEXT_634 = NL + "    if !";
-  protected final String TEXT_635 = ".nil? and ";
-  protected final String TEXT_636 = ".";
-  protected final String TEXT_637 = " >= ";
-  protected final String TEXT_638 = ".";
-  protected final String TEXT_639 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_640 = NL + "    ";
-  protected final String TEXT_641 = " = @";
-  protected final String TEXT_642 = NL + "    @";
-  protected final String TEXT_643 = " = ";
-  protected final String TEXT_644 = NL + "    if !";
-  protected final String TEXT_645 = ".nil? and !";
-  protected final String TEXT_646 = ".eql?(";
-  protected final String TEXT_647 = ")";
-  protected final String TEXT_648 = NL + "      ";
-  protected final String TEXT_649 = ".";
-  protected final String TEXT_650 = "(self)" + NL + "    end" + NL + "    unless ";
-  protected final String TEXT_651 = ".nil?";
-  protected final String TEXT_652 = NL + "      ";
-  protected final String TEXT_653 = ".";
-  protected final String TEXT_654 = "(self)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_655 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_656 = NL + "  def ";
-  protected final String TEXT_657 = "(";
-  protected final String TEXT_658 = ")" + NL + "    was_set = false";
-  protected final String TEXT_659 = NL + "    if ";
-  protected final String TEXT_660 = ".nil?";
-  protected final String TEXT_661 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_662 = NL + "    ";
-  protected final String TEXT_663 = " = @";
-  protected final String TEXT_664 = NL + "    @";
-  protected final String TEXT_665 = " = ";
-  protected final String TEXT_666 = NL + "    if !";
-  protected final String TEXT_667 = ".nil? and !";
-  protected final String TEXT_668 = ".eql?(";
-  protected final String TEXT_669 = ")";
-  protected final String TEXT_670 = NL + "      ";
-  protected final String TEXT_671 = ".";
-  protected final String TEXT_672 = "(self)" + NL + "    end" + NL + "    @";
-  protected final String TEXT_673 = ".";
-  protected final String TEXT_674 = "(self)" + NL + "    was_set = true";
-  protected final String TEXT_675 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_676 = NL + "  def ";
-  protected final String TEXT_677 = "(";
-  protected final String TEXT_678 = ")" + NL + "    was_set = false";
-  protected final String TEXT_679 = NL + "    # Must provide @";
-  protected final String TEXT_680 = " to ";
-  protected final String TEXT_681 = NL + "    if ";
-  protected final String TEXT_682 = ".nil?";
-  protected final String TEXT_683 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    # @";
-  protected final String TEXT_684 = " already at maximum (";
-  protected final String TEXT_685 = ")" + NL + "    if ";
-  protected final String TEXT_686 = ".";
-  protected final String TEXT_687 = " >= ";
-  protected final String TEXT_688 = ".";
-  protected final String TEXT_689 = NL + "      return was_set" + NL + "    end" + NL + "    ";
-  protected final String TEXT_690 = NL + "    ";
-  protected final String TEXT_691 = " = @";
-  protected final String TEXT_692 = NL + "    @";
-  protected final String TEXT_693 = " = ";
-  protected final String TEXT_694 = NL + "    if !";
-  protected final String TEXT_695 = ".nil? and !";
-  protected final String TEXT_696 = ".eql?(";
-  protected final String TEXT_697 = ")" + NL + "      didRemove = ";
-  protected final String TEXT_698 = ".";
-  protected final String TEXT_699 = "(self)" + NL + "      unless didRemove" + NL + "        @";
-  protected final String TEXT_700 = " = ";
-  protected final String TEXT_701 = NL + "        return was_set" + NL + "      end" + NL + "    end" + NL + "    @";
-  protected final String TEXT_702 = ".";
-  protected final String TEXT_703 = "(self)" + NL + "    was_set = true";
-  protected final String TEXT_704 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_705 = NL + "  def ";
-  protected final String TEXT_706 = "(";
-  protected final String TEXT_707 = ")" + NL + "    was_set = false";
-  protected final String TEXT_708 = NL + "    # Must provide @";
-  protected final String TEXT_709 = " to ";
-  protected final String TEXT_710 = NL + "    if ";
-  protected final String TEXT_711 = ".nil?";
-  protected final String TEXT_712 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    if !@";
-  protected final String TEXT_713 = ".nil? and @";
-  protected final String TEXT_714 = ".";
-  protected final String TEXT_715 = " <= ";
-  protected final String TEXT_716 = ".";
-  protected final String TEXT_717 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_718 = NL + "    ";
-  protected final String TEXT_719 = " = @";
-  protected final String TEXT_720 = NL + "    @";
-  protected final String TEXT_721 = " = ";
-  protected final String TEXT_722 = NL + "    if !";
-  protected final String TEXT_723 = ".nil? and !";
-  protected final String TEXT_724 = ".eql?(";
-  protected final String TEXT_725 = ")" + NL + "      didRemove = ";
-  protected final String TEXT_726 = ".";
-  protected final String TEXT_727 = "(self)" + NL + "      unless didRemove" + NL + "        @";
-  protected final String TEXT_728 = " = ";
-  protected final String TEXT_729 = NL + "        return was_set" + NL + "      end" + NL + "    end" + NL + "    @";
-  protected final String TEXT_730 = ".";
-  protected final String TEXT_731 = "(self)" + NL + "    was_set = true";
-  protected final String TEXT_732 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_733 = NL + "  def ";
-  protected final String TEXT_734 = "(";
-  protected final String TEXT_735 = ")" + NL + "    was_added = false";
-  protected final String TEXT_736 = NL + "    ";
-  protected final String TEXT_737 = " = ";
-  protected final String TEXT_738 = ".";
-  protected final String TEXT_739 = NL + "    if ";
-  protected final String TEXT_740 = ".nil?";
-  protected final String TEXT_741 = NL + "      ";
-  protected final String TEXT_742 = ".";
-  protected final String TEXT_743 = "(self)" + NL + "    elsif !";
-  protected final String TEXT_744 = ".eql?(self)";
-  protected final String TEXT_745 = NL + "      ";
-  protected final String TEXT_746 = ".";
-  protected final String TEXT_747 = "(";
-  protected final String TEXT_748 = ")";
-  protected final String TEXT_749 = NL + "      ";
-  protected final String TEXT_750 = "(";
-  protected final String TEXT_751 = ")" + NL + "    else" + NL + "      @";
-  protected final String TEXT_752 = " << ";
-  protected final String TEXT_753 = NL + "    end" + NL + "    was_added = true";
-  protected final String TEXT_754 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_755 = "(";
-  protected final String TEXT_756 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_757 = NL + "    if @";
-  protected final String TEXT_758 = ".include?(";
-  protected final String TEXT_759 = ")" + NL + "      @";
-  protected final String TEXT_760 = ".delete(";
-  protected final String TEXT_761 = ")";
-  protected final String TEXT_762 = NL + "      ";
-  protected final String TEXT_763 = ".";
-  protected final String TEXT_764 = "(nil)" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_765 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_766 = NL + "  def ";
-  protected final String TEXT_767 = "(";
-  protected final String TEXT_768 = ")" + NL + "    was_set = false";
-  protected final String TEXT_769 = NL + "    ";
-  protected final String TEXT_770 = " = @";
-  protected final String TEXT_771 = NL + "    @";
-  protected final String TEXT_772 = " = ";
-  protected final String TEXT_773 = NL + "    if !";
-  protected final String TEXT_774 = ".nil? and !";
-  protected final String TEXT_775 = ".eql?(";
-  protected final String TEXT_776 = ")";
-  protected final String TEXT_777 = NL + "      ";
-  protected final String TEXT_778 = ".";
-  protected final String TEXT_779 = "(self)" + NL + "    end" + NL + "    unless ";
-  protected final String TEXT_780 = ".nil?";
-  protected final String TEXT_781 = NL + "      ";
-  protected final String TEXT_782 = ".";
-  protected final String TEXT_783 = "(self)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_784 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_785 = NL + "  def ";
-  protected final String TEXT_786 = "(";
-  protected final String TEXT_787 = ")" + NL + "    was_added = false";
-  protected final String TEXT_788 = NL + "    if ";
-  protected final String TEXT_789 = " >= ";
-  protected final String TEXT_790 = ".";
-  protected final String TEXT_791 = NL + "      return was_added" + NL + "    end" + NL;
-  protected final String TEXT_792 = NL + "    ";
-  protected final String TEXT_793 = " = ";
-  protected final String TEXT_794 = ".";
-  protected final String TEXT_795 = NL + "    if ";
-  protected final String TEXT_796 = ".nil?";
-  protected final String TEXT_797 = NL + "      ";
-  protected final String TEXT_798 = ".";
-  protected final String TEXT_799 = "(self)" + NL + "    elsif !";
-  protected final String TEXT_800 = ".eql?(self)";
-  protected final String TEXT_801 = NL + "      ";
-  protected final String TEXT_802 = ".";
-  protected final String TEXT_803 = "(";
-  protected final String TEXT_804 = ")";
-  protected final String TEXT_805 = NL + "      ";
-  protected final String TEXT_806 = "(";
-  protected final String TEXT_807 = ")" + NL + "    else" + NL + "      @";
-  protected final String TEXT_808 = " << ";
-  protected final String TEXT_809 = NL + "    end" + NL + "    was_added = true";
-  protected final String TEXT_810 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_811 = "(";
-  protected final String TEXT_812 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_813 = NL + "    if @";
-  protected final String TEXT_814 = ".include?(";
-  protected final String TEXT_815 = ")" + NL + "      @";
-  protected final String TEXT_816 = ".delete(";
-  protected final String TEXT_817 = ")";
-  protected final String TEXT_818 = NL + "      ";
-  protected final String TEXT_819 = ".";
-  protected final String TEXT_820 = "(nil)" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_821 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_822 = NL + "  def ";
-  protected final String TEXT_823 = "(";
-  protected final String TEXT_824 = ")" + NL + "    was_added = false";
-  protected final String TEXT_825 = NL + "    if ";
-  protected final String TEXT_826 = " < ";
-  protected final String TEXT_827 = ".";
-  protected final String TEXT_828 = NL + "      @";
-  protected final String TEXT_829 = " << ";
-  protected final String TEXT_830 = NL + "      was_added = true" + NL + "    end";
-  protected final String TEXT_831 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_832 = "(";
-  protected final String TEXT_833 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_834 = NL + "    unless @";
-  protected final String TEXT_835 = ".include?(";
-  protected final String TEXT_836 = ")";
-  protected final String TEXT_837 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_838 = " <= ";
-  protected final String TEXT_839 = ".";
-  protected final String TEXT_840 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_841 = ".delete(";
-  protected final String TEXT_842 = ")" + NL + "    was_removed = true";
-  protected final String TEXT_843 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_844 = NL + "  def ";
-  protected final String TEXT_845 = "(";
-  protected final String TEXT_846 = ")" + NL + "    was_added = false";
-  protected final String TEXT_847 = NL + "    if ";
-  protected final String TEXT_848 = " >= ";
-  protected final String TEXT_849 = ".";
-  protected final String TEXT_850 = NL + "      return was_added" + NL + "    end";
-  protected final String TEXT_851 = NL + "    ";
-  protected final String TEXT_852 = " = ";
-  protected final String TEXT_853 = ".";
-  protected final String TEXT_854 = NL + "    if !";
-  protected final String TEXT_855 = ".nil? and ";
-  protected final String TEXT_856 = ".";
-  protected final String TEXT_857 = " <= ";
-  protected final String TEXT_858 = ".";
-  protected final String TEXT_859 = NL + "      return was_added" + NL + "    elsif !";
-  protected final String TEXT_860 = ".nil?";
-  protected final String TEXT_861 = NL + "      ";
-  protected final String TEXT_862 = ".instance_variable_get(\"@";
-  protected final String TEXT_863 = "\").delete(";
-  protected final String TEXT_864 = ")" + NL + "    end" + NL + "    @";
-  protected final String TEXT_865 = " << ";
-  protected final String TEXT_866 = NL + "    ";
-  protected final String TEXT_867 = ".instance_variable_set(\"@";
-  protected final String TEXT_868 = "\",self)" + NL + "    was_added = true";
-  protected final String TEXT_869 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_870 = "(";
-  protected final String TEXT_871 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_872 = NL + "    if @";
-  protected final String TEXT_873 = ".include?(";
-  protected final String TEXT_874 = ") and ";
-  protected final String TEXT_875 = " > ";
-  protected final String TEXT_876 = ".";
-  protected final String TEXT_877 = NL + "      @";
-  protected final String TEXT_878 = ".delete(";
-  protected final String TEXT_879 = ")";
-  protected final String TEXT_880 = NL + "      ";
-  protected final String TEXT_881 = ".instance_variable_set(\"@";
-  protected final String TEXT_882 = "\",nil)" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_883 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_884 = NL + "  def ";
-  protected final String TEXT_885 = "(";
-  protected final String TEXT_886 = ")" + NL + "    was_set = false";
-  protected final String TEXT_887 = NL + "    ";
-  protected final String TEXT_888 = " = []";
-  protected final String TEXT_889 = NL + "    ";
-  protected final String TEXT_890 = ".each do |";
-  protected final String TEXT_891 = "|" + NL + "      if ";
-  protected final String TEXT_892 = ".include?(";
-  protected final String TEXT_893 = ")";
-  protected final String TEXT_894 = NL + "        return was_set" + NL + "      elsif !";
-  protected final String TEXT_895 = ".";
-  protected final String TEXT_896 = ".nil? and !";
-  protected final String TEXT_897 = ".";
-  protected final String TEXT_898 = ".eql?(self)";
-  protected final String TEXT_899 = NL + "        return was_set" + NL + "      end";
-  protected final String TEXT_900 = NL + "      ";
-  protected final String TEXT_901 = " << ";
-  protected final String TEXT_902 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_903 = ".size != ";
-  protected final String TEXT_904 = ".";
-  protected final String TEXT_905 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_906 = NL + "    ";
-  protected final String TEXT_907 = ".each do |";
-  protected final String TEXT_908 = "|" + NL + "      @";
-  protected final String TEXT_909 = ".delete(";
-  protected final String TEXT_910 = ")" + NL + "    end" + NL + "    " + NL + "    @";
-  protected final String TEXT_911 = ".each do |orphan|" + NL + "      orphan.instance_variable_set(\"@";
-  protected final String TEXT_912 = "\",nil)" + NL + "    end" + NL + "    @";
-  protected final String TEXT_913 = ".clear";
-  protected final String TEXT_914 = NL + "    ";
-  protected final String TEXT_915 = ".each do |";
-  protected final String TEXT_916 = "|";
-  protected final String TEXT_917 = NL + "      ";
-  protected final String TEXT_918 = ".instance_variable_set(\"@";
-  protected final String TEXT_919 = "\",self)" + NL + "      @";
-  protected final String TEXT_920 = " << ";
-  protected final String TEXT_921 = NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_922 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_923 = NL + "  def ";
-  protected final String TEXT_924 = "(";
-  protected final String TEXT_925 = ")" + NL + "    was_added = false";
-  protected final String TEXT_926 = NL + "    @";
-  protected final String TEXT_927 = " << ";
-  protected final String TEXT_928 = NL + "    was_added = true";
-  protected final String TEXT_929 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_930 = "(";
-  protected final String TEXT_931 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_932 = NL + "    if @";
-  protected final String TEXT_933 = ".include?(";
-  protected final String TEXT_934 = ")" + NL + "      @";
-  protected final String TEXT_935 = ".delete(";
-  protected final String TEXT_936 = ")" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_937 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_938 = NL + "  def ";
-  protected final String TEXT_939 = "(";
-  protected final String TEXT_940 = ")" + NL + "    was_added = false";
-  protected final String TEXT_941 = NL + "    if ";
-  protected final String TEXT_942 = " < ";
-  protected final String TEXT_943 = ".";
-  protected final String TEXT_944 = NL + "      @";
-  protected final String TEXT_945 = " << ";
-  protected final String TEXT_946 = NL + "      was_added = true" + NL + "    end";
-  protected final String TEXT_947 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_948 = "(";
-  protected final String TEXT_949 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_950 = NL + "    if @";
-  protected final String TEXT_951 = ".include?(";
-  protected final String TEXT_952 = ")" + NL + "      @";
-  protected final String TEXT_953 = ".delete(";
-  protected final String TEXT_954 = ")" + NL + "      was_removed = true" + NL + "    end";
-  protected final String TEXT_955 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_956 = NL + "  def ";
-  protected final String TEXT_957 = "(";
-  protected final String TEXT_958 = ")" + NL + "    was_added = false";
-  protected final String TEXT_959 = NL + "    @";
-  protected final String TEXT_960 = " << ";
-  protected final String TEXT_961 = NL + "    was_added = true";
-  protected final String TEXT_962 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_963 = "(";
-  protected final String TEXT_964 = ")" + NL + "    was_removed = false";
-  protected final String TEXT_965 = NL + "    unless @";
-  protected final String TEXT_966 = ".include?(";
-  protected final String TEXT_967 = ")";
-  protected final String TEXT_968 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_969 = " <= ";
-  protected final String TEXT_970 = ".";
-  protected final String TEXT_971 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_972 = ".delete(";
-  protected final String TEXT_973 = ")" + NL + "    was_removed = true";
-  protected final String TEXT_974 = NL + "    was_removed" + NL + "  end" + NL;
-  protected final String TEXT_975 = NL + "  def ";
-  protected final String TEXT_976 = "(";
-  protected final String TEXT_977 = ")" + NL + "    was_set = false";
-  protected final String TEXT_978 = NL + "    ";
-  protected final String TEXT_979 = " = []";
-  protected final String TEXT_980 = NL + "    ";
-  protected final String TEXT_981 = ".each do |";
-  protected final String TEXT_982 = "|" + NL + "      next if (";
-  protected final String TEXT_983 = ".include?(";
-  protected final String TEXT_984 = "))";
-  protected final String TEXT_985 = NL + "      ";
-  protected final String TEXT_986 = " << ";
-  protected final String TEXT_987 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_988 = ".size != ";
-  protected final String TEXT_989 = ".size or ";
-  protected final String TEXT_990 = ".size() != ";
-  protected final String TEXT_991 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_992 = ".clear";
-  protected final String TEXT_993 = NL + "    ";
-  protected final String TEXT_994 = ".each do |";
-  protected final String TEXT_995 = "|" + NL + "      @";
-  protected final String TEXT_996 = " << ";
-  protected final String TEXT_997 = NL + "    end" + NL + "" + NL + "    was_set = true";
-  protected final String TEXT_998 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_999 = NL + "  def ";
-  protected final String TEXT_1000 = "(";
-  protected final String TEXT_1001 = ")" + NL + "    was_set = false";
-  protected final String TEXT_1002 = NL + "    ";
-  protected final String TEXT_1003 = " = []";
-  protected final String TEXT_1004 = NL + "    ";
-  protected final String TEXT_1005 = ".each do |";
-  protected final String TEXT_1006 = "|" + NL + "      next if (";
-  protected final String TEXT_1007 = ".include?(";
-  protected final String TEXT_1008 = ")) ";
-  protected final String TEXT_1009 = NL + "      ";
-  protected final String TEXT_1010 = " << ";
-  protected final String TEXT_1011 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_1012 = ".size != ";
-  protected final String TEXT_1013 = ".length or ";
-  protected final String TEXT_1014 = ".size < ";
-  protected final String TEXT_1015 = ".";
-  protected final String TEXT_1016 = " or ";
-  protected final String TEXT_1017 = ".size() > ";
-  protected final String TEXT_1018 = ".";
-  protected final String TEXT_1019 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_1020 = NL + "    ";
-  protected final String TEXT_1021 = " = @";
-  protected final String TEXT_1022 = ".dup" + NL + "    @";
-  protected final String TEXT_1023 = ".clear";
-  protected final String TEXT_1024 = NL + "    ";
-  protected final String TEXT_1025 = ".each do |";
-  protected final String TEXT_1026 = "|" + NL + "      @";
-  protected final String TEXT_1027 = " << ";
-  protected final String TEXT_1028 = NL + "      if ";
-  protected final String TEXT_1029 = ".include?(";
-  protected final String TEXT_1030 = ")";
-  protected final String TEXT_1031 = NL + "        ";
-  protected final String TEXT_1032 = ".delete(";
-  protected final String TEXT_1033 = ")" + NL + "      else";
-  protected final String TEXT_1034 = NL + "        ";
-  protected final String TEXT_1035 = ".";
-  protected final String TEXT_1036 = "(self)" + NL + "      end" + NL + "    end" + NL;
-  protected final String TEXT_1037 = NL + "    ";
-  protected final String TEXT_1038 = ".each do |";
-  protected final String TEXT_1039 = "|";
-  protected final String TEXT_1040 = NL + "      ";
-  protected final String TEXT_1041 = ".";
-  protected final String TEXT_1042 = "(self)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_1043 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1044 = NL + "  def ";
-  protected final String TEXT_1045 = "(";
-  protected final String TEXT_1046 = ")" + NL + "    was_set = false";
-  protected final String TEXT_1047 = NL + "    ";
-  protected final String TEXT_1048 = " = []";
-  protected final String TEXT_1049 = NL + "    ";
-  protected final String TEXT_1050 = ".each do |";
-  protected final String TEXT_1051 = "|" + NL + "      next if (";
-  protected final String TEXT_1052 = ".include?(";
-  protected final String TEXT_1053 = "))";
-  protected final String TEXT_1054 = NL + "      ";
-  protected final String TEXT_1055 = " << ";
-  protected final String TEXT_1056 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_1057 = ".size != ";
-  protected final String TEXT_1058 = ".size or ";
-  protected final String TEXT_1059 = ".size < ";
-  protected final String TEXT_1060 = ".";
-  protected final String TEXT_1061 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_1062 = NL + "    ";
-  protected final String TEXT_1063 = " = @";
-  protected final String TEXT_1064 = ".dup" + NL + "    @";
-  protected final String TEXT_1065 = ".clear";
-  protected final String TEXT_1066 = NL + "    ";
-  protected final String TEXT_1067 = ".each do |";
-  protected final String TEXT_1068 = "|" + NL + "      @";
-  protected final String TEXT_1069 = " << ";
-  protected final String TEXT_1070 = NL + "      if ";
-  protected final String TEXT_1071 = ".include?(";
-  protected final String TEXT_1072 = ")";
-  protected final String TEXT_1073 = NL + "        ";
-  protected final String TEXT_1074 = ".delete(";
-  protected final String TEXT_1075 = ")" + NL + "      else";
-  protected final String TEXT_1076 = NL + "        ";
-  protected final String TEXT_1077 = ".";
-  protected final String TEXT_1078 = "(self)" + NL + "      end" + NL + "    end" + NL;
-  protected final String TEXT_1079 = NL + "    ";
-  protected final String TEXT_1080 = ".each do |";
-  protected final String TEXT_1081 = "|";
-  protected final String TEXT_1082 = NL + "      ";
-  protected final String TEXT_1083 = ".";
-  protected final String TEXT_1084 = "(self)" + NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_1085 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1086 = NL + "  def ";
-  protected final String TEXT_1087 = "(";
-  protected final String TEXT_1088 = ")" + NL + "    was_set = false";
-  protected final String TEXT_1089 = NL + "    ";
-  protected final String TEXT_1090 = " = []";
-  protected final String TEXT_1091 = NL + "    ";
-  protected final String TEXT_1092 = ".each do |";
-  protected final String TEXT_1093 = "|" + NL + "      next if (";
-  protected final String TEXT_1094 = ".include?(";
-  protected final String TEXT_1095 = "))";
-  protected final String TEXT_1096 = NL + "      ";
-  protected final String TEXT_1097 = " << ";
-  protected final String TEXT_1098 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_1099 = ".size != ";
-  protected final String TEXT_1100 = ".size or ";
-  protected final String TEXT_1101 = ".size < ";
-  protected final String TEXT_1102 = ".";
-  protected final String TEXT_1103 = " or ";
-  protected final String TEXT_1104 = ".size > ";
-  protected final String TEXT_1105 = ".";
-  protected final String TEXT_1106 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_1107 = ".clear";
-  protected final String TEXT_1108 = NL + "    ";
-  protected final String TEXT_1109 = ".each do |";
-  protected final String TEXT_1110 = "|" + NL + "      @";
-  protected final String TEXT_1111 = " << ";
-  protected final String TEXT_1112 = NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_1113 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1114 = NL + "  def ";
-  protected final String TEXT_1115 = "(";
-  protected final String TEXT_1116 = ")" + NL + "    was_set = false";
-  protected final String TEXT_1117 = NL + "    if ";
-  protected final String TEXT_1118 = ".length < ";
-  protected final String TEXT_1119 = ".";
-  protected final String TEXT_1120 = NL + "      return was_set" + NL + "    end" + NL;
-  protected final String TEXT_1121 = NL + "    ";
-  protected final String TEXT_1122 = " = []";
-  protected final String TEXT_1123 = NL + "    ";
-  protected final String TEXT_1124 = " = {}";
-  protected final String TEXT_1125 = NL + "    ";
-  protected final String TEXT_1126 = ".each do |";
-  protected final String TEXT_1127 = "|" + NL + "      if ";
-  protected final String TEXT_1128 = ".include?(";
-  protected final String TEXT_1129 = ")";
-  protected final String TEXT_1130 = NL + "        return was_set" + NL + "      elsif !";
-  protected final String TEXT_1131 = ".";
-  protected final String TEXT_1132 = ".nil? and !";
-  protected final String TEXT_1133 = ".";
-  protected final String TEXT_1134 = ".eql?(self)";
-  protected final String TEXT_1135 = NL + "        ";
-  protected final String TEXT_1136 = " = ";
-  protected final String TEXT_1137 = ".";
-  protected final String TEXT_1138 = NL + "        unless ";
-  protected final String TEXT_1139 = ".has_key?(";
-  protected final String TEXT_1140 = ")";
-  protected final String TEXT_1141 = NL + "          ";
-  protected final String TEXT_1142 = "[";
-  protected final String TEXT_1143 = "] = ";
-  protected final String TEXT_1144 = ".";
-  protected final String TEXT_1145 = NL + "        end" + NL + "        currentCount = ";
-  protected final String TEXT_1146 = "[";
-  protected final String TEXT_1147 = "]" + NL + "        nextCount = currentCount - 1" + NL + "        if nextCount < ";
-  protected final String TEXT_1148 = NL + "          return was_set" + NL + "        end";
-  protected final String TEXT_1149 = NL + "        ";
-  protected final String TEXT_1150 = "[";
-  protected final String TEXT_1151 = "] = nextCount" + NL + "      end";
-  protected final String TEXT_1152 = NL + "      ";
-  protected final String TEXT_1153 = " << ";
-  protected final String TEXT_1154 = NL + "    end" + NL;
-  protected final String TEXT_1155 = NL + "    ";
-  protected final String TEXT_1156 = ".each do |";
-  protected final String TEXT_1157 = "|" + NL + "      @";
-  protected final String TEXT_1158 = ".delete(";
-  protected final String TEXT_1159 = ")" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_1160 = ".each do |orphan|" + NL + "      orphan.instance_variable_set(\"@";
-  protected final String TEXT_1161 = "\",nil)" + NL + "    end" + NL + "    @";
-  protected final String TEXT_1162 = ".clear";
-  protected final String TEXT_1163 = NL + "    ";
-  protected final String TEXT_1164 = ".each do |";
-  protected final String TEXT_1165 = "|" + NL + "      unless ";
-  protected final String TEXT_1166 = ".";
-  protected final String TEXT_1167 = ".nil?";
-  protected final String TEXT_1168 = NL + "        ";
-  protected final String TEXT_1169 = ".";
-  protected final String TEXT_1170 = ".instance_variable_get(\"@";
-  protected final String TEXT_1171 = "\").delete(";
-  protected final String TEXT_1172 = ")" + NL + "      end";
-  protected final String TEXT_1173 = NL + "      ";
-  protected final String TEXT_1174 = ".instance_variable_set(\"@";
-  protected final String TEXT_1175 = "\",self)" + NL + "      @";
-  protected final String TEXT_1176 = " << ";
-  protected final String TEXT_1177 = NL + "    end" + NL + "    was_set = true";
-  protected final String TEXT_1178 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1179 = NL + "  def ";
-  protected final String TEXT_1180 = "(";
-  protected final String TEXT_1181 = ")" + NL + "    was_set = false";
-  protected final String TEXT_1182 = NL + "    ";
-  protected final String TEXT_1183 = " = []";
-  protected final String TEXT_1184 = NL + "    ";
-  protected final String TEXT_1185 = ".each do |";
-  protected final String TEXT_1186 = "|" + NL + "      next if (";
-  protected final String TEXT_1187 = ".include?(";
-  protected final String TEXT_1188 = "))";
-  protected final String TEXT_1189 = NL + "      ";
-  protected final String TEXT_1190 = " << ";
-  protected final String TEXT_1191 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_1192 = ".size != ";
-  protected final String TEXT_1193 = ".size or ";
-  protected final String TEXT_1194 = ".size() > ";
-  protected final String TEXT_1195 = ".";
-  protected final String TEXT_1196 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_1197 = ".clear";
-  protected final String TEXT_1198 = NL + "    ";
-  protected final String TEXT_1199 = ".each do |";
-  protected final String TEXT_1200 = "|" + NL + "      @";
-  protected final String TEXT_1201 = " << ";
-  protected final String TEXT_1202 = NL + "    end" + NL + "" + NL + "    was_set = true";
-  protected final String TEXT_1203 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1204 = NL + "  def ";
-  protected final String TEXT_1205 = "(";
-  protected final String TEXT_1206 = ")" + NL + "    was_set = false";
-  protected final String TEXT_1207 = NL + "    ";
-  protected final String TEXT_1208 = " = []";
-  protected final String TEXT_1209 = NL + "    ";
-  protected final String TEXT_1210 = ".each do |";
-  protected final String TEXT_1211 = "|" + NL + "      next if (";
-  protected final String TEXT_1212 = ".include?(";
-  protected final String TEXT_1213 = "))";
-  protected final String TEXT_1214 = NL + "      ";
-  protected final String TEXT_1215 = " << ";
-  protected final String TEXT_1216 = NL + "    end" + NL + "" + NL + "    if ";
-  protected final String TEXT_1217 = ".size != ";
-  protected final String TEXT_1218 = ".size or ";
-  protected final String TEXT_1219 = ".size() < ";
-  protected final String TEXT_1220 = ".";
-  protected final String TEXT_1221 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
-  protected final String TEXT_1222 = ".clear";
-  protected final String TEXT_1223 = NL + "    ";
-  protected final String TEXT_1224 = ".each do |";
-  protected final String TEXT_1225 = "|" + NL + "      @";
-  protected final String TEXT_1226 = " << ";
-  protected final String TEXT_1227 = NL + "    end" + NL + "" + NL + "    was_set = true";
-  protected final String TEXT_1228 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1229 = NL + "  def eql?(obj)" + NL + "    return false if obj.nil?" + NL + "    return false unless self.class == obj.class" + NL + "" + NL + "    compareTo = obj";
-  protected final String TEXT_1230 = NL + "    ";
-  protected final String TEXT_1231 = NL + "    true" + NL + "  end" + NL + "" + NL + "  def hash" + NL + "    return @cachedHashCode unless @cachedHashCode == -1" + NL + "    @cachedHashCode = 17";
-  protected final String TEXT_1232 = NL + "    ";
+  protected final String TEXT_242 = "UNABLE TO UNDERSAND association variable (see association_Get_All.jet)";
+  protected final String TEXT_243 = "//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP ";
+  protected final String TEXT_244 = " : ";
+  protected final String TEXT_245 = NL + "  def ";
+  protected final String TEXT_246 = NL + "    is_valid = ";
+  protected final String TEXT_247 = " >= ";
+  protected final String TEXT_248 = ".";
+  protected final String TEXT_249 = NL + "    is_valid = ";
+  protected final String TEXT_250 = " >= ";
+  protected final String TEXT_251 = ".";
+  protected final String TEXT_252 = " and ";
+  protected final String TEXT_253 = " <= ";
+  protected final String TEXT_254 = ".";
+  protected final String TEXT_255 = NL + "    is_valid" + NL + "  end";
+  protected final String TEXT_256 = NL + "  def self.";
+  protected final String TEXT_257 = NL + "    ";
+  protected final String TEXT_258 = NL + "  end";
+  protected final String TEXT_259 = NL + "  def self.";
+  protected final String TEXT_260 = NL + "    minimum = ";
+  protected final String TEXT_261 = NL + "    minimum" + NL + "  end";
+  protected final String TEXT_262 = NL + "  def self.";
+  protected final String TEXT_263 = NL + "    ";
+  protected final String TEXT_264 = NL + "  end";
+  protected final String TEXT_265 = NL + "  def self.";
+  protected final String TEXT_266 = NL + "    minimum = ";
+  protected final String TEXT_267 = NL + "    minimum" + NL + "  end";
+  protected final String TEXT_268 = NL + "  def self.";
+  protected final String TEXT_269 = NL + "    ";
+  protected final String TEXT_270 = NL + "  end";
+  protected final String TEXT_271 = NL + "  def self.";
+  protected final String TEXT_272 = NL + "    maximum = ";
+  protected final String TEXT_273 = NL + "    maximum" + NL + "  end";
+  protected final String TEXT_274 = NL + "  def ";
+  protected final String TEXT_275 = "(";
+  protected final String TEXT_276 = ")" + NL + "    was_added = false";
+  protected final String TEXT_277 = NL + "    if ";
+  protected final String TEXT_278 = " >= ";
+  protected final String TEXT_279 = ".";
+  protected final String TEXT_280 = NL + "      return was_added" + NL + "    end" + NL;
+  protected final String TEXT_281 = NL + "    @";
+  protected final String TEXT_282 = " << ";
+  protected final String TEXT_283 = NL + "    if ";
+  protected final String TEXT_284 = ".";
+  protected final String TEXT_285 = "(self) != -1" + NL + "      was_added = true" + NL + "    else" + NL + "      was_added = ";
+  protected final String TEXT_286 = ".";
+  protected final String TEXT_287 = "(self)" + NL + "      unless was_added" + NL + "        @";
+  protected final String TEXT_288 = ".delete(";
+  protected final String TEXT_289 = ")" + NL + "      end" + NL + "    end";
+  protected final String TEXT_290 = NL + "    was_added" + NL + "  end";
+  protected final String TEXT_291 = NL + "  def ";
+  protected final String TEXT_292 = "(";
+  protected final String TEXT_293 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_294 = NL + "    unless @";
+  protected final String TEXT_295 = ".include?(";
+  protected final String TEXT_296 = ")";
+  protected final String TEXT_297 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    oldIndex = @";
+  protected final String TEXT_298 = ".index(";
+  protected final String TEXT_299 = ")" + NL + "    @";
+  protected final String TEXT_300 = ".delete_at(oldIndex)" + NL + "    if ";
+  protected final String TEXT_301 = ".";
+  protected final String TEXT_302 = "(self) == -1" + NL + "      was_removed = true" + NL + "    else" + NL + "      was_removed = ";
+  protected final String TEXT_303 = ".";
+  protected final String TEXT_304 = "(self)" + NL + "      @";
+  protected final String TEXT_305 = ".insert(oldIndex,";
+  protected final String TEXT_306 = ") unless was_removed" + NL + "    end";
+  protected final String TEXT_307 = NL + "    was_removed" + NL + "  end";
+  protected final String TEXT_308 = NL + "  def ";
+  protected final String TEXT_309 = "(";
+  protected final String TEXT_310 = ")" + NL + "    was_set = false";
+  protected final String TEXT_311 = NL + "    @";
+  protected final String TEXT_312 = " = ";
+  protected final String TEXT_313 = NL + "    was_set = true";
+  protected final String TEXT_314 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_315 = NL + "  def ";
+  protected final String TEXT_316 = "(";
+  protected final String TEXT_317 = ")" + NL + "    was_set = false";
+  protected final String TEXT_318 = NL + "    unless ";
+  protected final String TEXT_319 = ".nil?" + NL + "      @";
+  protected final String TEXT_320 = " = ";
+  protected final String TEXT_321 = NL + "      was_set = true" + NL + "    end";
+  protected final String TEXT_322 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_323 = NL + "  def ";
+  protected final String TEXT_324 = "(";
+  protected final String TEXT_325 = ")" + NL + "    was_set = false";
+  protected final String TEXT_326 = NL + "    if !@";
+  protected final String TEXT_327 = ".nil? and !@";
+  protected final String TEXT_328 = ".eql?(";
+  protected final String TEXT_329 = ") and self.eql?(@";
+  protected final String TEXT_330 = ".";
+  protected final String TEXT_331 = ")" + NL + "      #Unable to ";
+  protected final String TEXT_332 = ", as existing @";
+  protected final String TEXT_333 = " would become an orphan";
+  protected final String TEXT_334 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_335 = " = ";
+  protected final String TEXT_336 = NL + "    ";
+  protected final String TEXT_337 = " = !";
+  protected final String TEXT_338 = ".nil? ? ";
+  protected final String TEXT_339 = ".";
+  protected final String TEXT_340 = " : nil" + NL + "" + NL + "    unless self.eql?(";
+  protected final String TEXT_341 = ")" + NL + "      unless ";
+  protected final String TEXT_342 = ".nil?";
+  protected final String TEXT_343 = NL + "        ";
+  protected final String TEXT_344 = ".instance_variable_set(\"@";
+  protected final String TEXT_345 = "\",nil)" + NL + "      end" + NL + "      unless @";
+  protected final String TEXT_346 = ".nil?" + NL + "        @";
+  protected final String TEXT_347 = ".";
+  protected final String TEXT_348 = "(self)" + NL + "      end" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_349 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_350 = NL + "  def ";
+  protected final String TEXT_351 = "(";
+  protected final String TEXT_352 = ")" + NL + "    was_set = false";
+  protected final String TEXT_353 = NL + "    if ";
+  protected final String TEXT_354 = ".nil?" + NL + "      #Unable to ";
+  protected final String TEXT_355 = " to nil, as ";
+  protected final String TEXT_356 = " must always be associated to a @";
+  protected final String TEXT_357 = NL + "      return was_set" + NL + "    end" + NL + "    ";
+  protected final String TEXT_358 = NL + "    ";
+  protected final String TEXT_359 = " = ";
+  protected final String TEXT_360 = ".";
+  protected final String TEXT_361 = NL + "    if !";
+  protected final String TEXT_362 = ".nil? and !self.eql?(";
+  protected final String TEXT_363 = ")" + NL + "      #Unable to ";
+  protected final String TEXT_364 = ", the current @";
+  protected final String TEXT_365 = " already has a ";
+  protected final String TEXT_366 = ", which would be orphaned if it were re-assigned";
+  protected final String TEXT_367 = NL + "      return was_set" + NL + "    end" + NL + "    ";
+  protected final String TEXT_368 = NL + "    ";
+  protected final String TEXT_369 = " = @";
+  protected final String TEXT_370 = NL + "    @";
+  protected final String TEXT_371 = " = ";
+  protected final String TEXT_372 = NL + "    @";
+  protected final String TEXT_373 = ".";
+  protected final String TEXT_374 = "(self)" + NL + "" + NL + "    unless ";
+  protected final String TEXT_375 = ".nil?";
+  protected final String TEXT_376 = NL + "      ";
+  protected final String TEXT_377 = ".";
+  protected final String TEXT_378 = "(nil)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_379 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_380 = NL + "  def ";
+  protected final String TEXT_381 = "(";
+  protected final String TEXT_382 = ")" + NL + "    was_added = false";
+  protected final String TEXT_383 = NL + "    ";
+  protected final String TEXT_384 = " = ";
+  protected final String TEXT_385 = ".";
+  protected final String TEXT_386 = NL + "    ";
+  protected final String TEXT_387 = " = (!";
+  protected final String TEXT_388 = ".nil? and !";
+  protected final String TEXT_389 = ".eql?(self))" + NL + "" + NL + "    if ";
+  protected final String TEXT_390 = " and ";
+  protected final String TEXT_391 = ".";
+  protected final String TEXT_392 = " <= ";
+  protected final String TEXT_393 = ".";
+  protected final String TEXT_394 = NL + "      return was_added" + NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_395 = NL + "      ";
+  protected final String TEXT_396 = ".";
+  protected final String TEXT_397 = "(self)" + NL + "    else" + NL + "      @";
+  protected final String TEXT_398 = " << ";
+  protected final String TEXT_399 = NL + "    end" + NL + "    was_added = true";
+  protected final String TEXT_400 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_401 = "(";
+  protected final String TEXT_402 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_403 = NL + "    # Unable to remove ";
+  protected final String TEXT_404 = ", as it must always have a ";
+  protected final String TEXT_405 = NL + "    if ";
+  protected final String TEXT_406 = ".";
+  protected final String TEXT_407 = ".eql?(self)";
+  protected final String TEXT_408 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    # ";
+  protected final String TEXT_409 = " already at minimum (";
+  protected final String TEXT_410 = ")" + NL + "    if ";
+  protected final String TEXT_411 = " <= ";
+  protected final String TEXT_412 = ".";
+  protected final String TEXT_413 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_414 = ".delete(";
+  protected final String TEXT_415 = ")" + NL + "    was_removed = true";
+  protected final String TEXT_416 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_417 = NL + "  def ";
+  protected final String TEXT_418 = "(";
+  protected final String TEXT_419 = ")" + NL + "    was_added = false";
+  protected final String TEXT_420 = NL + "    if ";
+  protected final String TEXT_421 = " >= ";
+  protected final String TEXT_422 = ".";
+  protected final String TEXT_423 = NL + "      return was_added" + NL + "    end" + NL;
+  protected final String TEXT_424 = NL + "    ";
+  protected final String TEXT_425 = " = ";
+  protected final String TEXT_426 = ".";
+  protected final String TEXT_427 = NL + "    ";
+  protected final String TEXT_428 = " = (!";
+  protected final String TEXT_429 = ".nil? and !";
+  protected final String TEXT_430 = ".eql?(self))" + NL + "" + NL + "    if ";
+  protected final String TEXT_431 = " and ";
+  protected final String TEXT_432 = ".";
+  protected final String TEXT_433 = " <= ";
+  protected final String TEXT_434 = ".";
+  protected final String TEXT_435 = NL + "      return was_added" + NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_436 = NL + "      ";
+  protected final String TEXT_437 = ".";
+  protected final String TEXT_438 = "(self)" + NL + "    else" + NL + "      @";
+  protected final String TEXT_439 = " << ";
+  protected final String TEXT_440 = NL + "    end" + NL + "    was_added = true";
+  protected final String TEXT_441 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_442 = "(";
+  protected final String TEXT_443 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_444 = NL + "    # Unable to remove ";
+  protected final String TEXT_445 = ", as it must always have a ";
+  protected final String TEXT_446 = NL + "    if ";
+  protected final String TEXT_447 = ".";
+  protected final String TEXT_448 = ".eql?(self)";
+  protected final String TEXT_449 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    # ";
+  protected final String TEXT_450 = " already at minimum (";
+  protected final String TEXT_451 = ")" + NL + "    if ";
+  protected final String TEXT_452 = " <= ";
+  protected final String TEXT_453 = ".";
+  protected final String TEXT_454 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_455 = ".delete(";
+  protected final String TEXT_456 = ")" + NL + "    was_removed = true";
+  protected final String TEXT_457 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_458 = NL + "  def ";
+  protected final String TEXT_459 = "(";
+  protected final String TEXT_460 = ")" + NL + "    was_added = false";
+  protected final String TEXT_461 = NL + "    if ";
+  protected final String TEXT_462 = " >= ";
+  protected final String TEXT_463 = ".";
+  protected final String TEXT_464 = NL + "      return was_added" + NL + "    end" + NL;
+  protected final String TEXT_465 = NL + "    ";
+  protected final String TEXT_466 = " = ";
+  protected final String TEXT_467 = ".";
+  protected final String TEXT_468 = NL + "    ";
+  protected final String TEXT_469 = " = (!";
+  protected final String TEXT_470 = ".nil? and !";
+  protected final String TEXT_471 = ".eql?(self))" + NL + "    if ";
+  protected final String TEXT_472 = NL + "      ";
+  protected final String TEXT_473 = ".";
+  protected final String TEXT_474 = "(self)" + NL + "    else" + NL + "      @";
+  protected final String TEXT_475 = " << ";
+  protected final String TEXT_476 = NL + "    end" + NL + "    was_added = true";
+  protected final String TEXT_477 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_478 = "(";
+  protected final String TEXT_479 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_480 = NL + "    # Unable to remove ";
+  protected final String TEXT_481 = ", as it must always have a ";
+  protected final String TEXT_482 = NL + "    unless ";
+  protected final String TEXT_483 = ".";
+  protected final String TEXT_484 = ".eql?(self)" + NL + "      @";
+  protected final String TEXT_485 = ".delete(";
+  protected final String TEXT_486 = ")" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_487 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_488 = NL + "  def ";
+  protected final String TEXT_489 = "(";
+  protected final String TEXT_490 = ")" + NL + "    was_set = false";
+  protected final String TEXT_491 = NL + "    ";
+  protected final String TEXT_492 = " = []";
+  protected final String TEXT_493 = NL + "    ";
+  protected final String TEXT_494 = ".each do |";
+  protected final String TEXT_495 = "|" + NL + "      next if (";
+  protected final String TEXT_496 = ".include?(";
+  protected final String TEXT_497 = "))";
+  protected final String TEXT_498 = NL + "      ";
+  protected final String TEXT_499 = " << ";
+  protected final String TEXT_500 = NL + "    end" + NL + "" + NL + "    if (";
+  protected final String TEXT_501 = ".size != ";
+  protected final String TEXT_502 = ".size or ";
+  protected final String TEXT_503 = ".size() > ";
+  protected final String TEXT_504 = ".";
+  protected final String TEXT_505 = ")";
+  protected final String TEXT_506 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_507 = NL + "    ";
+  protected final String TEXT_508 = " = @";
+  protected final String TEXT_509 = ".dup" + NL + "    @";
+  protected final String TEXT_510 = ".clear";
+  protected final String TEXT_511 = NL + "    ";
+  protected final String TEXT_512 = ".each do |";
+  protected final String TEXT_513 = "|" + NL + "      @";
+  protected final String TEXT_514 = " << ";
+  protected final String TEXT_515 = NL + "      if (";
+  protected final String TEXT_516 = ".include?(";
+  protected final String TEXT_517 = "))";
+  protected final String TEXT_518 = NL + "        ";
+  protected final String TEXT_519 = ".delete(";
+  protected final String TEXT_520 = ")" + NL + "      else";
+  protected final String TEXT_521 = NL + "        ";
+  protected final String TEXT_522 = ".";
+  protected final String TEXT_523 = "(self)" + NL + "      end" + NL + "    end" + NL;
+  protected final String TEXT_524 = NL + "    ";
+  protected final String TEXT_525 = ".each do |";
+  protected final String TEXT_526 = "|";
+  protected final String TEXT_527 = NL + "      ";
+  protected final String TEXT_528 = ".";
+  protected final String TEXT_529 = "(self)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_530 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_531 = NL + "  def ";
+  protected final String TEXT_532 = "(";
+  protected final String TEXT_533 = ")" + NL + "    was_added = false";
+  protected final String TEXT_534 = NL + "    ";
+  protected final String TEXT_535 = " = ";
+  protected final String TEXT_536 = ".";
+  protected final String TEXT_537 = NL + "    ";
+  protected final String TEXT_538 = " = (!";
+  protected final String TEXT_539 = ".nil? and !";
+  protected final String TEXT_540 = ".eql?(self))" + NL + "    if ";
+  protected final String TEXT_541 = NL + "      ";
+  protected final String TEXT_542 = ".";
+  protected final String TEXT_543 = "(self)" + NL + "    else" + NL + "      @";
+  protected final String TEXT_544 = " << ";
+  protected final String TEXT_545 = NL + "    end" + NL + "    was_added = true";
+  protected final String TEXT_546 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_547 = "(";
+  protected final String TEXT_548 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_549 = NL + "    # Unable to remove ";
+  protected final String TEXT_550 = ", as it must always have a ";
+  protected final String TEXT_551 = NL + "    unless ";
+  protected final String TEXT_552 = ".";
+  protected final String TEXT_553 = ".eql?(self)" + NL + "      @";
+  protected final String TEXT_554 = ".delete(";
+  protected final String TEXT_555 = ")" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_556 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_557 = NL + "  def ";
+  protected final String TEXT_558 = "(";
+  protected final String TEXT_559 = ")" + NL + "    was_set = false";
+  protected final String TEXT_560 = NL + "    if ";
+  protected final String TEXT_561 = ".nil?";
+  protected final String TEXT_562 = NL + "      ";
+  protected final String TEXT_563 = " = @";
+  protected final String TEXT_564 = NL + "      @";
+  protected final String TEXT_565 = " = nil" + NL + "      " + NL + "      if !";
+  protected final String TEXT_566 = ".nil? and !";
+  protected final String TEXT_567 = ".";
+  protected final String TEXT_568 = ".nil?";
+  protected final String TEXT_569 = NL + "        ";
+  protected final String TEXT_570 = ".";
+  protected final String TEXT_571 = "(nil)" + NL + "      end" + NL + "      was_set = true";
+  protected final String TEXT_572 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_573 = NL + "    ";
+  protected final String TEXT_574 = " = self.";
+  protected final String TEXT_575 = NL + "    if !";
+  protected final String TEXT_576 = ".nil? and !";
+  protected final String TEXT_577 = ".eql?(";
+  protected final String TEXT_578 = ")";
+  protected final String TEXT_579 = NL + "      ";
+  protected final String TEXT_580 = ".";
+  protected final String TEXT_581 = "(nil)" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_582 = " = ";
+  protected final String TEXT_583 = NL + "    ";
+  protected final String TEXT_584 = " = ";
+  protected final String TEXT_585 = ".";
+  protected final String TEXT_586 = NL + NL + "    unless self.eql?(";
+  protected final String TEXT_587 = ")";
+  protected final String TEXT_588 = NL + "      ";
+  protected final String TEXT_589 = ".";
+  protected final String TEXT_590 = "(self)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_591 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_592 = NL + "  def ";
+  protected final String TEXT_593 = "(";
+  protected final String TEXT_594 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_595 = NL + "    unless @";
+  protected final String TEXT_596 = ".include?(";
+  protected final String TEXT_597 = ")";
+  protected final String TEXT_598 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_599 = " <= ";
+  protected final String TEXT_600 = ".";
+  protected final String TEXT_601 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    oldIndex = @";
+  protected final String TEXT_602 = ".index(";
+  protected final String TEXT_603 = ")" + NL + "    @";
+  protected final String TEXT_604 = ".delete_at(oldIndex)" + NL + "    if ";
+  protected final String TEXT_605 = ".";
+  protected final String TEXT_606 = "(self) == -1" + NL + "      was_removed = true" + NL + "    else" + NL + "      was_removed = ";
+  protected final String TEXT_607 = ".";
+  protected final String TEXT_608 = "(self)" + NL + "      @";
+  protected final String TEXT_609 = ".insert(oldIndex,";
+  protected final String TEXT_610 = ") unless was_removed" + NL + "    end";
+  protected final String TEXT_611 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_612 = NL + "  def ";
+  protected final String TEXT_613 = "(";
+  protected final String TEXT_614 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_615 = NL + "    unless @";
+  protected final String TEXT_616 = ".include?(";
+  protected final String TEXT_617 = ")";
+  protected final String TEXT_618 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_619 = " <= ";
+  protected final String TEXT_620 = ".";
+  protected final String TEXT_621 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    oldIndex = @";
+  protected final String TEXT_622 = ".index(";
+  protected final String TEXT_623 = ")" + NL + "    @";
+  protected final String TEXT_624 = ".delete_at(oldIndex)" + NL + "    if ";
+  protected final String TEXT_625 = ".";
+  protected final String TEXT_626 = "(self) == -1" + NL + "      was_removed = true" + NL + "    else" + NL + "      was_removed = ";
+  protected final String TEXT_627 = ".";
+  protected final String TEXT_628 = "(self)" + NL + "      @";
+  protected final String TEXT_629 = ".insert(oldIndex,";
+  protected final String TEXT_630 = ") unless was_removed" + NL + "    end";
+  protected final String TEXT_631 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_632 = NL + "  def ";
+  protected final String TEXT_633 = "(";
+  protected final String TEXT_634 = ")" + NL + "    was_set = false";
+  protected final String TEXT_635 = NL + "    if !";
+  protected final String TEXT_636 = ".nil? and ";
+  protected final String TEXT_637 = ".";
+  protected final String TEXT_638 = " >= ";
+  protected final String TEXT_639 = ".";
+  protected final String TEXT_640 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_641 = NL + "    ";
+  protected final String TEXT_642 = " = @";
+  protected final String TEXT_643 = NL + "    @";
+  protected final String TEXT_644 = " = ";
+  protected final String TEXT_645 = NL + "    if !";
+  protected final String TEXT_646 = ".nil? and !";
+  protected final String TEXT_647 = ".eql?(";
+  protected final String TEXT_648 = ")";
+  protected final String TEXT_649 = NL + "      ";
+  protected final String TEXT_650 = ".";
+  protected final String TEXT_651 = "(self)" + NL + "    end" + NL + "    unless ";
+  protected final String TEXT_652 = ".nil?";
+  protected final String TEXT_653 = NL + "      ";
+  protected final String TEXT_654 = ".";
+  protected final String TEXT_655 = "(self)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_656 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_657 = NL + "  def ";
+  protected final String TEXT_658 = "(";
+  protected final String TEXT_659 = ")" + NL + "    was_set = false";
+  protected final String TEXT_660 = NL + "    if ";
+  protected final String TEXT_661 = ".nil?";
+  protected final String TEXT_662 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_663 = NL + "    ";
+  protected final String TEXT_664 = " = @";
+  protected final String TEXT_665 = NL + "    @";
+  protected final String TEXT_666 = " = ";
+  protected final String TEXT_667 = NL + "    if !";
+  protected final String TEXT_668 = ".nil? and !";
+  protected final String TEXT_669 = ".eql?(";
+  protected final String TEXT_670 = ")";
+  protected final String TEXT_671 = NL + "      ";
+  protected final String TEXT_672 = ".";
+  protected final String TEXT_673 = "(self)" + NL + "    end" + NL + "    @";
+  protected final String TEXT_674 = ".";
+  protected final String TEXT_675 = "(self)" + NL + "    was_set = true";
+  protected final String TEXT_676 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_677 = NL + "  def ";
+  protected final String TEXT_678 = "(";
+  protected final String TEXT_679 = ")" + NL + "    was_set = false";
+  protected final String TEXT_680 = NL + "    # Must provide @";
+  protected final String TEXT_681 = " to ";
+  protected final String TEXT_682 = NL + "    if ";
+  protected final String TEXT_683 = ".nil?";
+  protected final String TEXT_684 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    # @";
+  protected final String TEXT_685 = " already at maximum (";
+  protected final String TEXT_686 = ")" + NL + "    if ";
+  protected final String TEXT_687 = ".";
+  protected final String TEXT_688 = " >= ";
+  protected final String TEXT_689 = ".";
+  protected final String TEXT_690 = NL + "      return was_set" + NL + "    end" + NL + "    ";
+  protected final String TEXT_691 = NL + "    ";
+  protected final String TEXT_692 = " = @";
+  protected final String TEXT_693 = NL + "    @";
+  protected final String TEXT_694 = " = ";
+  protected final String TEXT_695 = NL + "    if !";
+  protected final String TEXT_696 = ".nil? and !";
+  protected final String TEXT_697 = ".eql?(";
+  protected final String TEXT_698 = ")" + NL + "      didRemove = ";
+  protected final String TEXT_699 = ".";
+  protected final String TEXT_700 = "(self)" + NL + "      unless didRemove" + NL + "        @";
+  protected final String TEXT_701 = " = ";
+  protected final String TEXT_702 = NL + "        return was_set" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_703 = ".";
+  protected final String TEXT_704 = "(self)" + NL + "    was_set = true";
+  protected final String TEXT_705 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_706 = NL + "  def ";
+  protected final String TEXT_707 = "(";
+  protected final String TEXT_708 = ")" + NL + "    was_set = false";
+  protected final String TEXT_709 = NL + "    # Must provide @";
+  protected final String TEXT_710 = " to ";
+  protected final String TEXT_711 = NL + "    if ";
+  protected final String TEXT_712 = ".nil?";
+  protected final String TEXT_713 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    if !@";
+  protected final String TEXT_714 = ".nil? and @";
+  protected final String TEXT_715 = ".";
+  protected final String TEXT_716 = " <= ";
+  protected final String TEXT_717 = ".";
+  protected final String TEXT_718 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_719 = NL + "    ";
+  protected final String TEXT_720 = " = @";
+  protected final String TEXT_721 = NL + "    @";
+  protected final String TEXT_722 = " = ";
+  protected final String TEXT_723 = NL + "    if !";
+  protected final String TEXT_724 = ".nil? and !";
+  protected final String TEXT_725 = ".eql?(";
+  protected final String TEXT_726 = ")" + NL + "      didRemove = ";
+  protected final String TEXT_727 = ".";
+  protected final String TEXT_728 = "(self)" + NL + "      unless didRemove" + NL + "        @";
+  protected final String TEXT_729 = " = ";
+  protected final String TEXT_730 = NL + "        return was_set" + NL + "      end" + NL + "    end" + NL + "    @";
+  protected final String TEXT_731 = ".";
+  protected final String TEXT_732 = "(self)" + NL + "    was_set = true";
+  protected final String TEXT_733 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_734 = NL + "  def ";
+  protected final String TEXT_735 = "(";
+  protected final String TEXT_736 = ")" + NL + "    was_added = false";
+  protected final String TEXT_737 = NL + "    ";
+  protected final String TEXT_738 = " = ";
+  protected final String TEXT_739 = ".";
+  protected final String TEXT_740 = NL + "    if ";
+  protected final String TEXT_741 = ".nil?";
+  protected final String TEXT_742 = NL + "      ";
+  protected final String TEXT_743 = ".";
+  protected final String TEXT_744 = "(self)" + NL + "    elsif !";
+  protected final String TEXT_745 = ".eql?(self)";
+  protected final String TEXT_746 = NL + "      ";
+  protected final String TEXT_747 = ".";
+  protected final String TEXT_748 = "(";
+  protected final String TEXT_749 = ")";
+  protected final String TEXT_750 = NL + "      ";
+  protected final String TEXT_751 = "(";
+  protected final String TEXT_752 = ")" + NL + "    else" + NL + "      @";
+  protected final String TEXT_753 = " << ";
+  protected final String TEXT_754 = NL + "    end" + NL + "    was_added = true";
+  protected final String TEXT_755 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_756 = "(";
+  protected final String TEXT_757 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_758 = NL + "    if @";
+  protected final String TEXT_759 = ".include?(";
+  protected final String TEXT_760 = ")" + NL + "      @";
+  protected final String TEXT_761 = ".delete(";
+  protected final String TEXT_762 = ")";
+  protected final String TEXT_763 = NL + "      ";
+  protected final String TEXT_764 = ".";
+  protected final String TEXT_765 = "(nil)" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_766 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_767 = NL + "  def ";
+  protected final String TEXT_768 = "(";
+  protected final String TEXT_769 = ")" + NL + "    was_set = false";
+  protected final String TEXT_770 = NL + "    ";
+  protected final String TEXT_771 = " = @";
+  protected final String TEXT_772 = NL + "    @";
+  protected final String TEXT_773 = " = ";
+  protected final String TEXT_774 = NL + "    if !";
+  protected final String TEXT_775 = ".nil? and !";
+  protected final String TEXT_776 = ".eql?(";
+  protected final String TEXT_777 = ")";
+  protected final String TEXT_778 = NL + "      ";
+  protected final String TEXT_779 = ".";
+  protected final String TEXT_780 = "(self)" + NL + "    end" + NL + "    unless ";
+  protected final String TEXT_781 = ".nil?";
+  protected final String TEXT_782 = NL + "      ";
+  protected final String TEXT_783 = ".";
+  protected final String TEXT_784 = "(self)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_785 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_786 = NL + "  def ";
+  protected final String TEXT_787 = "(";
+  protected final String TEXT_788 = ")" + NL + "    was_added = false";
+  protected final String TEXT_789 = NL + "    if ";
+  protected final String TEXT_790 = " >= ";
+  protected final String TEXT_791 = ".";
+  protected final String TEXT_792 = NL + "      return was_added" + NL + "    end" + NL;
+  protected final String TEXT_793 = NL + "    ";
+  protected final String TEXT_794 = " = ";
+  protected final String TEXT_795 = ".";
+  protected final String TEXT_796 = NL + "    if ";
+  protected final String TEXT_797 = ".nil?";
+  protected final String TEXT_798 = NL + "      ";
+  protected final String TEXT_799 = ".";
+  protected final String TEXT_800 = "(self)" + NL + "    elsif !";
+  protected final String TEXT_801 = ".eql?(self)";
+  protected final String TEXT_802 = NL + "      ";
+  protected final String TEXT_803 = ".";
+  protected final String TEXT_804 = "(";
+  protected final String TEXT_805 = ")";
+  protected final String TEXT_806 = NL + "      ";
+  protected final String TEXT_807 = "(";
+  protected final String TEXT_808 = ")" + NL + "    else" + NL + "      @";
+  protected final String TEXT_809 = " << ";
+  protected final String TEXT_810 = NL + "    end" + NL + "    was_added = true";
+  protected final String TEXT_811 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_812 = "(";
+  protected final String TEXT_813 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_814 = NL + "    if @";
+  protected final String TEXT_815 = ".include?(";
+  protected final String TEXT_816 = ")" + NL + "      @";
+  protected final String TEXT_817 = ".delete(";
+  protected final String TEXT_818 = ")";
+  protected final String TEXT_819 = NL + "      ";
+  protected final String TEXT_820 = ".";
+  protected final String TEXT_821 = "(nil)" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_822 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_823 = NL + "  def ";
+  protected final String TEXT_824 = "(";
+  protected final String TEXT_825 = ")" + NL + "    was_added = false";
+  protected final String TEXT_826 = NL + "    if ";
+  protected final String TEXT_827 = " < ";
+  protected final String TEXT_828 = ".";
+  protected final String TEXT_829 = NL + "      @";
+  protected final String TEXT_830 = " << ";
+  protected final String TEXT_831 = NL + "      was_added = true" + NL + "    end";
+  protected final String TEXT_832 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_833 = "(";
+  protected final String TEXT_834 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_835 = NL + "    unless @";
+  protected final String TEXT_836 = ".include?(";
+  protected final String TEXT_837 = ")";
+  protected final String TEXT_838 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_839 = " <= ";
+  protected final String TEXT_840 = ".";
+  protected final String TEXT_841 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_842 = ".delete(";
+  protected final String TEXT_843 = ")" + NL + "    was_removed = true";
+  protected final String TEXT_844 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_845 = NL + "  def ";
+  protected final String TEXT_846 = "(";
+  protected final String TEXT_847 = ")" + NL + "    was_added = false";
+  protected final String TEXT_848 = NL + "    if ";
+  protected final String TEXT_849 = " >= ";
+  protected final String TEXT_850 = ".";
+  protected final String TEXT_851 = NL + "      return was_added" + NL + "    end";
+  protected final String TEXT_852 = NL + "    ";
+  protected final String TEXT_853 = " = ";
+  protected final String TEXT_854 = ".";
+  protected final String TEXT_855 = NL + "    if !";
+  protected final String TEXT_856 = ".nil? and ";
+  protected final String TEXT_857 = ".";
+  protected final String TEXT_858 = " <= ";
+  protected final String TEXT_859 = ".";
+  protected final String TEXT_860 = NL + "      return was_added" + NL + "    elsif !";
+  protected final String TEXT_861 = ".nil?";
+  protected final String TEXT_862 = NL + "      ";
+  protected final String TEXT_863 = ".instance_variable_get(\"@";
+  protected final String TEXT_864 = "\").delete(";
+  protected final String TEXT_865 = ")" + NL + "    end" + NL + "    @";
+  protected final String TEXT_866 = " << ";
+  protected final String TEXT_867 = NL + "    ";
+  protected final String TEXT_868 = ".instance_variable_set(\"@";
+  protected final String TEXT_869 = "\",self)" + NL + "    was_added = true";
+  protected final String TEXT_870 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_871 = "(";
+  protected final String TEXT_872 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_873 = NL + "    if @";
+  protected final String TEXT_874 = ".include?(";
+  protected final String TEXT_875 = ") and ";
+  protected final String TEXT_876 = " > ";
+  protected final String TEXT_877 = ".";
+  protected final String TEXT_878 = NL + "      @";
+  protected final String TEXT_879 = ".delete(";
+  protected final String TEXT_880 = ")";
+  protected final String TEXT_881 = NL + "      ";
+  protected final String TEXT_882 = ".instance_variable_set(\"@";
+  protected final String TEXT_883 = "\",nil)" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_884 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_885 = NL + "  def ";
+  protected final String TEXT_886 = "(";
+  protected final String TEXT_887 = ")" + NL + "    was_set = false";
+  protected final String TEXT_888 = NL + "    ";
+  protected final String TEXT_889 = " = []";
+  protected final String TEXT_890 = NL + "    ";
+  protected final String TEXT_891 = ".each do |";
+  protected final String TEXT_892 = "|" + NL + "      if ";
+  protected final String TEXT_893 = ".include?(";
+  protected final String TEXT_894 = ")";
+  protected final String TEXT_895 = NL + "        return was_set" + NL + "      elsif !";
+  protected final String TEXT_896 = ".";
+  protected final String TEXT_897 = ".nil? and !";
+  protected final String TEXT_898 = ".";
+  protected final String TEXT_899 = ".eql?(self)";
+  protected final String TEXT_900 = NL + "        return was_set" + NL + "      end";
+  protected final String TEXT_901 = NL + "      ";
+  protected final String TEXT_902 = " << ";
+  protected final String TEXT_903 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_904 = ".size != ";
+  protected final String TEXT_905 = ".";
+  protected final String TEXT_906 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_907 = NL + "    ";
+  protected final String TEXT_908 = ".each do |";
+  protected final String TEXT_909 = "|" + NL + "      @";
+  protected final String TEXT_910 = ".delete(";
+  protected final String TEXT_911 = ")" + NL + "    end" + NL + "    " + NL + "    @";
+  protected final String TEXT_912 = ".each do |orphan|" + NL + "      orphan.instance_variable_set(\"@";
+  protected final String TEXT_913 = "\",nil)" + NL + "    end" + NL + "    @";
+  protected final String TEXT_914 = ".clear";
+  protected final String TEXT_915 = NL + "    ";
+  protected final String TEXT_916 = ".each do |";
+  protected final String TEXT_917 = "|";
+  protected final String TEXT_918 = NL + "      ";
+  protected final String TEXT_919 = ".instance_variable_set(\"@";
+  protected final String TEXT_920 = "\",self)" + NL + "      @";
+  protected final String TEXT_921 = " << ";
+  protected final String TEXT_922 = NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_923 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_924 = NL + "  def ";
+  protected final String TEXT_925 = "(";
+  protected final String TEXT_926 = ")" + NL + "    was_added = false";
+  protected final String TEXT_927 = NL + "    @";
+  protected final String TEXT_928 = " << ";
+  protected final String TEXT_929 = NL + "    was_added = true";
+  protected final String TEXT_930 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_931 = "(";
+  protected final String TEXT_932 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_933 = NL + "    if @";
+  protected final String TEXT_934 = ".include?(";
+  protected final String TEXT_935 = ")" + NL + "      @";
+  protected final String TEXT_936 = ".delete(";
+  protected final String TEXT_937 = ")" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_938 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_939 = NL + "  def ";
+  protected final String TEXT_940 = "(";
+  protected final String TEXT_941 = ")" + NL + "    was_added = false";
+  protected final String TEXT_942 = NL + "    if ";
+  protected final String TEXT_943 = " < ";
+  protected final String TEXT_944 = ".";
+  protected final String TEXT_945 = NL + "      @";
+  protected final String TEXT_946 = " << ";
+  protected final String TEXT_947 = NL + "      was_added = true" + NL + "    end";
+  protected final String TEXT_948 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_949 = "(";
+  protected final String TEXT_950 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_951 = NL + "    if @";
+  protected final String TEXT_952 = ".include?(";
+  protected final String TEXT_953 = ")" + NL + "      @";
+  protected final String TEXT_954 = ".delete(";
+  protected final String TEXT_955 = ")" + NL + "      was_removed = true" + NL + "    end";
+  protected final String TEXT_956 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_957 = NL + "  def ";
+  protected final String TEXT_958 = "(";
+  protected final String TEXT_959 = ")" + NL + "    was_added = false";
+  protected final String TEXT_960 = NL + "    @";
+  protected final String TEXT_961 = " << ";
+  protected final String TEXT_962 = NL + "    was_added = true";
+  protected final String TEXT_963 = NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_964 = "(";
+  protected final String TEXT_965 = ")" + NL + "    was_removed = false";
+  protected final String TEXT_966 = NL + "    unless @";
+  protected final String TEXT_967 = ".include?(";
+  protected final String TEXT_968 = ")";
+  protected final String TEXT_969 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_970 = " <= ";
+  protected final String TEXT_971 = ".";
+  protected final String TEXT_972 = NL + "      return was_removed" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_973 = ".delete(";
+  protected final String TEXT_974 = ")" + NL + "    was_removed = true";
+  protected final String TEXT_975 = NL + "    was_removed" + NL + "  end" + NL;
+  protected final String TEXT_976 = NL + "  def ";
+  protected final String TEXT_977 = "(";
+  protected final String TEXT_978 = ")" + NL + "    was_set = false";
+  protected final String TEXT_979 = NL + "    ";
+  protected final String TEXT_980 = " = []";
+  protected final String TEXT_981 = NL + "    ";
+  protected final String TEXT_982 = ".each do |";
+  protected final String TEXT_983 = "|" + NL + "      next if (";
+  protected final String TEXT_984 = ".include?(";
+  protected final String TEXT_985 = "))";
+  protected final String TEXT_986 = NL + "      ";
+  protected final String TEXT_987 = " << ";
+  protected final String TEXT_988 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_989 = ".size != ";
+  protected final String TEXT_990 = ".size or ";
+  protected final String TEXT_991 = ".size() != ";
+  protected final String TEXT_992 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_993 = ".clear";
+  protected final String TEXT_994 = NL + "    ";
+  protected final String TEXT_995 = ".each do |";
+  protected final String TEXT_996 = "|" + NL + "      @";
+  protected final String TEXT_997 = " << ";
+  protected final String TEXT_998 = NL + "    end" + NL + "" + NL + "    was_set = true";
+  protected final String TEXT_999 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1000 = NL + "  def ";
+  protected final String TEXT_1001 = "(";
+  protected final String TEXT_1002 = ")" + NL + "    was_set = false";
+  protected final String TEXT_1003 = NL + "    ";
+  protected final String TEXT_1004 = " = []";
+  protected final String TEXT_1005 = NL + "    ";
+  protected final String TEXT_1006 = ".each do |";
+  protected final String TEXT_1007 = "|" + NL + "      next if (";
+  protected final String TEXT_1008 = ".include?(";
+  protected final String TEXT_1009 = ")) ";
+  protected final String TEXT_1010 = NL + "      ";
+  protected final String TEXT_1011 = " << ";
+  protected final String TEXT_1012 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_1013 = ".size != ";
+  protected final String TEXT_1014 = ".length or ";
+  protected final String TEXT_1015 = ".size < ";
+  protected final String TEXT_1016 = ".";
+  protected final String TEXT_1017 = " or ";
+  protected final String TEXT_1018 = ".size() > ";
+  protected final String TEXT_1019 = ".";
+  protected final String TEXT_1020 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_1021 = NL + "    ";
+  protected final String TEXT_1022 = " = @";
+  protected final String TEXT_1023 = ".dup" + NL + "    @";
+  protected final String TEXT_1024 = ".clear";
+  protected final String TEXT_1025 = NL + "    ";
+  protected final String TEXT_1026 = ".each do |";
+  protected final String TEXT_1027 = "|" + NL + "      @";
+  protected final String TEXT_1028 = " << ";
+  protected final String TEXT_1029 = NL + "      if ";
+  protected final String TEXT_1030 = ".include?(";
+  protected final String TEXT_1031 = ")";
+  protected final String TEXT_1032 = NL + "        ";
+  protected final String TEXT_1033 = ".delete(";
+  protected final String TEXT_1034 = ")" + NL + "      else";
+  protected final String TEXT_1035 = NL + "        ";
+  protected final String TEXT_1036 = ".";
+  protected final String TEXT_1037 = "(self)" + NL + "      end" + NL + "    end" + NL;
+  protected final String TEXT_1038 = NL + "    ";
+  protected final String TEXT_1039 = ".each do |";
+  protected final String TEXT_1040 = "|";
+  protected final String TEXT_1041 = NL + "      ";
+  protected final String TEXT_1042 = ".";
+  protected final String TEXT_1043 = "(self)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_1044 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1045 = NL + "  def ";
+  protected final String TEXT_1046 = "(";
+  protected final String TEXT_1047 = ")" + NL + "    was_set = false";
+  protected final String TEXT_1048 = NL + "    ";
+  protected final String TEXT_1049 = " = []";
+  protected final String TEXT_1050 = NL + "    ";
+  protected final String TEXT_1051 = ".each do |";
+  protected final String TEXT_1052 = "|" + NL + "      next if (";
+  protected final String TEXT_1053 = ".include?(";
+  protected final String TEXT_1054 = "))";
+  protected final String TEXT_1055 = NL + "      ";
+  protected final String TEXT_1056 = " << ";
+  protected final String TEXT_1057 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_1058 = ".size != ";
+  protected final String TEXT_1059 = ".size or ";
+  protected final String TEXT_1060 = ".size < ";
+  protected final String TEXT_1061 = ".";
+  protected final String TEXT_1062 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_1063 = NL + "    ";
+  protected final String TEXT_1064 = " = @";
+  protected final String TEXT_1065 = ".dup" + NL + "    @";
+  protected final String TEXT_1066 = ".clear";
+  protected final String TEXT_1067 = NL + "    ";
+  protected final String TEXT_1068 = ".each do |";
+  protected final String TEXT_1069 = "|" + NL + "      @";
+  protected final String TEXT_1070 = " << ";
+  protected final String TEXT_1071 = NL + "      if ";
+  protected final String TEXT_1072 = ".include?(";
+  protected final String TEXT_1073 = ")";
+  protected final String TEXT_1074 = NL + "        ";
+  protected final String TEXT_1075 = ".delete(";
+  protected final String TEXT_1076 = ")" + NL + "      else";
+  protected final String TEXT_1077 = NL + "        ";
+  protected final String TEXT_1078 = ".";
+  protected final String TEXT_1079 = "(self)" + NL + "      end" + NL + "    end" + NL;
+  protected final String TEXT_1080 = NL + "    ";
+  protected final String TEXT_1081 = ".each do |";
+  protected final String TEXT_1082 = "|";
+  protected final String TEXT_1083 = NL + "      ";
+  protected final String TEXT_1084 = ".";
+  protected final String TEXT_1085 = "(self)" + NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_1086 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1087 = NL + "  def ";
+  protected final String TEXT_1088 = "(";
+  protected final String TEXT_1089 = ")" + NL + "    was_set = false";
+  protected final String TEXT_1090 = NL + "    ";
+  protected final String TEXT_1091 = " = []";
+  protected final String TEXT_1092 = NL + "    ";
+  protected final String TEXT_1093 = ".each do |";
+  protected final String TEXT_1094 = "|" + NL + "      next if (";
+  protected final String TEXT_1095 = ".include?(";
+  protected final String TEXT_1096 = "))";
+  protected final String TEXT_1097 = NL + "      ";
+  protected final String TEXT_1098 = " << ";
+  protected final String TEXT_1099 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_1100 = ".size != ";
+  protected final String TEXT_1101 = ".size or ";
+  protected final String TEXT_1102 = ".size < ";
+  protected final String TEXT_1103 = ".";
+  protected final String TEXT_1104 = " or ";
+  protected final String TEXT_1105 = ".size > ";
+  protected final String TEXT_1106 = ".";
+  protected final String TEXT_1107 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_1108 = ".clear";
+  protected final String TEXT_1109 = NL + "    ";
+  protected final String TEXT_1110 = ".each do |";
+  protected final String TEXT_1111 = "|" + NL + "      @";
+  protected final String TEXT_1112 = " << ";
+  protected final String TEXT_1113 = NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_1114 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1115 = NL + "  def ";
+  protected final String TEXT_1116 = "(";
+  protected final String TEXT_1117 = ")" + NL + "    was_set = false";
+  protected final String TEXT_1118 = NL + "    if ";
+  protected final String TEXT_1119 = ".length < ";
+  protected final String TEXT_1120 = ".";
+  protected final String TEXT_1121 = NL + "      return was_set" + NL + "    end" + NL;
+  protected final String TEXT_1122 = NL + "    ";
+  protected final String TEXT_1123 = " = []";
+  protected final String TEXT_1124 = NL + "    ";
+  protected final String TEXT_1125 = " = {}";
+  protected final String TEXT_1126 = NL + "    ";
+  protected final String TEXT_1127 = ".each do |";
+  protected final String TEXT_1128 = "|" + NL + "      if ";
+  protected final String TEXT_1129 = ".include?(";
+  protected final String TEXT_1130 = ")";
+  protected final String TEXT_1131 = NL + "        return was_set" + NL + "      elsif !";
+  protected final String TEXT_1132 = ".";
+  protected final String TEXT_1133 = ".nil? and !";
+  protected final String TEXT_1134 = ".";
+  protected final String TEXT_1135 = ".eql?(self)";
+  protected final String TEXT_1136 = NL + "        ";
+  protected final String TEXT_1137 = " = ";
+  protected final String TEXT_1138 = ".";
+  protected final String TEXT_1139 = NL + "        unless ";
+  protected final String TEXT_1140 = ".has_key?(";
+  protected final String TEXT_1141 = ")";
+  protected final String TEXT_1142 = NL + "          ";
+  protected final String TEXT_1143 = "[";
+  protected final String TEXT_1144 = "] = ";
+  protected final String TEXT_1145 = ".";
+  protected final String TEXT_1146 = NL + "        end" + NL + "        currentCount = ";
+  protected final String TEXT_1147 = "[";
+  protected final String TEXT_1148 = "]" + NL + "        nextCount = currentCount - 1" + NL + "        if nextCount < ";
+  protected final String TEXT_1149 = NL + "          return was_set" + NL + "        end";
+  protected final String TEXT_1150 = NL + "        ";
+  protected final String TEXT_1151 = "[";
+  protected final String TEXT_1152 = "] = nextCount" + NL + "      end";
+  protected final String TEXT_1153 = NL + "      ";
+  protected final String TEXT_1154 = " << ";
+  protected final String TEXT_1155 = NL + "    end" + NL;
+  protected final String TEXT_1156 = NL + "    ";
+  protected final String TEXT_1157 = ".each do |";
+  protected final String TEXT_1158 = "|" + NL + "      @";
+  protected final String TEXT_1159 = ".delete(";
+  protected final String TEXT_1160 = ")" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_1161 = ".each do |orphan|" + NL + "      orphan.instance_variable_set(\"@";
+  protected final String TEXT_1162 = "\",nil)" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1163 = ".clear";
+  protected final String TEXT_1164 = NL + "    ";
+  protected final String TEXT_1165 = ".each do |";
+  protected final String TEXT_1166 = "|" + NL + "      unless ";
+  protected final String TEXT_1167 = ".";
+  protected final String TEXT_1168 = ".nil?";
+  protected final String TEXT_1169 = NL + "        ";
+  protected final String TEXT_1170 = ".";
+  protected final String TEXT_1171 = ".instance_variable_get(\"@";
+  protected final String TEXT_1172 = "\").delete(";
+  protected final String TEXT_1173 = ")" + NL + "      end";
+  protected final String TEXT_1174 = NL + "      ";
+  protected final String TEXT_1175 = ".instance_variable_set(\"@";
+  protected final String TEXT_1176 = "\",self)" + NL + "      @";
+  protected final String TEXT_1177 = " << ";
+  protected final String TEXT_1178 = NL + "    end" + NL + "    was_set = true";
+  protected final String TEXT_1179 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1180 = NL + "  def ";
+  protected final String TEXT_1181 = "(";
+  protected final String TEXT_1182 = ")" + NL + "    was_set = false";
+  protected final String TEXT_1183 = NL + "    ";
+  protected final String TEXT_1184 = " = []";
+  protected final String TEXT_1185 = NL + "    ";
+  protected final String TEXT_1186 = ".each do |";
+  protected final String TEXT_1187 = "|" + NL + "      next if (";
+  protected final String TEXT_1188 = ".include?(";
+  protected final String TEXT_1189 = "))";
+  protected final String TEXT_1190 = NL + "      ";
+  protected final String TEXT_1191 = " << ";
+  protected final String TEXT_1192 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_1193 = ".size != ";
+  protected final String TEXT_1194 = ".size or ";
+  protected final String TEXT_1195 = ".size() > ";
+  protected final String TEXT_1196 = ".";
+  protected final String TEXT_1197 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_1198 = ".clear";
+  protected final String TEXT_1199 = NL + "    ";
+  protected final String TEXT_1200 = ".each do |";
+  protected final String TEXT_1201 = "|" + NL + "      @";
+  protected final String TEXT_1202 = " << ";
+  protected final String TEXT_1203 = NL + "    end" + NL + "" + NL + "    was_set = true";
+  protected final String TEXT_1204 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1205 = NL + "  def ";
+  protected final String TEXT_1206 = "(";
+  protected final String TEXT_1207 = ")" + NL + "    was_set = false";
+  protected final String TEXT_1208 = NL + "    ";
+  protected final String TEXT_1209 = " = []";
+  protected final String TEXT_1210 = NL + "    ";
+  protected final String TEXT_1211 = ".each do |";
+  protected final String TEXT_1212 = "|" + NL + "      next if (";
+  protected final String TEXT_1213 = ".include?(";
+  protected final String TEXT_1214 = "))";
+  protected final String TEXT_1215 = NL + "      ";
+  protected final String TEXT_1216 = " << ";
+  protected final String TEXT_1217 = NL + "    end" + NL + "" + NL + "    if ";
+  protected final String TEXT_1218 = ".size != ";
+  protected final String TEXT_1219 = ".size or ";
+  protected final String TEXT_1220 = ".size() < ";
+  protected final String TEXT_1221 = ".";
+  protected final String TEXT_1222 = NL + "      return was_set" + NL + "    end" + NL + "" + NL + "    @";
+  protected final String TEXT_1223 = ".clear";
+  protected final String TEXT_1224 = NL + "    ";
+  protected final String TEXT_1225 = ".each do |";
+  protected final String TEXT_1226 = "|" + NL + "      @";
+  protected final String TEXT_1227 = " << ";
+  protected final String TEXT_1228 = NL + "    end" + NL + "" + NL + "    was_set = true";
+  protected final String TEXT_1229 = NL + "    was_set" + NL + "  end" + NL;
+  protected final String TEXT_1230 = NL + "  def eql?(obj)" + NL + "    return false if obj.nil?" + NL + "    return false unless self.class == obj.class" + NL + "" + NL + "    compareTo = obj";
+  protected final String TEXT_1231 = NL + "    ";
+  protected final String TEXT_1232 = NL + "    true" + NL + "  end" + NL + "" + NL + "  def hash" + NL + "    return @cachedHashCode unless @cachedHashCode == -1" + NL + "    @cachedHashCode = 17";
   protected final String TEXT_1233 = NL + "    ";
-  protected final String TEXT_1234 = NL + "    @cachedHashCode" + NL + "  end" + NL;
-  protected final String TEXT_1235 = NL + "  def ";
-  protected final String TEXT_1236 = NL + "    ";
-  protected final String TEXT_1237 = NL + "  end" + NL;
-  protected final String TEXT_1238 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
-  protected final String TEXT_1239 = NL + "    ";
-  protected final String TEXT_1240 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_1241 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    def run()" + NL + "    {" + NL + "      try" + NL + "      {";
-  protected final String TEXT_1242 = NL + "        ";
-  protected final String TEXT_1243 = NL + "      }" + NL + "      catch (InterruptedException e)" + NL + "      {" + NL + "        e.printStackTrace();" + NL + "      }" + NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_1244 = NL + "  def ";
-  protected final String TEXT_1245 = NL + "    ";
-  protected final String TEXT_1246 = " = new TimedEventHandler(this,\"";
-  protected final String TEXT_1247 = "\",";
-  protected final String TEXT_1248 = ")" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_1249 = NL + "    ";
-  protected final String TEXT_1250 = ".stop()" + NL + "  end" + NL;
-  protected final String TEXT_1251 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
-  protected final String TEXT_1252 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
-  protected final String TEXT_1253 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    def stop" + NL + "      timer.cancel();" + NL + "    end" + NL + "    " + NL + "    def run";
-  protected final String TEXT_1254 = NL + "      if (\"";
-  protected final String TEXT_1255 = "\".eql?(timeoutMethodName))" + NL + "      {" + NL + "        shouldRestart = !controller.";
-  protected final String TEXT_1256 = NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
-  protected final String TEXT_1257 = NL + "        }" + NL + "        return;" + NL + "      }";
-  protected final String TEXT_1258 = NL + "    end" + NL + "  }" + NL;
-  protected final String TEXT_1259 = NL + "    @";
-  protected final String TEXT_1260 = " = nil";
-  protected final String TEXT_1261 = NL + "    @";
-  protected final String TEXT_1262 = ".clear";
-  protected final String TEXT_1263 = NL + "    ";
-  protected final String TEXT_1264 = " = @";
-  protected final String TEXT_1265 = NL + "    @";
-  protected final String TEXT_1266 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1267 = ".nil?";
-  protected final String TEXT_1268 = NL + "      ";
-  protected final String TEXT_1269 = ".delete" + NL + "    end";
-  protected final String TEXT_1270 = NL + "    unless @";
-  protected final String TEXT_1271 = ".nil?" + NL + "      @";
-  protected final String TEXT_1272 = ".";
-  protected final String TEXT_1273 = "(nil)" + NL + "    end";
-  protected final String TEXT_1274 = NL + "    ";
-  protected final String TEXT_1275 = " = @";
-  protected final String TEXT_1276 = NL + "    @";
-  protected final String TEXT_1277 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1278 = ".nil?";
-  protected final String TEXT_1279 = NL + "      ";
-  protected final String TEXT_1280 = ".";
-  protected final String TEXT_1281 = "(nil)" + NL + "    end";
-  protected final String TEXT_1282 = NL + "    ";
-  protected final String TEXT_1283 = " = @";
-  protected final String TEXT_1284 = NL + "    @";
-  protected final String TEXT_1285 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1286 = ".nil?";
-  protected final String TEXT_1287 = NL + "      ";
-  protected final String TEXT_1288 = ".delete" + NL + "    end";
-  protected final String TEXT_1289 = NL + "    unless @";
-  protected final String TEXT_1290 = ".nil?" + NL + "      @";
-  protected final String TEXT_1291 = ".";
-  protected final String TEXT_1292 = "(self)" + NL + "    end";
-  protected final String TEXT_1293 = NL + "    unless @";
-  protected final String TEXT_1294 = ".nil?" + NL + "      @";
-  protected final String TEXT_1295 = ".delete" + NL + "    end";
-  protected final String TEXT_1296 = NL + "    unless @";
-  protected final String TEXT_1297 = ".nil?" + NL + "      if @";
-  protected final String TEXT_1298 = ".";
-  protected final String TEXT_1299 = " <= ";
-  protected final String TEXT_1300 = NL + "        @";
-  protected final String TEXT_1301 = ".delete" + NL + "      else" + NL + "        @";
-  protected final String TEXT_1302 = ".";
-  protected final String TEXT_1303 = "(self)" + NL + "      end" + NL + "    end";
-  protected final String TEXT_1304 = NL + "    @";
-  protected final String TEXT_1305 = ".";
-  protected final String TEXT_1306 = "(self)";
-  protected final String TEXT_1307 = NL + "    @";
-  protected final String TEXT_1308 = ".each do |";
-  protected final String TEXT_1309 = "|";
-  protected final String TEXT_1310 = NL + "      ";
-  protected final String TEXT_1311 = ".instance_variable_set(\"@";
-  protected final String TEXT_1312 = "\",nil)" + NL + "    end" + NL + "    @";
-  protected final String TEXT_1313 = ".clear";
-  protected final String TEXT_1314 = NL + "    ";
-  protected final String TEXT_1315 = " = @";
-  protected final String TEXT_1316 = ".dup" + NL + "    @";
-  protected final String TEXT_1317 = ".clear";
-  protected final String TEXT_1318 = NL + "    ";
-  protected final String TEXT_1319 = ".each do |";
-  protected final String TEXT_1320 = "|" + NL + "      if ";
-  protected final String TEXT_1321 = ".";
-  protected final String TEXT_1322 = " <= ";
-  protected final String TEXT_1323 = ".";
-  protected final String TEXT_1324 = NL + "        ";
-  protected final String TEXT_1325 = ".delete" + NL + "      else";
-  protected final String TEXT_1326 = NL + "        ";
-  protected final String TEXT_1327 = ".";
-  protected final String TEXT_1328 = "(self)" + NL + "      end" + NL + "    end";
-  protected final String TEXT_1329 = NL + "    ";
-  protected final String TEXT_1330 = " = @";
-  protected final String TEXT_1331 = ".dup" + NL + "    @";
-  protected final String TEXT_1332 = ".clear";
-  protected final String TEXT_1333 = NL + "    ";
-  protected final String TEXT_1334 = ".each do |";
-  protected final String TEXT_1335 = "|";
-  protected final String TEXT_1336 = NL + "      ";
-  protected final String TEXT_1337 = ".";
-  protected final String TEXT_1338 = "(self)" + NL + "    end";
-  protected final String TEXT_1339 = NL + "    @";
-  protected final String TEXT_1340 = ".each do |";
-  protected final String TEXT_1341 = "|";
-  protected final String TEXT_1342 = NL + "      ";
-  protected final String TEXT_1343 = ".delete" + NL + "    end";
-  protected final String TEXT_1344 = NL + "    @";
-  protected final String TEXT_1345 = ".each do |";
-  protected final String TEXT_1346 = "|";
-  protected final String TEXT_1347 = NL + "      ";
-  protected final String TEXT_1348 = ".";
-  protected final String TEXT_1349 = "(nil)" + NL + "    end";
-  protected final String TEXT_1350 = NL + NL;
-  protected final String TEXT_1351 = NL + "  #------------------------" + NL + "  # DEVELOPER CODE - PROVIDED AS-IS" + NL + "  #------------------------" + NL + "  ";
-  protected final String TEXT_1352 = NL + "  ";
-  protected final String TEXT_1353 = NL + "end";
-  protected final String TEXT_1354 = NL;
+  protected final String TEXT_1234 = NL + "    ";
+  protected final String TEXT_1235 = NL + "    @cachedHashCode" + NL + "  end" + NL;
+  protected final String TEXT_1236 = NL + "  def ";
+  protected final String TEXT_1237 = NL + "    ";
+  protected final String TEXT_1238 = NL + "  end" + NL;
+  protected final String TEXT_1239 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
+  protected final String TEXT_1240 = NL + "    ";
+  protected final String TEXT_1241 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
+  protected final String TEXT_1242 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    def run()" + NL + "    {" + NL + "      try" + NL + "      {";
+  protected final String TEXT_1243 = NL + "        ";
+  protected final String TEXT_1244 = NL + "      }" + NL + "      catch (InterruptedException e)" + NL + "      {" + NL + "        e.printStackTrace();" + NL + "      }" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1245 = NL + "  def ";
+  protected final String TEXT_1246 = NL + "    ";
+  protected final String TEXT_1247 = " = new TimedEventHandler(this,\"";
+  protected final String TEXT_1248 = "\",";
+  protected final String TEXT_1249 = ")" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_1250 = NL + "    ";
+  protected final String TEXT_1251 = ".stop()" + NL + "  end" + NL;
+  protected final String TEXT_1252 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
+  protected final String TEXT_1253 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
+  protected final String TEXT_1254 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    def stop" + NL + "      timer.cancel();" + NL + "    end" + NL + "    " + NL + "    def run";
+  protected final String TEXT_1255 = NL + "      if (\"";
+  protected final String TEXT_1256 = "\".eql?(timeoutMethodName))" + NL + "      {" + NL + "        shouldRestart = !controller.";
+  protected final String TEXT_1257 = NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
+  protected final String TEXT_1258 = NL + "        }" + NL + "        return;" + NL + "      }";
+  protected final String TEXT_1259 = NL + "    end" + NL + "  }" + NL;
+  protected final String TEXT_1260 = NL + "    @";
+  protected final String TEXT_1261 = " = nil";
+  protected final String TEXT_1262 = NL + "    @";
+  protected final String TEXT_1263 = ".clear";
+  protected final String TEXT_1264 = NL + "    ";
+  protected final String TEXT_1265 = " = @";
+  protected final String TEXT_1266 = NL + "    @";
+  protected final String TEXT_1267 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1268 = ".nil?";
+  protected final String TEXT_1269 = NL + "      ";
+  protected final String TEXT_1270 = ".delete" + NL + "    end";
+  protected final String TEXT_1271 = NL + "    unless @";
+  protected final String TEXT_1272 = ".nil?" + NL + "      @";
+  protected final String TEXT_1273 = ".";
+  protected final String TEXT_1274 = "(nil)" + NL + "    end";
+  protected final String TEXT_1275 = NL + "    ";
+  protected final String TEXT_1276 = " = @";
+  protected final String TEXT_1277 = NL + "    @";
+  protected final String TEXT_1278 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1279 = ".nil?";
+  protected final String TEXT_1280 = NL + "      ";
+  protected final String TEXT_1281 = ".";
+  protected final String TEXT_1282 = "(nil)" + NL + "    end";
+  protected final String TEXT_1283 = NL + "    ";
+  protected final String TEXT_1284 = " = @";
+  protected final String TEXT_1285 = NL + "    @";
+  protected final String TEXT_1286 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1287 = ".nil?";
+  protected final String TEXT_1288 = NL + "      ";
+  protected final String TEXT_1289 = ".delete" + NL + "    end";
+  protected final String TEXT_1290 = NL + "    unless @";
+  protected final String TEXT_1291 = ".nil?" + NL + "      @";
+  protected final String TEXT_1292 = ".";
+  protected final String TEXT_1293 = "(self)" + NL + "    end";
+  protected final String TEXT_1294 = NL + "    unless @";
+  protected final String TEXT_1295 = ".nil?" + NL + "      @";
+  protected final String TEXT_1296 = ".delete" + NL + "    end";
+  protected final String TEXT_1297 = NL + "    unless @";
+  protected final String TEXT_1298 = ".nil?" + NL + "      if @";
+  protected final String TEXT_1299 = ".";
+  protected final String TEXT_1300 = " <= ";
+  protected final String TEXT_1301 = NL + "        @";
+  protected final String TEXT_1302 = ".delete" + NL + "      else" + NL + "        @";
+  protected final String TEXT_1303 = ".";
+  protected final String TEXT_1304 = "(self)" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1305 = NL + "    @";
+  protected final String TEXT_1306 = ".";
+  protected final String TEXT_1307 = "(self)";
+  protected final String TEXT_1308 = NL + "    @";
+  protected final String TEXT_1309 = ".each do |";
+  protected final String TEXT_1310 = "|";
+  protected final String TEXT_1311 = NL + "      ";
+  protected final String TEXT_1312 = ".instance_variable_set(\"@";
+  protected final String TEXT_1313 = "\",nil)" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1314 = ".clear";
+  protected final String TEXT_1315 = NL + "    ";
+  protected final String TEXT_1316 = " = @";
+  protected final String TEXT_1317 = ".dup" + NL + "    @";
+  protected final String TEXT_1318 = ".clear";
+  protected final String TEXT_1319 = NL + "    ";
+  protected final String TEXT_1320 = ".each do |";
+  protected final String TEXT_1321 = "|" + NL + "      if ";
+  protected final String TEXT_1322 = ".";
+  protected final String TEXT_1323 = " <= ";
+  protected final String TEXT_1324 = ".";
+  protected final String TEXT_1325 = NL + "        ";
+  protected final String TEXT_1326 = ".delete" + NL + "      else";
+  protected final String TEXT_1327 = NL + "        ";
+  protected final String TEXT_1328 = ".";
+  protected final String TEXT_1329 = "(self)" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1330 = NL + "    ";
+  protected final String TEXT_1331 = " = @";
+  protected final String TEXT_1332 = ".dup" + NL + "    @";
+  protected final String TEXT_1333 = ".clear";
+  protected final String TEXT_1334 = NL + "    ";
+  protected final String TEXT_1335 = ".each do |";
+  protected final String TEXT_1336 = "|";
+  protected final String TEXT_1337 = NL + "      ";
+  protected final String TEXT_1338 = ".";
+  protected final String TEXT_1339 = "(self)" + NL + "    end";
+  protected final String TEXT_1340 = NL + "    @";
+  protected final String TEXT_1341 = ".each do |";
+  protected final String TEXT_1342 = "|";
+  protected final String TEXT_1343 = NL + "      ";
+  protected final String TEXT_1344 = ".delete" + NL + "    end";
+  protected final String TEXT_1345 = NL + "    @";
+  protected final String TEXT_1346 = ".each do |";
+  protected final String TEXT_1347 = "|";
+  protected final String TEXT_1348 = NL + "      ";
+  protected final String TEXT_1349 = ".";
+  protected final String TEXT_1350 = "(nil)" + NL + "    end";
+  protected final String TEXT_1351 = NL + NL;
+  protected final String TEXT_1352 = NL + "  #------------------------" + NL + "  # DEVELOPER CODE - PROVIDED AS-IS" + NL + "  #------------------------" + NL + "  ";
+  protected final String TEXT_1353 = NL + "  ";
+  protected final String TEXT_1354 = NL + "end";
+  protected final String TEXT_1355 = NL;
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -1992,7 +1993,7 @@ public class RubyClassGenerator implements ILang
      } 
     stringBuffer.append(TEXT_82);
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (Attribute av : uClass.getAttributes())
   {
   
@@ -2114,7 +2115,7 @@ public class RubyClassGenerator implements ILang
   }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (Attribute av : uClass.getAttributes()) 
   {
     if (av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
@@ -2331,9 +2332,19 @@ public class RubyClassGenerator implements ILang
   }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+{
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
+  {
+    
+    
+// NOT IMPLEMENTED YET
+
+     
+  }
+  
+  for(StateMachine sm : uClass.getAllStateMachines())
   {
     
     stringBuffer.append(TEXT_181);
@@ -2345,10 +2356,11 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_184);
      
   }
+}
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for(Event e : uClass.getEvents())
   {
     
@@ -2441,8 +2453,8 @@ public class RubyClassGenerator implements ILang
 
     
 {
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
-  for(StateMachine sm : uClass.getAllStateMachines())
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
+  for (StateMachine sm : uClass.getAllStateMachines())  
   {
     if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
     {
@@ -2575,7 +2587,7 @@ public class RubyClassGenerator implements ILang
 }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
 
@@ -2601,7 +2613,7 @@ public class RubyClassGenerator implements ILang
 
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
-  
+
     boolean hasCodeInjections = customGetPrefixCode != null || customGetPostfixCode != null;
   
     if (av.isOne())
@@ -2681,10 +2693,16 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_241);
     
     }
+    else
+    {
+      
+    stringBuffer.append(TEXT_242);
+    
+    }
  }
 
     
-  // GENERIC FILE - MOSTLY LIKELY NO NEED TO CHANGE FOR NEW LANGUAGES
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
@@ -2889,9 +2907,9 @@ public class RubyClassGenerator implements ILang
     else
     {
       
-    stringBuffer.append(TEXT_242);
-    stringBuffer.append(av);
     stringBuffer.append(TEXT_243);
+    stringBuffer.append(av);
+    stringBuffer.append(TEXT_244);
     stringBuffer.append(relatedAssociation);
     
     }
@@ -2902,32 +2920,32 @@ public class RubyClassGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_244);
+    stringBuffer.append(TEXT_245);
     stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
      if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } 
      if (av.getMultiplicity().isUpperBoundMany()) { 
-    stringBuffer.append(TEXT_245);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_246);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_247);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_248);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      } else { 
-    stringBuffer.append(TEXT_248);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_249);
-    stringBuffer.append(uClass.getName());
-    stringBuffer.append(TEXT_250);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_251);
     stringBuffer.append(gen.translate("numberOfMethod",av));
-    stringBuffer.append(TEXT_252);
+    stringBuffer.append(TEXT_250);
     stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_251);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_252);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_253);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_254);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      } 
      if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } 
-    stringBuffer.append(TEXT_254);
+    stringBuffer.append(TEXT_255);
     
     }
     
@@ -2941,19 +2959,19 @@ public class RubyClassGenerator implements ILang
     String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
 
      if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { 
-    stringBuffer.append(TEXT_255);
-    stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_256);
-    stringBuffer.append(av.getMultiplicity().getLowerBound());
+    stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_257);
-     } else { 
+    stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_258);
+     } else { 
+    stringBuffer.append(TEXT_259);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
      if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } 
-    stringBuffer.append(TEXT_259);
+    stringBuffer.append(TEXT_260);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
      if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPostfixCode); } 
-    stringBuffer.append(TEXT_260);
+    stringBuffer.append(TEXT_261);
      } 
     
     }
@@ -2968,19 +2986,19 @@ public class RubyClassGenerator implements ILang
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
 
      if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { 
-    stringBuffer.append(TEXT_261);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_262);
-    stringBuffer.append(av.getMultiplicity().getLowerBound());
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_263);
-     } else { 
+    stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_264);
+     } else { 
+    stringBuffer.append(TEXT_265);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } 
-    stringBuffer.append(TEXT_265);
+    stringBuffer.append(TEXT_266);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
      if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPostfixCode); } 
-    stringBuffer.append(TEXT_266);
+    stringBuffer.append(TEXT_267);
      } 
     
     }
@@ -2995,19 +3013,19 @@ public class RubyClassGenerator implements ILang
     String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
 
      if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { 
-    stringBuffer.append(TEXT_267);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_268);
-    stringBuffer.append(av.getMultiplicity().getUpperBound());
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_269);
-     } else { 
+    stringBuffer.append(av.getMultiplicity().getUpperBound());
     stringBuffer.append(TEXT_270);
+     } else { 
+    stringBuffer.append(TEXT_271);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } 
-    stringBuffer.append(TEXT_271);
+    stringBuffer.append(TEXT_272);
     stringBuffer.append(av.getMultiplicity().getUpperBound());
      if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } 
-    stringBuffer.append(TEXT_272);
+    stringBuffer.append(TEXT_273);
      } 
     
     }
@@ -3017,41 +3035,41 @@ public class RubyClassGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_273);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_274);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_275);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_276);
      if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
      if (!av.getMultiplicity().isUpperBoundMany()) { 
-    stringBuffer.append(TEXT_276);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_277);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_278);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_279);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_279);
-     } 
     stringBuffer.append(TEXT_280);
-    stringBuffer.append(gen.translate("associationMany",av));
+     } 
     stringBuffer.append(TEXT_281);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_282);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_283);
-    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_284);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
     stringBuffer.append(TEXT_285);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
-    stringBuffer.append(TEXT_286);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_287);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_286);
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(TEXT_287);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_288);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_289);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_290);
     
     }
     
@@ -3060,39 +3078,39 @@ public class RubyClassGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_290);
-    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_291);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_292);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_293);
-    stringBuffer.append(gen.translate("associationMany",av));
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
     stringBuffer.append(TEXT_294);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_295);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_296);
-    stringBuffer.append(gen.translate("associationMany",av));
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
     stringBuffer.append(TEXT_297);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_298);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_299);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_300);
-    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
-    stringBuffer.append(TEXT_301);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_302);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_303);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_304);
+    stringBuffer.append(TEXT_300);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_301);
+    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
+    stringBuffer.append(TEXT_302);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_303);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_304);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_305);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_306);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_307);
     
     }
 
@@ -3103,1464 +3121,1464 @@ public class RubyClassGenerator implements ILang
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_307);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_308);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_309);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_310);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_311);
     stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_310);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(TEXT_311);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_312);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_313);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_314);
     
     }
     else if (includeFile == "association_SetUnidirectionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_314);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_315);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_316);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_317);
-    stringBuffer.append(gen.translate("parameterNew",av));
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_318);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_319);
     stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_319);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_320);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_321);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_322);
     
     }
     else if (includeFile == "association_SetOptionalOneToOne.jet")
     {
       
-    stringBuffer.append(TEXT_322);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_323);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_324);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_325);
-    stringBuffer.append(gen.translate("associationOne",av));
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_326);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_327);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_328);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_329);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_330);
-    stringBuffer.append(gen.translate("setMethod",av));
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_331);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_332);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_333);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_333);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_334);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_335);
-    stringBuffer.append(gen.relatedTranslate("parameterOld",av));
-    stringBuffer.append(TEXT_336);
     stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_336);
+    stringBuffer.append(gen.relatedTranslate("parameterOld",av));
     stringBuffer.append(TEXT_337);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_338);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_339);
-    stringBuffer.append(gen.relatedTranslate("parameterOld",av));
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_340);
     stringBuffer.append(gen.relatedTranslate("parameterOld",av));
     stringBuffer.append(TEXT_341);
-    stringBuffer.append(TEXT_342);
     stringBuffer.append(gen.relatedTranslate("parameterOld",av));
+    stringBuffer.append(TEXT_342);
     stringBuffer.append(TEXT_343);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterOld",av));
     stringBuffer.append(TEXT_344);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_345);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_346);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_347);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_348);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(TEXT_349);
     
     }
     else if (includeFile == "association_SetOneToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_349);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_350);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_351);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_352);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_353);
     stringBuffer.append(gen.translate("setMethod",av));
+    stringBuffer.append(TEXT_351);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_352);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(TEXT_353);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_354);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_355);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_356);
     stringBuffer.append(gen.translate("associationOne",av));
      if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_356);
     stringBuffer.append(TEXT_357);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_358);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_359);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_360);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_359);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_360);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_361);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_362);
-    stringBuffer.append(gen.translate("setMethod",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_363);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_364);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_365);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_366);
-    stringBuffer.append(TEXT_367);
-    stringBuffer.append(gen.translate("parameterOld",av));
-    stringBuffer.append(TEXT_368);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_365);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_366);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_367);
+    stringBuffer.append(TEXT_368);
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_369);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_370);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_371);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_371);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_372);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_373);
-    stringBuffer.append(gen.translate("parameterOld",av));
-    stringBuffer.append(TEXT_374);
-    stringBuffer.append(TEXT_375);
-    stringBuffer.append(gen.translate("parameterOld",av));
-    stringBuffer.append(TEXT_376);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_374);
+    stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(TEXT_375);
+    stringBuffer.append(TEXT_376);
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_377);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_378);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_379);
     
     }
     else if (includeFile == "association_AddMandatoryManyToOne.jet")
     {
       
-    stringBuffer.append(TEXT_379);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_380);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_381);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
-    stringBuffer.append(TEXT_382);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_383);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_384);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_385);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
-    stringBuffer.append(TEXT_386);
+    stringBuffer.append(TEXT_382);
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(TEXT_383);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_384);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_385);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_386);
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_387);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_388);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
-    stringBuffer.append(TEXT_389);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_389);
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_390);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_391);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_392);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_393);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_393);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_394);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_395);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_396);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_397);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_398);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_399);
-    stringBuffer.append(gen.translate("removeMethod",av));
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
     stringBuffer.append(TEXT_400);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_401);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_402);
-    stringBuffer.append(gen.translate("parameterOne",av));
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
     stringBuffer.append(TEXT_403);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_404);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_405);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_406);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_407);
+    stringBuffer.append(TEXT_404);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_405);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_406);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_407);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
     stringBuffer.append(TEXT_408);
-    stringBuffer.append(av.getMultiplicity().getLowerBound());
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_409);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_410);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_411);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_412);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_412);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_413);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_414);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_415);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_416);
     
     }
     else if (includeFile == "association_AddMNToOnlyOne.jet")
     {
       
-    stringBuffer.append(TEXT_416);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_417);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_418);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_419);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_420);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_421);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_422);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_422);
     stringBuffer.append(TEXT_423);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_424);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_425);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_426);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
-    stringBuffer.append(TEXT_427);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_425);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_426);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_427);
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_428);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_429);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
-    stringBuffer.append(TEXT_430);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_430);
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_431);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_432);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_433);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_434);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_434);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_435);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_436);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_437);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_438);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_439);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_440);
-    stringBuffer.append(gen.translate("removeMethod",av));
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
     stringBuffer.append(TEXT_441);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_442);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_443);
-    stringBuffer.append(gen.translate("parameterOne",av));
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
     stringBuffer.append(TEXT_444);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_445);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_446);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_447);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_448);
+    stringBuffer.append(TEXT_445);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_446);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_447);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_448);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
     stringBuffer.append(TEXT_449);
-    stringBuffer.append(av.getMultiplicity().getLowerBound());
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_450);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_451);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_452);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_453);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_453);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_454);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_455);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_456);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_457);
     
     }
     else if (includeFile == "association_AddOptionalNToOne.jet")
     {
       
-    stringBuffer.append(TEXT_457);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_458);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_459);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_460);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_461);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_462);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_463);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_463);
     stringBuffer.append(TEXT_464);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_465);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_466);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_467);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
-    stringBuffer.append(TEXT_468);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_466);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_467);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_468);
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_469);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_470);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_471);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_472);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_473);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_474);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_475);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_476);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_477);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_478);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_479);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_480);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_481);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_482);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_483);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_484);
+    stringBuffer.append(TEXT_475);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_476);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_477);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_478);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_479);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_480);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_481);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_482);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_483);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_484);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_485);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_486);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_487);
     
     }
     else if (includeFile == "association_SetOptionalNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_487);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_488);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_489);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_490);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_491);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_492);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_493);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_494);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_495);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_496);
-    stringBuffer.append(TEXT_497);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_498);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_499);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_500);
     stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_501);
+    stringBuffer.append(TEXT_494);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_495);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_496);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_497);
+    stringBuffer.append(TEXT_498);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_499);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_500);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_501);
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_502);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_503);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_504);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_505);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
     stringBuffer.append(TEXT_506);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_507);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_508);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_509);
-    stringBuffer.append(TEXT_510);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_511);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_512);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_510);
+    stringBuffer.append(TEXT_511);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_512);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_513);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_514);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_515);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_516);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_517);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_518);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_519);
-    stringBuffer.append(TEXT_520);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_521);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
-    stringBuffer.append(TEXT_522);
-    stringBuffer.append(TEXT_523);
     stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_519);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_520);
+    stringBuffer.append(TEXT_521);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_522);
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(TEXT_523);
     stringBuffer.append(TEXT_524);
-    stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_525);
-    stringBuffer.append(TEXT_526);
     stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(TEXT_526);
     stringBuffer.append(TEXT_527);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_528);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_529);
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(TEXT_530);
     
     }
     else if (includeFile == "association_AddManyToOne.jet")
     {
       
-    stringBuffer.append(TEXT_530);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_531);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_532);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
-    stringBuffer.append(TEXT_533);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_534);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_535);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_536);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
-    stringBuffer.append(TEXT_537);
+    stringBuffer.append(TEXT_533);
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(TEXT_534);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_535);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_536);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_537);
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_538);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_539);
-    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_540);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_541);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_542);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_543);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_544);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_545);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_546);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_547);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_548);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_549);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_550);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_551);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_552);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_553);
+    stringBuffer.append(TEXT_544);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_545);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_546);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_547);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_548);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_549);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_550);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_551);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_552);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_553);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_554);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_555);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_556);
     
     }
     else if (includeFile == "association_SetOptionalOneToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_556);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_557);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_558);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_559);
     stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_559);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_560);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_561);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_562);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_563);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_564);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_565);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_566);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_567);
-    stringBuffer.append(TEXT_568);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_567);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_568);
     stringBuffer.append(TEXT_569);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_570);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_571);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
     stringBuffer.append(TEXT_572);
-    stringBuffer.append(gen.translate("parameterCurrent",av));
     stringBuffer.append(TEXT_573);
-    stringBuffer.append(gen.translate("getMethod",av));
-    stringBuffer.append(TEXT_574);
     stringBuffer.append(gen.translate("parameterCurrent",av));
+    stringBuffer.append(TEXT_574);
+    stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_575);
     stringBuffer.append(gen.translate("parameterCurrent",av));
     stringBuffer.append(TEXT_576);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_577);
-    stringBuffer.append(TEXT_578);
     stringBuffer.append(gen.translate("parameterCurrent",av));
+    stringBuffer.append(TEXT_577);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_578);
     stringBuffer.append(TEXT_579);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterCurrent",av));
     stringBuffer.append(TEXT_580);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_581);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_582);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_583);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_584);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_585);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_586);
-    stringBuffer.append(TEXT_587);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_588);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_581);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_582);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_583);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_584);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_585);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_586);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_587);
+    stringBuffer.append(TEXT_588);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_589);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_590);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_591);
     
     }
     else if (includeFile == "association_AddMNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_591);
-    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_592);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_593);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_594);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_595);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_594);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_595);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_596);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_597);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
     stringBuffer.append(TEXT_598);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_599);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_600);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_600);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_601);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_602);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_603);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_604);
-    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
-    stringBuffer.append(TEXT_605);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_606);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_607);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_608);
+    stringBuffer.append(TEXT_604);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_605);
+    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
+    stringBuffer.append(TEXT_606);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_607);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_608);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_609);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_610);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_611);
     
     }
     else if (includeFile == "association_AddMStarToMany.jet")
     {
       
-    stringBuffer.append(TEXT_611);
-    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_612);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_613);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_614);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_615);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_614);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_615);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_616);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_617);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
     stringBuffer.append(TEXT_618);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_619);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_620);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_620);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_621);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_622);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_623);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_624);
-    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
-    stringBuffer.append(TEXT_625);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_626);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_627);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_628);
+    stringBuffer.append(TEXT_624);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_625);
+    stringBuffer.append(gen.relatedTranslate("indexOfMethod",av));
+    stringBuffer.append(TEXT_626);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_627);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_628);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_629);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_630);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_631);
     
     }
     else if (includeFile == "association_SetOptionalOneToOptionalN.jet")
     {
       
-    stringBuffer.append(TEXT_631);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_632);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_633);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_634);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_634);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_635);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_636);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_637);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_638);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_639);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
      if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_639);
     stringBuffer.append(TEXT_640);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_641);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_642);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_643);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_644);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_645);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_646);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_647);
-    stringBuffer.append(TEXT_648);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_647);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_648);
     stringBuffer.append(TEXT_649);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_650);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_651);
-    stringBuffer.append(TEXT_652);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_652);
     stringBuffer.append(TEXT_653);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_654);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_655);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_656);
     
     }
     else if (includeFile == "association_SetOneToMany.jet")
     {
       
-    stringBuffer.append(TEXT_656);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_657);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_658);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_659);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_659);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_660);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_661);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
     stringBuffer.append(TEXT_662);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_663);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_664);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_665);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_666);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_667);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_668);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_669);
-    stringBuffer.append(TEXT_670);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_669);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_670);
     stringBuffer.append(TEXT_671);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_672);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_673);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_674);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_675);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_676);
     
     }
     else if (includeFile == "association_SetOneToAtMostN.jet")
     {
       
-    stringBuffer.append(TEXT_676);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_677);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_678);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_679);
-    stringBuffer.append(gen.translate("associationOne",av));
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_680);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_681);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_682);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_683);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_684);
-    stringBuffer.append(relatedAssociation.getMultiplicity().getUpperBound());
-    stringBuffer.append(TEXT_685);
+    stringBuffer.append(TEXT_681);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_682);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_683);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_684);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_685);
+    stringBuffer.append(relatedAssociation.getMultiplicity().getUpperBound());
     stringBuffer.append(TEXT_686);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_687);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_688);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_689);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
      if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_689);
     stringBuffer.append(TEXT_690);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_691);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_692);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_693);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_694);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_695);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_696);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_697);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_697);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_698);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_699);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_700);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_701);
     stringBuffer.append(gen.translate("parameterExisting",av));
      if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_701);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_702);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_703);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_704);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_705);
     
     }
     else if (includeFile == "association_SetOneToMandatoryMany.jet")
     {
       
-    stringBuffer.append(TEXT_705);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_706);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_707);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-    stringBuffer.append(TEXT_708);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_709);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_710);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_711);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_712);
+    stringBuffer.append(TEXT_708);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(TEXT_709);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_710);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_711);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_712);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
     stringBuffer.append(TEXT_713);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_714);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_715);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_716);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_717);
     stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
      if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_717);
     stringBuffer.append(TEXT_718);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_719);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_720);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_721);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_722);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_723);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_724);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_725);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_725);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_726);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_727);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_728);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_729);
     stringBuffer.append(gen.translate("parameterExisting",av));
      if (customSetPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetPostfixCode); } 
-    stringBuffer.append(TEXT_729);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_730);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_731);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_732);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_733);
     
     }
     else if (includeFile == "association_AddManyToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_733);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_734);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_735);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
-    stringBuffer.append(TEXT_736);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_737);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_738);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_739);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_740);
-    stringBuffer.append(TEXT_741);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_742);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_743);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_744);
-    stringBuffer.append(TEXT_745);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_746);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_747);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_748);
-    stringBuffer.append(TEXT_749);
     stringBuffer.append(gen.translate("addMethod",av));
-    stringBuffer.append(TEXT_750);
+    stringBuffer.append(TEXT_735);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_751);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_752);
+    stringBuffer.append(TEXT_736);
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(TEXT_737);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_738);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_753);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_754);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_755);
+    stringBuffer.append(TEXT_739);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_740);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_741);
+    stringBuffer.append(TEXT_742);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_756);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_757);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_758);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_759);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_760);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_761);
-    stringBuffer.append(TEXT_762);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_763);
+    stringBuffer.append(TEXT_743);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_744);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_745);
+    stringBuffer.append(TEXT_746);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_747);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_748);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_749);
+    stringBuffer.append(TEXT_750);
+    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_751);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_752);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_753);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_754);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_755);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_756);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_757);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_758);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_759);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_760);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_761);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_762);
+    stringBuffer.append(TEXT_763);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_764);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_765);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_766);
     
     }
     else if (includeFile == "association_SetOptionalOneToMany.jet")
     {
       
-    stringBuffer.append(TEXT_766);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_767);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_768);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_769);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
     stringBuffer.append(TEXT_770);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_771);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_772);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_773);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_774);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_775);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_776);
-    stringBuffer.append(TEXT_777);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_776);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_777);
     stringBuffer.append(TEXT_778);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_779);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_780);
-    stringBuffer.append(TEXT_781);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_781);
     stringBuffer.append(TEXT_782);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_783);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_784);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+    stringBuffer.append(TEXT_785);
     
     }
     else if (includeFile == "association_AddOptionalNToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_785);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_786);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_787);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_788);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_789);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_790);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_791);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_791);
     stringBuffer.append(TEXT_792);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_793);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_794);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_795);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_796);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_797);
-    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_798);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_799);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_800);
-    stringBuffer.append(TEXT_801);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_802);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_803);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_804);
-    stringBuffer.append(TEXT_805);
-    stringBuffer.append(gen.translate("addMethod",av));
-    stringBuffer.append(TEXT_806);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_807);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_808);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_809);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_810);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_811);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_812);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_813);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_814);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_815);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_816);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_817);
-    stringBuffer.append(TEXT_818);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_819);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_800);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_801);
+    stringBuffer.append(TEXT_802);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_803);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_804);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_805);
+    stringBuffer.append(TEXT_806);
+    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_807);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_808);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_809);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_810);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_811);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_812);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_813);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_814);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_815);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_816);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_817);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_818);
+    stringBuffer.append(TEXT_819);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_820);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_821);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_822);
     
     }
     else if (includeFile == "association_AddUnidirectionalMN.jet")
     {
       
-    stringBuffer.append(TEXT_822);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_823);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_824);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_825);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_826);
-    stringBuffer.append(uClass.getName());
-    stringBuffer.append(TEXT_827);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-    stringBuffer.append(TEXT_828);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_829);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_830);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_831);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_832);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_833);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_834);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_835);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_836);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_837);
     stringBuffer.append(gen.translate("numberOfMethod",av));
-    stringBuffer.append(TEXT_838);
+    stringBuffer.append(TEXT_827);
     stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_828);
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(TEXT_829);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_830);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_831);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_832);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_833);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_834);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_835);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_836);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_837);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_838);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_839);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_840);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_840);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_841);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_842);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_843);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_844);
     
     }
     else if (includeFile == "association_AddMNToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_844);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_845);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_846);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_847);
      if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
      if (!av.isStar()) { 
-    stringBuffer.append(TEXT_847);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_848);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_849);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_850);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_850);
-     } 
     stringBuffer.append(TEXT_851);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+     } 
     stringBuffer.append(TEXT_852);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_853);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_854);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_853);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_854);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_855);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_856);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_857);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_858);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_859);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_859);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_860);
-    stringBuffer.append(TEXT_861);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_861);
     stringBuffer.append(TEXT_862);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_863);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_864);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_865);
+    stringBuffer.append(TEXT_864);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_865);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_866);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_867);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_868);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_869);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_870);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_871);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_872);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_873);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_874);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
-    stringBuffer.append(TEXT_875);
-    stringBuffer.append(uClass.getName());
-    stringBuffer.append(TEXT_876);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_877);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_878);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_879);
-    stringBuffer.append(TEXT_880);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_881);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_869);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_870);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_871);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_872);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_873);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_874);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_875);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_876);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_877);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_878);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_879);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_880);
+    stringBuffer.append(TEXT_881);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_882);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_883);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_884);
     
     }
     else if (includeFile == "association_SetNToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_884);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_885);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_886);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-    stringBuffer.append(TEXT_887);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
-    stringBuffer.append(TEXT_888);
-    stringBuffer.append(TEXT_889);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_887);
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(TEXT_888);
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(TEXT_889);
     stringBuffer.append(TEXT_890);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_891);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_892);
-    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_893);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_894);
-    stringBuffer.append(gen.translate("associationNew",av));
-    stringBuffer.append(TEXT_895);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_896);
-    stringBuffer.append(gen.translate("associationNew",av));
-    stringBuffer.append(TEXT_897);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_898);
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_899);
-    stringBuffer.append(TEXT_900);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
-    stringBuffer.append(TEXT_901);
+    stringBuffer.append(TEXT_895);
     stringBuffer.append(gen.translate("associationNew",av));
-    stringBuffer.append(TEXT_902);
+    stringBuffer.append(TEXT_896);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_897);
+    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(TEXT_898);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_899);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_900);
+    stringBuffer.append(TEXT_901);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(TEXT_902);
+    stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_903);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_904);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_905);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_905);
     stringBuffer.append(TEXT_906);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_907);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_908);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_909);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_909);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_910);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_911);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_912);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_913);
-    stringBuffer.append(TEXT_914);
-    stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_915);
-    stringBuffer.append(gen.translate("associationNew",av));
-    stringBuffer.append(TEXT_916);
-    stringBuffer.append(TEXT_917);
-    stringBuffer.append(gen.translate("associationNew",av));
-    stringBuffer.append(TEXT_918);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_919);
+    stringBuffer.append(TEXT_913);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_920);
+    stringBuffer.append(TEXT_914);
+    stringBuffer.append(TEXT_915);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_916);
     stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(TEXT_917);
+    stringBuffer.append(TEXT_918);
+    stringBuffer.append(gen.translate("associationNew",av));
+    stringBuffer.append(TEXT_919);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_920);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_921);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_922);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_923);
     
     }
     else if (includeFile == "association_AddUnidirectionalMany.jet")
     {
       
-    stringBuffer.append(TEXT_923);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_924);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_925);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_926);
-    stringBuffer.append(gen.translate("associationMany",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_927);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_928);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_929);
-    stringBuffer.append(gen.translate("removeMethod",av));
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
     stringBuffer.append(TEXT_930);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_931);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_932);
-    stringBuffer.append(gen.translate("associationMany",av));
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
     stringBuffer.append(TEXT_933);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_934);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_935);
+    stringBuffer.append(TEXT_934);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_935);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_936);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_937);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_938);
     
     }
     else if (includeFile == "association_AddUnidirectionalOptionalN.jet")
     {
       
-    stringBuffer.append(TEXT_938);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_939);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_940);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_941);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_942);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_943);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_944);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_945);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_946);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_947);
-    stringBuffer.append(gen.translate("removeMethod",av));
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
     stringBuffer.append(TEXT_948);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_949);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_950);
-    stringBuffer.append(gen.translate("associationMany",av));
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
     stringBuffer.append(TEXT_951);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_952);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_953);
+    stringBuffer.append(TEXT_952);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_953);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_954);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_955);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_956);
     
     }
     else if (includeFile == "association_AddUnidirectionalMStar.jet")
     {
       
-    stringBuffer.append(TEXT_956);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_957);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_958);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_959);
-    stringBuffer.append(gen.translate("associationMany",av));
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
     stringBuffer.append(TEXT_960);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_961);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
-    stringBuffer.append(TEXT_962);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_963);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_964);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
-    stringBuffer.append(TEXT_965);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_966);
+    stringBuffer.append(TEXT_961);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_962);
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+    stringBuffer.append(TEXT_963);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_964);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_965);
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+    stringBuffer.append(TEXT_966);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_967);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_968);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
     stringBuffer.append(TEXT_969);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_970);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_971);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
-    stringBuffer.append(TEXT_971);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_972);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_973);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_974);
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+    stringBuffer.append(TEXT_975);
     
     }
     else if (includeFile == "association_SetUnidirectionalN.jet")
     {
       
-    stringBuffer.append(TEXT_975);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_976);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_977);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_978);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_979);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_980);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_981);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_982);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_983);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_984);
-    stringBuffer.append(TEXT_985);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_986);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_987);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_988);
     stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_989);
+    stringBuffer.append(TEXT_982);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_983);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_984);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_985);
+    stringBuffer.append(TEXT_986);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_987);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_988);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_989);
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_990);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_991);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_991);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_992);
-    stringBuffer.append(TEXT_993);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_994);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_995);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_996);
+    stringBuffer.append(TEXT_993);
+    stringBuffer.append(TEXT_994);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_995);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_996);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_997);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_998);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_999);
     
     }
     else if (includeFile != null)
@@ -4571,227 +4589,227 @@ public class RubyClassGenerator implements ILang
     if (includeFile2 == "association_SetMNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_999);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1000);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1001);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1002);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1003);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1004);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1005);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1006);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1007);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1008);
-    stringBuffer.append(TEXT_1009);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1010);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1011);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1012);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1006);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1007);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1008);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1009);
+    stringBuffer.append(TEXT_1010);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1011);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1012);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1013);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1014);
-    stringBuffer.append(uClass.getName());
-    stringBuffer.append(TEXT_1015);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1016);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1017);
+    stringBuffer.append(TEXT_1015);
     stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1016);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1017);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1018);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1019);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1019);
     stringBuffer.append(TEXT_1020);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1021);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1022);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1023);
-    stringBuffer.append(TEXT_1024);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1025);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1026);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1024);
+    stringBuffer.append(TEXT_1025);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1026);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_1027);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1028);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_1029);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1030);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_1031);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1032);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1033);
-    stringBuffer.append(TEXT_1034);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1035);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
-    stringBuffer.append(TEXT_1036);
-    stringBuffer.append(TEXT_1037);
     stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1033);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1034);
+    stringBuffer.append(TEXT_1035);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1036);
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(TEXT_1037);
     stringBuffer.append(TEXT_1038);
-    stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1039);
-    stringBuffer.append(TEXT_1040);
     stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(TEXT_1040);
     stringBuffer.append(TEXT_1041);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_1042);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1043);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1044);
     
     }
     else if (includeFile2 == "association_SetMStarToMany.jet")
     {
       
-    stringBuffer.append(TEXT_1044);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1045);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1046);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1047);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1048);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1049);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1050);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1051);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1052);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1053);
-    stringBuffer.append(TEXT_1054);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1055);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1056);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1057);
     stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1058);
+    stringBuffer.append(TEXT_1051);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1052);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1053);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1054);
+    stringBuffer.append(TEXT_1055);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1056);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1057);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1058);
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1059);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1060);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1061);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1061);
     stringBuffer.append(TEXT_1062);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1063);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1064);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1065);
-    stringBuffer.append(TEXT_1066);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1067);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1068);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1066);
+    stringBuffer.append(TEXT_1067);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1068);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_1069);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1070);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_1071);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1072);
+    stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_1073);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1074);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1075);
-    stringBuffer.append(TEXT_1076);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1077);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
-    stringBuffer.append(TEXT_1078);
-    stringBuffer.append(TEXT_1079);
     stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1075);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1076);
+    stringBuffer.append(TEXT_1077);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1078);
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(TEXT_1079);
     stringBuffer.append(TEXT_1080);
-    stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1081);
-    stringBuffer.append(TEXT_1082);
     stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(TEXT_1082);
     stringBuffer.append(TEXT_1083);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_1084);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1085);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1086);
     
     }
     else if (includeFile2 == "association_SetUnidirectionalMN.jet")
     {
       
-    stringBuffer.append(TEXT_1086);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1087);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1088);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1089);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1090);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1091);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1092);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1093);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1094);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1095);
-    stringBuffer.append(TEXT_1096);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1097);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1098);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1099);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1093);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1094);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1095);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1096);
+    stringBuffer.append(TEXT_1097);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1098);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1099);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1100);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1101);
-    stringBuffer.append(uClass.getName());
-    stringBuffer.append(TEXT_1102);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1103);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1104);
+    stringBuffer.append(TEXT_1102);
     stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1103);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1104);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1105);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1106);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1106);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1107);
-    stringBuffer.append(TEXT_1108);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1109);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1110);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1111);
+    stringBuffer.append(TEXT_1108);
+    stringBuffer.append(TEXT_1109);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1110);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1111);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1112);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1113);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1114);
     
     }
     else if (includeFile2 == "association_SetMNToOptionalOne.jet")
@@ -4801,231 +4819,231 @@ public class RubyClassGenerator implements ILang
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" or {0}.size > {2}.{1}", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av),uClass.getName());
 
-    stringBuffer.append(TEXT_1114);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1115);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1116);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-    stringBuffer.append(TEXT_1117);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1117);
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1118);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1119);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1120);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(orCheckMaxBound);
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1120);
     stringBuffer.append(TEXT_1121);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1122);
-    stringBuffer.append(TEXT_1123);
-    stringBuffer.append(existingToNewMap);
-    stringBuffer.append(TEXT_1124);
-    stringBuffer.append(TEXT_1125);
-    stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1126);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1127);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(TEXT_1123);
+    stringBuffer.append(TEXT_1124);
+    stringBuffer.append(existingToNewMap);
+    stringBuffer.append(TEXT_1125);
+    stringBuffer.append(TEXT_1126);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1127);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1128);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1129);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1130);
-    stringBuffer.append(gen.translate("parameterOne",av));
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
     stringBuffer.append(TEXT_1131);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1132);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1133);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_1134);
-    stringBuffer.append(TEXT_1135);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_1136);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1137);
+    stringBuffer.append(TEXT_1134);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_1135);
+    stringBuffer.append(TEXT_1136);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1137);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1138);
-    stringBuffer.append(existingToNewMap);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1139);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_1140);
-    stringBuffer.append(TEXT_1141);
     stringBuffer.append(existingToNewMap);
-    stringBuffer.append(TEXT_1142);
+    stringBuffer.append(TEXT_1140);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1141);
+    stringBuffer.append(TEXT_1142);
+    stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1143);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1144);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
-    stringBuffer.append(TEXT_1145);
-    stringBuffer.append(existingToNewMap);
-    stringBuffer.append(TEXT_1146);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1145);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1146);
+    stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1147);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1148);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1148);
     stringBuffer.append(TEXT_1149);
-    stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1150);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1151);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1152);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1153);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1154);
-    stringBuffer.append(TEXT_1155);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(TEXT_1154);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1155);
     stringBuffer.append(TEXT_1156);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1157);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1158);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1159);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1160);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_1161);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1162);
-    stringBuffer.append(TEXT_1163);
-    stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1164);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1160);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1161);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_1162);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1163);
+    stringBuffer.append(TEXT_1164);
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1165);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1166);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1167);
-    stringBuffer.append(TEXT_1168);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1169);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_1168);
+    stringBuffer.append(TEXT_1169);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1170);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1171);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1172);
-    stringBuffer.append(TEXT_1173);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1174);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_1175);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1176);
+    stringBuffer.append(TEXT_1172);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1173);
+    stringBuffer.append(TEXT_1174);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1175);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_1176);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1177);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1178);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1179);
     
     }
     else if (includeFile2 == "association_SetUnidirectionalOptionalN.jet")
     {
       
-    stringBuffer.append(TEXT_1179);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1180);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1181);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1182);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1183);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1184);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1185);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1186);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1187);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1188);
-    stringBuffer.append(TEXT_1189);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1190);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1191);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1192);
     stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1193);
+    stringBuffer.append(TEXT_1186);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1187);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1188);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1189);
+    stringBuffer.append(TEXT_1190);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1191);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1192);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1193);
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1194);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1195);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1196);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1196);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1197);
-    stringBuffer.append(TEXT_1198);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1199);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1200);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1201);
+    stringBuffer.append(TEXT_1198);
+    stringBuffer.append(TEXT_1199);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1200);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1201);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1202);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1203);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1204);
     
     }
     else if (includeFile2 == "association_SetUnidirectionalMStar.jet")
     {
       
-    stringBuffer.append(TEXT_1204);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1205);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1206);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1207);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1208);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1209);
-    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1210);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1211);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1212);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1213);
-    stringBuffer.append(TEXT_1214);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1215);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1216);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1217);
     stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1218);
+    stringBuffer.append(TEXT_1211);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1212);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1213);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1214);
+    stringBuffer.append(TEXT_1215);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1216);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1217);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1218);
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1219);
-    stringBuffer.append(uClass.getName());
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1220);
+    stringBuffer.append(uClass.getName());
+    stringBuffer.append(TEXT_1221);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
      if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1221);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1222);
-    stringBuffer.append(TEXT_1223);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1224);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1225);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1226);
+    stringBuffer.append(TEXT_1223);
+    stringBuffer.append(TEXT_1224);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1225);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1226);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1227);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1228);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1229);
     
     }
     else if (includeFile2 != null)
@@ -5125,15 +5143,15 @@ public class RubyClassGenerator implements ILang
   }
 
 
-    stringBuffer.append(TEXT_1229);
     stringBuffer.append(TEXT_1230);
-    stringBuffer.append( checks.toString().trim() );
     stringBuffer.append(TEXT_1231);
+    stringBuffer.append( checks.toString().trim() );
     stringBuffer.append(TEXT_1232);
-    stringBuffer.append( hash.toString().trim() );
     stringBuffer.append(TEXT_1233);
-    stringBuffer.append( canSet.toString().trim() );
+    stringBuffer.append( hash.toString().trim() );
     stringBuffer.append(TEXT_1234);
+    stringBuffer.append( canSet.toString().trim() );
+    stringBuffer.append(TEXT_1235);
      } 
     
 { 
@@ -5146,11 +5164,11 @@ public class RubyClassGenerator implements ILang
       {
         hasActivities = true;
         
-    stringBuffer.append(TEXT_1235);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
     stringBuffer.append(TEXT_1236);
-    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append( gen.translate("doActivityMethod",state));
     stringBuffer.append(TEXT_1237);
+    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append(TEXT_1238);
     
       }
     }
@@ -5185,15 +5203,15 @@ public class RubyClassGenerator implements ILang
     }
   }
 
-    stringBuffer.append(TEXT_1238);
     stringBuffer.append(TEXT_1239);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1240);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1241);
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1242);
-    stringBuffer.append( output );
     stringBuffer.append(TEXT_1243);
+    stringBuffer.append( output );
+    stringBuffer.append(TEXT_1244);
     
   }
 }
@@ -5209,19 +5227,19 @@ public class RubyClassGenerator implements ILang
       {
         hasTimedEvents = true;
         
-    stringBuffer.append(TEXT_1244);
-    stringBuffer.append(gen.translate("eventStartMethod",e) );
     stringBuffer.append(TEXT_1245);
-    stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(gen.translate("eventStartMethod",e) );
     stringBuffer.append(TEXT_1246);
-    stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_1247);
-    stringBuffer.append( e.getTimerInSeconds() );
-    stringBuffer.append(TEXT_1248);
-    stringBuffer.append(gen.translate("eventStopMethod",e) );
-    stringBuffer.append(TEXT_1249);
     stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(TEXT_1247);
+    stringBuffer.append( gen.translate("eventMethod",e) );
+    stringBuffer.append(TEXT_1248);
+    stringBuffer.append( e.getTimerInSeconds() );
+    stringBuffer.append(TEXT_1249);
+    stringBuffer.append(gen.translate("eventStopMethod",e) );
     stringBuffer.append(TEXT_1250);
+    stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(TEXT_1251);
     
       }
     }
@@ -5233,11 +5251,11 @@ public class RubyClassGenerator implements ILang
  
 
 
-    stringBuffer.append(TEXT_1251);
-    stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_1252);
     stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_1253);
+    stringBuffer.append( gen.translate("type",uClass) );
+    stringBuffer.append(TEXT_1254);
     
   for(StateMachine sm : uClass.getStateMachines())
   {
@@ -5246,19 +5264,19 @@ public class RubyClassGenerator implements ILang
       if (e.getIsTimer())
       {
         
-    stringBuffer.append(TEXT_1254);
-    stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_1255);
     stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_1256);
-    stringBuffer.append( gen.translate("eventStartMethod",e) );
+    stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_1257);
+    stringBuffer.append( gen.translate("eventStartMethod",e) );
+    stringBuffer.append(TEXT_1258);
     
       }
     }
   }
 
-    stringBuffer.append(TEXT_1258);
+    stringBuffer.append(TEXT_1259);
     
   }
 }
@@ -5292,17 +5310,17 @@ public class RubyClassGenerator implements ILang
       if (av.isOne())
       {
         
-    stringBuffer.append(TEXT_1259);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1260);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1261);
     
       }
       else if (av.isMany())
       {
         
-    stringBuffer.append(TEXT_1261);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1262);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1263);
     
       }
       continue;
@@ -5311,217 +5329,217 @@ public class RubyClassGenerator implements ILang
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1263);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1264);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1265);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1266);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1267);
-    stringBuffer.append(TEXT_1268);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1268);
     stringBuffer.append(TEXT_1269);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1270);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1270);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1271);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1272);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1273);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1274);
     
     }
     else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1274);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1275);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1276);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1277);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1278);
-    stringBuffer.append(TEXT_1279);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1279);
     stringBuffer.append(TEXT_1280);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1281);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1282);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1282);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1283);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1284);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1285);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1286);
-    stringBuffer.append(TEXT_1287);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1287);
     stringBuffer.append(TEXT_1288);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1289);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
     {
       
-    stringBuffer.append(TEXT_1289);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1290);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1291);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1292);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1293);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isN())
     {
       
-    stringBuffer.append(TEXT_1293);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1294);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1295);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1296);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isMN())
     {
       
-    stringBuffer.append(TEXT_1296);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1297);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1298);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
-    stringBuffer.append(TEXT_1299);
-    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
-    stringBuffer.append(TEXT_1300);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1299);
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1300);
+    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_1301);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1302);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1303);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1304);
     
     }
     else if (av.isOne() && relatedAssociation.isMany())
     {
       
-    stringBuffer.append(TEXT_1304);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1305);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1306);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1307);
     
     }
     else if (av.isMandatory() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1307);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1308);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1309);
-    stringBuffer.append(TEXT_1310);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1311);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_1312);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1309);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1310);
+    stringBuffer.append(TEXT_1311);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1312);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_1313);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1314);
     
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
     {
       
-    stringBuffer.append(TEXT_1314);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1315);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1316);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1317);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1318);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1319);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1320);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1321);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1322);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_1323);
-    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1324);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1325);
-    stringBuffer.append(TEXT_1326);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1326);
     stringBuffer.append(TEXT_1327);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1328);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1329);
     
     }
     else if (av.isMany() && relatedAssociation.isMany())
     {
       
-    stringBuffer.append(TEXT_1329);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1330);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1331);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1332);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1333);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1334);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1335);
-    stringBuffer.append(TEXT_1336);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1336);
     stringBuffer.append(TEXT_1337);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1338);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1339);
     
     }
     else if (av.isMany() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1339);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1340);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1341);
-    stringBuffer.append(TEXT_1342);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1342);
     stringBuffer.append(TEXT_1343);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1344);
     
     }
     else if (av.isMany() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1344);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1345);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1346);
-    stringBuffer.append(TEXT_1347);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1347);
     stringBuffer.append(TEXT_1348);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1349);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1350);
     
     }
     else
@@ -5530,7 +5548,7 @@ public class RubyClassGenerator implements ILang
     }
   }
   
-  if (!uClass.isRoot() && "class".equals(uClass.getExtendsClass().getModifier()))
+  if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
   {
     appendln(stringBuffer,"");
     append(stringBuffer, "    super.delete");
@@ -5575,15 +5593,15 @@ public class RubyClassGenerator implements ILang
     	}
     }
 
-    stringBuffer.append(TEXT_1350);
+    stringBuffer.append(TEXT_1351);
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_1351);
     stringBuffer.append(TEXT_1352);
+    stringBuffer.append(TEXT_1353);
     stringBuffer.append(uClass.getExtraCode());
      } 
-    stringBuffer.append(TEXT_1353);
     stringBuffer.append(TEXT_1354);
+    stringBuffer.append(TEXT_1355);
     stringBuffer.append(gen.translate("packageDefinitionEnd",uClass));
     return stringBuffer.toString();
   }

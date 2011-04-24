@@ -14,6 +14,24 @@ namespace cruise.umple.compiler;
 
 class UmpleModel
 {
+  public List<UmpleElement> getUmpleElements()
+  {
+    List<UmpleElement> all = new ArrayList<UmpleElement>();
+    all.addAll(getUmpleClasses());
+    all.addAll(getUmpleInterfaces());
+    return all;
+  }
+
+  public UmpleInterface addUmpleInterface(String name)
+  {
+    UmpleInterface newInterface = getUmpleInterface(name);
+    if (newInterface == null)
+    {
+      newInterface = new UmpleInterface(name);
+      addUmpleInterface(newInterface);
+    }
+    return newInterface;
+  }
 
   public UmpleClass addUmpleClass(String name)
   {
@@ -394,17 +412,6 @@ class UmpleInterface
 	  return false;  
   }
 
- protected GeneratedInterface gInterface = null;
-  public GeneratedInterface getGeneratedInterface()
-  {
-    return gInterface;
-  }
-
-  public GeneratedInterface createGeneratedInterface(UmpleModel model)
-  {
-    gInterface = new GeneratedInterface(model, this);
-    return getGeneratedInterface();
-  }
 }
 
 

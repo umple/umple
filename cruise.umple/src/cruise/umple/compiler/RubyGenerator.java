@@ -138,20 +138,7 @@ public class RubyGenerator implements CodeGenerator
       addImports(aClass,genClass);
     }
 
-    for (UmpleInterface aInterface : model.getUmpleInterfaces())
-    {
-      prepare(aInterface);
-    }
-    
     addRelatedImports();
-  }
-  
-  private void prepare(UmpleInterface aInterface)
-  {
-    if (aInterface.getGeneratedInterface() == null)
-    {
-      aInterface.createGeneratedInterface(model);
-    }
   }
   
   public String getType(UmpleVariable av)
@@ -457,17 +444,13 @@ public class RubyGenerator implements CodeGenerator
   public void generate()
   {
     prepare();
-    for (UmpleClass currentClass : model.getUmpleClasses())
+    for (UmpleElement currentElement : model.getUmpleElements())
     {
-      if ("external".equals(currentClass.getModifier()))
+      if ("external".equals(currentElement.getModifier()))
       {
         continue;
       }
-      writeFile(currentClass);
-    }
-    for (UmpleInterface currentInterface : model.getUmpleInterfaces())
-    {
-      writeInterfaceFile(currentInterface);
+      writeFile(currentElement);
     }
     GeneratorHelper.postpare(model);
   }
@@ -514,19 +497,20 @@ public class RubyGenerator implements CodeGenerator
     }
   }
   
-  private void writeFile(UmpleClass aClass)
+  private void writeFile(UmpleElement aElement)
   {
     try
     {
-      ILang language = getLanguageFor(aClass);
+      ILang language = getLanguageFor(aElement);
       String path = model.getUmpleFile().getPath();
       File file = new File(path);
       file.mkdirs();
 
-      String filename = StringFormatter.toUnderscore(aClass.getName()) + ".rb";
-      BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + filename));
-      String contents = language.getCode(model, aClass);
-      aClass.getGeneratedClass().setCode(contents);
+      String rubyName = StringFormatter.toUnderscore(aElement.getName()) + ".rb";
+      String filename = path + File.separator + rubyName;
+      BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+      String contents = language.getCode(model, aElement);
+      model.getGeneratedCode().put(aElement.getName(),contents);
       bw.write(contents);
       bw.flush();
       bw.close();
@@ -536,29 +520,7 @@ public class RubyGenerator implements CodeGenerator
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
   }
-  
-  private void writeInterfaceFile(UmpleInterface aInterface) 
-  {
-   try
-    {
-    ILang language = getLanguageFor(aInterface);
-    String path = model.getUmpleFile().getPath() + File.separator + aInterface.getPackageName().replace(".", File.separator);
-    File file = new File(path);
-    file.mkdirs();
 
-    BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + aInterface.getName() + ".java"));
-    String contents = language.getCode(model, aInterface);
-    aInterface.getGeneratedInterface().setCode(contents);
-    bw.write(contents);
-    bw.flush();
-    }
-    catch (Exception e)
-    {
-      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
-    }
-
-  }
-  
   private String getUpperCaseName(String name)
   {
     if (name == null || name.length() == 0)

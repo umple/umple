@@ -135,26 +135,20 @@ public class JavaGenerator implements CodeGenerator
 
   }
   
-   public void generate()
+  public void generate()
   {
     prepare();
-    UmpleClass lastClass = null;
-    UmpleInterface lastInterface = null;
+    UmpleElement lastElement = null;
     try
     {
-      for (UmpleClass currentClass : model.getUmpleClasses())
+      for (UmpleElement currentElement : model.getUmpleElements())
       {
-        if ("external".equals(currentClass.getModifier()))
+        if ("external".equals(currentElement.getModifier()))
         {
           continue;
         }
-        writeFile(currentClass);
-        lastClass = currentClass;
-      }
-      for (UmpleInterface currentInterface : model.getUmpleInterfaces())
-      {
-        writeInterfaceFile(currentInterface);
-        lastInterface = currentInterface;
+        writeFile(currentElement);
+        lastElement = currentElement;
       }
     }
     catch (Exception e)
@@ -162,7 +156,7 @@ public class JavaGenerator implements CodeGenerator
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
 
-    if (lastClass == null && lastInterface == null)
+    if (lastElement == null)
     {
       String message = "There was a problem with generating classes.\nNo clases were compiled.\n";
       message += "Check the first line statement for probable cause.";
@@ -529,22 +523,9 @@ public class JavaGenerator implements CodeGenerator
       addImports(aClass,genClass);
     }
     
-    for (UmpleInterface aInterface : model.getUmpleInterfaces())
-    {
-      prepare(aInterface);
-    }
-    
     addRelatedImports();
   }
 
-  private void prepare(UmpleInterface aInterface)
-  {
-    if (aInterface.getGeneratedInterface() == null)
-    {
-      aInterface.createGeneratedInterface(model);
-    }
-  }
-    
   public static String typeOf(String aType)
   {
     if (aType == null || aType.length() == 0)
@@ -945,37 +926,17 @@ public class JavaGenerator implements CodeGenerator
     return typeOf(aType);
   }
   
-  private void writeFile(UmpleClass aClass) throws IOException
+  private void writeFile(UmpleElement aClass) throws IOException
   {
     ILang language = getLanguageFor(aClass);
     String path = model.getUmpleFile().getPath() + File.separator + aClass.getPackageName().replace(".", File.separator);
+    String filename = path + File.separator + aClass.getName() + ".java";
     File file = new File(path);
     file.mkdirs();
 
-    BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + aClass.getName() + ".java"));
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
     String contents = language.getCode(model, aClass);
-    aClass.getGeneratedClass().setCode(contents);
-    try
-    {
-      bw.write(contents);
-      bw.flush();
-    }
-    finally
-    {
-      bw.close();
-    }
-  }
-  
-  private void writeInterfaceFile(UmpleInterface aInterface) throws IOException
-  {
-    ILang language = getLanguageFor(aInterface);
-    String path = model.getUmpleFile().getPath() + File.separator + aInterface.getPackageName().replace(".", File.separator);
-    File file = new File(path);
-    file.mkdirs();
-
-    BufferedWriter bw = new BufferedWriter(new FileWriter(path + File.separator + aInterface.getName() + ".java"));
-    String contents = language.getCode(model, aInterface);
-    aInterface.getGeneratedInterface().setCode(contents);
+    model.getGeneratedCode().put(aClass.getName(),contents);
     try
     {
       bw.write(contents);

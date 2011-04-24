@@ -11,11 +11,6 @@ public class UmpleInterface extends UmpleElement
   // MEMBER VARIABLES
   //------------------------
 
-  //UmpleInterface Attributes
-  private List<String> namespaces;
-  private String packageName;
-  private String extraCode;
-
   //UmpleInterface Associations
   private List<Method> methods;
   private List<Depend> depends;
@@ -28,9 +23,6 @@ public class UmpleInterface extends UmpleElement
   public UmpleInterface(String aName)
   {
     super(aName);
-    namespaces = new ArrayList<String>();
-    packageName = "";
-    extraCode = "";
     methods = new ArrayList<Method>();
     depends = new ArrayList<Depend>();
     constants = new ArrayList<Constant>();
@@ -39,77 +31,6 @@ public class UmpleInterface extends UmpleElement
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean addNamespace(String aNamespace)
-  {
-    boolean wasAdded = false;
-    wasAdded = namespaces.add(aNamespace);
-    return wasAdded;
-  }
-
-  public boolean removeNamespace(String aNamespace)
-  {
-    boolean wasRemoved = false;
-    wasRemoved = namespaces.remove(aNamespace);
-    return wasRemoved;
-  }
-
-  public boolean setPackageName(String aPackageName)
-  {
-    boolean wasSet = false;
-    if (aPackageName == null) { return false; }
-    packageName = aPackageName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setExtraCode(String aExtraCode)
-  {
-    boolean wasSet = false;
-    extraCode = aExtraCode;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public String getNamespace(int index)
-  {
-    String aNamespace = namespaces.get(index);
-    return aNamespace;
-  }
-
-  public String[] getNamespaces()
-  {
-    String[] newNamespaces = namespaces.toArray(new String[namespaces.size()]);
-    return newNamespaces;
-  }
-
-  public int numberOfNamespaces()
-  {
-    int number = namespaces.size();
-    return number;
-  }
-
-  public boolean hasNamespaces()
-  {
-    boolean has = namespaces.size() > 0;
-    return has;
-  }
-
-  public int indexOfNamespace(String aNamespace)
-  {
-    int index = namespaces.indexOf(aNamespace);
-    return index;
-  }
-
-  public String getPackageName()
-  {
-    return packageName;
-  }
-
-  public String getExtraCode()
-  {
-    return extraCode;
-  }
 
   public Method getMethod(int index)
   {
@@ -300,17 +221,5 @@ public class UmpleInterface extends UmpleElement
 		  }
 	  }
 	  return false;  
-  }
-
- protected GeneratedInterface gInterface = null;
-  public GeneratedInterface getGeneratedInterface()
-  {
-    return gInterface;
-  }
-
-  public GeneratedInterface createGeneratedInterface(UmpleModel model)
-  {
-    gInterface = new GeneratedInterface(model, this);
-    return getGeneratedInterface();
   }
 }

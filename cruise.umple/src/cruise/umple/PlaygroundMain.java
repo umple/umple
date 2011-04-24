@@ -110,23 +110,14 @@ public class PlaygroundMain
     }
     else if ("-source".equals(args[0]))
     {
-      for (UmpleClass aClass : model.getUmpleClasses())      
+      for (String generatedCode : model.getGeneratedCode().values())
       {
         if (answer.length() > 0)
         {
           answer += "\n\n\n\n";
         }
-        answer += aClass.getGeneratedClass().getCode();
+        answer += generatedCode;
       }
-      for (UmpleInterface aInterface : model.getUmpleInterfaces())      
-      {
-        if (answer.length() > 0)
-        {
-          answer += "\n\n\n\n";
-        }
-        answer += aInterface.getGeneratedInterface().getCode();
-      }
-      
     }
     else if ("-generate".equals(args[0]))
     {

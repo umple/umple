@@ -13,11 +13,9 @@ class CourseB
   private $log;
 
   //CourseB State Machines
-  private $status;
-
-  // status constants
   private static $StatusOpen = 1;
   private static $StatusClosed = 2;
+  private $status;
 
   //------------------------
   // CONSTRUCTOR

@@ -14,12 +14,8 @@ public class UmpleClass extends UmpleElement
 
   //UmpleClass Attributes
   private boolean isSingleton;
-  private List<String> namespaces;
-  private String modifier;
   private List<Association> associations;
   private Key key;
-  private String extraCode;
-  private String packageName;
 
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
@@ -42,12 +38,8 @@ public class UmpleClass extends UmpleElement
   {
     super(aName);
     isSingleton = false;
-    namespaces = new ArrayList<String>();
-    modifier = "class";
     associations = new ArrayList<Association>();
     key = new Key();
-    extraCode = "";
-    packageName = "";
     codeInjections = new ArrayList<CodeInjection>();
     parentInterface = new ArrayList<UmpleInterface>();
     depends = new ArrayList<Depend>();
@@ -67,28 +59,6 @@ public class UmpleClass extends UmpleElement
   {
     boolean wasSet = false;
     isSingleton = aIsSingleton;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean addNamespace(String aNamespace)
-  {
-    boolean wasAdded = false;
-    wasAdded = namespaces.add(aNamespace);
-    return wasAdded;
-  }
-
-  public boolean removeNamespace(String aNamespace)
-  {
-    boolean wasRemoved = false;
-    wasRemoved = namespaces.remove(aNamespace);
-    return wasRemoved;
-  }
-
-  public boolean setModifier(String aModifier)
-  {
-    boolean wasSet = false;
-    modifier = aModifier;
     wasSet = true;
     return wasSet;
   }
@@ -115,61 +85,9 @@ public class UmpleClass extends UmpleElement
     return wasSet;
   }
 
-  public boolean setExtraCode(String aExtraCode)
-  {
-    boolean wasSet = false;
-    extraCode = aExtraCode;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setPackageName(String aPackageName)
-  {
-    boolean wasSet = false;
-    if (aPackageName == null) { return false; }
-    packageName = aPackageName;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean getIsSingleton()
   {
     return isSingleton;
-  }
-
-  public String getNamespace(int index)
-  {
-    String aNamespace = namespaces.get(index);
-    return aNamespace;
-  }
-
-  public String[] getNamespaces()
-  {
-    String[] newNamespaces = namespaces.toArray(new String[namespaces.size()]);
-    return newNamespaces;
-  }
-
-  public int numberOfNamespaces()
-  {
-    int number = namespaces.size();
-    return number;
-  }
-
-  public boolean hasNamespaces()
-  {
-    boolean has = namespaces.size() > 0;
-    return has;
-  }
-
-  public int indexOfNamespace(String aNamespace)
-  {
-    int index = namespaces.indexOf(aNamespace);
-    return index;
-  }
-
-  public String getModifier()
-  {
-    return modifier;
   }
 
   public Association getAssociation(int index)
@@ -205,16 +123,6 @@ public class UmpleClass extends UmpleElement
   public Key getKey()
   {
     return key;
-  }
-
-  public String getExtraCode()
-  {
-    return extraCode;
-  }
-
-  public String getPackageName()
-  {
-    return packageName;
   }
 
   public CodeInjection getCodeInjection(int index)

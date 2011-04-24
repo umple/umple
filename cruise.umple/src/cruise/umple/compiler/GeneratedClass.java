@@ -10,9 +10,6 @@ public class GeneratedClass extends GeneratedElement
   // MEMBER VARIABLES
   //------------------------
 
-  //GeneratedClass Attributes
-  private String code;
-
   //GeneratedClass Associations
   private UmpleModel model;
   private UmpleClass uClass;
@@ -25,7 +22,6 @@ public class GeneratedClass extends GeneratedElement
   public GeneratedClass(UmpleModel aModel, UmpleClass aUClass)
   {
     super();
-    code = null;
     if (!setModel(aModel))
     {
       throw new RuntimeException("Unable to create GeneratedClass due to aModel");
@@ -39,19 +35,6 @@ public class GeneratedClass extends GeneratedElement
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setCode(String aCode)
-  {
-    boolean wasSet = false;
-    code = aCode;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public String getCode()
-  {
-    return code;
-  }
 
   public UmpleModel getModel()
   {

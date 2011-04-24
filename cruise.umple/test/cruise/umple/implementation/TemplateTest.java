@@ -133,53 +133,23 @@ public class TemplateTest
     }
     else
     {
-      if (model.getUmpleClass(className) == null)
+      if (model.getUmpleClass(className) == null &&  model.getUmpleInterface(className) == null)
       {
-        Assert.fail("Unknown class:" + className);
+        Assert.fail("Unknown class / interface:" + className);
+      }
+
+      if (model.getGeneratedCode().get(className) == null) 
+      {
+        Assert.fail("No generated code:" + className);  
       }
       
-      if (model.getUmpleClass(className).getGeneratedClass() == null)
-      {
-        Assert.fail("No generated class:" + className);  
-      }
-      
-      
-      actual = model.getUmpleClass(className).getGeneratedClass().getCode();
+      actual = model.getGeneratedCode().get(className);
     }
     
     File expected = new File(pathToInput,codeFile);
     System.out.println(actual);
     SampleFileWriter.assertFileContent(expected,actual);
   }
-  
-  public void assertUmpleInterfaceTemplateFor(String umpleFile, String codeFile, String interfaceName)
-  {
-    UmpleModel model = createUmpleSystem(pathToInput,umpleFile);
-    
-    String actual = null;
-    if (interfaceName == null)
-    {
-      actual = model.getCode();
-    }
-    else
-    {
-      if (model.getUmpleInterface(interfaceName) == null)
-      {
-        Assert.fail("Unknown interface:" + interfaceName);
-      }
-      
-      if (model.getUmpleInterface(interfaceName).getGeneratedInterface() == null)
-      {
-        Assert.fail("No generated interface:" + interfaceName);  
-      }
-      actual = model.getUmpleInterface(interfaceName).getGeneratedInterface().getCode();
-    }
-    
-    File expected = new File(pathToInput,codeFile);
-    System.out.println(actual);
-    SampleFileWriter.assertFileContent(expected,actual);
-  }
-  
 
   public  UmpleModel createUmpleSystem(String path, String filename)
   {

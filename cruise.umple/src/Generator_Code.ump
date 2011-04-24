@@ -11,6 +11,7 @@ namespace cruise.umple.compiler;
 
 class EcoreGenerator
 {
+  
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -384,7 +385,7 @@ class PapyrusGenerator
 class XmiGenerator
 {
   
-     public void generate()
+  public void generate()
   {
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -540,7 +541,7 @@ class XmiGenerator
 class TextUmlGenerator
 {
 
- public void generate()
+  public void generate()
   {
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;

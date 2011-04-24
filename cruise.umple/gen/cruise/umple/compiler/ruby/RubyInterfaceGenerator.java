@@ -47,7 +47,7 @@ public class RubyInterfaceGenerator implements ILang
     stringBuffer.append(TEXT_1);
     
   UmpleInterface uInterface = (UmpleInterface) uElement;
-  GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  // GeneratedInterface gInterface = uInterface.getGeneratedInterface();
   RubyGenerator gen = new RubyGenerator();
   gen.setModel(model);
   
@@ -68,11 +68,12 @@ public class RubyInterfaceGenerator implements ILang
     append(stringBuffer, "require '{0}'",depend.getName());
   }
   
-  for (String anImport : gInterface.getMultiLookup("import"))
-  {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "require '{0}'",anImport);
-  }
+  // TODO: No test failed from removing this
+  // for (String anImport : gInterface.getMultiLookup("import"))
+  // {
+  //  appendln(stringBuffer, "");
+  //  append(stringBuffer, "require '{0}'",anImport);
+  // }
 
     stringBuffer.append(TEXT_4);
     stringBuffer.append(uInterface.getName());

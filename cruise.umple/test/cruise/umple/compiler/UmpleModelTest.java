@@ -1,6 +1,7 @@
 package cruise.umple.compiler;
 
 import java.io.*;
+import java.util.*;
 
 import org.junit.*;
 
@@ -40,7 +41,16 @@ public class UmpleModelTest
     model.addGenerate("Java");
     Assert.assertEquals("Php", model.getDefaultGenerate());
   }
-  
+
+  @Test
+  public void addUmpleInterface()
+  {
+    Assert.assertEquals(null,model.getUmpleInterface("Teacher"));
+    
+    UmpleInterface aInterface = model.addUmpleInterface("Teacher");
+    Assert.assertEquals(aInterface,model.getUmpleInterface("Teacher"));
+  }
+
   @Test
   public void addUmpleClass()
   {
@@ -49,6 +59,8 @@ public class UmpleModelTest
     UmpleClass uClass = model.addUmpleClass("Teacher");
     Assert.assertEquals(uClass,model.getUmpleClass("Teacher"));
   }
+
+
 
   @Test
   public void addUmpleClassMergeWithExisting()
@@ -225,4 +237,17 @@ public class UmpleModelTest
 	  Assert.assertEquals(new Coordinate(15,45,0,0), a.getPosition(0));
 	  Assert.assertEquals(new Coordinate(0,30,0,0), a.getPosition(1));
   }
+  
+  @Test
+  public void getUmpleElements()
+  {
+    UmpleClass x = model.addUmpleClass("X");
+    UmpleInterface y = model.addUmpleInterface("Y");
+    List<UmpleElement> all = model.getUmpleElements();
+    Assert.assertEquals(2,all.size());
+    Assert.assertEquals(x,all.get(0));
+    Assert.assertEquals(y,all.get(1));
+    
+  }
+  
 }

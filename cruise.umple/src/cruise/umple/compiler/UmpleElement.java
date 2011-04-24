@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 public class UmpleElement
 {
@@ -12,6 +13,10 @@ public class UmpleElement
 
   //UmpleElement Attributes
   private String name;
+  private String modifier;
+  private List<String> namespaces;
+  private String packageName;
+  private String extraCode;
   private Coordinate position;
 
   //------------------------
@@ -21,6 +26,10 @@ public class UmpleElement
   public UmpleElement(String aName)
   {
     name = aName;
+    modifier = null;
+    namespaces = new ArrayList<String>();
+    packageName = "";
+    extraCode = "";
     position = new Coordinate(-1,-1,-1,-1);
   }
 
@@ -36,6 +45,45 @@ public class UmpleElement
     return wasSet;
   }
 
+  public boolean setModifier(String aModifier)
+  {
+    boolean wasSet = false;
+    modifier = aModifier;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean addNamespace(String aNamespace)
+  {
+    boolean wasAdded = false;
+    wasAdded = namespaces.add(aNamespace);
+    return wasAdded;
+  }
+
+  public boolean removeNamespace(String aNamespace)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = namespaces.remove(aNamespace);
+    return wasRemoved;
+  }
+
+  public boolean setPackageName(String aPackageName)
+  {
+    boolean wasSet = false;
+    if (aPackageName == null) { return false; }
+    packageName = aPackageName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setExtraCode(String aExtraCode)
+  {
+    boolean wasSet = false;
+    extraCode = aExtraCode;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setPosition(Coordinate aPosition)
   {
     boolean wasSet = false;
@@ -47,6 +95,51 @@ public class UmpleElement
   public String getName()
   {
     return name;
+  }
+
+  public String getModifier()
+  {
+    return modifier;
+  }
+
+  public String getNamespace(int index)
+  {
+    String aNamespace = namespaces.get(index);
+    return aNamespace;
+  }
+
+  public String[] getNamespaces()
+  {
+    String[] newNamespaces = namespaces.toArray(new String[namespaces.size()]);
+    return newNamespaces;
+  }
+
+  public int numberOfNamespaces()
+  {
+    int number = namespaces.size();
+    return number;
+  }
+
+  public boolean hasNamespaces()
+  {
+    boolean has = namespaces.size() > 0;
+    return has;
+  }
+
+  public int indexOfNamespace(String aNamespace)
+  {
+    int index = namespaces.indexOf(aNamespace);
+    return index;
+  }
+
+  public String getPackageName()
+  {
+    return packageName;
+  }
+
+  public String getExtraCode()
+  {
+    return extraCode;
   }
 
   public Coordinate getPosition()

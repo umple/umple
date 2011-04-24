@@ -21,6 +21,7 @@ public class UmpleModel
   private Glossary glossary;
   private String defaultNamespace;
   private String code;
+  private Map<String,String> generatedCode;
   private Coordinate levelOffset;
   private Coordinate initialOffset;
   private Coordinate classSize;
@@ -47,6 +48,7 @@ public class UmpleModel
     glossary = new Glossary();
     defaultNamespace = null;
     code = null;
+    generatedCode = new HashMap<String,String>();
     levelOffset = new Coordinate(200,100,0,0);
     initialOffset = new Coordinate(50,30,0,0);
     classSize = new Coordinate(0,0,109,45);
@@ -125,6 +127,14 @@ public class UmpleModel
     return wasSet;
   }
 
+  public boolean setGeneratedCode(Map<String,String> aGeneratedCode)
+  {
+    boolean wasSet = false;
+    generatedCode = aGeneratedCode;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleFile getUmpleFile()
   {
     return umpleFile;
@@ -183,6 +193,11 @@ public class UmpleModel
   public String getCode()
   {
     return code;
+  }
+
+  public Map<String,String> getGeneratedCode()
+  {
+    return generatedCode;
   }
 
   public Association getAssociation(int index)
@@ -417,6 +432,25 @@ public class UmpleModel
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  public List<UmpleElement> getUmpleElements()
+  {
+    List<UmpleElement> all = new ArrayList<UmpleElement>();
+    all.addAll(getUmpleClasses());
+    all.addAll(getUmpleInterfaces());
+    return all;
+  }
+
+  public UmpleInterface addUmpleInterface(String name)
+  {
+    UmpleInterface newInterface = getUmpleInterface(name);
+    if (newInterface == null)
+    {
+      newInterface = new UmpleInterface(name);
+      addUmpleInterface(newInterface);
+    }
+    return newInterface;
+  }
+
   public UmpleClass addUmpleClass(String name)
   {
     UmpleClass newClass = getUmpleClass(name);
