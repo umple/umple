@@ -3,7 +3,8 @@
 
   <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
   <property name="haltonfailure" value="false"/>
-  <property name="shouldPackageUmpleonline" value="false"/>    
+  <property name="shouldPackageUmpleOnline" value="false"/>
+  <property name="shouldDeployUmpleOnlineJars" value="false"/>    
   <import file="_versionLast.xml" />
 
 </project>

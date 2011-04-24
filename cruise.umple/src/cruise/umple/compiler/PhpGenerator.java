@@ -55,12 +55,12 @@ public class PhpGenerator implements CodeGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> UmpleToJavaPrimitiveMap;
-
+  private static List<String> OneOrManyLookup;
   static
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
     UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
+    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");
     UpperCaseSingularLookupMap.put("parameterNew", "new{0}");
     UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
     UpperCaseSingularLookupMap.put("addMethod", "add{0}");
@@ -80,6 +80,7 @@ public class PhpGenerator implements CodeGenerator
     UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
     UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
     UpperCaseSingularLookupMap.put("getMethod", "get{0}");
+    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
     UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
     UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
     UpperCaseSingularLookupMap.put("hasMethod", "has{0}");
@@ -87,6 +88,7 @@ public class PhpGenerator implements CodeGenerator
     UpperCaseSingularLookupMap.put("attributeCanSetOne","canSet{0}");
     UpperCaseSingularLookupMap.put("eventStartMethod", "start{0}Handler");
     UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");    
+    UpperCaseSingularLookupMap.put("stateNull","{0}Null");
     
     UpperCasePluralLookupMap = new HashMap<String, String>();
     UpperCasePluralLookupMap.put("parameterMany", "new{0}");
@@ -116,17 +118,14 @@ public class PhpGenerator implements CodeGenerator
     //AsIsSingularLookupMap.put("stateString","\"{0}\"");
     AsIsSingularLookupMap.put("eventMethod","{0}");
     AsIsSingularLookupMap.put("eventHandler", "{0}Handler");
-        
+
     AsIsPluralLookupMap = new HashMap<String, String>();
     AsIsPluralLookupMap.put("associationMany","{0}");
     AsIsPluralLookupMap.put("attributeMany","{0}");
-    
-    UmpleToJavaPrimitiveMap = new HashMap<String, String>();
-    UmpleToJavaPrimitiveMap.put("Integer","int");
-    UmpleToJavaPrimitiveMap.put("Boolean","boolean");
-    UmpleToJavaPrimitiveMap.put("Double","double");
-    UmpleToJavaPrimitiveMap.put("Float","float");
 
+    OneOrManyLookup = new ArrayList<String>();
+    OneOrManyLookup.add("attribute");
+    
   }
   
   public void prepare()
@@ -148,14 +147,16 @@ public class PhpGenerator implements CodeGenerator
     {
       prepare(aInterface);
     }
-    
-    for (UmpleInterface aInterface : model.getUmpleInterfaces())
-    {
-      GeneratedInterface genInterface = aInterface.getGeneratedInterface();
-    }
-    
-    addRelatedImports();
 
+    addRelatedImports();
+  }
+  
+  private void prepare(UmpleInterface aInterface)
+  {
+    if (aInterface.getGeneratedInterface() == null)
+    {
+      aInterface.createGeneratedInterface(model);
+    }
   }
   
   public String getType(UmpleVariable av)
@@ -164,10 +165,6 @@ public class PhpGenerator implements CodeGenerator
     if (myType == null || myType.length() == 0)
     {
       return "String";
-    }
-    else if (UmpleToJavaPrimitiveMap.containsKey(myType))
-    {
-      return UmpleToJavaPrimitiveMap.get(myType);
     }
     else
     {
@@ -278,6 +275,12 @@ private String getExtendClassesNames(UmpleClass uClass)
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
+    if (OneOrManyLookup.contains(keyName))
+    {
+      String realKeyName = isMany ? keyName + "Many" : keyName + "One";
+      return translate(realKeyName,av,isMany);
+    }
+  
     String singularName = isMany ? model.getGlossary().getSingular(av.getName()) : av.getName();
     String pluralName = isMany ? av.getName() : model.getGlossary().getPlural(av.getName());
 
@@ -373,7 +376,7 @@ private String getExtendClassesNames(UmpleClass uClass)
   {
     String singularName = state.getName();
     String pluralName = model.getGlossary().getPlural(singularName);
-    String stateMachinePlusState = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(singularName));
+    String fullStateName = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getFullName()),getUpperCaseName(singularName));
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -393,15 +396,15 @@ private String getExtendClassesNames(UmpleClass uClass)
     }
     else if ("stateOne".equals(keyName))
     {
-      return stateMachinePlusState;
+      return fullStateName;
     }
     else if ("stateString".equals(keyName))
     {
-      return "\"" + stateMachinePlusState + "\"";
+      return "\"" + fullStateName + "\"";
     }
     else if ("doActivityMethod".equals(keyName))
     {
-      return StringFormatter.format("doActivity{0}",stateMachinePlusState); 
+      return StringFormatter.format("doActivity{0}",fullStateName); 
     }
     
     return "UNKNOWN ID: " + keyName;
@@ -428,6 +431,28 @@ private String getExtendClassesNames(UmpleClass uClass)
     {
       return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
     }
+    else if ("typeGet".equals(keyName) || "typeFull".equals(keyName))
+    {
+      return "String";
+    }
+    else if ("type".equals(keyName))
+    {
+      return "int";
+    }
+    else if ("listStates".equals(keyName))
+    {
+      String allEnums = "";
+      for(State state : sm.getStates())
+      {
+        if (allEnums.length() > 0)
+        {
+          allEnums += ", ";
+        }
+        allEnums += translate("stateOne",state);
+      }
+      return allEnums;
+    }
+
     return "UNKNOWN ID: " + keyName;
   }
   
@@ -477,70 +502,9 @@ private String getExtendClassesNames(UmpleClass uClass)
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
     
-    postpare();
-  }
-  
-  public void postpare()
-  {
-    for (UmpleClass aClass : model.getUmpleClasses())
-    {
-      postpare(aClass);
-    }  
-  }  
-  
-  private void postpare(UmpleClass aClass)
-  {
-    int maxIndex = aClass.numberOfCodeInjections() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      CodeInjection ci = aClass.getCodeInjection(i);
-      if (ci.getIsInternal())
-      {
-        aClass.removeCodeInjection(ci);
-      }
-    }
-    
-    maxIndex = aClass.numberOfDepends() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      Depend d = aClass.getDepend(i);
-      if (d.getIsInternal())
-      {
-        aClass.removeDepend(d);
-      }      
-    }  
-  
-    // Remove all internally created actions that are Java specific
-    for (StateMachine sm : aClass.getStateMachines())
-    {
-      postpareInternalStates(sm);
-      for (State s : sm.getStates())
-      {
-        List<Action> allActions = s.getActions();
-        for (Action a : allActions)
-        {
-          if (a.getIsInternal())
-          {
-            s.removeAction(a);
-          }
-        }
-      }
-    }
+    GeneratorHelper.postpare(model);
   }
 
-  private void postpareInternalStates(StateMachine sm)
-  {
-    for (int i=sm.numberOfStates() - 1; i >= 0; i--)
-    {
-      State s = sm.getState(i);
-      if (s.getIsInternal())
-      {
-        sm.removeState(s);
-      }
-    }
-  }
-  
-  
   public String nameOf(String name, boolean hasMultiple)
   {
     if (name == null)
@@ -701,22 +665,51 @@ private String getExtendClassesNames(UmpleClass uClass)
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
-      
+    }
+
+    for (TraceItem traceItem : aClass.getTraceItems())
+    {
+      Map<String,String> lookups = new HashMap<String,String>();
+      lookups.put("attributeCode",StringFormatter.format("print(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
+      GeneratorHelper.prepareTraceItem(traceItem,lookups);
+    }
+    
+    for (StateMachine sm : aClass.getStateMachines())
+    {
+      prepareNestedStatesFor(sm,0);
     }    
     
   }
   
- private void prepare(UmpleInterface aInterface)
- {
-    if (aInterface.getGeneratedInterface() != null)
+  private void prepareNestedStatesFor(StateMachine sm,int concurrentIndex)
+  {
+    if (sm.getParentState() != null)
     {
-      return;
+      State parentState = sm.getParentState();
+      Map<String,String> lookups = new HashMap<String,String>();
+      lookups.put("entryEventName",translate("enterMethod",parentState));
+      lookups.put("exitEventName",translate("exitMethod",parentState));
+      lookups.put("parentEntryActionCode",StringFormatter.format("if ($this->{0} == self::${1}) { $this->{2}(\"{3}\"); }"
+          ,translate("stateMachineOne",sm)
+          ,translate("stateNull",sm)
+          ,translate("setMethod",sm)
+          ,translate("stateOne",sm.getStartState()))
+      );
+      lookups.put("parentExitActionCode",StringFormatter.format("$this->{0}();",translate("exitMethod",parentState)));
+      GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);  
     }
-    else 
+
+    for (State s : sm.getStates())
     {
-    	GeneratedInterface genInterface = aInterface.createGeneratedInterface(model);
+      int nestedSmIndex = 0;
+      for (StateMachine nestedSm : s.getNestedStateMachines())
+      {
+        prepareNestedStatesFor(nestedSm,nestedSmIndex);
+        nestedSmIndex += 1;
+      }
     }
-  }
+  }  
   
   private void generateConstructorSignature(GeneratedClass genClass)
   {

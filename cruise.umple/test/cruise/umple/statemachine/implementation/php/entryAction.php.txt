@@ -10,11 +10,9 @@ class Light
   //------------------------
 
   //Light State Machines
-  private $status;
-
-  // status constants
   private static $StatusOn = 1;
   private static $StatusOff = 2;
+  private $status;
 
   //------------------------
   // CONSTRUCTOR

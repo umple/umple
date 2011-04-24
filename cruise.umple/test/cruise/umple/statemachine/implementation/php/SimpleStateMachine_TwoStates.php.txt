@@ -10,11 +10,9 @@ class Course
   //------------------------
 
   //Course State Machines
-  private $status;
-
-  // status constants
   private static $StatusOpen = 1;
   private static $StatusFull = 2;
+  private $status;
 
   //------------------------
   // CONSTRUCTOR

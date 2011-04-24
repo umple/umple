@@ -1,35 +1,19 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
+/*
 
-package cruise.umple.compiler;
-import cruise.umple.util.*;
-import java.util.*;
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
 
-public class GeneratorHelper
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
 {
+  depend cruise.umple.util.*;
+  depend java.util.*;
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public GeneratorHelper()
-  {}
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public void delete()
-  {}
-
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
   public static String toCode(List<CodeInjection> allCodeInjections)
   {
     String asCode = null;
@@ -190,4 +174,7 @@ public class GeneratorHelper
       }       
     }
   }
+
+
 }
+

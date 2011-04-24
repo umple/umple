@@ -921,7 +921,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
     Assert.assertEquals("if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }",onState.getAction(1).getActionCode());
     
-    generator.postpare();
+    GeneratorHelper.postpare(model);
     Assert.assertEquals(0,onState.numberOfActions());
   }  
   
@@ -942,7 +942,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("setName", inject.getOperation());
     Assert.assertEquals("System.out.println(\"TRACING name\");",inject.getCode());
     
-    generator.postpare();
+    GeneratorHelper.postpare(model);
     Assert.assertEquals(0,c.numberOfCodeInjections());
   }    
   
@@ -1004,7 +1004,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("entry",onState.getAction(2).getActionType());
     Assert.assertEquals("if (bulbB == BulbB.Null) { setBulbB(BulbB.Normal2); }",onState.getAction(2).getActionCode());
     
-    generator.postpare();
+    GeneratorHelper.postpare(model);
     Assert.assertEquals(0,onState.numberOfActions());
     Assert.assertEquals(0,onState.numberOfTransitions());
 //    System.out.println("Found" + normalState.getTransition(0).getFromState().getName() + ":" + normalState.getTransition(0).getNextState().getName());

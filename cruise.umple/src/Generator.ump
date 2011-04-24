@@ -21,6 +21,11 @@ interface CodeGenerator
   void generate();
 }
 
+class GeneratorHelper
+{
+
+}
+
 class EcoreGenerator
 {
   isA CodeGenerator;
@@ -133,6 +138,7 @@ class RubyGenerator
 use Umple.ump;
 use StateMachine.ump;
 use Generator_Code.ump;
+use Generator_CodeHelper.ump;
 use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodePhp.ump;

@@ -6,8 +6,9 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <property name="haltonfailure" value="true"/>    
-  <property name="shouldPackageUmpleonline" value="false"/>    
-  <import file="_versionNone.xml" />
+  <property name="shouldPackageUmpleOnline" value="true"/>
+  <property name="shouldDeployUmpleOnlineJars" value="true"/>
+  <import file="_versionNew.xml" />
 
 
 </project>

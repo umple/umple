@@ -9,34 +9,6 @@ http://cruise.site.uottawa.ca/UmpleMITLicense.html
 
 namespace cruise.umple.compiler;
 
-class GeneratorHelper
-{
-  depend cruise.umple.util.*;
-  depend java.util.*;
-
-  public static String toCode(List<CodeInjection> allCodeInjections)
-  {
-    String asCode = null;
-    if (allCodeInjections != null)
-    {
-      for (CodeInjection inject : allCodeInjections)
-      {
-        if (asCode == null)
-        {
-          asCode = inject.getCode();
-        }
-        else
-        {
-          asCode = StringFormatter.format("{0}\n    {1}",asCode,inject.getCode());
-        }
-      }
-    }
-    return asCode;
-  }
-
-}
-
-
 class EcoreGenerator
 {
   public void generate()

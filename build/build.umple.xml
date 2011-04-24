@@ -87,10 +87,16 @@
     </java>
   </target>
   
-  <target name="packageUmpleonline" if="${shouldPackageUmpleonline}">
+  <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
     <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
+  </target>
+
+  <target name="deployUmpleonlineJars" if="${shouldDeployUmpleOnlineJars}">
+    <copy file="dist/umplesync.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="dist/umple.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="dist/vml.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
   
   <target name="package">
@@ -152,6 +158,7 @@
 	  
 	  <antcall target="packageUmpleonline" />
 	  <antcall target="packageDocs" />
+	  <antcall target="deployUmpleonlineJars" />
   </target>
 
   <!-- Move Umpleonline files back into the test data -->

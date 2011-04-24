@@ -137,19 +137,21 @@ public class RubyGenerator implements CodeGenerator
       generateNullableConstructorSignature(genClass);
       addImports(aClass,genClass);
     }
-    
+
     for (UmpleInterface aInterface : model.getUmpleInterfaces())
     {
       prepare(aInterface);
     }
     
-    for (UmpleInterface aInterface : model.getUmpleInterfaces())
-    {
-      GeneratedInterface genInterface = aInterface.getGeneratedInterface();
-    }
-    
     addRelatedImports();
-
+  }
+  
+  private void prepare(UmpleInterface aInterface)
+  {
+    if (aInterface.getGeneratedInterface() == null)
+    {
+      aInterface.createGeneratedInterface(model);
+    }
   }
   
   public String getType(UmpleVariable av)
@@ -467,70 +469,9 @@ public class RubyGenerator implements CodeGenerator
     {
       writeInterfaceFile(currentInterface);
     }
-    postpare();
-  }
-  
-  public void postpare()
-  {
-    for (UmpleClass aClass : model.getUmpleClasses())
-    {
-      postpare(aClass);
-    }  
-  }  
-  
-  private void postpare(UmpleClass aClass)
-  {
-    int maxIndex = aClass.numberOfCodeInjections() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      CodeInjection ci = aClass.getCodeInjection(i);
-      if (ci.getIsInternal())
-      {
-        aClass.removeCodeInjection(ci);
-      }
-    }
-    
-    maxIndex = aClass.numberOfDepends() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      Depend d = aClass.getDepend(i);
-      if (d.getIsInternal())
-      {
-        aClass.removeDepend(d);
-      }      
-    }  
-  
-    // Remove all internally created actions that are Java specific
-    for (StateMachine sm : aClass.getStateMachines())
-    {
-      postpareInternalStates(sm);
-      for (State s : sm.getStates())
-      {
-        List<Action> allActions = s.getActions();
-        for (Action a : allActions)
-        {
-          if (a.getIsInternal())
-          {
-            s.removeAction(a);
-          }
-        }
-      }
-    }
+    GeneratorHelper.postpare(model);
   }
 
-   private void postpareInternalStates(StateMachine sm)
-   {
-     for (int i=sm.numberOfStates() - 1; i >= 0; i--)
-     {
-       State s = sm.getState(i);
-       if (s.getIsInternal())
-       {
-         sm.removeState(s);
-       }
-     }
-   }
-  
-  
   public String nameOf(String name, boolean hasMultiple)
   {
     if (name == null)
@@ -634,19 +575,6 @@ public class RubyGenerator implements CodeGenerator
     }
   }
   
-    
- private void prepare(UmpleInterface aInterface)
- {
-    if (aInterface.getGeneratedInterface() != null)
-    {
-      return;
-    }
-    else 
-    {
-    	GeneratedInterface genInterface = aInterface.createGeneratedInterface(model);
-    }
-  }
-    
   private void prepare(UmpleClass aClass)
   {
     if (aClass.getGeneratedClass() != null)

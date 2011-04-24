@@ -32,6 +32,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NavigationHeaderTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NavigationItemTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GeneratorHelper">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeGenerator" interface="true">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EcoreGenerator" eSuperTypes="#//CodeGenerator">
@@ -617,8 +619,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="words" eType="#//Word" upperBound="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DocumenterMain">
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GeneratorHelper">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>

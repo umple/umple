@@ -10,11 +10,9 @@ class LightFixture
   //------------------------
 
   //LightFixture State Machines
-  private $bulb;
-
-  // bulb constants
   private static $BulbOn = 1;
   private static $BulbOff = 2;
+  private $bulb;
 
   //------------------------
   // CONSTRUCTOR

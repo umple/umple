@@ -129,7 +129,7 @@ class JavaGenerator
       message += "Check the first line statement for probable cause.";
       throw new UmpleCompilerException(message,null);
     }
-    postpare();
+    GeneratorHelper.postpare(model);
   }
   
   
@@ -495,23 +495,17 @@ class JavaGenerator
       prepare(aInterface);
     }
     
-    for (UmpleInterface aInterface : model.getUmpleInterfaces())
-    {
-      aInterface.getGeneratedInterface();
-    }
-    
-    
     addRelatedImports();
   }
-  
-  public void postpare()
+
+  private void prepare(UmpleInterface aInterface)
   {
-    for (UmpleClass aClass : model.getUmpleClasses())
+    if (aInterface.getGeneratedInterface() == null)
     {
-      postpare(aClass);
-    }  
+      aInterface.createGeneratedInterface(model);
+    }
   }
-  
+    
   public static String typeOf(String aType)
   {
     if (aType == null || aType.length() == 0)
@@ -583,18 +577,6 @@ class JavaGenerator
       genClass.setParentClass(parent.getGeneratedClass());
       generateConstructorSignature(genClass);
     }
-    
-    for (TraceItem traceItem : aClass.getTraceItems())
-    {
-      Attribute attr = traceItem.getAttribute();
-      if (attr != null)
-      {
-        String code = StringFormatter.format("System.out.println(\"TRACING {0}\");",translate("attribute",attr));
-        CodeInjection set = new CodeInjection("after",translate("setMethod",attr) , code);
-        set.setIsInternal(true);
-        aClass.addCodeInjection(set);
-      }
-    }
 
     for(Attribute av : aClass.getAttributes())
     {
@@ -636,32 +618,20 @@ class JavaGenerator
       }
     }
     
+    for (TraceItem traceItem : aClass.getTraceItems())
+    {
+      Map<String,String> lookups = new HashMap<String,String>();
+      lookups.put("attributeCode",StringFormatter.format("System.out.println(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
+      GeneratorHelper.prepareTraceItem(traceItem,lookups);
+    }
+    
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
     for (StateMachine sm : aClass.getStateMachines())
     {
-      // Add a null entry state for nested states
       prepareNestedStatesFor(sm,0);
-      for (State s : sm.getStates())
-      {
-        for (Transition t : s.getTransitions())
-        {
-          Event e = t.getEvent();
-          if (!e.getIsTimer())
-          {
-            continue;
-          }
-          hasTimedEvents = true;
-          Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
-          entryAction.setActionType("entry");
-          
-          Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
-          exitAction.setActionType("exit");
-
-          t.getFromState().addAction(entryAction);
-          t.getFromState().addAction(exitAction);
-        }
-      }
+      hasTimedEvents = prepareTimedEvents(sm) || hasTimedEvents;
     }
         
     if (hasTimedEvents)
@@ -670,12 +640,30 @@ class JavaGenerator
     }
   }
    
-  private void prepare(UmpleInterface aInterface)
+  private boolean prepareTimedEvents(StateMachine sm)
   {
-    if (aInterface.getGeneratedInterface() == null)
+    boolean hasTimedEvents = false;
+    for (State s : sm.getStates())
     {
-      aInterface.createGeneratedInterface(model);
+      for (Transition t : s.getTransitions())
+      {
+        Event e = t.getEvent();
+        if (!e.getIsTimer())
+        {
+          continue;
+        }
+        hasTimedEvents = true;
+        Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+        entryAction.setActionType("entry");
+        
+        Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+        exitAction.setActionType("exit");
+
+        t.getFromState().addAction(entryAction);
+        t.getFromState().addAction(exitAction);
+      }
     }
+    return hasTimedEvents;
   }
   
   private void prepareNestedStatesFor(StateMachine sm,int concurrentIndex)
@@ -683,52 +671,20 @@ class JavaGenerator
     if (sm.getParentState() != null)
     {
       State parentState = sm.getParentState();
-      StateMachine firstSm = parentState.getNestedStateMachine(0);
-      State nullState = sm.addState("Null",0);
-      nullState.setIsInternal(true);
-      
-      if (sm.getStartState() != null)
-      {
-        
-        if (concurrentIndex == 0)
-        {
-          Action parentExitAction = new Action(StringFormatter.format("{0}();",translate("exitMethod",parentState)));
-          parentExitAction.setIsInternal(true);
-          parentExitAction.setActionType("exit");
-          parentState.addAction(parentExitAction,0);
-        }
-
-        Event enterEvent = firstSm.findOrCreateEvent(translate("enterMethod",parentState));
-        enterEvent.setIsInternal(true);
-        Transition enterTransition = new Transition(nullState,sm.getStartState());
-        enterTransition.setIsInternal(true);
-        enterTransition.setEvent(enterEvent);
-
-        Event exitEvent = firstSm.findOrCreateEvent(translate("exitMethod",parentState));
-        exitEvent.setIsInternal(true);
-        
-        for (State state : sm.getStates())
-        {
-          if (state == nullState) { continue; }
-          Transition exitTransition = state.addTransition(nullState,0);
-          exitTransition.setIsInternal(true);
-          exitTransition.setEvent(exitEvent);
-        }
-
-        Action parentEntryAction = new Action(StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
-            ,translate("stateMachineOne",sm)
-            ,translate("type",sm)
-            ,translate("stateNull",sm)
-            ,translate("setMethod",sm)
-            ,translate("stateOne",sm.getStartState())
-        ));
-        parentEntryAction.setActionType("entry");
-        parentEntryAction.setIsInternal(true);
-        parentState.addAction(parentEntryAction); 
-      }
-
+      Map<String,String> lookups = new HashMap<String,String>();
+      lookups.put("entryEventName",translate("enterMethod",parentState));
+      lookups.put("exitEventName",translate("exitMethod",parentState));
+      lookups.put("parentEntryActionCode",StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
+          ,translate("stateMachineOne",sm)
+          ,translate("type",sm)
+          ,translate("stateNull",sm)
+          ,translate("setMethod",sm)
+          ,translate("stateOne",sm.getStartState()))
+      );
+      lookups.put("parentExitActionCode",StringFormatter.format("{0}();",translate("exitMethod",parentState)));
+      GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);  
     }
-    
+
     for (State s : sm.getStates())
     {
       int nestedSmIndex = 0;
@@ -739,80 +695,6 @@ class JavaGenerator
       }
     }
   }
-  
-  private void postpare(UmpleClass aClass)
-  {
-    int maxIndex = aClass.numberOfCodeInjections() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      CodeInjection ci = aClass.getCodeInjection(i);
-      if (ci.getIsInternal())
-      {
-        aClass.removeCodeInjection(ci);
-      }
-    }
-    
-    maxIndex = aClass.numberOfDepends() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      Depend d = aClass.getDepend(i);
-      if (d.getIsInternal())
-      {
-        aClass.removeDepend(d);
-      }      
-    }  
-
-    List<State> shouldDelete = new ArrayList<State>();
-    for (StateMachine sm : aClass.getAllStateMachines())
-    {
-      postpareInternalStates(sm,shouldDelete);
-    }
-
-    // Remove all internally created actions that are Java specific
-    for (StateMachine sm : aClass.getAllStateMachines())
-    {
-      for (State s : sm.getStates())
-      {
-        for (int i=s.numberOfTransitions()-1; i>=0; i--)
-        {
-          Transition t = s.getTransition(i);
-          if (t.getIsInternal())
-          {
-            t.delete();
-          }
-        }
-
-        for (int i=s.numberOfActions()-1; i>=0; i--)
-        {
-          Action a = s.getAction(i);
-          if (a.getIsInternal())
-          {
-            s.removeAction(a);
-          }
-        }
-      }
-    }
-    
-    for (int i=shouldDelete.size()-1; i>=0; i--)
-    {
-      State s = shouldDelete.get(i);
-      s.delete();
-    }
-    
-  }
-
-   private void postpareInternalStates(StateMachine sm, List<State> shouldDelete)
-   {
-     for (int i=sm.numberOfStates() - 1; i >= 0; i--)
-     {
-       State s = sm.getState(i);
-       if (s.getIsInternal())
-       {
-         shouldDelete.add(s);
-       }       
-     }
-   }
-   
   
   private void generateConstructorSignature(GeneratedClass genClass)
   {

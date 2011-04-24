@@ -10,11 +10,9 @@ class Light
   //------------------------
 
   //Light State Machines
-  private $bulb;
-
-  // bulb constants
   private static $BulbOff = 1;
   private static $BulbOn = 2;
+  private $bulb;
 
   //------------------------
   // CONSTRUCTOR

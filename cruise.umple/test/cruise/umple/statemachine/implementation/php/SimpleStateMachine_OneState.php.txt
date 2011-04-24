@@ -10,10 +10,8 @@ class Student
   //------------------------
 
   //Student State Machines
-  private $grade;
-
-  // grade constants
   private static $GradePass = 1;
+  private $grade;
 
   //------------------------
   // CONSTRUCTOR

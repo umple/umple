@@ -475,6 +475,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("aName",generator.translate("parameterOne",attr));
     Assert.assertEquals("name",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
+    Assert.assertEquals("names",generator.translate("attribute",attr));    
     Assert.assertEquals("name",generator.translate("attributeOne",attr));
     Assert.assertEquals("names",generator.translate("attributeMany",attr));
     Assert.assertEquals("addName",generator.translate("addMethod",attr));
@@ -517,6 +518,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("aNames",generator.translate("parameterOne",attr));
     Assert.assertEquals("names",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
+    Assert.assertEquals("names",generator.translate("attribute",attr));
     Assert.assertEquals("names",generator.translate("attributeOne",attr));
     Assert.assertEquals("names",generator.translate("attributeMany",attr));
     Assert.assertEquals("addNames",generator.translate("addMethod",attr));
@@ -646,25 +648,25 @@ public class PhpGeneratorTest
     Assert.assertEquals("Mentor", generator.translate("typeMany",av));
 
     av.setType("Integer");
-    Assert.assertEquals("int",generator.getType(av));
+    Assert.assertEquals("Integer",generator.getType(av));
     Assert.assertEquals(true,generator.isNullable(av));
-    Assert.assertEquals("int", generator.translate("type",av));
-    Assert.assertEquals("int", generator.translate("typeMany",av));
+    Assert.assertEquals("Integer", generator.translate("type",av));
+    Assert.assertEquals("Integer", generator.translate("typeMany",av));
 
     av.setType("Boolean");
-    Assert.assertEquals("boolean",generator.getType(av));
+    Assert.assertEquals("Boolean",generator.getType(av));
     Assert.assertEquals(true,generator.isNullable(av));
-    Assert.assertEquals("boolean", generator.translate("type",av));
+    Assert.assertEquals("Boolean", generator.translate("type",av));
     
     av.setType("Double");
-    Assert.assertEquals("double",generator.getType(av));
+    Assert.assertEquals("Double",generator.getType(av));
     Assert.assertEquals(true,generator.isNullable(av));
-    Assert.assertEquals("double", generator.translate("type",av));
+    Assert.assertEquals("Double", generator.translate("type",av));
 
     av.setType("Float");
-    Assert.assertEquals("float",generator.getType(av));
+    Assert.assertEquals("Float",generator.getType(av));
     Assert.assertEquals(true,generator.isNullable(av));
-    Assert.assertEquals("float", generator.translate("type",av));
+    Assert.assertEquals("Float", generator.translate("type",av));
 
     av.setType("");
     Assert.assertEquals("String",generator.getType(av));
@@ -805,6 +807,92 @@ public class PhpGeneratorTest
     Assert.assertEquals("registerHandler",generator.translate("eventHandler",e));
   }  
   
+  @Test
+  public void translate_nestedStateMachines()
+  {
+    UmpleClass c = model.addUmpleClass("Student");
+    StateMachine outerSm = new StateMachine("Vcr");
+    outerSm.setUmpleClass(c);
+
+    State s1 = new State("s1",outerSm);
+    new State("s2",outerSm);
+    
+    StateMachine sm = new StateMachine("On");
+    s1.addNestedStateMachine(sm);
+    
+    State s3 = new State("s3",sm);
+    new State("s4",sm);
+    
+    StateMachine innerSm = new StateMachine("AlmostOn");
+    s3.addNestedStateMachine(innerSm);
+
+    State s5 = new State("s5",innerSm);
+    
+    
+    
+    Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
+    Assert.assertEquals("VcrOn",generator.translate("stateMachineOne",sm));
+    Assert.assertEquals("aVcrOn",generator.translate("parameterOne",sm));
+    Assert.assertEquals("placeholderVcrOn",generator.translate("removeParameterOne",sm));    
+    Assert.assertEquals("getVcrOn",generator.translate("getMethod",sm));
+    Assert.assertEquals("getVcrOnFullName",generator.translate("getFullMethod",sm));
+    Assert.assertEquals("String",generator.translate("typeGet",sm));
+    Assert.assertEquals("int",generator.translate("type",sm));
+    Assert.assertEquals("VcrOnNull",generator.translate("stateNull",sm));
+    Assert.assertEquals("VcrOnS3",generator.translate("stateOne",s3));
+    Assert.assertEquals("VcrOnAlmostOnS5",generator.translate("stateOne",s5));
+    Assert.assertEquals("VcrOnS3, VcrOnS4",generator.translate("listStates",sm));
+    
+  }  
+  
+  @Test
+  public void prepare_postpare_nestedStateMachine()
+  {
+    UmpleClass c = model.addUmpleClass("LightFixture");
+    StateMachine sm = new StateMachine("bulb");
+    StateMachine nestedSm = new StateMachine("On");
+
+    sm.setUmpleClass(c);
+    
+    State onState = new State("On",sm);
+    onState.addNestedStateMachine(nestedSm);
+    State normalState = new State("Normal",nestedSm);
+    normalState.setIsStartState(true);
+
+    generator.prepare();
+    Assert.assertEquals(2,onState.numberOfActions());
+
+    Assert.assertEquals("exit",onState.getAction(0).getActionType());
+    Assert.assertEquals("$this->exitOn();",onState.getAction(0).getActionCode());
+    
+    Assert.assertEquals("entry",onState.getAction(1).getActionType());
+    Assert.assertEquals("if ($this->bulbOn == self::$BulbOnNull) { $this->setBulbOn(\"BulbOnNormal\"); }",onState.getAction(1).getActionCode());
+    
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(0,onState.numberOfActions());
+  }    
+  
+  @Test
+  public void prepare_postpare_traceItem_attribute()
+  {
+    UmpleClass c = model.addUmpleClass("LightFixture");
+    Attribute attr = new Attribute("name","String",null,null,false);
+    TraceItem traceItem = new TraceItem();
+    
+    traceItem.setUmpleClass(c);
+    traceItem.setAttribute(attr);
+    generator.prepare();
+
+    Assert.assertEquals(1,c.numberOfCodeInjections());
+    CodeInjection inject = c.getCodeInjection(0);
+    Assert.assertEquals("after",inject.getType());
+    Assert.assertEquals("setName", inject.getOperation());
+    Assert.assertEquals("print(\"TRACING name\");",inject.getCode());
+    
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(0,c.numberOfCodeInjections());
+  }   
+  
   private void assertOtherTranslate(AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));
@@ -812,6 +900,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("2",generator.relatedTranslate("parameterValue",av));
     Assert.assertEquals("student",generator.relatedTranslate("associationOne",av));
     Assert.assertEquals("students",generator.relatedTranslate("associationMany",av));
+    Assert.assertEquals("students",generator.relatedTranslate("attribute",av));
     Assert.assertEquals("student",generator.relatedTranslate("attributeOne",av));
     Assert.assertEquals("students",generator.relatedTranslate("attributeMany",av));
     Assert.assertEquals("addStudent",generator.relatedTranslate("addMethod",av));
@@ -859,6 +948,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
     Assert.assertEquals("mentors",generator.translate("associationMany",av));
+    Assert.assertEquals("mentor",generator.translate("attribute",av));
     Assert.assertEquals("mentor",generator.translate("attributeOne",av));
     Assert.assertEquals("mentors",generator.translate("attributeMany",av));
     Assert.assertEquals("addMentor",generator.translate("addMethod",av));
@@ -900,6 +990,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("2",generator.translate("parameterValue",relatedAv));
     Assert.assertEquals("student",generator.translate("associationOne",relatedAv));
     Assert.assertEquals("students",generator.translate("associationMany",relatedAv));
+    Assert.assertEquals("students",generator.translate("attribute",relatedAv));
     Assert.assertEquals("student",generator.translate("attributeOne",relatedAv));
     Assert.assertEquals("students",generator.translate("attributeMany",relatedAv));
     Assert.assertEquals("addStudent",generator.translate("addMethod",relatedAv));
@@ -944,6 +1035,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
     Assert.assertEquals("mentors",generator.translate("associationMany",av));
+    Assert.assertEquals("mentor",generator.translate("attribute",av));
     Assert.assertEquals("mentor",generator.translate("attributeOne",av));
     Assert.assertEquals("mentors",generator.translate("attributeMany",av));
     Assert.assertEquals("addMentor",generator.translate("addMethod",av));
@@ -985,6 +1077,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("2",generator.translate("parameterValue",relatedAv));
     Assert.assertEquals("student",generator.translate("associationOne",relatedAv));
     Assert.assertEquals("students",generator.translate("associationMany",relatedAv));
+    Assert.assertEquals("students",generator.translate("attribute",relatedAv));
     Assert.assertEquals("student",generator.translate("attributeOne",relatedAv));
     Assert.assertEquals("students",generator.translate("attributeMany",relatedAv));
     Assert.assertEquals("addStudent",generator.translate("addMethod",relatedAv));

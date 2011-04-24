@@ -331,6 +331,7 @@ public class StateMachineTest
   {
     StateMachine innerSm1 = new StateMachine("innerSm1");
     StateMachine innerSm2 = new StateMachine("innerSm2");
+    StateMachine innerSm3 = new StateMachine("innerSm3"); 
 
     State state1 = new State("state1",sm);
     state1.addNestedStateMachine(innerSm1);
@@ -338,9 +339,14 @@ public class StateMachineTest
     State state2 = new State("state2",innerSm1);
     state2.addNestedStateMachine(innerSm2);
 
+    State state3 = new State("state3",innerSm2);
+    state3.addNestedStateMachine(innerSm3);
+
+
     Assert.assertEquals("sm",sm.getFullName());
     Assert.assertEquals("smInnerSm1",innerSm1.getFullName());
     Assert.assertEquals("smInnerSm1InnerSm2",innerSm2.getFullName());
+    Assert.assertEquals("smInnerSm1InnerSm2InnerSm3",innerSm3.getFullName());
   }
 
   @Test

@@ -10,11 +10,13 @@ class LightFixture
   //------------------------
 
   //LightFixture State Machines
-  private $bulb;
-
-  // bulb constants
   private static $BulbOff = 1;
   private static $BulbOn = 2;
+  private static $BulbOnNull = 3;
+  private static $BulbOnNormal = 4;
+  private static $BulbOnDimmed = 5;
+  private $bulb;
+  private $bulbOn;
 
   //------------------------
   // CONSTRUCTOR
@@ -23,7 +25,7 @@ class LightFixture
   public function __construct()
   {
     $this->setBulb(self::$BulbOff);
-    if ($this->bulb == null) { $this->setBulb(self::$UNKNOWN ID: stateNull); }
+    if ($this->bulb == null) { $this->setBulb(self::$OffNull); }
   }
 
   //------------------------
@@ -39,8 +41,9 @@ class LightFixture
 
   public function getBulbOn()
   {
-    if ($this->bulbOn == self::$OnNormal) { return "OnNormal"; }
-    elseif ($this->bulbOn == self::$OnDimmed) { return "OnDimmed"; }
+    if ($this->bulbOn == self::$BulbOnNull) { return "BulbOnNull"; }
+    elseif ($this->bulbOn == self::$BulbOnNormal) { return "BulbOnNormal"; }
+    elseif ($this->bulbOn == self::$BulbOnDimmed) { return "BulbOnDimmed"; }
     return null;
   }
 
@@ -63,16 +66,47 @@ class LightFixture
     return $wasEventProcessed;
   }
 
+  public function enterOn()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->bulbOn == self::$BulbOnNull)
+    {
+      $this->setBulbOn(self::$BulbOnNormal);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function exitOn()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->bulbOn == self::$BulbOnNormal)
+    {
+      $this->setBulbOn(self::$BulbOnNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->bulbOn == self::$BulbOnDimmed)
+    {
+      $this->setBulbOn(self::$BulbOnNull);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
   public function touch()
   {
     $wasEventProcessed = false;
 
-    if ($this->bulbOn == self::$OnNormal)
+    if ($this->bulbOn == self::$BulbOnNormal)
     {
-      $this->setBulbOn(self::$OnDimmed);
+      $this->setBulbOn(self::$BulbOnDimmed);
       $wasEventProcessed = true;
     }
-    elseif ($this->bulbOn == self::$OnDimmed)
+    elseif ($this->bulbOn == self::$BulbOnDimmed)
     {
       $this->setBulbOn(self::$BulbOff);
       $wasEventProcessed = true;
@@ -85,6 +119,7 @@ class LightFixture
   {
     if ($this->bulb == self::$BulbOn)
     {
+      $this->exitOn();
       print("Show Me Last (Exit)");
     }
   }
@@ -92,6 +127,12 @@ class LightFixture
   private function setBulb($aBulb)
   {
     $this->bulb = $aBulb;
+
+    // entry actions and do activities
+    if ($this->bulb == self::$BulbOn)
+    {
+      if ($this->bulbOn == self::$BulbOnNull) { $this->setBulbOn("BulbOnNormal"); }
+    }
   }
 
   private function setBulbOn($aBulbOn)
