@@ -7,7 +7,7 @@
    -->
   <property name="haltonfailure" value="true"/>    
   <property name="shouldPackageUmpleOnline" value="true"/>
-  <property name="shouldDeployUmpleOnlineJars" value="true"/>
+  <property name="shouldDeploy" value="true"/>
   <import file="_versionNew.xml" />
 
 

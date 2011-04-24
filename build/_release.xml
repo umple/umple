@@ -4,7 +4,7 @@
   <!-- Package a new release, run locally and then committed when 'smoke' test passes -->
   <property name="haltonfailure" value="false"/>
   <property name="shouldPackageUmpleOnline" value="true"/>    
-  <property name="shouldDeployUmpleOnlineJars" value="false"/>
+  <property name="shouldDeploy" value="false"/>
   <import file="_versionNew.xml" />
 
 </project>
