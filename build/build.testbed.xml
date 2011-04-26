@@ -34,37 +34,21 @@
     <mkdir dir="${test.output.path.ruby}"/>
   </target>
 
-  <target name="umpleTestbed">
-    <antcall target="umpleTestbedJava" />
-    <antcall target="umpleTestbedPhp" />
-    <antcall target="umpleTestbedRuby" />
-  </target>
-  
-  <target name="umpleTestbedJava">
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
-      <arg value="testbed/src/TestHarness.ump"/>
-    </java>
-  </target>
-
-  <target name="umpleTestbedPhp">
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
-      <arg value="testbed_php/src/TestHarnessPhp.ump"/>
-    </java>
-  </target>
-  
-  <target name="umpleTestbedRuby">
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
-      <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
-    </java>
-  </target>
-  
     
   <!-- ```````````````````````````
     Compile the application
   ``````````````````````````` -->
 
   <target name="compile">
-    <echo message="${ant.project.name}: ${ant.file}"/>
+    <antcall target="compileJava" />
+    <antcall target="compilePhp" />
+    <antcall target="compileRuby" />
+  </target>
+  
+  <target name="compileJava">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="testbed/src/TestHarness.ump"/>
+    </java>
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
       <src path="${project.path}/src"/>
@@ -74,8 +58,21 @@
       <exclude name="**/data" />
       <classpath refid="project.classpath"/>
     </javac>
+
   </target>
 
+  <target name="compilePhp">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="testbed_php/src/TestHarnessPhp.ump"/>
+    </java>
+  </target>
+  
+  <target name="compileRuby">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
+    </java>
+  </target>
+  
   <!-- ```````````````````````````
     Test the application
   ``````````````````````````` -->
@@ -145,7 +142,6 @@
   <target name="build" >
     <antcall target="template.clean" />
     <antcall target="init" />
-    <antcall target="umpleTestbed" />
     <antcall target="compile" />
     <antcall target="test" />
   </target>

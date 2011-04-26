@@ -6,43 +6,6 @@ class CourseA
   status { }
 }
 
-class CourseB
-{
-  log = "initial value";
-  
-  status {
-    Open {
-      entry / { log = "entry called"; }
-      exit / { log = "exit called"; }
-      anEvent -> Closed;
-    }
-    Closed {
-      anEvent -> Open;
-    }
-  }
-}
-
-class CourseC
-{
-  String[] logs;
-  
-  status {
-    Open {
-      entry / { addLog("Open Entry"); }
-      flip -> Closed;
-      do 
-      {  
-        Thread.sleep(400);
-        addLog("Do Activity On Open");
-      }
-    }
-    Closed {
-      entry / { addLog("Closed Entry"); }
-      flip -> Open;
-    }
-  }
-}
-
 class CourseD
 {
   status {
@@ -52,51 +15,6 @@ class CourseD
     }
     Closed {}
   }
-}
-
-class CourseE
-{
-
-  String[] logs;
-  
-  status
-  {
-    Off
-    {
-      entry / { addLog("Enter Off"); }
-      exit / { addLog("Exit Off"); }
-      turnOn -> On;
-      turnSleep -> Sleep;
-    }
-    Sleep
-    {
-      entry / { addLog("Enter Sleep"); }
-      exit / { addLog("Exit Sleep"); }
-      wake -> Pause;
-    }
-    On
-    {
-      entry / { addLog("Enter On"); }
-      exit / { addLog("Exit On"); }
-      
-      turnOff -> Off;
-      Play 
-      { 
-        entry / { addLog("Enter Play"); }
-        exit / { addLog("Exit Play"); }
-        push -> Pause;
-      }
-      Pause
-      {
-        entry / { addLog("Enter Pause"); }
-        exit / { addLog("Exit Pause"); }
-        push -> Play;      
-        standby -> Sleep;
-      }      
-      
-    }
- }
- 
 }
 
 class CourseF

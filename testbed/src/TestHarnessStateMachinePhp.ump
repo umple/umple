@@ -1,11 +1,6 @@
 
 namespace cruise.statemachine.test;
 
-class CourseA
-{
-  status { }
-}
-
 class CourseB
 {
   log = "initial value";
@@ -43,14 +38,47 @@ class CourseC
   }
 }
 
-class CourseD
+class CourseE
 {
-  status {
-    Open
-    { 
-      after(1) -> Closed; 
-    }
-    Closed {}
-  }
-}
 
+  String[] logs;
+  
+  status
+  {
+    Off
+    {
+      entry / { $this->addLog("Enter Off"); }
+      exit / { $this->addLog("Exit Off"); }
+      turnOn -> On;
+      turnSleep -> Sleep;
+    }
+    Sleep
+    {
+      entry / { $this->addLog("Enter Sleep"); }
+      exit / { $this->addLog("Exit Sleep"); }
+      wake -> Pause;
+    }
+    On
+    {
+      entry / { $this->addLog("Enter On"); }
+      exit / { $this->addLog("Exit On"); }
+      
+      turnOff -> Off;
+      Play 
+      { 
+        entry / { $this->addLog("Enter Play"); }
+        exit / { $this->addLog("Exit Play"); }
+        push -> Pause;
+      }
+      Pause
+      {
+        entry / { $this->addLog("Enter Pause"); }
+        exit / { $this->addLog("Exit Pause"); }
+        push -> Play;      
+        standby -> Sleep;
+      }      
+      
+    }
+ }
+ 
+}
