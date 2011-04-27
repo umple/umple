@@ -21,6 +21,7 @@ public class UmpleModel
   private Glossary glossary;
   private String defaultNamespace;
   private String code;
+  private String traceType;
   private Map<String,String> generatedCode;
   private Coordinate levelOffset;
   private Coordinate initialOffset;
@@ -48,6 +49,7 @@ public class UmpleModel
     glossary = new Glossary();
     defaultNamespace = null;
     code = null;
+    traceType = "Console";
     generatedCode = new HashMap<String,String>();
     levelOffset = new Coordinate(200,100,0,0);
     initialOffset = new Coordinate(50,30,0,0);
@@ -127,6 +129,14 @@ public class UmpleModel
     return wasSet;
   }
 
+  public boolean setTraceType(String aTraceType)
+  {
+    boolean wasSet = false;
+    traceType = aTraceType;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setGeneratedCode(Map<String,String> aGeneratedCode)
   {
     boolean wasSet = false;
@@ -193,6 +203,11 @@ public class UmpleModel
   public String getCode()
   {
     return code;
+  }
+
+  public String getTraceType()
+  {
+    return traceType;
   }
 
   public Map<String,String> getGeneratedCode()

@@ -29,8 +29,9 @@
 
       <h1>myGrammar</h1>
       <p class="description">program- : ( [[comment]] | [[directive]] )*<br />
-directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[entity]]<br />
+directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]<br />
 glossary : glossary { [[word]]* }<br />
+traceType- : tracer [traceType] ;<br />
 word : [singular] : [plural] ;<br />
 generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
 useStatement- : use [use] ;<br />

@@ -22,10 +22,24 @@ public class UmpleParserTracerTest
   }
   
   @Test
-  public void simpleTraceAndExecute()
+  public void attributeTrace()
   {
-    assertParse("300_tracer.ump","[classDefinition][name:LightFixture][trace][trace_code:m1()][trace_execute:\"x\"]");
+    assertParse("300_tracer.ump","[classDefinition][name:LightFixture][attribute][name:x][trace][trace_code:x]");
+    
+    Assert.assertEquals("Console",model.getTraceType());
+    UmpleClass clazz = model.getUmpleClass("LightFixture");
+    Assert.assertEquals(1,clazz.numberOfTraceItems());
+    TraceItem traceItem = clazz.getTraceItem(0);
+    Assert.assertEquals(clazz.getAttribute("x"),traceItem.getAttribute());
   }
+
+  @Test
+  public void traceType_String()
+  {
+    assertParse("300_tracerType_String.ump","[traceType:String]");
+    Assert.assertEquals("String",model.getTraceType());
+  }
+  
   
   @Test
   public void executeWithRecord()
@@ -45,9 +59,7 @@ public class UmpleParserTracerTest
   {
     assertParse("300_tracer_whereClause.ump","[classDefinition][name:LightFixture][trace][trace_code:m4()][trace_execute:\"y\"][trace_where:attr7>5]");
   }
-  
-  
-  
+
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename,expectedOutput,true);

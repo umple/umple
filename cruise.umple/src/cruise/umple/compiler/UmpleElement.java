@@ -17,6 +17,7 @@ public class UmpleElement
   private List<String> namespaces;
   private String packageName;
   private String extraCode;
+  private boolean isInternal;
   private Coordinate position;
 
   //------------------------
@@ -30,6 +31,7 @@ public class UmpleElement
     namespaces = new ArrayList<String>();
     packageName = "";
     extraCode = "";
+    isInternal = false;
     position = new Coordinate(-1,-1,-1,-1);
   }
 
@@ -80,6 +82,14 @@ public class UmpleElement
   {
     boolean wasSet = false;
     extraCode = aExtraCode;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsInternal(boolean aIsInternal)
+  {
+    boolean wasSet = false;
+    isInternal = aIsInternal;
     wasSet = true;
     return wasSet;
   }
@@ -140,6 +150,11 @@ public class UmpleElement
   public String getExtraCode()
   {
     return extraCode;
+  }
+
+  public boolean getIsInternal()
+  {
+    return isInternal;
   }
 
   public Coordinate getPosition()

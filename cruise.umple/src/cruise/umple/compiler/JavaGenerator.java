@@ -511,7 +511,8 @@ public class JavaGenerator implements CodeGenerator
   
   public void prepare()
   {
-    for (UmpleClass aClass : model.getUmpleClasses())
+    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(model.getUmpleClasses());
+    for (UmpleClass aClass : allClasses)
     {
       prepare(aClass);
     }
@@ -641,7 +642,27 @@ public class JavaGenerator implements CodeGenerator
     for (TraceItem traceItem : aClass.getTraceItems())
     {
       Map<String,String> lookups = new HashMap<String,String>();
-      lookups.put("attributeCode",StringFormatter.format("System.out.println(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      
+      if ("Console".equals(model.getTraceType()))
+      {
+        lookups.put("attributeCode",StringFormatter.format("System.out.println(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      }
+      else if ("String".equals(model.getTraceType()))
+      {
+        String executeMethod = "public static void execute(String message) { getInstance().addTrace(message); }\n";
+        executeMethod += "public void reset() { getInstance().traces.clear(); }";
+        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
+        GeneratorHelper.prepareStringTracer(model, packageName, executeMethod);
+        
+        if (!packageName.equals(aClass.getPackageName()))
+        {
+          Depend d = new Depend(packageName + ".*");
+          d.setIsInternal(true);
+          aClass.addDepend(d);
+        }
+        
+        lookups.put("attributeCode",StringFormatter.format("StringTracer.execute(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      }
       lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
       GeneratorHelper.prepareTraceItem(traceItem,lookups);
     }

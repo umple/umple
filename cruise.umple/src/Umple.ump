@@ -24,6 +24,7 @@ class UmpleModel
   Glossary glossary = new Glossary();
   String defaultNamespace = null;
   String code = null;
+  String traceType = "Console";
   
   Map<String,String> generatedCode = new HashMap<String,String>();
   
@@ -50,6 +51,7 @@ class UmpleElement
   String[] namespaces;
   packageName = "";
   extraCode = "";
+  Boolean isInternal = false;
   Coordinate position = new Coordinate(-1,-1,-1,-1);
   
   before setPackageName { if (aPackageName == null) { return false; } }  

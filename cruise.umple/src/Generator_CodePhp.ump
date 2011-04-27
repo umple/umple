@@ -91,7 +91,8 @@ class PhpGenerator
 
   public void prepare()
   {
-    for (UmpleClass aClass : model.getUmpleClasses())
+    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(model.getUmpleClasses());
+    for (UmpleClass aClass : allClasses)
     {
       prepare(aClass);
     }
@@ -592,7 +593,19 @@ private String getExtendClassesNames(UmpleClass uClass)
     for (TraceItem traceItem : aClass.getTraceItems())
     {
       Map<String,String> lookups = new HashMap<String,String>();
-      lookups.put("attributeCode",StringFormatter.format("print(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      
+      if ("Console".equals(model.getTraceType()))
+      {
+        lookups.put("attributeCode",StringFormatter.format("print(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      }
+      else if ("String".equals(model.getTraceType()))
+      {
+        String executeMethod = "public static function execute($message) { self::getInstance()->addTrace($message); }\n";
+        executeMethod += "public function reset() { self::getInstance()->traces = array(); }";
+        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
+        GeneratorHelper.prepareStringTracer(model, packageName, executeMethod);
+        lookups.put("attributeCode",StringFormatter.format("StringTracer::execute(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+      }
       lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
       GeneratorHelper.prepareTraceItem(traceItem,lookups);
     }

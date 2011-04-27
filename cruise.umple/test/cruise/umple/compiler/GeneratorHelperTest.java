@@ -71,6 +71,24 @@ public class GeneratorHelperTest
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,c.numberOfCodeInjections());
   }  
+
+  @Test
+  public void prepare_StringTracer()
+  {
+    GeneratorHelper.prepareStringTracer(model,"myblah","extraCode");
+    Assert.assertEquals(1,model.numberOfUmpleClasses());
+    UmpleClass c = model.getUmpleClass("StringTracer");
+    
+    Assert.assertNotNull(c.getGeneratedClass());
+    Assert.assertEquals(true,c.getIsSingleton());
+    Assert.assertEquals(true,c.getIsInternal());
+    Assert.assertEquals("traces",c.getAttribute(0).getName());
+    Assert.assertEquals("extraCode",c.getExtraCode());
+    Assert.assertEquals("myblah",c.getPackageName());
+    
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(0,model.numberOfUmpleClasses());
+  }
   
   @Test
   public void prepare_nestedStateMachine()

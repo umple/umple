@@ -6,6 +6,15 @@ public class DependTest
 {
   
   @Test
+  public void getIsInternal()
+  {
+    Depend d = new Depend("x");
+    Assert.assertEquals(false, d.getIsInternal());
+    d.setIsInternal(true);
+    Assert.assertEquals(true, d.getIsInternal());
+  }
+  
+  @Test
   public void defaultIsNotInternal()
   {
     Depend d = new Depend("org.junit.*");

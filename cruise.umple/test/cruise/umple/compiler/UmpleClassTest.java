@@ -21,6 +21,14 @@ public class UmpleClassTest
   {
     umpleClass = null;
   }
+  
+  @Test
+  public void getIsInternal()
+  {
+    Assert.assertEquals(false,umpleClass.getIsInternal());
+    umpleClass.setIsInternal(true);
+    Assert.assertEquals(true,umpleClass.getIsInternal());
+  }
 
   @Test
   public void Constructor_fileName() throws Exception

@@ -36,12 +36,35 @@ class GeneratorHelper
   
   public static void postpare(UmpleModel model)
   {
+    int maxIndex = model.numberOfUmpleClasses() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      UmpleClass c = model.getUmpleClass(i);
+      if (c.getIsInternal())
+      {
+        model.removeUmpleClass(c);
+      }
+    }
+    
     for (UmpleClass aClass : model.getUmpleClasses())
     {
       postpare(aClass);
     }  
   }
-
+  
+  public static void prepareStringTracer(UmpleModel model, String dependsPackage, String extraCode)
+  {
+    UmpleClass aClass = model.addUmpleClass("StringTracer");
+    aClass.setIsInternal(true);
+    aClass.setIsSingleton(true); 
+    aClass.setPackageName(dependsPackage);
+    Attribute traces = new Attribute("traces","String",null,null,false);
+    traces.setIsList(true);
+    aClass.addAttribute(traces);
+    aClass.setExtraCode(extraCode);
+    aClass.createGeneratedClass(model);
+  }
+  
   public static void prepareTraceItem(TraceItem traceItem, Map<String,String> lookups)
   {
     UmpleClass aClass = traceItem.getUmpleClass();
@@ -174,7 +197,6 @@ class GeneratorHelper
       }       
     }
   }
-
 
 }
 

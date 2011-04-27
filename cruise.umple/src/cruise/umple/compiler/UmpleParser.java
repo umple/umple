@@ -101,8 +101,9 @@ private void init()
 		addCouple(new Couple("{","}"));
 
 		addRule("program- : ( [[comment]] | [[directive]] )*");
-		addRule("directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[entity]]");
+		addRule("directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]");
 		addRule("glossary : glossary { [[word]]* }");
+		addRule("traceType- : tracer [traceType] ;");
 		addRule("word : [singular] : [plural] ;");
 		addRule("generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;");
 		addRule("useStatement- : use [use] ;");
@@ -227,6 +228,10 @@ private void init()
 			else if (t.is("glossary"))
 			{
 				analyzeGlossary(t);
+			}
+			else if (t.is("traceType"))
+			{
+			    model.setTraceType(t.getValue("traceType"));
 			}
 			else if (t.is("namespace"))
 			{
