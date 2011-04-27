@@ -1,12 +1,25 @@
-We are in the process of Open Sourcing Umple.  At the time being, we are 
-working on polishing it, creating the build infrastructure, improving the 
-documentation. If you want to obtain the code prior to it being available 
-on Google Code, then email tcl@site.uottawa.ca
+This is the main directory for various Umple subprojects
 
-Please refer to Umple home page for additional information: 
-http://cruise.site.uottawa.ca/umple/
+    cruise.umple -> The main Umple compiler
 
-For further information, please contact Timothy C. Lethbridge 
-tcl@site.uottawa.ca
+    UmpleToJava -> Code generation for Java
+    UmpleToPhp  -> Code generation for Php
+    UmpleToRuby -> Code generation for Ruby
 
+    UmpleToTemplate -> Template for creating new code generation subprojects
+
+    cruise.umple.eclipse -> The Ecipse plugin for Umple
+
+    build
+    lib -> Elements the Umple build depends on
+    releases
+    sandbox
+
+    testbed -> Major testing examples
+    testbed_php
+    testbed_ruby
+    
+    umpleonline -> The UmpleOnline web application, which allows generation of code
+        from Umple directly in a web browser, and also editing of Umple both graphically
+        and textually. This is online at http://try.umple.org
  
