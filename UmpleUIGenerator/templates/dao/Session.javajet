@@ -1,0 +1,31 @@
+<%@ jet package="cruise.data.impl.dao.session" 
+class="Session"  skeleton="../skeleton/IGenerator.skeleton" %>
+package dao.session;
+
+public class Session {
+	
+	private static Session session; 
+	private final ObjectRepository obj;
+	
+	
+	private Session(){
+		
+		obj=new ObjectRepository();
+	}
+
+	public static void destroy(){
+		session=null;
+		
+	}
+	public static Session getInstance(){
+		if (session==null)
+		session= new Session();
+		
+		return session;
+	}
+
+
+	public ObjectRepository getObjectRepository() {
+		return obj;
+	}
+}

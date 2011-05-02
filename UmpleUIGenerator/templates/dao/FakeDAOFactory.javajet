@@ -1,0 +1,116 @@
+<%@ jet package="cruise.data.impl.dao.factory" 
+imports="java.util.* cruise.umple.compiler.* cruise.umple.compiler.UmpleClass cruise.model.abstractObjects.BackingObject;"
+class="FakeDAOFactory"  skeleton="../skeleton/IGenerator.skeleton" %>
+<%  
+ArrayList<BackingObject> clazzez =(ArrayList<BackingObject>)argument;
+%>
+package dao.factory;
+
+<% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); %>
+import <%=clazz.getPackageName()%>.<%=clazz.getClassName()%>;
+ <% } %>
+<% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); %>
+import dao.<%=clazz.getPackageName()%>.<%=clazz.getClassName()%>DAO;
+import dao.keys.<%=clazz.getPackageName()%>.<%=clazz.getClassName()%>Key;
+import java.util.List;
+import dao.keys.IKey;
+import dao.generic.GenericDAO;
+ <% } %>
+import dao.generic.impl.GenericFakeDAO;
+
+public class FakeDAOFactory  extends DAOFactory{
+ 
+  <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); %>
+	private <%=clazz.getClassName()%>DAO a<%=clazz.getClassName()%>=new <%=clazz.getClassName()%>FakeDAO();
+ <% } %>
+
+  <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); %>
+	public   <%=clazz.getClassName()%>DAO get<%=clazz.getClassName()%>DAO(){
+		return a<%=clazz.getClassName()%>;
+	}
+ <% } %>
+
+	
+
+  <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); 
+  	UmpleClass uClazz=clazz.getUClazz();  	%>
+	public static class <%=clazz.getClassName()%>FakeDAO extends GenericFakeDAO<<%=clazz.getDAOTable()%>, <%=clazz.getClassName()%>Key> implements <%=clazz.getClassName()%>DAO {
+	
+		public void cascadeDelete(<%=clazz.getDAOTable()%> a<%=clazz.getClassName()%>){
+		<% for (AssociationVariable assocVar: uClazz.getAssociationVariables()) { %>
+		<% if (assocVar.getRelatedAssociation().isOnlyOne() && assocVar.isMany()) {		%>
+		List<<%=assocVar.getType()%>>  <%=assocVar.getName()%>s=((<%=clazz.getClassName()%>)a<%=clazz.getClassName()%>).get<%=assocVar.getUpperCaseName()%>s();
+		for(<%=assocVar.getType()%>  a<%=assocVar.getUpperCaseName()%> : <%=assocVar.getName()%>s)
+    	{   
+			DAOUtils.getDAOByInstance(a<%=assocVar.getUpperCaseName()%>).cascadeDelete(a<%=assocVar.getUpperCaseName()%>);
+    	}<%}%>
+    	<% if (assocVar.getRelatedAssociation().isOnlyOne() && assocVar.isOne()) {		%>
+    	if (((<%=clazz.getClassName()%>)a<%=clazz.getClassName()%>).get<%=assocVar.getUpperCaseName()%>()!=null)
+    		DAOUtils.getDAOByInstance(((<%=clazz.getClassName()%>)a<%=clazz.getClassName()%>).get<%=assocVar.getUpperCaseName()%>()).cascadeDelete(((<%=clazz.getClassName()%>)a<%=clazz.getClassName()%>).get<%=assocVar.getUpperCaseName()%>());
+    	<%}%>
+    	<% if ((assocVar.getRelatedAssociation().isN() || assocVar.getRelatedAssociation().isMN()) && assocVar.isMany()) {		%>
+    	List<<%=assocVar.getType()%>>  <%=assocVar.getName()%>s=((<%=clazz.getClassName()%>)a<%=clazz.getClassName()%>).get<%=assocVar.getUpperCaseName()%>s();
+		for(<%=assocVar.getType()%>  a<%=assocVar.getUpperCaseName()%> : <%=assocVar.getName()%>s)
+    	{  
+    	if (a<%=assocVar.getUpperCaseName()%>.numberOf<%=assocVar.getRelatedAssociation().getUpperCaseName()%>s()-1 < <%=assocVar.getType()%>.minimumNumberOf<%=assocVar.getRelatedAssociation().getUpperCaseName()%>s())
+    		DAOUtils.getDAOByInstance(a<%=assocVar.getUpperCaseName()%>).cascadeDelete(a<%=assocVar.getUpperCaseName()%>);
+    	}<%}%>
+	   	<% }%>
+	   		this.delete((<%=clazz.getClassName()%>Key)DAOUtils.generateKey(a<%=clazz.getClassName()%>));
+ 		}
+ 		
+ 		public void deleteTree(<%=clazz.getDAOTable()%> a<%=clazz.getClassName()%>){
+ 			this.cascadeDelete( a<%=clazz.getClassName()%>);
+ 			a<%=clazz.getClassName()%>.delete();
+ 		}
+ 		
+ 	}
+ 	
+ <% } %>
+}
+
+
+ class DAOUtils{
+ 
+ 		private static DAOFactory daoFactory;
+		static {
+			daoFactory=DAOFactory.instance(DAOFactory.FakeDAO);
+		}
+
+	public static IKey generateKey(Object entity){
+		  <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) {
+		  BackingObject clazz= iterClazzez.next(); %> 
+ 		if (entity.getClass().getName().equals(<%=clazz.getClassName()%>.class.getName())){
+ 			<%=clazz.getClassName()%>  a<%=clazz.getClassName()%>= (<%=clazz.getClassName()%>)entity;
+ 			<%Iterator<Attribute> keyIter=clazz.getKeysAttributes().iterator();
+				String deleteSignature="";
+				while (keyIter.hasNext()){
+				Attribute att=keyIter.next();
+				deleteSignature=deleteSignature+"  a"+clazz.getClassName() +".get"+ att.getUpperCaseName()+"()";
+				if(keyIter.hasNext())
+					deleteSignature=deleteSignature+", ";	}		%>
+								
+			<%=clazz.getClassName()%>Key <%=clazz.getClassName().toLowerCase()%>Key= new <%=clazz.getClassName()%>Key(<%=deleteSignature%>);
+ 			return <%=clazz.getClassName().toLowerCase()%>Key;
+ 		}
+ 		<% } %>		
+ 		return null;
+ 		}
+ 
+ 		
+
+		public static GenericDAO getDAOByInstance(Object entity){
+		  <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) {
+		  BackingObject clazz= iterClazzez.next(); %> 
+ 		if (entity.getClass().getName().equals(<%=clazz.getClassName()%>.class.getName())){
+ 		return daoFactory.get<%=clazz.getClassName()%>DAO();
+ 		}	<% } %>
+ 		return null;		
+		}
+
+	}

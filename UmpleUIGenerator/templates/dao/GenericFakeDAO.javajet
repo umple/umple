@@ -1,0 +1,74 @@
+<%@ jet package="cruise.data.impl.dao.generic.impl" 
+class="GenericFakeDAO"   skeleton="../skeleton/IGenerator.skeleton" %>
+package dao.generic.impl;
+
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import dao.generic.GenericDAO;
+import dao.session.Session;
+
+public abstract class GenericFakeDAO<T, PK> implements GenericDAO<T, PK>{
+
+	private Class<T> persistentClass;
+   
+    @SuppressWarnings("unchecked")
+	public GenericFakeDAO() {
+        this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
+                                .getGenericSuperclass()).getActualTypeArguments()[0];
+     }
+
+    public Class<T> getPersistentClass() {
+        return persistentClass;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T findById(PK id) {
+        T entity;
+          entity = (T) Session.getInstance().getObjectRepository().getTable(getPersistentClass()).get(id);
+
+        return entity;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<T> findAll() {
+        return Collections.unmodifiableList(new ArrayList<T>(Session.getInstance().getObjectRepository().getTable(getPersistentClass()).values()));
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<T> findAll(Class clazz) {
+        List<T> filteredCollection = new ArrayList<T>();
+        for (T obj : new ArrayList<T>(Session.getInstance().getObjectRepository().getTable(getPersistentClass()).values()) ) {
+        	if (clazz.isInstance(obj)) {
+				filteredCollection.add(obj);
+			}
+		}
+		return Collections.unmodifiableList(filteredCollection);
+        //return Collections.unmodifiableList(new ArrayList<T>(Session.getInstance().getObjectRepository().getTable(getPersistentClass()).values()));
+    }
+
+
+    public List<T> findByInstance(T exampleInstance) {
+      
+        return null;
+    }
+
+
+    public T save(T entity, PK pk) {
+        Session.getInstance().getObjectRepository().save(getPersistentClass(), pk, entity);
+        return entity;
+    }
+
+    public void delete(PK pk) {
+    	Session.getInstance().getObjectRepository().delete(getPersistentClass(), pk);
+    	System.gc();
+    }
+
+
+
+   
+	
+
+}
