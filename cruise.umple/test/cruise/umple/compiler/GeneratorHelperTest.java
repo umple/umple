@@ -91,6 +91,20 @@ public class GeneratorHelperTest
   }
   
   @Test
+  public void prepare_StringTracerOnlyOnce()
+  {
+    GeneratorHelper.prepareStringTracer(model,"myblah","code1");
+    GeneratorHelper.prepareStringTracer(model,"myblah2","code2");
+    Assert.assertEquals(1,model.numberOfUmpleClasses());
+    UmpleClass c = model.getUmpleClass("StringTracer");
+    
+    Assert.assertEquals(1,c.numberOfAttributes());
+    Assert.assertEquals("code1",c.getExtraCode());
+    Assert.assertEquals("myblah",c.getPackageName());
+  }
+
+
+  @Test
   public void prepare_nestedStateMachine()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");

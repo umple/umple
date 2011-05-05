@@ -3,9 +3,6 @@ namespace elevator.core;
 
 class Building
 {
-  name;
-  1 -- * Floor;
-  1 -- * Elevator;
 
   public function getFloorsReversed()
   {
@@ -148,23 +145,12 @@ class Building
 
 class Floor
 {
-  autounique number;  
- 
-  0..1 -- * Person waitingPerson;
-  0..1 -- 0..1 Elevator elevatorOnThisFloor; 
-  1 -- 0..1 UpRequest;
-  1 -- 0..1 DownRequest;
+
 }
 
 class Elevator
 {
 
-  direction;
-  Boolean isMoving;
-  Double percentageDoorOpen = 0;
-  0..1 onItsWayTo -- * Floor requestedFloor;
-  0..1 -- * Person ridingPerson;
-  
   public function getDirectionOffset()
   {
     return $this->getDirection() == "up" ? 1 : -1;
@@ -190,10 +176,7 @@ class Elevator
 
 class Person
 {
-  autounique number;
-  name;
-  * exitAtPerson -- 0..1 Floor desiredFloor; 
-  
+
   public function pressButton($desiredFloor)
   {
     $this->setDesiredFloor($desiredFloor);
@@ -214,15 +197,12 @@ class Person
 
 class FloorRequest
 {
-  Boolean isCalled;
 }
 
 class UpRequest
 {
-  isA FloorRequest;
 }
 
 class DownRequest
 {
-  isA FloorRequest;
 }

@@ -23,7 +23,7 @@ public class StringTracerTest
     Assert.assertEquals(0,tracer.numberOfTraces());
     person.setName("aha");
     Assert.assertEquals(1,tracer.numberOfTraces());
-    Assert.assertEquals("TRACING name",tracer.getTrace(0));
+    Assert.assertEquals("name=aha",tracer.getTrace(0));
   }
   
 }

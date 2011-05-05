@@ -88,8 +88,7 @@ public class UmpleParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  
- public UmpleParser()  {
+   public UmpleParser()  {
 this("UmpleParser",new UmpleModel(null));
   }
  public UmpleParser(UmpleModel aModel)  {
@@ -451,8 +450,7 @@ private void init()
 		}
 		//2. Verify if method to be added is a constructor
 		if (aMethod.getType().equals("public")){
-			String extraCode = uClass.getExtraCode()  + System.getProperty("line.separator")  + aMethod.toString();
-			uClass.setExtraCode(extraCode);
+			uClass.appendExtraCode(aMethod.toString());
 			return false;
 		}  
 		//3. Verify if method from interface is already part of the Class extracode
@@ -693,7 +691,7 @@ private void init()
 			}
 			else if (childToken.is("extraCode"))
 			{
-				aInterface.setExtraCode(childToken.getValue("extraCode"));
+				aInterface.appendExtraCode(childToken.getValue("extraCode"));
 			}
 
 
@@ -876,8 +874,7 @@ private void init()
 			}
 			else if (token.is("extraCode"))
 			{
-				String previousExtraCode = aClass.getExtraCode().length() > 0 ? aClass.getExtraCode() + System.getProperty("line.separator"): "";
-				aClass.setExtraCode(previousExtraCode + token.getValue());
+				aClass.appendExtraCode(token.getValue());
 			}
 			else if (token.is("constantDeclaration"))
 			{

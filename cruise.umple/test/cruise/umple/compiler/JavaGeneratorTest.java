@@ -543,6 +543,7 @@ public class JavaGeneratorTest
     attr.setIsList(true);
     c.addAttribute(attr);
     
+    Assert.assertEquals("newNames",generator.translate("parameter",attr));
     Assert.assertEquals("aName",generator.translate("parameterOne",attr));
     Assert.assertEquals("placeholderName",generator.translate("removeParameterOne",attr));
     Assert.assertEquals("name",generator.translate("associationOne",attr));
@@ -940,7 +941,7 @@ public class JavaGeneratorTest
     CodeInjection inject = c.getCodeInjection(0);
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("setName", inject.getOperation());
-    Assert.assertEquals("System.out.println(\"TRACING name\");",inject.getCode());
+    Assert.assertEquals("System.out.println(\"name=\" + aName);",inject.getCode());
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,c.numberOfCodeInjections());
@@ -992,7 +993,7 @@ public class JavaGeneratorTest
     CodeInjection inject = c.getCodeInjection(0);
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("setName", inject.getOperation());
-    Assert.assertEquals("StringTracer.execute(\"TRACING name\");",inject.getCode());
+    Assert.assertEquals("StringTracer.execute(\"name=\" + aName);",inject.getCode());
     Assert.assertEquals("blah.*",c.getDepend(0).getName());
     
     GeneratorHelper.postpare(model);
@@ -1092,6 +1093,7 @@ public class JavaGeneratorTest
   private void assertOtherTranslate(AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));
+    Assert.assertEquals("newStudents",generator.relatedTranslate("parameter",av));
     Assert.assertEquals("aStudent",generator.relatedTranslate("parameterOne",av));
     Assert.assertEquals("placeholderStudent",generator.relatedTranslate("removeParameterOne",av));    
     Assert.assertEquals("2",generator.relatedTranslate("parameterValue",av));
@@ -1139,6 +1141,7 @@ public class JavaGeneratorTest
   private void assertTranslate(Attribute av, Attribute relatedAv)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
+    Assert.assertEquals("aMentor",generator.translate("parameter",av));
     Assert.assertEquals("aMentor",generator.translate("parameterOne",av));
     Assert.assertEquals("placeholderMentor",generator.translate("removeParameterOne",av));    
     Assert.assertEquals("3",generator.translate("parameterValue",av));

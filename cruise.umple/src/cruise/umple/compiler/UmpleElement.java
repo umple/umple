@@ -165,4 +165,25 @@ public class UmpleElement
   public void delete()
   {}
 
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public void appendExtraCode(String newCode)
+  {
+    appendExtraCode(newCode,true);
+  }
+  
+  public void appendExtraCode(String newCode, boolean addNewline)
+  {
+    if (newCode == null) 
+    { 
+      return;
+    }
+    if (!"".equals(extraCode) && addNewline)
+    {
+      extraCode += System.getProperty("line.separator");
+    } 
+    extraCode += newCode;
+  }
 }

@@ -472,6 +472,7 @@ public class PhpGeneratorTest
     attr.setIsList(true);
     c.addAttribute(attr);
     
+    Assert.assertEquals("newNames",generator.translate("parameter",attr));    
     Assert.assertEquals("aName",generator.translate("parameterOne",attr));
     Assert.assertEquals("name",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
@@ -515,6 +516,7 @@ public class PhpGeneratorTest
     Attribute attr = new Attribute("names","String",null,null,false);
     c.addAttribute(attr);
     
+    Assert.assertEquals("aNames",generator.translate("parameter",attr));
     Assert.assertEquals("aNames",generator.translate("parameterOne",attr));
     Assert.assertEquals("names",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
@@ -887,7 +889,7 @@ public class PhpGeneratorTest
     CodeInjection inject = c.getCodeInjection(0);
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("setName", inject.getOperation());
-    Assert.assertEquals("print(\"TRACING name\");",inject.getCode());
+    Assert.assertEquals("print(\"name={$aName}\");",inject.getCode());
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,c.numberOfCodeInjections());
@@ -917,7 +919,7 @@ public class PhpGeneratorTest
     CodeInjection inject = c.getCodeInjection(0);
     Assert.assertEquals("after",inject.getType());
     Assert.assertEquals("setName", inject.getOperation());
-    Assert.assertEquals("StringTracer::execute(\"TRACING name\");",inject.getCode());
+    Assert.assertEquals("StringTracer::execute(\"name={$aName}\");",inject.getCode());
     Assert.assertEquals(0,c.numberOfDepends());
     
     GeneratorHelper.postpare(model);
@@ -929,6 +931,7 @@ public class PhpGeneratorTest
   private void assertOtherTranslate(AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));
+    Assert.assertEquals("newStudents",generator.relatedTranslate("parameter",av));
     Assert.assertEquals("aStudent",generator.relatedTranslate("parameterOne",av));
     Assert.assertEquals("2",generator.relatedTranslate("parameterValue",av));
     Assert.assertEquals("student",generator.relatedTranslate("associationOne",av));
@@ -977,6 +980,7 @@ public class PhpGeneratorTest
   private void assertTranslate(AssociationVariable av, AssociationVariable relatedAv)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
+    Assert.assertEquals("aMentor",generator.translate("parameter",av));
     Assert.assertEquals("aMentor",generator.translate("parameterOne",av));
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
@@ -1064,6 +1068,7 @@ public class PhpGeneratorTest
   private void assertTranslate(Attribute av, Attribute relatedAv)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
+    Assert.assertEquals("aMentor",generator.translate("parameter",av));
     Assert.assertEquals("aMentor",generator.translate("parameterOne",av));
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));

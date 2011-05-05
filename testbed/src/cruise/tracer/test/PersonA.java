@@ -32,7 +32,7 @@ public class PersonA
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    StringTracer.execute("TRACING name");
+    StringTracer.execute("name=" + aName);
     return wasSet;
   }
 

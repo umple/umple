@@ -1,9 +1,15 @@
 <?php
 require_once("ui/framework.php");
 
+$tracer = StringTracer::getInstance();
 if (isset($_POST["buttonNext"]))
 {
-	$building = retrieveBuilding();
+	$building = retrieveObject("inputBuilding");
+	$oldTracer = retrieveObject("inputTracer");
+	foreach($oldTracer->getTraces() as $trace)
+	{
+	  $tracer->addTrace($trace);
+	}
   
 	if (isset($_POST["inputAction"]) && $_POST["inputAction"] != "")
 	{
@@ -23,6 +29,7 @@ assignRandomFloor($building);
 <html>
 <head>
 <style>
+table tr td { vertical-align: top; }
 table.elevatorshaft, table.elevatorshaft tr {padding:0;margin:0;}
 table.elevatorshaft td {width:50px;height:100px;background-color:#7E8B8B;}
 div.open {background-color:blue;width:50%;height:100%;}
@@ -36,25 +43,39 @@ table.elevatorshaft td.people {background-color:white; width:500px;vertical-alig
 
 img.button {cursor:pointer;}
 
+
+
 </style>
 <script type="text/javascript" src="ui/display.js"></script>
 
 </head>
 <body>
 
-Welcome to <?php echo $building->getName() ?><br />
+<table>
+  <tr>
+    <td>
+      <h1>Welcome to <?php echo $building->getName() ?></h1>
 
-<?php displayElevatorShaft($building); ?>
+      <?php displayElevatorShaft($building); ?>
 
-<br /><br />
-<form action="index.php" method="post">
-<input id="inputAutomatic" name="inputAutomatic" type="checkbox" value="auto" <?php echo$autoChecked?> /> On Automatic<br />
-<input id="buttonNext" name="buttonNext" type="submit" value="next" />
-<input id="buttonReset" name="buttonReset" type="submit" value="reset" />
-<br />
-<?php storeBuilding($building); ?>
-<input id="inputAction" name="inputAction" type="hidden" />
-</form>
+      <br /><br />
+      <form action="index.php" method="post">
+        <input id="inputAutomatic" name="inputAutomatic" type="checkbox" value="auto" <?php echo$autoChecked?> /> On Automatic<br />
+        <input id="buttonNext" name="buttonNext" type="submit" value="next" />
+        <input id="buttonReset" name="buttonReset" type="submit" value="reset" />
+        <br />
+        <?php storeObject("inputBuilding",$building); ?>
+        <?php storeObject("inputTracer",$tracer); ?>
+        <input id="inputAction" name="inputAction" type="hidden" />
+      </form>
+    </td>
+    <td>
+      <h2>TRACING RESULTS (latest on top)</h2>
+      <?php displayTraces($tracer); ?>
+    </td>
+  </tr>
+</table>
+
 <script language="javascript">
 
 var inputAutomatic = document.getElementById("inputAutomatic");

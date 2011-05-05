@@ -71,13 +71,17 @@ public class GeneratorHelper
   public static void prepareStringTracer(UmpleModel model, String dependsPackage, String extraCode)
   {
     UmpleClass aClass = model.addUmpleClass("StringTracer");
-    aClass.setIsInternal(true);
-    aClass.setIsSingleton(true); 
-    aClass.setPackageName(dependsPackage);
-    Attribute traces = new Attribute("traces","String",null,null,false);
-    traces.setIsList(true);
-    aClass.addAttribute(traces);
-    aClass.setExtraCode(extraCode);
+    
+    if (aClass.numberOfAttributes() == 0)
+    {
+      aClass.setIsInternal(true);
+      aClass.setIsSingleton(true); 
+      aClass.setPackageName(dependsPackage);
+      Attribute traces = new Attribute("traces","String",null,null,false);
+      traces.setIsList(true);
+      aClass.addAttribute(traces);
+      aClass.appendExtraCode(extraCode);
+    }
     aClass.createGeneratedClass(model);
   }
   

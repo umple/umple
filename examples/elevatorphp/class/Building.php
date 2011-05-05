@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.6.0.1712 modeling language!*/
+/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 class Building
 {
@@ -26,15 +26,18 @@ class Building
     $this->floors = array();
     $this->elevators = array();
   }
-  
+
   //------------------------
   // INTERFACE
   //------------------------
 
   public function setName($aName)
   {
+    $wasSet = false;
     $this->name = $aName;
-    return true;
+    $wasSet = true;
+    StringTracer::execute("name={$aName}");
+    return $wasSet;
   }
 
   public function getName()
@@ -44,54 +47,89 @@ class Building
 
   public function getFloor($index)
   {
-    return $this->floors[$index];
+    $aFloor = $this->floors[$index];
+    return $aFloor;
   }
 
   public function getFloors()
   {
-    return $this->floors;
+    $newFloors = $this->floors;
+    return $newFloors;
   }
 
   public function numberOfFloors()
   {
-    return count($this->floors);
+    $number = count($this->floors);
+    return $number;
   }
 
   public function hasFloors()
   {
-    return $this->numberOfFloors() > 0;
+    $has = $this->numberOfFloors() > 0;
+    return $has;
   }
 
   public function indexOfFloor($aFloor)
   {
-    $rawAnswer = array_search($aFloor,$this->floors);
-    return $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer; 
+    $wasFound = false;
+    $index = 0;
+    foreach($this->floors as $floor)
+    {
+      if ($floor->equals($aFloor))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
   }
 
   public function getElevator($index)
   {
-    return $this->elevators[$index];
+    $aElevator = $this->elevators[$index];
+    return $aElevator;
   }
 
   public function getElevators()
   {
-    return $this->elevators;
+    $newElevators = $this->elevators;
+    return $newElevators;
   }
 
   public function numberOfElevators()
   {
-    return count($this->elevators);
+    $number = count($this->elevators);
+    return $number;
   }
 
   public function hasElevators()
   {
-    return $this->numberOfElevators() > 0;
+    $has = $this->numberOfElevators() > 0;
+    return $has;
   }
 
   public function indexOfElevator($aElevator)
   {
-    $rawAnswer = array_search($aElevator,$this->elevators);
-    return $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer; 
+    $wasFound = false;
+    $index = 0;
+    foreach($this->elevators as $elevator)
+    {
+      if ($elevator->equals($aElevator))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfFloors()
+  {
+    return 0;
   }
 
   public function addFloorVia()
@@ -101,14 +139,10 @@ class Building
 
   public function addFloor($aFloor)
   {
-    if ($this->indexOfFloor($aFloor) != -1)
-    {
-      return false;
-    }
-
+    $wasAdded = false;
+    if ($this->indexOfFloor($aFloor) !== -1) { return false; }
     $existingBuilding = $aFloor->getBuilding();
-    $isNewBuilding = $existingBuilding != null && $existingBuilding != $this;
-
+    $isNewBuilding = $existingBuilding != null && $this !== $existingBuilding;
     if ($isNewBuilding)
     {
       $aFloor->setBuilding($this);
@@ -117,22 +151,26 @@ class Building
     {
       $this->floors[] = $aFloor;
     }
-    return true;
+    $wasAdded = true;
+    return $wasAdded;
   }
 
   public function removeFloor($aFloor)
   {
+    $wasRemoved = false;
     //Unable to remove aFloor, as it must always have a building
-    if ($aFloor->getBuilding() == $this)
-    {
-      return false;
-    }
-    else
+    if ($this !== $aFloor->getBuilding())
     {
       unset($this->floors[$this->indexOfFloor($aFloor)]);
       $this->floors = array_values($this->floors);
-      return true;
+      $wasRemoved = true;
     }
+    return $wasRemoved;
+  }
+
+  public static function minimumNumberOfElevators()
+  {
+    return 0;
   }
 
   public function addElevatorVia($aDirection, $aIsMoving)
@@ -142,14 +180,10 @@ class Building
 
   public function addElevator($aElevator)
   {
-    if ($this->indexOfElevator($aElevator) != -1)
-    {
-      return false;
-    }
-
+    $wasAdded = false;
+    if ($this->indexOfElevator($aElevator) !== -1) { return false; }
     $existingBuilding = $aElevator->getBuilding();
-    $isNewBuilding = $existingBuilding != null && $existingBuilding != $this;
-
+    $isNewBuilding = $existingBuilding != null && $this !== $existingBuilding;
     if ($isNewBuilding)
     {
       $aElevator->setBuilding($this);
@@ -158,22 +192,26 @@ class Building
     {
       $this->elevators[] = $aElevator;
     }
-    return true;
+    $wasAdded = true;
+    return $wasAdded;
   }
 
   public function removeElevator($aElevator)
   {
+    $wasRemoved = false;
     //Unable to remove aElevator, as it must always have a building
-    if ($aElevator->getBuilding() == $this)
-    {
-      return false;
-    }
-    else
+    if ($this !== $aElevator->getBuilding())
     {
       unset($this->elevators[$this->indexOfElevator($aElevator)]);
       $this->elevators = array_values($this->elevators);
-      return true;
+      $wasRemoved = true;
     }
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
   }
 
   public function delete()
@@ -188,6 +226,10 @@ class Building
     }
   }
 
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
   public function getFloorsReversed()
   {
     return array_reverse($this->getFloors());

@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.6.0.1712 modeling language!*/
+/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 class Floor
 {
@@ -42,7 +42,7 @@ class Floor
     }
     $this->exitAtPersons = array();
   }
-  
+
   //------------------------
   // INTERFACE
   //------------------------
@@ -54,28 +54,43 @@ class Floor
 
   public function getWaitingPerson($index)
   {
-    return $this->waitingPersons[$index];
+    $aWaitingPerson = $this->waitingPersons[$index];
+    return $aWaitingPerson;
   }
 
   public function getWaitingPersons()
   {
-    return $this->waitingPersons;
+    $newWaitingPersons = $this->waitingPersons;
+    return $newWaitingPersons;
   }
 
   public function numberOfWaitingPersons()
   {
-    return count($this->waitingPersons);
+    $number = count($this->waitingPersons);
+    return $number;
   }
 
   public function hasWaitingPersons()
   {
-    return $this->numberOfWaitingPersons() > 0;
+    $has = $this->numberOfWaitingPersons() > 0;
+    return $has;
   }
 
   public function indexOfWaitingPerson($aWaitingPerson)
   {
-    $rawAnswer = array_search($aWaitingPerson,$this->waitingPersons);
-    return $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer; 
+    $wasFound = false;
+    $index = 0;
+    foreach($this->waitingPersons as $waitingPerson)
+    {
+      if ($waitingPerson->equals($aWaitingPerson))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
   }
 
   public function getElevatorOnThisFloor()
@@ -105,44 +120,60 @@ class Floor
 
   public function getExitAtPerson($index)
   {
-    return $this->exitAtPersons[$index];
+    $aExitAtPerson = $this->exitAtPersons[$index];
+    return $aExitAtPerson;
   }
 
   public function getExitAtPersons()
   {
-    return $this->exitAtPersons;
+    $newExitAtPersons = $this->exitAtPersons;
+    return $newExitAtPersons;
   }
 
   public function numberOfExitAtPersons()
   {
-    return count($this->exitAtPersons);
+    $number = count($this->exitAtPersons);
+    return $number;
   }
 
   public function hasExitAtPersons()
   {
-    return $this->numberOfExitAtPersons() > 0;
+    $has = $this->numberOfExitAtPersons() > 0;
+    return $has;
   }
 
   public function indexOfExitAtPerson($aExitAtPerson)
   {
-    $rawAnswer = array_search($aExitAtPerson,$this->exitAtPersons);
-    return $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer; 
+    $wasFound = false;
+    $index = 0;
+    foreach($this->exitAtPersons as $exitAtPerson)
+    {
+      if ($exitAtPerson->equals($aExitAtPerson))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfWaitingPersons()
+  {
+    return 0;
   }
 
   public function addWaitingPerson($aWaitingPerson)
   {
-    if ($this->indexOfWaitingPerson($aWaitingPerson) != -1)
-    {
-      return false;
-    }
-
+    $wasAdded = false;
+    if ($this->indexOfWaitingPerson($aWaitingPerson) !== -1) { return false; }
     $existingFloor = $aWaitingPerson->getFloor();
     if ($existingFloor == null)
     {
-      $this->waitingPersons[] = $aWaitingPerson;
       $aWaitingPerson->setFloor($this);
     }
-    else if ($existingFloor != $this)
+    elseif ($this !== $existingFloor)
     {
       $existingFloor->removeWaitingPerson($aWaitingPerson);
       $this->addWaitingPerson($aWaitingPerson);
@@ -151,26 +182,29 @@ class Floor
     {
       $this->waitingPersons[] = $aWaitingPerson;
     }
-    return true;
+    $wasAdded = true;
+    return $wasAdded;
   }
 
   public function removeWaitingPerson($aWaitingPerson)
   {
-    if ($this->indexOfWaitingPerson($aWaitingPerson) == -1)
-    {
-      return false;
-    }
-    else
+    $wasRemoved = false;
+    if ($this->indexOfWaitingPerson($aWaitingPerson) != -1)
     {
       unset($this->waitingPersons[$this->indexOfWaitingPerson($aWaitingPerson)]);
       $this->waitingPersons = array_values($this->waitingPersons);
-      $aWaitingPerson->setFloor(null);
-      return true;
+      if ($this === $aWaitingPerson->getFloor())
+      {
+        $aWaitingPerson->setFloor(null);
+      }
+      $wasRemoved = true;
     }
+    return $wasRemoved;
   }
 
   public function setElevatorOnThisFloor($newElevatorOnThisFloor)
   {
+    $wasSet = false;
     if ($newElevatorOnThisFloor == null)
     {
       $existingElevatorOnThisFloor = $this->elevatorOnThisFloor;
@@ -180,7 +214,8 @@ class Floor
       {
         $existingElevatorOnThisFloor->setFloor(null);
       }
-      return;
+      $wasSet = true;
+      return $wasSet;
     }
     
     $currentElevatorOnThisFloor = $this->getElevatorOnThisFloor();
@@ -196,14 +231,17 @@ class Floor
     {
       $newElevatorOnThisFloor->setFloor($this);
     }
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setUpRequest($newUpRequest)
   {
+    $wasSet = false;
     if ($this->upRequest != null && $this->upRequest != $newUpRequest && $this == $this->upRequest->getFloor())
     {
       //Unable to setUpRequest, as existing upRequest would become an orphan
-      return false;
+      return $wasSet;
     }
     
     $this->upRequest = $newUpRequest;
@@ -213,22 +251,24 @@ class Floor
     {
       if ($oldFloor != null)
       {
-        $oldFloor->upRequest = null;  
+        $oldFloor->upRequest = null;
       }
       if ($this->upRequest != null)
       {
-        $this->upRequest->setFloor($this);  
+        $this->upRequest->setFloor($this);
       }
     }
-    return true;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setDownRequest($newDownRequest)
   {
+    $wasSet = false;
     if ($this->downRequest != null && $this->downRequest != $newDownRequest && $this == $this->downRequest->getFloor())
     {
       //Unable to setDownRequest, as existing downRequest would become an orphan
-      return false;
+      return $wasSet;
     }
     
     $this->downRequest = $newDownRequest;
@@ -238,21 +278,23 @@ class Floor
     {
       if ($oldFloor != null)
       {
-        $oldFloor->downRequest = null;  
+        $oldFloor->downRequest = null;
       }
       if ($this->downRequest != null)
       {
-        $this->downRequest->setFloor($this);  
+        $this->downRequest->setFloor($this);
       }
     }
-    return true;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setBuilding($aBuilding)
   {
+    $wasSet = false;
     if ($aBuilding == null)
     {
-      return false;
+      return $wasSet;
     }
     
     $existingBuilding = $this->building;
@@ -262,37 +304,42 @@ class Floor
       $existingBuilding->removeFloor($this);
     }
     $this->building->addFloor($this);
-    return true;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setOnItsWayTo($aOnItsWayTo)
   {
+    $wasSet = false;
     $existingOnItsWayTo = $this->onItsWayTo;
     $this->onItsWayTo = $aOnItsWayTo;
-    if ($existingOnItsWayTo != null && $existingOnItsWayTo != $aOnItsWayTo)
+    if ($existingOnItsWayTo != null && $existingOnItsWayTo !== $aOnItsWayTo)
     {
       $existingOnItsWayTo->removeRequestedFloor($this);
     }
-    if ($aOnItsWayTo != null)
+    if ($aOnItsWayTo != null && $aOnItsWayTo !== $existingOnItsWayTo)
     {
-      $aOnItsWayTo->addRequestedFloor($this);  
+      $aOnItsWayTo->addRequestedFloor($this);
     }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public static function minimumNumberOfExitAtPersons()
+  {
+    return 0;
   }
 
   public function addExitAtPerson($aExitAtPerson)
   {
-    if ($this->indexOfExitAtPerson($aExitAtPerson) != -1)
-    {
-      return false;
-    }
-
+    $wasAdded = false;
+    if ($this->indexOfExitAtPerson($aExitAtPerson) !== -1) { return false; }
     $existingDesiredFloor = $aExitAtPerson->getDesiredFloor();
     if ($existingDesiredFloor == null)
     {
-      $this->exitAtPersons[] = $aExitAtPerson;
       $aExitAtPerson->setDesiredFloor($this);
     }
-    else if ($existingDesiredFloor != $this)
+    elseif ($this !== $existingDesiredFloor)
     {
       $existingDesiredFloor->removeExitAtPerson($aExitAtPerson);
       $this->addExitAtPerson($aExitAtPerson);
@@ -301,22 +348,29 @@ class Floor
     {
       $this->exitAtPersons[] = $aExitAtPerson;
     }
-    return true;
+    $wasAdded = true;
+    return $wasAdded;
   }
 
   public function removeExitAtPerson($aExitAtPerson)
   {
-    if ($this->indexOfExitAtPerson($aExitAtPerson) == -1)
-    {
-      return false;
-    }
-    else
+    $wasRemoved = false;
+    if ($this->indexOfExitAtPerson($aExitAtPerson) != -1)
     {
       unset($this->exitAtPersons[$this->indexOfExitAtPerson($aExitAtPerson)]);
       $this->exitAtPersons = array_values($this->exitAtPersons);
-      $aExitAtPerson->setDesiredFloor(null);
-      return true;
+      if ($this === $aExitAtPerson->getDesiredFloor())
+      {
+        $aExitAtPerson->setDesiredFloor(null);
+      }
+      $wasRemoved = true;
     }
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
   }
 
   public function delete()

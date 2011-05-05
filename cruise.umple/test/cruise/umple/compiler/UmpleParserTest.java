@@ -77,6 +77,22 @@ public class UmpleParserTest
   }
   
   @Test
+  public void multipleExtraCode()
+  {
+    assertParse("003_multipleExtraCode.ump","[classDefinition][name:Student][extraCode:blahblah][classDefinition][name:Student][extraCode:moreblah]");
+    UmpleClass aClass = model.getUmpleClass("Student");
+    Assert.assertEquals("blahblah\nmoreblah",aClass.getExtraCode());
+  }
+  
+  @Test
+  public void constructorExtraCode()
+  {
+    assertParse("003_constructorExtraCode.ump","[classDefinition][name:Student][concreteMethodDeclaration][type:public][methodDeclarator][methodName:Student][parameterList][parameter][type:String][name:x][code:blah();]");  
+    UmpleClass aClass = model.getUmpleClass("Student");
+    Assert.assertEquals(" public Student(String x)  {\nblah();\n  }",aClass.getExtraCode());
+  }
+  
+  @Test
   public void innerClass()
   {
     assertParse("003_innerClass.ump", "[classDefinition][name:Person][attribute][name:name][classDefinition][name:Student][attribute][name:Integer]");
@@ -822,15 +838,25 @@ public class UmpleParserTest
   @Test
   public void interfaceWithExtraCode()
   {
-	assertParse("014_interface_extracode.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extraCode:public void getCode();]");
+    assertParse("014_interface_extracode.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extraCode:public void getCode();]");
   }
   
-  /* Test to verify extra code inside interfaces*/
+  @Test
   public void classWithImplementedMethods()
   {
-	assertParse("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extraCode:public void getCode();]");
+    assertParse("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][classDefinition][name:Something][attribute][type:implements][name:ISomething][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
   }
   
+  //TODO: Not being parsed by meta model
+  @Test @Ignore
+  public void classWithMethods()
+  {
+    assertParse("015_classMethods.ump", "[classDefinition][name:Student][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
+    
+    UmpleClass s = model.getUmpleClass("Student");
+    Assert.assertEquals(1,s.numberOfMethods());
+    Assert.assertEquals("",s.getExtraCode());
+  }
   
   @Test
   public void mixDifferentFiles()

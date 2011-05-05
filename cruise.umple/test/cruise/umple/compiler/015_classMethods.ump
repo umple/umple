@@ -1,0 +1,6 @@
+class Student
+{
+  String getCode(){
+  	return 0;  
+  }
+}

@@ -12,7 +12,7 @@ class Floor
 {
   autounique number;  
  
-  0..1 -- * Person waitingPerson;
+  0..1 -- * Person waitingPersons;
   0..1 -- 0..1 Elevator elevatorOnThisFloor; 
   1 -- 0..1 UpRequest;
   1 -- 0..1 DownRequest;
@@ -23,15 +23,15 @@ class Elevator
   direction;
   Boolean isMoving;
   Double percentageDoorOpen = 0;
-  0..1 onItsWayTo -- * Floor requestedFloor;
-  0..1 -- * Person ridingPerson; 
+  0..1 onItsWayTo -- * Floor requestedFloors;
+  0..1 -- * Person ridingPersons; 
 }
 
 class Person
 {
   autounique number;
   name;
-  * exitAtPerson -- 0..1 Floor desiredFloor; 
+  * exitAtPersons -- 0..1 Floor desiredFloor; 
 }
 
 class FloorRequest

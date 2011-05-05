@@ -125,6 +125,7 @@ public class JavaGenerator implements CodeGenerator
     
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
+    OneOrManyLookup.add("parameter");
     
     UmpleToJavaPrimitiveMap = new HashMap<String, String>();
     UmpleToJavaPrimitiveMap.put("Integer","int");
@@ -645,7 +646,7 @@ public class JavaGenerator implements CodeGenerator
       
       if ("Console".equals(model.getTraceType()))
       {
-        lookups.put("attributeCode",StringFormatter.format("System.out.println(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+        lookups.put("attributeCode",StringFormatter.format("System.out.println(\"{0}=\" + {1});",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
       }
       else if ("String".equals(model.getTraceType()))
       {
@@ -661,7 +662,7 @@ public class JavaGenerator implements CodeGenerator
           aClass.addDepend(d);
         }
         
-        lookups.put("attributeCode",StringFormatter.format("StringTracer.execute(\"TRACING {0}\");",translate("attribute",traceItem.getAttribute())));
+        lookups.put("attributeCode",StringFormatter.format("StringTracer.execute(\"{0}=\" + {1});",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
       }
       lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
       GeneratorHelper.prepareTraceItem(traceItem,lookups);

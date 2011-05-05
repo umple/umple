@@ -15,7 +15,7 @@ class StringTracerTest extends UnitTestCase
     $this->assertEqual(0,$tracer->numberOfTraces());
     $person->setName("aha");
     $this->assertEqual(1,$tracer->numberOfTraces());
-    $this->assertEqual("TRACING name",$tracer->getTrace(0));
+    $this->assertEqual("name=aha",$tracer->getTrace(0));
   }
   
 }

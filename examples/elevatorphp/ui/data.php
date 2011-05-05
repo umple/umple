@@ -27,14 +27,14 @@ function createBuilding()
 	return $building;
 }
 
-function storeBuilding($building)
+function storeObject($fieldId,$obj)
 {
-	?><input id="inputBuilding" name="inputBuilding" type="hidden" value="<?php echo base64_encode(serialize($building)) ?>" /><?php
+  ?><input id="<?php echo $fieldId ?>" name="<?php echo $fieldId ?>" type="hidden" value="<?php echo base64_encode(serialize($obj)) ?>" /><?php
 }
 
-function retrieveBuilding()
+function retrieveObject($fieldId)
 {
-	return unserialize(base64_decode($_POST["inputBuilding"]));
+  return unserialize(base64_decode($_POST[$fieldId]));
 }
 
 function handleActions($building, $actions)

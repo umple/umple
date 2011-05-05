@@ -1,0 +1,30 @@
+
+tracer String;
+
+class Building
+{
+  trace name; 
+}
+
+class Floor
+{
+  trace number;
+}
+
+class Elevator
+{
+  trace direction;
+  trace isMoving;
+  trace percentageDoorOpen;
+}
+
+class Person
+{
+  trace number;
+  trace name;
+}
+
+class FloorRequest
+{
+  trace isCalled;
+}

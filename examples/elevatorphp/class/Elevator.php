@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.6.0.1712 modeling language!*/
+/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 class Elevator
 {
@@ -37,27 +37,36 @@ class Elevator
       throw new Exception("Unable to create elevator due to building");
     }
   }
-  
+
   //------------------------
   // INTERFACE
   //------------------------
 
   public function setDirection($aDirection)
   {
+    $wasSet = false;
     $this->direction = $aDirection;
-    return true;
+    $wasSet = true;
+    StringTracer::execute("direction={$aDirection}");
+    return $wasSet;
   }
 
   public function setIsMoving($aIsMoving)
   {
+    $wasSet = false;
     $this->isMoving = $aIsMoving;
-    return true;
+    $wasSet = true;
+    StringTracer::execute("isMoving={$aIsMoving}");
+    return $wasSet;
   }
 
   public function setPercentageDoorOpen($aPercentageDoorOpen)
   {
+    $wasSet = false;
     $this->percentageDoorOpen = $aPercentageDoorOpen;
-    return true;
+    $wasSet = true;
+    StringTracer::execute("percentageDoorOpen={$aPercentageDoorOpen}");
+    return $wasSet;
   }
 
   public function getDirection()
@@ -77,54 +86,84 @@ class Elevator
 
   public function getRequestedFloor($index)
   {
-    return $this->requestedFloors[$index];
+    $aRequestedFloor = $this->requestedFloors[$index];
+    return $aRequestedFloor;
   }
 
   public function getRequestedFloors()
   {
-    return $this->requestedFloors;
+    $newRequestedFloors = $this->requestedFloors;
+    return $newRequestedFloors;
   }
 
   public function numberOfRequestedFloors()
   {
-    return count($this->requestedFloors);
+    $number = count($this->requestedFloors);
+    return $number;
   }
 
   public function hasRequestedFloors()
   {
-    return $this->numberOfRequestedFloors() > 0;
+    $has = $this->numberOfRequestedFloors() > 0;
+    return $has;
   }
 
   public function indexOfRequestedFloor($aRequestedFloor)
   {
-    $rawAnswer = array_search($aRequestedFloor,$this->requestedFloors);
-    return $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer; 
+    $wasFound = false;
+    $index = 0;
+    foreach($this->requestedFloors as $requestedFloor)
+    {
+      if ($requestedFloor->equals($aRequestedFloor))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
   }
 
   public function getRidingPerson($index)
   {
-    return $this->ridingPersons[$index];
+    $aRidingPerson = $this->ridingPersons[$index];
+    return $aRidingPerson;
   }
 
   public function getRidingPersons()
   {
-    return $this->ridingPersons;
+    $newRidingPersons = $this->ridingPersons;
+    return $newRidingPersons;
   }
 
   public function numberOfRidingPersons()
   {
-    return count($this->ridingPersons);
+    $number = count($this->ridingPersons);
+    return $number;
   }
 
   public function hasRidingPersons()
   {
-    return $this->numberOfRidingPersons() > 0;
+    $has = $this->numberOfRidingPersons() > 0;
+    return $has;
   }
 
   public function indexOfRidingPerson($aRidingPerson)
   {
-    $rawAnswer = array_search($aRidingPerson,$this->ridingPersons);
-    return $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer; 
+    $wasFound = false;
+    $index = 0;
+    foreach($this->ridingPersons as $ridingPerson)
+    {
+      if ($ridingPerson->equals($aRidingPerson))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
   }
 
   public function getBuilding()
@@ -137,20 +176,21 @@ class Elevator
     return $this->floor;
   }
 
+  public static function minimumNumberOfRequestedFloors()
+  {
+    return 0;
+  }
+
   public function addRequestedFloor($aRequestedFloor)
   {
-    if ($this->indexOfRequestedFloor($aRequestedFloor) != -1)
-    {
-      return false;
-    }
-
+    $wasAdded = false;
+    if ($this->indexOfRequestedFloor($aRequestedFloor) !== -1) { return false; }
     $existingOnItsWayTo = $aRequestedFloor->getOnItsWayTo();
     if ($existingOnItsWayTo == null)
     {
-      $this->requestedFloors[] = $aRequestedFloor;
       $aRequestedFloor->setOnItsWayTo($this);
     }
-    else if ($existingOnItsWayTo != $this)
+    elseif ($this !== $existingOnItsWayTo)
     {
       $existingOnItsWayTo->removeRequestedFloor($aRequestedFloor);
       $this->addRequestedFloor($aRequestedFloor);
@@ -159,38 +199,41 @@ class Elevator
     {
       $this->requestedFloors[] = $aRequestedFloor;
     }
-    return true;
+    $wasAdded = true;
+    return $wasAdded;
   }
 
   public function removeRequestedFloor($aRequestedFloor)
   {
-    if ($this->indexOfRequestedFloor($aRequestedFloor) == -1)
-    {
-      return false;
-    }
-    else
+    $wasRemoved = false;
+    if ($this->indexOfRequestedFloor($aRequestedFloor) != -1)
     {
       unset($this->requestedFloors[$this->indexOfRequestedFloor($aRequestedFloor)]);
       $this->requestedFloors = array_values($this->requestedFloors);
-      $aRequestedFloor->setOnItsWayTo(null);
-      return true;
+      if ($this === $aRequestedFloor->getOnItsWayTo())
+      {
+        $aRequestedFloor->setOnItsWayTo(null);
+      }
+      $wasRemoved = true;
     }
+    return $wasRemoved;
+  }
+
+  public static function minimumNumberOfRidingPersons()
+  {
+    return 0;
   }
 
   public function addRidingPerson($aRidingPerson)
   {
-    if ($this->indexOfRidingPerson($aRidingPerson) != -1)
-    {
-      return false;
-    }
-
+    $wasAdded = false;
+    if ($this->indexOfRidingPerson($aRidingPerson) !== -1) { return false; }
     $existingElevator = $aRidingPerson->getElevator();
     if ($existingElevator == null)
     {
-      $this->ridingPersons[] = $aRidingPerson;
       $aRidingPerson->setElevator($this);
     }
-    else if ($existingElevator != $this)
+    elseif ($this !== $existingElevator)
     {
       $existingElevator->removeRidingPerson($aRidingPerson);
       $this->addRidingPerson($aRidingPerson);
@@ -199,29 +242,32 @@ class Elevator
     {
       $this->ridingPersons[] = $aRidingPerson;
     }
-    return true;
+    $wasAdded = true;
+    return $wasAdded;
   }
 
   public function removeRidingPerson($aRidingPerson)
   {
-    if ($this->indexOfRidingPerson($aRidingPerson) == -1)
-    {
-      return false;
-    }
-    else
+    $wasRemoved = false;
+    if ($this->indexOfRidingPerson($aRidingPerson) != -1)
     {
       unset($this->ridingPersons[$this->indexOfRidingPerson($aRidingPerson)]);
       $this->ridingPersons = array_values($this->ridingPersons);
-      $aRidingPerson->setElevator(null);
-      return true;
+      if ($this === $aRidingPerson->getElevator())
+      {
+        $aRidingPerson->setElevator(null);
+      }
+      $wasRemoved = true;
     }
+    return $wasRemoved;
   }
 
   public function setBuilding($aBuilding)
   {
+    $wasSet = false;
     if ($aBuilding == null)
     {
-      return false;
+      return $wasSet;
     }
     
     $existingBuilding = $this->building;
@@ -231,11 +277,13 @@ class Elevator
       $existingBuilding->removeElevator($this);
     }
     $this->building->addElevator($this);
-    return true;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setFloor($newFloor)
   {
+    $wasSet = false;
     if ($newFloor == null)
     {
       $existingFloor = $this->floor;
@@ -245,7 +293,8 @@ class Elevator
       {
         $existingFloor->setElevatorOnThisFloor(null);
       }
-      return;
+      $wasSet = true;
+      return $wasSet;
     }
     
     $currentFloor = $this->getFloor();
@@ -261,6 +310,13 @@ class Elevator
     {
       $newFloor->setElevatorOnThisFloor($this);
     }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
   }
 
   public function delete()
@@ -280,6 +336,10 @@ class Elevator
     }
   }
 
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
   public function getDirectionOffset()
   {
     return $this->getDirection() == "up" ? 1 : -1;

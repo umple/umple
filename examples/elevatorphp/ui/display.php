@@ -19,6 +19,17 @@ function displayElevatorShaft($building)
 	?></table><?php
 }
 
+function displayTraces($tracer)
+{
+  $allTraceEntries = array_reverse($tracer->getTraces());
+  ?><ul>
+  <?php foreach($allTraceEntries as $entry) { ?>
+      <li><?php echo $entry ?></li>
+  <?php } ?>
+  <ul>
+  <?php
+}
+
 function displayPeople($floor)
 {
 	

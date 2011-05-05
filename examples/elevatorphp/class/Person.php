@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.6.0.1712 modeling language!*/
+/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 class Person
 {
@@ -35,15 +35,18 @@ class Person
     $this->name = $aName;
     $this->number = self::$nextNumber++;
   }
-  
+
   //------------------------
   // INTERFACE
   //------------------------
 
   public function setName($aName)
   {
+    $wasSet = false;
     $this->name = $aName;
-    return true;
+    $wasSet = true;
+    StringTracer::execute("name={$aName}");
+    return $wasSet;
   }
 
   public function getName()
@@ -73,44 +76,58 @@ class Person
 
   public function setDesiredFloor($aDesiredFloor)
   {
+    $wasSet = false;
     $existingDesiredFloor = $this->desiredFloor;
     $this->desiredFloor = $aDesiredFloor;
-    if ($existingDesiredFloor != null && $existingDesiredFloor != $aDesiredFloor)
+    if ($existingDesiredFloor != null && $existingDesiredFloor !== $aDesiredFloor)
     {
       $existingDesiredFloor->removeExitAtPerson($this);
     }
-    if ($aDesiredFloor != null)
+    if ($aDesiredFloor != null && $aDesiredFloor !== $existingDesiredFloor)
     {
-      $aDesiredFloor->addExitAtPerson($this);  
+      $aDesiredFloor->addExitAtPerson($this);
     }
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setFloor($aFloor)
   {
+    $wasSet = false;
     $existingFloor = $this->floor;
     $this->floor = $aFloor;
-    if ($existingFloor != null && $existingFloor != $aFloor)
+    if ($existingFloor != null && $existingFloor !== $aFloor)
     {
       $existingFloor->removeWaitingPerson($this);
     }
-    if ($aFloor != null)
+    if ($aFloor != null && $aFloor !== $existingFloor)
     {
-      $aFloor->addWaitingPerson($this);  
+      $aFloor->addWaitingPerson($this);
     }
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function setElevator($aElevator)
   {
+    $wasSet = false;
     $existingElevator = $this->elevator;
     $this->elevator = $aElevator;
-    if ($existingElevator != null && $existingElevator != $aElevator)
+    if ($existingElevator != null && $existingElevator !== $aElevator)
     {
       $existingElevator->removeRidingPerson($this);
     }
-    if ($aElevator != null)
+    if ($aElevator != null && $aElevator !== $existingElevator)
     {
-      $aElevator->addRidingPerson($this);  
+      $aElevator->addRidingPerson($this);
     }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
   }
 
   public function delete()
@@ -129,6 +146,10 @@ class Person
     }
   }
 
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
   public function pressButton($desiredFloor)
   {
     $this->setDesiredFloor($desiredFloor);

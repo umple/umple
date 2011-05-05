@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.6.0.1712 modeling language!*/
+/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 class FloorRequest
 {
@@ -20,20 +20,28 @@ class FloorRequest
   {
     $this->isCalled = $aIsCalled;
   }
-  
+
   //------------------------
   // INTERFACE
   //------------------------
 
   public function setIsCalled($aIsCalled)
   {
+    $wasSet = false;
     $this->isCalled = $aIsCalled;
-    return true;
+    $wasSet = true;
+    StringTracer::execute("isCalled={$aIsCalled}");
+    return $wasSet;
   }
 
   public function getIsCalled()
   {
     return $this->isCalled;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
   }
 
   public function delete()
