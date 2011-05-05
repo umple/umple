@@ -1,0 +1,228 @@
+//A very simple elevator system
+namespace elevator.core;
+
+class Building
+{
+  name;
+  1 -- * Floor;
+  1 -- * Elevator;
+
+  public function getFloorsReversed()
+  {
+    return array_reverse($this->getFloors());
+  }
+  
+  public function buttonPressed($action)
+  {
+    $input = explode("_",$action);
+    $direction = $input[1];
+    $floorNumber = $input[2];
+    
+    foreach ($this->getFloors() as $aFloor)
+    {
+      if ($aFloor->getNumber() == $floorNumber)
+      {
+        $request = $direction == "up" ? $aFloor->getUpRequest() : $aFloor->getDownRequest();
+        $request->setIsCalled(true);
+        return;
+      }
+    }    
+  }
+
+
+  public function nextStep()
+  {
+    foreach ($this->getElevators() as $elevator)
+    {
+      $this->moveElevator($elevator);
+      $this->openDoors($elevator);
+      if ($elevator->getIsMoving() || $elevator->getPercentageDoorOpen() != 1)
+      {
+        continue;
+      }
+
+      $this->peopleEnterElevator($elevator);
+      $this->peopleExitElevator($elevator);
+    }
+  }
+  
+  public function moveElevator($e)
+  {
+    if (!$e->getIsMoving())
+    {
+      return;
+    }
+    
+    $currentFloor = $this->indexOfFloor($e->getFloor());
+    $nextFloor = $currentFloor + $e->getDirectionOffset();
+    $maxFloor = $this->numberOfFloors() - 1;
+    if ($nextFloor <= $maxFloor && $nextFloor >= 0)
+    {
+      $this->getFloor($nextFloor)->setElevatorOnThisFloor($e);
+    }
+    
+    if ($nextFloor >= $maxFloor || $nextFloor <= 0)
+    {
+      $e->switchDirections();
+    }
+  }
+  
+  public function openDoors($e)
+  {
+    if ($e->getFloor() == null)
+    {
+      return;
+    }
+    $f = $e->getFloor();
+    $up = $f->getUpRequest();
+    $down = $f->getDownRequest();
+
+    if ($up != null && $e->isUp() && $up->getIsCalled())
+    {
+      $up->setIsCalled(false);
+      $e->setIsMoving(false);
+      $e->setPercentageDoorOpen(0.25);
+    }
+    else if ($down != null && $e->isDown() && $down->getIsCalled())
+    {
+      $down->setIsCalled(false);
+      $e->setIsMoving(false);
+      $e->setPercentageDoorOpen(0.25);
+    }
+    else if ($e->indexOfRequestedFloor($f) != -1)
+    {
+      $e->removeRequestedFloor($f);
+      $e->setIsMoving(false);
+      $e->setPercentageDoorOpen(0.25);
+    }
+    
+    if (!$e->getIsMoving() && $e->getPercentageDoorOpen() == 1)
+    {
+      $e->setPercentageDoorOpen(0);
+      $e->setIsMoving(true);
+    }
+    else if (!$e->getIsMoving())
+    {
+      $e->setPercentageDoorOpen($e->getPercentageDoorOpen() + 0.25);
+    }
+
+  }
+  
+  public function peopleEnterElevator($e)
+  {
+    $f = $e->getFloor();
+    for ($i=0; $i<$f->numberOfWaitingPersons();)
+    {
+      $p = $f->getWaitingPerson($i);
+      
+      if ($p->getDesiredFloor() == null)
+      {
+        $i++;
+        continue;
+      }
+      $f->removeWaitingPerson($p);
+      $e->addRidingPerson($p);
+      $e->addRequestedFloor($p->getDesiredFloor());
+    }
+  }
+  
+  public function peopleExitElevator($e)
+  {
+    $f = $e->getFloor();
+    for ($i=0; $i<$e->numberOfRidingPersons();)
+    {
+      $p = $e->getRidingPerson($i);
+      if ($f == $p->getDesiredFloor())
+      {
+        $e->removeRidingPerson($p);
+        $p->setDesiredFloor(null);
+        $p->setFloor($f);
+      }
+      else
+      {
+        $i++;
+      }
+    }
+  }
+}
+
+class Floor
+{
+  autounique number;  
+ 
+  0..1 -- * Person waitingPerson;
+  0..1 -- 0..1 Elevator elevatorOnThisFloor; 
+  1 -- 0..1 UpRequest;
+  1 -- 0..1 DownRequest;
+}
+
+class Elevator
+{
+
+  direction;
+  Boolean isMoving;
+  Double percentageDoorOpen = 0;
+  0..1 onItsWayTo -- * Floor requestedFloor;
+  0..1 -- * Person ridingPerson;
+  
+  public function getDirectionOffset()
+  {
+    return $this->getDirection() == "up" ? 1 : -1;
+  }
+  
+  public function switchDirections()
+  {
+    $this->setDirection($this->getDirection() == "up" ? "down" : "up");
+  }
+  
+  public function isUp()
+  {
+    return $this->getDirection() == "up";
+  }
+
+  public function isDown()
+  {
+    return $this->getDirection() == "down";
+  }
+
+  
+}
+
+class Person
+{
+  autounique number;
+  name;
+  * exitAtPerson -- 0..1 Floor desiredFloor; 
+  
+  public function pressButton($desiredFloor)
+  {
+    $this->setDesiredFloor($desiredFloor);
+    if ($this->getFloor()->getNumber() > $desiredFloor->getNumber())
+    {
+      $this->getFloor()->getDownRequest()->setIsCalled(true);
+    }
+    else if ($this->getFloor()->getNumber() < $desiredFloor->getNumber())
+    {
+      $this->getFloor()->getUpRequest()->setIsCalled(true);
+    }
+    else
+    {
+     $this->setDesiredFloor(null);
+    }
+  }
+}
+
+class FloorRequest
+{
+  Boolean isCalled;
+}
+
+class UpRequest
+{
+  isA FloorRequest;
+}
+
+class DownRequest
+{
+  isA FloorRequest;
+}
