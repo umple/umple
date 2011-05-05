@@ -3,28 +3,28 @@ tracer String;
 
 class Building
 {
-  trace name; 
+  // trace name; 
 }
 
 class Floor
 {
-  trace number;
+  // trace number;
 }
 
 class Elevator
 {
-  trace direction;
-  trace isMoving;
+  // trace direction;
+  // trace isMoving;
   trace percentageDoorOpen;
 }
 
 class Person
 {
-  trace number;
-  trace name;
+  // trace number;
+  // trace name;
 }
 
 class FloorRequest
 {
-  trace isCalled;
+  // trace isCalled;
 }

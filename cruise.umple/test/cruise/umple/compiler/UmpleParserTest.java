@@ -855,6 +855,8 @@ public class UmpleParserTest
     
     UmpleClass s = model.getUmpleClass("Student");
     Assert.assertEquals(1,s.numberOfMethods());
+    Method m = s.getMethod(0);
+    Assert.assertEquals("getCode", m.getName());
     Assert.assertEquals("",s.getExtraCode());
   }
   

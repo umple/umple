@@ -47,7 +47,6 @@ class Elevator
     $wasSet = false;
     $this->direction = $aDirection;
     $wasSet = true;
-    StringTracer::execute("direction={$aDirection}");
     return $wasSet;
   }
 
@@ -56,7 +55,6 @@ class Elevator
     $wasSet = false;
     $this->isMoving = $aIsMoving;
     $wasSet = true;
-    StringTracer::execute("isMoving={$aIsMoving}");
     return $wasSet;
   }
 

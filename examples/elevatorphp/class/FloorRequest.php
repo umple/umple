@@ -30,7 +30,6 @@ class FloorRequest
     $wasSet = false;
     $this->isCalled = $aIsCalled;
     $wasSet = true;
-    StringTracer::execute("isCalled={$aIsCalled}");
     return $wasSet;
   }
 
