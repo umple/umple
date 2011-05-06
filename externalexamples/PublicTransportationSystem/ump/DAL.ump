@@ -1,0 +1,1591 @@
+namespace umple.pts.domain.dal;
+
+use Entities.ump;
+
+class PTSConnection{
+	depend java.sql.*;
+	 static String hostName;
+	static String port;
+	static String sID;
+	static String userName;
+	static String password;
+	static Connection ptsConnection;
+	
+	public static void initializePTSConnection(String hostName,String port,String sID,String userName,String password){
+		PTSConnection.hostName = hostName;
+		PTSConnection.port = port;
+		PTSConnection.sID = sID;
+		PTSConnection.userName = userName;
+		PTSConnection.password = password;
+	}
+	
+	public static Connection getConnection() throws ClassNotFoundException, SQLException{
+		if(ptsConnection == null){
+			PTSConnection.initializePTSConnection("jrastic.webfactional.com","5432","jrastic_tinp", "jrastic_tinp", "Can4RBzz");
+			//PTSConnection.initializePTSConnection("art2002.dyndns.org","51522","cpmsdbt", "pts", "gs93s01");
+			Class.forName ("org.postgresql.Driver");
+			//Class.forName ("oracle.jdbc.driver.OracleDriver");
+			String connstring = "jdbc:postgresql://" + PTSConnection.hostName + ":" + PTSConnection.port + "/" + PTSConnection.sID;
+			//String connstring = "jdbc:oracle:thin:@" + PTSConnection.hostName + ":" + PTSConnection.port + ":" + PTSConnection.sID;
+			ptsConnection = DriverManager.getConnection(connstring, PTSConnection.userName, PTSConnection.password);
+			ptsConnection.setAutoCommit(false);
+		}
+		
+		return ptsConnection;
+	}
+	
+	public static void killConnection(Connection conn) throws SQLException{
+		ptsConnection = conn;
+		ptsConnection.close();
+	}
+}
+
+class StopStorage{
+	depend umple.pts.domain.coreEntities.*;
+	depend java.sql.*;
+	depend java.util.*;
+	depend umple.pts.domain.repositories.StopRepository;
+	
+	public static int insert(Stop stop) throws ClassNotFoundException,
+			SQLException {
+		if (stop == null) {
+			return -1;
+		}
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		int id = StopStorage.getNextStopId();
+		int r = stmt
+				.executeUpdate("INSERT INTO STOPS(STOPID, STOPNAME, STOPSTATUS) VALUES("
+						+ id + ", '" + stop.getName() + "', 'OK')");
+		if (r == 1)
+			stop.setStopId(id);
+		StopRepository.getInstance().addObject(stop);
+		stmt.close();
+		return r;
+	}
+
+	public static int remove(Stop stop) throws ClassNotFoundException,
+			SQLException {
+		if (stop == null) {
+			return -1;
+		}
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		int r = stmt.executeUpdate("DELETE FROM STOPS WHERE STOPID="
+				+ stop.getEntityId() + "");
+		StopRepository.getInstance().removeObject(stop);
+		stmt.close();
+		return r;
+	}
+
+	public static int update(Stop stop) throws ClassNotFoundException,
+			SQLException {
+		if (stop == null) {
+			return -1;
+		}
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		int r = stmt.executeUpdate("UPDATE STOPS SET STOPNAME='"
+				+ stop.getName() + "' WHERE STOPID=" + stop.getEntityId());
+		stmt.close();
+		return r;
+	}
+
+	public static List<Stop> getAll() throws ClassNotFoundException,
+			SQLException {
+		StopRepository.getInstance().delete();
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		ResultSet stops = stmt
+				.executeQuery("SELECT * FROM STOPS ORDER BY STOPID");
+		List<Stop> result = new ArrayList<Stop>();
+		while (stops.next()) {
+			Stop stop = new Stop(stops.getString(2));
+			stop.setStopId(Integer.parseInt(stops.getString(1)));
+			result.add(stop);
+			StopRepository.getInstance().addObject(stop);
+		}
+		stops.close();
+		stmt.close();
+		return result;
+	}
+
+	public static Stop getByID(int id) throws SQLException,
+			ClassNotFoundException {
+		Stop stopInMemory = (Stop) StopRepository.getInstance()
+				.searchEntityById(id);
+		if (stopInMemory == null) {
+			Connection conn = PTSConnection.getConnection();
+			Statement stmt = conn.createStatement();
+			ResultSet stops = stmt
+					.executeQuery("SELECT * FROM STOPS WHERE STOPID=" + id);
+
+			while (stops.next()) {
+				stopInMemory = new Stop(stops.getString(2));
+				stopInMemory.setStopId(Integer.parseInt(stops.getString(1)));
+				StopRepository.getInstance().addObject(stopInMemory);
+			}
+			stops.close();
+			stmt.close();
+		}
+		return stopInMemory;
+	}
+
+	public static Stop getByName(String name) throws SQLException,
+			ClassNotFoundException {
+		Stop result = null;
+		for (Stop stop : StopRepository.getInstance().getStops()) {
+			if (stop.getName().equals(name)) {
+				return stop;
+			}
+		}
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		ResultSet stops = stmt
+				.executeQuery("SELECT * FROM STOPS WHERE STOPNAME='" + name
+						+ "'");
+
+		while (stops.next()) {
+			result = new Stop(stops.getString(2));
+			result.setStopId(Integer.parseInt(stops.getString(1)));
+			StopRepository.getInstance().addObject(result);
+		}
+		stops.close();
+		stmt.close();
+		return result;
+	}
+
+	public static int getNextStopId() throws SQLException,
+			ClassNotFoundException {
+		ResultSet nextIdSt = PTSConnection.getConnection()
+				.prepareStatement("SELECT nextval('STOP_STOP_ID_SEQ')")
+				.executeQuery();
+		int nextId = -1;
+
+		if (nextIdSt.next()) {
+			nextId = nextIdSt.getInt(1);
+		}
+		nextIdSt.close();
+		return nextId;
+	}
+}
+
+class LineStorage{
+	depend umple.pts.domain.coreEntities.*;
+	depend java.sql.*;
+	depend java.util.*;
+	depend umple.pts.domain.repositories.LineRepository;
+	
+	public static int getNextLineId() throws SQLException,
+			ClassNotFoundException {
+
+		int nextLineId = -1;
+
+		ResultSet result = PTSConnection.getConnection()
+				.prepareStatement("SELECT nextval('LINE_LINE_ID_SEQ')")
+				.executeQuery();
+		if (result.next()) {
+			nextLineId = result.getInt(1);
+		}
+		result.close();
+
+		return nextLineId;
+	}
+
+	public static int deleteStopInLine(Line line, Stop stop)
+			throws SQLException, ClassNotFoundException {
+
+		int stopPosition = line.getStops().indexOf(stop);
+		if (stopPosition < 0) {
+			return -1;
+		}
+
+		PreparedStatement deleteStopInLineStm = PTSConnection.getConnection()
+				.prepareStatement(
+						"DELETE FROM STOPSINLINES "
+								+ "	WHERE LINEID = ? AND STOPID = ?");
+
+		deleteStopInLineStm.setInt(1, line.getLineId());
+		deleteStopInLineStm.setInt(2, stop.getStopId());
+
+		// updates each other stop position
+		if (deleteStopInLineStm.executeUpdate() > 0) {
+			PreparedStatement updateEachOtherStopPos = PTSConnection
+					.getConnection().prepareStatement(
+							"UPDATE STOPSINLINES "
+									+ "	SET STOPPOSITION = STOPPOSITION -1 "
+									+ "WHERE STOPPOSITION > ?");
+			updateEachOtherStopPos.setInt(1, stopPosition);
+
+			updateEachOtherStopPos.executeUpdate();
+			updateEachOtherStopPos.close();
+		}
+		deleteStopInLineStm.close();
+
+		return 1;
+	}
+
+	public static int insertOrUpdateInfoAboutStops(Line line)
+			throws SQLException, ClassNotFoundException {
+		PreparedStatement updateStm = PTSConnection.getConnection()
+				.prepareStatement(
+						"UPDATE STOPSINLINES " + "	SET STOPPOSITION = ? "
+								+ "	WHERE LINEID = ? AND STOPID = ?");
+		updateStm.setInt(2, line.getLineId());
+
+		PreparedStatement insertStm = PTSConnection.getConnection()
+				.prepareStatement(
+						"INSERT INTO STOPSINLINES"
+								+ "	(LINEID, STOPID, STOPPOSITION)"
+								+ "	VALUES(?, ?, ?)");
+		insertStm.setInt(1, line.getLineId());
+
+		int currentPostion = 0;
+		for (Stop stop : line.getStops()) {
+			updateStm.setInt(1, currentPostion);
+			updateStm.setInt(3, stop.getStopId());
+
+			if (updateStm.executeUpdate() <= 0) {
+
+				insertStm.setInt(2, stop.getStopId());
+				insertStm.setInt(3, currentPostion);
+
+				if (insertStm.executeUpdate() <= 0) {
+					insertStm.close();
+					updateStm.close();
+					return -1;
+				}
+			}
+			currentPostion++;
+
+		}
+		updateStm.close();
+		insertStm.close();
+
+		return 1;
+	}
+
+	public static int insert(Line line) throws ClassNotFoundException,
+			SQLException {
+		if (line == null) {
+			return -1;
+		}
+
+		Connection conn = PTSConnection.getConnection();
+
+		int nextLineId = getNextLineId();
+		if (nextLineId < 0) {
+			return -1;
+		}
+
+		PreparedStatement insertStm = conn.prepareStatement("INSERT INTO LINES"
+				+ "	(LINEID, STARTSTOPID, ENDSTOPID, NAME)"
+				+ " 	VALUES(?, ?, ?, ?)");
+		insertStm.setInt(1, nextLineId);
+
+		if (StopStorage.update(line.getFirstEndStop()) <= 0) {
+			if (StopStorage.insert(line.getFirstEndStop()) <= 0) {
+				return -1;
+			}
+		}
+		insertStm.setInt(2, line.getFirstEndStop().getStopId());
+
+		if (StopStorage.update(line.getSecondEndStop()) <= 0) {
+			if (StopStorage.insert(line.getSecondEndStop()) <= 0) {
+				return -1;
+			}
+		}
+		insertStm.setInt(3, line.getSecondEndStop().getStopId());
+		insertStm.setString(4, line.getName());
+
+		if (insertStm.executeUpdate() > 0) {
+			line.setLineId(nextLineId);
+
+			if (line instanceof EmergencyLine) {
+				PreparedStatement insertELStm = conn
+						.prepareStatement("INSERT INTO EMERGENCYLINES "
+								+ "	(LINEID, CAUSE, STARTTIME, ENDTIME) "
+								+ "	VALUES (?, ?, ?, ?)");
+
+				insertELStm.setInt(1, line.getLineId());
+				insertELStm.setString(2,
+						((EmergencyLine) line).getEmergencyCause());
+				insertELStm.setTimestamp(3, new Timestamp(
+						((EmergencyLine) line).getStartTime().getTime()));
+				insertELStm.setTimestamp(4, new Timestamp(
+						((EmergencyLine) line).getEndTime().getTime()));
+
+				if (insertELStm.executeUpdate() <= 0) {
+					insertELStm.close();
+					return -1;
+				}
+			}
+
+			insertStm.close();
+
+			return insertOrUpdateInfoAboutStops(line);
+
+		} else {
+			insertStm.close();
+			return 0;
+		}
+
+	}
+
+	public static int remove(Line line) throws ClassNotFoundException,
+			SQLException {
+		if (line == null) {
+			return -1;
+		}
+
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement deleteStopsStm = conn
+				.prepareStatement("DELETE FROM STOPSINLINES WHERE LINEID="
+						+ line.getLineId());
+		deleteStopsStm.executeUpdate();
+		deleteStopsStm.close();
+
+		if (line instanceof EmergencyLine) {
+			PreparedStatement stm = conn
+					.prepareStatement("DELETE FROM EMERGENCYLINES WHERE LINEID = "
+							+ line.getLineId());
+			if (stm.executeUpdate() <= 0) {
+				stm.close();
+				return -1;
+			}
+			stm.close();
+		}
+		PreparedStatement deleteLine = conn
+				.prepareStatement("DELETE FROM LINES WHERE LINEID="
+						+ line.getLineId());
+		int retVal = deleteLine.executeUpdate();
+		//LineRepository.getInstance().removeObject(line);
+		deleteLine.close();
+		return retVal;
+	}
+
+	public static int update(Line line) throws ClassNotFoundException,
+			SQLException {
+		if (line == null) {
+			return -1;
+		}
+
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement updateLineStm = conn.prepareStatement("UPDATE LINES "
+				+ "	SET (STARTSTOPID, ENDSTOPID, NAME) =" + "		(?, ?, ? ) "
+				+ "	WHERE LINEID = ?");
+
+		if (StopStorage.update(line.getFirstEndStop()) <= 0) {
+			if (StopStorage.insert(line.getFirstEndStop()) <= 0) {
+				return -1;
+			}
+		}
+		updateLineStm.setInt(1, line.getFirstEndStop().getStopId());
+
+		if (StopStorage.update(line.getSecondEndStop()) <= 0) {
+			if (StopStorage.insert(line.getSecondEndStop()) <= 0) {
+				return -1;
+			}
+		}
+		updateLineStm.setInt(2, line.getSecondEndStop().getStopId());
+
+		updateLineStm.setString(3, line.getName());
+		updateLineStm.setInt(4, line.getLineId());
+
+		if (updateLineStm.executeUpdate() > 0) {
+			if (line instanceof EmergencyLine) {
+				PreparedStatement updateELStm = conn
+						.prepareStatement("UPDATE EMERGENCYLINES "
+								+ "	SET (CAUSE, STARTTIME, ENDTIME) ="
+								+ "		( ?, ?, ?) " + "	WHERE LINEID = ?");
+				updateELStm.setString(1,
+						((EmergencyLine) line).getEmergencyCause());
+				updateELStm.setTimestamp(2, new Timestamp(
+						((EmergencyLine) line).getStartTime().getTime()));
+				updateELStm.setTimestamp(3, new Timestamp(
+						((EmergencyLine) line).getEndTime().getTime()));
+				updateELStm.setInt(4, line.getLineId());
+
+				if (updateELStm.executeUpdate() <= 0) {
+					updateELStm.close();
+					return -1;
+				}
+				updateELStm.close();
+			}
+			updateLineStm.close();
+			return insertOrUpdateInfoAboutStops(line);
+		} else {
+			updateLineStm.close();
+			return 0;
+		}
+
+	}
+
+	public static void fillRepository() throws ClassNotFoundException,
+			SQLException {
+		LineRepository.getInstance().delete();
+
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		String linename;
+		ResultSet lines = stmt
+				.executeQuery("SELECT LINEID,STARTSTOPID,ENDSTOPID,NAME FROM LINES ORDER BY LINEID");
+		while (lines.next()) {
+			int lineId = lines.getInt(1);
+			linename = lines.getString(4);
+			Stop ss = StopStorage.getByID(lines.getInt(2));
+			Stop es = StopStorage.getByID(lines.getInt(3));
+			Statement stmtNew = conn.createStatement();
+			ResultSet stops = stmtNew
+					.executeQuery("SELECT STOPID FROM STOPSINLINES WHERE LINEID="
+							+ lineId + "ORDER BY stopposition ");
+			List<Stop> lineStops = new ArrayList<Stop>();
+			while (stops.next()) {
+				Stop stop = StopStorage.getByID(stops.getInt(1));
+				lineStops.add(stop);
+			}
+			stops.close();
+
+			Line aLine = null;
+			Statement stmtE = conn.createStatement();
+			ResultSet emergencyLine = stmtE
+					.executeQuery("SELECT CAUSE, STARTTIME, ENDTIME FROM EMERGENCYLINES WHERE LINEID ="
+							+ lineId);
+			if (emergencyLine.next()) {
+				String cause = emergencyLine.getString(1);
+				Time startTime = emergencyLine.getTime(2);
+				Time endTime = emergencyLine.getTime(3);
+
+				aLine = new EmergencyLine(ss, es, cause, startTime, endTime,
+						(Stop[]) lineStops.toArray(new Stop[lineStops.size()]));
+				aLine.setName(linename);
+				aLine.setLineId(lineId);
+			} else {
+				aLine = new Line(ss, es,
+						(Stop[]) lineStops.toArray(new Stop[lineStops.size()]));
+				aLine.setName(linename);
+				aLine.setLineId(lineId);
+			}
+
+			emergencyLine.close();
+
+			LineRepository.getInstance().addObject(aLine);
+		}
+
+		lines.close();
+	}
+
+	public static Line getByID(int id) throws ClassNotFoundException,
+			SQLException {
+		Line aLine = (Line) LineRepository.getInstance().searchEntityById(id);
+		String linename;
+
+		if (aLine == null) {
+			ResultSet line = PTSConnection
+					.getConnection()
+					.prepareStatement(
+							"SELECT LINEID,STARTSTOPID,ENDSTOPID,NAME "
+									+ "FROM LINES " + "WHERE LINEID =" + id)
+					.executeQuery();
+			if (line.next()) {
+				Statement stmt = PTSConnection.getConnection()
+						.createStatement();
+
+				int lineId = line.getInt(1);
+				linename = line.getString(4);
+				Stop ss = StopStorage.getByID(line.getInt(2));
+				Stop es = StopStorage.getByID(line.getInt(3));
+				ResultSet stops = stmt
+						.executeQuery("SELECT STOPID FROM STOPSINLINES WHERE LINEID="
+								+ lineId);
+				List<Stop> lineStops = new ArrayList<Stop>();
+				while (stops.next()) {
+					Stop stop = StopStorage.getByID(stops.getInt(1));
+					if (!lineStops.contains(stop))
+						lineStops.add(stop);
+				}
+				stops.close();
+
+				ResultSet emergencyLine = stmt
+						.executeQuery("SELECT CAUSE, STARTTIME, ENDTIME FROM EMERGENCYLINES WHERE LINEID ="
+								+ lineId);
+				if (emergencyLine.next()) {
+					String cause = emergencyLine.getString(1);
+					Time startTime = emergencyLine.getTime(2);
+					Time endTime = emergencyLine.getTime(3);
+
+					aLine = new EmergencyLine(ss, es, cause, startTime,
+							endTime,
+							(Stop[]) lineStops.toArray(new Stop[lineStops
+									.size()]));
+					aLine.setName(linename);
+					aLine.setLineId(lineId);
+				} else {
+					aLine = new Line(ss, es,
+							(Stop[]) lineStops.toArray(new Stop[lineStops
+									.size()]));
+					aLine.setName(linename);
+					aLine.setLineId(lineId);
+				}
+				emergencyLine.close();
+				LineRepository.getInstance().addObject(aLine);
+			}
+
+			line.close();
+		}
+
+		return aLine;
+	}
+}
+
+class RunStorage{
+	depend umple.pts.domain.coreEntities.*;
+	depend java.sql.*;
+	depend java.util.*;
+	depend umple.pts.domain.repositories.RunRepository;
+	
+	protected static final String EXISTANCE_CHECK_STM_SQL = "SELECT RUNID FROM RUNS WHERE RUNID = ?";
+  
+  protected static final String UPDATE_STM_SQL = "UPDATE RUNS SET (STARTTIME, ENDTIME, STARTSTOPID, ENDSTOPID, FORLINEID) = (?, ?, ?, ?, ? ) WHERE RUNID = ?";
+  
+  protected static final String INSERT_STM_SQL = "INSERT INTO RUNS (RUNID, STARTTIME, ENDTIME, STARTSTOPID, ENDSTOPID, FORLINEID, WAITTIME) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  
+  protected static final String FETCH_STM_SQL = "SELECT Runs.RUNID, Runs.STARTTIME, Runs.ENDTIME, Runs.STARTSTOPID, Runs.ENDSTOPID, Runs.FORLINEID, Runs.WAITTIME FROM RUNS Runs ORDER BY RUNID";
+  
+  protected static final String DELETE_STM_SQL = "DELETE FROM RUNS WHERE RUNID = ?";
+  
+  protected static final String FETCH_ACTUAL_RUN_STM_SQL = 
+  		"	SELECT ActualRuns.RUNID, ActualRuns.STATUS, ActualRuns.DELAYMINUTES, ActualRuns.BASERUNID " +
+  		"	FROM ACTUALRUNS ActualRuns WHERE ActualRuns.RUNID = ?";
+  
+  
+  public static int getNextRunId() throws SQLException, ClassNotFoundException{
+	  ResultSet nextIdRS = PTSConnection.getConnection().prepareStatement("SELECT nextval('RUN_RUN_ID_SEQ')").executeQuery();
+	  	int nextId = -1;
+	  	
+	  	if(nextIdRS.next()){
+	  		nextId = nextIdRS.getInt(1);
+	  	}
+	  	nextIdRS.close();
+	  	
+	  	return nextId;
+  }
+  
+  public static int insert(Run run)throws ClassNotFoundException, SQLException{
+		
+	  	if(run == null){
+	  		return -1;
+	  	}
+	  	
+	  	int nextId = getNextRunId();
+	  	if(nextId < 0){
+	  		return -1;
+	  	}
+	  	
+	  	Connection conn = PTSConnection.getConnection();
+	  	
+		PreparedStatement insertStatement = conn.prepareStatement(INSERT_STM_SQL);
+	
+		insertStatement.setInt(1, nextId);
+		
+		insertStatement.setTimestamp(2, new Timestamp(run.getStartTime().getTime()));
+		insertStatement.setTimestamp(3, new Timestamp(run.getEndTime().getTime()));
+		
+		if(StopStorage.update(run.getStartStop()) <= 0){
+			if(StopStorage.insert(run.getStartStop()) <= 0){
+				return -1;
+			}
+		}
+		insertStatement.setLong(4, run.getStartStop().getStopId());
+		
+		if(StopStorage.update(run.getEndStop()) <= 0){
+			if(StopStorage.insert(run.getEndStop()) <= 0){
+				return -1;
+			}
+		}
+		insertStatement.setLong(5, run.getEndStop().getStopId());
+		
+		if(LineStorage.update(run.getLine()) <= 0){
+			if(LineStorage.insert(run.getLine()) <= 0){
+				return -1;
+			}
+		}
+		insertStatement.setLong(6, run.getLine().getLineId());
+                if(run.getWaitTime() != null){
+                    insertStatement.setTimestamp(7, new Timestamp(run.getWaitTime().getTime()));
+                } else {
+                    insertStatement.setTimestamp(7, null);
+                }
+		
+		
+		
+		if(insertStatement.executeUpdate() > 0){
+			run.setRunId(nextId);
+			
+			if(run instanceof ActualRun){
+				PreparedStatement insertARStm = conn.prepareStatement(
+						"INSERT INTO ACTUALRUNS " +
+						"	(RUNID, STATUS, DELAYMINUTES, BASERUNID) " +
+						"	VALUES (?, ?, ?, ?)");
+				insertARStm.setLong(1, run.getRunId());
+				insertARStm.setString(2, ((ActualRun)run).getStatus());
+				insertARStm.setLong(3, ((ActualRun)run).getDelayMinutes());
+				
+				if(insertOrUpdate(((ActualRun)run).getRun()) <= 0){
+					return -1;
+				}
+				insertARStm.setLong(4, ((ActualRun)run).getRun().getRunId());
+				
+				if(insertARStm.executeUpdate() < 0){
+					return -1;
+				}
+				
+				if(run instanceof EmergencyRun){
+					PreparedStatement insertERStm = conn.prepareStatement(
+							"INSERT INTO EMERGENCYRUNS  " +
+							"	(RUNID,  CAUSE, BASELINEID) " +
+							"	VALUES (?, ?, ?)");
+					insertERStm.setLong(1, run.getRunId());
+					insertERStm.setString(2, ((EmergencyRun)run).getCause());
+					insertERStm.setLong(3, ((EmergencyRun)run).getBaseLine().getLineId());
+					
+					if(insertERStm.executeUpdate() < 0){
+						insertERStm.close();
+						return -1;
+					}
+					
+					insertERStm.close();
+				}
+			}
+		} else {
+			return -1;
+		}		
+		return 1;
+	}
+	
+	public static int remove(Run run)throws ClassNotFoundException, SQLException{
+		if(run == null){
+			return -1;
+		}
+		
+		Connection conn = PTSConnection.getConnection();
+		
+		if(run instanceof ActualRun){
+			if(run instanceof EmergencyRun){
+				PreparedStatement stmDeleteER = conn.prepareStatement("DELETE FROM EMERGENCYRUNS WHERE RUNID = ?");
+				stmDeleteER.setLong(1, run.getEntityId());
+				
+				int result = stmDeleteER.executeUpdate();
+				stmDeleteER.close();
+				if(result <= 0){
+					return -1;
+				}
+			}
+			
+			PreparedStatement stmDeleteAR = conn.prepareStatement("DELETE FROM ACTUALRUNS WHERE RUNID = ?");
+			stmDeleteAR.setLong(1, run.getEntityId());
+			
+			int result = stmDeleteAR.executeUpdate();
+			stmDeleteAR.close();
+			if(result <= 0){
+				return result;
+			}
+		}
+		
+		PreparedStatement deleteArrivalTimes = conn.prepareStatement("DELETE FROM ARRIVALTIMETOSTOPS WHERE RUNID = ?");
+		deleteArrivalTimes.setLong(1, run.getRunId());
+		
+		deleteArrivalTimes.executeUpdate();
+		
+		PreparedStatement deleteStm = conn.prepareStatement(DELETE_STM_SQL);
+		deleteStm.setLong(1, run.getRunId());
+		
+		int retVal = deleteStm.executeUpdate();
+		deleteStm.close();
+		
+		return retVal;
+	}
+	
+	public static int removeArrivalTimeToStop(ArrivalTimeToStop arrivalTime) throws SQLException, ClassNotFoundException{
+		
+		PreparedStatement deleteStm = PTSConnection.getConnection().prepareStatement("DELETE FROM ARRIVALTIMETOSTOPS WHERE RUNID = ? AND STOPID = ?");
+		deleteStm.setInt(1, arrivalTime.getRun().getRunId());
+		deleteStm.setInt(2, arrivalTime.getStop().getStopId());
+		
+		int result = deleteStm.executeUpdate();
+		deleteStm.close();
+		
+		return result;
+	}
+
+        public static int addArrivalTimeToStop(ArrivalTimeToStop arrivalTime)throws SQLException, ClassNotFoundException{
+
+		PreparedStatement insertStm = PTSConnection.getConnection().prepareStatement("INSERT INTO ARRIVALTIMETOSTOPS (RUNID, STOPID, ARRIVALTIME) VALUES (?, ?, ?)");
+		insertStm.setInt(1, arrivalTime.getRun().getRunId());
+		insertStm.setInt(2, arrivalTime.getStop().getStopId());
+                insertStm.setTimestamp(3, new Timestamp(arrivalTime.getArrivalTime().getTime()));
+
+		int result = insertStm.executeUpdate();
+		insertStm.close();
+
+		return result;
+	}
+	
+	protected static int insertOrUpdateDataAboutArrivalTimestoStop(Run run) throws ClassNotFoundException, SQLException{
+		List<ArrivalTimeToStop> arrivalTimes = run.getArrivalTimeToStops();
+
+		for(ArrivalTimeToStop arrivalTime: arrivalTimes){
+			Connection conn = PTSConnection.getConnection();
+			PreparedStatement updateStm = conn.prepareStatement("UPDATE ARRIVALTIMETOSTOPS SET ARRIVALTIME = ? WHERE RUNID =? AND STOPID =?");
+			updateStm.setTimestamp(1, new Timestamp(arrivalTime.getArrivalTime().getTime()));
+			updateStm.setLong(2, run.getRunId());
+			updateStm.setLong(3, arrivalTime.getStop().getStopId());
+			
+			if(updateStm.executeUpdate() == 0){
+                                addArrivalTimeToStop(arrivalTime);
+			}
+			
+			updateStm.close();
+
+		}
+		
+		return 1;
+	}
+	
+	public static int insertOrUpdate(Run run)throws ClassNotFoundException, SQLException{
+		
+		if(run == null){
+			return -1;
+		}
+				
+		Connection conn = PTSConnection.getConnection();
+		
+		PreparedStatement chkStm = conn.prepareStatement("SELECT RUNID FROM RUNS WHERE RUNID = ?");
+		chkStm.setLong(1, run.getEntityId());
+		//Object already exists
+		if(chkStm.executeQuery().next()){
+			
+			if(run instanceof ActualRun){
+				PreparedStatement updARStm = conn.prepareStatement(
+						"UPDATE ACTUALRUNS " +
+						"	SET (STATUS, DELAYMINUTES, BASERUNID) = " +
+						"	(?, ?, ? ) " +
+						"WHERE RUNID = ?");
+				ActualRun ar = (ActualRun)run;
+				updARStm.setString(1, ar.getStatus());
+				updARStm.setLong(2, ar.getDelayMinutes());
+				updARStm.setLong(3, ar.getRun().getRunId());
+				updARStm.setLong(4, ar.getRunId());
+				insertOrUpdate(ar.getRun());
+				int result =updARStm.executeUpdate();
+				if(result <= 0){
+					updARStm.close();
+					chkStm.close();
+					return result;
+				}
+				
+				updARStm.close();
+				
+				if(run instanceof EmergencyRun){
+					PreparedStatement updERStm = conn.prepareStatement(
+							"UPDATE EMERGENCYRUNS " +
+							"	SET (CAUSE, BASELINEID) = " +
+							"	(?, ? ) " +
+							"WHERE RUNID = ?");
+					EmergencyRun er = (EmergencyRun)run;
+					updERStm.setString(1, er.getCause());
+					
+					if(LineStorage.update(er.getBaseLine()) <= 0){
+						if(LineStorage.insert(er.getBaseLine()) <= 0){
+							return -1;
+						}
+					}
+					updERStm.setLong(2, er.getBaseLine().getLineId());
+					
+					updERStm.setLong(3, er.getRunId());
+					
+					result = updERStm.executeUpdate();
+					updARStm.close();
+					if(result <= 0){
+						return result;
+					}
+				}
+			}
+			
+			PreparedStatement updateStm = conn.prepareStatement(UPDATE_STM_SQL);
+			updateStm.setTimestamp(1, new Timestamp(run.getStartTime().getTime()));
+			updateStm.setTimestamp(2, new Timestamp(run.getEndTime().getTime()));
+			
+			if(StopStorage.update(run.getStartStop()) <= 0){
+				if(StopStorage.insert(run.getStartStop()) <= 0){
+					return -1;
+				}
+			}
+			updateStm.setLong(3, run.getStartStop().getStopId());
+			
+			if(StopStorage.update(run.getEndStop()) <= 0){
+				if(StopStorage.insert(run.getEndStop()) <= 0){
+					return -1;
+				}
+			}
+			updateStm.setLong(4, run.getEndStop().getStopId());
+			
+			if(LineStorage.update(run.getLine()) <= 0){
+				if(LineStorage.insert(run.getLine()) <= 0){
+					return -1;
+				}
+			}
+			updateStm.setLong(5, run.getLine().getLineId());
+			
+			updateStm.setLong(6, run.getRunId());
+			
+			if( updateStm.executeUpdate()> 0){
+				updateStm.close();
+				return insertOrUpdateDataAboutArrivalTimestoStop(run);
+			}
+			updateStm.close();
+		} else {
+			if(insert(run) > 0){
+				return insertOrUpdateDataAboutArrivalTimestoStop(run);
+			}
+		}
+		
+		return 0;
+	}
+	
+	public static void fillRepository() throws ClassNotFoundException, SQLException{
+		RunRepository.getInstance().deleteData();
+		
+		Connection conn = PTSConnection.getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet runs = stmt.executeQuery(FETCH_STM_SQL);
+        while (runs.next()){
+        	
+        	//optimization flag
+	    	boolean newOneCreated = false;
+        	int runId= runs.getInt(1);
+        	Run runInMemory = (Run) RunRepository.getInstance().searchEntityById(runId);
+        	
+        	if(runInMemory == null){
+        		Stop ss = StopStorage.getByID(runs.getInt(4));
+		    	Stop es = StopStorage.getByID(runs.getInt(5));
+		        Time endTime = new Time(runs.getTimestamp(3).getTime());
+		        Time startTime = new Time(runs.getTimestamp(2).getTime());
+    	        Line forLine = LineStorage.getByID(runs.getInt(6));
+                Time waitTime = null;
+                if(runs.getTimestamp(7) != null){
+                    waitTime = new Time(runs.getTimestamp(7).getTime());
+                }
+
+    	        
+    	        
+    	        ResultSet actualRun = conn.prepareStatement("SELECT STATUS, DELAYMINUTES, BASERUNID FROM ACTUALRUNS WHERE RUNID = " + runId).executeQuery();
+    	        if(actualRun.next()){
+    	        	
+    	        	int delayTime = actualRun.getInt(2);
+    	        	String runStatus = actualRun.getString(1);
+    	        	int forRunId = actualRun.getInt(3);
+    	        	actualRun.close();
+    	        	
+    	        	ResultSet emergencyRun = conn.prepareStatement("SELECT CAUSE, BASELINEID FROM EMERGENCYRUNS WHERE RUNID =  " + runId).executeQuery();
+	         	    if(emergencyRun.next()){
+	         	    	String cause = emergencyRun.getString(1);
+	         	    	int baseLineId = emergencyRun.getInt(2);
+	         	    	emergencyRun.close();
+	         	    	runInMemory = new EmergencyRun(startTime, endTime, waitTime, ss, es, forLine, delayTime, (ScheduledRun) getByID(forRunId), cause);
+	         	    	((EmergencyRun)runInMemory).setEmergencyLine((EmergencyLine) LineStorage.getByID(baseLineId));
+	         	    } else {
+	         	    	emergencyRun.close();
+	         	    	runInMemory = new ActualRun(startTime, endTime, waitTime, ss, es, forLine, delayTime, (ScheduledRun) getByID(forRunId));
+	         	    }
+    	        	
+    	        	if(runStatus != null){
+    	        		((ActualRun)runInMemory).setStatus(runStatus);
+    	        	}
+    	        } else {
+        	        runInMemory = new ScheduledRun(startTime, endTime, waitTime, ss, es, forLine);
+        	        actualRun.close();
+    	        }
+    	        
+    	        runInMemory.setRunId(runId);
+    	        RunRepository.getInstance().addRun(runInMemory);
+    	        newOneCreated = true;
+        	}
+        	
+	        PreparedStatement stm = PTSConnection.getConnection().prepareStatement("SELECT STOPID, ARRIVALTIME FROM ARRIVALTIMETOSTOPS WHERE RUNID = ?");
+	        stm.setLong(1, runId);
+	    	ResultSet arrivalTimesToAStopRS = stm.executeQuery();
+	    	while(arrivalTimesToAStopRS.next()){
+	    		Stop stop = StopStorage.getByID(arrivalTimesToAStopRS.getInt(1));
+	    		Time arrivalTime =  new Time(arrivalTimesToAStopRS.getTimestamp(2).getTime());
+	    		
+	    		if(!newOneCreated){
+	    			boolean foundArrivalTime = false;
+	    			for(ArrivalTimeToStop arrTimeToStop : runInMemory.getArrivalTimeToStops()){
+	    				if(arrTimeToStop.getStop() == stop){
+	    					arrTimeToStop.setArrivalTime(arrivalTime);
+	    					foundArrivalTime = true;
+	    					break;
+	    				}
+	    			}
+	    			
+	    			if(!foundArrivalTime){
+	    				runInMemory.addArrivalTimeToStop(arrivalTime, stop);
+	    			}
+	    			
+	    		} else {
+	    			runInMemory.addArrivalTimeToStop(arrivalTime, stop);
+	    		}	    		
+	    	}
+	    	arrivalTimesToAStopRS.close();
+        }
+        runs.close();
+	}
+	
+	//not yet implemented
+	public static Run getByID(int id) throws ClassNotFoundException, SQLException{
+		
+		//first searches memory (entity cashe aka. repository)
+		Run runInMemory = (Run) RunRepository.getInstance().searchEntityById(id);
+		
+		if(runInMemory == null){
+			Connection conn = PTSConnection.getConnection();
+			ResultSet runs = conn.prepareStatement("SELECT Runs.RUNID, Runs.STARTTIME, Runs.ENDTIME, Runs.STARTSTOPID, Runs.ENDSTOPID, Runs.FORLINEID, Runs.WAITTIME FROM RUNS Runs WHERE RUNS.runid = " + id +  "ORDER BY RUNID").executeQuery();
+	        if(runs.next()){
+		    	int runId= runs.getInt(1);
+		    	Stop ss = StopStorage.getByID(runs.getInt(4));
+		    	Stop es = StopStorage.getByID(runs.getInt(5));
+		        Time endTime = new Time(runs.getTimestamp(3).getTime());
+		        Time startTime = new Time(runs.getTimestamp(2).getTime());
+    	        Line forLine = LineStorage.getByID(runs.getInt(6));
+    	        Time waitTime = new Time(runs.getTimestamp(7).getTime());
+    	        
+    	        ResultSet actualRun = conn.prepareStatement("SELECT STATUS, DELAYMINUTES, BASERUNID FROM ACTUALRUNS WHERE RUNID = " + runId).executeQuery();
+    	        if(actualRun.next()){
+    	        	
+    	        	int delayTime = actualRun.getInt(2);
+    	        	String runStatus = actualRun.getString(1);
+    	        	int forRunId = actualRun.getInt(3);
+    	        	actualRun.close();
+    	        	
+    	        	ResultSet emergencyRun = conn.prepareStatement("SELECT CAUSE, BASELINEID FROM EMERGENCYRUNS WHERE RUNID =  " + runId).executeQuery();
+	         	    if(emergencyRun.next()){
+	         	    	String cause = emergencyRun.getString(1);
+	         	    	int baseLineId = emergencyRun.getInt(2);
+	         	    	emergencyRun.close();
+	         	    	runInMemory = new EmergencyRun(startTime, endTime, waitTime, ss, es, forLine, delayTime, (ScheduledRun) getByID(forRunId), cause);
+	         	    	((EmergencyRun)runInMemory).setEmergencyLine((EmergencyLine) LineStorage.getByID(baseLineId));
+	         	    } else {
+	         	    	emergencyRun.close();
+	         	    	runInMemory = new ActualRun(startTime, endTime, waitTime, ss, es, forLine, delayTime, (ScheduledRun) getByID(forRunId));
+	         	    }
+    	        	
+    	        	if(runStatus != null){
+    	        		((ActualRun)runInMemory).setStatus(runStatus);
+    	        	}
+    	        } else {
+        	        runInMemory = new ScheduledRun(startTime, endTime, waitTime, ss, es, forLine);
+        	        actualRun.close();
+    	        }
+    	        
+    	        runInMemory.setRunId(runId);
+    	        RunRepository.getInstance().addRun(runInMemory);
+		        
+		        PreparedStatement stm = PTSConnection.getConnection().prepareStatement("SELECT STOPID, ARRIVALTIME FROM ARRIVALTIMETOSTOPS WHERE RUNID = ?");
+		        stm.setLong(1, runId);
+		    	ResultSet arrivalTimesToAStopRS = stm.executeQuery();
+		    	while(arrivalTimesToAStopRS.next()){
+		    		Stop stop = StopStorage.getByID(arrivalTimesToAStopRS.getInt(1));
+		    		Time arrivalTime =  new Time(arrivalTimesToAStopRS.getTimestamp(2).getTime());
+		    		runInMemory.addArrivalTimeToStop(arrivalTime, stop);
+		    	}
+		    	arrivalTimesToAStopRS.close();
+	        }
+	        
+	        runs.close();
+		}
+		
+		return runInMemory;
+	}
+}
+
+class VehicleStorage{
+	depend umple.pts.domain.coreEntities.*;
+	depend umple.pts.domain.repositories.VehicleRepository;
+	depend java.sql.*;
+	depend java.util.*;
+	
+	protected static final String EXISTANCE_CHECK_STM_SQL = "SELECT VEHICLEID FROM VEHICLES WHERE VEHICLEID = ?";
+  
+  protected static final String UPDATE_STM_SQL = "UPDATE VEHICLES SET (VEHICLESTATUS, PUBLICVEHICLENAME, STARTOPERATIONTIME, ENDOPERATIONTIME, ASSIGNEDLINEID) = (?, ?, ?, ?, ? ) WHERE VEHICLEID = ?";
+  
+  protected static final String INSERT_STM_SQL = "INSERT INTO VEHICLES (VEHICLEID, VEHICLESTATUS, PUBLICVEHICLENAME, STARTOPERATIONTIME, ENDOPERATIONTIME, ASSIGNEDLINEID) VALUES ( ?, ?, ?, ?, ?, ?)";
+  
+  protected static final String FETCH_STM_SQL = "SELECT VEHICLEID, VEHICLESTATUS, PUBLICVEHICLENAME, STARTOPERATIONTIME, ENDOPERATIONTIME, ASSIGNEDLINEID FROM VEHICLES";
+  
+  protected static final String DELETE_STM_SQL = "DELETE FROM VEHICLES WHERE VEHICLEID = ?";
+  
+  public static int getNextVehicleId() throws SQLException, ClassNotFoundException{
+	 ResultSet nextIdRS = PTSConnection.getConnection().prepareStatement("SELECT nextval('VEHICLE_VEHICLE_ID_SEQ')").executeQuery();
+	 int nextId = -1;
+	  	
+	 if(nextIdRS.next()){
+		 nextId = nextIdRS.getInt(1);
+	 }
+	 nextIdRS.close();
+	  	
+	 return nextId;
+  }
+  
+    public static int insert(Vehicle vehicle) throws ClassNotFoundException, SQLException {
+        if (vehicle == null) {
+            return -1;
+        }
+
+        int id = VehicleStorage.getNextVehicleId();
+        vehicle.setVehicleId(id);
+        if (id < 0) {
+            return -1;
+        }
+        Connection conn = PTSConnection.getConnection();
+        PreparedStatement insertStatement = conn.prepareStatement(INSERT_STM_SQL);
+        insertStatement.setInt(1, id);
+        insertStatement.setString(2, vehicle.getVehicleStatus());
+        insertStatement.setString(3, vehicle.getPublicVehicleName());
+
+
+        if (vehicle.getStartOperationTime() != null) {
+            insertStatement.setTimestamp(4, new Timestamp(vehicle.getStartOperationTime().getTime()));
+        } else {
+            insertStatement.setNull(4, Types.TIMESTAMP);
+        }
+
+        if (vehicle.getEndOperationTime() != null) {
+            insertStatement.setTimestamp(5, new Timestamp(vehicle.getEndOperationTime().getTime()));
+        } else {
+            insertStatement.setNull(5, Types.TIMESTAMP);
+        }
+        if (vehicle.getAssignedLine() != null) {
+            if (LineStorage.getByID(vehicle.getAssignedLine().getEntityId()) == null) {
+                LineStorage.insert(vehicle.getAssignedLine());
+            }
+            insertStatement.setInt(6, vehicle.getAssignedLine().getEntityId());
+        } else {
+            insertStatement.setNull(6, Types.BIGINT);
+        }
+
+
+        int r = insertStatement.executeUpdate();
+        VehicleRepository.getInstance().addVehicle(vehicle);
+        return r;
+    }
+	
+	public static int remove(Vehicle vehicle)throws ClassNotFoundException, SQLException{
+		if(vehicle == null)
+			  return -1;
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement removeStatement = conn.prepareStatement(DELETE_STM_SQL);
+		removeStatement.setLong(1, vehicle.getEntityId());
+		VehicleRepository.getInstance().removeVehicle(vehicle);
+		return removeStatement.executeUpdate();
+	}
+	
+    public static int update(Vehicle vehicle) throws ClassNotFoundException, SQLException {
+        if (vehicle == null) {
+            return -1;
+        }
+        Connection conn = PTSConnection.getConnection();
+        PreparedStatement updateStatement = conn.prepareStatement(UPDATE_STM_SQL);
+        updateStatement.setInt(6, vehicle.getEntityId());
+        updateStatement.setString(1, vehicle.getVehicleStatus());
+        updateStatement.setString(2, vehicle.getPublicVehicleName());
+        if (vehicle.getStartOperationTime() != null) {
+            updateStatement.setTimestamp(3, new Timestamp(vehicle.getStartOperationTime().getTime()));
+        } else {
+            updateStatement.setNull(3, Types.TIMESTAMP);
+        }
+
+        if (vehicle.getEndOperationTime() != null) {
+            updateStatement.setTimestamp(4, new Timestamp(vehicle.getEndOperationTime().getTime()));
+        } else {
+            updateStatement.setNull(4, Types.TIMESTAMP);
+        }
+        if (vehicle.getAssignedLine() != null) {
+            if (LineStorage.getByID(vehicle.getAssignedLine().getEntityId()) == null) {
+                LineStorage.insert(vehicle.getAssignedLine());
+            }
+            updateStatement.setInt(5, vehicle.getAssignedLine().getEntityId());
+        } else {
+            updateStatement.setNull(5, Types.BIGINT);
+        }
+
+
+        return updateStatement.executeUpdate();
+    }
+
+	public static List<Vehicle> getAll() throws ClassNotFoundException, SQLException{
+		VehicleRepository.getInstance().deleteData();
+		VehicleRepository.getInstance();
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+        ResultSet Vehicles = stmt.executeQuery(FETCH_STM_SQL);
+        List<Vehicle> result = new ArrayList<Vehicle>();
+        while (Vehicles.next()){
+        	Line aAssignedLine = LineStorage.getByID(Vehicles.getInt(6));
+        	Vehicle vehicle = new Vehicle(Vehicles.getString(3), Vehicles.getString(2), new Time(Vehicles.getTimestamp(4).getTime()), new Time(Vehicles.getTimestamp(5).getTime()), aAssignedLine);
+        	vehicle.setVehicleId(Vehicles.getInt(1));
+        	result.add(vehicle);
+        	VehicleRepository.getInstance().addVehicle(vehicle);
+        }
+        Vehicles.close();
+        return result;
+	}
+	
+	public static Vehicle getByID(int id)throws SQLException, ClassNotFoundException{
+		Vehicle vehicle = null;
+		for(Vehicle aVehicle:VehicleRepository.getInstance().getVehicles()){
+			if(aVehicle.getEntityId()==id)
+				return aVehicle;
+		}
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+        ResultSet Vehicles = stmt.executeQuery(FETCH_STM_SQL.concat(" WHERE VEHICLES.VEHICLEID = " + id));
+		while(Vehicles.next()){
+			String vstatus = Vehicles.getString(2);
+			String vname = Vehicles.getString(3);
+			Time sTime = Vehicles.getTime(4);
+			Time eTime = Vehicles.getTime(5);
+			Line line = LineStorage.getByID(Vehicles.getInt(6));
+			if(line == null)
+				return null;
+			vehicle = new Vehicle(vname, vstatus, sTime, eTime, line);
+			VehicleRepository.getInstance().addVehicle(vehicle);
+		}
+		Vehicles.close();
+        return vehicle;
+	}
+}
+
+class ScheduleStorage{
+	depend umple.pts.domain.coreEntities.*;
+	depend java.sql.*;
+	depend java.sql.Date;
+	depend java.util.*;
+	depend umple.pts.domain.repositories.RunRepository;
+	depend umple.pts.domain.repositories.ScheduleRepository;
+	
+  	protected static final String EXISTANCE_CHECK_STM_SQL = "SELECT SCHEDULEID FROM SCHEDULES WHERE SCHEDULEID = ?";
+
+	protected static final String UPDATE_SCH_STM_SQL = "UPDATE schedules SET schedulename=? WHERE scheduleid=?";
+
+	protected static final String INSERT_SCH_STM_SQL = "INSERT INTO schedules( scheduleid, schedulename) VALUES (?, ?)";
+
+	protected static final String FETCH_SCH_STM_SQL = "SELECT schedulename FROM schedules WHERE scheduleid=?";
+
+	protected static final String DELETE_SCH_STM_SQL = "DELETE FROM schedules WHERE scheduleid=?";
+
+	protected static final String UPDATE_SPC_SCH_STM_SQL = "UPDATE specialschedules SET occurencestart=?, occurenceend=? WHERE scheduleid=?";
+
+	protected static final String INSERT_SPC_SCH_STM_SQL = "INSERT INTO specialschedules( scheduleid, occurencestart, occurenceend) VALUES (?, ?, ?)";
+
+	protected static final String FETCH_SPC_SCH_STM_SQL = "SELECT occurencestart, occurenceend FROM specialschedules WHERE scheduleid=?";
+
+	protected static final String DELETE_SPC_SCH_STM_SQL = "DELETE FROM specialschedules WHERE scheduleid=?";
+
+	protected static final String UPDATE_TT_STM_SQL = "UPDATE timetables SET minutesbetweenruns=?, firstruntime=?, lastruntime=?, forlineid=? WHERE timetableid=?";
+
+	protected static final String INSERT_TT_STM_SQL = "INSERT INTO timetables( timetableid, minutesbetweenruns, firstruntime, lastruntime, forlineid) VALUES (?, ?, ?, ?, ?)";
+
+	protected static final String FETCH_TT_STM_SQL = "SELECT  minutesbetweenruns, firstruntime, lastruntime, forlineid FROM timetables WHERE timetableid=?";
+
+	protected static final String DELETE_TT_STM_SQL = "DELETE FROM timetables WHERE timetableid=?";
+
+	public static int getNextScheduleId() throws SQLException,
+			ClassNotFoundException {
+		ResultSet nextIdRS = PTSConnection.getConnection()
+				.prepareStatement("SELECT nextval('SCHEDULE_SCHEDULE_ID_SEQ')")
+				.executeQuery();
+		int nextId = -1;
+
+		if (nextIdRS.next()) {
+			nextId = nextIdRS.getInt(1);
+		}
+		nextIdRS.close();
+
+		return nextId;
+	}
+	public static int getNextTimeTableId() throws SQLException,
+			ClassNotFoundException {
+		ResultSet nextIdRS = PTSConnection.getConnection()
+				.prepareStatement("SELECT nextval('SCHEDULE_SCHEDULE_ID_SEQ')")
+				.executeQuery();
+		int nextId = -1;
+
+		if (nextIdRS.next()) {
+			nextId = nextIdRS.getInt(1);
+		}
+		nextIdRS.close();
+		return nextId;
+	}
+
+	public static int insertTimeTable(LineTimeTable ltt) throws SQLException,
+			ClassNotFoundException {
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement instt = conn.prepareStatement(INSERT_TT_STM_SQL);
+		int ttid = getNextTimeTableId();
+		ltt.setTimeTableId(ttid);
+		instt.setInt(1, ttid);
+		instt.setInt(2, ltt.getMinutesBetweenConsecutiveRuns());
+		instt.setTimestamp(3, new Timestamp(ltt.getFirstRunTime().getTime()));
+		instt.setTimestamp(4, new Timestamp(ltt.getLastRunTime().getTime()));
+		if (LineStorage.update(ltt.getForLine()) <= 0) {
+			if (LineStorage.insert(ltt.getForLine()) <= 0) {
+				return -1;
+			}
+		}
+		instt.setInt(5, ltt.getForLine().getLineId());
+		if (instt.executeUpdate() >= 0) {
+			for (Run run : ltt.getScheduledRuns()) {
+				PreparedStatement stm = conn
+						.prepareStatement("INSERT INTO runsintimetables( runid, timetableid) VALUES (?, ?)");
+				PreparedStatement chstm = conn
+						.prepareStatement("UPDATE runsintimetables SET runid=? WHERE timetableid=? AND runid= ?");
+				chstm.setInt(1, run.getRunId());
+				stm.setInt(1, run.getRunId());
+				chstm.setInt(3, run.getRunId());
+				chstm.setInt(2, ltt.getTimeTableId());
+				stm.setInt(2, ltt.getTimeTableId());
+				if (chstm.executeUpdate() <= 0) {
+					if (stm.executeUpdate() <= 0) {
+						chstm.close();
+						stm.close();
+						return -1;
+					}
+				}
+				chstm.close();
+				stm.close();
+			}
+			instt.close();
+			return 1;
+		}
+		return -1;
+	}
+
+	public static int updateTimeTable(LineTimeTable ltt) throws SQLException,
+			ClassNotFoundException {
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement instt = conn.prepareStatement(UPDATE_TT_STM_SQL);
+		int ttid = getNextTimeTableId();
+		ltt.setTimeTableId(ttid);
+		instt.setInt(5, ttid);
+		instt.setInt(1, ltt.getMinutesBetweenConsecutiveRuns());
+		instt.setTimestamp(2, new Timestamp(ltt.getFirstRunTime().getTime()));
+		instt.setTimestamp(3, new Timestamp(ltt.getLastRunTime().getTime()));
+		if (LineStorage.update(ltt.getForLine()) <= 0) {
+			if (LineStorage.insert(ltt.getForLine()) <= 0) {
+				return -1;
+			}
+		}
+		instt.setInt(4, ltt.getForLine().getLineId());
+		if (instt.executeUpdate() >= 0) {
+			for (Run run : ltt.getScheduledRuns()) {
+				PreparedStatement stm = conn
+						.prepareStatement("INSERT INTO runsintimetables( runid, timetableid) VALUES (?, ?)");
+				PreparedStatement chstm = conn
+						.prepareStatement("UPDATE runsintimetables SET runid=? WHERE timetableid=? AND runid= ?");
+				chstm.setInt(1, run.getRunId());
+				stm.setInt(1, run.getRunId());
+				chstm.setInt(3, run.getRunId());
+				chstm.setInt(2, ltt.getTimeTableId());
+				stm.setInt(2, ltt.getTimeTableId());
+				if (chstm.executeUpdate() <= 0) {
+					if (stm.executeUpdate() <= 0)
+						chstm.close();
+					stm.close();
+					return -1;
+				}
+				chstm.close();
+				stm.close();
+			}
+		}
+		instt.close();
+		return 1;
+	}
+
+	public static int removeTimeTable(LineTimeTable ltt) throws SQLException,
+			ClassNotFoundException {
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement deltt = conn.prepareStatement(DELETE_TT_STM_SQL);
+		PreparedStatement stm = conn
+				.prepareStatement("DELETE FROM runsintimetables WHERE timetableid= ?");
+		int ttid = getNextTimeTableId();
+		ltt.setTimeTableId(ttid);
+		stm.setInt(1, ttid);
+		deltt.setInt(1, ttid);
+		if (deltt.executeUpdate() <= 0) {
+			if (stm.executeUpdate() <= 0) {
+				stm.close();
+				deltt.close();
+				return -1;
+			}
+		}
+		stm.close();
+		deltt.close();
+		return 1;
+	}
+
+	public static void fillRepository() throws ClassNotFoundException,
+			SQLException {
+		ScheduleRepository.getInstance().delete();
+		ScheduleRepository.getInstance();
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement getAll = conn
+				.prepareStatement("SELECT schedulename, scheduleid FROM schedules");
+		ResultSet schids = getAll.executeQuery();
+		while (schids.next()) {
+			PreparedStatement gettt = conn
+					.prepareStatement("SELECT timetableid FROM timetablesinschedules WHERE scheduleid=?");
+
+			gettt.setInt(1, schids.getInt(2));
+			List<LineTimeTable> allLineTimeTables = new ArrayList<LineTimeTable>();
+			ResultSet tt = gettt.executeQuery();
+			while (tt.next()) {
+				allLineTimeTables.add(getTimeTableById(tt.getInt(1)));
+			}
+			tt.close();
+			gettt.close();
+			PreparedStatement getsp = conn
+					.prepareStatement(FETCH_SPC_SCH_STM_SQL);
+			getsp.setInt(1, schids.getInt(2));
+			ResultSet sp = getsp.executeQuery();
+			Schedule res = null;
+			if (sp.next()) {
+				Date aOccurenceStart = new Date(sp.getTimestamp(1).getDate());
+				Date aOccurenceEnd = new Date(sp.getTimestamp(2).getDate());
+				res = new SpecialSchedule(schids.getString(1), aOccurenceStart,
+						aOccurenceEnd,
+						(LineTimeTable[]) allLineTimeTables
+								.toArray(new LineTimeTable[allLineTimeTables
+										.size()]));
+				sp.close();
+				getsp.close();
+			}
+			res = new Schedule(
+					schids.getString(1),
+					(LineTimeTable[]) allLineTimeTables
+							.toArray(new LineTimeTable[allLineTimeTables.size()]));
+			res.setScheduleId(schids.getInt(2));
+			getsp.close();
+			sp.close();
+
+			ScheduleRepository.getInstance().addObject(res);
+		}
+		schids.close();
+		getAll.close();
+	}
+
+	public static Schedule getScheduleById(int id)
+			throws ClassNotFoundException, SQLException {
+		if(ScheduleRepository.getInstance().searchEntityById(id)!= null)
+			return (Schedule) ScheduleRepository.getInstance().searchEntityById(id);
+		
+		Connection conn = PTSConnection.getConnection();
+
+		PreparedStatement getsch = conn.prepareStatement(FETCH_SCH_STM_SQL);
+		getsch.setInt(1, id);
+		ResultSet sch = getsch.executeQuery();
+		if (sch.next()) {
+			PreparedStatement gettt = conn
+					.prepareStatement("SELECT timetableid FROM timetablesinschedules WHERE scheduleid=?");
+			gettt.setInt(1, id);
+			List<LineTimeTable> allLineTimeTables = new ArrayList<LineTimeTable>();
+			ResultSet tt = gettt.executeQuery();
+			while (tt.next()) {
+				allLineTimeTables.add(getTimeTableById(tt.getInt(1)));
+			}
+			tt.close();
+			gettt.close();
+			PreparedStatement getsp = conn
+					.prepareStatement(FETCH_SPC_SCH_STM_SQL);
+			getsp.setInt(1, id);
+			ResultSet sp = getsp.executeQuery();
+			if (sp.next()) {
+				Date aOccurenceStart = new Date(sp.getTimestamp(1).getDate());
+				Date aOccurenceEnd = new Date(sp.getTimestamp(2).getDate());
+				SpecialSchedule ressp = new SpecialSchedule(sch.getString(1),
+						aOccurenceStart, aOccurenceEnd,
+						(LineTimeTable[]) allLineTimeTables
+								.toArray(new LineTimeTable[allLineTimeTables
+										.size()]));
+				sp.close();
+				getsp.close();
+				sch.close();
+				getsch.close();
+				return ressp;
+			}
+			sp.close();
+			getsp.close();
+			Schedule res = new Schedule(
+					sch.getString(1),
+					(LineTimeTable[]) allLineTimeTables
+							.toArray(new LineTimeTable[allLineTimeTables.size()]));
+
+			sch.close();
+			getsch.close();
+			return res;
+		}
+		sch.close();
+		return null;
+	}
+
+	public static LineTimeTable getTimeTableById(int id) throws SQLException,
+			ClassNotFoundException {
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement gettt = conn.prepareStatement(FETCH_TT_STM_SQL);
+		gettt.setInt(1, id);
+		ResultSet tt = gettt.executeQuery();
+
+		if (tt.next()) {
+			Line aForLine = LineStorage.getByID(tt.getInt(4));
+
+			PreparedStatement getttr = conn
+					.prepareStatement("SELECT runid FROM runsintimetables WHERE timetableid=?");
+			getttr.setInt(1, id);
+			ResultSet ttr = getttr.executeQuery();
+			List<ScheduledRun> runs = new ArrayList<ScheduledRun>();
+			while (ttr.next()) {
+				runs.add((ScheduledRun) RunStorage.getByID(ttr.getInt(1)));
+			}
+			getttr.close();
+			ttr.close();
+			Time aFirstRunTime = new Time(tt.getTimestamp(2).getTime());
+			Time aLastRunTime = new Time(tt.getTimestamp(3).getTime());
+			LineTimeTable res = new LineTimeTable(
+					aForLine,
+					aFirstRunTime,
+					aLastRunTime,
+					tt.getInt(1),
+					(ScheduledRun[]) (runs.toArray(new ScheduledRun[runs.size()])));
+			gettt.close();
+			tt.close();
+			return res;
+		}
+		gettt.close();
+		tt.close();
+		return null;
+	}
+
+	public static int insertSchedule(Schedule schedule) throws SQLException,
+			ClassNotFoundException {
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement insSch = conn.prepareStatement(INSERT_SCH_STM_SQL);
+		int id = getNextScheduleId();
+		schedule.setScheduleId(id);
+		insSch.setInt(1, id);
+		insSch.setString(2, schedule.getScheduleName());
+		int ret = 0;
+		ret = insSch.executeUpdate();
+		insSch.close();
+		for (LineTimeTable ltt : schedule.getLineTimeTables()) {
+			insertTimeTable(ltt);
+			PreparedStatement stmt = conn
+					.prepareStatement("INSERT INTO timetablesinschedules (scheduleid, timetableid) VALUES (?, ?)");
+			stmt.setInt(2, ltt.getTimeTableId());
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+			stmt.close();
+		}
+		if (schedule instanceof SpecialSchedule) {
+			PreparedStatement insSpSch = conn
+					.prepareStatement(INSERT_SPC_SCH_STM_SQL);
+			insSpSch.setInt(1, id);
+			insSpSch.setTimestamp(2, new Timestamp(((SpecialSchedule) schedule)
+					.getOccurenceStart().getDate()));
+			insSpSch.setTimestamp(3, new Timestamp(((SpecialSchedule) schedule)
+					.getOccurenceEnd().getDate()));
+			ret = insSpSch.executeUpdate();
+			insSpSch.close();
+		}
+		ScheduleRepository.getInstance().addObject(schedule);
+		return ret;
+	}
+
+	public static int removeSchedule(Schedule schedule) throws SQLException,
+			ClassNotFoundException {
+		Connection conn = PTSConnection.getConnection();
+		PreparedStatement insSch = conn.prepareStatement(DELETE_SCH_STM_SQL);
+		insSch.setInt(1, schedule.getScheduleId());
+		int ret = 0;
+		ret = insSch.executeUpdate();
+		insSch.close();
+		PreparedStatement stmt = conn
+				.prepareStatement("DELETE INTO timetablesinschedules WHERE scheduleid =?");
+		stmt.setInt(1, schedule.getScheduleId());
+		stmt.executeUpdate();
+		stmt.close();
+		for (LineTimeTable ltt : schedule.getLineTimeTables()) {
+			removeTimeTable(ltt);
+		}
+		if (schedule instanceof SpecialSchedule) {
+			PreparedStatement insSpSch = conn
+					.prepareStatement(DELETE_SPC_SCH_STM_SQL);
+			insSpSch.setInt(1, schedule.getScheduleId());
+			ret = insSpSch.executeUpdate();
+			insSpSch.close();
+		}
+		ScheduleRepository.getInstance().removeObject(schedule);
+		return ret;
+	}
+	
+	public static int updateSchedule(Schedule schedule) throws SQLException, ClassNotFoundException{
+            Connection conn = PTSConnection.getConnection();
+
+            if(schedule instanceof SpecialSchedule){
+                PreparedStatement upSSch = conn.prepareStatement(UPDATE_SPC_SCH_STM_SQL);
+
+                upSSch.setTimestamp(1, new Timestamp(((SpecialSchedule)schedule).getOccurenceStart().getTime()));
+                upSSch.setTimestamp(2, new Timestamp(((SpecialSchedule)schedule).getOccurenceEnd().getTime()));
+                upSSch.setInt(3, schedule.getScheduleId());
+                int ret = upSSch.executeUpdate();
+                upSSch.close();
+                if(ret < 0){
+                    return 0;
+                }
+            }
+
+            PreparedStatement upSch = conn.prepareStatement(UPDATE_SCH_STM_SQL);
+            upSch.setString(1, schedule.getScheduleName());
+            upSch.setInt(2, schedule.getScheduleId());
+
+            int ret = upSch.executeUpdate();
+            upSch.close();
+
+            if(ret >= 0){
+                for(LineTimeTable ltt : schedule.getLineTimeTables()){
+                    updateTimeTable(ltt);
+                }
+            }
+
+            return ret;
+
+    }
+}
+
+/**
+ * @author Augustin and Manish
+ *
+ */
+class StorageUtility {
+	depend java.sql.*;
+	
+	public static Timestamp getCurrentTime() throws ClassNotFoundException, SQLException{
+		Connection conn = PTSConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		ResultSet res = stmt.executeQuery("SELECT LOCALTIMESTAMP");
+		Timestamp currTime = new Timestamp(0);
+		while(res.next()){
+			currTime = res.getTimestamp(1); 
+		}
+		return currTime;
+	}
+}

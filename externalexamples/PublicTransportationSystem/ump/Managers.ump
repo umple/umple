@@ -1,0 +1,1621 @@
+use Repositories.ump;
+use Entities.ump;
+use CoreInterfaces.ump;
+use Math.ump;
+
+namespace umple.pts.domain.managers;
+
+
+/**
+ *This class manages the stops.
+ * @author Augustin and Manish
+ */ 
+class StopManager{
+ depend java.io.IOException;
+ depend java.io.Writer;
+ isA IStopManager;
+ singleton;
+ depend umple.pts.domain.coreEntities.Stop;
+ depend umple.pts.domain.repositories.StopRepository;
+ private StopRepository repository;
+ 
+ /**
+   * This function initializes the repository. 
+   */
+  public void initialiseRepository(){
+	  repository = StopRepository.getInstance();
+  }
+ 
+ /**
+  * Creates a stop and adds it to the repository
+  * @param aName takes the name of the Stop.
+  * @return returns the created stop if successful, else returns false. 
+  */
+ public Stop createStop(String aName) {
+  Stop newStop = new Stop(aName);
+  if(repository.addObject(newStop)){
+	  return newStop;
+  }
+  else{
+	  return null;
+  }
+ }
+ 
+ /**
+  * Deletes a stop from the repository.
+  * @param aStop The Stop which needs to be deleted.
+  * @return Returns true if delete was successful.
+  */
+ public boolean deleteStop(Stop aStop) {
+  return repository.removeObject(aStop);
+ }
+ 
+ /**
+  * This function returns the repository in the manager.
+  * @return Returns the repository.
+  */
+ public StopRepository getRepository() {
+  return repository.getInstance();
+ }
+ 
+ public void writeRepositoryDataToXML(Writer writer) throws IOException{
+ 		 getRepository().writeToXML(writer);
+ }
+}
+
+
+/**
+ *This class manages the lines in the system.
+ * @author Augustin and Manish
+ */
+class LineManager{
+ depend java.io.IOException;
+ depend java.io.Writer;
+ isA ILineManager;
+ singleton;
+ depend java.util.*;
+ depend java.sql.Time;
+ depend umple.pts.domain.coreEntities.*;
+ depend umple.pts.domain.repositories.LineRepository;
+ private LineRepository repository;
+ private umple.pts.domain.managers.StopManager aStopManager;
+ private umple.pts.domain.managers.VehicleManager aVehicleManager;
+ 
+ public void setManagerReferences(StopManager aStopManager, VehicleManager aVehicleManager){
+ 	this.aStopManager = aStopManager;
+ 	this.aVehicleManager = aVehicleManager;
+ }
+ 
+ /**
+   * This function initializes the repository. 
+   */
+  public void initialiseRepository(){
+	  repository = LineRepository.getInstance();
+  }
+  
+ /**
+  * Returns repository asigned to manager
+  */
+  public LineRepository getRepository(){
+   return this.repository.getInstance();
+  }	
+ 
+ /**
+  * This function creates a Line and stores it into the repository.
+  * @param listOfStops The list of Stops that will make the line.
+  * @param firstEndPoint One stop, which will be an end point for the runs. (Starting or ending point)
+  * @param secondEndPoint Second Stop, which will have the vice-a-versa status for a Run than the (firstEndPoint)
+  * @return Returns the line created, else false.
+  */
+ public Line createLine(List<Stop> listOfStops, Stop firstEndPoint, Stop secondEndPoint) {
+  Line newLine = new Line(firstEndPoint, secondEndPoint, (Stop[])listOfStops.toArray(new Stop[listOfStops.size()]));
+  if(newLine.validateEntity()){
+   repository.addObject(newLine);
+   return newLine;
+  }
+  else{
+   return null;
+  }
+ }
+ 
+ /**
+  * This function creates an Emergency Line and stores it into the repository.
+  * @param listOfStops The list of Stops that will make the line.
+  * @param firstEndPoint One stop, which will be an end point for the runs. (Starting or ending point)
+  * @param secondEndPoint Second Stop, which will have the vice-a-versa status for a Run than the (firstEndPoint)
+  * @param cause The cause for using the EmergencyLine
+  * @param startTime The starting time for the usage of the EmergencyLine.
+  * @param endTime The ending time for the usage of the EmergencyLine.
+  * @return Returns the EmergencyLine created, else false.
+  */
+ 	public EmergencyLine createEmergencyLine(List<Stop> listOfStops, Stop firstEndPoint, Stop secondEndPoint, String cause, Time startTime, Time endTime) {
+	 EmergencyLine newLine =  new EmergencyLine(firstEndPoint, secondEndPoint, cause, startTime, endTime, (Stop[])listOfStops.toArray(new Stop[listOfStops.size()]));
+	  if(newLine.validateEntity()){
+	   repository.addObject(newLine);
+	   return newLine;
+	  }
+	  else{
+	   return null;
+	  }
+	 }
+	 
+  /**
+   * It inserts a stop in a Line.
+   * @param aLine The line which has to be modified.
+   * @param previusStop The existing stop in the line which will precede the new stop
+   * @param newStop The new stop which has to be inserted.
+   * @return Returns true if successful.
+   */
+  public boolean insertStopInLine(Line aLine, Stop previusStop, Stop newStop) {
+  //The "newStop" will be added as the next stop to the "previousStop" in the Line "aLine".
+  //if line is not in repository means that this manager is not able to manage line
+  if(repository.indexOfLine(aLine) < 0){
+   return false;
+  }
+  return aLine.insertStopAfter(newStop, previusStop);
+ }
+ 
+ /**
+  * It deletes a stop in a Line.
+  * @param aLine The line which has to be modified.
+  * @param stopToRemove The stop which has to be deleted.
+  * @return Returns true if successful.
+  */
+ public boolean deleteStopFromLine(Line aLine, Stop stopToRemove) {
+  //if line is not in repository means that this manager is not able to manage line
+  if(repository.indexOfLine(aLine) < 0){
+   return false;
+  }  
+  return aLine.removeStop(stopToRemove);
+ }
+ 
+ 
+ 
+ /**
+  * Removes a line from the repository
+  * @param line Line which wants to be removed
+  * @return true if removed a line, else false
+  */
+ public boolean deleteLine(Line line) {
+	 return repository.removeObject(line);
+ }
+ 
+ /**
+  * Adds a line to repository
+  * @param line Line which wants to be added
+  * @return true if added a line, else false
+  */
+ public boolean addLine(Line line){
+	 return repository.addObject(line);
+ }
+ 
+ public void writeRepositoryDataToXML(Writer writer) throws IOException{
+ 		 getRepository().writeToXML(writer);
+ }
+}
+
+
+/**
+ *This class manages runs.
+ * @author Augustin and Manish
+ */
+class RunManager{
+ isA IRunManager;
+ singleton;
+ depend umple.pts.domain.coreEntities.*;
+ depend umple.pts.domain.repositories.*;
+ depend java.sql.Time;
+ depend java.util.*;
+ private RunRepository repository;
+ private umple.pts.domain.managers.LineManager aLineManager;
+ private umple.pts.domain.managers.StopManager aStopManager;
+ private umple.pts.domain.managers.VehicleManager aVehicleManager;
+ 
+ public void setManagerReferences(LineManager aLineManager, StopManager aStopManager, VehicleManager aVehicleManager){
+ 	this.aLineManager = aLineManager;
+ 	this.aStopManager = aStopManager;
+ 	this.aVehicleManager = aVehicleManager;
+ }
+
+ /**
+   * This function initializes the repository. 
+   */
+  public void initialiseRepository(){
+	  repository = RunRepository.getInstance();
+  }
+ 
+ /**
+  * This function creates a Run and stores it into the repository.
+  * @param startStop Starting stop of a Run. 
+  * @param endStop Ending Stop of the Run.
+  * @param waitTime The waiting time at each Stop for the Run.
+  * @param startTime The starting Time of the Run.
+  * @param endTime The ending Time of the Run.
+  * @param runLine The Line on which the Run will run.
+  * @return Returns the line created, else false.
+  */
+ public ScheduledRun createRun(Stop startStop, Stop endStop, Time waitTime, Time startTime, Time endTime, Line runLine) {
+	 ScheduledRun newRun = new ScheduledRun(startTime, endTime, waitTime, startStop, endStop, runLine);
+	  if(repository.addObject(newRun)){
+		  return newRun;
+	  } else {
+		  return null;
+	  }
+  }
+
+ /**
+  * This function changes the startStop of a Run
+  * @param currentRun The Run which has to be modified.
+  * @param startStop The new Start Stop for the Run.
+  * @return Returns true if successful.
+  */
+ public boolean changeStartStop(Run currentRun, Stop startStop) {
+  //RunManager can change startStop of a Run only if it is it's manager
+  if(repository.indexOfRun(currentRun) >= 0){
+   return currentRun.setStartStop(startStop);
+  }
+  return false;
+ }
+
+ /**
+  * This function changes the endStop of a Run
+  * @param currentRun The Run which has to be modified.
+  * @param endStop The new End Stop for the Run.
+  * @return Returns true if successful.
+  */
+ public boolean changeEndStop(Run currentRun, Stop endStop) {
+  //RunManager can change endStop of a Run only if it is it's manager
+  if(repository.indexOfRun(currentRun) >= 0){
+   return currentRun.setEndStop(endStop);
+  }
+  return false;
+ }
+
+ /**
+  * This function deletes a Run
+  * @param aRun The Run which has to be modified.
+  * @return Returns true if successful.
+  */
+ public boolean deleteRun(Run aRun) {
+  return repository.removeObject(aRun);
+ }
+ 
+ /**
+  * This function adds the ArrivalTime for a Run at a Stop.
+  * @param aRun The Run which has to be modified.
+  * @param aStop The Stop at which the Arrival Time has to be added.
+  * @param aArrivalTime The arrival time to be set.
+  * @return Returns true if successful.
+  */
+ public boolean addArrivalTimes(Run aRun, Stop aStop, Time aArrivalTime){
+ if(repository.indexOfRun(aRun) >= 0){
+  return aRun.addArrivalTimeToStop(aRun.addArrivalTimeToStop(aArrivalTime, aStop));
+  }
+  return false;
+ }
+ 
+ /**
+  * This function finds the earliest Run for a Stop on a Line 
+  * @param aLine The Line on which the Run should be based.
+  * @param aStop The Stop at which the Run should be found.
+  * @param aCurrentTime The time after which the earliest Run should be returned,
+  * @return Returns the run found, else null.
+  */
+ public Run findRunForLineStopTime(Line aLine, Stop aStop, Time aCurrentTime){
+	 Run solutionRun = null;
+	 boolean set = false;
+	 for(Run aRun:repository.getRuns()){
+		Time newTime = aRun.getArrivalTimeToStop(aStop);
+		if(newTime != null){
+			if(aCurrentTime.compareTo(newTime) < 0){
+				if(set){
+					 if( solutionRun.getArrivalTimeToStop(aStop).compareTo(newTime) > 0){
+						 solutionRun = aRun;
+					 }
+				}
+				else{
+					solutionRun = aRun;
+					set = true;
+				}
+			}
+		}
+	 }
+	 return solutionRun;
+ }
+ 
+ //After this function, the ArrivalTimes need to be re-entered
+ /**
+  * This function creates an EmergencyRun and stores it into the repository.
+  * @param aStartStop Starting stop of the EmergencyRun. 
+  * @param aEndStop Ending Stop of the EmergencyRun.
+  * @param aWaitTime The waiting time at each Stop for the EmergencyRun.
+  * @param aStartTime The starting Time of the EmergencyRun.
+  * @param aEndTime The ending Time of the EmergencyRun.
+  * @param aEmergencyLine The EmergencyLine on which the Run will run.
+  * @param aRun The Run for which the EmergencyRun is a substitute.
+  * @param aDelayMinutes The delay of the EmergencyRun from the original Run.
+  * @param aCause The cause for the EmergencyRun.
+  * @return Returns the line created, else false.
+  */
+ public EmergencyRun createEmergencyRunsForEmergencyLineAndRun(EmergencyLine aEmergencyLine, Time aStartTime, Time aEndTime, Time aWaitTime, Stop aStartStop, Stop aEndStop, int aDelayMinutes, ScheduledRun aRun,String aCause){
+	 EmergencyRun newRun = new EmergencyRun(aStartTime, aEndTime, aWaitTime, aStartStop, aEndStop, aEmergencyLine, aDelayMinutes, aRun, aCause);
+	  if(repository.addObject(newRun)){
+		  return newRun;
+	  } else {
+		  return null;
+	  }
+ }
+ 
+//After this function, the ArrivalTimes need to be re-entered
+ /**
+  * This function creates an EmergencyRun and stores it into the repository.
+  * @param aStartStop Starting stop of the EmergencyRun. 
+  * @param aEndStop Ending Stop of the EmergencyRun.
+  * @param aWaitTime The waiting time at each Stop for the EmergencyRun.
+  * @param aStartTime The starting Time of the EmergencyRun.
+  * @param aEndTime The ending Time of the EmergencyRun.
+  * @param aEmergencyLine The EmergencyLine on which the Run will run.
+  * @param aRun The Run for which the EmergencyRun is a substitute.
+ * @param aDelayMinutes 
+  * @param aDelayMinutes The delay of the EmergencyRun from the original Run.
+  * @param aCause The cause for the EmergencyRun.
+  * @return Returns the line created, else false.
+  */
+ public ActualRun createActualRunForScheduledRun(Time aStartTime, Time aEndTime, Time aWaitTime, Stop aStartStop, Stop aEndStop, ScheduledRun aRun, int aDelayMinutes){
+	 ActualRun newRun = new ActualRun(aStartTime, aEndTime, aWaitTime, aStartStop, aEndStop, aRun.getLine(), aDelayMinutes, aRun);
+	  if(repository.addObject(newRun)){
+		  return newRun;
+	  } else {
+		  return null;
+	  }
+ }
+ 
+ /**
+  * This function returns the repository in the manager.
+  * @return Returns the repository.
+  */
+ public RunRepository getRepository() {
+  return repository.getInstance();
+ }
+}
+
+/**
+ *This class manages the vehicles in the system.
+ * @author Augustin and Manish
+ */
+class VehicleManager
+{
+	depend java.io.IOException;
+ 	depend java.io.Writer;
+	isA IVehicleManager;
+	singleton;
+	depend umple.pts.domain.coreEntities.*;
+	depend umple.pts.domain.repositories.VehicleRepository;
+	depend java.sql.Time;
+	private VehicleRepository repository;
+	private umple.pts.domain.managers.ScheduleManager aScheduleManager;
+ 	private umple.pts.domain.managers.LineManager aLineManager;
+ 	private umple.pts.domain.managers.RunManager aRunManager;
+ 	
+ 	public void setManagerReferences(ScheduleManager aScheduleManager, LineManager aLineManager, RunManager aRunManager){
+ 		this.aScheduleManager = aScheduleManager;
+ 		this.aLineManager = aLineManager;
+ 		this.aRunManager = aRunManager;
+ 	}
+ 	
+ 	/**
+   	 * This function initimalizes the repository. 
+   	 */
+  	public void initialiseRepository(){
+	  	repository = VehicleRepository.getInstance();
+  	}
+	
+	/**
+ 	 * This function creates a Vehicle and stores it in the repository.
+ 	 * @param aPublicVehicleName The name of the Vehicle.
+ 	 * @param aVehicleStatus The status of the Vehicle.
+ 	 * @param aStartOperationTime The starting Operation Time.
+ 	 * @param aEndOperationTime The ending Operation Time. 
+ 	 * @return Returns True if successful.
+ 	 */
+	public Vehicle createVehicle(String aPublicVehicleName, String aVehicleStatus, Time aStartOperationTime, Time aEndOperationTime){
+		if(aStartOperationTime.compareTo(aEndOperationTime) < 0){
+			Vehicle newVehicle = new Vehicle(aPublicVehicleName, aVehicleStatus, aStartOperationTime, aEndOperationTime, null);
+			this.repository.addObject(newVehicle);
+			return newVehicle;
+		}
+		return null;
+	}
+	
+	public void writeRepositoryDataToXML(Writer writer) throws IOException{
+ 		 getRepository().writeToXML(writer);
+ 	}
+	
+	/**
+	 * Assigns A Vehicle to a Particular Line. (OverLoaded)
+	 * @param vehicleId The Id of the Vehicle to be assigned.
+	 * @param aLine The Line to which is to be assigned.
+	 * @param aStartOperationTime The starting Operation Time.
+ 	 * @param aEndOperationTime The ending Operation Time.
+ 	 * @return Returns True if successful.
+	 */
+	public boolean assignVehicle(int vehicleId, Line aLine, Time startOperationTime, Time stopOperationTime) {
+		for (Vehicle aVehicle : this.repository.getVehicles())
+		{
+			if(aVehicle.getVehicleId() == vehicleId){
+				aVehicle.setAssignedLine(aLine);
+				aVehicle.setStartOperationTime(startOperationTime);
+				aVehicle.setEndOperationTime(stopOperationTime);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Assigns A Vehicle to a Particular Line. (OverLoaded)
+	 * @param vehicle The vehicle to be assigned.
+	 * @param aLine The Line to which is to be assigned.
+	 * @param aStartOperationTime The starting Operation Time.
+ 	 * @param aEndOperationTime The ending Operation Time.
+ 	 * @return Returns True if successful.
+	 */
+	public boolean assignVehicle(Vehicle vehicle, Line aLine, Time startOperationTime, Time stopOperationTime) {
+		vehicle.setAssignedLine(aLine);
+		vehicle.setStartOperationTime(startOperationTime);
+		vehicle.setEndOperationTime(stopOperationTime);
+		return true;
+	}
+
+	/**
+	 * This function de-assigns a Vehicle from a Line. (OverLoaded)
+	 * @param vehicleId The id of the vehicle to be de-assigned.
+	 * @return Returns True if successful.
+	 */
+	public boolean deassignVehicle(int vehicleId) {
+		for (Vehicle aVehicle : this.repository.getVehicles())
+		{
+			if(aVehicle.getVehicleId() == vehicleId){
+				aVehicle.setAssignedLine(null);
+				aVehicle.setStartOperationTime(null);
+				aVehicle.setEndOperationTime(null);
+				//aVehicle.setOngoingRun(null);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * This function de-assigns a Vehicle from a Line. (OverLoaded)
+	 * @param vehicle The vehicle to be de-assigned.
+	 * @return Returns True if successful.
+	 */
+	public boolean deassignVehicle(Vehicle vehicle) {
+		vehicle.setAssignedLine(null);
+		vehicle.setStartOperationTime(null);
+		vehicle.setEndOperationTime(null);
+		return true;
+	}
+
+	/**
+	 * This function deletes a Vehicle.
+	 * @param aVehicle The vehicle to be deleted.
+	 * @return Returns True if successful.
+	 */
+	public boolean deleteVehicle(Vehicle aVehicle) {
+		return this.repository.removeObject(aVehicle);
+	}
+	
+	/**
+	 * This function starts a Vehicle's Run.
+	 * @param aVehicle The vehicle to be started on a Run.
+	 * @return Returns True if successful.
+	 */
+	public boolean startRunForVehicle(Vehicle aVehicle) {
+		return this.repository.removeObject(aVehicle);
+	}
+
+	/**
+	 * This function finishes a Vehicle's Run.
+	 * @param aVehicle The vehicle to finish on a Run.
+	 * @return Returns True if successful.
+	 */
+	public boolean finishRunForVehicle(Vehicle aVehicle) {
+		return this.repository.addObject(aVehicle);
+	}
+	
+	/**
+  	 * This function returns the repository in the manager.
+  	 * @return Returns the repository.
+  	 */
+ 	public VehicleRepository getRepository() {
+  		return repository.getInstance();
+ 	}
+}
+
+/**
+ * It is a container for the Lines found for the shortest way between two stops
+ * @author Augustin and Manish
+ */
+class CalculateRouteBetweenStops{
+	depend umple.pts.domain.coreEntities.*; 
+	Stop fromStop;
+	Line routeLine;
+	Stop toStop;
+}
+
+/**
+ * It is a container for the Runs found for the shortest way between two stops
+ * @author Augustin and Manish
+ */
+class CalculateRunsBetweenStops{
+	depend umple.pts.domain.coreEntities.*;
+	Stop fromStop;
+	Run run;
+	Stop toStop;
+}
+
+/**
+ * This class handles all the runningVehicles and all the operations regarding the real-time runs. 
+ * @author Augustin and Manish
+ */
+class RealTimeManager{
+	isA IRealTimeManager;
+	singleton;
+	depend umple.pts.domain.coreEntities.*;
+	depend umple.pts.domain.repositories.RunningVehicleRepository;
+	depend umple.pts.domain.repositories.RunRepository;
+	depend java.sql.Time;
+	depend java.util.*;
+	private RunningVehicleRepository repository;
+    private RunRepository actualRunRepository;
+	private umple.pts.domain.managers.ScheduleManager aScheduleManager;
+ 	private umple.pts.domain.managers.LineManager aLineManager;
+ 	private umple.pts.domain.managers.RunManager aRunManager;
+ 	private umple.pts.domain.managers.VehicleManager aVehicleManager;
+ 	private umple.pts.domain.managers.StopManager aStopManager;
+ 	
+ 	public void setManagerReferences(ScheduleManager aScheduleManager, LineManager aLineManager, RunManager aRunManager, VehicleManager aVehicleManager, StopManager aStopManager){
+ 		this.aScheduleManager = aScheduleManager;
+ 		this.aLineManager = aLineManager;
+ 		this.aRunManager = aRunManager;
+ 		this.aVehicleManager = aVehicleManager;
+ 		this.aStopManager = aStopManager;
+ 	}
+ 	
+ 	/**
+   	 * This function initializes the repository. 
+   	 */
+  	public void initialiseRepository(){
+	  	repository = RunningVehicleRepository.getInstance();
+	  	actualRunRepository = RunRepository.getInstance();
+  	}
+ 	
+ 	/**
+ 	 * This function starts a Run on a Vehicle.
+ 	 * @param aVehicle The Vehicle which will run.
+ 	 * @param The Run which will be started.
+ 	 * @return Returns true if successful.
+ 	 */
+ 	public boolean startRunForVehicle(Vehicle aVehicle, ScheduledRun aRun){
+ 		if(aVehicleManager.startRunForVehicle(aVehicle)){
+ 			
+ 			ActualRun aOngoingActualRun;
+// 			if(aRun instanceof ActualRun){
+// 				aOngoingActualRun = (ActualRun) aRun;
+// 				aOngoingActualRun.setStatus("Run Started");
+// 			}
+// 			else{
+ 				aOngoingActualRun = new ActualRun(aRun.getStartTime(), aRun.getEndTime(), aRun.getWaitTime(), aRun.getStartStop(), aRun.getEndStop(), aRun.getLine(), 0, aRun);
+ 				for(ArrivalTimeToStop ar:aRun.getArrivalTimeToStops()){
+ 					aOngoingActualRun.addArrivalTimeToStop(ar.getArrivalTime(), ar.getStop());
+ 				}
+ 	 	 		aOngoingActualRun.setStatus("Run Started");
+ 	 	 		actualRunRepository.addObject(aOngoingActualRun);
+// 			}
+ 	 		
+ 	 		RunningVehicle toBeRun = new RunningVehicle(aVehicle, aOngoingActualRun.getStartStop(),aRun.getStartTime(), aOngoingActualRun);
+ 	 		
+ 	 		return this.repository.addObject(toBeRun);
+ 		}
+ 		return false;
+ 	}
+ 	
+ 	/**
+ 	 * This function finishes a Run on a RunningVehicle.
+ 	 * @param aRunningVehicle The RunningVehicle which will finish the run.
+ 	 * @return Returns true if successful.
+ 	 */
+ 	public boolean finishRunForVehicle(RunningVehicle aRunningVehicle){
+ 		if(this.repository.removeObject(aRunningVehicle)){
+ 			actualRunRepository.removeObject(aRunningVehicle.getOngoingActualRun());
+ 	 		return this.aVehicleManager.finishRunForVehicle(aRunningVehicle.getVehicle());
+ 		}
+ 		return false;
+ 	}
+ 	
+	/**
+	 * Gets the current delay for the Run and sets the next predicted time to orginal delay + calculated delay.
+	 * @param aRunningVehicle The RunningVehicle for which the delay is being calculated.
+	 * @param currentTime The time at which the delay was calculated.
+	 * @param lastStop The stop on which the delay was calculated.
+	 * @return Returns the calculated delay.
+	 */
+	public int updateRunStatusAtStop(RunningVehicle aRunningVehicle, Time currentTime, Stop lastStop){
+		int aDelayMinutes = 0;
+		if(repository.indexOfRunningVehicle(aRunningVehicle) >= 0){	
+ 			aRunningVehicle.setLastStop(lastStop);
+ 			aRunningVehicle.setLastUpdateTime(currentTime);
+ 		
+ 			ActualRun aRun = aRunningVehicle.getOngoingActualRun();
+ 			Time lastStopArrivalTime = aRun.getArrivalTimeToStop(lastStop);
+ 			aDelayMinutes = (int) ((currentTime.getTime() - lastStopArrivalTime.getTime())/60000);
+ 			
+ 			Stop nextStop = aRun.getLine().getStopAfter(lastStop);
+ 			Time nextArrivalTimeToStop = aRun.getArrivalTimeToStop(nextStop);
+ 			
+ 			nextArrivalTimeToStop.setTime(nextArrivalTimeToStop.getTime() + aDelayMinutes*60000);
+ 			aRun.setArrivalTimeToStop(nextStop, nextArrivalTimeToStop);
+ 			
+ 			aRunningVehicle.getOngoingActualRun().setDelayMinutes(aDelayMinutes);
+ 			return aDelayMinutes;
+ 		}
+ 		return aDelayMinutes;
+ 	}
+ 	
+ 	/**
+ 	 * List of Action stores: 0,1,2 - 0=ReplaceStop 1=RemoveStop
+ 	 * @param aLine
+ 	 * @param affectedStop Stop collection: the stop to be replaced 
+ 	 * @param otherStop Stop collection :the stop replacing the affectedStop ()
+ 	 * @param actionBit List of Action stores: 0,1 - 0=ReplaceStop 1=RemoveStop
+ 	 * @return The EmergencyLine created, else null.
+ 	 */   
+ 	public Line changeLineOnEmergency(Line aLine, List<Stop> affectedStop, List<Integer> actionBit, List<Stop> otherStop){
+ 		Line newLine = aLine;
+ 		for(Stop aStop:affectedStop){
+ 			if(newLine.hasStop(aStop)){
+ 				if(actionBit.get(affectedStop.indexOf(aStop)) == 0){
+ 					newLine.insertStopAfter(otherStop.get(affectedStop.indexOf(aStop)),aStop);
+ 					newLine.removeStop(aStop);
+ 				}
+ 				else{
+ 					newLine.removeStop(aStop);
+ 				}
+ 			}
+ 			else{
+ 				return null;
+ 			}
+ 		}
+ 		return newLine;
+ 	}
+ 	
+ 	/**
+  	 * This function returns the repository in the manager.
+  	 * @return Returns the repository.
+  	 */
+ 	public RunningVehicleRepository getRepository() {
+  		return repository.getInstance();
+ 	}
+ 	
+ 	/**
+	 * Gets all the ScheduledRuns in the current Schedule.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<ScheduledRun> getScheduledRuns() {
+		return aScheduleManager.getScheduledRunsForCurrentSchedule();
+	}
+	
+	/**
+	 * Finds the ScheduledRuns passing through a Stop.
+	 * @param stop The Stop for which the ScheduledRuns are needed.
+	 * @return
+	 * Returns a List of ScheduledRuns found, else null.
+	 */
+	public List<ScheduledRun> getScheduledRunsForStop(Stop stop) {
+		return aScheduleManager.getScheduledRunsForCurrentScheduleAndStop(stop);
+	}
+	
+	/**
+	 * Gets all the ActualRuns in the current Schedule.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<ActualRun> getActualRuns() {
+		List<IEntity> data = actualRunRepository.search(new IRepositorySearch(){
+            public boolean isTarget(IEntity anEntity) {
+                boolean isTarget = false;
+                if(anEntity instanceof ActualRun){
+                        isTarget = true;
+                }
+                return isTarget;
+            }
+        });
+		List<ActualRun> actualRuns = new ArrayList<ActualRun>();
+		for(IEntity e:data){
+			actualRuns.add((ActualRun) e);
+		}
+		return actualRuns;
+	}
+	
+	/**
+	 * Finds the ScheduledRuns and ActualRuns passing through a Stop.
+	 * @param stop The Stop for which the ScheduledRuns are needed.
+	 * @return
+	 * Returns a List of ScheduledRuns found, else null.
+	 */
+	public List<ActualRun> getActualRunsForStop(Stop stop) {
+		List<IEntity> data = actualRunRepository.search(new IRepositorySearch(){
+            public boolean isTarget(IEntity anEntity) {
+                boolean isTarget = false;
+                if(anEntity instanceof ActualRun){
+					isTarget = true;
+                }
+                return isTarget;
+            }
+        });
+		List<ActualRun> actualRuns = new ArrayList<ActualRun>();
+		for(IEntity e:data){
+			if(((ActualRun)e).getLine().hasStop(stop))
+			actualRuns.add((ActualRun) e);
+		}
+		return actualRuns;
+	}
+	
+	/**
+	 * Gets all the ScheduledRuns  and ActualRuns in the current Schedule.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<Run> getAllRuns() {
+		List<Run> runs = new ArrayList<Run>();
+		for(ScheduledRun schrun:aScheduleManager.getScheduledRunsForCurrentSchedule()){
+			runs.add(schrun);
+		}
+		for(ActualRun acrun:this.getActualRuns()){
+			runs.add(acrun);
+		}
+		return runs;
+	}
+	
+	/**
+	 * Finds the ScheduledRuns and ActualRuns passing through a Stop.
+	 * @param stop The Stop for which the ScheduledRuns are needed.
+	 * @return
+	 * Returns a List of ScheduledRuns found, else null.
+	 */
+	public List<Run> getAllRunsForStop(Stop stop) {
+		List<Run> runs = new ArrayList<Run>();
+		for(ScheduledRun schrun:aScheduleManager.getScheduledRunsForCurrentSchedule()){
+			runs.add(schrun);
+		}
+		for(ActualRun acrun:this.getActualRunsForStop(stop)){
+			runs.add(acrun);
+		}
+		return runs;
+	}
+}
+
+/**
+ * This class handles all the emergency related operations.
+ * @author Augustin and Manish
+ */
+class EmergencyManager{
+	isA IEmergencyManager;
+	singleton;
+	depend umple.pts.domain.coreEntities.*;
+	depend umple.pts.domain.repositories.RunningVehicleRepository;
+	depend java.sql.Time;
+	depend java.sql.Date;
+	depend java.util.*;
+	private RunningVehicleRepository repository;
+	private umple.pts.domain.managers.ScheduleManager aScheduleManager;
+ 	private umple.pts.domain.managers.LineManager aLineManager;
+ 	private umple.pts.domain.managers.RunManager aRunManager;
+ 	private umple.pts.domain.managers.VehicleManager aVehicleManager;
+ 	private umple.pts.domain.managers.StopManager aStopManager;
+ 	private umple.pts.domain.managers.RealTimeManager aRealTimeManager;
+ 	
+ 	public void setManagerReferences(ScheduleManager aScheduleManager, LineManager aLineManager, RunManager aRunManager, VehicleManager aVehicleManager, StopManager aStopManager, RealTimeManager aRealTimeManager){
+ 		this.aScheduleManager = aScheduleManager;
+ 		this.aLineManager = aLineManager;
+ 		this.aRunManager = aRunManager;
+ 		this.aVehicleManager = aVehicleManager;
+ 		this.aStopManager = aStopManager;
+ 		this.aRealTimeManager = aRealTimeManager;
+ 	}
+ 	
+ 	/**
+   	 * This function initializes the repository. 
+   	 */
+  	public void initialiseRepository(){
+	  	repository = RunningVehicleRepository.getInstance();
+  	}
+ 	
+	/**
+	 * This function cancels the current Run and gets the overall delay in minutes.
+	 * @param aRunningVehicle The RunningVehicle which will be canceled.
+	 * @param affectedStop The Stop which caused the cancellation.
+	 * @param currentTime The time at which the cancellation is done.
+	 * @param vehicleStatus The status of the Vehicle.
+	 * @return Returns the delay in minutes.
+	 */
+ 	public int cancelRunAndGetDelay(RunningVehicle aRunningVehicle, Stop affectedStop, Time currentTime, String vehicleStatus) {
+		//returns the delay caused by the current emergency, which may be added to all Runs on the affected Lines
+		int inducedDelay = aRealTimeManager.updateRunStatusAtStop(aRunningVehicle, currentTime, affectedStop);
+		aRunningVehicle.getVehicle().setVehicleStatus(vehicleStatus);
+		aRealTimeManager.finishRunForVehicle(aRunningVehicle);		
+		return inducedDelay;
+	}
+	
+	/**
+	 * Delays all the runs after a specified Time on a Line for a Date.
+	 * @param currentTime The specified time.
+	 * @param aLine The line on which the delay is to be introduced.
+	 * @param delayedDate The date on which the delay is to be introduced.
+	 * @param delayMinutes The time in minutes, for which the delay is to be introduced.
+	 */
+ 	public void delayAllRunsonLineAfterCurrentTimeForDate(Line aLine, Time currentTime, Date delayedDate, int delayMinutes){
+		LineTimeTable aLTT = aScheduleManager.getTimeTableForALineAndDate(aLine, delayedDate);
+		aLTT.induceDelayInAllRunsAfterStartTime(currentTime, delayMinutes);
+	}
+	
+	/**
+  	 * This function returns the repository in the manager.
+  	 * @return Returns the repository.
+  	 */
+ 	public RunningVehicleRepository getRepository() {
+  		return repository.getInstance();
+ 	}
+}
+
+/**
+ *This class manages the schedules.
+ * @author Augustin and Manish
+ */
+class ScheduleManager{
+ isA IScheduleManager;
+ singleton; 
+ depend umple.pts.domain.coreEntities.*;
+ depend umple.pts.domain.math.*;
+ depend umple.pts.domain.repositories.ScheduleRepository;
+ depend umple.pts.domain.repositories.StopRepository;
+ depend java.util.*;
+ depend java.sql.Date;
+ depend java.sql.Time;
+ depend java.sql.SQLException;
+ depend umple.pts.domain.dal.ScheduleStorage;
+ private ScheduleRepository repository;
+ //default schedule
+ Schedule mainSchedule;
+ private umple.pts.domain.managers.LineManager aLineManager;
+ private umple.pts.domain.managers.RunManager aRunManager;
+ private umple.pts.domain.managers.StopManager aStopManager;
+ private umple.pts.domain.managers.VehicleManager aVehicleManager;
+ 
+ public void setManagerReferences(LineManager aLineManager, RunManager aRunManager, StopManager aStopManager, VehicleManager aVehicleManager){
+ 	this.aLineManager = aLineManager;
+ 	this.aRunManager = aRunManager;
+ 	this.aStopManager = aStopManager;
+ 	this.aVehicleManager = aVehicleManager;
+ }
+ 
+ /**
+   * This function initializes the repository. 
+   */
+  public void initialiseRepository(){
+	  repository = ScheduleRepository.getInstance();
+  }
+  
+  /**
+	 * This function will return list of quickest runs for each of run passing fromStop in period of one hour.
+	 * @param fromStop Origin stop.
+	 * @param toStop Destination stop.
+	 * @param time Time for check-
+	 * @return Sorted list of quickest route properties.
+	 * @throws ClassNotFoundException ScheduleDAL error
+	 * @throws SQLException ScheduleDAL error.
+	 * @see ScheduleStorage
+	 * @see DirectedGraph
+	 * @see #findQuickestRouteBetweenStopsForTime(Stop, Stop, Time, Schedule)
+	 */
+	public List<QuickestRunsCalculusProperties> findQuickestRouteBetweenStopsForTime(Stop fromStop, Stop toStop, Time time) throws ClassNotFoundException, SQLException{
+		return this.findQuickestRouteBetweenStopsForTime(fromStop, toStop, time, getMainSchedule());
+	}
+	
+	/**
+	 * This function will return list of quickest runs for each of run passing fromStop in period of one hour.
+	 * @param fromStop Origin stop.
+	 * @param toStop Destination stop.
+	 * @param time Time for check-
+	 * @param schedule Schedule for runs
+	 * @return Sorted list of quickest route properties.
+	 */
+	public List<QuickestRunsCalculusProperties> findQuickestRouteBetweenStopsForTime(Stop fromStop, Stop toStop, Time time, Schedule schedule){
+		
+		DirectedGraph graph = new DirectedGraph(schedule.getLineTimeTables());
+		
+		TreeSet<QuickestRunsCalculusProperties> sortedProps = new TreeSet<QuickestRunsCalculusProperties>(new Comparator<QuickestRunsCalculusProperties>(){
+
+			@Override
+			public int compare(QuickestRunsCalculusProperties arg0,
+					QuickestRunsCalculusProperties arg1) {
+				if(arg0 == null){
+					return 1;
+				} else if (arg1 == null){
+					return -1;
+				}
+				
+				if(arg0.getEndTime().equals(arg1.getEndTime())){
+					if(arg0.getStartTime().equals(arg1.getStartTime())){
+						if(arg0.numberOfRunStopsCalculusProperties() <= arg1.numberOfRunStopsCalculusProperties()){
+							return -1;
+						} else {
+							return 1;
+						}
+					} else {
+						return arg1.getStartTime().compareTo(arg0.getStartTime());
+					}
+				} else {
+					return arg1.getEndTime().compareTo(arg0.getEndTime());
+				}
+			}
+			
+		});
+		
+		sortedProps.addAll(graph.getQuickestRoutes(fromStop, toStop, time));
+		
+		return new ArrayList<QuickestRunsCalculusProperties>(sortedProps);
+		
+	}
+
+ /**
+  * This function creates a Schedule and stores it in the repository.
+  * @param scheduleName The Name of the Schedule.
+  * @param listOfLineTimeTables The List of all TimeTables to be created.
+  * @return Returns the created Schedule, else null.
+  */
+ public Schedule createSchedule(String scheduleName, List<LineTimeTable> listOfLineTimeTables) {
+	  return this.createSchedule(scheduleName, listOfLineTimeTables, null, null);
+  }
+ 
+ /**
+  * This function creates a Schedule and stores it in the repository.
+  * @param scheduleName The Name of the Schedule.
+  * @return Returns the created Schedule, else null.
+  */
+ public Schedule createSchedule(String scheduleName) {
+	  return this.createSchedule(scheduleName, null, null, null);
+  }
+
+/**This function inserts a scheduled run into the Schedule.
+ * @param aSchedule The Schedule which will be modified.
+ * @param aRun The new Run which will be inserted.
+ * @return Returns true if successful.
+ */
+  public boolean insertRun(Schedule aSchedule, ScheduledRun aRun) {
+  boolean wasInserted = false;
+  
+  //ScheduleManager can change aSchedule of only if it is it's manager
+  if(repository.indexOfSchedule(aSchedule) >= 0){
+   for (LineTimeTable aLineTimeTable : aSchedule.getLineTimeTables()) {
+    if(aLineTimeTable.getForLine().getLineId() == aRun.getLine().getLineId())
+	aLineTimeTable.addScheduledRun(aRun);
+	wasInserted = true;
+   }
+  }  
+  return wasInserted;
+ }
+ 
+  /**
+   * This function creates a LineTimeTable and generates the runs for it.
+   * @author Manish and Augustin
+   * @param aLine The Line from which the LineTimeTable is to be created.
+   * @param aFirstRunTime The timing of the first Run.
+   * @param aLastRunTime The timing of the Last Run.
+   * @param aMinutesBetweenConsecutiveRuns The number of minutes between 2 consecutive runs.
+   * @param runLength The number of minutes 1 run lasts. 
+   * @return Returns the created LineTimeTable, else null.
+   */
+   public LineTimeTable createLineTimeTableAndGenerateRuns(Line aLine, int runLength, Time aFirstRunTime, Time aLastRunTime, int aMinutesBetweenConsecutiveRuns) {
+	  LineTimeTable theLTT = new LineTimeTable(aLine, aFirstRunTime, aLastRunTime, aMinutesBetweenConsecutiveRuns);
+	  Time currentRunTime = theLTT.getFirstRunTime();
+		
+	  Time runEndTime = currentRunTime;
+	  runEndTime.setMinutes(currentRunTime.getMinutes() +  runLength);
+	  ScheduledRun aRun = aRunManager.createRun(aLine.getFirstEndStop(), aLine.getSecondEndStop(), new Time(0), currentRunTime, runEndTime, aLine);
+	  ScheduledRun bRun = aRunManager.createRun(aLine.getSecondEndStop(), aLine.getFirstEndStop(), null, currentRunTime, runEndTime, aLine);
+	  theLTT.addScheduledRun(aRun);
+	  theLTT.addScheduledRun(bRun);
+	  while(currentRunTime.compareTo(theLTT.getLastRunTime()) <= 0){
+		  currentRunTime.setMinutes(currentRunTime.getMinutes() +  theLTT.getMinutesBetweenConsecutiveRuns());
+		  runEndTime.setMinutes(currentRunTime.getMinutes() + runLength);
+		  aRun = (ScheduledRun) aRunManager.createRun(aLine.getFirstEndStop(), aLine.getSecondEndStop(), null, currentRunTime, runEndTime, aLine);
+		  bRun = (ScheduledRun) aRunManager.createRun(aLine.getSecondEndStop(), aLine.getFirstEndStop(), null, currentRunTime, runEndTime, aLine);
+	  	  theLTT.addScheduledRun(aRun);
+	  	  theLTT.addScheduledRun(bRun);
+	  }
+	  return theLTT;
+   }
+   
+   /**
+    * This function creates a LineTimeTable.
+    * @author Manish and Augustin
+    * @param aLine The Line from which the LineTimeTable is to be created.
+    * @param aFirstRunTime The timing of the first Run.
+    * @param aLastRunTime The timing of the Last Run.
+    * @param aMinutesBetweenConsecutiveRuns The number of minutes between 2 consecutive runs.
+    * @return Returns the created Schedule, else null.
+    */
+    public LineTimeTable createLineTimeTable(Line aLine, Time aFirstRunTime, Time aLastRunTime, int aMinutesBetweenConsecutiveRuns) {
+ 	  LineTimeTable theLTT = new LineTimeTable(aLine, aFirstRunTime, aLastRunTime, aMinutesBetweenConsecutiveRuns);
+ 	  return theLTT;
+    }
+ 
+  /**This function deletes a specified run from the schedule.
+   * @param aSchedule The Schedule which will be modified.
+   * @param aRun The new Run which will be deleted.
+   * @return Returns true if successful.
+   */
+ public boolean deleteRun(Schedule aSchedule, ScheduledRun aRun) {
+  boolean wasDeleted = false;
+  
+  //ScheduleManager can change aSchedule of only if it is it's manager
+  if(repository.indexOfSchedule(aSchedule) >= 0){
+   for (LineTimeTable aLineTimeTable : aSchedule.getLineTimeTables()) {
+    if(aLineTimeTable.getForLine().getLineId() == aRun.getLine().getLineId())
+	aLineTimeTable.removeScheduledRun(aRun);
+    wasDeleted = true;
+   }
+  }
+  
+  return wasDeleted;
+ }
+ 
+	/**
+	 * Gives a LineTimeTable for a Line and Date.
+	 * @param aLine The Line for which the LTT is needed.
+	 * @param forDate The Date on which the LTT is needed.
+	 * @return
+	 * If There is special schedule taking place on date forDate, it will return
+	 * time table for a line defined in that schedule. Otherwise it will return timetable
+	 * from main schedule.
+	 */
+	public LineTimeTable getTimeTableForALineAndDate(Line aLine, Date forDate) {
+		final Date forDateStatic = forDate;
+		//searches only specific schedule with forDate element of [occurenceStart, occurenceEnd]
+		IRepositorySearch decider = new IRepositorySearch() {
+			public boolean isTarget(IEntity anEntity) {
+				if(anEntity instanceof SpecialSchedule){
+					SpecialSchedule specSchInstance = (SpecialSchedule) anEntity;
+					if(specSchInstance.getOccurenceStart().compareTo(forDateStatic) <= 0 
+						&& specSchInstance.getOccurenceEnd().compareTo(forDateStatic) >= 0){
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+				
+		TreeSet<IEntity> foundSchedules = new TreeSet<IEntity>(new Comparator<IEntity>() {
+			
+			//returns comparation of occurrence start dates. If Start date is greater, greater the priority of 
+			//special date is, based on date and fact that end date is greater or equal that date.
+			public int compare(IEntity o1, IEntity o2) {
+				if(!(o1 instanceof SpecialSchedule)){
+					return -1;
+				} else if(!(o2 instanceof SpecialSchedule)){
+					return 1;
+				}
+				else {
+					return ((SpecialSchedule)o1).getOccurenceStart().compareTo(((SpecialSchedule)o2).getOccurenceStart());
+				}
+			}
+		});
+		//adds all special schedules that fit decider
+		foundSchedules.addAll(repository.search(decider));
+		if(!foundSchedules.isEmpty()){
+			//schedule with highest priority is one who has greatest time of start (last one before chosen date)
+			SpecialSchedule scheduleWithHighestPriority = (SpecialSchedule) foundSchedules.last();
+			//returns timetable generated from schedule with highest priority
+			for (LineTimeTable aLineTimeTable : scheduleWithHighestPriority.getLineTimeTables()){
+	  		 if(aLineTimeTable.getForLine().getLineId() == aLine.getLineId())
+	   		 return aLineTimeTable;
+	  		}			
+		}
+		return this.getDefaultTimeTableForALine(aLine);
+	}
+	
+//	List<Run> getRuns(){
+//		
+//	}
+	
+ 	// Method returns scheduled timetable for default schedule
+	/**
+	 * Gives a LineTimeTable for a Line.
+	 * @param aLine The Line for which the LTT is needed.
+	 * @return
+	 * Returns scheduled timetable for default schedule
+	 */
+	public LineTimeTable getDefaultTimeTableForALine(Line aLine) {
+	 for (LineTimeTable aLineTimeTable : mainSchedule.getLineTimeTables()){
+	  if(aLineTimeTable.getForLine().equals(aLine))
+	   return aLineTimeTable;
+	  }
+	  return null;
+	}
+	
+	/**
+	  * This method creates special schedule if occurrence dates are defined, regular schedule otherwise, and stores it in the repository.
+	  * @param scheduleName The Name of the Schedule.
+	  * @param listOfLineTimeTables The List of all TimeTables to be created.
+	  * @param occurrenceStart The date from which the Schedule has to be used.
+	  * @param occurrenceEnd The date till which the Schedule has to be used. 
+	  * @return Returns the created Schedule, else null.
+	  */
+	public Schedule createSchedule(String scheduleName, List<LineTimeTable> listOfLineTimeTables, Date occurrenceStart, Date occurrenceEnd) {
+		Schedule newSchedule = null;
+		if(occurrenceStart != null && occurrenceEnd != null) {
+			newSchedule = new SpecialSchedule(scheduleName, occurrenceStart, occurrenceStart,(LineTimeTable[])listOfLineTimeTables.toArray(new LineTimeTable[listOfLineTimeTables.size()]));
+		}
+		else {
+			if(listOfLineTimeTables != null)
+				newSchedule = new Schedule(scheduleName, (LineTimeTable[])listOfLineTimeTables.toArray(new LineTimeTable[listOfLineTimeTables.size()]));
+			else
+				newSchedule = new Schedule(scheduleName);
+		}
+		if(repository.addObject(newSchedule)){
+			return newSchedule;
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * This function will add a Line to the Schedule and generate Runs automatically for that.
+	 * @param aSchedule The Schedule to be modified.
+	 * @param aLine The Line to be added.
+	 * @param aRunLength The Time in minutes needed for 1 Run.
+	 * @param aFirstRunTime The Time for the first Run.
+	 * @param aLastRunTime The Time after which there will be no more Runs.
+	 * @param aMinutesBetweenConsecutiveRuns The time in minutes between any two Runs.
+	 * @return Returns true if successful.
+	 */
+	
+	public boolean insertLineWithRunGeneration(Schedule aSchedule, Line aLine, int aRunLength, Time aFirstRunTime, Time aLastRunTime, int aMinutesBetweenConsecutiveRuns) {
+		ScheduledRun aRun =  this.aRunManager.createRun(aLine.getFirstEndStop(), aLine.getSecondEndStop(), null, aFirstRunTime, new Time(aFirstRunTime.getHours(), aFirstRunTime.getMinutes() + aRunLength, aFirstRunTime.getSeconds()), aLine);
+		ScheduledRun bRun =  this.aRunManager.createRun(aLine.getSecondEndStop(), aLine.getFirstEndStop(), null, aFirstRunTime, new Time(aFirstRunTime.getHours(), aFirstRunTime.getMinutes() + aRunLength, aFirstRunTime.getSeconds()), aLine);
+		ScheduledRun[] runs={aRun, bRun};
+		LineTimeTable aLineTimeTable = new LineTimeTable(aLine, new Time(aFirstRunTime.getHours(), aFirstRunTime.getMinutes() + aMinutesBetweenConsecutiveRuns, aFirstRunTime.getSeconds()), aLastRunTime, aMinutesBetweenConsecutiveRuns, runs);
+		this.GenerateRuns(aSchedule, aLine, aRunLength);
+		return aSchedule.addLineTimeTable(aLineTimeTable);
+	}
+
+	/**
+	 * This function will add a LineTimeTable to the Schedule.
+	 * @param aSchedule The Schedule to be modified.
+	 * @param aLineTimeTable The LineTimeTable to be added.
+	 * @return Returns true if successful.
+	 */
+	public boolean insertLineTimeTable(Schedule aSchedule, LineTimeTable aLineTimeTable) {
+		return aSchedule.addLineTimeTable(aLineTimeTable);
+	}
+
+	/**
+	 * This function will remove a Line from the Schedule.
+	 * @param aSchedule The Schedule to be modified.
+	 * @param aLine The Line to be deleted.
+	 * @return Returns true if successful.
+	 */
+	public boolean removeLine(Schedule aSchedule, Line aLine) {
+		for(LineTimeTable aLineTimeTable:aSchedule.getLineTimeTables())
+		{
+			if(aLineTimeTable.getForLine().equals(aLine)){
+				aSchedule.removeLineTimeTable(aLineTimeTable);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * This function will remove a LineTimeTable from the Schedule.
+	 * @param aSchedule The Schedule to be modified.
+	 * @param aLineTimeTable The LineTimeTable to be deleted.
+	 * @return Returns true if successful.
+	 */
+	public boolean removeLineTimeTable(Schedule aSchedule, LineTimeTable aLineTimeTable) {
+		return aSchedule.removeLineTimeTable(aLineTimeTable);
+	}
+	
+	/**
+	 * This function will remove a LineTimeTable from the Schedule.
+	 * @param aSchedule The Schedule to be removed.
+	 * @return Returns true if successful.
+	 */
+	public boolean removeSchedule(Schedule aSchedule) {
+		return repository.removeObject(aSchedule);
+	}
+	
+	/**
+	 * This function will find the Lines (with the intermediate stops) which form the shortest path between two stops. 
+	 * @param startStop The initial Stop.
+	 * @param endStop The final Stop.
+	 * @return
+	 * Returns the list of lines found, else null.
+	 */
+	public List<CalculateRouteBetweenStops> findLines(Stop startStop, Stop endStop) {
+		List<Line> allLines = new ArrayList<Line>();
+		for (LineTimeTable aLineTimeTable:mainSchedule.getLineTimeTables())
+		{
+			if(!allLines.contains(aLineTimeTable.getForLine()))
+				allLines.add(aLineTimeTable.getForLine());
+		}
+	
+		DirectedGraph calculateLinesGraph = new DirectedGraph();
+		calculateLinesGraph.readDataFromLines(allLines);
+		Vertex firstVertex = calculateLinesGraph.findVertexByStop(startStop);
+		Vertex secondVertex = calculateLinesGraph.findVertexByStop(endStop);
+		QuickestRouteCalculusProperties calculator = calculateLinesGraph.getQuickestRoute(firstVertex, secondVertex);
+		List<Vertex> path = calculator.getPassedVertexes();
+		
+		//The stops constituting the quickest route
+		List<Stop> foundStops = new ArrayList<Stop>();
+		int vCount = path.size();
+		
+		//The list of stops to change the vehicle
+		List<Stop> solutionStops = new ArrayList<Stop>();
+		List<Stop> proxySolutionStops = new ArrayList<Stop>();
+		solutionStops.add(path.get(0).getStop());
+		proxySolutionStops.add(path.get(0).getStop());
+		
+		while(vCount > 1){
+			vCount--;
+			foundStops.add(path.get(vCount).getStop());			
+		}
+		
+		//Code to calculate the lines from the list of stops ... Algorithm
+		List<CalculateRouteBetweenStops> solution = new ArrayList<CalculateRouteBetweenStops>();
+		
+		while(!solutionStops.contains(endStop)){	
+			for(Stop solutionStop:solutionStops){
+				for(Line possibleLine:this.findLinesOnStop(solutionStop)){
+					for(Stop finalStop:foundStops){
+						if(possibleLine.hasStop(finalStop)){
+						//check if this is a switchable stop, or final destination, add it to solution
+							if(finalStop.equals(solutionStop)){
+								//exception that it reached home stop
+							}
+							else{
+								//Add the switchable stops to calculate lines from the stop
+								if(!proxySolutionStops.contains(finalStop)){
+									proxySolutionStops.add(finalStop);
+									break;
+								}
+								CalculateRouteBetweenStops sol = new CalculateRouteBetweenStops(solutionStop, possibleLine, finalStop);
+								//if the solution exists, do not add
+								if(solution.contains(sol)){
+									break;
+								}
+								else{
+									solution.add(sol);
+								}
+							}
+						}
+					}
+				}
+			}
+			proxySolutionStops.removeAll(solutionStops);
+			solutionStops.clear();
+			solutionStops.addAll(proxySolutionStops);
+		}
+		return solution;
+	}
+
+	/**
+	 * This function will find the Runs (with the intermediate stops) which form the shortest path between two stops, given the starting Time. 
+	 * @param startStop The initial Stop.
+	 * @param endStop The final Stop.
+	 * @param currentTime The starting Time on the initial Stop.
+	 * @return
+	 * Returns the list of lines found, else null.
+	 */
+	public List<CalculateRunsBetweenStops> findRouteForTime(Stop startStop, Stop endStop, Time currentTime) {
+		List<CalculateRouteBetweenStops> foundLines = this.findLines(startStop, endStop);
+		List<CalculateRunsBetweenStops> foundRuns = new ArrayList<CalculateRunsBetweenStops>();
+		HashMap<Stop,Time> timeForStop = new HashMap<Stop, Time>();
+		
+		timeForStop.put(startStop, currentTime);
+		
+		List<LineTimeTable> lineTables = mainSchedule.getLineTimeTables();
+		for(CalculateRouteBetweenStops route:foundLines){
+			
+			//for the first found line which will have the first stop
+			for(LineTimeTable table:  lineTables){
+				if(route.getRouteLine().equals(table.getForLine())){
+					Run aRun = table.findRunForLineStopTime( route.getFromStop(), timeForStop.get(route.getFromStop()));
+					CalculateRunsBetweenStops newSolution = new CalculateRunsBetweenStops(route.getFromStop(), aRun, route.getToStop());
+					if(!foundRuns.contains(newSolution)){
+						Time timeToEnd = null;
+						for(ArrivalTimeToStop times:aRun.getArrivalTimeToStops()){
+							if(times.getStop().equals(route.getToStop())){
+								timeToEnd = times.getArrivalTime();
+								break;
+							}
+						}
+						timeForStop.put(route.getToStop(), timeToEnd);
+						foundRuns.add(newSolution);
+					}
+				}
+			}		
+		}
+		//Code to find Runs on the foundLines.
+		return foundRuns;
+	}
+
+	/**
+	 * This function finds the LineTimeTable for a Line in the default Schedule.
+	 * @param aLine The Line for which the LTT is needed.
+	 * @return
+	 * Returns the LTT found, else null.
+	 */
+	public LineTimeTable findTimeTableForLine(Line aLine) {
+		for(LineTimeTable aLineTimeTable:mainSchedule.getLineTimeTables())
+		{
+			if(aLineTimeTable.getForLine().equals(aLine)){
+				return aLineTimeTable;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * This function finds the LineTimeTable for a Line for a Particular Schedule.
+	 * @param aLine The Line for which the LTT is needed.
+	 * @param aSchedule The Schedule which will be searched for the LTT.
+	 * @return
+	 * Returns the LTT found, else null.
+	 */
+	public LineTimeTable findTimeTableForLineForSchedule(Schedule aSchedule, Line aLine) {
+		if(repository.indexOfSchedule(aSchedule) >= 0){
+			for(LineTimeTable aLineTimeTable:aSchedule.getLineTimeTables())
+			{
+				if(aLineTimeTable.getForLine().equals(aLine)){
+					return aLineTimeTable;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Finds the Lines passing through a Stop.
+	 * @param currentStop The Stop for which the Lines are needed.
+	 * @return
+	 * Returns a List of Lines found, else null.
+	 */
+	public List<Line> findLinesOnStop(Stop currentStop) {
+		List<Line> lines = new ArrayList<Line>();
+		
+		for(LineTimeTable aLineTimeTable:mainSchedule.getLineTimeTables())
+		{
+			if(aLineTimeTable.getForLine().hasStop(currentStop) ){
+			lines.add(aLineTimeTable.getForLine());
+			}
+		}
+		return lines;
+	}
+	
+	/**
+	 * Gets all the ScheduledRuns in the current Schedule.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<ScheduledRun> getScheduledRunsForCurrentSchedule() {
+		return getScheduledRunsForSchedule(mainSchedule);
+	}
+	
+	/**
+	 * Gets all the ScheduledRuns in the Schedule.
+	 * @param schedule The schedule from which all the Scheduled Runs are to be found.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<ScheduledRun> getScheduledRunsForSchedule(Schedule schedule) {
+		List<ScheduledRun> runs = new ArrayList<ScheduledRun>();
+		
+		for(LineTimeTable aLineTimeTable:schedule.getLineTimeTables())
+		{
+			for(ScheduledRun run:aLineTimeTable.getScheduledRuns())
+			{
+				runs.add(run);
+			}
+		}
+		return runs;
+	}
+	
+	/**
+	 * Gets all the ScheduledRuns in the current Schedule for a line.
+	 * @param line The line for which the runs are to be found.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<ScheduledRun> getScheduledRunsForCurrentScheduleAndLine(Line line) {
+		return getScheduledRunsForScheduleAndLine(mainSchedule, line);
+	}
+	
+	/**
+	 * Gets all the ScheduledRuns in the Schedule for a line.
+	 * @param schedule The schedule from which the Scheduled Runs are to be found.
+	 * @param line The line for which the runs are to be found.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<ScheduledRun> getScheduledRunsForScheduleAndLine(Schedule schedule, Line line) {
+		return findTimeTableForLineForSchedule(schedule, line).getScheduledRuns();
+	}
+	
+	/**
+	 * Gets all the LineTimeTables in the current Schedule.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<LineTimeTable> getLineTimeTablesForCurrentSchedule() {
+		return getLineTimeTablesForSchedule(mainSchedule);
+	}
+	
+	/**
+	 * Gets all the LineTimeTables in the Schedule.
+	 * @param schedule The schedule from which all the LineTimeTables are to be found.
+	 * @return
+	 * Returns a List of ScheduledRuns.
+	 */
+	public List<LineTimeTable> getLineTimeTablesForSchedule(Schedule schedule) {
+		return schedule.getLineTimeTables();
+	}
+	
+	/**
+	 * Finds the ScheduledRuns passing through a Stop.
+	 * @param stop The Stop for which the Lines are needed.
+	 * @return
+	 * Returns a List of ScheduledRuns found, else null.
+	 */
+	public List<ScheduledRun> getScheduledRunsForCurrentScheduleAndStop(Stop stop) {
+		List<ScheduledRun> runs = new ArrayList<ScheduledRun>();
+		
+		for(LineTimeTable aLineTimeTable:mainSchedule.getLineTimeTables())
+		{
+			if(aLineTimeTable.getForLine().hasStop(stop) ){
+				for(ScheduledRun run:aLineTimeTable.getScheduledRuns()){
+					runs.add(run);
+				}
+			}
+		}
+		return runs;
+	}
+	
+	/**
+	 * Finds the Lines passing through a Stop.
+	 * @param currentStop The Stop for which the Lines are needed.
+	 * @return
+	 * Returns a List of Lines found, else null.
+	 */
+	public List<Line> findLinesOnStopId(int currentStopId) {
+		List<Stop> stops = StopRepository.getInstance().getStops();
+		Stop currentStop = null;
+		for(Stop stop:stops)
+		{
+			if(stop.getStopId() == currentStopId ){
+				currentStop = stop;
+			}
+		}
+		return findLinesOnStop(currentStop);
+	}
+	
+	/**
+	 * Finds the Lines in the current Schedule
+	 * @return
+	 * Returns a List of Lines found, else null.
+	 */
+	public List<Line> getLinesFromCurrentSchedule() {
+		return getLinesInSchedule(mainSchedule);
+	}
+	
+	/**
+	 * Finds the Lines in the Schedule.
+	 * @param schedule The schedule in which the lines are to be found.
+	 * @return
+	 * Returns a List of Lines found, else null.
+	 */
+	public List<Line> getLinesInSchedule(Schedule schedule) {
+		List<Line> lines = new ArrayList<Line>();
+		
+		for(LineTimeTable aLineTimeTable:schedule.getLineTimeTables())
+		{
+			lines.add(aLineTimeTable.getForLine());
+		}
+		return lines;
+	}
+	
+	/**
+	 * Finds the Lines passing through a Stop in a particular Schedule.
+	 * @param currentStop The Stop for which the Lines are needed.
+	 * @param aSchedule The Schedule on which the Lines are to be found.
+	 * @return
+	 * Returns a List of Lines found, else null.
+	 */
+	public List<Line> findLinesOnStopForSchedule(Schedule aSchedule, Stop currentStop) {
+		List<Line> lines = new ArrayList<Line>();
+		if(repository.indexOfSchedule(aSchedule) >= 0){
+			for(LineTimeTable aLineTimeTable:aSchedule.getLineTimeTables())
+			{
+				if(aLineTimeTable.getForLine().hasStop(currentStop) ){
+				lines.add(aLineTimeTable.getForLine());
+				}
+			}
+			return lines;
+		}
+		return null;
+	}
+	
+	/**
+	 * This function will generate automatically Runs based on the provided data.
+	 * @param aSchedule The Schedule for which the Runs are to be generated.
+	 * @param aLine The Line on which the Runs are to be generated.
+	 * @param runLength The time in minutes needed per Run.
+	 * @return
+	 */
+	public boolean GenerateRuns(Schedule aSchedule, Line aLine, int runLength){
+		LineTimeTable theLTT = aSchedule.getLineTimeTableByLine(aLine); 
+  		Time currentRunTime = theLTT.getFirstRunTime();
+  		
+  		Time runEndTime = currentRunTime;
+  		runEndTime.setMinutes(currentRunTime.getMinutes() +  runLength);
+  		ScheduledRun aRun = aRunManager.createRun(aLine.getFirstEndStop(), aLine.getSecondEndStop(), new Time(0), currentRunTime, runEndTime, aLine);
+  		ScheduledRun bRun = aRunManager.createRun(aLine.getSecondEndStop(), aLine.getFirstEndStop(), null, currentRunTime, runEndTime, aLine);
+  		theLTT.addScheduledRun(aRun);
+  		theLTT.addScheduledRun(bRun);
+  		while(currentRunTime.compareTo(theLTT.getLastRunTime()) <= 0){
+  			currentRunTime.setMinutes(currentRunTime.getMinutes() +  theLTT.getMinutesBetweenConsecutiveRuns());
+  			runEndTime.setMinutes(currentRunTime.getMinutes() + runLength);
+  			aRun = (ScheduledRun) aRunManager.createRun(aLine.getFirstEndStop(), aLine.getSecondEndStop(), null, currentRunTime, runEndTime, aLine);
+  	  		bRun = (ScheduledRun) aRunManager.createRun(aLine.getSecondEndStop(), aLine.getFirstEndStop(), null, currentRunTime, runEndTime, aLine);
+  	  		theLTT.addScheduledRun(aRun);
+  	  		theLTT.addScheduledRun(bRun);
+  		}
+  		return true;
+  	}
+  	
+  	/**
+ 	 * Sets the schedule as the main Schedule
+ 	 * @param schedule The schedule to be considered as a Main Schedule.
+ 	 */
+ 	public void setMainSchedule(Schedule schedule){
+ 		mainSchedule = schedule;
+ 	}
+ 	
+ 	/**
+ 	 * Gets the schedule as the main Schedule
+ 	 * @param schedule The schedule to be considered as a Main Schedule.
+ 	 * @throws SQLException
+ 	 * @throws ClassNotFoundException 
+ 	 * @return returns the current Schedule.
+ 	 */
+ 	public Schedule getMainSchedule() throws ClassNotFoundException, SQLException{
+ 		if(mainSchedule == null){
+ 			mainSchedule = ScheduleStorage.getScheduleById(0);
+ 		}
+ 		return mainSchedule;
+ 	}
+ 	
+ 	/**
+  	 * This function returns the repository in the manager.
+  	 * @return Returns the repository.
+  	 */
+ 	public ScheduleRepository getRepository() {
+  		return repository.getInstance();
+ 	}
+}

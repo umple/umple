@@ -1,0 +1,158 @@
+namespace umple.pts.domain.interfaces;
+
+use Entities.ump;
+//This interface is used to define a parameter to compare entities in the repository.
+interface IRepositorySearch{
+	depend umple.pts.domain.coreEntities.*;
+	boolean isTarget(IEntity anEntity);
+}
+//default behaviour of all of repositories
+interface IRepository{
+	depend umple.pts.domain.coreEntities.*;
+	depend java.util.*;
+	List<IEntity> search(IRepositorySearch decider);
+	IEntity searchEntityById(int entityId);
+    void notifyObservers(RepositoryEvent e);
+    boolean addObject(IEntity object);
+    boolean removeObject(IEntity object);
+    boolean addObserver(IRepositoryObserver anObserver);
+    boolean removeObserver(IRepositoryObserver anObserver);
+}
+//repository observer
+interface IRepositoryObserver{
+	
+    static final int ADDED_OBJECT = 1;
+	static final int REMOVED_OBJECT = 2;
+    void repositoryStateChanged(RepositoryEvent e);
+}
+
+/**
+ * Class for event handling from repositories.
+ * @author apetrovic
+ *
+ */
+class RepositoryEvent{
+	depend umple.pts.domain.coreEntities.IEntity;
+    IRepository source;
+    int cause;
+    IEntity data;
+}
+//This interface defines the methods to compare or find an entity from the Repository, using entity Id or any other definable parameter.
+
+//An interface to define the functionalities of a Stop Manager.
+interface IStopManager{
+  depend umple.pts.domain.coreEntities.*;
+  Stop createStop(String aName);
+  boolean deleteStop(Stop aStop);
+}
+
+//An interface to define the functionalities of a Line Manager.
+interface ILineManager{
+  depend umple.pts.domain.coreEntities.*;
+  depend java.util.*;
+  Line createLine(List<Stop> listOfStops, Stop firstEndPoint, Stop secondEndPoint);
+  boolean insertStopInLine(Line aLine, Stop previusStop, Stop newStop);
+//The insert function, inserts the "newStop" just after the "previousStop" in the "aLine" Line.
+  boolean deleteStopFromLine(Line aLine, Stop stopToRemove);
+}
+
+//An interface to define the functionalities of a Run Manager.
+interface IRunManager{
+  depend umple.pts.domain.coreEntities.*;
+  depend java.sql.Time;
+  ScheduledRun createRun(Stop startStop, Stop endStop, Time waitTime, Time startTime, Time endTime,Line runLine);
+//These function will change the stops from the where the run starts and ends.
+  boolean changeStartStop(Run currentRun, Stop startStop);
+  boolean changeEndStop(Run currentRun, Stop endStop);
+  boolean deleteRun(Run aRun);
+  boolean addArrivalTimes(Run aRun, Stop aStop, Time aArrivalTime);
+}
+
+//An interface to define the functionalities of a Schedule Manager.
+interface IScheduleManager{
+  depend umple.pts.domain.coreEntities.*;
+  depend java.util.*;
+  depend java.sql.Date;
+  depend java.sql.Time;
+  LineTimeTable getDefaultTimeTableForALine(Line aLine);
+//This function will get the normal schedule for a line.
+  LineTimeTable getTimeTableForALineAndDate(Line aLine, Date forDate);
+//This function will get the normal schedule for a line unless the date specified has an exceptional schedule.
+  Schedule createSchedule(String scheduleName, List<LineTimeTable> listOfLineTimeTables);
+  Schedule createSchedule(String scheduleName, List<LineTimeTable> listOfLineTimeTables, Date occurrenceStart, Date occurrenceEnd);
+//The two functions create a normal and an exceptional schedule with its specific occurence dates.
+  boolean insertRun(Schedule aSchedule, ScheduledRun aRun);
+  boolean deleteRun(Schedule aSchedule, ScheduledRun aRun);
+//These functions add and delete a specific run to a schedule.
+
+  boolean insertLineWithRunGeneration(Schedule aSchedule, Line aLine, int aRunLength, Time aFirstRunTime, Time aLastRunTime, int aMinutesBetweenConsecutiveRuns);
+//This will add the line and ask the LineTimeTable to generate the runs.  
+  boolean insertLineTimeTable(Schedule aSchedule, LineTimeTable aLineTimeTable);
+//This will add an existing LineTimeTable to the Schedule
+  boolean removeLine(Schedule aSchedule, Line aLine);
+  boolean removeLineTimeTable(Schedule aSchedule, LineTimeTable aLineTimeTable);
+//These functions will remove a all the runs for a Line or a LineTimeTable 
+}
+
+//An interface to define the functionalities of a Vehicle Manager.
+interface IVehicleManager
+{
+  depend umple.pts.domain.coreEntities.Vehicle;
+  depend umple.pts.domain.coreEntities.Line;
+  depend java.sql.Time;
+  Vehicle createVehicle(String aPublicVehicleName, String aVehicleStatus, Time aStartOperationTime, Time aEndOperationTime);
+//This function will create a new vehicle.
+	boolean assignVehicle(int vehicleId, Line aLine, Time startOperationTime, Time stopOperationTime);
+//This function will assign a particular vehicle to a particular line, for a particular time. (OverLoaded)
+	boolean deassignVehicle(int vehicleId);
+//This function will deassign a vehicle from its line. (OverLoaded)
+	boolean assignVehicle(Vehicle vehicle, Line aLine, Time startOperationTime, Time stopOperationTime);
+//This function will assign a particular vehicle to a particular line, for a particular time. (OverLoaded)
+	boolean deassignVehicle(Vehicle vehicle);
+//This function will deassign a vehicle from its line. (OverLoaded)
+	boolean startRunForVehicle(Vehicle aVehicle);
+//This function will assign a particular vehicle to a particular line, for a particular time.
+	boolean finishRunForVehicle(Vehicle aVehicle);
+//This function will deassign a vehicle from its line.
+	boolean deleteVehicle(Vehicle aVehicle);
+}
+
+//An interface to define the functionalities of a class handling the Passenger Assistance functions.
+interface IPassengerAssistant{
+  depend umple.pts.domain.coreEntities.*;
+  depend umple.pts.domain.managers.*;
+  depend java.util.*;
+  depend java.sql.Time;
+  public List<CalculateRouteBetweenStops> findLines(Stop startStop, Stop endStop);
+//This function will just find all the lines from one stop to another.
+  public List<CalculateRunsBetweenStops> findRouteForTime(Stop startStop, Stop endStop, Time currentTime);
+//This function will find the runs which will be the best way to reach the endStop from the startStop at the given time.
+  LineTimeTable findTimeTableForLine(Line aLine);
+//This function will just retrieve the TimeTable for a Line
+  List<Line> findLinesOnStop(Stop currentStop);
+//This function will find all the lines going through a Stop.
+}
+
+//This interface will define the functions which will be used to handle the Vehicles, Runs and issues at realtime.
+interface IRealTimeManager{
+  depend umple.pts.domain.coreEntities.*;
+  depend umple.pts.domain.managers.*;
+  depend java.util.*;
+  depend java.sql.Time;
+  
+  boolean startRunForVehicle(Vehicle aVehicle, ScheduledRun aRun);
+  int updateRunStatusAtStop(RunningVehicle aRunningVehicle, Time currentTime, Stop lastStop);
+  boolean finishRunForVehicle(RunningVehicle aRunningVehicle);
+  Line changeLineOnEmergency(Line aLine, List<Stop> affectedStop, List<Integer> actionBit, List<Stop> otherStop);
+}
+
+interface IEmergencyManager{
+  depend umple.pts.domain.coreEntities.*;
+  depend umple.pts.domain.managers.*;
+  depend java.util.*;
+  depend java.sql.Time;
+  depend java.sql.Date;
+  
+  int cancelRunAndGetDelay(RunningVehicle aVehicle, Stop affectedStop, Time currentTime, String vehicleStatus);
+  void delayAllRunsonLineAfterCurrentTimeForDate(Line aLine, Time currentTime, Date delayedDate, int delayMinutes);
+}

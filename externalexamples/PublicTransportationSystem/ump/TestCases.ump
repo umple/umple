@@ -1,0 +1,288 @@
+
+class Student
+{ 
+
+	//***************************************************
+	//*************   Tracing variables   ***************
+	//***************************************************
+	String name;
+	int id;
+    int [] nameList;
+	
+	//=========== TestCase ID (100) Trace single variable
+	trace name;
+	trace id;
+	trace nameList;
+	
+	//=========== TestCase ID (101) Trace single variable with condition
+	trace name where id == 30;
+	trace id where id > 500;
+	
+	//=========== TestCase ID (102) Trace 
+	//any sets of attribute name to tim
+	trace name == "tim";
+	//any sets of attribute id of value less than 20
+	trace id < 20;
+	
+	//=========== TestCase ID (103) Trace single item until a condition becomes true
+	trace name until name == "tim";
+	trace id until id == 6;
+	
+	//=========== TestCase ID (104) Trace single variable for a number of occurences
+	trace name for 5;
+	trace id for 100;
+	
+	//=========== TestCase ID (105) Trace single variable every certain time
+	trace name period 30ms;
+	
+	//=========== TestCase ID (106) Trace single variable for a time duration
+	trace name during 50s;
+	trace id during 100ms;
+	
+	//=========== TestCase ID (107) Trace multilpe variables
+	trace { id };
+	trace {name , id };
+	trace { id ,name, nameList };
+	
+	//=========== TestCase ID (108) Trace multilpe variables with condition
+	trace { name , id } where name == "tim";
+	trace { id , name , nameList } where id == 234;
+	
+	//=========== TestCase ID (109) Trace multiple item until a condition becomes true
+	trace { name , id } until name == "tim";
+	trace { name , id } until id == 234;
+	
+	//=========== TestCase ID (110) Trace multiple variable for a number of occurences
+	trace { name , id } for 5;
+	trace { name , id } for 100;
+	
+	//=========== TestCase ID (111) Trace multiple variables every certain time
+	trace { name , id } period 30ms;
+	trace { name , id } period 1s;
+	
+	//=========== TestCase ID (112) Trace multiple variable for a time duration
+	trace { name , id } during 150s;
+	trace { name , id } during 200ms;
+	
+	//=========== TestCase ID (113) Trace clause different combinations
+	trace name during 30ms execute "something";
+	trace {name, id} execute {record("x")} where id >100;
+	
+	//=========== TestCase ID (1)
+	
+	//***************************************************
+	//*************   Tracing methods     ***************
+	//***************************************************
+    
+	//=========== TestCase ID (200) Trace method
+	trace method1();
+	trace method2();
+	trace getName();
+	
+	//=========== TestCase ID (201) Trace when a certain value is returned by a method
+	trace method1()<5;
+	
+	//=========== TestCase ID (202) Trace method entry
+	trace entry method1();
+	trace entry method2();
+	
+	//=========== TestCase ID (203) Trace method exit
+	trace exit method1();
+	trace exit method2();
+	
+	//=========== TestCase ID (204) Trace method with condition
+	trace method1() where id == 234;
+    trace method2() where name > "Tim";
+    
+    //=========== TestCase ID (205) Trace method entry with condition
+    trace entry method1() where id == 234;
+	trace entry method2() where name > "Tim";
+	
+	//=========== TestCase ID (206) Trace method exit with condition
+	trace exit method1() where id == 234;
+	trace exit method2() where name > "Tim";
+	
+	//=========== TestCase ID (207) Trace a method for a number of occurences
+	trace method1() for 5;
+	trace getName() for 100;
+	
+	//=========== TestCase ID (208) Trace a method for a time duration
+	trace method1() during 50s;
+	trace getName() during 100ms;
+	
+	//=========== TestCase ID (209) Trace single method with execute clause
+	trace method1() execute "somthing";
+    trace getName() execute record("objectBeingTraced");
+    trace setName() execute { record("x",name) };
+    trace setName() execute { record ("objectBeingTraced"), record("x",name) };
+	
+	//=========== TestCase ID (211) Trace multiple methods
+	trace { method1() };
+	trace { method1() , getName() };
+	trace { method1() , method2() , getName() };
+	
+	//=========== TestCase ID (211) Trace multiple methods with condition
+	trace { method1() , getName() } where id == 234;
+    trace { method1() , method2() } where name > "Tim";
+    
+    //=========== TestCase ID (212) Trace multiple methods entry with condition
+    trace { entry method1() , entry method2()  } where id == 234;
+	trace { entry method1() , entry getName() } where name > "Tim";
+	
+	//=========== TestCase ID (213) Trace multiple methods exit with condition
+	trace { exit method1() , exit method2()  } where id == 234;
+	trace { exit method1() , exit getName() } where name > "Tim";
+	
+	//=========== TestCase ID (214) Trace multilpe methods with condition
+	trace { method1() , getName() } where name == "tim";
+	trace { method1() , method2() } where id == 234;
+	
+	//=========== TestCase ID (215) Trace multiple methods until a condition becomes true
+	trace { method1() , getName() } until name == "tim";
+	trace { method1() , method2() } until id == 234;
+	
+	//=========== TestCase ID (216) Trace multiple methods for a number of occurences
+	trace { method1() , getName() } for 5;
+	trace { method1() , method2() } for 100;
+	
+	//=========== TestCase ID (217) Trace multiple methods for a time duration
+	trace { method1() , getName() } during 150s;
+	trace { method1() , method2() } during 200ms;
+	
+	//=========== TestCase ID (218) Trace multiple methods with execute clause
+	trace { method1(), setName() } execute "somthing";
+	trace { method2(), getName() } execute { record("x",result) };
+	trace { setName(), getName() } execute { record ("objectBeingTraced"), record("x",name) };
+	
+	//=========== TestCase ID (219) Trace clause different combinations
+	trace method1() execute "somthing" where id == 234;
+    trace getName() execute record("objectBeingTraced") where name == "Tim";
+    trace {method1(),setName()} for 100 until method1()>0;
+    	
+	//=========== TestCase ID (2) Trace
+	
+	//***************************************************
+	//*************   Tracing association     ***********
+	//***************************************************
+	
+	//=========== TestCase ID (300) Trace any changes to association 
+	trace assoc1;
+	
+	//=========== TestCase ID (301) Trace cardinality changes of assoc1 
+	trace cardinality(assoc1);
+	
+	//=========== TestCase ID (302) Trace changes to assoc1 such that the cardinality becomes 0
+	trace cardinality(assoc1) == 0;
+	
+	//=========== TestCase ID (303) Trace changes to assoc1 such that the cardinality becomes bigger than 5
+	trace cardinality(assoc1) > 5;
+	
+	//=========== TestCase ID (3)
+	
+	//***************************************************
+	//*************   Tracing state machines     ********
+	//***************************************************
+	
+	bulb {
+		On {
+		    event1() -> state2;
+		    entry / {break;}
+		    exit / {break;}
+		    flip -> Off;
+	    
+		    //=========== TestCase ID (400) Trace an entry in a state machine
+		    trace entry;
+		    
+		    //=========== TestCase ID (401) Trace an exit in a state machine
+		    trace exit;
+	    
+	    	nestedOn{
+	    	}
+	    	
+	    	//=========== TestCase ID (402) Trace an event in a state machine
+	    	trace event1;
+	    	
+	    	//=========== TestCase ID (403) Trace a nested state
+			trace nestedOn;
+	  	}
+	  	
+	  	Off{
+		  	event2 -> state3;
+		  	flip -> On;
+		  	
+		  	//=========== TestCase ID (404) Trace an event in a state machine
+	    	trace event2;
+	    	
+	    	//=========== TestCase ID (405) Trace a reused event in a state machine
+			trace flip;
+	  	}
+	}
+	
+	fixture as OnOffSwitch;
+	
+	//=========== TestCase ID (406) Trace any change of state machine (state machine inside class)
+	trace bulb;
+	
+	//=========== TestCase ID (407) Trace a state machine outside class
+	trace OnOffSwitch;
+	
+	//=========== TestCase ID (408) Trace a refrenced state machine
+	trace fixture;
+
+	//=========== TestCase ID (4) Trace 
+	
+	//***************************************************
+	//*************        Trace Cases         **********
+	//***************************************************
+
+	//=========== TestCase ID (500) TraceCase with single trace directive
+	tracecase tc1 {
+  		trace name execute "a6";
+	}
+	
+	//=========== TestCase ID (501) TraceCase with multiple trace directives
+	tracecase tc2 {
+  		trace name execute {record ("objectBeingTraced"), record("x",name)};
+  		trace id == "tim";
+  		trace { method1() , getName() } during 150s;
+	}
+	
+	//=========== TestCase ID (502) TraceCase activation on construction
+	activate tc1;
+	activate tc2 until name == "tim";
+	activate tc1 during 12ms;
+	activate tc2 on thisThread during 12ms;
+	
+	
+	//=========== TestCase ID (503) TraceCase deactivation
+	deactivate tc1;
+	deactivate tc2 for 1s;
+	
+	//=========== TestCase ID (504) TraceDirectives that activate
+   
+   trace id > 1000 { record "acivating tc2"; activate tc2 on this}
+
+   trace id < 500 { record "acivating tc1"; activate tc1 on thisThread}
+
+}
+
+association assoc1
+{
+  0..1 Student aStudent -- 0..1 Mentor aMentor;
+}
+
+associationClass Relationship
+{
+  * Student;
+  * Mentor;
+}
+
+statemachine OnOffSwitch
+{
+  On { push -> Off;}
+  Off { push -> On; }
+}
+
+class Mentor
+{}
+
