@@ -1,0 +1,38 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.associations" 
+imports="java.util.* cruise.umple.compiler.*  cruise.model.abstractObjects.BackingObject  cruise.ui.jsf.*"
+class="AssocZeroOrOneFormFragment"  %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    List<AssociationVariable> mergeList= new ArrayList<AssociationVariable>();
+	mergeList.addAll( bckObject.getConstructorOneAsociations());
+	mergeList.addAll(bckObject.getZeroOrOneAsociations());
+%>
+			
+			<% for (AssociationVariable assocVar: mergeList) { %>	
+					<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}"  />
+					<h:panelGrid columns="2" style="text-align:right;"	  >
+						<% BackingObject assBck=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType()); %>
+			<rich:simpleTogglePanel switchType="client"  label="" style="width:220px" rendered="#{<%="a"+bckObject.getClassName()%>Bean.<%=assocVar.getName()%>!=null}">	
+			<f:facet name="openMarker">
+				<h:outputText value="Show +" style="font-weight:bold;color:black;"/>
+			</f:facet>
+			<f:facet name="closeMarker">
+				<h:outputText value="Hide -" style="font-weight:bold;color:black;"/>
+			</f:facet>
+			<h:panelGrid columns="2" style="text-align:left;"	>
+			<% for (Attribute attVar: assBck.getKeysAttributes()) { %>
+			<h:outputText styleClass="label1" value="#{<%="a"+assBck.getClassName()%>Bundle.<%=attVar.getUpperCaseName()%>}" />
+			<%=bckObject.getFragmentProvider().getGUIGridFragment(attVar, "a"+bckObject.getClassName()+"Bean." + assocVar.getName(), "a" + assBck.getClassName()  ) %>
+			<% } %>
+			<f:facet name="header">
+			<h:outputText value=" " />
+			</f:facet>
+			</h:panelGrid>
+			</rich:simpleTogglePanel>
+						<a4j:commandLink value="" reRender="<%=assocVar.getUpperCaseName()%>PanelRichPanel#{uniqueId}"
+							rendered="#{!<%="a"+bckObject.getClassName()%>Bean.from<%=assocVar.getUpperCaseName()%>}" immediate="true" 
+							action="#{<%="a"+bckObject.getClassName()%>Bean.to<%=assocVar.getUpperCaseName()%>s}"
+							oncomplete="Richfaces.showModalPanel('<%=assocVar.getUpperCaseName()%>GridPanel#{uniqueId}');">
+							<h:outputText value="Select" />
+						</a4j:commandLink>
+					</h:panelGrid>				
+			<% } %>

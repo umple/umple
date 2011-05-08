@@ -1,0 +1,58 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.associations" 
+imports="java.util.* cruise.umple.compiler.*  cruise.model.abstractObjects.BackingObject  cruise.ui.jsf.*"
+class="AssocNManyToOptionalPanelFragment"  %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+	List<AssociationVariable> multipleAsociations=bckObject.getNManyToOptionalAssociations();
+%>
+<% for (AssociationVariable assocVar: multipleAsociations) { %>
+<rich:modalPanel id="<%=assocVar.getUpperCaseName()%>GridPanel#{uniqueId}" autosized="true">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+
+			<f:subview>
+				<h:form>
+					<a4j:commandLink
+						action="#{<%="a"+bckObject.getClassName()%>Bean.to<%=assocVar.getUpperCaseName()%>sCancel}" value=""
+						oncomplete="Richfaces.hideModalPanel('<%=assocVar.getUpperCaseName()%>GridPanel#{uniqueId}');">
+						<h:graphicImage value="/images/icons/close.png"
+							styleClass="hidelink"  />
+					</a4j:commandLink>
+				</h:form>
+			</f:subview>
+		</h:panelGroup>
+	</f:facet>
+
+	<rich:panel id="<%=assocVar.getUpperCaseName()%>PanelRichPanel#{uniqueId}">
+
+<%
+String url=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType()).getPackageName();
+if (url==null)
+	url="";
+	url=url.replace('.', '/');	
+%>
+		<ui:include src="/pages/<%=url%>/<%=assocVar.getType()%>/gridSelectMany.xhtml">
+			<ui:param name="mainPanel" value="<%=bckObject.getClassName()%>MainPanel#{uniqueId}"/>
+			<ui:param name="uniqueId" value="<%=JSFProvider.getNextId()%>"/>
+		</ui:include>
+		<f:subview>
+			<h:form>
+				<h:panelGrid columns="2">
+					<a4j:commandButton
+						action="#{<%="a"+bckObject.getClassName()%>Bean.to<%=assocVar.getUpperCaseName()%>sDone}" value="Confirm"
+						reRender="<%=bckObject.getClassName()%>MainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('<%=assocVar.getUpperCaseName()%>GridPanel#{uniqueId}');" />
+					<a4j:commandButton
+						action="#{<%="a"+bckObject.getClassName()%>Bean.to<%=assocVar.getUpperCaseName()%>sCancel}" value="Cancel"
+						reRender="<%=bckObject.getClassName()%>MainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('<%=assocVar.getUpperCaseName()%>GridPanel#{uniqueId}');" />
+				</h:panelGrid>
+			</h:form>
+		</f:subview>
+	</rich:panel>
+</rich:modalPanel>
+<% } %>	

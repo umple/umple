@@ -1,0 +1,87 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI" 
+imports="java.util.* cruise.model.abstractObjects.BackingObject  cruise.umple.compiler.* cruise.ui.jsf.* "
+class="BaseInsertable" skeleton="../skeleton/IGenerator.skeleton" %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    String voName= bckObject.getClassName()+"VO";
+    String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);
+    
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<f:subview>
+	<h:form>
+		<rich:panel style="width:450px" id="<%=bckObject.getClassName()%>MainPanel#{uniqueId}">
+			<f:facet name="header">
+			#{<%="a"+bckObject.getClassName()%>Bundle.<%=bckObject.getClassName()%>ClassName} 
+			</f:facet>
+			<h:panelGrid columns="1" >
+				<h:panelGrid columns="3"  columnClasses="colStyle1"  rendered="#{!<%="a"+bckObject.getClassName()%>Bean.editing}" >
+				<% for (Attribute attVar: bckObject.getKeysAttributes()) {	%>
+					<%=bckObject.getFragmentProvider().getGUICreateFragment(attVar, "a"+bckObject.getClassName() )%>
+					<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				<%} %>
+				<% for (Attribute attVar: bckObject.getAttVariables()) { 
+					String frmt=bckObject.getFragmentProvider().getGUICreateFragment(attVar, "a"+bckObject.getClassName() ) ;
+				if(frmt.trim().length()>0){		%>
+				<%=frmt%>
+					<h:outputText value=" " />
+				<% }%>
+				<%} %>
+				
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="colStyle1"  rendered="#{<%="a"+bckObject.getClassName()%>Bean.editing}">
+				<% for (Attribute attVar: bckObject.getKeysAttributes()) { %>
+				<%=bckObject.getFragmentProvider().getGUIEditFragment(attVar, "a"+bckObject.getClassName(),voName ) %>
+						<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				<% } %>
+				<% for (Attribute attVar: bckObject.getAttVariables()) { 
+					String frmt=bckObject.getFragmentProvider().getGUIEditFragment(attVar, "a"+bckObject.getClassName(),voName );
+					if(frmt.trim().length()>0){
+					%>
+					<%=frmt%>
+					<h:outputText value=" " />
+					<% }%>
+
+				<% } %>
+				</h:panelGrid>
+				<h:panelGrid columns="2" columnClasses="colStyle1"  >
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocZeroOrOneFormFragment(bckObject) %>		
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocMandatorylToSingletonFormFragment(bckObject) %>		
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocOptionalToSingletonFormFragment(bckObject) %>
+			</h:panelGrid>
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocManyToOneFormFragment(bckObject) %>
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocZeroManyToOptionalFormFragment(bckObject) %>
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocNManyToOptionalFormFragment(bckObject) %>		
+
+			<h:panelGrid columns="2" style="width:100%; text-align:right;">
+					<a4j:commandButton action="#{<%="a"+bckObject.getClassName()%>Bean.createOrEdit}"
+						value="#{<%="a"+bckObject.getClassName()%>Bean.editing?'Update':'Add'}"
+						reRender="<%=bckObject.getClassName()%>GridContainer#{uniqueId}, <%=bckObject.getClassName()%>MainPanel#{uniqueId}" />
+					<a4j:commandButton action="#{<%="a"+bckObject.getClassName()%>Bean.cancel}"  
+						value="Cancel" reRender="<%=bckObject.getClassName()%>MainPanel#{uniqueId}" />
+			</h:panelGrid>
+			</h:panelGrid>
+		</rich:panel>
+	</h:form>
+</f:subview>
+<f:subview>
+	<rich:spacer height="3" />
+		<rich:panel style="border-style:none; background-color:transparent" id="<%=bckObject.getClassName()%>GridContainer#{uniqueId}">
+		<rich:spacer height="3" />
+		 <ui:include src="grid.xhtml">
+			<ui:param name="mainPanel" value="<%=bckObject.getClassName()%>MainPanel#{uniqueId}"/>
+			<ui:param name="parentId" value="#{uniqueId}"/>
+			<ui:param name="uniqueId" value="<%=JSFProvider.getNextId()%>" />
+		</ui:include>
+	</rich:panel>
+</f:subview>
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocZeroOrOnePanelFragment(bckObject) %>	
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocZeroManyToOptionalPanelFragment(bckObject) %>
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocNManyToOptionalPanelFragment(bckObject) %>
+<%=((JSFProvider)bckObject.getFragmentProvider()).getAssocManyToOnePanelFragment(bckObject) %>
+</html>

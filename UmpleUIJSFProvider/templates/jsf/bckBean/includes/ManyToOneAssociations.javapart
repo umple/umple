@@ -1,0 +1,47 @@
+<% for (AssociationVariable assocVar: multipleManyToOneAsociations) { %>
+private List<<%=assocVar.getType()%>> a<%=assocVar.getUpperCaseName()%>List;
+
+	public List<<%=assocVar.getType()%>> get<%=assocVar.getUpperCaseName()%>List() {
+		return getSelected<%=assocVar.getUpperCaseName()%>List();
+
+	}
+
+	public void set<%=assocVar.getUpperCaseName()%>List(List<<%=assocVar.getType()%>> arg) {
+		this.a<%=assocVar.getUpperCaseName()%>List = arg;
+	}
+	
+	<%
+String url=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType()).getPackageName();
+if (url==null)
+	url="";
+//	url=url.replace('.', '/');	
+%>
+	public String to<%=assocVar.getUpperCaseName()%>s() {
+		BeanLinker bLinker = new BeanLinker();
+		bLinker.setRoleName("<%=assocVar.getRelatedAssociation().getUpperCaseName()%>");
+		<%=preffix%>.<%=url%>.<%=assocVar.getType()%><%=suffix%> bean=new web.<%=url%>.<%=assocVar.getType()%><%=suffix%>();
+		bean.set<%=assocVar.getRelatedAssociation().getUpperCaseName()%>(this.getEdited<%=voName%>());
+		bLinker.setInitBean(bean);
+		PageFlowUtils.pushBeanLinker(bLinker);
+		return "";
+	}
+	
+	public String to<%=assocVar.getUpperCaseName()%>sDone() {
+		PageFlowUtils.popBeanLinker();
+		return "";
+	}
+	
+	public String to<%=assocVar.getUpperCaseName()%>sCancel() {
+		PageFlowUtils.popBeanLinker();
+		return "";
+	}
+
+
+	public List<<%=assocVar.getType()%>> getSelected<%=assocVar.getUpperCaseName()%>List() {
+		if(this.getEdited<%=voName%>()!=null)
+			return  this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s();
+		return null;
+	}
+
+
+ <% } %>

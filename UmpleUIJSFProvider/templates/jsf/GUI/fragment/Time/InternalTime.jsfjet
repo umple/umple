@@ -1,0 +1,2 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+class="InternalTime" skeleton="../../../skeleton/IGenerator.skeleton" %>

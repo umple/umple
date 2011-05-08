@@ -1,0 +1,10 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.associations" 
+imports="java.util.* cruise.umple.compiler.*  cruise.model.abstractObjects.BackingObject  cruise.ui.jsf.*"
+class="AssocMandatoryToSingletonFormFragment"  %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    List<AssociationVariable> mandatoryToSingletonAssociations= bckObject.getMandatoryToSingletonAssociations();
+%>
+<% for (AssociationVariable assocVar: mandatoryToSingletonAssociations) { %>	
+				<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}"  />
+				<h:graphicImage value="/images/icons/checkmark.gif" style="border:0"  />
+<% } %>

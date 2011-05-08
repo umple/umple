@@ -1,0 +1,14 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="SetteableDateCreate" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+	<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+<% if (attVar.getValue()==null){ %>
+	<rich:calendar value="#{#1#Bean.<%=attVar.getName()%>}" popup="true"
+						datePattern="yyyy-MM-dd" showApplyButton="false" cellWidth="24px"
+						cellHeight="22px" style="width:200px" />
+<% } else {%>
+	<h:outputText value="#{#1#Bean.initial<%=attVar.getUpperCaseName()%>}"  style="text-align:right;" >
+		<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+	</h:outputText>
+<%}%>

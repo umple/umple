@@ -1,0 +1,30 @@
+<% for (AssociationVariable assocVar: optionalToSingletonAssociations) { %>
+	public void getInstance<%=assocVar.getUpperCaseName()%>() {
+		setSelected<%=assocVar.getUpperCaseName()%>(<%=assocVar.getType()%>.getInstance());
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setSelected<%=assocVar.getUpperCaseName()%>(<%=assocVar.getType()%> selected<%=assocVar.getUpperCaseName()%>) {
+		PageFlowUtils.getPageFlow().put("selected<%=assocVar.getUpperCaseName()%>", selected<%=assocVar.getUpperCaseName()%>);
+	}
+
+	public <%=assocVar.getType()%> getSelected<%=assocVar.getUpperCaseName()%>() {
+
+		return (<%=assocVar.getType()%>) PageFlowUtils.getPageFlow().get("selected<%=assocVar.getUpperCaseName()%>");
+	}
+
+	public void removeSelected<%=assocVar.getUpperCaseName()%>() {
+
+		PageFlowUtils.getPageFlow().remove("selected<%=assocVar.getUpperCaseName()%>");
+
+	}
+
+ <% } %>
+ <% for (AssociationVariable assocVar: mandatoryToSingletonAssociations) { %>
+	public <%=assocVar.getType()%> getSelected<%=assocVar.getUpperCaseName()%>() {
+
+		return <%=assocVar.getType()%>.getInstance();
+	}
+
+ <% } %>

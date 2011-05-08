@@ -1,0 +1,53 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.associations" 
+imports="java.util.* cruise.umple.compiler.*  cruise.model.abstractObjects.BackingObject  cruise.ui.jsf.*"
+class="AssocManyToOneFormFragment"  %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+	List<AssociationVariable> multipleAsociations=bckObject.getManyToOneAssociations();
+%>
+			
+<% for (AssociationVariable assocVar: multipleAsociations) { %>	
+		<% BackingObject assBck=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType()); %>
+		<h:panelGrid columns="2" rendered="#{<%="a"+bckObject.getClassName()%>Bean.editing}"	 >
+<rich:simpleTogglePanel switchType="client"  label="" style="width:350px; text-align:center;" >	
+			<f:facet name="openMarker">
+				<h:outputText value="Show #{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}s +" style="font-weight:bold;color:black;"/>
+			</f:facet>
+			<f:facet name="closeMarker">
+				<h:outputText value="Hide #{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}s -" style="font-weight:bold;color:black;"/>
+			</f:facet>				
+	<rich:dataTable value="#{<%="a"+bckObject.getClassName()+"Bean." + assocVar.getName()%>List}" var="reg"
+		onRowMouseOver="this.style.backgroundColor='#F1F1F1'" style="align:center;"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'" rows="10" rowKeyVar="row"	>
+		<f:facet name="header">
+			<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}" />
+		</f:facet>
+
+		<% for (Attribute attVar: assBck.getKeysAttributes()) { %>
+		<% String gridFmt=bckObject.getFragmentProvider().getGUIGridFragment(attVar, "reg", "a" + assBck.getClassName() ); %>
+			<% if (gridFmt.trim().length()>0){%>
+		<rich:column>	
+				<%=gridFmt %>
+		</rich:column>				
+			<% } %>
+		<% } %>
+							
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+
+		</rich:column>			
+		<f:facet name="footer">
+			<rich:datascroller renderIfSinglePage="false" />
+
+		</f:facet>
+	</rich:dataTable>
+	</rich:simpleTogglePanel>
+		<a4j:commandLink value="" reRender="<%=assocVar.getUpperCaseName()%>PanelRichPanel#{uniqueId}"
+			immediate="true" 
+			action="#{<%="a"+bckObject.getClassName()%>Bean.to<%=assocVar.getUpperCaseName()%>s}"
+			oncomplete="Richfaces.showModalPanel('<%=assocVar.getUpperCaseName()%>GridPanel#{uniqueId}');">
+			<h:outputText value="Manage" />
+		</a4j:commandLink>
+					</h:panelGrid>				
+			<% } %>

@@ -1,0 +1,22 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI" 
+imports="java.util.* cruise.umple.compiler.* cruise.ui.jsf.* cruise.model.abstractObjects.BackingObject"
+class="BaseMain" skeleton="../skeleton/IGenerator.skeleton" %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<ui:composition template="/pages/templates/common.xhtml">
+	<ui:define name="pageHeader"><%=bckObject.getClassName()%> CRUD</ui:define>
+	<ui:define name="body">
+		<ui:include src="<%=bckObject.getClassName()%>Insertable.xhtml">
+		<ui:param name="uniqueId" value="<%=JSFProvider.getNextId()%>"/>
+		</ui:include>
+	</ui:define>
+</ui:composition>
+</html>

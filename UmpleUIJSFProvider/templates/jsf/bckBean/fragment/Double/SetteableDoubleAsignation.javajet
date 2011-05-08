@@ -1,0 +1,5 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.asignation" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="SetteableDoubleAsignation" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<%="a"+ attVar.getUpperCaseName()%> = #1#;

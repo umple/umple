@@ -1,0 +1,10 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.set" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="SetteableTimeSet" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+	public void set<%= attVar.getUpperCaseName()+"Hour"%>(int <%= attVar.getName()+"Hour"%>) {
+		this.<%= "a"+attVar.getUpperCaseName()+"Hour"%> = <%= attVar.getName()+"Hour"%>;
+	}
+	public void set<%= attVar.getUpperCaseName()+"Minute"%>(int <%= attVar.getName()+"Minute"%>) {
+		this.<%= "a"+attVar.getUpperCaseName()+"Minute"%> = <%= attVar.getName()+"Minute"%>;
+	}	

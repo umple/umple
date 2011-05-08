@@ -1,0 +1,8 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.declaration" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="InternalTimeDeclaration" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<% if (attVar.getValue()==null) { %>
+private  int <%= "a"+attVar.getUpperCaseName()+"Hour"%>=getInitial<%= attVar.getUpperCaseName()%>Hour();
+private  int <%= "a"+attVar.getUpperCaseName()+"Minute"%>=getInitial<%= attVar.getUpperCaseName()%>Minute();
+<%} %>

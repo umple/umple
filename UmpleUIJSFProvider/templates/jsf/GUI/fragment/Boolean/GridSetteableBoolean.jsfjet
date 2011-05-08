@@ -1,0 +1,6 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="GridSetteableBoolean" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+			<f:facet name="header"><h:outputText value="#{#2#Bundle.<%=attVar.getUpperCaseName()%>}"/></f:facet>
+			<h:selectBooleanCheckbox value="#{#1#.<%=attVar.getName()%>}" readonly="true" disabled="true"/>

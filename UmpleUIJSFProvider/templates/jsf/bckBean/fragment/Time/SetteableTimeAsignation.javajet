@@ -1,0 +1,6 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.asignation" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="SetteableTimeAsignation" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+	<%="a"+ attVar.getUpperCaseName()+"Hour"%> =getInitial<%= attVar.getUpperCaseName()%>Hour();
+	<%="a"+ attVar.getUpperCaseName()+"Minute"%>=getInitial<%= attVar.getUpperCaseName()%>Minute();

@@ -1,0 +1,49 @@
+<% for (AssociationVariable assocVar: multipleNManyToOptionalAssociations) { %>
+	private List<<%=assocVar.getType()%>> a<%=assocVar.getUpperCaseName()%>List;
+
+	public List<<%=assocVar.getType()%>> get<%=assocVar.getUpperCaseName()%>List() {
+		return getSelected<%=assocVar.getUpperCaseName()%>List();
+
+	}
+
+	public void set<%=assocVar.getUpperCaseName()%>List(List<<%=assocVar.getType()%>> arg) {
+		this.a<%=assocVar.getUpperCaseName()%>List = arg;
+	}
+	
+	public String to<%=assocVar.getUpperCaseName()%>s() {
+		BeanLinker bLinker = new BeanLinker();
+		bLinker.setRoleName("<%=assocVar.getRelatedAssociation().getUpperCaseName()%>");
+		bLinker.setLinkerCollection(getSelected<%=assocVar.getUpperCaseName()%>List());
+		PageFlowUtils.pushBeanLinker(bLinker);
+		return "";
+	}
+	
+	public String to<%=assocVar.getUpperCaseName()%>sDone() {
+		List<<%=assocVar.getType()%>> newList =(List<<%=assocVar.getType()%>>)PageFlowUtils.peekBeanLinker().getLinkerCollection();
+		PageFlowUtils.popBeanLinker();
+		setSelected<%=assocVar.getUpperCaseName()%>List(newList);
+		return "";
+	}
+	
+	public String to<%=assocVar.getUpperCaseName()%>sCancel() {
+		PageFlowUtils.popBeanLinker();
+		return "";
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setSelected<%=assocVar.getUpperCaseName()%>List(List<<%=assocVar.getType()%>> selected<%=assocVar.getUpperCaseName()%>List) {
+		PageFlowUtils.getPageFlow().put("selected<%=assocVar.getUpperCaseName()%>List", selected<%=assocVar.getUpperCaseName()%>List);
+	}
+
+	public List<<%=assocVar.getType()%>> getSelected<%=assocVar.getUpperCaseName()%>List() {
+
+		return (List<<%=assocVar.getType()%>>) PageFlowUtils.getPageFlow().get("selected<%=assocVar.getUpperCaseName()%>List");
+	}
+
+	public void removeSelected<%=assocVar.getUpperCaseName()%>List() {
+
+		PageFlowUtils.getPageFlow().remove("selected<%=assocVar.getUpperCaseName()%>List");
+
+	}
+
+ <% } %>

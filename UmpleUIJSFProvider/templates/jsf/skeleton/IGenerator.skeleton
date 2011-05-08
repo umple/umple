@@ -1,0 +1,8 @@
+import cruise.model.abstractObjects.IGenerator;
+
+public class CLASS implements IGenerator {
+
+	public String generate(Object argument) {
+		return "";
+	}
+}

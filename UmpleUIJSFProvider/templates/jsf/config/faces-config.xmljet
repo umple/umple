@@ -1,0 +1,68 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.config" 
+imports="java.util.* cruise.ui.jsf.* cruise.umple.compiler.Attribute cruise.umple.compiler.UmpleClass cruise.model.abstractObjects.BackingObject;"
+class="FacesConfig"  skeleton="../skeleton/IGenerator.skeleton" %>
+<% List<BackingObject> clazzez=(List<BackingObject>)argument;
+ String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX); %>
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+  <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	UmpleClass clazz= iterClazzez.next().getUClazz(); %>
+ <managed-bean>
+	<managed-bean-name>a<%=clazz.getName()%>Bean</managed-bean-name>
+	<managed-bean-class><%=preffix + "." + clazz.getPackageName()+"." + clazz.getName()%>Bean</managed-bean-class>
+	<managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <% } %>
+ <managed-bean>
+  <managed-bean-name>timeBean</managed-bean-name>
+  <managed-bean-class><%=preffix%>.components.bean.TimeBean</managed-bean-class>
+  <managed-bean-scope>application</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>skinBean</managed-bean-name>
+  <managed-bean-class><%=preffix%>.components.bean.SkinBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+  <managed-property>
+   <property-name>skin</property-name>
+   <value>wine</value>
+  </managed-property>
+</managed-bean>
+ <managed-bean>
+  <managed-bean-name>mainBean</managed-bean-name>
+  <managed-bean-class> <%=preffix%>.control.MainBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+   <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	UmpleClass clazz= iterClazzez.next().getUClazz(); %>
+ <navigation-rule>
+  <display-name>to<%=clazz.getName()%>Main</display-name>
+  <navigation-case>
+   <from-outcome>to<%=clazz.getName()%>Main</from-outcome>
+   <to-view-id>/pages/<%=clazz.getPackageName().replace('.', '/')%>/<%=clazz.getName()%>/<%=clazz.getName()%>Main.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+  <% } %>
+  <navigation-rule>
+  <display-name>home</display-name>
+  <navigation-case>
+   <from-outcome>home</from-outcome>
+   <to-view-id>/pages/home.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <application>
+  <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+      <locale-config>            
+          <default-locale>en</default-locale>            
+          <supported-locale>en</supported-locale>
+      </locale-config>
+      <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+	BackingObject bckObject= iterClazzez.next(); %>
+	<resource-bundle>
+   <base-name>bundles.<%=(bckObject.getPackageName()!=null?(bckObject.getPackageName()+"."):"" )+bckObject.getClassName()%></base-name>
+   <var>a<%=bckObject.getClassName()%>Bundle</var>
+  </resource-bundle><% } %>	
+      	
+ </application>
+</faces-config>

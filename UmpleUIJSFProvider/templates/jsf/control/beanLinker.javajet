@@ -1,0 +1,75 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.control" 
+imports="java.util.*  cruise.umple.compiler.* cruise.ui.jsf.*"
+class="BeanLinker"  skeleton="../skeleton/IGenerator.skeleton" %>
+<% String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);%>
+package <%=preffix%>.control;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+public class BeanLinker {
+
+	private Object initBean;
+	private List linkerCollection;
+	private Object linker;
+	private boolean singleSelection;
+	private boolean multipleSelection;
+	private String roleName;
+	private Map attributeMap=new HashMap();
+	
+	public Map getAttributeMap() {
+		return attributeMap;
+	}	
+	
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+	
+	public boolean isSingleSelection() {
+		return singleSelection;
+	}
+
+	public void setSingleSelection(boolean singleSelection) {
+		this.singleSelection = singleSelection;
+	}
+
+	public boolean isMultipleSelection() {
+		return multipleSelection;
+	}
+
+	public void setMultipleSelection(boolean multipleSelection) {
+		this.multipleSelection = multipleSelection;
+	}
+
+	public Object getInitBean() {
+		return initBean;
+	}
+	
+	public void setInitBean(Object initBean) {
+		this.initBean = initBean;
+	}
+	
+	public List getLinkerCollection() {
+		return linkerCollection;
+	}
+	
+	public void setLinkerCollection(List linkerCollection) {
+		this.linkerCollection = linkerCollection;
+	}
+
+	public void setLinker(Object linker) {
+		this.linker = linker;
+	}
+
+	public Object getLinker() {
+		return linker;
+	}
+	
+	
+	
+}
