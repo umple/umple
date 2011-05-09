@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ -e umple.jar ] 
 then
-  echo "REMOVE BUILD"
+  echo "REMOTE BUILD"
   java -jar umple.jar Elevator.ump
 else
   echo "LOCAL BUILD"
