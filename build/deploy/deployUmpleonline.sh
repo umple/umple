@@ -4,7 +4,6 @@ rm -rf /h/ralph/sites/www/html/umple
 cd /h/ralph/umple/trunk/ && java -jar dist/umpledocs.jar build/reference dist/cruise.umple/reference
 cp -r /h/ralph/umple/trunk/dist/cruise.umple/reference /h/ralph/sites/www/html/
 mv /h/ralph/sites/www/html/reference/ /h/ralph/sites/www/html/umple
-cp -r /h/ralph/cruise/dev_umple/ElevatorPhp /h/ralph/sites/www/html/umple
 
 echo "Removing UmpleOnline"
 rm -rf /h/ralph/sites/www/html/umpleonline
