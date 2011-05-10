@@ -29,6 +29,9 @@ assignRandomFloor($building);
 <html>
 <head>
 <style>
+h1 { padding: 2px 0 2px 0; margin: 0; }
+h2 { padding: 10px 0 12px 0; margin: 0; }
+h3 { padding: 0 0 10px 0; margin: 0; font-size: 12pt; }
 table tr td { vertical-align: top; }
 table.elevatorshaft, table.elevatorshaft tr {padding:0;margin:0;}
 table.elevatorshaft td {width:50px;height:100px;background-color:#7E8B8B;}
@@ -55,6 +58,7 @@ img.button {cursor:pointer;}
   <tr>
     <td>
       <h1>Welcome to <?php echo $building->getName() ?></h1>
+      <h3>For more info: <a href="http://code.google.com/p/umple/wiki/Examples#Elevator_PHP">http://code.google.com/p/umple/wiki/Examples</a></h3>
 
       <?php displayElevatorShaft($building); ?>
 
