@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package cruise.umple.compiler;
 import java.io.*;
@@ -54,6 +54,8 @@ public class EcoreGenerator implements CodeGenerator
   {
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
+    String packageName;
+    String nsURI;
     List<String> allTypes = new ArrayList<String>();
     
     code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -65,12 +67,15 @@ public class EcoreGenerator implements CodeGenerator
       if (isFirst)
       {
         isFirst = false;
-        code.append(StringFormatter.format("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"{0}\">\n",model.getUmpleFile().getSimpleFileName()));
+        packageName = getTargetNamespaceName();
+        nsURI = model.getDefaultNamespace() != null ? model.getDefaultNamespace(): model.getUmpleFile().getSimpleFileName();
+        code.append(StringFormatter.format("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"{0}\" nsURI=\"{1}\" nsPrefix=\"{0}\">\n",packageName, nsURI));
         code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>\n"));
       }
 
       String superStructureFlag = "";
       String interfaceFlag = "";
+      String abstractFlag = "";
       if (uClass.getExtendsClass() != null)
       {
         superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uClass.getExtendsClass().getName()); 
@@ -79,7 +84,8 @@ public class EcoreGenerator implements CodeGenerator
 		  UmpleInterface uInterface = uClass.getParentInterface(0);
 		  superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
 	      interfaceFlag =   " interface=\"true\"" ; 
-	      code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uInterface.getName(),interfaceFlag));
+	      abstractFlag =   "abstract=\"true\"" ; 
+	      code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
 	      code.append("  </eClassifiers>\n");
       }
      
@@ -116,7 +122,6 @@ public class EcoreGenerator implements CodeGenerator
           
           String safeType2 = typeName;
           safeType2 = safeType2.replace("<", "&lt;");
-          
           String lookupType = typeName;
           int ltIndex = lookupType.indexOf("<");
           
@@ -227,6 +232,17 @@ public class EcoreGenerator implements CodeGenerator
     {
       return null;  
     }
+  }
+
+  private String getTargetNamespaceName(){
+	  if (model.getDefaultNamespace() != null){
+		  if (model.getDefaultNamespace().length() > 0 )
+		  {
+			  String [] namespaces = model.getDefaultNamespace().split("\\.");	
+			  return namespaces[namespaces.length-1];
+		  }
+	  }
+		  return model.getUmpleFile().getSimpleFileName();
   }
   
   private void writeModel()
