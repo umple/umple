@@ -1,5 +1,5 @@
 generate Ecore;
-namespace example;
+namespace cruise.umple.example;
 
 class Person
 {

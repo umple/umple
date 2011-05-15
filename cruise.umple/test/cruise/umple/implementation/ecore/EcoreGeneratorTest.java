@@ -45,4 +45,20 @@ public class EcoreGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/Associations.ecore")).exists());
   }  
   
+  @Test
+  public void Namespaces()
+  {
+    language = null;
+    assertUmpleTemplateFor("ecore/Namespace.ump","ecore/Namespace.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/Namespace.ecore")).exists());
+  }  
+  
+  @Test
+  public void No_Namespaces()
+  {
+    language = null;
+    assertUmpleTemplateFor("ecore/NoNamespace.ump","ecore/NoNamespace.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/NoNamespace.ecore")).exists());
+  }  
+  
 }
