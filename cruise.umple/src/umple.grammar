@@ -1,0 +1,87 @@
+program- : ( [[comment]] | [[directive]] )*
+directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]
+glossary : glossary { [[word]]* }
+traceType- : tracer [traceType] ;
+word : [singular] : [plural] ;
+generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;
+useStatement- : use [use] ;
+namespace- : namespace [namespace] ;
+entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]
+
+classDefinition : class [name] { [[classContent]]* }
+externalDefinition : external [name] { [[classContent]]* }
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }
+associationDefinition : association [name]? { [[association]]* }
+associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]
+
+trace : [[fullTrace]] | [[simpleTrace]]
+simpleTrace- : trace [**trace_code] ;
+fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?
+
+// Section for Members in Interfaces
+// NOTE: We are considering type as simple String
+// Interface Body: An interface can have CONSTANTS, ATTRIBUTES and METHODS
+interfaceBody- : [[interfaceMemberDeclaration]]*
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]] 
+// Constants in interfaces (e.g. constant String ACONSTANT="aValue";)
+constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;
+// Methods in classes and Interfaces
+// Should we use modifier for concrete methods [=modifier:public|protected|private]?
+// Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
+concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] } 
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
+methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
+parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
+parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
+
+association : [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
+inlineAssociation : [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+inlineAssociationEnd : [[multiplicity]] [roleName]?
+singleAssociationEnd : [[multiplicity]] [type,roleName] ;
+associationEnd : [[multiplicity]] [type,roleName]
+multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]
+
+softwarePattern- : [[isA]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]
+isA- : [[singleIsA]] | [[multipleIsA]]
+singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;
+multipleIsA- : isA [extendsName] ( , [extendsName] )* ;
+singleton- : [=singleton] ;
+keyDefinition- : [[defaultKey]] | [[key]]
+codeInjection- : [[beforeCode]] | [[afterCode]]
+attribute : [[derivedAttribute]] | [=autounique] [name] ; | [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+
+beforeCode : before [operationName] { [**code] }
+afterCode : after [operationName] { [**code] }
+defaultKey : key { }
+key : key { [keyId] ( , [keyId] )* }
+depend- : depend [depend] ;
+extraCode- : [**extraCode]
+
+comment- : [[inlineComment]] | [[multilineComment]]
+inlineComment- : // [*inlineComment]
+multilineComment- : /* [**multilineComment] */
+
+stateMachineDefinition : statemachine [name] { [[state]]* }
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] 
+inlineStateMachine : [name] { [[state]]* }
+referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } 
+enum : [name] { } | [name] { [stateName] (, [stateName])* }
+state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }
+stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]
+afterEveryEvent- : afterEvery -( [timer] -)
+afterEvent- : after -( [timer] -)
+action : / { [**actionCode] }
+entryOrExitAction : [=type:entry|exit] / { [**actionCode] }
+activity : do { [**activityCode] }
+guard : [ [**guardCode] ] 
+
+position- : [[associationPosition]] | [[elementPosition]]
+elementPosition : position [x] [y] [width] [height] ;
+associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;
+coordinate : [x] , [y]

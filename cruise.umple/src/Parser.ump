@@ -72,6 +72,9 @@ class RulePart
 
 class Parser
 {
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
   name; // default 'program'
   String[] grammarRules;
   * -> * Rule;

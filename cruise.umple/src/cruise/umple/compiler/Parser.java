@@ -2,6 +2,8 @@
 /*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 package cruise.umple.compiler;
+import java.io.*;
+import cruise.umple.util.*;
 import java.util.*;
 
 public class Parser
@@ -306,6 +308,57 @@ public class Parser
       toString(stringSoFar,subToken);
     }
     return stringSoFar;
+  }
+
+  public int addRulesInFile(String filenameOrResourcePath)
+  {
+    InputStream resourceStream = null;
+    BufferedReader reader = null;
+    int numberOfRulesProcessed = 0;
+    try
+    {
+      if ((new File(filenameOrResourcePath)).exists())
+      {
+        reader = new BufferedReader(new FileReader(filenameOrResourcePath));
+      }
+      else
+      {
+        resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
+
+      String nextRule = null;
+      do 
+      {
+        nextRule = reader.readLine();
+        if (nextRule == null)
+        {
+          continue;
+        }
+        nextRule = nextRule.trim();
+        if (nextRule.startsWith("//") || nextRule.startsWith("#") || nextRule.equals(""))
+        {
+          addGrammarRule(nextRule);
+        }
+        else
+        {
+          addRule(nextRule);
+          numberOfRulesProcessed += 1;
+        }
+        
+      } 
+      while (nextRule != null);
+    }
+    catch (Exception e)
+    {
+      
+    }
+    finally
+    {
+      SampleFileWriter.closeAsRequired(reader);
+      SampleFileWriter.closeAsRequired(resourceStream);
+    }    
+    return numberOfRulesProcessed;
   }
 
   public void addRule(String input)

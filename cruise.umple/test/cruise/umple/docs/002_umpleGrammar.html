@@ -49,14 +49,22 @@ associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [
 trace : [[fullTrace]] | [[simpleTrace]]<br />
 simpleTrace- : trace [**trace_code] ;<br />
 fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
+<br />
+// Section for Members in Interfaces<br />
+// NOTE: We are considering type as simple String<br />
+// Interface Body: An interface can have CONSTANTS, ATTRIBUTES and METHODS<br />
 interfaceBody- : [[interfaceMemberDeclaration]]*<br />
-interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]] <br />
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]]<br />
+// Constants in interfaces (e.g. constant String ACONSTANT="aValue";)<br />
 constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;<br />
-concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] } <br />
-abstractMethodDeclaration :  [type] [[methodDeclarator]] ; <br />
-methodDeclarator : [methodName] [[parameterList]] | [methodName] -( -) <br />
-parameterList : -( [[parameter]] ( , [[parameter]] )* -) <br />
-parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) <br />
+// Methods in classes and Interfaces<br />
+// Should we use modifier for concrete methods [=modifier:public|protected|private]?<br />
+// Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?<br />
+concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] }<br />
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ;<br />
+methodDeclarator : [methodName] [[parameterList]] | [methodName] -( -)<br />
+parameterList : -( [[parameter]] ( , [[parameter]] )* -)<br />
+parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0])<br />
 <br />
 association : [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
 symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;<br />
@@ -88,9 +96,9 @@ inlineComment- : // [*inlineComment]<br />
 multilineComment- : /* [**multilineComment] */<br />
 <br />
 stateMachineDefinition : statemachine [name] { [[state]]* }<br />
-stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] <br />
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]<br />
 inlineStateMachine : [name] { [[state]]* }<br />
-referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } <br />
+referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* }<br />
 enum : [name] { } | [name] { [stateName] (, [stateName])* }<br />
 state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }<br />
 stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br />
@@ -101,13 +109,12 @@ afterEvent- : after -( [timer] -)<br />
 action : / { [**actionCode] }<br />
 entryOrExitAction : [=type:entry|exit] / { [**actionCode] }<br />
 activity : do { [**activityCode] }<br />
-guard : [ [**guardCode] ] <br />
+guard : [ [**guardCode] ]<br />
 <br />
-position- : [[associationPosition]] | [[elementPosition]] <br />
+position- : [[associationPosition]] | [[elementPosition]]<br />
 elementPosition : position [x] [y] [width] [height] ;<br />
 associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;<br />
-coordinate : [x] , [y]<br />
-</p>
+coordinate : [x] , [y]</p>
 
 
 

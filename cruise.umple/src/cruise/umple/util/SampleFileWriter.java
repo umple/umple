@@ -133,6 +133,21 @@ public class SampleFileWriter
     }
   }
   
+  public static void closeAsRequired(InputStream reader)
+  {
+    if (reader != null)
+    {
+      try
+      {
+        reader.close();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
   public static String rationalize(String rawPath)
   {
     String path = rawPath;

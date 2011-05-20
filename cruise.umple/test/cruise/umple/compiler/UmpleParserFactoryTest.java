@@ -10,8 +10,22 @@ public class UmpleParserFactoryTest
   {
     UmpleParser p = UmpleParserFactory.create("cruise.umple.compiler.UmpleInternalParser");
     Assert.assertEquals(UmpleInternalParser.class,p.getClass());
+    
+    p = UmpleParserFactory.create("UmpleInternalParser");
+    Assert.assertEquals(UmpleInternalParser.class,p.getClass());
   }
   
+  @Test
+  public void returnUmpleXtextParser()
+  {
+    UmpleParser p = UmpleParserFactory.create("cruise.umple.compiler.UmpleXtextParser");
+    Assert.assertEquals(UmpleXtextParser.class,p.getClass());
+    
+    p = UmpleParserFactory.create("UmpleXtextParser");
+    Assert.assertEquals(UmpleXtextParser.class,p.getClass());    
+  }
+  
+
   @Test
   public void returnNullIfInvalidName()
   {

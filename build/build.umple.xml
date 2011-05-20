@@ -74,6 +74,7 @@
       <exclude name="**/data" />
       <classpath refid="project.classpath"/>
     </javac>
+    <copy todir="${bin.path}" file="${project.path}/src/umple.grammar" overwrite="true" />
   </target>
 
   <!-- ```````````````````````````
@@ -97,7 +98,7 @@
     <echo message="Package Version: ${umple.version}" />
   
     <property name="umple_classpath" value=" " />
-    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/**" excludes="**/*Test.class">
+    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** umple.grammar" excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -106,7 +107,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/**">
+    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** umple.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -115,7 +116,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/**">
+    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** umple.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -124,7 +125,7 @@
       </manifest>
     </jar>
   
-    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/**">
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** umple.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -133,7 +134,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/vml/**">
+    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/vml/** umple.grammar">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
