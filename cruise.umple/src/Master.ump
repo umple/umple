@@ -26,6 +26,7 @@ use UmpleExceptions.ump;
 use UmpleHelper.ump;
 use UmpleParser.ump;
 use UmpleInternalParser.ump;
+use UmpleXtextParser.ump;
 use UmpleSync.ump;
 use Violet.ump;
 use Vml.ump;

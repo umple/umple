@@ -135,14 +135,6 @@ public class UmpleInternalParserTest extends UmpleParserTest
   private void assertParse(String filename, String expectedOutput)
   {
     boolean answer = parse(filename);
-    if (answer == false)
-    {
-      System.out.println("failed at:" + parser.getParseResult().getPosition());
-    }
-    else
-    {
-      answer = parser.analyze(false).getWasSuccess();
-    }
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedOutput, parser.toString());  
   }

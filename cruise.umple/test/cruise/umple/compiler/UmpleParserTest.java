@@ -10,10 +10,10 @@ import cruise.umple.util.*;
 public class UmpleParserTest
 {
 
-  UmpleParser parser;
-  UmpleModel model;
-  String pathToInput;
-  String umpleParserName;
+  public UmpleParser parser;
+  public UmpleModel model;
+  public String pathToInput;
+  public String umpleParserName;
 
   @Before
   public void setUp()
@@ -1058,9 +1058,12 @@ public class UmpleParserTest
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
-    parser = UmpleParserFactory.create(umpleParserName,true);
-    parser.setModel(model);
+    parser = UmpleParserFactory.create(umpleParserName,model,true);
     boolean answer = parser.parse("program", input).getWasSuccess();
+    if (answer)
+    {
+      answer = parser.analyze(false).getWasSuccess();
+    }
     return answer;
   }
   
@@ -1072,11 +1075,6 @@ public class UmpleParserTest
   public void assertFailedParse(String filename, Position expectedPosition)
   {
     boolean answer = parse(filename);
-    
-    if (answer)
-    {
-      answer = parser.analyze(false).getWasSuccess();
-    }
     Assert.assertEquals(false, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }

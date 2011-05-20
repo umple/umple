@@ -1,0 +1,51 @@
+/*
+
+Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+Stubbed implementations, should reference generated code from Xtext in the "gen" directory.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleXtextParser
+{
+  public String toGrammar()
+  {
+    return temp.toGrammar();
+  }
+  
+  public ParseResult parse(String ruleName, String codeToParse)
+  {
+    return temp.parse(ruleName,codeToParse);
+  }
+  
+  public ParseResult analyze(boolean shouldGenerateCode)
+  {
+    return temp.analyze(shouldGenerateCode);  
+  }
+
+  public Token getRootToken()
+  {
+    return temp.getRootToken();
+  }
+  
+  public UmpleModel getModel()
+  {
+    return temp.getModel();
+  }
+  
+  public boolean setModel(UmpleModel model)
+  {
+    return temp.setModel(model);
+  }
+  
+  public ParseResult getParseResult()
+  {
+    return temp.getParseResult();
+  }
+  
+}
