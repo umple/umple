@@ -7,7 +7,7 @@ import org.junit.*;
 
 import cruise.umple.util.*;
 
-public abstract class UmpleParserTest
+public class UmpleParserTest
 {
 
   UmpleParser parser;
