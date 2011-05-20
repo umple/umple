@@ -27,6 +27,8 @@ public class EcoreGeneratorTest extends TemplateTest
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/ecore/Ecore.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/Associations.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/NoNamespace.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/Namespace.ecore");
   }
 
   @Test

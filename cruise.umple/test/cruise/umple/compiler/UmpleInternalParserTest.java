@@ -1,0 +1,151 @@
+package cruise.umple.compiler;
+
+import java.util.*;
+import org.junit.*;
+
+public class UmpleInternalParserTest extends UmpleParserTest
+{
+  
+  public static Map<String,String> fileToOutputs;
+  
+  static {
+    fileToOutputs = new HashMap<String,String>();
+
+    String expectedResult = null;
+    
+    fileToOutputs.put("001_empty.ump", "");
+    fileToOutputs.put("001_empty.ump", "");
+    fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
+    fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
+    fileToOutputs.put("002_namespace.ump", "[namespace:cruise][namespace:cruise.umple][namespace:example]");
+    fileToOutputs.put("003_emptyClass.ump", "[classDefinition][name:Student]");
+    fileToOutputs.put("003_multipleExtraCode.ump","[classDefinition][name:Student][extraCode:blahblah][classDefinition][name:Student][extraCode:moreblah]");
+    fileToOutputs.put("003_constructorExtraCode.ump","[classDefinition][name:Student][concreteMethodDeclaration][type:public][methodDeclarator][methodName:Student][parameterList][parameter][type:String][name:x][code:blah();]");  
+    fileToOutputs.put("003_innerClass.ump", "[classDefinition][name:Person][attribute][name:name][classDefinition][name:Student][attribute][name:Integer]");
+    fileToOutputs.put("003_commentsInClass.ump", "[classDefinition][name:Student][inlineComment:A name][attribute][name:name][inlineComment:the time][attribute][type:Time][name:t]");
+    fileToOutputs.put("004_depend.ump", "[classDefinition][name:Student][depend:java.util.Map]");
+    fileToOutputs.put("004_multipleClasses.ump", "[classDefinition][name:Student][classDefinition][name:Mentor]");
+    fileToOutputs.put("004_multipleClassesAndNamespaces.ump", "[namespace:cruise.util][classDefinition][name:Student][namespace:cruise.core][classDefinition][name:Mentor]");
+    fileToOutputs.put("004_referencedPackages.ump", "[namespace:example][classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:0][upperBound:1][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][namespace:anotherExample][classDefinition][name:Mentor]");
+    fileToOutputs.put("007_isA_OnlyOne.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Person]");
+    fileToOutputs.put("007_isA_MultipleTimesInTheSameLine.ump", "[classDefinition][name:Student][extendsName:Person][extendsName:Worker][classDefinition][name:Person][interfaceDefinition][name:Worker]");
+    fileToOutputs.put("007_isA_ListForm.ump", "[classDefinition][name:Student][extendsName:Person][extendsName:Worker][classDefinition][name:Person][interfaceDefinition][name:Worker]");
+    fileToOutputs.put("007_implements.ump", "[classDefinition][name:Student][extendsName:IStudent][interfaceDefinition][name:IStudent]");
+
+     expectedResult = "[classDefinition][name:Student]" +
+         "[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
+         "[interfaceDefinition][name:IStudent]" +
+         "[interfaceDefinition][name:IPerson]" +
+         "[interfaceDefinition][name:IMan]";
+    fileToOutputs.put("007_isAMultipleInterfaces.ump", expectedResult);
+
+    expectedResult = "[classDefinition][name:Student][extendsName:Human]" +
+         "[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
+         "[interfaceDefinition][name:IStudent]" +
+         "[interfaceDefinition][name:IPerson]" +
+         "[interfaceDefinition][name:IMan]" +
+         "[classDefinition][name:Human]";
+    fileToOutputs.put("007_isAMultipleInterfacesAndClasses.ump", expectedResult);
+  
+    expectedResult = "[classDefinition][name:Student][extendsName:Human]" +
+         "[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
+         "[interfaceDefinition][name:IStudent]" +
+         "[interfaceDefinition][name:IPerson]" +
+         "[interfaceDefinition][name:IMan]" +
+         "[classDefinition][name:Human]";
+    fileToOutputs.put("007_isAMultipleInterfacesAndClassesV2.ump", expectedResult);
+    fileToOutputs.put("007_isAGrouped.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Student][classDefinition][name:Person]");
+    fileToOutputs.put("007_singleton.ump", "[classDefinition][name:Airline][singleton:singleton]");
+    fileToOutputs.put("008_isABlahAttribute.ump", "[classDefinition][name:Student][attribute][type:Boolean][name:isActNow]");
+    fileToOutputs.put("008_simpleAttribute.ump", "[classDefinition][name:Student][attribute][name:number]");
+    fileToOutputs.put("008_listAttribute.ump", "[classDefinition][name:Token][attribute][list:[]][name:blah][attribute][type:String][list:[]][name:name][attribute][type:Position][list:[]][name:start][attribute][type:Integer][list:[]][name:number][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
+    fileToOutputs.put("008_derivedAttribute.ump", "[classDefinition][name:Position][attribute][type:Integer][name:perimeter][derivedValue:2*l + 2*w][attribute][type:Integer][name:w][attribute][type:Integer][name:l]");
+    fileToOutputs.put("008_associationAttribute.ump", "[classDefinition][name:Token][attribute][name:number][attribute][type:Position][name:startPosition][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
+    fileToOutputs.put("008_typeAttribute.ump", "[classDefinition][name:Student][attribute][type:Integer][name:name][attribute][type:String][name:name2][attribute][type:Time][name:name3][attribute][type:Date][name:name4][attribute][type:Double][name:name5]");
+    fileToOutputs.put("008_uniqueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][name:number]");
+    fileToOutputs.put("008_assignedValueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][type:Integer][name:number][value:1][attribute][modifier:settable][type:String][name:s][value:\"s\"][attribute][name:s2][value:\"s2\"]");
+    fileToOutputs.put("008_autouniqueAttribute.ump", "[classDefinition][name:Student][attribute][autounique:autounique][name:id]");
+    fileToOutputs.put("008_complexAssignedAttribute.ump", "[classDefinition][name:Student][attribute][type:Time][name:t][value:new Time(\"now\")]");
+    fileToOutputs.put("009_externalNamedAssociation.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][associationDefinition][name:Counsellor][association][associationEnd][lowerBound:4][upperBound:5][type:Student][arrow:--][associationEnd][lowerBound:6][upperBound:9][type:Mentor]");
+    fileToOutputs.put("009_association.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][inlineAssociation][inlineAssociationEnd][bound:*][roleName:me][arrow:--][associationEnd][bound:*][type:Student][roleName:them][classDefinition][name:Mentor]");
+    fileToOutputs.put("009_externalAssociation.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][associationDefinition][association][associationEnd][lowerBound:4][upperBound:5][type:Student][arrow:--][associationEnd][lowerBound:6][upperBound:9][type:Mentor][roleName:myMentor][association][associationEnd][bound:*][type:Student][roleName:me][arrow:--][associationEnd][bound:*][type:Student][roleName:them]");
+    fileToOutputs.put("009_oneWayAssociation.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:0][upperBound:1][arrow:->][associationEnd][lowerBound:0][upperBound:1][type:Mentor][classDefinition][name:Mentor]");
+    fileToOutputs.put("009_otherWayAssociation.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:0][upperBound:1][arrow:<-][associationEnd][lowerBound:0][upperBound:1][type:Mentor][classDefinition][name:Mentor]");
+    fileToOutputs.put("009_reflexiveSymmetricAssociation.ump", "[classDefinition][name:Student][symmetricReflexiveAssociation][lowerBound:0][upperBound:1][roleName:partner]");
+    fileToOutputs.put("009_associationByItself.ump", "[associationDefinition][association][associationEnd][lowerBound:0][upperBound:1][type:Student][roleName:aStudent][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][association][associationEnd][bound:*][type:Event][arrow:--][associationEnd][bound:*][type:Location][classDefinition][name:Event][classDefinition][name:Location][classDefinition][name:Student][classDefinition][name:Mentor]");
+    fileToOutputs.put("010_associationClassMultipleDefinitions.ump", "[associationClassDefinition][name:Relationship][singleAssociationEnd][bound:*][type:Student][singleAssociationEnd][bound:*][type:Mentor][classDefinition][name:Student][classDefinition][name:Mentor][classDefinition][name:Relationship][elementPosition][x:1][y:2][width:3][height:4]");
+    fileToOutputs.put("010_associationClassOtherAssociations.ump", "[associationClassDefinition][name:VotesInPoll][singleAssociationEnd][bound:*][type:Candidature][singleAssociationEnd][bound:*][type:PollInElection][inlineAssociation][inlineAssociationEnd][bound:*][arrow:--][associationEnd][bound:*][type:Location][classDefinition][name:Candidature][classDefinition][name:PollInElection][classDefinition][name:Location]");
+    fileToOutputs.put("010_associationClass.ump", "[namespace:example][classDefinition][name:Thing][associationClassDefinition][name:Ticket][extendsName:Thing][attribute][name:name][attribute][type:Integer][name:type][value:1][singleAssociationEnd][bound:*][type:Event][roleName:event][singleAssociationEnd][bound:*][type:Location][extraCode:public int one() {return 1;}][classDefinition][name:Event][classDefinition][name:Location]");
+    fileToOutputs.put("013_inlineComments.ump", "[inlineComment:c 5][inlineComment:c 5b][namespace:example][inlineComment:c 6][inlineComment:c 7][inlineComment:c 7b][inlineComment:c 7c]");
+    fileToOutputs.put("013_multilineComments.ump", "[multilineComment:c 1\n  c 1b][multilineComment:c 1c\n  c 1d][multilineComment:c 2][multilineComment:c 2b\n  c 2c][multilineComment:c 2d\n  c 2e][multilineComment:c 2f\n  c 2g][multilineComment:c 3][multilineComment:c 3b\n  c 3c][namespace:example][multilineComment:c 4][multilineComment:c 4b\n  c 4c][multilineComment:c 4d\n  c 4e]");
+    fileToOutputs.put("012_attributesAndAssociations.ump", "[namespace:example][classDefinition][name:Mentor][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][attribute][name:number]");
+    fileToOutputs.put("014_interface_implementation.ump", "[interfaceDefinition][name:ISomething][classDefinition][name:Something][extendsName:ISomething]");
+    fileToOutputs.put("014_interface_methodAndParam.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String[]][methodDeclarator][methodName:getMethod][parameterList][parameter][type:String][list:[]][name:aname][parameter][type:Integer][name:anotherType]");
+    fileToOutputs.put("014_interface_position.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][elementPosition][x:10][y:20][width:30][height:40]");
+    fileToOutputs.put("014_interface_methodNoParam.ump","[interfaceDefinition][name:I_Something][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getSomething][parameterList]");
+    fileToOutputs.put("014_interface_constant.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][constantDeclaration][type:String][name:aVariable][value:aValue]");
+    expectedResult = "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][constantDeclaration][type:String][name:aVariable][value:aValue]" +
+              "[interfaceMemberDeclaration][constantDeclaration][type:String][name:aSecondVariable][value:aSecondValue]"+
+              "[interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getMethod][parameterList][parameter][type:String][name:name]";
+    fileToOutputs.put("014_interface_allMembers.ump", expectedResult);
+    fileToOutputs.put("014_interfaceDepend.ump", "[interfaceDefinition][name:IMe][depend:java.util.*]");
+    fileToOutputs.put("014_interface_extracode.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extraCode:public void getCode();]");
+    fileToOutputs.put("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][classDefinition][name:Something][attribute][type:implements][name:ISomething][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
+    fileToOutputs.put("015_classMethods.ump", "[classDefinition][name:Student][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
+    fileToOutputs.put("015_base.ump", "[use:015_Student.ump][use:015_Mentor.ump][classDefinition][name:Student][use:015_Student.ump][classDefinition][name:Mentor][extendsName:Student]");
+    fileToOutputs.put("016_classPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
+    fileToOutputs.put("016_defaultClassPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
+    fileToOutputs.put("016_associationPosition.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Mentor][elementPosition][x:10][y:20][width:30][height:40][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4][classDefinition][name:Mentor]");
+    fileToOutputs.put("016_associationClassMixinPosition.ump", "");
+    fileToOutputs.put("016_associationClassRelationshipNotDefined.ump", "fill_me_in");
+    fileToOutputs.put("016_unknownAssociationPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4]");
+    fileToOutputs.put("016_associationClassPosition.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Mentor][elementPosition][x:1][y:2][width:3][height:4][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4][classDefinition][name:Mentor][associationClassDefinition][name:Relationship][singleAssociationEnd][bound:*][type:Student][singleAssociationEnd][bound:*][type:Mentor][elementPosition][x:10][y:20][width:30][height:40]");
+    fileToOutputs.put("017_glossary.ump","[glossary][word][singular:entity][plural:entities]");
+    fileToOutputs.put("018_key.ump","[classDefinition][name:Student][attribute][name:id][attribute][name:name][key][keyId:id][keyId:name][classDefinition][name:Mentor][attribute][name:employeeId][key][keyId:employeeId][extraCode:;][classDefinition][name:Course][attribute][name:code][defaultKey]");
+    fileToOutputs.put("019_before.ump","[classDefinition][name:Student][attribute][name:name][beforeCode][operationName:setName][code:doSomething();]");
+    fileToOutputs.put("019_after.ump","[classDefinition][name:Student][attribute][name:name][afterCode][operationName:getName][code:notReallyPossible();]");
+    fileToOutputs.put("020_enumEmpty.ump","[classDefinition][name:Student][stateMachine][enum][name:status]");
+    fileToOutputs.put("020_enum.ump","[classDefinition][name:Student][stateMachine][enum][name:status][stateName:FullTime][stateName:PartTime][stateName:MidTime][stateMachine][enum][name:grade][stateName:High]");
+    fileToOutputs.put("020_enumLongHand.ump","[classDefinition][name:Student][stateMachine][inlineStateMachine][name:status][state][stateName:FullTime][state][stateName:PartTime]");
+    fileToOutputs.put("021_nestedUse.ump","[classDefinition][name:Student][attribute][name:fisrtName][use:021_nestedUse_B.ump][classDefinition][name:Student][attribute][name:lastName][use:021_nestedUse_C.ump][classDefinition][name:Student][attribute][name:middleName]");
+
+    
+  }
+
+  @Before
+  public void mySetUp()
+  {
+    umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
+  }
+  
+  @Override
+  public void assertParse(String filename)
+  {
+    if (fileToOutputs.containsKey(filename))
+    {
+      String expectedResult = fileToOutputs.get(filename);
+      assertParse(filename, expectedResult);
+    }
+    else
+    {
+      Assert.fail("Please provide a expected output of the tokenized string");
+    }
+  }
+
+  private void assertParse(String filename, String expectedOutput)
+  {
+    boolean answer = parse(filename);
+    if (answer == false)
+    {
+      System.out.println("failed at:" + parser.getParseResult().getPosition());
+    }
+    else
+    {
+      answer = parser.analyze(false).getWasSuccess();
+    }
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(expectedOutput, parser.toString());  
+  }
+  
+  
+}

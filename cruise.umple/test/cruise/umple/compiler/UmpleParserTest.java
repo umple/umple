@@ -7,7 +7,7 @@ import org.junit.*;
 
 import cruise.umple.util.*;
 
-public class UmpleParserTest
+public abstract class UmpleParserTest
 {
 
   UmpleParser parser;
@@ -25,27 +25,28 @@ public class UmpleParserTest
   @Test
   public void empty()
   {
-    assertParse("001_empty.ump", "");
+    assertParse("001_empty.ump");
+    Assert.assertEquals(0,model.numberOfUmpleClasses());
   }
   
   @Test
   public void languageDefault()
   {
-    assertParse("001_empty.ump", "");
+    assertParse("001_empty.ump");
     Assert.assertEquals("Java", model.getDefaultGenerate());
   }
   
   @Test
   public void javaLanguage()
   {
-    assertParse("001_javaLanguage.ump","[generate:Java]");
+    assertParse("001_javaLanguage.ump");
     Assert.assertEquals("Java", model.getDefaultGenerate());
   }
 
   @Test
   public void phpLanguage()
   {
-    assertParse("001_phpLanguage.ump","[generate:Php]");
+    assertParse("001_phpLanguage.ump");
     Assert.assertEquals("Php", model.getDefaultGenerate());
   }
 
@@ -58,7 +59,7 @@ public class UmpleParserTest
   @Test
   public void namespace()
   {
-    assertParse("002_namespace.ump", "[namespace:cruise][namespace:cruise.umple][namespace:example]");
+    assertParse("002_namespace.ump");
     Assert.assertEquals("cruise",model.getDefaultNamespace());
     
   }
@@ -72,7 +73,7 @@ public class UmpleParserTest
   @Test
   public void emptyClass()
   {
-    assertParse("003_emptyClass.ump", "[classDefinition][name:Student]");
+    assertParse("003_emptyClass.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Student",aClass.getName());
     Assert.assertEquals(false,aClass.getKey().isProvided());
@@ -81,7 +82,7 @@ public class UmpleParserTest
   @Test
   public void multipleExtraCode()
   {
-    assertParse("003_multipleExtraCode.ump","[classDefinition][name:Student][extraCode:blahblah][classDefinition][name:Student][extraCode:moreblah]");
+    assertParse("003_multipleExtraCode.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("blahblah\nmoreblah",aClass.getExtraCode());
   }
@@ -89,7 +90,7 @@ public class UmpleParserTest
   @Test
   public void constructorExtraCode()
   {
-    assertParse("003_constructorExtraCode.ump","[classDefinition][name:Student][concreteMethodDeclaration][type:public][methodDeclarator][methodName:Student][parameterList][parameter][type:String][name:x][code:blah();]");  
+    assertParse("003_constructorExtraCode.ump");  
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals(" public Student(String x)  {\nblah();\n  }",aClass.getExtraCode());
   }
@@ -97,7 +98,7 @@ public class UmpleParserTest
   @Test
   public void innerClass()
   {
-    assertParse("003_innerClass.ump", "[classDefinition][name:Person][attribute][name:name][classDefinition][name:Student][attribute][name:Integer]");
+    assertParse("003_innerClass.ump");
     UmpleClass person = model.getUmpleClass("Person");
     Assert.assertEquals("Person",person.getName());
     
@@ -116,13 +117,13 @@ public class UmpleParserTest
   @Test
   public void commentsInClass()
   {
-    assertParse("003_commentsInClass.ump", "[classDefinition][name:Student][inlineComment:A name][attribute][name:name][inlineComment:the time][attribute][type:Time][name:t]");
+    assertParse("003_commentsInClass.ump");
   }
   
   @Test
   public void depend()
   {
-    assertParse("004_depend.ump", "[classDefinition][name:Student][depend:java.util.Map]");
+    assertParse("004_depend.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     
     Assert.assertEquals(1,aClass.numberOfDepends());
@@ -132,13 +133,14 @@ public class UmpleParserTest
   @Test
   public void multipleClasses()
   {
-    assertParse("004_multipleClasses.ump", "[classDefinition][name:Student][classDefinition][name:Mentor]");
+    assertParse("004_multipleClasses.ump");
+    Assert.assertEquals(2,model.numberOfUmpleClasses());
   }
 
   @Test
   public void classAndNamespaces()
   {
-    assertParse("004_multipleClassesAndNamespaces.ump", "[namespace:cruise.util][classDefinition][name:Student][namespace:cruise.core][classDefinition][name:Mentor]");
+    assertParse("004_multipleClassesAndNamespaces.ump");
 
     UmpleClass studentClass = model.getUmpleClass("Student");
     Assert.assertEquals("cruise.util",studentClass.getPackageName());
@@ -151,7 +153,7 @@ public class UmpleParserTest
   @Test
   public void referencedPackages()
   {
-    assertParse("004_referencedPackages.ump", "[namespace:example][classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:0][upperBound:1][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][namespace:anotherExample][classDefinition][name:Mentor]");
+    assertParse("004_referencedPackages.ump");
 
     UmpleClass studentClass = model.getUmpleClass("Student");
     String[] referenced = studentClass.getNamespaces();
@@ -168,7 +170,7 @@ public class UmpleParserTest
   public void isA_OnlyOne()
   {
 	//ie. isA Y;
-    assertParse("007_isA_OnlyOne.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Person]");
+    assertParse("007_isA_OnlyOne.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Person",aClass.getExtendsClass().getName());
     Assert.assertEquals(false,aClass.isRoot());
@@ -178,7 +180,7 @@ public class UmpleParserTest
   public void isA_MultipleTimesInTheSameLine()
   {
 	//ie. isA Y, isA Z;
-    assertParse("007_isA_MultipleTimesInTheSameLine.ump", "[classDefinition][name:Student][extendsName:Person][extendsName:Worker][classDefinition][name:Person][interfaceDefinition][name:Worker]");
+    assertParse("007_isA_MultipleTimesInTheSameLine.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Person",aClass.getExtendsClass().getName());
     Assert.assertEquals("Worker",aClass.getParentInterface(0).getName());
@@ -188,7 +190,7 @@ public class UmpleParserTest
   @Test
   public void isA_ListForm()
   {
-    assertParse("007_isA_ListForm.ump", "[classDefinition][name:Student][extendsName:Person][extendsName:Worker][classDefinition][name:Person][interfaceDefinition][name:Worker]");
+    assertParse("007_isA_ListForm.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Person",aClass.getExtendsClass().getName());
     Assert.assertEquals("Worker",aClass.getParentInterface(0).getName());
@@ -198,7 +200,7 @@ public class UmpleParserTest
   @Test
   public void implementsInterface()
   {
-    assertParse("007_implements.ump", "[classDefinition][name:Student][extendsName:IStudent][interfaceDefinition][name:IStudent]");
+    assertParse("007_implements.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("IStudent",aClass.getParentInterface(0).getName());
   }
@@ -206,12 +208,7 @@ public class UmpleParserTest
   @Test
   public void isA_MultipleInterfaces()
   {
-	  String expectedResult = "[classDefinition][name:Student]" +
-	  		"[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
-	  		"[interfaceDefinition][name:IStudent]" +
-	  		"[interfaceDefinition][name:IPerson]" +
-	  		"[interfaceDefinition][name:IMan]";
-    assertParse("007_isAMultipleInterfaces.ump", expectedResult);
+    assertParse("007_isAMultipleInterfaces.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     
     Assert.assertEquals("IStudent",aClass.getParentInterface(0).getName());
@@ -222,13 +219,7 @@ public class UmpleParserTest
   @Test
   public void isA_MultipleInterfacesAndClasses()
   {
-    String expectedResult = "[classDefinition][name:Student][extendsName:Human]" +
-	  		"[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
-	  		"[interfaceDefinition][name:IStudent]" +
-	  		"[interfaceDefinition][name:IPerson]" +
-	  		"[interfaceDefinition][name:IMan]" +
-	  		"[classDefinition][name:Human]";
-    assertParse("007_isAMultipleInterfacesAndClasses.ump", expectedResult);
+    assertParse("007_isAMultipleInterfacesAndClasses.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     // EXTENDS
     Assert.assertEquals("Human",aClass.getExtendsClass().getName());
@@ -243,13 +234,7 @@ public class UmpleParserTest
   @Test
   public void isA_MultipleInterfacesAndClassesV2()
   {
-    String expectedResult = "[classDefinition][name:Student][extendsName:Human]" +
-	  		"[extendsName:IStudent][extendsName:IPerson][extendsName:IMan]" +
-	  		"[interfaceDefinition][name:IStudent]" +
-	  		"[interfaceDefinition][name:IPerson]" +
-	  		"[interfaceDefinition][name:IMan]" +
-	  		"[classDefinition][name:Human]";
-    assertParse("007_isAMultipleInterfacesAndClassesV2.ump", expectedResult);
+    assertParse("007_isAMultipleInterfacesAndClassesV2.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     // EXTENDS
     Assert.assertEquals("Human",aClass.getExtendsClass().getName());
@@ -265,7 +250,7 @@ public class UmpleParserTest
   @Test
   public void isA_Grouped()
   {
-    assertParse("007_isAGrouped.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Student][classDefinition][name:Person]");
+    assertParse("007_isAGrouped.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Person",aClass.getExtendsClass().getName());
     Assert.assertEquals(false,aClass.isRoot());
@@ -274,7 +259,7 @@ public class UmpleParserTest
   @Test
   public void singleton()
   {
-    assertParse("007_singleton.ump", "[classDefinition][name:Airline][singleton:singleton]");
+    assertParse("007_singleton.ump");
     UmpleClass aClass = model.getUmpleClass("Airline");
     Assert.assertEquals(true,aClass.getIsSingleton());
   }
@@ -282,7 +267,7 @@ public class UmpleParserTest
   @Test
   public void isABlahAttribute()
   {
-    assertParse("008_isABlahAttribute.ump", "[classDefinition][name:Student][attribute][type:Boolean][name:isActNow]");
+    assertParse("008_isABlahAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable = aClass.getAttribute("isActNow");
     Assert.assertEquals("isActNow", variable.getName());
@@ -292,7 +277,7 @@ public class UmpleParserTest
   @Test
   public void attribute_simple()
   {
-    assertParse("008_simpleAttribute.ump", "[classDefinition][name:Student][attribute][name:number]");
+    assertParse("008_simpleAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable = aClass.getAttribute("number");
     Assert.assertEquals("number", variable.getName());
@@ -302,7 +287,7 @@ public class UmpleParserTest
   @Test
   public void attribute_list()
   {
-    assertParse("008_listAttribute.ump", "[classDefinition][name:Token][attribute][list:[]][name:blah][attribute][type:String][list:[]][name:name][attribute][type:Position][list:[]][name:start][attribute][type:Integer][list:[]][name:number][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
+    assertParse("008_listAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Token");
     Attribute variable = aClass.getAttribute("name");
     Assert.assertEquals("name", variable.getName());
@@ -318,7 +303,7 @@ public class UmpleParserTest
   @Test
   public void attribute_derived()
   {
-    assertParse("008_derivedAttribute.ump", "[classDefinition][name:Position][attribute][type:Integer][name:perimeter][derivedValue:2*l + 2*w][attribute][type:Integer][name:w][attribute][type:Integer][name:l]");
+    assertParse("008_derivedAttribute.ump");
 
     UmpleClass aClass = model.getUmpleClass("Position");
     Attribute variable = aClass.getAttribute("perimeter");
@@ -345,7 +330,7 @@ public class UmpleParserTest
   @Test
   public void association_attribute()
   {
-    assertParse("008_associationAttribute.ump", "[classDefinition][name:Token][attribute][name:number][attribute][type:Position][name:startPosition][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
+    assertParse("008_associationAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Token");
     Attribute variable = aClass.getAttribute("startPosition");
     Assert.assertEquals("startPosition", variable.getName());
@@ -361,7 +346,7 @@ public class UmpleParserTest
   @Test
   public void attribute_Type()
   {
-    assertParse("008_typeAttribute.ump", "[classDefinition][name:Student][attribute][type:Integer][name:name][attribute][type:String][name:name2][attribute][type:Time][name:name3][attribute][type:Date][name:name4][attribute][type:Double][name:name5]");
+    assertParse("008_typeAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable;
     
@@ -389,7 +374,7 @@ public class UmpleParserTest
   @Test
   public void attribute_Unique()
   {
-    assertParse("008_uniqueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][name:number]");
+    assertParse("008_uniqueAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     UmpleVariable variable = aClass.getUniqueIdentifier();
     Assert.assertEquals("number", variable.getName());
@@ -398,7 +383,7 @@ public class UmpleParserTest
   @Test
   public void attribute_assignedValue()
   {
-    assertParse("008_assignedValueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][type:Integer][name:number][value:1][attribute][modifier:settable][type:String][name:s][value:\"s\"][attribute][name:s2][value:\"s2\"]");
+    assertParse("008_assignedValueAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     UmpleVariable variable;
     
@@ -416,7 +401,7 @@ public class UmpleParserTest
   @Test
   public void attribute_autounique()
   {
-    assertParse("008_autouniqueAttribute.ump", "[classDefinition][name:Student][attribute][autounique:autounique][name:id]");
+    assertParse("008_autouniqueAttribute.ump");
 
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable = aClass.getAttribute("id");
@@ -427,7 +412,7 @@ public class UmpleParserTest
   @Test
   public void attributeComplexAssigned()
   {
-    assertParse("008_complexAssignedAttribute.ump", "[classDefinition][name:Student][attribute][type:Time][name:t][value:new Time(\"now\")]");
+    assertParse("008_complexAssignedAttribute.ump");
 
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable = aClass.getAttribute("t");
@@ -437,7 +422,7 @@ public class UmpleParserTest
   @Test
   public void associationName()
   {
-    assertParse("009_externalNamedAssociation.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][associationDefinition][name:Counsellor][association][associationEnd][lowerBound:4][upperBound:5][type:Student][arrow:--][associationEnd][lowerBound:6][upperBound:9][type:Mentor]");
+    assertParse("009_externalNamedAssociation.ump");
     
     Association as = model.getAssociation(0);
     Assert.assertEquals("Counsellor",as.getName());
@@ -458,7 +443,7 @@ public class UmpleParserTest
   @Test
   public void association()
   {
-    assertParse("009_association.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][inlineAssociation][inlineAssociationEnd][bound:*][roleName:me][arrow:--][associationEnd][bound:*][type:Student][roleName:them][classDefinition][name:Mentor]");
+    assertParse("009_association.ump");
     
     UmpleClass aClass = model.getUmpleClass("Student");
     AssociationVariable variable = aClass.getAssociationVariable("aMentor");
@@ -519,7 +504,7 @@ public class UmpleParserTest
   @Test
   public void association_external()
   {
-    assertParse("009_externalAssociation.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][associationDefinition][association][associationEnd][lowerBound:4][upperBound:5][type:Student][arrow:--][associationEnd][lowerBound:6][upperBound:9][type:Mentor][roleName:myMentor][association][associationEnd][bound:*][type:Student][roleName:me][arrow:--][associationEnd][bound:*][type:Student][roleName:them]");
+    assertParse("009_externalAssociation.ump");
     
     UmpleClass aClass = model.getUmpleClass("Student");
     AssociationVariable variable = aClass.getAssociationVariable("myMentor");
@@ -573,7 +558,7 @@ public class UmpleParserTest
   @Test
   public void oneWayAssociation()
   {
-    assertParse("009_oneWayAssociation.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:0][upperBound:1][arrow:->][associationEnd][lowerBound:0][upperBound:1][type:Mentor][classDefinition][name:Mentor]");
+    assertParse("009_oneWayAssociation.ump");
 
     UmpleClass aClass = model.getUmpleClass("Student");
     AssociationVariable variable = aClass.getAssociationVariable("mentor");
@@ -599,7 +584,7 @@ public class UmpleParserTest
   @Test
   public void otherWayAssociation()
   {
-    assertParse("009_otherWayAssociation.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:0][upperBound:1][arrow:<-][associationEnd][lowerBound:0][upperBound:1][type:Mentor][classDefinition][name:Mentor]");
+    assertParse("009_otherWayAssociation.ump");
 
     UmpleClass aClass = model.getUmpleClass("Student");
     AssociationVariable variable = aClass.getAssociationVariable("mentor");
@@ -633,7 +618,7 @@ public class UmpleParserTest
   @Test
   public void symmetricReflexiveAssociation()
   {
-    assertParse("009_reflexiveSymmetricAssociation.ump", "[classDefinition][name:Student][symmetricReflexiveAssociation][lowerBound:0][upperBound:1][roleName:partner]");
+    assertParse("009_reflexiveSymmetricAssociation.ump");
     
     UmpleClass aClass = model.getUmpleClass("Student");
     AssociationVariable variable = aClass.getAssociationVariable("partner");
@@ -644,7 +629,7 @@ public class UmpleParserTest
   @Test
   public void associationByItself()
   {
-    assertParse("009_associationByItself.ump", "[associationDefinition][association][associationEnd][lowerBound:0][upperBound:1][type:Student][roleName:aStudent][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][association][associationEnd][bound:*][type:Event][arrow:--][associationEnd][bound:*][type:Location][classDefinition][name:Event][classDefinition][name:Location][classDefinition][name:Student][classDefinition][name:Mentor]");
+    assertParse("009_associationByItself.ump");
 
     List<Association> iter = model.getAssociations();
     Assert.assertEquals(2,iter.size());
@@ -687,7 +672,7 @@ public class UmpleParserTest
   @Test
   public void associationClassMultipleDefinitions()
   {
-	assertParse("010_associationClassMultipleDefinitions.ump", "[associationClassDefinition][name:Relationship][singleAssociationEnd][bound:*][type:Student][singleAssociationEnd][bound:*][type:Mentor][classDefinition][name:Student][classDefinition][name:Mentor][classDefinition][name:Relationship][elementPosition][x:1][y:2][width:3][height:4]");
+	assertParse("010_associationClassMultipleDefinitions.ump");
 	UmpleClass associationClass = model.getUmpleClass("Relationship");
     Coordinate position = new Coordinate(1,2,3,4);
       
@@ -700,7 +685,7 @@ public class UmpleParserTest
   @Test
   public void associationClassAdditionalAssociations()
   {
-    assertParse("010_associationClassOtherAssociations.ump", "[associationClassDefinition][name:VotesInPoll][singleAssociationEnd][bound:*][type:Candidature][singleAssociationEnd][bound:*][type:PollInElection][inlineAssociation][inlineAssociationEnd][bound:*][arrow:--][associationEnd][bound:*][type:Location][classDefinition][name:Candidature][classDefinition][name:PollInElection][classDefinition][name:Location]");
+    assertParse("010_associationClassOtherAssociations.ump");
     
     UmpleClass votes = model.getUmpleClass("VotesInPoll");
     Assert.assertEquals(3,votes.numberOfAssociationVariables());
@@ -722,7 +707,7 @@ public class UmpleParserTest
   @Test
   public void associationClass()
   {
-    assertParse("010_associationClass.ump", "[namespace:example][classDefinition][name:Thing][associationClassDefinition][name:Ticket][extendsName:Thing][attribute][name:name][attribute][type:Integer][name:type][value:1][singleAssociationEnd][bound:*][type:Event][roleName:event][singleAssociationEnd][bound:*][type:Location][extraCode:public int one() {return 1;}][classDefinition][name:Event][classDefinition][name:Location]");
+    assertParse("010_associationClass.ump");
 
     UmpleClass aClass = model.getUmpleClass("Ticket");
     
@@ -763,26 +748,26 @@ public class UmpleParserTest
   @Test
   public void inlineComments()
   {
-    assertParse("013_inlineComments.ump", "[inlineComment:c 5][inlineComment:c 5b][namespace:example][inlineComment:c 6][inlineComment:c 7][inlineComment:c 7b][inlineComment:c 7c]");
+    assertParse("013_inlineComments.ump");
   }
 
   @Test
   public void multilineComments()
   {
-    assertParse("013_multilineComments.ump", "[multilineComment:c 1\n  c 1b][multilineComment:c 1c\n  c 1d][multilineComment:c 2][multilineComment:c 2b\n  c 2c][multilineComment:c 2d\n  c 2e][multilineComment:c 2f\n  c 2g][multilineComment:c 3][multilineComment:c 3b\n  c 3c][namespace:example][multilineComment:c 4][multilineComment:c 4b\n  c 4c][multilineComment:c 4d\n  c 4e]");
+    assertParse("013_multilineComments.ump");
   }
    
   @Test
   public void attributesAndAssocations()
   {
-    assertParse("012_attributesAndAssociations.ump", "[namespace:example][classDefinition][name:Mentor][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][attribute][name:number]");
+    assertParse("012_attributesAndAssociations.ump");
   }
 
   /* Test to verify the isA relationship between classes and Interfaces*/
   @Test
   public void interfaceImplementation()
   {
-	assertParse("014_interface_implementation.ump", "[interfaceDefinition][name:ISomething][classDefinition][name:Something][extendsName:ISomething]");
+	assertParse("014_interface_implementation.ump");
 	   
     UmpleClass aClass = model.getUmpleClass("Something");
     Assert.assertEquals("ISomething",aClass.getParentInterface(0).getName());
@@ -793,20 +778,20 @@ public class UmpleParserTest
   @Test
   public void interfaceWithMethodAndParameters()
   {
-	assertParse("014_interface_methodAndParam.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String[]][methodDeclarator][methodName:getMethod][parameterList][parameter][type:String][list:[]][name:aname][parameter][type:Integer][name:anotherType]");
+	assertParse("014_interface_methodAndParam.ump");
   }
   
   @Test
   public void interfaceWithPosition()
   {
-	assertParse("014_interface_position.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][elementPosition][x:10][y:20][width:30][height:40]");
+	assertParse("014_interface_position.ump");
   }
   
   /* Test to verify the the methods WITH NO parameters inside an Interface*/
   @Test
   public void interfaceWithMethodAndNOTParameters()
   {
-	assertParse("014_interface_methodNoParam.ump","[interfaceDefinition][name:I_Something][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getSomething][parameterList]");
+	assertParse("014_interface_methodNoParam.ump");
   }
   
   
@@ -814,22 +799,20 @@ public class UmpleParserTest
   @Test
   public void interfaceWithConstants()
   {
-	assertParse("014_interface_constant.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][constantDeclaration][type:String][name:aVariable][value:aValue]");
+	assertParse("014_interface_constant.ump");
   }
   
   /* Test to verify all Members (Constants and Methods)  inside an Interface*/
   @Test
   public void interfaceWithMultipleMembers()
   {
-    String parseResult = "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][constantDeclaration][type:String][name:aVariable][value:aValue]" +
-    					 "[interfaceMemberDeclaration][constantDeclaration][type:String][name:aSecondVariable][value:aSecondValue]"+
-    					 "[interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getMethod][parameterList][parameter][type:String][name:name]";
-	assertParse("014_interface_allMembers.ump", parseResult);
+    assertParse("014_interface_allMembers.ump");
   }
+  
   @Test
   public void interfaceClassDepend()
   {
-    assertParse("014_interfaceDepend.ump", "[interfaceDefinition][name:IMe][depend:java.util.*]");
+    assertParse("014_interfaceDepend.ump");
     
     UmpleInterface aInterface = model.getUmpleInterface("IMe");
     Assert.assertEquals(1,aInterface.numberOfDepends());
@@ -840,20 +823,20 @@ public class UmpleParserTest
   @Test
   public void interfaceWithExtraCode()
   {
-    assertParse("014_interface_extracode.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extraCode:public void getCode();]");
+    assertParse("014_interface_extracode.ump");
   }
   
   @Test
   public void classWithImplementedMethods()
   {
-    assertParse("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][classDefinition][name:Something][attribute][type:implements][name:ISomething][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
+    assertParse("015_ClassWithImplementedMethods.ump");
   }
   
   //TODO: Not being parsed by meta model
   @Test @Ignore
   public void classWithMethods()
   {
-    assertParse("015_classMethods.ump", "[classDefinition][name:Student][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
+    assertParse("015_classMethods.ump");
     
     UmpleClass s = model.getUmpleClass("Student");
     Assert.assertEquals(1,s.numberOfMethods());
@@ -865,7 +848,7 @@ public class UmpleParserTest
   @Test
   public void mixDifferentFiles()
   {
-    assertParse("015_base.ump", "[use:015_Student.ump][use:015_Mentor.ump][classDefinition][name:Student][use:015_Student.ump][classDefinition][name:Mentor][extendsName:Student]");
+    assertParse("015_base.ump");
     
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Student",aClass.getName());
@@ -877,7 +860,7 @@ public class UmpleParserTest
   @Test
   public void classPosition()
   {
-    assertParse("016_classPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
+    assertParse("016_classPosition.ump");
     
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Student",aClass.getName());
@@ -887,7 +870,7 @@ public class UmpleParserTest
   @Test
   public void classPosition_default()
   {
-    assertParse("016_defaultClassPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
+    assertParse("016_defaultClassPosition.ump");
     
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Student",aClass.getName());
@@ -897,7 +880,7 @@ public class UmpleParserTest
   @Test
   public void positionAssociation()
   {
-    assertParse("016_associationPosition.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Mentor][elementPosition][x:10][y:20][width:30][height:40][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4][classDefinition][name:Mentor]");
+    assertParse("016_associationPosition.ump");
     
     Association assoc = model.getAssociations().get(0);
     Assert.assertEquals("Mentor__Student",assoc.getName());
@@ -909,7 +892,7 @@ public class UmpleParserTest
   @Test @Ignore
   public void positionAssociationClass_Mixin()
   {
-    assertParse("016_associationClassMixinPosition.ump", "");
+    assertParse("016_associationClassMixinPosition.ump");
     
     Assert.assertEquals(3, model.numberOfUmpleClasses());
     
@@ -917,13 +900,13 @@ public class UmpleParserTest
     Assert.assertEquals("Relationship",aClass.getName());
     Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getPosition());
     
- // make sure that "isWellDefined" is true
+    // make sure that "isWellDefined" is true
   } 
 
   @Test @Ignore
   public void positionAssociationClass_NoAssociation()
   {
-    assertParse("016_associationClassRelationshipNotDefined.ump", "fill_me_in");
+    assertParse("016_associationClassRelationshipNotDefined.ump");
     
     // fill me in with checks
     // make sure that "isWellDefined" is false
@@ -932,14 +915,14 @@ public class UmpleParserTest
   @Test
   public void positionUnknownAssociation()
   {
-    assertParse("016_unknownAssociationPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4]");
+    assertParse("016_unknownAssociationPosition.ump");
     Assert.assertEquals(0, model.getAssociations().size());
   }  
   
   @Test
   public void associationClassPosition()
   {
-    assertParse("016_associationClassPosition.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Mentor][elementPosition][x:1][y:2][width:3][height:4][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4][classDefinition][name:Mentor][associationClassDefinition][name:Relationship][singleAssociationEnd][bound:*][type:Student][singleAssociationEnd][bound:*][type:Mentor][elementPosition][x:10][y:20][width:30][height:40]");
+    assertParse("016_associationClassPosition.ump");
     
     UmpleClass aClass = model.getUmpleClass("Relationship");
     Assert.assertEquals("Relationship",aClass.getName());
@@ -949,7 +932,7 @@ public class UmpleParserTest
   @Test
   public void glossary()
   {
-    assertParse("017_glossary.ump","[glossary][word][singular:entity][plural:entities]");
+    assertParse("017_glossary.ump");
     Glossary g = model.getGlossary();
     Assert.assertEquals("entities",g.getPlural("entity"));
     Assert.assertEquals("entity",g.getSingular("entities"));
@@ -970,7 +953,7 @@ public class UmpleParserTest
   @Test
   public void key()
   {
-    assertParse("018_key.ump","[classDefinition][name:Student][attribute][name:id][attribute][name:name][key][keyId:id][keyId:name][classDefinition][name:Mentor][attribute][name:employeeId][key][keyId:employeeId][extraCode:;][classDefinition][name:Course][attribute][name:code][defaultKey]");
+    assertParse("018_key.ump");
     
     UmpleClass student = model.getUmpleClass("Student");
     Key key = student.getKey();
@@ -995,7 +978,7 @@ public class UmpleParserTest
   @Test
   public void beforeKeyword()
   {
-    assertParse("019_before.ump","[classDefinition][name:Student][attribute][name:name][beforeCode][operationName:setName][code:doSomething();]");
+    assertParse("019_before.ump");
 
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfCodeInjections());
@@ -1009,7 +992,7 @@ public class UmpleParserTest
   @Test
   public void afterKeyword()
   {
-    assertParse("019_after.ump","[classDefinition][name:Student][attribute][name:name][afterCode][operationName:getName][code:notReallyPossible();]");
+    assertParse("019_after.ump");
     
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfCodeInjections());
@@ -1023,7 +1006,7 @@ public class UmpleParserTest
   @Test
   public void enumAttributeEmpty()
   {
-    assertParse("020_enumEmpty.ump","[classDefinition][name:Student][stateMachine][enum][name:status]");
+    assertParse("020_enumEmpty.ump");
     
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfStateMachines());
@@ -1034,7 +1017,7 @@ public class UmpleParserTest
   @Test
   public void enumShortHandSyntax()
   {
-    assertParse("020_enum.ump","[classDefinition][name:Student][stateMachine][enum][name:status][stateName:FullTime][stateName:PartTime][stateName:MidTime][stateMachine][enum][name:grade][stateName:High]");
+    assertParse("020_enum.ump");
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(2,student.numberOfStateMachines());
     StateMachine sm = student.getStateMachine(0);
@@ -1049,7 +1032,7 @@ public class UmpleParserTest
   @Test
   public void enumLongHandSyntax()
   {
-    assertParse("020_enumLongHand.ump","[classDefinition][name:Student][stateMachine][inlineStateMachine][name:status][state][stateName:FullTime][state][stateName:PartTime]");
+    assertParse("020_enumLongHand.ump");
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(1,student.numberOfStateMachines());
     StateMachine sm = student.getStateMachine(0);
@@ -1063,25 +1046,14 @@ public class UmpleParserTest
   @Test
   public void nestedUseStatements()
   {
-    assertParse("021_nestedUse.ump","[classDefinition][name:Student][attribute][name:fisrtName][use:021_nestedUse_B.ump][classDefinition][name:Student][attribute][name:lastName][use:021_nestedUse_C.ump][classDefinition][name:Student][attribute][name:middleName]");
+    assertParse("021_nestedUse.ump");
     
     UmpleClass student = model.getUmpleClass("Student");
     Assert.assertEquals(3,student.numberOfAttributes());
     
   }
-
-  private void assertParse(String filename, String expectedOutput)
-  {
-    assertParse(filename, expectedOutput, true);
-  }
-
-  private void assertFailedParse(String filename, Position expectedPosition)
-  {
-    assertParse(filename, "", false);
-    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
-  }
-
-  private void assertParse(String filename, String expectedOutput, boolean expected)
+  
+  public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
@@ -1089,22 +1061,25 @@ public class UmpleParserTest
     parser = UmpleParserFactory.create(umpleParserName,true);
     parser.setModel(model);
     boolean answer = parser.parse("program", input).getWasSuccess();
+    return answer;
+  }
+  
+  public void assertParse(String filename)
+  {
+    Assert.assertEquals(true,parse(filename));
+  }
+
+  public void assertFailedParse(String filename, Position expectedPosition)
+  {
+    boolean answer = parse(filename);
     
     if (answer)
     {
       answer = parser.analyze(false).getWasSuccess();
     }
-
-    if (answer == false && expected)
-    {
-      System.out.println("failed at:" + parser.getParseResult().getPosition());
-    }
-    
-    Assert.assertEquals(expected, answer);
-    if (expected)
-    {
-      Assert.assertEquals(expectedOutput, parser.toString());  
-    }
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
 
 }
+ 

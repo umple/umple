@@ -99,6 +99,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToRoot + "/x.rb");
     SampleFileWriter.destroy(pathToRoot + "/one.rb");
     SampleFileWriter.destroy(pathToRoot + "/two.rb");    
+    
   }
   
   @Test
