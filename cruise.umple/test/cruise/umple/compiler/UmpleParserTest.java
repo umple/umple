@@ -13,11 +13,13 @@ public class UmpleParserTest
   UmpleParser parser;
   UmpleModel model;
   String pathToInput;
+  String umpleParserName;
 
   @Before
   public void setUp()
   {
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
+    umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
 
   @Test
@@ -677,7 +679,7 @@ public class UmpleParserTest
   public void associationClass2()
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, "010_associationClass2.ump"));
-    parser = new UmpleParser();
+    parser = UmpleParserFactory.create(umpleParserName,true);
     boolean answer = parser.parse("associationClassDefinition", input).getWasSuccess();
     Assert.assertEquals(true,answer);
   }
@@ -1084,7 +1086,8 @@ public class UmpleParserTest
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
-    parser = new UmpleParser(model);
+    parser = UmpleParserFactory.create(umpleParserName,true);
+    parser.setModel(model);
     boolean answer = parser.parse("program", input).getWasSuccess();
     
     if (answer)

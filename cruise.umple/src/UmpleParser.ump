@@ -12,35 +12,14 @@ See also UmpleParser_Code for the grammar definition and methods
 
 namespace cruise.umple.compiler;
 
-class UmpleParser
+interface UmpleParser
 {
-  isA Parser;
-  depend java.io.*;
-  depend cruise.umple.util.*;
- 
-  currentPackageName = "";
-  internal AssociationVariable[] unlinkedAssociationVariables;
-  internal Association[] unlinkedAssociations;
-  internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
-  internal String[] unparsedUmpleFiles;
-  internal String[] parsedUmpleFiles;
-  internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
-  internal Map<UmpleClass,Pair> umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
-  internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
-  internal Map<TraceItem,Token> unparsedTraceItems = new HashMap<TraceItem,Token>(); 
-  UmpleModel model;
-  
-  after constructor { init(); }
+  public String toGrammar();
+  public ParseResult parse(String ruleName, String codeToParse);
+  public ParseResult analyze(boolean shouldGenerateCode);
+  public Token getRootToken();
+  public UmpleModel getModel();
+  public boolean setModel(UmpleModel model);
+  public ParseResult getParseResult();
 }
 
-class Pair
-{
-  name;
-  value;
-}
-
-use Parser.ump;
-use Umple.ump;
-use UmpleDiagram.ump;
-use StateMachine.ump;
-use UmpleParser_Code.ump;

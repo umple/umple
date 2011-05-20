@@ -52,7 +52,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     try
     {
       textParser = new TextParser(getUmpleCode());
-      umpleParser = new UmpleParser();
+      umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())

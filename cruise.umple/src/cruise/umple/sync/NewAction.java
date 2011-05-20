@@ -39,7 +39,7 @@ public class NewAction extends SynchronizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       JsonParser parser = new JsonParser("json");

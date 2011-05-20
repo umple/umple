@@ -310,7 +310,7 @@ public class Documenter
       exampleOutput += nextExample;
     }
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
-    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", (new UmpleParser()).toGrammar());
+    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", (new UmpleInternalParser()).toGrammar());
     return htmlOutput;
   }
   

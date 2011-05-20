@@ -9,6 +9,7 @@ public class JavaGeneratorTest
 
   UmpleModel model;
   JavaGenerator generator;
+  String umpleParserName;
 
   @Before
   public void setUp()
@@ -16,6 +17,7 @@ public class JavaGeneratorTest
     model = new UmpleModel(null);
     generator = new JavaGenerator();
     generator.setModel(model);
+    umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
   
   @Test
@@ -1345,7 +1347,7 @@ public class JavaGeneratorTest
 
   private UmpleModel parse(String input)
   {
-    UmpleParser parser = new UmpleParser();
+    UmpleParser parser = UmpleParserFactory.create(umpleParserName,true);
     parser.parse("program", input);
     parser.analyze(false);
     UmpleModel model = parser.getModel();

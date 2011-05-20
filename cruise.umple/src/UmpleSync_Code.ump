@@ -26,7 +26,7 @@ class UpdatePositioningAction
     try
     {
       textParser = new TextParser(getUmpleCode());
-      umpleParser = new UmpleParser();
+      umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -233,7 +233,7 @@ class NewAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       JsonParser parser = new JsonParser("json");
@@ -340,7 +340,7 @@ class EditAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -583,7 +583,7 @@ class DeleteAction
     {
       
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -658,7 +658,7 @@ class NewAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -750,7 +750,7 @@ class NewAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       umpleParser.parse("program", getUmpleCode());
       JsonParser jsonParser = new JsonParser("json");
       jsonParser.parse("json", getDeltaCode());
@@ -822,7 +822,7 @@ class EditAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -1011,7 +1011,7 @@ class DeleteAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -1146,7 +1146,7 @@ class DeleteGeneralizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -1228,7 +1228,7 @@ class NewGeneralizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())

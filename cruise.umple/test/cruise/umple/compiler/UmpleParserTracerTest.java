@@ -14,11 +14,13 @@ public class UmpleParserTracerTest
   UmpleParser parser;
   UmpleModel model;
   String pathToInput;
+  String umpleParserName;
 
   @Before
   public void setUp()
   {
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
+    umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
   
   @Test
@@ -70,7 +72,8 @@ public class UmpleParserTracerTest
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
-    parser = new UmpleParser(model);
+    parser = UmpleParserFactory.create(umpleParserName,model,true);
+    
     boolean answer = parser.parse("program", input).getWasSuccess();
     
     if (answer)

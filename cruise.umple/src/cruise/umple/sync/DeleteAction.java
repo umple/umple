@@ -40,7 +40,7 @@ public class DeleteAction extends SynchronizationAction
     {
       
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())

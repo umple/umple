@@ -108,3 +108,48 @@ class UmpleFile
     fileContent = new StringBuilder(fileContent.toString().replaceAll("//(\\w|\\d|\\s)*\\n", "\n"));
   }  
 }
+
+
+class UmpleParserFactory
+{
+
+  public static UmpleParser create(String className) 
+  {
+    Object object = null;
+    try 
+    {
+      Class<?> classDefinition = Class.forName(className);
+      object = classDefinition.newInstance();
+      return (UmpleParser)object;
+    } 
+    catch (Exception e) 
+    { 
+      return null;
+    }
+  }
+  
+  public static UmpleParser create(String umpleParserName, UmpleModel model)
+  {
+    return create(umpleParserName,model,false);
+  }
+  
+  public static UmpleParser create(String umpleParserName, boolean failHardIfInvalid)
+  {
+    return create(umpleParserName,null,failHardIfInvalid);
+  }
+  
+  public static UmpleParser create(String umpleParserName, UmpleModel model, boolean failHardIfInvalid)
+  {
+    UmpleParser p = create(umpleParserName);
+    if (p == null && failHardIfInvalid)
+    {
+      org.junit.Assert.fail("Unknown parser " + umpleParserName);
+    }
+    if (model != null)
+    {
+      p.setModel(model);
+    }
+    return p;
+  }
+
+}

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.12.0.352 modeling language!*/
 
 package cruise.umple.compiler;
 import java.io.*;
@@ -234,15 +234,15 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
-  private String getTargetNamespaceName(){
-	  if (model.getDefaultNamespace() != null){
-		  if (model.getDefaultNamespace().length() > 0 )
-		  {
-			  String [] namespaces = model.getDefaultNamespace().split("\\.");	
-			  return namespaces[namespaces.length-1];
-		  }
-	  }
-		  return model.getUmpleFile().getSimpleFileName();
+  private String getTargetNamespaceName(){ 
+     if (model.getDefaultNamespace() != null){
+	if (model.getDefaultNamespace().length() > 0 )
+	{
+	   String [] namespaces = model.getDefaultNamespace().split("\\.");	
+	   return namespaces[namespaces.length-1];
+	}
+     }
+    return model.getUmpleFile().getSimpleFileName();
   }
   
   private void writeModel()

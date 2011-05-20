@@ -39,7 +39,7 @@ public class DeleteAssociationAction extends SynchronizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())

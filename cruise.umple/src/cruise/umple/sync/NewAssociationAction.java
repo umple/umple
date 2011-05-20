@@ -54,7 +54,7 @@ public class NewAssociationAction extends SynchronizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       ParseResult result = umpleParser.parse("program", getUmpleCode());
 
       if (!result.getWasSuccess())
@@ -146,7 +146,7 @@ public class NewAssociationAction extends SynchronizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleParser();
+      UmpleParser umpleParser = new UmpleInternalParser();
       umpleParser.parse("program", getUmpleCode());
       JsonParser jsonParser = new JsonParser("json");
       jsonParser.parse("json", getDeltaCode());

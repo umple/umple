@@ -551,7 +551,7 @@ public class UmpleModel
     
   public void run()
   {
-    UmpleParser parser = new UmpleParser(this);
+    UmpleParser parser = new UmpleInternalParser(this);
     String input = SampleFileWriter.readContent(getUmpleFile().getFile());
     ParseResult result = parser.parse("program", input);
     

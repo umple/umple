@@ -31,4 +31,9 @@ class UmpleFile
   internal StringBuilder fileContent = init();
 }
 
+class UmpleParserFactory
+{
+ 
+}
+
 use UmpleHelper_Code.ump;

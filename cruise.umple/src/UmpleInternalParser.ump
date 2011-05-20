@@ -1,0 +1,46 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This is the Umple master files that calls all other Umple files. By compiling this file,
+Umple will regenerate all Java files.
+
+*/
+
+class UmpleInternalParser
+{
+  isA UmpleParser;
+  isA Parser;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+ 
+  currentPackageName = "";
+  internal AssociationVariable[] unlinkedAssociationVariables;
+  internal Association[] unlinkedAssociations;
+  internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
+  internal String[] unparsedUmpleFiles;
+  internal String[] parsedUmpleFiles;
+  internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
+  internal Map<UmpleClass,Pair> umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
+  internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
+  internal Map<TraceItem,Token> unparsedTraceItems = new HashMap<TraceItem,Token>(); 
+  UmpleModel model;
+  
+  after constructor { init(); }
+}
+
+class Pair
+{
+  name;
+  value;
+}
+
+use UmpleParser.ump;
+use Parser.ump;
+use Umple.ump;
+use UmpleDiagram.ump;
+use StateMachine.ump;
+use UmpleInternalParser_Code.ump;

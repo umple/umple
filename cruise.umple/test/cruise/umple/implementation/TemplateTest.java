@@ -14,6 +14,7 @@ public class TemplateTest
   public String pathToRoot;
   public String language;
   public String languagePath;
+  public String umpleParserName;
   
   @Before
   public void setUp()
@@ -22,6 +23,7 @@ public class TemplateTest
     pathToRoot = SampleFileWriter.rationalize("../cruise.umple");    
     language = null;
     languagePath = "java";
+    umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
   
   @After
@@ -153,7 +155,7 @@ public class TemplateTest
 
   public  UmpleModel createUmpleSystem(String path, String filename)
   {
-    UmpleParser parser = new UmpleParser();
+    UmpleParser parser = UmpleParserFactory.create(umpleParserName,true);
 
     String input = SampleFileWriter.readContent(new File(path,filename));
     ParseResult result = parser.parse("program", input);
@@ -164,6 +166,10 @@ public class TemplateTest
     }
 
     UmpleModel model = parser.getModel();
+    if (model == null)
+    {
+      Assert.fail("Null model");
+    }
     model.setUmpleFile(new UmpleFile(new File(path,filename)));
 
     if (language != null)

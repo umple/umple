@@ -9,19 +9,19 @@ http://cruise.site.uottawa.ca/UmpleMITLicense.html
 
 namespace cruise.umple.compiler;
 
-class UmpleParser
+class UmpleInternalParser
 {
  
   internal StateMachine placeholderStateMachine = null;
   
-  public UmpleParser()
+  public UmpleInternalParser()
   {
-    this("UmpleParser",new UmpleModel(null));
+    this("UmpleInternalParser",new UmpleModel(null));
   }
 
-  public UmpleParser(UmpleModel aModel)
+  public UmpleInternalParser(UmpleModel aModel)
   {
-    this("UmpleParser",aModel);
+    this("UmpleInternalParser",aModel);
   }
 
 	private void init()
