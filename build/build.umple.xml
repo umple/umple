@@ -15,8 +15,8 @@
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <path refid="junit4.classpath"/>
+    <path refid="xtext_core.classpath"/>
   </path>
-
 
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct
