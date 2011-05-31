@@ -25,7 +25,11 @@
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xtext_1.0.2.v201102150722.jar" />
     <pathelement location="lib/xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar" />
-    <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722" />
+    <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846.jar"/>
+    <pathelement location="lib/xtextplugins/org.apache.commons.logging_1.0.4.v201005080501.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.core_1.0.2.v201102150556.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtend.typesystem.emf_1.0.1.v201008251147.jar"/>
   </path>
 
   <!-- ```````````````````````````

@@ -47,7 +47,7 @@ public class UmpleJavaValidator extends AbstractUmpleJavaValidator {
 		}
 	}
 	
-	public static final String TRACEDIRECTIVE_START = "InvalidTraceDirective";
+/*	public static final String INVALID_TRACEDIRECTIVE_START = "InvalidTraceDirective";
 	@Check  
 	public void checkTraceDirectiveStartsWithLower(TraceDirective trace) {
 		if (!Character.isLowerCase(trace.getTraceStart().charAt(0))) {
@@ -57,6 +57,6 @@ public class UmpleJavaValidator extends AbstractUmpleJavaValidator {
 					trace.getTraceStart()
 			);
 		}
-	}
+	}*/
 
 }

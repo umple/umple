@@ -70,24 +70,22 @@ public class UmpleXtextParser implements UmpleParser
   {
     ParseResult tempResult = temp.parse(ruleName,codeToParse);
     return tempResult;
-//    Reader codeToParseReader = new StringReader(codeToParse);
-//    UmpleAntlrTokenFileProvider antlrTokenFileProvider = new UmpleAntlrTokenFileProvider();
-//    AntlrTokenDefProvider tokenDefProvider = new AntlrTokenDefProvider();
-//    tokenDefProvider.setAntlrTokenFileProvider(antlrTokenFileProvider);
-//    Provider<Lexer> provider = (Provider)LexerProvider.create(InternalUmpleLexer.class);
-//    Provider<XtextResourceSet> grammarResourceSet = null;
-//    GrammarProvider grammarProvider = new GrammarProvider("cruise.umple.Umple",grammarResourceSet);
-//    TerminalsGrammarAccess terminalsGrammarAccess = new TerminalsGrammarAccess(grammarProvider);
-//    
-//    antlr.setElementFactory(new DefaultEcoreElementFactory());
-//    antlr.setGrammarAccess(new UmpleGrammarAccess(grammarProvider, terminalsGrammarAccess));
-//    antlr.setLexerProvider(provider);
-//    antlr.setTokenDefProvider(tokenDefProvider);
-//
-//    IParseResult iResult = antlr.parse(ruleName, codeToParseReader);
-//    boolean wasSuccess = iResult.getParseErrors().size() == 0;
-//    ParseResult result = new ParseResult(wasSuccess);
-//    return result;   
+    	  	  
+	  /*Injector injector = new
+      UmpleStandaloneSetup().createInjectorAndDoEMFRegistration() ;
+	  Reader inputStream = new StringReader(codeToParse);
+	  IAntlrParser parser = injector.getInstance(IAntlrParser.class);
+      IParseResult parseResult = parser.parse(inputStream);
+      if (!parseResult.getParseErrors().isEmpty()) {
+          // syntax errors occured - handle them properly
+    	  return null;
+      }
+      else{
+    	  boolean wasSuccess = parseResult.getParseErrors().size() == 0;
+          ParseResult result = new ParseResult(wasSuccess);
+          return result;   
+      }*/
+      
   }
   
   public ParseResult analyze(boolean shouldGenerateCode)
