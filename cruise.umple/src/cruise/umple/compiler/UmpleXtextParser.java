@@ -12,6 +12,7 @@ public class UmpleXtextParser implements UmpleParser
 
   //UmpleXtextParser Attributes
   private UmpleInternalParser temp;
+  private cruise.umple.parser.antlr.UmpleParser antlr;
 
   //------------------------
   // CONSTRUCTOR
@@ -20,6 +21,7 @@ public class UmpleXtextParser implements UmpleParser
   public UmpleXtextParser()
   {
     temp = new UmpleInternalParser();
+    antlr = new cruise.umple.parser.antlr.UmpleParser();
   }
 
   //------------------------
@@ -34,9 +36,22 @@ public class UmpleXtextParser implements UmpleParser
     return wasSet;
   }
 
+  public boolean setAntlr(cruise.umple.parser.antlr.UmpleParser aAntlr)
+  {
+    boolean wasSet = false;
+    antlr = aAntlr;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleInternalParser getTemp()
   {
     return temp;
+  }
+
+  public cruise.umple.parser.antlr.UmpleParser getAntlr()
+  {
+    return antlr;
   }
 
   public void delete()
@@ -53,7 +68,26 @@ public class UmpleXtextParser implements UmpleParser
   
   public ParseResult parse(String ruleName, String codeToParse)
   {
-    return temp.parse(ruleName,codeToParse);
+    ParseResult tempResult = temp.parse(ruleName,codeToParse);
+    return tempResult;
+//    Reader codeToParseReader = new StringReader(codeToParse);
+//    UmpleAntlrTokenFileProvider antlrTokenFileProvider = new UmpleAntlrTokenFileProvider();
+//    AntlrTokenDefProvider tokenDefProvider = new AntlrTokenDefProvider();
+//    tokenDefProvider.setAntlrTokenFileProvider(antlrTokenFileProvider);
+//    Provider<Lexer> provider = (Provider)LexerProvider.create(InternalUmpleLexer.class);
+//    Provider<XtextResourceSet> grammarResourceSet = null;
+//    GrammarProvider grammarProvider = new GrammarProvider("cruise.umple.Umple",grammarResourceSet);
+//    TerminalsGrammarAccess terminalsGrammarAccess = new TerminalsGrammarAccess(grammarProvider);
+//    
+//    antlr.setElementFactory(new DefaultEcoreElementFactory());
+//    antlr.setGrammarAccess(new UmpleGrammarAccess(grammarProvider, terminalsGrammarAccess));
+//    antlr.setLexerProvider(provider);
+//    antlr.setTokenDefProvider(tokenDefProvider);
+//
+//    IParseResult iResult = antlr.parse(ruleName, codeToParseReader);
+//    boolean wasSuccess = iResult.getParseErrors().size() == 0;
+//    ParseResult result = new ParseResult(wasSuccess);
+//    return result;   
   }
   
   public ParseResult analyze(boolean shouldGenerateCode)

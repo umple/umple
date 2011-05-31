@@ -24,6 +24,8 @@
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.util_1.0.2.v201102150722.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xtext_1.0.2.v201102150722.jar" />
+    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar" />
+    <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722" />
   </path>
 
   <!-- ```````````````````````````

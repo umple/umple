@@ -17,8 +17,21 @@ namespace cruise.umple.compiler;
 class UmpleXtextParser
 {
   isA UmpleParser;
-  
+  // depend java.io.*;
+  // depend org.eclipse.xtext.parser.*;
+  // depend org.eclipse.xtext.common.services.*;
+  // depend org.eclipse.xtext.parser.*;
+  // depend org.eclipse.xtext.parser.antlr.*;
+  // depend com.google.inject.*;
+  // depend cruise.umple.parser.antlr.*;
+  // depend cruise.umple.parser.antlr.internal.*;
+  // depend cruise.umple.services.*;
+  // depend org.eclipse.xtext.parser.antlr.internal.*;
+  // depend org.eclipse.xtext.resource.*;
+  // depend org.eclipse.xtext.service.*;
+
   UmpleInternalParser temp = new UmpleInternalParser();
+  cruise.umple.parser.antlr.UmpleParser antlr = new cruise.umple.parser.antlr.UmpleParser();
   
 }
 
