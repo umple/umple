@@ -1,0 +1,436 @@
+grammar cruise.umple.Umple  with  org.eclipse.xtext.common.Terminals 
+ 
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate umple "http://www.umple.cruise/Umple"
+
+//import "platform:/resource/cruise.umple.xtext.ext.java/src-gen/cruise/umple/xtext/ext/Java.ecore" as java
+
+UmpleModel:
+	(namespace=Namespace)? 
+	(glossary=Glossary)? 
+	(generate_=Generate)?
+	(traceMechanism=TraceMechanism)?
+	((uses+=UseStatement)     |
+	(umpleElements+=UmpleElement)   |
+	(associations+=UmpleAssociation) | 
+	(associationClasses+=UmpleAssociationClass) |  
+	(statemachines+=StateMachineDefinition))* ; 
+
+// Grammar 
+UmpleElement:
+	UmpleClass | UmpleInterface;
+
+Word:
+	singular=STRING ":" plural=STRING ";" ;	
+	
+Glossary:
+	{Glossary}"glossary" "{" (words+=Word)* "}";
+	
+Generate:	
+	"generate" (java?="Java" | Php?="Php"| Ruby="Ruby")  ";";
+	
+UseStatement:
+	"use" (fileID)";";
+
+Namespace:
+	"namespace" (value=fileID) ";";
+	
+
+UmpleClass :  {UmpleClass} (packageName=STRING)? (external?='external')? "class" (name=ID) "{"  
+			(singleton?=Singleton)?
+			(key=Key)?
+			(codeInjection=CodeInjection)?
+			("isA" (extendsClass+=[UmpleElement]) ("," extendsClass+=[UmpleElement])* ";")?
+			((attributes+=UmpleAttribute)		|
+			(symmetricReflexiveAssociations+=SymmetricReflexiveAssociation)		|
+			(inlineAssociations+=InlineAssociation)								|
+			(depends+=Depend)					|
+			(positions+=Position)				|
+			(stateMachines+=StateMachine)		|
+			(traceDirectives+=TraceDirective)	|
+			(traceCases+=TraceCase))*
+			(externalLanguage=ExternalLanguage)?
+			"}";
+
+// ExtraCode Section
+ExternalLanguage: 
+	(functions+=functionDefinition)* | (rubyFunctions+=rubyFunction)* | (phpFunctions+=phpFunction)* ;
+	
+PrimitiveType
+    :   "boolean"
+    |   "char"
+    |   "byte"
+    |   "short"
+    |   "int"
+    |   "long"
+    |   "float"
+    |   "double"
+    ;
+
+
+//Interface can not have native code right now
+UmpleInterface: "interface" name=ID "{" (depends+=Depend)* (extraCode=functionDeclaration ";")? "}";
+
+UmpleAssociation: "association" (name=ID)? "{" (associations=Association) "}";	
+
+UmpleAssociationClass: "associationClass" name=ID "{" (associationClassContents+=associationClassContent)* "}";
+
+//CONTENT SECTION
+associationClassContent: 
+	UmpleClass | Depend | (singleAssociationEnd) |
+	StateMachine | UmpleAttribute | InlineAssociation;
+
+//ASSOCIATIONS/
+Association:  multiplicity (type1=ID) (rolename1=ID)?  ("->"|"--"|"<-"|"><") multiplicity (type2=ID) (rolename2=ID)? ";";
+SymmetricReflexiveAssociation: multiplicity "self" (rolename=ID) ";";
+InlineAssociation: multiplicity (rolename1=ID)? ("->"|"--"|"<-"|"><") (multiplicity) (type=ID) (rolename2=ID)? ";";
+singleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
+multiplicity: bound | (bound ".." bound);
+bound: INT | "*";
+
+//ATTRIBUTES AND SMALLER BITS
+
+Singleton: singleton?="singleton" ";";
+
+CodeInjection:"before" (name=extendedID) code=block | "after" (name=extendedID) code=block;
+
+UmpleAttribute:
+	autounique?="autounique" name=extendedID ";" |
+	(unique?="unique")? modifier=Modifier? ((type=UmpleAttributeType (list?="[]")?) |
+	(object=[UmpleClass] (list?="[]")?))?  name=extendedID ( '=' value=UmplePrimitiveType)? ";";
+	
+UmplePrimitiveType:
+  INT | STRING ;
+ 
+UmpleAttributeType
+	: 	"Date"
+	|	"Time"
+	|	"Double" | "double"
+	|	"Integer"|"integer"|"int"
+	|	"Boolean"|"boolean"
+	|	"String"|"string"
+	;
+ 
+enum Modifier: IMMUTABLE="immutable"|SETTABLE="settable"|INTERNAL="internal"|DEFAULTED="defaulted"|CONST="const";
+
+
+//This section can contain native Java code
+Key: "key" {Key} "{" (keys+=ID ("," keys+=ID)*)? "}";
+
+Depend: "depend" name = extendedID (".*")? ";";
+
+
+//STATEMACHINES
+
+StateMachineDefinition: "statemachine" name=extendedID "{" (states+=State)* "}";
+StateMachine: ENUM | InlineStateMachine | ReferencedStateMachine;
+InlineStateMachine: name=extendedID "{" (states+=State)* "}";
+ReferencedStateMachine: name = extendedID "as" (machine=[StateMachineDefinition]) ";";
+ENUM: name=extendedID "{" state1=extendedID ("," states+=extendedID)* "}";
+
+State: ( (stateTraceDirective+=TraceDirective) | ("conc")? ("concurrent")? ("|")? stateName=extendedID  "{" (("*")? states+=StateEntity)* "}");
+
+StateEntity: Transition | EntryOrExitAction | (Activity ("->" extendedID ";")?) | State | (expression=expression ";");	
+//This covers just activities and activities that cause a state transition
+
+	
+Transition: 
+	(Guard events+=EventDefinition "->" a=Action? stateName=extendedID ";") |
+	(EventDefinition g=Guard? "->" a=Action? stateName=extendedID ";");
+	
+EventDefinition:  {EventDefinition}TimedEvent |{EventDefinition} WaitEvent | eventID=ID;
+TimedEvent: "afterEvery" "(" (INT|ID) ")";
+WaitEvent: "wait" "(" (INT|ID) ")";
+Action: "/" code=block;
+EntryOrExitAction: (type="entry" |type="exit") "/" code=block;
+Activity: "do" code=block;
+Guard: "[" GuardCode "]";
+
+//This does allow for additions and modifications as well as boolean expressions
+//but it is the most comprehensive
+GuardCode: nativeExpression=block;
+
+Position: (a=AssociationPosition | c=ClassPosition);
+ClassPosition: "position" (x=INT) (y=INT) (width=INT) (height=INT) ";";
+AssociationPosition: "position.association" (index=INT) (c1=Coordinate) (c2=Coordinate) ";"; //ERROR: UNSURE AS TO WHAT INDEX IS
+Coordinate: (x=INT) "," (y=INT);
+
+
+// TRACEDIRECTIVE SECTION
+
+/*
+TraceDirective:
+  	( traceStart=("trace"|"Trace")  modelElement+=ModelElement (conditionRHS=ConditionRHS)? (elementPattern='*')? 
+  	(for?="for" repeat=INT)? 
+  	(during?="during" duration=INT (durationUnite=ID))? 
+  	(hasPeriod?="period" period=INT (periodUnite=ID))?
+	("execute" ((codeToExecute=STRING | traceRecord+=TraceRecord) |  ('{' traceRecord+=TraceRecord (','  traceRecord+=TraceRecord)*) '}') )?
+	("until" untilCondition=TraceCondition)?
+	("where" whereCondition=TraceCondition)?
+	("after" afterCondition=TraceCondition)?
+	(("activate" activateCaseName=ID ( activateOnThis?="onAllObjects" | activateOnThisThread?="onThisThreadOnly" )? (("for" repeats=INT) | ("period" period=INT (unite=ID)) | ("during" duration=INT (unite=ID)) | ('until' untilCondition=TraceCondition) )?) | ("deactivate" deactivateCaseName=ID ( "for" deactivateTime=INT (unite=ID) )? ))?)
+	';'
+	|
+	(
+	(("activate" activateCaseName=ID)
+	|
+	("deactivate" deactivateCaseName=ID "onThisObject" ( "for" deactivateTime=INT (unite=ID) )? ))
+	)
+	';';
+*/
+
+TraceDirective:
+	( traceStart=("trace"|"Trace")  modelElement+=ModelElement (conditionRHS=ConditionRHS)? (elementPattern='*')?) ;
+	
+	
+TraceCase:
+	("tracecase" traceCaseName=ID '{' (traceDirective+=TraceDirective)* '}');
+
+TraceRecord:
+    ("record" '(' objectBeingTraced=STRING (',' textOutput=ID)? ) ')';
+
+TraceCondition:
+ CompoundTraceCondition | SimpleTraceCondition;
+ 
+CompoundTraceCondition:
+ 	operand=STRING;
+
+SimpleTraceCondition:
+ 	lhs=ModelElement (conditionRHS=ConditionRHS);
+ 	
+ConditionRHS:
+    operand=ComparisonOperator value=PrimitiveType;
+     
+ModelElement: 
+	((executeOnEntry?="entry" |executeOnExit?="exit" | cflow?="cflow" )? aMethod=ID'()')	| attribute=[UmpleAttribute]
+;
+
+ComparisonOperator
+	:	'>'
+	|   '<'
+	|	'=='
+	|	'>='
+	|	'<='
+	;
+
+TraceMechanism :
+	"TraceUsing" traceMechanism=ID ";";
+	
+/*
+PropertyTraceDirective:
+	"trace" (executeOnEntry?='entry' |executeOnExit?='exit' | cflow?='cflow' )? modelElement+=ModelElement (elementPattern='*')? ('for' repeats=INT 'during' duration=INT (unite=ID))?  
+	("execute" ((codeToExecute=STRING | traceRecord+=TraceRecord) |  ('{' traceRecord+=TraceRecord (","  traceRecord+=TraceRecord)*) '}') )?
+	('where' traceCondition=TraceCondition)?
+	';';
+*/
+	
+// END OF TRACEDIRECTIVE SECTION
+
+/** EXPRESSIONS (JAVA and UMPLE)
+ *	START
+ *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
+ *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
+ *	have no left-side recursion.
+ **/
+block 
+    :   '{' blocks+=blockStatement* '}'
+    ;
+
+
+parExpression:	
+	'(' expression ')';
+
+assignmentOperator
+	:	'='
+	|	'+='
+	|	'-='
+	;
+
+expressionList
+	:	expressions+=expression (',' expressions+=expression)*
+	;
+
+ 
+ expression 
+	: 	expression1=conditionalExpression (assignmentOperator expression2=expression)?
+	;
+	
+conditionalExpression
+    :   expression1=conditionalOrExpression ( '?' expression2=expression ':' expression3=expression )?
+    ;
+
+conditionalOrExpression
+    :   expression1=conditionalAndExpression ( '||' expressionRest+=conditionalAndExpression )*
+    ;
+
+conditionalAndExpression
+    :   expression1=equalityExpression ( '&&' expressionRest+=equalityExpression )*
+    ;
+    
+equalityExpression
+    :   expression1=relationalExpression ( ('==' | '!=')  expressionRest+=relationalExpression)*
+    ;
+
+relationalExpression
+	:	expression1=additiveExpression  (relationalOp expressionRest+=additiveExpression)*
+	;
+
+relationalOp
+	:	"<="
+	|	"<"
+	|	">="
+	|	">"
+	;
+	
+additiveExpression
+    :   expression1=multiplicativeExpression ( ('+' | '-') expressionRest+=multiplicativeExpression )*
+    ;
+
+multiplicativeExpression
+    :   expression1=unaryExpression ( ( '*' | '/' | '%' ) expressionRest+=unaryExpression )*
+    ;
+    
+unaryExpression
+    :   '+' exp1=unaryExpression
+    |   '-' exp1=unaryExpression
+    |   '++' exp1=unaryExpression
+    |   '--' exp1=unaryExpression
+    |   exp2=unaryExpressionNotPlusMinus
+    ;
+
+unaryExpressionNotPlusMinus
+    :   '~' unaryExpression
+    |   '!' unaryExpression
+    |	primary ('++'|'--')?
+    ;
+
+primary
+	:	parExpression
+	|	literal
+	;
+
+literal
+	:	INT
+	|	DOUBLE
+	|	STRING
+	|	extendedID
+	|	javaFunctionCall
+	|	"true"	| "TRUE"
+	|	"false"	| "FALSE"
+	;
+	
+	
+/** EXPRESSIONS
+ *	END
+ **/
+
+//LANGUAGE DEPENDENT
+functionCall : javaFunctionCall;	//Expand list with more options
+
+functionDeclaration 
+	: java=javaFunctionDeclaration;
+
+functionDefinition : java=javaFunctionDefinition;
+
+
+/** JAVA NATIVE CODE
+ *	START
+ *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
+ *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
+ *	have no left-side recursion.
+**/
+
+//Methods
+javaFunctionDeclaration:
+("static")? ("public"|"private"|"protected") (returnType=attributeType|"void"|referenceType=ID) name=ID ( "(" (argList+=attributeType argListID+=extendedID ("," argList+=attributeType argListID+=extendedID)*)? ")" | '()');
+
+javaFunctionDefinition: 
+decl=javaFunctionDeclaration code=block
+;
+
+javaFunctionCall: name=extendedID (("(" args=expressionList? ")")|("()"));
+
+
+blockStatement
+    :	statement
+    |	localVariableDeclarationStatement
+    ;
+
+localVariableDeclarationStatement
+    :    localVariableDeclaration ';'
+    ;
+
+localVariableDeclaration
+    :   type=attributeType dec=variableDeclarators
+    ;
+   
+variableDeclarators
+    :   vd+=variableDeclarator (',' vd+=variableDeclarator)*
+    ;
+
+variableDeclarator
+    :   name=extendedID ('=' exp=expression)?
+    ;
+
+statement
+	:	block
+	|	'if' condition=parExpression state1=statement ('else' state2=statement)?
+	|	'for' '(' control=forControl ')' state=statement
+	|	 'while' condition=parExpression state=statement
+	|   'return' retVal=expression? ';'
+	|	';'
+	|	"break" ";"
+	|	expression ';'
+	|   'try' tryBlock=block 'catch' catchBlock= block
+	;
+	
+forControl
+	:	init=forInit? ';' condition=expression? ';' update=forUpdate?
+	;
+
+forInit
+	:	(expressions+=expression (',' expressions+=expression)*)
+	|	localVariableDeclaration
+	;
+
+forUpdate
+	:	expressionList;
+
+	
+
+//condictionalExpression covers all expressions except "="
+//See Expression section for details
+
+attributeType
+	: 	"Date"
+	|	"Time"
+	|	"Double" | "double"
+	|	"Integer"|"integer"|"int"
+	|	"Boolean"|"boolean"
+	|	"String"|"string"
+	;
+
+
+/** JAVA NATIVE CODE
+ *	END
+**/
+
+// PHP CODE
+phpFunction: 'public' 'function' name=ID codeblock=[phpBlock];
+
+phpBlock: '{' code=STRING'}';
+
+// Ruby Code
+
+rubyFunction: RUBY_FUNCTION;
+
+// Terminals
+terminal RUBY_FUNCTION: DEF -> END;
+terminal DEF: 'def';
+terminal END: 'end';
+
+extendedID: ID ("." ID)*;
+DOUBLE: INT "." INT;
+fileID: CHARS CHARS*;
+CHARS: (extendedID|INT);

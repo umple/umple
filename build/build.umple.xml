@@ -68,6 +68,7 @@
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
       <src path="${project.path}/src"/>
       <src path="${project.path}/gen"/>
+      <src path="${project.path}/src-gen"/>
       <src path="${project.path}/test"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
