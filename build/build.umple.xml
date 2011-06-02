@@ -47,13 +47,13 @@
   
   <!-- Move the generated code from UmpleTo* to cruise.umple -->
   <target name="codegen">
-    <copy todir="cruise.umple/gen/cruise/umple/compiler/java" overwrite="true">
+    <copy todir="cruise.umple/src-gen/cruise/umple/compiler/java" overwrite="true">
       <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes="*.svn" />
     </copy>
-    <copy todir="cruise.umple/gen/cruise/umple/compiler/php" overwrite="true">
+    <copy todir="cruise.umple/src-gen/cruise/umple/compiler/php" overwrite="true">
       <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes="*.svn" />
     </copy>
-    <copy todir="cruise.umple/gen/cruise/umple/compiler/ruby" overwrite="true">
+    <copy todir="cruise.umple/src-gen/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes="*.svn" />
     </copy>
   </target>
@@ -67,7 +67,6 @@
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
       <src path="${project.path}/src"/>
-      <src path="${project.path}/gen"/>
       <src path="${project.path}/src-gen"/>
       <src path="${project.path}/test"/>
       <exclude name="**/.svn"/>

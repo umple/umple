@@ -63,7 +63,7 @@
 
   <target name="template.setVersion">
     <echo message="Setting Version: ${umple.version}" />
-    <replace dir="cruise.umple/gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+    <replace dir="cruise.umple/src-gen/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
       <include name="**/*.java"/>
     </replace>
     <replace dir="cruise.umple/test/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
@@ -81,7 +81,7 @@
   
   <target name="template.resetVersion">
     <echo message="Resetting Version: ${umple.version}" />
-    <replace dir="cruise.umple/gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+    <replace dir="cruise.umple/src-gen/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
     </replace>
     <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
