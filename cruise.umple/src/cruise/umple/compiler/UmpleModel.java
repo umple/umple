@@ -21,7 +21,6 @@ public class UmpleModel
   private Glossary glossary;
   private String defaultNamespace;
   private String code;
-  private String traceType;
   private Map<String,String> generatedCode;
   private Coordinate levelOffset;
   private Coordinate initialOffset;
@@ -29,6 +28,7 @@ public class UmpleModel
   private int maxYLevels;
   private Coordinate offsetFromEdge;
   private int reflexiveSegmentLength;
+  private String traceType;
 
   //UmpleModel Associations
   private List<Association> associations;
@@ -49,7 +49,6 @@ public class UmpleModel
     glossary = new Glossary();
     defaultNamespace = null;
     code = null;
-    traceType = "Console";
     generatedCode = new HashMap<String,String>();
     levelOffset = new Coordinate(200,100,0,0);
     initialOffset = new Coordinate(50,30,0,0);
@@ -57,6 +56,7 @@ public class UmpleModel
     maxYLevels = 5;
     offsetFromEdge = new Coordinate(10,30,0,0);
     reflexiveSegmentLength = 15;
+    traceType = "Console";
     associations = new ArrayList<Association>();
     umpleClasses = new ArrayList<UmpleClass>();
     stateMachineDefinitions = new ArrayList<StateMachine>();
@@ -129,18 +129,18 @@ public class UmpleModel
     return wasSet;
   }
 
-  public boolean setTraceType(String aTraceType)
-  {
-    boolean wasSet = false;
-    traceType = aTraceType;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setGeneratedCode(Map<String,String> aGeneratedCode)
   {
     boolean wasSet = false;
     generatedCode = aGeneratedCode;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTraceType(String aTraceType)
+  {
+    boolean wasSet = false;
+    traceType = aTraceType;
     wasSet = true;
     return wasSet;
   }
@@ -205,14 +205,14 @@ public class UmpleModel
     return code;
   }
 
-  public String getTraceType()
-  {
-    return traceType;
-  }
-
   public Map<String,String> getGeneratedCode()
   {
     return generatedCode;
+  }
+
+  public String getTraceType()
+  {
+    return traceType;
   }
 
   public Association getAssociation(int index)

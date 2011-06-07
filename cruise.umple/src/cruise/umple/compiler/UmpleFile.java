@@ -67,7 +67,8 @@ public class UmpleFile
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-   public UmpleFile(String aPath,String aFilename)  {
+  
+ public UmpleFile(String aPath,String aFilename)  {
 this(new File(aPath,aFilename));
   }
  public UmpleFile(String aFullFilename)  {

@@ -1,0 +1,32 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+The tracing meta model.
+
+It currently only supports tracing of attributes, but we are currently in the process
+of enhancing the Umple syntax and meta model to support richer trace objects.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleModel
+{
+  String traceType = "Console"; 
+}
+
+class TraceItem
+{
+  0..1 -- 0..1 Attribute;
+}
+
+class UmpleClass
+{
+  0..1 -- * TraceItem;
+}
+
+use Trace_Code.ump;

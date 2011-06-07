@@ -1,0 +1,19 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Dusan Brestovansky, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+Methods for trace aspects of an Umple meta model.
+
+Currently a place holder as no additional action semantics are required.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class TraceItem
+{
+
+}

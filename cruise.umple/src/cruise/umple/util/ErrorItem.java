@@ -93,7 +93,8 @@ public class ErrorItem
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-   public ErrorItem(String aId,String [] aParts)  {
+  
+ public ErrorItem(String aId,String [] aParts)  {
 this(aId);
     for (String part : aParts)
     {

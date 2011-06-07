@@ -24,7 +24,6 @@ class UmpleModel
   Glossary glossary = new Glossary();
   String defaultNamespace = null;
   String code = null;
-  String traceType = "Console";
   
   Map<String,String> generatedCode = new HashMap<String,String>();
   
@@ -82,11 +81,6 @@ class Constant{
   value;
   
 class UniqueIdentifier { } 
-}
-
-class TraceItem
-{
-  0..1 -- 0..1 Attribute;
 }
 
 class MethodParameter{
@@ -156,7 +150,6 @@ class UmpleClass
   1 -> 0..1 UniqueIdentifier;
   1 -> * Attribute;
   1 -> * AssociationVariable;
-  0..1 -- * TraceItem;
   
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
 }

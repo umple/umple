@@ -86,7 +86,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-   public UmpleInternalParser()  {
+  
+ public UmpleInternalParser()  {
 this("UmpleInternalParser",new UmpleModel(null));
   }
  public UmpleInternalParser(UmpleModel aModel)  {

@@ -21,6 +21,7 @@ use StateMachine.ump;
 use TextParser.ump;
 use Umlet.ump;
 use Umple.ump;
+use Trace.ump;
 use UmpleDiagram.ump;
 use UmpleExceptions.ump;
 use UmpleHelper.ump;

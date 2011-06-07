@@ -186,7 +186,8 @@ public class Token
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-   public Token(String aName,String aValue,Position aPosition)  {
+  
+ public Token(String aName,String aValue,Position aPosition)  {
 this(aName,aValue);
     setPosition(aPosition);
   }
