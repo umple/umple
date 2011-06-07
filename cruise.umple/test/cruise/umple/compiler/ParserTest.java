@@ -56,7 +56,7 @@ public class ParserTest
   @Test
   public void addRulesInFile_resource()
   {
-    Assert.assertEquals(true,parser.addRulesInFile("/umple.grammar") > 0);
+    Assert.assertEquals(true,parser.addRulesInFile("/umple_core.grammar") > 0);
   }
 
 

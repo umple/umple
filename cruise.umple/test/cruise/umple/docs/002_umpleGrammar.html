@@ -28,15 +28,22 @@
       <td class="content">
 
       <h1>myGrammar</h1>
-      <p class="description">program- : ( [[comment]] | [[directive]] )*<br />
+      <p class="description">// The core of umple is a "program"<br />
+program- : ( [[comment]] | [[directive]] )*<br />
+<br />
+// A directive is either configurations, or model elements<br />
 directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]<br />
 glossary : glossary { [[word]]* }<br />
-traceType- : tracer [traceType] ;<br />
 word : [singular] : [plural] ;<br />
 generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
 useStatement- : use [use] ;<br />
 namespace- : namespace [namespace] ;<br />
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />
+<br />
+comment- : [[inlineComment]] | [[multilineComment]]<br />
+inlineComment- : // [*inlineComment]<br />
+multilineComment- : /* [**multilineComment] */<br />
+<br />
 <br />
 classDefinition : class [name] { [[classContent]]* }<br />
 externalDefinition : external [name] { [[classContent]]* }<br />
@@ -46,9 +53,6 @@ associationClassDefinition : associationClass [name] { [[associationClassContent
 classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]<br />
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]<br />
 <br />
-trace : [[fullTrace]] | [[simpleTrace]]<br />
-simpleTrace- : trace [**trace_code] ;<br />
-fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
 <br />
 // Section for Members in Interfaces<br />
 // NOTE: We are considering type as simple String<br />
@@ -74,6 +78,11 @@ singleAssociationEnd : [[multiplicity]] [type,roleName] ;<br />
 associationEnd : [[multiplicity]] [type,roleName]<br />
 multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]<br />
 <br />
+defaultKey : key { }<br />
+key : key { [keyId] ( , [keyId] )* }<br />
+depend- : depend [depend] ;<br />
+extraCode- : [**extraCode]<br />
+<br />
 softwarePattern- : [[isA]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]<br />
 isA- : [[singleIsA]] | [[multipleIsA]]<br />
 singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;<br />
@@ -86,14 +95,6 @@ derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=
 <br />
 beforeCode : before [operationName] { [**code] }<br />
 afterCode : after [operationName] { [**code] }<br />
-defaultKey : key { }<br />
-key : key { [keyId] ( , [keyId] )* }<br />
-depend- : depend [depend] ;<br />
-extraCode- : [**extraCode]<br />
-<br />
-comment- : [[inlineComment]] | [[multilineComment]]<br />
-inlineComment- : // [*inlineComment]<br />
-multilineComment- : /* [**multilineComment] */<br />
 <br />
 stateMachineDefinition : statemachine [name] { [[state]]* }<br />
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]<br />
@@ -111,6 +112,12 @@ entryOrExitAction : [=type:entry|exit] / { [**actionCode] }<br />
 activity : do { [**activityCode] }<br />
 guard : [ [**guardCode] ]<br />
 <br />
+<br />
+traceType- : tracer [traceType] ;<br />
+<br />
+trace : [[fullTrace]] | [[simpleTrace]]<br />
+simpleTrace- : trace [**trace_code] ;<br />
+fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
 position- : [[associationPosition]] | [[elementPosition]]<br />
 elementPosition : position [x] [y] [width] [height] ;<br />
 associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;<br />

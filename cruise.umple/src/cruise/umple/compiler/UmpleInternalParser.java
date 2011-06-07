@@ -98,7 +98,12 @@ private void init()
   {
     addCouple(new Couple("\"","\""));
     addCouple(new Couple("{","}"));
-    addRulesInFile("/umple.grammar");
+    addRulesInFile("/umple_core.grammar");
+    addRulesInFile("/umple_classes.grammar");
+    addRulesInFile("/umple_patterns.grammar");
+    addRulesInFile("/umple_state_machines.grammar");
+    addRulesInFile("/umple_traces.grammar");
+    addRulesInFile("/umple_layout.grammar");
   }
 
 

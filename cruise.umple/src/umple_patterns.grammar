@@ -1,0 +1,13 @@
+
+softwarePattern- : [[isA]] | [[singleton]] | [[keyDefinition]] | [[codeInjection]]
+isA- : [[singleIsA]] | [[multipleIsA]]
+singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;
+multipleIsA- : isA [extendsName] ( , [extendsName] )* ;
+singleton- : [=singleton] ;
+keyDefinition- : [[defaultKey]] | [[key]]
+codeInjection- : [[beforeCode]] | [[afterCode]]
+attribute : [[derivedAttribute]] | [=autounique] [name] ; | [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+
+beforeCode : before [operationName] { [**code] }
+afterCode : after [operationName] { [**code] }

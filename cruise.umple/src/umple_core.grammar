@@ -1,0 +1,18 @@
+
+
+// The core of umple is a "program"
+program- : ( [[comment]] | [[directive]] )*
+
+// A directive is either configurations, or model elements
+directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]
+glossary : glossary { [[word]]* }
+word : [singular] : [plural] ;
+generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;
+useStatement- : use [use] ;
+namespace- : namespace [namespace] ;
+entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]
+
+comment- : [[inlineComment]] | [[multilineComment]]
+inlineComment- : // [*inlineComment]
+multilineComment- : /* [**multilineComment] */
+

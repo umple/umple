@@ -1,0 +1,16 @@
+
+stateMachineDefinition : statemachine [name] { [[state]]* }
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] 
+inlineStateMachine : [name] { [[state]]* }
+referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } 
+enum : [name] { } | [name] { [stateName] (, [stateName])* }
+state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }
+stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]
+afterEveryEvent- : afterEvery -( [timer] -)
+afterEvent- : after -( [timer] -)
+action : / { [**actionCode] }
+entryOrExitAction : [=type:entry|exit] / { [**actionCode] }
+activity : do { [**activityCode] }
+guard : [ [**guardCode] ] 

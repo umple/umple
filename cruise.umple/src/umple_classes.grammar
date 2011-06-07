@@ -1,0 +1,38 @@
+
+classDefinition : class [name] { [[classContent]]* }
+externalDefinition : external [name] { [[classContent]]* }
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }
+associationDefinition : association [name]? { [[association]]* }
+associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]
+
+
+// Section for Members in Interfaces
+// NOTE: We are considering type as simple String
+// Interface Body: An interface can have CONSTANTS, ATTRIBUTES and METHODS
+interfaceBody- : [[interfaceMemberDeclaration]]*
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]] 
+// Constants in interfaces (e.g. constant String ACONSTANT="aValue";)
+constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;
+// Methods in classes and Interfaces
+// Should we use modifier for concrete methods [=modifier:public|protected|private]?
+// Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
+concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] } 
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
+methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
+parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
+parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
+
+association : [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
+inlineAssociation : [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+inlineAssociationEnd : [[multiplicity]] [roleName]?
+singleAssociationEnd : [[multiplicity]] [type,roleName] ;
+associationEnd : [[multiplicity]] [type,roleName]
+multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]
+
+defaultKey : key { }
+key : key { [keyId] ( , [keyId] )* }
+depend- : depend [depend] ;
+extraCode- : [**extraCode]

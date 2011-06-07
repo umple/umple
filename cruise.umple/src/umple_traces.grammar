@@ -1,0 +1,7 @@
+
+
+traceType- : tracer [traceType] ;
+
+trace : [[fullTrace]] | [[simpleTrace]]
+simpleTrace- : trace [**trace_code] ;
+fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?
