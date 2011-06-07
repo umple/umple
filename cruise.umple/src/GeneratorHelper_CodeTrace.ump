@@ -1,0 +1,66 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This class provides helper methods of trace related code generation.
+
+Please refer to GeneratorHelper_Code.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
+{
+  
+  // Currently no model-level post generate changes required
+  private static void postpareTrace(UmpleModel aModel)
+  {}
+
+  // Currently no internal trace entities to remove at the class level
+  private static void postpareTrace(UmpleClass aClass)
+  {}
+  
+  // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
+  // expects the following action semantic lookups
+  //  + packageName: What package should this class belong to?
+  //  + extraCode: What is the code required to execute the trace 
+  public static void prepareStringTracer(UmpleModel model, Map<String,String> lookups)
+  {
+    UmpleClass aClass = model.addUmpleClass("StringTracer");
+    
+    if (aClass.numberOfAttributes() == 0)
+    {
+      aClass.setIsInternal(true);
+      aClass.setIsSingleton(true); 
+      aClass.setPackageName(lookups.get("packageName"));
+      Attribute traces = new Attribute("traces","String",null,null,false);
+      traces.setIsList(true);
+      aClass.addAttribute(traces);
+      aClass.appendExtraCode(lookups.get("extraCode"));
+    }
+    aClass.createGeneratedClass(model);
+  }
+
+  // Inject the necessary "after" hooks to call the trace, this method expects the following action semantic lookups
+  //  + setMethod: What is the name of the setMethod we are attaching the trace to
+  //  + attributeCode: What is the trace code that should be executed
+  public static void prepareTraceItem(TraceItem traceItem, Map<String,String> lookups)
+  {
+    UmpleClass aClass = traceItem.getUmpleClass();
+    Attribute attr = traceItem.getAttribute();
+    if (attr != null)
+    {
+      String setMethod = lookups.get("setMethod");
+      String code = lookups.get("attributeCode");
+      CodeInjection set = new CodeInjection("after", setMethod, code);
+      set.setIsInternal(true);
+      aClass.addCodeInjection(set);
+    }
+  }
+
+}
+

@@ -604,7 +604,9 @@ private String getExtendClassesNames(UmpleClass uClass)
         String executeMethod = "public static function execute($message) { self::getInstance()->addTrace($message); }\n";
         executeMethod += "public function reset() { self::getInstance()->traces = array(); }";
         String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
-        GeneratorHelper.prepareStringTracer(model, packageName, executeMethod);
+        lookups.put("packageName",packageName);
+        lookups.put("extraCode",executeMethod);
+        GeneratorHelper.prepareStringTracer(model, lookups);
         lookups.put("attributeCode",StringFormatter.format("StringTracer::execute(\"{0}={${1}}\");",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
       }
       lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));

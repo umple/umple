@@ -75,7 +75,11 @@ public class GeneratorHelperTest
   @Test
   public void prepare_StringTracer()
   {
-    GeneratorHelper.prepareStringTracer(model,"myblah","extraCode");
+    Map<String,String> lookups = new HashMap<String,String>();
+    lookups.put("packageName","myblah");
+    lookups.put("extraCode","extraCode");
+    
+    GeneratorHelper.prepareStringTracer(model,lookups);
     Assert.assertEquals(1,model.numberOfUmpleClasses());
     UmpleClass c = model.getUmpleClass("StringTracer");
     
@@ -93,8 +97,16 @@ public class GeneratorHelperTest
   @Test
   public void prepare_StringTracerOnlyOnce()
   {
-    GeneratorHelper.prepareStringTracer(model,"myblah","code1");
-    GeneratorHelper.prepareStringTracer(model,"myblah2","code2");
+    Map<String,String> lookups = new HashMap<String,String>();
+    lookups.put("packageName","myblah");
+    lookups.put("extraCode","code1");
+
+    Map<String,String> lookups2 = new HashMap<String,String>();
+    lookups2.put("packageName","myblah2");
+    lookups2.put("extraCode","code2");
+    
+    GeneratorHelper.prepareStringTracer(model,lookups);
+    GeneratorHelper.prepareStringTracer(model,lookups2);
     Assert.assertEquals(1,model.numberOfUmpleClasses());
     UmpleClass c = model.getUmpleClass("StringTracer");
     

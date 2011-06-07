@@ -30,6 +30,62 @@ public class GeneratorHelper
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  public static void postpare(UmpleModel model)
+  {
+    postpareClass(model);
+    postpareStateMachine(model);
+    postpareTrace(model);
+    
+    for (UmpleClass aClass : model.getUmpleClasses())
+    {
+      postpare(aClass);
+    }  
+  }
+
+  // Undo all class level internal changes
+  private static void postpare(UmpleClass aClass)
+  {
+    postpareClass(aClass);
+    postpareStateMachine(aClass);
+    postpareTrace(aClass);
+  }
+public static void postpareClass(UmpleModel model)
+  {
+    int maxIndex = model.numberOfUmpleClasses() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      UmpleClass c = model.getUmpleClass(i);
+      if (c.getIsInternal())
+      {
+        model.removeUmpleClass(c);
+      }
+    }
+  }
+  
+  // Remove all internally added attributes / associations of a class
+  private static void postpareClass(UmpleClass aClass)
+  {
+    int maxIndex = aClass.numberOfCodeInjections() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      CodeInjection ci = aClass.getCodeInjection(i);
+      if (ci.getIsInternal())
+      {
+        aClass.removeCodeInjection(ci);
+      }
+    }
+    
+    maxIndex = aClass.numberOfDepends() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      Depend d = aClass.getDepend(i);
+      if (d.getIsInternal())
+      {
+        aClass.removeDepend(d);
+      }      
+    }  
+  }  
+  
   public static String toCode(List<CodeInjection> allCodeInjections)
   {
     String asCode = null;
@@ -49,56 +105,53 @@ public class GeneratorHelper
     }
     return asCode;
   }
-  
-  public static void postpare(UmpleModel model)
+private static void postpareStateMachine(UmpleModel aModel)
   {
-    int maxIndex = model.numberOfUmpleClasses() - 1;
-    for (int i=maxIndex; i>=0; i--)
+    
+  }
+
+  // Remove all internal state machine entities
+  private static void postpareStateMachine(UmpleClass aClass)
+  {
+    List<State> shouldDelete = new ArrayList<State>();
+    for (StateMachine sm : aClass.getAllStateMachines())
     {
-      UmpleClass c = model.getUmpleClass(i);
-      if (c.getIsInternal())
+      postpareInternalStates(sm,shouldDelete);
+    }
+
+    // Remove all internally created actions
+    for (StateMachine sm : aClass.getAllStateMachines())
+    {
+      for (State s : sm.getStates())
       {
-        model.removeUmpleClass(c);
+        for (int i=s.numberOfTransitions()-1; i>=0; i--)
+        {
+          Transition t = s.getTransition(i);
+          if (t.getIsInternal())
+          {
+            t.delete();
+          }
+        }
+
+        for (int i=s.numberOfActions()-1; i>=0; i--)
+        {
+          Action a = s.getAction(i);
+          if (a.getIsInternal())
+          {
+            s.removeAction(a);
+          }
+        }
       }
     }
     
-    for (UmpleClass aClass : model.getUmpleClasses())
+    for (int i=shouldDelete.size()-1; i>=0; i--)
     {
-      postpare(aClass);
-    }  
-  }
-  
-  public static void prepareStringTracer(UmpleModel model, String dependsPackage, String extraCode)
-  {
-    UmpleClass aClass = model.addUmpleClass("StringTracer");
-    
-    if (aClass.numberOfAttributes() == 0)
-    {
-      aClass.setIsInternal(true);
-      aClass.setIsSingleton(true); 
-      aClass.setPackageName(dependsPackage);
-      Attribute traces = new Attribute("traces","String",null,null,false);
-      traces.setIsList(true);
-      aClass.addAttribute(traces);
-      aClass.appendExtraCode(extraCode);
+      State s = shouldDelete.get(i);
+      s.delete();
     }
-    aClass.createGeneratedClass(model);
-  }
-  
-  public static void prepareTraceItem(TraceItem traceItem, Map<String,String> lookups)
-  {
-    UmpleClass aClass = traceItem.getUmpleClass();
-    Attribute attr = traceItem.getAttribute();
-    if (attr != null)
-    {
-      String setMethod = lookups.get("setMethod");
-      String code = lookups.get("attributeCode");
-      CodeInjection set = new CodeInjection("after", setMethod, code);
-      set.setIsInternal(true);
-      aClass.addCodeInjection(set);
-    }
-  }
+  }  
 
+  // Add the necessary before / after hooks to support nested state machines
   public static void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups)
   {
     String entryEventName = lookups.get("entryEventName");
@@ -146,66 +199,7 @@ public class GeneratorHelper
     }  
   }
 
-  private static void postpare(UmpleClass aClass)
-  {
-    int maxIndex = aClass.numberOfCodeInjections() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      CodeInjection ci = aClass.getCodeInjection(i);
-      if (ci.getIsInternal())
-      {
-        aClass.removeCodeInjection(ci);
-      }
-    }
-    
-    maxIndex = aClass.numberOfDepends() - 1;
-    for (int i=maxIndex; i>=0; i--)
-    {
-      Depend d = aClass.getDepend(i);
-      if (d.getIsInternal())
-      {
-        aClass.removeDepend(d);
-      }      
-    }  
-
-    List<State> shouldDelete = new ArrayList<State>();
-    for (StateMachine sm : aClass.getAllStateMachines())
-    {
-      postpareInternalStates(sm,shouldDelete);
-    }
-
-    // Remove all internally created actions
-    for (StateMachine sm : aClass.getAllStateMachines())
-    {
-      for (State s : sm.getStates())
-      {
-        for (int i=s.numberOfTransitions()-1; i>=0; i--)
-        {
-          Transition t = s.getTransition(i);
-          if (t.getIsInternal())
-          {
-            t.delete();
-          }
-        }
-
-        for (int i=s.numberOfActions()-1; i>=0; i--)
-        {
-          Action a = s.getAction(i);
-          if (a.getIsInternal())
-          {
-            s.removeAction(a);
-          }
-        }
-      }
-    }
-    
-    for (int i=shouldDelete.size()-1; i>=0; i--)
-    {
-      State s = shouldDelete.get(i);
-      s.delete();
-    }
-    
-  }
+  // Mark all internal states are ready for deletion
   private static void postpareInternalStates(StateMachine sm, List<State> shouldDelete)
   {
     for (int i=sm.numberOfStates() - 1; i >= 0; i--)
@@ -215,6 +209,50 @@ public class GeneratorHelper
       {
         shouldDelete.add(s);
       }       
+    }
+  }
+private static void postpareTrace(UmpleModel aModel)
+  {}
+
+  // Currently no internal trace entities to remove at the class level
+  private static void postpareTrace(UmpleClass aClass)
+  {}
+  
+  // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
+  // expects the following action semantic lookups
+  //  + packageName: What package should this class belong to?
+  //  + extraCode: What is the code required to execute the trace 
+  public static void prepareStringTracer(UmpleModel model, Map<String,String> lookups)
+  {
+    UmpleClass aClass = model.addUmpleClass("StringTracer");
+    
+    if (aClass.numberOfAttributes() == 0)
+    {
+      aClass.setIsInternal(true);
+      aClass.setIsSingleton(true); 
+      aClass.setPackageName(lookups.get("packageName"));
+      Attribute traces = new Attribute("traces","String",null,null,false);
+      traces.setIsList(true);
+      aClass.addAttribute(traces);
+      aClass.appendExtraCode(lookups.get("extraCode"));
+    }
+    aClass.createGeneratedClass(model);
+  }
+
+  // Inject the necessary "after" hooks to call the trace, this method expects the following action semantic lookups
+  //  + setMethod: What is the name of the setMethod we are attaching the trace to
+  //  + attributeCode: What is the trace code that should be executed
+  public static void prepareTraceItem(TraceItem traceItem, Map<String,String> lookups)
+  {
+    UmpleClass aClass = traceItem.getUmpleClass();
+    Attribute attr = traceItem.getAttribute();
+    if (attr != null)
+    {
+      String setMethod = lookups.get("setMethod");
+      String code = lookups.get("attributeCode");
+      CodeInjection set = new CodeInjection("after", setMethod, code);
+      set.setIsInternal(true);
+      aClass.addCodeInjection(set);
     }
   }
 }

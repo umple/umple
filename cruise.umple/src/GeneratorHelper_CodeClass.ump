@@ -1,0 +1,78 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This class provides helper methods of class related code generation.
+
+Please refer to GeneratorHelper_Code.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
+{
+
+  // Remove all internally added classes
+  public static void postpareClass(UmpleModel model)
+  {
+    int maxIndex = model.numberOfUmpleClasses() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      UmpleClass c = model.getUmpleClass(i);
+      if (c.getIsInternal())
+      {
+        model.removeUmpleClass(c);
+      }
+    }
+  }
+  
+  // Remove all internally added attributes / associations of a class
+  private static void postpareClass(UmpleClass aClass)
+  {
+    int maxIndex = aClass.numberOfCodeInjections() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      CodeInjection ci = aClass.getCodeInjection(i);
+      if (ci.getIsInternal())
+      {
+        aClass.removeCodeInjection(ci);
+      }
+    }
+    
+    maxIndex = aClass.numberOfDepends() - 1;
+    for (int i=maxIndex; i>=0; i--)
+    {
+      Depend d = aClass.getDepend(i);
+      if (d.getIsInternal())
+      {
+        aClass.removeDepend(d);
+      }      
+    }  
+  }  
+  
+  public static String toCode(List<CodeInjection> allCodeInjections)
+  {
+    String asCode = null;
+    if (allCodeInjections != null)
+    {
+      for (CodeInjection inject : allCodeInjections)
+      {
+        if (asCode == null)
+        {
+          asCode = inject.getCode();
+        }
+        else
+        {
+          asCode = StringFormatter.format("{0}\n    {1}",asCode,inject.getCode());
+        }
+      }
+    }
+    return asCode;
+  }  
+
+}
+

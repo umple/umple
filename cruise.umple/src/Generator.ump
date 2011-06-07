@@ -137,8 +137,8 @@ class RubyGenerator
 
 use Umple.ump;
 use StateMachine.ump;
+use GeneratorHelper_Code.ump;
 use Generator_Code.ump;
-use Generator_CodeHelper.ump;
 use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodePhp.ump;

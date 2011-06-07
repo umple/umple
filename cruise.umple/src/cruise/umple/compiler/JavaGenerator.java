@@ -653,7 +653,9 @@ public class JavaGenerator implements CodeGenerator
         String executeMethod = "public static void execute(String message) { getInstance().addTrace(message); }\n";
         executeMethod += "public void reset() { getInstance().traces.clear(); }";
         String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
-        GeneratorHelper.prepareStringTracer(model, packageName, executeMethod);
+        lookups.put("packageName",packageName);
+        lookups.put("extraCode",executeMethod);
+        GeneratorHelper.prepareStringTracer(model, lookups);
         
         if (!packageName.equals(aClass.getPackageName()))
         {
