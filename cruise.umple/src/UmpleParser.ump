@@ -5,8 +5,18 @@ Copyright 2010 Andrew Forward, Timothy C. Lethbridge
 This file is made available subject to the open source license found at:
 http://cruise.site.uottawa.ca/UmpleMITLicense.html
 
-'Model' for the Umple Parser 
-See also UmpleParser_Code for the grammar definition and methods
+This interface bridges the gap between parsing Umple text and populating the
+Umple meta model.
+
+Currently we have two implementations.
+
+  + UmpleInternalParser
+  + UmpleXtextParser
+  
+The UmpleXtextParser is still a work in progress and currently only delegates to
+our internal parser.  We have structured our tests in generic way so that if/when
+we proceed with fully integrating the Xtext parser, our UmpleParserTest will ensure
+conformance with our current parser.
 
 */
 

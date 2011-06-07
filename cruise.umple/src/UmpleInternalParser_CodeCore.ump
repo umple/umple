@@ -1,0 +1,73 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This file analyze core umple meta model tokens such as which language to generate,
+the current namespace, etc and populates the umple meta model.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  
+  // Analyze core tokens to the Umple language
+  private void analyzeCoreToken(Token t)
+  {
+    if (t.is("generate"))
+    {
+      model.addGenerate(t.getValue());
+    }
+    else if (t.is("glossary"))
+    {
+      analyzeGlossary(t);
+    }
+    else if (t.is("namespace"))
+    {
+      currentPackageName = t.getValue();
+      if (model.getDefaultNamespace() == null)
+      {
+        model.setDefaultNamespace(currentPackageName);  
+      }
+    }
+  }
+
+  // There are currently no core tokens of concern in the context of an UmpleClass
+  // This method is available if needed
+  private void analyzeCoreToken(Token t, UmpleClass aClass, int analysisStep)
+  {
+
+  }
+
+  // Perform post token analysis on core elements of the Umple language
+  private void postTokenCoreAnalysis()
+  {
+    if (model.getDefaultGenerate() == null)
+    {
+      model.addGenerate("Java");
+    }
+  }  
+
+
+  // Add singular / plural forms of words to the glossary to be used by the code generator
+  private void analyzeGlossary(Token glossaryToken)
+  {
+    for(Token wordToken : glossaryToken.getSubTokens())
+    {
+      if (!wordToken.is("word"))
+      {
+        continue;
+      }
+      Word word = new Word(wordToken.getValue("singular"),wordToken.getValue("plural"));
+      model.getGlossary().addWord(word);
+    }
+  }
+
+
+}

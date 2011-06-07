@@ -449,23 +449,21 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInternalParser" eSuperTypes="#//Parser">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPackageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unparsedUmpleFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parsedUmpleFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlinkedAssociationVariables" eType="#//AssociationVariable" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlinkedAssociations" eType="#//Association" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="positionToClassNameReference" eType="#//Map%3CPosition%2CString%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unparsedUmpleFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parsedUmpleFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtend" eType="#//Map%3CUmpleClass%2CList%3CString%3E%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleClassToStateMachineDefinition" eType="#//Map%3CUmpleClass%2CPair%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unparsedTraceItem" eType="#//Map%3CTraceItem%2CToken%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleClassToStateMachineDefinition" eType="#//Map%3CUmpleClass%2CPair%3E"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;Position,String>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,List&lt;String>>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,Pair>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,Token>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;TraceItem,Token>"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,Pair>"/>
   <eClassifiers xsi:type="ecore:EClass" name="Pair">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

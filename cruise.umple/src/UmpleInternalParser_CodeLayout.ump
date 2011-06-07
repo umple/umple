@@ -1,0 +1,117 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This file analyze layout related umple meta model tokens such positions and 
+populates the umple meta model.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+
+  // Analyze layout tokens to the Umple language
+  private void analyzeLayoutToken(Token token)
+  {
+
+  }
+
+  // There are currently no core tokens of concern in the context of an UmpleClass
+  // This method is available if needed
+  private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep)
+  {
+    if (analysisStep != 2)
+    {
+      return;
+    }
+    
+    if (token.is("elementPosition"))
+    {
+      aClass.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+    }
+    else if (token.is("associationPosition"))
+    {
+      String name = token.getValue("name");
+      Association assoc = model.getAssociation(name);
+
+      if (assoc != null)
+      {
+        assoc.setName(name);
+        for(Token position : token.getSubTokens())
+        {
+          if (position.is("coordinate"))
+          {
+            assoc.addPosition(new Coordinate(position.getIntValue("x"),position.getIntValue("y"),0,0));
+          }
+        }
+      }
+    }
+  }
+
+  // Perform post token analysis on core elements of the Umple language
+  private void postTokenLayoutAnalysis()
+  {
+    layoutNewElements();
+  }  
+
+  // Look for any new elements and give them positions if undefined
+  private void layoutNewElements()
+  {
+    // layout classes
+    for (int i=0; i<model.numberOfUmpleClasses(); i++)
+    {
+      UmpleClass c = model.getUmpleClass(i);
+
+      if (c.getPosition().getStatus() == Coordinate.Status.Defaulted)
+      {
+        // Do nothing
+      }
+      else if (c.getPosition().getStatus() == Coordinate.Status.Undefined)
+      {
+        c.setPosition(model.getDefaultClassPosition(i+1));
+        c.getPosition().setStatus(Coordinate.Status.Defaulted);
+      }
+    }
+
+    // layout interfaces
+    for (int i=0; i<model.numberOfUmpleInterfaces(); i++)
+    {
+      UmpleInterface c = model.getUmpleInterface(i);
+
+      if (c.getPosition().getStatus() == Coordinate.Status.Defaulted)
+      {
+        // Do nothing
+      }
+      else if (c.getPosition().getStatus() == Coordinate.Status.Undefined)
+      {
+        c.setPosition(model.getDefaultClassPosition(i+1));
+        c.getPosition().setStatus(Coordinate.Status.Defaulted);
+      }
+    }
+
+    // Layout associations
+    for (int i=0; i<model.numberOfAssociations(); i++)
+    {
+      Association a = model.getAssociation(i);
+      int numberOfPositions = a.numberOfPositions();
+
+      if (numberOfPositions < 2)
+      {
+        Coordinate[] defaults = model.getDefaultAssociationPosition(a);
+
+        a.addPosition(defaults[0]);
+        a.addPosition(defaults[1]);
+        a.getPosition(0).setStatus(Coordinate.Status.Defaulted);
+        a.getPosition(1).setStatus(Coordinate.Status.Defaulted);
+      }
+    }    
+  }  
+
+} 

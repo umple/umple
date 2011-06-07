@@ -1,0 +1,52 @@
+/*
+
+Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+
+This file is made available subject to the open source license found at:
+http://cruise.site.uottawa.ca/UmpleMITLicense.html
+
+This file analyzses trace related tokens to populate the Umple meta model for
+traces.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  
+  // Process trace related tokens
+  private void analyzeTraceToken(Token token)
+  {
+    if (token.is("traceType"))
+    {
+      model.setTraceType(token.getValue("traceType"));
+    }
+  }
+  
+  // Process trace related tokens within the context of a class
+  private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
+  {
+    
+    // Only process trace tokens once all other entities have been analyzed
+    if (analysisStep != 2)
+    {
+      return;
+    }
+
+    if (token.is("trace"))
+    {
+      TraceItem traceItem = new TraceItem();
+      traceItem.setUmpleClass(aClass);
+      traceItem.setAttribute(traceItem.getUmpleClass().getAttribute(token.getValue("trace_code")));
+    }
+  }
+  
+  // Perform post token analysis on trace related elements of the Umple language
+  private void postTokenTraceAnalysis()
+  {
+  }
+
+} 

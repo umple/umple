@@ -5,8 +5,17 @@ Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
 This file is made available subject to the open source license found at:
 http://cruise.site.uottawa.ca/UmpleMITLicense.html
 
-This is the Umple master files that calls all other Umple files. By compiling this file,
-Umple will regenerate all Java files.
+This is our internal parser implementation for the Umple language.  It uses
+a generic Parser that can read an external EBNF grammar file, and then populate
+an abstract syntax tree.
+
+The work of the UmpleInternalParser is 
+
+a) The grammar definition (defined externally in *.grammar files)
+b) Analyzing the AST to populate an Umple meta model instance
+c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
+
+Please refer to UmpleInternalParser_Code.ump for implementation details.
 
 */
 
@@ -16,20 +25,9 @@ class UmpleInternalParser
   isA Parser;
   depend java.io.*;
   depend cruise.umple.util.*;
- 
   currentPackageName = "";
-  internal AssociationVariable[] unlinkedAssociationVariables;
-  internal Association[] unlinkedAssociations;
-  internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
-  internal String[] unparsedUmpleFiles;
-  internal String[] parsedUmpleFiles;
-  internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
-  internal Map<UmpleClass,Pair> umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
-  internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
-  internal Map<TraceItem,Token> unparsedTraceItems = new HashMap<TraceItem,Token>(); 
   UmpleModel model;
-  
-  after constructor { init(); }
+
 }
 
 class Pair
