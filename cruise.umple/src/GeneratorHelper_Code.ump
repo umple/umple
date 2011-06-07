@@ -47,4 +47,4 @@ class GeneratorHelper
 
 use GeneratorHelper_CodeClass.ump;
 use GeneratorHelper_CodeStateMachine.ump;
-use GeneratorHelper_CodeTRace.ump;
+use GeneratorHelper_CodeTrace.ump;
