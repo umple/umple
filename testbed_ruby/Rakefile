@@ -1,6 +1,8 @@
 require 'rake'
 require 'rake/testtask'
 
+task :default => [:testbed]
+
 desc "Run all tests"
 Rake::TestTask.new("testbed") do |t|
   t.test_files = FileList['test/attributes/*_test.rb','test/associations/*_test.rb']
