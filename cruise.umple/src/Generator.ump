@@ -21,6 +21,11 @@ interface CodeGenerator
   void generate();
 }
 
+interface CodeTranslator
+{
+  String translate(String id, Attribute attribute);
+}
+
 class GeneratorHelper
 {
 
@@ -99,6 +104,7 @@ class JsonGenerator
 class JavaGenerator
 {
   isA CodeGenerator;
+  isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;
@@ -112,6 +118,7 @@ class JavaGenerator
 class PhpGenerator
 {
   isA CodeGenerator;
+  isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;
@@ -125,6 +132,7 @@ class PhpGenerator
 class RubyGenerator
 {
   isA CodeGenerator;
+  isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;

@@ -456,6 +456,7 @@ public class RubyGeneratorTest
     attr.setIsList(true);
     c.addAttribute(attr);
     
+    Assert.assertEquals("new_names",generator.translate("parameter",attr));    
     Assert.assertEquals("a_name",generator.translate("parameterOne",attr));
     Assert.assertEquals("name",generator.translate("associationOne",attr));
     Assert.assertEquals("names",generator.translate("associationMany",attr));
@@ -784,6 +785,7 @@ public class RubyGeneratorTest
   private void assertOtherTranslate(AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));
+    Assert.assertEquals("new_students",generator.relatedTranslate("parameter",av));
     Assert.assertEquals("a_student",generator.relatedTranslate("parameterOne",av));
     Assert.assertEquals("2",generator.relatedTranslate("parameterValue",av));
     Assert.assertEquals("student",generator.relatedTranslate("associationOne",av));
@@ -831,6 +833,7 @@ public class RubyGeneratorTest
   private void assertTranslate(Attribute av, Attribute relatedAv)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
+    Assert.assertEquals("a_mentor",generator.translate("parameter",av));
     Assert.assertEquals("a_mentor",generator.translate("parameterOne",av));
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
@@ -872,6 +875,7 @@ public class RubyGeneratorTest
       return;
     }
     
+    Assert.assertEquals("a_student",generator.translate("parameter",relatedAv));
     Assert.assertEquals("a_student",generator.translate("parameterOne",relatedAv));
     Assert.assertEquals("2",generator.translate("parameterValue",relatedAv));
     Assert.assertEquals("student",generator.translate("associationOne",relatedAv));
@@ -916,6 +920,7 @@ public class RubyGeneratorTest
   private void assertTranslate(AssociationVariable av, AssociationVariable relatedAv)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.translate("blah", av));
+    Assert.assertEquals("a_mentor",generator.translate("parameter",av));
     Assert.assertEquals("a_mentor",generator.translate("parameterOne",av));
     Assert.assertEquals("3",generator.translate("parameterValue",av));
     Assert.assertEquals("mentor",generator.translate("associationOne",av));
@@ -957,6 +962,7 @@ public class RubyGeneratorTest
       return;
     }
     
+    Assert.assertEquals("new_students",generator.translate("parameter",relatedAv));
     Assert.assertEquals("a_student",generator.translate("parameterOne",relatedAv));
     Assert.assertEquals("2",generator.translate("parameterValue",relatedAv));
     Assert.assertEquals("student",generator.translate("associationOne",relatedAv));

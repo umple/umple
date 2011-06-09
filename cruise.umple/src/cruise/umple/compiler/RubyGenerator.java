@@ -8,7 +8,7 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
-public class RubyGenerator implements CodeGenerator
+public class RubyGenerator implements CodeGenerator,CodeTranslator
 {
 
   //------------------------
@@ -55,6 +55,7 @@ public class RubyGenerator implements CodeGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
+  private static List<String> OneOrManyLookup;
 
   static
   {
@@ -121,11 +122,17 @@ public class RubyGenerator implements CodeGenerator
     AsIsPluralLookupMap.put("attributeMany","{0}");
     AsIsPluralLookupMap.put("getManyMethod", "get_{0}");
     AsIsPluralLookupMap.put("setManyMethod", "set_{0}");
+
+    OneOrManyLookup = new ArrayList<String>();
+    OneOrManyLookup.add("attribute");
+    OneOrManyLookup.add("parameter");
+
   }
   
   public void prepare()
   {
-    for (UmpleClass aClass : model.getUmpleClasses())
+    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(model.getUmpleClasses());
+    for (UmpleClass aClass : allClasses)
     {
       prepare(aClass);
     }
@@ -263,6 +270,12 @@ public class RubyGenerator implements CodeGenerator
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
+    if (OneOrManyLookup.contains(keyName))
+    {
+      String realKeyName = isMany ? keyName + "Many" : keyName + "One";
+      return translate(realKeyName,av,isMany);
+    }
+  
     String singularName = isMany ? model.getGlossary().getSingular(av.getName()) : av.getName();
     String pluralName = isMany ? av.getName() : model.getGlossary().getPlural(av.getName());
 
@@ -610,8 +623,16 @@ public class RubyGenerator implements CodeGenerator
         aClass.addCodeInjection(set);
       }
       
-    }    
+    } 
     
+    Map<String,String> lookups = new HashMap<String,String>();
+    String executeMethods = "def self.execute(message)\n  self.getInstance().addTrace(message)\nend\n";
+    executeMethods += "def reset\n  self.getInstance().traces = []\nend";
+    lookups.put("consoleTemplate","puts \"{0}=#{{1}}\"");
+    lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
+    lookups.put("executeMethods",executeMethods);
+    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
+
   }
   
   private void generateConstructorSignature(GeneratedClass genClass)

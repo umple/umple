@@ -8,7 +8,7 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.*;
 
-public class PhpGenerator implements CodeGenerator
+public class PhpGenerator implements CodeGenerator,CodeTranslator
 {
 
   //------------------------
@@ -630,27 +630,13 @@ private String getExtendClassesNames(UmpleClass uClass)
       }
     }
 
-    for (TraceItem traceItem : aClass.getTraceItems())
-    {
-      Map<String,String> lookups = new HashMap<String,String>();
-      
-      if ("Console".equals(model.getTraceType()))
-      {
-        lookups.put("attributeCode",StringFormatter.format("print(\"{0}={${1}}\");",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
-      }
-      else if ("String".equals(model.getTraceType()))
-      {
-        String executeMethod = "public static function execute($message) { self::getInstance()->addTrace($message); }\n";
-        executeMethod += "public function reset() { self::getInstance()->traces = array(); }";
-        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
-        lookups.put("packageName",packageName);
-        lookups.put("extraCode",executeMethod);
-        GeneratorHelper.prepareStringTracer(model, lookups);
-        lookups.put("attributeCode",StringFormatter.format("StringTracer::execute(\"{0}={${1}}\");",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
-      }
-      lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
-      GeneratorHelper.prepareTraceItem(traceItem,lookups);
-    }
+    Map<String,String> lookups = new HashMap<String,String>();
+    String executeMethods = "public static function execute($message) { self::getInstance()->addTrace($message); }\n";
+    executeMethods += "public function reset() { self::getInstance()->traces = array(); }";
+    lookups.put("consoleTemplate","print(\"{0}={${1}}\");");
+    lookups.put("stringTemplate","StringTracer::execute(\"{0}={${1}}\");");
+    lookups.put("extraCode",executeMethods);
+    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
     
     for (StateMachine sm : aClass.getStateMachines())
     {

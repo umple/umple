@@ -218,6 +218,49 @@ private static void postpareTrace(UmpleModel aModel)
   private static void postpareTrace(UmpleClass aClass)
   {}
   
+
+  // Look through all traces and inject the necessary code in the after, it requires the following lookups
+  //  + consoleTemplate
+  //  + stringTemplate
+  //  + dependPackage 
+  //  + executeMethod
+  public static void prepareAllStringTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  {
+    String consoleTemplate = templateLookups.get("consoleTemplate");
+    String stringTemplate = templateLookups.get("stringTemplate");
+    String dependPackage = templateLookups.get("dependPackage");
+    String extraCode = templateLookups.get("extraCode");
+    
+    for (TraceItem traceItem : aClass.getTraceItems())
+    {
+      Map<String,String> lookups = new HashMap<String,String>();
+      
+      if ("Console".equals(model.getTraceType()))
+      {
+        lookups.put("attributeCode",StringFormatter.format(consoleTemplate,t.translate("attribute",traceItem.getAttribute()),t.translate("parameter",traceItem.getAttribute())));
+      }
+      else if ("String".equals(model.getTraceType()))
+      {
+        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
+        lookups.put("packageName",packageName);
+        lookups.put("extraCode",extraCode);
+        GeneratorHelper.prepareStringTracer(model, lookups);
+        
+        if (dependPackage != null && !packageName.equals(aClass.getPackageName()))
+        {
+          Depend d = new Depend(packageName + ".*");
+          d.setIsInternal(true);
+          aClass.addDepend(d);
+        }
+        
+        lookups.put("attributeCode",StringFormatter.format(stringTemplate,t.translate("attribute",traceItem.getAttribute()),t.translate("parameter",traceItem.getAttribute())));
+      }
+      lookups.put("setMethod",t.translate("setMethod",traceItem.getAttribute()));
+      GeneratorHelper.prepareTraceItem(traceItem,lookups);
+    }  
+  }  
+  
+  
   // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
   // expects the following action semantic lookups
   //  + packageName: What package should this class belong to?

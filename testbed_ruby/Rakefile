@@ -5,7 +5,7 @@ task :default => [:testbed]
 
 desc "Run all tests"
 Rake::TestTask.new("testbed") do |t|
-  t.test_files = FileList['test/attributes/*_test.rb','test/associations/*_test.rb']
+  t.test_files = FileList['test/attributes/*_test.rb','test/associations/*_test.rb','test/statemachine/*_test.rb','test/tracer/*_test.rb']
   t.verbose = true
   t.warning = true
 end

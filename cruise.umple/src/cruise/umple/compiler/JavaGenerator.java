@@ -8,7 +8,7 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.java.*;
 
-public class JavaGenerator implements CodeGenerator
+public class JavaGenerator implements CodeGenerator,CodeTranslator
 {
 
   //------------------------
@@ -640,35 +640,14 @@ public class JavaGenerator implements CodeGenerator
       }
     }
     
-    for (TraceItem traceItem : aClass.getTraceItems())
-    {
-      Map<String,String> lookups = new HashMap<String,String>();
-      
-      if ("Console".equals(model.getTraceType()))
-      {
-        lookups.put("attributeCode",StringFormatter.format("System.out.println(\"{0}=\" + {1});",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
-      }
-      else if ("String".equals(model.getTraceType()))
-      {
-        String executeMethod = "public static void execute(String message) { getInstance().addTrace(message); }\n";
-        executeMethod += "public void reset() { getInstance().traces.clear(); }";
-        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
-        lookups.put("packageName",packageName);
-        lookups.put("extraCode",executeMethod);
-        GeneratorHelper.prepareStringTracer(model, lookups);
-        
-        if (!packageName.equals(aClass.getPackageName()))
-        {
-          Depend d = new Depend(packageName + ".*");
-          d.setIsInternal(true);
-          aClass.addDepend(d);
-        }
-        
-        lookups.put("attributeCode",StringFormatter.format("StringTracer.execute(\"{0}=\" + {1});",translate("attribute",traceItem.getAttribute()),translate("parameter",traceItem.getAttribute())));
-      }
-      lookups.put("setMethod",translate("setMethod",traceItem.getAttribute()));
-      GeneratorHelper.prepareTraceItem(traceItem,lookups);
-    }
+    Map<String,String> lookups = new HashMap<String,String>();
+    String executeMethods = "public static void execute(String message) { getInstance().addTrace(message); }\n";
+    executeMethods += "public void reset() { getInstance().traces.clear(); }";
+    lookups.put("consoleTemplate","System.out.println(\"{0}=\" + {1});");
+    lookups.put("stringTemplate","StringTracer.execute(\"{0}=\" + {1});");
+    lookups.put("dependPackage","1");
+    lookups.put("extraCode",executeMethods);
+    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
     
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
