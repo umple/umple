@@ -1,11 +1,15 @@
 require 'rake'
 require 'rake/testtask'
 
-task :default => [:testbed]
-
-desc "Run basic tests"
+desc "Run all tests"
 Rake::TestTask.new("testbed") do |t|
   t.test_files = FileList['test/attributes/*_test.rb','test/associations/*_test.rb']
   t.verbose = true
   t.warning = true
+end
+
+desc "Compile and run all tests"
+Rake::TestTask.new("compile_and_testbed") do |t|
+  system "java -jar ../dist/umple.jar src/TestHarnessRuby.ump"
+  Rake::Task['testbed'].invoke
 end
