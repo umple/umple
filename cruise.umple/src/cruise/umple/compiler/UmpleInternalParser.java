@@ -86,7 +86,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-   public UmpleInternalParser()  {
+  
+ public UmpleInternalParser()  {
 this("UmpleInternalParser",new UmpleModel(null));
   }
  public UmpleInternalParser(UmpleModel aModel)  {
@@ -1289,7 +1290,8 @@ private void analyzeTraceToken(Token token)
     {
       TraceItem traceItem = new TraceItem();
       traceItem.setUmpleClass(aClass);
-      traceItem.setAttribute(traceItem.getUmpleClass().getAttribute(token.getValue("trace_code")));
+      traceItem.setAttribute(traceItem.getUmpleClass().getAttribute(token.getValue("trace_attribute")));
+      traceItem.setWhereClause(token.getValue("trace_where"));
     }
   }
   

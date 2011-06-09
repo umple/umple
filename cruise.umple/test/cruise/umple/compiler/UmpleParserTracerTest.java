@@ -26,13 +26,14 @@ public class UmpleParserTracerTest
   @Test
   public void attributeTrace()
   {
-    assertParse("300_tracer.ump","[classDefinition][name:LightFixture][attribute][name:x][trace][trace_code:x]");
+    assertParse("300_tracer.ump","[classDefinition][name:LightFixture][attribute][name:x][trace][trace_attribute:x]");
     
     Assert.assertEquals("Console",model.getTraceType());
     UmpleClass clazz = model.getUmpleClass("LightFixture");
     Assert.assertEquals(1,clazz.numberOfTraceItems());
     TraceItem traceItem = clazz.getTraceItem(0);
     Assert.assertEquals(clazz.getAttribute("x"),traceItem.getAttribute());
+    Assert.assertEquals(null,traceItem.getWhereClause());
   }
 
   @Test
@@ -40,6 +41,26 @@ public class UmpleParserTracerTest
   {
     assertParse("300_tracerType_String.ump","[traceType:String]");
     Assert.assertEquals("String",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_Console()
+  {
+	assertParse("300_traceType_Console.ump","[traceType:Console]");
+	Assert.assertEquals("Console",model.getTraceType());	
+  }
+  
+  @Test
+  public void trace_SimpleWhere()
+  {
+	assertParse("300_trace_simpleWhere.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:x][trace][trace_attribute:x][trace_where:x > 5]");
+
+    UmpleClass clazz = model.getUmpleClass("LightFixture");
+    Assert.assertEquals(1,clazz.numberOfTraceItems());
+    
+    TraceItem item = clazz.getTraceItem(0);
+    Assert.assertEquals(clazz.getAttribute("x"),item.getAttribute());
+    Assert.assertEquals("x > 5",item.getWhereClause());
   }
   
   

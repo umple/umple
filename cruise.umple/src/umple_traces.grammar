@@ -2,6 +2,7 @@
 
 traceType- : tracer [traceType] ;
 
-trace : [[fullTrace]] | [[simpleTrace]]
-simpleTrace- : trace [**trace_code] ;
+trace : [[fullTrace]] | [[whereTrace]] | [[simpleTrace]]
+simpleTrace- : trace [**trace_attribute] ;
+whereTrace- : trace [trace_attribute] where [**trace_where] ;
 fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?

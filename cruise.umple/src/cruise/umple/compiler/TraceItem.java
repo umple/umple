@@ -10,6 +10,9 @@ public class TraceItem
   // MEMBER VARIABLES
   //------------------------
 
+  //TraceItem Attributes
+  private String whereClause;
+
   //TraceItem Associations
   private Attribute attribute;
   private UmpleClass umpleClass;
@@ -19,11 +22,26 @@ public class TraceItem
   //------------------------
 
   public TraceItem()
-  {}
+  {
+    whereClause = null;
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setWhereClause(String aWhereClause)
+  {
+    boolean wasSet = false;
+    whereClause = aWhereClause;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getWhereClause()
+  {
+    return whereClause;
+  }
 
   public Attribute getAttribute()
   {

@@ -115,8 +115,9 @@ guard : [ [**guardCode] ]<br />
 <br />
 traceType- : tracer [traceType] ;<br />
 <br />
-trace : [[fullTrace]] | [[simpleTrace]]<br />
-simpleTrace- : trace [**trace_code] ;<br />
+trace : [[fullTrace]] | [[whereTrace]] | [[simpleTrace]]<br />
+simpleTrace- : trace [**trace_attribute] ;<br />
+whereTrace- : trace [trace_attribute] where [**trace_where] ;<br />
 fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
 position- : [[associationPosition]] | [[elementPosition]]<br />
 elementPosition : position [x] [y] [width] [height] ;<br />

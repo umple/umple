@@ -21,6 +21,7 @@ class UmpleModel
 
 class TraceItem
 {
+  whereClause = null;
   0..1 -- 0..1 Attribute;
 }
 

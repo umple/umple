@@ -1,7 +1,5 @@
 package cruise.umple.compiler;
 
-import cruise.umple.compiler.java.JavaInterfaceGenerator;
-
 import org.junit.*;
 
 public class JavaGeneratorTraceTest
