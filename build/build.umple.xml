@@ -251,6 +251,13 @@
     </copy>
           
   </target>
+  
+  <target name="deployUmpleDocs" >
+    <antcall target="packageDocs" />
+    <copy todir="/h/ralph/sites/www/html/umple">
+      <fileset dir="dist/cruise.umple/reference">
+    </copy>
+  </target>
 
   <!-- ```````````````````````````
     Build the application
