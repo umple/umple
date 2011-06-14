@@ -14,11 +14,11 @@ Page.init = function()
 { 
   jQuery.noConflict();
   jQuery(document).keydown(function(event){Action.keyboardShortcut(event);});
+  
   Page.initPaletteArea();
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
-  
   Action.loadFile();
 }
 
@@ -192,8 +192,8 @@ Page.initUmpleTextArea = function()
   jQuery("#umpleLayoutEditor").focus(function(){Action.focusOn("umpleLayoutEditor", true);});
   jQuery("#umpleModelEditor").blur(function(){Action.focusOn("umpleModelEditor", false);});
   jQuery("#umpleLayoutEditor").blur(function(){Action.focusOn("umpleLayoutEditor", false);});
-  Action.updateLayoutEditorAndDiagram();
-  History.save(Page.getUmpleCode());
+  // Action.updateLayoutEditorAndDiagram();
+  // History.save(Page.getUmpleCode());
 }
 
 Page.isPhotoReady = function()
@@ -280,7 +280,8 @@ Page.enableEditDragAndResize = function(doEnable)
   	jQuery("div.umpleClass").removeClass("unselectable");
   	jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", false);
   	jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", false);
-  }   else
+  } 
+  else
   {
   	jQuery("span.editable").addClass("uneditable");
   	jQuery("div.umpleClass").addClass("unselectable");
@@ -406,7 +407,8 @@ Page.showDiagramSyncNeeded = function(doShow)
   	jQuery("#syncNeededMessage").remove();
   }
   
-}
+}
+
 Page.hideLoading = function()
 {
   var modelEditor = "#umpleModelEditor";

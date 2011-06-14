@@ -53,9 +53,28 @@ function readTemporaryFile($filename)
   return $contents;
 }
 
+function extractModelId($filename)
+{
+  if ($filename == null)
+  {
+    return "";
+  }
+  else
+  {
+    $index = strpos($filename,"/model.ump");
+    $length = $index - strlen($filename);
+    $modelId = substr($filename,7,$length);
+    return $modelId;
+  }
+}
+
 function extractFilename()
 {
-  if (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
+  if (isset($_REQUEST["model"]))
+  {
+    $filename = "../ump/". $_REQUEST["model"] ."/model.ump";
+  }
+  elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
   {
     $filename = "../" . nextFilename("ump");
   }

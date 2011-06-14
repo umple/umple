@@ -1,6 +1,7 @@
 <?php
 require_once ("scripts/compiler_config.php");
 $filename = extractFilename();
+$output = readTemporaryFile($filename);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -29,11 +30,13 @@ $filename = extractFilename();
   
 <input id="filename" type="hidden" value="<?php echo $filename ?>" />
 
+<div class="bookmarkableUrl"><a href="?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a></div>
 <table id="container" class="container">
 
 <tr class="mainApplication">   
   <td id="textEditorColumn"  tabIndex="2"  class="textEditorColumn">
-      <textarea id="umpleModelEditor" class = "umpleModelEditor" wrap="off" rows="24" ></textarea>
+      <textarea id="umpleModelEditor" class = "umpleModelEditor" wrap="off" rows="24" >
+      </textarea>
       <textarea id="umpleLayoutEditor" class="umpleLayoutEditor" wrap="off" ></textarea>
   </td>
   
@@ -84,9 +87,16 @@ $filename = extractFilename();
             <option name = "optionExample" value="WarehouseSystem.ump">WarehouseSystem</option>
           </select>
         </li>
-        <li> <div><pre></pre></div> </li>
-        <li> <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> </li>
         </ul>
+        <ul class="second">
+          <li class="subtitle">SAVE</li>
+          <div class="bookmarkableUrl"><a href="?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a></div>
+        </ul>
+        <ul class="second">
+          <li class="subtitle">NEW</li>
+          <li> <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> </li>
+        </ul>
+
       </div>
       
       <h3><a href="#">TOOLS</a></h3>
@@ -166,6 +176,7 @@ $filename = extractFilename();
 
 <script language="JavaScript">
   Page.init();
+  Page.setUmpleCode("<?php $output ?>");
 </script>
 
 </body>

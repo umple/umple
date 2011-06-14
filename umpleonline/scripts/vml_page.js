@@ -17,7 +17,7 @@ Page.init = function()
   
   Page.initSourceCodeArea();
   Page.showCodeMessage("none");
-  Action.loadFile();
+  Action.saveNewFile();
 }
 
 Page.initAction = function(id,action)

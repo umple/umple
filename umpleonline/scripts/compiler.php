@@ -8,6 +8,12 @@ if (isset($_REQUEST["save"]))
   $filename = createTemporaryFile($input);
   echo $filename;
 }
+else if (isset($_REQUEST["load"]))
+{
+  $filename = $_REQUEST["filename"];
+  $outputUmple = readTemporaryFile($filename);
+  echo $outputUmple;
+}
 else if (isset($_REQUEST["action"]))
 {
   handleUmpleTextChange();

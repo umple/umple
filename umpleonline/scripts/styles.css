@@ -27,6 +27,7 @@ div.palette input.checkbox { cursor:pointer; margin-left: 10px; padding:2px; ver
 
 div.palette ul { background-color: GhostWhite; margin:5px -25px -15px -25px; padding:6px 0px 10px 0px; border: Black solid 1px; border-top: 0; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
 div.palette ul.first { margin-top:-10px; border-top: solid black 1px; }
+div.palette ul.second { margin-top:20px; border-top: solid black 1px; }
 div.palette h3 { letter-spacing: -1px; font-family: Verdana; line-height: 13px; height: 25px; font-size: 10.5pt;}
 div.palette li { z-index: 1; font-family: Verdana; margin:0; list-style-type: none; border: GhostWhite solid 1px; font-size: 9pt; }
 div.palette li.disabled { z-index: 2; background-color: GhostWhite; color: Silver;}
@@ -34,6 +35,8 @@ div.palette li.disabled  img{ z-index: 1; cursor: not-allowed; opacity: 0.25;}
 div.palette li.subtitle { text-shadow: 1px 1px 4px White; font-weight: bold; text-transform: uppercase; letter-spacing: 0px; color: Black; margin: 0px 5px 8px 5px; text-indent: 8px; font-family: Verdana; text-align: left; font-size:10pt;x border-bottom: Silver double;}
 div.palette li.selected { z-index: 4; border: DarkGray solid 1px; color: Black; background-color:Gainsboro; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
 div.palette li.highlight { z-index: 3; border: DarkGray solid 1px; color: Black; background-color: Gainsboro; cursor:pointer; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+div.palette .bookmarkableUrl { padding: 2px 14px 2px 14px; }
+.bookmarkableUrl { padding: 0px 0px 0px 8px; }
 
 /* BUTTONS */
 div.jQueryPaletteButton { font-family: Verdana; letter-spacing: 0.1px; color: black; border-color: DarkSlateGray; width: 132px; height: 25px; vertical-align: center; font-size: 10pt; margin:0px 5px 0px 10px; padding:0; cursor:hand; }

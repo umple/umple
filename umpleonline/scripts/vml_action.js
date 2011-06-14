@@ -49,18 +49,18 @@ Action.clicked = function(event)
   }
 }
 
-Action.loadFile = function()
+Action.saveNewFile = function()
 {
   var vmlCode = Page.getVmlCode();
   var filename = Page.getFilename();
   
   if (filename == "")
   {
-    Ajax.sendRequest("scripts/compiler_vml.php",Action.loadFileCallback,format("save=1&&vmlCode={0}",vmlCode));
+    Ajax.sendRequest("scripts/compiler_vml.php",Action.saveNewFileCallback,format("save=1&&vmlCode={0}",vmlCode));
   }
 }
 
-Action.loadFileCallback = function(response)
+Action.saveNewFileCallback = function(response)
 {
   Page.setFilename(response.responseText);
 }

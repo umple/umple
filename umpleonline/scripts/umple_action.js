@@ -137,7 +137,10 @@ Action.startOver = function()
 {
   Page.setUmpleCode("");
   UmpleSystem.merge(null);
-  location.reload();
+  window.location = "umple.php";
+  // Action.saveNewFile();
+  // location.
+  // location.reload();
 }
 
 Action.undo = function()
@@ -182,16 +185,35 @@ Action.redo = function()
 
 Action.loadFile = function()
 {
+  var filename = Page.getFilename();
+  if (filename != "")
+  {
+    Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+  }
+  else
+  {
+    Action.saveNewFile();
+  }
+}
+
+Action.loadFileCallback = function(response)
+{
+  Page.setUmpleCode(response.responseText);
+  if (!Action.manualSync) Action.updateUmpleDiagram();
+}
+
+Action.saveNewFile = function()
+{
   var umpleCode = Page.getUmpleCode();
   var filename = Page.getFilename();
   
   if (filename == "")
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("save=1&&umpleCode={0}",umpleCode));
+    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode));
   }
 }
 
-Action.loadFileCallback = function(response)
+Action.saveNewFileCallback = function(response)
 {
   Page.setFilename(response.responseText);
 }
