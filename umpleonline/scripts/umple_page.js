@@ -418,6 +418,7 @@ Page.hideLoading = function()
   jQuery(modelEditor).hideLoading();
   jQuery(canvas).hideLoading();
   jQuery(layoutEditor).hideLoading();
+  jQuery(".bookmarkableUrl").removeClass("disabled");
 }
 
 Page.showModelLoading = function()
@@ -427,6 +428,7 @@ Page.showModelLoading = function()
   {
     modelEditor.showLoading();
   }
+  jQuery(".bookmarkableUrl").addClass("disabled");
 }
 
 Page.showLayoutLoading = function()
@@ -436,6 +438,7 @@ Page.showLayoutLoading = function()
   {
   	layoutEditor.showLoading();
   }
+  jQuery(".bookmarkableUrl").addClass("disabled");
 }
 
 Page.showCanvasLoading = function()
@@ -445,6 +448,7 @@ Page.showCanvasLoading = function()
   {
   	canvas.showLoading();
   }
+  jQuery(".bookmarkableUrl").addClass("disabled");
 }
 
 Page.resetCanvasSize = function()

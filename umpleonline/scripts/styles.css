@@ -45,6 +45,11 @@ a.button:visited { color:black; text-decoration:none; }
 a.button:hover { color:black; text-decoration:none; }
 a.button:active { color:black; text-decoration:none; }
 
+
+/* DISABLING DIVS ON THE SCREEN */
+.disabled { text-decoration: line-through; color: #d6d6d6; }
+.disabled a { text-decoration: none; color: #d6d6d6;}
+
 /* SELECT and CUSTOM SIZE INPUTS */
 select.button { width:134px; border: DimGray solid 1px; font: Verdana; font-size: 10pt; padding: 0px; margin: 0 0px 5px 10px; cursor:pointer; }
 input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
