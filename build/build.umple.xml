@@ -242,14 +242,13 @@
 
   <target name="deployUmpleonline" >
     <antcall target="deployUmpleonlineJars" />
-    
+    <antcall target="deployUmpleDocs" />    
     <copy todir="/h/ralph/sites/www/html/umpleonline">
       <fileset dir="umpleonline">
         <exclude name=".svn"/>
         <exclude name="ump"/>
       </fileset>
     </copy>
-          
   </target>
   
   <target name="deployUmpleDocs" >
