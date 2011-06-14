@@ -237,6 +237,18 @@
     <copy file="dist/vml.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
 
+  <target name="deployUmpleonline" >
+    <antcall target="deployUmpleonlineJars" />
+    
+    <copy todir="/h/ralph/sites/www/html/umpleonline">
+      <fileset dir="umpleonline">
+        <exclude name=".svn"/>
+        <exclude name="ump"/>
+      </fileset>
+    </copy>
+          
+  </target>
+
   <!-- ```````````````````````````
     Build the application
   ``````````````````````````` -->
