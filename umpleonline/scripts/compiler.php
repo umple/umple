@@ -5,7 +5,7 @@ require_once("compiler_config.php");
 if (isset($_REQUEST["save"]))
 {
   $input = $_REQUEST["umpleCode"];
-  $filename = createTemporaryFile($input);
+  $filename = saveFile($input);
   echo $filename;
 }
 else if (isset($_REQUEST["load"]))
@@ -25,9 +25,9 @@ else if (isset($_REQUEST["umpleCode"]))
   
   if ($language == "Simulate")
   {
-    $filename = createTemporaryFile("generate Php;\n" . $input);
+    $filename = saveFile("generate Php;\n" . $input);
     executeCommand("java -jar umple.jar {$filename}");
-    $filename = createTemporaryFile("generate Simulate;\n" . $input);
+    $filename = saveFile("generate Simulate;\n" . $input);
     executeCommand("java -jar umple.jar {$filename}");
     $modelId = getFilenameId($filename);
     echo $modelId;
@@ -35,7 +35,7 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   elseif (!in_array($language,array("Php","Java","Ruby")))
   {  
-    $filename = createTemporaryFile($input);
+    $filename = saveFile($input);
     $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename}");
     if ($language != "Json")
     {
@@ -45,7 +45,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
-  $filename = createTemporaryFile("generate {$language};\n" . $input);
+  $filename = saveFile("generate {$language};\n" . $input);
   $outputFilename = "{$filename}.output";
   $command = "java -jar umplesync.jar -source {$filename} > {$outputFilename}";    
   exec($command);

@@ -5,7 +5,7 @@ require_once("compiler_config.php");
 if (isset($_REQUEST["save"]))
 {
   $input = $_REQUEST["vmlCode"];
-  $filename = createTemporaryFile($input);
+  $filename = saveFile($input);
   echo $filename;
 }
 else if (isset($_REQUEST["vmlCode"]))
@@ -13,7 +13,7 @@ else if (isset($_REQUEST["vmlCode"]))
   $input = $_REQUEST["vmlCode"];
   $language = $_REQUEST["language"];
   
-  $filename = createTemporaryFile($input);
+  $filename = saveFile($input);
   $outputFilename = "{$filename}.output";
   
   $command = "java -jar vml.jar $outputFilename $filename";
@@ -32,12 +32,12 @@ else if (isset($_REQUEST["vmlCode"]))
 
     if (!in_array($language,array("Php","Java","Ruby")))
     {  
-      createFile($outputFilename, "generate {$language};\n" . $genericCode);
+      saveFile("generate {$language};\n" . $genericCode,$outputFilename);
       $command = "java -jar umplesync.jar -source {$outputFilename} > {$secondOutFilename}";
     } 
     else
     {
-      createFile($outputFilename, $genericCode);
+      saveFile($genericCode,$outputFilename);
       
       $command = "java -jar umplesync.jar -generate {$language} {$outputFilename}  > {$secondOutFilename}";
     }
@@ -84,63 +84,3 @@ else
 {
   echo "Invalid use of vml compiler";
 }
-
-
-// function createTemporaryFile($input)
-// {
-//   
-//   if (!isset($_REQUEST["filename"]))
-//   {
-//     $filename = nextFilename();  
-//   }
-//   else
-//   {
-//     $filename = $_REQUEST["filename"];
-//   }
-//   return createFile($filename,$input);
-// }
-// 
-// function createFile($filename,$input)
-// {
-//   $fh = fopen($filename, 'w');
-//   fwrite($fh, $input);
-//   fclose($fh);
-//   return $filename;
-// }
-// 
-// function readTemporaryFile($filename)
-// {
-//   if (!is_file($filename) || filesize($filename) == 0)
-//   {
-//     return "";
-//   }
-// 
-//   $handle = fopen($filename, "r");
-//   $contents = fread($handle, filesize($filename));
-//   fclose($handle);
-//   return $contents;
-// }
-// 
-// 
-// function nextFilename()
-// {
-//   while(true)
-//   {
-//     $id = rand(0,999999);
-//     $filename = "../ump/__{$id}.vml";
-//     
-//     if (!file_exists($filename))
-//     {
-//       return $filename;
-//     }
-//   }
-// }
-// 
-// function executeCommand($command)
-// {
-//   ob_start();
-//   passthru($command);
-//   $output = trim(ob_get_contents());
-//   ob_clean();
-//   return $output;
-// }

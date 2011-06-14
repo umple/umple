@@ -12,15 +12,7 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
-function createFile($filename,$input)
-{
-  $fh = fopen($filename, 'w');
-  fwrite($fh, $input);
-  fclose($fh);
-  return $filename;
-}
-
-function createTemporaryFile($input, $filename = null)
+function saveFile($input, $filename = null)
 {
   if ($filename == null)
   {
@@ -167,7 +159,7 @@ function showUserInterface($filename)
   $buildProjectCommand = "#! /bin/sh\n";
   $buildProjectCommand .= "set JAVA_HOME={$GLOBALS['JAVA_HOME']}\n";
   $buildProjectCommand .= "{$GLOBALS['ANT_EXEC']} -f {$buildFile} -DxmlFile=UmpleProject.xml -DumpleFile={$umpleFile} -DoutputFolder={$uiguDirectory} -DprojectName={$uiguProjectName}";
-  createTemporaryFile("{$buildProjectCommand}\n","runAnt.bat");
+  saveFile("{$buildProjectCommand}\n","runAnt.bat");
   
   //Fix the permissions so the runAnt.bat will work
   chmod("runAnt.bat",0755); 
@@ -263,9 +255,9 @@ function handleUmpleTextChange()
   //Windows versus Linux PHP issues
   $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\""; 
 
-  $filename = createTemporaryFile($input);
+  $filename = saveFile($input);
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} {$actionCode} {$filename}");
-
+  saveFile($umpleOutput,$filename);
   echo urldecode($umpleOutput);
   return;
 }
