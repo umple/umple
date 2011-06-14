@@ -1,0 +1,212 @@
+<!-- The following is included from files/inclleftmenu.html -->
+
+      <!-- Sets the width of cells for subsequent rows -->
+      <tr>
+        <td valign="top" width="34" height="8"></td>
+        <td width="11"></td>
+        <td valign="top" width="141"></td>
+        <td valign="top" width="5"></td>  
+        <td valign="top" width="29"></td> 
+        <td valign="top" width="811"></td>
+        <td valign="top" width="24"></td>
+        <td valign="top" width="15"></td>
+      </tr>
+
+      <!-- Main row into which the menu and content are embedded -->
+      <tr>
+        <td valign="top">
+          <img src="files/indicator_blocks.gif"
+            alt="some dots" align="top" border="0" height="10"
+            vspace="20" width="34" />
+        </td>
+      
+        <td></td>
+      
+        <!-- Menu table cell -->
+        <td id="menu_1" valign="top">
+          <!--#if expr="$page=home" -->
+            <div class="menu1-level1-act">
+          <!--#else -->
+            <div class="menu1-level1-no"> 
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl"
+                onfocus="blurLink(this);">
+              T.C. Lethbridge<br />Home
+            </a>
+          </div>
+
+          <!--#if expr="$page=research" -->
+            <div class="menu1-level1-act">
+          <!--#else -->
+            <div class="menu1-level1-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/research.shtml"
+                onfocus="blurLink(this);">
+              Research
+            </a>
+          </div>
+
+          <!--#if expr="$page=publications" -->
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/publications/"
+                onfocus="blurLink(this);">
+              Publications</a>
+          </div>
+
+          <!--#if expr="$page=presentations" -->
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/presentations/"
+                onfocus="blurLink(this);">
+              Presentations</a>
+          </div>
+
+          <!--#if expr="$page=gradtheses" -->
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/gradtheses/"
+                onfocus="blurLink(this);">
+              Grad students</a>
+          </div>
+
+          <!--#if expr="$page=umple" --> 
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://cruise.site.uottawa.ca/umple/"
+                onfocus="blurLink(this);">
+              Umple
+            </a>
+          </div>
+          
+          <!--#if expr="$page=cruise" --> 
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://cruise.site.uottawa.ca/"
+                onfocus="blurLink(this);">
+              CRuiSE Lab
+            </a>
+          </div>
+
+          <!--#if expr="$page=edrel" --> 
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/edrel/"
+                onfocus="blurLink(this);">
+              Education
+            </a>
+          </div>
+
+          <!--#if expr="$page=teaching" -->
+            <div class="menu1-level1-act">
+          <!--#else -->
+            <div class="menu1-level1-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/teaching.shtml"
+                onfocus="blurLink(this);">
+              Teaching
+            </a>
+          </div>
+
+          <!--#if expr="$page=csi5122" --> 
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/csi5122/"
+                onfocus="blurLink(this);">
+              CSI5122
+            </a>
+          </div>
+
+          <!--#if expr="$page=seg2105" --> 
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/seg2105/"
+                onfocus="blurLink(this);">
+              SEG2105
+            </a>
+          </div>
+
+          <!--#if expr="$page=seg4210" --> 
+            <div class="menu1-level2-act">
+          <!--#else -->
+            <div class="menu1-level2-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/seg4210/"
+                onfocus="blurLink(this);">
+              SEG4210
+            </a>
+          </div>
+          
+          <!--#if expr="$page=textbook" -->
+            <div class="menu1-level1-act">
+          <!--#else -->
+            <div class="menu1-level1-no">
+          <!--#endif -->
+            <a href="http://www.lloseng.com"
+                onfocus="blurLink(this);">
+              Textbook
+            </a>
+          </div>
+          
+          <!--#if expr="$page=biography" -->   
+            <div class="menu1-level1-act">
+          <!--#else -->
+            <div class="menu1-level1-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/~tcl/biography.shtml"
+                onfocus="blurLink(this);">
+              Biography
+            </a>
+          </div>
+
+          <!--#if expr="$page=site" -->   
+            <div class="menu1-level1-act">
+          <!--#else -->
+            <div class="menu1-level1-no">
+          <!--#endif -->
+            <a href="http://www.site.uottawa.ca/eng/" target="_blank"
+                onfocus="blurLink(this);">
+              School of Electrical Engineering and Computer Science.
+            </a>
+          </div>
+  
+          <div class="contacts">
+            <p>&nbsp;<br /> &nbsp; <br /> &nbsp; <br />
+            <b>Address:</b><br />
+            800 King Edward Ave<br />
+            Ottawa ON, K1N 6N5 Canada<br />&nbsp;<br />
+            <b>Tel:</b> +1 613 562-5800 x6685<br />
+            <b>Fax:</b> +1 613 562-5664<br />&nbsp;<br />
+            <b>Office:</b> SITE Building, Room 5070<br />&nbsp;<br />
+            <b>Email:</b> <a href="mailto:tcl@site.uottawa.ca">
+              tcl@site.uottawa.ca</a></p>
+          </div>      
+  
+        </td> <!-- end of main table cell -->
+          
+        <td valign="top" width="1">
+          <img src="files/dots.gif" alt="list of dots" border="0"
+            height="300" width="5" />
+        </td>
+              
+        <td valign="top" width="1"></td>
+
+
+<!-- End of inclusion from files/inclleftmenu.html -->
+

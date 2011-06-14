@@ -87,6 +87,9 @@
       <arg value="build/reference"/>
       <arg value="${dist.path}/reference"/>
     </java>
+    <copy todir="${dist.path}/reference/files">
+      <fileset dir="build/reference/files"/>
+    </copy>
   </target>
   
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">

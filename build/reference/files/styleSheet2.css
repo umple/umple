@@ -1,0 +1,200 @@
+/* GENERAL fonts */
+P, OL, UL, DIV, H1, H2, H3, H4, B {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	color: #000000;
+}
+H1 {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333333;
+}
+H2 {
+	font-size: 14px;
+	font-weight: bold;
+	color: #666666;
+}
+H3 {
+	font-size: 12px;
+	font-weight: bold;
+	color: #666666;
+}
+H4 {
+	font-size: 10px;
+	font-weight: bold;
+	color: #666666;
+}
+
+P, H1, H2, H3, H4 {margin: 0px 0px 5px 0px;}
+
+P, B, OL, UL, LI {line-height: 12pt;}
+
+a {
+  cursor:pointer;cursor:hand;
+}
+
+TD#footer {
+	border-top: dotted 1px #999999;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #333333;
+}
+TD#footer P {
+	font-size: 10px;
+	text-align: center;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #333333;
+}
+
+/* Content column */
+TD#content {
+
+	padding-right: 10px;
+	padding-top: 15px;
+	vertical-align: top;
+	width: 480px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* Links original color: #B45D32   new #A34C21 */
+TD#content A {
+	text-decoration: none;
+	color: #A34C21;
+	font-weight: 100;
+	border-bottom-width: thin;
+	border-bottom-style: dashed;
+}
+TD#content A:hover {
+	text-decoration: none;
+	border-bottom-style: none;
+}
+TD#content A:visited{
+    color: #734C21;}
+
+/* Right column content */
+TD#content_right {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 15px;
+	vertical-align: top;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+TD DIV.topicname A{
+	font-size: 10px;
+}
+
+/* Menu 1 column */
+TD#menu_1 {	
+	vertical-align: top; 
+	width: 150px;	
+	background-image: url(../images/menubackground.jpg);
+	background-repeat : no-repeat;
+	padding-top: 10px;
+}
+TD#menu_1 DIV {
+	width: 95%;
+}
+TD#menu_1 DIV A {
+	color: navy;
+	text-decoration: none;
+}
+TD#menu_1 DIV A:hover {
+	text-decoration: underline;
+}
+
+/*  MENU 1, level 1, normal state (NO) */
+TD#menu_1 DIV.menu1-level1-no {
+  border-bottom: 1px dotted #999999;
+  font-size: 11px;
+  padding-top:5px;
+  padding-left:5px;
+}
+/*  MENU 1, level 1, active state (ACT) */
+TD#menu_1 DIV.menu1-level1-act {
+  border-bottom: 1px solid #999999;
+  font-weight:bold;
+  font-size: 11px;
+  padding-top:5px;
+  padding-left:5px;
+
+  background-color: #eeeeee;
+  filter:alpha(opacity='70', style='0');
+}
+TD#menu_1 DIV.menu1-level1-act A {
+  color:black;
+}
+
+TD#menu_1 DIV.contacts P {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-style: italic;
+	font-size: 8pt;
+        padding-left:5px;
+        line-height: 8pt;
+        color: #888888;
+}
+
+TD#menu_1 DIV.contacts B {
+	font-size: 8pt;
+        color: #555555;
+}
+
+
+/*  MENU 1, level 2, normal state (NO) */
+TD#menu_1 DIV.menu1-level2-no {
+  font-size: 10px;
+  padding-left:20px;
+}
+/*  MENU 1, level 2, active state (ACT) */
+TD#menu_1 DIV.menu1-level2-act {
+  font-size: 10px;
+  font-weight:bold;
+  padding-left:20px;
+}
+
+
+
+/*  MENU 2, level 1, general for all table cells: */
+TR#menu_2 TD {
+  background-color: #333366;
+  width: 10%;
+  text-align: center;
+  padding: 0px 2px 0px 2px;
+}
+TR#menu_2 TD A {
+  color: white;
+  font-size: 10px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  text-decoration: none;
+}
+TR#menu_2 TD A:hover {
+  text-decoration: underline;
+}
+TR#menu_2 TD.oddcell {
+  background-color: #666699;
+}
+TR#menu_2 TD.menu2-level1-act {
+  background-color: #88292A;
+}
+
+
+
+/* Style for the Path-menu: */
+TD#path {
+  white-space: nowrap;
+  background-color: #F8F8EC;
+
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  font-style: italic;
+  font-weight: bold;
+  padding: 1px 1px 5px 5px;
+}
+TD#path A {
+  text-decoration: none;
+  color:black;
+}
+TD#path A:hover {
+  text-decoration: underline;
+
+}
