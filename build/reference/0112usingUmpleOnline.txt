@@ -1,0 +1,204 @@
+Using UmpleOnline
+User Manual
+
+@@description
+
+<p>The following describes how to use the <a 
+href="http://try.umple.org">UmpleOnline tool accessible online at 
+try.umple.org</a></p>
+
+<p><b>Loading and saving</b></p>
+
+<ul>
+
+<li><b>To explore examples of Umple</b>, In the centre pane, click on 
+'LOAD & SAVE'. You can load a pre-prepared example from the 'LOAD' 
+menu.</li>
+
+<br />
+
+<li><b>To restart UmpleOnline</b> (you will lose any work you have not 
+saved), click 'Start Over'</li>
+
+<br />
+
+<li><b>To enable saving of your work</b>, click 'Bookmarkable URL' above 
+the left pane or in the centre pane and copy or bookmark the URL that 
+appears in your browser's URL bar. Note that from this point on you can 
+keep editing the Umple code or diagram, and your work will continue to be 
+saved at this URL. You are thus saving your work in the 'cloud'. You can 
+embed the URL in other pages to document your product. Note that at the 
+current time, anyone who knows your URL can also edit your work, and if 
+you forget your URL, there is no way to retrieve it. Therefore it is also 
+suggested that you copy and paste the text of important files somewhere 
+else. One thing to note is that if you just copy the visible text in the 
+left hand pane, you will <u<not</u> be saving the <i>layout of the 
+diagram</i>. If you want to save this too, you have to do one of the 
+following:
+  <ul>
+     <li>Click on Options/Source in the center pane, to generate a popup 
+that also contains the layout information.
+     <li>Click on Options/Layout Editor in the center pane to view a 
+separate window containing the layout, and then save the 
+automatically-generated layout information separately. You can actually 
+edit this layout textually, but we suggest you only do that if you are an 
+expert since it us much easier to edit the layout from the right-hand 
+graphical pane, as described later.
+  </ul>
+</li>
+
+</ul>
+
+<p><b>Left Pane: Umple textual code</b></p>
+
+<ul>
+
+<li>Type any Umple code into this pane. Three seconds after you stop 
+typing, your program will be interpreted by Umple, and Umple will attempt 
+to draw a corresponding class diagram in the right-hand side. Just about 
+the simplest Umple program you could type here would be class X {}</li>
+
+<br />
+
+<li><b>If you make a mistake</b>, you can click 'Undo' in the centre pane, 
+repeatedly to 'back out' each change you made. You can also redo changes 
+in a similar manner.</li>
+
+<br />
+
+<li><b>You can hide this pane entirely</b> by unchecking 'Text Editor' in the 
+center pane.</li>
+
+<br />
+
+<li><b>If you are doing a lot of text editing</b>, and don't want to have 
+the diagram generated all the time, you can click on Options/Manual Sync 
+in the center pane.</li>
+
+<br />
+
+<li><b>Current limitations</b>: The text pane currently has no syntax 
+highlighting. If you make a syntax error the diagram on the right 
+currently disappears, and you won't be able to generate code, or you will 
+generate code that treats most of your text as 'extra code' that it passes 
+to the Java/PHP/Ruby compiler to see if it can get that to process it. 
+Improving these issues is on the Umple project to-do list. Meanwhile, if 
+your program has an error, we suggest saving it somewhere and then pasting 
+in small bits of it into the editor until you can find the part that gives 
+the error.
+
+</ul>
+
+
+<p><b>Right Pane: UML diagram</b></p>
+
+<ul>
+
+<li><b>To add a class</b>, click on the Tools/Class command in the center pane, 
+then position the cursor over the canvas. To add a whole series of 
+classes, double-click on the Tools/Class command and click repeatedly on 
+the canvas. Press escape if you change your mind and you don't want to add 
+a class.</li>
+
+<br />
+
+<li>You can also use the text (left) pane to write Umple code that will 
+appear on the canvas. If you do this, you will have to then lay out the 
+diagram, since the layout algorithm is rather simple.</li>
+
+<br />
+
+<li><b>To rename a class</b>, click on the class name and type over it, then hit 
+enter or click somewhere else. Alternatively edit it on the text (left) 
+pane.</li>
+
+<br />
+
+<li><b>To reposition classes,</b> you can drag classes around to align 
+them the way you like. You can also select a class and use the arrow keys 
+to move it by a small amount in any direction. This is nice to carefully 
+arrange classes. Note that the positions of your classes are saved in a 
+hidden text pane on the left hand side. See the discussion above regarding 
+showing this pane and saving the layout information</li>
+
+<br />
+
+
+<li><b>To add an attribute</b>, click in the 'Add More' box and type the 
+attribute name. To give an attribute a type, follow the name by a colon, 
+and then one of the Umple types (Integer, String, Date, Time, Boolean or 
+the name of an Umple class. You can click on an attribute at any time to 
+change its name or type, or you can edit the attribute in the textual 
+(left) pane. You can add a whole series of attributes by just hitting 
+return after each one and typing the next one.</li>
+
+<br />
+
+<li><b>To delete an attribute</b>, click on the little red X next to it.</li>
+
+<br />
+
+
+<li><b>To add a generalization</b> (an inheritance relationship between 
+classes), click on Tools/Generalization in the center pane, and then click 
+first on the subclass, then the superclass. If you double-click on 
+Tools/Generalization you can then hook up a subclass to its parent, and 
+then the parent to a higher-level parent, etc. Press escape to cancel the 
+process of adding generalizations..</li>
+
+<br />
+
+<li><b>To add an association</b> (a relationship that describes how 
+instances of one class are to be connected to instances of another at run 
+time), click on Tools/Association in the center pane. Then click on one 
+class to be connected, and then the second class. By default, the 
+multiplicity of a new association is many-to-many (* -- *). To change 
+this, or to add a name to the assocation, you currently have to edit the 
+Umple code in the left (textual) pane.</li>
+
+<br />
+
+<li><b>To adjust the location of an association</b>, in other words how it 
+is connected to each class, hover over the association until you see 
+little squares at its ends, then click. The squares should change to a 
+darker colour. Select a little squares and move it to a new location on 
+the class. If an association crosses a class's border, just move the class 
+a little. Note that the location of the association end is saved with the 
+layout information of the diagram.</li>
+
+
+<br />
+
+<li><b>To delete a class, generalization or association</b> click on 
+Tools/Delete and then select the item to delete.</li>
+
+<br />
+
+<li><b>To hide the 'add more' line in each class</b>, select Options/Photo 
+Ready from the centre pane. You can also click on any class to adjust its 
+size a little. UmpleOnline is an excellent tool for preparing nice-looking 
+diagrams ready for publication.</li>
+
+<br />
+
+<li><b>To hide the graphical canvas</b>, uncheck Options/Layout Editor. 
+Then you can just work with the textual Umple in the left pane.</li>
+
+<br />
+
+<li><b>To adjust the size of the canvas</b> select 'Smaller' or 'Larger' 
+from the Options.</li>
+
+</ul>
+
+
+<p><b>Bottom Pane: Generated Results</b></p>
+
+<ul>
+<li>This user manual is under development. Details will be added later.</li>
+</ul>
+
+
+<p>We will later on add instructions about how to use the Eclipse plugin.</p>
+
+<p><b><i>Next topic if reading in sequence:</i></b> Structure of Umple Code.</p>

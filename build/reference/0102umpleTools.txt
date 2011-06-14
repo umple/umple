@@ -1,0 +1,36 @@
+Umple Tools
+User Manual
+
+@@description
+
+<p>Umple files conventionally use the extension .ump. To create a model or 
+a system you would use one or more of the following tools to view, edit 
+and compile .ump files.</p>
+
+<ul>
+
+<li><b>Eclipse.</b> To use Umple with Eclipse, you need to load an Umple 
+Eclipse plugin. This can be obtained from our <a 
+href="http://code.google.com/p/umple/downloads/list">downloads site</a>. 
+Note there is a plain plugin and a plugin enhanced with the XText 
+technology that gives context-assist to help you program or model with 
+fewer errors.</li>
+
+<br />
+
+<li><b>UmpleOnline.</b> <a href="http://try.umple.org">UmpleOnline</a> 
+allows you to instantly experiment with Umple on the web. You can explore 
+examples or create your own and save them in the "cloud". You can generate 
+code as well as several other outputs.</li>
+
+<br />
+
+<li><b>Command-line based compiler</b> You can always use Umple from the 
+command line, typically from an ant script. Simply <a
+href="http://code.google.com/p/umple/downloads/list">download the latest 
+umple jar</a>, and run it as "java -jar umple_XXXX *.ump", where XXXX is the 
+version number of the compiler that you downloaded.</li>
+</ul>
+
+
+<p><b><i>Next topic if reading in sequence:</i></b> Using UmpleOnline.</p>
