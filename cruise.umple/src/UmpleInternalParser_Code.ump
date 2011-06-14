@@ -8,9 +8,9 @@ http://cruise.site.uottawa.ca/UmpleMITLicense.html
 This file contains the implementation details for our internal Umple parser.
 
 This class parses an Umple file into an abstract syntax tree of tokens, which are then
-analyzed into an Umple meta model.  This meta model can then be passed to our code generator
-to generate target implementations such as Java, PHP and Ruby.  It is configured to mostly
-delegate to helper methods for the following components
+analyzed into an ubstabce of of Umple meta model.  This meta model instance can then 
+be passed to our code generator to generate target implementations such as Java, PHP 
+and Ruby.  It is configured to mostly delegate to helper methods for the following components
 
  + Core (most things outside of the elements below)
  + Umple Classes
@@ -103,7 +103,7 @@ class UmpleInternalParser
   }
 
   // Delegate function to analyze a token within the context of a class
-  // Each token is analyzed twice, analysisStep is "1" is for the first round of analsys
+  // Each token is analyzed twice, analysisStep is "1" is for the first round of analysis
   // and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
   // put everything under the "1"
   private void analyzeAllTokens(Token rootToken, UmpleClass aClass, int analysisStep)
