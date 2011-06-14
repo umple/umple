@@ -256,6 +256,8 @@
     <antcall target="packageDocs" />
     <copy todir="/h/ralph/sites/www/html/umple">
       <fileset dir="dist/cruise.umple/reference">
+        <exclude name=".svn"/>
+      </fileset>
     </copy>
   </target>
 
