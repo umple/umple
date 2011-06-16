@@ -15,12 +15,18 @@ import org.junit.*;
 
 public class TracerTest extends TracerTemplateTest
 {
-
+  
   @Test
-  public void WaitForCodeGenToWriteTestsHere()
+  public void TracesSupportAttributes()
   {
-    Assert.assertEquals(1,1);
-    // assertUmpleTemplateFor("SimpleTrace.ump",languagePath + "/SimpleTrace."+ languagePath +".txt","Tracer");
+   assertUmpleTemplateFor("AttributeTrace.ump",languagePath + "/AttributeTrace."+ languagePath +".txt","Tracer");
+  }
+  
+  @Test @Ignore
+  public void TracesSupportAssoiations()
+  {
+   assertUmpleTemplateFor("AssociationTrace.ump",languagePath + "/AssociationTrace."+ languagePath +".txt","Tracer");
   }
 
+  
 }

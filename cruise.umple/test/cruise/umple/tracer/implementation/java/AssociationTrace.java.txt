@@ -1,0 +1,74 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Associations
+  private Student student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public boolean setStudent(Student newStudent)
+  {
+    boolean wasSet = false;
+    if (newStudent == null)
+    {
+      Student existingStudent = student;
+      student = null;
+      
+      if (existingStudent != null && existingStudent.getTracer() != null)
+      {
+        existingStudent.setTracer(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    Student currentStudent = getStudent();
+    if (currentStudent != null && !currentStudent.equals(newStudent))
+    {
+      currentStudent.setTracer(null);
+    }
+
+    student = newStudent;
+    Tracer existingTracer = newStudent.getTracer();
+
+    if (!equals(existingTracer))
+    {
+      newStudent.setTracer(this);
+    }
+    wasSet = true;
+    System.out.println("student=" + newStudent);
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (student != null)
+    {
+      student.setTracer(null);
+    }
+  }
+
+}

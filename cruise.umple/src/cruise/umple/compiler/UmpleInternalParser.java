@@ -86,8 +86,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  
- public UmpleInternalParser()  {
+   public UmpleInternalParser()  {
 this("UmpleInternalParser",new UmpleModel(null));
   }
  public UmpleInternalParser(UmpleModel aModel)  {
@@ -148,7 +147,7 @@ private void init()
   }
 
   // Delegate function to analyze a token within the context of a class
-  // Each token is analyzed twice, analysisStep is "1" is for the first round of analsys
+  // Each token is analyzed twice, analysisStep is "1" is for the first round of analysis
   // and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
   // put everything under the "1"
   private void analyzeAllTokens(Token rootToken, UmpleClass aClass, int analysisStep)

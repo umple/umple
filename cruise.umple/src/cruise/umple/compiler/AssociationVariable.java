@@ -16,6 +16,7 @@ public class AssociationVariable extends UmpleVariable
 
   //AssociationVariable Associations
   private AssociationVariable relatedAssociation;
+  private TraceItem traceItem;
 
   //------------------------
   // CONSTRUCTOR
@@ -63,6 +64,11 @@ public class AssociationVariable extends UmpleVariable
     return relatedAssociation;
   }
 
+  public TraceItem getTraceItem()
+  {
+    return traceItem;
+  }
+
   public boolean setRelatedAssociation(AssociationVariable newRelatedAssociation)
   {
     boolean wasSet = false;
@@ -96,11 +102,48 @@ public class AssociationVariable extends UmpleVariable
     return wasSet;
   }
 
+  public boolean setTraceItem(TraceItem newTraceItem)
+  {
+    boolean wasSet = false;
+    if (newTraceItem == null)
+    {
+      TraceItem existingTraceItem = traceItem;
+      traceItem = null;
+      
+      if (existingTraceItem != null && existingTraceItem.getAssociationVariable() != null)
+      {
+        existingTraceItem.setAssociationVariable(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    TraceItem currentTraceItem = getTraceItem();
+    if (currentTraceItem != null && !currentTraceItem.equals(newTraceItem))
+    {
+      currentTraceItem.setAssociationVariable(null);
+    }
+
+    traceItem = newTraceItem;
+    AssociationVariable existingAssociationVariable = newTraceItem.getAssociationVariable();
+
+    if (!equals(existingAssociationVariable))
+    {
+      newTraceItem.setAssociationVariable(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete()
   {
     if (relatedAssociation != null)
     {
       relatedAssociation.setRelatedAssociation(null);
+    }
+    if (traceItem != null)
+    {
+      traceItem.setAssociationVariable(null);
     }
     super.delete();
   }

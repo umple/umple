@@ -237,7 +237,14 @@ private static void postpareTrace(UmpleModel aModel)
       
       if ("Console".equals(model.getTraceType()))
       {
-        lookups.put("attributeCode",StringFormatter.format(consoleTemplate,t.translate("attribute",traceItem.getAttribute()),t.translate("parameter",traceItem.getAttribute())));
+        if (traceItem.getAttribute() != null)
+        {
+          lookups.put("attributeCode",StringFormatter.format(consoleTemplate,t.translate("attribute",traceItem.getAttribute()),t.translate("parameter",traceItem.getAttribute())));
+        }
+        //else if (traceItem.getAssociationVariable() != null)
+        //{
+        //  lookups.put("associationCode",StringFormatter.format(consoleTemplate,t.translate("association",traceItem.getAssociationVariable()),t.translate("parameter",traceItem.getAssociationVariable())));
+        //}
       }
       else if ("String".equals(model.getTraceType()))
       {
@@ -252,10 +259,15 @@ private static void postpareTrace(UmpleModel aModel)
           d.setIsInternal(true);
           aClass.addDepend(d);
         }
-        
-        lookups.put("attributeCode",StringFormatter.format(stringTemplate,t.translate("attribute",traceItem.getAttribute()),t.translate("parameter",traceItem.getAttribute())));
+        if (traceItem.getAttribute() != null)
+        {
+          lookups.put("attributeCode",StringFormatter.format(stringTemplate,t.translate("attribute",traceItem.getAttribute()),t.translate("parameter",traceItem.getAttribute())));
+        }
       }
-      lookups.put("setMethod",t.translate("setMethod",traceItem.getAttribute()));
+      if (traceItem.getAttribute() != null)
+      {
+        lookups.put("setMethod",t.translate("setMethod",traceItem.getAttribute()));
+      }
       GeneratorHelper.prepareTraceItem(traceItem,lookups);
     }  
   }  

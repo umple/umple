@@ -15,6 +15,7 @@ public class TraceItem
 
   //TraceItem Associations
   private Attribute attribute;
+  private AssociationVariable associationVariable;
   private UmpleClass umpleClass;
 
   //------------------------
@@ -46,6 +47,11 @@ public class TraceItem
   public Attribute getAttribute()
   {
     return attribute;
+  }
+
+  public AssociationVariable getAssociationVariable()
+  {
+    return associationVariable;
   }
 
   public UmpleClass getUmpleClass()
@@ -86,6 +92,39 @@ public class TraceItem
     return wasSet;
   }
 
+  public boolean setAssociationVariable(AssociationVariable newAssociationVariable)
+  {
+    boolean wasSet = false;
+    if (newAssociationVariable == null)
+    {
+      AssociationVariable existingAssociationVariable = associationVariable;
+      associationVariable = null;
+      
+      if (existingAssociationVariable != null && existingAssociationVariable.getTraceItem() != null)
+      {
+        existingAssociationVariable.setTraceItem(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    AssociationVariable currentAssociationVariable = getAssociationVariable();
+    if (currentAssociationVariable != null && !currentAssociationVariable.equals(newAssociationVariable))
+    {
+      currentAssociationVariable.setTraceItem(null);
+    }
+
+    associationVariable = newAssociationVariable;
+    TraceItem existingTraceItem = newAssociationVariable.getTraceItem();
+
+    if (!equals(existingTraceItem))
+    {
+      newAssociationVariable.setTraceItem(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
@@ -108,6 +147,10 @@ public class TraceItem
     if (attribute != null)
     {
       attribute.setTraceItem(null);
+    }
+    if (associationVariable != null)
+    {
+      associationVariable.setTraceItem(null);
     }
     if (umpleClass != null)
     {

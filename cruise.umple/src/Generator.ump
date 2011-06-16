@@ -24,6 +24,9 @@ interface CodeGenerator
 interface CodeTranslator
 {
   String translate(String id, Attribute attribute);
+  
+  // TODO: LH#171
+  //String translate(String id, AssociationVariable associationVariable);
 }
 
 class GeneratorHelper

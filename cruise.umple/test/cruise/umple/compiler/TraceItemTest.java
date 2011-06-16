@@ -21,6 +21,15 @@ public class TraceItemTest
     traceItem.setAttribute(a);
     Assert.assertEquals(a,traceItem.getAttribute());
   }
+  
+  @Test
+  public void assocationVariable()
+  {
+	Assert.assertEquals(null,traceItem.getAssociationVariable());
+	AssociationVariable a = new AssociationVariable("aName","MyType","symmetricreflexive","",AssociationTest.createMultiplicity(0,1),true);
+    traceItem.setAssociationVariable(a);
+    Assert.assertEquals(a, traceItem.getAssociationVariable());
+  }
 
   @Test
   public void umpleClass()

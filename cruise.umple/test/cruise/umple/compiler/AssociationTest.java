@@ -126,7 +126,7 @@ public class AssociationTest
     Assert.assertEquals(-1,new Association(true,true,new AssociationEnd("student","Student",null,"Student", createMultiplicity(0,2)), new AssociationEnd("mentor","Student","","Student",createMultiplicity(0,3))).whoIsInvalid());
   }  
   
-  private Multiplicity createMultiplicity(int lower, int upper)
+  public static Multiplicity createMultiplicity(int lower, int upper)
   {
     Multiplicity m = new Multiplicity();
     m.setRange(lower + "", upper + "");
