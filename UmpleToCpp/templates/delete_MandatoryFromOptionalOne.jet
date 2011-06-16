@@ -1,0 +1,6 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    for(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("associationMany",av)%>)
+    {
+      <%=gen.relatedTranslate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>,null);
+    }
+    <%=gen.translate("associationMany",av)%>.clear();

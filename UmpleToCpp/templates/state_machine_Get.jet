@@ -1,0 +1,6 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public <%=gen.translate("type",sm)%> <%=gen.translate("getMethod",sm)%>()
+  {
+    return <%= gen.translate("stateOne",sm) %>;
+  }
+

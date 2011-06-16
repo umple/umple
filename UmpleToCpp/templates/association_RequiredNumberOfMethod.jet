@@ -1,0 +1,19 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+    String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
+    String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
+%>
+<% if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { %>
+  public static int <%=gen.translate("requiredNumberOfMethod",av)%>()
+  {
+    return <%=av.getMultiplicity().getLowerBound()%>;
+  }
+<% } else { %>
+  public static int <%=gen.translate("requiredNumberOfMethod",av)%>()
+  {
+    <% if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } %>
+    int required = <%=av.getMultiplicity().getLowerBound()%>;
+    <% if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPostfixCode); } %>
+    return required;
+  }
+<% } %>

@@ -1,0 +1,21 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+    String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
+
+    String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
+    String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
+%>
+<% if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { %>
+  public static int <%=gen.translate("maximumNumberOfMethod",av)%>()
+  {
+    return <%=av.getMultiplicity().getUpperBound()%>;
+  }
+<% } else { %>
+  public static int <%=gen.translate("maximumNumberOfMethod",av)%>()
+  {
+    <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } %>
+    int maximum = <%=av.getMultiplicity().getUpperBound()%>;
+    <% if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } %>
+    return maximum;
+  }
+<% } %>

@@ -1,0 +1,10 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+{
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
+  for(Event e : uClass.getEvents())
+  {
+    %><%@ include file="state_machine_Event.jet" %><%
+  }
+}
+%>

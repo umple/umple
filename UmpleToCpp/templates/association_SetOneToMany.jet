@@ -1,0 +1,23 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  {
+    boolean wasSet = false;
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    if (<%=gen.translate("parameterOne",av)%> == null)
+    {
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      return wasSet;
+    }
+
+    <%=gen.translate("type",av)%> <%=gen.translate("parameterExisting",av)%> = <%=gen.translate("associationOne",av)%>;
+    <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>;
+    if (<%=gen.translate("parameterExisting",av)%> != null && !<%=gen.translate("parameterExisting",av)%>.equals(<%=gen.translate("parameterOne",av)%>))
+    {
+      <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
+    }
+    <%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
+    wasSet = true;
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    return wasSet;
+  }
+

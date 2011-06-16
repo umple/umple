@@ -1,0 +1,74 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+{
+
+  boolean isFirst = true;
+  if (uClass.getKey().isProvided())
+  {
+    isFirst = false;
+    appendln(stringBuffer, "");
+    appendln(stringBuffer, "");
+    appendln(stringBuffer,"  //Helper Variables");
+    append(stringBuffer, "  private int cachedHashCode;");
+  }
+
+  for (Attribute av : uClass.getAttributes())
+  {
+    if ("immutable".equals(av.getModifier()))
+    {
+      if (isFirst)
+      {
+        isFirst = false;
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        appendln(stringBuffer,"  //Helper Variables");
+      } 
+      else
+      {
+        appendln(stringBuffer, "");
+      }
+      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+    }
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null && !"immutable".equals(av.getModifier()))
+    {
+      appendln(stringBuffer, "");
+      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      appendln(stringBuffer, "");
+      append(stringBuffer, "  private boolean {0};", gen.translate("associationCanSet",as));
+    }
+  }
+  
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    for (Event e : sm.getEvents())
+    {
+      if (!e.getIsTimer())
+      {
+        continue;
+      }
+    
+      if (isFirst)
+      {
+        isFirst = false;
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        appendln(stringBuffer,"  //Helper Variables");
+      }
+      else
+      {
+        appendln(stringBuffer, "");
+      }
+      append(stringBuffer, "  private TimedEventHandler {0};", gen.translate("eventHandler",e));
+    }
+  }
+}
+%>

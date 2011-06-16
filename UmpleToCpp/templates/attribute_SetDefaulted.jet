@@ -1,0 +1,21 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  {
+    boolean wasSet = false;
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <%=gen.translate("attributeOne",av)%> = <%=gen.translate("parameterOne",av)%>;
+    wasSet = true;
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    return wasSet;
+  }
+
+  public boolean <%=gen.translate("resetMethod",av)%>()
+  {
+    boolean wasReset = false;
+    <% if (customResetPrefixCode != null) { append(stringBuffer, "\n    {0}",customResetPrefixCode); } %>
+    <%=gen.translate("attributeOne",av)%> = <%=gen.translate("getDefaultMethod",av)%>();
+    wasReset = true;
+    <% if (customResetPostfixCode != null) { append(stringBuffer, "\n    {0}",customResetPostfixCode); } %>
+    return wasReset;
+  }
+
