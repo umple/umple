@@ -1,8 +1,3 @@
-interface ISomething
-{
-	isA ISuper,IOtherSuper;
-}
-
 interface ISuper
 {
 
@@ -11,4 +6,9 @@ interface ISuper
 interface IOtherSuper
 {
 
+}
+
+interface IOther
+{
+ isA ISuper,IOtherSuper;
 }

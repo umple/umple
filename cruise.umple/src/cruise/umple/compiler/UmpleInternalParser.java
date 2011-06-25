@@ -460,7 +460,6 @@ private void analyzeClassToken(Token t)
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
     model.addUmpleInterface(newInterface);
     newInterface.setPackageName(currentPackageName);
-    addExtendsTo(t, newInterface);
     analyzeInterface(t,newInterface);  
   }
 
@@ -508,6 +507,7 @@ private void analyzeClassToken(Token t)
   {
     for(Token childToken : interfaceMemberToken.getSubTokens())
     {
+      addExtendsTo(interfaceMemberToken, aInterface);
       if(childToken.is("abstractMethodDeclaration"))
       {
         analyzeMethod(childToken, aInterface);   
