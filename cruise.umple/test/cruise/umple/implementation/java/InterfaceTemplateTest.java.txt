@@ -11,6 +11,6 @@ public interface ISomething
  public static final Integer MAX = 3;
   // ABSTRACT METHODS 
 
- public String getCode(String [] aParam,Integer anotherParam);
+ public String getCode(String [] aParam, Integer anotherParam);
  public String isValid();
 }

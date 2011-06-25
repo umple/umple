@@ -32,6 +32,18 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.destroy(pathToInput + "/java/example");
   }
   
+  @Test
+  public void ClassMethods()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_Methods.ump",languagePath + "/ClassTemplateTest_Methods."+ languagePath +".txt","CodeTranslator");
+  }
+  
+  @Test
+  public void ClassImplementedMethods()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_ImplementedMethods.ump",languagePath + "/ClassTemplateTest_ImplementedMethods."+ languagePath +".txt","CodeTranslator");
+  }
+  
   
   @Test
   public void Java()

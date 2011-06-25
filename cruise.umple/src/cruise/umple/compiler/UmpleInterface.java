@@ -211,15 +211,27 @@ public class UmpleInterface extends UmpleElement
   //------------------------
   
   public boolean hasMethod(Method comparedMethod){
+	  boolean isMethod=false;
 	  String methodName = comparedMethod.getName();
 	  int numberOfParams = comparedMethod.getMethodParameters().size();
 	  for (Method aMethod : this.getMethods()){
-		  if (aMethod.getName().equals(methodName)){
+		  // Compare method names
+		  if (aMethod.getName().equals(methodName)){	
+			  // Now compare parameters
 			  if (numberOfParams == aMethod.getMethodParameters().size()){
-				  return true;				  
+				  for (MethodParameter param: aMethod.getMethodParameters()){
+					 for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+					  if (param.getType().equals(paramToCompare.getType())){
+						  isMethod=true;			  
+					  }
+					  else{
+						  return false;
+					  }
+					 }
+				  }
 			  }
 		  }
 	  }
-	  return false;  
+	  return isMethod;  
   }
 }

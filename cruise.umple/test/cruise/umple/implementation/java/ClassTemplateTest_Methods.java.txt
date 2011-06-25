@@ -3,7 +3,7 @@
 
 package example;
 
-public class Something implements ISomething
+public class CodeTranslator
 {
 
   //------------------------
@@ -14,7 +14,7 @@ public class Something implements ISomething
   // CONSTRUCTOR
   //------------------------
 
-  public Something()
+  public CodeTranslator()
   {}
 
   //------------------------
@@ -24,14 +24,14 @@ public class Something implements ISomething
   public void delete()
   {}
 
-  @Override
-  public String getCode(String [] aParam, Integer anotherParam){
-      return "";
+
+  public String translate(String id, Attribute attribute){
+      return "1";
   }
 
-  @Override
-  public String isValid(){
-      return "";
+
+  public String translate(String id, AssociationVariable associationVariable){
+      return "1";
   }
 
 }

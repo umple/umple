@@ -13,6 +13,17 @@ interface IGarbage
 {
 }
 
+interface ICodeTranslator
+{
+   String translate(String id, Attribute attribute);
+   String translate(String id, AssociationVariable associationVariable);
+}
+
+class CodeTranslator
+{
+  isA ICodeTranslator;
+}
+
 class Something
 {
   isA ISomething;

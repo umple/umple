@@ -17,5 +17,4 @@ public class InterfaceTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_Implements."+ languagePath +".txt","Something");
   }
 
-
 }
