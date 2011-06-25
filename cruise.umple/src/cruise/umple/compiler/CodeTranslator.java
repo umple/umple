@@ -4,9 +4,9 @@ package cruise.umple.compiler;
 
 public interface CodeTranslator
 {
-  // TODO: LH#50749
+  // TODO: LH#171
   //String translate(String id, AssociationVariable associationVariable);
   // ABSTRACT METHODS 
 
- public String translate(String id,Attribute attribute);
+ public String translate(String id, Attribute attribute);
 }

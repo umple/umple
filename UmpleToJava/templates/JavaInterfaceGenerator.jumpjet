@@ -16,7 +16,7 @@
 <%=gen.translate("packageDefinition",uInterface)%>
 <%@ include file="import_packages_interface.jet" %>
 
-public interface <%=uInterface.getName()%>
+public interface <%=uInterface.getName()%><%= gen.translate("isA",uInterface) %>
 {
   <%=extraCode%>
 <% if (uInterface.hasConstants()) { %>

@@ -79,6 +79,8 @@
         eType="#//phpFunction" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsInterface" unique="false"
+        upperBound="-1" eType="#//UmpleInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extraCode" eType="#//functionDeclaration"
         containment="true"/>
   </eClassifiers>

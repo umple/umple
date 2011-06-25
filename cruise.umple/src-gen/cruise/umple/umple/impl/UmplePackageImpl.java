@@ -1179,9 +1179,19 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleInterface_ExtraCode()
+  public EReference getUmpleInterface_ExtendsInterface()
   {
     return (EReference)umpleInterfaceEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getUmpleInterface_ExtraCode()
+  {
+    return (EReference)umpleInterfaceEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3286,6 +3296,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     createEReference(externalLanguageEClass, EXTERNAL_LANGUAGE__PHP_FUNCTIONS);
 
     umpleInterfaceEClass = createEClass(UMPLE_INTERFACE);
+    createEReference(umpleInterfaceEClass, UMPLE_INTERFACE__EXTENDS_INTERFACE);
     createEReference(umpleInterfaceEClass, UMPLE_INTERFACE__EXTRA_CODE);
 
     umpleAssociationEClass = createEClass(UMPLE_ASSOCIATION);
@@ -3681,6 +3692,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     initEReference(getExternalLanguage_PhpFunctions(), this.getphpFunction(), null, "phpFunctions", null, 0, -1, ExternalLanguage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(umpleInterfaceEClass, UmpleInterface.class, "UmpleInterface", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getUmpleInterface_ExtendsInterface(), this.getUmpleInterface(), null, "extendsInterface", null, 0, -1, UmpleInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getUmpleInterface_ExtraCode(), this.getfunctionDeclaration(), null, "extraCode", null, 0, 1, UmpleInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(umpleAssociationEClass, UmpleAssociation.class, "UmpleAssociation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

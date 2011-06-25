@@ -2640,11 +2640,13 @@ protected class ExternalLanguage_PhpFunctionsAssignment_2 extends AssignmentToke
  *
  * //Interface can not have native code right now
  * UmpleInterface:
- * 	"interface" name=ID "{" depends+=Depend* (extraCode=functionDeclaration ";")? "}";
+ * 	"interface" name=ID "{" depends+=Depend* ("isA" extendsInterface+=[UmpleInterface] (","
+ * 	extendsInterface+=[UmpleInterface])* ";")? (extraCode=functionDeclaration ";")? "}";
  *
  **/
 
-// "interface" name=ID "{" depends+=Depend* (extraCode=functionDeclaration ";")? "}"
+// "interface" name=ID "{" depends+=Depend* ("isA" extendsInterface+=[UmpleInterface] (","
+// extendsInterface+=[UmpleInterface])* ";")? (extraCode=functionDeclaration ";")? "}"
 protected class UmpleInterface_Group extends GroupToken {
 	
 	public UmpleInterface_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2659,7 +2661,7 @@ protected class UmpleInterface_Group extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new UmpleInterface_RightCurlyBracketKeyword_5(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new UmpleInterface_RightCurlyBracketKeyword_6(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -2797,7 +2799,7 @@ protected class UmpleInterface_DependsAssignment_3 extends AssignmentToken  {
 	}	
 }
 
-// (extraCode=functionDeclaration ";")?
+// ("isA" extendsInterface+=[UmpleInterface] ("," extendsInterface+=[UmpleInterface])* ";")?
 protected class UmpleInterface_Group_4 extends GroupToken {
 	
 	public UmpleInterface_Group_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -2812,7 +2814,196 @@ protected class UmpleInterface_Group_4 extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new UmpleInterface_SemicolonKeyword_4_1(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new UmpleInterface_SemicolonKeyword_4_3(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "isA"
+protected class UmpleInterface_IsAKeyword_4_0 extends KeywordToken  {
+	
+	public UmpleInterface_IsAKeyword_4_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getIsAKeyword_4_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_DependsAssignment_3(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new UmpleInterface_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// extendsInterface+=[UmpleInterface]
+protected class UmpleInterface_ExtendsInterfaceAssignment_4_1 extends AssignmentToken  {
+	
+	public UmpleInterface_ExtendsInterfaceAssignment_4_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceAssignment_4_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_IsAKeyword_4_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("extendsInterface",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("extendsInterface");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceUmpleInterfaceCrossReference_4_1_0().getType().getClassifier())) {
+				type = AssignmentType.CROSS_REFERENCE;
+				element = grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceUmpleInterfaceCrossReference_4_1_0(); 
+				return obj;
+			}
+		}
+		return null;
+	}
+
+}
+
+// ("," extendsInterface+=[UmpleInterface])*
+protected class UmpleInterface_Group_4_2 extends GroupToken {
+	
+	public UmpleInterface_Group_4_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getGroup_4_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_ExtendsInterfaceAssignment_4_2_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// ","
+protected class UmpleInterface_CommaKeyword_4_2_0 extends KeywordToken  {
+	
+	public UmpleInterface_CommaKeyword_4_2_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getCommaKeyword_4_2_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_Group_4_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new UmpleInterface_ExtendsInterfaceAssignment_4_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// extendsInterface+=[UmpleInterface]
+protected class UmpleInterface_ExtendsInterfaceAssignment_4_2_1 extends AssignmentToken  {
+	
+	public UmpleInterface_ExtendsInterfaceAssignment_4_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceAssignment_4_2_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_CommaKeyword_4_2_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("extendsInterface",false)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("extendsInterface");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0().getType().getClassifier())) {
+				type = AssignmentType.CROSS_REFERENCE;
+				element = grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0(); 
+				return obj;
+			}
+		}
+		return null;
+	}
+
+}
+
+
+// ";"
+protected class UmpleInterface_SemicolonKeyword_4_3 extends KeywordToken  {
+	
+	public UmpleInterface_SemicolonKeyword_4_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getSemicolonKeyword_4_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_Group_4_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new UmpleInterface_ExtendsInterfaceAssignment_4_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+
+// (extraCode=functionDeclaration ";")?
+protected class UmpleInterface_Group_5 extends GroupToken {
+	
+	public UmpleInterface_Group_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getUmpleInterfaceAccess().getGroup_5();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new UmpleInterface_SemicolonKeyword_5_1(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -2820,15 +3011,15 @@ protected class UmpleInterface_Group_4 extends GroupToken {
 }
 
 // extraCode=functionDeclaration
-protected class UmpleInterface_ExtraCodeAssignment_4_0 extends AssignmentToken  {
+protected class UmpleInterface_ExtraCodeAssignment_5_0 extends AssignmentToken  {
 	
-	public UmpleInterface_ExtraCodeAssignment_4_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public UmpleInterface_ExtraCodeAssignment_5_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getUmpleInterfaceAccess().getExtraCodeAssignment_4_0();
+		return grammarAccess.getUmpleInterfaceAccess().getExtraCodeAssignment_5_0();
 	}
 
     @Override
@@ -2847,7 +3038,7 @@ protected class UmpleInterface_ExtraCodeAssignment_4_0 extends AssignmentToken  
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getFunctionDeclarationRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getUmpleInterfaceAccess().getExtraCodeFunctionDeclarationParserRuleCall_4_0_0(); 
+				element = grammarAccess.getUmpleInterfaceAccess().getExtraCodeFunctionDeclarationParserRuleCall_5_0_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -2859,29 +3050,30 @@ protected class UmpleInterface_ExtraCodeAssignment_4_0 extends AssignmentToken  
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new UmpleInterface_DependsAssignment_3(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new UmpleInterface_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new UmpleInterface_Group_4(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new UmpleInterface_DependsAssignment_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 2: return new UmpleInterface_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // ";"
-protected class UmpleInterface_SemicolonKeyword_4_1 extends KeywordToken  {
+protected class UmpleInterface_SemicolonKeyword_5_1 extends KeywordToken  {
 	
-	public UmpleInterface_SemicolonKeyword_4_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public UmpleInterface_SemicolonKeyword_5_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Keyword getGrammarElement() {
-		return grammarAccess.getUmpleInterfaceAccess().getSemicolonKeyword_4_1();
+		return grammarAccess.getUmpleInterfaceAccess().getSemicolonKeyword_5_1();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new UmpleInterface_ExtraCodeAssignment_4_0(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new UmpleInterface_ExtraCodeAssignment_5_0(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -2890,23 +3082,24 @@ protected class UmpleInterface_SemicolonKeyword_4_1 extends KeywordToken  {
 
 
 // "}"
-protected class UmpleInterface_RightCurlyBracketKeyword_5 extends KeywordToken  {
+protected class UmpleInterface_RightCurlyBracketKeyword_6 extends KeywordToken  {
 	
-	public UmpleInterface_RightCurlyBracketKeyword_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public UmpleInterface_RightCurlyBracketKeyword_6(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Keyword getGrammarElement() {
-		return grammarAccess.getUmpleInterfaceAccess().getRightCurlyBracketKeyword_5();
+		return grammarAccess.getUmpleInterfaceAccess().getRightCurlyBracketKeyword_6();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new UmpleInterface_Group_4(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new UmpleInterface_DependsAssignment_3(lastRuleCallOrigin, this, 1, inst);
-			case 2: return new UmpleInterface_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, this, 2, inst);
+			case 0: return new UmpleInterface_Group_5(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new UmpleInterface_Group_4(lastRuleCallOrigin, this, 1, inst);
+			case 2: return new UmpleInterface_DependsAssignment_3(lastRuleCallOrigin, this, 2, inst);
+			case 3: return new UmpleInterface_LeftCurlyBracketKeyword_2(lastRuleCallOrigin, this, 3, inst);
 			default: return null;
 		}	
 	}

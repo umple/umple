@@ -98,6 +98,8 @@ public class UmpleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getUmpleClassAccess().getGroup_9_2(), "rule__UmpleClass__Group_9_2__0");
 					put(grammarAccess.getUmpleInterfaceAccess().getGroup(), "rule__UmpleInterface__Group__0");
 					put(grammarAccess.getUmpleInterfaceAccess().getGroup_4(), "rule__UmpleInterface__Group_4__0");
+					put(grammarAccess.getUmpleInterfaceAccess().getGroup_4_2(), "rule__UmpleInterface__Group_4_2__0");
+					put(grammarAccess.getUmpleInterfaceAccess().getGroup_5(), "rule__UmpleInterface__Group_5__0");
 					put(grammarAccess.getUmpleAssociationAccess().getGroup(), "rule__UmpleAssociation__Group__0");
 					put(grammarAccess.getUmpleAssociationClassAccess().getGroup(), "rule__UmpleAssociationClass__Group__0");
 					put(grammarAccess.getAssociationAccess().getGroup(), "rule__Association__Group__0");
@@ -244,7 +246,9 @@ public class UmpleParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExternalLanguageAccess().getPhpFunctionsAssignment_2(), "rule__ExternalLanguage__PhpFunctionsAssignment_2");
 					put(grammarAccess.getUmpleInterfaceAccess().getNameAssignment_1(), "rule__UmpleInterface__NameAssignment_1");
 					put(grammarAccess.getUmpleInterfaceAccess().getDependsAssignment_3(), "rule__UmpleInterface__DependsAssignment_3");
-					put(grammarAccess.getUmpleInterfaceAccess().getExtraCodeAssignment_4_0(), "rule__UmpleInterface__ExtraCodeAssignment_4_0");
+					put(grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceAssignment_4_1(), "rule__UmpleInterface__ExtendsInterfaceAssignment_4_1");
+					put(grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceAssignment_4_2_1(), "rule__UmpleInterface__ExtendsInterfaceAssignment_4_2_1");
+					put(grammarAccess.getUmpleInterfaceAccess().getExtraCodeAssignment_5_0(), "rule__UmpleInterface__ExtraCodeAssignment_5_0");
 					put(grammarAccess.getUmpleAssociationAccess().getNameAssignment_1(), "rule__UmpleAssociation__NameAssignment_1");
 					put(grammarAccess.getUmpleAssociationAccess().getAssociationsAssignment_3(), "rule__UmpleAssociation__AssociationsAssignment_3");
 					put(grammarAccess.getUmpleAssociationClassAccess().getNameAssignment_1(), "rule__UmpleAssociationClass__NameAssignment_1");

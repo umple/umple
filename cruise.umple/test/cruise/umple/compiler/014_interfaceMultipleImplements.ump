@@ -1,0 +1,14 @@
+interface ISomething
+{
+	isA ISuper,IOtherSuper;
+}
+
+interface ISuper
+{
+
+}
+
+interface IOtherSuper
+{
+
+}

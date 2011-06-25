@@ -76,6 +76,7 @@ public class JavaInterfaceGenerator implements ILang
 
     stringBuffer.append(TEXT_3);
     stringBuffer.append(uInterface.getName());
+    stringBuffer.append( gen.translate("isA",uInterface) );
     stringBuffer.append(TEXT_4);
     stringBuffer.append(TEXT_5);
     stringBuffer.append(extraCode);

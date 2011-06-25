@@ -123,34 +123,34 @@ T126 : 'internal' ;
 T127 : 'defaulted' ;
 T128 : 'const' ;
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8318
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8358
 RULE_RUBY_FUNCTION : RULE_DEF ( options {greedy=false;} : . )*RULE_END;
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8320
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8360
 RULE_DEF : 'def';
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8322
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8362
 RULE_END : 'end';
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8324
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8364
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8326
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8366
 RULE_INT : ('0'..'9')+;
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8328
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8368
 RULE_STRING : ('"' ('\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')|~(('\\'|'"')))* '"'|'\'' ('\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')|~(('\\'|'\'')))* '\'');
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8330
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8370
 RULE_ML_COMMENT : '/*' ( options {greedy=false;} : . )*'*/';
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8332
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8372
 RULE_SL_COMMENT : '//' ~(('\n'|'\r'))* ('\r'? '\n')?;
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8334
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8374
 RULE_WS : (' '|'\t'|'\r'|'\n')+;
 
-// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8336
+// $ANTLR src "../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g" 8376
 RULE_ANY_OTHER : .;
 
 

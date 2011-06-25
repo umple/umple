@@ -95,5 +95,24 @@ public class UmpleInterfaceTest
     Assert.assertEquals("100",constantValue );
     Assert.assertEquals("int",constantType );
   }
+  
+  @Test
+  public void addSingleExtends()
+  {
+    UmpleInterface booking = new UmpleInterface("Booking");
+    umpleClassInterface.addExtendsInterface(booking);
+    Assert.assertEquals("Booking", umpleClassInterface.getExtendsInterface(0).getName());
+  }
+  
+  @Test
+  public void addMultipleExtends()
+  {
+	  UmpleInterface booking = new UmpleInterface("Booking");
+	  UmpleInterface price = new UmpleInterface("Price");
+	  umpleClassInterface.addExtendsInterface(booking);
+	  umpleClassInterface.addExtendsInterface(price);
+	  Assert.assertEquals("Booking", umpleClassInterface.getExtendsInterface(0).getName());
+	  Assert.assertEquals("Price", umpleClassInterface.getExtendsInterface(1).getName());
+  }
 
 }

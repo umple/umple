@@ -33,3 +33,11 @@ class Garbage
 {
   isA ISomething, IGarbage;
 }
+
+interface IFirstChild{
+	isA ISomething;
+}
+
+interface ISecondChild{
+	isA ISomething, IGarbage;
+}

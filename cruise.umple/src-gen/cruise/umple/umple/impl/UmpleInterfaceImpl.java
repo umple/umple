@@ -9,13 +9,19 @@ import cruise.umple.umple.UmpleInterface;
 import cruise.umple.umple.UmplePackage;
 import cruise.umple.umple.functionDeclaration;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,6 +30,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link cruise.umple.umple.impl.UmpleInterfaceImpl#getExtendsInterface <em>Extends Interface</em>}</li>
  *   <li>{@link cruise.umple.umple.impl.UmpleInterfaceImpl#getExtraCode <em>Extra Code</em>}</li>
  * </ul>
  * </p>
@@ -32,6 +39,16 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class UmpleInterfaceImpl extends UmpleElementImpl implements UmpleInterface
 {
+  /**
+   * The cached value of the '{@link #getExtendsInterface() <em>Extends Interface</em>}' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExtendsInterface()
+   * @generated
+   * @ordered
+   */
+  protected EList<UmpleInterface> extendsInterface;
+
   /**
    * The cached value of the '{@link #getExtraCode() <em>Extra Code</em>}' containment reference.
    * <!-- begin-user-doc -->
@@ -61,6 +78,20 @@ public class UmpleInterfaceImpl extends UmpleElementImpl implements UmpleInterfa
   protected EClass eStaticClass()
   {
     return UmplePackage.Literals.UMPLE_INTERFACE;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<UmpleInterface> getExtendsInterface()
+  {
+    if (extendsInterface == null)
+    {
+      extendsInterface = new EObjectResolvingEList<UmpleInterface>(UmpleInterface.class, this, UmplePackage.UMPLE_INTERFACE__EXTENDS_INTERFACE);
+    }
+    return extendsInterface;
   }
 
   /**
@@ -137,6 +168,8 @@ public class UmpleInterfaceImpl extends UmpleElementImpl implements UmpleInterfa
   {
     switch (featureID)
     {
+      case UmplePackage.UMPLE_INTERFACE__EXTENDS_INTERFACE:
+        return getExtendsInterface();
       case UmplePackage.UMPLE_INTERFACE__EXTRA_CODE:
         return getExtraCode();
     }
@@ -148,11 +181,16 @@ public class UmpleInterfaceImpl extends UmpleElementImpl implements UmpleInterfa
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
+      case UmplePackage.UMPLE_INTERFACE__EXTENDS_INTERFACE:
+        getExtendsInterface().clear();
+        getExtendsInterface().addAll((Collection<? extends UmpleInterface>)newValue);
+        return;
       case UmplePackage.UMPLE_INTERFACE__EXTRA_CODE:
         setExtraCode((functionDeclaration)newValue);
         return;
@@ -170,6 +208,9 @@ public class UmpleInterfaceImpl extends UmpleElementImpl implements UmpleInterfa
   {
     switch (featureID)
     {
+      case UmplePackage.UMPLE_INTERFACE__EXTENDS_INTERFACE:
+        getExtendsInterface().clear();
+        return;
       case UmplePackage.UMPLE_INTERFACE__EXTRA_CODE:
         setExtraCode((functionDeclaration)null);
         return;
@@ -187,6 +228,8 @@ public class UmpleInterfaceImpl extends UmpleElementImpl implements UmpleInterfa
   {
     switch (featureID)
     {
+      case UmplePackage.UMPLE_INTERFACE__EXTENDS_INTERFACE:
+        return extendsInterface != null && !extendsInterface.isEmpty();
       case UmplePackage.UMPLE_INTERFACE__EXTRA_CODE:
         return extraCode != null;
     }

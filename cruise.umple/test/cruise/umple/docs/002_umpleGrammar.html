@@ -58,7 +58,7 @@ associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [
 // NOTE: We are considering type as simple String<br />
 // Interface Body: An interface can have CONSTANTS, ATTRIBUTES and METHODS<br />
 interfaceBody- : [[interfaceMemberDeclaration]]*<br />
-interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[extraCode]]<br />
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[isA]] | [[extraCode]]<br />
 // Constants in interfaces (e.g. constant String ACONSTANT="aValue";)<br />
 constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;<br />
 // Methods in classes and Interfaces<br />

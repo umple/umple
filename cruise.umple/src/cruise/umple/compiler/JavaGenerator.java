@@ -319,6 +319,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     {
       return aInterface.getPackageName().length() == 0 ? "" : "package " + aInterface.getPackageName() + ";"; 
     }
+    if ("isA".equals(name))
+    {
+      return getImplementsForInterfaces(aInterface);
+    }
     return "";
   }
   
@@ -358,6 +362,23 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       return getExtendAndImplements(aClass);
     }
     return "UNKNOWN ID: " + name;
+  }
+  
+  private String getImplementsForInterfaces(UmpleInterface uInterface)
+  {
+      String implementedInterfaces = "";
+
+      if (uInterface.hasExtendsInterface() == false){
+          return "";
+      }
+      else{
+          for (UmpleInterface aInterface : uInterface.getExtendsInterface())
+          {
+              implementedInterfaces += aInterface.getName() + ", " ; 
+          }
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-2); 
+          return " extends " + implementedInterfaces;
+      }
   }
 
   private String getExtendAndImplements(UmpleClass uClass)

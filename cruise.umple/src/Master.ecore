@@ -321,6 +321,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="members" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/extendsInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleInterfaces"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleInterfaces"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleInterface"/>
@@ -459,12 +461,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlinkedAssociations" eType="#//Association" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="positionToClassNameReference" eType="#//Map%3CPosition%2CString%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtend" eType="#//Map%3CUmpleClass%2CList%3CString%3E%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedInterfaceExtend" eType="#//Map%3CUmpleInterface%2CList%3CString%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleClassToStateMachineDefinition" eType="#//Map%3CUmpleClass%2CPair%3E"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;Position,String>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,List&lt;String>>"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleInterface,List&lt;String>>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,Token>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,Pair>"/>
   <eClassifiers xsi:type="ecore:EClass" name="Pair">

@@ -21,7 +21,8 @@ class UmpleInternalParser
   internal Association[] unlinkedAssociations;
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
   internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
-  
+  internal Map<UmpleInterface,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
+ 
   // Analyze class definitions and related tokens
   private void analyzeClassToken(Token t)
   {
@@ -109,6 +110,12 @@ class UmpleInternalParser
     }
   }
   
+  private void postTokenInterfaceAnalysis()
+  {
+      addUnlinkedInterfaceExtends();
+  }
+  
+  
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
@@ -150,6 +157,18 @@ class UmpleInternalParser
       }  
     }
   }
+    
+  private void addExtendsTo(Token classToken, UmpleInterface aInterface)
+  {
+    List<String> extendsList = new ArrayList<String>();
+    for (Token extendsToken : classToken.getSubTokens()){
+      if (extendsToken.getValue("extendsName") != null)
+      { 
+        extendsList.add(extendsToken.getValue("extendsName"));
+        unlinkedInterfaceExtends.put(aInterface, extendsList);
+      }  
+    }
+  }
 
   private UmpleClass analyzeExternal(Token externalToken)
   {
@@ -163,6 +182,7 @@ class UmpleInternalParser
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
     model.addUmpleInterface(newInterface);
     newInterface.setPackageName(currentPackageName);
+    addExtendsTo(t, newInterface);
     analyzeInterface(t,newInterface);  
   }
 
@@ -186,6 +206,25 @@ class UmpleInternalParser
 
     }
   }
+
+  private void addUnlinkedInterfaceExtends()
+  {  
+    for (UmpleInterface child : unlinkedInterfaceExtends.keySet())
+    {
+      List<String> extendsNames = unlinkedInterfaceExtends.get(child);
+
+      if (extendsNames == null)
+      {
+        continue;
+      }
+
+      for (int i=0; i < extendsNames.size();i++){
+        String extendName= extendsNames.get(i);
+          UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+          child.addExtendsInterface(uInterface);
+      }
+    }
+  }  
 
   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
   {

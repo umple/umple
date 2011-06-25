@@ -67,6 +67,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//ExternalLanguage/phpFunctions"/>
     </genClasses>
     <genClasses ecoreClass="Umple.ecore#//UmpleInterface">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleInterface/extendsInterface"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleInterface/extraCode"/>
     </genClasses>
     <genClasses ecoreClass="Umple.ecore#//UmpleAssociation">

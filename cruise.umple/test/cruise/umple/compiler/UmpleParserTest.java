@@ -827,6 +827,23 @@ public class UmpleParserTest
   }
   
   @Test
+  public void interfaceWithSingleIsA()
+  {
+    assertParse("014_interfaceImplements.ump");
+    UmpleInterface child = model.getUmpleInterface("ISomething");
+	Assert.assertEquals("ISuper", child.getExtendsInterface(0).getName());
+  }
+  
+  @Test
+  public void interfaceWithMultipleIsA()
+  {
+    assertParse("014_interfaceMultipleImplements.ump");
+    UmpleInterface child = model.getUmpleInterface("ISomething");
+	Assert.assertEquals("ISuper", child.getExtendsInterface(0).getName());
+	Assert.assertEquals("IOtherSuper", child.getExtendsInterface(1).getName());
+  }
+  
+  @Test
   public void classWithImplementedMethods()
   {
     assertParse("015_ClassWithImplementedMethods.ump");

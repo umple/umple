@@ -1402,12 +1402,52 @@ ruleUmpleInterface returns [EObject current=null]
 	    }
 
 )
-)*((
+)*(	'isA' 
+    {
+        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getIsAKeyword_4_0(), null); 
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = factory.create(grammarAccess.getUmpleInterfaceRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode, $current);
+	        }
+        }
+	RULE_ID
+	{
+		createLeafNode(grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceUmpleInterfaceCrossReference_4_1_0(), "extendsInterface"); 
+	}
+
+)
+)(	',' 
+    {
+        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getCommaKeyword_4_2_0(), null); 
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = factory.create(grammarAccess.getUmpleInterfaceRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode, $current);
+	        }
+        }
+	RULE_ID
+	{
+		createLeafNode(grammarAccess.getUmpleInterfaceAccess().getExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0(), "extendsInterface"); 
+	}
+
+)
+))*	';' 
+    {
+        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getSemicolonKeyword_4_3(), null); 
+    }
+)?((
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getUmpleInterfaceAccess().getExtraCodeFunctionDeclarationParserRuleCall_4_0_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getUmpleInterfaceAccess().getExtraCodeFunctionDeclarationParserRuleCall_5_0_0(), currentNode); 
 	    }
-		lv_extraCode_4_0=rulefunctionDeclaration		{
+		lv_extraCode_9_0=rulefunctionDeclaration		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getUmpleInterfaceRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -1416,7 +1456,7 @@ ruleUmpleInterface returns [EObject current=null]
 	       		set(
 	       			$current, 
 	       			"extraCode",
-	        		lv_extraCode_4_0, 
+	        		lv_extraCode_9_0, 
 	        		"functionDeclaration", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -1428,11 +1468,11 @@ ruleUmpleInterface returns [EObject current=null]
 )
 )	';' 
     {
-        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getSemicolonKeyword_4_1(), null); 
+        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getSemicolonKeyword_5_1(), null); 
     }
 )?	'}' 
     {
-        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getRightCurlyBracketKeyword_5(), null); 
+        createLeafNode(grammarAccess.getUmpleInterfaceAccess().getRightCurlyBracketKeyword_6(), null); 
     }
 )
 ;

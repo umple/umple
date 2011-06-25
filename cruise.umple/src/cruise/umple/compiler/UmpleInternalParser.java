@@ -22,6 +22,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private List<Association> unlinkedAssociations;
   private Map<Position,String> positionToClassNameReference;
   private Map<UmpleClass,List<String>> unlinkedExtends;
+  private Map<UmpleInterface,List<String>> unlinkedInterfaceExtends;
   private StateMachine placeholderStateMachine;
   private Map<String,Token> stateMachineNameToToken;
   private Map<UmpleClass,Pair> umpleClassToStateMachineDefinition;
@@ -41,6 +42,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     unlinkedAssociations = new ArrayList<Association>();
     positionToClassNameReference = new HashMap<Position, String>();
     unlinkedExtends = new HashMap<UmpleClass,List<String>>();
+    unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
     placeholderStateMachine = null;
     stateMachineNameToToken = new HashMap<String, Token>();
     umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
@@ -192,7 +194,10 @@ private void init()
     {
       postTokenCoreAnalysis();
     }
-    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenInterfaceAnalysis();
+    }
     if (getParseResult().getWasSuccess())
     {
       postTokenClassAnalysis();  
@@ -228,7 +233,7 @@ private void init()
         if (!parsedUmpleFiles.contains(filename) && !unparsedUmpleFiles.contains(filename))
         {
           unparsedUmpleFiles.add(filename);
-        }
+        }  
       }
     }
   }
@@ -383,6 +388,12 @@ private void analyzeClassToken(Token t)
     }
   }
   
+  private void postTokenInterfaceAnalysis()
+  {
+      addUnlinkedInterfaceExtends();
+  }
+  
+  
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
@@ -424,6 +435,18 @@ private void analyzeClassToken(Token t)
       }  
     }
   }
+    
+  private void addExtendsTo(Token classToken, UmpleInterface aInterface)
+  {
+    List<String> extendsList = new ArrayList<String>();
+    for (Token extendsToken : classToken.getSubTokens()){
+      if (extendsToken.getValue("extendsName") != null)
+      { 
+        extendsList.add(extendsToken.getValue("extendsName"));
+        unlinkedInterfaceExtends.put(aInterface, extendsList);
+      }  
+    }
+  }
 
   private UmpleClass analyzeExternal(Token externalToken)
   {
@@ -437,6 +460,7 @@ private void analyzeClassToken(Token t)
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
     model.addUmpleInterface(newInterface);
     newInterface.setPackageName(currentPackageName);
+    addExtendsTo(t, newInterface);
     analyzeInterface(t,newInterface);  
   }
 
@@ -460,6 +484,25 @@ private void analyzeClassToken(Token t)
 
     }
   }
+
+  private void addUnlinkedInterfaceExtends()
+  {  
+    for (UmpleInterface child : unlinkedInterfaceExtends.keySet())
+    {
+      List<String> extendsNames = unlinkedInterfaceExtends.get(child);
+
+      if (extendsNames == null)
+      {
+        continue;
+      }
+
+      for (int i=0; i < extendsNames.size();i++){
+        String extendName= extendsNames.get(i);
+          UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+          child.addExtendsInterface(uInterface);
+      }
+    }
+  }  
 
   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
   {

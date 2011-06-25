@@ -2312,11 +2312,11 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_RUBY_FUNCTION() throws RecognitionException {
         try {
             int _type = RULE_RUBY_FUNCTION;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8318:20: ( RULE_DEF ( options {greedy=false; } : . )* RULE_END )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8318:22: RULE_DEF ( options {greedy=false; } : . )* RULE_END
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8358:20: ( RULE_DEF ( options {greedy=false; } : . )* RULE_END )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8358:22: RULE_DEF ( options {greedy=false; } : . )* RULE_END
             {
             mRULE_DEF(); 
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8318:31: ( options {greedy=false; } : . )*
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8358:31: ( options {greedy=false; } : . )*
             loop1:
             do {
                 int alt1=2;
@@ -2350,7 +2350,7 @@ public class InternalUmpleLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8318:59: .
+            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8358:59: .
             	    {
             	    matchAny(); 
 
@@ -2377,8 +2377,8 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_DEF() throws RecognitionException {
         try {
             int _type = RULE_DEF;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8320:10: ( 'def' )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8320:12: 'def'
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8360:10: ( 'def' )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8360:12: 'def'
             {
             match("def"); 
 
@@ -2396,8 +2396,8 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_END() throws RecognitionException {
         try {
             int _type = RULE_END;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8322:10: ( 'end' )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8322:12: 'end'
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8362:10: ( 'end' )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8362:12: 'end'
             {
             match("end"); 
 
@@ -2415,10 +2415,10 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_ID() throws RecognitionException {
         try {
             int _type = RULE_ID;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8324:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8324:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8364:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8364:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8324:11: ( '^' )?
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8364:11: ( '^' )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -2427,7 +2427,7 @@ public class InternalUmpleLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8324:11: '^'
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8364:11: '^'
                     {
                     match('^'); 
 
@@ -2446,7 +2446,7 @@ public class InternalUmpleLexer extends Lexer {
                 recover(mse);    throw mse;
             }
 
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8324:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8364:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop3:
             do {
                 int alt3=2;
@@ -2494,10 +2494,10 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_INT() throws RecognitionException {
         try {
             int _type = RULE_INT;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8326:10: ( ( '0' .. '9' )+ )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8326:12: ( '0' .. '9' )+
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8366:10: ( ( '0' .. '9' )+ )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8366:12: ( '0' .. '9' )+
             {
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8326:12: ( '0' .. '9' )+
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8366:12: ( '0' .. '9' )+
             int cnt4=0;
             loop4:
             do {
@@ -2511,7 +2511,7 @@ public class InternalUmpleLexer extends Lexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8326:13: '0' .. '9'
+            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8366:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -2541,10 +2541,10 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_STRING() throws RecognitionException {
         try {
             int _type = RULE_STRING;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -2556,16 +2556,16 @@ public class InternalUmpleLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("8328:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )", 7, 0, input);
+                    new NoViableAltException("8368:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )", 7, 0, input);
 
                 throw nvae;
             }
             switch (alt7) {
                 case 1 :
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop5:
                     do {
                         int alt5=3;
@@ -2581,7 +2581,7 @@ public class InternalUmpleLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
+                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -2598,7 +2598,7 @@ public class InternalUmpleLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:62: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:62: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
                     	        input.consume();
@@ -2624,10 +2624,10 @@ public class InternalUmpleLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:82: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:82: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:87: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:87: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop6:
                     do {
                         int alt6=3;
@@ -2643,7 +2643,7 @@ public class InternalUmpleLexer extends Lexer {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:88: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
+                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:88: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -2660,7 +2660,7 @@ public class InternalUmpleLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8328:129: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8368:129: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
                     	        input.consume();
@@ -2702,12 +2702,12 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_ML_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_ML_COMMENT;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8330:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8330:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8370:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8370:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8330:24: ( options {greedy=false; } : . )*
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8370:24: ( options {greedy=false; } : . )*
             loop8:
             do {
                 int alt8=2;
@@ -2732,7 +2732,7 @@ public class InternalUmpleLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8330:52: .
+            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8370:52: .
             	    {
             	    matchAny(); 
 
@@ -2760,12 +2760,12 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_SL_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_SL_COMMENT;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop9:
             do {
                 int alt9=2;
@@ -2778,7 +2778,7 @@ public class InternalUmpleLexer extends Lexer {
 
                 switch (alt9) {
             	case 1 :
-            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFE') ) {
             	        input.consume();
@@ -2799,7 +2799,7 @@ public class InternalUmpleLexer extends Lexer {
                 }
             } while (true);
 
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:40: ( ( '\\r' )? '\\n' )?
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:40: ( ( '\\r' )? '\\n' )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -2808,9 +2808,9 @@ public class InternalUmpleLexer extends Lexer {
             }
             switch (alt11) {
                 case 1 :
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:41: ( '\\r' )? '\\n'
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:41: ( '\\r' )? '\\n'
                     {
-                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:41: ( '\\r' )?
+                    // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:41: ( '\\r' )?
                     int alt10=2;
                     int LA10_0 = input.LA(1);
 
@@ -2819,7 +2819,7 @@ public class InternalUmpleLexer extends Lexer {
                     }
                     switch (alt10) {
                         case 1 :
-                            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8332:41: '\\r'
+                            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8372:41: '\\r'
                             {
                             match('\r'); 
 
@@ -2849,10 +2849,10 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_WS() throws RecognitionException {
         try {
             int _type = RULE_WS;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8334:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8334:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8374:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8374:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8334:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8374:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt12=0;
             loop12:
             do {
@@ -2905,8 +2905,8 @@ public class InternalUmpleLexer extends Lexer {
     public final void mRULE_ANY_OTHER() throws RecognitionException {
         try {
             int _type = RULE_ANY_OTHER;
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8336:16: ( . )
-            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8336:18: .
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8376:16: ( . )
+            // ../cruise.umple/src-gen/cruise/umple/parser/antlr/internal/InternalUmple.g:8376:18: .
             {
             matchAny(); 
 

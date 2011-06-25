@@ -148,7 +148,10 @@ class UmpleInternalParser
     {
       postTokenCoreAnalysis();
     }
-    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenInterfaceAnalysis();
+    }
     if (getParseResult().getWasSuccess())
     {
       postTokenClassAnalysis();  
@@ -184,7 +187,7 @@ class UmpleInternalParser
         if (!parsedUmpleFiles.contains(filename) && !unparsedUmpleFiles.contains(filename))
         {
           unparsedUmpleFiles.add(filename);
-        }
+        }  
       }
     }
   }

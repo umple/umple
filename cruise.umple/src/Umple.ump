@@ -124,6 +124,7 @@ class UmpleInterface
 {
   isA UmpleElement;
  
+  * -> 0..* UmpleInterface extendsInterface;
   1 -> 0..* Method;
   * -> * Depend;
   1 -> 0..* Constant;

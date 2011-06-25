@@ -70,7 +70,11 @@ PrimitiveType
 
 
 //Interface can not have native code right now
-UmpleInterface: "interface" name=ID "{" (depends+=Depend)* (extraCode=functionDeclaration ";")? "}";
+UmpleInterface: "interface" name=ID "{" 
+		(depends+=Depend)* 
+		("isA" (extendsInterface+=[UmpleInterface]) ("," extendsInterface+=[UmpleInterface])* ";")?
+		(extraCode=functionDeclaration ";")?
+		"}";
 
 UmpleAssociation: "association" (name=ID)? "{" (associations=Association) "}";	
 

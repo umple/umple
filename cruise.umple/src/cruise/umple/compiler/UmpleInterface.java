@@ -12,6 +12,7 @@ public class UmpleInterface extends UmpleElement
   //------------------------
 
   //UmpleInterface Associations
+  private List<UmpleInterface> extendsInterface;
   private List<Method> methods;
   private List<Depend> depends;
   private List<Constant> constants;
@@ -23,6 +24,7 @@ public class UmpleInterface extends UmpleElement
   public UmpleInterface(String aName)
   {
     super(aName);
+    extendsInterface = new ArrayList<UmpleInterface>();
     methods = new ArrayList<Method>();
     depends = new ArrayList<Depend>();
     constants = new ArrayList<Constant>();
@@ -31,6 +33,36 @@ public class UmpleInterface extends UmpleElement
   //------------------------
   // INTERFACE
   //------------------------
+
+  public UmpleInterface getExtendsInterface(int index)
+  {
+    UmpleInterface aExtendsInterface = extendsInterface.get(index);
+    return aExtendsInterface;
+  }
+
+  public List<UmpleInterface> getExtendsInterface()
+  {
+    List<UmpleInterface> newExtendsInterface = Collections.unmodifiableList(extendsInterface);
+    return newExtendsInterface;
+  }
+
+  public int numberOfExtendsInterface()
+  {
+    int number = extendsInterface.size();
+    return number;
+  }
+
+  public boolean hasExtendsInterface()
+  {
+    boolean has = extendsInterface.size() > 0;
+    return has;
+  }
+
+  public int indexOfExtendsInterface(UmpleInterface aExtendsInterface)
+  {
+    int index = extendsInterface.indexOf(aExtendsInterface);
+    return index;
+  }
 
   public Method getMethod(int index)
   {
@@ -122,6 +154,31 @@ public class UmpleInterface extends UmpleElement
     return index;
   }
 
+  public static int minimumNumberOfExtendsInterface()
+  {
+    return 0;
+  }
+
+  public boolean addExtendsInterface(UmpleInterface aExtendsInterface)
+  {
+    boolean wasAdded = false;
+    if (extendsInterface.contains(aExtendsInterface)) { return false; }
+    extendsInterface.add(aExtendsInterface);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeExtendsInterface(UmpleInterface aExtendsInterface)
+  {
+    boolean wasRemoved = false;
+    if (extendsInterface.contains(aExtendsInterface))
+    {
+      extendsInterface.remove(aExtendsInterface);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public static int minimumNumberOfMethods()
   {
     return 0;
@@ -200,6 +257,7 @@ public class UmpleInterface extends UmpleElement
 
   public void delete()
   {
+    extendsInterface.clear();
     methods.clear();
     depends.clear();
     constants.clear();

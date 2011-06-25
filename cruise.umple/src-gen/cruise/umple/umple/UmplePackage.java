@@ -574,13 +574,22 @@ public interface UmplePackage extends EPackage
   int UMPLE_INTERFACE__DEPENDS = UMPLE_ELEMENT__DEPENDS;
 
   /**
+   * The feature id for the '<em><b>Extends Interface</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int UMPLE_INTERFACE__EXTENDS_INTERFACE = UMPLE_ELEMENT_FEATURE_COUNT + 0;
+
+  /**
    * The feature id for the '<em><b>Extra Code</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int UMPLE_INTERFACE__EXTRA_CODE = UMPLE_ELEMENT_FEATURE_COUNT + 0;
+  int UMPLE_INTERFACE__EXTRA_CODE = UMPLE_ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Interface</em>' class.
@@ -589,7 +598,7 @@ public interface UmplePackage extends EPackage
    * @generated
    * @ordered
    */
-  int UMPLE_INTERFACE_FEATURE_COUNT = UMPLE_ELEMENT_FEATURE_COUNT + 1;
+  int UMPLE_INTERFACE_FEATURE_COUNT = UMPLE_ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link cruise.umple.umple.impl.UmpleAssociationImpl <em>Association</em>}' class.
@@ -3903,6 +3912,17 @@ public interface UmplePackage extends EPackage
   EClass getUmpleInterface();
 
   /**
+   * Returns the meta object for the reference list '{@link cruise.umple.umple.UmpleInterface#getExtendsInterface <em>Extends Interface</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference list '<em>Extends Interface</em>'.
+   * @see cruise.umple.umple.UmpleInterface#getExtendsInterface()
+   * @see #getUmpleInterface()
+   * @generated
+   */
+  EReference getUmpleInterface_ExtendsInterface();
+
+  /**
    * Returns the meta object for the containment reference '{@link cruise.umple.umple.UmpleInterface#getExtraCode <em>Extra Code</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -6455,6 +6475,14 @@ public interface UmplePackage extends EPackage
      * @generated
      */
     EClass UMPLE_INTERFACE = eINSTANCE.getUmpleInterface();
+
+    /**
+     * The meta object literal for the '<em><b>Extends Interface</b></em>' reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference UMPLE_INTERFACE__EXTENDS_INTERFACE = eINSTANCE.getUmpleInterface_ExtendsInterface();
 
     /**
      * The meta object literal for the '<em><b>Extra Code</b></em>' containment reference feature.

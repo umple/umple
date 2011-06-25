@@ -601,17 +601,30 @@ public class UmpleGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDependsAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cDependsDependParserRuleCall_3_0 = (RuleCall)cDependsAssignment_3.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Assignment cExtraCodeAssignment_4_0 = (Assignment)cGroup_4.eContents().get(0);
-		private final RuleCall cExtraCodeFunctionDeclarationParserRuleCall_4_0_0 = (RuleCall)cExtraCodeAssignment_4_0.eContents().get(0);
-		private final Keyword cSemicolonKeyword_4_1 = (Keyword)cGroup_4.eContents().get(1);
-		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Keyword cIsAKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cExtendsInterfaceAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final CrossReference cExtendsInterfaceUmpleInterfaceCrossReference_4_1_0 = (CrossReference)cExtendsInterfaceAssignment_4_1.eContents().get(0);
+		private final RuleCall cExtendsInterfaceUmpleInterfaceIDTerminalRuleCall_4_1_0_1 = (RuleCall)cExtendsInterfaceUmpleInterfaceCrossReference_4_1_0.eContents().get(1);
+		private final Group cGroup_4_2 = (Group)cGroup_4.eContents().get(2);
+		private final Keyword cCommaKeyword_4_2_0 = (Keyword)cGroup_4_2.eContents().get(0);
+		private final Assignment cExtendsInterfaceAssignment_4_2_1 = (Assignment)cGroup_4_2.eContents().get(1);
+		private final CrossReference cExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0 = (CrossReference)cExtendsInterfaceAssignment_4_2_1.eContents().get(0);
+		private final RuleCall cExtendsInterfaceUmpleInterfaceIDTerminalRuleCall_4_2_1_0_1 = (RuleCall)cExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0.eContents().get(1);
+		private final Keyword cSemicolonKeyword_4_3 = (Keyword)cGroup_4.eContents().get(3);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Assignment cExtraCodeAssignment_5_0 = (Assignment)cGroup_5.eContents().get(0);
+		private final RuleCall cExtraCodeFunctionDeclarationParserRuleCall_5_0_0 = (RuleCall)cExtraCodeAssignment_5_0.eContents().get(0);
+		private final Keyword cSemicolonKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
+		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		////Interface can not have native code right now
 		//UmpleInterface:
-		//	"interface" name=ID "{" depends+=Depend* (extraCode=functionDeclaration ";")? "}";
+		//	"interface" name=ID "{" depends+=Depend* ("isA" extendsInterface+=[UmpleInterface] (","
+		//	extendsInterface+=[UmpleInterface])* ";")? (extraCode=functionDeclaration ";")? "}";
 		public ParserRule getRule() { return rule; }
 
-		//"interface" name=ID "{" depends+=Depend* (extraCode=functionDeclaration ";")? "}"
+		//"interface" name=ID "{" depends+=Depend* ("isA" extendsInterface+=[UmpleInterface] (","
+		//extendsInterface+=[UmpleInterface])* ";")? (extraCode=functionDeclaration ";")? "}"
 		public Group getGroup() { return cGroup; }
 
 		//"interface"
@@ -632,20 +645,53 @@ public class UmpleGrammarAccess extends AbstractGrammarElementFinder {
 		//Depend
 		public RuleCall getDependsDependParserRuleCall_3_0() { return cDependsDependParserRuleCall_3_0; }
 
-		//(extraCode=functionDeclaration ";")?
+		//("isA" extendsInterface+=[UmpleInterface] ("," extendsInterface+=[UmpleInterface])* ";")?
 		public Group getGroup_4() { return cGroup_4; }
 
-		//extraCode=functionDeclaration
-		public Assignment getExtraCodeAssignment_4_0() { return cExtraCodeAssignment_4_0; }
+		//"isA"
+		public Keyword getIsAKeyword_4_0() { return cIsAKeyword_4_0; }
 
-		//functionDeclaration
-		public RuleCall getExtraCodeFunctionDeclarationParserRuleCall_4_0_0() { return cExtraCodeFunctionDeclarationParserRuleCall_4_0_0; }
+		//extendsInterface+=[UmpleInterface]
+		public Assignment getExtendsInterfaceAssignment_4_1() { return cExtendsInterfaceAssignment_4_1; }
+
+		//[UmpleInterface]
+		public CrossReference getExtendsInterfaceUmpleInterfaceCrossReference_4_1_0() { return cExtendsInterfaceUmpleInterfaceCrossReference_4_1_0; }
+
+		//ID
+		public RuleCall getExtendsInterfaceUmpleInterfaceIDTerminalRuleCall_4_1_0_1() { return cExtendsInterfaceUmpleInterfaceIDTerminalRuleCall_4_1_0_1; }
+
+		//("," extendsInterface+=[UmpleInterface])*
+		public Group getGroup_4_2() { return cGroup_4_2; }
+
+		//","
+		public Keyword getCommaKeyword_4_2_0() { return cCommaKeyword_4_2_0; }
+
+		//extendsInterface+=[UmpleInterface]
+		public Assignment getExtendsInterfaceAssignment_4_2_1() { return cExtendsInterfaceAssignment_4_2_1; }
+
+		//[UmpleInterface]
+		public CrossReference getExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0() { return cExtendsInterfaceUmpleInterfaceCrossReference_4_2_1_0; }
+
+		//ID
+		public RuleCall getExtendsInterfaceUmpleInterfaceIDTerminalRuleCall_4_2_1_0_1() { return cExtendsInterfaceUmpleInterfaceIDTerminalRuleCall_4_2_1_0_1; }
 
 		//";"
-		public Keyword getSemicolonKeyword_4_1() { return cSemicolonKeyword_4_1; }
+		public Keyword getSemicolonKeyword_4_3() { return cSemicolonKeyword_4_3; }
+
+		//(extraCode=functionDeclaration ";")?
+		public Group getGroup_5() { return cGroup_5; }
+
+		//extraCode=functionDeclaration
+		public Assignment getExtraCodeAssignment_5_0() { return cExtraCodeAssignment_5_0; }
+
+		//functionDeclaration
+		public RuleCall getExtraCodeFunctionDeclarationParserRuleCall_5_0_0() { return cExtraCodeFunctionDeclarationParserRuleCall_5_0_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_5_1() { return cSemicolonKeyword_5_1; }
 
 		//"}"
-		public Keyword getRightCurlyBracketKeyword_5() { return cRightCurlyBracketKeyword_5; }
+		public Keyword getRightCurlyBracketKeyword_6() { return cRightCurlyBracketKeyword_6; }
 	}
 
 	public class UmpleAssociationElements extends AbstractParserRuleElementFinder {
@@ -4531,7 +4577,8 @@ public class UmpleGrammarAccess extends AbstractGrammarElementFinder {
 
 	////Interface can not have native code right now
 	//UmpleInterface:
-	//	"interface" name=ID "{" depends+=Depend* (extraCode=functionDeclaration ";")? "}";
+	//	"interface" name=ID "{" depends+=Depend* ("isA" extendsInterface+=[UmpleInterface] (","
+	//	extendsInterface+=[UmpleInterface])* ";")? (extraCode=functionDeclaration ";")? "}";
 	public UmpleInterfaceElements getUmpleInterfaceAccess() {
 		return (pUmpleInterface != null) ? pUmpleInterface : (pUmpleInterface = new UmpleInterfaceElements());
 	}
