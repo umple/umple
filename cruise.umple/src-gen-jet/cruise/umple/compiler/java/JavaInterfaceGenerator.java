@@ -76,6 +76,7 @@ public class JavaInterfaceGenerator implements ILang
 
     stringBuffer.append(TEXT_3);
     stringBuffer.append(uInterface.getName());
+    stringBuffer.append( gen.translate("isA",uInterface) );
     stringBuffer.append(TEXT_4);
     stringBuffer.append(TEXT_5);
     stringBuffer.append(extraCode);
@@ -123,9 +124,9 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
     				paramType = aMethodParam.getType();
         			isList = aMethodParam.getIsList() ? " [] " : " ";
     				aSingleParameter = paramType + isList + paramName;
-        			parameters += aSingleParameter + ",";
+        			parameters += aSingleParameter + ", ";
     			}
-    			String finalParams = parameters.substring(0, parameters.length()-1);
+    			String finalParams = parameters.substring(0, parameters.length()-2);
     			appendln(stringBuffer, "");
     			append(stringBuffer, " {0} {1} {2}({3});", methodModifier, methodType, methodName, finalParams);	
     		}

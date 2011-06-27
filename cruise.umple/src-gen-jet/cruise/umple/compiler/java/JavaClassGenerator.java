@@ -6795,7 +6795,8 @@ public class JavaClassGenerator implements ILang
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
-    		String methodBody = aMethod.getIsImplemented() ? "   return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+    		String methodBody = aMethod.getIsImplemented() ? "return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+    		String properMethodBody = "      " + methodBody; 
     		String override =  aMethod.getIsImplemented() ? "  @Override" : "";
     		String paramName="";
     		String paramType="";
@@ -6810,14 +6811,14 @@ public class JavaClassGenerator implements ILang
     				paramType = aMethodParam.getType();
     				isList = aMethodParam.getIsList() ? " [] " : " ";
     				aSingleParameter = paramType + isList + paramName;
-        			parameters += aSingleParameter + ",";
+        			parameters += aSingleParameter + ", ";
     			}
-    			String finalParams = parameters.substring(0, parameters.length()-1);
+    			String finalParams = parameters.substring(0, parameters.length()-2);
     			appendln(stringBuffer, "");
     			appendln(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
     			appendln(stringBuffer, "{");
-    			appendln(stringBuffer, methodBody);
+    			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
     			
     		}
@@ -6826,7 +6827,7 @@ public class JavaClassGenerator implements ILang
     			appendln(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
     		    appendln(stringBuffer, "{");
-    			appendln(stringBuffer, methodBody);
+    			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
     		}
     	}
