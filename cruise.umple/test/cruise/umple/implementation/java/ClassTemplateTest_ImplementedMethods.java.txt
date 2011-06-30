@@ -26,12 +26,12 @@ public class CodeTranslator implements ICodeTranslator
 
   @Override
   public String translate(String id, Attribute attribute){
-      return "";
+            return "";
   }
 
   @Override
   public String translate(String id, AssociationVariable associationVariable){
-      return "";
+            return "";
   }
 
 }

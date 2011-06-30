@@ -63,6 +63,11 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
+    
+    SampleFileWriter.destroy(pathToInput + "/ICodeTranslator.php");
+    SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
+    SampleFileWriter.destroy(pathToInput + "/ISecondChild.php");
+    SampleFileWriter.destroy(pathToInput + "/CodeTranslator.php");
 
     SampleFileWriter.destroy(pathToRoot + "/X.java");
     SampleFileWriter.destroy(pathToRoot + "/X.php");
@@ -100,6 +105,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToRoot + "/one.rb");
     SampleFileWriter.destroy(pathToRoot + "/two.rb");    
     
+    SampleFileWriter.destroy(pathToInput + "/i_code_translator.rb");    
+    SampleFileWriter.destroy(pathToInput + "/i_first_child.rb");    
+    SampleFileWriter.destroy(pathToInput + "/code_translator.rb");    
+    SampleFileWriter.destroy(pathToInput + "/i_second_child.rb");    
   }
   
   @Test

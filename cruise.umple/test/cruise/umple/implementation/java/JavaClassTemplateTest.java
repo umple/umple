@@ -41,7 +41,7 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   @Test
   public void ClassImplementedMethods()
   {
-    assertUmpleTemplateFor("ClassTemplateTest_ImplementedMethods.ump",languagePath + "/ClassTemplateTest_ImplementedMethods."+ languagePath +".txt","CodeTranslator");
+    assertUmpleTemplateFor("ClassTemplateTest_ImplementedMethods.ump", languagePath + "/ClassTemplateTest_ImplementedMethods."+ languagePath +".txt","CodeTranslator");
   }
   
   

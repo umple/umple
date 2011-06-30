@@ -6795,7 +6795,7 @@ public class JavaClassGenerator implements ILang
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
-    		String methodBody = aMethod.getIsImplemented() ? "return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+    		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
     		String properMethodBody = "      " + methodBody; 
     		String override =  aMethod.getIsImplemented() ? "  @Override" : "";
     		String paramName="";

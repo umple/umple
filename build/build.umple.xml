@@ -32,7 +32,7 @@
     Generate JET Templates
   ``````````````````````````` -->
   
-  <!-- Moved the generic JET templates into the various UmpleTo* projects -->
+  <!-- Move the generic JET templates into the various UmpleTo* projects -->
   <target name="templates">
     <copy todir="UmpleToJava/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
