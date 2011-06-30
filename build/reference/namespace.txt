@@ -1,8 +1,8 @@
-namespace
+Namespaces
 Directives
 
 @@description
-Namespaces allow you to group like entities to promote cohesion, 
+Namespaces allow you to group similar entities to promote cohesion, 
 as well as reduce the possibility of name collision.
 
 @@syntax

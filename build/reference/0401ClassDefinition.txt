@@ -1,0 +1,40 @@
+Class Definition
+Entities
+
+@@description
+<p>      
+A class definotion defines an object-oriented  class available for use in your system.  A class can be 
+composed of many things including: 
+</p>
+
+<ul>
+<li>Specification of inheritance from a superclass using the isA keyword.</li>
+<li>Dependencies</li>
+<li>Attributes</li>
+<li>Associations</li>
+<li>Methods containing "code" in a native language (e.g. Java)</li>
+</ul>
+
+@@syntax
+class [name] { [[classContent]]* }
+
+@@example
+
+class Student
+{
+  firstName;   // attribute - defaults to String
+  lastName;
+  Integer number;  // attribute with type Integer
+  * -- * Address;  // Many-to-many association
+  
+  public String fullName()  // Method, whose content is not processed by Umple
+  {
+    return getFirstName() + " " + getLastName();
+  } 
+}
+
+class Address
+{
+  String[] line;  // Multi-valued attribute
+}
+@@endexample

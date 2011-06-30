@@ -1,12 +1,14 @@
-language
-Directives
+Languages supported
+Misc
 
 @@description
 <p>      
-The Umple language can be translated into one of the following implementation languages:
+Umple code can result in generation of various  languages. Code from these languages can be inserted into Umple, or Umple can be inserted into code for the languages.
 </p>
 
 <ul>
 <li>Java</li>
 <li>Php</li>
+<li>Ruby</li>
+<li>C++ is under development</li>
 </ul>

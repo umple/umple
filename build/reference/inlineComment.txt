@@ -1,12 +1,12 @@
-inlineComment
-Misc
+Inline Comments
+Comments
 
 @@description
-Inline comments to document your work.
+Use two slashes to place comments after any text on the line. The comment ends at the end of the line. This is the same syntax as in Java, C++ and several other languages.
 
 @@syntax
 // [comment-text]
 
 @@example
-// The Umple system is both fun and efficient to development with
+// Umple is both fun and efficient to development with
 @@endexample

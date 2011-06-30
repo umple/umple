@@ -32,7 +32,7 @@ current time, anyone who knows your URL can also edit your work, and if
 you forget your URL, there is no way to retrieve it. Therefore it is also 
 suggested that you copy and paste the text of important files somewhere 
 else. One thing to note is that if you just copy the visible text in the 
-left hand pane, you will <u<not</u> be saving the <i>layout of the 
+left hand pane, you will <u>not</u> be saving the <i>layout of the 
 diagram</i>. If you want to save this too, you have to do one of the 
 following:
   <ul>

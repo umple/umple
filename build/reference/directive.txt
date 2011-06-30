@@ -1,14 +1,12 @@
-directive
+Types of Directives
 Directives
 
 @@description
 <p>      
-A directive can be one of:
-</p>
+Directives appear as the 'main' entries in an Umple file</p>
 
 <ul>
-<li>facade (affects code generation)</li>
-<li>useStatement (includes other model files to allow for reuse)</li>
-<li>namespace</li>
-<li>entity (e.g. class or interface)</li>
+<li><a href="UseStatements.html">Use statements</a> (Include other Umple files to allow for modularization and reuse)</li>
+<li><a href="Namespaces.html">Namespace declarations</a> (Affects code generation, for example generates packages in Java)</li>
+<li><a href="Entities.html">Entity declarations</a>(Definitions of classs or interfaces)</li>
 </ul>

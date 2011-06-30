@@ -1,7 +1,9 @@
-multilineComment
-Misc
+Multiline Comment
+Comments
 @@description
-For larger comments to document your work.
+Use multiline comments starting with slash-star and ending with star-slash to document your work. You should put a comment block, for example, at the beginning of each file.
+
+<p>This syntax is the same as in Java and C++.</p>
 
 @@syntax
 /*

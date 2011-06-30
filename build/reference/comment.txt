@@ -1,10 +1,14 @@
-comment
-Misc
+Umple Comments
+Comments
 
 @@description
 Comments provide a mechanism to document your work to provide some insight into
 <i>why</i> you are performing a certain action, as opposed to simply showing
 <i>how</i>.
+
+<p>
+Comments should be used just like in any programming language
+</p>
 
 <p>
 Comments can be either inlineComments, or multilineComments.
