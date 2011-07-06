@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: cruise.umple.xtext.ui
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0
+Bundle-Vendor: Cruise - University of Ottawa
+Bundle-Version: 1.12.0.352
 Bundle-SymbolicName: cruise.umple.xtext.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.ui,
@@ -11,8 +11,7 @@ Require-Bundle: org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.ui,
  org.eclipse.xtext.builder,
- org.antlr.runtime,
- cruise.umple;bundle-version="1.0.0"
+ org.antlr.runtime
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: cruise.umple.ui.contentassist.antlr

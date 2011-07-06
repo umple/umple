@@ -44,6 +44,15 @@
     <pathelement location="lib/xtextplugins/org.eclipse.xpand_1.0.1.v201008251147.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types_1.0.2.v201102150722.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.generator_1.0.2.v201102150722.jar"/>
+  <!-- ```````````````````````````
+    Libraries for the Umple Editor: cruise.umple.xtext.ui
+  ``````````````````````````` -->
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.edit.ui_2.6.0.v20100914-1218.jar"/>
+    <pathelement location="lib/xtextplugins/org.apache.log4j_1.2.15.v201005080500.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.shared_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.builder_1.0.2.v201102150722.jar"/>
    </path>
 
   <!-- ```````````````````````````
@@ -71,6 +80,8 @@
     </replace>
 
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+    <!-- Xtext UI Project Manifest File -->
+    <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
 
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
     <!-- 
