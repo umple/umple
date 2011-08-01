@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="cruise.umple.umplificator.model.workflow.workflow"
+            class="cruise.umple.umplificator.model.workflow.WorkflowPackage"
+            genModel="model/RefactoringWorkflow.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="workflow"
+            class="cruise.umple.umplificator.model.workflow.util.WorkflowResourceFactoryImpl"/>
+   </extension>
+
+</plugin>
