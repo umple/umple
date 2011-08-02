@@ -25,4 +25,5 @@ Import-Package: com.google.common.collect,
  org.eclipse.jdt.launching,
  org.eclipse.xtext.junit.util
 Export-Package: cruise.umple.umplificator.core.generator.umple,
+ cruise.umple.umplificator.core.inventory,
  cruise.umple.umplificator.core.types

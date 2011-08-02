@@ -10,9 +10,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IImportDeclaration;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+
+import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
+import cruise.umple.umplificator.core.inventory.JavaProjectInventory;
 
 
 /**
@@ -66,6 +71,20 @@ public class UmpleGenerator {
 		return methodContent.toString();
 	}
 	
+	public static void translateJavaClassesInPackage(IPackageFragment aPackage) {
+		ICompilationUnit [] units= JavaPackageInventory.getUnitsFromPackage(aPackage);
+		for (ICompilationUnit unit: units){
+			translateJavaClass(unit);
+		}
+	}
+	
+	public static void translateJavaClassesInProject(IJavaProject project) {
+		IPackageFragment [] packages = JavaProjectInventory.getPackagesFromProject(project);
+		for (IPackageFragment aPackage: packages){
+			translateJavaClassesInPackage(aPackage);
+		}
+	}
+	
 	public static void translateJavaClass(ICompilationUnit unit){
 		String className= unit.getElementName().substring(0, unit.getElementName().length()-5);
 	    StringBuilder contents = new StringBuilder();
@@ -103,6 +122,4 @@ public class UmpleGenerator {
 			logger.error(e);
 		}
 	}
-	
-	
 }
