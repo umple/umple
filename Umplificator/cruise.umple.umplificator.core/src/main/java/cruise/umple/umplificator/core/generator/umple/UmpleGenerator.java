@@ -16,6 +16,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
+import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
 import cruise.umple.umplificator.core.inventory.JavaProjectInventory;
 
@@ -53,10 +54,29 @@ public class UmpleGenerator {
 		for (IType type : allTypes) {
 			IField[] fields = type.getFields();
 			for (IField field : fields) {
-				fieldsContent.append(field.getSource()+ "\n");
+				fieldsContent.append(translateFieldsToUmpleAttribute(field));
 			}
 		}
 		return fieldsContent.toString();
+	}
+	
+	public static String translateFieldsToUmpleAttribute(IField field) {
+		String name ="";
+		String type ="";	
+		String value= "";
+		if (FieldAnalyzer.isPrimitiveType(field))
+		{
+			name = field.getElementName();
+			type = FieldAnalyzer.getUmpleType(field);
+			if (FieldAnalyzer.hasValue(field)){
+				value = " =";
+				value += FieldAnalyzer.getValue(field);
+			}
+			return type + " " + name + value + ";" +  "\n";			
+		}
+		else{
+			return "";
+		}
 	}
 	
 	public static String translateMethods(ICompilationUnit unit) throws JavaModelException {
@@ -76,6 +96,7 @@ public class UmpleGenerator {
 		for (ICompilationUnit unit: units){
 			translateJavaClass(unit);
 		}
+		
 	}
 	
 	public static void translateJavaClassesInProject(IJavaProject project) {
