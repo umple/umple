@@ -58,7 +58,7 @@
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench_3.5.2.M20100113-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />
-    <pathelement location="lib/eclipseplugins/org.eclipse.xtext_1.0.2.v201102150722.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext_1.0.2.v201102150722.jar" />
     <pathelement location="lib/eclipseplugins/${path.eclipse.01}" />
     <pathelement location="lib/eclipseplugins/${path.eclipse.02}" />
   </path>  
@@ -152,6 +152,10 @@
       <fileset dir="cruise.umple/src-gen/cruise/umple/" includes="Umple.xmi" />
       <fileset dir="cruise.umple/src-gen/cruise/umple/" includes="Umple.ecore" />
       <fileset dir="cruise.umple/src-gen/cruise/umple/" includes="Umple.genmodel" />
+    </copy>
+
+    <copy todir="${plugin.files}">
+      <fileset dir="cruise.umple/src" includes="*.grammar"/>
     </copy>
 
     <copy todir="${plugin.files}/cruise/umple/parser/antlr/internal">
