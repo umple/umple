@@ -145,6 +145,11 @@
       <fileset dir="cruise.umple.eclipse" includes="icons/**" />
       <fileset dir="cruise.umple.eclipse" includes="META-INF/MANIFEST.MF" />
       <fileset dir="cruise.umple.eclipse/bin" includes="cruise/**" />
+      <fileset dir="cruise.umple.eclipse" includes="cruise/**" />
+    </copy>
+
+    <copy todir="${plugin.files}">
+      <fileset dir="cruise.umple/src" includes="*.grammar"/>
     </copy>
     
     <!-- Assemble plug-in jar -->

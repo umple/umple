@@ -77,7 +77,6 @@
     </javac>
     <copy todir="${bin.path}" overwrite="true">
 	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
-	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
     </copy>
   </target>
 
