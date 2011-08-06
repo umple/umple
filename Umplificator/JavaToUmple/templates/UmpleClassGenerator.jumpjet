@@ -1,0 +1,15 @@
+<%@ jet package="cruise.umple.umplificator.umple" class="UmpleClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+  UmpleClass uClass = (UmpleClass) uElement;
+%>
+
+
+class <%=uClass.getName()%>
+{
+  <%@ include file="inheritance.jet" %>
+  <%@ include file="depends.jet" %>
+  <%@ include file="members_AllAttributes.jet" %>
+  <%@ include file="members_AllAssociations.jet" %>
+  <%@ include file="members_AllMethods.jet" %>
+}
