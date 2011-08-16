@@ -19,12 +19,11 @@
     <pathelement location="lib/xtextplugins/com.google.inject_2.0.0.v201003051000.jar" />
     <pathelement location="lib/xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.emf.common_2.6.0.v20100914-1218.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore_2.6.1.v20100914-1218.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore_2.7.0.v20110605-0747.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xtend_1.0.1.v201008251147.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.util_1.0.2.v201102150722.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.util_2.0.0.v201106070531.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext_1.0.2.v201102150722.jar" />
-    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext_2.0.0.v201106070531.jar" />
     <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846.jar"/>
     <pathelement location="lib/xtextplugins/org.apache.commons.logging_1.0.4.v201005080501.jar"/>
@@ -42,17 +41,19 @@
     <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.launch_1.0.2.v201102151014.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.runtime_1.0.2.v201102150556.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xpand_1.0.1.v201008251147.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types_2.0.0.v201106070531.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.generator_1.0.2.v201102150722.jar"/>
   <!-- ```````````````````````````
     Libraries for the Umple Editor: cruise.umple.xtext.ui
   ``````````````````````````` -->
-    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui_2.0.0.v201106070531.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.emf.edit.ui_2.6.0.v20100914-1218.jar"/>
     <pathelement location="lib/xtextplugins/org.apache.log4j_1.2.15.v201005080500.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.shared_1.0.2.v201102150722.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.builder_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.2.0.v201101311130.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types.ui_2.0.0.v201106070531.jar"/>
    </path>
 
   <!-- ```````````````````````````
