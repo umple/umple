@@ -1,112 +1,106 @@
-grammar cruise.umple.Umple  with  org.eclipse.xtext.common.Terminals 
- 
-import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+grammar cruise.umple.Umple with org.eclipse.xtext.common.Terminals
 
 generate umple "http://www.umple.cruise/Umple"
 
-//import "platform:/resource/cruise.umple.xtext.ext.java/src-gen/cruise/umple/xtext/ext/Java.ecore" as java
 
 UmpleModel:
-	(namespace=Namespace)? 
-	(glossary=Glossary)? 
-	(generate_=Generate)?
-	(traceMechanism=TraceMechanism)?
-	((uses+=UseStatement)     |
-	(umpleElements+=UmpleElement)   |
-	(associations+=UmpleAssociation) | 
-	(associationClasses+=UmpleAssociationClass) |  
-	(statemachines+=StateMachineDefinition))* ; 
+	elements+=AbstractElement*;
 
-// Grammar 
-UmpleElement:
-	UmpleClass | UmpleInterface;
-
-Word:
-	singular=STRING ":" plural=STRING ";" ;	
+AbstractElement:
+	Namespace | Glossary  | Generate  | UseStatement | Entity;
 	
+	
+/* -------------------------------------------------------------------------------------------
+ * Part similar to umple_core.grammar
+ */ 
 Glossary:
 	{Glossary}"glossary" "{" (words+=Word)* "}";
 	
+Word:
+	singular=STRING ":" plural=STRING ";" ;	
+	
 Generate:	
-	"generate" (java?="Java" | Php?="Php"| Ruby="Ruby")  ";";
+	'generate' (java?='Java' | Php?='Php'| Ruby='Ruby')  ";";
 	
 UseStatement:
-	"use" (fileID)";";
+	"use" (file=fileID)";";
 
 Namespace:
 	"namespace" (value=fileID) ";";
-	
-
-UmpleClass :  {UmpleClass} (packageName=STRING)? (external?='external')? "class" (name=ID) "{"  
-			(singleton?=Singleton)?
-			(key=Key)?
-			(codeInjection=CodeInjection)?
-			("isA" (extendsClass+=[UmpleElement]) ("," extendsClass+=[UmpleElement])* ";")?
-			((attributes+=UmpleAttribute)		|
-			(symmetricReflexiveAssociations+=SymmetricReflexiveAssociation)		|
-			(inlineAssociations+=InlineAssociation)								|
-			(depends+=Depend)					|
-			(positions+=Position)				|
-			(stateMachines+=StateMachine)		|
-			(traceDirectives+=TraceDirective)	|
-			(traceCases+=TraceCase))*
-			(externalLanguage=ExternalLanguage)?
-			"}";
-
-// ExtraCode Section
-ExternalLanguage: 
-	(functions+=functionDefinition)* | (rubyFunctions+=rubyFunction)* | (phpFunctions+=phpFunction)* ;
-	
-PrimitiveType
-    :   "boolean"
-    |   "char"
-    |   "byte"
-    |   "short"
-    |   "int"
-    |   "long"
-    |   "float"
-    |   "double"
-    ;
 
 
-//Interface can not have native code right now
-UmpleInterface: "interface" name=ID "{" 
-		(depends+=Depend)* 
-		("isA" (extendsInterface+=[UmpleInterface]) ("," extendsInterface+=[UmpleInterface])* ";")?
-		(extraCode=functionDeclaration ";")?
-		"}";
+Entity:  ClassDefinition | InterfaceDefinition | ExternalDefinition | AssociationDefinition | AssociationClassDefinition;
+/* End of part similar to umple_core.grammar */ 
 
-UmpleAssociation: "association" (name=ID)? "{" (associations=Association) "}";	
 
-UmpleAssociationClass: "associationClass" name=ID "{" (associationClassContents+=associationClassContent)* "}";
+/* -------------------------------------------------------------------------------------------
+ * Part similar to umple_classes.grammar
+ */ 
+ClassDefinition: "class" (name=ID) "{"  
+	classContent+=ClassContent*
+	"}";
 
-//CONTENT SECTION
-associationClassContent: 
-	UmpleClass | Depend | (singleAssociationEnd) |
-	StateMachine | UmpleAttribute | InlineAssociation;
+ExternalDefinition : 'external' name=ID '{' classContent+=ClassContent* '}';
 
-//ASSOCIATIONS/
+InterfaceDefinition: 'interface' name=ID '{' depend+=Depend* '}';
+
+AssociationDefinition: 'association' name=ID '{' association+=Association* '}' ;
+
+ClassContent:
+	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation  ;
+
+AssociationClassContent:
+	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation  ;
+
+Depend: 'depend' name = extendedID (".*")? ";";
+
 Association:  multiplicity (type1=ID) (rolename1=ID)?  ("->"|"--"|"<-"|"><") multiplicity (type2=ID) (rolename2=ID)? ";";
+
 SymmetricReflexiveAssociation: multiplicity "self" (rolename=ID) ";";
+
 InlineAssociation: multiplicity (rolename1=ID)? ("->"|"--"|"<-"|"><") (multiplicity) (type=ID) (rolename2=ID)? ";";
-singleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
-multiplicity: bound | (bound ".." bound);
-bound: INT | "*";
 
-//ATTRIBUTES AND SMALLER BITS
+SingleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
 
-Singleton: singleton?="singleton" ";";
+AssociationClassDefinition: 'associationClass' name=ID '{' associationClassContent+=AssociationClassContent* '}';
+/* End of part similar to umple_classes.grammar */ 
 
-CodeInjection:"before" (name=extendedID) code=block | "after" (name=extendedID) code=block;
+/* -------------------------------------------------------------------------------------------
+ * Part similar to umple_patterns.grammar
+ */ 
+SoftwarePattern:
+	isA | Singleton | KeyDefinition | CodeInjection;
 
-UmpleAttribute:
+isA: 'isA' (extendsClass+=[UmpleElement]) ("," extendsClass+=[UmpleElement])* ";";
+
+Singleton: singleton?="singleton" ";" ;
+
+KeyDefinition: "key" {Key} "{" (keys+=ID ("," keys+=ID)*)? "}";
+
+CodeInjection:"before" (name=extendedID) code=STRING | "after" (name=extendedID) code=STRING; 
+
+Attribute:
 	autounique?="autounique" name=extendedID ";" |
 	(unique?="unique")? modifier=Modifier? ((type=UmpleAttributeType (list?="[]")?) |
-	(object=[UmpleClass] (list?="[]")?))?  name=extendedID ( '=' value=UmplePrimitiveType)? ";";
-	
-UmplePrimitiveType:
-  INT | STRING ;
- 
+	(object=[ClassDefinition] (list?="[]")?))?  name=extendedID ( '=' value=UmplePrimitiveType)? ";";
+/* End of umple_patterns.grammar */ 
+
+/* -------------------------------------------------------------------------------------------
+ * Part similar to umple_layout.grammar
+ */ 
+Position: AssociationPosition |  ElementPosition;
+
+ElementPosition: 'position' (x=INT) (y=INT) (width=INT) (height=INT) ";"; 
+
+AssociationPosition: "position.association" name=ID (c1=Coordinate) (c2=Coordinate) ";";
+
+Coordinate: (x=INT) "," (y=INT);
+/* End of umple_layout.grammar */ 
+
+
+/* -------------------------------------------------------------------------------------------
+ * Complement Rules
+ */ 
 UmpleAttributeType
 	: 	"Date"
 	|	"Time"
@@ -115,128 +109,19 @@ UmpleAttributeType
 	|	"Boolean"|"boolean"
 	|	"String"|"string"
 	;
- 
-enum Modifier: IMMUTABLE="immutable"|SETTABLE="settable"|INTERNAL="internal"|DEFAULTED="defaulted"|CONST="const";
 
+UmplePrimitiveType:
+  INT | STRING ;
 
-//This section can contain native Java code
-Key: "key" {Key} "{" (keys+=ID ("," keys+=ID)*)? "}";
+enum Modifier: IMMUTABLE="immutable"|SETTABLE="settable"|INTERNAL="internal"|DEFAULTED="defaulted"|CONST="const";  
 
-Depend: "depend" name = extendedID (".*")? ";";
+multiplicity: bound | (bound ".." bound);
 
+bound: INT | "*";
 
-//STATEMACHINES
+UmpleElement:  ClassDefinition | InterfaceDefinition ;
+/* End of Complement Rules */ 
 
-StateMachineDefinition: "statemachine" name=extendedID "{" (states+=State)* "}";
-StateMachine: ENUM | InlineStateMachine | ReferencedStateMachine;
-InlineStateMachine: name=extendedID "{" (states+=State)* "}";
-ReferencedStateMachine: name = extendedID "as" (machine=[StateMachineDefinition]) ";";
-ENUM: name=extendedID "{" state1=extendedID ("," states+=extendedID)* "}";
-
-State: ( (stateTraceDirective+=TraceDirective) | ("conc")? ("concurrent")? ("|")? stateName=extendedID  "{" (("*")? states+=StateEntity)* "}");
-
-StateEntity: Transition | EntryOrExitAction | (Activity ("->" extendedID ";")?) | State | (expression=expression ";");	
-//This covers just activities and activities that cause a state transition
-
-	
-Transition: 
-	(Guard events+=EventDefinition "->" a=Action? stateName=extendedID ";") |
-	(EventDefinition g=Guard? "->" a=Action? stateName=extendedID ";");
-	
-EventDefinition:  {EventDefinition}TimedEvent |{EventDefinition} WaitEvent | eventID=ID;
-TimedEvent: "afterEvery" "(" (INT|ID) ")";
-WaitEvent: "wait" "(" (INT|ID) ")";
-Action: "/" code=block;
-EntryOrExitAction: (type="entry" |type="exit") "/" code=block;
-Activity: "do" code=block;
-Guard: "[" GuardCode "]";
-
-//This does allow for additions and modifications as well as boolean expressions
-//but it is the most comprehensive
-GuardCode: nativeExpression=block;
-
-Position: (a=AssociationPosition | c=ClassPosition);
-ClassPosition: "position" (x=INT) (y=INT) (width=INT) (height=INT) ";";
-AssociationPosition: "position.association" (index=INT) (c1=Coordinate) (c2=Coordinate) ";"; //ERROR: UNSURE AS TO WHAT INDEX IS
-Coordinate: (x=INT) "," (y=INT);
-
-
-// TRACEDIRECTIVE SECTION
-
-/*
-TraceDirective:
-  	( traceStart=("trace"|"Trace")  modelElement+=ModelElement (conditionRHS=ConditionRHS)? (elementPattern='*')? 
-  	(for?="for" repeat=INT)? 
-  	(during?="during" duration=INT (durationUnite=ID))? 
-  	(hasPeriod?="period" period=INT (periodUnite=ID))?
-	("execute" ((codeToExecute=STRING | traceRecord+=TraceRecord) |  ('{' traceRecord+=TraceRecord (','  traceRecord+=TraceRecord)*) '}') )?
-	("until" untilCondition=TraceCondition)?
-	("where" whereCondition=TraceCondition)?
-	("after" afterCondition=TraceCondition)?
-	(("activate" activateCaseName=ID ( activateOnThis?="onAllObjects" | activateOnThisThread?="onThisThreadOnly" )? (("for" repeats=INT) | ("period" period=INT (unite=ID)) | ("during" duration=INT (unite=ID)) | ('until' untilCondition=TraceCondition) )?) | ("deactivate" deactivateCaseName=ID ( "for" deactivateTime=INT (unite=ID) )? ))?)
-	';'
-	|
-	(
-	(("activate" activateCaseName=ID)
-	|
-	("deactivate" deactivateCaseName=ID "onThisObject" ( "for" deactivateTime=INT (unite=ID) )? ))
-	)
-	';';
-*/
-
-TraceDirective:
-	( traceStart=("trace"|"Trace")  modelElement+=ModelElement (conditionRHS=ConditionRHS)? (elementPattern='*')?) ;
-	
-	
-TraceCase:
-	("tracecase" traceCaseName=ID '{' (traceDirective+=TraceDirective)* '}');
-
-TraceRecord:
-    ("record" '(' objectBeingTraced=STRING (',' textOutput=ID)? ) ')';
-
-TraceCondition:
- CompoundTraceCondition | SimpleTraceCondition;
- 
-CompoundTraceCondition:
- 	operand=STRING;
-
-SimpleTraceCondition:
- 	lhs=ModelElement (conditionRHS=ConditionRHS);
- 	
-ConditionRHS:
-    operand=ComparisonOperator value=PrimitiveType;
-     
-ModelElement: 
-	((executeOnEntry?="entry" |executeOnExit?="exit" | cflow?="cflow" )? aMethod=ID'()')	| attribute=[UmpleAttribute]
-;
-
-ComparisonOperator
-	:	'>'
-	|   '<'
-	|	'=='
-	|	'>='
-	|	'<='
-	;
-
-TraceMechanism :
-	"TraceUsing" traceMechanism=ID ";";
-	
-/*
-PropertyTraceDirective:
-	"trace" (executeOnEntry?='entry' |executeOnExit?='exit' | cflow?='cflow' )? modelElement+=ModelElement (elementPattern='*')? ('for' repeats=INT 'during' duration=INT (unite=ID))?  
-	("execute" ((codeToExecute=STRING | traceRecord+=TraceRecord) |  ('{' traceRecord+=TraceRecord (","  traceRecord+=TraceRecord)*) '}') )?
-	('where' traceCondition=TraceCondition)?
-	';';
-*/
-	
-// END OF TRACEDIRECTIVE SECTION
-
-/** EXPRESSIONS (JAVA and UMPLE)
- *	START
- *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
- *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
- *	have no left-side recursion.
- **/
 block 
     :   '{' blocks+=blockStatement* '}'
     ;
@@ -429,11 +314,13 @@ phpBlock: '{' code=STRING'}';
 
 rubyFunction: RUBY_FUNCTION;
 
-// Terminals
+
+/* -------------------------------------------------------------------------------------------
+ * TERMINALS AND DATA TYPES
+ */
 terminal RUBY_FUNCTION: DEF -> END;
 terminal DEF: 'def';
 terminal END: 'end';
-
 extendedID: ID ("." ID)*;
 DOUBLE: INT "." INT;
 fileID: CHARS CHARS*;
