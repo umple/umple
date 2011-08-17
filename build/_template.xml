@@ -27,7 +27,7 @@
     <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846.jar"/>
     <pathelement location="lib/xtextplugins/org.apache.commons.logging_1.0.4.v201005080501.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.core_1.0.2.v201102150556.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.core_1.1.0.v201106070424.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtend.typesystem.emf_1.0.1.v201008251147.jar"/>
   <!-- ```````````````````````````
     Libraries for the xtext Grammar and MWE2 Generator
@@ -36,10 +36,10 @@
     <pathelement location="lib/xtextplugins/org.apache.commons.cli_1.0.0.v20080604-1500.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.emf.codegen.ecore_2.6.1.v20100914-1218.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.emf.codegen_2.6.0.v20100914-1218.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.utils_1.0.2.v201102150556.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.utils_1.1.0.v201106070424.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.language_1.0.2.v201102151014.jar"/>
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.launch_1.0.2.v201102151014.jar" />
-    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.runtime_1.0.2.v201102150556.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.launch_2.0.0.v201106070634.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.runtime_2.0.0.v201106070424.jar" />
     <pathelement location="lib/xtextplugins/org.eclipse.xpand_1.0.1.v201008251147.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types_2.0.0.v201106070531.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.generator_1.0.2.v201102150722.jar"/>
