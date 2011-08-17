@@ -24,7 +24,7 @@ package cruise.umple.umple;
  * @model
  * @generated
  */
-public interface InlineAssociation extends associationClassContent
+public interface InlineAssociation extends ClassContent, AssociationClassContent
 {
   /**
    * Returns the value of the '<em><b>Rolename1</b></em>' attribute.

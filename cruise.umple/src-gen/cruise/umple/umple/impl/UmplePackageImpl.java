@@ -5,56 +5,41 @@
  */
 package cruise.umple.umple.impl;
 
-import cruise.umple.umple.Action;
-import cruise.umple.umple.Activity;
+import cruise.umple.umple.AbstractElement;
 import cruise.umple.umple.Association;
+import cruise.umple.umple.AssociationClassContent;
+import cruise.umple.umple.AssociationClassDefinition;
+import cruise.umple.umple.AssociationDefinition;
 import cruise.umple.umple.AssociationPosition;
-import cruise.umple.umple.ClassPosition;
+import cruise.umple.umple.Attribute;
+import cruise.umple.umple.ClassContent;
+import cruise.umple.umple.ClassDefinition;
 import cruise.umple.umple.CodeInjection;
-import cruise.umple.umple.CompoundTraceCondition;
-import cruise.umple.umple.ConditionRHS;
 import cruise.umple.umple.Coordinate;
 import cruise.umple.umple.Depend;
-import cruise.umple.umple.EntryOrExitAction;
-import cruise.umple.umple.EventDefinition;
-import cruise.umple.umple.ExternalLanguage;
+import cruise.umple.umple.ElementPosition;
+import cruise.umple.umple.Entity;
+import cruise.umple.umple.ExternalDefinition;
 import cruise.umple.umple.Generate;
 import cruise.umple.umple.Glossary;
-import cruise.umple.umple.Guard;
-import cruise.umple.umple.GuardCode;
 import cruise.umple.umple.InlineAssociation;
-import cruise.umple.umple.InlineStateMachine;
+import cruise.umple.umple.InterfaceDefinition;
 import cruise.umple.umple.Key;
-import cruise.umple.umple.ModelElement;
+import cruise.umple.umple.KeyDefinition;
 import cruise.umple.umple.Modifier;
 import cruise.umple.umple.Namespace;
 import cruise.umple.umple.Position;
-import cruise.umple.umple.ReferencedStateMachine;
-import cruise.umple.umple.SimpleTraceCondition;
+import cruise.umple.umple.SingleAssociationEnd;
 import cruise.umple.umple.Singleton;
-import cruise.umple.umple.State;
-import cruise.umple.umple.StateEntity;
-import cruise.umple.umple.StateMachine;
-import cruise.umple.umple.StateMachineDefinition;
+import cruise.umple.umple.SoftwarePattern;
 import cruise.umple.umple.SymmetricReflexiveAssociation;
-import cruise.umple.umple.TraceCase;
-import cruise.umple.umple.TraceCondition;
-import cruise.umple.umple.TraceDirective;
-import cruise.umple.umple.TraceMechanism;
-import cruise.umple.umple.TraceRecord;
-import cruise.umple.umple.Transition;
-import cruise.umple.umple.UmpleAssociation;
-import cruise.umple.umple.UmpleAssociationClass;
-import cruise.umple.umple.UmpleAttribute;
-import cruise.umple.umple.UmpleClass;
 import cruise.umple.umple.UmpleElement;
 import cruise.umple.umple.UmpleFactory;
-import cruise.umple.umple.UmpleInterface;
 import cruise.umple.umple.UmpleModel;
 import cruise.umple.umple.UmplePackage;
+import cruise.umple.umple.UseStatement;
 import cruise.umple.umple.Word;
 import cruise.umple.umple.additiveExpression;
-import cruise.umple.umple.associationClassContent;
 import cruise.umple.umple.block;
 import cruise.umple.umple.blockStatement;
 import cruise.umple.umple.conditionalAndExpression;
@@ -69,6 +54,7 @@ import cruise.umple.umple.forUpdate;
 import cruise.umple.umple.functionCall;
 import cruise.umple.umple.functionDeclaration;
 import cruise.umple.umple.functionDefinition;
+import cruise.umple.umple.isA;
 import cruise.umple.umple.javaFunctionCall;
 import cruise.umple.umple.javaFunctionDeclaration;
 import cruise.umple.umple.javaFunctionDefinition;
@@ -81,7 +67,6 @@ import cruise.umple.umple.phpBlock;
 import cruise.umple.umple.phpFunction;
 import cruise.umple.umple.primary;
 import cruise.umple.umple.relationalExpression;
-import cruise.umple.umple.singleAssociationEnd;
 import cruise.umple.umple.statement;
 import cruise.umple.umple.unaryExpression;
 import cruise.umple.umple.unaryExpressionNotPlusMinus;
@@ -116,14 +101,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleElementEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass wordEClass = null;
+  private EClass abstractElementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -137,7 +115,21 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass wordEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass generateEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass useStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -151,35 +143,42 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleClassEClass = null;
+  private EClass entityEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass externalLanguageEClass = null;
+  private EClass classDefinitionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleInterfaceEClass = null;
+  private EClass externalDefinitionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleAssociationEClass = null;
+  private EClass interfaceDefinitionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleAssociationClassEClass = null;
+  private EClass associationDefinitionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass classContentEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -187,6 +186,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * @generated
    */
   private EClass associationClassContentEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass dependEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -221,7 +227,35 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass associationClassDefinitionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass softwarePatternEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass isAEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass singletonEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass keyDefinitionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -235,119 +269,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleAttributeEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass keyEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass dependEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass stateMachineDefinitionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass stateMachineEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass inlineStateMachineEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass referencedStateMachineEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass enumEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass stateEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass stateEntityEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass transitionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass eventDefinitionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass actionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass entryOrExitActionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass activityEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass guardEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass guardCodeEClass = null;
+  private EClass attributeEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -361,7 +283,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass classPositionEClass = null;
+  private EClass elementPositionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -382,63 +304,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass traceDirectiveEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass traceCaseEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass traceRecordEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass traceConditionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass compoundTraceConditionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass simpleTraceConditionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass conditionRHSEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass modelElementEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass traceMechanismEClass = null;
+  private EClass umpleElementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -669,6 +535,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass keyEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EEnum modifierEEnum = null;
 
   /**
@@ -749,7 +622,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleModel_Namespace()
+  public EReference getUmpleModel_Elements()
   {
     return (EReference)umpleModelEClass.getEStructuralFeatures().get(0);
   }
@@ -759,9 +632,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleModel_Glossary()
+  public EClass getAbstractElement()
   {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(1);
+    return abstractElementEClass;
   }
 
   /**
@@ -769,9 +642,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleModel_Generate_()
+  public EClass getGlossary()
   {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(2);
+    return glossaryEClass;
   }
 
   /**
@@ -779,89 +652,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleModel_TraceMechanism()
+  public EReference getGlossary_Words()
   {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getUmpleModel_Uses()
-  {
-    return (EAttribute)umpleModelEClass.getEStructuralFeatures().get(4);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleModel_UmpleElements()
-  {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(5);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleModel_Associations()
-  {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(6);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleModel_AssociationClasses()
-  {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(7);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleModel_Statemachines()
-  {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(8);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getUmpleElement()
-  {
-    return umpleElementEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getUmpleElement_Name()
-  {
-    return (EAttribute)umpleElementEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleElement_Depends()
-  {
-    return (EReference)umpleElementEClass.getEStructuralFeatures().get(1);
+    return (EReference)glossaryEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -892,26 +685,6 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
   public EAttribute getWord_Plural()
   {
     return (EAttribute)wordEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getGlossary()
-  {
-    return glossaryEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getGlossary_Words()
-  {
-    return (EReference)glossaryEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -959,6 +732,26 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getUseStatement()
+  {
+    return useStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getUseStatement_File()
+  {
+    return (EAttribute)useStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getNamespace()
   {
     return namespaceEClass;
@@ -979,9 +772,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getUmpleClass()
+  public EClass getEntity()
   {
-    return umpleClassEClass;
+    return entityEClass;
   }
 
   /**
@@ -989,9 +782,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleClass_PackageName()
+  public EAttribute getEntity_Name()
   {
-    return (EAttribute)umpleClassEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)entityEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -999,9 +792,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleClass_External()
+  public EClass getClassDefinition()
   {
-    return (EAttribute)umpleClassEClass.getEStructuralFeatures().get(1);
+    return classDefinitionEClass;
   }
 
   /**
@@ -1009,9 +802,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleClass_Singleton()
+  public EReference getClassDefinition_ClassContent()
   {
-    return (EAttribute)umpleClassEClass.getEStructuralFeatures().get(2);
+    return (EReference)classDefinitionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1019,9 +812,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_Key()
+  public EClass getExternalDefinition()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(3);
+    return externalDefinitionEClass;
   }
 
   /**
@@ -1029,9 +822,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_CodeInjection()
+  public EReference getExternalDefinition_ClassContent()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(4);
+    return (EReference)externalDefinitionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1039,9 +832,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_ExtendsClass()
+  public EClass getInterfaceDefinition()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(5);
+    return interfaceDefinitionEClass;
   }
 
   /**
@@ -1049,9 +842,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_Attributes()
+  public EReference getInterfaceDefinition_Depend()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(6);
+    return (EReference)interfaceDefinitionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1059,9 +852,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_SymmetricReflexiveAssociations()
+  public EClass getAssociationDefinition()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(7);
+    return associationDefinitionEClass;
   }
 
   /**
@@ -1069,9 +862,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_InlineAssociations()
+  public EReference getAssociationDefinition_Association()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(8);
+    return (EReference)associationDefinitionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1079,9 +872,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_Positions()
+  public EClass getClassContent()
   {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(9);
+    return classContentEClass;
   }
 
   /**
@@ -1089,179 +882,29 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleClass_StateMachines()
-  {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(10);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleClass_TraceDirectives()
-  {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(11);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleClass_TraceCases()
-  {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(12);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleClass_ExternalLanguage()
-  {
-    return (EReference)umpleClassEClass.getEStructuralFeatures().get(13);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getExternalLanguage()
-  {
-    return externalLanguageEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getExternalLanguage_Functions()
-  {
-    return (EReference)externalLanguageEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getExternalLanguage_RubyFunctions()
-  {
-    return (EAttribute)externalLanguageEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getExternalLanguage_PhpFunctions()
-  {
-    return (EReference)externalLanguageEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getUmpleInterface()
-  {
-    return umpleInterfaceEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleInterface_ExtendsInterface()
-  {
-    return (EReference)umpleInterfaceEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleInterface_ExtraCode()
-  {
-    return (EReference)umpleInterfaceEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getUmpleAssociation()
-  {
-    return umpleAssociationEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getUmpleAssociation_Name()
-  {
-    return (EAttribute)umpleAssociationEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleAssociation_Associations()
-  {
-    return (EReference)umpleAssociationEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getUmpleAssociationClass()
-  {
-    return umpleAssociationClassEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getUmpleAssociationClass_Name()
-  {
-    return (EAttribute)umpleAssociationClassEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getUmpleAssociationClass_AssociationClassContents()
-  {
-    return (EReference)umpleAssociationClassEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getassociationClassContent()
+  public EClass getAssociationClassContent()
   {
     return associationClassContentEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDepend()
+  {
+    return dependEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDepend_Name()
+  {
+    return (EAttribute)dependEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1379,7 +1022,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getsingleAssociationEnd()
+  public EClass getSingleAssociationEnd()
   {
     return singleAssociationEndEClass;
   }
@@ -1389,7 +1032,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getsingleAssociationEnd_Type()
+  public EAttribute getSingleAssociationEnd_Type()
   {
     return (EAttribute)singleAssociationEndEClass.getEStructuralFeatures().get(0);
   }
@@ -1399,9 +1042,59 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getsingleAssociationEnd_Rolename()
+  public EAttribute getSingleAssociationEnd_Rolename()
   {
     return (EAttribute)singleAssociationEndEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAssociationClassDefinition()
+  {
+    return associationClassDefinitionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAssociationClassDefinition_AssociationClassContent()
+  {
+    return (EReference)associationClassDefinitionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSoftwarePattern()
+  {
+    return softwarePatternEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getisA()
+  {
+    return isAEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getisA_ExtendsClass()
+  {
+    return (EReference)isAEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1429,6 +1122,16 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getKeyDefinition()
+  {
+    return keyDefinitionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getCodeInjection()
   {
     return codeInjectionEClass;
@@ -1449,9 +1152,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getCodeInjection_Code()
+  public EAttribute getCodeInjection_Code()
   {
-    return (EReference)codeInjectionEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)codeInjectionEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1459,9 +1162,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getUmpleAttribute()
+  public EClass getAttribute()
   {
-    return umpleAttributeEClass;
+    return attributeEClass;
   }
 
   /**
@@ -1469,9 +1172,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_Autounique()
+  public EAttribute getAttribute_Autounique()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1479,9 +1182,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_Name()
+  public EAttribute getAttribute_Name()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1489,9 +1192,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_Unique()
+  public EAttribute getAttribute_Unique()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(2);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1499,9 +1202,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_Modifier()
+  public EAttribute getAttribute_Modifier()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(3);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1509,9 +1212,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_Type()
+  public EAttribute getAttribute_Type()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(4);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1519,9 +1222,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_List()
+  public EAttribute getAttribute_List()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(5);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(5);
   }
 
   /**
@@ -1529,9 +1232,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleAttribute_Object()
+  public EReference getAttribute_Object()
   {
-    return (EReference)umpleAttributeEClass.getEStructuralFeatures().get(6);
+    return (EReference)attributeEClass.getEStructuralFeatures().get(6);
   }
 
   /**
@@ -1539,399 +1242,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUmpleAttribute_Value()
+  public EAttribute getAttribute_Value()
   {
-    return (EAttribute)umpleAttributeEClass.getEStructuralFeatures().get(7);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getKey()
-  {
-    return keyEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getKey_Keys()
-  {
-    return (EAttribute)keyEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getDepend()
-  {
-    return dependEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getDepend_Name()
-  {
-    return (EAttribute)dependEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getStateMachineDefinition()
-  {
-    return stateMachineDefinitionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getStateMachineDefinition_Name()
-  {
-    return (EAttribute)stateMachineDefinitionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStateMachineDefinition_States()
-  {
-    return (EReference)stateMachineDefinitionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getStateMachine()
-  {
-    return stateMachineEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getStateMachine_Name()
-  {
-    return (EAttribute)stateMachineEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getInlineStateMachine()
-  {
-    return inlineStateMachineEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getInlineStateMachine_States()
-  {
-    return (EReference)inlineStateMachineEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getReferencedStateMachine()
-  {
-    return referencedStateMachineEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getReferencedStateMachine_Machine()
-  {
-    return (EReference)referencedStateMachineEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getENUM()
-  {
-    return enumEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getENUM_State1()
-  {
-    return (EAttribute)enumEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getENUM_States()
-  {
-    return (EAttribute)enumEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getState()
-  {
-    return stateEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getState_StateTraceDirective()
-  {
-    return (EReference)stateEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getState_StateName()
-  {
-    return (EAttribute)stateEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getState_States()
-  {
-    return (EReference)stateEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getStateEntity()
-  {
-    return stateEntityEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStateEntity_Expression()
-  {
-    return (EReference)stateEntityEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getTransition()
-  {
-    return transitionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getTransition_A()
-  {
-    return (EReference)transitionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTransition_StateName()
-  {
-    return (EAttribute)transitionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getEventDefinition()
-  {
-    return eventDefinitionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getEventDefinition_G()
-  {
-    return (EReference)eventDefinitionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getEventDefinition_EventID()
-  {
-    return (EAttribute)eventDefinitionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getAction()
-  {
-    return actionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getAction_Code()
-  {
-    return (EReference)actionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getEntryOrExitAction()
-  {
-    return entryOrExitActionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getEntryOrExitAction_Type()
-  {
-    return (EAttribute)entryOrExitActionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getEntryOrExitAction_Code()
-  {
-    return (EReference)entryOrExitActionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getActivity()
-  {
-    return activityEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getActivity_Code()
-  {
-    return (EReference)activityEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getGuard()
-  {
-    return guardEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getGuard_Events()
-  {
-    return (EReference)guardEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getGuardCode()
-  {
-    return guardCodeEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getGuardCode_NativeExpression()
-  {
-    return (EReference)guardCodeEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)attributeEClass.getEStructuralFeatures().get(7);
   }
 
   /**
@@ -1949,9 +1262,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getPosition_A()
+  public EClass getElementPosition()
   {
-    return (EReference)positionEClass.getEStructuralFeatures().get(0);
+    return elementPositionEClass;
   }
 
   /**
@@ -1959,9 +1272,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getPosition_C()
+  public EAttribute getElementPosition_X()
   {
-    return (EReference)positionEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1969,9 +1282,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getClassPosition()
+  public EAttribute getElementPosition_Y()
   {
-    return classPositionEClass;
+    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1979,9 +1292,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getClassPosition_X()
+  public EAttribute getElementPosition_Width()
   {
-    return (EAttribute)classPositionEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1989,29 +1302,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getClassPosition_Y()
+  public EAttribute getElementPosition_Height()
   {
-    return (EAttribute)classPositionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getClassPosition_Width()
-  {
-    return (EAttribute)classPositionEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getClassPosition_Height()
-  {
-    return (EAttribute)classPositionEClass.getEStructuralFeatures().get(3);
+    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2029,7 +1322,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssociationPosition_Index()
+  public EAttribute getAssociationPosition_Name()
   {
     return (EAttribute)associationPositionEClass.getEStructuralFeatures().get(0);
   }
@@ -2089,279 +1382,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getTraceDirective()
+  public EClass getUmpleElement()
   {
-    return traceDirectiveEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTraceDirective_TraceStart()
-  {
-    return (EAttribute)traceDirectiveEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getTraceDirective_ModelElement()
-  {
-    return (EReference)traceDirectiveEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getTraceDirective_ConditionRHS()
-  {
-    return (EReference)traceDirectiveEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTraceDirective_ElementPattern()
-  {
-    return (EAttribute)traceDirectiveEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getTraceCase()
-  {
-    return traceCaseEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTraceCase_TraceCaseName()
-  {
-    return (EAttribute)traceCaseEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getTraceCase_TraceDirective()
-  {
-    return (EReference)traceCaseEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getTraceRecord()
-  {
-    return traceRecordEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTraceRecord_ObjectBeingTraced()
-  {
-    return (EAttribute)traceRecordEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTraceRecord_TextOutput()
-  {
-    return (EAttribute)traceRecordEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getTraceCondition()
-  {
-    return traceConditionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getCompoundTraceCondition()
-  {
-    return compoundTraceConditionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getCompoundTraceCondition_Operand()
-  {
-    return (EAttribute)compoundTraceConditionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getSimpleTraceCondition()
-  {
-    return simpleTraceConditionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getSimpleTraceCondition_Lhs()
-  {
-    return (EReference)simpleTraceConditionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getSimpleTraceCondition_ConditionRHS()
-  {
-    return (EReference)simpleTraceConditionEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getConditionRHS()
-  {
-    return conditionRHSEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getConditionRHS_Operand()
-  {
-    return (EAttribute)conditionRHSEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getConditionRHS_Value()
-  {
-    return (EAttribute)conditionRHSEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getModelElement()
-  {
-    return modelElementEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getModelElement_ExecuteOnEntry()
-  {
-    return (EAttribute)modelElementEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getModelElement_ExecuteOnExit()
-  {
-    return (EAttribute)modelElementEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getModelElement_Cflow()
-  {
-    return (EAttribute)modelElementEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getModelElement_AMethod()
-  {
-    return (EAttribute)modelElementEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getModelElement_Attribute()
-  {
-    return (EReference)modelElementEClass.getEStructuralFeatures().get(4);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getTraceMechanism()
-  {
-    return traceMechanismEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getTraceMechanism_TraceMechanism()
-  {
-    return (EAttribute)traceMechanismEClass.getEStructuralFeatures().get(0);
+    return umpleElementEClass;
   }
 
   /**
@@ -3209,6 +2232,26 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getKey()
+  {
+    return keyEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getKey_Keys()
+  {
+    return (EAttribute)keyEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EEnum getModifier()
   {
     return modifierEEnum;
@@ -3245,69 +2288,49 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
 
     // Create classes and their features
     umpleModelEClass = createEClass(UMPLE_MODEL);
-    createEReference(umpleModelEClass, UMPLE_MODEL__NAMESPACE);
-    createEReference(umpleModelEClass, UMPLE_MODEL__GLOSSARY);
-    createEReference(umpleModelEClass, UMPLE_MODEL__GENERATE_);
-    createEReference(umpleModelEClass, UMPLE_MODEL__TRACE_MECHANISM);
-    createEAttribute(umpleModelEClass, UMPLE_MODEL__USES);
-    createEReference(umpleModelEClass, UMPLE_MODEL__UMPLE_ELEMENTS);
-    createEReference(umpleModelEClass, UMPLE_MODEL__ASSOCIATIONS);
-    createEReference(umpleModelEClass, UMPLE_MODEL__ASSOCIATION_CLASSES);
-    createEReference(umpleModelEClass, UMPLE_MODEL__STATEMACHINES);
+    createEReference(umpleModelEClass, UMPLE_MODEL__ELEMENTS);
 
-    umpleElementEClass = createEClass(UMPLE_ELEMENT);
-    createEAttribute(umpleElementEClass, UMPLE_ELEMENT__NAME);
-    createEReference(umpleElementEClass, UMPLE_ELEMENT__DEPENDS);
+    abstractElementEClass = createEClass(ABSTRACT_ELEMENT);
+
+    glossaryEClass = createEClass(GLOSSARY);
+    createEReference(glossaryEClass, GLOSSARY__WORDS);
 
     wordEClass = createEClass(WORD);
     createEAttribute(wordEClass, WORD__SINGULAR);
     createEAttribute(wordEClass, WORD__PLURAL);
-
-    glossaryEClass = createEClass(GLOSSARY);
-    createEReference(glossaryEClass, GLOSSARY__WORDS);
 
     generateEClass = createEClass(GENERATE);
     createEAttribute(generateEClass, GENERATE__JAVA);
     createEAttribute(generateEClass, GENERATE__PHP);
     createEAttribute(generateEClass, GENERATE__RUBY);
 
+    useStatementEClass = createEClass(USE_STATEMENT);
+    createEAttribute(useStatementEClass, USE_STATEMENT__FILE);
+
     namespaceEClass = createEClass(NAMESPACE);
     createEAttribute(namespaceEClass, NAMESPACE__VALUE);
 
-    umpleClassEClass = createEClass(UMPLE_CLASS);
-    createEAttribute(umpleClassEClass, UMPLE_CLASS__PACKAGE_NAME);
-    createEAttribute(umpleClassEClass, UMPLE_CLASS__EXTERNAL);
-    createEAttribute(umpleClassEClass, UMPLE_CLASS__SINGLETON);
-    createEReference(umpleClassEClass, UMPLE_CLASS__KEY);
-    createEReference(umpleClassEClass, UMPLE_CLASS__CODE_INJECTION);
-    createEReference(umpleClassEClass, UMPLE_CLASS__EXTENDS_CLASS);
-    createEReference(umpleClassEClass, UMPLE_CLASS__ATTRIBUTES);
-    createEReference(umpleClassEClass, UMPLE_CLASS__SYMMETRIC_REFLEXIVE_ASSOCIATIONS);
-    createEReference(umpleClassEClass, UMPLE_CLASS__INLINE_ASSOCIATIONS);
-    createEReference(umpleClassEClass, UMPLE_CLASS__POSITIONS);
-    createEReference(umpleClassEClass, UMPLE_CLASS__STATE_MACHINES);
-    createEReference(umpleClassEClass, UMPLE_CLASS__TRACE_DIRECTIVES);
-    createEReference(umpleClassEClass, UMPLE_CLASS__TRACE_CASES);
-    createEReference(umpleClassEClass, UMPLE_CLASS__EXTERNAL_LANGUAGE);
+    entityEClass = createEClass(ENTITY);
+    createEAttribute(entityEClass, ENTITY__NAME);
 
-    externalLanguageEClass = createEClass(EXTERNAL_LANGUAGE);
-    createEReference(externalLanguageEClass, EXTERNAL_LANGUAGE__FUNCTIONS);
-    createEAttribute(externalLanguageEClass, EXTERNAL_LANGUAGE__RUBY_FUNCTIONS);
-    createEReference(externalLanguageEClass, EXTERNAL_LANGUAGE__PHP_FUNCTIONS);
+    classDefinitionEClass = createEClass(CLASS_DEFINITION);
+    createEReference(classDefinitionEClass, CLASS_DEFINITION__CLASS_CONTENT);
 
-    umpleInterfaceEClass = createEClass(UMPLE_INTERFACE);
-    createEReference(umpleInterfaceEClass, UMPLE_INTERFACE__EXTENDS_INTERFACE);
-    createEReference(umpleInterfaceEClass, UMPLE_INTERFACE__EXTRA_CODE);
+    externalDefinitionEClass = createEClass(EXTERNAL_DEFINITION);
+    createEReference(externalDefinitionEClass, EXTERNAL_DEFINITION__CLASS_CONTENT);
 
-    umpleAssociationEClass = createEClass(UMPLE_ASSOCIATION);
-    createEAttribute(umpleAssociationEClass, UMPLE_ASSOCIATION__NAME);
-    createEReference(umpleAssociationEClass, UMPLE_ASSOCIATION__ASSOCIATIONS);
+    interfaceDefinitionEClass = createEClass(INTERFACE_DEFINITION);
+    createEReference(interfaceDefinitionEClass, INTERFACE_DEFINITION__DEPEND);
 
-    umpleAssociationClassEClass = createEClass(UMPLE_ASSOCIATION_CLASS);
-    createEAttribute(umpleAssociationClassEClass, UMPLE_ASSOCIATION_CLASS__NAME);
-    createEReference(umpleAssociationClassEClass, UMPLE_ASSOCIATION_CLASS__ASSOCIATION_CLASS_CONTENTS);
+    associationDefinitionEClass = createEClass(ASSOCIATION_DEFINITION);
+    createEReference(associationDefinitionEClass, ASSOCIATION_DEFINITION__ASSOCIATION);
+
+    classContentEClass = createEClass(CLASS_CONTENT);
 
     associationClassContentEClass = createEClass(ASSOCIATION_CLASS_CONTENT);
+
+    dependEClass = createEClass(DEPEND);
+    createEAttribute(dependEClass, DEPEND__NAME);
 
     associationEClass = createEClass(ASSOCIATION);
     createEAttribute(associationEClass, ASSOCIATION__TYPE1);
@@ -3327,90 +2350,43 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     createEAttribute(singleAssociationEndEClass, SINGLE_ASSOCIATION_END__TYPE);
     createEAttribute(singleAssociationEndEClass, SINGLE_ASSOCIATION_END__ROLENAME);
 
+    associationClassDefinitionEClass = createEClass(ASSOCIATION_CLASS_DEFINITION);
+    createEReference(associationClassDefinitionEClass, ASSOCIATION_CLASS_DEFINITION__ASSOCIATION_CLASS_CONTENT);
+
+    softwarePatternEClass = createEClass(SOFTWARE_PATTERN);
+
+    isAEClass = createEClass(IS_A);
+    createEReference(isAEClass, IS_A__EXTENDS_CLASS);
+
     singletonEClass = createEClass(SINGLETON);
     createEAttribute(singletonEClass, SINGLETON__SINGLETON);
 
+    keyDefinitionEClass = createEClass(KEY_DEFINITION);
+
     codeInjectionEClass = createEClass(CODE_INJECTION);
     createEAttribute(codeInjectionEClass, CODE_INJECTION__NAME);
-    createEReference(codeInjectionEClass, CODE_INJECTION__CODE);
+    createEAttribute(codeInjectionEClass, CODE_INJECTION__CODE);
 
-    umpleAttributeEClass = createEClass(UMPLE_ATTRIBUTE);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__AUTOUNIQUE);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__NAME);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__UNIQUE);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__MODIFIER);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__TYPE);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__LIST);
-    createEReference(umpleAttributeEClass, UMPLE_ATTRIBUTE__OBJECT);
-    createEAttribute(umpleAttributeEClass, UMPLE_ATTRIBUTE__VALUE);
-
-    keyEClass = createEClass(KEY);
-    createEAttribute(keyEClass, KEY__KEYS);
-
-    dependEClass = createEClass(DEPEND);
-    createEAttribute(dependEClass, DEPEND__NAME);
-
-    stateMachineDefinitionEClass = createEClass(STATE_MACHINE_DEFINITION);
-    createEAttribute(stateMachineDefinitionEClass, STATE_MACHINE_DEFINITION__NAME);
-    createEReference(stateMachineDefinitionEClass, STATE_MACHINE_DEFINITION__STATES);
-
-    stateMachineEClass = createEClass(STATE_MACHINE);
-    createEAttribute(stateMachineEClass, STATE_MACHINE__NAME);
-
-    inlineStateMachineEClass = createEClass(INLINE_STATE_MACHINE);
-    createEReference(inlineStateMachineEClass, INLINE_STATE_MACHINE__STATES);
-
-    referencedStateMachineEClass = createEClass(REFERENCED_STATE_MACHINE);
-    createEReference(referencedStateMachineEClass, REFERENCED_STATE_MACHINE__MACHINE);
-
-    enumEClass = createEClass(ENUM);
-    createEAttribute(enumEClass, ENUM__STATE1);
-    createEAttribute(enumEClass, ENUM__STATES);
-
-    stateEClass = createEClass(STATE);
-    createEReference(stateEClass, STATE__STATE_TRACE_DIRECTIVE);
-    createEAttribute(stateEClass, STATE__STATE_NAME);
-    createEReference(stateEClass, STATE__STATES);
-
-    stateEntityEClass = createEClass(STATE_ENTITY);
-    createEReference(stateEntityEClass, STATE_ENTITY__EXPRESSION);
-
-    transitionEClass = createEClass(TRANSITION);
-    createEReference(transitionEClass, TRANSITION__A);
-    createEAttribute(transitionEClass, TRANSITION__STATE_NAME);
-
-    eventDefinitionEClass = createEClass(EVENT_DEFINITION);
-    createEReference(eventDefinitionEClass, EVENT_DEFINITION__G);
-    createEAttribute(eventDefinitionEClass, EVENT_DEFINITION__EVENT_ID);
-
-    actionEClass = createEClass(ACTION);
-    createEReference(actionEClass, ACTION__CODE);
-
-    entryOrExitActionEClass = createEClass(ENTRY_OR_EXIT_ACTION);
-    createEAttribute(entryOrExitActionEClass, ENTRY_OR_EXIT_ACTION__TYPE);
-    createEReference(entryOrExitActionEClass, ENTRY_OR_EXIT_ACTION__CODE);
-
-    activityEClass = createEClass(ACTIVITY);
-    createEReference(activityEClass, ACTIVITY__CODE);
-
-    guardEClass = createEClass(GUARD);
-    createEReference(guardEClass, GUARD__EVENTS);
-
-    guardCodeEClass = createEClass(GUARD_CODE);
-    createEReference(guardCodeEClass, GUARD_CODE__NATIVE_EXPRESSION);
+    attributeEClass = createEClass(ATTRIBUTE);
+    createEAttribute(attributeEClass, ATTRIBUTE__AUTOUNIQUE);
+    createEAttribute(attributeEClass, ATTRIBUTE__NAME);
+    createEAttribute(attributeEClass, ATTRIBUTE__UNIQUE);
+    createEAttribute(attributeEClass, ATTRIBUTE__MODIFIER);
+    createEAttribute(attributeEClass, ATTRIBUTE__TYPE);
+    createEAttribute(attributeEClass, ATTRIBUTE__LIST);
+    createEReference(attributeEClass, ATTRIBUTE__OBJECT);
+    createEAttribute(attributeEClass, ATTRIBUTE__VALUE);
 
     positionEClass = createEClass(POSITION);
-    createEReference(positionEClass, POSITION__A);
-    createEReference(positionEClass, POSITION__C);
 
-    classPositionEClass = createEClass(CLASS_POSITION);
-    createEAttribute(classPositionEClass, CLASS_POSITION__X);
-    createEAttribute(classPositionEClass, CLASS_POSITION__Y);
-    createEAttribute(classPositionEClass, CLASS_POSITION__WIDTH);
-    createEAttribute(classPositionEClass, CLASS_POSITION__HEIGHT);
+    elementPositionEClass = createEClass(ELEMENT_POSITION);
+    createEAttribute(elementPositionEClass, ELEMENT_POSITION__X);
+    createEAttribute(elementPositionEClass, ELEMENT_POSITION__Y);
+    createEAttribute(elementPositionEClass, ELEMENT_POSITION__WIDTH);
+    createEAttribute(elementPositionEClass, ELEMENT_POSITION__HEIGHT);
 
     associationPositionEClass = createEClass(ASSOCIATION_POSITION);
-    createEAttribute(associationPositionEClass, ASSOCIATION_POSITION__INDEX);
+    createEAttribute(associationPositionEClass, ASSOCIATION_POSITION__NAME);
     createEReference(associationPositionEClass, ASSOCIATION_POSITION__C1);
     createEReference(associationPositionEClass, ASSOCIATION_POSITION__C2);
 
@@ -3418,42 +2394,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     createEAttribute(coordinateEClass, COORDINATE__X);
     createEAttribute(coordinateEClass, COORDINATE__Y);
 
-    traceDirectiveEClass = createEClass(TRACE_DIRECTIVE);
-    createEAttribute(traceDirectiveEClass, TRACE_DIRECTIVE__TRACE_START);
-    createEReference(traceDirectiveEClass, TRACE_DIRECTIVE__MODEL_ELEMENT);
-    createEReference(traceDirectiveEClass, TRACE_DIRECTIVE__CONDITION_RHS);
-    createEAttribute(traceDirectiveEClass, TRACE_DIRECTIVE__ELEMENT_PATTERN);
-
-    traceCaseEClass = createEClass(TRACE_CASE);
-    createEAttribute(traceCaseEClass, TRACE_CASE__TRACE_CASE_NAME);
-    createEReference(traceCaseEClass, TRACE_CASE__TRACE_DIRECTIVE);
-
-    traceRecordEClass = createEClass(TRACE_RECORD);
-    createEAttribute(traceRecordEClass, TRACE_RECORD__OBJECT_BEING_TRACED);
-    createEAttribute(traceRecordEClass, TRACE_RECORD__TEXT_OUTPUT);
-
-    traceConditionEClass = createEClass(TRACE_CONDITION);
-
-    compoundTraceConditionEClass = createEClass(COMPOUND_TRACE_CONDITION);
-    createEAttribute(compoundTraceConditionEClass, COMPOUND_TRACE_CONDITION__OPERAND);
-
-    simpleTraceConditionEClass = createEClass(SIMPLE_TRACE_CONDITION);
-    createEReference(simpleTraceConditionEClass, SIMPLE_TRACE_CONDITION__LHS);
-    createEReference(simpleTraceConditionEClass, SIMPLE_TRACE_CONDITION__CONDITION_RHS);
-
-    conditionRHSEClass = createEClass(CONDITION_RHS);
-    createEAttribute(conditionRHSEClass, CONDITION_RHS__OPERAND);
-    createEAttribute(conditionRHSEClass, CONDITION_RHS__VALUE);
-
-    modelElementEClass = createEClass(MODEL_ELEMENT);
-    createEAttribute(modelElementEClass, MODEL_ELEMENT__EXECUTE_ON_ENTRY);
-    createEAttribute(modelElementEClass, MODEL_ELEMENT__EXECUTE_ON_EXIT);
-    createEAttribute(modelElementEClass, MODEL_ELEMENT__CFLOW);
-    createEAttribute(modelElementEClass, MODEL_ELEMENT__AMETHOD);
-    createEReference(modelElementEClass, MODEL_ELEMENT__ATTRIBUTE);
-
-    traceMechanismEClass = createEClass(TRACE_MECHANISM);
-    createEAttribute(traceMechanismEClass, TRACE_MECHANISM__TRACE_MECHANISM);
+    umpleElementEClass = createEClass(UMPLE_ELEMENT);
 
     blockEClass = createEClass(BLOCK);
     createEReference(blockEClass, BLOCK__BLOCKS);
@@ -3571,6 +2512,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     phpBlockEClass = createEClass(PHP_BLOCK);
     createEAttribute(phpBlockEClass, PHP_BLOCK__CODE);
 
+    keyEClass = createEClass(KEY);
+    createEAttribute(keyEClass, KEY__KEYS);
+
     // Create enums
     modifierEEnum = createEEnum(MODIFIER);
   }
@@ -3604,26 +2548,36 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     // Set bounds for type parameters
 
     // Add supertypes to classes
-    umpleClassEClass.getESuperTypes().add(this.getUmpleElement());
-    umpleClassEClass.getESuperTypes().add(this.getassociationClassContent());
-    umpleInterfaceEClass.getESuperTypes().add(this.getUmpleElement());
-    inlineAssociationEClass.getESuperTypes().add(this.getassociationClassContent());
-    singleAssociationEndEClass.getESuperTypes().add(this.getassociationClassContent());
-    umpleAttributeEClass.getESuperTypes().add(this.getassociationClassContent());
-    dependEClass.getESuperTypes().add(this.getassociationClassContent());
-    stateMachineEClass.getESuperTypes().add(this.getassociationClassContent());
-    inlineStateMachineEClass.getESuperTypes().add(this.getStateMachine());
-    referencedStateMachineEClass.getESuperTypes().add(this.getStateMachine());
-    enumEClass.getESuperTypes().add(this.getStateMachine());
-    stateEClass.getESuperTypes().add(this.getStateEntity());
-    transitionEClass.getESuperTypes().add(this.getStateEntity());
-    eventDefinitionEClass.getESuperTypes().add(this.getTransition());
-    entryOrExitActionEClass.getESuperTypes().add(this.getStateEntity());
-    activityEClass.getESuperTypes().add(this.getStateEntity());
-    guardEClass.getESuperTypes().add(this.getTransition());
-    guardCodeEClass.getESuperTypes().add(this.getGuard());
-    compoundTraceConditionEClass.getESuperTypes().add(this.getTraceCondition());
-    simpleTraceConditionEClass.getESuperTypes().add(this.getTraceCondition());
+    glossaryEClass.getESuperTypes().add(this.getAbstractElement());
+    generateEClass.getESuperTypes().add(this.getAbstractElement());
+    useStatementEClass.getESuperTypes().add(this.getAbstractElement());
+    namespaceEClass.getESuperTypes().add(this.getAbstractElement());
+    entityEClass.getESuperTypes().add(this.getAbstractElement());
+    classDefinitionEClass.getESuperTypes().add(this.getEntity());
+    classDefinitionEClass.getESuperTypes().add(this.getUmpleElement());
+    externalDefinitionEClass.getESuperTypes().add(this.getEntity());
+    interfaceDefinitionEClass.getESuperTypes().add(this.getEntity());
+    interfaceDefinitionEClass.getESuperTypes().add(this.getUmpleElement());
+    associationDefinitionEClass.getESuperTypes().add(this.getEntity());
+    dependEClass.getESuperTypes().add(this.getClassContent());
+    dependEClass.getESuperTypes().add(this.getAssociationClassContent());
+    symmetricReflexiveAssociationEClass.getESuperTypes().add(this.getClassContent());
+    symmetricReflexiveAssociationEClass.getESuperTypes().add(this.getAssociationClassContent());
+    inlineAssociationEClass.getESuperTypes().add(this.getClassContent());
+    inlineAssociationEClass.getESuperTypes().add(this.getAssociationClassContent());
+    associationClassDefinitionEClass.getESuperTypes().add(this.getEntity());
+    softwarePatternEClass.getESuperTypes().add(this.getClassContent());
+    softwarePatternEClass.getESuperTypes().add(this.getAssociationClassContent());
+    isAEClass.getESuperTypes().add(this.getSoftwarePattern());
+    singletonEClass.getESuperTypes().add(this.getSoftwarePattern());
+    keyDefinitionEClass.getESuperTypes().add(this.getSoftwarePattern());
+    codeInjectionEClass.getESuperTypes().add(this.getSoftwarePattern());
+    attributeEClass.getESuperTypes().add(this.getClassContent());
+    attributeEClass.getESuperTypes().add(this.getAssociationClassContent());
+    positionEClass.getESuperTypes().add(this.getClassContent());
+    positionEClass.getESuperTypes().add(this.getAssociationClassContent());
+    elementPositionEClass.getESuperTypes().add(this.getPosition());
+    associationPositionEClass.getESuperTypes().add(this.getPosition());
     blockEClass.getESuperTypes().add(this.getstatement());
     parExpressionEClass.getESuperTypes().add(this.getprimary());
     expressionListEClass.getESuperTypes().add(this.getforUpdate());
@@ -3638,72 +2592,53 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     localVariableDeclarationEClass.getESuperTypes().add(this.getlocalVariableDeclarationStatement());
     localVariableDeclarationEClass.getESuperTypes().add(this.getforInit());
     statementEClass.getESuperTypes().add(this.getblockStatement());
+    keyEClass.getESuperTypes().add(this.getKeyDefinition());
 
     // Initialize classes and features; add operations and parameters
     initEClass(umpleModelEClass, UmpleModel.class, "UmpleModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getUmpleModel_Namespace(), this.getNamespace(), null, "namespace", null, 0, 1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_Glossary(), this.getGlossary(), null, "glossary", null, 0, 1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_Generate_(), this.getGenerate(), null, "generate_", null, 0, 1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_TraceMechanism(), this.getTraceMechanism(), null, "traceMechanism", null, 0, 1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleModel_Uses(), ecorePackage.getEString(), "uses", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_UmpleElements(), this.getUmpleElement(), null, "umpleElements", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_Associations(), this.getUmpleAssociation(), null, "associations", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_AssociationClasses(), this.getUmpleAssociationClass(), null, "associationClasses", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleModel_Statemachines(), this.getStateMachineDefinition(), null, "statemachines", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getUmpleModel_Elements(), this.getAbstractElement(), null, "elements", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(umpleElementEClass, UmpleElement.class, "UmpleElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getUmpleElement_Name(), ecorePackage.getEString(), "name", null, 0, 1, UmpleElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleElement_Depends(), this.getDepend(), null, "depends", null, 0, -1, UmpleElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(abstractElementEClass, AbstractElement.class, "AbstractElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(glossaryEClass, Glossary.class, "Glossary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getGlossary_Words(), this.getWord(), null, "words", null, 0, -1, Glossary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(wordEClass, Word.class, "Word", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getWord_Singular(), ecorePackage.getEString(), "singular", null, 0, 1, Word.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getWord_Plural(), ecorePackage.getEString(), "plural", null, 0, 1, Word.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(glossaryEClass, Glossary.class, "Glossary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGlossary_Words(), this.getWord(), null, "words", null, 0, -1, Glossary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(generateEClass, Generate.class, "Generate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getGenerate_Java(), ecorePackage.getEBoolean(), "java", null, 0, 1, Generate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getGenerate_Php(), ecorePackage.getEBoolean(), "Php", null, 0, 1, Generate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getGenerate_Ruby(), ecorePackage.getEString(), "Ruby", null, 0, 1, Generate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(useStatementEClass, UseStatement.class, "UseStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getUseStatement_File(), ecorePackage.getEString(), "file", null, 0, 1, UseStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(namespaceEClass, Namespace.class, "Namespace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getNamespace_Value(), ecorePackage.getEString(), "value", null, 0, 1, Namespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(umpleClassEClass, UmpleClass.class, "UmpleClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getUmpleClass_PackageName(), ecorePackage.getEString(), "packageName", null, 0, 1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleClass_External(), ecorePackage.getEBoolean(), "external", null, 0, 1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleClass_Singleton(), ecorePackage.getEBoolean(), "singleton", null, 0, 1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_Key(), this.getKey(), null, "key", null, 0, 1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_CodeInjection(), this.getCodeInjection(), null, "codeInjection", null, 0, 1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_ExtendsClass(), this.getUmpleElement(), null, "extendsClass", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_Attributes(), this.getUmpleAttribute(), null, "attributes", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_SymmetricReflexiveAssociations(), this.getSymmetricReflexiveAssociation(), null, "symmetricReflexiveAssociations", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_InlineAssociations(), this.getInlineAssociation(), null, "inlineAssociations", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_Positions(), this.getPosition(), null, "positions", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_StateMachines(), this.getStateMachine(), null, "stateMachines", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_TraceDirectives(), this.getTraceDirective(), null, "traceDirectives", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_TraceCases(), this.getTraceCase(), null, "traceCases", null, 0, -1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleClass_ExternalLanguage(), this.getExternalLanguage(), null, "externalLanguage", null, 0, 1, UmpleClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(entityEClass, Entity.class, "Entity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getEntity_Name(), ecorePackage.getEString(), "name", null, 0, 1, Entity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(externalLanguageEClass, ExternalLanguage.class, "ExternalLanguage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getExternalLanguage_Functions(), this.getfunctionDefinition(), null, "functions", null, 0, -1, ExternalLanguage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getExternalLanguage_RubyFunctions(), ecorePackage.getEString(), "rubyFunctions", null, 0, -1, ExternalLanguage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getExternalLanguage_PhpFunctions(), this.getphpFunction(), null, "phpFunctions", null, 0, -1, ExternalLanguage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(classDefinitionEClass, ClassDefinition.class, "ClassDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getClassDefinition_ClassContent(), this.getClassContent(), null, "classContent", null, 0, -1, ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(umpleInterfaceEClass, UmpleInterface.class, "UmpleInterface", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getUmpleInterface_ExtendsInterface(), this.getUmpleInterface(), null, "extendsInterface", null, 0, -1, UmpleInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleInterface_ExtraCode(), this.getfunctionDeclaration(), null, "extraCode", null, 0, 1, UmpleInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(externalDefinitionEClass, ExternalDefinition.class, "ExternalDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getExternalDefinition_ClassContent(), this.getClassContent(), null, "classContent", null, 0, -1, ExternalDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(umpleAssociationEClass, UmpleAssociation.class, "UmpleAssociation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getUmpleAssociation_Name(), ecorePackage.getEString(), "name", null, 0, 1, UmpleAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleAssociation_Associations(), this.getAssociation(), null, "associations", null, 0, 1, UmpleAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(interfaceDefinitionEClass, InterfaceDefinition.class, "InterfaceDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getInterfaceDefinition_Depend(), this.getDepend(), null, "depend", null, 0, -1, InterfaceDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(umpleAssociationClassEClass, UmpleAssociationClass.class, "UmpleAssociationClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getUmpleAssociationClass_Name(), ecorePackage.getEString(), "name", null, 0, 1, UmpleAssociationClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleAssociationClass_AssociationClassContents(), this.getassociationClassContent(), null, "associationClassContents", null, 0, -1, UmpleAssociationClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(associationDefinitionEClass, AssociationDefinition.class, "AssociationDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAssociationDefinition_Association(), this.getAssociation(), null, "association", null, 0, -1, AssociationDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(associationClassContentEClass, associationClassContent.class, "associationClassContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(classContentEClass, ClassContent.class, "ClassContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(associationClassContentEClass, AssociationClassContent.class, "AssociationClassContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(dependEClass, Depend.class, "Depend", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getDepend_Name(), ecorePackage.getEString(), "name", null, 0, 1, Depend.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(associationEClass, Association.class, "Association", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getAssociation_Type1(), ecorePackage.getEString(), "type1", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3719,94 +2654,47 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     initEAttribute(getInlineAssociation_Type(), ecorePackage.getEString(), "type", null, 0, 1, InlineAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getInlineAssociation_Rolename2(), ecorePackage.getEString(), "rolename2", null, 0, 1, InlineAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(singleAssociationEndEClass, singleAssociationEnd.class, "singleAssociationEnd", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getsingleAssociationEnd_Type(), ecorePackage.getEString(), "type", null, 0, 1, singleAssociationEnd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getsingleAssociationEnd_Rolename(), ecorePackage.getEString(), "rolename", null, 0, 1, singleAssociationEnd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(singleAssociationEndEClass, SingleAssociationEnd.class, "SingleAssociationEnd", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getSingleAssociationEnd_Type(), ecorePackage.getEString(), "type", null, 0, 1, SingleAssociationEnd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getSingleAssociationEnd_Rolename(), ecorePackage.getEString(), "rolename", null, 0, 1, SingleAssociationEnd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(associationClassDefinitionEClass, AssociationClassDefinition.class, "AssociationClassDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAssociationClassDefinition_AssociationClassContent(), this.getAssociationClassContent(), null, "associationClassContent", null, 0, -1, AssociationClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(softwarePatternEClass, SoftwarePattern.class, "SoftwarePattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(isAEClass, isA.class, "isA", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getisA_ExtendsClass(), this.getUmpleElement(), null, "extendsClass", null, 0, -1, isA.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(singletonEClass, Singleton.class, "Singleton", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getSingleton_Singleton(), ecorePackage.getEBoolean(), "singleton", null, 0, 1, Singleton.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(keyDefinitionEClass, KeyDefinition.class, "KeyDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
     initEClass(codeInjectionEClass, CodeInjection.class, "CodeInjection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getCodeInjection_Name(), ecorePackage.getEString(), "name", null, 0, 1, CodeInjection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getCodeInjection_Code(), this.getblock(), null, "code", null, 0, 1, CodeInjection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getCodeInjection_Code(), ecorePackage.getEString(), "code", null, 0, 1, CodeInjection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(umpleAttributeEClass, UmpleAttribute.class, "UmpleAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getUmpleAttribute_Autounique(), ecorePackage.getEBoolean(), "autounique", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleAttribute_Name(), ecorePackage.getEString(), "name", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleAttribute_Unique(), ecorePackage.getEBoolean(), "unique", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleAttribute_Modifier(), this.getModifier(), "modifier", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleAttribute_Type(), ecorePackage.getEString(), "type", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleAttribute_List(), ecorePackage.getEBoolean(), "list", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getUmpleAttribute_Object(), this.getUmpleClass(), null, "object", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getUmpleAttribute_Value(), ecorePackage.getEString(), "value", null, 0, 1, UmpleAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getKey_Keys(), ecorePackage.getEString(), "keys", null, 0, -1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(dependEClass, Depend.class, "Depend", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getDepend_Name(), ecorePackage.getEString(), "name", null, 0, 1, Depend.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateMachineDefinitionEClass, StateMachineDefinition.class, "StateMachineDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getStateMachineDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, StateMachineDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStateMachineDefinition_States(), this.getState(), null, "states", null, 0, -1, StateMachineDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateMachineEClass, StateMachine.class, "StateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getStateMachine_Name(), ecorePackage.getEString(), "name", null, 0, 1, StateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(inlineStateMachineEClass, InlineStateMachine.class, "InlineStateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getInlineStateMachine_States(), this.getState(), null, "states", null, 0, -1, InlineStateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(referencedStateMachineEClass, ReferencedStateMachine.class, "ReferencedStateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getReferencedStateMachine_Machine(), this.getStateMachineDefinition(), null, "machine", null, 0, 1, ReferencedStateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(enumEClass, cruise.umple.umple.ENUM.class, "ENUM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getENUM_State1(), ecorePackage.getEString(), "state1", null, 0, 1, cruise.umple.umple.ENUM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getENUM_States(), ecorePackage.getEString(), "states", null, 0, -1, cruise.umple.umple.ENUM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getState_StateTraceDirective(), this.getTraceDirective(), null, "stateTraceDirective", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getState_StateName(), ecorePackage.getEString(), "stateName", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getState_States(), this.getStateEntity(), null, "states", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateEntityEClass, StateEntity.class, "StateEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getStateEntity_Expression(), this.getexpression(), null, "expression", null, 0, 1, StateEntity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTransition_A(), this.getAction(), null, "a", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getTransition_StateName(), ecorePackage.getEString(), "stateName", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eventDefinitionEClass, EventDefinition.class, "EventDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getEventDefinition_G(), this.getGuard(), null, "g", null, 0, 1, EventDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getEventDefinition_EventID(), ecorePackage.getEString(), "eventID", null, 0, 1, EventDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAction_Code(), this.getblock(), null, "code", null, 0, 1, Action.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(entryOrExitActionEClass, EntryOrExitAction.class, "EntryOrExitAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEntryOrExitAction_Type(), ecorePackage.getEString(), "type", null, 0, 1, EntryOrExitAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getEntryOrExitAction_Code(), this.getblock(), null, "code", null, 0, 1, EntryOrExitAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(activityEClass, Activity.class, "Activity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getActivity_Code(), this.getblock(), null, "code", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(guardEClass, Guard.class, "Guard", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGuard_Events(), this.getEventDefinition(), null, "events", null, 0, -1, Guard.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(guardCodeEClass, GuardCode.class, "GuardCode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGuardCode_NativeExpression(), this.getblock(), null, "nativeExpression", null, 0, 1, GuardCode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(attributeEClass, Attribute.class, "Attribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAttribute_Autounique(), ecorePackage.getEBoolean(), "autounique", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAttribute_Name(), ecorePackage.getEString(), "name", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAttribute_Unique(), ecorePackage.getEBoolean(), "unique", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAttribute_Modifier(), this.getModifier(), "modifier", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAttribute_Type(), ecorePackage.getEString(), "type", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAttribute_List(), ecorePackage.getEBoolean(), "list", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAttribute_Object(), this.getClassDefinition(), null, "object", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAttribute_Value(), ecorePackage.getEString(), "value", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(positionEClass, Position.class, "Position", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getPosition_A(), this.getAssociationPosition(), null, "a", null, 0, 1, Position.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getPosition_C(), this.getClassPosition(), null, "c", null, 0, 1, Position.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(classPositionEClass, ClassPosition.class, "ClassPosition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getClassPosition_X(), ecorePackage.getEInt(), "x", null, 0, 1, ClassPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getClassPosition_Y(), ecorePackage.getEInt(), "y", null, 0, 1, ClassPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getClassPosition_Width(), ecorePackage.getEInt(), "width", null, 0, 1, ClassPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getClassPosition_Height(), ecorePackage.getEInt(), "height", null, 0, 1, ClassPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(elementPositionEClass, ElementPosition.class, "ElementPosition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getElementPosition_X(), ecorePackage.getEInt(), "x", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getElementPosition_Y(), ecorePackage.getEInt(), "y", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getElementPosition_Width(), ecorePackage.getEInt(), "width", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getElementPosition_Height(), ecorePackage.getEInt(), "height", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(associationPositionEClass, AssociationPosition.class, "AssociationPosition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getAssociationPosition_Index(), ecorePackage.getEInt(), "index", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAssociationPosition_Name(), ecorePackage.getEString(), "name", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssociationPosition_C1(), this.getCoordinate(), null, "c1", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssociationPosition_C2(), this.getCoordinate(), null, "c2", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3814,42 +2702,7 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
     initEAttribute(getCoordinate_X(), ecorePackage.getEInt(), "x", null, 0, 1, Coordinate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getCoordinate_Y(), ecorePackage.getEInt(), "y", null, 0, 1, Coordinate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(traceDirectiveEClass, TraceDirective.class, "TraceDirective", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getTraceDirective_TraceStart(), ecorePackage.getEString(), "traceStart", null, 0, 1, TraceDirective.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTraceDirective_ModelElement(), this.getModelElement(), null, "modelElement", null, 0, -1, TraceDirective.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTraceDirective_ConditionRHS(), this.getConditionRHS(), null, "conditionRHS", null, 0, 1, TraceDirective.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getTraceDirective_ElementPattern(), ecorePackage.getEString(), "elementPattern", null, 0, 1, TraceDirective.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(traceCaseEClass, TraceCase.class, "TraceCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getTraceCase_TraceCaseName(), ecorePackage.getEString(), "traceCaseName", null, 0, 1, TraceCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTraceCase_TraceDirective(), this.getTraceDirective(), null, "traceDirective", null, 0, -1, TraceCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(traceRecordEClass, TraceRecord.class, "TraceRecord", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getTraceRecord_ObjectBeingTraced(), ecorePackage.getEString(), "objectBeingTraced", null, 0, 1, TraceRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getTraceRecord_TextOutput(), ecorePackage.getEString(), "textOutput", null, 0, 1, TraceRecord.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(traceConditionEClass, TraceCondition.class, "TraceCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(compoundTraceConditionEClass, CompoundTraceCondition.class, "CompoundTraceCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getCompoundTraceCondition_Operand(), ecorePackage.getEString(), "operand", null, 0, 1, CompoundTraceCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(simpleTraceConditionEClass, SimpleTraceCondition.class, "SimpleTraceCondition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getSimpleTraceCondition_Lhs(), this.getModelElement(), null, "lhs", null, 0, 1, SimpleTraceCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getSimpleTraceCondition_ConditionRHS(), this.getConditionRHS(), null, "conditionRHS", null, 0, 1, SimpleTraceCondition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(conditionRHSEClass, ConditionRHS.class, "ConditionRHS", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getConditionRHS_Operand(), ecorePackage.getEString(), "operand", null, 0, 1, ConditionRHS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getConditionRHS_Value(), ecorePackage.getEString(), "value", null, 0, 1, ConditionRHS.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(modelElementEClass, ModelElement.class, "ModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getModelElement_ExecuteOnEntry(), ecorePackage.getEBoolean(), "executeOnEntry", null, 0, 1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getModelElement_ExecuteOnExit(), ecorePackage.getEBoolean(), "executeOnExit", null, 0, 1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getModelElement_Cflow(), ecorePackage.getEBoolean(), "cflow", null, 0, 1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getModelElement_AMethod(), ecorePackage.getEString(), "aMethod", null, 0, 1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getModelElement_Attribute(), this.getUmpleAttribute(), null, "attribute", null, 0, 1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(traceMechanismEClass, TraceMechanism.class, "TraceMechanism", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getTraceMechanism_TraceMechanism(), ecorePackage.getEString(), "traceMechanism", null, 0, 1, TraceMechanism.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(umpleElementEClass, UmpleElement.class, "UmpleElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(blockEClass, block.class, "block", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getblock_Blocks(), this.getblockStatement(), null, "blocks", null, 0, -1, block.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3966,6 +2819,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
 
     initEClass(phpBlockEClass, phpBlock.class, "phpBlock", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getphpBlock_Code(), ecorePackage.getEString(), "code", null, 0, 1, phpBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getKey_Keys(), ecorePackage.getEString(), "keys", null, 0, -1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize enums and add enum literals
     initEEnum(modifierEEnum, Modifier.class, "Modifier");

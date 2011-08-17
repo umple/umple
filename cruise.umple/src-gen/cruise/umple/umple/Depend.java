@@ -22,7 +22,7 @@ package cruise.umple.umple;
  * @model
  * @generated
  */
-public interface Depend extends associationClassContent
+public interface Depend extends ClassContent, AssociationClassContent
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

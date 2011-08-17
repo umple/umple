@@ -5,7 +5,6 @@
  */
 package cruise.umple.umple;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface SymmetricReflexiveAssociation extends EObject
+public interface SymmetricReflexiveAssociation extends ClassContent, AssociationClassContent
 {
   /**
    * Returns the value of the '<em><b>Rolename</b></em>' attribute.

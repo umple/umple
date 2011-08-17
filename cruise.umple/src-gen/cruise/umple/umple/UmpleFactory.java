@@ -35,22 +35,13 @@ public interface UmpleFactory extends EFactory
   UmpleModel createUmpleModel();
 
   /**
-   * Returns a new object of class '<em>Element</em>'.
+   * Returns a new object of class '<em>Abstract Element</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Element</em>'.
+   * @return a new object of class '<em>Abstract Element</em>'.
    * @generated
    */
-  UmpleElement createUmpleElement();
-
-  /**
-   * Returns a new object of class '<em>Word</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Word</em>'.
-   * @generated
-   */
-  Word createWord();
+  AbstractElement createAbstractElement();
 
   /**
    * Returns a new object of class '<em>Glossary</em>'.
@@ -62,6 +53,15 @@ public interface UmpleFactory extends EFactory
   Glossary createGlossary();
 
   /**
+   * Returns a new object of class '<em>Word</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Word</em>'.
+   * @generated
+   */
+  Word createWord();
+
+  /**
    * Returns a new object of class '<em>Generate</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -69,6 +69,15 @@ public interface UmpleFactory extends EFactory
    * @generated
    */
   Generate createGenerate();
+
+  /**
+   * Returns a new object of class '<em>Use Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Use Statement</em>'.
+   * @generated
+   */
+  UseStatement createUseStatement();
 
   /**
    * Returns a new object of class '<em>Namespace</em>'.
@@ -80,58 +89,76 @@ public interface UmpleFactory extends EFactory
   Namespace createNamespace();
 
   /**
-   * Returns a new object of class '<em>Class</em>'.
+   * Returns a new object of class '<em>Entity</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Class</em>'.
+   * @return a new object of class '<em>Entity</em>'.
    * @generated
    */
-  UmpleClass createUmpleClass();
+  Entity createEntity();
 
   /**
-   * Returns a new object of class '<em>External Language</em>'.
+   * Returns a new object of class '<em>Class Definition</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>External Language</em>'.
+   * @return a new object of class '<em>Class Definition</em>'.
    * @generated
    */
-  ExternalLanguage createExternalLanguage();
+  ClassDefinition createClassDefinition();
 
   /**
-   * Returns a new object of class '<em>Interface</em>'.
+   * Returns a new object of class '<em>External Definition</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Interface</em>'.
+   * @return a new object of class '<em>External Definition</em>'.
    * @generated
    */
-  UmpleInterface createUmpleInterface();
+  ExternalDefinition createExternalDefinition();
 
   /**
-   * Returns a new object of class '<em>Association</em>'.
+   * Returns a new object of class '<em>Interface Definition</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Association</em>'.
+   * @return a new object of class '<em>Interface Definition</em>'.
    * @generated
    */
-  UmpleAssociation createUmpleAssociation();
+  InterfaceDefinition createInterfaceDefinition();
 
   /**
-   * Returns a new object of class '<em>Association Class</em>'.
+   * Returns a new object of class '<em>Association Definition</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Association Class</em>'.
+   * @return a new object of class '<em>Association Definition</em>'.
    * @generated
    */
-  UmpleAssociationClass createUmpleAssociationClass();
+  AssociationDefinition createAssociationDefinition();
 
   /**
-   * Returns a new object of class '<em>association Class Content</em>'.
+   * Returns a new object of class '<em>Class Content</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>association Class Content</em>'.
+   * @return a new object of class '<em>Class Content</em>'.
    * @generated
    */
-  associationClassContent createassociationClassContent();
+  ClassContent createClassContent();
+
+  /**
+   * Returns a new object of class '<em>Association Class Content</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Association Class Content</em>'.
+   * @generated
+   */
+  AssociationClassContent createAssociationClassContent();
+
+  /**
+   * Returns a new object of class '<em>Depend</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Depend</em>'.
+   * @generated
+   */
+  Depend createDepend();
 
   /**
    * Returns a new object of class '<em>Association</em>'.
@@ -161,13 +188,40 @@ public interface UmpleFactory extends EFactory
   InlineAssociation createInlineAssociation();
 
   /**
-   * Returns a new object of class '<em>single Association End</em>'.
+   * Returns a new object of class '<em>Single Association End</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>single Association End</em>'.
+   * @return a new object of class '<em>Single Association End</em>'.
    * @generated
    */
-  singleAssociationEnd createsingleAssociationEnd();
+  SingleAssociationEnd createSingleAssociationEnd();
+
+  /**
+   * Returns a new object of class '<em>Association Class Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Association Class Definition</em>'.
+   * @generated
+   */
+  AssociationClassDefinition createAssociationClassDefinition();
+
+  /**
+   * Returns a new object of class '<em>Software Pattern</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Software Pattern</em>'.
+   * @generated
+   */
+  SoftwarePattern createSoftwarePattern();
+
+  /**
+   * Returns a new object of class '<em>is A</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>is A</em>'.
+   * @generated
+   */
+  isA createisA();
 
   /**
    * Returns a new object of class '<em>Singleton</em>'.
@@ -177,6 +231,15 @@ public interface UmpleFactory extends EFactory
    * @generated
    */
   Singleton createSingleton();
+
+  /**
+   * Returns a new object of class '<em>Key Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Key Definition</em>'.
+   * @generated
+   */
+  KeyDefinition createKeyDefinition();
 
   /**
    * Returns a new object of class '<em>Code Injection</em>'.
@@ -194,151 +257,7 @@ public interface UmpleFactory extends EFactory
    * @return a new object of class '<em>Attribute</em>'.
    * @generated
    */
-  UmpleAttribute createUmpleAttribute();
-
-  /**
-   * Returns a new object of class '<em>Key</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Key</em>'.
-   * @generated
-   */
-  Key createKey();
-
-  /**
-   * Returns a new object of class '<em>Depend</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Depend</em>'.
-   * @generated
-   */
-  Depend createDepend();
-
-  /**
-   * Returns a new object of class '<em>State Machine Definition</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State Machine Definition</em>'.
-   * @generated
-   */
-  StateMachineDefinition createStateMachineDefinition();
-
-  /**
-   * Returns a new object of class '<em>State Machine</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State Machine</em>'.
-   * @generated
-   */
-  StateMachine createStateMachine();
-
-  /**
-   * Returns a new object of class '<em>Inline State Machine</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Inline State Machine</em>'.
-   * @generated
-   */
-  InlineStateMachine createInlineStateMachine();
-
-  /**
-   * Returns a new object of class '<em>Referenced State Machine</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Referenced State Machine</em>'.
-   * @generated
-   */
-  ReferencedStateMachine createReferencedStateMachine();
-
-  /**
-   * Returns a new object of class '<em>ENUM</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>ENUM</em>'.
-   * @generated
-   */
-  ENUM createENUM();
-
-  /**
-   * Returns a new object of class '<em>State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State</em>'.
-   * @generated
-   */
-  State createState();
-
-  /**
-   * Returns a new object of class '<em>State Entity</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State Entity</em>'.
-   * @generated
-   */
-  StateEntity createStateEntity();
-
-  /**
-   * Returns a new object of class '<em>Transition</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Transition</em>'.
-   * @generated
-   */
-  Transition createTransition();
-
-  /**
-   * Returns a new object of class '<em>Event Definition</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Event Definition</em>'.
-   * @generated
-   */
-  EventDefinition createEventDefinition();
-
-  /**
-   * Returns a new object of class '<em>Action</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Action</em>'.
-   * @generated
-   */
-  Action createAction();
-
-  /**
-   * Returns a new object of class '<em>Entry Or Exit Action</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Entry Or Exit Action</em>'.
-   * @generated
-   */
-  EntryOrExitAction createEntryOrExitAction();
-
-  /**
-   * Returns a new object of class '<em>Activity</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Activity</em>'.
-   * @generated
-   */
-  Activity createActivity();
-
-  /**
-   * Returns a new object of class '<em>Guard</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Guard</em>'.
-   * @generated
-   */
-  Guard createGuard();
-
-  /**
-   * Returns a new object of class '<em>Guard Code</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Guard Code</em>'.
-   * @generated
-   */
-  GuardCode createGuardCode();
+  Attribute createAttribute();
 
   /**
    * Returns a new object of class '<em>Position</em>'.
@@ -350,13 +269,13 @@ public interface UmpleFactory extends EFactory
   Position createPosition();
 
   /**
-   * Returns a new object of class '<em>Class Position</em>'.
+   * Returns a new object of class '<em>Element Position</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Class Position</em>'.
+   * @return a new object of class '<em>Element Position</em>'.
    * @generated
    */
-  ClassPosition createClassPosition();
+  ElementPosition createElementPosition();
 
   /**
    * Returns a new object of class '<em>Association Position</em>'.
@@ -377,85 +296,13 @@ public interface UmpleFactory extends EFactory
   Coordinate createCoordinate();
 
   /**
-   * Returns a new object of class '<em>Trace Directive</em>'.
+   * Returns a new object of class '<em>Element</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Trace Directive</em>'.
+   * @return a new object of class '<em>Element</em>'.
    * @generated
    */
-  TraceDirective createTraceDirective();
-
-  /**
-   * Returns a new object of class '<em>Trace Case</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Trace Case</em>'.
-   * @generated
-   */
-  TraceCase createTraceCase();
-
-  /**
-   * Returns a new object of class '<em>Trace Record</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Trace Record</em>'.
-   * @generated
-   */
-  TraceRecord createTraceRecord();
-
-  /**
-   * Returns a new object of class '<em>Trace Condition</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Trace Condition</em>'.
-   * @generated
-   */
-  TraceCondition createTraceCondition();
-
-  /**
-   * Returns a new object of class '<em>Compound Trace Condition</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Compound Trace Condition</em>'.
-   * @generated
-   */
-  CompoundTraceCondition createCompoundTraceCondition();
-
-  /**
-   * Returns a new object of class '<em>Simple Trace Condition</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Simple Trace Condition</em>'.
-   * @generated
-   */
-  SimpleTraceCondition createSimpleTraceCondition();
-
-  /**
-   * Returns a new object of class '<em>Condition RHS</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Condition RHS</em>'.
-   * @generated
-   */
-  ConditionRHS createConditionRHS();
-
-  /**
-   * Returns a new object of class '<em>Model Element</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Model Element</em>'.
-   * @generated
-   */
-  ModelElement createModelElement();
-
-  /**
-   * Returns a new object of class '<em>Trace Mechanism</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Trace Mechanism</em>'.
-   * @generated
-   */
-  TraceMechanism createTraceMechanism();
+  UmpleElement createUmpleElement();
 
   /**
    * Returns a new object of class '<em>block</em>'.
@@ -744,6 +591,15 @@ public interface UmpleFactory extends EFactory
    * @generated
    */
   phpBlock createphpBlock();
+
+  /**
+   * Returns a new object of class '<em>Key</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Key</em>'.
+   * @generated
+   */
+  Key createKey();
 
   /**
    * Returns the package supported by this factory.

@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class InlineAssociationImpl extends associationClassContentImpl implements InlineAssociation
+public class InlineAssociationImpl extends ClassContentImpl implements InlineAssociation
 {
   /**
    * The default value of the '{@link #getRolename1() <em>Rolename1</em>}' attribute.

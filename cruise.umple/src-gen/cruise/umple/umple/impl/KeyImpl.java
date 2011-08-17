@@ -14,8 +14,6 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
@@ -31,7 +29,7 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  *
  * @generated
  */
-public class KeyImpl extends MinimalEObjectImpl.Container implements Key
+public class KeyImpl extends KeyDefinitionImpl implements Key
 {
   /**
    * The cached value of the '{@link #getKeys() <em>Keys</em>}' attribute list.

@@ -83,14 +83,9 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createUmpleModelAdapter();
       }
       @Override
-      public Adapter caseUmpleElement(UmpleElement object)
+      public Adapter caseAbstractElement(AbstractElement object)
       {
-        return createUmpleElementAdapter();
-      }
-      @Override
-      public Adapter caseWord(Word object)
-      {
-        return createWordAdapter();
+        return createAbstractElementAdapter();
       }
       @Override
       public Adapter caseGlossary(Glossary object)
@@ -98,9 +93,19 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createGlossaryAdapter();
       }
       @Override
+      public Adapter caseWord(Word object)
+      {
+        return createWordAdapter();
+      }
+      @Override
       public Adapter caseGenerate(Generate object)
       {
         return createGenerateAdapter();
+      }
+      @Override
+      public Adapter caseUseStatement(UseStatement object)
+      {
+        return createUseStatementAdapter();
       }
       @Override
       public Adapter caseNamespace(Namespace object)
@@ -108,34 +113,44 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createNamespaceAdapter();
       }
       @Override
-      public Adapter caseUmpleClass(UmpleClass object)
+      public Adapter caseEntity(Entity object)
       {
-        return createUmpleClassAdapter();
+        return createEntityAdapter();
       }
       @Override
-      public Adapter caseExternalLanguage(ExternalLanguage object)
+      public Adapter caseClassDefinition(ClassDefinition object)
       {
-        return createExternalLanguageAdapter();
+        return createClassDefinitionAdapter();
       }
       @Override
-      public Adapter caseUmpleInterface(UmpleInterface object)
+      public Adapter caseExternalDefinition(ExternalDefinition object)
       {
-        return createUmpleInterfaceAdapter();
+        return createExternalDefinitionAdapter();
       }
       @Override
-      public Adapter caseUmpleAssociation(UmpleAssociation object)
+      public Adapter caseInterfaceDefinition(InterfaceDefinition object)
       {
-        return createUmpleAssociationAdapter();
+        return createInterfaceDefinitionAdapter();
       }
       @Override
-      public Adapter caseUmpleAssociationClass(UmpleAssociationClass object)
+      public Adapter caseAssociationDefinition(AssociationDefinition object)
       {
-        return createUmpleAssociationClassAdapter();
+        return createAssociationDefinitionAdapter();
       }
       @Override
-      public Adapter caseassociationClassContent(associationClassContent object)
+      public Adapter caseClassContent(ClassContent object)
       {
-        return createassociationClassContentAdapter();
+        return createClassContentAdapter();
+      }
+      @Override
+      public Adapter caseAssociationClassContent(AssociationClassContent object)
+      {
+        return createAssociationClassContentAdapter();
+      }
+      @Override
+      public Adapter caseDepend(Depend object)
+      {
+        return createDependAdapter();
       }
       @Override
       public Adapter caseAssociation(Association object)
@@ -153,9 +168,24 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createInlineAssociationAdapter();
       }
       @Override
-      public Adapter casesingleAssociationEnd(singleAssociationEnd object)
+      public Adapter caseSingleAssociationEnd(SingleAssociationEnd object)
       {
-        return createsingleAssociationEndAdapter();
+        return createSingleAssociationEndAdapter();
+      }
+      @Override
+      public Adapter caseAssociationClassDefinition(AssociationClassDefinition object)
+      {
+        return createAssociationClassDefinitionAdapter();
+      }
+      @Override
+      public Adapter caseSoftwarePattern(SoftwarePattern object)
+      {
+        return createSoftwarePatternAdapter();
+      }
+      @Override
+      public Adapter caseisA(isA object)
+      {
+        return createisAAdapter();
       }
       @Override
       public Adapter caseSingleton(Singleton object)
@@ -163,94 +193,19 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createSingletonAdapter();
       }
       @Override
+      public Adapter caseKeyDefinition(KeyDefinition object)
+      {
+        return createKeyDefinitionAdapter();
+      }
+      @Override
       public Adapter caseCodeInjection(CodeInjection object)
       {
         return createCodeInjectionAdapter();
       }
       @Override
-      public Adapter caseUmpleAttribute(UmpleAttribute object)
+      public Adapter caseAttribute(Attribute object)
       {
-        return createUmpleAttributeAdapter();
-      }
-      @Override
-      public Adapter caseKey(Key object)
-      {
-        return createKeyAdapter();
-      }
-      @Override
-      public Adapter caseDepend(Depend object)
-      {
-        return createDependAdapter();
-      }
-      @Override
-      public Adapter caseStateMachineDefinition(StateMachineDefinition object)
-      {
-        return createStateMachineDefinitionAdapter();
-      }
-      @Override
-      public Adapter caseStateMachine(StateMachine object)
-      {
-        return createStateMachineAdapter();
-      }
-      @Override
-      public Adapter caseInlineStateMachine(InlineStateMachine object)
-      {
-        return createInlineStateMachineAdapter();
-      }
-      @Override
-      public Adapter caseReferencedStateMachine(ReferencedStateMachine object)
-      {
-        return createReferencedStateMachineAdapter();
-      }
-      @Override
-      public Adapter caseENUM(ENUM object)
-      {
-        return createENUMAdapter();
-      }
-      @Override
-      public Adapter caseState(State object)
-      {
-        return createStateAdapter();
-      }
-      @Override
-      public Adapter caseStateEntity(StateEntity object)
-      {
-        return createStateEntityAdapter();
-      }
-      @Override
-      public Adapter caseTransition(Transition object)
-      {
-        return createTransitionAdapter();
-      }
-      @Override
-      public Adapter caseEventDefinition(EventDefinition object)
-      {
-        return createEventDefinitionAdapter();
-      }
-      @Override
-      public Adapter caseAction(Action object)
-      {
-        return createActionAdapter();
-      }
-      @Override
-      public Adapter caseEntryOrExitAction(EntryOrExitAction object)
-      {
-        return createEntryOrExitActionAdapter();
-      }
-      @Override
-      public Adapter caseActivity(Activity object)
-      {
-        return createActivityAdapter();
-      }
-      @Override
-      public Adapter caseGuard(Guard object)
-      {
-        return createGuardAdapter();
-      }
-      @Override
-      public Adapter caseGuardCode(GuardCode object)
-      {
-        return createGuardCodeAdapter();
+        return createAttributeAdapter();
       }
       @Override
       public Adapter casePosition(Position object)
@@ -258,9 +213,9 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createPositionAdapter();
       }
       @Override
-      public Adapter caseClassPosition(ClassPosition object)
+      public Adapter caseElementPosition(ElementPosition object)
       {
-        return createClassPositionAdapter();
+        return createElementPositionAdapter();
       }
       @Override
       public Adapter caseAssociationPosition(AssociationPosition object)
@@ -273,49 +228,9 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createCoordinateAdapter();
       }
       @Override
-      public Adapter caseTraceDirective(TraceDirective object)
+      public Adapter caseUmpleElement(UmpleElement object)
       {
-        return createTraceDirectiveAdapter();
-      }
-      @Override
-      public Adapter caseTraceCase(TraceCase object)
-      {
-        return createTraceCaseAdapter();
-      }
-      @Override
-      public Adapter caseTraceRecord(TraceRecord object)
-      {
-        return createTraceRecordAdapter();
-      }
-      @Override
-      public Adapter caseTraceCondition(TraceCondition object)
-      {
-        return createTraceConditionAdapter();
-      }
-      @Override
-      public Adapter caseCompoundTraceCondition(CompoundTraceCondition object)
-      {
-        return createCompoundTraceConditionAdapter();
-      }
-      @Override
-      public Adapter caseSimpleTraceCondition(SimpleTraceCondition object)
-      {
-        return createSimpleTraceConditionAdapter();
-      }
-      @Override
-      public Adapter caseConditionRHS(ConditionRHS object)
-      {
-        return createConditionRHSAdapter();
-      }
-      @Override
-      public Adapter caseModelElement(ModelElement object)
-      {
-        return createModelElementAdapter();
-      }
-      @Override
-      public Adapter caseTraceMechanism(TraceMechanism object)
-      {
-        return createTraceMechanismAdapter();
+        return createUmpleElementAdapter();
       }
       @Override
       public Adapter caseblock(block object)
@@ -478,6 +393,11 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
         return createphpBlockAdapter();
       }
       @Override
+      public Adapter caseKey(Key object)
+      {
+        return createKeyAdapter();
+      }
+      @Override
       public Adapter defaultCase(EObject object)
       {
         return createEObjectAdapter();
@@ -515,31 +435,16 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleElement <em>Element</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.AbstractElement <em>Abstract Element</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.UmpleElement
+   * @see cruise.umple.umple.AbstractElement
    * @generated
    */
-  public Adapter createUmpleElementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Word <em>Word</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Word
-   * @generated
-   */
-  public Adapter createWordAdapter()
+  public Adapter createAbstractElementAdapter()
   {
     return null;
   }
@@ -560,6 +465,21 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Word <em>Word</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.Word
+   * @generated
+   */
+  public Adapter createWordAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link cruise.umple.umple.Generate <em>Generate</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -570,6 +490,21 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createGenerateAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UseStatement <em>Use Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.UseStatement
+   * @generated
+   */
+  public Adapter createUseStatementAdapter()
   {
     return null;
   }
@@ -590,91 +525,121 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleClass <em>Class</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Entity <em>Entity</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.UmpleClass
+   * @see cruise.umple.umple.Entity
    * @generated
    */
-  public Adapter createUmpleClassAdapter()
+  public Adapter createEntityAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ExternalLanguage <em>External Language</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ClassDefinition <em>Class Definition</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.ExternalLanguage
+   * @see cruise.umple.umple.ClassDefinition
    * @generated
    */
-  public Adapter createExternalLanguageAdapter()
+  public Adapter createClassDefinitionAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleInterface <em>Interface</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ExternalDefinition <em>External Definition</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.UmpleInterface
+   * @see cruise.umple.umple.ExternalDefinition
    * @generated
    */
-  public Adapter createUmpleInterfaceAdapter()
+  public Adapter createExternalDefinitionAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleAssociation <em>Association</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.InterfaceDefinition <em>Interface Definition</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.UmpleAssociation
+   * @see cruise.umple.umple.InterfaceDefinition
    * @generated
    */
-  public Adapter createUmpleAssociationAdapter()
+  public Adapter createInterfaceDefinitionAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleAssociationClass <em>Association Class</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.AssociationDefinition <em>Association Definition</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.UmpleAssociationClass
+   * @see cruise.umple.umple.AssociationDefinition
    * @generated
    */
-  public Adapter createUmpleAssociationClassAdapter()
+  public Adapter createAssociationDefinitionAdapter()
   {
     return null;
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.associationClassContent <em>association Class Content</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ClassContent <em>Class Content</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.associationClassContent
+   * @see cruise.umple.umple.ClassContent
    * @generated
    */
-  public Adapter createassociationClassContentAdapter()
+  public Adapter createClassContentAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.AssociationClassContent <em>Association Class Content</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.AssociationClassContent
+   * @generated
+   */
+  public Adapter createAssociationClassContentAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Depend <em>Depend</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.Depend
+   * @generated
+   */
+  public Adapter createDependAdapter()
   {
     return null;
   }
@@ -725,16 +690,61 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.singleAssociationEnd <em>single Association End</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.SingleAssociationEnd <em>Single Association End</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.singleAssociationEnd
+   * @see cruise.umple.umple.SingleAssociationEnd
    * @generated
    */
-  public Adapter createsingleAssociationEndAdapter()
+  public Adapter createSingleAssociationEndAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.AssociationClassDefinition <em>Association Class Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.AssociationClassDefinition
+   * @generated
+   */
+  public Adapter createAssociationClassDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.SoftwarePattern <em>Software Pattern</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.SoftwarePattern
+   * @generated
+   */
+  public Adapter createSoftwarePatternAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.isA <em>is A</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.isA
+   * @generated
+   */
+  public Adapter createisAAdapter()
   {
     return null;
   }
@@ -755,6 +765,21 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.KeyDefinition <em>Key Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.KeyDefinition
+   * @generated
+   */
+  public Adapter createKeyDefinitionAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link cruise.umple.umple.CodeInjection <em>Code Injection</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -770,256 +795,16 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleAttribute <em>Attribute</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Attribute <em>Attribute</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.UmpleAttribute
+   * @see cruise.umple.umple.Attribute
    * @generated
    */
-  public Adapter createUmpleAttributeAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Key <em>Key</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Key
-   * @generated
-   */
-  public Adapter createKeyAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Depend <em>Depend</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Depend
-   * @generated
-   */
-  public Adapter createDependAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.StateMachineDefinition <em>State Machine Definition</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.StateMachineDefinition
-   * @generated
-   */
-  public Adapter createStateMachineDefinitionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.StateMachine <em>State Machine</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.StateMachine
-   * @generated
-   */
-  public Adapter createStateMachineAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.InlineStateMachine <em>Inline State Machine</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.InlineStateMachine
-   * @generated
-   */
-  public Adapter createInlineStateMachineAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ReferencedStateMachine <em>Referenced State Machine</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.ReferencedStateMachine
-   * @generated
-   */
-  public Adapter createReferencedStateMachineAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ENUM <em>ENUM</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.ENUM
-   * @generated
-   */
-  public Adapter createENUMAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.State <em>State</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.State
-   * @generated
-   */
-  public Adapter createStateAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.StateEntity <em>State Entity</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.StateEntity
-   * @generated
-   */
-  public Adapter createStateEntityAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Transition <em>Transition</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Transition
-   * @generated
-   */
-  public Adapter createTransitionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.EventDefinition <em>Event Definition</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.EventDefinition
-   * @generated
-   */
-  public Adapter createEventDefinitionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Action <em>Action</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Action
-   * @generated
-   */
-  public Adapter createActionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.EntryOrExitAction <em>Entry Or Exit Action</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.EntryOrExitAction
-   * @generated
-   */
-  public Adapter createEntryOrExitActionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Activity <em>Activity</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Activity
-   * @generated
-   */
-  public Adapter createActivityAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Guard <em>Guard</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.Guard
-   * @generated
-   */
-  public Adapter createGuardAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.GuardCode <em>Guard Code</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.GuardCode
-   * @generated
-   */
-  public Adapter createGuardCodeAdapter()
+  public Adapter createAttributeAdapter()
   {
     return null;
   }
@@ -1040,16 +825,16 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ClassPosition <em>Class Position</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ElementPosition <em>Element Position</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.ClassPosition
+   * @see cruise.umple.umple.ElementPosition
    * @generated
    */
-  public Adapter createClassPositionAdapter()
+  public Adapter createElementPositionAdapter()
   {
     return null;
   }
@@ -1085,136 +870,16 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.TraceDirective <em>Trace Directive</em>}'.
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.UmpleElement <em>Element</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see cruise.umple.umple.TraceDirective
+   * @see cruise.umple.umple.UmpleElement
    * @generated
    */
-  public Adapter createTraceDirectiveAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.TraceCase <em>Trace Case</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.TraceCase
-   * @generated
-   */
-  public Adapter createTraceCaseAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.TraceRecord <em>Trace Record</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.TraceRecord
-   * @generated
-   */
-  public Adapter createTraceRecordAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.TraceCondition <em>Trace Condition</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.TraceCondition
-   * @generated
-   */
-  public Adapter createTraceConditionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.CompoundTraceCondition <em>Compound Trace Condition</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.CompoundTraceCondition
-   * @generated
-   */
-  public Adapter createCompoundTraceConditionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.SimpleTraceCondition <em>Simple Trace Condition</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.SimpleTraceCondition
-   * @generated
-   */
-  public Adapter createSimpleTraceConditionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ConditionRHS <em>Condition RHS</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.ConditionRHS
-   * @generated
-   */
-  public Adapter createConditionRHSAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.ModelElement <em>Model Element</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.ModelElement
-   * @generated
-   */
-  public Adapter createModelElementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link cruise.umple.umple.TraceMechanism <em>Trace Mechanism</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see cruise.umple.umple.TraceMechanism
-   * @generated
-   */
-  public Adapter createTraceMechanismAdapter()
+  public Adapter createUmpleElementAdapter()
   {
     return null;
   }
@@ -1695,6 +1360,21 @@ public class UmpleAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createphpBlockAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link cruise.umple.umple.Key <em>Key</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see cruise.umple.umple.Key
+   * @generated
+   */
+  public Adapter createKeyAdapter()
   {
     return null;
   }

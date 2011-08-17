@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class DependImpl extends associationClassContentImpl implements Depend
+public class DependImpl extends ClassContentImpl implements Depend
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.

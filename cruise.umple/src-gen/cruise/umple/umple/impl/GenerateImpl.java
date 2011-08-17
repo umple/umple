@@ -13,7 +13,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,7 +29,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class GenerateImpl extends MinimalEObjectImpl.Container implements Generate
+public class GenerateImpl extends AbstractElementImpl implements Generate
 {
   /**
    * The default value of the '{@link #isJava() <em>Java</em>}' attribute.

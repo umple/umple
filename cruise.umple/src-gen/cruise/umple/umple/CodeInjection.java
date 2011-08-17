@@ -5,7 +5,6 @@
  */
 package cruise.umple.umple;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface CodeInjection extends EObject
+public interface CodeInjection extends SoftwarePattern
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -53,29 +52,29 @@ public interface CodeInjection extends EObject
   void setName(String value);
 
   /**
-   * Returns the value of the '<em><b>Code</b></em>' containment reference.
+   * Returns the value of the '<em><b>Code</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Code</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Code</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Code</em>' containment reference.
-   * @see #setCode(block)
+   * @return the value of the '<em>Code</em>' attribute.
+   * @see #setCode(String)
    * @see cruise.umple.umple.UmplePackage#getCodeInjection_Code()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  block getCode();
+  String getCode();
 
   /**
-   * Sets the value of the '{@link cruise.umple.umple.CodeInjection#getCode <em>Code</em>}' containment reference.
+   * Sets the value of the '{@link cruise.umple.umple.CodeInjection#getCode <em>Code</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Code</em>' containment reference.
+   * @param value the new value of the '<em>Code</em>' attribute.
    * @see #getCode()
    * @generated
    */
-  void setCode(block value);
+  void setCode(String value);
 
 } // CodeInjection

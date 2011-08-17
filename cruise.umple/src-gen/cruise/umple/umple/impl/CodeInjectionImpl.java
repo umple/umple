@@ -7,16 +7,12 @@ package cruise.umple.umple.impl;
 
 import cruise.umple.umple.CodeInjection;
 import cruise.umple.umple.UmplePackage;
-import cruise.umple.umple.block;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,7 +28,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements CodeInjection
+public class CodeInjectionImpl extends SoftwarePatternImpl implements CodeInjection
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -55,14 +51,24 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getCode() <em>Code</em>}' containment reference.
+   * The default value of the '{@link #getCode() <em>Code</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getCode()
    * @generated
    * @ordered
    */
-  protected block code;
+  protected static final String CODE_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getCode() <em>Code</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getCode()
+   * @generated
+   * @ordered
+   */
+  protected String code = CODE_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -113,7 +119,7 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
-  public block getCode()
+  public String getCode()
   {
     return code;
   }
@@ -123,53 +129,12 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetCode(block newCode, NotificationChain msgs)
+  public void setCode(String newCode)
   {
-    block oldCode = code;
+    String oldCode = code;
     code = newCode;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, UmplePackage.CODE_INJECTION__CODE, oldCode, newCode);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setCode(block newCode)
-  {
-    if (newCode != code)
-    {
-      NotificationChain msgs = null;
-      if (code != null)
-        msgs = ((InternalEObject)code).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - UmplePackage.CODE_INJECTION__CODE, null, msgs);
-      if (newCode != null)
-        msgs = ((InternalEObject)newCode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - UmplePackage.CODE_INJECTION__CODE, null, msgs);
-      msgs = basicSetCode(newCode, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, UmplePackage.CODE_INJECTION__CODE, newCode, newCode));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case UmplePackage.CODE_INJECTION__CODE:
-        return basicSetCode(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+      eNotify(new ENotificationImpl(this, Notification.SET, UmplePackage.CODE_INJECTION__CODE, oldCode, code));
   }
 
   /**
@@ -204,7 +169,7 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
         setName((String)newValue);
         return;
       case UmplePackage.CODE_INJECTION__CODE:
-        setCode((block)newValue);
+        setCode((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -224,7 +189,7 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
         setName(NAME_EDEFAULT);
         return;
       case UmplePackage.CODE_INJECTION__CODE:
-        setCode((block)null);
+        setCode(CODE_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -243,7 +208,7 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
       case UmplePackage.CODE_INJECTION__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case UmplePackage.CODE_INJECTION__CODE:
-        return code != null;
+        return CODE_EDEFAULT == null ? code != null : !CODE_EDEFAULT.equals(code);
     }
     return super.eIsSet(featureID);
   }
@@ -261,6 +226,8 @@ public class CodeInjectionImpl extends MinimalEObjectImpl.Container implements C
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", code: ");
+    result.append(code);
     result.append(')');
     return result.toString();
   }

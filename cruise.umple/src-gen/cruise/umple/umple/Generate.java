@@ -5,7 +5,6 @@
  */
 package cruise.umple.umple;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Generate extends EObject
+public interface Generate extends AbstractElement
 {
   /**
    * Returns the value of the '<em><b>Java</b></em>' attribute.

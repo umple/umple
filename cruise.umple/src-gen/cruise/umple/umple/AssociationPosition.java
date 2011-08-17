@@ -5,7 +5,6 @@
  */
 package cruise.umple.umple;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -15,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link cruise.umple.umple.AssociationPosition#getIndex <em>Index</em>}</li>
+ *   <li>{@link cruise.umple.umple.AssociationPosition#getName <em>Name</em>}</li>
  *   <li>{@link cruise.umple.umple.AssociationPosition#getC1 <em>C1</em>}</li>
  *   <li>{@link cruise.umple.umple.AssociationPosition#getC2 <em>C2</em>}</li>
  * </ul>
@@ -25,33 +24,33 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface AssociationPosition extends EObject
+public interface AssociationPosition extends Position
 {
   /**
-   * Returns the value of the '<em><b>Index</b></em>' attribute.
+   * Returns the value of the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Index</em>' attribute isn't clear,
+   * If the meaning of the '<em>Name</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Index</em>' attribute.
-   * @see #setIndex(int)
-   * @see cruise.umple.umple.UmplePackage#getAssociationPosition_Index()
+   * @return the value of the '<em>Name</em>' attribute.
+   * @see #setName(String)
+   * @see cruise.umple.umple.UmplePackage#getAssociationPosition_Name()
    * @model
    * @generated
    */
-  int getIndex();
+  String getName();
 
   /**
-   * Sets the value of the '{@link cruise.umple.umple.AssociationPosition#getIndex <em>Index</em>}' attribute.
+   * Sets the value of the '{@link cruise.umple.umple.AssociationPosition#getName <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Index</em>' attribute.
-   * @see #getIndex()
+   * @param value the new value of the '<em>Name</em>' attribute.
+   * @see #getName()
    * @generated
    */
-  void setIndex(int value);
+  void setName(String value);
 
   /**
    * Returns the value of the '<em><b>C1</b></em>' containment reference.

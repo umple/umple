@@ -13,7 +13,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +27,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class NamespaceImpl extends MinimalEObjectImpl.Container implements Namespace
+public class NamespaceImpl extends AbstractElementImpl implements Namespace
 {
   /**
    * The default value of the '{@link #getValue() <em>Value</em>}' attribute.

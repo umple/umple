@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +24,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link cruise.umple.umple.impl.AssociationPositionImpl#getIndex <em>Index</em>}</li>
+ *   <li>{@link cruise.umple.umple.impl.AssociationPositionImpl#getName <em>Name</em>}</li>
  *   <li>{@link cruise.umple.umple.impl.AssociationPositionImpl#getC1 <em>C1</em>}</li>
  *   <li>{@link cruise.umple.umple.impl.AssociationPositionImpl#getC2 <em>C2</em>}</li>
  * </ul>
@@ -33,27 +32,27 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class AssociationPositionImpl extends MinimalEObjectImpl.Container implements AssociationPosition
+public class AssociationPositionImpl extends PositionImpl implements AssociationPosition
 {
   /**
-   * The default value of the '{@link #getIndex() <em>Index</em>}' attribute.
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getIndex()
+   * @see #getName()
    * @generated
    * @ordered
    */
-  protected static final int INDEX_EDEFAULT = 0;
+  protected static final String NAME_EDEFAULT = null;
 
   /**
-   * The cached value of the '{@link #getIndex() <em>Index</em>}' attribute.
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getIndex()
+   * @see #getName()
    * @generated
    * @ordered
    */
-  protected int index = INDEX_EDEFAULT;
+  protected String name = NAME_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getC1() <em>C1</em>}' containment reference.
@@ -101,9 +100,9 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
    * <!-- end-user-doc -->
    * @generated
    */
-  public int getIndex()
+  public String getName()
   {
-    return index;
+    return name;
   }
 
   /**
@@ -111,12 +110,12 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setIndex(int newIndex)
+  public void setName(String newName)
   {
-    int oldIndex = index;
-    index = newIndex;
+    String oldName = name;
+    name = newName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, UmplePackage.ASSOCIATION_POSITION__INDEX, oldIndex, index));
+      eNotify(new ENotificationImpl(this, Notification.SET, UmplePackage.ASSOCIATION_POSITION__NAME, oldName, name));
   }
 
   /**
@@ -243,8 +242,8 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
   {
     switch (featureID)
     {
-      case UmplePackage.ASSOCIATION_POSITION__INDEX:
-        return getIndex();
+      case UmplePackage.ASSOCIATION_POSITION__NAME:
+        return getName();
       case UmplePackage.ASSOCIATION_POSITION__C1:
         return getC1();
       case UmplePackage.ASSOCIATION_POSITION__C2:
@@ -263,8 +262,8 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
   {
     switch (featureID)
     {
-      case UmplePackage.ASSOCIATION_POSITION__INDEX:
-        setIndex((Integer)newValue);
+      case UmplePackage.ASSOCIATION_POSITION__NAME:
+        setName((String)newValue);
         return;
       case UmplePackage.ASSOCIATION_POSITION__C1:
         setC1((Coordinate)newValue);
@@ -286,8 +285,8 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
   {
     switch (featureID)
     {
-      case UmplePackage.ASSOCIATION_POSITION__INDEX:
-        setIndex(INDEX_EDEFAULT);
+      case UmplePackage.ASSOCIATION_POSITION__NAME:
+        setName(NAME_EDEFAULT);
         return;
       case UmplePackage.ASSOCIATION_POSITION__C1:
         setC1((Coordinate)null);
@@ -309,8 +308,8 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
   {
     switch (featureID)
     {
-      case UmplePackage.ASSOCIATION_POSITION__INDEX:
-        return index != INDEX_EDEFAULT;
+      case UmplePackage.ASSOCIATION_POSITION__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case UmplePackage.ASSOCIATION_POSITION__C1:
         return c1 != null;
       case UmplePackage.ASSOCIATION_POSITION__C2:
@@ -330,8 +329,8 @@ public class AssociationPositionImpl extends MinimalEObjectImpl.Container implem
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (index: ");
-    result.append(index);
+    result.append(" (name: ");
+    result.append(name);
     result.append(')');
     return result.toString();
   }

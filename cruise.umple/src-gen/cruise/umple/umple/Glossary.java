@@ -7,8 +7,6 @@ package cruise.umple.umple;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Glossary</b></em>'.
@@ -25,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Glossary extends EObject
+public interface Glossary extends AbstractElement
 {
   /**
    * Returns the value of the '<em><b>Words</b></em>' containment reference list.

@@ -69,53 +69,36 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
     switch (eClass.getClassifierID())
     {
       case UmplePackage.UMPLE_MODEL: return createUmpleModel();
-      case UmplePackage.UMPLE_ELEMENT: return createUmpleElement();
-      case UmplePackage.WORD: return createWord();
+      case UmplePackage.ABSTRACT_ELEMENT: return createAbstractElement();
       case UmplePackage.GLOSSARY: return createGlossary();
+      case UmplePackage.WORD: return createWord();
       case UmplePackage.GENERATE: return createGenerate();
+      case UmplePackage.USE_STATEMENT: return createUseStatement();
       case UmplePackage.NAMESPACE: return createNamespace();
-      case UmplePackage.UMPLE_CLASS: return createUmpleClass();
-      case UmplePackage.EXTERNAL_LANGUAGE: return createExternalLanguage();
-      case UmplePackage.UMPLE_INTERFACE: return createUmpleInterface();
-      case UmplePackage.UMPLE_ASSOCIATION: return createUmpleAssociation();
-      case UmplePackage.UMPLE_ASSOCIATION_CLASS: return createUmpleAssociationClass();
-      case UmplePackage.ASSOCIATION_CLASS_CONTENT: return createassociationClassContent();
+      case UmplePackage.ENTITY: return createEntity();
+      case UmplePackage.CLASS_DEFINITION: return createClassDefinition();
+      case UmplePackage.EXTERNAL_DEFINITION: return createExternalDefinition();
+      case UmplePackage.INTERFACE_DEFINITION: return createInterfaceDefinition();
+      case UmplePackage.ASSOCIATION_DEFINITION: return createAssociationDefinition();
+      case UmplePackage.CLASS_CONTENT: return createClassContent();
+      case UmplePackage.ASSOCIATION_CLASS_CONTENT: return createAssociationClassContent();
+      case UmplePackage.DEPEND: return createDepend();
       case UmplePackage.ASSOCIATION: return createAssociation();
       case UmplePackage.SYMMETRIC_REFLEXIVE_ASSOCIATION: return createSymmetricReflexiveAssociation();
       case UmplePackage.INLINE_ASSOCIATION: return createInlineAssociation();
-      case UmplePackage.SINGLE_ASSOCIATION_END: return createsingleAssociationEnd();
+      case UmplePackage.SINGLE_ASSOCIATION_END: return createSingleAssociationEnd();
+      case UmplePackage.ASSOCIATION_CLASS_DEFINITION: return createAssociationClassDefinition();
+      case UmplePackage.SOFTWARE_PATTERN: return createSoftwarePattern();
+      case UmplePackage.IS_A: return createisA();
       case UmplePackage.SINGLETON: return createSingleton();
+      case UmplePackage.KEY_DEFINITION: return createKeyDefinition();
       case UmplePackage.CODE_INJECTION: return createCodeInjection();
-      case UmplePackage.UMPLE_ATTRIBUTE: return createUmpleAttribute();
-      case UmplePackage.KEY: return createKey();
-      case UmplePackage.DEPEND: return createDepend();
-      case UmplePackage.STATE_MACHINE_DEFINITION: return createStateMachineDefinition();
-      case UmplePackage.STATE_MACHINE: return createStateMachine();
-      case UmplePackage.INLINE_STATE_MACHINE: return createInlineStateMachine();
-      case UmplePackage.REFERENCED_STATE_MACHINE: return createReferencedStateMachine();
-      case UmplePackage.ENUM: return createENUM();
-      case UmplePackage.STATE: return createState();
-      case UmplePackage.STATE_ENTITY: return createStateEntity();
-      case UmplePackage.TRANSITION: return createTransition();
-      case UmplePackage.EVENT_DEFINITION: return createEventDefinition();
-      case UmplePackage.ACTION: return createAction();
-      case UmplePackage.ENTRY_OR_EXIT_ACTION: return createEntryOrExitAction();
-      case UmplePackage.ACTIVITY: return createActivity();
-      case UmplePackage.GUARD: return createGuard();
-      case UmplePackage.GUARD_CODE: return createGuardCode();
+      case UmplePackage.ATTRIBUTE: return createAttribute();
       case UmplePackage.POSITION: return createPosition();
-      case UmplePackage.CLASS_POSITION: return createClassPosition();
+      case UmplePackage.ELEMENT_POSITION: return createElementPosition();
       case UmplePackage.ASSOCIATION_POSITION: return createAssociationPosition();
       case UmplePackage.COORDINATE: return createCoordinate();
-      case UmplePackage.TRACE_DIRECTIVE: return createTraceDirective();
-      case UmplePackage.TRACE_CASE: return createTraceCase();
-      case UmplePackage.TRACE_RECORD: return createTraceRecord();
-      case UmplePackage.TRACE_CONDITION: return createTraceCondition();
-      case UmplePackage.COMPOUND_TRACE_CONDITION: return createCompoundTraceCondition();
-      case UmplePackage.SIMPLE_TRACE_CONDITION: return createSimpleTraceCondition();
-      case UmplePackage.CONDITION_RHS: return createConditionRHS();
-      case UmplePackage.MODEL_ELEMENT: return createModelElement();
-      case UmplePackage.TRACE_MECHANISM: return createTraceMechanism();
+      case UmplePackage.UMPLE_ELEMENT: return createUmpleElement();
       case UmplePackage.BLOCK: return createblock();
       case UmplePackage.PAR_EXPRESSION: return createparExpression();
       case UmplePackage.EXPRESSION_LIST: return createexpressionList();
@@ -148,6 +131,7 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
       case UmplePackage.FOR_UPDATE: return createforUpdate();
       case UmplePackage.PHP_FUNCTION: return createphpFunction();
       case UmplePackage.PHP_BLOCK: return createphpBlock();
+      case UmplePackage.KEY: return createKey();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -203,21 +187,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleElement createUmpleElement()
+  public AbstractElement createAbstractElement()
   {
-    UmpleElementImpl umpleElement = new UmpleElementImpl();
-    return umpleElement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Word createWord()
-  {
-    WordImpl word = new WordImpl();
-    return word;
+    AbstractElementImpl abstractElement = new AbstractElementImpl();
+    return abstractElement;
   }
 
   /**
@@ -236,10 +209,32 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public Word createWord()
+  {
+    WordImpl word = new WordImpl();
+    return word;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Generate createGenerate()
   {
     GenerateImpl generate = new GenerateImpl();
     return generate;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public UseStatement createUseStatement()
+  {
+    UseStatementImpl useStatement = new UseStatementImpl();
+    return useStatement;
   }
 
   /**
@@ -258,10 +253,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleClass createUmpleClass()
+  public Entity createEntity()
   {
-    UmpleClassImpl umpleClass = new UmpleClassImpl();
-    return umpleClass;
+    EntityImpl entity = new EntityImpl();
+    return entity;
   }
 
   /**
@@ -269,10 +264,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ExternalLanguage createExternalLanguage()
+  public ClassDefinition createClassDefinition()
   {
-    ExternalLanguageImpl externalLanguage = new ExternalLanguageImpl();
-    return externalLanguage;
+    ClassDefinitionImpl classDefinition = new ClassDefinitionImpl();
+    return classDefinition;
   }
 
   /**
@@ -280,10 +275,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleInterface createUmpleInterface()
+  public ExternalDefinition createExternalDefinition()
   {
-    UmpleInterfaceImpl umpleInterface = new UmpleInterfaceImpl();
-    return umpleInterface;
+    ExternalDefinitionImpl externalDefinition = new ExternalDefinitionImpl();
+    return externalDefinition;
   }
 
   /**
@@ -291,10 +286,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleAssociation createUmpleAssociation()
+  public InterfaceDefinition createInterfaceDefinition()
   {
-    UmpleAssociationImpl umpleAssociation = new UmpleAssociationImpl();
-    return umpleAssociation;
+    InterfaceDefinitionImpl interfaceDefinition = new InterfaceDefinitionImpl();
+    return interfaceDefinition;
   }
 
   /**
@@ -302,10 +297,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleAssociationClass createUmpleAssociationClass()
+  public AssociationDefinition createAssociationDefinition()
   {
-    UmpleAssociationClassImpl umpleAssociationClass = new UmpleAssociationClassImpl();
-    return umpleAssociationClass;
+    AssociationDefinitionImpl associationDefinition = new AssociationDefinitionImpl();
+    return associationDefinition;
   }
 
   /**
@@ -313,10 +308,32 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public associationClassContent createassociationClassContent()
+  public ClassContent createClassContent()
   {
-    associationClassContentImpl associationClassContent = new associationClassContentImpl();
+    ClassContentImpl classContent = new ClassContentImpl();
+    return classContent;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssociationClassContent createAssociationClassContent()
+  {
+    AssociationClassContentImpl associationClassContent = new AssociationClassContentImpl();
     return associationClassContent;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Depend createDepend()
+  {
+    DependImpl depend = new DependImpl();
+    return depend;
   }
 
   /**
@@ -357,10 +374,43 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public singleAssociationEnd createsingleAssociationEnd()
+  public SingleAssociationEnd createSingleAssociationEnd()
   {
-    singleAssociationEndImpl singleAssociationEnd = new singleAssociationEndImpl();
+    SingleAssociationEndImpl singleAssociationEnd = new SingleAssociationEndImpl();
     return singleAssociationEnd;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssociationClassDefinition createAssociationClassDefinition()
+  {
+    AssociationClassDefinitionImpl associationClassDefinition = new AssociationClassDefinitionImpl();
+    return associationClassDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SoftwarePattern createSoftwarePattern()
+  {
+    SoftwarePatternImpl softwarePattern = new SoftwarePatternImpl();
+    return softwarePattern;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public isA createisA()
+  {
+    isAImpl isA = new isAImpl();
+    return isA;
   }
 
   /**
@@ -379,6 +429,17 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public KeyDefinition createKeyDefinition()
+  {
+    KeyDefinitionImpl keyDefinition = new KeyDefinitionImpl();
+    return keyDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public CodeInjection createCodeInjection()
   {
     CodeInjectionImpl codeInjection = new CodeInjectionImpl();
@@ -390,186 +451,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleAttribute createUmpleAttribute()
+  public Attribute createAttribute()
   {
-    UmpleAttributeImpl umpleAttribute = new UmpleAttributeImpl();
-    return umpleAttribute;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Key createKey()
-  {
-    KeyImpl key = new KeyImpl();
-    return key;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Depend createDepend()
-  {
-    DependImpl depend = new DependImpl();
-    return depend;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public StateMachineDefinition createStateMachineDefinition()
-  {
-    StateMachineDefinitionImpl stateMachineDefinition = new StateMachineDefinitionImpl();
-    return stateMachineDefinition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public StateMachine createStateMachine()
-  {
-    StateMachineImpl stateMachine = new StateMachineImpl();
-    return stateMachine;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public InlineStateMachine createInlineStateMachine()
-  {
-    InlineStateMachineImpl inlineStateMachine = new InlineStateMachineImpl();
-    return inlineStateMachine;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ReferencedStateMachine createReferencedStateMachine()
-  {
-    ReferencedStateMachineImpl referencedStateMachine = new ReferencedStateMachineImpl();
-    return referencedStateMachine;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ENUM createENUM()
-  {
-    ENUMImpl enum_ = new ENUMImpl();
-    return enum_;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public State createState()
-  {
-    StateImpl state = new StateImpl();
-    return state;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public StateEntity createStateEntity()
-  {
-    StateEntityImpl stateEntity = new StateEntityImpl();
-    return stateEntity;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Transition createTransition()
-  {
-    TransitionImpl transition = new TransitionImpl();
-    return transition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EventDefinition createEventDefinition()
-  {
-    EventDefinitionImpl eventDefinition = new EventDefinitionImpl();
-    return eventDefinition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Action createAction()
-  {
-    ActionImpl action = new ActionImpl();
-    return action;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EntryOrExitAction createEntryOrExitAction()
-  {
-    EntryOrExitActionImpl entryOrExitAction = new EntryOrExitActionImpl();
-    return entryOrExitAction;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Activity createActivity()
-  {
-    ActivityImpl activity = new ActivityImpl();
-    return activity;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Guard createGuard()
-  {
-    GuardImpl guard = new GuardImpl();
-    return guard;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public GuardCode createGuardCode()
-  {
-    GuardCodeImpl guardCode = new GuardCodeImpl();
-    return guardCode;
+    AttributeImpl attribute = new AttributeImpl();
+    return attribute;
   }
 
   /**
@@ -588,10 +473,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ClassPosition createClassPosition()
+  public ElementPosition createElementPosition()
   {
-    ClassPositionImpl classPosition = new ClassPositionImpl();
-    return classPosition;
+    ElementPositionImpl elementPosition = new ElementPositionImpl();
+    return elementPosition;
   }
 
   /**
@@ -621,98 +506,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public TraceDirective createTraceDirective()
+  public UmpleElement createUmpleElement()
   {
-    TraceDirectiveImpl traceDirective = new TraceDirectiveImpl();
-    return traceDirective;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public TraceCase createTraceCase()
-  {
-    TraceCaseImpl traceCase = new TraceCaseImpl();
-    return traceCase;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public TraceRecord createTraceRecord()
-  {
-    TraceRecordImpl traceRecord = new TraceRecordImpl();
-    return traceRecord;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public TraceCondition createTraceCondition()
-  {
-    TraceConditionImpl traceCondition = new TraceConditionImpl();
-    return traceCondition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public CompoundTraceCondition createCompoundTraceCondition()
-  {
-    CompoundTraceConditionImpl compoundTraceCondition = new CompoundTraceConditionImpl();
-    return compoundTraceCondition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public SimpleTraceCondition createSimpleTraceCondition()
-  {
-    SimpleTraceConditionImpl simpleTraceCondition = new SimpleTraceConditionImpl();
-    return simpleTraceCondition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ConditionRHS createConditionRHS()
-  {
-    ConditionRHSImpl conditionRHS = new ConditionRHSImpl();
-    return conditionRHS;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ModelElement createModelElement()
-  {
-    ModelElementImpl modelElement = new ModelElementImpl();
-    return modelElement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public TraceMechanism createTraceMechanism()
-  {
-    TraceMechanismImpl traceMechanism = new TraceMechanismImpl();
-    return traceMechanism;
+    UmpleElementImpl umpleElement = new UmpleElementImpl();
+    return umpleElement;
   }
 
   /**
@@ -1065,6 +862,17 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
   {
     phpBlockImpl phpBlock = new phpBlockImpl();
     return phpBlock;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Key createKey()
+  {
+    KeyImpl key = new KeyImpl();
+    return key;
   }
 
   /**

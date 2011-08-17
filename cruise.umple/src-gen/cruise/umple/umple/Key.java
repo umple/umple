@@ -7,8 +7,6 @@ package cruise.umple.umple;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Key</b></em>'.
@@ -25,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Key extends EObject
+public interface Key extends KeyDefinition
 {
   /**
    * Returns the value of the '<em><b>Keys</b></em>' attribute list.

@@ -5,7 +5,6 @@
  */
 package cruise.umple.umple;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Singleton extends EObject
+public interface Singleton extends SoftwarePattern
 {
   /**
    * Returns the value of the '<em><b>Singleton</b></em>' attribute.

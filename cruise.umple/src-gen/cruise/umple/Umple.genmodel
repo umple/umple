@@ -7,330 +7,226 @@
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="5.0"
     copyrightFields="false" editPluginID="cruise.umple.edit" editorPluginID="cruise.umple.editor">
   <genPackages prefix="Umple" basePackage="cruise.umple" disposableProviderFactory="true"
-      ecorePackage="Umple.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Umple.ecore#//Modifier">
-      <genEnumLiterals ecoreEnumLiteral="Umple.ecore#//Modifier/IMMUTABLE"/>
-      <genEnumLiterals ecoreEnumLiteral="Umple.ecore#//Modifier/SETTABLE"/>
-      <genEnumLiterals ecoreEnumLiteral="Umple.ecore#//Modifier/INTERNAL"/>
-      <genEnumLiterals ecoreEnumLiteral="Umple.ecore#//Modifier/DEFAULTED"/>
-      <genEnumLiterals ecoreEnumLiteral="Umple.ecore#//Modifier/CONST"/>
+      ecorePackage="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Modifier">
+      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Modifier/IMMUTABLE"/>
+      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Modifier/SETTABLE"/>
+      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Modifier/INTERNAL"/>
+      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Modifier/DEFAULTED"/>
+      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Modifier/CONST"/>
     </genEnums>
-    <genClasses ecoreClass="Umple.ecore#//UmpleModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/namespace"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/glossary"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/generate_"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/traceMechanism"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleModel/uses"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/umpleElements"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/associations"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/associationClasses"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleModel/statemachines"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//UmpleElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleElement/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleElement/depends"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Word">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Word/singular"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Word/plural"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Glossary">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Glossary/words"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Generate">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Generate/java"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Generate/Php"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Generate/Ruby"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Namespace">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Namespace/value"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//UmpleClass">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleClass/packageName"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleClass/external"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleClass/singleton"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/key"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/codeInjection"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/extendsClass"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/attributes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/symmetricReflexiveAssociations"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/inlineAssociations"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/positions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/stateMachines"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/traceDirectives"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/traceCases"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleClass/externalLanguage"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//ExternalLanguage">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//ExternalLanguage/functions"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ExternalLanguage/rubyFunctions"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//ExternalLanguage/phpFunctions"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//UmpleInterface">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleInterface/extendsInterface"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleInterface/extraCode"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//UmpleAssociation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAssociation/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleAssociation/associations"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//UmpleAssociationClass">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAssociationClass/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleAssociationClass/associationClassContents"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//associationClassContent"/>
-    <genClasses ecoreClass="Umple.ecore#//Association">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Association/type1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Association/rolename1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Association/type2"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Association/rolename2"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//SymmetricReflexiveAssociation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//SymmetricReflexiveAssociation/rolename"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//InlineAssociation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//InlineAssociation/rolename1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//InlineAssociation/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//InlineAssociation/rolename2"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//singleAssociationEnd">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//singleAssociationEnd/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//singleAssociationEnd/rolename"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Singleton">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Singleton/singleton"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//CodeInjection">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//CodeInjection/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//CodeInjection/code"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//UmpleAttribute">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/autounique"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/unique"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/modifier"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/list"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//UmpleAttribute/object"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//UmpleAttribute/value"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Key">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Key/keys"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Depend">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Depend/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//StateMachineDefinition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//StateMachineDefinition/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//StateMachineDefinition/states"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//StateMachine">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//StateMachine/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//InlineStateMachine">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//InlineStateMachine/states"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//ReferencedStateMachine">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//ReferencedStateMachine/machine"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//ENUM">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ENUM/state1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ENUM/states"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//State">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//State/stateTraceDirective"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//State/stateName"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//State/states"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//StateEntity">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//StateEntity/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Transition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Transition/a"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Transition/stateName"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//EventDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//EventDefinition/g"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//EventDefinition/eventID"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Action">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Action/code"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//EntryOrExitAction">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//EntryOrExitAction/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//EntryOrExitAction/code"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Activity">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Activity/code"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Guard">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Guard/events"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//GuardCode">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//GuardCode/nativeExpression"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Position">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Position/a"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//Position/c"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//ClassPosition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ClassPosition/x"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ClassPosition/y"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ClassPosition/width"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ClassPosition/height"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//AssociationPosition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//AssociationPosition/index"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//AssociationPosition/c1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//AssociationPosition/c2"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//Coordinate">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Coordinate/x"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//Coordinate/y"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//TraceDirective">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//TraceDirective/traceStart"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//TraceDirective/modelElement"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//TraceDirective/conditionRHS"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//TraceDirective/elementPattern"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//TraceCase">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//TraceCase/traceCaseName"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//TraceCase/traceDirective"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//TraceRecord">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//TraceRecord/objectBeingTraced"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//TraceRecord/textOutput"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//TraceCondition"/>
-    <genClasses ecoreClass="Umple.ecore#//CompoundTraceCondition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//CompoundTraceCondition/operand"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//SimpleTraceCondition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//SimpleTraceCondition/lhs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//SimpleTraceCondition/conditionRHS"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//ConditionRHS">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ConditionRHS/operand"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ConditionRHS/value"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//ModelElement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ModelElement/executeOnEntry"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ModelElement/executeOnExit"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ModelElement/cflow"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//ModelElement/aMethod"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//ModelElement/attribute"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//TraceMechanism">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//TraceMechanism/traceMechanism"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//block">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//block/blocks"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//parExpression"/>
-    <genClasses ecoreClass="Umple.ecore#//expressionList">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//expressionList/expressions"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//expression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//expression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//expression/expression2"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//conditionalExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalExpression/expression2"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalExpression/expression3"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//conditionalOrExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalOrExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalOrExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//conditionalAndExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalAndExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//conditionalAndExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//equalityExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//equalityExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//equalityExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//relationalExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//relationalExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//relationalExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//additiveExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//additiveExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//additiveExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//multiplicativeExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//multiplicativeExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//multiplicativeExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//unaryExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//unaryExpression/exp1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//unaryExpression/exp2"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//unaryExpressionNotPlusMinus"/>
-    <genClasses ecoreClass="Umple.ecore#//primary"/>
-    <genClasses ecoreClass="Umple.ecore#//literal"/>
-    <genClasses ecoreClass="Umple.ecore#//functionCall"/>
-    <genClasses ecoreClass="Umple.ecore#//functionDeclaration">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//functionDeclaration/java"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//functionDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//functionDefinition/java"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//javaFunctionDeclaration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//javaFunctionDeclaration/returnType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//javaFunctionDeclaration/referenceType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//javaFunctionDeclaration/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//javaFunctionDeclaration/argList"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//javaFunctionDeclaration/argListID"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//javaFunctionDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//javaFunctionDefinition/decl"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//javaFunctionDefinition/code"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//javaFunctionCall">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//javaFunctionCall/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//javaFunctionCall/args"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//blockStatement"/>
-    <genClasses ecoreClass="Umple.ecore#//localVariableDeclarationStatement"/>
-    <genClasses ecoreClass="Umple.ecore#//localVariableDeclaration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//localVariableDeclaration/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//localVariableDeclaration/dec"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//variableDeclarators">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//variableDeclarators/vd"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//variableDeclarator">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//variableDeclarator/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//variableDeclarator/exp"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//statement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/condition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/state1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/state2"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/control"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/state"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/retVal"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/tryBlock"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//statement/catchBlock"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//forControl">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//forControl/init"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//forControl/condition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//forControl/update"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//forInit">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Umple.ecore#//forInit/expressions"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//forUpdate"/>
-    <genClasses ecoreClass="Umple.ecore#//phpFunction">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//phpFunction/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Umple.ecore#//phpFunction/codeblock"/>
-    </genClasses>
-    <genClasses ecoreClass="Umple.ecore#//phpBlock">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Umple.ecore#//phpBlock/code"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//UmpleModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//UmpleModel/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AbstractElement"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Glossary">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Glossary/words"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Word">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Word/singular"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Word/plural"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Generate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Generate/java"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Generate/Php"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Generate/Ruby"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//UseStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//UseStatement/file"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Namespace">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Namespace/value"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Entity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Entity/name"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ClassDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ClassDefinition/classContent"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition/classContent"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition/depend"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition/association"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ClassContent"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Depend">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Depend/name"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Association">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Association/type1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Association/rolename1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Association/type2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Association/rolename2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation/rolename"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//InlineAssociation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//InlineAssociation/rolename1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//InlineAssociation/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//InlineAssociation/rolename2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd/rolename"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition/associationClassContent"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//isA">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//isA/extendsClass"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Singleton">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Singleton/singleton"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//KeyDefinition"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//CodeInjection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//CodeInjection/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//CodeInjection/code"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/autounique"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/unique"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/modifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/list"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/object"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Attribute/value"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Position"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ElementPosition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ElementPosition/x"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ElementPosition/y"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ElementPosition/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//ElementPosition/height"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationPosition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationPosition/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationPosition/c1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//AssociationPosition/c2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Coordinate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Coordinate/x"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Coordinate/y"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//UmpleElement"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//block">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//block/blocks"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//parExpression"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//expressionList">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//expressionList/expressions"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//expression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//expression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//expression/expression2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalExpression/expression2"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalExpression/expression3"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression/expressionRest"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression/expressionRest"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//equalityExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//equalityExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//equalityExpression/expressionRest"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//relationalExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//relationalExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//relationalExpression/expressionRest"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//additiveExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//additiveExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//additiveExpression/expressionRest"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression/expression1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression/expressionRest"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//unaryExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//unaryExpression/exp1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//unaryExpression/exp2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//unaryExpressionNotPlusMinus"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//primary"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//literal"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//functionCall"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//functionDeclaration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//functionDeclaration/java"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//functionDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//functionDefinition/java"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/returnType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/referenceType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/argList"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/argListID"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition/decl"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition/code"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionCall/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//javaFunctionCall/args"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//blockStatement"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//localVariableDeclarationStatement"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//localVariableDeclaration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//localVariableDeclaration/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//localVariableDeclaration/dec"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//variableDeclarators">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//variableDeclarators/vd"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//variableDeclarator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//variableDeclarator/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//variableDeclarator/exp"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/state1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/state2"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/control"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/state"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/retVal"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/tryBlock"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//statement/catchBlock"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forControl">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forControl/init"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forControl/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forControl/update"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forInit">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forInit/expressions"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//forUpdate"/>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//phpFunction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//phpFunction/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//phpFunction/codeblock"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//phpBlock">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//phpBlock/code"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Key">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple/src-gen/cruise/umple/Umple.ecore#//Key/keys"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
