@@ -100,7 +100,7 @@
       <include name="**/*.txt"/>
     </replace>
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
-    
+    <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
     <!-- 
     <replace file="../cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" /> 
