@@ -82,8 +82,9 @@
 
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
     <!-- Xtext UI Project Manifest File -->
-    <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
-
+      <!-- 
+	<replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+   -->
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
     <!-- 
     <replace file="cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" /> 
