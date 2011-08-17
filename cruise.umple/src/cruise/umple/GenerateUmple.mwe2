@@ -92,9 +92,6 @@ Workflow {
 			// generates a more lightweight Antlr parser and lexer tailored for content assist  
 			fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
 
-			// generates junit test support classes into Generator#pathTestProject
-			fragment = junit.Junit4Fragment {}
-
 			// project wizard (optional) 
 			// fragment = projectWizard.SimpleProjectWizardFragment {
 			// 		generatorProjectName = "${projectName}"
