@@ -45,6 +45,12 @@ function readTemporaryFile($filename)
   return $contents;
 }
 
+function isBookmark($filename)
+{
+  $modelId = extractModelId($filename);
+  return substr($modelId,0,3) != "tmp";
+}
+
 function extractModelId($filename)
 {
   if ($filename == null)
@@ -83,13 +89,13 @@ function getFilenameId($filename)
 }
 
 // This will create your umple file, as well as the directory used for the uigu
-function nextFilename($basedir = "../ump")
+function nextFilename($basedir = "../ump", $prefix = "tmp")
 {
   while(true)
   {
     $id = rand(0,999999);
-    $dirname = "{$basedir}/{$id}";
-    $uiguDirname = "{$basedir}/{$id}/uigu";
+    $dirname = "{$basedir}/{$prefix}{$id}";
+    $uiguDirname = "{$dirname}/uigu";
     $filename = "{$dirname}/model.ump";
     
     if (!file_exists($dirname))
@@ -270,4 +276,10 @@ function executeCommand($command)
   $output = trim(ob_get_contents());
   ob_clean();
   return $output;
+}
+
+
+function cleanupOldFiles()
+{
+  executeCommand("find ump -type f -mtime +3 | grep -v .svn | grep /tmp | xargs rm -rf");
 }

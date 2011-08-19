@@ -1,5 +1,6 @@
 <?php
 require_once ("scripts/compiler_config.php");
+cleanupOldFiles();
 $filename = extractFilename();
 $output = readTemporaryFile($filename);
 ?>
@@ -30,7 +31,12 @@ $output = readTemporaryFile($filename);
   
 <input id="filename" type="hidden" value="<?php echo $filename ?>" />
 
-<div class="bookmarkableUrl"><a href="?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a></div>
+<?php if (isBookmark($filename)) { ?>
+  <div class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a></div>
+<?php } else { ?>
+  <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
+<?php } ?>
+
 <table id="container" class="container">
 
 <tr class="mainApplication">   
@@ -90,7 +96,15 @@ $output = readTemporaryFile($filename);
         </ul>
         <ul class="second">
           <li class="subtitle">SAVE</li>
-          <div class="bookmarkableUrl"><a href="?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a></div>
+<?php if (isBookmark($filename)) { ?>
+            <div class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark this Link for Future Use</a></div>
+<?php } else { ?>
+            <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
+<?php } ?>
+
+
+
+          
         </ul>
         <ul class="second">
           <li class="subtitle">NEW</li>
