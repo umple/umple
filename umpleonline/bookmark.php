@@ -7,15 +7,17 @@ if (!isset($_REQUEST["model"]))
   exit;
 }
 
-$tempModel = $_REQUEST["model"];
+$tempModelId = $_REQUEST["model"];
 $savedModel = nextFilename("ump","a");
-$filename = "ump/{$tempModel}/model.ump";
+$saveModelId = extractModelId($savedModel);
+
+$filename = "ump/{$tempModelId}/model.ump";
 
 if (!is_file($filename))
 {
-  echo "Temporary model {$tempModel} no longer exist";
+  echo "Temporary model {$tempModelId} no longer exist";
   exit;
 }
 
-executeCommand("mv ump/{$model} ump/{$savedModel}");
-header("Location: /umple.php?model={$savedModel}");
+executeCommand("mv ump/{$tempModelId} ump/{$saveModelId}");
+header("Location: umple.php?model={$saveModelId}");
