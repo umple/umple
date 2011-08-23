@@ -42,8 +42,8 @@ $output = readTemporaryFile($filename);
 <tr class="mainApplication">   
   <td id="textEditorColumn"  tabIndex="2"  class="textEditorColumn">
   <div id="umpleModelEditor" style="height: 520px; width: 420px">class A{}</div>
-	<script src="editor_scripts/ace.js" type="text/javascript" charset="utf-8"></script>
-	<script src="editor_scripts/mode-java.js" type="text/javascript" charset="utf-8"></script>
+	<script src="scripts/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="scripts/ace/mode-java.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		window.onload = function() {
    	 	var editor = ace.edit("umpleModelEditor");
@@ -52,7 +52,7 @@ $output = readTemporaryFile($filename);
 		editor.getSession().setMode(new JavaScriptMode());
 		};
 	</script>
-	<script src="editor_scripts/theme-clouds.js" type="text/javascript" charset="utf-8"></script>
+	<script src="scripts/ace/theme-clouds.js" type="text/javascript" charset="utf-8"></script>
 
       <!-- <textarea id="umpleModelEditor" class = "umpleModelEditor" wrap="off" rows="24" >
       </textarea> -->
