@@ -9,10 +9,8 @@ $output = readTemporaryFile($filename);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
-
   <title>UmpleOnline: Generate Java, PHP, or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
-  
 </head>
 <body>
   <table class="pagetitle">
@@ -39,7 +37,6 @@ $output = readTemporaryFile($filename);
 <?php } ?>
 
 <table id="container" class="container">
-
 
 <tr class="mainApplication">   
 

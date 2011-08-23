@@ -27,10 +27,9 @@ else if (isset($_REQUEST["vmlCode"]))
   }
   else
   {
-    
     $secondOutFilename = "{$filename}.{$language}.output";
 
-    if (!in_array($language,array("Php","Java","Ruby")))
+    if (in_array($language,array("Php","Java","Ruby")))
     {  
       saveFile("generate {$language};\n" . $genericCode,$outputFilename);
       $command = "java -jar umplesync.jar -source {$outputFilename} > {$secondOutFilename}";
@@ -38,7 +37,6 @@ else if (isset($_REQUEST["vmlCode"]))
     else
     {
       saveFile($genericCode,$outputFilename);
-      
       $command = "java -jar umplesync.jar -generate {$language} {$outputFilename}  > {$secondOutFilename}";
     }
 
