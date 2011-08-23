@@ -51,4 +51,9 @@ document.write('<script type="text/javascript" src="scripts/umple_generalization
 document.write('<script type="text/javascript" src="scripts/umple_attribute.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_history.js"><\/script>');
 
-
+// Ace editor
+// STILL WORKING ON ACE LOADER
+// document.write('<script type="text/javascript" src="scripts/ace/ace.js"><\/script>');
+// document.write('<script type="text/javascript" src="scripts/ace/mode-java.js"><\/script>');
+// document.write('<script type="text/javascript" src="scripts/ace_loader.js"><\/script>');
+// document.write('<script type="text/javascript" src="scripts/ace/theme-clouds.js"><\/script>');

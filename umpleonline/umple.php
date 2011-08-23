@@ -9,6 +9,7 @@ $output = readTemporaryFile($filename);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
+
   <title>UmpleOnline: Generate Java, PHP, or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
   
@@ -39,24 +40,15 @@ $output = readTemporaryFile($filename);
 
 <table id="container" class="container">
 
-<tr class="mainApplication">   
-  <td id="textEditorColumn"  tabIndex="2"  class="textEditorColumn">
-  <div id="umpleModelEditor" style="height: 520px; width: 420px">class A{}</div>
-	<script src="scripts/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-	<script src="scripts/ace/mode-java.js" type="text/javascript" charset="utf-8"></script>
-	<script>
-		window.onload = function() {
-   	 	var editor = ace.edit("umpleModelEditor");
-		editor.setTheme("ace/theme/clouds");
-		var JavaScriptMode = require("ace/mode/java").Mode;
-		editor.getSession().setMode(new JavaScriptMode());
-		};
-	</script>
-	<script src="scripts/ace/theme-clouds.js" type="text/javascript" charset="utf-8"></script>
 
-      <!-- <textarea id="umpleModelEditor" class = "umpleModelEditor" wrap="off" rows="24" >
-      </textarea> -->
-      <textarea id="umpleLayoutEditor" class="umpleLayoutEditor" wrap="off" ></textarea>
+<tr class="mainApplication">   
+
+  <td id="textEditorColumn"  tabIndex="2"  class="textEditorColumn">
+    <!-- TODO: GET ACE TO WORK (Using normal text area until then) -->
+    <!-- <div id="umpleModelEditor" style="height: 520px; width: 420px">class A{}</div> -->
+    <textarea id="umpleModelEditor" class="umpleModelEditor" wrap="off" rows="24" >
+    </textarea>
+    <textarea id="umpleLayoutEditor" class="umpleLayoutEditor" wrap="off" > </textarea>
   </td>
   
   <td id="paletteColumn" class="paletteColumn">

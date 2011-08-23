@@ -348,15 +348,14 @@ Page.canShowHovers = function()
 
 Page.getUmpleCode = function()
 {
-  var model = jQuery("#umpleModelEditor").text().replace(Page.modelDelimiter, "");
-  //alert("Page.getUmpleCode_nocleaned:" + model);
-  var regex = new RegExp(/^\d+/); //starts with digit, one or more
+	// TODO: use .text() for ACE, .val otherwise
+  var model = jQuery("#umpleModelEditor").val().replace(Page.modelDelimiter, "");
+  var regex = new RegExp(/^\d+/); //starts with digit, one or more E.G. 12345class X
   var lineNumbers = regex.exec(model);
   var modelCleaned = model.replace(lineNumbers,"");
-  //alert("Page.getUmpleCode_cleaned:" + modelCleaned);
   var positioning = jQuery("#umpleLayoutEditor").val().replace(Page.modelDelimiter, "");
   
-  var umpleCode = model + Page.modelDelimiter + positioning;
+  var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
   return umpleCode;
 }
 

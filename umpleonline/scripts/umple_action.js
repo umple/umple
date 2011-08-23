@@ -1549,7 +1549,6 @@ Action.enableManualSync = function(enable)
 Action.ajax = function(callback,post)
 {
   var modelAndPositioning = Page.getUmpleCode();
-  //console.log("ACTION.ajax:" + modelAndPositioning);
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
   Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&umpleCode={1}&filename={2}",post,umpleCode,filename));
