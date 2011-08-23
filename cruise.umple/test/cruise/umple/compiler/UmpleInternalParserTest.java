@@ -110,8 +110,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("020_enum.ump","[classDefinition][name:Student][stateMachine][enum][name:status][stateName:FullTime][stateName:PartTime][stateName:MidTime][stateMachine][enum][name:grade][stateName:High]");
     fileToOutputs.put("020_enumLongHand.ump","[classDefinition][name:Student][stateMachine][inlineStateMachine][name:status][state][stateName:FullTime][state][stateName:PartTime]");
     fileToOutputs.put("021_nestedUse.ump","[classDefinition][name:Student][attribute][name:fisrtName][use:021_nestedUse_B.ump][classDefinition][name:Student][attribute][name:lastName][use:021_nestedUse_C.ump][classDefinition][name:Student][attribute][name:middleName]");
-
-    
+    fileToOutputs.put("030_mixingRegularAndDerivedAttributes_bug201.ump","[namespace:example][classDefinition][name:Student][attribute][name:one][attribute][name:two][attribute][name:three][derivedValue:one + \":\" + two]"); 
   }
 
   @Before

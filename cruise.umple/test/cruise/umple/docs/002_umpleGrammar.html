@@ -78,6 +78,12 @@ singleAssociationEnd : [[multiplicity]] [type,roleName] ;<br />
 associationEnd : [[multiplicity]] [type,roleName]<br />
 multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]<br />
 <br />
+attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]<br />
+simpleAttribute- : [name] ;<br />
+autouniqueAttribute- : [=autounique] [name] ;<br />
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }<br />
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;<br />
+<br />
 defaultKey : key { }<br />
 key : key { [keyId] ( , [keyId] )* }<br />
 depend- : depend [depend] ;<br />
@@ -90,8 +96,6 @@ multipleIsA- : isA [extendsName] ( , [extendsName] )* ;<br />
 singleton- : [=singleton] ;<br />
 keyDefinition- : [[defaultKey]] | [[key]]<br />
 codeInjection- : [[beforeCode]] | [[afterCode]]<br />
-attribute : [[derivedAttribute]] | [=autounique] [name] ; | [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;<br />
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }<br />
 <br />
 beforeCode : before [operationName] { [**code] }<br />
 afterCode : after [operationName] { [**code] }<br />

@@ -1070,6 +1070,17 @@ public class UmpleParserTest
     
   }
   
+  @Test
+  public void mixingRegularAndDerivedAttributes_bug201()
+  {
+    //http://code.google.com/p/umple/issues/detail?id=201
+    assertParse("030_mixingRegularAndDerivedAttributes_bug201.ump");
+    
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(3,student.numberOfAttributes());
+    
+  }
+  
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));

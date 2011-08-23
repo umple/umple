@@ -1,62 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="lib" path="eclipseplugins/linux/org.eclipse.swt_3.6.2.v3659c.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/linux/org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.commands_3.5.0.I20090525-2000.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.filebuffers_3.5.0.v20090526-2000.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.resources_3.5.2.R35x_v20091203-1235.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.runtime_3.5.0.v20090525.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800/runtime_registry_compatibility.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.emf.ecore_2.5.0.v200906151043.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.equinox.app_1.2.0.v20090520-1800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.equinox.preferences_3.2.300.v20090520-1800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.equinox.registry_3.4.100.v20090520-1800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.jdt.compiler.apt_1.0.201.R35x_v20090825-1530.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.jdt.compiler.tool_1.0.100.v_972_R35x.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.jdt.core_3.5.1.v_972_R35x.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.jface_3.5.2.M20100120-0800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.jface.text_3.5.2.r352_v20091118-0800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.swt_3.5.2.v3557f.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.swt.cocoa.macosx_3.5.2.v3557f.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.text_3.5.0.v20090513-2000.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.ui_3.5.2.M20100120-0800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.ui.editors_3.5.0.v20090527-2000.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.ui.ide_3.5.2.M20100113-0800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.ui.views_3.4.1.M20090826-0800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.ui.workbench_3.5.2.M20100113-0800.jar"/>
-	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar"/>
-	<classpathentry kind="lib" path="junit.jar"/>
-	<classpathentry kind="lib" path="org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-	<classpathentry kind="lib" path="umple.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="xtextplugins/com.google.collect_0.8.0.v201102150722.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/com.google.inject_2.0.0.v201003051000.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/com.ibm.icu_4.2.1.v20100412.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.antlr.runtime_3.2.0.v201101311130.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.apache.commons.cli_1.0.0.v20080604-1500.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.apache.commons.logging_1.0.4.v201005080501.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.apache.log4j_1.2.15.v201005080500.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.codegen_2.6.0.v20100914-1218.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.codegen.ecore_2.6.1.v20100914-1218.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.common_2.6.0.v20100914-1218.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.ecore_2.6.1.v20100914-1218.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.ecore_2.7.0.v20110605-0747.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.mwe.core_1.0.2.v201102150556.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.mwe.utils_1.0.2.v201102150556.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.edit.ui_2.6.0.v20100914-1218.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.mwe2.language_1.0.2.v201102151014.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.mwe2.launch_1.0.2.v201102151014.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.emf.mwe2.runtime_1.0.2.v201102150556.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xpand_1.0.1.v201008251147.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtend_1.0.1.v201008251147.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtend.typesystem.emf_1.0.1.v201008251147.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext_1.0.2.v201102150722.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.common.types_1.0.2.v201102150722.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext_2.0.0.v201106070531.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.builder_1.0.2.v201102150722.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.common.types_2.0.0.v201106070531.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.common.types.ui_2.0.0.v201106070531.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.generator_1.0.2.v201102150722.jar"/>
-	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.util_1.0.2.v201102150722.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.ui_2.0.0.v201106070531.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.ui.shared_1.0.2.v201102150722.jar"/>
+	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.util_2.0.0.v201106070531.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

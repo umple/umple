@@ -32,6 +32,12 @@ singleAssociationEnd : [[multiplicity]] [type,roleName] ;
 associationEnd : [[multiplicity]] [type,roleName]
 multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]
 
+attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
+simpleAttribute- : [name] ;
+autouniqueAttribute- : [=autounique] [name] ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+
 defaultKey : key { }
 key : key { [keyId] ( , [keyId] )* }
 depend- : depend [depend] ;
