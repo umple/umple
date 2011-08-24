@@ -61,8 +61,8 @@
   ``````````````````````````` -->
 
   <target name="template.clean">
-    <delete dir="${bin.path}"/>
-    <delete dir="${dist.path}"/>
+    <delete dir="${bin.path}" failonerror="false" />
+    <delete dir="${dist.path}" failonerror="false" />
   </target>
 
   <target name="template.init">
