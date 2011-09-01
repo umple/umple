@@ -1,0 +1,62 @@
+class Person {
+  name;
+}
+
+class Student {
+  isA Person;
+
+  immutable Integer stNum;
+  
+  status {
+    Applied {
+      quit -> Quit;
+      enrol -> Enrolled;
+    }
+    Enrolled {
+      quit -> /{setSupervisor(null);} 
+        Quit;
+      graduate -> /{setSupervisor(null);}
+        Graduated;
+    }
+    Graduated {}
+    Quit {}
+  }
+
+  * -- 0..1 Supervisor;
+  
+  before setSupervisor {
+    if(aSupervisor != null
+      && (supervisor != null || 
+      status != Status.Enrolled)) {
+      return false;
+    }
+  }
+
+  // Base language method
+  public String toString() {
+    return(
+      (getName()==null ?
+        " " : getName()) +
+      " status="+getStatus() +
+      " stNum="+getStNum() +
+      " Supervisor=" +
+      (getSupervisor()==null ? "nobody" : 
+      getSupervisor().toString())
+    );
+  }
+}
+
+class Supervisor {
+  isA Person;
+
+  // Base language method
+  public String toString() {
+    return(
+      (getName()==null ?
+        " " : getName()) + " "   
+         +
+      numberOfStudents()+ " mentees"
+    );
+  }
+}
+
