@@ -68,14 +68,31 @@ function extractModelId($filename)
 
 function extractFilename()
 {
+  // If the argument is model=X, then load that saved tmp or bookmarked model
   if (isset($_REQUEST["model"]))
   {
     $filename = "../ump/". $_REQUEST["model"] ."/model.ump";
   }
+  // If the argument is example=X then copy the example and open it
+  elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
+  {
+    $fileToCopy = "ump/".htmlspecialchars($_REQUEST['example']).".ump";
+    if (!file_exists($fileToCopy))
+    {
+       $fileToCopy = "ump/NullExample.ump";
+    }
+    $destfile = nextFilename("ump");
+    $filename = "../" . $destfile;
+
+    copy($fileToCopy, $destfile);
+  }
+  // Starting from scratch; so simply create a blank model
   elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
   {
     $filename = "../" . nextFilename("ump");
   }
+ 
+  // Open any file. Needs maintenance TODO consider removing
   else
   {
     $filename = htmlspecialchars($_REQUEST['filename']);
@@ -100,6 +117,7 @@ function nextFilename($basedir = "../ump", $prefix = "tmp")
     
     if (!file_exists($dirname))
     {
+        
       mkdir($dirname);
       mkdir($uiguDirname);
       return $filename;
