@@ -17,4 +17,4 @@ Use multiline comments starting with slash-star and ending with star-slash to do
 */
 @@endexample
 
-<p><b><i>Next topic if reading in sequence:</i></b> TypesOfDirectives.</p>
+

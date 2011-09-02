@@ -23,5 +23,3 @@ useStatement- : use [use] ;
 @@example
 use Core.ump;
 @@endexample
-
-<p><b><i>Next topic if reading in sequence:</i></b> Namespace Directives.</p>

@@ -24,5 +24,3 @@ Comments can be either inlineComments, or multilineComments.
   other apples
 */
 @@endexample
-
-<p><b><i>Next topic if reading in sequence:</i></b> Inline Comments.</p>

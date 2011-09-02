@@ -11,4 +11,3 @@ Use two slashes to place comments after any text on the line. The comment ends a
 // Umple is both fun and efficient to development with
 @@endexample
 
-<p><b><i>Next topic if reading in sequence:</i></b> Multiline Comments.</p>
