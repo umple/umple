@@ -1,0 +1,25 @@
+Use Statements
+Directives
+
+@@description
+Use statements allow you to decompose your system by embedding or referencing
+other model or program entities (i.e. classes) within your current model.
+
+A model file will only be included once, subsequent "use" commands 
+for the same file will be ignored.
+
+A common technique is create a 'master' Umple file that does nothing but have a list
+of use statements.
+
+Parts of an individual class can be specified in separate files, and brought together using several use statements. For example the associations or attributes could be in one (or several) files, and the methods could be in one (or more) additional files.
+
+Another way to decompose a system is to have a 'core' set of files that can be included in several different systems using use statements.
+
+Use statements work in a manner similar to 'include' directives in other languages.
+
+@@syntax
+useStatement- : use [use] ;
+
+@@example
+use Core.ump;
+@@endexample
