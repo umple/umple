@@ -1,8 +1,8 @@
-depend
-Classes
+Depend clause
+Classes and Interfaces
 
 @@description
-Used to indicate a dependency to another namespace, class or interface
+The depend clause is used to indicate a dependency to another namespace, class or interface
 
 @@syntax
 depend [depend] ;

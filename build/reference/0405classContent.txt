@@ -1,0 +1,28 @@
+Class Content
+Classes and Interfaces
+
+@@description
+<p>      
+A class can contain any of the following items. Interfaces are limited to those marked [Interfaces]:
+</p>
+
+<ul>
+
+<li>Comments describe the intent of your class [Interfaces too]]</li>
+
+<li>isA directives that specify a superclass to your class (i.e. a Supervisor could be descrbied as "isA Person") [Interfaces can have more than one]</li>
+
+<li>Attribute describing simple data that can be found in any element of the class (i.e. name, dob, amount)</li>
+
+<li>A singleton declaration that limits the system to only one instance of this class (e.g. there may only be one Bank in a banking system)</li>
+
+<li>Depends clauses that describe external dependencies that might be used by your class within methods</li>
+
+<li>Associations that define links to instances of other classes (or to other instances of this class). </li>
+
+<li>Internal class definitions that define subclass of this class</li>
+
+<li>Methods that provide behaviour for the class [Interfaces can have declarations of methods only]</li>
+
+<li>State machine definitions that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls.
+</ul>

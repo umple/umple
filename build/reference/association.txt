@@ -1,5 +1,5 @@
 association (inline)
-Classes
+Associations
 
 @@description
 An association represents a relationship between two classes.  Associations can be defined within a class, in a similar manner

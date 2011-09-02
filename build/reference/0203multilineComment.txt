@@ -1,4 +1,4 @@
-Multiline Comment
+Multiline Comments
 Comments
 @@description
 Use multiline comments starting with slash-star and ending with star-slash to document your work. You should put a comment block, for example, at the beginning of each file.
@@ -16,3 +16,5 @@ Use multiline comments starting with slash-star and ending with star-slash to do
   other apples
 */
 @@endexample
+
+<p><b><i>Next topic if reading in sequence:</i></b> TypesOfDirectives.</p>

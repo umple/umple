@@ -1,0 +1,24 @@
+isA clause
+Classes and Interfaces
+
+@@description
+<p>Used to denote an inheritance relationship (generalization) between two classes</p>
+
+<p>This corresponds to keywords such as 'extends', 'subclass', etc. in other languages. The isA keyword was chosen so as to be independent of other languages.</p>
+
+@@syntax
+isA [extendsName] ;
+
+@@example
+
+class Person
+{
+  name;
+}
+
+class Student
+{
+  isA Person;
+  Integer number;
+}
+@@endexample

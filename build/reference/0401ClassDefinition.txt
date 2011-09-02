@@ -1,5 +1,5 @@
 Class Definition
-Entities
+Classes and Interfaces
 
 @@description
 <p>      

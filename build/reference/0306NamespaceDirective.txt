@@ -1,4 +1,4 @@
-Namespaces
+Namespace Directives
 Directives
 
 @@description

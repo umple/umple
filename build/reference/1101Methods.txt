@@ -1,10 +1,10 @@
-extraCode
-Classes
+Method Definition
+Classes and Interfaces
 
 @@description
 The Umple language allows a developer to extend the functionality of a class with arbitrary
-logic written the natively compiled language (e.g. Java or Php).  Within this arbitrary
-code, a developer is available to use the available attributes and associations; helping
+methods written the natively compiled language (e.g. Java or Php).  Within these arbitrary
+methods, a developer may call methods that access the Umple attributes, associations and state machines; helping
 to unify the programmer interface, and simplify the resulting code.
 
 @@example

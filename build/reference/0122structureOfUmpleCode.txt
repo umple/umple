@@ -9,25 +9,25 @@ User Manual
 
 <ul>
 
-<li>Entitles such as <b>Classes</b> (see classDefinition) or 
-<b>Interfaces</b> (see interfaceDefinition). These look very similar to 
+<li>Entitles such as <a href="ClassDefinition.html">classes</a> or 
+<a href="InterfaceDefinition.html">interfaces</a>. These look very similar to 
 the definitions of classes or interfaces in Java. Indeed they can be 
 identical to what you would find in a Java (or PHP or Ruby) file. However, 
 the key difference is that they can also contain Umple code for UML 
-constructs such as associations, attributes and state machines. Another 
+constructs such as <a href="AssociationDefinition.html">associations</a>, <a href="AttributeDefinition.html">attributes</a> and <a href="StateMachineDefinition.html">state machines</a>. Another 
 difference is that in Umple, you can have multiple definitions of the same 
 class; the contents of the second and subsequent definition are 
 <i>added</i> to the overall definition of the class.</li>
 
 <br />
 
-<li><b><i>Use</i> statements</b> (see useStatement) that direct Umple to include 
+<li><b><a href="UseStatements.html">Use statements</a></b> that direct Umple to include 
 other Umple files in the system. It does not matter if you 'use' the same 
 file repeatedly.</li>
 
 <br />
 
-<li><b>Namespace declarations</b>. These allow for improved modularization of a 
+<li><b><a href="NamespaceDirectives.html">Namespaces</a></b>. These allow for improved modularization of a 
 system.</li>
 
 </ul>
@@ -80,7 +80,6 @@ time, this mechanism does not allow you to override existing elememts,
 which you might need to do to add a feature. Taken together, these 
 mechanisms allow for a form of product-line development. Umple does, 
 however, have an extra feature, called <a 
-href="">http://cruise.site.uottawa.ca/umpleonline/vml.phpVML</a> that is 
-currently in need of fixing, that should assist with this when complete.</p>
+href="http://cruise.site.uottawa.ca/umpleonline/vml.php">VML</a> that should assist with this when complete.</p>
 
-<p><b><i>Next topic if reading in sequence:</i></b> To be determined.</p>
+<p><b><i>Next topic if reading in sequence:</i></b> Umple Comments.</p>

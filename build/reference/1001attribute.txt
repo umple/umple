@@ -1,5 +1,5 @@
-attribute
-Classes
+Attribute Definition
+Attributes
 
 @@description
 An attribute represents some information held by a class.  <br />

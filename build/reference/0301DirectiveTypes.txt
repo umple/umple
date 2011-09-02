@@ -7,7 +7,11 @@ Directives appear as the 'main' entries in an Umple file.</p>
 
 <ul>
 <li><a href="UseStatements.html">Use statements</a> result in inclusion of other Umple files to allow for modularization and reuse.</li>
-<li><a href="EntityDeclarations.html">Entity declarations</a> define the top level model or code elements including classes, interfaces, associations and association classes. Other model or code elements, such as methods or attributes must be placed <i>inside</i> these entities.</li>
-<li><a href="NamespaceDeclarations.html">Namespace declarations</a> gather entitles in logical groups. Within a namespace, entitles must have different names. Namespace declarations affect code generation; for example they generate packages in Java)</li>
+
+<li><b>Entity declarations</b> define the top level model or code elements including <a href="ClassDefinition.html">classes</a>, <a href="InterfaceDefinition.html">interfaces</a>, <a href="AssociationDefinition.html">associations</a> and <a href="AssociationClassDefinition.html">association classes</a>. Other model or code elements, such as <a href="MethodDefinition.html">methods</a> or <a href="AttributeDefinition.html">attributes</a> must be placed <i>inside</i> these entities.</li>
+
+<li><a href="NamespaceDirectives.html">Namespace directives</a> gather entitles in logical groups. Within a namespace, entitles must have different names. Namespaces affect code generation; for example they correspond to packages in Java.</li>
 
 </ul>
+
+<p><b><i>Next topic if reading in sequence:</i></b> Use Statements.</p>
