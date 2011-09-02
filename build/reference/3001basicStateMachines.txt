@@ -1,0 +1,35 @@
+Basic State Machines
+State Machines
+
+@@description
+<p>      
+A state machine is modeled as an attribute with a fixed set of values (called states) that
+are determined by the occurrence of events (method calls). State machines are very useful
+for quickly defining a program's behaviour
+</p>
+
+
+@@example
+
+// This example shows simple states without any actions or guards
+// More examples can be found in UmpleOnline
+// Additional details will be added here soon
+
+class GarageDoor
+{
+   status {
+      Open { buttonOrObstacle -> Closing;  }
+      Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      }
+      Closed { buttonOrObstacle -> Opening; }
+      Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      }
+      HalfOpen { buttonOrObstacle -> Opening; }
+  }
+}
+
+@@endexample
