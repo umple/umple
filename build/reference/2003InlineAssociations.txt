@@ -1,4 +1,4 @@
-association (inline)
+Inline Associations
 Associations
 
 @@description

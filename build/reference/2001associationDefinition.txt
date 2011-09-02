@@ -1,5 +1,5 @@
-associationDefinition
-Entities
+Association Definition
+Associations
 
 @@description
 <p>      
@@ -32,6 +32,4 @@ An association can be presented in four ways in Umple.
   <li>Association Class - A special notation to define the two star "*" ends within an Association Class</li>
 </ul>
   
-<p>
-Please refer to Association Section for examples and syntax for each of the notations above.
-</p>
+

@@ -3,7 +3,7 @@ Associations
 
 @@description
 <p>      
-An association class can container several components including:
+An association class can contain several components including:
 </p>
 
 <ul>

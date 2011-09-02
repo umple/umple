@@ -1,24 +1,15 @@
-associationClassDefinition
-Entities
+Association Class Definition
+Associations
 
 @@description
 <p>      
-An association class defines an object-oriented pattern to manage * to * relationships.
+An association class defines an object-oriented pattern to manage * to * (many to many) associations when data needs to be stored about each link of that association.
 </p>
+
+<p>An association class is a class and can have all the items found in a class. However it
+always has two one-to-many associations to classes that otherwise would have had a many-to-many relationship.
 
 <img src="examples/venueticket.jpg" />
-
-<p>
-An association class can be composed of the following things: 
-</p>
-
-<ul>
-<li>Inheritance</li>
-<li>Dependencies</li>
-<li>Attributes</li>
-<li>Associations</li>
-<li>Arbitrary "code" in a native language (e.g. Java)</li>
-</ul>
 
 <p>
 Please note that an association class must define both star "*" ends; otherwise use a simple class instead.
