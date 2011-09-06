@@ -176,6 +176,7 @@ $output = readTemporaryFile($filename);
           <li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li>
           <!--<li id="buttonUigu" class="uigu"><img src="scripts/uigu.png" title="Generate UI" /> Generate UI</li>-->
           <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
+          <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
         </ul>
       </div>
     </div>

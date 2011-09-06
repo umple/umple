@@ -71,6 +71,10 @@ Action.clicked = function(event)
   {
     Action.showCodeInSeparateWindow();
   }
+  else if (action == "CopyEncodedURL")
+  {
+    Action.showEncodedURLCodeInSeparateWindow();
+  }
   else if (action == "Undo")
   {
     Action.undo();
@@ -372,6 +376,12 @@ Action.showCodeInSeparateWindow = function()
 {
   codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+}
+
+Action.showEncodedURLCodeInSeparateWindow = function()
+{
+  codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
 }
 
 Action.simulateCode = function()

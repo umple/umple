@@ -86,6 +86,13 @@ function extractFilename()
 
     copy($fileToCopy, $destfile);
   }
+  elseif (isset($_REQUEST['text']) && $_REQUEST["text"] != "")
+  {
+    $destfile = nextFilename("ump");
+    $filename = "../" . $destfile;
+
+    file_put_contents($destfile, urldecode($_REQUEST["text"]));
+  }
   // Starting from scratch; so simply create a blank model
   elseif (!isset($_REQUEST['filename']) || $_REQUEST["filename"] == "")
   {

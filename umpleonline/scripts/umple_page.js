@@ -41,6 +41,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopy");
+  Page.initHighlighter("buttonCopyEncodedURL");
   Page.initHighlighter("buttonSmaller");
   Page.initHighlighter("buttonLarger");
   Page.initHighlighter("buttonSyncCode");
@@ -64,6 +65,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
+  Page.initAction("buttonCopyEncodedURL");
   Page.initAction("buttonUndo");
   Page.initAction("buttonRedo");
   Page.initAction("buttonUigu");
@@ -357,6 +359,13 @@ Page.getUmpleCode = function()
   
   var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
   return umpleCode;
+}
+
+Page.getEncodedURL = function()
+{
+  // TODO See if the server can be grabbed from the current one
+  // TODO Internet explorer limis to about 2000 characters
+    return "http://try.umple.org/?text=" + encodeURIComponent(Page.getUmpleCode());
 }
 
 Page.splitUmpleCode = function(umpleCode)
