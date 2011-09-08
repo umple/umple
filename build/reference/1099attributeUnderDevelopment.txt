@@ -1,0 +1,10 @@
+Aspects of attributes under development
+Attributes
+
+@@description
+<p>The unique keyword currently generates no code.</p>
+
+<p>The lazy keyword only currently works with immutable.</p>
+
+<p>If you discover any other problems please add an issue at
+<a href="http://bugs.umple.org">bugs.umple.org.</p>

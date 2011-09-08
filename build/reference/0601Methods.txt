@@ -8,7 +8,7 @@ methods, a developer may call methods that access the Umple attributes, associat
 to unify the programmer interface, and simplify the resulting code.
 
 @@example
-language Java;
+generate Java;
 class Person
 {
   name;

@@ -1,0 +1,105 @@
+Classes as Attribute Types
+Attributes
+
+@@description
+<p>You can declare a class as a data type of an attribute.</p>
+
+<p>Note that if you get the object stored in such an attribute
+it is currently possible to modify it, hence affecting the 
+containing object in a backhanded sort of way. This is considered
+content coupling in software engineering, and should be 
+carefully controlled or avoided. We may in future add a keyword
+to Umple to ensure this cannot happen.</p>
+
+<p>In the examples below, we show how using attribute notation
+is very simular to using a directed association, except that
+with attribute notation, you can set the value to null</p>
+
+
+@@example
+// This first example uses attribute notation
+// The address is required on the constructor, but can be null
+
+class Person {
+  name;
+  
+  // The following uses a class as the attribute type
+  Address address;
+}
+
+class Address {
+  street;
+  city;
+  postalCode;
+  country;
+}
+
+@@endexample
+
+@@example
+
+// Contrast this example with the previous one
+// Here we use a directed association instead of an attribute.
+// Note that the multiplicity on the left is of no relevance.
+// It is conventional to show it as * to indicate that the
+//  value could be attached to several objects.
+//
+// Here when you construct a Person, the address cannot be
+// null. 
+class Person {
+  name;
+  
+  * -> 1 Address address;
+}
+
+class Address {
+  street;
+  city;
+  postalCode;
+  country;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 50 29 113 63;
+  position.association Address:address__Person 30,63 30,0;
+}
+
+class Address
+{
+  position 50 131 149 114;
+}
+@@endexample
+
+@@example
+// In this example, we have made the address optional. Now, 
+// it does not appear on the constructor. However when you
+// add an address it still cannot be null.
+//
+// Note also that in this example, the role name 'address'
+// is left off to show  it is optional.
+
+class Person {
+  name;
+  
+  * -> 0..1 Address;
+}
+
+class Address {
+  street;
+  city;
+  postalCode;
+  country;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 49 29 113 63;
+  position.association Address__Person 30,63 30,0;
+}
+
+class Address
+{
+  position 49 131 149 114;
+}
+@@endexample

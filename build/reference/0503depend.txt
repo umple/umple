@@ -16,7 +16,7 @@ class Equipment
   Integer weight;
 }
 
-namespace sports.baseball
+namespace sports.baseball;
 
 class Baseball
 {

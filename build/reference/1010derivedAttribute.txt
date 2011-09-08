@@ -1,0 +1,23 @@
+Derived Attributes
+Attributes
+
+@@description
+<p>You can specify at arbitrary expression after the equals sign to create
+an attribute that will be computed. There will be no set method on such
+an attribute</p>
+
+<p>Note that unless you use the simplest of expressions, you will be limited'
+to only being able to generate code for the language of the expression.</p>
+
+@@example
+class Point 
+{
+    // Cartesian coordinates
+    Float x;
+    Float y;
+    
+    // Polar coordinates
+    Float rho = {Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2))}
+    Float theta = {Math.toDegrees(Math.atan2(getY(),getX()))}
+}
+@@endexample

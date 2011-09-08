@@ -1,0 +1,34 @@
+Umple Builtin Data Types
+Attributes
+
+@@description
+<p>The following examples illustrate the data types available
+for Umple attributes. Except as specified, they will generate
+primitive datatypes in Java</p>
+
+
+@@example
+
+class Demo 
+{
+  Integer i;
+  Float f;
+  String s;  // the default of no type is specified
+  Double d;
+  Boolean b;
+  Date d; // In Java. uses the java.sql.Date class
+  Time t; // In Java. uses the java.sql.Time class
+}
+@@endexample
+
+@@example
+
+class DemoNonUmpleType
+{
+  // If you use a non-umple type that is specific to a base
+  // programming language, then code will be generated
+  // consistent with that type, but generation of code
+  // independent of base language is no longer possible
+  int DemoJavaInt;
+}
+@@endexample
