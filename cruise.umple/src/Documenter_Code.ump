@@ -234,7 +234,8 @@ class Documenter
       if(endOfExampleBeforePosition == -1) {endOfExampleBeforePosition = example.length();}
       nextExample = nextExample.replace("@@EXAMPLE_CODE@@", example.substring(0,endOfExampleBeforePosition));
       try {
-        nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",URLEncoder.encode(example,"UTF-8"));
+        nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",
+            URLEncoder.encode(example,"UTF-8").replaceAll("\\+","%20").replaceAll("%2B","%252B"));
       }
       catch (java.io.UnsupportedEncodingException e) {
       }
