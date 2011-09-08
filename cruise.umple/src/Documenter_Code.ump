@@ -201,6 +201,8 @@ class Documenter
   
   private String toHtml(Content selectedContent, String navigationOutput)
   {
+    int endOfExampleBeforePosition=0;
+    
     if (selectedContent == null)
     {
       return "";
@@ -227,7 +229,10 @@ class Documenter
       String nextExample = Template.ExampleTemplate;
       String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
       nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
-      nextExample = nextExample.replace("@@EXAMPLE_CODE@@",example);
+      
+      endOfExampleBeforePosition = example.indexOf("//$?[End_of_model]$?");
+      if(endOfExampleBeforePosition == -1) {endOfExampleBeforePosition = example.length();}
+      nextExample = nextExample.replace("@@EXAMPLE_CODE@@", example.substring(0,endOfExampleBeforePosition));
       try {
         nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",URLEncoder.encode(example,"UTF-8"));
       }
@@ -356,9 +361,9 @@ class Template
       "@@EXAMPLE_CODE@@" + "\n" +
       "      </pre>" + "\n" +
       "<p class=\"description\">" +
-      "&nbsp; <br/><a href=\"http://try.umple.org?text=@@EXAMPLE_CODE_URL@@\">" +
+      "<a href=\"http://try.umple.org?text=@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
-      "" + "\n";
+      "&nbsp; <br/>" + "\n";
     return template;
   }
   
