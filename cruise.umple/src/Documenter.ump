@@ -12,6 +12,7 @@ namespace cruise.umple.docs;
 class Documenter
 {
   depend java.io.*;
+  depend java.net.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.*;
   

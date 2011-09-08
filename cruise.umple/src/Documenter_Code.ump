@@ -228,6 +228,11 @@ class Documenter
       String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
       nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
       nextExample = nextExample.replace("@@EXAMPLE_CODE@@",example);
+      try {
+        nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",URLEncoder.encode(example,"UTF-8"));
+      }
+      catch (java.io.UnsupportedEncodingException e) {
+      }
       exampleOutput += nextExample;
     }
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
@@ -350,6 +355,9 @@ class Template
       "      <pre name=\"code\" class=\"c-sharp\">" + "\n" +
       "@@EXAMPLE_CODE@@" + "\n" +
       "      </pre>" + "\n" +
+      "<p class=\"description\">" +
+      "&nbsp; <br/><a href=\"http://try.umple.org?text=@@EXAMPLE_CODE_URL@@\">" +
+        "Load the above code into UmpleOnline</a></p>" + "\n" +
       "" + "\n";
     return template;
   }
