@@ -1,11 +1,11 @@
 
-stateMachineDefinition : statemachine [name] { [[state]]* }
-stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] 
-inlineStateMachine : [name] { [[state]]* }
+stateMachineDefinition : statemachine [name] { [[state]]* } | [[comment]]
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]  
+inlineStateMachine : [name] { [[state]]* } | [[comment]]
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } 
-enum : [name] { } | [name] { [stateName] (, [stateName])* }
-state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* }
-stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]
+enum : [name] { } | [name] { [stateName] (, [stateName])* } | [[comment]]
+state : [stateName] { ( [=changeType:-|*]? [[stateEntity]] )* } | [[comment]]
+stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]] | [[comment]]
 transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]
 afterEveryEvent- : afterEvery -( [timer] -)
