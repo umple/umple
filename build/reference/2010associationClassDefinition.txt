@@ -1,5 +1,6 @@
 Association Class Definition
 Associations
+noreferences
 
 @@description
 <p>      
@@ -7,9 +8,12 @@ An association class defines an object-oriented pattern to manage * to * (many t
 </p>
 
 <p>An association class is a class and can have all the items found in a class. However it
-always has two one-to-many associations to classes that otherwise would have had a many-to-many relationship.
+always has two one-to-many associations to classes that otherwise would have had a many-to-many relationship.</p>
 
-<img src="examples/venueticket.jpg" />
+<p>Association classes in Umple are under development still. Some changes will
+be forthcoming. At the current time, all attributes but one must have = followed by
+a value to initialize them. Also Association classes are supposed to end up being like
+two 1-* associations; currently in Umple they appear like two 0..1-* associations.</p>
 
 <p>
 Please note that an association class must define both star "*" ends; otherwise use a simple class instead.
@@ -21,10 +25,10 @@ associationClassContent- :  [[comment]] | [[classDefinition]] | [[isA]] |  [[dep
 
 @@example
 
-association Ticket
+associationClass Ticket
 {
   Date when;
-  Double price;
+  Double price = 0.0;
   * Person attendee;
   * Venue;
 }
@@ -37,5 +41,22 @@ class Person
 class Venue
 {
   address;
+}//$?[End_of_model]$?
+
+class Ticket
+{
+  position 50 29 112 77;
+  position.association Person:attendee__Ticket 113,76 30,0;
+  position.association Ticket__Venue 30,77 30,0;
+}
+
+class Person
+{
+  position 178 124 109 60;
+}
+
+class Venue
+{
+  position 50 230 109 45;
 }
 @@endexample

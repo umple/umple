@@ -1,5 +1,6 @@
 Using UmpleOnline
 User Manual
+noreferences
 
 @@description
 
@@ -13,7 +14,9 @@ try.umple.org</a></p>
 
 <li><b>To explore examples of Umple</b>, In the centre pane, click on 
 'LOAD & SAVE'. You can load a pre-prepared example from the 'LOAD' 
-menu.</li>
+menu. You can also directly access these examples using a
+URL, whose last component is the name of the example. For example <a href="http://try.umple.org/?example=2DShapes">click
+here to jump to the 2DShapes example: http://try.umple.org/?example=2DShapes</a></li>
 
 <br />
 
@@ -22,16 +25,33 @@ saved), click 'Start Over'</li>
 
 <br />
 
-<li><b>To enable saving of your work</b>, click 'Bookmarkable URL' above 
-the left pane or in the centre pane and copy or bookmark the URL that 
-appears in your browser's URL bar. Note that from this point on you can 
+<li><b>To enable saving of your work</b>, there are two approaches:
+
+<ol>
+<li><b>click 'Save Model for Future Editing'
+above 
+the left pane or in the centre pane</b> and copy or bookmark the URL that 
+appears in your browser's URL bar. <br/>&nbsp;<br/>
+
+Note that from this point on you can 
 keep editing the Umple code or diagram, and your work will continue to be 
 saved at this URL. You are thus saving your work in the 'cloud'. You can 
 embed the URL in other pages to document your product. Note that at the 
 current time, anyone who knows your URL can also edit your work, and if 
 you forget your URL, there is no way to retrieve it. Therefore it is also 
-suggested that you copy and paste the text of important files somewhere 
-else. One thing to note is that if you just copy the visible text in the 
+suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br/></li>
+
+<li><b>Create a URL that embeds the entire diagram</b>. This is only guaranteed to
+work for small diagrams, since some browsers such as older versions
+of Internet Explorer limit the number of characters in a URL. <br/>&nbsp;<br/>
+
+To do this, click on "Encoded URL" in the Options part of the center pane,
+and copy the URL that appears in a separate window. You might want to
+use a URL shortening service such as bit.ly to shorten the URL before 
+posting it or embedding it in another document.<br/>&nbsp;<br/></li>
+
+<li><b>Copy and paste the text of important models somewhere 
+else</b>. One thing to note is that if you just copy the visible text in the 
 left hand pane, you will <u>not</u> be saving the <i>layout of the 
 diagram</i>. If you want to save this too, you have to do one of the 
 following:
@@ -45,6 +65,7 @@ edit this layout textually, but we suggest you only do that if you are an
 expert since it us much easier to edit the layout from the right-hand 
 graphical pane, as described later.
   </ul>
+</li></ol>  
 </li>
 
 </ul>

@@ -1,5 +1,6 @@
 Umple Comments
 Comments
+noreferences
 
 @@description
 Comments provide a mechanism to document your work to provide some insight into

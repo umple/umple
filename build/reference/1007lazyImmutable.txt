@@ -1,5 +1,6 @@
 Lazy Immutable Attributes
 Attributes
+noreferences
 
 @@description
 <p>If you want to avoid having an attribute change after it is initially

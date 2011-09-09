@@ -1,5 +1,6 @@
 Derived Attributes
 Attributes
+noreferences
 
 @@description
 <p>You can specify at arbitrary expression after the equals sign to create
@@ -8,6 +9,9 @@ an attribute</p>
 
 <p>Note that unless you use the simplest of expressions, you will be limited'
 to only being able to generate code for the language of the expression.</p>
+
+<p>You should make sure you call the 'get' methods provided in the Umple-generated
+API (rather than directly accessing variales) and avoid having any side-effects in your expressions. Currently this is not enforced, but may be in the future</p>
 
 @@example
 class Point 

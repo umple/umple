@@ -1,18 +1,23 @@
 Class Definition
 Classes and Interfaces
+noreferences
 
 @@description
 <p>      
-A class definotion defines an object-oriented  class available for use in your system.  A class can be 
+A class definition defines an object-oriented  class available for use in your system.  A class can be 
 composed of many things including: 
 </p>
 
 <ul>
-<li>Specification of inheritance from a superclass using the isA keyword.</li>
-<li>Dependencies</li>
-<li>Attributes</li>
-<li>Associations</li>
-<li>Methods containing "code" in a native language (e.g. Java)</li>
+<li><a href="isAclause.html">Specification of inheritance from a superclass using the
+ isA keyword</a>.</li>
+<li><a href="Dependclause.html">Dependencies</a></li>
+<li><a href="AttributeDefinition.html">Attributes</a></li>
+<li><a href="BasicStateMachines.html">State machines defining attributes whose
+behaviour is controlled by a sequence of events</a></li>
+<li><a href="AssociationDefinition.html">Associations</a></li>
+<li><a href="MethodDefinition.html">Methods containing "code" in a native language (e.g. Java)</a></li>
+
 </ul>
 
 @@syntax

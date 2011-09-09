@@ -1,5 +1,6 @@
 Banking System
 Examples
+noreferences
 
 @@description
 <img src="examples/banking.jpg" width="90%" title="Banking System UML Model"/>

@@ -1,5 +1,6 @@
 Warehouse System
 Examples
+noreferences
 
 @@description
 <img src="examples/warehouse.png" width="90%" title="Warehouse System UML Model"/>

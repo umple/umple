@@ -1,10 +1,16 @@
 Aspects of attributes under development
 Attributes
+noreferences
 
 @@description
-<p>The unique keyword currently generates no code.</p>
+<p>The unique keyword currently generates no code. In future
+the intent is that it will force all values of an attribute in your
+running program to be different.</p>
 
-<p>The lazy keyword only currently works with immutable.</p>
+<p>The lazy keyword only currently works with immutable. There
+have been requests to make it work with an ordinary attribute, such
+that the attribute need not be initialized in the constructor, but
+would have to be set before a call to get it.</p>
 
-<p>If you discover any other problems please add an issue at
-<a href="http://bugs.umple.org">bugs.umple.org.</p>
+<p>If you discover any other problems or have requests please add an issue at
+<a href="http://bugs.umple.org">bugs.umple.org.</a></p>

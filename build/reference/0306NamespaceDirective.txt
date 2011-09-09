@@ -1,5 +1,6 @@
 Namespace Directives
 Directives
+noreferences
 
 @@description
 Namespaces allow you to group similar entities to promote cohesion, 

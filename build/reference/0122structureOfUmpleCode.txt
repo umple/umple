@@ -1,5 +1,6 @@
 Structure of Umple Code
 User Manual
+noreferences
 
 @@description
 

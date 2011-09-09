@@ -1,5 +1,6 @@
 singleton
 Patterns
+noreferences
 
 @@description
 Used to mark this class as a singleon class and ensures that only one object of the class is 

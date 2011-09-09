@@ -1,5 +1,6 @@
 Multiplicity
 Associations
+noreferences
 
 @@description
 Describes the allowable number of entities that can participate in one end of an association.

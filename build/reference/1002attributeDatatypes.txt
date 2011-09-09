@@ -1,5 +1,6 @@
 Umple Builtin Data Types
 Attributes
+noreferences
 
 @@description
 <p>The following examples illustrate the data types available

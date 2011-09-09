@@ -1,5 +1,6 @@
 Method Definition
 Classes and Interfaces
+noreferences
 
 @@description
 The Umple language allows a developer to extend the functionality of a class with arbitrary

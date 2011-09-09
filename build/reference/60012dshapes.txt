@@ -1,5 +1,6 @@
 2D Shapes System
 Examples
+noreferences
 
 @@description
 <img src="examples/2dshapes.png" width="90%" title=""/>

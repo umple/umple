@@ -1,5 +1,6 @@
 Classes as Attribute Types
 Attributes
+noreferences
 
 @@description
 <p>You can declare a class as a data type of an attribute.</p>

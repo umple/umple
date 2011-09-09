@@ -1,5 +1,6 @@
 isA clause
 Classes and Interfaces
+noreferences
 
 @@description
 <p>Used to denote an inheritance relationship (generalization) between two classes</p>

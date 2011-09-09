@@ -1,5 +1,6 @@
 MultiValued Attributes
 Attributes
+noreferences
 
 @@description
 <p>As in UML, you can have attribute with multiple values.</p>

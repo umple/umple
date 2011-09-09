@@ -1,12 +1,28 @@
 Attribute Definition
 Attributes
+noreferences
 
 @@description
-An attribute represents some information held by a class.  <br />
-The attribute can have many properties, 
-and can be defaulted to a certain value.
+<p>An attribute represents some information held by a class.</p>
 
-The example below shows the basic properties of attributes.
+<p>The attribute can have many properties, 
+and can be defaulted to a certain value.</p>
+
+<p>It is important to distinguish an attribute from the concept of a 'field' or
+'instance variable' in Java or another programming language. An attribute is a
+UML/Umple entity that represents simple data. In Java it will become a field, but 
+there will also be methods associated with the Umple attribute to get it, set it, and constrain
+its value. An attribute may also automatically be added to the argument list
+of the constructor and constructed in the constructor. In
+addition to representing attributes, Java fields also represent the ends of 
+<a href="AssociationDefinition.html">associations</a>. Both attributes and associations should be considered more abstract
+than fields</p>
+
+<p><a href="BasicStateMachines.html">Umple state machines</a> are a special kind of attribute, and Umple also allows you to <a href="BeforeAndAfterStatements.html">inject
+code that will constrain or alter the values of attributes using aspect-oriented
+techniques.</a></p>
+
+<p>The example below shows the basic properties of attributes.<p>
 
 
 @@syntax
@@ -57,6 +73,8 @@ class Group
   
   // Similar to the above, except this shows that if no type is given,
   // then the default type is String
+  // Note that currently in Umple the space before and after the =
+  // is required.
   defaulted r = "";
 }
 @@endexample

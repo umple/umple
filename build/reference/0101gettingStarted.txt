@@ -1,5 +1,6 @@
 Getting Started
 User Manual
+noreferences
 
 @@description
 <p>Umple is a technology for Model-Oriented Programming.</p>
@@ -20,7 +21,7 @@ code)</li>
 
 <li><b>2. Add UML modeling constructs directly into your programs, when you 
 are programming in Java, PHP or Ruby</b>. For example, when programming in 
-Java, you can directly add a UML state machine into your code. This can 
+Java, you can directly add a UML <a href="BasicStateMachines.html">state machine</a> into your code. This can 
 save you a lot of coding. The Umple compiler acts as a pre-processor, 
 first compiling the state machine to Java, and then compiling the Java 
 into an executable program.</li>
@@ -33,8 +34,8 @@ compiler creates code in languages like Java and PHP that is of top
 quality. It is a goal of the Umple team to create the best open-source 
 code-generation tool available. The generated code never needs to be 
 edited and never should be edited, since if the generator doesn't create 
-code of the type you would like, you can always embedding native (i.e. 
-Java) methods in the Umple, or else use Umple's aspected-oriented 
+code of the type you would like, you can always embed native (i.e. 
+Java, Php, etc.) methods in the Umple, or else use Umple's <a href="BeforeAndAfterStatements.html">aspect oriented</a> 
 capabilities to achieve what you need. As a last resort, you can edit the 
 code generator, since it is open source. As a result the concept of 'round 
 tripping' is obsolete in Umple. You should treat Umple-generated code just 
@@ -48,8 +49,8 @@ so you can verify its correctness and learn how it works.</li>
 <li><b>4. Incrementally Umplify a program.</b> A program in a base 
 language like Java should pass through the Umple compiler unchanged. As a 
 result you can incrementally refactor such a program, stripping off 
-complex code for sich things as associations, state machines and patterns, 
-and replacing it by complex Umple code. This can be done bit-by-bit, while 
+complex code for such things as associations, state machines and patterns, 
+and replacing it by simple Umple code. This can be done bit-by-bit, while 
 testing thoroughly at each step. When you are done, you will have a 
 program that should not only be more compact, but also more reliable and 
 more maintainable. In addition, you have the benefit of being able to view 
@@ -62,7 +63,8 @@ and "Ample".</p>
 
 <p>The quickest way to get started with Umple is to go to <a 
 href="http://try.umple.org/">UmpleOnline</a>, to choose 'Load & Save' and 
-browse the examples listed under 'Select Example'</p>
+browse the examples listed under 'Select Example'. Each of these user manual
+pages also allows you to instantly load the examples into UmpleOnline.</p>
 
 <p>To learn more about Umple, read the links on the left of this page, or 
 go to the <a href="http://www.umple.org">Umple Home page</a>. In 

@@ -1,0 +1,24 @@
+Before and After Statements
+Aspect Orientation
+noreferences
+
+@@description
+You can request that certain code be run before or after
+various Umple-defined actions on attributes, associations and the
+components of state machines. The ability to do this with methods
+will be available soon, giving capabilities similar to aspect-oriented
+languages.
+
+
+@@example
+
+class X
+{
+  a;
+  whenWasASet;
+  
+  afterSetA {
+     setWhenWasASet(getA() + System.currentTimeMillis());
+  }
+}
+@@endexample

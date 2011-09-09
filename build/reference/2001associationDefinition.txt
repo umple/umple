@@ -1,9 +1,10 @@
 Association Definition
 Associations
+noreferences
 
 @@description
 <p>      
-An association defines a relationship from a class to a class. More specifically, it defines which links (i.e. references or pointers) may exist at run time between instances of the classes.
+An association defines a relationship from a <a href="ClassDefinition.html">class</a> to another class. More specifically, it defines which links (i.e. references or pointers) may exist at run time between instances of the classes.
 </p>
 
 <p>
@@ -16,9 +17,8 @@ An association can specify the following information:
 
 <ul>
   <li>The classes involved (i.e. one or two classes)</li>
-  <li>The restrictions on the number of objects allowed in the relationship (multiplicity)</li>
-  <li>Association end names (to clarify the relationship and avoid collision if two classes are
-  associated in multiple ways</li>
+  <li>The restrictions on the number of objects allowed in the relationship (<a href="Multiplicity.html">multiplicity</a>)</li>
+  <li><a href="RoleNames.html">Role names</a> on association ends (to clarify the relationship and avoid collision if two classes are associated in multiple ways</li>
 </ul>
 
 <p>
@@ -28,8 +28,10 @@ An association can be presented in four ways in Umple.
 <ul>
   <li>Inline - Defined within one of the classes of the relationship</li>
   <li>Reflexive - A class that is associated with itself</li>
-  <li>External - An external notation to associate two classes together</li>
-  <li>Association Class - A special notation to define the two star "*" ends within an Association Class</li>
+  <li>External - To associate a class to class in non-umple code.</li>
+  <li>Association Class - A shorthand for two one-to-many associations to a class
+  that contains data that relates the two classes. The two related classes are
+  logically in a many-many relationship (this is currently under development).</li>
 </ul>
   
 
