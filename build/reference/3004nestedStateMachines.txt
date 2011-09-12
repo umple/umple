@@ -1,0 +1,228 @@
+Nested State Machines
+State Machines
+noreferences
+
+@@description
+<p>      
+State machined can be nested inside another. This often allows for simpler Umple (or UML)
+notation, since events that need to cause effects in every substate of the outer state do not have to be repeated in each of the substates.
+</p>
+
+<p>
+The first example below illustrates nesting abstractly. The next example shows nesting in
+a concrete example. The third example is the same as the second, but with no nesting, to
+illustrate the difference.
+</p>
+
+
+@@example
+
+// Illustration of nested states. Event e1 will take the system into
+// state s2, and its first substrate s2a. Event e2 directly goes to s2b.
+// Event e3 toggles between s2b and s2a. Event e1 when in s2, goes to s1
+
+class A {
+  sm {
+     s1 {
+        e1 -> s2;
+        e2 -> s2b;
+     }
+     s2 {
+        e1 -> s1;
+        s2a {
+          e3 -> s2b;
+        }
+        s2b {
+          e3 -> s2a;
+        }
+     }
+  }
+}
+
+@@endexample
+
+
+@@example
+
+// Example showing nested states.
+
+class Course {
+  code;
+  description;
+  1 -- * CourseSection;
+}
+
+class CourseSection
+{
+  // Example from Lethbridge and Laganiere: Object Oriented Software
+  // Engineering: Practical Software Development using UML and Java
+  // McGraw Hill, 2005  www.lloseng.com
+
+  sectionId;
+  Integer classSize = 0;
+  Integer minimumClassSize = 10;
+  Integer maximumClassSize = 100;
+  
+  // State machine controlling status
+  status
+  {
+    Planned {
+      openRegistration -> OpenNotEnoughStudents;
+    }
+    Open {
+      closeRegistration -> Cancelled;
+      cancel -> Cancelled;
+      NotEnoughStudents {
+        register [getClassSize() > getMinimumClassSize()] -> OpenEnoughStudents;
+      }
+      EnoughStudents {
+        register [getClassSize() > getMaximumClassSize()] -> Closed;
+      }
+    }
+    Cancelled {}
+    Closed {}
+  }
+
+  boolean requestToRegister(Student aStudent)
+  {
+    register();
+    setClassSize(getClassSize()+1);
+  }
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 49 22 149 80;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 49 22 149 80;
+  position.association Course__CourseSection 30,80 30,0;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 50 30 109 45;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 49 30 149 80;
+}
+
+class Course
+{
+  position.association Course__CourseSection 31,80 30,0;
+}
+
+@@endexample
+
+
+
+@@example
+
+// Example with an opportunity to nest states, to avoid repeating
+// transitions
+
+class Course {
+  code;
+  description;
+  1 -- * CourseSection;
+}
+
+class CourseSection
+{
+  // Example from Lethbridge and Laganiere: Object Oriented Software
+  // Engineering: Practical Software Development using UML and Java
+  // McGraw Hill, 2005  www.lloseng.com
+
+  sectionId;
+  Integer classSize = 0;
+  Integer minimumClassSize = 10;
+  Integer maximumClassSize = 100;
+  
+  // State machine controlling status
+  status
+  {
+    Planned {
+      openRegistration -> OpenNotEnoughStudents;
+    }
+    OpenNotEnoughStudents {
+      closeRegistration -> Cancelled;
+      cancel -> Cancelled;
+      register [getClassSize() > getMinimumClassSize()] -> OpenEnoughStudents;
+    }
+    OpenEnoughStudents {
+      closeRegistration -> Cancelled;
+      cancel -> Cancelled;
+      register [getClassSize() > getMaximumClassSize()] -> Closed;
+    }
+    Cancelled {}
+    Closed {}
+  }
+
+  boolean requestToRegister(Student aStudent)
+  {
+    register();
+    setClassSize(getClassSize()+1);
+  }
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 49 22 149 80;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 49 22 149 80;
+  position.association Course__CourseSection 30,80 30,0;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 50 30 109 45;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 49 30 149 80;
+}
+
+class Course
+{
+  position.association Course__CourseSection 31,80 30,0;
+}
+
+@@endexample

@@ -3,7 +3,7 @@ Examples
 noreferences
 
 @@description
-<p>A simple airline system that manage flight and passenger information</p>
+<p>A simple airline system that manages flight and passenger information</p>
 
 <img src="examples/airline.png" title="Airline System UML Model" width="90%" />
 
@@ -70,5 +70,44 @@ association {
 
 association {
   1 Airline -- * Person;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 61 23 149 80;
+  position.association Person__PersonRole 36,80 30,0;
+}
+
+class Airline
+{
+  position.association Airline__RegularFlight 25,46 30,0;
+  position 266 24 109 45;
+}
+
+class PersonRole
+{
+  position 60 140 109 45;
+}
+
+class SpecificFlight
+{
+  position 370 286 109 45;
+}
+
+class RegularFlight
+{
+  position.association RegularFlight__SpecificFlight 48,63 50,0;
+  position 358 159 109 63;
+}
+
+class PassengerRole
+{
+  position.association Booking__PassengerRole 55,63 11,0;
+  position 165 259 113 63;
+}
+
+class Booking
+{
+  position 259 398 157 63;
 }
 @@endexample

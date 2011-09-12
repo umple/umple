@@ -35,7 +35,7 @@ quality. It is a goal of the Umple team to create the best open-source
 code-generation tool available. The generated code never needs to be 
 edited and never should be edited, since if the generator doesn't create 
 code of the type you would like, you can always embed native (i.e. 
-Java, Php, etc.) methods in the Umple, or else use Umple's <a href="BeforeAndAfterStatements.html">aspect oriented</a> 
+Java, Php, etc.) methods in the Umple, or else use Umple's <a href="BeforeandAfterStatements.html">aspect oriented</a> 
 capabilities to achieve what you need. As a last resort, you can edit the 
 code generator, since it is open source. As a result the concept of 'round 
 tripping' is obsolete in Umple. You should treat Umple-generated code just 

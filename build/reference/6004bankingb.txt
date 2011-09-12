@@ -79,5 +79,71 @@ class Branch
 
 class Loan{
  isA BankAccount;
+}//$?[End_of_model]$?
+
+class CreditCardCompany
+{
+  position 73 122 139 45;
+}
+
+class DebitCard
+{
+  position 134 543 109 45;
+}
+
+class Bank
+{
+  position 263 123 109 45;
+  position.association Bank__Branch 110,10 0,10;
+}
+
+class FinancialInstitution
+{
+  position.association FinancialInstitution__ReusableFinancialInstrument 30,63 30,0;
+  position 18 12 132 63;
+}
+
+class ReusableFinancialInstrument
+{
+  position 14 304 191 80;
+}
+
+class FinancialInstrument
+{
+  position 71 199 137 45;
+  position.association Currency:denomination__FinancialInstrument 138,25 0,52;
+}
+
+class Currency
+{
+  position 298 184 169 80;
+}
+
+class BankAccount
+{
+  position 371 435 219 97;
+  position.association BankAccount__Cheque 4,0 184,97;
+  position.association BankAccount__DebitCard 0,29 71,0;
+}
+
+class Branch
+{
+  position.association BankAccount__Branch 58,80 164,0;
+  position 444 56 128 80;
+}
+
+class Cheque
+{
+  position 217 296 191 97;
+}
+
+class Loan
+{
+  position 283 552 109 45;
+}
+
+class CreditCard
+{
+  position 11 457 147 80;
 }
 @@endexample
