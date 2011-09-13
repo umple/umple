@@ -29,7 +29,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.xtext.junit.util.PluginUtil;
+import org.eclipse.xtext.ui.junit.util.PluginUtil;
+
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("restriction")

@@ -10,10 +10,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.core.resources;bundle-version="3.6.1",
- org.junit4;bundle-version="4.8.1"
+ org.eclipse.xtext.ui.junit;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.common.collect,
+ cruise.umple,
+ cruise.umple.compiler,
+ cruise.umple.util,
  org.eclipse.core.resources,
  org.eclipse.emf.common.util,
  org.eclipse.emf.ecore,
@@ -22,8 +25,7 @@ Import-Package: com.google.common.collect,
  org.eclipse.emf.ecore.xmi.impl,
  org.eclipse.jdt.core,
  org.eclipse.jdt.core.eval,
- org.eclipse.jdt.launching,
- org.eclipse.xtext.junit.util
+ org.eclipse.jdt.launching
 Export-Package: cruise.umple.umplificator.core.generator.umple,
  cruise.umple.umplificator.core.inventory,
  cruise.umple.umplificator.core.types

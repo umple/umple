@@ -7,8 +7,8 @@
 
 class <%=uClass.getName()%>
 {
-  <%@ include file="inheritance.jet" %>
   <%@ include file="depends.jet" %>
+  <%@ include file="inheritance.jet" %>
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllAssociations.jet" %>
   <%@ include file="members_AllMethods.jet" %>

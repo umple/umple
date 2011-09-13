@@ -16,9 +16,11 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
+import cruise.umple.compiler.UmpleClass;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
 import cruise.umple.umplificator.core.inventory.JavaProjectInventory;
+import cruise.umple.umplificator.umple.UmpleClassGenerator;
 
 
 /**
@@ -107,22 +109,21 @@ public class UmpleGenerator {
 	}
 	
 	public static void translateJavaClass(ICompilationUnit unit){
-		String className= unit.getElementName().substring(0, unit.getElementName().length()-5);
-	    StringBuilder contents = new StringBuilder();
-		try {
-			contents = new StringBuilder();
-			contents.append(translatePackageName(unit)+ "\n");
-			contents.append("\n");
-			contents.append("class " + className +"{" + "\n");
-			contents.append(translateImports(unit)+ "\n");
-			contents.append(translateFields(unit)+ "\n");
-			contents.append(translateMethods(unit)+ "\n");
-			contents.append("}"+ "\n");
-			writeFile(unit, contents.toString());
-		} catch (CoreException e) {
-			logger.error(e);
-		}
+	    JavaMetamodelConverter converter = new JavaMetamodelConverter();
+	    UmpleClass uClass = converter.getUmpleClassFromJavaClass(unit);
+	    UmpleClassGenerator generator = new UmpleClassGenerator();
+		writeFile(unit, generator.getCode(null, uClass));
 	}
+	
+/*	contents = new StringBuilder();
+	contents.append(translatePackageName(unit)+ "\n");
+	contents.append("\n");
+	contents.append("class " + className +"{" + "\n");
+	contents.append(translateImports(unit)+ "\n");
+	contents.append(translateFields(unit)+ "\n");
+	contents.append(translateMethods(unit)+ "\n");
+	contents.append("}"+ "\n");*/
+	
 	
 	public static void writeFile(ICompilationUnit unit, String contents){
 		String className= unit.getElementName().substring(0, unit.getElementName().length()-5);

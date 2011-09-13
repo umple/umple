@@ -10,6 +10,8 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.junit.*;
 import org.apache.log4j.Logger;
 
+
+// TO BE RUN AS JUNIT PLUGIN TEST
 public class JavaClassInventoryTest {
 
 	ICompilationUnit cunit;

@@ -1,10 +1,5 @@
 package cruise.umple.umplificator.core.inventory;
 
-import static org.eclipse.xtext.junit.util.IResourcesSetupUtil.addNature;
-import static org.eclipse.xtext.junit.util.JavaProjectSetupUtil.addSourceFolder;
-import static org.eclipse.xtext.junit.util.JavaProjectSetupUtil.createJavaProject;
-import static org.eclipse.xtext.junit.util.JavaProjectSetupUtil.createSubFolder;
-
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -34,16 +29,16 @@ public class TestUtil {
 	}
 
 	public static IJavaProject createJavaProjectWithRootSrc(String string) throws CoreException {
-		IJavaProject project = createJavaProject(string);
-		addNature(project.getProject(), JavaProjectSetupUtil.NATURE_ID);
-		addSourceFolder(project, "src");
+		IJavaProject project = JavaProjectSetupUtil.createJavaProject(string);
+		JavaProjectSetupUtil.addProjectNature(project.getProject(), JavaProjectSetupUtil.NATURE_ID);
+		JavaProjectSetupUtil.addSourceFolder(project, "src");
 		return project;
 	}
 
 	public static IFolder addFolder(IJavaProject javaProject, String folderName) throws CoreException,
 	JavaModelException {
 		IProject project = javaProject.getProject();
-		IFolder folder = createSubFolder(project, folderName); 
+		IFolder folder = JavaProjectSetupUtil.createSubFolder(project, folderName); 
 		return folder;
 	}
 

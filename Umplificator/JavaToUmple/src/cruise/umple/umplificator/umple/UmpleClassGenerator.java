@@ -50,14 +50,15 @@ public class UmpleClassGenerator
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_3);
     
+
+
+
+    
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
     append(stringBuffer, "import {0};",depend.getName());
   }
-
-    
-
 
     
 

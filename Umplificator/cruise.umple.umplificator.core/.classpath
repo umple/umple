@@ -4,9 +4,9 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/test"/>
+	<classpathentry kind="src" path="src/main/gen"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="/home/millos/Repositories/UmpleGoogle/umple/lib/junit.jar"/>
-	<classpathentry kind="lib" path="/home/millos/Repositories/UmpleGoogle/umple/lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core.source_3.6.2.v_A76_R36x.jar"/>
+	<classpathentry kind="lib" path="/lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+	<classpathentry kind="lib" path="/lib/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
