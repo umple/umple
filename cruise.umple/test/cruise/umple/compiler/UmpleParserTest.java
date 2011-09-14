@@ -84,7 +84,8 @@ public class UmpleParserTest
   {
     assertParse("003_multipleExtraCode.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
-    Assert.assertEquals("blahblah\nmoreblah",aClass.getExtraCode());
+     Assert.assertEquals("blahblah"+ 
+        System.getProperty("line.separator") + "moreblah",aClass.getExtraCode());
   }
   
   @Test
@@ -92,7 +93,9 @@ public class UmpleParserTest
   {
     assertParse("003_constructorExtraCode.ump");  
     UmpleClass aClass = model.getUmpleClass("Student");
-    Assert.assertEquals(" public Student(String x)  {\nblah();\n  }",aClass.getExtraCode());
+     Assert.assertEquals(" public Student(String x)  {"+ 
+         System.getProperty("line.separator") + "blah();"+ 
+         System.getProperty("line.separator") + "  }",aClass.getExtraCode());
   }
   
   @Test

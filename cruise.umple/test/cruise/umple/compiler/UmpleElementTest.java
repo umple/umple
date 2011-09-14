@@ -20,7 +20,8 @@ public class UmpleElementTest
     ele.appendExtraCode("a");
     Assert.assertEquals("a",ele.getExtraCode());
     ele.appendExtraCode("b");
-    Assert.assertEquals("a\nb",ele.getExtraCode());
+     Assert.assertEquals("a" + System.getProperty("line.separator") + 
+                         "b",ele.getExtraCode());
   }
 
   @Test
