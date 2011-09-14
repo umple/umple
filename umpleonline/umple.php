@@ -21,7 +21,7 @@ $output = readTemporaryFile($filename);
       <td>
         <p class="pagedescription">
         Draw on the right, write (Umple) model code on the left. Generate Java, PHP or Ruby code from your models. <br/>
-        Visit <a href="http://cruise.site.uottawa.ca/umple/">Umple Home Page</a> for help.
+        Visit <a href="http://cruise.site.uottawa.ca/umple/UsingUmpleOnline.html">the User Manual</a> or <a href="http://cruise.site.uottawa.ca/umple/">the Umple Home Page</a> for help.
         <a href="download_eclipse_umple_plugin.html">Download Eclipse Plugin</a>
         </p>
       </td>
