@@ -1,0 +1,38 @@
+Code Injection Pattern Matching
+Aspect Orientation
+noreferences
+
+@@description
+<p>When creating before and after statements, you
+can arrange for the code to be injected into certain
+methods that mach a pattern. You can use * as a wildcard, and ! as an
+exclusion operator. The following examples will both generate the
+same code.</p>
+
+@@example
+
+class Student
+{
+  firstName;
+  lastName;
+  cityOfBirth;
+  before get*Name { 
+    if ( DEBUG) { System.out.println("accessing the name"); }
+  }
+}
+
+@@endexample
+
+@@example
+
+class Student
+{
+  firstName;
+  lastName;
+  cityOfBirth;
+  before get*,!getCityOfBirth { 
+    if ( DEBUG) { System.out.println("accessing the name"); }
+  }
+}
+
+@@endexample

@@ -3,12 +3,18 @@ Aspect Orientation
 noreferences
 
 @@description
-You can request that certain code be run before or after
+<p>You can request that certain code be run before or after
 various Umple-defined actions on attributes, associations and the
 components of state machines. The ability to do this with methods
 will be available soon, giving capabilities similar to aspect-oriented
-languages.
+languages.<p>
 
+<p>Using 'before' allows you to enforce preconditions, such that 
+the attribute or association will not be set if the precondition
+is not true. To reject setting a value, add 'return false'.</p>
+
+<p>You can add before and after clauses to add code to generated methods of the form getX, setX, addX, removeX, getXs (to get all elements of an association), numberOfXs, indexOfX, where X is the name of the attribute or association. You can also add code before and
+after the constructor.</p>
 
 @@example
 
@@ -19,6 +25,32 @@ class X
   
   afterSetA {
      setWhenWasASet(getA() + System.currentTimeMillis());
+  }
+}
+@@endexample
+
+@@example
+
+class Person {
+  name;
+  before setName {
+    if (aName != null && aName.length() > 20) { return false; }
+  }
+}
+
+@@endexample
+
+@@example
+class Operation {
+  query;
+  before constructor {
+    if (aQuery == null)
+    {
+      throw new RuntimeException("Please provide a valid query");
+    }
+  }
+  after constructor {
+    if (DEBUG) { System.out.println("Created " + query); }
   }
 }
 @@endexample

@@ -72,7 +72,7 @@ particular, you should browse the <a
 href="http://code.google.com/p/umple/wiki/Tutorials">tutorials and videos 
 about Umple</a></p>
 
-<p><b><i>Next topic if reading in sequence:</i></b> Umple Tools.</p>
+<p><b><i>Next topic if reading in sequence:</i></b> <a href="UmpleTools.html">Umple Tools</a>.</p>
 
 <hr />
 

@@ -8,6 +8,11 @@ noreferences
 href="http://try.umple.org">UmpleOnline tool accessible online at 
 try.umple.org</a></p>
 
+<p>For information about writing Umple models or code in UmpleOnline, look at the <a href="GettingStarted.html">Getting
+Started section of this user manual</a>, or any other topic in the left
+column of this page, including information about defining <a href="ClassDefinition.html">classes</a>,
+<a href="AttributeDefinition.html">attributes</a>, <a href="AssociationDefinition.html">associations</a> and <a href="BasicStateMachines.html">state machines</a>.</p>
+
 <p><b>Loading and saving</b></p>
 
 <ul>

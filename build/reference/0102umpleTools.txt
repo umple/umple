@@ -34,4 +34,4 @@ version number of the compiler that you downloaded.</li>
 </ul>
 
 
-<p><b><i>Next topic if reading in sequence:</i></b> Using UmpleOnline.</p>
+<p><b><i>Next topic if reading in sequence:</i></b> <a href="UsingUmpleOnline.html">Using UmpleOnline</a>.</p>

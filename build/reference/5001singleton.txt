@@ -1,10 +1,9 @@
-singleton
-Patterns
+Singleton Pattern
+Other Features
 noreferences
 
 @@description
-Used to mark this class as a singleon class and ensures that only one object of the class is 
-instantiated at runtime.
+The Singleton pattern to mark a class as a singleon class. The code ensures that only one object of the class is instantiated at runtime.
 
 @@syntax
 singleton ;
