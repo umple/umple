@@ -22,6 +22,19 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void stateMachineComments()
+  {
+    assertParse("100_stateMachineComments.ump","[inlineComment:one][inlineComment:two][classDefinition][name:LightFixture][inlineComment:three][inlineComment:four][stateMachine][inlineStateMachine][name:status][inlineComment:five][inlineComment:six][state][stateName:On][inlineComment:seven][inlineComment:eight][transition][event:flip][stateName:Off][inlineComment:nine][inlineComment:ten][state][stateName:Off][inlineComment:eleven][inlineComment:twelve]");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("status", sm.getName());
+    Assert.assertEquals(2, sm.numberOfStates());
+    Assert.assertEquals("On",sm.getState(0).getName());
+    Assert.assertEquals("Off",sm.getState(1).getName());
+  }
+  
+  @Test
   public void transitionToUnknownState()
   {
     assertParse("100_transitionToUnknownState.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Off]");
