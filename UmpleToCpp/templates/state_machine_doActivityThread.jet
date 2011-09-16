@@ -2,7 +2,7 @@
 <%   
   StringBuffer output = new StringBuffer();
 
-  boolean isFirst = true;
+  isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
     for (State state : sm.getStates())

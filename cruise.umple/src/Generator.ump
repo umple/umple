@@ -118,6 +118,21 @@ class JavaGenerator
   UmpleModel model = null;
 }
 
+class CppGenerator
+{
+  isA CodeGenerator;
+  isA CodeTranslator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.java.*;  
+  
+  UmpleModel model = null;
+}
+
+
 class PhpGenerator
 {
   isA CodeGenerator;
@@ -153,3 +168,4 @@ use Generator_Code.ump;
 use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodePhp.ump;
+use Generator_CodeCpp.ump;

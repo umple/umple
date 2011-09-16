@@ -6,9 +6,10 @@
     append(stringBuffer, "import {0};",depend.getName());
   }
   
-  for (String anImport : gInterface.getMultiLookup("import"))
-  {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",anImport);
-  }
+  // TODO: No test failed from removing this
+  // for (String anImport : gInterface.getMultiLookup("import"))
+  // {
+  //  appendln(stringBuffer, "");
+  //  append(stringBuffer, "import {0};",anImport);
+  // }
 %>

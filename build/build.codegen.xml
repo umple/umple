@@ -12,6 +12,9 @@
     <copy todir="UmpleToRuby/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
     </copy>
+    <copy todir="UmpleToCpp/templates" overwrite="true">
+      <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
+    </copy>
   </target>
   
   <!-- Translate the *.jet and *.jumpjet files into Java source code -->
@@ -28,6 +31,9 @@
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
+      <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes="*.svn" />
     </copy>
   </target> -->
 

@@ -7,6 +7,8 @@
       }
       else
       {
-        <%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
+        <%=gen.translate("type",av)%> <%=gen.translate("removeParameterOne",av)%> = <%=gen.translate("associationOne",av)%>;
+        this.<%=gen.translate("associationOne",av)%> = null;
+        <%=gen.translate("removeParameterOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
       }
     }

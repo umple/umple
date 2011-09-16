@@ -76,6 +76,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeGenerator" interface="true" abstract="true">
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CppGenerator" eSuperTypes="#//CodeGenerator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeGenerator" interface="true" abstract="true">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PhpGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
   </eClassifiers>

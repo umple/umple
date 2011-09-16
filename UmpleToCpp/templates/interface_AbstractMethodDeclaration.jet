@@ -20,9 +20,9 @@
     				paramType = aMethodParam.getType();
         			isList = aMethodParam.getIsList() ? " [] " : " ";
     				aSingleParameter = paramType + isList + paramName;
-        			parameters += aSingleParameter + ",";
+        			parameters += aSingleParameter + ", ";
     			}
-    			String finalParams = parameters.substring(0, parameters.length()-1);
+    			String finalParams = parameters.substring(0, parameters.length()-2);
     			appendln(stringBuffer, "");
     			append(stringBuffer, " {0} {1} {2}({3});", methodModifier, methodType, methodName, finalParams);	
     		}

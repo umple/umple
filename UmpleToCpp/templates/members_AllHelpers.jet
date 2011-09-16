@@ -2,7 +2,7 @@
 <%
 {
 
-  boolean isFirst = true;
+  isFirst = true;
   if (uClass.getKey().isProvided())
   {
     isFirst = false;
