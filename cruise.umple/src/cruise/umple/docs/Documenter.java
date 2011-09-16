@@ -3,6 +3,7 @@
 
 package cruise.umple.docs;
 import java.io.*;
+import java.net.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.*;
 import java.util.*;
@@ -280,6 +281,8 @@ public class Documenter
   
   private String toHtml(Content selectedContent, String navigationOutput)
   {
+    int endOfExampleBeforePosition=0;
+    
     if (selectedContent == null)
     {
       return "";
@@ -306,7 +309,16 @@ public class Documenter
       String nextExample = Template.ExampleTemplate;
       String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
       nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
-      nextExample = nextExample.replace("@@EXAMPLE_CODE@@",example);
+      
+      endOfExampleBeforePosition = example.indexOf("//$?[End_of_model]$?");
+      if(endOfExampleBeforePosition == -1) {endOfExampleBeforePosition = example.length();}
+      nextExample = nextExample.replace("@@EXAMPLE_CODE@@", example.substring(0,endOfExampleBeforePosition));
+      try {
+        nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",
+            URLEncoder.encode(example,"UTF-8").replaceAll("\\+","%20").replaceAll("%2B","%252B"));
+      }
+      catch (java.io.UnsupportedEncodingException e) {
+      }
       exampleOutput += nextExample;
     }
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
