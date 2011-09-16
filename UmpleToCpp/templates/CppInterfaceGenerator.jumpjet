@@ -1,9 +1,9 @@
-<%@ jet package="cruise.umple.compiler.java" class="JavaInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ jet package="cruise.umple.compiler.cpp" class="CppInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
   UmpleInterface uInterface = (UmpleInterface) uElement;
   GeneratedInterface gInterface = uInterface.getGeneratedInterface();
-  JavaGenerator gen = new JavaGenerator();
+  CppGenerator gen = new CppGenerator();
   gen.setModel(model);
 
   String extraCode = "";

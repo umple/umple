@@ -1,9 +1,9 @@
-<%@ jet package="cruise.umple.compiler.java" class="JavaClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ jet package="cruise.umple.compiler.cpp" class="CppClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
   UmpleClass uClass = (UmpleClass) uElement;  
   GeneratedClass gClass = uClass.getGeneratedClass();
-  JavaGenerator gen = new JavaGenerator();
+  CppGenerator gen = new CppGenerator();
   gen.setModel(model);
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
