@@ -1,0 +1,228 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Associations
+  private Course main;
+  private List<Course> secondaries;
+
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetMain;
+  private boolean canSetSecondaries;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor()
+  {
+    secondaries = new ArrayList<Course>();
+    cachedHashCode = -1;
+    canSetMain = true;
+    canSetSecondaries = true;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Course getMain()
+  {
+    return main;
+  }
+
+  public Course getSecondary(int index)
+  {
+    Course aSecondary = secondaries.get(index);
+    return aSecondary;
+  }
+
+  public List<Course> getSecondaries()
+  {
+    List<Course> newSecondaries = Collections.unmodifiableList(secondaries);
+    return newSecondaries;
+  }
+
+  public int numberOfSecondaries()
+  {
+    int number = secondaries.size();
+    return number;
+  }
+
+  public boolean hasSecondaries()
+  {
+    boolean has = secondaries.size() > 0;
+    return has;
+  }
+
+  public int indexOfSecondary(Course aSecondary)
+  {
+    int index = secondaries.indexOf(aSecondary);
+    return index;
+  }
+
+  public boolean setMain(Course newMain)
+  {
+    boolean wasSet = false;
+    if (!canSetMain) { return false; }
+    if (newMain == null)
+    {
+      Course existingMain = main;
+      main = null;
+      
+      if (existingMain != null && existingMain.getMentor() != null)
+      {
+        existingMain.setMentor(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    Course currentMain = getMain();
+    if (currentMain != null && !currentMain.equals(newMain))
+    {
+      currentMain.setMentor(null);
+    }
+
+    main = newMain;
+    Mentor existingMentor = newMain.getMentor();
+
+    if (!equals(existingMentor))
+    {
+      newMain.setMentor(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public static int minimumNumberOfSecondaries()
+  {
+    return 0;
+  }
+
+  public boolean addSecondary(Course aSecondary)
+  {
+    boolean wasAdded = false;
+    if (!canSetSecondaries) { return false; }
+    if (secondaries.contains(aSecondary)) { return false; }
+    Mentor existingMentor = aSecondary.getMentor();
+    if (existingMentor == null)
+    {
+      aSecondary.setMentor(this);
+    }
+    else if (!this.equals(existingMentor))
+    {
+      existingMentor.removeSecondary(aSecondary);
+      addSecondary(aSecondary);
+    }
+    else
+    {
+      secondaries.add(aSecondary);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeSecondary(Course aSecondary)
+  {
+    boolean wasRemoved = false;
+    if (!canSetSecondaries) { return false; }
+    if (secondaries.contains(aSecondary))
+    {
+      secondaries.remove(aSecondary);
+      aSecondary.setMentor(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Mentor compareTo = (Mentor)obj;
+  
+    if (main == null && compareTo.main != null)
+    {
+      return false;
+    }
+    else if (main != null && !main.equals(compareTo.main))
+    {
+      return false;
+    }
+
+    if (secondaries.size() != compareTo.secondaries.size())
+    {
+      return false;
+    }
+
+    for (int i=0; i<secondaries.size(); i++)
+    {
+      Course me = secondaries.get(i);
+      Course them = compareTo.secondaries.get(i);
+      if (me == null && them != null)
+      {
+       return false;
+      }
+      else if (me != null && !me.equals(them))
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    if (main != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + main.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+    if (secondaries != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + secondaries.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetMain = false;
+    canSetSecondaries = false;
+    return cachedHashCode;
+  }
+
+  public void delete()
+  {
+    if (main != null)
+    {
+      main.setMentor(null);
+    }
+    for(Course aSecondary : secondaries)
+    {
+      aSecondary.setMentor(null);
+    }
+  }
+
+}

@@ -1,0 +1,68 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example.one;
+import example.two.*;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+
+  //Mentor Associations
+  private Student student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName)
+  {
+    name = aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public void delete()
+  {
+    if (student != null)
+    {
+      if (student.numberOfMentors() <= 1)
+      {
+        student.delete();
+      }
+      else
+      {
+        Student placeholderStudent = student;
+        this.student = null;
+        placeholderStudent.removeMentor(this);
+      }
+    }
+  }
+
+}

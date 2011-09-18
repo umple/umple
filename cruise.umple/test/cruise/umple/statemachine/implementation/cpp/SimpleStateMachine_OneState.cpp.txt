@@ -1,0 +1,50 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student State Machines
+  enum Grade { Pass }
+  private Grade grade;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {
+    setGrade(Grade.Pass);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getGradeFullName()
+  {
+    String answer = grade.toString();
+    return answer;
+  }
+
+  public Grade getGrade()
+  {
+    return grade;
+  }
+
+  public boolean setGrade(Grade aGrade)
+  {
+    grade = aGrade;
+    return true;
+  }
+
+  public void delete()
+  {}
+
+}

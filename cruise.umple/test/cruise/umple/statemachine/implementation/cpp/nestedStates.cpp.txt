@@ -1,0 +1,155 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { Off, On }
+  enum BulbOn { Null, Normal, Dimmed }
+  private Bulb bulb;
+  private BulbOn bulbOn;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulb(Bulb.Off);
+    if (bulbOn == null) { setBulbOn(BulbOn.Null); }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    if (bulbOn != BulbOn.Null) { answer += "." + bulbOn.toString(); }
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  public BulbOn getBulbOn()
+  {
+    return bulbOn;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (bulb)
+    {
+      case Off:
+        setBulb(Bulb.On);
+        wasEventProcessed = true;
+        break;
+      case On:
+        exitBulb();
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean enterOn()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (bulbOn)
+    {
+      case Null:
+        setBulbOn(BulbOn.Normal);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean exitOn()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (bulbOn)
+    {
+      case Normal:
+        setBulbOn(BulbOn.Null);
+        wasEventProcessed = true;
+        break;
+      case Dimmed:
+        setBulbOn(BulbOn.Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean touch()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (bulbOn)
+    {
+      case Normal:
+        setBulbOn(BulbOn.Dimmed);
+        wasEventProcessed = true;
+        break;
+      case Dimmed:
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitBulb()
+  {
+    switch(bulb)
+    {
+      case On:
+        exitOn();
+        break;
+    }
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+
+    // entry actions and do activities
+    switch(bulb)
+    {
+      case On:
+        if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }
+        break;
+    }
+  }
+
+  private void setBulbOn(BulbOn aBulbOn)
+  {
+    bulbOn = aBulbOn;
+    if (bulb != Bulb.On && aBulbOn != BulbOn.Null) { setBulb(Bulb.On); }
+  }
+
+  public void delete()
+  {}
+
+}

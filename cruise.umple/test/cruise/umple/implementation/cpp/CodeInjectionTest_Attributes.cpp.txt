@@ -1,0 +1,186 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String id;
+  private String name;
+  private String type;
+  private List<String> roles;
+
+  //Helper Variables
+  private boolean canSetId;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aName)
+  {
+    print "before constructor";
+    canSetId = true;
+    name = aName;
+    resetType();
+    roles = new ArrayList<String>();
+    print "after constructor";
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(String aId)
+  {
+    boolean wasSet = false;
+    print "start setId";
+    if (!canSetId) { return false; }
+    canSetId = false;
+    id = aId;
+    wasSet = true;
+    print "end setId";
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    print "start setName";
+    print "start setName2";
+    name = aName;
+    wasSet = true;
+    print "end setName";
+    return wasSet;
+  }
+
+  public boolean setType(String aType)
+  {
+    boolean wasSet = false;
+    print "start setType";
+    type = aType;
+    wasSet = true;
+    print "end setType";
+    return wasSet;
+  }
+
+  public boolean resetType()
+  {
+    boolean wasReset = false;
+    print "start resetType";
+    type = getDefaultType();
+    wasReset = true;
+    print "end resetType";
+    return wasReset;
+  }
+
+  public boolean addRole(String aRole)
+  {
+    boolean wasAdded = false;
+    print "start add";
+    wasAdded = roles.add(aRole);
+    print "end add";
+    return wasAdded;
+  }
+
+  public boolean removeRole(String aRole)
+  {
+    boolean wasRemoved = false;
+    print "start remove";
+    wasRemoved = roles.remove(aRole);
+    print "end remove";
+    return wasRemoved;
+  }
+
+  public String getId()
+  {
+    print "start getId";
+    String aId = id;
+    print "end getId";
+    return aId;
+  }
+
+  public String getName()
+  {
+    print "start getName";
+    String aName = name;
+    print "end getName";
+    return aName;
+  }
+
+  public String getType()
+  {
+    print "start getType";
+    String aType = type;
+    print "end getType";
+    return aType;
+  }
+
+  public String getDefaultType()
+  {
+    print "start getDefaultType";
+    String aType = "None";
+    print "end getDefaultType";
+    return aType;
+  }
+
+  public String getRole(int index)
+  {
+    print "start getRole";
+    String aRole = roles.get(index);
+    print "end getRole";
+    return aRole;
+  }
+
+  public String[] getRoles()
+  {
+    print "start getRoles";
+    String[] newRoles = roles.toArray(new String[roles.size()]);
+    print "end getRoles";
+    return newRoles;
+  }
+
+  public int numberOfRoles()
+  {
+    print "start numberOfRoles";
+    int number = roles.size();
+    print "end numberOfRoles";
+    return number;
+  }
+
+  public boolean hasRoles()
+  {
+    boolean has = roles.size() > 0;
+    return has;
+  }
+
+  public int indexOfRole(String aRole)
+  {
+    print "start indexOfRole";
+    int index = roles.indexOf(aRole);
+    print "end indexOfRole";
+    return index;
+  }
+
+  public String getFunName()
+  {
+    print "start funName";
+    String aFunName = name + "sillypans";
+    print "end funName";
+    return aFunName;
+  }
+
+  public void delete()
+  {
+    print "start delete";
+    print "after delete";
+  }
+
+}

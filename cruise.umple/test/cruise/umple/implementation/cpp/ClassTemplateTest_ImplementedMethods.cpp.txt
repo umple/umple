@@ -1,0 +1,37 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class CodeTranslator implements ICodeTranslator
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public CodeTranslator()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  @Override
+  public String translate(String id, Attribute attribute){
+            return "";
+  }
+
+  @Override
+  public String translate(String id, AssociationVariable associationVariable){
+            return "";
+  }
+
+}

@@ -1,0 +1,134 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private int number;
+
+  //Student Associations
+  private Student pupil;
+  private Student ta;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(int aNumber)
+  {
+    number = aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(int aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getNumber()
+  {
+    return number;
+  }
+
+  public Student getPupil()
+  {
+    return pupil;
+  }
+
+  public Student getTa()
+  {
+    return ta;
+  }
+
+  public boolean setPupil(Student newPupil)
+  {
+    boolean wasSet = false;
+    if (newPupil == null)
+    {
+      Student existingPupil = pupil;
+      pupil = null;
+      
+      if (existingPupil != null && existingPupil.getTa() != null)
+      {
+        existingPupil.setTa(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    Student currentPupil = getPupil();
+    if (currentPupil != null && !currentPupil.equals(newPupil))
+    {
+      currentPupil.setTa(null);
+    }
+
+    pupil = newPupil;
+    Student existingTa = newPupil.getTa();
+
+    if (!equals(existingTa))
+    {
+      newPupil.setTa(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTa(Student newTa)
+  {
+    boolean wasSet = false;
+    if (newTa == null)
+    {
+      Student existingTa = ta;
+      ta = null;
+      
+      if (existingTa != null && existingTa.getPupil() != null)
+      {
+        existingTa.setPupil(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    Student currentTa = getTa();
+    if (currentTa != null && !currentTa.equals(newTa))
+    {
+      currentTa.setPupil(null);
+    }
+
+    ta = newTa;
+    Student existingPupil = newTa.getPupil();
+
+    if (!equals(existingPupil))
+    {
+      newTa.setPupil(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (pupil != null)
+    {
+      pupil.setTa(null);
+    }
+    if (ta != null)
+    {
+      ta.setPupil(null);
+    }
+  }
+
+}

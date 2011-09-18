@@ -1,0 +1,77 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+
+  //Student Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber)
+  {
+    number = aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(String aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public boolean setMentor(Mentor aMentor)
+  {
+    boolean wasSet = false;
+    Mentor existingMentor = mentor;
+    mentor = aMentor;
+    if (existingMentor != null && !existingMentor.equals(aMentor))
+    {
+      existingMentor.removeStudent(this);
+    }
+    if (aMentor != null)
+    {
+      aMentor.addStudent(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (mentor != null)
+    {
+      Mentor placeholderMentor = mentor;
+      this.mentor = null;
+      placeholderMentor.removeStudent(this);
+    }
+  }
+
+}

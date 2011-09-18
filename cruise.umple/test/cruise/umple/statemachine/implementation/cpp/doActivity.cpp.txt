@@ -1,0 +1,105 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Switch
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Switch State Machines
+  enum Status { On, Off }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Switch()
+  {
+    setStatus(Status.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean press()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (status)
+    {
+      case On:
+        setStatus(Status.Off);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case Off:
+        new DoActivityThread(this,"doActivityStatusOff");
+        break;
+    }
+  }
+
+  private void doActivityStatusOff() throws InterruptedException
+  {
+    keepDoing();
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    Switch controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(Switch aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      try
+      {
+        if ("doActivityStatusOff".equals(doActivityMethodName))
+        {
+          controller.doActivityStatusOff();
+        }
+      }
+      catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+}
