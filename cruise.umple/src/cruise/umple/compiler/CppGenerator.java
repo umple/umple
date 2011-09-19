@@ -6,7 +6,7 @@ import java.util.*;
 import java.io.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
-import cruise.umple.compiler.java.*;
+import cruise.umple.compiler.cpp.*;
 
 public class CppGenerator implements CodeGenerator,CodeTranslator
 {
@@ -171,11 +171,11 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
     if (aElement instanceof UmpleInterface)
     {
-      return new JavaInterfaceGenerator();
+      return new CppInterfaceGenerator();
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new JavaClassGenerator();
+      return new CppClassGenerator();
     } 
     else{
         return null;        

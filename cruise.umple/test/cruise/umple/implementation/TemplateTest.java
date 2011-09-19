@@ -9,29 +9,29 @@ import cruise.umple.util.SampleFileWriter;
 
 public class TemplateTest
 {
-  
+
   public String pathToInput;
   public String pathToRoot;
   public String language;
   public String languagePath;
   public String umpleParserName;
-  
+
   @Before
   public void setUp()
   {
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/implementation");
-    pathToRoot = SampleFileWriter.rationalize("../cruise.umple");    
+    pathToRoot = SampleFileWriter.rationalize("../cruise.umple");
     language = null;
     languagePath = "java";
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
-  
+
   @After
   public void tearDown()
   {
-    
+
     SampleFileWriter.destroy(pathToInput + "/example");
-    
+
     SampleFileWriter.destroy(pathToInput + "/ISomething.java");
     SampleFileWriter.destroy(pathToInput + "/Token.java");
     SampleFileWriter.destroy(pathToInput + "/Garbage.php");
@@ -63,7 +63,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
-    
+
     SampleFileWriter.destroy(pathToInput + "/ICodeTranslator.php");
     SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
     SampleFileWriter.destroy(pathToInput + "/ISecondChild.php");
@@ -75,7 +75,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToRoot + "/Two.java");
     SampleFileWriter.destroy("One.java");
     SampleFileWriter.destroy("Two.java");
-    
+
     SampleFileWriter.destroy(pathToInput + "/i_something.rb");
     SampleFileWriter.destroy(pathToInput + "/token.rb");
     SampleFileWriter.destroy(pathToInput + "/garbage.rb");
@@ -103,21 +103,21 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToRoot + "/x.rb");
     SampleFileWriter.destroy(pathToRoot + "/x.rb");
     SampleFileWriter.destroy(pathToRoot + "/one.rb");
-    SampleFileWriter.destroy(pathToRoot + "/two.rb");    
-    
-    SampleFileWriter.destroy(pathToInput + "/i_code_translator.rb");    
-    SampleFileWriter.destroy(pathToInput + "/i_first_child.rb");    
-    SampleFileWriter.destroy(pathToInput + "/code_translator.rb");    
-    SampleFileWriter.destroy(pathToInput + "/i_second_child.rb");    
+    SampleFileWriter.destroy(pathToRoot + "/two.rb");
+
+    SampleFileWriter.destroy(pathToInput + "/i_code_translator.rb");
+    SampleFileWriter.destroy(pathToInput + "/i_first_child.rb");
+    SampleFileWriter.destroy(pathToInput + "/code_translator.rb");
+    SampleFileWriter.destroy(pathToInput + "/i_second_child.rb");
   }
-  
+
   @Test
   public void avoidJunitError()
   {}
-  
-  //```````````````````
+
+  // ```````````````````
   // INTERFACE
-  //```````````````````
+  // ```````````````````
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile)
   {
@@ -126,18 +126,18 @@ public class TemplateTest
 
   public void assertEitherUmpleTemplateFor(String umpleFile, String codeFile1, String codeFile2)
   {
-    UmpleModel model = createUmpleSystem(pathToInput,umpleFile);
+    UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
     String actual = model.getCode();
-    File expected1 = new File(pathToInput,codeFile1);
-    File expected2 = new File(pathToInput,codeFile2);
-    //System.out.println(actual);
-    SampleFileWriter.assertEitherFileContent(expected1,expected2,actual);
+    File expected1 = new File(pathToInput, codeFile1);
+    File expected2 = new File(pathToInput, codeFile2);
+    // System.out.println(actual);
+    SampleFileWriter.assertEitherFileContent(expected1, expected2, actual);
   }
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className)
   {
-    UmpleModel model = createUmpleSystem(pathToInput,umpleFile);
-    
+    UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
+
     String actual = null;
     if (className == null)
     {
@@ -145,29 +145,29 @@ public class TemplateTest
     }
     else
     {
-      if (model.getUmpleClass(className) == null &&  model.getUmpleInterface(className) == null)
+      if (model.getUmpleClass(className) == null && model.getUmpleInterface(className) == null)
       {
         Assert.fail("Unknown class / interface:" + className);
       }
 
-      if (model.getGeneratedCode().get(className) == null) 
+      if (model.getGeneratedCode().get(className) == null)
       {
-        Assert.fail("No generated code:" + className);  
+        Assert.fail("No generated code:" + className);
       }
-      
+
       actual = model.getGeneratedCode().get(className);
     }
-    
-    File expected = new File(pathToInput,codeFile);
+
+    File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
-    SampleFileWriter.assertFileContent(expected,actual);
+    SampleFileWriter.assertFileContent(expected, actual);
   }
 
-  public  UmpleModel createUmpleSystem(String path, String filename)
+  public UmpleModel createUmpleSystem(String path, String filename)
   {
-    UmpleParser parser = UmpleParserFactory.create(umpleParserName,true);
+    UmpleParser parser = UmpleParserFactory.create(umpleParserName, true);
 
-    String input = SampleFileWriter.readContent(new File(path,filename));
+    String input = SampleFileWriter.readContent(new File(path, filename));
     ParseResult result = parser.parse("program", input);
 
     if (!result.getWasSuccess())
@@ -180,19 +180,19 @@ public class TemplateTest
     {
       Assert.fail("Null model");
     }
-    model.setUmpleFile(new UmpleFile(new File(path,filename)));
+    model.setUmpleFile(new UmpleFile(new File(path, filename)));
 
     if (language != null)
     {
       model.addGenerate(language);
-    }    
-    
+    }
+
     result = parser.analyze(true);
     if (!result.getWasSuccess())
     {
       Assert.fail("Semantics Failed at:" + result.getPosition());
     }
-    
+
     return model;
   }
 }

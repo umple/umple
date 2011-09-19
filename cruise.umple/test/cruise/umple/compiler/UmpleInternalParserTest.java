@@ -17,6 +17,8 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("001_empty.ump", "");
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
+    fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");
+    fileToOutputs.put("001_cppLanguage.ump","[generate:Cpp]");
     fileToOutputs.put("002_namespace.ump", "[namespace:cruise][namespace:cruise.umple][namespace:example]");
     fileToOutputs.put("003_emptyClass.ump", "[classDefinition][name:Student]");
     fileToOutputs.put("003_multipleExtraCode.ump","[classDefinition][name:Student][extraCode:blahblah][classDefinition][name:Student][extraCode:moreblah]");

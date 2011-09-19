@@ -127,7 +127,7 @@ class CppGenerator
   depend cruise.umple.util.*;
 
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.java.*;  
+  depend cruise.umple.compiler.cpp.*;  
   
   UmpleModel model = null;
 }

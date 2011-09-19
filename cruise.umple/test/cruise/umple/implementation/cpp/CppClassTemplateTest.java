@@ -46,26 +46,25 @@ public class CppClassTemplateTest extends ClassTemplateTest
   
   
   @Test
-  public void Java()
+  public void Cpp()
   {
     language = null;
-    assertUmpleTemplateFor("java/ClassTemplateTest_Java.ump","java/ClassTemplateTest_Java.java.txt","Mentor");
+    assertUmpleTemplateFor("cpp/ClassTemplateTest_Cpp.ump","cpp/ClassTemplateTest_Java.cpp.txt","Mentor");
   }
   
   @Test
   public void Generated()
   {
-    assertUmpleTemplateFor("java/ClassTemplateTest_Generated.ump","java/ClassTemplateTest_Generated.java.txt","Mentor");
+    assertUmpleTemplateFor("cpp/ClassTemplateTest_Generated.ump","cpp/ClassTemplateTest_Generated.cpp.txt","Mentor");
     
   }
   
   @Test
   public void ImportAssociations()
   {
-    language = null;
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import.java.txt","Mentor");
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import2.java.txt","Student");
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import3.java.txt","Course");
+    assertUmpleTemplateFor("cpp/ClassTemplateTest_Import.ump","cpp/ClassTemplateTest_Import.cpp.txt","Mentor");
+    assertUmpleTemplateFor("cpp/ClassTemplateTest_Import.ump","cpp/ClassTemplateTest_Import2.cpp.txt","Student");
+    assertUmpleTemplateFor("cpp/ClassTemplateTest_Import.ump","cpp/ClassTemplateTest_Import3.cpp.txt","Course");
   }  
   
 }

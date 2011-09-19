@@ -35,7 +35,7 @@ program- : ( [[comment]] | [[directive]] )*<br />
 directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]<br />
 glossary : glossary { [[word]]* }<br />
 word : [singular] : [plural] ;<br />
-generate- : generate [=generate:Java|Php|Ruby|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
+generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
 useStatement- : use [use] ;<br />
 namespace- : namespace [namespace] ;<br />
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />

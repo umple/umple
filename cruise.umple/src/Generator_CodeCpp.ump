@@ -132,11 +132,11 @@ class CppGenerator
   {
     if (aElement instanceof UmpleInterface)
     {
-      return new JavaInterfaceGenerator();
+      return new CppInterfaceGenerator();
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new JavaClassGenerator();
+      return new CppClassGenerator();
     } 
     else{
         return null;        

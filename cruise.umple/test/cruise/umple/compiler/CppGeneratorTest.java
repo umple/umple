@@ -1,6 +1,6 @@
 package cruise.umple.compiler;
 
-import cruise.umple.compiler.java.JavaInterfaceGenerator;
+import cruise.umple.compiler.cpp.CppInterfaceGenerator;
 
 import org.junit.*;
 
@@ -898,7 +898,7 @@ public class CppGeneratorTest
   public void getLanguageFor()
   {
     UmpleInterface aInterface = new UmpleInterface("Student");
-    Assert.assertEquals(JavaInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
+    Assert.assertEquals(CppInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
   }
 
   @Test

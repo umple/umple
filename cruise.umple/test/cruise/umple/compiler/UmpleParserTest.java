@@ -51,6 +51,21 @@ public class UmpleParserTest
   }
 
   @Test
+  public void rubyLanguage()
+  {
+    assertParse("001_rubyLanguage.ump");
+    Assert.assertEquals("Ruby", model.getDefaultGenerate());
+  }
+
+  @Test
+  public void cppLanguage()
+  {
+    assertParse("001_cppLanguage.ump");
+    Assert.assertEquals("Cpp", model.getDefaultGenerate());
+  }
+
+
+  @Test
   public void otherLanguage()
   {
     assertFailedParse("001_otherLanguage.ump", new Position(1,9,9));
