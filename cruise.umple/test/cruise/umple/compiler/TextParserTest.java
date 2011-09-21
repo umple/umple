@@ -27,7 +27,14 @@ public class TextParserTest {
     Assert.assertEquals("abc-def=",parser.next());
     Assert.assertEquals("\"aha\"",parser.next());
   }
-  
+
+  @Test
+  public void WhiteSpaceTest()
+  {
+    parser.load("a \t\r\n b");
+    Assert.assertEquals("a",parser.next());
+    Assert.assertEquals("b",parser.next());
+  }
   @Test
   public void Peek()
   {

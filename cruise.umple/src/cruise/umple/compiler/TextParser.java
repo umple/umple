@@ -668,7 +668,7 @@ public class TextParser
   
   private boolean isSpace(char c)
   {
-    return c == ' ' || c == '\n';
+    return c == ' ' || c == '\n' || c == '\t' || c == '\r';
   }
 
   private boolean isAlpha(char c)
