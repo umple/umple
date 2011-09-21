@@ -9,6 +9,9 @@ class Mentor
 
   immutable String str;
   lazy immutable String str2;
+  lazy someName;
+  lazy Double lDoub;
+  lazy Boolean lBool;
   settable Date d;
   internal Time t = new Time();
   Integer i;

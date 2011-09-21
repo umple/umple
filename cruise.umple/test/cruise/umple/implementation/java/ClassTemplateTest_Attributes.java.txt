@@ -24,6 +24,9 @@ public class Mentor
   //Mentor Attributes
   private String str;
   private String str2;
+  private String someName;
+  private double lDoub;
+  private boolean lBool;
   private Date d;
   private Time t;
   private int i;
@@ -53,6 +56,9 @@ public class Mentor
     str = aStr;
     canSetStr = false;
     canSetStr2 = true;
+    someName = null;
+    lDoub = 0;
+    lBool = false;
     d = aD;
     t = new Time();
     i = aI;
@@ -78,6 +84,30 @@ public class Mentor
     if (!canSetStr2) { return false; }
     canSetStr2 = false;
     str2 = aStr2;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setSomeName(String aSomeName)
+  {
+    boolean wasSet = false;
+    someName = aSomeName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLDoub(double aLDoub)
+  {
+    boolean wasSet = false;
+    lDoub = aLDoub;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLBool(boolean aLBool)
+  {
+    boolean wasSet = false;
+    lBool = aLBool;
     wasSet = true;
     return wasSet;
   }
@@ -194,6 +224,21 @@ public class Mentor
   public String getStr2()
   {
     return str2;
+  }
+
+  public String getSomeName()
+  {
+    return someName;
+  }
+
+  public double getLDoub()
+  {
+    return lDoub;
+  }
+
+  public boolean getLBool()
+  {
+    return lBool;
   }
 
   public Date getD()

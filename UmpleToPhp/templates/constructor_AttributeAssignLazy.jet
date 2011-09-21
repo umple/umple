@@ -1,0 +1,26 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String defaultValue = null;
+  
+  // Try to assign a null value or 0 value if we recognize
+  // one of Umple's built in data types. (http://cruise.site.uottawa.ca/umple/UmpleBuiltinDataTypes.html)
+  
+  if(av.getType().equals("String") || av.getType().equals("Date") || av.getType().equals("Time"))
+  {
+  	defaultValue = "NULL";
+  }
+  else if(av.getType().equals("Double") || av.getType().equals("Float") || av.getType().equals("Integer"))
+  {
+  	defaultValue = "0";
+  }
+  else if(av.getType().equals("Boolean"))
+  {
+  	defaultValue = "false";
+  }
+  
+  // Only assign a value if we could find a default
+  if(defaultValue != null)
+  { %>
+    $<%=instanceIdentifier%>-><%=gen.translate("attributeOne",av)%> = <%=defaultValue%>;
+<%} %>

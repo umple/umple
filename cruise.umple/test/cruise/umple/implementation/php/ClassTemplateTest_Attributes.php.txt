@@ -21,6 +21,9 @@ class Mentor
   //Mentor Attributes
   private $str;
   private $str2;
+  private $someName;
+  private $lDoub;
+  private $lBool;
   private $d;
   private $t;
   private $i;
@@ -50,6 +53,9 @@ class Mentor
     $this->str = $aStr;
     $this->canSetStr = false;
     $this->canSetStr2 = true;
+    $this->someName = NULL;
+    $this->lDoub = 0;
+    $this->lBool = false;
     $this->d = $aD;
     $this->t = new Time();
     $this->i = $aI;
@@ -75,6 +81,30 @@ class Mentor
     if (!$this->canSetStr2) { return false; }
     $this->canSetStr2 = false;
     $this->str2 = $aStr2;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setSomeName($aSomeName)
+  {
+    $wasSet = false;
+    $this->someName = $aSomeName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setLDoub($aLDoub)
+  {
+    $wasSet = false;
+    $this->lDoub = $aLDoub;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setLBool($aLBool)
+  {
+    $wasSet = false;
+    $this->lBool = $aLBool;
     $wasSet = true;
     return $wasSet;
   }
@@ -191,6 +221,21 @@ class Mentor
   public function getStr2()
   {
     return $this->str2;
+  }
+
+  public function getSomeName()
+  {
+    return $this->someName;
+  }
+
+  public function getLDoub()
+  {
+    return $this->lDoub;
+  }
+
+  public function getLBool()
+  {
+    return $this->lBool;
   }
 
   public function getD()
