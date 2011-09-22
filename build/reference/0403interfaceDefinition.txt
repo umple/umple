@@ -16,7 +16,11 @@ composed of the following things:
 <p class="description">Umple currently supports Java and PHP as native languages.</p>
 
 @@syntax
-interfaceDefinition : interface [name] { [[depend]]* [[extraCode]]? }
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] } <br/>&nbsp;<br/>
+
+interfaceBody- : [[interfaceMemberDeclaration]]*<br/>&nbsp;<br/>
+
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[isA]] | [[extraCode]]
 
 @@example
 

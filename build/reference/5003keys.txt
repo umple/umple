@@ -13,6 +13,14 @@ when looking up an object in a set.</p>
 
 <p>Place the comma-separated list of key elements in curly brackets, after the word key.</p>
 
+@@syntax
+
+keyDefinition- : [[defaultKey]] | [[key]]<br/>&nbsp;<br/>
+
+defaultKey : key { }<br/>&nbsp;<br/>
+
+key : key { [keyId] ( , [keyId] )* }
+
 @@example
 class Sport {
   name;

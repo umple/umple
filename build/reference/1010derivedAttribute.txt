@@ -13,6 +13,10 @@ to only being able to generate code for the language of the expression.</p>
 <p>You should make sure you call the 'get' methods provided in the Umple-generated
 API (rather than directly accessing variales) and avoid having any side-effects in your expressions. Currently this is not enforced, but may be in the future</p>
 
+@@syntax
+
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+
 @@example
 class Point 
 {

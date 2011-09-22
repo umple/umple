@@ -9,6 +9,18 @@ are determined by the occurrence of events (method calls). State machines are ve
 for quickly defining a program's behaviour
 </p>
 
+@@syntax
+
+inlineStateMachine : [name] { ( [[comment]] | [[state]] )* }<br/>&nbsp;<br/>
+
+state : [stateName] { ( [[comment]] | [=changeType:-|*]? [[stateEntity]] )* }<br/>&nbsp;<br/>
+
+stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br/>&nbsp;<br/>
+
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]<br/>&nbsp;<br/>
+
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [event]<br/>&nbsp;<br/>
+
 
 @@example
 

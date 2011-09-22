@@ -25,6 +25,12 @@ running. Note that at the current time, the do activity thread must
 terminate itself; as an enhancement, the do activity thread should be
 interrupted and cancelled when a transition is taken out of the state.</p>
 
+@@syntax
+
+entryOrExitAction : [=type:entry|exit] / { [**actionCode] }<br/>&nbsp;<br/>
+
+activity : do { [**activityCode] }
+
 
 @@example
 

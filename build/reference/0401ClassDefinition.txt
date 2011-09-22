@@ -21,7 +21,9 @@ behaviour is controlled by a sequence of events</a></li>
 </ul>
 
 @@syntax
-class [name] { [[classContent]]* }
+class [name] { [[classContent]]* } <br/>&nbsp;<br/>
+
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]
 
 @@example
 

@@ -16,6 +16,14 @@ is not true. To reject setting a value, add 'return false'.</p>
 <p>You can add before and after clauses to add code to generated methods of the form getX, setX, addX, removeX, getXs (to get all elements of an association), numberOfXs, indexOfX, where X is the name of the attribute or association. You can also add code before and
 after the constructor.</p>
 
+@@syntax
+
+codeInjection- : [[beforeCode]] | [[afterCode]]<br/>&nbsp;<br/>
+
+beforeCode : before [operationName] { [**code] }<br/>&nbsp;<br/>
+
+afterCode : after [operationName] { [**code] }
+
 @@example
 
 class X
@@ -23,7 +31,7 @@ class X
   a;
   whenWasASet;
   
-  afterSetA {
+  after setA {
      setWhenWasASet(getA() + System.currentTimeMillis());
   }
 }
