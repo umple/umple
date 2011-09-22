@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/UmpleEditorAndCompiler_1.10.2.jar" id="UmpleEditorAndCompiler" version="1.10.2">
+   <feature url="features/UmpleEditorAndCompiler_1.14.0.605.jar" id="UmpleEditorAndCompiler" version="1.14.0.605">
       <category name="Umple"/>
    </feature>
    <category-def name="Umple" label="Umple"/>
