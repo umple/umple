@@ -15,6 +15,16 @@ for quickly defining a program's behaviour
 // This example shows simple states without any actions or guards
 // More examples can be found in UmpleOnline
 // Additional details will be added here soon
+//
+// In the following, status is a state machine, and acts like an
+// attributes, whose value is set by various events.
+//
+// Open, Closing, Closed, Opening and HalfOpen are the possible
+// values, or states, of status.
+//
+// buttonOrObstacle, reachBottom and reachTop are events. These
+// become generated methods that can be called to cause a state
+// change.
 
 class GarageDoor
 {
