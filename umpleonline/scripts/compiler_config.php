@@ -102,7 +102,15 @@ function extractFilename()
   // Open any file. Needs maintenance TODO consider removing
   else
   {
-    $filename = htmlspecialchars($_REQUEST['filename']);
+    $destfile = nextFilename("ump");
+    $filename = "../" . $destfile;
+
+    file_put_contents($destfile, file_get_contents("http://" . $_REQUEST["filename"]));
+    
+    // To ensure the file is http file_get_contents(preg_match('@^http://@i', $_REQUEST['url'])?$_REQUEST['url']:$default_file);
+    // Copy the file as in example=above
+    // http://php.net/manual/en/function.file-get-contents.php
+    // or http://www.bin-co.com/php/scripts/load/
   }
   return $filename;
 }
