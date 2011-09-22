@@ -30,7 +30,7 @@ saved), click 'Start Over'</li>
 
 <br />
 
-<li><b>To enable saving of your work</b>, there are two approaches:
+<li><b>To save of your work</b>, there are three approaches:
 
 <ol>
 <li><b>click 'Save Model for Future Editing'
@@ -43,7 +43,8 @@ keep editing the Umple code or diagram, and your work will continue to be
 saved at this URL. You are thus saving your work in the 'cloud'. You can 
 embed the URL in other pages to document your product. Note that at the 
 current time, anyone who knows your URL can also edit your work, and if 
-you forget your URL, there is no way to retrieve it. Therefore it is also 
+you forget your URL, or someone messes up the saved contents at that URL,
+there is no way to retrieve it. Therefore it is also 
 suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br/></li>
 
 <li><b>Create a URL that embeds the entire diagram</b>. This is only guaranteed to
@@ -53,7 +54,7 @@ of Internet Explorer limit the number of characters in a URL. <br/>&nbsp;<br/>
 To do this, click on "Encoded URL" in the Options part of the center pane,
 and copy the URL that appears in a separate window. You might want to
 use a URL shortening service such as bit.ly to shorten the URL before 
-posting it or embedding it in another document.<br/>&nbsp;<br/></li>
+posting it or embedding it in another document. You also need to be aware that you are limited by certain browsers and URL shortening services to files with about 2000 characters or less, so test your URL once you have created it.<br/>&nbsp;<br/></li>
 
 <li><b>Copy and paste the text of important models somewhere 
 else</b>. One thing to note is that if you just copy the visible text in the 
@@ -62,7 +63,8 @@ diagram</i>. If you want to save this too, you have to do one of the
 following:
   <ul>
      <li>Click on Options/Source in the center pane, to generate a popup 
-that also contains the layout information.
+that also contains the layout information. Copy and paste the contents
+of this window, and then close the window.
      <li>Click on Options/Layout Editor in the center pane to view a 
 separate window containing the layout, and then save the 
 automatically-generated layout information separately. You can actually 
@@ -70,7 +72,27 @@ edit this layout textually, but we suggest you only do that if you are an
 expert since it us much easier to edit the layout from the right-hand 
 graphical pane, as described later.
   </ul>
-</li></ol>  
+</li>
+</ol>  
+</li>
+
+&nbsp;<br/>
+
+<li><b>To load Umple code into UmpleOnline do one of the following:</b>
+  <ol>
+    <li><b>1. Load a URL you saved using one of the saving methods 1 and 2 above.</b></li>
+    <li><b>2. Put a .ump file on the web (saved from Eclipse or using saving method 3 above), and load it using the filename argument to Umpleonline.</b> The filename
+    argument's syntax is ?filename=X, where X is the URL of the file containing
+    the Umple file, <i>minus the leading 'http://'</i>. So, for example there
+    is a .ump file in the repository at the following URL: <a href="http://umple.googlecode.com/svn/trunk/cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump">umple.googlecode.com/svn/trunk/cruise.umple/test/data/
+    InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump</a>. This can be loaded into Umple using the following URL: <a href="http://cruise.site.uottawa.ca/umpleonline/?filename=umple.googlecode.com/svn/trunk/cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump">http://cruise.site.uottawa.ca/umpleonline/?filename=umple.googlecode.com/svn/trunk/
+cruise.umple/test/data/InventoryAndOrders/ClientOrder/
+MailOrderSystemClientOrder.ump</a></li> 
+    <li><b>Paste Umple code into UmpleOnline</b> Note however, that you have to make
+    sure the pasted file contains the layout information, as described under the saving methods above.
+  </ol>
+   <br>Note that in most of these cases, the user can edit the Umple, without affecting the 
+original content. In other words, a copy is saved first. The only exception is that when you edit Umple saved using method 1, any changes are saved permanently.
 </li>
 
 </ul>
