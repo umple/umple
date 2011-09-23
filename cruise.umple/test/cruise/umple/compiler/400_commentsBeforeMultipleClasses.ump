@@ -1,0 +1,19 @@
+
+namespace example;
+
+// This is a simple comment
+class Student
+{
+
+}
+
+class Mentor
+{
+
+}
+
+// This is a course file
+class Course
+{
+
+}

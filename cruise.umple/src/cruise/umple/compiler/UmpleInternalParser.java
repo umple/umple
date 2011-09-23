@@ -23,6 +23,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private Map<Position,String> positionToClassNameReference;
   private Map<UmpleClass,List<String>> unlinkedExtends;
   private Map<UmpleInterface,List<String>> unlinkedInterfaceExtends;
+  private Comment lastComment;
   private StateMachine placeholderStateMachine;
   private Map<String,Token> stateMachineNameToToken;
   private Map<UmpleClass,Pair> umpleClassToStateMachineDefinition;
@@ -43,6 +44,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     positionToClassNameReference = new HashMap<Position, String>();
     unlinkedExtends = new HashMap<UmpleClass,List<String>>();
     unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
+    lastComment = null;
     placeholderStateMachine = null;
     stateMachineNameToToken = new HashMap<String, Token>();
     umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
@@ -304,7 +306,14 @@ private void analyzeCoreToken(Token t)
   }
 private void analyzeClassToken(Token t)
   {
-    if (t.is("classDefinition"))
+  
+    boolean shouldConsumeComment = lastComment != null;
+  
+    if (t.is("inlineComment"))
+    {
+      analyzeComment(t);
+    }  
+    else if (t.is("classDefinition"))
     {
       analyzeClass(t);
     }
@@ -324,7 +333,18 @@ private void analyzeClassToken(Token t)
     {
       analyzeAllAssociations(t);
     }
+    
+    if (shouldConsumeComment)
+    {
+      lastComment = null;
+    }
+    
   }  
+  
+  private void analyzeComment(Token token)
+  {
+    lastComment = new Comment(token.getValue());
+  }
   
   // Analyzed class content tokens
   private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep)
@@ -411,6 +431,11 @@ private void analyzeClassToken(Token t)
   private UmpleClass analyzeClass(Token classToken)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
+    
+    if (lastComment != null)
+    {
+      aClass.addComment(lastComment);
+    }
     
     addExtendsTo(classToken, aClass);
     if (classToken.getValue("singleton") != null)

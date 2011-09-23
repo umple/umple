@@ -1089,6 +1089,44 @@ public class UmpleParserTest
   }
   
   @Test
+  public void commentsBeforeClasses()
+  {
+    assertParse("400_commentsBeforeClasses.ump");
+    
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(1,student.numberOfComments());
+    Assert.assertEquals("This is a simple comment",student.getComment(0).getText());
+  }
+  
+  @Test
+  public void commentsBeforeMultipleClasses()
+  {
+    assertParse("400_commentsBeforeMultipleClasses.ump");
+    
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(1,student.numberOfComments());
+    Assert.assertEquals("This is a simple comment",student.getComment(0).getText());
+
+    UmpleClass mentor = model.getUmpleClass("Mentor");
+    Assert.assertEquals(0,mentor.numberOfComments());
+
+    UmpleClass course = model.getUmpleClass("Course");
+    Assert.assertEquals(1,course.numberOfComments());
+    Assert.assertEquals("This is a course file",course.getComment(0).getText());
+  }
+
+  @Test
+  public void commentsWayBeforeClass()
+  {
+    assertParse("400_commentsWayBeforeClass.ump");
+    UmpleClass student = model.getUmpleClass("Student");
+    Assert.assertEquals(0,student.numberOfComments());
+    
+    
+  }
+  
+
+  @Test
   public void mixingRegularAndDerivedAttributes_bug201()
   {
     //http://code.google.com/p/umple/issues/detail?id=201

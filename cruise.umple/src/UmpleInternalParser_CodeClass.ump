@@ -22,11 +22,19 @@ class UmpleInternalParser
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
   internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
   internal Map<UmpleInterface,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
+  internal Comment lastComment = null;
  
   // Analyze class definitions and related tokens
   private void analyzeClassToken(Token t)
   {
-    if (t.is("classDefinition"))
+  
+    boolean shouldConsumeComment = lastComment != null;
+  
+    if (t.is("inlineComment"))
+    {
+      analyzeComment(t);
+    }  
+    else if (t.is("classDefinition"))
     {
       analyzeClass(t);
     }
@@ -46,7 +54,18 @@ class UmpleInternalParser
     {
       analyzeAllAssociations(t);
     }
+    
+    if (shouldConsumeComment)
+    {
+      lastComment = null;
+    }
+    
   }  
+  
+  private void analyzeComment(Token token)
+  {
+    lastComment = new Comment(token.getValue());
+  }
   
   // Analyzed class content tokens
   private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep)
@@ -133,6 +152,11 @@ class UmpleInternalParser
   private UmpleClass analyzeClass(Token classToken)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
+    
+    if (lastComment != null)
+    {
+      aClass.addComment(lastComment);
+    }
     
     addExtendsTo(classToken, aClass);
     if (classToken.getValue("singleton") != null)
