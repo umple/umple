@@ -1,0 +1,7 @@
+namespace example;
+
+// This is a student
+class Student
+{
+
+}

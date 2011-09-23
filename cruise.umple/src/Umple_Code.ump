@@ -1365,3 +1365,27 @@ class Coordinate
     }
   }
 }
+
+
+class Comment
+{
+
+  public static String format(String type,List<Comment> allComments)
+  {
+  
+    String commentDelimiter = type == "Hash" ? "# " : "// ";
+  
+    if (allComments.size() == 0)
+    {
+      return null;
+    }
+
+    String output = "";
+    for(Comment c : allComments)
+    {
+      output += commentDelimiter + c.getText() + "\n"; 
+    }
+    return output.trim();
+  }
+
+}

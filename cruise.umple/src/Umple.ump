@@ -304,6 +304,7 @@ class Coordinate
 
 class Comment
 {
+  depend java.util.*;
   text;
 }
 

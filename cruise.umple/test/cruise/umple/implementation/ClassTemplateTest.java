@@ -71,4 +71,10 @@ public class ClassTemplateTest extends TemplateTest
     Assert.fail("Add an association class that does not have the *properties* of an association");    
   }
   
+  @Test
+  public void CommentsBeforeClass()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_Comment.ump",languagePath + "/ClassTemplateTest_Comment."+ languagePath +".txt","Student");
+  }
+  
 }

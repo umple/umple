@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 public class Comment
 {
@@ -42,4 +43,25 @@ public class Comment
   public void delete()
   {}
 
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public static String format(String type,List<Comment> allComments)
+  {
+  
+    String commentDelimiter = type == "Hash" ? "# " : "// ";
+  
+    if (allComments.size() == 0)
+    {
+      return null;
+    }
+
+    String output = "";
+    for(Comment c : allComments)
+    {
+      output += commentDelimiter + c.getText() + "\n"; 
+    }
+    return output.trim();
+  }
 }
