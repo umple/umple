@@ -649,6 +649,20 @@ public class UmpleClassTest
     Assert.assertEquals(4,umpleClass.getAllStateMachines().size());
   }  
   
+  @Test
+  public void comments_ShouldStartWithZero()
+  {
+    Assert.assertEquals(0,umpleClass.numberOfComments());
+  }
+  
+  @Test
+  public void addComments()
+  {
+    Comment comment = new Comment("Blah");
+    umpleClass.addComment(comment);
+    Assert.assertEquals(comment, umpleClass.getComment(0));
+  }
+  
   private Multiplicity createMultiplicity(int lower, int upper)
   {
     Multiplicity m = new Multiplicity();

@@ -349,6 +349,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier" eOpposite="#//UniqueIdentifier/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariables" lowerBound="0" upperBound="-1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/umpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceItems" lowerBound="0" upperBound="-1" eType="#//TraceItem" eOpposite="#//TraceItem/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/umpleClasses"/>
@@ -431,6 +432,10 @@
     <eLiterals name="Explicit" value="0"/>
     <eLiterals name="Undefined" value="1"/>
     <eLiterals name="Defaulted" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Comment">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/comments"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraceItem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="whereClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

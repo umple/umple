@@ -151,6 +151,7 @@ class UmpleClass
   1 -> 0..1 UniqueIdentifier;
   1 -> * Attribute;
   1 -> * AssociationVariable;
+  1 -> * Comment;
   
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
 }
@@ -299,6 +300,11 @@ class Coordinate
   after setHeight { if(wasSet) updateStatus(); }
    
   key { x, y, width, height }
+}
+
+class Comment
+{
+  text;
 }
 
 use UmpleHelper.ump;

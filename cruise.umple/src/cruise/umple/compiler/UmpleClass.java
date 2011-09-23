@@ -27,6 +27,7 @@ public class UmpleClass extends UmpleElement
   private UniqueIdentifier uniqueIdentifier;
   private List<Attribute> attributes;
   private List<AssociationVariable> associationVariables;
+  private List<Comment> comments;
   private List<TraceItem> traceItems;
   private List<StateMachine> stateMachines;
 
@@ -47,6 +48,7 @@ public class UmpleClass extends UmpleElement
     constants = new ArrayList<Constant>();
     attributes = new ArrayList<Attribute>();
     associationVariables = new ArrayList<AssociationVariable>();
+    comments = new ArrayList<Comment>();
     traceItems = new ArrayList<TraceItem>();
     stateMachines = new ArrayList<StateMachine>();
   }
@@ -345,6 +347,36 @@ public class UmpleClass extends UmpleElement
     return index;
   }
 
+  public Comment getComment(int index)
+  {
+    Comment aComment = comments.get(index);
+    return aComment;
+  }
+
+  public List<Comment> getComments()
+  {
+    List<Comment> newComments = Collections.unmodifiableList(comments);
+    return newComments;
+  }
+
+  public int numberOfComments()
+  {
+    int number = comments.size();
+    return number;
+  }
+
+  public boolean hasComments()
+  {
+    boolean has = comments.size() > 0;
+    return has;
+  }
+
+  public int indexOfComment(Comment aComment)
+  {
+    int index = comments.indexOf(aComment);
+    return index;
+  }
+
   public TraceItem getTraceItem(int index)
   {
     TraceItem aTraceItem = traceItems.get(index);
@@ -597,6 +629,31 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public static int minimumNumberOfComments()
+  {
+    return 0;
+  }
+
+  public boolean addComment(Comment aComment)
+  {
+    boolean wasAdded = false;
+    if (comments.contains(aComment)) { return false; }
+    comments.add(aComment);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeComment(Comment aComment)
+  {
+    boolean wasRemoved = false;
+    if (comments.contains(aComment))
+    {
+      comments.remove(aComment);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public static int minimumNumberOfTraceItems()
   {
     return 0;
@@ -686,6 +743,7 @@ public class UmpleClass extends UmpleElement
     uniqueIdentifier = null;
     attributes.clear();
     associationVariables.clear();
+    comments.clear();
     for(TraceItem aTraceItem : traceItems)
     {
       aTraceItem.setUmpleClass(null);
