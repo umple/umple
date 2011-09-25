@@ -1,0 +1,9 @@
+
+namespace example;
+
+// This is a simple comment
+// Multiline comment test
+class Student
+{
+
+}

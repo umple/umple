@@ -22,17 +22,22 @@ class UmpleInternalParser
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
   internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
   internal Map<UmpleInterface,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
-  internal Comment lastComment = null;
+  internal List<Comment> lastComments = new ArrayList<Comment>();
  
   // Analyze class definitions and related tokens
   private void analyzeClassToken(Token t)
   {
   
-    boolean shouldConsumeComment = lastComment != null;
+    boolean shouldConsumeComment = lastComments.size() > 0;
   
-    if (t.is("inlineComment"))
+  	if (t.isStatic("//"))
+  	{
+  	  shouldConsumeComment = false;
+  	}
+    else if (t.is("inlineComment"))
     {
       analyzeComment(t);
+      shouldConsumeComment = false;
     }  
     else if (t.is("classDefinition"))
     {
@@ -57,14 +62,17 @@ class UmpleInternalParser
     
     if (shouldConsumeComment)
     {
-      lastComment = null;
+      lastComments.clear();
     }
     
   }  
   
   private void analyzeComment(Token token)
   {
-    lastComment = new Comment(token.getValue());
+  	if (!token.getValue().equals("$?[End_of_model]$?")) {
+  		
+  	lastComments.add(new Comment(token.getValue()));
+  	}
   }
   
   // Analyzed class content tokens
@@ -153,9 +161,9 @@ class UmpleInternalParser
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
     
-    if (lastComment != null)
+    for (Comment c : lastComments)
     {
-      aClass.addComment(lastComment);
+      aClass.addComment(c);	
     }
     
     addExtendsTo(classToken, aClass);

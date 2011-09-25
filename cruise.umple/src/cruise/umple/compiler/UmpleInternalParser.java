@@ -23,7 +23,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private Map<Position,String> positionToClassNameReference;
   private Map<UmpleClass,List<String>> unlinkedExtends;
   private Map<UmpleInterface,List<String>> unlinkedInterfaceExtends;
-  private Comment lastComment;
+  private List<Comment> lastComments;
   private StateMachine placeholderStateMachine;
   private Map<String,Token> stateMachineNameToToken;
   private Map<UmpleClass,Pair> umpleClassToStateMachineDefinition;
@@ -44,7 +44,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     positionToClassNameReference = new HashMap<Position, String>();
     unlinkedExtends = new HashMap<UmpleClass,List<String>>();
     unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
-    lastComment = null;
+    lastComments = new ArrayList<Comment>();
     placeholderStateMachine = null;
     stateMachineNameToToken = new HashMap<String, Token>();
     umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
@@ -307,11 +307,16 @@ private void analyzeCoreToken(Token t)
 private void analyzeClassToken(Token t)
   {
   
-    boolean shouldConsumeComment = lastComment != null;
+    boolean shouldConsumeComment = lastComments.size() > 0;
   
-    if (t.is("inlineComment"))
+  	if (t.isStatic("//"))
+  	{
+  	  shouldConsumeComment = false;
+  	}
+    else if (t.is("inlineComment"))
     {
       analyzeComment(t);
+      shouldConsumeComment = false;
     }  
     else if (t.is("classDefinition"))
     {
@@ -336,14 +341,17 @@ private void analyzeClassToken(Token t)
     
     if (shouldConsumeComment)
     {
-      lastComment = null;
+      lastComments.clear();
     }
     
   }  
   
   private void analyzeComment(Token token)
   {
-    lastComment = new Comment(token.getValue());
+  	if (!token.getValue().equals("$?[End_of_model]$?")) {
+  		
+  	lastComments.add(new Comment(token.getValue()));
+  	}
   }
   
   // Analyzed class content tokens
@@ -432,9 +440,9 @@ private void analyzeClassToken(Token t)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
     
-    if (lastComment != null)
+    for (Comment c : lastComments)
     {
-      aClass.addComment(lastComment);
+      aClass.addComment(c);	
     }
     
     addExtendsTo(classToken, aClass);

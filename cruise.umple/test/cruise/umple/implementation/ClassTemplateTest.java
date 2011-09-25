@@ -77,4 +77,16 @@ public class ClassTemplateTest extends TemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_Comment.ump",languagePath + "/ClassTemplateTest_Comment."+ languagePath +".txt","Student");
   }
   
+  @Test
+  public void MultiCommentsBeforeClassTest()
+  {
+	  assertUmpleTemplateFor("ClassTemplateTest_MultiComment.ump",languagePath + "/ClassTemplateTest_MultiComment."+ languagePath +".txt", "Student");
+  }
+  
+  @Test
+  public void GarbageCommentsClass()
+  {
+	  assertUmpleTemplateFor("ClassTemplateTest_GarbageComment.ump",languagePath + "/ClassTemplateTest_GarbageComment."+languagePath+".txt", "Student");
+  }
+  
 }

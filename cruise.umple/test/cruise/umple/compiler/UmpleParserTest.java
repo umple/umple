@@ -1099,6 +1099,16 @@ public class UmpleParserTest
   }
   
   @Test
+  public void test() {
+	  assertParse("400_multiCommentsBeforeClassesTest.ump");
+	  
+	  UmpleClass student = model.getUmpleClass("Student");
+	  Assert.assertEquals(2, student.numberOfComments());
+	  Assert.assertEquals("This is a simple comment", student.getComment(0).getText());
+	  Assert.assertEquals("Multiline comment test", student.getComment(1).getText());
+  }
+  
+  @Test
   public void commentsBeforeMultipleClasses()
   {
     assertParse("400_commentsBeforeMultipleClasses.ump");

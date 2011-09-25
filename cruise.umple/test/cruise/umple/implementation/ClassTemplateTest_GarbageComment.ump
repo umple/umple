@@ -1,0 +1,8 @@
+namespace example;
+
+// This is a student
+// $?[End_of_model]$?
+class Student
+{
+
+}
