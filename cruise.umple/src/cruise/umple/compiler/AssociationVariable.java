@@ -60,6 +60,11 @@ public class AssociationVariable extends UmpleVariable
     return isNavigable;
   }
 
+  public boolean isIsNavigable()
+  {
+    return isNavigable;
+  }
+
   public AssociationVariable getRelatedAssociation()
   {
     return relatedAssociation;

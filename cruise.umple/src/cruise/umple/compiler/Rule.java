@@ -101,6 +101,11 @@ public class Rule
     return index;
   }
 
+  public boolean isShouldHide()
+  {
+    return shouldHide;
+  }
+
   public void delete()
   {}
 

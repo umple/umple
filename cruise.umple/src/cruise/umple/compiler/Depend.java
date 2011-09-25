@@ -61,6 +61,11 @@ public class Depend
     return isInternal;
   }
 
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public boolean equals(Object obj)
   {
     if (obj == null) { return false; }

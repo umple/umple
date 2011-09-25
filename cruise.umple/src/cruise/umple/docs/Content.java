@@ -131,6 +131,11 @@ public class Content
     return index;
   }
 
+  public boolean isShouldIncludeReferences()
+  {
+    return shouldIncludeReferences;
+  }
+
   public void delete()
   {}
 

@@ -84,6 +84,11 @@ public class CodeInjection
     return isInternal;
   }
 
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public void delete()
   {}
 

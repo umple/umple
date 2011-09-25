@@ -55,6 +55,11 @@ public class Transition
     return isInternal;
   }
 
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public Event getEvent()
   {
     return event;

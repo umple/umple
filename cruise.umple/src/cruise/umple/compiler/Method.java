@@ -90,6 +90,11 @@ public class Method
     return isImplemented;
   }
 
+  public boolean isIsImplemented()
+  {
+    return isImplemented;
+  }
+
   public MethodParameter getMethodParameter(int index)
   {
     MethodParameter aMethodParameter = methodParameters.get(index);

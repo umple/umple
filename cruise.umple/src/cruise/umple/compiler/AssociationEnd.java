@@ -141,6 +141,11 @@ public class AssociationEnd
     return isDefaultRoleName;
   }
 
+  public boolean isIsDefaultRoleName()
+  {
+    return isDefaultRoleName;
+  }
+
   public Association getAssociation()
   {
     return association;

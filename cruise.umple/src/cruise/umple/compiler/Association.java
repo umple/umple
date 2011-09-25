@@ -127,6 +127,16 @@ public class Association
     return index;
   }
 
+  public boolean isIsLeftNavigable()
+  {
+    return isLeftNavigable;
+  }
+
+  public boolean isIsRightNavigable()
+  {
+    return isRightNavigable;
+  }
+
   public AssociationEnd getEnd(int index)
   {
     AssociationEnd aEnd = ends.get(index);

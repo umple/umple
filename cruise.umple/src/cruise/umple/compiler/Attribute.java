@@ -88,6 +88,26 @@ public class Attribute extends UmpleVariable
     return isLazy;
   }
 
+  public boolean isIsAutounique()
+  {
+    return isAutounique;
+  }
+
+  public boolean isIsList()
+  {
+    return isList;
+  }
+
+  public boolean isIsDerived()
+  {
+    return isDerived;
+  }
+
+  public boolean isIsLazy()
+  {
+    return isLazy;
+  }
+
   public TraceItem getTraceItem()
   {
     return traceItem;

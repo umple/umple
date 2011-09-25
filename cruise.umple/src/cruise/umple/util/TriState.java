@@ -55,6 +55,16 @@ public class TriState
     return status;
   }
 
+  public boolean isIsSet()
+  {
+    return isSet;
+  }
+
+  public boolean isStatus()
+  {
+    return status;
+  }
+
   public void delete()
   {}
 

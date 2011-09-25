@@ -90,6 +90,21 @@ public class State
     return isInternal;
   }
 
+  public boolean isIsConcurrent()
+  {
+    return numberOfNestedStateMachines() > 1;
+  }
+
+  public boolean isIsStartState()
+  {
+    return isStartState;
+  }
+
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public Activity getActivity()
   {
     return activity;

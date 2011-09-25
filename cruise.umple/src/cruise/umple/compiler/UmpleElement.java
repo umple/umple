@@ -162,6 +162,11 @@ public class UmpleElement
     return position;
   }
 
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public void delete()
   {}
 

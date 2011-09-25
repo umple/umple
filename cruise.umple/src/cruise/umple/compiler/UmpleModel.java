@@ -215,6 +215,11 @@ public class UmpleModel
     return traceType;
   }
 
+  public boolean isShouldGenerate()
+  {
+    return shouldGenerate;
+  }
+
   public Association getAssociation(int index)
   {
     Association aAssociation = associations.get(index);

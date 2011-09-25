@@ -84,6 +84,16 @@ public class Event
     return isInternal;
   }
 
+  public boolean isIsTimer()
+  {
+    return isTimer;
+  }
+
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public void delete()
   {}
 

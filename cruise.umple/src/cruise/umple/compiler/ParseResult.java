@@ -42,6 +42,11 @@ public class ParseResult
     return wasSuccess;
   }
 
+  public boolean isWasSuccess()
+  {
+    return wasSuccess;
+  }
+
   public Position getPosition()
   {
     return position;

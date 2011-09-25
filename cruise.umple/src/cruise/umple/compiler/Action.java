@@ -69,6 +69,11 @@ public class Action
     return isInternal;
   }
 
+  public boolean isIsInternal()
+  {
+    return isInternal;
+  }
+
   public void delete()
   {}
 

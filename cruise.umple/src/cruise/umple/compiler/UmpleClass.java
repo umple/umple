@@ -127,6 +127,11 @@ public class UmpleClass extends UmpleElement
     return key;
   }
 
+  public boolean isIsSingleton()
+  {
+    return isSingleton;
+  }
+
   public CodeInjection getCodeInjection(int index)
   {
     CodeInjection aCodeInjection = codeInjections.get(index);

@@ -86,6 +86,11 @@ public class Key
     return index;
   }
 
+  public boolean isIsDefault()
+  {
+    return isDefault;
+  }
+
   public void delete()
   {}
 
