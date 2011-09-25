@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
 public class AssociationVariable extends UmpleVariable
 {
 

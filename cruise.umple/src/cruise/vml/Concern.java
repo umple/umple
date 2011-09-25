@@ -4,6 +4,7 @@
 package cruise.vml;
 import java.util.*;
 
+// POSITION INFORMATION
 public class Concern
 {
 

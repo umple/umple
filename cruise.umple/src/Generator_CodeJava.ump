@@ -41,6 +41,7 @@ class JavaGenerator
     UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
     UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
     UpperCaseSingularLookupMap.put("getMethod", "get{0}");
+    UpperCaseSingularLookupMap.put("isMethod", "is{0}");
     UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");    
     UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
     UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");

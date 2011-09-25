@@ -99,6 +99,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     AsIsSingularLookupMap.put("eventHandler","{0}_handler");
     AsIsSingularLookupMap.put("setMethod", "set_{0}");
     AsIsSingularLookupMap.put("getMethod", "get_{0}");
+    AsIsSingularLookupMap.put("isMethod", "is_{0}");
 
 
     AsIsPluralLookupMap = new HashMap<String, String>();

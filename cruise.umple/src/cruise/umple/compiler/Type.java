@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// Type is a simple string
 public class Type
 {
 

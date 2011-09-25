@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// }
 public class Point
 {
 

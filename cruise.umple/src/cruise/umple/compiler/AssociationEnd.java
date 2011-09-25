@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// Create a derived attribute otherend (the other AssociationEnd)
 public class AssociationEnd
 {
 

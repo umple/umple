@@ -5,6 +5,7 @@ package cruise.umple.compiler;
 import java.io.*;
 import cruise.umple.compiler.exceptions.*;
 
+// TODO: Users of this can most likely just use File, so this could be refactored out
 public class UmpleFile
 {
 

@@ -7,6 +7,7 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.io.*;
 
+// Text to diagram merging tool used by UmpleOnline
 public class PlaygroundMain
 {
 

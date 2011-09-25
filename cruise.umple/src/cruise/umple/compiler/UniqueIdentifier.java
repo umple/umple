@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// This class should go and instead AssociationEnd should be the member variable
 public class UniqueIdentifier extends UmpleVariable
 {
 

@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// NOT used right now
 public class ReferenceType extends Type
 {
 

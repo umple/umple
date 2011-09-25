@@ -4,6 +4,7 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// Should be abolished
 public class GeneratedElement
 {
 
