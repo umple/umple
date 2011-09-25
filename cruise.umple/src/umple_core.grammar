@@ -4,7 +4,7 @@
 program- : ( [[comment]] | [[directive]] )*
 
 // A directive is either configurations, or model elements
-directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]
+directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]]
 glossary : glossary { [[word]]* }
 word : [singular] : [plural] ;
 generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;
@@ -16,3 +16,4 @@ comment- : [[inlineComment]] | [[multilineComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
+debug- : [=debug] ;

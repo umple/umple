@@ -1147,6 +1147,13 @@ public class UmpleParserTest
     
   }
   
+  @Test
+  public void debugKeyword()
+  {
+    assertParse("500_DebugMode.ump");       
+    Assert.assertEquals(true,model.getDebugMode());        
+  }
+
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));

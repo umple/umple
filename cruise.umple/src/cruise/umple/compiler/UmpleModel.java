@@ -21,6 +21,7 @@ public class UmpleModel
   private Glossary glossary;
   private String defaultNamespace;
   private String code;
+  private boolean debugMode;
   private Map<String,String> generatedCode;
   private Coordinate levelOffset;
   private Coordinate initialOffset;
@@ -49,6 +50,7 @@ public class UmpleModel
     glossary = new Glossary();
     defaultNamespace = null;
     code = null;
+    debugMode = false;
     generatedCode = new HashMap<String,String>();
     levelOffset = new Coordinate(200,100,0,0);
     initialOffset = new Coordinate(50,30,0,0);
@@ -129,6 +131,14 @@ public class UmpleModel
     return wasSet;
   }
 
+  public boolean setDebugMode(boolean aDebugMode)
+  {
+    boolean wasSet = false;
+    debugMode = aDebugMode;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setGeneratedCode(Map<String,String> aGeneratedCode)
   {
     boolean wasSet = false;
@@ -205,6 +215,11 @@ public class UmpleModel
     return code;
   }
 
+  public boolean getDebugMode()
+  {
+    return debugMode;
+  }
+
   public Map<String,String> getGeneratedCode()
   {
     return generatedCode;
@@ -218,6 +233,11 @@ public class UmpleModel
   public boolean isShouldGenerate()
   {
     return shouldGenerate;
+  }
+
+  public boolean isDebugMode()
+  {
+    return debugMode;
   }
 
   public Association getAssociation(int index)

@@ -24,6 +24,7 @@ class UmpleModel
   Glossary glossary = new Glossary();
   String defaultNamespace = null;
   String code = null;
+  Boolean debugMode = false;
   
   Map<String,String> generatedCode = new HashMap<String,String>();
   

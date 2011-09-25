@@ -117,7 +117,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("400_commentsBeforeMultipleClasses.ump", "[namespace:example][inlineComment:This is a simple comment][classDefinition][name:Student][classDefinition][name:Mentor][inlineComment:This is a course file][classDefinition][name:Course]");
     fileToOutputs.put("400_commentsWayBeforeClass.ump", "[inlineComment:This is a simple comment][namespace:example][classDefinition][name:Student]");
     fileToOutputs.put("400_multiCommentsBeforeClassesTest.ump", "[namespace:example][inlineComment:This is a simple comment][inlineComment:Multiline comment test][classDefinition][name:Student]");
-    
+    fileToOutputs.put("500_DebugMode.ump", "[debug:debug][classDefinition][name:Student]");
   }
 
   @Before

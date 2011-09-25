@@ -272,6 +272,10 @@ private void analyzeCoreToken(Token t)
         model.setDefaultNamespace(currentPackageName);  
       }
     }
+    else if (t.is("debug"))
+    {
+    	model.setDebugMode(true);
+    }
   }
 
   // There are currently no core tokens of concern in the context of an UmpleClass
