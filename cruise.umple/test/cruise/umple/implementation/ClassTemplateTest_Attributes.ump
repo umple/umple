@@ -12,6 +12,7 @@ class Mentor
   lazy someName;
   lazy Double lDoub;
   lazy Boolean lBool;
+  lazy String name = "Johannes";
   settable Date d;
   internal Time t = new Time();
   Integer i;

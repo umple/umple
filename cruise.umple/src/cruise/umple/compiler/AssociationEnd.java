@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// TODO: Code smell referenceToClassName is a duplication, can access via the association
 // Create a derived attribute otherend (the other AssociationEnd)
 public class AssociationEnd
 {

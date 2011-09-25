@@ -24,6 +24,7 @@ class Mentor
   private $someName;
   private $lDoub;
   private $lBool;
+  private $name;
   private $d;
   private $t;
   private $i;
@@ -56,6 +57,7 @@ class Mentor
     $this->someName = NULL;
     $this->lDoub = 0;
     $this->lBool = false;
+    $this->name = "Johannes";
     $this->d = $aD;
     $this->t = new Time();
     $this->i = $aI;
@@ -105,6 +107,14 @@ class Mentor
   {
     $wasSet = false;
     $this->lBool = $aLBool;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
     $wasSet = true;
     return $wasSet;
   }
@@ -236,6 +246,11 @@ class Mentor
   public function getLBool()
   {
     return $this->lBool;
+  }
+
+  public function getName()
+  {
+    return $this->name;
   }
 
   public function getD()

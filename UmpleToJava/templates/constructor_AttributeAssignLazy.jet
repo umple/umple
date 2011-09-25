@@ -1,27 +1,35 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = null; // av.getValue() == null ? "parameterOne" : "parameterValue";
   String defaultValue = null;
   
-  // Try to assign a null value or 0 value if we recognize
-  // one of Umple's built in data types. (http://cruise.site.uottawa.ca/umple/UmpleBuiltinDataTypes.html)
-  
-  if(av.getType().equals("String") || av.getType().equals("Date") || av.getType().equals("Time"))
+ 
+  if(av.getValue() == null)
   {
-  	defaultValue = "null";
-  }
-  else if(av.getType().equals("Double") || av.getType().equals("Integer"))
-  {
-  	defaultValue = "0";
-  }
-  else if(av.getType().equals("Float"))
-  {
-  	defaultValue = "0.0f";
-  }
-  else if(av.getType().equals("Boolean"))
-  {
-  	defaultValue = "false";
-  }
+     // Try to assign a null value or 0 value if we recognize
+     // one of Umple's built in data types. (http://cruise.site.uottawa.ca/umple/UmpleBuiltinDataTypes.html)
+
+     if(av.getType().equals("String") || av.getType().equals("Date") || av.getType().equals("Time"))
+     {
+  	   defaultValue = "null";
+     }
+     else if(av.getType().equals("Double") || av.getType().equals("Integer"))
+     {
+       defaultValue = "0";
+     }
+     else if(av.getType().equals("Float"))
+     {
+  	   defaultValue = "0.0f";
+     }
+     else if(av.getType().equals("Boolean"))
+     {
+  	   defaultValue = "false";
+     }
+   }
+   else
+   {
+       defaultValue = gen.translate("parameterValue",av);
+   }
   
   // Only assign a value if we could find a default
   if(defaultValue != null)

@@ -3,6 +3,12 @@
 
 package cruise.umple.compiler;
 
+// class GeneratedInterface
+// {
+// isA GeneratedElement;
+// //code = null;
+// * -> 1 UmpleModel model;
+// 0..1 -> 1 UmpleInterface uInterface;
 // }
 public class Point
 {

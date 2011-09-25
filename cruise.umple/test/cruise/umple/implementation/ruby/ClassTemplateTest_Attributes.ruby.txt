@@ -24,7 +24,7 @@ class Mentor
   #------------------------
 
   #Mentor Attributes - for documentation purposes
-  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :d, :t, :i, :p, :q, :r, :s, :t, :u, :v, :w
+  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :name, :d, :t, :i, :p, :q, :r, :s, :t, :u, :v, :w
 
   #Autounique Attributes - for documentation purposes
   #attr_reader x;
@@ -42,6 +42,7 @@ class Mentor
     @someName = nil
     @lDoub = 0
     @lBool = false
+    @name = "Johannes"
     @d = a_d
     @t = new Time()
     @i = a_i
@@ -89,6 +90,13 @@ class Mentor
   def set_lBool(a_lBool)
     was_set = false
     @lBool = a_lBool
+    was_set = true
+    was_set
+  end
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
     was_set = true
     was_set
   end
@@ -202,6 +210,10 @@ class Mentor
 
   def get_lBool
     @lBool
+  end
+
+  def get_name
+    @name
   end
 
   def get_d

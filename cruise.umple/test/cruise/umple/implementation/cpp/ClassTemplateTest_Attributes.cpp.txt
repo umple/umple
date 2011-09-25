@@ -28,6 +28,7 @@ public class Mentor
   private String someName;
   private double lDoub;
   private boolean lBool;
+  private String name;
   private Date d;
   private Time t;
   private int i;
@@ -60,6 +61,7 @@ public class Mentor
     someName = aSomeName;
     lDoub = aLDoub;
     lBool = aLBool;
+    name = "Johannes";
     d = aD;
     t = new Time();
     i = aI;
@@ -109,6 +111,14 @@ public class Mentor
   {
     boolean wasSet = false;
     lBool = aLBool;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
     wasSet = true;
     return wasSet;
   }
@@ -240,6 +250,11 @@ public class Mentor
   public boolean getLBool()
   {
     return lBool;
+  }
+
+  public String getName()
+  {
+    return name;
   }
 
   public Date getD()
