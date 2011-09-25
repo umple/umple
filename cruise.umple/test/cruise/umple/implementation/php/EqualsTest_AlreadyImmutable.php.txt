@@ -72,6 +72,11 @@ class Student
     return $this->stringId;
   }
 
+  public function isBooleanId()
+  {
+    return $this->booleanId;
+  }
+
   public function equals($compareTo)
   {
     if ($compareTo == null) { return false; }

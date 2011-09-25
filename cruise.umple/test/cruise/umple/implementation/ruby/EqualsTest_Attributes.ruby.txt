@@ -128,6 +128,10 @@ class Student
     index
   end
 
+  def is_booleanId
+    @booleanId
+  end
+
   def eql?(obj)
     return false if obj.nil?
     return false unless self.class == obj.class

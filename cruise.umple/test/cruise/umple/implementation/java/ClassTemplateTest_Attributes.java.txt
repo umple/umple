@@ -321,6 +321,11 @@ public class Mentor
     return x;
   }
 
+  public boolean isLBool()
+  {
+    return lBool;
+  }
+
   public void delete()
   {}
 

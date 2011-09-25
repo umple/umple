@@ -153,6 +153,11 @@ class Student
     return $index;
   }
 
+  public function isBooleanId()
+  {
+    return $this->booleanId;
+  }
+
   public function equals($compareTo)
   {
     if ($compareTo == null) { return false; }

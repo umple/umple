@@ -16,6 +16,7 @@ public class Student
   private String name;
   private String type;
   private List<String> roles;
+  private boolean injBool;
 
   //Helper Variables
   private boolean canSetId;
@@ -24,13 +25,14 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aName)
+  public Student(String aName, boolean aInjBool)
   {
     print "before constructor";
     canSetId = true;
     name = aName;
     resetType();
     roles = new ArrayList<String>();
+    injBool = aInjBool;
     print "after constructor";
   }
 
@@ -97,6 +99,14 @@ public class Student
     wasRemoved = roles.remove(aRole);
     print "end remove";
     return wasRemoved;
+  }
+
+  public boolean setInjBool(boolean aInjBool)
+  {
+    boolean wasSet = false;
+    injBool = aInjBool;
+    wasSet = true;
+    return wasSet;
   }
 
   public String getId()
@@ -175,6 +185,32 @@ public class Student
     String aFunName = name + "sillypans";
     print "end funName";
     return aFunName;
+  }
+
+  public boolean getInjBool()
+  {
+    return injBool;
+  }
+
+  public boolean getDInjBool()
+  {
+    return 2/3;
+  }
+
+  public boolean isInjBool()
+  {
+    print "before injBool";
+    boolean aInjBool = injBool;
+    print "after injBool";
+    return aInjBool;
+  }
+
+  public boolean isDInjBool()
+  {
+    print "before dInjBool";
+    boolean aDInjBool = 2/3;
+    print "after dInjBool";
+    return aDInjBool;
   }
 
   public void delete()

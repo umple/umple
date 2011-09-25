@@ -13,13 +13,13 @@ class Student
   #------------------------
 
   #Student Attributes - for documentation purposes
-  #attr_reader :id, :name, :type, :roles
+  #attr_reader :id, :name, :type, :roles, :injBool
 
   #------------------------
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_name)
+  def initialize(a_name, a_injBool)
     @initialized = false
     @deleted = false
     print "before constructor";
@@ -27,6 +27,7 @@ class Student
     @name = a_name
     reset_type
     @roles = []
+    @injBool = a_injBool
     print "after constructor";
     @initialized = true
   end
@@ -88,6 +89,13 @@ class Student
     was_removed = roles.delete(a_role)
     print "end remove";
     was_removed
+  end
+
+  def set_injBool(a_injBool)
+    was_set = false
+    @injBool = a_injBool
+    was_set = true
+    was_set
   end
 
   def get_id
@@ -157,6 +165,28 @@ class Student
     a_funName = name + "sillypans"
     print "end funName";
     a_funName
+  end
+
+  def get_injBool
+    @injBool
+  end
+
+  def get_dInjBool
+    2/3
+  end
+
+  def is_injBool
+    print "before injBool";
+    a_injBool = @injBool
+    print "after injBool";
+    a_injBool
+  end
+
+  def is_dInjBool
+    print "before dInjBool";
+    a_dInjBool = 2/3
+    print "after dInjBool";
+    a_dInjBool
   end
 
   def delete

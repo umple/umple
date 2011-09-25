@@ -7,7 +7,16 @@ class Student
   defaulted type = "None";
   String[] roles;
   funName = { name + "sillypans" }
-
+  
+  Boolean injBool;
+  Boolean dInjBool = { 2/3 }
+  
+  before isInjBool { print "before injBool"; }
+  after isInjBool { print "after injBool"; }
+  
+  before isDInjBool { print "before dInjBool"; }
+  after isDInjBool { print "after dInjBool"; }
+  
   before constructor { print "before constructor"; }
   after constructor { print "after constructor"; }
 

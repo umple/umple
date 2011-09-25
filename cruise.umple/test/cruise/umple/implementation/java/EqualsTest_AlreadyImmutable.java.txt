@@ -73,6 +73,11 @@ public class Student
     return stringId;
   }
 
+  public boolean isBooleanId()
+  {
+    return booleanId;
+  }
+
   public boolean equals(Object obj)
   {
     if (obj == null) { return false; }

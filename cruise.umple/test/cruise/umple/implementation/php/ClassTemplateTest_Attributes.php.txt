@@ -318,6 +318,11 @@ class Mentor
     return $this->x;
   }
 
+  public function isLBool()
+  {
+    return $this->lBool;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;

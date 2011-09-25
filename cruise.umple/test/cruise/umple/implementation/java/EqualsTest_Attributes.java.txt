@@ -151,6 +151,11 @@ public class Student
     return index;
   }
 
+  public boolean isBooleanId()
+  {
+    return booleanId;
+  }
+
   public boolean equals(Object obj)
   {
     if (obj == null) { return false; }

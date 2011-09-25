@@ -1,0 +1,49 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class BoolTest
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #BoolTest Attributes - for documentation purposes
+  #attr_reader :test
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_test)
+    @initialized = false
+    @deleted = false
+    @test = a_test
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_test(a_test)
+    was_set = false
+    @test = a_test
+    was_set = true
+    was_set
+  end
+
+  def get_test
+    @test
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

@@ -50,6 +50,7 @@ public class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 
   <%@ include file="attribute_Set_All.jet" %>
   <%@ include file="attribute_Get_All.jet" %>
+  <%@ include file="attribute_IsBoolean_All.jet" %>
   <%@ include file="state_machine_Get_All.jet" %>
   <%@ include file="state_machine_Events_All.jet" %>
   <%@ include file="state_machine_Set_All.jet" %>

@@ -1,0 +1,43 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
+  for (Attribute av : uClass.getAttributes()) 
+  {
+    if (!av.getType().equals("Boolean") || av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+    
+    String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
+    String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
+
+    String customNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("numberOfMethod",av)));
+    String customNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("numberOfMethod",av)));
+
+    String customHasManyPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("hasManyMethod",av)));
+    String customHasManyPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("hasManyMethod",av)));
+
+    String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
+    String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+    
+    if (av.getIsDerived() && customGetPostfixCode != null)
+    {
+      %><%@ include file="attribute_IsBooleanCodeInjectionDerived.jet" %><%
+    }
+    else if (av.getIsDerived())
+    {
+      %><%@ include file="attribute_IsBooleanDerived.jet" %><%
+    }
+    else if (customGetPostfixCode != null)
+    {
+      %><%@ include file="attribute_IsBooleanCodeInjection.jet" %><%
+    }
+    else
+    {
+      %><%@ include file="attribute_IsBoolean.jet" %><%
+    }
+      
+    appendln(stringBuffer, "");
+  }
+
+%>

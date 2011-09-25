@@ -14,6 +14,7 @@ class Student
   private $name;
   private $type;
   private $roles;
+  private $injBool;
 
   //Helper Variables
   private $canSetId;
@@ -22,13 +23,14 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName)
+  public function __construct($aName, $aInjBool)
   {
     print "before constructor";
     $this->canSetId = true;
     $this->name = $aName;
     $this->resetType();
     $this->roles = array();
+    $this->injBool = $aInjBool;
     print "after constructor";
   }
 
@@ -98,6 +100,14 @@ class Student
     $wasRemoved = true;
     print "end remove";
     return $wasRemoved;
+  }
+
+  public function setInjBool($aInjBool)
+  {
+    $wasSet = false;
+    $this->injBool = $aInjBool;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function getId()
@@ -177,6 +187,32 @@ class Student
     $aFunName = name + "sillypans";
     print "end funName";
     return $aFunName;
+  }
+
+  public function getInjBool()
+  {
+    return $this->injBool;
+  }
+
+  public function getDInjBool()
+  {
+    return 2/3;
+  }
+
+  public Boolean isInjBool()
+  {
+    print "before injBool";
+    $aInjBool = $this->null;
+    print "after injBool";
+    return $aInjBool;
+  }
+
+  public Boolean isDInjBool()
+  {
+    print "before dInjBool";
+    Boolean aDInjBool = 2/3;
+    print "after dInjBool";
+    return aDInjBool;
   }
 
   public function equals($compareTo)
