@@ -58,9 +58,10 @@ else if (isset($_REQUEST["umpleCode"]))
   if ($sourceCode == "")
   {
     $html = "
-        //An error occurred interpreting your Umple code, please review it and try again.
-        //If the problem persists, please email the Umple code to
-        //Andrew at aforward@site.uottawa.ca.
+        // An error occurred interpreting your Umple code, please review it and try again.
+        // If the problem persists, please email the Umple code to
+        // The umple-help google group: umple-help@googlegroups.com
+        // Or post an issue at http://bugs.umple.org -- the umple issues page
         ";
     echo $html;
   }
