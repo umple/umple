@@ -1493,7 +1493,7 @@ public class PhpClassGenerator implements ILang
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append(TEXT_2);
-     if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
+     if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Slahses",uClass.getComments())); } 
     stringBuffer.append(TEXT_3);
     stringBuffer.append( uClass.getName() );
     stringBuffer.append( gen.translate("isA",uClass) );

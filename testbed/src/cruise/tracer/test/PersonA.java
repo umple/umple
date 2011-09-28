@@ -2,7 +2,6 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.tracer.test;
-import cruise.util.*;
 
 public class PersonA
 {
@@ -32,7 +31,6 @@ public class PersonA
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    StringTracer.execute("name=" + aName);
     return wasSet;
   }
 

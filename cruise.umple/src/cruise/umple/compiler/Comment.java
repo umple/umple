@@ -47,12 +47,10 @@ public class Comment
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public Boolean isInline = true;
-
   public static String format(String type,List<Comment> allComments)
   {
   
-    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "RubyMultiline") ? "" : (type == "Multiline") ? "" : "// ";
+    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : "// ";
   
     if (allComments.size() == 0)
     {
@@ -68,12 +66,7 @@ public class Comment
     
     if(type == "Javadoc")
       output = "/**\n" + output + " */";
-     
-       if (type == "RubyMultiline")
-     output = "=begin\n" + output + "=end";
       
-      if (type == "Multiline")
-      output = "/*\n" + output + "*/";
     return output.trim();
   }
 }

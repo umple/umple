@@ -59,14 +59,6 @@ public class ClassTemplateTest extends TemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_Singleton.ump",languagePath + "/ClassTemplateTest_Singleton."+ languagePath +".txt","Application");
   }   
   
-  /*
-  @Test
-  public void LazyAttributesOnSingleton()
-  {
-	  assertUmpleTemplateFor("ClassTemplateTest_LazyAttributesOnSingleton.ump",languagePath + "/ClassTemplateTest_LazyAttributesOnSingleton."+ languagePath +".txt","Application");
-  }
-  */
-  
   @Test @Ignore
   public void AssociationClass()
   {
@@ -95,12 +87,6 @@ public class ClassTemplateTest extends TemplateTest
   public void GarbageCommentsClass()
   {
 	  assertUmpleTemplateFor("ClassTemplateTest_GarbageComment.ump",languagePath + "/ClassTemplateTest_GarbageComment."+languagePath+".txt", "Student");
-  }
-  
-  @Test
-  public void MultiLineCommentsBeforeClassTest()
-  {
-	  assertUmpleTemplateFor("ClassTemplateTest_MultiLineComment.ump",languagePath + "/ClassTemplateTest_MultiLineComment."+languagePath+".txt","Student");
   }
   
 }

@@ -30,7 +30,6 @@ class PersonA
     $wasSet = false;
     $this->name = $aName;
     $wasSet = true;
-    StringTracer::execute("name={$aName}");
     return $wasSet;
   }
 

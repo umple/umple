@@ -310,24 +310,18 @@ private void analyzeCoreToken(Token t)
   }
 private void analyzeClassToken(Token t)
   {
+  
     boolean shouldConsumeComment = lastComments.size() > 0;
-      
-  	if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
+  
+  	if (t.isStatic("//"))
   	{
   	  shouldConsumeComment = false;
-  	  
   	}
     else if (t.is("inlineComment"))
     {
       analyzeComment(t);
       shouldConsumeComment = false;
     }  
-    
-    else if (t.is("multilineComment"))
-    {
-    	analyzeMultilineComment(t);
-    	shouldConsumeComment = false;
-    }
     else if (t.is("classDefinition"))
     {
       analyzeClass(t);
@@ -361,17 +355,6 @@ private void analyzeClassToken(Token t)
   	if (!token.getValue().equals("$?[End_of_model]$?")) {
   		
   	lastComments.add(new Comment(token.getValue()));
-  	}
-  }
-  
-  private void analyzeMultilineComment(Token token)
-  {
-  	String inlineComments[] = token.getValue().split("\n");
-  	
-  	for (int i = 0; i < inlineComments.length; i++) {
-  		Comment comment = new Comment(inlineComments[i]);
-  		comment.isInline = false;
-  		lastComments.add(comment);
   	}
   }
   
@@ -460,23 +443,19 @@ private void analyzeClassToken(Token t)
   private UmpleClass analyzeClass(Token classToken)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
-        
+    
     for (Comment c : lastComments)
     {
-      aClass.addComment(c);
+      aClass.addComment(c);	
     }
-        
+    
     addExtendsTo(classToken, aClass);
     if (classToken.getValue("singleton") != null)
     {
       aClass.setIsSingleton(true);
     }
     aClass.setPackageName(currentPackageName);
-    
-    if (aClass.getIsSingleton()) 
-    {
-    	classToken.setName(classToken.getName());	
-    }
+
     analyzeAllTokens(classToken,aClass,1);
     analyzeAllTokens(classToken,aClass,2);
     return aClass;

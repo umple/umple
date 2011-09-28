@@ -1456,7 +1456,7 @@ public class RubyClassGenerator implements ILang
   }
 
     stringBuffer.append(TEXT_4);
-     if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("RubyMultiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Hash",uClass.getComments()));} } 
+     if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Hash",uClass.getComments())); } 
     stringBuffer.append(TEXT_5);
     stringBuffer.append(uClass.getName());
     stringBuffer.append( gen.translate("isA",uClass) );
