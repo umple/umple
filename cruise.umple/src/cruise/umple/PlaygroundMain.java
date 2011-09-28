@@ -7,8 +7,10 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.io.*;
 
-// TODO: Code smell - rename?
-// Text to diagram merging tool used by UmpleOnline
+/**
+ * TODO: Code smell - rename?
+ * Text to diagram merging tool used by UmpleOnline
+ */
 public class PlaygroundMain
 {
 

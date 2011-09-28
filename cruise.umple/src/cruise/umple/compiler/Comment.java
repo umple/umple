@@ -50,7 +50,7 @@ public class Comment
   public static String format(String type,List<Comment> allComments)
   {
   
-    String commentDelimiter = type == "Hash" ? "# " : "// ";
+    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : "// ";
   
     if (allComments.size() == 0)
     {
@@ -58,10 +58,15 @@ public class Comment
     }
 
     String output = "";
+      
     for(Comment c : allComments)
     {
       output += commentDelimiter + c.getText() + "\n"; 
     }
+    
+    if(type == "Javadoc")
+      output = "/**\n" + output + " */";
+      
     return output.trim();
   }
 }

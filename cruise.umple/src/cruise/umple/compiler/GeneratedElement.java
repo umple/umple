@@ -4,9 +4,11 @@
 package cruise.umple.compiler;
 import java.util.*;
 
-// TODO: Code smell: This duplicates the structure of the class from UmpleClass
-// This is a problem for model-to-model transformations
-// Should be abolished
+/**
+ * TODO: Code smell: This duplicates the structure of the class from UmpleClass
+ * This is a problem for model-to-model transformations
+ * Should be abolished
+ */
 public class GeneratedElement
 {
 

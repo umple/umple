@@ -3,7 +3,9 @@
 
 package cruise.umple.compiler;
 
-// NOT used right now
+/**
+ * NOT used right now
+ */
 public class PrimitiveType extends Type
 {
 

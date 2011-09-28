@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.12.1.605 modeling language!*/
+/*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 class DoorC
 {
@@ -86,6 +86,11 @@ class DoorC
   public function getDoorId()
   {
     return $this->doorId;
+  }
+
+  public function isBooleanId()
+  {
+    return $this->booleanId;
   }
 
   public function equals($compareTo)

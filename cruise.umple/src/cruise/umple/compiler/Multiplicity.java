@@ -4,7 +4,9 @@
 package cruise.umple.compiler;
 import cruise.umple.util.*;
 
-// TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+/**
+ * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+ */
 public class Multiplicity
 {
 

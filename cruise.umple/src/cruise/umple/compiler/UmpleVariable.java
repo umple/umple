@@ -3,9 +3,11 @@
 
 package cruise.umple.compiler;
 
-// Superclass for tracking member variables in all target languages
-// TODO: Code smell because we have both an association variable and also an association
-// This class should go and instead AssociationEnd should be the member variable
+/**
+ * Superclass for tracking member variables in all target languages
+ * TODO: Code smell because we have both an association variable and also an association
+ * This class should go and instead AssociationEnd should be the member variable
+ */
 public class UmpleVariable
 {
 

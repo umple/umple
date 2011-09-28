@@ -1814,7 +1814,7 @@ public class JavaClassGenerator implements ILang
   }
 
     stringBuffer.append(TEXT_4);
-     if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Slahses",uClass.getComments())); } 
+     if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } 
     stringBuffer.append(TEXT_5);
     stringBuffer.append(uClass.getName());
     stringBuffer.append( gen.translate("isA",uClass) );

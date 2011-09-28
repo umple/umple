@@ -3,9 +3,11 @@
 
 package example;
 
-// This is a student
-// Multiple comments
-// on several lines
+/**
+ * This is a student
+ * Multiple comments
+ * on several lines
+ */
 public class Student
 {
 

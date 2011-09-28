@@ -3,8 +3,10 @@
 
 package cruise.umple.compiler;
 
-// NOT used right now
-// Type is a simple string
+/**
+ * NOT used right now
+ * Type is a simple string
+ */
 public class Type
 {
 

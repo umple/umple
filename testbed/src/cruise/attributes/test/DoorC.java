@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.12.1.605 modeling language!*/
+/*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.attributes.test;
 import java.sql.Date;
@@ -89,6 +89,11 @@ public class DoorC
   public DoorB getDoorId()
   {
     return doorId;
+  }
+
+  public boolean isBooleanId()
+  {
+    return booleanId;
   }
 
   public void delete()
