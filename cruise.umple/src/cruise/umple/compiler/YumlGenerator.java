@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 import cruise.umple.util.*;
 
 public class YumlGenerator implements CodeGenerator
@@ -86,6 +87,15 @@ public class YumlGenerator implements CodeGenerator
       UmpleClass c2 = model.getUmpleClass(aAssoc.getEnd(1).getClassName());
       String mult1 = aAssoc.getEnd(0).toSimpleString();
       String mult2 = aAssoc.getEnd(1).toSimpleString();
+      List<AssociationEnd> assocEnds= aAssoc.getEnds();
+      AssociationEnd roleName1= new AssociationEnd(null,null,null,null, null);
+      AssociationEnd roleName2= new AssociationEnd(null,null,null,null, null);
+      
+      if(!assocEnds.isEmpty())
+      {  
+    	      	  roleName1 = assocEnds.get(0);
+    	  	      roleName2= assocEnds.get(1);
+       }
       
       String direction = "-";
       if (aAssoc.getIsLeftNavigable() && !aAssoc.getIsRightNavigable())
@@ -96,7 +106,7 @@ public class YumlGenerator implements CodeGenerator
       {
         direction = "->";
       }
-      yuml.append(StringFormatter.format("[{0}]{2}{4}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction));
+      yuml.append(StringFormatter.format("[{0}]{5}{2}{4}{6}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction,roleName1.getRoleName(),roleName2.getRoleName()));
     }
     
     model.setCode(yuml.toString());

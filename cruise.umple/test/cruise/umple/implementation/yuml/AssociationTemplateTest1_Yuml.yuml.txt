@@ -1,1 +1,1 @@
-[Student],[Mentor],[Student]*-0..1[Mentor],
+[Student],[Mentor],[Student]students*-mentor0..1[Mentor],
