@@ -4,6 +4,7 @@ import org.junit.*;
 
 import cruise.util.StringTracer;
 
+@Ignore
 public class StringTracerTest
 {
   
