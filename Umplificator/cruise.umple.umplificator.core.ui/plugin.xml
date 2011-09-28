@@ -38,7 +38,7 @@
          <action
                class="cruise.umple.umplificator.core.ui.action.UmplifyElementAction"
                enablesFor="*"
-               id="cruise.umple.umplificator.ui.action.UmplifyElement"
+               id="cruise.umple.umplificator.ui.action.UmplifyElementAction"
                label="Umplify Element"
                menubarPath="cruise.umple.umplificator.ui.menu.contextMenu/group1">
          </action>

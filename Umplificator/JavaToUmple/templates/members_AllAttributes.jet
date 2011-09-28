@@ -1,4 +1,10 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
 <%
-
+  for (Attribute av : uClass.getAttributes()) 
+  {
+  	String name = av.getName();
+	String type = av.getType();
+	String value= "= " + av.getValue();
+	String attr  = type + " " + name + value + ";" +  "\n";			
+  }
 %>

@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
+import cruise.umple.compiler.UmpleVariable;
 import cruise.umple.compiler.*;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 
@@ -17,13 +18,25 @@ public class JavaMetamodelConverter {
 	
 	private static Logger logger = Logger.getLogger(JavaMetamodelConverter.class);
 	private List<Attribute> attributes = new ArrayList<Attribute>();
+	public UmpleClass uClass;
 	
 	public UmpleClass getUmpleClassFromJavaClass(ICompilationUnit unit){
 		String className= unit.getElementName().substring(0, unit.getElementName().length()-5);
 		UmpleClass uClass = new UmpleClass(className);	
+		setNamespace(unit);
 		addUmpleAttributes(unit);
 		return uClass;
 	}
+	
+	
+	public void setNamespace(ICompilationUnit unit)
+	{
+		IType type = unit.getType(unit.getElementName());
+		if (type != null && type.getPackageFragment() != null){
+			uClass.addNamespace(type.getPackageFragment().getElementName());
+		}
+	}
+	
 	
 	public void addUmpleAttributes(ICompilationUnit unit){
 		try {
@@ -33,6 +46,7 @@ public class JavaMetamodelConverter {
 				IField[] fields = type.getFields();
 				for (IField field : fields) {
 					Attribute attr = getUmpleAttributeFromJavaField(field);
+					uClass.addAttribute(attr);
 					attributes.add(attr);
 				}
 			}	

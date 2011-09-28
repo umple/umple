@@ -18,10 +18,12 @@ public class UmpleClassGenerator
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/*This code was generated using the Java Umplificator!*/";
-  protected final String TEXT_2 = NL + NL + NL + "class ";
+  protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the Java Umplificator!*/" + NL + "" + NL + "namespace ";
+  protected final String TEXT_2 = " ;" + NL + "" + NL + "class ";
   protected final String TEXT_3 = NL + "{";
-  protected final String TEXT_4 = NL + "}";
+  protected final String TEXT_4 = NL + "isA ";
+  protected final String TEXT_5 = " ;";
+  protected final String TEXT_6 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -39,25 +41,31 @@ public class UmpleClassGenerator
   /* 
   * This method will return the generated code.
   */
-  public String getCode(UmpleModel model, UmpleElement uElement)
+  public String getCode(UmpleModel model, UmpleClass uClass)
   {
     final StringBuffer stringBuffer = new StringBuffer();
     stringBuffer.append(TEXT_1);
-    
-  UmpleClass uClass = (UmpleClass) uElement;
-
+    stringBuffer.append(uClass.getNamespace(0) );
     stringBuffer.append(TEXT_2);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_3);
     
-
-
-
-    
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",depend.getName());
+    append(stringBuffer, "depend {0};",depend.getName());
+  }
+
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(uClass.getExtendsClass() );
+    stringBuffer.append(TEXT_5);
+    
+  for (Attribute av : uClass.getAttributes()) 
+  {
+  	String name = av.getName();
+	String type = av.getType();
+	String value= "= " + av.getValue();
+	String attr  = type + " " + name + value + ";" +  "\n";			
   }
 
     
@@ -66,10 +74,7 @@ public class UmpleClassGenerator
     
 
 
-    
-
-
-    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_6);
     return stringBuffer.toString();
   }
 }
