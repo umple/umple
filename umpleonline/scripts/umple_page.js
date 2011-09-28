@@ -57,6 +57,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonPhpCode");
   Page.initAction("buttonEcoreCode");  
   Page.initAction("buttonJavaCode");
+  Page.initAction("buttonJavaAPIDoc");
+//  Page.initAction("buttonZip");
   Page.initAction("buttonRubyCode");
   Page.initAction("buttonPhotoReady");
   Page.initAction("buttonSimulateCode");
@@ -530,8 +532,14 @@ Page.showViewDone = function()
 Page.showGeneratedCode = function(code,language)
 {
   jQuery("#generatedCodeRow").show();
-  jQuery("#generatedCodeRow").html(format('<pre class="brush: {1};">{0}</pre>',code,language));
-  SyntaxHighlighter.highlight("code");
+
+  if(language!="javadoc") {
+    jQuery("#generatedCodeRow").html(format('<pre class="brush: {1};">{0}</pre>',code,language));
+    SyntaxHighlighter.highlight("code");
+  }
+  else {
+      jQuery("#generatedCodeRow").html(format('{0}',code));
+  }
 }
 
 Page.setFilename = function(filename)

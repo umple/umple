@@ -30,6 +30,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("java","Java");
   }
+  else if (action == "JavaAPIDoc")
+  {
+    Action.generateCode("javadoc","javadoc");
+  }
   else if (action == "EcoreCode")
   {
     Action.generateCode("xml","Ecore");
