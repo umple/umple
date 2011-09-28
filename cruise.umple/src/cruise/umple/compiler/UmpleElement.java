@@ -169,7 +169,7 @@ public class UmpleElement
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

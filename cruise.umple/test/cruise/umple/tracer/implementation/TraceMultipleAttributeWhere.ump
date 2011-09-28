@@ -1,0 +1,8 @@
+namespace example;
+
+class Tracer
+{
+  	Integer id;
+	String name;
+	trace name , id where name == "tim";
+}

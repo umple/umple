@@ -13,10 +13,11 @@ package cruise.umple.tracer.implementation.cpp;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import cruise.umple.tracer.implementation.*;
 import cruise.umple.util.SampleFileWriter;
-
+@Ignore
 public class CppTracerTest extends TracerTest
 {
   @Before

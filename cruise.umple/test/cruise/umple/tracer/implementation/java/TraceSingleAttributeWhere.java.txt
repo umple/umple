@@ -1,0 +1,49 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int x;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aX)
+  {
+    x = aX;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(int aX)
+  {
+    boolean wasSet = false;
+    if( x == 100 )
+    {
+      System.out.println("x=" + aX);
+    }
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getX()
+  {
+    return x;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,6 @@
+
+class Tracer
+{
+	x;
+	trace x;
+}

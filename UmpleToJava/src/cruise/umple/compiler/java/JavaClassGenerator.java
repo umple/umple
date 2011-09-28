@@ -1748,7 +1748,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1728 = NL + "      ";
   protected final String TEXT_1729 = ".";
   protected final String TEXT_1730 = "(null);" + NL + "    }";
-  protected final String TEXT_1731 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_1731 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
   protected final String TEXT_1732 = NL + "  ";
   protected final String TEXT_1733 = NL + "}";
 
@@ -7009,6 +7009,39 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1732);
     stringBuffer.append(uClass.getExtraCode());
      } 
+    
+
+{
+		//============== Tracing code generation		
+		
+		if( model.getTraceType().equals("File") )
+		{
+			appendln(stringBuffer, "\n  //------------------------");
+  			appendln(stringBuffer, "  // TRACING CODE");
+ 			appendln(stringBuffer, "  //------------------------\n");
+ 			
+ 			appendln(stringBuffer, "  static void fileTracer(Object obj)");
+			appendln(stringBuffer, "  {");
+			appendln(stringBuffer, "    FileOutputStream fout = null;");
+			appendln(stringBuffer, "    Date date = new Date();");
+			appendln(stringBuffer, "    try");
+			appendln(stringBuffer, "    {");
+			appendln(stringBuffer, "      // Open an output stream");
+			appendln(stringBuffer, "      fout = new FileOutputStream ({0}TraceLog.txt{1},true);",'"','"');
+			appendln(stringBuffer, "      new PrintStream(fout).println ({0}(Tracing log file){1});",'"','"');
+			appendln(stringBuffer, "    }");
+			appendln(stringBuffer, "    catch (IOException e)");
+			appendln(stringBuffer, "    {");
+		    appendln(stringBuffer, "      System.err.println ({0}Unable to write to file{1});",'"','"');
+			appendln(stringBuffer, "      System.exit(-1);");
+			appendln(stringBuffer, "    }");
+			appendln(stringBuffer, "    new PrintStream(fout).println(\"Traced object value: \" + obj);");
+			appendln(stringBuffer, "    new PrintStream(fout).println({0}Trace time : {1} + date);",'"','"');
+			appendln(stringBuffer, "  }");
+		}
+}
+
+
     stringBuffer.append(TEXT_1733);
     return stringBuffer.toString();
   }

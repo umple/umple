@@ -47,20 +47,20 @@ public class GeneratorHelperTest
   }
   
   @Test
-  public void prepare_postpare_traceItem_attribute()
+  public void prepare_postpare_traceDirective_attribute()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");
     Attribute attr = new Attribute("name","String",null,null,false);
-    TraceItem traceItem = new TraceItem();
+    TraceDirective traceDirective = new TraceDirective();
     
-    traceItem.setUmpleClass(c);
-    traceItem.setAttribute(attr);
+    traceDirective.setUmpleClass(c);
+    traceDirective.addAttribute(attr);
 
     Map<String,String> lookups = new HashMap<String,String>();
     lookups.put("setMethod","setX");
     lookups.put("attributeCode","x");
     
-    GeneratorHelper.prepareTraceItem(traceItem,lookups);
+    GeneratorHelper.prepareTraceDirective(traceDirective,lookups,null);
 
     Assert.assertEquals(1,c.numberOfCodeInjections());
     CodeInjection inject = c.getCodeInjection(0);

@@ -1,0 +1,9 @@
+class LightFixture
+{
+	Integer id;
+	String name;
+	trace name execute { "somthing" };
+    trace id execute { record("objectBeingTraced") };
+    trace name execute { record("x",name) } for 100;
+    trace id execute { record ("objectBeingTraced"), record("x",name) } where id > 500;
+}

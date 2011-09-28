@@ -2,7 +2,25 @@
 
 traceType- : tracer [traceType] ;
 
-trace : [[fullTrace]] | [[whereTrace]] | [[simpleTrace]]
-simpleTrace- : trace [**trace_attribute] ;
-whereTrace- : trace [trace_attribute] where [**trace_where] ;
-fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?
+trace : [[traceDirective]] | [[traceCase]]
+
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? ;
+
+traceItem- : ( entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )* 
+
+executeClause- :  execute { [**trace_execute] }
+traceWhere :  where [[traceCondition]]
+traceUntil :  until [[traceCondition]] 
+traceAfter : after [[traceCondition]]
+traceFor- : for [trace_for]
+tracePeriod- : period [trace_period]
+traceDuring- : during [trace_duration]
+
+traceCondition- : [LHS] [[conditionRHS]]
+conditionRHS- : [comparison_operator] [RHS]
+
+traceCase- : [[traceCaseDef]] | [[traceCaseActivation]] | [[traceCaseDeactivation]]
+traceCaseDef- : tracecase [tracecase_name] { [[traceDirective]]* }
+traceCaseActivation- : activate [tracecase_act_name] (onAllObjects | onThisThreadOnly)? ;
+traceCaseDeactivation- : deactivate [tracecase_deact_name] onThisObject [[deActivateFor]]? ;
+deActivateFor- : for [deactivate_for]

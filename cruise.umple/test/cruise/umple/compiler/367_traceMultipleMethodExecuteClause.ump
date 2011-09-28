@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace method() execute { "something" } during 30ms;
+	trace setName(),getName() execute {record("x")} where id > 100;
+}

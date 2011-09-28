@@ -28,7 +28,8 @@ public class UmpleClass extends UmpleElement
   private List<Attribute> attributes;
   private List<AssociationVariable> associationVariables;
   private List<Comment> comments;
-  private List<TraceItem> traceItems;
+  private List<TraceDirective> traceDirectives;
+  private List<TraceCase> traceCases;
   private List<StateMachine> stateMachines;
 
   //------------------------
@@ -49,7 +50,8 @@ public class UmpleClass extends UmpleElement
     attributes = new ArrayList<Attribute>();
     associationVariables = new ArrayList<AssociationVariable>();
     comments = new ArrayList<Comment>();
-    traceItems = new ArrayList<TraceItem>();
+    traceDirectives = new ArrayList<TraceDirective>();
+    traceCases = new ArrayList<TraceCase>();
     stateMachines = new ArrayList<StateMachine>();
   }
 
@@ -382,33 +384,63 @@ public class UmpleClass extends UmpleElement
     return index;
   }
 
-  public TraceItem getTraceItem(int index)
+  public TraceDirective getTraceDirective(int index)
   {
-    TraceItem aTraceItem = traceItems.get(index);
-    return aTraceItem;
+    TraceDirective aTraceDirective = traceDirectives.get(index);
+    return aTraceDirective;
   }
 
-  public List<TraceItem> getTraceItems()
+  public List<TraceDirective> getTraceDirectives()
   {
-    List<TraceItem> newTraceItems = Collections.unmodifiableList(traceItems);
-    return newTraceItems;
+    List<TraceDirective> newTraceDirectives = Collections.unmodifiableList(traceDirectives);
+    return newTraceDirectives;
   }
 
-  public int numberOfTraceItems()
+  public int numberOfTraceDirectives()
   {
-    int number = traceItems.size();
+    int number = traceDirectives.size();
     return number;
   }
 
-  public boolean hasTraceItems()
+  public boolean hasTraceDirectives()
   {
-    boolean has = traceItems.size() > 0;
+    boolean has = traceDirectives.size() > 0;
     return has;
   }
 
-  public int indexOfTraceItem(TraceItem aTraceItem)
+  public int indexOfTraceDirective(TraceDirective aTraceDirective)
   {
-    int index = traceItems.indexOf(aTraceItem);
+    int index = traceDirectives.indexOf(aTraceDirective);
+    return index;
+  }
+
+  public TraceCase getTraceCase(int index)
+  {
+    TraceCase aTraceCase = traceCases.get(index);
+    return aTraceCase;
+  }
+
+  public List<TraceCase> getTraceCases()
+  {
+    List<TraceCase> newTraceCases = Collections.unmodifiableList(traceCases);
+    return newTraceCases;
+  }
+
+  public int numberOfTraceCases()
+  {
+    int number = traceCases.size();
+    return number;
+  }
+
+  public boolean hasTraceCases()
+  {
+    boolean has = traceCases.size() > 0;
+    return has;
+  }
+
+  public int indexOfTraceCase(TraceCase aTraceCase)
+  {
+    int index = traceCases.indexOf(aTraceCase);
     return index;
   }
 
@@ -659,40 +691,79 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
-  public static int minimumNumberOfTraceItems()
+  public static int minimumNumberOfTraceDirectives()
   {
     return 0;
   }
 
-  public boolean addTraceItem(TraceItem aTraceItem)
+  public boolean addTraceDirective(TraceDirective aTraceDirective)
   {
     boolean wasAdded = false;
-    if (traceItems.contains(aTraceItem)) { return false; }
-    UmpleClass existingUmpleClass = aTraceItem.getUmpleClass();
+    if (traceDirectives.contains(aTraceDirective)) { return false; }
+    UmpleClass existingUmpleClass = aTraceDirective.getUmpleClass();
     if (existingUmpleClass == null)
     {
-      aTraceItem.setUmpleClass(this);
+      aTraceDirective.setUmpleClass(this);
     }
     else if (!this.equals(existingUmpleClass))
     {
-      existingUmpleClass.removeTraceItem(aTraceItem);
-      addTraceItem(aTraceItem);
+      existingUmpleClass.removeTraceDirective(aTraceDirective);
+      addTraceDirective(aTraceDirective);
     }
     else
     {
-      traceItems.add(aTraceItem);
+      traceDirectives.add(aTraceDirective);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeTraceItem(TraceItem aTraceItem)
+  public boolean removeTraceDirective(TraceDirective aTraceDirective)
   {
     boolean wasRemoved = false;
-    if (traceItems.contains(aTraceItem))
+    if (traceDirectives.contains(aTraceDirective))
     {
-      traceItems.remove(aTraceItem);
-      aTraceItem.setUmpleClass(null);
+      traceDirectives.remove(aTraceDirective);
+      aTraceDirective.setUmpleClass(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfTraceCases()
+  {
+    return 0;
+  }
+
+  public boolean addTraceCase(TraceCase aTraceCase)
+  {
+    boolean wasAdded = false;
+    if (traceCases.contains(aTraceCase)) { return false; }
+    UmpleClass existingUmpleClass = aTraceCase.getUmpleClass();
+    if (existingUmpleClass == null)
+    {
+      aTraceCase.setUmpleClass(this);
+    }
+    else if (!this.equals(existingUmpleClass))
+    {
+      existingUmpleClass.removeTraceCase(aTraceCase);
+      addTraceCase(aTraceCase);
+    }
+    else
+    {
+      traceCases.add(aTraceCase);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeTraceCase(TraceCase aTraceCase)
+  {
+    boolean wasRemoved = false;
+    if (traceCases.contains(aTraceCase))
+    {
+      traceCases.remove(aTraceCase);
+      aTraceCase.setUmpleClass(null);
       wasRemoved = true;
     }
     return wasRemoved;
@@ -749,9 +820,13 @@ public class UmpleClass extends UmpleElement
     attributes.clear();
     associationVariables.clear();
     comments.clear();
-    for(TraceItem aTraceItem : traceItems)
+    for(TraceDirective aTraceDirective : traceDirectives)
     {
-      aTraceItem.setUmpleClass(null);
+      aTraceDirective.setUmpleClass(null);
+    }
+    for(TraceCase aTraceCase : traceCases)
+    {
+      aTraceCase.setUmpleClass(null);
     }
     for(StateMachine aStateMachine : stateMachines)
     {
@@ -759,7 +834,7 @@ public class UmpleClass extends UmpleElement
     }
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

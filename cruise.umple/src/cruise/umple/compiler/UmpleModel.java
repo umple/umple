@@ -467,7 +467,7 @@ public class UmpleModel
     stateMachineDefinitions.clear();
     umpleInterfaces.clear();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

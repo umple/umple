@@ -1,0 +1,72 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int x;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aX)
+  {
+    x = aX;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(int aX)
+  {
+    boolean wasSet = false;
+    if( x == 100 )
+    {
+      fileTracer(x);
+    }
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getX()
+  {
+    return x;
+  }
+
+  public void delete()
+  {}
+
+  //------------------------
+  // TRACING CODE
+  //------------------------
+
+  static void fileTracer(Object obj)
+  {
+    FileOutputStream fout = null;
+    Date date = new Date();
+    try
+    {
+      // Open an output stream
+      fout = new FileOutputStream ("TraceLog.txt",true);
+      new PrintStream(fout).println ("(Tracing log file)");
+    }
+    catch (IOException e)
+    {
+      System.err.println ("Unable to write to file");
+      System.exit(-1);
+    }
+    new PrintStream(fout).println("Traced object value: " + obj);
+    new PrintStream(fout).println("Trace time : " + date);
+  }
+
+}

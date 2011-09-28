@@ -1,0 +1,7 @@
+class LightFixture
+{
+	String name;
+	tracecase tc1 {
+  		trace name execute { "a6" };
+	}
+}

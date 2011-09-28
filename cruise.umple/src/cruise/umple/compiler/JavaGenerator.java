@@ -46,7 +46,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

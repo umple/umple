@@ -120,10 +120,28 @@ guard : [ [**guardCode] ]<br />
 <br />
 traceType- : tracer [traceType] ;<br />
 <br />
-trace : [[fullTrace]] | [[whereTrace]] | [[simpleTrace]]<br />
-simpleTrace- : trace [**trace_attribute] ;<br />
-whereTrace- : trace [trace_attribute] where [**trace_where] ;<br />
-fullTrace- : trace [**trace_code] execute { [**trace_execute] } ( where [**trace_where] ; )?<br />
+trace : [[traceDirective]] | [[traceCase]]<br />
+<br />
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? ;<br />
+<br />
+traceItem- : ( entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )*<br />
+<br />
+executeClause- :  execute { [**trace_execute] }<br />
+traceWhere :  where [[traceCondition]]<br />
+traceUntil :  until [[traceCondition]]<br />
+traceAfter : after [[traceCondition]]<br />
+traceFor- : for [trace_for]<br />
+tracePeriod- : period [trace_period]<br />
+traceDuring- : during [trace_duration]<br />
+<br />
+traceCondition- : [LHS] [[conditionRHS]]<br />
+conditionRHS- : [comparison_operator] [RHS]<br />
+<br />
+traceCase- : [[traceCaseDef]] | [[traceCaseActivation]] | [[traceCaseDeactivation]]<br />
+traceCaseDef- : tracecase [tracecase_name] { [[traceDirective]]* }<br />
+traceCaseActivation- : activate [tracecase_act_name] (onAllObjects | onThisThreadOnly)? ;<br />
+traceCaseDeactivation- : deactivate [tracecase_deact_name] onThisObject [[deActivateFor]]? ;<br />
+deActivateFor- : for [deactivate_for]<br />
 position- : [[associationPosition]] | [[elementPosition]]<br />
 elementPosition : position [x] [y] [width] [height] ;<br />
 associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;<br />

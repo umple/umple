@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 public class Attribute extends UmpleVariable
 {
@@ -17,7 +18,7 @@ public class Attribute extends UmpleVariable
   private boolean isLazy;
 
   //Attribute Associations
-  private TraceItem traceItem;
+  private List<TraceDirective> traceDirectives;
 
   //------------------------
   // CONSTRUCTOR
@@ -30,6 +31,7 @@ public class Attribute extends UmpleVariable
     isList = false;
     isDerived = false;
     isLazy = false;
+    traceDirectives = new ArrayList<TraceDirective>();
   }
 
   //------------------------
@@ -108,53 +110,97 @@ public class Attribute extends UmpleVariable
     return isLazy;
   }
 
-  public TraceItem getTraceItem()
+  public TraceDirective getTraceDirective(int index)
   {
-    return traceItem;
+    TraceDirective aTraceDirective = traceDirectives.get(index);
+    return aTraceDirective;
   }
 
-  public boolean setTraceItem(TraceItem newTraceItem)
+  public List<TraceDirective> getTraceDirectives()
   {
-    boolean wasSet = false;
-    if (newTraceItem == null)
+    List<TraceDirective> newTraceDirectives = Collections.unmodifiableList(traceDirectives);
+    return newTraceDirectives;
+  }
+
+  public int numberOfTraceDirectives()
+  {
+    int number = traceDirectives.size();
+    return number;
+  }
+
+  public boolean hasTraceDirectives()
+  {
+    boolean has = traceDirectives.size() > 0;
+    return has;
+  }
+
+  public int indexOfTraceDirective(TraceDirective aTraceDirective)
+  {
+    int index = traceDirectives.indexOf(aTraceDirective);
+    return index;
+  }
+
+  public static int minimumNumberOfTraceDirectives()
+  {
+    return 0;
+  }
+
+  public boolean addTraceDirective(TraceDirective aTraceDirective)
+  {
+    boolean wasAdded = false;
+    if (traceDirectives.contains(aTraceDirective)) { return false; }
+    traceDirectives.add(aTraceDirective);
+    if (aTraceDirective.indexOfAttribute(this) != -1)
     {
-      TraceItem existingTraceItem = traceItem;
-      traceItem = null;
-      
-      if (existingTraceItem != null && existingTraceItem.getAttribute() != null)
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aTraceDirective.addAttribute(this);
+      if (!wasAdded)
       {
-        existingTraceItem.setAttribute(null);
+        traceDirectives.remove(aTraceDirective);
       }
-      wasSet = true;
-      return wasSet;
     }
+    return wasAdded;
+  }
 
-    TraceItem currentTraceItem = getTraceItem();
-    if (currentTraceItem != null && !currentTraceItem.equals(newTraceItem))
+  public boolean removeTraceDirective(TraceDirective aTraceDirective)
+  {
+    boolean wasRemoved = false;
+    if (!traceDirectives.contains(aTraceDirective))
     {
-      currentTraceItem.setAttribute(null);
+      return wasRemoved;
     }
 
-    traceItem = newTraceItem;
-    Attribute existingAttribute = newTraceItem.getAttribute();
-
-    if (!equals(existingAttribute))
+    int oldIndex = traceDirectives.indexOf(aTraceDirective);
+    traceDirectives.remove(oldIndex);
+    if (aTraceDirective.indexOfAttribute(this) == -1)
     {
-      newTraceItem.setAttribute(this);
+      wasRemoved = true;
     }
-    wasSet = true;
-    return wasSet;
+    else
+    {
+      wasRemoved = aTraceDirective.removeAttribute(this);
+      if (!wasRemoved)
+      {
+        traceDirectives.add(oldIndex,aTraceDirective);
+      }
+    }
+    return wasRemoved;
   }
 
   public void delete()
   {
-    if (traceItem != null)
+    ArrayList<TraceDirective> copyOfTraceDirectives = new ArrayList<TraceDirective>(traceDirectives);
+    traceDirectives.clear();
+    for(TraceDirective aTraceDirective : copyOfTraceDirectives)
     {
-      traceItem.setAttribute(null);
+      aTraceDirective.removeAttribute(this);
     }
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

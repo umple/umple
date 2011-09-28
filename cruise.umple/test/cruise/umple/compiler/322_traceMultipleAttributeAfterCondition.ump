@@ -1,0 +1,7 @@
+class LightFixture
+{
+	Integer id;
+	String name;
+	trace name, id after name == "tim";
+	trace name , id after id == 234;
+}

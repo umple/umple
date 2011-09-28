@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace exit method1();
+	trace exit method2();
+}

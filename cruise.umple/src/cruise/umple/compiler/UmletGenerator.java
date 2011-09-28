@@ -178,7 +178,7 @@ public class UmletGenerator implements CodeGenerator
     classElements.clear();
     associationElements.clear();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

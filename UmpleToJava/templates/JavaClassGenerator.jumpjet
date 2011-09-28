@@ -65,11 +65,12 @@ public class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 <% if (uClass.hasMethods()) { %>
   <%@ include file="class_MethodDeclaration.jet" %>
 <% } %>
-<% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>
+<% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
   <%=uClass.getExtraCode()%>
 <% } %>
+  <%@ include file="trace.jet" %>
 }

@@ -1,0 +1,5 @@
+class LightFixture
+{
+	deactivate tc1 onThisObject;
+	deactivate tc2 onThisObject for 1s;
+}

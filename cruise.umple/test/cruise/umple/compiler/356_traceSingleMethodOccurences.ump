@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace method1() for 5;
+	trace method2() for 100;
+}

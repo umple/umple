@@ -116,7 +116,7 @@ public class UmletDiagram
       aUmletElement.removeUmletDiagram(this);
     }
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

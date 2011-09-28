@@ -1,0 +1,10 @@
+namespace example;
+
+tracer File;
+
+class Tracer
+{
+  x;
+  y;
+  trace x,y;
+}

@@ -93,7 +93,7 @@ public class UmpleVariable
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

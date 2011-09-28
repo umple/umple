@@ -85,7 +85,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   {
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
@@ -1354,30 +1354,215 @@ private void analyzeTraceToken(Token token)
       model.setTraceType(token.getValue("traceType"));
     }
   }
+  //****************************************
+  //********* Trace Glue Code   ************
+  //****************************************
   
   // Process trace related tokens within the context of a class
   private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
   {
-    
     // Only process trace tokens once all other entities have been analyzed
     if (analysisStep != 2)
     {
       return;
     }
-
+    
+    // Analyze trace statement token
     if (token.is("trace"))
     {
-      TraceItem traceItem = new TraceItem();
-      traceItem.setUmpleClass(aClass);
-      traceItem.setAttribute(traceItem.getUmpleClass().getAttribute(token.getValue("trace_attribute")));
-      traceItem.setWhereClause(token.getValue("trace_where"));
+    	analyzeTraceStatement(aClass, token);
     }
+  }
+  
+  // Process Trace statement subtokens. Token could be trace directive or trace case
+  private void analyzeTraceStatement( UmpleClass aClass, Token token)
+  {
+	  TraceDirective traceDirective = new TraceDirective();
+      MethodTraceEntity mte = new MethodTraceEntity();
+      traceDirective.setUmpleClass(aClass);
+      
+      for( Token traceToken : token.getSubTokens() )
+      {
+    	  if( traceToken.is("trace_entity") )
+    	  {
+    		  analyzeTraceItem( traceToken , traceDirective , mte );
+    	  }
+    	  else if( traceToken.getName().equals("entry") )
+    	  {
+    		  mte.setEntry(true);
+    	  }
+    	  else if( traceToken.getName().equals("exit") )
+    	  {
+    		  mte.setExit(true);
+    	  }
+    	  else if( traceToken.is("traceWhere") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
+    		  traceDirective.addCondition(tc);
+    	  }
+    	  else if( traceToken.is("traceUntil") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
+    		  traceDirective.addCondition(tc);
+    	  }
+    	  else if( traceToken.is("traceAfter") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "after");
+    		  traceDirective.addCondition(tc);
+    	  }  	  
+    	  else if( traceToken.is("trace_for") )
+    	  {
+    		  traceDirective.setForClause(Integer.parseInt(token.getValue("trace_for")));
+    	  } 	  
+    	  else if( traceToken.is("trace_period") )
+    	  {
+    		  traceDirective.setPeriodClause(token.getValue("trace_period"));
+    	  }	  
+    	  else if( traceToken.is("trace_duration") )
+    	  {
+    		  traceDirective.setDuringClause(token.getValue("trace_duration"));
+    	  }	  
+    	  else if( traceToken.is("trace_execute") )
+    	  {
+    		  traceDirective.setExecuteClause(token.getValue("trace_execute"));
+    	  }  
+    	  else if( traceToken.is("tracecase_name") )
+    	  {
+    		  analyzeTraceCaseToken( aClass , token );
+    		  return;
+    	  }
+      }
+  }
+  
+  // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
+  private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte)
+  {
+	  Attribute attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
+	  String methodName = traceToken.getValue("trace_entity");
+	  
+	  if( methodName.contains("("))
+	  {
+		  if( mte.getName() !=  null)
+		  {
+			  mte = new MethodTraceEntity();
+		  }
+		  mte.setName(methodName);
+		  traceDirective.addMethodTraceEntity(mte);
+	  }
+	  else if( attr != null )
+	  {
+		  traceDirective.addAttribute(attr);
+	  }
+  }
+  
+  // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
+  // Returns a trace condition filled with left and right hands operands, with comparison operator used
+  private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType )
+  {
+	  ConditionRhs rhs = new ConditionRhs();
+	  TraceCondition tc = new TraceCondition(rhs);
+	  tc.setConditionType(conditionType);
+	  for( Token subToken : traceConditionToken.getSubTokens() )
+	  {
+		  if(subToken.is("LHS"))
+			  tc.setLhs(subToken.getValue("LHS"));
+		  if(subToken.is("comparison_operator"))
+			  rhs.setComparisonOperator(subToken.getValue("comparison_operator"));
+		  if(subToken.is("RHS"))
+			  rhs.setRhs(subToken.getValue("RHS"));
+	  }
+	  tc.setRhs(rhs);
+	  return tc;
+  }
+  
+  // Analyzes trace case token and its subtokens (i.e. trace directive tokens)
+  public void analyzeTraceCaseToken( UmpleClass aClass , Token token )
+  {
+	  TraceCase tca = new TraceCase();
+	  TraceDirective td = new TraceDirective();
+	  td.setUmpleClass(aClass);
+	  // set trace case name
+	  tca.setName(token.getValue("tracecase_name"));
+	  
+	  for( Token traceToken : token.getSubTokens() )
+	  { 
+		  // "trace" indicates the beginning of a trace directive
+		  if( traceToken.getName().equals("trace") )
+		  {
+			  td = new TraceDirective();
+			  td.setUmpleClass(aClass);
+		  }
+		  // ";" indicates the end of a trace directive, once true, then the trace directive is added to the trace case
+		  else if( traceToken.getName().equals(";") )
+		  {
+			  tca.addTraceDirective(td);
+		  }
+		  else
+			  analyzeTraceDirectiveFragments( td , aClass , traceToken, token );
+	  }
+	  aClass.addTraceCase(tca);
+  }
+  
+  // Modified version of method "analyzeTraceDirective"
+  // This method analyzes trace directive fragments inside a trace case
+  private void analyzeTraceDirectiveFragments( TraceDirective traceDirective , UmpleClass aClass , Token traceToken , Token token )
+  {
+      MethodTraceEntity mte = new MethodTraceEntity();
+      
+      if( traceToken.is("trace_entity") )  
+      {
+    	  analyzeTraceItem( traceToken , traceDirective , mte );
+      }
+      else if( traceToken.getName().equals("entry") )
+      {
+    	  mte.setEntry(true);  
+      }	
+      else if( traceToken.getName().equals("exit") )	
+      { 	
+    	  mte.setExit(true);  	  
+      }   	
+      else if( traceToken.is("traceWhere") )
+	  {
+		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
+		  traceDirective.addCondition(tc);
+	  }
+	  else if( traceToken.is("traceUntil") )
+	  {
+		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
+		  traceDirective.addCondition(tc);
+	  }
+	  else if( traceToken.is("traceAfter") )
+	  {
+		  TraceCondition tc = analyzeTraceCondition( traceToken, "after");
+		  traceDirective.addCondition(tc);
+	  }	    	
+      else if( traceToken.is("trace_for") )  	
+      {	
+    	  traceDirective.setForClause(Integer.parseInt(token.getValue("trace_for"))); 	  
+      } 	     	
+      else if( traceToken.is("trace_period") )   	
+      {  	
+    	  traceDirective.setPeriodClause(token.getValue("trace_period"));   	  
+      }	     	
+      else if( traceToken.is("trace_duration") )   	
+      {   	
+    	  traceDirective.setDuringClause(token.getValue("trace_duration"));   	  
+      }	     	
+      else if( traceToken.is("trace_execute") )   	
+      { 	
+    	  traceDirective.setExecuteClause(token.getValue("trace_execute")); 	  
+      }
+     
   }
   
   // Perform post token analysis on trace related elements of the Umple language
   private void postTokenTraceAnalysis()
   {
   }
+  
+  //****************************************
+  //********* End of Trace Glue Code   *****
+  //****************************************
 private void analyzeLayoutToken(Token token)
   {
 

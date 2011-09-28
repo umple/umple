@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace method1(), method2() until name == "tim";
+	trace getName() ,method3() until id == 234;
+}

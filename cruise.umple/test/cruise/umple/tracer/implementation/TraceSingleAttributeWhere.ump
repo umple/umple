@@ -1,0 +1,7 @@
+namespace example;
+
+class Tracer
+{
+  Integer x;
+  trace x where x == 100;
+}

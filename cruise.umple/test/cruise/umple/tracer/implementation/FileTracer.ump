@@ -1,0 +1,8 @@
+
+tracer File;
+
+class Tracer
+{
+	x;
+	trace x;
+}

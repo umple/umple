@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace method1() , method2() where name == "tim";
+	trace setName() , method3() where id == 234;
+}

@@ -1,0 +1,4 @@
+class LightFixture
+{
+	activate tc1;
+}
