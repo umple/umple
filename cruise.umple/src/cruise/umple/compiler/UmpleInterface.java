@@ -263,7 +263,7 @@ public class UmpleInterface extends UmpleElement
     constants.clear();
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

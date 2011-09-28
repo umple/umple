@@ -142,7 +142,7 @@ public class RulePart
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

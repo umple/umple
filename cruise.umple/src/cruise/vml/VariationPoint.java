@@ -333,7 +333,7 @@ public class VariationPoint
       placeholderConcern.removeVariationPoint(this);
     }
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

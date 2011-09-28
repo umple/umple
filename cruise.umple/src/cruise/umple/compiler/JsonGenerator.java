@@ -42,7 +42,7 @@ public class JsonGenerator implements CodeGenerator
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

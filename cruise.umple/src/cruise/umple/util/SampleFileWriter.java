@@ -26,7 +26,7 @@ public class SampleFileWriter
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

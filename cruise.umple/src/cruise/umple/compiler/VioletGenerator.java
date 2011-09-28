@@ -178,7 +178,7 @@ public class VioletGenerator implements CodeGenerator
     violetClasses.clear();
     violetAssociations.clear();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

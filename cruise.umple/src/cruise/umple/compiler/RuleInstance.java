@@ -160,7 +160,7 @@ public class RuleInstance
     ruleParts.clear();
     parser = null;
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

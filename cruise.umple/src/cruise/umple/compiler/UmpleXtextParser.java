@@ -56,7 +56,7 @@ public class UmpleXtextParser implements UmpleParser
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 public class MethodParameter extends Attribute
 {

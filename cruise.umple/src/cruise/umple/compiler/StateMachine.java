@@ -247,7 +247,7 @@ public class StateMachine
       aState.delete();
     }
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

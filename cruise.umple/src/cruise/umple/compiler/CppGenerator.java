@@ -46,7 +46,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

@@ -156,7 +156,7 @@ public class Variant
       placeholderVariationPoint.removeVariant(this);
     }
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

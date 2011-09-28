@@ -164,7 +164,7 @@ public class Couple
       placeholderCouple.removeIgnore(this);
     }
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

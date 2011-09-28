@@ -45,7 +45,7 @@ public class XmiGenerator implements CodeGenerator
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

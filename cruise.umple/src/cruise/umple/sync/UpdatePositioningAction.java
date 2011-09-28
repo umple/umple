@@ -42,7 +42,7 @@ public class UpdatePositioningAction extends SynchronizationAction
   {
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

@@ -29,7 +29,7 @@ public class NewAssociationAction extends SynchronizationAction
   {
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

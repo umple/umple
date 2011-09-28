@@ -144,7 +144,7 @@ public class VioletDiagram
     violetClasses.clear();
     violetAssociations.clear();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

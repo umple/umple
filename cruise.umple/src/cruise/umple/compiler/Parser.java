@@ -239,7 +239,7 @@ public class Parser
     rules.clear();
     couples.clear();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

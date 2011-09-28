@@ -56,7 +56,7 @@ public class SynchronizationAction
 
   public void delete()
   {}
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

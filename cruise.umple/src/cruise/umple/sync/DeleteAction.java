@@ -29,7 +29,7 @@ public class DeleteAction extends SynchronizationAction
   {
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
