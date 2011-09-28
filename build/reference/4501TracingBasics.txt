@@ -1,0 +1,18 @@
+Tracing Basics
+Tracing
+noreferences
+
+@@description
+<p>Umple has a subsystem for injecting trace directive into generated code.
+When complete this will be able to work with a variety of tracing toolkits such as LTTNG</p>
+
+@@example
+
+class Student
+{
+   Integer id;
+   trace id;
+
+}
+
+@@endexample
