@@ -6,6 +6,24 @@ import java.io.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+ * 
+ * This file is made available subject to the open source license found at:
+ * http://cruise.site.uottawa.ca/UmpleMITLicense.html
+ * 
+ * This is our internal parser implementation for the Umple language.  It uses
+ * a generic Parser that can read an external EBNF grammar file, and then populate
+ * an abstract syntax tree.
+ * 
+ * The work of the UmpleInternalParser is 
+ * 
+ * a) The grammar definition (defined externally in *.grammar files)
+ * b) Analyzing the AST to populate an Umple meta model instance
+ * c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
+ * 
+ * Please refer to UmpleInternalParser_Code.ump for implementation details.
+ */
 public class UmpleInternalParser extends Parser implements UmpleParser
 {
 
@@ -310,18 +328,24 @@ private void analyzeCoreToken(Token t)
   }
 private void analyzeClassToken(Token t)
   {
-  
     boolean shouldConsumeComment = lastComments.size() > 0;
-  
-  	if (t.isStatic("//"))
+      
+  	if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
   	{
   	  shouldConsumeComment = false;
+  	  
   	}
     else if (t.is("inlineComment"))
     {
       analyzeComment(t);
       shouldConsumeComment = false;
     }  
+    
+    else if (t.is("multilineComment"))
+    {
+    	analyzeMultilineComment(t);
+    	shouldConsumeComment = false;
+    }
     else if (t.is("classDefinition"))
     {
       analyzeClass(t);
@@ -355,6 +379,17 @@ private void analyzeClassToken(Token t)
   	if (!token.getValue().equals("$?[End_of_model]$?")) {
   		
   	lastComments.add(new Comment(token.getValue()));
+  	}
+  }
+  
+  private void analyzeMultilineComment(Token token)
+  {
+  	String inlineComments[] = token.getValue().split("\n");
+  	
+  	for (int i = 0; i < inlineComments.length; i++) {
+  		Comment comment = new Comment(inlineComments[i]);
+  		comment.isInline = false;
+  		lastComments.add(comment);
   	}
   }
   
@@ -443,19 +478,23 @@ private void analyzeClassToken(Token t)
   private UmpleClass analyzeClass(Token classToken)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
-    
+        
     for (Comment c : lastComments)
     {
-      aClass.addComment(c);	
+      aClass.addComment(c);
     }
-    
+        
     addExtendsTo(classToken, aClass);
     if (classToken.getValue("singleton") != null)
     {
       aClass.setIsSingleton(true);
     }
     aClass.setPackageName(currentPackageName);
-
+    
+    if (aClass.getIsSingleton()) 
+    {
+    	classToken.setName(classToken.getName());	
+    }
     analyzeAllTokens(classToken,aClass,1);
     analyzeAllTokens(classToken,aClass,2);
     return aClass;

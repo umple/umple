@@ -72,12 +72,12 @@ public class NewAction extends SynchronizationAction
       {
         // inlineComment has two tokens: "//" and "comment text"
         // we need to add the new class after the "comment text"
-        if (t.isStatic("//"))
+        if (t.isStatic("//") || t.isStatic("/*"))
         {
           continue;
         }
         
-        if (t.is("inlineComment"))
+        if (t.is("inlineComment")|| t.is("multilineComment"))
         {
           if (!t.isValue(delimiter))
           {

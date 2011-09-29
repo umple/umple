@@ -12,21 +12,42 @@ public class Ignore
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "      if (\"";
-  protected final String TEXT_2 = "\".equals(timeoutMethodName))" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
-  protected final String TEXT_3 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
-  protected final String TEXT_4 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
-
   public String generate(Object argument)
   {
     final StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(TEXT_1);
-    stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_2);
-    stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append( gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_4);
+    
+
+{
+		//============== Tracing code generation		
+		
+		if( model.getTraceType().equals("File") )
+		{
+			appendln(stringBuffer, "\n  //------------------------");
+  			appendln(stringBuffer, "  // TRACING CODE");
+ 			appendln(stringBuffer, "  //------------------------\n");
+ 			
+ 			appendln(stringBuffer, "  static void fileTracer(Object obj)");
+			appendln(stringBuffer, "  {");
+			appendln(stringBuffer, "    FileOutputStream fout = null;");
+			appendln(stringBuffer, "    Date date = new Date();");
+			appendln(stringBuffer, "    try");
+			appendln(stringBuffer, "    {");
+			appendln(stringBuffer, "      // Open an output stream");
+			appendln(stringBuffer, "      fout = new FileOutputStream ({0}TraceLog.txt{1},true);",'"','"');
+			appendln(stringBuffer, "      new PrintStream(fout).println ({0}(Tracing log file){1});",'"','"');
+			appendln(stringBuffer, "    }");
+			appendln(stringBuffer, "    catch (IOException e)");
+			appendln(stringBuffer, "    {");
+		    appendln(stringBuffer, "      System.err.println ({0}Unable to write to file{1});",'"','"');
+			appendln(stringBuffer, "      System.exit(-1);");
+			appendln(stringBuffer, "    }");
+			appendln(stringBuffer, "    new PrintStream(fout).println(\"Traced object value: \" + obj);");
+			appendln(stringBuffer, "    new PrintStream(fout).println({0}Trace time : {1} + date);",'"','"');
+			appendln(stringBuffer, "  }");
+		}
+}
+
+
     return stringBuffer.toString();
   }
 }

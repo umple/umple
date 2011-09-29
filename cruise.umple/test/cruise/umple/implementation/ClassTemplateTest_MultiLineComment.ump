@@ -1,0 +1,9 @@
+namespace example;
+
+/* This is a student
+Multiple comments
+on several lines */
+class Student
+{
+
+}

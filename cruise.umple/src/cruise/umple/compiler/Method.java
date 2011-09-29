@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Code supporting interfaces
+ */
 public class Method
 {
 
