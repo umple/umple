@@ -21,8 +21,8 @@ public class UmpleClassGenerator
   protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the Java Umplificator!*/" + NL + "" + NL + "namespace ";
   protected final String TEXT_2 = " ;" + NL + "" + NL + "class ";
   protected final String TEXT_3 = NL + "{";
-  protected final String TEXT_4 = NL + "isA ";
-  protected final String TEXT_5 = " ;";
+  protected final String TEXT_4 = NL + "  isA ";
+  protected final String TEXT_5 = ";";
   protected final String TEXT_6 = NL + "}";
 
   // Add a newline to the end of the input
@@ -56,9 +56,11 @@ public class UmpleClassGenerator
     append(stringBuffer, "depend {0};",depend.getName());
   }
 
+    if (uClass.getExtendsClass() != null){
     stringBuffer.append(TEXT_4);
-    stringBuffer.append(uClass.getExtendsClass() );
+    stringBuffer.append(uClass.getExtendsClass().getName() );
     stringBuffer.append(TEXT_5);
+    }
     
   for (Attribute av : uClass.getAttributes()) 
   {
@@ -69,7 +71,6 @@ public class UmpleClassGenerator
   }
 
     
-
 
     
 

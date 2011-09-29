@@ -20,7 +20,7 @@ public class JavaClassInventory {
 	private static Logger logger = Logger.getLogger(JavaClassInventory.class);
 
 	public static IMethod[] getMethods(ICompilationUnit unit)
-	{
+	{ 
 		try{
 			IType[] allTypes = unit.getAllTypes();
 			IMethod[] methods = null;

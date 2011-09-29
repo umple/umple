@@ -6,10 +6,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
 
-import cruise.umple.compiler.UmpleVariable;
 import cruise.umple.compiler.*;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 
@@ -19,13 +20,29 @@ public class JavaMetamodelConverter {
 	private static Logger logger = Logger.getLogger(JavaMetamodelConverter.class);
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 	public UmpleClass uClass;
-	
+
 	public UmpleClass getUmpleClassFromJavaClass(ICompilationUnit unit){
 		String className= unit.getElementName().substring(0, unit.getElementName().length()-5);
-		UmpleClass uClass = new UmpleClass(className);	
+		uClass = new UmpleClass(className);	
 		setNamespace(unit);
+		addExtendedClasses(unit);
 		addUmpleAttributes(unit);
 		return uClass;
+	}
+
+	public void addExtendedClasses(ICompilationUnit unit)
+	{
+		String superclass;
+		try {
+			IType [] types = unit.getAllTypes();
+			superclass = types[0].getSuperclassName();
+			if (superclass != null){
+				UmpleClass uParent = new  UmpleClass(superclass);
+				uClass.setExtendsClass(uParent);
+			}
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -33,7 +50,10 @@ public class JavaMetamodelConverter {
 	{
 		IType type = unit.getType(unit.getElementName());
 		if (type != null && type.getPackageFragment() != null){
-			uClass.addNamespace(type.getPackageFragment().getElementName());
+			if (type.getPackageFragment().getElementName() != null){
+			String namespace = type.getPackageFragment().getElementName();
+			uClass.addNamespace(namespace);
+			}
 		}
 	}
 	
