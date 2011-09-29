@@ -206,5 +206,15 @@
             class="cruise.umple.ui.UmpleExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
       </markerResolutionGenerator>
    </extension>
+   
+   <!-- Umple Perspective -->
+   <extension point="org.eclipse.ui.perspectives">
+        <perspective
+              class="cruise.umple.ui.perspectives.UmplePerspective"
+              icon="icons/umpleDocument2.gif"
+              id="cruise.umple.ui.perspectives.UmplePerspective"
+              name="Umple">
+        </perspective>
+    </extension>
 
 </plugin>
