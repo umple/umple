@@ -3,7 +3,6 @@ package cruise.umple.ui.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.eclipse.ui.console.IConsoleConstants;
 
 
 public class UmplePerspective implements IPerspectiveFactory {
@@ -34,7 +33,6 @@ public class UmplePerspective implements IPerspectiveFactory {
 				factory.getEditorArea());
 		bottom.addView("org.eclipse.ui.console.ConsoleView");
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		bottom.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		
 		// Top left shows the Package Explorer view
 		IFolderLayout topLeft =
