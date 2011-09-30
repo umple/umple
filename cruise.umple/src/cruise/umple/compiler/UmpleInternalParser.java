@@ -274,9 +274,9 @@ private void init()
   }
 private void analyzeCoreToken(Token t)
   {
-    if (t.is("generate"))
+    if (t.is("generate") || t.is("generate_path"))
     {
-      model.addGenerate(t.getValue());
+    	analyzeGenerate(t);
     }
     else if (t.is("glossary"))
     {
@@ -325,6 +325,24 @@ private void analyzeCoreToken(Token t)
       Word word = new Word(wordToken.getValue("singular"),wordToken.getValue("plural"));
       model.getGlossary().addWord(word);
     }
+  }
+  
+  private void analyzeGenerate(Token genToken)
+  {
+  	if(genToken.is("generate_path"))
+  	{
+  	  String language = genToken.getValue("language");
+  	  String path = genToken.getValue("output");
+  	  
+  	  if(path.contains("..")) // TODO: what about folders like /..folder/?
+  	      path = null;
+  	      
+  	  model.addGenerate(new GenerateTarget(language, path));
+  	}
+  	else
+  	{
+      model.addGenerate(genToken.getValue());
+  	}
   }
 private void analyzeClassToken(Token t)
   {

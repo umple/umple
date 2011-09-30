@@ -16,7 +16,7 @@ public class UmpleModel
   //UmpleModel Attributes
   private UmpleFile umpleFile;
   private String defaultPackage;
-  private List<String> generates;
+  private List<GenerateTarget> generates;
   private boolean shouldGenerate;
   private Glossary glossary;
   private String defaultNamespace;
@@ -45,7 +45,7 @@ public class UmpleModel
   {
     umpleFile = aUmpleFile;
     defaultPackage = null;
-    generates = new ArrayList<String>();
+    generates = new ArrayList<GenerateTarget>();
     shouldGenerate = true;
     glossary = new Glossary();
     defaultNamespace = null;
@@ -85,14 +85,14 @@ public class UmpleModel
     return wasSet;
   }
 
-  public boolean addGenerate(String aGenerate)
+  public boolean addGenerate(GenerateTarget aGenerate)
   {
     boolean wasAdded = false;
     wasAdded = generates.add(aGenerate);
     return wasAdded;
   }
 
-  public boolean removeGenerate(String aGenerate)
+  public boolean removeGenerate(GenerateTarget aGenerate)
   {
     boolean wasRemoved = false;
     wasRemoved = generates.remove(aGenerate);
@@ -165,15 +165,15 @@ public class UmpleModel
     return defaultPackage;
   }
 
-  public String getGenerate(int index)
+  public GenerateTarget getGenerate(int index)
   {
-    String aGenerate = generates.get(index);
+    GenerateTarget aGenerate = generates.get(index);
     return aGenerate;
   }
 
-  public String[] getGenerates()
+  public GenerateTarget[] getGenerates()
   {
-    String[] newGenerates = generates.toArray(new String[generates.size()]);
+    GenerateTarget[] newGenerates = generates.toArray(new GenerateTarget[generates.size()]);
     return newGenerates;
   }
 
@@ -189,7 +189,7 @@ public class UmpleModel
     return has;
   }
 
-  public int indexOfGenerate(String aGenerate)
+  public int indexOfGenerate(GenerateTarget aGenerate)
   {
     int index = generates.indexOf(aGenerate);
     return index;
@@ -525,7 +525,26 @@ public class UmpleModel
     return newClass;
   }
 
+  public void addGenerate(String lang)
+  {
+     addGenerate(new GenerateTarget(lang, null));
+  }
+  
   public String getDefaultGenerate()
+  {
+  	// Note that this method should be getDefaultGenerateLanguage
+  	// To avoid rippling changes throughout the code, the name is left as is 
+    if (numberOfGenerates() == 0)
+    {
+      return null;
+    }
+    else
+    {
+      return getGenerate(0).getLanguage();
+    }
+  }
+  
+  public String getDefaultGeneratePath()
   {
     if (numberOfGenerates() == 0)
     {
@@ -533,7 +552,7 @@ public class UmpleModel
     }
     else
     {
-      return getGenerate(0);
+      return getGenerate(0).getPath() == null ? "./" : getGenerate(0).getPath();
     }
   }
   
@@ -606,9 +625,9 @@ public class UmpleModel
   {
     try
     {
-      for (String target : getGenerates())
+      for (GenerateTarget target : getGenerates())
       {
-        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target);
+        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
         generator.setModel(this);

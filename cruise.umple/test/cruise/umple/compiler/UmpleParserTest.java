@@ -75,6 +75,16 @@ public class UmpleParserTest
   public void outputLanguagePath()
   {
 	assertParse("001_outputLanguage.ump");
+    Assert.assertEquals("Ruby", model.getDefaultGenerate());
+    Assert.assertEquals("blah/blah/blah", model.getDefaultGeneratePath());
+  }
+  
+  @Test
+  public void outputLanguagePathFail()
+  {
+	assertParse("001_outputLanguageFail.ump");
+    Assert.assertEquals("Java", model.getDefaultGenerate());
+    Assert.assertFalse("Should be ./, or some default path", "../../../folder/".equals(model.getDefaultGeneratePath()));
   }
   
   @Test

@@ -67,7 +67,26 @@ class UmpleModel
     return newClass;
   }
 
+  public void addGenerate(String lang)
+  {
+     addGenerate(new GenerateTarget(lang, null));
+  }
+  
   public String getDefaultGenerate()
+  {
+  	// Note that this method should be getDefaultGenerateLanguage
+  	// To avoid rippling changes throughout the code, the name is left as is 
+    if (numberOfGenerates() == 0)
+    {
+      return null;
+    }
+    else
+    {
+      return getGenerate(0).getLanguage();
+    }
+  }
+  
+  public String getDefaultGeneratePath()
   {
     if (numberOfGenerates() == 0)
     {
@@ -75,7 +94,7 @@ class UmpleModel
     }
     else
     {
-      return getGenerate(0);
+      return getGenerate(0).getPath() == null ? "./" : getGenerate(0).getPath();
     }
   }
   
@@ -148,9 +167,9 @@ class UmpleModel
   {
     try
     {
-      for (String target : getGenerates())
+      for (GenerateTarget target : getGenerates())
       {
-        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target);
+        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
         generator.setModel(this);

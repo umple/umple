@@ -19,7 +19,7 @@ class UmpleModel
   
   UmpleFile umpleFile;
   defaultPackage = null;
-  String[] generates;
+  GenerateTarget[] generates;
   Boolean shouldGenerate = true;
   Glossary glossary = new Glossary();
   String defaultNamespace = null;
@@ -310,6 +310,14 @@ class Comment
   text;
 }
 
+class GenerateTarget
+{
+  language;
+  path;
+  // the default path
+  before getPath{if(path == null) path = "./"; }
+  key{language}
+}
 use UmpleHelper.ump;
 use UmpleDiagram.ump;
 use StateMachine.ump;
