@@ -32,10 +32,11 @@
 program- : ( [[comment]] | [[directive]] )*<br />
 <br />
 // A directive is either configurations, or model elements<br />
-directive- : [[glossary]] | [[generate]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]]<br />
+directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]]<br />
 glossary : glossary { [[word]]* }<br />
 word : [singular] : [plural] ;<br />
 generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
+generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] " [**output] " ;<br />
 useStatement- : use [use] ;<br />
 namespace- : namespace [namespace] ;<br />
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />
