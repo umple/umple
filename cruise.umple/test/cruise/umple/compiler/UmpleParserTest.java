@@ -70,6 +70,12 @@ public class UmpleParserTest
   {
     assertFailedParse("001_otherLanguage.ump", new Position(1,9,9));
   }
+
+  @Test
+  public void outputLanguagePath()
+  {
+	assertParse("001_outputLanguage.ump");
+  }
   
   @Test
   public void namespace()
