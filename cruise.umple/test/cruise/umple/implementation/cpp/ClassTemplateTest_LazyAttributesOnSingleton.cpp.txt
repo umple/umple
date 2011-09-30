@@ -1,0 +1,91 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Application
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Application theInstance = null;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Application Attributes
+  private String name;
+  private String version;
+  private list id;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  private Application()
+  {
+    name = aName;
+    version = aVersion;
+    id = aId;
+  }
+
+  public static Application getInstance()
+  {
+    if(theInstance == null)
+    {
+      theInstance = new Application();
+    }
+    return theInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setVersion(String aVersion)
+  {
+    boolean wasSet = false;
+    version = aVersion;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setId(list aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public String getVersion()
+  {
+    return version;
+  }
+
+  public list getId()
+  {
+    return id;
+  }
+
+  public void delete()
+  {}
+
+}

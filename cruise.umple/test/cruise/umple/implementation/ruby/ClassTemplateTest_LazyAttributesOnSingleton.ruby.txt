@@ -1,0 +1,61 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+require 'singleton'
+
+class Application
+  include Singleton
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Application Attributes - for documentation purposes
+  #attr_reader :name, :version, :id
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def set_version(a_version)
+    was_set = false
+    @version = a_version
+    was_set = true
+    was_set
+  end
+
+  def set_id(a_id)
+    was_set = false
+    @id = a_id
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_version
+    @version
+  end
+
+  def get_id
+    @id
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

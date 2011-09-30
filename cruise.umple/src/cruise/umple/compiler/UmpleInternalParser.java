@@ -1086,6 +1086,9 @@ private void analyzeClassToken(Token t)
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
+    if (aClass.getIsSingleton()) {
+    	isLazy = true;
+    }
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
