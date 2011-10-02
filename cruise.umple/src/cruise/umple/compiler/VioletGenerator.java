@@ -178,6 +178,11 @@ public class VioletGenerator implements CodeGenerator
     violetClasses.clear();
     violetAssociations.clear();
   }
+
+  @Override
+  public boolean setOutput(String aString){
+            return false;
+  }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

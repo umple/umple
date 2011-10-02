@@ -631,6 +631,7 @@ public class UmpleModel
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
         generator.setModel(this);
+        generator.setOutput(target.getPath());
         generator.generate();
       }
     }

@@ -178,6 +178,11 @@ public class UmletGenerator implements CodeGenerator
     classElements.clear();
     associationElements.clear();
   }
+
+  @Override
+  public boolean setOutput(String aString){
+            return false;
+  }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

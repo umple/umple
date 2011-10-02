@@ -14,6 +14,7 @@ public class YumlGenerator implements CodeGenerator
 
   //YumlGenerator Attributes
   private UmpleModel model;
+  private String outputPath;
 
   //------------------------
   // CONSTRUCTOR
@@ -22,6 +23,7 @@ public class YumlGenerator implements CodeGenerator
   public YumlGenerator()
   {
     model = null;
+    outputPath = "";
   }
 
   //------------------------
@@ -36,13 +38,31 @@ public class YumlGenerator implements CodeGenerator
     return wasSet;
   }
 
+  public boolean setOutputPath(String aOutputPath)
+  {
+    boolean wasSet = false;
+    outputPath = aOutputPath;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
   }
 
+  public String getOutputPath()
+  {
+    return outputPath;
+  }
+
   public void delete()
   {}
+
+  @Override
+  public boolean setOutput(String aString){
+            return false;
+  }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

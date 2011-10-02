@@ -17,6 +17,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 
   //JavaGenerator Attributes
   private UmpleModel model;
+  private String output;
 
   //------------------------
   // CONSTRUCTOR
@@ -25,6 +26,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   public JavaGenerator()
   {
     model = null;
+    output = "";
   }
 
   //------------------------
@@ -39,9 +41,22 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     return wasSet;
   }
 
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
   }
 
   public void delete()
@@ -954,7 +969,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   private void writeFile(UmpleElement aClass) throws IOException
   {
     ILang language = getLanguageFor(aClass);
-    String path = model.getUmpleFile().getPath() + File.separator + aClass.getPackageName().replace(".", File.separator);
+    String path = model.getUmpleFile().getPath() + File.separator + getOutput() + File.separator + aClass.getPackageName().replace(".", File.separator);
     String filename = path + File.separator + aClass.getName() + ".java";
     File file = new File(path);
     file.mkdirs();

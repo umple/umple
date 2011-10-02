@@ -16,6 +16,7 @@ public class PapyrusGenerator implements CodeGenerator
 
   //PapyrusGenerator Attributes
   private UmpleModel model;
+  private String output;
 
   //------------------------
   // CONSTRUCTOR
@@ -24,6 +25,7 @@ public class PapyrusGenerator implements CodeGenerator
   public PapyrusGenerator()
   {
     model = null;
+    output = "";
   }
 
   //------------------------
@@ -38,9 +40,22 @@ public class PapyrusGenerator implements CodeGenerator
     return wasSet;
   }
 
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
   }
 
   public void delete()

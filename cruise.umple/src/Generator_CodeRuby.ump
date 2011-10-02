@@ -477,7 +477,7 @@ class RubyGenerator
     try
     {
       ILang language = getLanguageFor(aElement);
-      String path = model.getUmpleFile().getPath();
+      String path = model.getUmpleFile().getPath() + File.separator + getOutput();
       File file = new File(path);
       file.mkdirs();
 

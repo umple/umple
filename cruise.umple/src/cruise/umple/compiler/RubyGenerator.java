@@ -17,6 +17,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
 
   //RubyGenerator Attributes
   private UmpleModel model;
+  private String output;
 
   //------------------------
   // CONSTRUCTOR
@@ -25,6 +26,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   public RubyGenerator()
   {
     model = null;
+    output = "";
   }
 
   //------------------------
@@ -39,9 +41,22 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     return wasSet;
   }
 
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
   }
 
   public void delete()
@@ -516,7 +531,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     try
     {
       ILang language = getLanguageFor(aElement);
-      String path = model.getUmpleFile().getPath();
+      String path = model.getUmpleFile().getPath() + File.separator + getOutput();
       File file = new File(path);
       file.mkdirs();
 

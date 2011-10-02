@@ -16,8 +16,9 @@ namespace cruise.umple.compiler;
 // Allows independent code generation tools
 // Different generators will do different things regarding where the files are put, etc.
 interface CodeGenerator
-{
+{ 
   boolean setModel(UmpleModel aUmpleModel);
+  boolean setOutput(String aString);
   void generate();
 }
 
@@ -43,6 +44,7 @@ class EcoreGenerator
   depend cruise.umple.compiler.exceptions.*;
 
   UmpleModel model = null;
+  String output = "";
 }
 
 class PapyrusGenerator
@@ -54,6 +56,7 @@ class PapyrusGenerator
   depend cruise.umple.compiler.exceptions.*;
 
   UmpleModel model = null;
+  String output = "";
 }
 
 class XmiGenerator
@@ -65,6 +68,7 @@ class XmiGenerator
   depend cruise.umple.compiler.exceptions.*;
 
   UmpleModel model = null;
+  String output = "";
 }
 
 class TextUmlGenerator
@@ -76,6 +80,7 @@ class TextUmlGenerator
   depend cruise.umple.compiler.exceptions.*;
 
   UmpleModel model = null;
+  String output = "";
 }
 
 class SimulateGenerator
@@ -87,6 +92,7 @@ class SimulateGenerator
   depend cruise.umple.compiler.exceptions.*;
 
   UmpleModel model = null;
+  String output = "";
 }
 
 class YumlGenerator
@@ -96,6 +102,7 @@ class YumlGenerator
   depend cruise.umple.util.*;
 
   UmpleModel model = null;
+  String outputPath = "";
 }
 
 
@@ -104,6 +111,7 @@ class JsonGenerator
   isA CodeGenerator;
   depend cruise.umple.util.*;
   UmpleModel model = null;
+  String output = "";
 }
 
 class JavaGenerator
@@ -118,6 +126,7 @@ class JavaGenerator
   depend cruise.umple.compiler.java.*;  
   
   UmpleModel model = null;
+  String output = "";
 }
 
 class CppGenerator
@@ -132,6 +141,7 @@ class CppGenerator
   depend cruise.umple.compiler.cpp.*;  
   
   UmpleModel model = null;
+  String output = "";
 }
 
 
@@ -147,6 +157,7 @@ class PhpGenerator
   depend cruise.umple.compiler.php.*;  
   
   UmpleModel model = null;
+  String output = "";
 }
 
 class RubyGenerator
@@ -161,6 +172,7 @@ class RubyGenerator
   depend cruise.umple.compiler.ruby.*;  
   
   UmpleModel model = null;
+  String output = "";
 }
 
 use Umple.ump;

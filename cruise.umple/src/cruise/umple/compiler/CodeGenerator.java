@@ -8,5 +8,6 @@ public interface CodeGenerator
   // ABSTRACT METHODS 
 
  public boolean setModel(UmpleModel aUmpleModel);
+ public boolean setOutput(String aString);
  public void generate();
 }

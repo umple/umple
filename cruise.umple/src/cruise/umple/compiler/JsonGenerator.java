@@ -13,6 +13,7 @@ public class JsonGenerator implements CodeGenerator
 
   //JsonGenerator Attributes
   private UmpleModel model;
+  private String output;
 
   //------------------------
   // CONSTRUCTOR
@@ -21,6 +22,7 @@ public class JsonGenerator implements CodeGenerator
   public JsonGenerator()
   {
     model = null;
+    output = "";
   }
 
   //------------------------
@@ -35,9 +37,22 @@ public class JsonGenerator implements CodeGenerator
     return wasSet;
   }
 
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
   }
 
   public void delete()

@@ -16,6 +16,7 @@ public class TextUmlGenerator implements CodeGenerator
 
   //TextUmlGenerator Attributes
   private UmpleModel model;
+  private String output;
 
   //------------------------
   // CONSTRUCTOR
@@ -24,6 +25,7 @@ public class TextUmlGenerator implements CodeGenerator
   public TextUmlGenerator()
   {
     model = null;
+    output = "";
   }
 
   //------------------------
@@ -38,9 +40,22 @@ public class TextUmlGenerator implements CodeGenerator
     return wasSet;
   }
 
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
   }
 
   public void delete()

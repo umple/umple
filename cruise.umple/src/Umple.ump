@@ -315,9 +315,10 @@ class GenerateTarget
   language;
   path;
   // the default path
-  before getPath{if(path == null) path = "./"; }
+  before getPath{if(path == null) path = ""; }
   key{language}
 }
+
 use UmpleHelper.ump;
 use UmpleDiagram.ump;
 use StateMachine.ump;

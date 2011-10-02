@@ -16,6 +16,7 @@ public class EcoreGenerator implements CodeGenerator
 
   //EcoreGenerator Attributes
   private UmpleModel model;
+  private String output;
 
   //------------------------
   // CONSTRUCTOR
@@ -24,6 +25,7 @@ public class EcoreGenerator implements CodeGenerator
   public EcoreGenerator()
   {
     model = null;
+    output = "";
   }
 
   //------------------------
@@ -38,9 +40,22 @@ public class EcoreGenerator implements CodeGenerator
     return wasSet;
   }
 
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
   }
 
   public void delete()
