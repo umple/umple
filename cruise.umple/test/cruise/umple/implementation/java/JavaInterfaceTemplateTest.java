@@ -4,6 +4,7 @@ import org.junit.*;
 
 import cruise.umple.implementation.InterfaceTemplateTest;
 
+
 public class JavaInterfaceTemplateTest extends InterfaceTemplateTest
 {
 
@@ -31,5 +32,4 @@ public class JavaInterfaceTemplateTest extends InterfaceTemplateTest
 	{
 		assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_multipleImplements."+ languagePath +".txt","ISecondChild");
 	}
-	
 }

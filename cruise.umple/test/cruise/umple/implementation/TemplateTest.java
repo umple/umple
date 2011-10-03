@@ -109,6 +109,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/i_first_child.rb");
     SampleFileWriter.destroy(pathToInput + "/code_translator.rb");
     SampleFileWriter.destroy(pathToInput + "/i_second_child.rb");
+
+    SampleFileWriter.destroy(pathToInput + "/ruby/ruby_code");
+    SampleFileWriter.destroy(pathToInput + "/java/java_code");
+    SampleFileWriter.destroy(pathToInput + "/php/php_code");
   }
 
   @Test

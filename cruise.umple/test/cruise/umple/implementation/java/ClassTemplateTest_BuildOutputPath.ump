@@ -1,0 +1,8 @@
+generate Java "java_code";
+
+namespace example;
+
+class Student
+{
+   name;
+}

@@ -13,7 +13,10 @@ import java.io.File;
 
 import org.junit.*;
 
+import cruise.umple.compiler.UmpleModel;
 import cruise.umple.implementation.ExternalClassTemplateTest;
+
+import cruise.umple.util.SampleFileWriter;
 
 public class JavaExternalClassTemplateTest extends ExternalClassTemplateTest
 {
@@ -24,5 +27,16 @@ public class JavaExternalClassTemplateTest extends ExternalClassTemplateTest
     assertUmpleTemplateFor("ExternalClassTest.ump",languagePath + "/ExternalClassTest_MyClass."+ languagePath +".txt","MyException");
     Assert.assertEquals(false, (new File(pathToInput + "/example/Exception.java")).exists());
   }
-    
+  @Test
+  public void GeneratePathTest()
+  {
+	  UmpleModel model = createUmpleSystem(pathToInput , languagePath + "/ClassTemplateTest_BuildOutputPath.ump");
+	  model.generate();
+
+	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/java_code/example/Student.java"));
+	  System.out.print(actual);
+	  
+	  String expected = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"));
+	  Assert.assertEquals(expected, actual);
+  }
 }

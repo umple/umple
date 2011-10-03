@@ -1,7 +1,10 @@
 package cruise.umple.implementation.php;
 
+import java.io.File;
+
 import org.junit.*;
 
+import cruise.umple.compiler.UmpleModel;
 import cruise.umple.implementation.*;
 import cruise.umple.util.SampleFileWriter;
 
@@ -39,5 +42,16 @@ public class PhpClassTemplateTest extends ClassTemplateTest
     language = null;
     assertUmpleTemplateFor("php/ClassTemplateTest_ExtraCode.ump","php/ClassTemplateTest_ExtraCode.php.txt","Mentor");
   }
-  
+  @Test
+  public void GeneratePathTest()
+  {
+	  UmpleModel model = createUmpleSystem(pathToInput , languagePath + "/ClassTemplateTest_BuildOutputPath.ump");
+	  model.generate();
+
+	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/php_code/student.php"));
+	  System.out.print(actual);
+	  
+	  String expected = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"));
+	  Assert.assertEquals(expected, actual);
+  }
 }
