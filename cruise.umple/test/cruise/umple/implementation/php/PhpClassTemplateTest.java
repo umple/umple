@@ -48,7 +48,7 @@ public class PhpClassTemplateTest extends ClassTemplateTest
 	  UmpleModel model = createUmpleSystem(pathToInput , languagePath + "/ClassTemplateTest_BuildOutputPath.ump");
 	  model.generate();
 
-	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/php_code/student.php"));
+	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/php_code/Student.php"));
 	  System.out.print(actual);
 	  
 	  String expected = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"));
