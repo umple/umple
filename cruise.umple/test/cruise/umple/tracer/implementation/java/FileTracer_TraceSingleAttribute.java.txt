@@ -2,6 +2,11 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Date;
+
 
 public class Tracer
 {

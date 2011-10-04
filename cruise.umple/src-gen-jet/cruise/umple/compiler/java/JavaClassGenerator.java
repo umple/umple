@@ -1812,6 +1812,14 @@ public class JavaClassGenerator implements ILang
     appendln(stringBuffer, "");
     append(stringBuffer, "import {0};",anImport);
   }
+  if( model.getTraceType().equals("File") )
+  {
+    appendln(stringBuffer, "");
+	appendln(stringBuffer, "import java.io.FileOutputStream;");
+	appendln(stringBuffer, "import java.io.IOException;");
+	appendln(stringBuffer, "import java.io.PrintStream;");
+	appendln(stringBuffer, "import java.util.Date;");
+  }
 
     stringBuffer.append(TEXT_4);
      if (uClass.numberOfComments() > 0) { append(stringBuffer, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } 
