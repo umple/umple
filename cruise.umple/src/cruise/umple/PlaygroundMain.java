@@ -77,9 +77,11 @@ public class PlaygroundMain
     if ("-generate".equals(args[0]) && args.length >= 2)
     {
       String filename = args[2];
+      GenerateTarget target = new GenerateTarget(args[1], ""); // output path goes here
       umpleFile = new UmpleFile(filename);
       model = new UmpleModel(umpleFile);
-      model.addGenerate(args[1]);
+      target.setOverrideAll(true);
+      model.addGenerate(target);
     }
     else
     {

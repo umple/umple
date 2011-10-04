@@ -530,6 +530,11 @@ public class UmpleModel
      addGenerate(new GenerateTarget(lang, null));
   }
   
+  public void addGenerate(Collection <?extends GenerateTarget> c)
+  {
+	 generates.addAll(c);
+  }
+  
   public String getDefaultGenerate()
   {
   	// Note that this method should be getDefaultGenerateLanguage
@@ -554,6 +559,11 @@ public class UmpleModel
     {
       return getGenerate(0).getPath() == null ? "./" : getGenerate(0).getPath();
     }
+  }
+  
+  public void clearGenerates()
+  {
+  	 generates.clear();
   }
   
   public UmpleClass getUmpleClass(String name)

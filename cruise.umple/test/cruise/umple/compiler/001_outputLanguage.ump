@@ -1,2 +1,3 @@
 generate Ruby "blah/blah/blah";
-generate Java "blue/blue/blue";
+generate Java "blue/blue/blue" --override;
+generate Php "path/to/php";

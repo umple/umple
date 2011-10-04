@@ -342,6 +342,7 @@ public void addSubToken(int index, Token aSubToken)
     }
     else
     {
+      // This should be "", as getValue() returns "" by default
       return null;
     }
   }

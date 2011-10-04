@@ -314,7 +314,10 @@ class GenerateTarget
 {
   language;
   path;
-  // the default path
+  
+  Boolean override = false;
+  Boolean overrideAll = false;
+   
   before getPath{if(path == null) path = ""; }
   key{language}
 }

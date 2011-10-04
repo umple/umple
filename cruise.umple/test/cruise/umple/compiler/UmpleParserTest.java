@@ -75,18 +75,39 @@ public class UmpleParserTest
   public void outputLanguagePath()
   {
 	assertParse("001_outputLanguage.ump");
+	
     Assert.assertEquals("Ruby", model.getDefaultGenerate());
     Assert.assertEquals("blah/blah/blah", model.getDefaultGeneratePath());
+    
+    Assert.assertEquals(false, model.getGenerate(0).getOverride());
+    Assert.assertEquals(false, model.getGenerate(0).getOverrideAll());
+
+    // This test is correct, since 'generate's may be re-ordered after
+    // token analysis
+    Assert.assertEquals(false, model.getGenerate(1).getOverride());
+    Assert.assertEquals(false, model.getGenerate(1).getOverrideAll());
+
+    Assert.assertEquals(true, model.getGenerate(2).getOverride());
+    Assert.assertEquals(false, model.getGenerate(2).getOverrideAll());
   }
   
   @Test
-  public void outputLanguagePathFail()
+  public void outputLanguagePathOverride()
   {
-	assertParse("001_outputLanguageFail.ump");
-    Assert.assertEquals("Java", model.getDefaultGenerate());
-    Assert.assertFalse("Should be ./, or some default path", "../../../folder/".equals(model.getDefaultGeneratePath()));
+	assertParse("001_outputLanguageOverride.ump");
+		
+	 Assert.assertEquals("Java", model.getDefaultGenerate());
+	 Assert.assertEquals("3", model.getDefaultGeneratePath());
   }
-  
+
+  @Test
+  public void outputLanguagePathOverrideAll()
+  {
+	assertParse("001_outputLanguageOverrideAll.ump");
+		
+	Assert.assertEquals("Java", model.getDefaultGenerate());
+	Assert.assertEquals("4", model.getDefaultGeneratePath());
+  }
   @Test
   public void namespace()
   {

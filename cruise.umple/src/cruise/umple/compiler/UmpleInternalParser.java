@@ -306,6 +306,50 @@ private void analyzeCoreToken(Token t)
   // Perform post token analysis on core elements of the Umple language
   private void postTokenCoreAnalysis()
   {
+ 	  boolean overrode_all = false;
+		
+	  List<GenerateTarget> gen = new ArrayList<GenerateTarget>(Arrays.asList(model.getGenerates()));
+	  HashMap<String, Boolean> overrideMap = new HashMap<String,Boolean>();
+		
+	  for(GenerateTarget target : model.getGenerates())
+	  {
+	  	if(target.getOverride() && !overrideMap.containsKey(target.getLanguage()))
+	  	{
+	  	   // Target is based on key {language} so this 
+	  	   // should remove everything with the same key
+	  	   while(gen.remove(target));
+	  	   overrideMap.put(target.getLanguage(), true);
+	  	   gen.add(target);
+	  	}
+	  	else
+	  	{
+	  		// Issue a warning that a generate statement has been issued 
+	  		// with the override keyword twice
+	  	}
+	  		
+	  	if(target.getOverrideAll() && overrideMap.containsKey(target.getLanguage()))
+	  	{
+	  		// issue warning
+	  	}
+
+	  	if(target.getOverrideAll() && overrode_all)
+	  	{
+	  		// issue warning
+	  		continue;
+	  	}
+	  		
+	  	if(target.getOverrideAll())
+	  	{
+	  		gen.clear();
+	  		gen.add(target);
+	  		overrideMap.put(target.getLanguage(), true);
+	  		overrode_all = true;
+	  	}
+	}
+	
+	model.clearGenerates();
+	model.addGenerate(gen);
+	
     if (model.getDefaultGenerate() == null)
     {
       model.addGenerate("Java");
@@ -333,11 +377,17 @@ private void analyzeCoreToken(Token t)
   	{
   	  String language = genToken.getValue("language");
   	  String path = genToken.getValue("output");
-  	  
-  	  if(path.contains("..")) // TODO: what about folders like /..folder/?
-  	      path = null;
+  	  GenerateTarget target = null;
   	      
-  	  model.addGenerate(new GenerateTarget(language, path));
+  	  target = new GenerateTarget(language, path);
+  	  
+  	  if(genToken.getValue("override") != null && genToken.getValue("override").equals("--override"))
+  	  	target.setOverride(true);
+  	  
+  	  if(genToken.getValue("override") != null && genToken.getValue("override").equals("--override-all"))
+  	  	target.setOverrideAll(true);
+  	  
+  	   model.addGenerate(target);
   	}
   	else
   	{

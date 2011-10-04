@@ -19,8 +19,9 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
     fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");
     fileToOutputs.put("001_cppLanguage.ump","[generate:Cpp]");
-    fileToOutputs.put("001_outputLanguage.ump","[generate_path][language:Ruby][output:blah/blah/blah][generate_path][language:Java][output:blue/blue/blue]");
-    fileToOutputs.put("001_outputLanguageFail.ump","[generate_path][language:Java][output:../../../folder/]");
+    fileToOutputs.put("001_outputLanguage.ump","[generate_path][language:Ruby][output:blah/blah/blah][generate_path][language:Java][output:blue/blue/blue][override:--override][generate_path][language:Php][output:path/to/php]");
+    fileToOutputs.put("001_outputLanguageOverride.ump","[generate_path][language:Java][output:1][generate_path][language:Java][output:2][generate_path][language:Java][output:3][override:--override][generate_path][language:Java][output:4][override:--override][generate_path][language:Java][output:5]");
+    fileToOutputs.put("001_outputLanguageOverrideAll.ump","[generate_path][language:Php][output:1][generate_path][language:Java][output:2][generate_path][language:Ruby][output:3][override:--override][generate_path][language:Java][output:4][override:--override-all][generate_path][language:Java][output:5][override:--override-all][generate_path][language:Php][output:6][generate_path][language:Ruby][output:7][override:--override]");
     fileToOutputs.put("002_namespace.ump", "[namespace:cruise][namespace:cruise.umple][namespace:example]");
     fileToOutputs.put("003_emptyClass.ump", "[classDefinition][name:Student]");
     fileToOutputs.put("003_multipleExtraCode.ump","[classDefinition][name:Student][extraCode:blahblah][classDefinition][name:Student][extraCode:moreblah]");

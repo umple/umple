@@ -8,7 +8,7 @@ directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] 
 glossary : glossary { [[word]]* }
 word : [singular] : [plural] ;
 generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ; 
-generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] " [**output] " ;
+generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] " [**output] " [=override:--override|--override-all]? ;
 useStatement- : use [use] ;
 namespace- : namespace [namespace] ;
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]

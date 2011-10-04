@@ -13,6 +13,8 @@ public class GenerateTarget
   //GenerateTarget Attributes
   private String language;
   private String path;
+  private boolean override;
+  private boolean overrideAll;
 
   //Helper Variables
   private int cachedHashCode;
@@ -26,6 +28,8 @@ public class GenerateTarget
   {
     language = aLanguage;
     path = aPath;
+    override = false;
+    overrideAll = false;
     cachedHashCode = -1;
     canSetLanguage = true;
   }
@@ -51,6 +55,22 @@ public class GenerateTarget
     return wasSet;
   }
 
+  public boolean setOverride(boolean aOverride)
+  {
+    boolean wasSet = false;
+    override = aOverride;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setOverrideAll(boolean aOverrideAll)
+  {
+    boolean wasSet = false;
+    overrideAll = aOverrideAll;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getLanguage()
   {
     return language;
@@ -58,8 +78,28 @@ public class GenerateTarget
 
   public String getPath()
   {
-    if(path == null) path = "./";
+    if(path == null) path = "";
     return path;
+  }
+
+  public boolean getOverride()
+  {
+    return override;
+  }
+
+  public boolean getOverrideAll()
+  {
+    return overrideAll;
+  }
+
+  public boolean isOverride()
+  {
+    return override;
+  }
+
+  public boolean isOverrideAll()
+  {
+    return overrideAll;
   }
 
   public boolean equals(Object obj)
