@@ -380,9 +380,6 @@ private void analyzeCoreToken(Token t)
   	  GenerateTarget target = null;
   	      
   	  target = new GenerateTarget(language, path);
-  	  
-  	  if(path.contains("..") || path.startsWith("/"))
-  	      path = "";
   	      
   	  if(genToken.getValue("override") != null && genToken.getValue("override").equals("--override"))
   	  	target.setOverride(true);

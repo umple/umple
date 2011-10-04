@@ -35,9 +35,9 @@ else if (isset($_REQUEST["umpleCode"]))
   
   if ($language == "Simulate")
   {
-    $filename = saveFile("generate Php;\n" . $input);
+    $filename = saveFile("generate Php \"./\" --override-all;\n" . $input);
     executeCommand("java -jar umple.jar {$filename}");
-    $filename = saveFile("generate Simulate;\n" . $input);
+    $filename = saveFile("generate Simulate \"./\" --override-all;\n" . $input);
     executeCommand("java -jar umple.jar {$filename}");
     $modelId = getFilenameId($filename);
     echo $modelId;
@@ -55,7 +55,8 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
-  $filename = saveFile("generate {$language};\n" . $input);
+  // Todo: default output paths.
+  $filename = saveFile("generate {$language} \"./\" --override-all;\n" . $input);
   $outputFilename = "{$filename}.output";
   
   // Clean up any pre-existing java. php or ruby files
