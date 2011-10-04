@@ -304,7 +304,8 @@ class ErrorItem
 
 class StringFormatter
 {
-
+  depend java.io.File;
+  
   public static String toCamelCase(String input)
   {
     if (input == null || input.length() == 0)
@@ -487,6 +488,14 @@ class StringFormatter
     }
     
     return answer;
+  }
+  
+  public static String addPathOrAbsolute(String prePath, String path)
+  {
+  	if(path.startsWith("/") || path.matches("^[a-zA-Z]:.*"))
+  		return path + File.separator;
+  	
+  	return prePath + File.separator + path + File.separator;
   }
   
   private static String clean(Object input)

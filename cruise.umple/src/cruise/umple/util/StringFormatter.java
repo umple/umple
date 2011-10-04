@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.util;
+import java.io.File;
 
 public class StringFormatter
 {
@@ -210,6 +211,14 @@ public class StringFormatter
     }
     
     return answer;
+  }
+  
+  public static String addPathOrAbsolute(String prePath, String path)
+  {
+  	if(path.startsWith("/") || path.matches("^[a-zA-Z]:.*"))
+  		return path + File.separator;
+  	
+  	return prePath + File.separator + path + File.separator;
   }
   
   private static String clean(Object input)

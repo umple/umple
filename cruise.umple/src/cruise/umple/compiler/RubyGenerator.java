@@ -531,7 +531,11 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     try
     {
       ILang language = getLanguageFor(aElement);
-      String path = model.getUmpleFile().getPath() + File.separator + getOutput();
+      
+      String path = StringFormatter.addPathOrAbsolute( 
+    						  model.getUmpleFile().getPath(), 
+        	                  getOutput());
+      
       File file = new File(path);
       file.mkdirs();
 

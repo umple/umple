@@ -7,6 +7,7 @@ import java.io.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.java.*;
+import cruise.umple.util.StringFormatter;
 
 public class JavaGenerator implements CodeGenerator,CodeTranslator
 {
@@ -72,6 +73,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   private static Map<String,String> AsIsPluralLookupMap;
   private static Map<String,String> UmpleToJavaPrimitiveMap;
   private static List<String> OneOrManyLookup;
+  
   
   static
   {
@@ -969,7 +971,12 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   private void writeFile(UmpleElement aClass) throws IOException
   {
     ILang language = getLanguageFor(aClass);
-    String path = model.getUmpleFile().getPath() + File.separator + getOutput() + File.separator + aClass.getPackageName().replace(".", File.separator);
+    
+    String path = StringFormatter.addPathOrAbsolute( 
+    						  model.getUmpleFile().getPath(), 
+        	                  getOutput()) + 
+        	                  aClass.getPackageName().replace(".", File.separator);
+    
     String filename = path + File.separator + aClass.getName() + ".java";
     File file = new File(path);
     file.mkdirs();

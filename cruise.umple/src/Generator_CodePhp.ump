@@ -498,7 +498,11 @@ private String getExtendClassesNames(UmpleClass uClass)
     try
     {
       ILang language = getLanguageFor(aElement);
-      String path = model.getUmpleFile().getPath() + File.separator + getOutput();
+
+      String path = StringFormatter.addPathOrAbsolute( 
+    						  model.getUmpleFile().getPath(), 
+        	                  getOutput());
+      
       String filename = path + File.separator + aElement.getName() + ".php";
       File file = new File(path);
       file.mkdirs();

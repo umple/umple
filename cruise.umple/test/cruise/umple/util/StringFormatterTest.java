@@ -1,5 +1,7 @@
 package cruise.umple.util;
 
+import java.io.File;
+
 import org.junit.*;
 
 import cruise.umple.util.StringFormatter;
@@ -274,6 +276,15 @@ public class StringFormatterTest
     Assert.assertEquals("apple_tree_care",StringFormatter.toUnderscore("AppleTreeCare")); 
     Assert.assertEquals("apple_tree",StringFormatter.toUnderscore("apple_tree"));
     Assert.assertEquals("apple_tree_care",StringFormatter.toUnderscore("apple_tree_care"));
+  }
+
+  @Test
+  public void absolutePathsTest()
+  {
+    Assert.assertEquals("/abs" + File.separator,StringFormatter.addPathOrAbsolute("somepath", "/abs"));
+    Assert.assertEquals("C:\\temp" + File.separator, StringFormatter.addPathOrAbsolute("somepath", "C:\\temp"));
+    Assert.assertEquals("somepath" + File.separator + "abs" + File.separator, StringFormatter.addPathOrAbsolute("somepath", "abs"));
+    
   }
   
 }
