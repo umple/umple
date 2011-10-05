@@ -123,12 +123,7 @@ class UmpleInternalParser
   	{
   	  String language = genToken.getValue("language");
   	  String path = genToken.getValue("output");
-  	  GenerateTarget target = null;
-  	      
-  	  if(path.contains("..") || path.startsWith("/"))
-  	      path = "";
-           
-  	  target = new GenerateTarget(language, path);
+  	  GenerateTarget target = new GenerateTarget(language, path);
   	      
   	  if(genToken.getValue("override") != null && genToken.getValue("override").equals("--override"))
   	  	target.setOverride(true);
