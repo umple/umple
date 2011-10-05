@@ -534,7 +534,17 @@ Page.showGeneratedCode = function(code,language)
   jQuery("#generatedCodeRow").show();
 
   if(language!="javadoc") {
-    jQuery("#generatedCodeRow").html(format('<pre class="brush: {1};">{0}</pre>',code,language));
+    var codeparts = code.split('URL_SPLIT');
+    var zipurl = "";
+    var bodycode = "";
+    if(codeparts.length == 1) {
+        bodycode = codeparts[0];
+    }
+    else {
+        zipurl = codeparts[0];
+        bodycode = codeparts[1];
+    }
+    jQuery("#generatedCodeRow").html(format(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
     SyntaxHighlighter.highlight("code");
   }
   else {
