@@ -117,7 +117,7 @@ else if (isset($_REQUEST["umpleCode"]))
        }                  
        
        exec($command);
-       exec("/usr/bin/zip -r $thedir/javadocFromUmple $thedir/javadoc");
+       exec("cd $thedir; rm javadocFromUmple.zip; /usr/bin/zip -r javadocFromUmple javadoc");
         $html = "<a href=\"umpleonline/$thedir/javadocFromUmple.zip\">Download the following as a zip file</a>
       <iframe width=100% height=1000 src=\"" . $theurldir . "/javadoc/\">This browser does not
       support iframes, so the javadoc cannot be displayed</iframe> 
@@ -126,7 +126,7 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     else // This is where the Java, PHP and other output is placed on the screen
     {
-	   exec("/usr/bin/zip -r $thedir/{$language}FromUmple $thedir/{$language}");
+	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
 	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a><p>URL_SPLIT";
        echo $sourceCode;
     }
