@@ -1,0 +1,108 @@
+class Intersection_timerDriven_noPedestrian {
+  
+  Integer directionOneGoTime;
+  Integer directionTwoGoTime;
+  Integer yellowTime;
+  
+  direction_One_Light;
+  direction_Two_Light;
+  
+  Integer P1GoTime;
+  Integer P2GoTime;
+  
+  
+  flow {
+    FourWayStop 
+    {
+      entry / {direction_One_Light = "FlashingRed"; direction_Two_Light = "FlashingRed"; }
+      initiateRegularOperation -> DirectionOneGo;    
+    }
+    DirectionOneGo
+    {
+      entry / {directionOneLight = directionOneLight.Green; directionTwoLight = directionTwoLight.Red; }
+      Wait_DirectionOneGo -> DirectionOneHalting;
+      detectMalfunction_DirectionOneGo -> FourWayStop;
+    }
+    DirectionOneHalting
+    {
+      entry / {directionOneLight = directionOneLight.Yellow; }
+      WaitDirectionOneHalting -> DirectionTwoGo;
+      detectMalfunction_DirectionOneaHalting -> FourWayStop;
+    }
+    DirectionTwoGo
+    {
+      entry / {directionOneLight = directionOneLight.Red; directionTwoLight = directionTwoLight.Green; }
+      WaitDirectionTwoGo -> DirectionTwoHalting;
+      detectMalfunction_DirectionTwoGo -> FourWayStop;
+    }
+    DirectionTwoHalting 
+    {
+      entry / {directionTwoLight = directionTwoLight.Yellow; }
+      Wait_DirectionTwoGo -> DirectionOneGo;
+      detectMalfunction_DirectionTwoHalting -> FourWayStop;
+    }        
+  }
+  
+  pedestrianFlow
+  {
+    FourWayStop
+    {
+      entry / {P1Light = P1Light.DoNotWalk;  P2Light = P2Light.DoNotWalk;}
+      initiateRegularOperation_Pedestrian -> P2Go;
+    }
+    P1Go
+    {
+      entry / {P1Light = P1Light.Walk;}
+      Wait_P1GO -> P1Halting;
+      detectMalfunction_P1GO -> FourWayStop;
+    }
+    P1halting
+    {
+      entry / {P1Light = P1Light.FlashingP1Light;}
+      Wait_P1Halting -> P2Go;
+      detectMalfunction_P1Halting -> FourWayStop;
+    }
+    P2Go
+    {
+      entry / {P2Light = P2Light.Walk;}
+      Wait_P2GO -> P2Halting;
+      detectMalfunction_P2GO -> FourWayStop;
+    }
+    P2Halting
+    {
+      entry / {P2Light = P2Light.Flashing;}
+      Wait_P2Halting -> P1Go;
+      detectMalfunction_P2Halting -> FourWayStop;
+    }
+  }
+  
+  
+  directionOneLight 
+  {
+    FlashingRed {} 
+    Red {}
+    Yellow {}
+    Green {}    
+  }
+  
+  directionTwoLight
+  {
+    FlashingRed {}
+    Red {}
+    Yellow {}
+    Green {}
+  }
+  
+  P1Light
+  {
+    DoNotWalk {}
+    Flashing {}
+    Walk {}
+  }
+  P2Light
+  {
+    DoNotWalk {}
+    Flashing {}
+    Walk {}
+  }
+}
