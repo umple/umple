@@ -1,0 +1,50 @@
+class Application {
+
+  status {
+    Initial_state {
+      createApplication -> InProgress;
+    }
+  
+    InProgress {
+      set_as_complete -> CompletedByResearcher;
+    }
+  
+    CompletedByResearcher {
+      ReturnToResearcher -> InProgress;
+      Verify -> VerifiedByInstitution;
+      check -> CompletedByResearcher;
+    }
+  
+    VerifiedByInstitution {
+      reOpen -> CompletedByResearcher;
+      submit -> SubmittedByInstitution;
+    }
+  
+    SubmittedByInstitution {
+      withdraw -> Withdrawn;
+      accept -> UnderAdminReview;
+      SubmissionCheck -> SubmittedByInstitution;
+    }
+  
+    UnderAdminReview {
+      ReturnForCorrections -> ReturnedForCorrections_Institution;
+      Accept -> UnderExpertReview;
+    }
+  
+    UnderExpertReview {}
+ 
+    ReturnedForCorrections_Institution {
+      returnToResearcher -> ReturnedForCorrections_Researcher;
+      Verify -> VerifiedByInstitutionAfterCorrections;
+    }
+  
+    VerifiedByInstitutionAfterCorrections {
+      ReOpen -> ReturnedForCorrections_Institution;
+      submit -> SubmitedByInstitution; 
+    }
+    
+    ReturnedForCorrections_Researcher {
+      verify -> ReturnedForCorrections_Institution;
+    }
+  }
+}
