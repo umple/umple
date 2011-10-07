@@ -1,0 +1,40 @@
+class Phone {
+  ringerSound {
+    Off{
+      callReceived -> On ;
+    }
+    
+    On{
+      silentButton -> Off ;
+      pickUp -> / {setVibration(Vibration.Off);} Off ;
+      rejectCall -> / { setVibration(Vibration.Off);} Off ;    
+    }
+  }
+
+  screenLight {
+    Off{
+      callReceived -> On ; 
+    }
+
+    On{
+      callReceived -> / {resetTimer();} On ;
+    }
+ 
+    Dimmed{
+      callReceived -> On ;
+      after(t) -> Off;
+    }
+  }
+
+  vibration {
+    Off {
+      callReceived -> On ;
+      }
+
+    On{
+      turnOffVibration -> Off ;
+      continuousMode {}
+      pulseMode {}
+    }
+  }
+}
