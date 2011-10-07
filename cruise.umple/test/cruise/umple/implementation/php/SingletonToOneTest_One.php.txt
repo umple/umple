@@ -1,0 +1,143 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $number;
+
+  //Student Associations
+  private $mentors;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aNumber)
+  {
+    $this->number = $aNumber;
+    $this->mentors = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setNumber($aNumber)
+  {
+    $wasSet = false;
+    $this->number = $aNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getNumber()
+  {
+    return $this->number;
+  }
+
+  public function getMentor($index)
+  {
+    $aMentor = $this->mentors[$index];
+    return $aMentor;
+  }
+
+  public function getMentors()
+  {
+    $newMentors = $this->mentors;
+    return $newMentors;
+  }
+
+  public function numberOfMentors()
+  {
+    $number = count($this->mentors);
+    return $number;
+  }
+
+  public function hasMentors()
+  {
+    $has = $this->numberOfMentors() > 0;
+    return $has;
+  }
+
+  public function indexOfMentor($aMentor)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->mentors as $mentor)
+    {
+      if ($mentor->equals($aMentor))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfMentors()
+  {
+    return 0;
+  }
+
+  public function addMentor($aMentor)
+  {
+    $wasAdded = false;
+    if ($this->indexOfMentor($aMentor) !== -1) { return false; }
+    $existingStudent = $aMentor->getStudent();
+    if ($existingStudent == null)
+    {
+      $aMentor->setStudent($this);
+    }
+    elseif ($this !== $existingStudent)
+    {
+      $existingStudent->removeMentor($aMentor);
+      $this->addMentor($aMentor);
+    }
+    else
+    {
+      $this->mentors[] = $aMentor;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeMentor($aMentor)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfMentor($aMentor) != -1)
+    {
+      unset($this->mentors[$this->indexOfMentor($aMentor)]);
+      $this->mentors = array_values($this->mentors);
+      if ($this === $aMentor->getStudent())
+      {
+        $aMentor->setStudent(null);
+      }
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->mentors as $aMentor)
+    {
+      $aMentor->setStudent(null);
+    }
+  }
+
+}
+?>

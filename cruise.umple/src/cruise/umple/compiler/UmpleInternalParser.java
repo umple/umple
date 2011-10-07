@@ -377,9 +377,7 @@ private void analyzeCoreToken(Token t)
   	{
   	  String language = genToken.getValue("language");
   	  String path = genToken.getValue("output");
-  	  GenerateTarget target = null;
-  	      
-  	  target = new GenerateTarget(language, path);
+  	  GenerateTarget target = new GenerateTarget(language, path);
   	      
   	  if(genToken.getValue("override") != null && genToken.getValue("override").equals("--override"))
   	  	target.setOverride(true);
@@ -517,6 +515,7 @@ private void analyzeClassToken(Token t)
   {
     if (verifyClassesInUse())
     {
+    	checkSingletonAssociations();
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
@@ -765,7 +764,8 @@ private void analyzeClassToken(Token t)
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
       UmpleClass aClass = model.getUmpleClass(av.getType());
-      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType()); 
+      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());       
+      
       aClass.addAssociationVariable(av.getRelatedAssociation());
       aClass.addAssociation(bClass.getAssociation(bClass.indexOfAssociationVariable(av)));
 
@@ -858,16 +858,37 @@ private void analyzeClassToken(Token t)
     return true;
   }
 
-  private void addUnlinkedAssociations()
-  {
-    for (Association association : unlinkedAssociations)
-    {
-      AssociationEnd myEnd = association.getEnd(0);
+private void checkSingletonAssociations() {
+	for (Association association : model.getAssociations()) {
+		AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
 
+		if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
+    	yourEnd.getMultiplicity().setRange("0", "1");
+    	yourEnd.getMultiplicity().setBound(null);  
+    }
+        
+    if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
+    	myEnd.getMultiplicity().setRange("0", "1");
+    	myEnd.getMultiplicity().setBound(null);
+    }
+		
+	}
+}
+
+  private void addUnlinkedAssociations()
+  {
+    for (Association association : unlinkedAssociations)
+    {      	
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+    	
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       myAs.setRelatedAssociation(yourAs);
@@ -1067,6 +1088,7 @@ private void analyzeClassToken(Token t)
 
     String myName = myMultToken.getValue("roleName");
     String myType = myMultToken.getValue("type") == null ? defaultMyType : myMultToken.getValue("type");
+        
     String myModifier = myMultToken.getValue("modifier");
     String myBound = myMultToken.getValue("bound");
     String myLowerBound = myMultToken.getValue("lowerBound");
@@ -1087,6 +1109,7 @@ private void analyzeClassToken(Token t)
     String yourBound = yourMultToken.getValue("bound");
     String yourLowerBound = yourMultToken.getValue("lowerBound");
     String yourUpperBound = yourMultToken.getValue("upperBound");
+    
     Multiplicity yourMult = new Multiplicity();
     yourMult.setBound(yourBound);
     yourMult.setRange(yourLowerBound,yourUpperBound);
@@ -1111,6 +1134,7 @@ private void analyzeClassToken(Token t)
 
   private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd)
   {
+  	  	
     if (firstEnd.getRoleName().length() == 0)
     { 
       String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());

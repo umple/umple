@@ -148,6 +148,7 @@ class UmpleInternalParser
   {
     if (verifyClassesInUse())
     {
+    	checkSingletonAssociations();
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
@@ -396,7 +397,8 @@ class UmpleInternalParser
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
       UmpleClass aClass = model.getUmpleClass(av.getType());
-      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType()); 
+      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());       
+      
       aClass.addAssociationVariable(av.getRelatedAssociation());
       aClass.addAssociation(bClass.getAssociation(bClass.indexOfAssociationVariable(av)));
 
@@ -489,16 +491,37 @@ class UmpleInternalParser
     return true;
   }
 
-  private void addUnlinkedAssociations()
-  {
-    for (Association association : unlinkedAssociations)
-    {
-      AssociationEnd myEnd = association.getEnd(0);
+private void checkSingletonAssociations() {
+	for (Association association : model.getAssociations()) {
+		AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
 
+		if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
+    	yourEnd.getMultiplicity().setRange("0", "1");
+    	yourEnd.getMultiplicity().setBound(null);  
+    }
+        
+    if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
+    	myEnd.getMultiplicity().setRange("0", "1");
+    	myEnd.getMultiplicity().setBound(null);
+    }
+		
+	}
+}
+
+  private void addUnlinkedAssociations()
+  {
+    for (Association association : unlinkedAssociations)
+    {      	
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+    	
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       myAs.setRelatedAssociation(yourAs);
@@ -698,6 +721,7 @@ class UmpleInternalParser
 
     String myName = myMultToken.getValue("roleName");
     String myType = myMultToken.getValue("type") == null ? defaultMyType : myMultToken.getValue("type");
+        
     String myModifier = myMultToken.getValue("modifier");
     String myBound = myMultToken.getValue("bound");
     String myLowerBound = myMultToken.getValue("lowerBound");
@@ -718,6 +742,7 @@ class UmpleInternalParser
     String yourBound = yourMultToken.getValue("bound");
     String yourLowerBound = yourMultToken.getValue("lowerBound");
     String yourUpperBound = yourMultToken.getValue("upperBound");
+    
     Multiplicity yourMult = new Multiplicity();
     yourMult.setBound(yourBound);
     yourMult.setRange(yourLowerBound,yourUpperBound);
@@ -742,6 +767,7 @@ class UmpleInternalParser
 
   private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd)
   {
+  	  	
     if (firstEnd.getRoleName().length() == 0)
     { 
       String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());
