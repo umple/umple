@@ -1,0 +1,24 @@
+
+class VendingMachine
+{
+  controlUnit {
+    ReceivingMoney {
+      pressSelection  -> ReceivingMoney;
+      enterCoin  -> ReceivingMoney;
+      pressSelection -> DeliveringItem;
+    }
+
+    DeliveringItem {
+      deliveryComplete  -> Waiting;
+      deliveryComplete -> ReturningMoney;
+    }
+    
+    ReturningMoney {
+      retunringComplete -> Waiting;
+    }
+    
+    Waiting {
+      enterCoin -> ReceivingMoney;
+    }
+  }
+}
