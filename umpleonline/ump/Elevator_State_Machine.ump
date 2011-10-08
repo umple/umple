@@ -1,0 +1,42 @@
+class Elevator {
+  
+  elevator_state_machine {
+    Idle {
+      upRequest -> DoorClosingMovingUp;
+      downRequest -> DoorClosingMovingDown;
+    }
+    PrepareUp {
+      DoorClosingMovingUp {
+        doorClosed -> / {goUp();} ElevatorUp;
+      }
+      started -> Moving;
+    }
+    PrepareDown {
+      DoorClosingMovingDown {
+        doorClosed  -> / {goDown();} ElevatorDown;
+      }
+      started -> Moving;
+    }
+
+    InMotion {
+      Moving {
+        approachingFloor  -> / {checkThisFloor();} Moving;
+        approachedRequestedFloor  -> / {stop();} Stopping;
+      }
+      Stopping {
+        stopped  -> /{openDoor();} DoorOpening;
+      }
+      DoorOpening {
+        doorOpened  -> / {startTimer();} AtFloor;
+      }
+    after(timer) -> / {checkNextDestination();} CheckingNextDestination;
+    }
+
+    CheckingNextDestination {
+      upRequest -> DoorClosingMovingUp;
+      downRequest -> DoorClosingMovingDown;
+      noRequest -> Idle;
+  
+    }
+  }
+}
