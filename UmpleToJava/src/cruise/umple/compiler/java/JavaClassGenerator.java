@@ -7015,7 +7015,7 @@ public class JavaClassGenerator implements ILang
 {
 
 	//==== Tracing Code    
-    if( model.getTraceType().equals("File") )
+    if( model.getTraceType().equals("File") && uClass.hasTraceDirectives() )
 	{
 		appendln(stringBuffer, "");
 		appendln(stringBuffer, "");

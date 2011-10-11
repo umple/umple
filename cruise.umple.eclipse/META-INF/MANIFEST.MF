@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.editors,
  org.eclipse.ui.ide,
  org.eclipse.jface.text,
- org.eclipse.jdt.core
+ org.eclipse.jdt.core,
+ cruise.umple;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Export-Package: cruise.umple.ui.eclipse;
   uses:="org.eclipse.jface.wizard,
