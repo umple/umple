@@ -19,7 +19,7 @@ class TextParser
   internal Integer _maxCharacterIndex = 0;
   internal Hashtable<Integer,Integer> indexToReplacementOffsetMap = new Hashtable<Integer,Integer>();
   internal _text = init("");
-  
+  internal _filename = null;
 
 }
 

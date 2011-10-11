@@ -13,6 +13,12 @@ class TextParser
 {
   private char[] _textCharacters;
 
+  public TextParser(String filename, String input)
+  {
+    init(input);
+    _filename = filename;
+  }
+  
   public TextParser(String input)
   {
     init(input);
@@ -31,6 +37,11 @@ class TextParser
   public String getText()
   {
     return _text;
+  }
+
+  public String getFilename()
+  {
+  	return _filename == null ? "" : _filename;
   }
 
   public void reset(int startIndex)

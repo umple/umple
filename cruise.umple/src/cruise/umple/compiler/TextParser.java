@@ -18,6 +18,7 @@ public class TextParser
   private int _maxCharacterIndex;
   private Hashtable<Integer,Integer> indexToReplacementOffsetMap;
   private String _text;
+  private String _filename;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,6 +32,7 @@ public class TextParser
     _maxCharacterIndex = 0;
     indexToReplacementOffsetMap = new Hashtable<Integer,Integer>();
     _text = init("");
+    _filename = null;
   }
 
   //------------------------
@@ -46,6 +48,12 @@ public class TextParser
   
   private char[] _textCharacters;
 
+  public TextParser(String filename, String input)
+  {
+    init(input);
+    _filename = filename;
+  }
+  
   public TextParser(String input)
   {
     init(input);
@@ -64,6 +72,11 @@ public class TextParser
   public String getText()
   {
     return _text;
+  }
+
+  public String getFilename()
+  {
+  	return _filename == null ? "" : _filename;
   }
 
   public void reset(int startIndex)

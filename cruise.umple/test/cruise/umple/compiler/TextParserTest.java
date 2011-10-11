@@ -934,5 +934,17 @@ public class TextParserTest {
     parser.skipWhitespace();
     Assert.assertEquals(new Position(1,3,3),parser.currentPosition());
   }
-  
+
+  @Test
+  public void filenameRetentionTest()
+  {
+	TextParser tp = new TextParser("someClass.ump","a = b");
+    Assert.assertEquals(tp.getFilename(), "someClass.ump");
+    
+    tp = new TextParser("a = b");
+    Assert.assertEquals(tp.getFilename(), "");
+
+    tp = new TextParser();
+    Assert.assertEquals(tp.getFilename(), "");
+  }
 }
