@@ -15,8 +15,7 @@ namespace cruise.umple.compiler;
 
 class GeneratorHelper
 {
-  
-  private static void postpareTrace(UmpleModel aModel)
+private static void postpareTrace(UmpleModel aModel)
   {}
 
   // Currently no internal trace entities to remove at the class level
@@ -161,7 +160,7 @@ class GeneratorHelper
             		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
             		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
             		  	
-            		attrCode = "  fileTracer(" + traceDirective.getAttribute(i).getName() + ");";
+            		attrCode = "  FileTracer.trace(" + traceDirective.getAttribute(i).getName() + ");";
             		lookups.put("attributeCode",attrCode);
           		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
           		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
@@ -175,7 +174,7 @@ class GeneratorHelper
           		else
           		{
           			// simple trace directive without any extra fragments
-              		attrCode = "fileTracer(" + traceDirective.getAttribute(i).getName() + ");";
+              		attrCode = "FileTracer.trace(" + traceDirective.getAttribute(i).getName() + ");";
               		lookups.put("attributeCode",attrCode);
             		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
             		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
@@ -277,6 +276,5 @@ class GeneratorHelper
 	  // ToDo return time depending on kind of unit used (second or millisecond)
 	  return period[0];
   }
-  
 }
 

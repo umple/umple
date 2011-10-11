@@ -72,5 +72,5 @@ public class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   
   <%=uClass.getExtraCode()%>
 <% } %>
-  <%@ include file="trace.jet" %>
 }
+<%@ include file="trace.jet" %>

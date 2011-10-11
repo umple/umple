@@ -356,7 +356,7 @@ private static void postpareTrace(UmpleModel aModel)
             		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
             		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
             		  	
-            		attrCode = "  fileTracer(" + traceDirective.getAttribute(i).getName() + ");";
+            		attrCode = "  FileTracer.trace(" + traceDirective.getAttribute(i).getName() + ");";
             		lookups.put("attributeCode",attrCode);
           		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
           		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
@@ -370,7 +370,7 @@ private static void postpareTrace(UmpleModel aModel)
           		else
           		{
           			// simple trace directive without any extra fragments
-              		attrCode = "fileTracer(" + traceDirective.getAttribute(i).getName() + ");";
+              		attrCode = "FileTracer.trace(" + traceDirective.getAttribute(i).getName() + ");";
               		lookups.put("attributeCode",attrCode);
             		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
             		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
