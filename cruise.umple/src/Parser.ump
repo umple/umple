@@ -21,7 +21,30 @@ class Couple
 class ParseResult
 {
   Boolean wasSuccess;
+  
+  // Position is left for now, as not to break things
   * -> 0..1 Position;
+  * -> * ErrorMessage;
+}
+
+class ErrorMessage
+{
+	* -> 1 ErrorType;
+	String[] parameters;
+}
+
+class ErrorType
+{
+	String errorFormat;
+	Integer errorCode;
+	Integer severtiy;
+	key {errorCode}
+}
+
+class ErrorTypeSingleton
+{
+	singleton;
+	1 -> * ErrorType;
 }
 
 class Token
