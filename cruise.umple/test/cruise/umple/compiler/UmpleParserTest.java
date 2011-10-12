@@ -1191,6 +1191,14 @@ public class UmpleParserTest
     Assert.assertEquals(true,model.getDebugMode());        
   }
 
+  @Test 
+  public void filenamePropogation()
+  {
+	assertParse("020_enumLongHand.ump");
+	if(parser.getClass() == UmpleInternalParser.class)
+       Assert.assertEquals("020_enumLongHand.ump", ((UmpleInternalParser)parser).getFilename());        
+  }
+  
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));

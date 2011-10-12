@@ -37,19 +37,21 @@ class UmpleInternalParser
   internal String[] parsedUmpleFiles;
   after constructor { init(); }
   
-  
   public UmpleInternalParser()
   {
-    this("UmpleInternalParser",new UmpleModel(null));
+    this("UmpleInternalParser", new UmpleModel(null));
   }
 
   public UmpleInternalParser(UmpleModel aModel)
-  {
-    this("UmpleInternalParser",aModel);
+  {	 
+  	this("UmpleInternalParser", aModel);
   }
 
   private void init()
   {
+	if(model.getUmpleFile() != null)
+		super.setFilename(model.getUmpleFile().getFileName());
+    
     addCouple(new Couple("\"","\""));
     addCouple(new Couple("{","}"));
     addRulesInFile("/umple_core.grammar");

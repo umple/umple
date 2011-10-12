@@ -75,7 +75,8 @@ class Parser
   depend java.io.*;
   depend cruise.umple.util.*;
 
-  name; // default 'program'
+  String filename = null;
+  String name; // default 'program'
   String[] grammarRules;
   * -> * Rule;
   * -> * Couple;

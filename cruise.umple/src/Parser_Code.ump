@@ -539,6 +539,18 @@ class RulePart
 class Parser
 {
   
+  public Parser(String aFilename, String aName)
+  {
+    filename = aFilename;
+    name = aName;
+    grammarRules = new ArrayList<String>();
+    parseResult = new ParseResult(true);
+    rootToken = reset();
+    rules = new ArrayList<Rule>();
+    couples = new ArrayList<Couple>();
+  }
+
+  
   public Token reset()
   {
     rootToken = new Token(getName(),"ROOT", new Position(1,0,0));

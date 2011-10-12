@@ -952,6 +952,13 @@ public class ParserTest
     assertParse(false, parser.parse("test", "a || b"));
   }
 
+  @Test
+  public void filenameRetentionTest()
+  {
+	Parser p = new Parser("filename.ugh", null);  
+	Assert.assertEquals("filename.ugh", p.getFilename());
+  }
+  
   private void assertParse(Position expected, ParseResult result)
   {
     Assert.assertEquals(expected, result.getPosition());

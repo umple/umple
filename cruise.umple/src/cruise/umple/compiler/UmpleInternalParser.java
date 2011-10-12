@@ -86,6 +86,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
+    if(model !=null && model.getUmpleFile() != null) super.setFilename(model.getUmpleFile().getFileName());
     return wasSet;
   }
 
@@ -109,13 +110,16 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   //------------------------
   
    public UmpleInternalParser()  {
-this("UmpleInternalParser",new UmpleModel(null));
+this("UmpleInternalParser", new UmpleModel(null));
   }
  public UmpleInternalParser(UmpleModel aModel)  {
-this("UmpleInternalParser",aModel);
+this("UmpleInternalParser", aModel);
   }
 private void init()
   {
+	if(model.getUmpleFile() != null)
+		super.setFilename(model.getUmpleFile().getFileName());
+    
     addCouple(new Couple("\"","\""));
     addCouple(new Couple("{","}"));
     addRulesInFile("/umple_core.grammar");

@@ -14,6 +14,7 @@ public class Parser
   //------------------------
 
   //Parser Attributes
+  private String filename;
   private String name;
   private List<String> grammarRules;
   private ParseResult parseResult;
@@ -29,6 +30,7 @@ public class Parser
 
   public Parser(String aName)
   {
+    filename = null;
     name = aName;
     grammarRules = new ArrayList<String>();
     parseResult = new ParseResult(true);
@@ -40,6 +42,14 @@ public class Parser
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setFilename(String aFilename)
+  {
+    boolean wasSet = false;
+    filename = aFilename;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setName(String aName)
   {
@@ -77,6 +87,11 @@ public class Parser
     rootToken = aRootToken;
     wasSet = true;
     return wasSet;
+  }
+
+  public String getFilename()
+  {
+    return filename;
   }
 
   public String getName()
@@ -244,7 +259,16 @@ public class Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public Token reset()
+   public Parser(String aFilename,String aName)  {
+filename = aFilename;
+    name = aName;
+    grammarRules = new ArrayList<String>();
+    parseResult = new ParseResult(true);
+    rootToken = reset();
+    rules = new ArrayList<Rule>();
+    couples = new ArrayList<Couple>();
+  }
+public Token reset()
   {
     rootToken = new Token(getName(),"ROOT", new Position(1,0,0));
     return rootToken;
