@@ -2,6 +2,11 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Date;
+
 
 public class Tracer
 {
@@ -35,7 +40,7 @@ public class Tracer
     wasSet = true;
     if( id == 234 )
     {
-      FileTracer.trace(id);
+      fileTracer(id);
     }
     return wasSet;
   }
@@ -47,7 +52,7 @@ public class Tracer
     wasSet = true;
     if( id == 234 )
     {
-      FileTracer.trace(name);
+      fileTracer(name);
     }
     return wasSet;
   }
@@ -65,29 +70,11 @@ public class Tracer
   public void delete()
   {}
 
-}
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
 
-//----------------------------
-// FILE TRACER SINGELTON CLASS
-//----------------------------
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Date;
-
-public class FileTracer
-{
-
-  private static final FileTracer instance = new FileTracer();
-
-  private FileTracer() { }
-
-  public static FileTracer getInstance() {
-    return instance;
-  }
-
-  static void trace(Object obj)
+  static void fileTracer(Object obj)
   {
     FileOutputStream fout = null;
     Date date = new Date();
@@ -105,4 +92,5 @@ public class FileTracer
     new PrintStream(fout).println("Traced object value: " + obj);
     new PrintStream(fout).println("Trace time : " + date);
   }
+
 }
