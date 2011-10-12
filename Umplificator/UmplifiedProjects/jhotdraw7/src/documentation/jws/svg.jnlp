@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for JHotDraw Sample Application -->
+<jnlp
+  spec="1.5.0+"
+  codebase="http://www.randelshofer.ch/oop/jhotdraw"
+  href="http://www.randelshofer.ch/oop/jhotdraw/Documentation/jws/svg.jnlp">
+  <information>
+    <title>JHotDraw SVG</title>
+    <vendor>Werner Randelshofer</vendor>
+    <homepage href="http://www.randelshofer.ch/oop/jhotdraw"/>
+    <description kind="short">JHotDraw SVG Sample Application.</description>
+    <description kind="one-line">JHotDraw SVG Sample Application.</description>
+    <description kind="tooltip">JHotDraw SVG</description>
+    <offline-allowed/>
+    <shortcut online="false">
+    	<desktop/>
+    	<menu submenu="JHotDraw"/>
+    </shortcut>
+  </information>
+  <security> 
+      <all-permissions/> 
+  </security> 
+  <resources>
+    <j2se version="1.5+" initial-heap-size="64m" max-heap-size="512m" />
+ 	<nativelib href="Samples/SVG/signed/libquaqua.jnilib.jar"/>
+ 	<nativelib href="Samples/SVG/signed/libquaqua64.jnilib.jar"/>
+ 	<jar href="Samples/SVG/signed/JHotDraw%20SVG.jar"/>
+  </resources>
+  <application-desc main-class="org.jhotdraw.samples.svg.Main"/>
+</jnlp> 

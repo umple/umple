@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/documentation-page.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>JHotDraw 7: PERT Sample Application</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<link href="stylesheet.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="page">
+<div class="nav"><!-- InstanceBeginEditable name="tocRegion" -->
+<iframe id="tocFrame" src="toc.html" width="200" height="200" scrolling="No"></iframe>
+<!-- InstanceEndEditable --></div>
+<div class="header">
+  <h1><!-- InstanceBeginEditable name="headerRegion" -->
+  <h1>JHotDraw 7: PERT Sample Application</h1>
+<!-- InstanceEndEditable --></h1>
+</div>
+<div class="article"><!-- InstanceBeginEditable name="articleRegion" -->
+  <p>A PERT diagram consists of tasks and dependencies. Tasks are drawn as the nodes of the graph; dependencies are drawn as the edges of the graph.</p>
+  <p><strong>Launch JHotDraw PERT:</strong> <a href="jws/pert.jnlp"><img src="images/webstart.small.gif" alt="Launch JHotDraw Draw" width="88" height="34" border="0" align="top" /></a><br />
+  </p>
+  <p><strong>Figure 1:</strong> Screenshot of the PERT application. Click image for larger view.</p>
+  <blockquote>
+    <p><a href="images/pert_osx.png" target="_blank"><img src="images/pert_osx_small.png" alt="" width="400" height="237" border="0" /></a></p>
+  </blockquote>
+  <p>    Each task figure has a name field, a duration field and a start time field. One can enter the values for the name field and the duration field. Specifying a duration of 0 denotes a milestone task. Milestones usually have names like 'Start' or 'End'. The value of the start time field can not be entered – is computed dynamically by the Figure objects.<br />
+    Each node figure has an arrow at one end. The arrow points to the dependent task.<br />
+    </p>
+  <p>The figures are 'aware' of their semantics. Connecting a task figure with another task figure establishes a dependency between the two figure objects. Causing all dependent task figure to update their duration fields. Also, the figures prevent the creation of cycles in the graph, by only offering connectors on figures when this does not cause a cycle in the graph.<br />
+  </p>
+<!-- InstanceEndEditable -->
+  <p>&nbsp;</p>
+</div><div class="footer">
+  <p>JHotDraw © 1996-2011 by the original authors and all contributors.</p>
+</div>
+</body>
+<!-- InstanceEnd --></html>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-net" default="all" basedir=".">
+    <target name="init">
+        <!-- properties for copyright and versioning -->
+        <property name="author" value="the authors and contributors of JHotDraw"/>
+        <property name="version" value="7.6"/>
+
+        <!-- build properties -->
+        <property name="libdir" value="lib"/>
+        <property name="srcdir" value="src/main/java"/>
+        <property name="builddir" value="build"/>
+        <property name="classdir" value="${builddir}/classes"/>
+        <property name="distdir" value="dist/JHotDraw ${version}/Samples/Net"/>
+
+        <!-- properties for jar signing -->
+        <property name="keystore.file" value="../../../../_Keystore/JavaKeystore"/>
+        <property name="keystore.alias" value="werner"/>
+        <property name="keystore.storepass" value="werner"/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${classdir}" />
+    </target>
+    <target name="applet.compile" depends="init,clean">
+        <mkdir dir="${classdir}"/>
+        <javac
+                destdir="${classdir}"
+                srcdir="${srcdir}"
+                debug="false"
+                optimize="true"
+                encoding="UTF-8"
+         >
+            <classpath path="${libdir}/java_30.zip"/>
+            <classpath path="${libdir}/annotations.jar"/>
+            <classpath path="${libdir}/jsr305.jar"/>
+            <include name="org/jhotdraw/samples/net/NetApplet.java"/> 
+            <include name="net/n3/nanoxml/*.java"/> 
+        </javac>
+        <copy todir="${classdir}/org/jhotdraw/app/action/images">
+            <fileset dir="${srcdir}/org/jhotdraw/app/action/images" >
+                <include name="edit*.png"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/draw/action/images">
+            <fileset dir="${srcdir}/org/jhotdraw/draw/action/images" />
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/gui">
+            <fileset dir="${srcdir}/org/jhotdraw/gui">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/undo">
+            <fileset dir="${srcdir}/org/jhotdraw/undo">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/undo/images">
+            <fileset dir="${srcdir}/org/jhotdraw/undo/images">
+                <include name="*.png"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/draw">
+            <fileset file="${srcdir}/org/jhotdraw/draw/Label*.properties"/>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/app">
+            <fileset file="${srcdir}/org/jhotdraw/app/Label*.properties"/>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/samples/net">
+            <fileset file="${srcdir}/org/jhotdraw/samples/net/Label*.properties"/>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/samples/net/images">
+            <fileset file="${srcdir}/org/jhotdraw/samples/net/images/*.png"/>
+        </copy>
+    </target>
+    <target name="applet.jar" depends="init,applet.compile">
+        <mkdir dir="${distdir}/unsigned"/>
+        <jar destfile="${distdir}/unsigned/jhotdraw_net.jar" basedir="${classdir}"
+        index="true" compress="false">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.net.NetApplet"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+        <exec executable="pack200">
+            <arg value="${distdir}/unsigned/jhotdraw_net.jar.pack.gz"/>
+            <arg value="${distdir}/unsigned/jhotdraw_net.jar"/>
+        </exec>
+    </target>
+    <target name="applet.jarsigned" depends="init,applet.jar">
+        <copy tofile="${distdir}/signed/jhotdraw_net.jar">
+            <fileset file="${distdir}/unsigned/jhotdraw_net.jar"/>
+        </copy>
+        <exec executable="pack200">
+            <arg value="-r"/>
+            <arg value="${distdir}/signed/jhotdraw_net.jar"/>
+        </exec>
+          <signjar alias="${keystore.alias}" 
+                storepass="${keystore.storepass}"
+                keystore="${keystore.file}" 
+                jar="${distdir}/signed/jhotdraw_net.jar"
+                >
+        </signjar>        
+        <exec executable="pack200">
+            <arg value="${distdir}/signed/jhotdraw_net.jar.pack.gz"/>
+            <arg value="${distdir}/signed/jhotdraw_net.jar"/>
+        </exec>
+    </target>
+    <target name="application.compile" depends="init,clean">
+        <mkdir dir="${classdir}"/>
+        <javac
+                destdir="${classdir}"
+                srcdir="${srcdir}"
+                debug="true"
+                optimize="true"
+                encoding="UTF-8"
+         >
+            <classpath path="${libdir}/quaqua.jar"/>
+            <classpath path="${libdir}/java_30.zip"/>
+            <classpath path="${libdir}/annotations.jar"/>
+            <classpath path="${libdir}/jsr305.jar"/>
+            <include name="net/n3/nanoxml/*.java"/> 
+            <include name="org/jhotdraw/samples/net/Main.java"/> 
+            <include name="org/jhotdraw/samples/net/NetProject.java"/> 
+        </javac>
+        <copy todir="${classdir}/org/jhotdraw/app/action/images">
+            <fileset dir="${srcdir}/org/jhotdraw/app/action/images" />
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/app">
+            <fileset dir="${srcdir}/org/jhotdraw/app">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/draw/action/images">
+            <fileset dir="${srcdir}/org/jhotdraw/draw/action/images" />
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/undo">
+            <fileset dir="${srcdir}/org/jhotdraw/undo">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/undo/images">
+            <fileset dir="${srcdir}/org/jhotdraw/undo/images">
+                <include name="*.png"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/draw">
+            <fileset file="${srcdir}/org/jhotdraw/draw/Label*.properties"/>
+        </copy> 
+        <copy todir="${classdir}/org/jhotdraw/app">
+            <fileset file="${srcdir}/org/jhotdraw/app/Label*.properties"/>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/gui">
+            <fileset file="${srcdir}/org/jhotdraw/gui/Label*.properties"/>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/samples/net">
+            <fileset file="${srcdir}/org/jhotdraw/samples/net/Label*.properties"/>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/samples/net/images">
+            <fileset file="${srcdir}/org/jhotdraw/samples/net/images/*.png"/>
+        </copy>
+    </target>
+    <target name="application.jar" depends="init,application.compile">
+        <mkdir dir="${distdir}/unsigned"/>
+        <jar destfile="${distdir}/unsigned/JHotDraw Net.jar" basedir="${classdir}">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.net.Main"/>
+                <attribute name="Class-Path" value="quaqua.jar lib/quaqua.jar ../lib/quaqua.jar ../../lib/quaqua.jar"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+        <copy todir="${distdir}/unsigned">
+            <fileset file="${libdir}/*.jar"/>
+            <fileset file="${libdir}/*.jnilib"/>
+        </copy>
+    </target>
+    <target name="application.jarsigned" depends="init,application.jar">
+        <mkdir dir="${distdir}/signed"/>
+        <unjar src="${libdir}/quaqua.jar" dest="${classdir}" />
+        <jar destfile="${distdir}/signed/JHotDraw Net.jar" basedir="${classdir}">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.net.Main"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+        <exec executable="pack200">
+            <arg value="-r"/>
+            <arg value="${distdir}/signed/JHotDraw Net.jar"/>
+        </exec>
+        <signjar alias="${keystore.alias}" 
+                storepass="${keystore.storepass}"
+                keystore="${keystore.file}" 
+                jar="${distdir}/signed/JHotDraw Net.jar"
+                >
+        </signjar>        
+        <jar basedir="${libdir}" compress="true"
+             jarfile="${distdir}/signed/libquaqua.jnilib.jar"
+             >
+            <include name="libquaqua.jnilib"/>
+        </jar>
+        <signjar alias="${keystore.alias}" 
+            storepass="${keystore.storepass}"
+            keystore="${keystore.file}" 
+            jar="${distdir}/signed/libquaqua.jnilib.jar"
+            >
+        </signjar>        
+        <jar basedir="${libdir}" compress="true"
+             jarfile="${distdir}/signed/libquaqua64.jnilib.jar"
+             >
+            <include name="libquaqua64.jnilib"/>
+        </jar>
+        <signjar alias="${keystore.alias}" 
+            storepass="${keystore.storepass}"
+            keystore="${keystore.file}" 
+            jar="${distdir}/signed/libquaqua64.jnilib.jar"
+            >
+        </signjar>        
+    </target>
+    <target name="application.run-jar" depends="init">
+        <java fork="true" jar="${distdir}/unsigned/JHotDraw Net.jar">
+            <jvmarg value="-Xdock:name=JHotDraw Net"/>
+            <jvmarg value="-Dlocale=en"/>
+            <jvmarg value="-Dapple.awt.graphics.UseQuartz=false"/>
+            <jvmarg value="-Djava.library.path=${libdir}"/>
+        </java>
+    </target>
+    <target name="application.run-compiled" depends="init">
+        <java fork="true" classname="org.jhotdraw.samples.net.Main">
+            <classpath>
+                <pathelement path="${classdir}"/>
+                <pathelement path="${libdir}/quaqua.jar"/>
+            </classpath>
+            <jvmarg value="-Xdock:name=JHotDraw Net"/>
+            <jvmarg value="-Dlocale=en"/>
+            <jvmarg value="-Dapple.awt.graphics.UseQuartz=false"/>
+            <jvmarg value="-Djava.library.path=${libdir}"/>
+            <jvmarg value="-Xmx256M"/>
+        </java>
+    </target>
+    <target name="applet.run-jar" depends="init">
+        <java fork="true" jar="${distdir}/unsigned/jhotdraw_net.jar"/>
+    </target>
+    <target name="applet.run-compiled" depends="init">
+        <java fork="true" classname="org.jhotdraw.samples.net.NetApplet">
+            <classpath>
+                <pathelement path="${classdir}"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="applet.appletviewer" depends="init">
+        <exec executable="appletviewer">
+        <arg value="${builddir}/NetApplet.html"/>
+        </exec>
+    </target>
+    <target name="dist" depends="init,applet.jar,application.jar">
+    </target>
+    <target name="distsigned" depends="init,applet.jarsigned,application.jarsigned">
+    </target>
+</project>

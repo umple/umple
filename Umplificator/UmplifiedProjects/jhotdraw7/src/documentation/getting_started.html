@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/documentation-page.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>JHotDraw 7: Getting Started</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+<link href="stylesheet.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="page">
+<div class="nav"><!-- InstanceBeginEditable name="tocRegion" -->
+<iframe id="tocFrame" src="toc.html" width="200" height="200" scrolling="No"></iframe>
+<!-- InstanceEndEditable --></div>
+<div class="header">
+  <h1><!-- InstanceBeginEditable name="headerRegion" -->
+  <h1>JHotDraw 7: Getting Started</h1>
+<!-- InstanceEndEditable --></h1>
+</div>
+<div class="article"><!-- InstanceBeginEditable name="articleRegion" -->
+  <h2>Playing around with the sample code</h2>
+  <p>JHotDraw comes with a number of mini examples and with some sample programs
+  which you can use to get an idea about its capabilities.</p>
+  <p>The mini examples are located in the <code>org.jhotdraw.sample.mini</code>
+  package. The purpose of the mini examples is to convey a specific aspect or
+  feature of the framework. Most of the mini examples consist only of a single Java class.</p>
+  <p>The larger sample programs are accessible from the navigation bar on the left side of
+  this page. The executable .jar files are located in the folders named
+  <code>Draw</code>, <code>Net</code>, <code>ODG</code>, <code>PERT</code>,
+  <code>SVG</code> and <code>Teddy</code>. The larger sample programs demonstrate
+  how to build a complete application or applet using JHotDraw.</p>
+  <h2>Looking at the source code</h2>
+  <p>The folder <code>jhotdraw7</code> is a NetBeans project. If you have the NetBeans IDE, you can open this folder as a project. When you do this, you may have to fix dependencies. All dependent files are located in the <code>jhotdraw7/lib</code> directory.</p>
+  <p>Once the project is open in NetBeans, you can build and run it. This will most likely start one of the sample programs, which are located in the <code>org.jhotdraw.samples</code> packages.</p>
+  <p>You can run any of the classes named <code>Main</code> as well as most
+  classes in the <code>org.jhotdraw.sample.mini</code> package.</p>
+  <h2>Integrating JHotDraw into a project of your own</h2>
+  <p>JHotDraw is a framework, and not an API. With new versions of the framework, you likely need to adapt your dependent code. JHotDraw also contains a lot of sample code and default implementations, which you are unlikely to need in your application. And finally, the artwork which ships with JHotDraw (for example the icons) may not match the style of your application. Thats why we think it makes little sense to bundle JHotDraw into a .jar-file, which  can be put into the classpath of an application.</p>
+  <p>We recommend  putting the <code>jhotdraw/src/main/java</code> directory in the source classpath of your project, and let javac  find the classes which your project actually needs. </p>
+  <!-- InstanceEndEditable -->
+  <p>&nbsp;</p>
+</div><div class="footer">
+  <p>JHotDraw © 1999-2011 by the original authors and all contributors.</p>
+</div>
+</body>
+<!-- InstanceEnd --></html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Builds the "JHotDraw" jar file. -->
+<project name="build-jhotdraw" default="all" basedir=".">
+    <target name="init">
+        <!-- properties for copyright and versioning -->
+        <property name="author" value="the authors and contributors of JHotDraw"/>
+        <property name="version" value="7rev758"/>
+
+        <!-- build properties -->
+        <property name="libdir" value="lib"/>
+        <property name="srcdir" value="src/main/java"/>
+        <property name="builddir" value="build"/>
+        <property name="classdir" value="${builddir}/classes"/>
+        <property name="distdir" value="dist/JHotDraw ${version}/Samples/JHotDraw"/>
+        <property name="javadocdir" value="dist/JHotDraw ${version}/JavaDoc"/>
+        <property name="docdir" value="dist/JHotDraw ${version}/Documentation"/>
+        <property name="docsrcdir" value="src/documentation"/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${classdir}" />
+    </target>
+    <target depends="init" description="Javadoc for my API." name="javadoc">
+        <mkdir dir="${javadocdir}"/>
+        <javadoc destdir="${javadocdir}" 
+        footer="&lt;font size=-2>Copyright 1996-2010 (c) by the authors and contributors of the JHotDraw project.&lt;br>Some rights reserved.&lt;/font>"
+        header="JHotDraw ${version}" 
+        windowtitle="JHotDraw ${version}"
+        maxmemory="256M"
+        overview="${srcdir}/org/jhotdraw/overview.html"
+        charset="UTF-8"
+        >
+            <packageset dir="${srcdir}">
+                <include name="org/jhotdraw/**"/>
+            </packageset>
+            <sourcepath>
+                <pathelement location="${srcdir}"/>
+            </sourcepath>
+            <classpath>
+                <pathelement location="${libdir}/quaqua.jar"/>
+                <pathelement location="${libdir}/java_30.zip"/>
+                <pathelement location="${libdir}/annotations.jar"/>
+                <pathelement location="${libdir}/jsr305.jar"/>
+            </classpath>
+        </javadoc>
+    </target>
+    <target name="compile" depends="init,clean">
+        <mkdir dir="${classdir}"/>
+        <javac  destdir="${classdir}"
+                srcdir="${srcdir}"
+                debug="true"
+                optimize="true"
+                encoding="UTF-8"
+         >
+            <classpath path="${libdir}/quaqua.jar"/>
+            <classpath path="${libdir}/java_30.zip"/>
+            <classpath path="${libdir}/annotations.jar"/>
+            <classpath path="${libdir}/jsr305.jar"/>
+            <include name="**/*.java"/>
+        </javac>
+        <copy todir="${classdir}">
+            <fileset dir="${srcdir}">
+                <include name="**/*.properties"/>
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="jar" depends="init,compile">
+        <mkdir dir="${distdir}"/>
+        <jar destfile="${distdir}/jhotdraw.jar" basedir="${classdir}">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.draw.Main"/>
+                <attribute name="Class-Path" value="quaqua.jar lib/quaqua.jar ../lib/quaqua.jar"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="dist" depends="jar">
+    </target>
+    <target name="distsigned" depends="jar">
+    </target>
+    <target name="documentation" depends="init">
+        <delete dir="${docdir}"/>
+        <mkdir dir="${docdir}"/>
+        <copy todir="${docdir}">
+            <fileset dir="${docsrcdir}"/>
+        </copy>
+    </target>
+</project>

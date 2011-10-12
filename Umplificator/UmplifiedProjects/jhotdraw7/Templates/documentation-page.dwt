@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Untitled Document</title>
+<!-- TemplateEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+<link href="../src/documentation/stylesheet.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="page">
+<div class="nav"><!-- TemplateBeginEditable name="tocRegion" --><iframe src="documentation-toc.dwt"></iframe><!-- TemplateEndEditable --></div>
+<div class="header">
+  <h1><!-- TemplateBeginEditable name="headerRegion" -->Header<!-- TemplateEndEditable --></h1>
+</div>
+<div class="article"><!-- TemplateBeginEditable name="articleRegion" -->Article<!-- TemplateEndEditable -->
+  <p>&nbsp;</p>
+</div><div class="footer">
+  <p>JHotDraw © 1999-2008 by the original authors and all contributors.</p>
+</div>
+</body>
+</html>
