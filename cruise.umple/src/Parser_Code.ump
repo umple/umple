@@ -709,6 +709,8 @@ class Parser
     rules.addAll(innerParser.rules);
   }
 
+  // TODO: The following two methods are very similar, code should be refactored
+  // such that code duplication is minimized. Or optionally, remove one of the methods.
   public ParseResult parse(String ruleName, String input)
   {
     TextParser inputParser = new TextParser(input);
@@ -718,6 +720,15 @@ class Parser
     return parseResult;
   }
 
+  public ParseResult parse(String ruleName, String filename, String input)
+  {
+    TextParser inputParser = new TextParser(filename, input);
+    parseResult.setPosition(inputParser.currentPosition());
+    boolean didParse = parse(ruleName, inputParser, rootToken, 0);
+    parseResult.setWasSuccess(didParse);
+    return parseResult;
+  }
+  
   private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
   {
     for (Rule r : rules)
