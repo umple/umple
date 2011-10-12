@@ -54,7 +54,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
 
-public class FileTracer {
+public class FileTracer
 {
 
   private static final FileTracer instance = new FileTracer();

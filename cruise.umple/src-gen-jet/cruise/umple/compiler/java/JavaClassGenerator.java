@@ -7027,7 +7027,7 @@ public class JavaClassGenerator implements ILang
 		appendln(stringBuffer, "import java.io.PrintStream;");
 		appendln(stringBuffer, "import java.util.Date;");
 		appendln(stringBuffer, "");
-		appendln(stringBuffer, "public class FileTracer {");
+		appendln(stringBuffer, "public class FileTracer");
 		appendln(stringBuffer, "{");
 		appendln(stringBuffer, "");
 		appendln(stringBuffer, "  private static final FileTracer instance = new FileTracer();");
