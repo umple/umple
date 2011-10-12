@@ -48,6 +48,7 @@ public class Parser
     boolean wasSet = false;
     filename = aFilename;
     wasSet = true;
+    rootToken = reset();
     return wasSet;
   }
 
@@ -270,7 +271,7 @@ filename = aFilename;
   }
 public Token reset()
   {
-    rootToken = new Token(getName(),"ROOT", new Position(1,0,0));
+    rootToken = new Token(getName(),"ROOT", new Position(filename,1,0,0));
     return rootToken;
   }
   
@@ -438,18 +439,7 @@ public Token reset()
     rules.addAll(innerParser.rules);
   }
 
-  // TODO: The following two methods are very similar, code should be refactored
-  // such that code duplication is minimized. Or optionally, remove one of the methods.
   public ParseResult parse(String ruleName, String input)
-  {
-    TextParser inputParser = new TextParser(input);
-    parseResult.setPosition(inputParser.currentPosition());
-    boolean didParse = parse(ruleName, inputParser, rootToken, 0);
-    parseResult.setWasSuccess(didParse);
-    return parseResult;
-  }
-
-  public ParseResult parse(String ruleName, String filename, String input)
   {
     TextParser inputParser = new TextParser(filename, input);
     parseResult.setPosition(inputParser.currentPosition());

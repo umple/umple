@@ -145,8 +145,10 @@ public class Token
   public boolean setPosition(Position newPosition)
   {
     boolean wasSet = false;
+    String tFilename = position == null ? newPosition.getFilename() : position.getFilename();
     position = newPosition;
     wasSet = true;
+    position.setFilename(tFilename);
     return wasSet;
   }
 

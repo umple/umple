@@ -68,7 +68,7 @@ public class UmpleParserTest
   @Test
   public void otherLanguage()
   {
-    assertFailedParse("001_otherLanguage.ump", new Position(1,9,9));
+    assertFailedParse("001_otherLanguage.ump", new Position("001_otherLanguage.ump", 1,9,9));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class UmpleParserTest
   @Test
   public void invalidNamespace_noName()
   {
-    assertFailedParse("002_invalidNamespace_noName.ump", new Position(1,10,10));
+    assertFailedParse("002_invalidNamespace_noName.ump", new Position("002_invalidNamespace_noName.ump",1,10,10));
   }
 
   @Test
@@ -166,7 +166,7 @@ public class UmpleParserTest
   @Test
   public void unknownClass()
   {
-    assertFailedParse("003_unknownClass.ump", new Position(5,9,27));
+    assertFailedParse("003_unknownClass.ump", new Position("003_unknownClass.ump",5,9,27));
   }
   
   @Test
@@ -379,7 +379,7 @@ public class UmpleParserTest
   @Test
   public void attribute_defaultedWithoutAValue()
   {
-    assertFailedParse("008_defaultWithoutValue.ump", new Position(4,2,19));
+    assertFailedParse("008_defaultWithoutValue.ump", new Position("008_defaultWithoutValue.ump",4,2,19));
   }
   
   @Test
@@ -486,13 +486,13 @@ public class UmpleParserTest
   @Test
   public void associationWithUnknownClass()
   {
-    assertFailedParse("009_associationWithUnknownClass.ump", new Position(7,15,53));
+    assertFailedParse("009_associationWithUnknownClass.ump", new Position("009_associationWithUnknownClass.ump",7,15,53));
   }
   
   @Test
   public void externalAssociationWithUnknownClass()
   {
-    assertFailedParse("009_externalAssociationWithUnknownClass.ump", new Position(6,23,58));
+    assertFailedParse("009_externalAssociationWithUnknownClass.ump", new Position("009_externalAssociationWithUnknownClass.ump",6,23,58));
   }
   
   @Test
@@ -553,7 +553,7 @@ public class UmpleParserTest
   @Test
   public void association_invalidMultiplicityOutOfOrder()
   {
-    assertFailedParse("009_association_multiplicityOutOfOrder.ump", new Position(4,2,19));
+    assertFailedParse("009_association_multiplicityOutOfOrder.ump", new Position("009_association_multiplicityOutOfOrder.ump",4,2,19));
   }  
 
   @Test
@@ -665,7 +665,7 @@ public class UmpleParserTest
   @Test
   public void association_nonZeroReflexiveAssociation()
   {
-    assertFailedParse("009_nonZeroReflexiveAssociation.ump", new Position(5,10,28));
+    assertFailedParse("009_nonZeroReflexiveAssociation.ump", new Position("009_nonZeroReflexiveAssociation.ump",5,10,28));
   }  
 
   
@@ -750,13 +750,13 @@ public class UmpleParserTest
   @Test
   public void associationClassMissingLeft()
   {
-    assertFailedParse("010_associationClassMissingLeft.ump", new Position(2,0,1));
+    assertFailedParse("010_associationClassMissingLeft.ump", new Position("010_associationClassMissingLeft.ump",2,0,1));
   }  
   
   @Test
   public void associationClassMissingRight()
   {
-    assertFailedParse("010_associationClassMissingRight.ump", new Position(2,0,1));
+    assertFailedParse("010_associationClassMissingRight.ump", new Position("010_associationClassMissingRight.ump",2,0,1));
   }
   
   @Test
@@ -1013,13 +1013,13 @@ public class UmpleParserTest
   @Test
   public void cannotHaveDuplicateKeys()
   {
-    assertFailedParse("018_cannotHaveDuplicateKeys.ump",new Position(8,2,55));
+    assertFailedParse("018_cannotHaveDuplicateKeys.ump",new Position("018_cannotHaveDuplicateKeys.ump",8,2,55));
   }
 
   @Test
   public void cannotHaveKeyAndDefaultKey()
   {
-    assertFailedParse("018_cannotHaveKeyAndDefaultKey.ump",new Position(8,2,55));
+    assertFailedParse("018_cannotHaveKeyAndDefaultKey.ump",new Position("018_cannotHaveKeyAndDefaultKey.ump",8,2,55));
   }  
   
   @Test

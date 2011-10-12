@@ -277,15 +277,20 @@ class Token
 
 class Position
 {
-
+  public Position(int aLineNumber, int aCharacterOffset, int aOffset)
+  {
+  	this(null, aLineNumber, aCharacterOffset, aOffset);
+  }
+  
   public Position copy()
   {
-    return new Position(lineNumber,characterOffset,offset);
+    return new Position(filename,lineNumber,characterOffset,offset);
   }
   
   public Position add(Position more)
   {
-    return new Position(getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
+  	String tfile = filename == null ? more.getFilename() : filename;
+    return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 
   public String toString()
@@ -553,7 +558,7 @@ class Parser
   
   public Token reset()
   {
-    rootToken = new Token(getName(),"ROOT", new Position(1,0,0));
+    rootToken = new Token(getName(),"ROOT", new Position(filename,1,0,0));
     return rootToken;
   }
   
@@ -721,18 +726,7 @@ class Parser
     rules.addAll(innerParser.rules);
   }
 
-  // TODO: The following two methods are very similar, code should be refactored
-  // such that code duplication is minimized. Or optionally, remove one of the methods.
   public ParseResult parse(String ruleName, String input)
-  {
-    TextParser inputParser = new TextParser(input);
-    parseResult.setPosition(inputParser.currentPosition());
-    boolean didParse = parse(ruleName, inputParser, rootToken, 0);
-    parseResult.setWasSuccess(didParse);
-    return parseResult;
-  }
-
-  public ParseResult parse(String ruleName, String filename, String input)
   {
     TextParser inputParser = new TextParser(filename, input);
     parseResult.setPosition(inputParser.currentPosition());

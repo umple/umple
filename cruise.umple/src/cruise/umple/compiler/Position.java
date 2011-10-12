@@ -11,12 +11,14 @@ public class Position
   //------------------------
 
   //Position Attributes
+  private String filename;
   private int lineNumber;
   private int characterOffset;
   private int offset;
 
   //Helper Variables
   private int cachedHashCode;
+  private boolean canSetFilename;
   private boolean canSetLineNumber;
   private boolean canSetCharacterOffset;
   private boolean canSetOffset;
@@ -25,12 +27,14 @@ public class Position
   // CONSTRUCTOR
   //------------------------
 
-  public Position(int aLineNumber, int aCharacterOffset, int aOffset)
+  public Position(String aFilename, int aLineNumber, int aCharacterOffset, int aOffset)
   {
+    filename = aFilename;
     lineNumber = aLineNumber;
     characterOffset = aCharacterOffset;
     offset = aOffset;
     cachedHashCode = -1;
+    canSetFilename = true;
     canSetLineNumber = true;
     canSetCharacterOffset = true;
     canSetOffset = true;
@@ -39,6 +43,15 @@ public class Position
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setFilename(String aFilename)
+  {
+    boolean wasSet = false;
+    if (!canSetFilename) { return false; }
+    filename = aFilename;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setLineNumber(int aLineNumber)
   {
@@ -67,6 +80,11 @@ public class Position
     return wasSet;
   }
 
+  public String getFilename()
+  {
+    return filename;
+  }
+
   public int getLineNumber()
   {
     return lineNumber;
@@ -89,6 +107,15 @@ public class Position
 
     Position compareTo = (Position)obj;
   
+    if (filename == null && compareTo.filename != null)
+    {
+      return false;
+    }
+    else if (filename != null && !filename.equals(compareTo.filename))
+    {
+      return false;
+    }
+
     if (lineNumber != compareTo.lineNumber)
     {
       return false;
@@ -114,12 +141,22 @@ public class Position
       return cachedHashCode;
     }
     cachedHashCode = 17;
+    if (filename != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + filename.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
     cachedHashCode = cachedHashCode * 23 + lineNumber;
 
     cachedHashCode = cachedHashCode * 23 + characterOffset;
 
     cachedHashCode = cachedHashCode * 23 + offset;
 
+    canSetFilename = false;
     canSetLineNumber = false;
     canSetCharacterOffset = false;
     canSetOffset = false;
@@ -133,14 +170,18 @@ public class Position
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public Position copy()
+   public Position(int aLineNumber,int aCharacterOffset,int aOffset)  {
+this(null, aLineNumber, aCharacterOffset, aOffset);
+  }
+public Position copy()
   {
-    return new Position(lineNumber,characterOffset,offset);
+    return new Position(filename,lineNumber,characterOffset,offset);
   }
   
   public Position add(Position more)
   {
-    return new Position(getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
+  	String tfile = filename == null ? more.getFilename() : filename;
+    return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 
   public String toString()

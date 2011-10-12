@@ -485,7 +485,7 @@ public class TextParser
       nextLineOffset++;
     }
     int characterOffset = _currentCharacterIndex - currentLineOffset - 1;
-    Position p = new Position(lineNumber, characterOffset, _currentCharacterIndex);
+    Position p = new Position(_filename, lineNumber, characterOffset, _currentCharacterIndex);
     return p;
   }
 

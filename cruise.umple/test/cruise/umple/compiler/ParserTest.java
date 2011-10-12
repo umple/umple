@@ -957,8 +957,24 @@ public class ParserTest
   {
 	Parser p = new Parser("filename.ugh", null);  
 	Assert.assertEquals("filename.ugh", p.getFilename());
+
+	Assert.assertEquals("filename.ugh", p.getRootToken().getPosition().getFilename());
   }
-  
+
+  @Test
+  public void positionPropogation()
+  {
+	parser.setFilename("shoes.omg");
+	parser.addRule("attribute : [=unique]? [=modifier:immutable|settable|internal|defaulted|const]? [type,name>1,0] (= [value])? ;");
+    assertParse(true, parser.parse("attribute", "unique Integer number = 1;"));
+    
+    Token t = parser.getRootToken();
+    Assert.assertEquals("shoes.omg", t.getPosition().getFilename());
+    
+    t.setPosition(new Position(1,1,1));
+    Assert.assertEquals("shoes.omg", t.getPosition().getFilename());
+
+  }  
   private void assertParse(Position expected, ParseResult result)
   {
     Assert.assertEquals(expected, result.getPosition());
