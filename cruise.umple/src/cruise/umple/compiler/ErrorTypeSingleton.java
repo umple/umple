@@ -27,6 +27,7 @@ public class ErrorTypeSingleton
   private ErrorTypeSingleton()
   {
     errorTypes = new ArrayList<ErrorType>();
+    init();
   }
 
   public static ErrorTypeSingleton getInstance()
@@ -101,5 +102,30 @@ public class ErrorTypeSingleton
   {
     errorTypes.clear();
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  private void init()
+	{
+	  // TODO: this function should parse an input file, and populate
+	  // errorTypes. BUT, it can't extend the parser class, otherwise
+	  // we have a cyclic dependency. (What happens in the case of
+	  // a parse error in this class?)
+	  this.errorTypes.add(new ErrorType(1003, 0, "test {0} {1}"));
+	}
+	
+	public void clear()
+	{
+	  this.errorTypes = new ArrayList<ErrorType>();
+	}
+	
+	public ErrorType getErrorTypeForCode(int code)
+	{
+		for(ErrorType et : this.errorTypes)
+			if(et.getErrorCode() == code)
+				return et;
+		return null;
+	}
 }

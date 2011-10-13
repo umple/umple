@@ -2,6 +2,8 @@
 /*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.util.StringFormatter;
+import java.util.List;
 
 public class ErrorType
 {
@@ -11,9 +13,9 @@ public class ErrorType
   //------------------------
 
   //ErrorType Attributes
-  private String errorFormat;
   private int errorCode;
   private int severtiy;
+  private String errorFormat;
 
   //Helper Variables
   private int cachedHashCode;
@@ -23,11 +25,11 @@ public class ErrorType
   // CONSTRUCTOR
   //------------------------
 
-  public ErrorType(String aErrorFormat, int aErrorCode, int aSevertiy)
+  public ErrorType(int aErrorCode, int aSevertiy, String aErrorFormat)
   {
-    errorFormat = aErrorFormat;
     errorCode = aErrorCode;
     severtiy = aSevertiy;
+    errorFormat = aErrorFormat;
     cachedHashCode = -1;
     canSetErrorCode = true;
   }
@@ -35,14 +37,6 @@ public class ErrorType
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setErrorFormat(String aErrorFormat)
-  {
-    boolean wasSet = false;
-    errorFormat = aErrorFormat;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setErrorCode(int aErrorCode)
   {
@@ -61,9 +55,12 @@ public class ErrorType
     return wasSet;
   }
 
-  public String getErrorFormat()
+  public boolean setErrorFormat(String aErrorFormat)
   {
-    return errorFormat;
+    boolean wasSet = false;
+    errorFormat = aErrorFormat;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getErrorCode()
@@ -74,6 +71,11 @@ public class ErrorType
   public int getSevertiy()
   {
     return severtiy;
+  }
+
+  public String getErrorFormat()
+  {
+    return errorFormat;
   }
 
   public boolean equals(Object obj)
@@ -106,5 +108,13 @@ public class ErrorType
 
   public void delete()
   {}
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String format(List<String> arguments)
+   {
+      return StringFormatter.format(errorFormat, arguments.toArray());
+   }
 }

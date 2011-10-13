@@ -35,9 +35,9 @@ class ErrorMessage
 
 class ErrorType
 {
-	String errorFormat;
 	Integer errorCode;
 	Integer severtiy;
+	String errorFormat;
 	key {errorCode}
 }
 

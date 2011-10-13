@@ -98,5 +98,17 @@ public class ErrorMessage
   {
     errorType = null;
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+   public ErrorMessage(int errorCode,String... parameters)  {
+this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode));
+	   this.parameters = Arrays.asList(parameters);
+  }
+public String toString()
+   {
+   	   return errorType.format(this.parameters);
+   }
 }

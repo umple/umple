@@ -1,5 +1,7 @@
 package cruise.umple.compiler;
 
+import java.util.ArrayList;
+
 import org.junit.*;
 
 import cruise.umple.util.FileManager;
@@ -975,6 +977,50 @@ public class ParserTest
     Assert.assertEquals("shoes.omg", t.getPosition().getFilename());
 
   }  
+  
+  @Test
+  public void errorTypeFormat()
+  {
+	  ErrorType et = new ErrorType(999, 9, "this is an error {0}, {1}");
+	  ArrayList<String> l = new ArrayList<String>();
+
+	  l.add("zero");
+	  l.add("one");
+	  
+	  Assert.assertEquals("this is an error zero, one", et.format(l));
+	  Assert.assertEquals(999, et.getErrorCode());
+	  Assert.assertEquals(9, et.getSevertiy());
+  }
+  
+  @Test 
+  public void errorTypeSingleton()
+  {
+	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+	  ets.clear();
+	  
+	  ets.addErrorType(new ErrorType(1001, 10, "This is a test error {0}"));
+	  
+	  ErrorType et = ets.getErrorTypeForCode(1001);
+	  Assert.assertEquals(1001, et.getErrorCode());
+	  Assert.assertEquals(10, et.getSevertiy());
+	  Assert.assertEquals("This is a test error {0}", et.getErrorFormat());
+	  
+	  et = ets.getErrorTypeForCode(1002);
+	  Assert.assertEquals(null, et);
+  }
+  
+  @Test 
+  public void errorMessage()
+  {
+	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+	  ets.clear();
+	  
+	  ets.addErrorType(new ErrorType(1002, 10, "This is a test error {0}, {1}"));
+	  
+	  ErrorMessage em = new ErrorMessage(1002, "zero", "one");
+	  Assert.assertEquals("This is a test error zero, one", em.toString());
+  }
+  
   private void assertParse(Position expected, ParseResult result)
   {
     Assert.assertEquals(expected, result.getPosition());
