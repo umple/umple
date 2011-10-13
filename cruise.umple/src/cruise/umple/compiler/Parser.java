@@ -48,7 +48,6 @@ public class Parser
     boolean wasSet = false;
     filename = aFilename;
     wasSet = true;
-    rootToken = reset();
     return wasSet;
   }
 

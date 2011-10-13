@@ -21,7 +21,7 @@ class Couple
 class ParseResult
 {
   Boolean wasSuccess;
-  
+  Boolean hasWarnings = false;
   // Position is left for now, as not to break things
   * -> 0..1 Position;
   * -> * ErrorMessage;
@@ -30,6 +30,7 @@ class ParseResult
 class ErrorMessage
 {
 	* -> 1 ErrorType;
+	* -> 1 Position;
 	String[] parameters;
 }
 
@@ -38,6 +39,7 @@ class ErrorType
 	Integer errorCode;
 	Integer severtiy;
 	String errorFormat;
+	String errorType;
 	key {errorCode}
 }
 
@@ -109,8 +111,6 @@ class Parser
   * -> * Couple;
   ParseResult parseResult = new ParseResult(true);
   Token rootToken = reset();
-  
-  after setFilename{rootToken = reset();}
 }
 
 class RuleInstance

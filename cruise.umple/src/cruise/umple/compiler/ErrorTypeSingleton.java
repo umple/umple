@@ -113,7 +113,7 @@ public class ErrorTypeSingleton
 	  // errorTypes. BUT, it can't extend the parser class, otherwise
 	  // we have a cyclic dependency. (What happens in the case of
 	  // a parse error in this class?)
-	  this.errorTypes.add(new ErrorType(1003, 0, "test {0} {1}"));
+	  this.errorTypes.add(new ErrorType(1003, 0, "test {0} {1}", "UmpleInternalTest"));
 	}
 	
 	public void clear()

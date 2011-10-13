@@ -967,6 +967,8 @@ public class ParserTest
   public void positionPropogation()
   {
 	parser.setFilename("shoes.omg");
+	parser.setRootToken(parser.reset());
+	
 	parser.addRule("attribute : [=unique]? [=modifier:immutable|settable|internal|defaulted|const]? [type,name>1,0] (= [value])? ;");
     assertParse(true, parser.parse("attribute", "unique Integer number = 1;"));
     
@@ -975,13 +977,12 @@ public class ParserTest
     
     t.setPosition(new Position(1,1,1));
     Assert.assertEquals("shoes.omg", t.getPosition().getFilename());
-
   }  
   
   @Test
   public void errorTypeFormat()
   {
-	  ErrorType et = new ErrorType(999, 9, "this is an error {0}, {1}");
+	  ErrorType et = new ErrorType(999, 9, "this is an error {0}, {1}", "TestError");
 	  ArrayList<String> l = new ArrayList<String>();
 
 	  l.add("zero");
@@ -998,7 +999,7 @@ public class ParserTest
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
 	  
-	  ets.addErrorType(new ErrorType(1001, 10, "This is a test error {0}"));
+	  ets.addErrorType(new ErrorType(1001, 10, "This is a test error {0}", "TestError"));
 	  
 	  ErrorType et = ets.getErrorTypeForCode(1001);
 	  Assert.assertEquals(1001, et.getErrorCode());
@@ -1015,9 +1016,9 @@ public class ParserTest
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
 	  
-	  ets.addErrorType(new ErrorType(1002, 10, "This is a test error {0}, {1}"));
+	  ets.addErrorType(new ErrorType(1002, 10, "This is a test error {0}, {1}", "TestError"));
 	  
-	  ErrorMessage em = new ErrorMessage(1002, "zero", "one");
+	  ErrorMessage em = new ErrorMessage(1002, new Position(0,0,0), "zero", "one");
 	  Assert.assertEquals("This is a test error zero, one", em.toString());
   }
   

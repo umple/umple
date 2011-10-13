@@ -16,17 +16,22 @@ public class ErrorMessage
 
   //ErrorMessage Associations
   private ErrorType errorType;
+  private Position position;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ErrorMessage(ErrorType aErrorType)
+  public ErrorMessage(ErrorType aErrorType, Position aPosition)
   {
     parameters = new ArrayList<String>();
     if (!setErrorType(aErrorType))
     {
       throw new RuntimeException("Unable to create ErrorMessage due to aErrorType");
+    }
+    if (!setPosition(aPosition))
+    {
+      throw new RuntimeException("Unable to create ErrorMessage due to aPosition");
     }
   }
 
@@ -83,6 +88,11 @@ public class ErrorMessage
     return errorType;
   }
 
+  public Position getPosition()
+  {
+    return position;
+  }
+
   public boolean setErrorType(ErrorType newErrorType)
   {
     boolean wasSet = false;
@@ -94,18 +104,30 @@ public class ErrorMessage
     return wasSet;
   }
 
+  public boolean setPosition(Position newPosition)
+  {
+    boolean wasSet = false;
+    if (newPosition != null)
+    {
+      position = newPosition;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
   public void delete()
   {
     errorType = null;
+    position = null;
   }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-   public ErrorMessage(int errorCode,String... parameters)  {
-this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode));
-	   this.parameters = Arrays.asList(parameters);
+   public ErrorMessage(int errorCode,Position pos,String... parameters)  {
+this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
+	  this.parameters = Arrays.asList(parameters);
   }
 public String toString()
    {

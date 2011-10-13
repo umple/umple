@@ -14,7 +14,7 @@ and Ruby.  It is configured to mostly delegate to helper methods for the followi
 
  + Core (most things outside of the elements below)
  + Umple Classes
- + State Machines
+ + State Machinesx
  + Traces
  + Layouts
 
@@ -50,7 +50,10 @@ class UmpleInternalParser
   private void init()
   {
 	if(model.getUmpleFile() != null)
-		super.setFilename(model.getUmpleFile().getFileName());
+	{
+		setFilename(model.getUmpleFile().getFileName());
+		setRootToken(reset()); // Makes sure the root token position has the filename
+    }
     
     addCouple(new Couple("\"","\""));
     addCouple(new Couple("{","}"));
@@ -204,6 +207,10 @@ class UmpleInternalParser
       unparsedUmpleFiles.remove(0);
       parsedUmpleFiles.add(nextFile);
       String input = SampleFileWriter.readContent(new File(nextFile));
+      //TODO: parse() should probably be responsible for
+      // reading file data, if we refactor it to be as such,
+      // then we can get rid of this ugly bit of code
+      setFilename(nextFile);
       parse("program", input);
       addNecessaryFiles();
     }    

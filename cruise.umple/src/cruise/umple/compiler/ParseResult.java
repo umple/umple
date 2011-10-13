@@ -13,6 +13,7 @@ public class ParseResult
 
   //ParseResult Attributes
   private boolean wasSuccess;
+  private boolean hasWarnings;
 
   //ParseResult Associations
   private Position position;
@@ -25,6 +26,7 @@ public class ParseResult
   public ParseResult(boolean aWasSuccess)
   {
     wasSuccess = aWasSuccess;
+    hasWarnings = false;
     errorMessages = new ArrayList<ErrorMessage>();
   }
 
@@ -40,14 +42,32 @@ public class ParseResult
     return wasSet;
   }
 
+  public boolean setHasWarnings(boolean aHasWarnings)
+  {
+    boolean wasSet = false;
+    hasWarnings = aHasWarnings;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean getWasSuccess()
   {
     return wasSuccess;
   }
 
+  public boolean getHasWarnings()
+  {
+    return hasWarnings;
+  }
+
   public boolean isWasSuccess()
   {
     return wasSuccess;
+  }
+
+  public boolean isHasWarnings()
+  {
+    return hasWarnings;
   }
 
   public Position getPosition()
