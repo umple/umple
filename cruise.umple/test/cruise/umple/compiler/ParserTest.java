@@ -1018,8 +1018,8 @@ public class ParserTest
 	  
 	  ets.addErrorType(new ErrorType(1002, 10, "This is a test error {0}, {1}", "TestError"));
 	  
-	  ErrorMessage em = new ErrorMessage(1002, new Position(0,0,0), "zero", "one");
-	  Assert.assertEquals("This is a test error zero, one", em.toString());
+	  ErrorMessage em = new ErrorMessage(1002, new Position("filename",0,0,0), "zero", "one");
+	  Assert.assertEquals("TestError Error on line: 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
   }
   
   private void assertParse(Position expected, ParseResult result)

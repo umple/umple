@@ -131,6 +131,8 @@ this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
   }
 public String toString()
    {
-   	   return errorType.format(this.parameters);
+	   String err = errorType.getErrorType() + " Error on line: " + this.position.getLineNumber();
+	   err += " of file \"" + this.position.getFilename() + "\":\n";
+   	   return  err + errorType.format(this.parameters);
    }
 }

@@ -159,26 +159,6 @@ class UmpleModel
 
     if(failed)
     	throw new UmpleCompilerException(result.toString(),null);
-    	
-    /*if (!result.getWasSuccess())
-    {
-      Position position = result.getPosition();
-      String errorMessage = "Syntax error:\n" + "Line:" + position.getLineNumber() + " Char:" + position.getCharacterOffset();
-      throw new UmpleCompilerException(errorMessage,null);
-    }
-    
-    result = parser.analyze(getShouldGenerate());
-    
-    if (result.getWasSuccess())
-    {
-    
-    }
-    else
-    {
-      Position position = result.getPosition();
-      String errorMessage = "Semantic error:\n" + "Line:" + position.getLineNumber() + " Char:" + position.getCharacterOffset();
-      throw new UmpleCompilerException(errorMessage,null);
-    }*/
   }  
   
    // Generates the actual code
