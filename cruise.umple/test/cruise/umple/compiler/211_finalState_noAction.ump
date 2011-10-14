@@ -12,10 +12,10 @@ class DVDplayer
           pause -> Paused;
         }
  
-        deepHistory {}
+        history {}
       }
       Off {
-        turnOn -> deepHistory ;
+        turnOn -> final ;
       }
     }
   }

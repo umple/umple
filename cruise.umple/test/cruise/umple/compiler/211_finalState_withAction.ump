@@ -1,3 +1,4 @@
+
 class DVDplayer
 {
   DVDplayerStatus {
@@ -12,12 +13,12 @@ class DVDplayer
           pause -> Paused;
         }
  
-        deepHistory {}
+        history {}
+
       }
       Off {
-        turnOn -> deepHistory ;
+        turnOn/{actionCode}-> final ;
       }
     }
   }
 }
-

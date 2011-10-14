@@ -1,0 +1,17 @@
+class Dryer {
+  status {
+    On {
+      Rotating{
+        dryingCompleted -> final ;
+      }
+      ||
+      Heating {
+        dryingCompleted -> final ;
+      }
+    fire -> Off ;
+    }
+
+    Off {
+    }
+  }
+}

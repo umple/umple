@@ -1,18 +1,20 @@
 class DVDplayer
 {
-  On {
-    Playing {
-      stop -> Stopped;
-    }
+    DVDplayerStatus {
+    On {
+      Playing {
+        stop -> Stopped;
+      }
 
-    Stopped {
-      play -> Playing;
-      pause -> Paused;
-    }
+      Stopped {
+        play -> Playing;
+        pause -> Paused;
+      }
  
-    history {}
-  }
-  Off {
-    turnOn -> history ;
+      history {}
+    }
+    Off {
+      turnOn -> history ;
+    }
   }
 }
