@@ -47,6 +47,10 @@ class ErrorTypeSingleton
 {
 	singleton;
 	1 -> * ErrorType;
+    
+	depend cruise.umple.compiler.exceptions.UmpleCompilerException;
+	depend cruise.umple.util.SampleFileWriter;
+	depend java.io.*;
 }
 
 class Token

@@ -1262,11 +1262,94 @@ class ErrorTypeSingleton
 
 	private void init()
 	{
-	  // TODO: this function should parse an input file, and populate
-	  // errorTypes. BUT, it can't extend the parser class, otherwise
-	  // we have a cyclic dependency. (What happens in the case of
-	  // a parse error in this class?)
-	  this.errorTypes.add(new ErrorType(0, 0, "Internal: {0}", "UmpleInternal"));
+	  String filename = "/english.error";
+      String input = readFile(filename);
+      parse(new TextParser(filename, input));
+	}
+	
+    public String readFile(String filenameOrResourcePath)
+    {
+      InputStream resourceStream = null;
+      BufferedReader reader = null;
+      String str = "";
+      try
+      {
+        if ((new File(filenameOrResourcePath)).exists())
+        {
+          reader = new BufferedReader(new FileReader(filenameOrResourcePath));
+        }
+        else
+        {
+          resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
+          reader = new BufferedReader(new InputStreamReader(resourceStream));
+        }
+        String line;
+        while((line=reader.readLine())!=null)
+    	  str += line;
+      }
+      catch (Exception e)
+      {
+        str = null;
+      }
+      finally
+      {
+        SampleFileWriter.closeAsRequired(reader);
+        SampleFileWriter.closeAsRequired(resourceStream);
+      }    
+      return str;
+    }
+    
+	private boolean parse(TextParser textParser)
+	{ 
+		while(textParser.peek() != null)
+		{
+		   Position p = textParser.currentPosition();
+		   
+           String code = textParser.nextUntil(false, ":");
+           textParser.next();
+
+           String severity = textParser.nextUntil(false, ",");
+           textParser.next();
+
+           String type = textParser.nextUntil(false, ",");
+           textParser.next();
+
+           String url = textParser.nextUntil(false, ",");
+           textParser.next();
+
+           String formatString = textParser.nextUntil(false, ";");
+           textParser.next();
+           
+           int codeInt;
+           int severityInt;
+           
+           if(code == null || severity == null || type == null || url == null || formatString == null)
+              throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
+           
+           try
+           {
+              codeInt = Integer.parseInt(code);
+           }
+           catch(NumberFormatException e)
+           {
+        	   throw new UmpleCompilerException("Error code must be an integer (line " + p.getLineNumber()+")",null);
+           }
+           
+           try
+           {
+        	  severityInt = Integer.parseInt(severity);
+           }
+           catch(NumberFormatException e)
+           {
+        	   throw new UmpleCompilerException("Severity must be an integer between [0,10] (line " + p.getLineNumber()+")",null);
+           }
+
+           if(severityInt < 0 || severityInt > 10)
+        	   throw new UmpleCompilerException("Severity must be an integer between [0,10] (line " + p.getLineNumber()+")",null);
+           
+           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type));
+		}
+		return true;
 	}
 	
 	public void clear()
@@ -1280,6 +1363,6 @@ class ErrorTypeSingleton
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 0, "Unknown Umple Error {0}", "UmpleInternal");
+		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal");
 	}
 }
