@@ -28,7 +28,7 @@ class UmpleInternalParser
   currentPackageName = "";
   UmpleModel model;
 
-  after setModel{if(model !=null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); rootToken=reset();}
+  after setModel{if(model !=null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}}
 }
 
 class Pair

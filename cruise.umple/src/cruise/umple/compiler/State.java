@@ -15,6 +15,8 @@ public class State
   private String name;
   private boolean isStartState;
   private boolean isInternal;
+  private boolean isHistoryState;
+  private boolean isDeepHistoryState;
 
   //State Associations
   private Activity activity;
@@ -32,6 +34,8 @@ public class State
     name = aName;
     isStartState = false;
     isInternal = false;
+    isHistoryState = false;
+    isDeepHistoryState = false;
     actions = new ArrayList<Action>();
     boolean didAddStateMachine = setStateMachine(aStateMachine);
     if (!didAddStateMachine)
@@ -70,6 +74,22 @@ public class State
     return wasSet;
   }
 
+  public boolean setIsHistoryState(boolean aIsHistoryState)
+  {
+    boolean wasSet = false;
+    isHistoryState = aIsHistoryState;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsDeepHistoryState(boolean aIsDeepHistoryState)
+  {
+    boolean wasSet = false;
+    isDeepHistoryState = aIsDeepHistoryState;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getName()
   {
     return name;
@@ -90,6 +110,16 @@ public class State
     return isInternal;
   }
 
+  public boolean getIsHistoryState()
+  {
+    return isHistoryState;
+  }
+
+  public boolean getIsDeepHistoryState()
+  {
+    return isDeepHistoryState;
+  }
+
   public boolean isIsConcurrent()
   {
     return numberOfNestedStateMachines() > 1;
@@ -103,6 +133,16 @@ public class State
   public boolean isIsInternal()
   {
     return isInternal;
+  }
+
+  public boolean isIsHistoryState()
+  {
+    return isHistoryState;
+  }
+
+  public boolean isIsDeepHistoryState()
+  {
+    return isDeepHistoryState;
   }
 
   public Activity getActivity()

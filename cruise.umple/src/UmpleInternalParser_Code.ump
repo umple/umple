@@ -91,6 +91,7 @@ class UmpleInternalParser
   {
     getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
+    getParseResult().addErrorMessage(new ErrorMessage(0,position,"TokenAnalysis"));
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual
@@ -215,7 +216,6 @@ class UmpleInternalParser
       addNecessaryFiles();
     }    
   }  
-
 }
 
 use UmpleInternalParser_CodeCore.ump;

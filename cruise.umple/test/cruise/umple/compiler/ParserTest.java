@@ -1007,7 +1007,7 @@ public class ParserTest
 	  Assert.assertEquals("This is a test error {0}", et.getErrorFormat());
 	  
 	  et = ets.getErrorTypeForCode(1002);
-	  Assert.assertEquals(null, et);
+	  Assert.assertEquals(-1, et.getErrorCode());
   }
   
   @Test 

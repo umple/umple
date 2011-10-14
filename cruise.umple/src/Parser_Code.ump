@@ -730,6 +730,7 @@ class Parser
   {
     TextParser inputParser = new TextParser(filename, input);
     parseResult.setPosition(inputParser.currentPosition());
+    _curParsePos = inputParser.currentPosition();
     boolean didParse = parse(ruleName, inputParser, rootToken, 0);
     parseResult.setWasSuccess(didParse);
     return parseResult;
@@ -776,6 +777,7 @@ class Parser
               break;
             }
             currentToken.addSubToken(new Token(inputValue, "STATIC", startTokenPosition));
+            _curParsePos = inputParser.currentPosition();
             parseResult.setPosition(inputParser.currentPosition());
           }
           else if (part.isVariable())
@@ -918,6 +920,7 @@ class Parser
         else if (inputParser.peek() != null && level == 0)
         {
           restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+          parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
           return false;
         }
         else
@@ -1216,6 +1219,17 @@ class RuleInstance
   
 }
 
+class ParseResult
+{
+   public String toString()
+   {
+   	 String ret = "";
+   	 for(ErrorMessage em : errorMessages)
+   	    ret += em.toString() + "\n";
+   	 return ret;
+   }
+}
+
 class ErrorMessage
 {
    public ErrorMessage(int errorCode, Position pos, String... parameters)  
@@ -1250,7 +1264,7 @@ class ErrorTypeSingleton
 	  // errorTypes. BUT, it can't extend the parser class, otherwise
 	  // we have a cyclic dependency. (What happens in the case of
 	  // a parse error in this class?)
-	  this.errorTypes.add(new ErrorType(1003, 0, "test {0} {1}", "UmpleInternalTest"));
+	  this.errorTypes.add(new ErrorType(0, 0, "Internal: {0}", "UmpleInternal"));
 	}
 	
 	public void clear()
@@ -1263,6 +1277,7 @@ class ErrorTypeSingleton
 		for(ErrorType et : this.errorTypes)
 			if(et.getErrorCode() == code)
 				return et;
-		return null;
+				
+		return new ErrorType(-1, 0, "Unknown Umple Error {0}", "UmpleInternal");
 	}
 }

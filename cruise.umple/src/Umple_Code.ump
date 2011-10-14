@@ -150,8 +150,17 @@ class UmpleModel
     UmpleParser parser = new UmpleInternalParser(this);
     String input = SampleFileWriter.readContent(getUmpleFile().getFile());
     ParseResult result = parser.parse("program", input);
+    boolean failed = !result.getWasSuccess();
     
-    if (!result.getWasSuccess())
+    if(!failed)
+        result = parser.analyze(getShouldGenerate());
+
+    failed |= !result.getWasSuccess();
+
+    if(failed)
+    	throw new UmpleCompilerException(result.toString(),null);
+    	
+    /*if (!result.getWasSuccess())
     {
       Position position = result.getPosition();
       String errorMessage = "Syntax error:\n" + "Line:" + position.getLineNumber() + " Char:" + position.getCharacterOffset();
@@ -169,7 +178,7 @@ class UmpleModel
       Position position = result.getPosition();
       String errorMessage = "Semantic error:\n" + "Line:" + position.getLineNumber() + " Char:" + position.getCharacterOffset();
       throw new UmpleCompilerException(errorMessage,null);
-    }
+    }*/
   }  
   
    // Generates the actual code

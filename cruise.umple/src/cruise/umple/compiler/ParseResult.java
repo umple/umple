@@ -143,5 +143,16 @@ public class ParseResult
     position = null;
     errorMessages.clear();
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String toString()
+   {
+   	 String ret = "";
+   	 for(ErrorMessage em : errorMessages)
+   	    ret += em.toString() + "\n";
+   	 return ret;
+   }
 }

@@ -1,11 +1,29 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.14.0.605 modeling language!*/
+/*This code was generated using the UMPLE 1.13.0.605 modeling language!*/
 
 package cruise.umple.compiler;
 import java.io.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+ * 
+ * This file is made available subject to the open source license found at:
+ * http://cruise.site.uottawa.ca/UmpleMITLicense.html
+ * 
+ * This is our internal parser implementation for the Umple language.  It uses
+ * a generic Parser that can read an external EBNF grammar file, and then populate
+ * an abstract syntax tree.
+ * 
+ * The work of the UmpleInternalParser is 
+ * 
+ * a) The grammar definition (defined externally in *.grammar files)
+ * b) Analyzing the AST to populate an Umple meta model instance
+ * c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
+ * 
+ * Please refer to UmpleInternalParser_Code.ump for implementation details.
+ */
 public class UmpleInternalParser extends Parser implements UmpleParser
 {
 
@@ -68,7 +86,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
-    if(model !=null && model.getUmpleFile() != null) super.setFilename(model.getUmpleFile().getFileName());
+    if(model !=null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}
     return wasSet;
   }
 
@@ -86,7 +104,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   {
     super.delete();
   }
-
+  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
@@ -141,6 +159,7 @@ private void init()
   {
     getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
+    getParseResult().addErrorMessage(new ErrorMessage(0,position,"TokenAnalysis"));
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual

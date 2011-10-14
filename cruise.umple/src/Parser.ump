@@ -110,6 +110,7 @@ class Parser
   * -> * Rule;
   * -> * Couple;
   ParseResult parseResult = new ParseResult(true);
+  internal Position _curParsePos = null;
   Token rootToken = reset();
 }
 

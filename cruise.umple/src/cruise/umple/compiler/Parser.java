@@ -18,6 +18,7 @@ public class Parser
   private String name;
   private List<String> grammarRules;
   private ParseResult parseResult;
+  private Position _curParsePos;
   private Token rootToken;
 
   //Parser Associations
@@ -34,6 +35,7 @@ public class Parser
     name = aName;
     grammarRules = new ArrayList<String>();
     parseResult = new ParseResult(true);
+    _curParsePos = null;
     rootToken = reset();
     rules = new ArrayList<Rule>();
     couples = new ArrayList<Couple>();
@@ -442,6 +444,7 @@ public Token reset()
   {
     TextParser inputParser = new TextParser(filename, input);
     parseResult.setPosition(inputParser.currentPosition());
+    _curParsePos = inputParser.currentPosition();
     boolean didParse = parse(ruleName, inputParser, rootToken, 0);
     parseResult.setWasSuccess(didParse);
     return parseResult;
@@ -488,6 +491,7 @@ public Token reset()
               break;
             }
             currentToken.addSubToken(new Token(inputValue, "STATIC", startTokenPosition));
+            _curParsePos = inputParser.currentPosition();
             parseResult.setPosition(inputParser.currentPosition());
           }
           else if (part.isVariable())
@@ -630,6 +634,7 @@ public Token reset()
         else if (inputParser.peek() != null && level == 0)
         {
           restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+          parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
           return false;
         }
         else
