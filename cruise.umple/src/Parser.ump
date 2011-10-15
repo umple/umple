@@ -22,6 +22,8 @@ class ParseResult
 {
   Boolean wasSuccess;
   Boolean hasWarnings = false;
+  internal Boolean _acceptsErrors = true;
+  
   // Position is left for now, as not to break things
   * -> 0..1 Position;
   * -> * ErrorMessage;

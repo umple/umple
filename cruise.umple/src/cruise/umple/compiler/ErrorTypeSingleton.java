@@ -112,7 +112,7 @@ public class ErrorTypeSingleton
   
   private void init()
 	{
-	  String filename = "/english.error";
+	  String filename = "/en.error";
       String input = readFile(filename);
       parse(new TextParser(filename, input));
 	}
@@ -191,11 +191,11 @@ public class ErrorTypeSingleton
            }
            catch(NumberFormatException e)
            {
-        	   throw new UmpleCompilerException("Severity must be an integer between [0,10] (line " + p.getLineNumber()+")",null);
+        	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
            }
 
-           if(severityInt < 0 || severityInt > 10)
-        	   throw new UmpleCompilerException("Severity must be an integer between [0,10] (line " + p.getLineNumber()+")",null);
+           if(severityInt < 1 || severityInt > 5)
+        	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
            
            this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type));
 		}
@@ -213,6 +213,6 @@ public class ErrorTypeSingleton
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal");
+		return new ErrorType(-1, 1, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal");
 	}
 }

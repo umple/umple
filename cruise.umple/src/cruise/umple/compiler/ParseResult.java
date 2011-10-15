@@ -14,6 +14,7 @@ public class ParseResult
   //ParseResult Attributes
   private boolean wasSuccess;
   private boolean hasWarnings;
+  private boolean _acceptsErrors;
 
   //ParseResult Associations
   private Position position;
@@ -27,6 +28,7 @@ public class ParseResult
   {
     wasSuccess = aWasSuccess;
     hasWarnings = false;
+    _acceptsErrors = true;
     errorMessages = new ArrayList<ErrorMessage>();
   }
 
@@ -121,9 +123,17 @@ public class ParseResult
   public boolean addErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasAdded = false;
+    if(!_acceptsErrors)
+    	return true; // This should technically return false
     if (errorMessages.contains(aErrorMessage)) { return false; }
     errorMessages.add(aErrorMessage);
     wasAdded = true;
+    if(aErrorMessage.getErrorType().getSevertiy() == 1)
+    	_acceptsErrors = false;
+    else if(aErrorMessage.getErrorType().getSevertiy() <= 2)
+    	wasSuccess = false;
+    else
+    	hasWarnings = true;
     return wasAdded;
   }
 
