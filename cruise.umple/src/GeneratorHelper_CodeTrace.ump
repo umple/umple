@@ -15,7 +15,7 @@ namespace cruise.umple.compiler;
 
 class GeneratorHelper
 {
-private static void postpareTrace(UmpleModel aModel)
+  private static void postpareTrace(UmpleModel aModel)
   {}
 
   // Currently no internal trace entities to remove at the class level
@@ -35,155 +35,13 @@ private static void postpareTrace(UmpleModel aModel)
     String dependPackage = templateLookups.get("dependPackage");
     String extraCode = templateLookups.get("extraCode");
     
-    // Go over each trac edirective
-    for (TraceDirective traceDirective : aClass.getTraceDirectives())
-    {
-      Map<String,String> lookups = new HashMap<String,String>();
-      
-      //-- if Console tracer is used, and its the default tracer if no tracer is specified
-      if ("Console".equals(model.getTraceType()))
-      {
-    	// if the traceItem is an attribute
-        if (traceDirective.hasAttributes())
-        {
-        	// Go over all attributes in trace directive
-        	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-        	{
-        		String attrCode = null, conditionType = null;
-        		
-        		// Process trace directive conditions if it has any 
-        		if( traceDirective.hasCondition() )
-        		{
-        			TraceCondition tc = traceDirective.getCondition(0);
-        			if( tc.getConditionType().equals("where") )
-        			{
-        				attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "where";
-        			}
-        			else if( tc.getConditionType().equals("until") )
-        			{
-        				attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "until";
-        			}
-        			else if( tc.getConditionType().equals("after") )
-        			{
-        				attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "after";
-        			}
-        			
-        			lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-        			
-        			attrCode = "{";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-            		attrCode = "  " + StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-          		  	attrCode = "}";
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-      			
-        		}
-        		else
-        		{
-        			// simple trace directive without any extra fragments
-            		attrCode = StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-        		}
-        		
-        		if( traceDirective.getPeriodClause() != null )
-        		{
-        			attrCode = "Thread thr1 = new Thread(tracePeriod(" + preparePeriod(traceDirective.getPeriodClause()) + "));\n";
-//        			attrCode += StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-        			attrCode = "thr1.start();\n";
-//        			attrCode += StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	attrCode = StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-        		}	
-        	}	
-        }
-      }
-      //-- if File tracer is used
-      else if ("File".equals(model.getTraceType()))
-      {
-    	// if the traceItem is an attribute
-          if (traceDirective.hasAttributes())
-          {
-          	// Go over all attributes in trace directive
-          	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-          	{
-          		String attrCode = null, conditionType = null;
-          		
-          		// Process trace directive conditions if it has any 
-          		if( traceDirective.hasCondition() )
-          		{
-          			TraceCondition tc = traceDirective.getCondition(0);
-          			if( tc.getConditionType().equals("where") )
-          			{
-          				attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-          				conditionType = "where";
-          			}
-          			else if( tc.getConditionType().equals("until") )
-          			{
-          				attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";
-          				conditionType = "until";
-          			}
-          			else if( tc.getConditionType().equals("after") )
-          			{
-          				attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-          				conditionType = "after";
-          			}
-          			
-          			lookups.put("attributeCode",attrCode);
-            		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-            		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-          			
-          			attrCode = "{";
-              		lookups.put("attributeCode",attrCode);
-            		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-            		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-            		  	
-            		attrCode = "  fileTracer(" + traceDirective.getAttribute(i).getName() + ");";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-            		  	
-            		attrCode = "}";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-        			
-          		}
-          		else
-          		{
-          			// simple trace directive without any extra fragments
-              		attrCode = "fileTracer(" + traceDirective.getAttribute(i).getName() + ");";
-              		lookups.put("attributeCode",attrCode);
-            		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-            		GeneratorHelper.prepareTraceDirective(traceDirective,lookups,conditionType);
-          		}
-          	}	
-          }
-      }
-      //-- if String tracer is used
-//      else if ("String".equals(model.getTraceType()))
+    // Go over each trace directive
+//    for (TraceDirective traceDirective : aClass.getTraceDirectives())
+//    {
+//      Map<String,String> lookups = new HashMap<String,String>();
+//      
+//      //-- if String tracer is used
+//      if ("String".equals(model.getTraceType()))
 //      {
 //        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
 //        lookups.put("packageName",packageName);
@@ -212,9 +70,8 @@ private static void postpareTrace(UmpleModel aModel)
 //    		  lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(0)));
 //    	  }
 //      }
-    }  
+//    }   
   }  
-
 
   // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
   // expects the following action semantic lookups
@@ -255,26 +112,6 @@ private static void postpareTrace(UmpleModel aModel)
     CodeInjection set = new CodeInjection(injectionType, setMethod, code);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
-  }
-  
-  private static String getComparisonOperatorInverse(String co) {
-	  if( co.equals("==") ) return "!=";
-	  else if( co.equals("!=") ) return "==";
-	  else if( co.equals(">") ) return "<=";
-	  else if( co.equals("<") ) return ">=";
-	  else if( co.equals(">=") ) return "<";
-	  else if( co.equals("<=") ) return ">";
-	  
-	  return null;
-  }
-  
-  private static String preparePeriod(String periodClause) {
-	  
-	  // split periodClause into two strings (1) contains numeric time (2) contains time unit
-	  String[] period = periodClause.split("s|m");
-	  
-	  // ToDo return time depending on kind of unit used (second or millisecond)
-	  return period[0];
   }
 }
 

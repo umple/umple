@@ -1,0 +1,79 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $id;
+  private $name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aId, $aName)
+  {
+    $this->id = $aId;
+    $this->name = $aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    if( $name == "tim" )
+    {
+      $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+      fprintf($file,"Traced object value: $id".PHP_EOL);
+      fprintf($file,"Trace time: $id".date(DATE_RFC822).PHP_EOL);
+      fclose($file);
+    }
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    if( $name == "tim" )
+    {
+      $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+      fprintf($file,"Traced object value: $name".PHP_EOL);
+      fprintf($file,"Trace time: $name".date(DATE_RFC822).PHP_EOL);
+      fclose($file);
+    }
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

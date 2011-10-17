@@ -1,0 +1,54 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $x;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aX)
+  {
+    $this->x = $aX;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setX($aX)
+  {
+    $wasSet = false;
+    $this->x = $aX;
+    $wasSet = true;
+    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+    fprintf($file,"Traced object value: $x".PHP_EOL);
+    fprintf($file,"Trace time: $x".date(DATE_RFC822).PHP_EOL);
+    fclose($file);
+    return $wasSet;
+  }
+
+  public function getX()
+  {
+    return $this->x;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
