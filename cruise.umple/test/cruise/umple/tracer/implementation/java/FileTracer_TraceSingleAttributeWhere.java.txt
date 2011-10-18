@@ -70,8 +70,18 @@ public class Tracer
       System.err.println ("Unable to write to file");
       System.exit(-1);
     }
+    // Write traced Item information
     new PrintStream(fout).println("Traced object value: " + obj);
     new PrintStream(fout).println("Trace time : " + date);
+    try
+    {
+      // Close output stream
+      fout.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
   }
 
 }

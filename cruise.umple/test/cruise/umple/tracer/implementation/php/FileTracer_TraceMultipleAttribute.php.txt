@@ -32,10 +32,7 @@ class Tracer
     $wasSet = false;
     $this->x = $aX;
     $wasSet = true;
-    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
-    fprintf($file,"Traced object value: $x".PHP_EOL);
-    fprintf($file,"Trace time: $x".date(DATE_RFC822).PHP_EOL);
-    fclose($file);
+    fileTracer($x);
     return $wasSet;
   }
 
@@ -44,10 +41,7 @@ class Tracer
     $wasSet = false;
     $this->y = $aY;
     $wasSet = true;
-    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
-    fprintf($file,"Traced object value: $y".PHP_EOL);
-    fprintf($file,"Trace time: $y".date(DATE_RFC822).PHP_EOL);
-    fclose($file);
+    fileTracer($y);
     return $wasSet;
   }
 
@@ -68,6 +62,18 @@ class Tracer
 
   public function delete()
   {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  function fileTracer($tracedItem)
+  {
+    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+    fprintf($file,"Traced object value: $tracedItem".PHP_EOL);
+    fprintf($file,"Trace time: ".date(DATE_RFC822).PHP_EOL);
+    fclose($file);
+  }
 
 }
 ?>

@@ -41,8 +41,18 @@ public class Ignore
 	    appendln(stringBuffer, "      System.err.println ({0}Unable to write to file{1});",'"','"');
 		appendln(stringBuffer, "      System.exit(-1);");
 		appendln(stringBuffer, "    }");
+		appendln(stringBuffer, "    // Write traced Item information");
 		appendln(stringBuffer, "    new PrintStream(fout).println(\"Traced object value: \" + obj);");
 		appendln(stringBuffer, "    new PrintStream(fout).println({0}Trace time : {1} + date);",'"','"');
+		appendln(stringBuffer, "    try");
+		appendln(stringBuffer, "    {");
+		appendln(stringBuffer, "      // Close output stream");
+		appendln(stringBuffer, "      fout.close();");
+		appendln(stringBuffer, "    }");
+		appendln(stringBuffer, "    catch (IOException e)");
+		appendln(stringBuffer, "    {");
+		appendln(stringBuffer, "      e.printStackTrace();");
+		appendln(stringBuffer, "    }");
 		appendln(stringBuffer, "  }");
 	}
 }
