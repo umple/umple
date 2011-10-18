@@ -686,8 +686,8 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     lookups.put("stringTemplate","StringTracer.execute(\"{0}=\" + {1});");
     lookups.put("dependPackage","1");
     lookups.put("extraCode",executeMethods);
-//    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
-    prepareAllStringTracers(this,model,aClass,lookups);
+    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
+    prepareAllTraces(this,model,aClass,lookups);
     
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
@@ -703,13 +703,13 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     }
   }
   
-    //====================== Start of Tracing code
+  //====================== Start of Tracing code
   // Look through all traces and inject the necessary code in the after, it requires the following lookups
   //  + consoleTemplate
   //  + stringTemplate
   //  + dependPackage 
   //  + executeMethod
-  public static void prepareAllStringTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  public static void prepareAllTraces(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
   {
     String consoleTemplate = templateLookups.get("consoleTemplate");
     String stringTemplate = templateLookups.get("stringTemplate");

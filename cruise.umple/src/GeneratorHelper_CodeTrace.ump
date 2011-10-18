@@ -15,7 +15,7 @@ namespace cruise.umple.compiler;
 
 class GeneratorHelper
 {
-  private static void postpareTrace(UmpleModel aModel)
+private static void postpareTrace(UmpleModel aModel)
   {}
 
   // Currently no internal trace entities to remove at the class level
@@ -34,43 +34,43 @@ class GeneratorHelper
     String stringTemplate = templateLookups.get("stringTemplate");
     String dependPackage = templateLookups.get("dependPackage");
     String extraCode = templateLookups.get("extraCode");
-    
+
     // Go over each trace directive
-//    for (TraceDirective traceDirective : aClass.getTraceDirectives())
-//    {
-//      Map<String,String> lookups = new HashMap<String,String>();
-//      
-//      //-- if String tracer is used
-//      if ("String".equals(model.getTraceType()))
-//      {
-//        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
-//        lookups.put("packageName",packageName);
-//        lookups.put("extraCode",extraCode);
-//        GeneratorHelper.prepareStringTracer(model, lookups);
-//        
-//        if (dependPackage != null && !packageName.equals(aClass.getPackageName()))
-//        {
-//          Depend d = new Depend(packageName + ".*");
-//          d.setIsInternal(true);
-//          aClass.addDepend(d);
-//        }
-//        if (traceDirective.hasAttributes())
-//        {
-//        	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-//        	{
-//                lookups.put("attributeCode",StringFormatter.format(stringTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i))));
-//        	}
-//        }
-//      }
-//      if (traceDirective.hasAttributes())
-//      {
-//    	  for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-//    	  {
-//    		  System.out.println("????");
-//    		  lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(0)));
-//    	  }
-//      }
-//    }   
+    for (TraceDirective traceDirective : aClass.getTraceDirectives())
+    {
+      Map<String,String> lookups = new HashMap<String,String>();
+      
+      //-- if String tracer is used
+      if ("String".equals(model.getTraceType()))
+      {
+        String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
+        lookups.put("packageName",packageName);
+        lookups.put("extraCode",extraCode);
+        GeneratorHelper.prepareStringTracer(model, lookups);
+
+        if (dependPackage != null && !packageName.equals(aClass.getPackageName()))
+        {
+          Depend d = new Depend(packageName + ".*");
+          d.setIsInternal(true);
+          aClass.addDepend(d);
+        }
+        if (traceDirective.hasAttributes())
+        {
+        	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
+        	{
+                lookups.put("attributeCode",StringFormatter.format(stringTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i))));
+        	}
+        }
+      }
+      if (traceDirective.hasAttributes())
+      {
+    	  for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
+    	  {
+    		  lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(0)));
+    	  }
+      }
+      prepareTraceDirective(traceDirective, lookups, null);
+    }   
   }  
 
   // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 

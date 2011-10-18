@@ -602,8 +602,8 @@ private String getExtendClassesNames(UmpleClass uClass)
     lookups.put("consoleTemplate","print(\"{0}={${1}}\");");
     lookups.put("stringTemplate","StringTracer::execute(\"{0}={${1}}\");");
     lookups.put("extraCode",executeMethods);
-//    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
-    prepareAllStringTracers(this,model,aClass,lookups);
+    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
+    prepareAllTraces(this,model,aClass,lookups);
         
     for (StateMachine sm : aClass.getStateMachines())
     {
@@ -618,7 +618,7 @@ private String getExtendClassesNames(UmpleClass uClass)
   //  + stringTemplate
   //  + dependPackage 
   //  + executeMethod
-  public static void prepareAllStringTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  public static void prepareAllTraces(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
   {
     String consoleTemplate = templateLookups.get("consoleTemplate");
     String stringTemplate = templateLookups.get("stringTemplate");

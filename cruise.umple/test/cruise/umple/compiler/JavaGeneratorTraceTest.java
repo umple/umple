@@ -18,7 +18,7 @@ public class JavaGeneratorTraceTest
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
   
-  @Test
+  @Test @Ignore
   public void prepare_postpare_traceDirective_attribute()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");

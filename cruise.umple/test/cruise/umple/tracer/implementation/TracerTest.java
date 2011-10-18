@@ -15,12 +15,6 @@ import org.junit.*;
 
 public class TracerTest extends TracerTemplateTest
 {
-	@Test @Ignore
-	  public void TestTmp()
-	  {
-	    assertUmpleTemplateFor("tmp_test.ump",languagePath + "/tmp_test."+ languagePath +".txt","Tracer");
-	  }
-
 	  //***************************//
 	  //****   File Tracer    *****//
 	  //**** Code Generation  *****//
@@ -30,6 +24,12 @@ public class TracerTest extends TracerTemplateTest
 	  public void TraceSupportFileTracer()
 	  {
 	    assertUmpleTemplateFor("FileTracer.ump",languagePath + "/FileTracer."+ languagePath +".txt","Tracer");
+	  }
+	  
+	  @Test
+	  public void TraceSupportStringTracer()
+	  {
+	    assertUmpleTemplateFor("StringTracer.ump",languagePath + "/StringTracer."+ languagePath +".txt","Tracer");
 	  }
 		
 	  //***************************//

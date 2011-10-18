@@ -34,5 +34,6 @@ public class PhpTracerTest extends TracerTest
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "tracer/php/example");
     SampleFileWriter.destroy(pathToInput + "/Tracer.php");
+    SampleFileWriter.destroy(pathToInput + "/StringTracer.php");
   }
 }
