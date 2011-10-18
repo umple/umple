@@ -786,22 +786,7 @@ private String getExtendClassesNames(UmpleClass uClass)
             		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
             		prepareTraceDirective(traceDirective,lookups,conditionType);
             		
-            		attrCode = "  $file=fopen(\"TraceLog.txt\",\"a\") or exit(\"Unable to open file!\");";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-
-            		attrCode = "  fprintf($file,\"Traced object value: $" + traceDirective.getAttribute(i).getName() +"\".PHP_EOL);";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-          		  	attrCode = "  fprintf($file,\"Trace time: $" + traceDirective.getAttribute(i).getName() +"\".date(DATE_RFC822).PHP_EOL);";
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-
-            		attrCode = "  fclose($file);";
+            		attrCode = "  fileTracer($"+ traceDirective.getAttribute(i).getName() + ");";
             		lookups.put("attributeCode",attrCode);
           		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
           		  	prepareTraceDirective(traceDirective,lookups,conditionType);
@@ -815,22 +800,7 @@ private String getExtendClassesNames(UmpleClass uClass)
           		else
           		{
           			// simple trace directive without any extra fragments
-          			attrCode = "$file=fopen(\"TraceLog.txt\",\"a\") or exit(\"Unable to open file!\");";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-
-            		attrCode = "fprintf($file,\"Traced object value: $" + traceDirective.getAttribute(i).getName() +"\".PHP_EOL);";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-          		  	attrCode = "fprintf($file,\"Trace time: $" + traceDirective.getAttribute(i).getName() +"\".date(DATE_RFC822).PHP_EOL);";
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-        		  	
-        		  	attrCode = "fclose($file);";
+          			attrCode = "fileTracer($"+ traceDirective.getAttribute(i).getName() + ");";
             		lookups.put("attributeCode",attrCode);
           		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
           		  	prepareTraceDirective(traceDirective,lookups,conditionType);
