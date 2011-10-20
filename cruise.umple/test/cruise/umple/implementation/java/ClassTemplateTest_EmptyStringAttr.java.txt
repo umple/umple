@@ -1,0 +1,45 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String grade;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {
+    grade = "";
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setGrade(String aGrade)
+  {
+    boolean wasSet = false;
+    grade = aGrade;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getGrade()
+  {
+    return grade;
+  }
+
+  public void delete()
+  {}
+
+}

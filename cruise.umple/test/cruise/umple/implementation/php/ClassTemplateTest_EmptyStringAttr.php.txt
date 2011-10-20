@@ -1,0 +1,50 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $grade;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->grade = "";
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setGrade($aGrade)
+  {
+    $wasSet = false;
+    $this->grade = $aGrade;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getGrade()
+  {
+    return $this->grade;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
