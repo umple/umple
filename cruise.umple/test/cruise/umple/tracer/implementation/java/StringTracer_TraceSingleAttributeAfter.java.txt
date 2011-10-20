@@ -1,0 +1,69 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import cruise.util.*;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int x;
+  private String y;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aX, String aY)
+  {
+    x = aX;
+    y = aY;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(int aX)
+  {
+    boolean wasSet = false;
+    x = aX;
+    wasSet = true;
+    if( x == 6 )
+    {
+      StringTracer.execute("x=" + aX);
+    }
+    return wasSet;
+  }
+
+  public boolean setY(String aY)
+  {
+    boolean wasSet = false;
+    y = aY;
+    wasSet = true;
+    if( y == "tim" )
+    {
+      StringTracer.execute("y=" + aY);
+    }
+    return wasSet;
+  }
+
+  public int getX()
+  {
+    return x;
+  }
+
+  public String getY()
+  {
+    return y;
+  }
+
+  public void delete()
+  {}
+
+}

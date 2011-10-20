@@ -34,6 +34,7 @@ public class JavaTracerTest extends TracerTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "tracer/java/example");
+    SampleFileWriter.destroy(pathToInput + "/cruise");
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
   }
   

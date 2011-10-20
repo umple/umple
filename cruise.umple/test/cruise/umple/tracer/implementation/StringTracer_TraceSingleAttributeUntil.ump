@@ -1,0 +1,11 @@
+namespace example;
+
+tracer String;
+
+class Tracer
+{
+	Integer id;
+	String name;
+	trace name until name == "tim";
+	trace id until id > 6;
+}
