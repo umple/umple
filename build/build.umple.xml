@@ -31,9 +31,14 @@
   <!-- ```````````````````````````
     Generate JET Templates
   ``````````````````````````` -->
-  
+ 
   <!-- Move the generic JET templates into the various UmpleTo* projects -->
   <target name="templates">
+	<!--
+	<exec executable="ruby" failonerror="true" dir="build">
+		<arg value="InsertDebugCodeScript.rb" />
+	</exec>	
+	-->
     <copy todir="UmpleToJava/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
     </copy>

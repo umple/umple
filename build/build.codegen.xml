@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." default="build" name="UmpleCodegen" >
-
+	
   <!-- Move the generic Jet templates into each project -->
-  <target name="prepare">
+  <target name="prepare">	
     <copy todir="UmpleToJava/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
     </copy>
