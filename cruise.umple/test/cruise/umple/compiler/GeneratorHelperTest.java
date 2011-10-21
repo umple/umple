@@ -60,7 +60,7 @@ public class GeneratorHelperTest
     lookups.put("setMethod","setX");
     lookups.put("attributeCode","x");
     
-    GeneratorHelper.prepareTraceDirective(traceDirective,lookups,null);
+    GeneratorHelper.injectTraceDirective(traceDirective, lookups, null);
 
     Assert.assertEquals(1,c.numberOfCodeInjections());
     CodeInjection inject = c.getCodeInjection(0);

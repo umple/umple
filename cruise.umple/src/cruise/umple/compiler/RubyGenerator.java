@@ -651,7 +651,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     lookups.put("consoleTemplate","puts \"{0}=#{{1}}\"");
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
-    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
+    //GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
 
   }
   

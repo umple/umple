@@ -655,6 +655,7 @@ private String getExtendClassesNames(UmpleClass uClass)
     executeMethods += "public function reset() { self::getInstance()->traces = array(); }";
     lookups.put("consoleTemplate","print(\"{0}={${1}}\");");
     lookups.put("stringTemplate","StringTracer::execute(\"{0}={${1}}\");");
+    lookups.put("fileTemplate","fileTracer(${0});");
     lookups.put("extraCode",executeMethods);
     //GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
 	prepareAllTraces(this,model,aClass,lookups);
@@ -667,215 +668,160 @@ private String getExtendClassesNames(UmpleClass uClass)
   }
   
   //====================== Start of Tracing code
-  // Look through all traces and inject the necessary code in the after, it requires the following lookups
+  // Checks which tracer is selected and then calls appropriate functions to process trace directives
+  public static void prepareAllTraces(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  {    
+    //-- if Console tracer is used
+    if ("Console".equals(model.getTraceType()))
+    {
+    	prepareConsoleTraces(aClass,t,templateLookups);
+    }
+    //-- if File tracer is used
+    else if ("File".equals(model.getTraceType()))
+    {
+    	prepareFileTraces(aClass,t,templateLookups);
+    }
+    //-- if String tracer is used
+    else if ("String".equals(model.getTraceType()))
+    {
+    	prepareStringTraces(model,aClass,t,templateLookups);
+    }
+  }
+  
+  // "Console Tracer" Look through all traces and inject the necessary code, it requires the following lookup
   //  + consoleTemplate
+  private static void prepareConsoleTraces( UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
+  {
+	  String consoleTemplate = templateLookups.get("consoleTemplate");
+	  
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {  
+	    	// if the traceItem is an attribute
+	        if (traceDirective.hasAttributes())
+	        {
+	        	processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
+	        }
+	  }
+  }
+
+  // "File Tracer" Look through all traces and inject the necessary code, it requires the following lookup
+  //  + fileTemplate
+  private static void prepareFileTraces(UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
+  {
+	  String fileTemplate = templateLookups.get("fileTemplate");
+	  
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {
+		  // if the traceItem is an attribute
+          if (traceDirective.hasAttributes())
+          {
+        	  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
+          }
+	  }
+  }
+
+  // "String Tracer" Look through all traces and inject the necessary code it requires the following lookups
   //  + stringTemplate
   //  + dependPackage 
   //  + executeMethod
-  public static void prepareAllTraces(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  private static void prepareStringTraces(UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
-    String consoleTemplate = templateLookups.get("consoleTemplate");
-    String stringTemplate = templateLookups.get("stringTemplate");
-    String dependPackage = templateLookups.get("dependPackage");
-    String extraCode = templateLookups.get("extraCode");
-    
-    // Go over each trace directive
-    for (TraceDirective traceDirective : aClass.getTraceDirectives())
-    {
-      Map<String,String> lookups = new HashMap<String,String>();
-      
-      //**************************
-      //-- if Console tracer is used, and its the default tracer if no tracer is specified
-      if ("Console".equals(model.getTraceType()))
-      {
-    	// if the traceItem is an attribute
-        if (traceDirective.hasAttributes())
-        {
-        	// Go over all attributes in trace directive
-        	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-        	{
-        		String attrCode = null, conditionType = null;
-        		
-        		// Process trace directive conditions if it has any 
-        		if( traceDirective.hasCondition() )
-        		{
-        			TraceCondition tc = traceDirective.getCondition(0);
-        			if( tc.getConditionType().equals("where") )
-        			{
-        				attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "where";
-        			}
-        			else if( tc.getConditionType().equals("until") )
-        			{
-        				attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "until";
-        			}
-        			else if( tc.getConditionType().equals("after") )
-        			{
-        				attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "after";
-        			}
-        			
-        			lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-        			
-        			attrCode = "{";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-            		attrCode = "  " + StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-          		  	attrCode = "}";
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-      			
-        		}
-        		else
-        		{
-        			// simple trace directive without any extra fragments
-            		attrCode = StringFormatter.format(consoleTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-        		}
-        	}
-        }
-      }
-      //**************************
-      //-- if File tracer is used
-      else if ("File".equals(model.getTraceType()))
-      {
-    	// if the traceItem is an attribute
+	  String stringTemplate = templateLookups.get("stringTemplate");
+	  String dependPackage = templateLookups.get("dependPackage");
+	  String extraCode = templateLookups.get("extraCode");
+	  
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {
+		  Map<String,String> lookups = new HashMap<String,String>();
+		  String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
+          lookups.put("packageName",packageName);
+          lookups.put("extraCode",extraCode);
+          prepareStringTracer(model, lookups);
+
+          if (dependPackage != null && !packageName.equals(aClass.getPackageName()))
+          {
+            Depend d = new Depend(packageName + ".*");
+            d.setIsInternal(true);
+            aClass.addDepend(d);
+          }
+          // if the traceItem is an attribute
           if (traceDirective.hasAttributes())
           {
-          	// Go over all attributes in trace directive
-          	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-          	{
-          		String attrCode = null, conditionType = null;
-          		
-          		// Process trace directive conditions if it has any 
-          		if( traceDirective.hasCondition() )
-          		{
-          			TraceCondition tc = traceDirective.getCondition(0);
-          			if( tc.getConditionType().equals("where") )
-          			{
-          				attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-          				conditionType = "where";
-          			}
-          			else if( tc.getConditionType().equals("until") )
-          			{
-          				attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";
-          				conditionType = "until";
-          			}
-          			else if( tc.getConditionType().equals("after") )
-          			{
-          				attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-          				conditionType = "after";
-          			}
-          			
-          			lookups.put("attributeCode",attrCode);
-            		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-            		prepareTraceDirective(traceDirective,lookups,conditionType);
-          			
-          			attrCode = "{";
-              		lookups.put("attributeCode",attrCode);
-            		lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-            		prepareTraceDirective(traceDirective,lookups,conditionType);
-            		
-            		attrCode = "  fileTracer($"+ traceDirective.getAttribute(i).getName() + ");";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-
-            		attrCode = "}";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-        			
-          		}
-          		else
-          		{
-          			// simple trace directive without any extra fragments
-          			attrCode = "fileTracer($"+ traceDirective.getAttribute(i).getName() + ");";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		}
-          	}	
+        	  processTraceDirectiveAttributes(traceDirective,t,stringTemplate);	 
           }
-      }
-      //**************************
-      //-- if Console tracer is used, and its the default tracer if no tracer is specified
-      if ("String".equals(model.getTraceType()))
-      {
-    	// if the traceItem is an attribute
-        if (traceDirective.hasAttributes())
-        {
-        	// Go over all attributes in trace directive
-        	for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
-        	{
-        		String attrCode = null, conditionType = null;
-        		
-        		// Process trace directive conditions if it has any 
-        		if( traceDirective.hasCondition() )
-        		{
-        			TraceCondition tc = traceDirective.getCondition(0);
-        			if( tc.getConditionType().equals("where") )
-        			{
-        				attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "where";
-        			}
-        			else if( tc.getConditionType().equals("until") )
-        			{
-        				attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "until";
-        			}
-        			else if( tc.getConditionType().equals("after") )
-        			{
-        				attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-        				conditionType = "after";
-        			}
-        			
-        			lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-        			
-        			attrCode = "{";
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-            		attrCode = "  " + StringFormatter.format(stringTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-          		  	
-          		  	attrCode = "}";
-          		  	lookups.put("attributeCode",attrCode);
-        		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-        		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-      			
-        		}
-        		else
-        		{
-        			// simple trace directive without any extra fragments
-            		attrCode = StringFormatter.format(stringTemplate,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-            		lookups.put("attributeCode",attrCode);
-          		  	lookups.put("setMethod",t.translate("setMethod",traceDirective.getAttribute(i)));
-          		  	prepareTraceDirective(traceDirective,lookups,conditionType);
-        		}
-        	}
-        }
-      }
-    }  
-  }  
+	  }
+  }
+  
+  // Process every attribute in a trace directive
+  private static void processTraceDirectiveAttributes( TraceDirective traceDirective, CodeTranslator t, String template ) 
+  {	  
+	  // Go over all attributes in trace directive
+	  for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
+	  {
+		  Attribute attr = traceDirective.getAttribute(i);
+		  String attrCode = null, conditionType = null;
+  		
+		  // Process trace directive conditions if it has any 
+		  if( traceDirective.hasCondition() )
+		  {
+			  processTraceCondition(traceDirective,t,template,attr);		
+		  }
+  		  else
+  		  {
+  			  // simple trace directive that traces attributes without any extra fragments
+      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
+      		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
+  		  }
+  	  }
+  }
+  
+  // Process condition in a trace directive
+  private static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
+  {
+	  String attrCode = null, conditionType = null;
+	  TraceCondition tc = traceDirective.getCondition(0);
+	  
+	  if( tc.getConditionType().equals("where") )
+	  {
+		  attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
+		  conditionType = "where";	  
+	  }
+	  else if( tc.getConditionType().equals("until") )  
+	  {  
+		  attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";  
+		  conditionType = "until";		 
+	  }
+	  else if( tc.getConditionType().equals("after") )
+	  {
+		  attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
+		  conditionType = "after";  
+	  }
+	   
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
 
+	  attrCode = "{";
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  	  
+	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+
+	  attrCode = "}";
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+  }
+  
+  // Assigns and prepares trace code injection before calling "injectTraceDirective"
+  //  + setMethod: What is the name of the setMethod we are attaching the trace to
+  //  + attrCode: What is the trace code that should be executed
+  private static void prepareTraceDirectiveInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType) 
+  {
+	  Map<String,String> lookups = new HashMap<String,String>();
+	  lookups.put("attributeCode",attrCode);
+	  lookups.put("setMethod",t.translate("setMethod",attr));
+	  injectTraceDirective(traceDirective,lookups,conditionType);
+  }
 
   // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
   // expects the following action semantic lookups
@@ -901,7 +847,7 @@ private String getExtendClassesNames(UmpleClass uClass)
   // Inject the necessary "before" and "after" hooks to call the trace, this method expects the following action semantic lookups
   //  + setMethod: What is the name of the setMethod we are attaching the trace to
   //  + attributeCode: What is the trace code that should be executed
-  public static void prepareTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String conditionType)
+  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String conditionType)
   {
     UmpleClass aClass = traceDirective.getUmpleClass();
     String setMethod = lookups.get("setMethod");
@@ -927,15 +873,6 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  else if( co.equals("<=") ) return ">";
 	  
 	  return null;
-  }
-  
-  private static String preparePeriod(String periodClause) {
-	  
-	  // split periodClause into two strings (1) contains numeric time (2) contains time unit
-	  String[] period = periodClause.split("s|m");
-	  
-	  // ToDo return time depending on kind of unit used (second or millisecond)
-	  return period[0];
   }
   //====================== End of Tracing code
   

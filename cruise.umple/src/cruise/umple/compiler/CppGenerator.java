@@ -683,7 +683,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     lookups.put("stringTemplate","StringTracer.execute(\"{0}=\" + {1});");
     lookups.put("dependPackage","1");
     lookups.put("extraCode",executeMethods);
-    GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
+    //GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
     
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
