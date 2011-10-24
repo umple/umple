@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.14.0.957 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.StringFormatter;
