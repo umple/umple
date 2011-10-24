@@ -1,8 +1,8 @@
 
 require 'test/unit'
-require 'src/door_b'
-require 'src/door_d'
-require 'src/door_f'
+require './src-gen-umple/door_b'
+require './src-gen-umple/door_d'
+require './src-gen-umple/door_f'
 
 module CruiseAttributesTest
 class DefaultedTest < Test::Unit::TestCase

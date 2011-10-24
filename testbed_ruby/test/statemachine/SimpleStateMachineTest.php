@@ -1,7 +1,7 @@
 require 'test/unit'
-require 'src/student_'
-require 'src/mentor_'
-require 'src/program_'
+require './src-gen-umple/student_'
+require './src-gen-umple/mentor_'
+require './src-gen-umple/program_'
 
 module CruiseTest
 class SimpleStateMachineTest < Test::Unit::TestCase

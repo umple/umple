@@ -1,4 +1,4 @@
-generate Ruby;
+generate Ruby "../src-gen-umple";
 
 use ../../testbed/src/TestHarnessAssociations.ump;
 use ../../testbed/src/TestHarnessAttributes.ump;

@@ -1,3 +1,5 @@
+generate Java "../src-gen-umple";
+
 use TestHarnessAttributes.ump;
 use TestHarnessAssociations.ump;
 use TestHarnessStateMachine.ump;

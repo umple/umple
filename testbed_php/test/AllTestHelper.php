@@ -6,7 +6,7 @@ function __autoload($class_name)
   {
     return;
   }
-  require_once "../src/" . $class_name . '.php';
+  require_once "../src-gen-umple/" . $class_name . '.php';
 }
 
 function endsWith($str, $sub ) 

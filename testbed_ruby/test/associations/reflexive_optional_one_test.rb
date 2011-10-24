@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'src/mentor_h'
+require './src-gen-umple/mentor_h'
 
 module CruiseTest
 class ReflexiveOptionalOneTest < Test::Unit::TestCase

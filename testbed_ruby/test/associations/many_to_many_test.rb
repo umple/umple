@@ -1,6 +1,6 @@
 require 'test/unit'
-require 'src/student_n'
-require 'src/mentor_n'
+require './src-gen-umple/student_n'
+require './src-gen-umple/mentor_n'
 
 module CruiseTest
 class ManyToManyTest < Test::Unit::TestCase

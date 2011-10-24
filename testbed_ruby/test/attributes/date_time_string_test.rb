@@ -1,6 +1,6 @@
 require 'test/unit'
-require 'src/door_e'
-require 'src/door_f'
+require './src-gen-umple/door_e'
+require './src-gen-umple/door_f'
 
 module CruiseAttributesTest
 class DateTimeStringTest < Test::Unit::TestCase

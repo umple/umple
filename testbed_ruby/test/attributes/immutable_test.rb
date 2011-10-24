@@ -1,8 +1,8 @@
 
 require 'test/unit'
-require 'src/door_a'
-require 'src/door_b'
-require 'src/door_c'
+require './src-gen-umple/door_a'
+require './src-gen-umple/door_b'
+require './src-gen-umple/door_c'
 
 module CruiseAttributesTest
 class ImmutableTest < Test::Unit::TestCase

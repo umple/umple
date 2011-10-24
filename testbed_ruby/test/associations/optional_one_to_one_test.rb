@@ -1,7 +1,7 @@
 require 'test/unit'
-require 'src/student_b'
-require 'src/mentor_b'
-require 'src/program_b'
+require './src-gen-umple/student_b'
+require './src-gen-umple/mentor_b'
+require './src-gen-umple/program_b'
 
 module CruiseTest
 class OptionalOneToOneTest < Test::Unit::TestCase
