@@ -1,8 +1,10 @@
-<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.14.0.957 modeling language!*/
 
-class Student
+package cruise.umple.scoping;
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
+
+public class UmpleScopeProvider extends AbstractDeclarativeScopeProvider
 {
 
   //------------------------
@@ -13,20 +15,16 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct()
-  {}
+  public UmpleScopeProvider()
+  {
+    super();
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
-
-  public function delete()
+  public void delete()
   {}
 
 }
-?>

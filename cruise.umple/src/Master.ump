@@ -10,7 +10,7 @@ Umple will regenerate all Java files.
 
 */
 
-generate Java;
+generate Java "../src-gen-umple";
 //generate Ecore;
 
 use Documenter.ump;
@@ -31,6 +31,7 @@ use UmpleXtextParser.ump;
 use UmpleSync.ump;
 use Violet.ump;
 use Vml.ump;
+use Plugin.ump;
 
 use Main_Code.ump;
 use UmpleStats_Code.ump;

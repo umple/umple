@@ -76,6 +76,7 @@
       <src path="cruise.umple/src"/>
       <src path="cruise.umple/src-gen"/>
       <src path="cruise.umple/src-gen-jet"/>
+      <src path="cruise.umple/src-gen-umple"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
       <exclude name="**/data" />

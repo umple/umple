@@ -1,8 +1,12 @@
-<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.14.0.957 modeling language!*/
 
-class Student
+package cruise.umple;
+
+/**
+ * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ */
+public class UmpleRuntimeModule extends AbstractUmpleRuntimeModule
 {
 
   //------------------------
@@ -13,20 +17,16 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct()
-  {}
+  public UmpleRuntimeModule()
+  {
+    super();
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
-
-  public function delete()
+  public void delete()
   {}
 
 }
-?>

@@ -1,8 +1,9 @@
-<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.14.0.957 modeling language!*/
 
-class Student
+package cruise.umple.validation;
+
+public class UmpleJavaValidator extends AbstractUmpleJavaValidator
 {
 
   //------------------------
@@ -13,20 +14,16 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct()
-  {}
+  public UmpleJavaValidator()
+  {
+    super();
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
-
-  public function delete()
+  public void delete()
   {}
 
 }
-?>
