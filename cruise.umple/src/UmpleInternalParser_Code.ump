@@ -1,9 +1,9 @@
 /*
 
-Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://cruise.site.uottawa.ca/UmpleMITLicense.html
+http://umple.org/license
 
 This file contains the implementation details for our internal Umple parser.
 

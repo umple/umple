@@ -1,10 +1,12 @@
 /*
 
-Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://cruise.site.uottawa.ca/UmpleMITLicense.html
+http://umple.org/license
 
+Model for generating documentation such as the Umple user manual
+See Documenter_Code.ump for the methods injected into these classes
 */
 
 namespace cruise.umple.docs;

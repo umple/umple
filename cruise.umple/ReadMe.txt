@@ -18,6 +18,9 @@ Subdirectories:
       various types of error messages to be generated.
       NOTE: Umple is designed to be written in itself. Add new files here
       and give them .ump suffices
+      Note that much functionality is split into two files
+         xx.ump   - the model (independent of destination programming language)
+         xx_ code.ump   - methods written in Java for the model
       This is the most important directory in the system.
     
     src-gen

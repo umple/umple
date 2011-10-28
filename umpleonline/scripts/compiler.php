@@ -1,5 +1,7 @@
 <?php
-
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
 require_once("compiler_config.php");
 
 if (isset($_REQUEST["save"]))

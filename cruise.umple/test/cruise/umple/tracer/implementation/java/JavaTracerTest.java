@@ -1,11 +1,9 @@
 /*
 
-Copyright 2010 Omar Badreddin, Andrew Forward, Timothy C. Lethbridge
-
-This file is made available subject to the open source license found at:
-http://cruise.site.uottawa.ca/UmpleMITLicense.html
-
-State Machine extensions       
+ Copyright: All contributers to the Umple Project
+ 
+ This file is made available subject to the open source license found at:
+ http://umple.org/license     
 
 */
 

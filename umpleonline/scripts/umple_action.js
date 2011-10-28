@@ -1,3 +1,6 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
 Action = new Object();
 Action.waiting_time = 1500;
 Action.oldTimeout = null;

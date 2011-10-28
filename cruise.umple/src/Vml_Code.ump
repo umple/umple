@@ -1,9 +1,12 @@
 /*
 
-Copyright 2010 Andrew Forward, Timothy C. Lethbridge
+Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://cruise.site.uottawa.ca/UmpleMITLicense.html
+http://umple.org/license
+
+Code for the variability modeling language. See Vml.ump for the model.
+This code is injected into the Vml.ump model using Umple's mixin capability 
 
 */
 
