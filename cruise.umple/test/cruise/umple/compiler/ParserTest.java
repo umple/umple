@@ -1030,7 +1030,81 @@ public class ParserTest
 	  ErrorMessage em = new ErrorMessage(1002, new Position("filename",0,0,0), "zero", "one");
 	  Assert.assertEquals("TestError Error on line: 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
   }
+
+  @Test 
+  public void staticRuleSpacing()
+  {
+	  parser.addRule("test_rule1 : a b ;");
+
+	  assertParse(true, parser.parse("test_rule1", "a b ;"));
+	  assertParse(true, parser.parse("test_rule1", "a b;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab ;"));
+
+	  parser.addRule("test_rule2 : d e f");
+	  assertParse(true, parser.parse("test_rule2", "d e f"));
+	  //assertParse(false, parser.parse("test_rule2", "de f"));
+	  //assertParse(false, parser.parse("test_rule2", "d ef"));
+	  //assertParse(false, parser.parse("test_rule2", "def"));
+	  
+  }
   
+  @Test
+  public void staticVarRuleSpacing()
+  {
+	  parser.addRule("test_rule1 : a [var] ;");
+
+	  assertParse(true, parser.parse("test_rule1", "a b ;"));
+	  assertParse(true, parser.parse("test_rule1", "a b;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab ;"));
+	  
+	  parser.addRule("test_rule2 : d [var] f");
+	  assertParse(true, parser.parse("test_rule2", "d e f"));
+	  //assertParse(false, parser.parse("test_rule2", "de f"));
+	  //assertParse(false, parser.parse("test_rule2", "d ef"));
+	  //assertParse(false, parser.parse("test_rule2", "def"));
+  }
+
+  @Test 
+  public void optionalRuleSpacing()
+  {
+	  parser.addRule("test_rule1 : a [var]? ;");
+
+	  assertParse(true, parser.parse("test_rule1", "a b ;"));
+	  assertParse(true, parser.parse("test_rule1", "a b;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab ;"));
+
+	  assertParse(true, parser.parse("test_rule1", "a ;"));
+	  assertParse(true, parser.parse("test_rule1", "a;"));
+  }
+
+  @Test 
+  public void varOptionalRuleSpacing()
+  {
+	  parser.addRule("test_rule1 : a [var1] [var2]? ;");
+
+	  assertParse(true, parser.parse("test_rule1", "a b c ;"));
+	  assertParse(true, parser.parse("test_rule1", "a b c;"));
+	  //assertParse(false, parser.parse("test_rule1", "abc;"));
+	  //assertParse(false, parser.parse("test_rule1", "ab c;"));
+	  //assertParse(false, parser.parse("test_rule1", "a bc;"));
+
+	  assertParse(true, parser.parse("test_rule1", "a b ;"));
+	  //assertParse(true, parser.parse("test_rule1", "a b;"));
+  }
+
+  @Test 
+  public void optionalRuleSpacingHardMode()
+  {
+	  
+	  parser.addRule("test : [[test_rule1]] | [[test_rule2]] ");
+	  parser.addRule("test_rule1 : a [var1] [var2]? ;");
+
+	  //assertParse(false, parser.parse("test", "a b; b;"));	  
+	  
+  }
   private void assertParse(Position expected, ParseResult result)
   {
     Assert.assertEquals(expected, result.getPosition());

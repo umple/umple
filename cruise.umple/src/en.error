@@ -1,1 +1,2 @@
-0 : 1, Semantic, http://code.umple.org, This is an error format {0} ;
+0 : 1, Semantic, http://code.umple.org, This is an error format {0} ; 
+100 : 1, Parse, http://, Expected one of '{0}', but found '{1}' ;

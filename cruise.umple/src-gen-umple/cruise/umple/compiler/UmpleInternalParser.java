@@ -7,10 +7,10 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * Copyright 2010 Andrew Forward, Omar Badreddin, Timothy C. Lethbridge
+ * Copyright: All contributers to the Umple Project
  * 
  * This file is made available subject to the open source license found at:
- * http://cruise.site.uottawa.ca/UmpleMITLicense.html
+ * http://umple.org/license
  * 
  * This is our internal parser implementation for the Umple language.  It uses
  * a generic Parser that can read an external EBNF grammar file, and then populate
