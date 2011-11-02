@@ -7,7 +7,7 @@
   ``````````````````````````` -->
   <import file="_template.xml" />
 
-  <property name="project.path" value="cruise.umple.xtext.ui"/>
+  <property name="project.path" value="cruise.umple.xtext"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple.xtext.ui"/>
   <property name="test.output.path" value="dist/qa/cruise.umple.xtext.ui"/>
@@ -74,7 +74,6 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen"/>
       <src path="cruise.umple/src"/>
-      <src path="cruise.umple/src-gen"/>
       <src path="cruise.umple/src-gen-jet"/>
       <src path="cruise.umple/src-gen-umple"/>
       <exclude name="**/.svn"/>
@@ -83,6 +82,7 @@
       <classpath refid="project.classpath"/>
     </javac> 
   </target>
+
   <!-- ```````````````````````````
     Test the application
   ``````````````````````````` -->
@@ -150,9 +150,9 @@
 
     <!-- Files needed by the Google Juice Dependency injection framework -->
     <copy todir="${plugin.files}/cruise/umple">
-      <fileset dir="cruise.umple/src-gen/cruise/umple/" includes="Umple.xmi" />
-      <fileset dir="cruise.umple/src-gen/cruise/umple/" includes="Umple.ecore" />
-      <fileset dir="cruise.umple/src-gen/cruise/umple/" includes="Umple.genmodel" />
+      <fileset dir="cruise.umple.xtext/src-gen/cruise/umple/" includes="Umple.xmi" />
+      <fileset dir="cruise.umple.xtext/src-gen/cruise/umple/" includes="Umple.ecore" />
+      <fileset dir="cruise.umple.xtext/src-gen/cruise/umple/" includes="Umple.genmodel" />
     </copy>
 
     <copy todir="${plugin.files}">
@@ -160,7 +160,7 @@
     </copy>
 
     <copy todir="${plugin.files}/cruise/umple/parser/antlr/internal">
-      <fileset dir="cruise.umple/src-gen/cruise/umple/parser/antlr/internal" includes="InternalUmple*.*" />
+      <fileset dir="cruise.umple.xtext/src-gen/cruise/umple/parser/antlr/internal" includes="InternalUmple*.*" />
     </copy>
 
     <copy todir="${plugin.files}/cruise/umple/ui/contentassist/antlr/internal/">

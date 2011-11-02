@@ -8,11 +8,18 @@
   <import file="_template.xml" />
 
   <property name="project.path" value="cruise.umple"/>
+  <property name="xtext.project.path" value="cruise.umple.xtext"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple"/>
   <property name="test.output.path" value="dist/qa/cruise.umple"/>
 
   <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="junit4.classpath"/>
+    <path refid="xtext_core.classpath"/>
+  </path>
+
+  <path id="xtext.project.classpath">
     <pathelement location="${bin.path}"/>
     <path refid="junit4.classpath"/>
     <path refid="xtext_core.classpath"/>
@@ -77,8 +84,9 @@
     <echo message="${ant.project.name}: ${ant.file}"/>
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+	<src path="${xtext.project.path}/src"/>
+      <src path="${xtext.project.path}/src-gen"/>
       <src path="${project.path}/src"/>
-      <src path="${project.path}/src-gen"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
