@@ -23,7 +23,6 @@ import java.io.InputStream;
 import org.eclipse.xtext.*;
 import org.eclipse.xtext.parser.*;
 import org.eclipse.xtext.parser.impl.*;
-import org.eclipse.xtext.parsetree.*;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
@@ -1892,32 +1891,6 @@ finally {
 }
 
 
-
-// Entry rule entryRulefileID
-entryRulefileID 
-:
-{ before(grammarAccess.getFileIDRule()); }
-	 rulefileID
-{ after(grammarAccess.getFileIDRule()); } 
-	 EOF 
-;
-
-// Rule fileID
-rulefileID
-    @init {
-		int stackSize = keepStackSize();
-    }
-	:
-(
-{ before(grammarAccess.getFileIDAccess().getGroup()); }
-(rule__FileID__Group__0)
-{ after(grammarAccess.getFileIDAccess().getGroup()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
 
 
 
@@ -11234,66 +11207,6 @@ finally {
 
 
 
-rule__FileID__Group__0
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__FileID__Group__0__Impl
-	rule__FileID__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__FileID__Group__0__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getFileIDAccess().getCHARSParserRuleCall_0()); }
-	ruleCHARS
-{ after(grammarAccess.getFileIDAccess().getCHARSParserRuleCall_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__FileID__Group__1
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__FileID__Group__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__FileID__Group__1__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getFileIDAccess().getCHARSParserRuleCall_1()); }
-(	ruleCHARS)*
-{ after(grammarAccess.getFileIDAccess().getCHARSParserRuleCall_1()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-
-
-
 
 
 rule__UmpleModel__ElementsAssignment
@@ -11431,8 +11344,8 @@ rule__UseStatement__FileAssignment_1
     }
 :
 (
-{ before(grammarAccess.getUseStatementAccess().getFileFileIDParserRuleCall_1_0()); }
-	rulefileID{ after(grammarAccess.getUseStatementAccess().getFileFileIDParserRuleCall_1_0()); }
+{ before(grammarAccess.getUseStatementAccess().getFileIDTerminalRuleCall_1_0()); }
+	RULE_ID{ after(grammarAccess.getUseStatementAccess().getFileIDTerminalRuleCall_1_0()); }
 )
 
 ;
@@ -11446,8 +11359,8 @@ rule__Namespace__ValueAssignment_1
     }
 :
 (
-{ before(grammarAccess.getNamespaceAccess().getValueFileIDParserRuleCall_1_0()); }
-	rulefileID{ after(grammarAccess.getNamespaceAccess().getValueFileIDParserRuleCall_1_0()); }
+{ before(grammarAccess.getNamespaceAccess().getValueIDTerminalRuleCall_1_0()); }
+	RULE_ID{ after(grammarAccess.getNamespaceAccess().getValueIDTerminalRuleCall_1_0()); }
 )
 
 ;
