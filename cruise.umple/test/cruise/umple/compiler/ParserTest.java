@@ -972,6 +972,17 @@ public class ParserTest
 	Assert.assertEquals("filename.ugh", p.getRootToken().getPosition().getFilename());
   }
 
+  //Testing for parser issues
+  @Test
+  public void staticDynamic()
+  {
+    parser.addRule("rulename : [=static:static] [dynamic]");
+
+    assertParse(false, parser.parse("rulename", "staticBar"));
+    assertParse(true, parser.parse("rulename", "static Bar"));
+  }
+  
+  
   @Test
   public void positionPropogation()
   {

@@ -112,12 +112,13 @@ public class ClassTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("ClassTemplateTest_MultiLineComment.ump",languagePath + "/ClassTemplateTest_MultiLineComment."+languagePath+".txt","Student");
   }
     
-  /* Test for spacing bug in issue 236
+  /* Test for spacing bug in issue 236 */
   @Test
+  @Ignore
   public void EmptyStringAttributeWhitespaceTest()
   {
 	  assertUmpleTemplateFor("ClassTemplateTest_EmptyStringAttr.ump",languagePath + "/ClassTemplateTest_EmptyStringAttr."+languagePath+".txt","Student");
   }
-  */
+  
   
 }

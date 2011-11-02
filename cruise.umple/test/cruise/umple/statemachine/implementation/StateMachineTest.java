@@ -70,6 +70,19 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("multipleGuardsSameEventWithDefaultNoGuard.ump",languagePath + "/multipleGuardsSameEventWithDefaultNoGuard."+ languagePath +".txt","LightFixture");
   }
   
+  @Test //Test the spacing problems in issue 155
+  @Ignore
+  public void guardSpacing() {
+	  assertUmpleTemplateFor("guardSpacing.ump",languagePath + "/guardSpacing."+ languagePath +".txt","Garage");
+  }
+  
+  @Test //Test the spacing problems in issues 154
+  public void stateMachineSpacing() {
+	  assertUmpleTemplateFor("stateMachineSpacing1.ump",languagePath + "/stateMachineSpacing."+ languagePath +".txt","Garage");
+	  assertUmpleTemplateFor("stateMachineSpacing2.ump",languagePath + "/stateMachineSpacing."+ languagePath +".txt","Garage");
+  }
+  
+  
   @Test
   public void transitionAction()
   {

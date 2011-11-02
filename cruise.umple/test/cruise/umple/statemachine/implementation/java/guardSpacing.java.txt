@@ -1,0 +1,90 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Garage
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Garage Attributes
+  private boolean entranceClear;
+
+  //Garage State Machines
+  enum GarageDoor { Open, Closing }
+  private GarageDoor GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Garage(boolean aEntranceClear)
+  {
+    entranceClear = aEntranceClear;
+    setGarageDoor(GarageDoor.Open);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setEntranceClear(boolean aEntranceClear)
+  {
+    boolean wasSet = false;
+    entranceClear = aEntranceClear;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getEntranceClear()
+  {
+    return entranceClear;
+  }
+
+  public boolean isEntranceClear()
+  {
+    return entranceClear;
+  }
+
+  public String getGarageDoorFullName()
+  {
+    String answer = GarageDoor.toString();
+    return answer;
+  }
+
+  public GarageDoor getGarageDoor()
+  {
+    return GarageDoor;
+  }
+
+  public boolean pressButton()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (GarageDoor)
+    {
+      case Open:
+        if (getEntranceClear())
+        {
+          setGarageDoor(GarageDoor.Closing);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setGarageDoor(GarageDoor aGarageDoor)
+  {
+    GarageDoor = aGarageDoor;
+  }
+
+  public void delete()
+  {}
+
+}

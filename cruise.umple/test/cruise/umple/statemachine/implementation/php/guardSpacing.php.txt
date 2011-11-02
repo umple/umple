@@ -1,0 +1,89 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Garage
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Garage Attributes
+  private $entranceClear;
+
+  //Garage State Machines
+  private static $GarageDoorOpen = 1;
+  private static $GarageDoorClosing = 2;
+  private $GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aEntranceClear)
+  {
+    $this->entranceClear = $aEntranceClear;
+    $this->setGarageDoor(self::$GarageDoorOpen);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setEntranceClear($aEntranceClear)
+  {
+    $wasSet = false;
+    $this->entranceClear = $aEntranceClear;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getEntranceClear()
+  {
+    return $this->entranceClear;
+  }
+
+  public function isEntranceClear()
+  {
+    return $this->entranceClear;
+  }
+
+  public function getGarageDoor()
+  {
+    if ($this->GarageDoor == self::$GarageDoorOpen) { return "GarageDoorOpen"; }
+    elseif ($this->GarageDoor == self::$GarageDoorClosing) { return "GarageDoorClosing"; }
+    return null;
+  }
+
+  public function pressButton()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->GarageDoor == self::$GarageDoorOpen)
+    {
+      if (getEntranceClear())
+      {
+        $this->setGarageDoor(self::$GarageDoorClosing);
+        $wasEventProcessed = true;
+      }
+    }
+
+    return $wasEventProcessed;
+  }
+
+  private function setGarageDoor($aGarageDoor)
+  {
+    $this->GarageDoor = $aGarageDoor;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
