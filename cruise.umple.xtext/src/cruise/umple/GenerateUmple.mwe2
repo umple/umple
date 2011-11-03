@@ -43,13 +43,7 @@ Workflow {
             //  platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel
             // "
             }
-
-            // Serializer 2.0
-            fragment = serializer.SerializerFragment {}
             
-            // the serialization component (1.0)
-            // fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
-
             // a custom ResourceFactory for use with EMF
             fragment = resourceFactory.ResourceFactoryFragment {
                 fileExtensions = file.extensions
@@ -96,23 +90,12 @@ Workflow {
             // generates a more lightweight Antlr parser and lexer tailored for content assist
             fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
 
-            // generates junit test support classes into Generator#pathTestProject
-            fragment = junit.Junit4Fragment {}
 
             // project wizard (optional)
             // fragment = projectWizard.SimpleProjectWizardFragment {
             //      generatorProjectName = "${projectName}"
             //      modelFileExtension = file.extensions
             // }
-
-            // provides the necessary bindings for java types integration
-            fragment = types.TypesGeneratorFragment {}
-
-            // generates the required bindings only if the grammar inherits from Xbase
-            fragment = xbase.XbaseGeneratorFragment {}
-
-            // provides a preference page for template proposals
-            fragment = templates.CodetemplatesGeneratorFragment {}
 
             // rename refactoring
             fragment = refactoring.RefactorElementNameFragment {}
