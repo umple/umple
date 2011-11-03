@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: cruise.umple.xtext
-Bundle-Vendor: Cruise - Uottawa
-Bundle-Version: 0.0.1
+Bundle-Vendor: Cruise Lab. University of Ottawa
+Bundle-Version: 1.0.0
 Bundle-SymbolicName: cruise.umple.xtext; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;bundle-version="2.0.0";visibility:=reexport,
@@ -27,7 +27,7 @@ Export-Package: cruise.umple,
  cruise.umple.umple,
  cruise.umple.umple.impl,
  cruise.umple.umple.util,
- cruise.umple.serializer,
+ cruise.umple.parseTreeConstruction,
  cruise.umple.parser.antlr,
  cruise.umple.parser.antlr.internal,
  cruise.umple.validation

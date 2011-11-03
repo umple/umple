@@ -39,5 +39,6 @@ public class UmpleStandaloneSetupGenerated implements ISetup {
 
 
 
+
 	}
 }
