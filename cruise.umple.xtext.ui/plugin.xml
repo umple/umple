@@ -14,6 +14,31 @@
             name="Umple Editor">
         </editor>
     </extension>
+    
+     <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="cruise.umple.ui.eclipse.UmpleAction"
+            label="Umple Tools"
+            visible="true">
+         <menu
+               id="UmpleMenu"
+               label="Umple &amp;Menu">
+            <separator
+                  name="UmpleGroup">
+            </separator>
+         </menu>
+         <action
+               class="cruise.umple.ui.eclipse.UmpleAction"
+               icon="$nl$/icons/action.compileUmple.gif"
+               id="cruise.umple.ui.eclipse.UmpleAction"
+               label="&amp;Compile Umple"
+               menubarPath="UmpleMenu/UmpleGroup"
+               toolbarPath="UmpleGroup"
+               tooltip="Compile Umple">
+         </action>
+      </actionSet>
+   </extension>
     <extension
         point="org.eclipse.ui.handlers">
         <handler
@@ -231,5 +256,15 @@
             extensions="ump">
     </provider>
   </extension>
+
+<!-- Umple Perspective -->
+   <extension point="org.eclipse.ui.perspectives">
+        <perspective
+              class="cruise.umple.ui.perspectives.UmplePerspective"
+              icon="icons/umpleDocument2.gif"
+              id="cruise.umple.ui.perspectives.UmplePerspective"
+              name="Umple">
+        </perspective>
+    </extension>
 
 </plugin>
