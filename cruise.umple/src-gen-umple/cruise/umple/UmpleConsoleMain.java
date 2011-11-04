@@ -3,6 +3,7 @@
 
 package cruise.umple;
 import cruise.umple.compiler.*;
+import cruise.umple.compiler.exceptions.*;
 
 public class UmpleConsoleMain
 {
@@ -44,8 +45,16 @@ public class UmpleConsoleMain
      String filename = args[0];
      UmpleFile umpleFile = new UmpleFile(filename);
      UmpleModel model = new UmpleModel(umpleFile);
-     model.run();
-     println("Success! Processed "+ filename +".");
+     
+     try
+     {
+    	 model.run();
+    	 println("Success! Processed "+ filename +".");
+     }
+     catch(UmpleCompilerException e)
+     {
+    	 printerr(e.getMessage());
+     }
      
 //     Compiler compiler = new Compiler();
 //     URL jarfile = compiler.compile(umpleFile.getPath());
@@ -64,5 +73,10 @@ public class UmpleConsoleMain
    {
      console += output + "\n";
      System.out.println(output);
+   }
+   private static void printerr(String err)
+   {
+   	console += err;
+   	System.err.print(err);
    }
 }
