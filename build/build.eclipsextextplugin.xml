@@ -142,10 +142,12 @@
 
     <copy todir="${plugin.files}">
       <fileset dir="cruise.umple.xtext.ui" includes="plugin.xml" />
-      <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" />
+      <!-- TODO: THIS IS THE PROBLEM THE UI PROJECT IS NOT BEING COMPILED AND THE BIN DIRECTORY IS NOT PART OF THE REPO -->
+      <!-- <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" /> -->
       <fileset dir="cruise.umple.xtext.ui" includes="icons/**" />
       <fileset dir="cruise.umple.xtext.ui" includes="META-INF/MANIFEST.MF" />
-      <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" />
+      <!-- why is this included twice? -->
+      <!-- <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" /> -->
     </copy>
 
     <!-- Files needed by the Google Juice Dependency injection framework -->
