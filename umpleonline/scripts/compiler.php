@@ -59,7 +59,10 @@ else if (isset($_REQUEST["umpleCode"]))
 
   // Generate the Java, PHP, Ruby or Cpp and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
+  $errorOut = saveFile("");
+  
   $outputFilename = "{$filename}.output";
+  $errorFilename = "{$errorOut}.output";
   
   // Clean up any pre-existing java. php, ruby or cpp files
   $thedir = dirname($outputFilename);
@@ -71,16 +74,17 @@ else if (isset($_REQUEST["umpleCode"]))
   }    
   if($toRemove) { exec($rmcommand); }
   
-  $command = "java -jar umplesync.jar -source {$filename} > {$outputFilename}";    
+  $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";    
   exec($command);
   
   $sourceCode = readTemporaryFile($outputFilename);
+  $errorMessage = readTemporaryFile($errorFilename);
   
   $sourceCode = str_replace("<?php","",$sourceCode);
   $sourceCode = str_replace("?>","",$sourceCode);
   $sourceCode = htmlspecialchars($sourceCode);
   
-  if ($sourceCode == "")
+  if ($errorMessage != "")
   {
     $html = "
         // An error occurred interpreting your Umple code, please review it and try again.
@@ -89,7 +93,7 @@ else if (isset($_REQUEST["umpleCode"]))
         // or post an issue at http://bugs.umple.org -- the Umple issues page
         // We are aware that error messages are not useful or nonexistent and
         // we are working to fix that.
-        ";
+        /* {$errorMessage} */"  ;
     echo $html;
   }
   else

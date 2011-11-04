@@ -4,6 +4,7 @@
 package cruise.umple;
 import cruise.umple.sync.*;
 import cruise.umple.compiler.*;
+import cruise.umple.compiler.exceptions.*;
 import cruise.umple.util.*;
 import java.io.*;
 
@@ -90,8 +91,15 @@ public class PlaygroundMain
       model = new UmpleModel(umpleFile);
     }
 
-    model.run();
-
+    try
+    {
+      model.run();
+    }
+    catch(UmpleCompilerException e)
+    {
+   	  System.err.print(e.getMessage());
+    }
+     
     if ("-classList".equals(args[0]))
     {
       for (UmpleClass aClass : model.getUmpleClasses())

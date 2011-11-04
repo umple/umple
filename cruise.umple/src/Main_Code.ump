@@ -74,6 +74,7 @@ class PlaygroundMain
 {
   depend cruise.umple.sync.*;
   depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.util.*;
   depend java.io.*;
   
@@ -131,8 +132,15 @@ class PlaygroundMain
       model = new UmpleModel(umpleFile);
     }
 
-    model.run();
-
+    try
+    {
+      model.run();
+    }
+    catch(UmpleCompilerException e)
+    {
+   	  System.err.print(e.getMessage());
+    }
+     
     if ("-classList".equals(args[0]))
     {
       for (UmpleClass aClass : model.getUmpleClasses())
