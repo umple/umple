@@ -59,10 +59,10 @@ else if (isset($_REQUEST["umpleCode"]))
 
   // Generate the Java, PHP, Ruby or Cpp and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
-  $errorOut = saveFile("");
+  // $errorOut = saveFile("");
   
   $outputFilename = "{$filename}.output";
-  $errorFilename = "{$errorOut}.output";
+  $errorFilename = "{$filename}.erroroutput";
   
   // Clean up any pre-existing java. php, ruby or cpp files
   $thedir = dirname($outputFilename);
