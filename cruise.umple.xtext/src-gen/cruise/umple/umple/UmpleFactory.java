@@ -261,6 +261,159 @@ public interface UmpleFactory extends EFactory
   Attribute createAttribute();
 
   /**
+   * Returns a new object of class '<em>State Machine Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State Machine Definition</em>'.
+   * @generated
+   */
+  StateMachineDefinition createStateMachineDefinition();
+
+  /**
+   * Returns a new object of class '<em>State Machine</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State Machine</em>'.
+   * @generated
+   */
+  StateMachine createStateMachine();
+
+  /**
+   * Returns a new object of class '<em>Inline State Machine</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Inline State Machine</em>'.
+   * @generated
+   */
+  InlineStateMachine createInlineStateMachine();
+
+  /**
+   * Returns a new object of class '<em>Referenced State Machine</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Referenced State Machine</em>'.
+   * @generated
+   */
+  ReferencedStateMachine createReferencedStateMachine();
+
+  /**
+   * Returns a new object of class '<em>Enum</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Enum</em>'.
+   * @generated
+   */
+  Enum createEnum();
+
+  /**
+   * Returns a new object of class '<em>State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State</em>'.
+   * @generated
+   */
+  State createState();
+
+  /**
+   * Returns a new object of class '<em>State Entity</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State Entity</em>'.
+   * @generated
+   */
+  StateEntity createStateEntity();
+
+  /**
+   * Returns a new object of class '<em>Transition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Transition</em>'.
+   * @generated
+   */
+  Transition createTransition();
+
+  /**
+   * Returns a new object of class '<em>Event Definition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Event Definition</em>'.
+   * @generated
+   */
+  EventDefinition createEventDefinition();
+
+  /**
+   * Returns a new object of class '<em>Event</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Event</em>'.
+   * @generated
+   */
+  Event createEvent();
+
+  /**
+   * Returns a new object of class '<em>After Every Event</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>After Every Event</em>'.
+   * @generated
+   */
+  AfterEveryEvent createAfterEveryEvent();
+
+  /**
+   * Returns a new object of class '<em>After Event</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>After Event</em>'.
+   * @generated
+   */
+  AfterEvent createAfterEvent();
+
+  /**
+   * Returns a new object of class '<em>Action</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Action</em>'.
+   * @generated
+   */
+  Action createAction();
+
+  /**
+   * Returns a new object of class '<em>Entry Or Exit Action</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Entry Or Exit Action</em>'.
+   * @generated
+   */
+  EntryOrExitAction createEntryOrExitAction();
+
+  /**
+   * Returns a new object of class '<em>Activity</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Activity</em>'.
+   * @generated
+   */
+  Activity createActivity();
+
+  /**
+   * Returns a new object of class '<em>Guard</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Guard</em>'.
+   * @generated
+   */
+  Guard createGuard();
+
+  /**
+   * Returns a new object of class '<em>Guard Code</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Guard Code</em>'.
+   * @generated
+   */
+  GuardCode createGuardCode();
+
+  /**
    * Returns a new object of class '<em>Position</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -547,6 +700,78 @@ public interface UmpleFactory extends EFactory
    * @generated
    */
   statement createstatement();
+
+  /**
+   * Returns a new object of class '<em>endstatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>endstatement</em>'.
+   * @generated
+   */
+  endstatement createendstatement();
+
+  /**
+   * Returns a new object of class '<em>breakstatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>breakstatement</em>'.
+   * @generated
+   */
+  breakstatement createbreakstatement();
+
+  /**
+   * Returns a new object of class '<em>ifstatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>ifstatement</em>'.
+   * @generated
+   */
+  ifstatement createifstatement();
+
+  /**
+   * Returns a new object of class '<em>forstatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>forstatement</em>'.
+   * @generated
+   */
+  forstatement createforstatement();
+
+  /**
+   * Returns a new object of class '<em>whilestatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>whilestatement</em>'.
+   * @generated
+   */
+  whilestatement createwhilestatement();
+
+  /**
+   * Returns a new object of class '<em>returnstatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>returnstatement</em>'.
+   * @generated
+   */
+  returnstatement createreturnstatement();
+
+  /**
+   * Returns a new object of class '<em>expressionstatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>expressionstatement</em>'.
+   * @generated
+   */
+  expressionstatement createexpressionstatement();
+
+  /**
+   * Returns a new object of class '<em>trystatement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>trystatement</em>'.
+   * @generated
+   */
+  trystatement createtrystatement();
 
   /**
    * Returns a new object of class '<em>for Control</em>'.

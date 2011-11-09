@@ -6,7 +6,97 @@
  */
 package cruise.umple.umple.impl;
 
-import cruise.umple.umple.*;
+import cruise.umple.umple.AbstractElement;
+import cruise.umple.umple.Action;
+import cruise.umple.umple.Activity;
+import cruise.umple.umple.AfterEvent;
+import cruise.umple.umple.AfterEveryEvent;
+import cruise.umple.umple.Association;
+import cruise.umple.umple.AssociationClassContent;
+import cruise.umple.umple.AssociationClassDefinition;
+import cruise.umple.umple.AssociationDefinition;
+import cruise.umple.umple.AssociationPosition;
+import cruise.umple.umple.Attribute;
+import cruise.umple.umple.ClassContent;
+import cruise.umple.umple.ClassDefinition;
+import cruise.umple.umple.CodeInjection;
+import cruise.umple.umple.Coordinate;
+import cruise.umple.umple.Depend;
+import cruise.umple.umple.ElementPosition;
+import cruise.umple.umple.Entity;
+import cruise.umple.umple.EntryOrExitAction;
+import cruise.umple.umple.Event;
+import cruise.umple.umple.EventDefinition;
+import cruise.umple.umple.ExternalDefinition;
+import cruise.umple.umple.Generate;
+import cruise.umple.umple.Glossary;
+import cruise.umple.umple.Guard;
+import cruise.umple.umple.GuardCode;
+import cruise.umple.umple.InlineAssociation;
+import cruise.umple.umple.InlineStateMachine;
+import cruise.umple.umple.InterfaceDefinition;
+import cruise.umple.umple.Key;
+import cruise.umple.umple.KeyDefinition;
+import cruise.umple.umple.Modifier;
+import cruise.umple.umple.Namespace;
+import cruise.umple.umple.Position;
+import cruise.umple.umple.ReferencedStateMachine;
+import cruise.umple.umple.SingleAssociationEnd;
+import cruise.umple.umple.Singleton;
+import cruise.umple.umple.SoftwarePattern;
+import cruise.umple.umple.State;
+import cruise.umple.umple.StateEntity;
+import cruise.umple.umple.StateMachine;
+import cruise.umple.umple.StateMachineDefinition;
+import cruise.umple.umple.SymmetricReflexiveAssociation;
+import cruise.umple.umple.Transition;
+import cruise.umple.umple.UmpleElement;
+import cruise.umple.umple.UmpleFactory;
+import cruise.umple.umple.UmpleModel;
+import cruise.umple.umple.UmplePackage;
+import cruise.umple.umple.UseStatement;
+import cruise.umple.umple.Word;
+import cruise.umple.umple.additiveExpression;
+import cruise.umple.umple.block;
+import cruise.umple.umple.blockStatement;
+import cruise.umple.umple.breakstatement;
+import cruise.umple.umple.conditionalAndExpression;
+import cruise.umple.umple.conditionalExpression;
+import cruise.umple.umple.conditionalOrExpression;
+import cruise.umple.umple.endstatement;
+import cruise.umple.umple.equalityExpression;
+import cruise.umple.umple.expression;
+import cruise.umple.umple.expressionList;
+import cruise.umple.umple.expressionstatement;
+import cruise.umple.umple.forControl;
+import cruise.umple.umple.forInit;
+import cruise.umple.umple.forUpdate;
+import cruise.umple.umple.forstatement;
+import cruise.umple.umple.functionCall;
+import cruise.umple.umple.functionDeclaration;
+import cruise.umple.umple.functionDefinition;
+import cruise.umple.umple.ifstatement;
+import cruise.umple.umple.isA;
+import cruise.umple.umple.javaFunctionCall;
+import cruise.umple.umple.javaFunctionDeclaration;
+import cruise.umple.umple.javaFunctionDefinition;
+import cruise.umple.umple.literal;
+import cruise.umple.umple.localVariableDeclaration;
+import cruise.umple.umple.localVariableDeclarationStatement;
+import cruise.umple.umple.multiplicativeExpression;
+import cruise.umple.umple.parExpression;
+import cruise.umple.umple.phpBlock;
+import cruise.umple.umple.phpFunction;
+import cruise.umple.umple.primary;
+import cruise.umple.umple.relationalExpression;
+import cruise.umple.umple.returnstatement;
+import cruise.umple.umple.statement;
+import cruise.umple.umple.trystatement;
+import cruise.umple.umple.unaryExpression;
+import cruise.umple.umple.unaryExpressionNotPlusMinus;
+import cruise.umple.umple.variableDeclarator;
+import cruise.umple.umple.variableDeclarators;
+import cruise.umple.umple.whilestatement;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -95,6 +185,23 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
       case UmplePackage.KEY_DEFINITION: return createKeyDefinition();
       case UmplePackage.CODE_INJECTION: return createCodeInjection();
       case UmplePackage.ATTRIBUTE: return createAttribute();
+      case UmplePackage.STATE_MACHINE_DEFINITION: return createStateMachineDefinition();
+      case UmplePackage.STATE_MACHINE: return createStateMachine();
+      case UmplePackage.INLINE_STATE_MACHINE: return createInlineStateMachine();
+      case UmplePackage.REFERENCED_STATE_MACHINE: return createReferencedStateMachine();
+      case UmplePackage.ENUM: return createEnum();
+      case UmplePackage.STATE: return createState();
+      case UmplePackage.STATE_ENTITY: return createStateEntity();
+      case UmplePackage.TRANSITION: return createTransition();
+      case UmplePackage.EVENT_DEFINITION: return createEventDefinition();
+      case UmplePackage.EVENT: return createEvent();
+      case UmplePackage.AFTER_EVERY_EVENT: return createAfterEveryEvent();
+      case UmplePackage.AFTER_EVENT: return createAfterEvent();
+      case UmplePackage.ACTION: return createAction();
+      case UmplePackage.ENTRY_OR_EXIT_ACTION: return createEntryOrExitAction();
+      case UmplePackage.ACTIVITY: return createActivity();
+      case UmplePackage.GUARD: return createGuard();
+      case UmplePackage.GUARD_CODE: return createGuardCode();
       case UmplePackage.POSITION: return createPosition();
       case UmplePackage.ELEMENT_POSITION: return createElementPosition();
       case UmplePackage.ASSOCIATION_POSITION: return createAssociationPosition();
@@ -127,6 +234,14 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
       case UmplePackage.VARIABLE_DECLARATORS: return createvariableDeclarators();
       case UmplePackage.VARIABLE_DECLARATOR: return createvariableDeclarator();
       case UmplePackage.STATEMENT: return createstatement();
+      case UmplePackage.ENDSTATEMENT: return createendstatement();
+      case UmplePackage.BREAKSTATEMENT: return createbreakstatement();
+      case UmplePackage.IFSTATEMENT: return createifstatement();
+      case UmplePackage.FORSTATEMENT: return createforstatement();
+      case UmplePackage.WHILESTATEMENT: return createwhilestatement();
+      case UmplePackage.RETURNSTATEMENT: return createreturnstatement();
+      case UmplePackage.EXPRESSIONSTATEMENT: return createexpressionstatement();
+      case UmplePackage.TRYSTATEMENT: return createtrystatement();
       case UmplePackage.FOR_CONTROL: return createforControl();
       case UmplePackage.FOR_INIT: return createforInit();
       case UmplePackage.FOR_UPDATE: return createforUpdate();
@@ -456,6 +571,193 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
   {
     AttributeImpl attribute = new AttributeImpl();
     return attribute;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StateMachineDefinition createStateMachineDefinition()
+  {
+    StateMachineDefinitionImpl stateMachineDefinition = new StateMachineDefinitionImpl();
+    return stateMachineDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StateMachine createStateMachine()
+  {
+    StateMachineImpl stateMachine = new StateMachineImpl();
+    return stateMachine;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public InlineStateMachine createInlineStateMachine()
+  {
+    InlineStateMachineImpl inlineStateMachine = new InlineStateMachineImpl();
+    return inlineStateMachine;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ReferencedStateMachine createReferencedStateMachine()
+  {
+    ReferencedStateMachineImpl referencedStateMachine = new ReferencedStateMachineImpl();
+    return referencedStateMachine;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public cruise.umple.umple.Enum createEnum()
+  {
+    EnumImpl enum_ = new EnumImpl();
+    return enum_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public State createState()
+  {
+    StateImpl state = new StateImpl();
+    return state;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StateEntity createStateEntity()
+  {
+    StateEntityImpl stateEntity = new StateEntityImpl();
+    return stateEntity;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Transition createTransition()
+  {
+    TransitionImpl transition = new TransitionImpl();
+    return transition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EventDefinition createEventDefinition()
+  {
+    EventDefinitionImpl eventDefinition = new EventDefinitionImpl();
+    return eventDefinition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Event createEvent()
+  {
+    EventImpl event = new EventImpl();
+    return event;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AfterEveryEvent createAfterEveryEvent()
+  {
+    AfterEveryEventImpl afterEveryEvent = new AfterEveryEventImpl();
+    return afterEveryEvent;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AfterEvent createAfterEvent()
+  {
+    AfterEventImpl afterEvent = new AfterEventImpl();
+    return afterEvent;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Action createAction()
+  {
+    ActionImpl action = new ActionImpl();
+    return action;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EntryOrExitAction createEntryOrExitAction()
+  {
+    EntryOrExitActionImpl entryOrExitAction = new EntryOrExitActionImpl();
+    return entryOrExitAction;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Activity createActivity()
+  {
+    ActivityImpl activity = new ActivityImpl();
+    return activity;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Guard createGuard()
+  {
+    GuardImpl guard = new GuardImpl();
+    return guard;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GuardCode createGuardCode()
+  {
+    GuardCodeImpl guardCode = new GuardCodeImpl();
+    return guardCode;
   }
 
   /**
@@ -808,6 +1110,94 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
   {
     statementImpl statement = new statementImpl();
     return statement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public endstatement createendstatement()
+  {
+    endstatementImpl endstatement = new endstatementImpl();
+    return endstatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public breakstatement createbreakstatement()
+  {
+    breakstatementImpl breakstatement = new breakstatementImpl();
+    return breakstatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ifstatement createifstatement()
+  {
+    ifstatementImpl ifstatement = new ifstatementImpl();
+    return ifstatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public forstatement createforstatement()
+  {
+    forstatementImpl forstatement = new forstatementImpl();
+    return forstatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public whilestatement createwhilestatement()
+  {
+    whilestatementImpl whilestatement = new whilestatementImpl();
+    return whilestatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public returnstatement createreturnstatement()
+  {
+    returnstatementImpl returnstatement = new returnstatementImpl();
+    return returnstatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public expressionstatement createexpressionstatement()
+  {
+    expressionstatementImpl expressionstatement = new expressionstatementImpl();
+    return expressionstatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public trystatement createtrystatement()
+  {
+    trystatementImpl trystatement = new trystatementImpl();
+    return trystatement;
   }
 
   /**

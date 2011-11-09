@@ -103,6 +103,65 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="object" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachine" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineStateMachine" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferencedStateMachine" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="machine" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Enum" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="states" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateEntity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="g" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Event" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AfterEveryEvent" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AfterEvent" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EntryOrExitAction" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actionCode" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Guard" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="events" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GuardCode" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard"/>
   <eClassifiers xsi:type="ecore:EClass" name="Position" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent"/>
   <eClassifiers xsi:type="ecore:EClass" name="ElementPosition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -140,7 +199,7 @@
         eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="expression" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
+  <eClassifiers xsi:type="ecore:EClass" name="expression" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GuardCode platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expressionstatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalExpression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
@@ -250,19 +309,35 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="statement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//blockStatement">
+  <eClassifiers xsi:type="ecore:EClass" name="statement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//blockStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="endstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="breakstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ifstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="state1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="state2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="forstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="control" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forControl"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="state" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="whilestatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="state" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="returnstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="retVal" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="expressionstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="trystatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="tryBlock" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="catchBlock" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"

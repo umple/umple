@@ -943,6 +943,680 @@ public interface UmplePackage extends EPackage
   int ATTRIBUTE_FEATURE_COUNT = CLASS_CONTENT_FEATURE_COUNT + 8;
 
   /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.StateMachineDefinitionImpl <em>State Machine Definition</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.StateMachineDefinitionImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getStateMachineDefinition()
+   * @generated
+   */
+  int STATE_MACHINE_DEFINITION = 26;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_MACHINE_DEFINITION__NAME = ENTITY__NAME;
+
+  /**
+   * The feature id for the '<em><b>States</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_MACHINE_DEFINITION__STATES = ENTITY_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>State Machine Definition</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_MACHINE_DEFINITION_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.StateMachineImpl <em>State Machine</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.StateMachineImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getStateMachine()
+   * @generated
+   */
+  int STATE_MACHINE = 27;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_MACHINE__NAME = CLASS_CONTENT_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>State Machine</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_MACHINE_FEATURE_COUNT = CLASS_CONTENT_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.InlineStateMachineImpl <em>Inline State Machine</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.InlineStateMachineImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getInlineStateMachine()
+   * @generated
+   */
+  int INLINE_STATE_MACHINE = 28;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int INLINE_STATE_MACHINE__NAME = STATE_MACHINE__NAME;
+
+  /**
+   * The feature id for the '<em><b>States</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int INLINE_STATE_MACHINE__STATES = STATE_MACHINE_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Inline State Machine</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int INLINE_STATE_MACHINE_FEATURE_COUNT = STATE_MACHINE_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.ReferencedStateMachineImpl <em>Referenced State Machine</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.ReferencedStateMachineImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getReferencedStateMachine()
+   * @generated
+   */
+  int REFERENCED_STATE_MACHINE = 29;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REFERENCED_STATE_MACHINE__NAME = STATE_MACHINE__NAME;
+
+  /**
+   * The feature id for the '<em><b>Machine</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REFERENCED_STATE_MACHINE__MACHINE = STATE_MACHINE_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Referenced State Machine</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REFERENCED_STATE_MACHINE_FEATURE_COUNT = STATE_MACHINE_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.EnumImpl <em>Enum</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.EnumImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getEnum()
+   * @generated
+   */
+  int ENUM = 30;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUM__NAME = STATE_MACHINE__NAME;
+
+  /**
+   * The feature id for the '<em><b>States</b></em>' attribute list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUM__STATES = STATE_MACHINE_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Enum</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUM_FEATURE_COUNT = STATE_MACHINE_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.StateEntityImpl <em>State Entity</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.StateEntityImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getStateEntity()
+   * @generated
+   */
+  int STATE_ENTITY = 32;
+
+  /**
+   * The number of structural features of the '<em>State Entity</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_ENTITY_FEATURE_COUNT = 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.StateImpl <em>State</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.StateImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getState()
+   * @generated
+   */
+  int STATE = 31;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__NAME = STATE_ENTITY_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>States</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__STATES = STATE_ENTITY_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>State</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_FEATURE_COUNT = STATE_ENTITY_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.TransitionImpl <em>Transition</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.TransitionImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getTransition()
+   * @generated
+   */
+  int TRANSITION = 33;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TRANSITION__A = STATE_ENTITY_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TRANSITION__STATE_NAME = STATE_ENTITY_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Transition</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TRANSITION_FEATURE_COUNT = STATE_ENTITY_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.EventDefinitionImpl <em>Event Definition</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.EventDefinitionImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getEventDefinition()
+   * @generated
+   */
+  int EVENT_DEFINITION = 34;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT_DEFINITION__A = TRANSITION__A;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT_DEFINITION__STATE_NAME = TRANSITION__STATE_NAME;
+
+  /**
+   * The feature id for the '<em><b>G</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT_DEFINITION__G = TRANSITION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT_DEFINITION__NAME = TRANSITION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Event Definition</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT_DEFINITION_FEATURE_COUNT = TRANSITION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.EventImpl <em>Event</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.EventImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getEvent()
+   * @generated
+   */
+  int EVENT = 35;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT__A = EVENT_DEFINITION__A;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT__STATE_NAME = EVENT_DEFINITION__STATE_NAME;
+
+  /**
+   * The feature id for the '<em><b>G</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT__G = EVENT_DEFINITION__G;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT__NAME = EVENT_DEFINITION__NAME;
+
+  /**
+   * The number of structural features of the '<em>Event</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT_FEATURE_COUNT = EVENT_DEFINITION_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.AfterEveryEventImpl <em>After Every Event</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.AfterEveryEventImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getAfterEveryEvent()
+   * @generated
+   */
+  int AFTER_EVERY_EVENT = 36;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVERY_EVENT__A = EVENT_DEFINITION__A;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVERY_EVENT__STATE_NAME = EVENT_DEFINITION__STATE_NAME;
+
+  /**
+   * The feature id for the '<em><b>G</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVERY_EVENT__G = EVENT_DEFINITION__G;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVERY_EVENT__NAME = EVENT_DEFINITION__NAME;
+
+  /**
+   * The number of structural features of the '<em>After Every Event</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVERY_EVENT_FEATURE_COUNT = EVENT_DEFINITION_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.AfterEventImpl <em>After Event</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.AfterEventImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getAfterEvent()
+   * @generated
+   */
+  int AFTER_EVENT = 37;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVENT__A = EVENT_DEFINITION__A;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVENT__STATE_NAME = EVENT_DEFINITION__STATE_NAME;
+
+  /**
+   * The feature id for the '<em><b>G</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVENT__G = EVENT_DEFINITION__G;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVENT__NAME = EVENT_DEFINITION__NAME;
+
+  /**
+   * The number of structural features of the '<em>After Event</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AFTER_EVENT_FEATURE_COUNT = EVENT_DEFINITION_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.ActionImpl <em>Action</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.ActionImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getAction()
+   * @generated
+   */
+  int ACTION = 38;
+
+  /**
+   * The feature id for the '<em><b>Code</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTION__CODE = 0;
+
+  /**
+   * The number of structural features of the '<em>Action</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTION_FEATURE_COUNT = 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.EntryOrExitActionImpl <em>Entry Or Exit Action</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.EntryOrExitActionImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getEntryOrExitAction()
+   * @generated
+   */
+  int ENTRY_OR_EXIT_ACTION = 39;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENTRY_OR_EXIT_ACTION__TYPE = STATE_ENTITY_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Action Code</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENTRY_OR_EXIT_ACTION__ACTION_CODE = STATE_ENTITY_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Entry Or Exit Action</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENTRY_OR_EXIT_ACTION_FEATURE_COUNT = STATE_ENTITY_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.ActivityImpl <em>Activity</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.ActivityImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getActivity()
+   * @generated
+   */
+  int ACTIVITY = 40;
+
+  /**
+   * The feature id for the '<em><b>Code</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTIVITY__CODE = STATE_ENTITY_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Activity</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTIVITY_FEATURE_COUNT = STATE_ENTITY_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.GuardImpl <em>Guard</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.GuardImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getGuard()
+   * @generated
+   */
+  int GUARD = 41;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD__A = TRANSITION__A;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD__STATE_NAME = TRANSITION__STATE_NAME;
+
+  /**
+   * The feature id for the '<em><b>Events</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD__EVENTS = TRANSITION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Guard</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD_FEATURE_COUNT = TRANSITION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.GuardCodeImpl <em>Guard Code</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.GuardCodeImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getGuardCode()
+   * @generated
+   */
+  int GUARD_CODE = 42;
+
+  /**
+   * The feature id for the '<em><b>A</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD_CODE__A = GUARD__A;
+
+  /**
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD_CODE__STATE_NAME = GUARD__STATE_NAME;
+
+  /**
+   * The feature id for the '<em><b>Events</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD_CODE__EVENTS = GUARD__EVENTS;
+
+  /**
+   * The number of structural features of the '<em>Guard Code</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARD_CODE_FEATURE_COUNT = GUARD_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link cruise.umple.umple.impl.PositionImpl <em>Position</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -950,7 +1624,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getPosition()
    * @generated
    */
-  int POSITION = 26;
+  int POSITION = 43;
 
   /**
    * The number of structural features of the '<em>Position</em>' class.
@@ -969,7 +1643,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getElementPosition()
    * @generated
    */
-  int ELEMENT_POSITION = 27;
+  int ELEMENT_POSITION = 44;
 
   /**
    * The feature id for the '<em><b>X</b></em>' attribute.
@@ -1024,7 +1698,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getAssociationPosition()
    * @generated
    */
-  int ASSOCIATION_POSITION = 28;
+  int ASSOCIATION_POSITION = 45;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1070,7 +1744,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getCoordinate()
    * @generated
    */
-  int COORDINATE = 29;
+  int COORDINATE = 46;
 
   /**
    * The feature id for the '<em><b>X</b></em>' attribute.
@@ -1107,7 +1781,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getUmpleElement()
    * @generated
    */
-  int UMPLE_ELEMENT = 30;
+  int UMPLE_ELEMENT = 47;
 
   /**
    * The number of structural features of the '<em>Element</em>' class.
@@ -1126,7 +1800,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getblockStatement()
    * @generated
    */
-  int BLOCK_STATEMENT = 52;
+  int BLOCK_STATEMENT = 69;
 
   /**
    * The number of structural features of the '<em>block Statement</em>' class.
@@ -1145,79 +1819,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getstatement()
    * @generated
    */
-  int STATEMENT = 57;
-
-  /**
-   * The feature id for the '<em><b>Condition</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__CONDITION = BLOCK_STATEMENT_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>State1</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__STATE1 = BLOCK_STATEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>State2</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__STATE2 = BLOCK_STATEMENT_FEATURE_COUNT + 2;
-
-  /**
-   * The feature id for the '<em><b>Control</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__CONTROL = BLOCK_STATEMENT_FEATURE_COUNT + 3;
-
-  /**
-   * The feature id for the '<em><b>State</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__STATE = BLOCK_STATEMENT_FEATURE_COUNT + 4;
-
-  /**
-   * The feature id for the '<em><b>Ret Val</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__RET_VAL = BLOCK_STATEMENT_FEATURE_COUNT + 5;
-
-  /**
-   * The feature id for the '<em><b>Try Block</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__TRY_BLOCK = BLOCK_STATEMENT_FEATURE_COUNT + 6;
-
-  /**
-   * The feature id for the '<em><b>Catch Block</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATEMENT__CATCH_BLOCK = BLOCK_STATEMENT_FEATURE_COUNT + 7;
+  int STATEMENT = 74;
 
   /**
    * The number of structural features of the '<em>statement</em>' class.
@@ -1226,7 +1828,7 @@ public interface UmplePackage extends EPackage
    * @generated
    * @ordered
    */
-  int STATEMENT_FEATURE_COUNT = BLOCK_STATEMENT_FEATURE_COUNT + 8;
+  int STATEMENT_FEATURE_COUNT = BLOCK_STATEMENT_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link cruise.umple.umple.impl.blockImpl <em>block</em>}' class.
@@ -1236,79 +1838,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getblock()
    * @generated
    */
-  int BLOCK = 31;
-
-  /**
-   * The feature id for the '<em><b>Condition</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__CONDITION = STATEMENT__CONDITION;
-
-  /**
-   * The feature id for the '<em><b>State1</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__STATE1 = STATEMENT__STATE1;
-
-  /**
-   * The feature id for the '<em><b>State2</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__STATE2 = STATEMENT__STATE2;
-
-  /**
-   * The feature id for the '<em><b>Control</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__CONTROL = STATEMENT__CONTROL;
-
-  /**
-   * The feature id for the '<em><b>State</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__STATE = STATEMENT__STATE;
-
-  /**
-   * The feature id for the '<em><b>Ret Val</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__RET_VAL = STATEMENT__RET_VAL;
-
-  /**
-   * The feature id for the '<em><b>Try Block</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__TRY_BLOCK = STATEMENT__TRY_BLOCK;
-
-  /**
-   * The feature id for the '<em><b>Catch Block</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BLOCK__CATCH_BLOCK = STATEMENT__CATCH_BLOCK;
+  int BLOCK = 48;
 
   /**
    * The feature id for the '<em><b>Blocks</b></em>' containment reference list.
@@ -1336,7 +1866,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getunaryExpressionNotPlusMinus()
    * @generated
    */
-  int UNARY_EXPRESSION_NOT_PLUS_MINUS = 43;
+  int UNARY_EXPRESSION_NOT_PLUS_MINUS = 60;
 
   /**
    * The number of structural features of the '<em>unary Expression Not Plus Minus</em>' class.
@@ -1355,7 +1885,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getprimary()
    * @generated
    */
-  int PRIMARY = 44;
+  int PRIMARY = 61;
 
   /**
    * The number of structural features of the '<em>primary</em>' class.
@@ -1374,7 +1904,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getparExpression()
    * @generated
    */
-  int PAR_EXPRESSION = 32;
+  int PAR_EXPRESSION = 49;
 
   /**
    * The number of structural features of the '<em>par Expression</em>' class.
@@ -1393,7 +1923,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getforUpdate()
    * @generated
    */
-  int FOR_UPDATE = 60;
+  int FOR_UPDATE = 85;
 
   /**
    * The number of structural features of the '<em>for Update</em>' class.
@@ -1412,7 +1942,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getexpressionList()
    * @generated
    */
-  int EXPRESSION_LIST = 33;
+  int EXPRESSION_LIST = 50;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -1440,79 +1970,34 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getexpression()
    * @generated
    */
-  int EXPRESSION = 34;
+  int EXPRESSION = 51;
 
   /**
-   * The feature id for the '<em><b>Condition</b></em>' containment reference.
+   * The feature id for the '<em><b>A</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EXPRESSION__CONDITION = PAR_EXPRESSION_FEATURE_COUNT + 0;
+  int EXPRESSION__A = STATE_ENTITY_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>State1</b></em>' containment reference.
+   * The feature id for the '<em><b>State Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EXPRESSION__STATE1 = PAR_EXPRESSION_FEATURE_COUNT + 1;
+  int EXPRESSION__STATE_NAME = STATE_ENTITY_FEATURE_COUNT + 1;
 
   /**
-   * The feature id for the '<em><b>State2</b></em>' containment reference.
+   * The feature id for the '<em><b>Events</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EXPRESSION__STATE2 = PAR_EXPRESSION_FEATURE_COUNT + 2;
-
-  /**
-   * The feature id for the '<em><b>Control</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int EXPRESSION__CONTROL = PAR_EXPRESSION_FEATURE_COUNT + 3;
-
-  /**
-   * The feature id for the '<em><b>State</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int EXPRESSION__STATE = PAR_EXPRESSION_FEATURE_COUNT + 4;
-
-  /**
-   * The feature id for the '<em><b>Ret Val</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int EXPRESSION__RET_VAL = PAR_EXPRESSION_FEATURE_COUNT + 5;
-
-  /**
-   * The feature id for the '<em><b>Try Block</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int EXPRESSION__TRY_BLOCK = PAR_EXPRESSION_FEATURE_COUNT + 6;
-
-  /**
-   * The feature id for the '<em><b>Catch Block</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int EXPRESSION__CATCH_BLOCK = PAR_EXPRESSION_FEATURE_COUNT + 7;
+  int EXPRESSION__EVENTS = STATE_ENTITY_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1521,7 +2006,7 @@ public interface UmplePackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION__EXPRESSION1 = PAR_EXPRESSION_FEATURE_COUNT + 8;
+  int EXPRESSION__EXPRESSION1 = STATE_ENTITY_FEATURE_COUNT + 3;
 
   /**
    * The feature id for the '<em><b>Expression2</b></em>' containment reference.
@@ -1530,7 +2015,7 @@ public interface UmplePackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION__EXPRESSION2 = PAR_EXPRESSION_FEATURE_COUNT + 9;
+  int EXPRESSION__EXPRESSION2 = STATE_ENTITY_FEATURE_COUNT + 4;
 
   /**
    * The number of structural features of the '<em>expression</em>' class.
@@ -1539,7 +2024,7 @@ public interface UmplePackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION_FEATURE_COUNT = PAR_EXPRESSION_FEATURE_COUNT + 10;
+  int EXPRESSION_FEATURE_COUNT = STATE_ENTITY_FEATURE_COUNT + 5;
 
   /**
    * The meta object id for the '{@link cruise.umple.umple.impl.conditionalExpressionImpl <em>conditional Expression</em>}' class.
@@ -1549,7 +2034,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getconditionalExpression()
    * @generated
    */
-  int CONDITIONAL_EXPRESSION = 35;
+  int CONDITIONAL_EXPRESSION = 52;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1595,7 +2080,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getconditionalOrExpression()
    * @generated
    */
-  int CONDITIONAL_OR_EXPRESSION = 36;
+  int CONDITIONAL_OR_EXPRESSION = 53;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1632,7 +2117,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getconditionalAndExpression()
    * @generated
    */
-  int CONDITIONAL_AND_EXPRESSION = 37;
+  int CONDITIONAL_AND_EXPRESSION = 54;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1669,7 +2154,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getequalityExpression()
    * @generated
    */
-  int EQUALITY_EXPRESSION = 38;
+  int EQUALITY_EXPRESSION = 55;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1706,7 +2191,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getrelationalExpression()
    * @generated
    */
-  int RELATIONAL_EXPRESSION = 39;
+  int RELATIONAL_EXPRESSION = 56;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1743,7 +2228,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getadditiveExpression()
    * @generated
    */
-  int ADDITIVE_EXPRESSION = 40;
+  int ADDITIVE_EXPRESSION = 57;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1780,7 +2265,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getmultiplicativeExpression()
    * @generated
    */
-  int MULTIPLICATIVE_EXPRESSION = 41;
+  int MULTIPLICATIVE_EXPRESSION = 58;
 
   /**
    * The feature id for the '<em><b>Expression1</b></em>' containment reference.
@@ -1817,7 +2302,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getunaryExpression()
    * @generated
    */
-  int UNARY_EXPRESSION = 42;
+  int UNARY_EXPRESSION = 59;
 
   /**
    * The feature id for the '<em><b>Exp1</b></em>' containment reference.
@@ -1854,7 +2339,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getliteral()
    * @generated
    */
-  int LITERAL = 45;
+  int LITERAL = 62;
 
   /**
    * The number of structural features of the '<em>literal</em>' class.
@@ -1873,7 +2358,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getfunctionCall()
    * @generated
    */
-  int FUNCTION_CALL = 46;
+  int FUNCTION_CALL = 63;
 
   /**
    * The number of structural features of the '<em>function Call</em>' class.
@@ -1892,7 +2377,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getfunctionDeclaration()
    * @generated
    */
-  int FUNCTION_DECLARATION = 47;
+  int FUNCTION_DECLARATION = 64;
 
   /**
    * The feature id for the '<em><b>Java</b></em>' containment reference.
@@ -1920,7 +2405,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getfunctionDefinition()
    * @generated
    */
-  int FUNCTION_DEFINITION = 48;
+  int FUNCTION_DEFINITION = 65;
 
   /**
    * The feature id for the '<em><b>Java</b></em>' containment reference.
@@ -1948,7 +2433,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getjavaFunctionDeclaration()
    * @generated
    */
-  int JAVA_FUNCTION_DECLARATION = 49;
+  int JAVA_FUNCTION_DECLARATION = 66;
 
   /**
    * The feature id for the '<em><b>Return Type</b></em>' attribute.
@@ -2012,7 +2497,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getjavaFunctionDefinition()
    * @generated
    */
-  int JAVA_FUNCTION_DEFINITION = 50;
+  int JAVA_FUNCTION_DEFINITION = 67;
 
   /**
    * The feature id for the '<em><b>Decl</b></em>' containment reference.
@@ -2049,7 +2534,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getjavaFunctionCall()
    * @generated
    */
-  int JAVA_FUNCTION_CALL = 51;
+  int JAVA_FUNCTION_CALL = 68;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2086,7 +2571,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getlocalVariableDeclarationStatement()
    * @generated
    */
-  int LOCAL_VARIABLE_DECLARATION_STATEMENT = 53;
+  int LOCAL_VARIABLE_DECLARATION_STATEMENT = 70;
 
   /**
    * The number of structural features of the '<em>local Variable Declaration Statement</em>' class.
@@ -2105,7 +2590,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getlocalVariableDeclaration()
    * @generated
    */
-  int LOCAL_VARIABLE_DECLARATION = 54;
+  int LOCAL_VARIABLE_DECLARATION = 71;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2151,7 +2636,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getvariableDeclarators()
    * @generated
    */
-  int VARIABLE_DECLARATORS = 55;
+  int VARIABLE_DECLARATORS = 72;
 
   /**
    * The feature id for the '<em><b>Vd</b></em>' containment reference list.
@@ -2179,7 +2664,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getvariableDeclarator()
    * @generated
    */
-  int VARIABLE_DECLARATOR = 56;
+  int VARIABLE_DECLARATOR = 73;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2209,6 +2694,248 @@ public interface UmplePackage extends EPackage
   int VARIABLE_DECLARATOR_FEATURE_COUNT = 2;
 
   /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.endstatementImpl <em>endstatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.endstatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getendstatement()
+   * @generated
+   */
+  int ENDSTATEMENT = 75;
+
+  /**
+   * The number of structural features of the '<em>endstatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENDSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.breakstatementImpl <em>breakstatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.breakstatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getbreakstatement()
+   * @generated
+   */
+  int BREAKSTATEMENT = 76;
+
+  /**
+   * The number of structural features of the '<em>breakstatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BREAKSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.ifstatementImpl <em>ifstatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.ifstatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getifstatement()
+   * @generated
+   */
+  int IFSTATEMENT = 77;
+
+  /**
+   * The feature id for the '<em><b>Condition</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IFSTATEMENT__CONDITION = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>State1</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IFSTATEMENT__STATE1 = STATEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>State2</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IFSTATEMENT__STATE2 = STATEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>ifstatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IFSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 3;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.forstatementImpl <em>forstatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.forstatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getforstatement()
+   * @generated
+   */
+  int FORSTATEMENT = 78;
+
+  /**
+   * The feature id for the '<em><b>Control</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FORSTATEMENT__CONTROL = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>State</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FORSTATEMENT__STATE = STATEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>forstatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FORSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.whilestatementImpl <em>whilestatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.whilestatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getwhilestatement()
+   * @generated
+   */
+  int WHILESTATEMENT = 79;
+
+  /**
+   * The feature id for the '<em><b>Condition</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WHILESTATEMENT__CONDITION = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>State</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WHILESTATEMENT__STATE = STATEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>whilestatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WHILESTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.returnstatementImpl <em>returnstatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.returnstatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getreturnstatement()
+   * @generated
+   */
+  int RETURNSTATEMENT = 80;
+
+  /**
+   * The feature id for the '<em><b>Ret Val</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RETURNSTATEMENT__RET_VAL = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>returnstatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RETURNSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.expressionstatementImpl <em>expressionstatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.expressionstatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#getexpressionstatement()
+   * @generated
+   */
+  int EXPRESSIONSTATEMENT = 81;
+
+  /**
+   * The number of structural features of the '<em>expressionstatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EXPRESSIONSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link cruise.umple.umple.impl.trystatementImpl <em>trystatement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see cruise.umple.umple.impl.trystatementImpl
+   * @see cruise.umple.umple.impl.UmplePackageImpl#gettrystatement()
+   * @generated
+   */
+  int TRYSTATEMENT = 82;
+
+  /**
+   * The feature id for the '<em><b>Try Block</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TRYSTATEMENT__TRY_BLOCK = STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Catch Block</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TRYSTATEMENT__CATCH_BLOCK = STATEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>trystatement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TRYSTATEMENT_FEATURE_COUNT = STATEMENT_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link cruise.umple.umple.impl.forControlImpl <em>for Control</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2216,7 +2943,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getforControl()
    * @generated
    */
-  int FOR_CONTROL = 58;
+  int FOR_CONTROL = 83;
 
   /**
    * The feature id for the '<em><b>Init</b></em>' containment reference.
@@ -2262,7 +2989,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getforInit()
    * @generated
    */
-  int FOR_INIT = 59;
+  int FOR_INIT = 84;
 
   /**
    * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -2290,7 +3017,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getphpFunction()
    * @generated
    */
-  int PHP_FUNCTION = 61;
+  int PHP_FUNCTION = 86;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2327,7 +3054,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getphpBlock()
    * @generated
    */
-  int PHP_BLOCK = 62;
+  int PHP_BLOCK = 87;
 
   /**
    * The feature id for the '<em><b>Code</b></em>' attribute.
@@ -2355,7 +3082,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getKey()
    * @generated
    */
-  int KEY = 63;
+  int KEY = 88;
 
   /**
    * The feature id for the '<em><b>Keys</b></em>' attribute list.
@@ -2383,7 +3110,7 @@ public interface UmplePackage extends EPackage
    * @see cruise.umple.umple.impl.UmplePackageImpl#getModifier()
    * @generated
    */
-  int MODIFIER = 64;
+  int MODIFIER = 89;
 
 
   /**
@@ -3063,6 +3790,352 @@ public interface UmplePackage extends EPackage
    * @generated
    */
   EAttribute getAttribute_Value();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.StateMachineDefinition <em>State Machine Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>State Machine Definition</em>'.
+   * @see cruise.umple.umple.StateMachineDefinition
+   * @generated
+   */
+  EClass getStateMachineDefinition();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link cruise.umple.umple.StateMachineDefinition#getStates <em>States</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>States</em>'.
+   * @see cruise.umple.umple.StateMachineDefinition#getStates()
+   * @see #getStateMachineDefinition()
+   * @generated
+   */
+  EReference getStateMachineDefinition_States();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.StateMachine <em>State Machine</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>State Machine</em>'.
+   * @see cruise.umple.umple.StateMachine
+   * @generated
+   */
+  EClass getStateMachine();
+
+  /**
+   * Returns the meta object for the attribute '{@link cruise.umple.umple.StateMachine#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see cruise.umple.umple.StateMachine#getName()
+   * @see #getStateMachine()
+   * @generated
+   */
+  EAttribute getStateMachine_Name();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.InlineStateMachine <em>Inline State Machine</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Inline State Machine</em>'.
+   * @see cruise.umple.umple.InlineStateMachine
+   * @generated
+   */
+  EClass getInlineStateMachine();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link cruise.umple.umple.InlineStateMachine#getStates <em>States</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>States</em>'.
+   * @see cruise.umple.umple.InlineStateMachine#getStates()
+   * @see #getInlineStateMachine()
+   * @generated
+   */
+  EReference getInlineStateMachine_States();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.ReferencedStateMachine <em>Referenced State Machine</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Referenced State Machine</em>'.
+   * @see cruise.umple.umple.ReferencedStateMachine
+   * @generated
+   */
+  EClass getReferencedStateMachine();
+
+  /**
+   * Returns the meta object for the reference '{@link cruise.umple.umple.ReferencedStateMachine#getMachine <em>Machine</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Machine</em>'.
+   * @see cruise.umple.umple.ReferencedStateMachine#getMachine()
+   * @see #getReferencedStateMachine()
+   * @generated
+   */
+  EReference getReferencedStateMachine_Machine();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.Enum <em>Enum</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Enum</em>'.
+   * @see cruise.umple.umple.Enum
+   * @generated
+   */
+  EClass getEnum();
+
+  /**
+   * Returns the meta object for the attribute list '{@link cruise.umple.umple.Enum#getStates <em>States</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute list '<em>States</em>'.
+   * @see cruise.umple.umple.Enum#getStates()
+   * @see #getEnum()
+   * @generated
+   */
+  EAttribute getEnum_States();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.State <em>State</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>State</em>'.
+   * @see cruise.umple.umple.State
+   * @generated
+   */
+  EClass getState();
+
+  /**
+   * Returns the meta object for the attribute '{@link cruise.umple.umple.State#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see cruise.umple.umple.State#getName()
+   * @see #getState()
+   * @generated
+   */
+  EAttribute getState_Name();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link cruise.umple.umple.State#getStates <em>States</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>States</em>'.
+   * @see cruise.umple.umple.State#getStates()
+   * @see #getState()
+   * @generated
+   */
+  EReference getState_States();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.StateEntity <em>State Entity</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>State Entity</em>'.
+   * @see cruise.umple.umple.StateEntity
+   * @generated
+   */
+  EClass getStateEntity();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.Transition <em>Transition</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Transition</em>'.
+   * @see cruise.umple.umple.Transition
+   * @generated
+   */
+  EClass getTransition();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.Transition#getA <em>A</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>A</em>'.
+   * @see cruise.umple.umple.Transition#getA()
+   * @see #getTransition()
+   * @generated
+   */
+  EReference getTransition_A();
+
+  /**
+   * Returns the meta object for the attribute '{@link cruise.umple.umple.Transition#getStateName <em>State Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>State Name</em>'.
+   * @see cruise.umple.umple.Transition#getStateName()
+   * @see #getTransition()
+   * @generated
+   */
+  EAttribute getTransition_StateName();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.EventDefinition <em>Event Definition</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Event Definition</em>'.
+   * @see cruise.umple.umple.EventDefinition
+   * @generated
+   */
+  EClass getEventDefinition();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.EventDefinition#getG <em>G</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>G</em>'.
+   * @see cruise.umple.umple.EventDefinition#getG()
+   * @see #getEventDefinition()
+   * @generated
+   */
+  EReference getEventDefinition_G();
+
+  /**
+   * Returns the meta object for the attribute '{@link cruise.umple.umple.EventDefinition#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see cruise.umple.umple.EventDefinition#getName()
+   * @see #getEventDefinition()
+   * @generated
+   */
+  EAttribute getEventDefinition_Name();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.Event <em>Event</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Event</em>'.
+   * @see cruise.umple.umple.Event
+   * @generated
+   */
+  EClass getEvent();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.AfterEveryEvent <em>After Every Event</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>After Every Event</em>'.
+   * @see cruise.umple.umple.AfterEveryEvent
+   * @generated
+   */
+  EClass getAfterEveryEvent();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.AfterEvent <em>After Event</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>After Event</em>'.
+   * @see cruise.umple.umple.AfterEvent
+   * @generated
+   */
+  EClass getAfterEvent();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.Action <em>Action</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Action</em>'.
+   * @see cruise.umple.umple.Action
+   * @generated
+   */
+  EClass getAction();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.Action#getCode <em>Code</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Code</em>'.
+   * @see cruise.umple.umple.Action#getCode()
+   * @see #getAction()
+   * @generated
+   */
+  EReference getAction_Code();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.EntryOrExitAction <em>Entry Or Exit Action</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Entry Or Exit Action</em>'.
+   * @see cruise.umple.umple.EntryOrExitAction
+   * @generated
+   */
+  EClass getEntryOrExitAction();
+
+  /**
+   * Returns the meta object for the attribute '{@link cruise.umple.umple.EntryOrExitAction#getType <em>Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Type</em>'.
+   * @see cruise.umple.umple.EntryOrExitAction#getType()
+   * @see #getEntryOrExitAction()
+   * @generated
+   */
+  EAttribute getEntryOrExitAction_Type();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.EntryOrExitAction#getActionCode <em>Action Code</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Action Code</em>'.
+   * @see cruise.umple.umple.EntryOrExitAction#getActionCode()
+   * @see #getEntryOrExitAction()
+   * @generated
+   */
+  EReference getEntryOrExitAction_ActionCode();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.Activity <em>Activity</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Activity</em>'.
+   * @see cruise.umple.umple.Activity
+   * @generated
+   */
+  EClass getActivity();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.Activity#getCode <em>Code</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Code</em>'.
+   * @see cruise.umple.umple.Activity#getCode()
+   * @see #getActivity()
+   * @generated
+   */
+  EReference getActivity_Code();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.Guard <em>Guard</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Guard</em>'.
+   * @see cruise.umple.umple.Guard
+   * @generated
+   */
+  EClass getGuard();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link cruise.umple.umple.Guard#getEvents <em>Events</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Events</em>'.
+   * @see cruise.umple.umple.Guard#getEvents()
+   * @see #getGuard()
+   * @generated
+   */
+  EReference getGuard_Events();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.GuardCode <em>Guard Code</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Guard Code</em>'.
+   * @see cruise.umple.umple.GuardCode
+   * @generated
+   */
+  EClass getGuardCode();
 
   /**
    * Returns the meta object for class '{@link cruise.umple.umple.Position <em>Position</em>}'.
@@ -3891,92 +4964,194 @@ public interface UmplePackage extends EPackage
   EClass getstatement();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getCondition <em>Condition</em>}'.
+   * Returns the meta object for class '{@link cruise.umple.umple.endstatement <em>endstatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>endstatement</em>'.
+   * @see cruise.umple.umple.endstatement
+   * @generated
+   */
+  EClass getendstatement();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.breakstatement <em>breakstatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>breakstatement</em>'.
+   * @see cruise.umple.umple.breakstatement
+   * @generated
+   */
+  EClass getbreakstatement();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.ifstatement <em>ifstatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>ifstatement</em>'.
+   * @see cruise.umple.umple.ifstatement
+   * @generated
+   */
+  EClass getifstatement();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.ifstatement#getCondition <em>Condition</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Condition</em>'.
-   * @see cruise.umple.umple.statement#getCondition()
-   * @see #getstatement()
+   * @see cruise.umple.umple.ifstatement#getCondition()
+   * @see #getifstatement()
    * @generated
    */
-  EReference getstatement_Condition();
+  EReference getifstatement_Condition();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getState1 <em>State1</em>}'.
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.ifstatement#getState1 <em>State1</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>State1</em>'.
-   * @see cruise.umple.umple.statement#getState1()
-   * @see #getstatement()
+   * @see cruise.umple.umple.ifstatement#getState1()
+   * @see #getifstatement()
    * @generated
    */
-  EReference getstatement_State1();
+  EReference getifstatement_State1();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getState2 <em>State2</em>}'.
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.ifstatement#getState2 <em>State2</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>State2</em>'.
-   * @see cruise.umple.umple.statement#getState2()
-   * @see #getstatement()
+   * @see cruise.umple.umple.ifstatement#getState2()
+   * @see #getifstatement()
    * @generated
    */
-  EReference getstatement_State2();
+  EReference getifstatement_State2();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getControl <em>Control</em>}'.
+   * Returns the meta object for class '{@link cruise.umple.umple.forstatement <em>forstatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>forstatement</em>'.
+   * @see cruise.umple.umple.forstatement
+   * @generated
+   */
+  EClass getforstatement();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.forstatement#getControl <em>Control</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Control</em>'.
-   * @see cruise.umple.umple.statement#getControl()
-   * @see #getstatement()
+   * @see cruise.umple.umple.forstatement#getControl()
+   * @see #getforstatement()
    * @generated
    */
-  EReference getstatement_Control();
+  EReference getforstatement_Control();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getState <em>State</em>}'.
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.forstatement#getState <em>State</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>State</em>'.
-   * @see cruise.umple.umple.statement#getState()
-   * @see #getstatement()
+   * @see cruise.umple.umple.forstatement#getState()
+   * @see #getforstatement()
    * @generated
    */
-  EReference getstatement_State();
+  EReference getforstatement_State();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getRetVal <em>Ret Val</em>}'.
+   * Returns the meta object for class '{@link cruise.umple.umple.whilestatement <em>whilestatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>whilestatement</em>'.
+   * @see cruise.umple.umple.whilestatement
+   * @generated
+   */
+  EClass getwhilestatement();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.whilestatement#getCondition <em>Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Condition</em>'.
+   * @see cruise.umple.umple.whilestatement#getCondition()
+   * @see #getwhilestatement()
+   * @generated
+   */
+  EReference getwhilestatement_Condition();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.whilestatement#getState <em>State</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>State</em>'.
+   * @see cruise.umple.umple.whilestatement#getState()
+   * @see #getwhilestatement()
+   * @generated
+   */
+  EReference getwhilestatement_State();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.returnstatement <em>returnstatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>returnstatement</em>'.
+   * @see cruise.umple.umple.returnstatement
+   * @generated
+   */
+  EClass getreturnstatement();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.returnstatement#getRetVal <em>Ret Val</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Ret Val</em>'.
-   * @see cruise.umple.umple.statement#getRetVal()
-   * @see #getstatement()
+   * @see cruise.umple.umple.returnstatement#getRetVal()
+   * @see #getreturnstatement()
    * @generated
    */
-  EReference getstatement_RetVal();
+  EReference getreturnstatement_RetVal();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getTryBlock <em>Try Block</em>}'.
+   * Returns the meta object for class '{@link cruise.umple.umple.expressionstatement <em>expressionstatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>expressionstatement</em>'.
+   * @see cruise.umple.umple.expressionstatement
+   * @generated
+   */
+  EClass getexpressionstatement();
+
+  /**
+   * Returns the meta object for class '{@link cruise.umple.umple.trystatement <em>trystatement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>trystatement</em>'.
+   * @see cruise.umple.umple.trystatement
+   * @generated
+   */
+  EClass gettrystatement();
+
+  /**
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.trystatement#getTryBlock <em>Try Block</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Try Block</em>'.
-   * @see cruise.umple.umple.statement#getTryBlock()
-   * @see #getstatement()
+   * @see cruise.umple.umple.trystatement#getTryBlock()
+   * @see #gettrystatement()
    * @generated
    */
-  EReference getstatement_TryBlock();
+  EReference gettrystatement_TryBlock();
 
   /**
-   * Returns the meta object for the containment reference '{@link cruise.umple.umple.statement#getCatchBlock <em>Catch Block</em>}'.
+   * Returns the meta object for the containment reference '{@link cruise.umple.umple.trystatement#getCatchBlock <em>Catch Block</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Catch Block</em>'.
-   * @see cruise.umple.umple.statement#getCatchBlock()
-   * @see #getstatement()
+   * @see cruise.umple.umple.trystatement#getCatchBlock()
+   * @see #gettrystatement()
    * @generated
    */
-  EReference getstatement_CatchBlock();
+  EReference gettrystatement_CatchBlock();
 
   /**
    * Returns the meta object for class '{@link cruise.umple.umple.forControl <em>for Control</em>}'.
@@ -4724,6 +5899,304 @@ public interface UmplePackage extends EPackage
     EAttribute ATTRIBUTE__VALUE = eINSTANCE.getAttribute_Value();
 
     /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.StateMachineDefinitionImpl <em>State Machine Definition</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.StateMachineDefinitionImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getStateMachineDefinition()
+     * @generated
+     */
+    EClass STATE_MACHINE_DEFINITION = eINSTANCE.getStateMachineDefinition();
+
+    /**
+     * The meta object literal for the '<em><b>States</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference STATE_MACHINE_DEFINITION__STATES = eINSTANCE.getStateMachineDefinition_States();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.StateMachineImpl <em>State Machine</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.StateMachineImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getStateMachine()
+     * @generated
+     */
+    EClass STATE_MACHINE = eINSTANCE.getStateMachine();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute STATE_MACHINE__NAME = eINSTANCE.getStateMachine_Name();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.InlineStateMachineImpl <em>Inline State Machine</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.InlineStateMachineImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getInlineStateMachine()
+     * @generated
+     */
+    EClass INLINE_STATE_MACHINE = eINSTANCE.getInlineStateMachine();
+
+    /**
+     * The meta object literal for the '<em><b>States</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference INLINE_STATE_MACHINE__STATES = eINSTANCE.getInlineStateMachine_States();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.ReferencedStateMachineImpl <em>Referenced State Machine</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.ReferencedStateMachineImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getReferencedStateMachine()
+     * @generated
+     */
+    EClass REFERENCED_STATE_MACHINE = eINSTANCE.getReferencedStateMachine();
+
+    /**
+     * The meta object literal for the '<em><b>Machine</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference REFERENCED_STATE_MACHINE__MACHINE = eINSTANCE.getReferencedStateMachine_Machine();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.EnumImpl <em>Enum</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.EnumImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getEnum()
+     * @generated
+     */
+    EClass ENUM = eINSTANCE.getEnum();
+
+    /**
+     * The meta object literal for the '<em><b>States</b></em>' attribute list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ENUM__STATES = eINSTANCE.getEnum_States();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.StateImpl <em>State</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.StateImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getState()
+     * @generated
+     */
+    EClass STATE = eINSTANCE.getState();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute STATE__NAME = eINSTANCE.getState_Name();
+
+    /**
+     * The meta object literal for the '<em><b>States</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference STATE__STATES = eINSTANCE.getState_States();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.StateEntityImpl <em>State Entity</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.StateEntityImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getStateEntity()
+     * @generated
+     */
+    EClass STATE_ENTITY = eINSTANCE.getStateEntity();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.TransitionImpl <em>Transition</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.TransitionImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getTransition()
+     * @generated
+     */
+    EClass TRANSITION = eINSTANCE.getTransition();
+
+    /**
+     * The meta object literal for the '<em><b>A</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TRANSITION__A = eINSTANCE.getTransition_A();
+
+    /**
+     * The meta object literal for the '<em><b>State Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute TRANSITION__STATE_NAME = eINSTANCE.getTransition_StateName();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.EventDefinitionImpl <em>Event Definition</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.EventDefinitionImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getEventDefinition()
+     * @generated
+     */
+    EClass EVENT_DEFINITION = eINSTANCE.getEventDefinition();
+
+    /**
+     * The meta object literal for the '<em><b>G</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference EVENT_DEFINITION__G = eINSTANCE.getEventDefinition_G();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute EVENT_DEFINITION__NAME = eINSTANCE.getEventDefinition_Name();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.EventImpl <em>Event</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.EventImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getEvent()
+     * @generated
+     */
+    EClass EVENT = eINSTANCE.getEvent();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.AfterEveryEventImpl <em>After Every Event</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.AfterEveryEventImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getAfterEveryEvent()
+     * @generated
+     */
+    EClass AFTER_EVERY_EVENT = eINSTANCE.getAfterEveryEvent();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.AfterEventImpl <em>After Event</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.AfterEventImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getAfterEvent()
+     * @generated
+     */
+    EClass AFTER_EVENT = eINSTANCE.getAfterEvent();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.ActionImpl <em>Action</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.ActionImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getAction()
+     * @generated
+     */
+    EClass ACTION = eINSTANCE.getAction();
+
+    /**
+     * The meta object literal for the '<em><b>Code</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ACTION__CODE = eINSTANCE.getAction_Code();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.EntryOrExitActionImpl <em>Entry Or Exit Action</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.EntryOrExitActionImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getEntryOrExitAction()
+     * @generated
+     */
+    EClass ENTRY_OR_EXIT_ACTION = eINSTANCE.getEntryOrExitAction();
+
+    /**
+     * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ENTRY_OR_EXIT_ACTION__TYPE = eINSTANCE.getEntryOrExitAction_Type();
+
+    /**
+     * The meta object literal for the '<em><b>Action Code</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ENTRY_OR_EXIT_ACTION__ACTION_CODE = eINSTANCE.getEntryOrExitAction_ActionCode();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.ActivityImpl <em>Activity</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.ActivityImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getActivity()
+     * @generated
+     */
+    EClass ACTIVITY = eINSTANCE.getActivity();
+
+    /**
+     * The meta object literal for the '<em><b>Code</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ACTIVITY__CODE = eINSTANCE.getActivity_Code();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.GuardImpl <em>Guard</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.GuardImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getGuard()
+     * @generated
+     */
+    EClass GUARD = eINSTANCE.getGuard();
+
+    /**
+     * The meta object literal for the '<em><b>Events</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference GUARD__EVENTS = eINSTANCE.getGuard_Events();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.GuardCodeImpl <em>Guard Code</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.GuardCodeImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getGuardCode()
+     * @generated
+     */
+    EClass GUARD_CODE = eINSTANCE.getGuardCode();
+
+    /**
      * The meta object literal for the '{@link cruise.umple.umple.impl.PositionImpl <em>Position</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5412,12 +6885,42 @@ public interface UmplePackage extends EPackage
     EClass STATEMENT = eINSTANCE.getstatement();
 
     /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.endstatementImpl <em>endstatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.endstatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getendstatement()
+     * @generated
+     */
+    EClass ENDSTATEMENT = eINSTANCE.getendstatement();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.breakstatementImpl <em>breakstatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.breakstatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getbreakstatement()
+     * @generated
+     */
+    EClass BREAKSTATEMENT = eINSTANCE.getbreakstatement();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.ifstatementImpl <em>ifstatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.ifstatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getifstatement()
+     * @generated
+     */
+    EClass IFSTATEMENT = eINSTANCE.getifstatement();
+
+    /**
      * The meta object literal for the '<em><b>Condition</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__CONDITION = eINSTANCE.getstatement_Condition();
+    EReference IFSTATEMENT__CONDITION = eINSTANCE.getifstatement_Condition();
 
     /**
      * The meta object literal for the '<em><b>State1</b></em>' containment reference feature.
@@ -5425,7 +6928,7 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__STATE1 = eINSTANCE.getstatement_State1();
+    EReference IFSTATEMENT__STATE1 = eINSTANCE.getifstatement_State1();
 
     /**
      * The meta object literal for the '<em><b>State2</b></em>' containment reference feature.
@@ -5433,7 +6936,17 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__STATE2 = eINSTANCE.getstatement_State2();
+    EReference IFSTATEMENT__STATE2 = eINSTANCE.getifstatement_State2();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.forstatementImpl <em>forstatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.forstatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getforstatement()
+     * @generated
+     */
+    EClass FORSTATEMENT = eINSTANCE.getforstatement();
 
     /**
      * The meta object literal for the '<em><b>Control</b></em>' containment reference feature.
@@ -5441,7 +6954,7 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__CONTROL = eINSTANCE.getstatement_Control();
+    EReference FORSTATEMENT__CONTROL = eINSTANCE.getforstatement_Control();
 
     /**
      * The meta object literal for the '<em><b>State</b></em>' containment reference feature.
@@ -5449,7 +6962,43 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__STATE = eINSTANCE.getstatement_State();
+    EReference FORSTATEMENT__STATE = eINSTANCE.getforstatement_State();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.whilestatementImpl <em>whilestatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.whilestatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getwhilestatement()
+     * @generated
+     */
+    EClass WHILESTATEMENT = eINSTANCE.getwhilestatement();
+
+    /**
+     * The meta object literal for the '<em><b>Condition</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference WHILESTATEMENT__CONDITION = eINSTANCE.getwhilestatement_Condition();
+
+    /**
+     * The meta object literal for the '<em><b>State</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference WHILESTATEMENT__STATE = eINSTANCE.getwhilestatement_State();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.returnstatementImpl <em>returnstatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.returnstatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getreturnstatement()
+     * @generated
+     */
+    EClass RETURNSTATEMENT = eINSTANCE.getreturnstatement();
 
     /**
      * The meta object literal for the '<em><b>Ret Val</b></em>' containment reference feature.
@@ -5457,7 +7006,27 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__RET_VAL = eINSTANCE.getstatement_RetVal();
+    EReference RETURNSTATEMENT__RET_VAL = eINSTANCE.getreturnstatement_RetVal();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.expressionstatementImpl <em>expressionstatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.expressionstatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#getexpressionstatement()
+     * @generated
+     */
+    EClass EXPRESSIONSTATEMENT = eINSTANCE.getexpressionstatement();
+
+    /**
+     * The meta object literal for the '{@link cruise.umple.umple.impl.trystatementImpl <em>trystatement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see cruise.umple.umple.impl.trystatementImpl
+     * @see cruise.umple.umple.impl.UmplePackageImpl#gettrystatement()
+     * @generated
+     */
+    EClass TRYSTATEMENT = eINSTANCE.gettrystatement();
 
     /**
      * The meta object literal for the '<em><b>Try Block</b></em>' containment reference feature.
@@ -5465,7 +7034,7 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__TRY_BLOCK = eINSTANCE.getstatement_TryBlock();
+    EReference TRYSTATEMENT__TRY_BLOCK = eINSTANCE.gettrystatement_TryBlock();
 
     /**
      * The meta object literal for the '<em><b>Catch Block</b></em>' containment reference feature.
@@ -5473,7 +7042,7 @@ public interface UmplePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference STATEMENT__CATCH_BLOCK = eINSTANCE.getstatement_CatchBlock();
+    EReference TRYSTATEMENT__CATCH_BLOCK = eINSTANCE.gettrystatement_CatchBlock();
 
     /**
      * The meta object literal for the '{@link cruise.umple.umple.impl.forControlImpl <em>for Control</em>}' class.

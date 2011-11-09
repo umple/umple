@@ -6,7 +6,95 @@
  */
 package cruise.umple.umple.util;
 
-import cruise.umple.umple.*;
+import cruise.umple.umple.AbstractElement;
+import cruise.umple.umple.Action;
+import cruise.umple.umple.Activity;
+import cruise.umple.umple.AfterEvent;
+import cruise.umple.umple.AfterEveryEvent;
+import cruise.umple.umple.Association;
+import cruise.umple.umple.AssociationClassContent;
+import cruise.umple.umple.AssociationClassDefinition;
+import cruise.umple.umple.AssociationDefinition;
+import cruise.umple.umple.AssociationPosition;
+import cruise.umple.umple.Attribute;
+import cruise.umple.umple.ClassContent;
+import cruise.umple.umple.ClassDefinition;
+import cruise.umple.umple.CodeInjection;
+import cruise.umple.umple.Coordinate;
+import cruise.umple.umple.Depend;
+import cruise.umple.umple.ElementPosition;
+import cruise.umple.umple.Entity;
+import cruise.umple.umple.EntryOrExitAction;
+import cruise.umple.umple.Event;
+import cruise.umple.umple.EventDefinition;
+import cruise.umple.umple.ExternalDefinition;
+import cruise.umple.umple.Generate;
+import cruise.umple.umple.Glossary;
+import cruise.umple.umple.Guard;
+import cruise.umple.umple.GuardCode;
+import cruise.umple.umple.InlineAssociation;
+import cruise.umple.umple.InlineStateMachine;
+import cruise.umple.umple.InterfaceDefinition;
+import cruise.umple.umple.Key;
+import cruise.umple.umple.KeyDefinition;
+import cruise.umple.umple.Namespace;
+import cruise.umple.umple.Position;
+import cruise.umple.umple.ReferencedStateMachine;
+import cruise.umple.umple.SingleAssociationEnd;
+import cruise.umple.umple.Singleton;
+import cruise.umple.umple.SoftwarePattern;
+import cruise.umple.umple.State;
+import cruise.umple.umple.StateEntity;
+import cruise.umple.umple.StateMachine;
+import cruise.umple.umple.StateMachineDefinition;
+import cruise.umple.umple.SymmetricReflexiveAssociation;
+import cruise.umple.umple.Transition;
+import cruise.umple.umple.UmpleElement;
+import cruise.umple.umple.UmpleModel;
+import cruise.umple.umple.UmplePackage;
+import cruise.umple.umple.UseStatement;
+import cruise.umple.umple.Word;
+import cruise.umple.umple.additiveExpression;
+import cruise.umple.umple.block;
+import cruise.umple.umple.blockStatement;
+import cruise.umple.umple.breakstatement;
+import cruise.umple.umple.conditionalAndExpression;
+import cruise.umple.umple.conditionalExpression;
+import cruise.umple.umple.conditionalOrExpression;
+import cruise.umple.umple.endstatement;
+import cruise.umple.umple.equalityExpression;
+import cruise.umple.umple.expression;
+import cruise.umple.umple.expressionList;
+import cruise.umple.umple.expressionstatement;
+import cruise.umple.umple.forControl;
+import cruise.umple.umple.forInit;
+import cruise.umple.umple.forUpdate;
+import cruise.umple.umple.forstatement;
+import cruise.umple.umple.functionCall;
+import cruise.umple.umple.functionDeclaration;
+import cruise.umple.umple.functionDefinition;
+import cruise.umple.umple.ifstatement;
+import cruise.umple.umple.isA;
+import cruise.umple.umple.javaFunctionCall;
+import cruise.umple.umple.javaFunctionDeclaration;
+import cruise.umple.umple.javaFunctionDefinition;
+import cruise.umple.umple.literal;
+import cruise.umple.umple.localVariableDeclaration;
+import cruise.umple.umple.localVariableDeclarationStatement;
+import cruise.umple.umple.multiplicativeExpression;
+import cruise.umple.umple.parExpression;
+import cruise.umple.umple.phpBlock;
+import cruise.umple.umple.phpFunction;
+import cruise.umple.umple.primary;
+import cruise.umple.umple.relationalExpression;
+import cruise.umple.umple.returnstatement;
+import cruise.umple.umple.statement;
+import cruise.umple.umple.trystatement;
+import cruise.umple.umple.unaryExpression;
+import cruise.umple.umple.unaryExpressionNotPlusMinus;
+import cruise.umple.umple.variableDeclarator;
+import cruise.umple.umple.variableDeclarators;
+import cruise.umple.umple.whilestatement;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -297,6 +385,158 @@ public class UmpleSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case UmplePackage.STATE_MACHINE_DEFINITION:
+      {
+        StateMachineDefinition stateMachineDefinition = (StateMachineDefinition)theEObject;
+        T result = caseStateMachineDefinition(stateMachineDefinition);
+        if (result == null) result = caseEntity(stateMachineDefinition);
+        if (result == null) result = caseAbstractElement(stateMachineDefinition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.STATE_MACHINE:
+      {
+        StateMachine stateMachine = (StateMachine)theEObject;
+        T result = caseStateMachine(stateMachine);
+        if (result == null) result = caseClassContent(stateMachine);
+        if (result == null) result = caseAssociationClassContent(stateMachine);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.INLINE_STATE_MACHINE:
+      {
+        InlineStateMachine inlineStateMachine = (InlineStateMachine)theEObject;
+        T result = caseInlineStateMachine(inlineStateMachine);
+        if (result == null) result = caseStateMachine(inlineStateMachine);
+        if (result == null) result = caseClassContent(inlineStateMachine);
+        if (result == null) result = caseAssociationClassContent(inlineStateMachine);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.REFERENCED_STATE_MACHINE:
+      {
+        ReferencedStateMachine referencedStateMachine = (ReferencedStateMachine)theEObject;
+        T result = caseReferencedStateMachine(referencedStateMachine);
+        if (result == null) result = caseStateMachine(referencedStateMachine);
+        if (result == null) result = caseClassContent(referencedStateMachine);
+        if (result == null) result = caseAssociationClassContent(referencedStateMachine);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.ENUM:
+      {
+        cruise.umple.umple.Enum enum_ = (cruise.umple.umple.Enum)theEObject;
+        T result = caseEnum(enum_);
+        if (result == null) result = caseStateMachine(enum_);
+        if (result == null) result = caseClassContent(enum_);
+        if (result == null) result = caseAssociationClassContent(enum_);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.STATE:
+      {
+        State state = (State)theEObject;
+        T result = caseState(state);
+        if (result == null) result = caseStateEntity(state);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.STATE_ENTITY:
+      {
+        StateEntity stateEntity = (StateEntity)theEObject;
+        T result = caseStateEntity(stateEntity);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.TRANSITION:
+      {
+        Transition transition = (Transition)theEObject;
+        T result = caseTransition(transition);
+        if (result == null) result = caseStateEntity(transition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.EVENT_DEFINITION:
+      {
+        EventDefinition eventDefinition = (EventDefinition)theEObject;
+        T result = caseEventDefinition(eventDefinition);
+        if (result == null) result = caseTransition(eventDefinition);
+        if (result == null) result = caseStateEntity(eventDefinition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.EVENT:
+      {
+        Event event = (Event)theEObject;
+        T result = caseEvent(event);
+        if (result == null) result = caseEventDefinition(event);
+        if (result == null) result = caseTransition(event);
+        if (result == null) result = caseStateEntity(event);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.AFTER_EVERY_EVENT:
+      {
+        AfterEveryEvent afterEveryEvent = (AfterEveryEvent)theEObject;
+        T result = caseAfterEveryEvent(afterEveryEvent);
+        if (result == null) result = caseEventDefinition(afterEveryEvent);
+        if (result == null) result = caseTransition(afterEveryEvent);
+        if (result == null) result = caseStateEntity(afterEveryEvent);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.AFTER_EVENT:
+      {
+        AfterEvent afterEvent = (AfterEvent)theEObject;
+        T result = caseAfterEvent(afterEvent);
+        if (result == null) result = caseEventDefinition(afterEvent);
+        if (result == null) result = caseTransition(afterEvent);
+        if (result == null) result = caseStateEntity(afterEvent);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.ACTION:
+      {
+        Action action = (Action)theEObject;
+        T result = caseAction(action);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.ENTRY_OR_EXIT_ACTION:
+      {
+        EntryOrExitAction entryOrExitAction = (EntryOrExitAction)theEObject;
+        T result = caseEntryOrExitAction(entryOrExitAction);
+        if (result == null) result = caseStateEntity(entryOrExitAction);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.ACTIVITY:
+      {
+        Activity activity = (Activity)theEObject;
+        T result = caseActivity(activity);
+        if (result == null) result = caseStateEntity(activity);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.GUARD:
+      {
+        Guard guard = (Guard)theEObject;
+        T result = caseGuard(guard);
+        if (result == null) result = caseTransition(guard);
+        if (result == null) result = caseStateEntity(guard);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.GUARD_CODE:
+      {
+        GuardCode guardCode = (GuardCode)theEObject;
+        T result = caseGuardCode(guardCode);
+        if (result == null) result = caseGuard(guardCode);
+        if (result == null) result = caseTransition(guardCode);
+        if (result == null) result = caseStateEntity(guardCode);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case UmplePackage.POSITION:
       {
         Position position = (Position)theEObject;
@@ -370,11 +610,16 @@ public class UmpleSwitch<T> extends Switch<T>
       {
         expression expression = (expression)theEObject;
         T result = caseexpression(expression);
+        if (result == null) result = caseGuardCode(expression);
         if (result == null) result = caseparExpression(expression);
-        if (result == null) result = casestatement(expression);
+        if (result == null) result = caseexpressionstatement(expression);
+        if (result == null) result = caseGuard(expression);
         if (result == null) result = caseprimary(expression);
-        if (result == null) result = caseblockStatement(expression);
+        if (result == null) result = casestatement(expression);
+        if (result == null) result = caseTransition(expression);
         if (result == null) result = caseunaryExpressionNotPlusMinus(expression);
+        if (result == null) result = caseblockStatement(expression);
+        if (result == null) result = caseStateEntity(expression);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -549,6 +794,78 @@ public class UmpleSwitch<T> extends Switch<T>
         statement statement = (statement)theEObject;
         T result = casestatement(statement);
         if (result == null) result = caseblockStatement(statement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.ENDSTATEMENT:
+      {
+        endstatement endstatement = (endstatement)theEObject;
+        T result = caseendstatement(endstatement);
+        if (result == null) result = casestatement(endstatement);
+        if (result == null) result = caseblockStatement(endstatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.BREAKSTATEMENT:
+      {
+        breakstatement breakstatement = (breakstatement)theEObject;
+        T result = casebreakstatement(breakstatement);
+        if (result == null) result = casestatement(breakstatement);
+        if (result == null) result = caseblockStatement(breakstatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.IFSTATEMENT:
+      {
+        ifstatement ifstatement = (ifstatement)theEObject;
+        T result = caseifstatement(ifstatement);
+        if (result == null) result = casestatement(ifstatement);
+        if (result == null) result = caseblockStatement(ifstatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.FORSTATEMENT:
+      {
+        forstatement forstatement = (forstatement)theEObject;
+        T result = caseforstatement(forstatement);
+        if (result == null) result = casestatement(forstatement);
+        if (result == null) result = caseblockStatement(forstatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.WHILESTATEMENT:
+      {
+        whilestatement whilestatement = (whilestatement)theEObject;
+        T result = casewhilestatement(whilestatement);
+        if (result == null) result = casestatement(whilestatement);
+        if (result == null) result = caseblockStatement(whilestatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.RETURNSTATEMENT:
+      {
+        returnstatement returnstatement = (returnstatement)theEObject;
+        T result = casereturnstatement(returnstatement);
+        if (result == null) result = casestatement(returnstatement);
+        if (result == null) result = caseblockStatement(returnstatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.EXPRESSIONSTATEMENT:
+      {
+        expressionstatement expressionstatement = (expressionstatement)theEObject;
+        T result = caseexpressionstatement(expressionstatement);
+        if (result == null) result = casestatement(expressionstatement);
+        if (result == null) result = caseblockStatement(expressionstatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case UmplePackage.TRYSTATEMENT:
+      {
+        trystatement trystatement = (trystatement)theEObject;
+        T result = casetrystatement(trystatement);
+        if (result == null) result = casestatement(trystatement);
+        if (result == null) result = caseblockStatement(trystatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1014,6 +1331,278 @@ public class UmpleSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAttribute(Attribute object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>State Machine Definition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>State Machine Definition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStateMachineDefinition(StateMachineDefinition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>State Machine</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>State Machine</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStateMachine(StateMachine object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Inline State Machine</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Inline State Machine</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInlineStateMachine(InlineStateMachine object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Referenced State Machine</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Referenced State Machine</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseReferencedStateMachine(ReferencedStateMachine object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Enum</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Enum</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEnum(cruise.umple.umple.Enum object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>State</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>State</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseState(State object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>State Entity</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>State Entity</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStateEntity(StateEntity object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Transition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Transition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTransition(Transition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Event Definition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Event Definition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEventDefinition(EventDefinition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Event</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Event</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEvent(Event object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>After Every Event</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>After Every Event</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAfterEveryEvent(AfterEveryEvent object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>After Event</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>After Event</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAfterEvent(AfterEvent object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Action</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Action</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAction(Action object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Entry Or Exit Action</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Entry Or Exit Action</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEntryOrExitAction(EntryOrExitAction object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Activity</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Activity</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseActivity(Activity object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Guard</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Guard</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseGuard(Guard object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Guard Code</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Guard Code</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseGuardCode(GuardCode object)
   {
     return null;
   }
@@ -1526,6 +2115,134 @@ public class UmpleSwitch<T> extends Switch<T>
    * @generated
    */
   public T casestatement(statement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>endstatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>endstatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseendstatement(endstatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>breakstatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>breakstatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casebreakstatement(breakstatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>ifstatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>ifstatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseifstatement(ifstatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>forstatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>forstatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseforstatement(forstatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>whilestatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>whilestatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casewhilestatement(whilestatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>returnstatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>returnstatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casereturnstatement(returnstatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>expressionstatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>expressionstatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseexpressionstatement(expressionstatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>trystatement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>trystatement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casetrystatement(trystatement object)
   {
     return null;
   }

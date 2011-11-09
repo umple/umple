@@ -29,7 +29,7 @@ Namespace:
 	"namespace" (value=ID) ";";
 
 
-Entity:  ClassDefinition | InterfaceDefinition | ExternalDefinition | AssociationDefinition | AssociationClassDefinition;
+Entity:  ClassDefinition | InterfaceDefinition | ExternalDefinition | AssociationDefinition | AssociationClassDefinition | StateMachineDefinition;
 /* End of part similar to umple_core.grammar */ 
 
 
@@ -47,10 +47,10 @@ InterfaceDefinition: 'interface' name=ID '{' depend+=Depend* '}';
 AssociationDefinition: 'association' name=ID '{' association+=Association* '}' ;
 
 ClassContent:
-	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation  ;
+	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation | StateMachine;
 
 AssociationClassContent:
-	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation  ;
+	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation | StateMachine;
 
 Depend: 'depend' name = extendedID (".*")? ";";
 
@@ -84,6 +84,51 @@ Attribute:
 	(unique?="unique")? modifier=Modifier? ((type=UmpleAttributeType (list?="[]")?) |
 	(object=[ClassDefinition] (list?="[]")?))?  name=extendedID ( '=' value=UmplePrimitiveType)? ";";
 /* End of umple_patterns.grammar */ 
+
+
+/* -------------------------------------------------------------------------------------------
+ * Part similar to umple_state_machines.grammar
+ */ 
+
+StateMachineDefinition: "statemachine" name=extendedID '{' states+=State '}';
+
+StateMachine: Enum| InlineStateMachine | ReferencedStateMachine ;
+
+InlineStateMachine: name=extendedID '{' states+=State'}' ;
+
+ReferencedStateMachine: name=extendedID 'as' machine=[StateMachineDefinition];
+
+Enum: name=extendedID "{" states+=extendedID ("," states+=extendedID)* "}";
+
+State: name=extendedID '{' (("*")? states+=StateEntity)*  '}'; 
+
+StateEntity: Transition | EntryOrExitAction | (Activity ("->" extendedID ";")?) | State | (expression ";");	
+//This covers just activities and activities that cause a state transition
+
+	
+Transition: 
+	(Guard events+=EventDefinition "->" a=Action? stateName=extendedID ";") |
+	(EventDefinition g=Guard? "->" a=Action? stateName=extendedID ";");
+	
+EventDefinition: AfterEveryEvent | AfterEvent | Event;
+
+Event: name=extendedID ;
+
+AfterEveryEvent: "afterEvery" "(" name=extendedID ")";
+
+AfterEvent: "wait" "(" name=extendedID ")";
+
+Action: "/" code=block;
+
+EntryOrExitAction: (type="entry" |type="exit") "/" actionCode=block;
+
+Activity: "do" '{' code=block '}' ;
+
+Guard: "[" GuardCode "]";
+
+GuardCode: expression;
+
+/* End of umple_state_machines.grammar */ 
 
 /* -------------------------------------------------------------------------------------------
  * Part similar to umple_layout.grammar
@@ -123,7 +168,7 @@ UmpleElement:  ClassDefinition | InterfaceDefinition ;
 /* End of Complement Rules */ 
 
 block 
-    :   '{' blocks+=blockStatement* '}'
+    :   {block} '{' blocks+=blockStatement* '}'
     ;
 
 
@@ -200,13 +245,13 @@ primary
 	;
 
 literal
-	:	INT
-	|	DOUBLE
-	|	STRING
-	|	extendedID
+	:	 {literal}INT
+	|	 {literal}DOUBLE
+	|	 {literal}STRING
+	|	 {literal}extendedID
 	|	javaFunctionCall
-	|	"true"	| "TRUE"
-	|	"false"	| "FALSE"
+	|	 {literal}TRUE
+	|	 {literal}FALSE
 	;
 	
 	
@@ -264,18 +309,35 @@ variableDeclarator
 
 statement
 	:	block
-	|	'if' condition=parExpression state1=statement ('else' state2=statement)?
-	|	'for' '(' control=forControl ')' state=statement
-	|	 'while' condition=parExpression state=statement
-	|   'return' retVal=expression? ';'
-	|	';'
-	|	"break" ";"
-	|	expression ';'
-	|   'try' tryBlock=block 'catch' catchBlock= block
+	|	ifstatement
+	|	forstatement
+	|	whilestatement
+	|   returnstatement
+	|	endstatement
+	|	breakstatement
+	|	expressionstatement
+	|   trystatement
 	;
-	
+
+endstatement: {endstatement}';' ;
+
+breakstatement: {breakstatement} "break" ";" ;
+
+ifstatement: {ifstatement}'if' condition=parExpression state1=statement ('else' state2=statement)? ;
+
+forstatement: {forstatement}'for' '(' control=forControl ')' state=statement ;
+
+whilestatement: {whilestatement}'while' condition=parExpression state=statement;
+
+returnstatement: {returnstatement}'return' retVal=expression? ';';
+
+expressionstatement: expression ';';
+
+trystatement: {trystatement}'try' tryBlock=block 'catch' catchBlock= block;
+
+
 forControl
-	:	init=forInit? ';' condition=expression? ';' update=forUpdate?
+	:	{forControl} init=forInit? ';' condition=expression? ';' update=forUpdate?
 	;
 
 forInit
@@ -318,6 +380,8 @@ rubyFunction: RUBY_FUNCTION;
 /* -------------------------------------------------------------------------------------------
  * TERMINALS AND DATA TYPES
  */
+terminal TRUE: 'true';
+terminal FALSE: 'false';
 terminal RUBY_FUNCTION: DEF -> END;
 terminal DEF: 'def';
 terminal END: 'end';

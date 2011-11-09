@@ -24,7 +24,7 @@ package cruise.umple.umple;
  * @model
  * @generated
  */
-public interface expression extends parExpression, statement
+public interface expression extends StateEntity, GuardCode, parExpression, expressionstatement
 {
   /**
    * Returns the value of the '<em><b>Expression1</b></em>' containment reference.
