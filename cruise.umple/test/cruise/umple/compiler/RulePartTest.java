@@ -329,7 +329,7 @@ public class RulePartTest
     Assert.assertEquals(true,part.isMultiWord());
     Assert.assertEquals("blah",part.getDisplayName());
   }
-
+  
   @Test
   public void isToEndOfLine()
   {
@@ -346,6 +346,20 @@ public class RulePartTest
     Assert.assertEquals(true,part.isToEndOfLine());
     Assert.assertEquals("blah",part.getDisplayName());
   }
+  
+  @Test
+  public void isAlphanumeric()
+  {
+    RulePart part = new RulePart("blah",null);
+    part.setType(RulePart.Type.Variable);
+    Assert.assertEquals(false,part.isAlphanumeric());
+    
+    part = new RulePart("~blah",null);
+    part.setType(RulePart.Type.Variable);
+    Assert.assertEquals(true,part.isAlphanumeric());
+    Assert.assertEquals("blah",part.getDisplayName());
+  }
+  
   
   @Test
   public void eachInnerPartHasAPosition()

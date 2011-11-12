@@ -946,6 +946,18 @@ public class ParserTest
     assertParse(true, parser.parse("test", "a || b"));
     Assert.assertEquals("[test][name:a][value:b]", parser.toString());
   }
+  
+  @Test
+  public void parseAlphanumeric()
+  {
+    parser.addRule("name : [~name] ;");
+    assertParse(false, parser.parse("name", "anything=nothing;"));
+    assertParse(true, parser.parse("name", "anythingnothing;"));
+    assertParse(true, parser.parse("name", "anything_nothing;"));
+  }
+  
+  
+  
 
   @Test
   public void parse_unnamed_constant()

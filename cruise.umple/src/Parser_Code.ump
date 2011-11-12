@@ -324,6 +324,9 @@ class RulePart
     {
       return name.substring(2);
     }
+    else if (isAlphanumeric()) {
+    	return name.substring(1);
+    }
     else
     {
       return name;
@@ -449,6 +452,11 @@ class RulePart
   {
     return !isMultiWord() && getName().startsWith("*");
   }
+  
+  public boolean isAlphanumeric() {
+  	return getName().startsWith("~");
+  }
+  
   
   public boolean isVariable()
   {
@@ -790,9 +798,10 @@ class Parser
             }
             else if (part.getNextIdentifiers().length > 0)
             {
-              boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
-              value = inputParser.nextUntil(stopAtSpace,part.getNextIdentifiers());
-
+           	  boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
+              boolean isAlphaNumeric = part.isAlphanumeric();
+              value = inputParser.nextUntil(stopAtSpace, isAlphaNumeric, part.getNextIdentifiers());
+              
               while (part.isMultiWord() && !isBalanced(value))
               {
                 int internalIndex = inputParser.currentIndex();
