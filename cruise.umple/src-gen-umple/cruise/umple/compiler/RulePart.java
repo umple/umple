@@ -168,6 +168,9 @@ public class RulePart
     {
       return name.substring(2);
     }
+    else if (isAlphanumeric()) {
+    	return name.substring(1);
+    }
     else
     {
       return name;
@@ -293,6 +296,11 @@ public class RulePart
   {
     return !isMultiWord() && getName().startsWith("*");
   }
+  
+  public boolean isAlphanumeric() {
+  	return getName().startsWith("~");
+  }
+  
   
   public boolean isVariable()
   {

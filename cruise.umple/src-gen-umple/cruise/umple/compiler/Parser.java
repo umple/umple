@@ -504,9 +504,10 @@ public Token reset()
             }
             else if (part.getNextIdentifiers().length > 0)
             {
-              boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
-              value = inputParser.nextUntil(stopAtSpace,part.getNextIdentifiers());
-
+           	  boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
+              boolean isAlphaNumeric = part.isAlphanumeric();
+              value = inputParser.nextUntil(stopAtSpace, isAlphaNumeric, part.getNextIdentifiers());
+              
               while (part.isMultiWord() && !isBalanced(value))
               {
                 int internalIndex = inputParser.currentIndex();

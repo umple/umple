@@ -417,16 +417,22 @@ public class TextParser
 
     return name();
   }
-
+  
   public String nextUntil(boolean stopAtSpace, String... stopBefore)
+  {    
+    return nextUntil(stopAtSpace, false, stopBefore);
+  }
+  
+  public String nextUntil(boolean stopAtSpace, boolean alphanumeric, String... stopBefore)
   {
     _lastCharacterIndex = _currentCharacterIndex;
-    if (loadName(stopAtSpace, false, stopBefore) == null)
+    if (loadName(stopAtSpace, false, alphanumeric, stopBefore) == null)
     {
       _lastCharacterIndex = -1;
     }
     return name();
   }
+  
   
   public String nextAfter(boolean stopAtSpace, String... stopAfter)
   {
@@ -543,7 +549,11 @@ public class TextParser
   // PRIVATE METHODS
   // ```````````````````````
 
-  private String loadName(boolean stopAtSpace, boolean stopAtMatch, String... lookups)
+  private String loadName(boolean stopAtSpace, boolean stopAtMatch, String... lookups) {
+	  return loadName(stopAtSpace, stopAtMatch, false, lookups);
+  }
+  
+  private String loadName(boolean stopAtSpace, boolean stopAtMatch, boolean isAlphanum, String... lookups)
   {
   
     boolean hasLookup = hasLookups(lookups);
@@ -554,6 +564,11 @@ public class TextParser
     boolean wasSpace = false;
     while (_currentCharacterIndex <= _maxCharacterIndex)
     {
+      //If the rule is alphanumeric only & we've reached a character that is not alphanumeric or an underscore, we haven't matched anything.
+      if(isAlphanum && !(isAlpha(c()) || isNumeric(c())) && !(c() == '_') && name.length() > 0) {
+    	break;
+      }
+          	
       if (isSpace() && (!hasLookup || stopAtMatch || stopAtSpace))
       {
         wasSpace = true;
