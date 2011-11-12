@@ -81,7 +81,7 @@ associationEnd : [[multiplicity]] [type,roleName]<br />
 multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]<br />
 <br />
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]<br />
-simpleAttribute- : [name] ;<br />
+simpleAttribute- : [~name] ;<br />
 autouniqueAttribute- : [=autounique] [name] ;<br />
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }<br />
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;<br />

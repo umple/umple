@@ -113,8 +113,7 @@ public class ClassTemplateTest extends TemplateTest
   }
     
   /* Test for spacing bug in issue 236 */
-  @Test
-  @Ignore
+  @Test  
   public void EmptyStringAttributeWhitespaceTest()
   {
 	  assertUmpleTemplateFor("ClassTemplateTest_EmptyStringAttr.ump",languagePath + "/ClassTemplateTest_EmptyStringAttr."+languagePath+".txt","Student");
