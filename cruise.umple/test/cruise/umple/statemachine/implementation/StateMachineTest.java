@@ -71,7 +71,6 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test //Test the spacing problems in issue 155
-  @Ignore
   public void guardSpacing() {
 	  assertUmpleTemplateFor("guardSpacing.ump",languagePath + "/guardSpacing."+ languagePath +".txt","Garage");
   }

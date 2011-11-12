@@ -1,0 +1,12 @@
+namespace example;
+
+class Garage {
+	Boolean entranceClear; GarageDoor {
+
+	Open {
+  		pressButton[getEntranceClear()] -> Closing;
+ 	}
+ 	Closing {
+ 	}
+
+} }
