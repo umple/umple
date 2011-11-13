@@ -1,0 +1,96 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.15.0.963 modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Registration
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Registration Attributes - for documentation purposes
+  #attr_reader :grade
+
+  #Registration Associations - for documentation purposes
+  #attr_reader :student, :courseSection
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_grade)
+    @initialized = false
+    @deleted = false
+    @grade = a_grade
+    @student = nil
+    @courseSection = nil
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_grade(a_grade)
+    was_set = false
+    @grade = a_grade
+    was_set = true
+    was_set
+  end
+
+  def get_grade
+    @grade
+  end
+
+  def get_student
+    @student
+  end
+
+  def get_courseSection
+    @courseSection
+  end
+
+  def set_student(a_student)
+    was_set = false
+    existing_student = @student
+    @student = a_student
+    if !existing_student.nil? and !existing_student.eql?(a_student)
+      existing_student.remove_registration(self)
+    end
+    unless a_student.nil?
+      a_student.add_registration(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def set_courseSection(a_courseSection)
+    was_set = false
+    existing_courseSection = @courseSection
+    @courseSection = a_courseSection
+    if !existing_courseSection.nil? and !existing_courseSection.eql?(a_courseSection)
+      existing_courseSection.remove_registration(self)
+    end
+    unless a_courseSection.nil?
+      a_courseSection.add_registration(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    unless @student.nil?
+      @student.remove_registration(self)
+    end
+    unless @courseSection.nil?
+      @courseSection.remove_registration(self)
+    end
+  end
+
+end
+end

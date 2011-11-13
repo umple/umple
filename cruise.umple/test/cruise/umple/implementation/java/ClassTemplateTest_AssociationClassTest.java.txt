@@ -1,0 +1,106 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+
+package example;
+
+public class Registration
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Registration Attributes
+  private String grade;
+
+  //Registration Associations
+  private Student student;
+  private CourseSection courseSection;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Registration(String aGrade)
+  {
+    grade = aGrade;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setGrade(String aGrade)
+  {
+    boolean wasSet = false;
+    grade = aGrade;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getGrade()
+  {
+    return grade;
+  }
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public CourseSection getCourseSection()
+  {
+    return courseSection;
+  }
+
+  public boolean setStudent(Student aStudent)
+  {
+    boolean wasSet = false;
+    Student existingStudent = student;
+    student = aStudent;
+    if (existingStudent != null && !existingStudent.equals(aStudent))
+    {
+      existingStudent.removeRegistration(this);
+    }
+    if (aStudent != null)
+    {
+      aStudent.addRegistration(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCourseSection(CourseSection aCourseSection)
+  {
+    boolean wasSet = false;
+    CourseSection existingCourseSection = courseSection;
+    courseSection = aCourseSection;
+    if (existingCourseSection != null && !existingCourseSection.equals(aCourseSection))
+    {
+      existingCourseSection.removeRegistration(this);
+    }
+    if (aCourseSection != null)
+    {
+      aCourseSection.addRegistration(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (student != null)
+    {
+      Student placeholderStudent = student;
+      this.student = null;
+      placeholderStudent.removeRegistration(this);
+    }
+    if (courseSection != null)
+    {
+      CourseSection placeholderCourseSection = courseSection;
+      this.courseSection = null;
+      placeholderCourseSection.removeRegistration(this);
+    }
+  }
+
+}

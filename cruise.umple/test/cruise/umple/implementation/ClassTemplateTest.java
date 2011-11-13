@@ -79,7 +79,10 @@ public class ClassTemplateTest extends TemplateTest
   @Test @Ignore
   public void AssociationClass()
   {
-    Assert.fail("Add an association class syntax text");
+	  //Test two variants of the AssociationClassTest syntax that should generate the same code.
+	  assertUmpleTemplateFor("ClassTemplateTest_AssociationClassTest_1.ump",languagePath + "/ClassTemplateTest_AssociationClassTest."+ languagePath +".txt","Registration");
+	  //Test for issue 131
+	  assertUmpleTemplateFor("ClassTemplateTest_AssociationClassTest_2.ump",languagePath + "/ClassTemplateTest_AssociationClassTest."+ languagePath +".txt","Registration");
   }
   
   @Test @Ignore
