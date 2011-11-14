@@ -11,11 +11,11 @@ noreferences
 <ul>
 
 <li>Entitles such as <a href="ClassDefinition.html">classes</a> or 
-<a href="InterfaceDefinition.html">interfaces</a>. These look very similar to 
+<a href="interfaceDefinition.html">interfaces</a>. These look very similar to 
 the definitions of classes or interfaces in Java. Indeed they can be 
 identical to what you would find in a Java (or PHP or Ruby) file. However, 
 the key difference is that they can also contain Umple code for UML 
-constructs such as <a href="AssociationDefinition.html">associations</a>, <a href="AttributeDefinition.html">attributes</a> and <a href="StateMachineDefinition.html">state machines</a>. Another 
+constructs such as <a href="AssociationDefinition.html">associations</a>, <a href="AttributeDefinition.html">attributes</a> and <a href="BasicStateMachines.html">state machines</a>. Another 
 difference is that in Umple, you can have multiple definitions of the same 
 class; the contents of the second and subsequent definition are 
 <i>added</i> to the overall definition of the class.</li>

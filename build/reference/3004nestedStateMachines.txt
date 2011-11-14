@@ -70,12 +70,13 @@ class CourseSection
       openRegistration -> OpenNotEnoughStudents;
     }
     Open {
-      closeRegistration -> Cancelled;
       cancel -> Cancelled;
       NotEnoughStudents {
+        closeRegistration -> Cancelled;
         register [getClassSize() > getMinimumClassSize()] -> OpenEnoughStudents;
       }
       EnoughStudents {
+        closeRegistration -> Closed;
         register [getClassSize() > getMaximumClassSize()] -> Closed;
       }
     }
@@ -169,7 +170,7 @@ class CourseSection
       register [getClassSize() > getMinimumClassSize()] -> OpenEnoughStudents;
     }
     OpenEnoughStudents {
-      closeRegistration -> Cancelled;
+      closeRegistration -> Closed;
       cancel -> Cancelled;
       register [getClassSize() > getMaximumClassSize()] -> Closed;
     }
