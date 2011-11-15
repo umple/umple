@@ -7,6 +7,7 @@
   appendln(stringBuffer, "  //------------------------");
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
+  
 
   isFirst = true;
   for(Attribute av : uClass.getAttributes())

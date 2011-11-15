@@ -33,6 +33,7 @@
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
 class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 {
+  private:
   <%@ include file="members_AllStatics.jet" %>
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllStateMachines.jet" %>
@@ -42,6 +43,7 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   <%@ include file="constructor_Declare_All.jet" %>
 
