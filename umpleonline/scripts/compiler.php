@@ -83,7 +83,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $sourceCode = str_replace("?>","",$sourceCode);
   $sourceCode = htmlspecialchars($sourceCode);
   
-  if ($errorMessage != "")
+  if ($sourceCode == "")
   {
     $html = "
         // An error occurred interpreting your Umple code, please review it and try again.
@@ -93,7 +93,9 @@ else if (isset($_REQUEST["umpleCode"]))
         // We are aware that error messages are not useful or nonexistent and
         // we are working to fix that.
         /* {$errorMessage} */"  ;
+        
     echo $html;
+    
   }
   else
   {
@@ -134,6 +136,11 @@ else if (isset($_REQUEST["umpleCode"]))
 	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
 	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a><p>URL_SPLIT";
        echo $sourceCode;
+       
+       if($errorMessage != "") // Warning, not error
+       {
+          echo "/*Warnings: {$errorMessage}*/";
+       }
     }
   }
 }

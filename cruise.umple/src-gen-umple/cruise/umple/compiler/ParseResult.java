@@ -128,10 +128,20 @@ public class ParseResult
     if (errorMessages.contains(aErrorMessage)) { return false; }
     errorMessages.add(aErrorMessage);
     wasAdded = true;
-    if(aErrorMessage.getErrorType().getSevertiy() == 1)
+    // If the severity level is 1 then it's the most severe error
+   	// And we stop accepting errors (The parser may continue to parse,
+   	// as but we won't report any further errors, as they may be non-sensical)
+    if(aErrorMessage.getErrorType().getSevertiy() == 1){
     	_acceptsErrors = false;
-    else if(aErrorMessage.getErrorType().getSevertiy() <= 2)
     	wasSuccess = false;
+    }
+    
+    // Otherwise, if the severity is 2, we may have an error, 
+    // but we'll continue to compile and generate additional errors/warnings 
+    else if(aErrorMessage.getErrorType().getSevertiy() == 2)  
+    	wasSuccess = false;
+    	
+    // Everything else must be a warning.
     else
     	hasWarnings = true;
     return wasAdded;
