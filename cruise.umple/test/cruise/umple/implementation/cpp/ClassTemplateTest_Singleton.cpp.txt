@@ -6,6 +6,7 @@ package example;
 
 class Application
 {
+  private:
 
   //------------------------
   // STATIC VARIABLES
@@ -20,6 +21,7 @@ class Application
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   private Application()
   {}

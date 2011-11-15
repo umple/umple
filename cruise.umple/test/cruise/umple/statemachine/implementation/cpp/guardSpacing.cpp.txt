@@ -6,6 +6,7 @@ package example;
 
 class Garage
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -21,6 +22,7 @@ class Garage
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Garage(boolean aEntranceClear)
   {

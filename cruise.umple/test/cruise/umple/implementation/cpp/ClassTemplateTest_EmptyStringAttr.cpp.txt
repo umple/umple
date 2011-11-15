@@ -6,6 +6,7 @@ package example;
 
 class Student
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -17,6 +18,7 @@ class Student
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Student()
   {

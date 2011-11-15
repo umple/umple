@@ -6,6 +6,7 @@ package example;
 
 class SubMentor2 extends Mentor
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -17,6 +18,7 @@ class SubMentor2 extends Mentor
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public SubMentor2(String aName, String aSubName)
   {

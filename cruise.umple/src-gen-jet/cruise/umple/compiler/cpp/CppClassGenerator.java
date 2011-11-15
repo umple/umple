@@ -23,8 +23,8 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL;
   protected final String TEXT_5 = NL + "class ";
-  protected final String TEXT_6 = NL + "{";
-  protected final String TEXT_7 = NL + NL + "  //------------------------" + NL + "  // CONSTRUCTOR" + NL + "  //------------------------" + NL;
+  protected final String TEXT_6 = NL + "{" + NL + "  private:";
+  protected final String TEXT_7 = NL + NL + "  //------------------------" + NL + "  // CONSTRUCTOR" + NL + "  //------------------------" + NL + "  public:" + NL;
   protected final String TEXT_8 = NL + "    ";
   protected final String TEXT_9 = " = new ArrayList<";
   protected final String TEXT_10 = ">();";
@@ -1847,6 +1847,7 @@ public class CppClassGenerator implements ILang
   appendln(stringBuffer, "  //------------------------");
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
+  
 
   isFirst = true;
   for(Attribute av : uClass.getAttributes())

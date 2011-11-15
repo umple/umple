@@ -8,6 +8,7 @@ import example.two.*;
 
 class Course
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -19,6 +20,7 @@ class Course
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Course()
   {

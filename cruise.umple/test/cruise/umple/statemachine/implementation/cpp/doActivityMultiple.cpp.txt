@@ -6,6 +6,7 @@ package example;
 
 class Lamp
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -18,6 +19,7 @@ class Lamp
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Lamp()
   {

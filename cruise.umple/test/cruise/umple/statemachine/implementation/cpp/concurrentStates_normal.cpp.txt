@@ -6,6 +6,7 @@ package example;
 
 class LightFixture
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -22,6 +23,7 @@ class LightFixture
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public LightFixture()
   {

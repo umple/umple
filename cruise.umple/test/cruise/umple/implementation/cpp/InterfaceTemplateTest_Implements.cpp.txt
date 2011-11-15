@@ -6,6 +6,7 @@ package example;
 
 class Something implements ISomething
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -14,6 +15,7 @@ class Something implements ISomething
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Something()
   {}

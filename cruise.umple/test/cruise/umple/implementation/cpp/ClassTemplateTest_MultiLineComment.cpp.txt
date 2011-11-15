@@ -11,6 +11,7 @@ on several lines
 */
 class Student
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -19,6 +20,7 @@ class Student
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Student()
   {}

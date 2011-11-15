@@ -9,6 +9,7 @@ import example.three.*;
 
 class Student
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -24,6 +25,7 @@ class Student
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Student(String aNumber, Mentor... allMentors)
   {

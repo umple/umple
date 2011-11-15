@@ -6,6 +6,7 @@ package example;
 
 class Token
 {
+  private:
 
   //------------------------
   // MEMBER VARIABLES
@@ -17,6 +18,7 @@ class Token
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public:
 
   public Token(Position aP)
   {
