@@ -6,7 +6,7 @@ package example.three;
 import java.util.*;
 import example.two.*;
 
-public class Course
+class Course
 {
 
   //------------------------
@@ -119,4 +119,4 @@ public class Course
     }
   }
 
-}
+};

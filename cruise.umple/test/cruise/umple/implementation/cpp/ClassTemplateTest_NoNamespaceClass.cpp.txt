@@ -4,7 +4,7 @@
 
 
 
-public class Token
+class Token
 {
 
   //------------------------
@@ -25,4 +25,4 @@ public class Token
   public void delete()
   {}
 
-}
+};

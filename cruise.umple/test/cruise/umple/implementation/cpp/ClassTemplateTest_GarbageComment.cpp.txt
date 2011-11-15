@@ -5,7 +5,7 @@
 package example;
 
 // This is a student
-public class Student
+class Student
 {
 
   //------------------------
@@ -26,4 +26,4 @@ public class Student
   public void delete()
   {}
 
-}
+};

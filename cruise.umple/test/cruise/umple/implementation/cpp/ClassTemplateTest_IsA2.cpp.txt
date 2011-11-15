@@ -4,7 +4,7 @@
 
 package example;
 
-public class SubMentor2 extends Mentor
+class SubMentor2 extends Mentor
 {
 
   //------------------------
@@ -46,4 +46,4 @@ public class SubMentor2 extends Mentor
     super.delete();
   }
 
-}
+};

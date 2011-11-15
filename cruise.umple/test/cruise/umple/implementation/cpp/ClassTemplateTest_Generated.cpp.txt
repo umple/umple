@@ -4,7 +4,7 @@
 
 package example;
 
-public class Mentor
+class Mentor
 {
 
   //------------------------
@@ -31,4 +31,4 @@ public class Mentor
   
   public static main()
   {}
-}
+};

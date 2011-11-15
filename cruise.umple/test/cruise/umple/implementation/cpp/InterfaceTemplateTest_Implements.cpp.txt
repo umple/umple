@@ -4,7 +4,7 @@
 
 package example;
 
-public class Something implements ISomething
+class Something implements ISomething
 {
 
   //------------------------
@@ -35,4 +35,4 @@ public class Something implements ISomething
             return "";
   }
 
-}
+};

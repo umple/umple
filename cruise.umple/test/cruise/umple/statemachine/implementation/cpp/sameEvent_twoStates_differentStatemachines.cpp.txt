@@ -4,7 +4,7 @@
 
 package example;
 
-public class LightFixture
+class LightFixture
 {
 
   //------------------------
@@ -108,4 +108,4 @@ public class LightFixture
   public void delete()
   {}
 
-}
+};

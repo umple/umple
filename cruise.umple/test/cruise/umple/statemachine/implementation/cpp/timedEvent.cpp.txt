@@ -5,7 +5,7 @@
 package example;
 import java.util.*;
 
-public class Mentor
+class Mentor
 {
 
   //------------------------
@@ -189,4 +189,4 @@ public class Mentor
   public void delete()
   {}
 
-}
+};

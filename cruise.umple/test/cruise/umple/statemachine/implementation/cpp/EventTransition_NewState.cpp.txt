@@ -4,7 +4,7 @@
 
 package example;
 
-public class Light
+class Light
 {
 
   //------------------------
@@ -66,4 +66,4 @@ public class Light
   public void delete()
   {}
 
-}
+};

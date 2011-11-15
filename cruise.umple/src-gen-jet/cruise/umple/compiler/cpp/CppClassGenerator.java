@@ -22,7 +22,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL;
-  protected final String TEXT_5 = NL + "public class ";
+  protected final String TEXT_5 = NL + "class ";
   protected final String TEXT_6 = NL + "{";
   protected final String TEXT_7 = NL + NL + "  //------------------------" + NL + "  // CONSTRUCTOR" + NL + "  //------------------------" + NL;
   protected final String TEXT_8 = NL + "    ";
@@ -1719,7 +1719,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1699 = "(null);" + NL + "    }";
   protected final String TEXT_1700 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
   protected final String TEXT_1701 = NL + "  ";
-  protected final String TEXT_1702 = NL + "}";
+  protected final String TEXT_1702 = NL + "};";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)

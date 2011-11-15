@@ -7,7 +7,7 @@ import java.util.*;
 import example.one.*;
 import example.three.*;
 
-public class Student
+class Student
 {
 
   //------------------------
@@ -283,4 +283,4 @@ public class Student
     }
   }
 
-}
+};

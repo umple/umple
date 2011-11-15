@@ -5,7 +5,7 @@
 package example.one;
 import example.two.*;
 
-public class Mentor
+class Mentor
 {
 
   //------------------------
@@ -66,4 +66,4 @@ public class Mentor
     }
   }
 
-}
+};
