@@ -157,7 +157,7 @@ private void init()
   // When an error occurs, set the failed position and mark the compile as NOT successful
   private void setFailedPosition(Position position)
   {
-    getParseResult().setWasSuccess(false);
+    //getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
     getParseResult().addErrorMessage(new ErrorMessage(0,position,"TokenAnalysis"));
   }

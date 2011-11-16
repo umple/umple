@@ -615,7 +615,7 @@ public class UmpleModel
 
     failed |= !result.getWasSuccess();
 
-    if(failed)
+    if(failed || result.getHasWarnings())
     	throw new UmpleCompilerException(result.toString(),null);
   }  
   
