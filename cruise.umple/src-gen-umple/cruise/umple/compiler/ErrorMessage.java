@@ -129,7 +129,11 @@ public class ErrorMessage
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
 	  this.parameters = Arrays.asList(parameters);
   }
-public String toString()
+public String getFormattedMessage()
+   {
+   	   return errorType.format(this.parameters);
+   }
+   public String toString()
    {
 	   String err = errorType.getErrorType() + " Error on line: " + this.position.getLineNumber();
 	   err += " of file \"" + this.position.getFilename() + "\":\n";

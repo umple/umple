@@ -22,6 +22,7 @@ public class UmpleModel
   private String defaultNamespace;
   private String code;
   private boolean debugMode;
+  private ParseResult lastResult;
   private Map<String,String> generatedCode;
   private Coordinate levelOffset;
   private Coordinate initialOffset;
@@ -51,6 +52,7 @@ public class UmpleModel
     defaultNamespace = null;
     code = null;
     debugMode = false;
+    lastResult = null;
     generatedCode = new HashMap<String,String>();
     levelOffset = new Coordinate(200,100,0,0);
     initialOffset = new Coordinate(50,30,0,0);
@@ -139,6 +141,14 @@ public class UmpleModel
     return wasSet;
   }
 
+  public boolean setLastResult(ParseResult aLastResult)
+  {
+    boolean wasSet = false;
+    lastResult = aLastResult;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setGeneratedCode(Map<String,String> aGeneratedCode)
   {
     boolean wasSet = false;
@@ -218,6 +228,11 @@ public class UmpleModel
   public boolean getDebugMode()
   {
     return debugMode;
+  }
+
+  public ParseResult getLastResult()
+  {
+    return lastResult;
   }
 
   public Map<String,String> getGeneratedCode()
@@ -609,6 +624,7 @@ public class UmpleModel
     String input = SampleFileWriter.readContent(getUmpleFile().getFile());
     ParseResult result = parser.parse("program", input);
     boolean failed = !result.getWasSuccess();
+    lastResult = result;
     
     if(!failed)
         result = parser.analyze(getShouldGenerate());

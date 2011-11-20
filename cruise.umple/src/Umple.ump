@@ -25,6 +25,7 @@ class UmpleModel
   String defaultNamespace = null;
   String code = null;
   Boolean debugMode = false;
+  ParseResult lastResult = null;
   
   Map<String,String> generatedCode = new HashMap<String,String>();
   

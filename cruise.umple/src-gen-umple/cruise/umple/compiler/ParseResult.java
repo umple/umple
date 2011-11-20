@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.util.StringFormatter;
 import java.util.*;
 
 public class ParseResult
@@ -131,14 +132,14 @@ public class ParseResult
     // If the severity level is 1 then it's the most severe error
    	// And we stop accepting errors (The parser may continue to parse,
    	// as but we won't report any further errors, as they may be non-sensical)
-    if(aErrorMessage.getErrorType().getSevertiy() == 1){
+    if(aErrorMessage.getErrorType().getSeverity() == 1){
     	_acceptsErrors = false;
     	wasSuccess = false;
     }
     
     // Otherwise, if the severity is 2, we may have an error, 
     // but we'll continue to compile and generate additional errors/warnings 
-    else if(aErrorMessage.getErrorType().getSevertiy() == 2)  
+    else if(aErrorMessage.getErrorType().getSeverity() == 2)  
     	wasSuccess = false;
     	
     // Everything else must be a warning.
@@ -174,5 +175,37 @@ public class ParseResult
    	 for(ErrorMessage em : errorMessages)
    	    ret += em.toString() + "\n";
    	 return ret;
+   }
+   
+   public String toJSON ()
+   {
+   	 String ret = "{ \"results\" : [ ";
+   	 boolean hasOne = false;
+   	 for(ErrorMessage em : errorMessages)
+   	 {
+   	 	ErrorType et = em.getErrorType();
+   	 	
+   	 	String line     = String.valueOf(em.getPosition().getLineNumber());
+   	 	String file     = StringFormatter.sanitizeForJson(em.getPosition().getFilename());
+   	 	String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
+   	 	String severity = String.valueOf(et.getSeverity());
+   	 	String code     = String.valueOf(et.getErrorCode());
+   	 	String type		= StringFormatter.sanitizeForJson(et.getErrorType());
+   	 	String url		= "http:\\\\www.google.com";
+   	 	
+   	 	ret += "{ \"errorCode\" : \"" + code + "\",";
+   	 	ret += " \"severity\" : \"" +severity + "\", ";
+   	 	ret += " \"errorType\" : \"" + type + "\", ";
+   	 	ret += "\"url\" : \"" + url + "\", ";
+   	 	ret += "\"line\" : \"" + line + "\", ";
+   	 	ret += "\"filename\" : \"" + file + "\", ";
+   	 	ret += "\"message\" : \"" + message + "\"},";
+   	 	hasOne = true;
+   	 }
+   	 
+   	 if(hasOne)
+   	 	ret = ret.substring(0, ret.length()-1);
+     ret += "]}";
+     return ret;
    }
 }

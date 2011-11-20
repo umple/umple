@@ -221,6 +221,30 @@ public class StringFormatter
   	return prePath + File.separator + path + File.separator;
   }
   
+  public static String sanitizeForJson(String input){
+	 String ret = "";
+     for (int i=0; i<input.length(); i++)
+	 {
+         switch(input.charAt(i))
+         {
+         	case '\\':         		
+         		ret += "\\\\";
+     		break;
+
+         	/*case '\'':
+         		ret += "\\'";
+         		break;*/
+
+         	case  '"':
+         		ret += "\\\"";
+         		break;
+         		default:
+         			ret += input.charAt(i);
+         			break;
+         }
+	 }
+	 return ret;   
+  }
   private static String clean(Object input)
   {
     return input == null ? "" : input.toString();

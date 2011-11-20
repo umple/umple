@@ -14,7 +14,7 @@ public class ErrorType
 
   //ErrorType Attributes
   private int errorCode;
-  private int severtiy;
+  private int severity;
   private String errorFormat;
   private String errorType;
 
@@ -26,10 +26,10 @@ public class ErrorType
   // CONSTRUCTOR
   //------------------------
 
-  public ErrorType(int aErrorCode, int aSevertiy, String aErrorFormat, String aErrorType)
+  public ErrorType(int aErrorCode, int aSeverity, String aErrorFormat, String aErrorType)
   {
     errorCode = aErrorCode;
-    severtiy = aSevertiy;
+    severity = aSeverity;
     errorFormat = aErrorFormat;
     errorType = aErrorType;
     cachedHashCode = -1;
@@ -49,10 +49,10 @@ public class ErrorType
     return wasSet;
   }
 
-  public boolean setSevertiy(int aSevertiy)
+  public boolean setSeverity(int aSeverity)
   {
     boolean wasSet = false;
-    severtiy = aSevertiy;
+    severity = aSeverity;
     wasSet = true;
     return wasSet;
   }
@@ -78,9 +78,9 @@ public class ErrorType
     return errorCode;
   }
 
-  public int getSevertiy()
+  public int getSeverity()
   {
-    return severtiy;
+    return severity;
   }
 
   public String getErrorFormat()

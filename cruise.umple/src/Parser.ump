@@ -27,6 +27,8 @@ class ParseResult
   // Position is left for now, as not to break things
   * -> 0..1 Position;
   * -> * ErrorMessage;
+
+  depend  cruise.umple.util.StringFormatter;
 }
 
 class ErrorMessage
@@ -39,7 +41,7 @@ class ErrorMessage
 class ErrorType
 {
 	Integer errorCode;
-	Integer severtiy;
+	Integer severity;
 	String errorFormat;
 	String errorType;
 	key {errorCode}

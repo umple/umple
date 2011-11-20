@@ -83,6 +83,36 @@ else if (isset($_REQUEST["umpleCode"]))
   $sourceCode = str_replace("?>","",$sourceCode);
   $sourceCode = htmlspecialchars($sourceCode);
   
+  $errhtml = "";
+  if($errorMessage != "") 
+  {
+  	 $errInfo = json_decode($errorMessage, true);
+     $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
+     $errhtml .= "<div id='errorRow' colspan='3' style='display:none'>";
+     
+     if($errInfo == null)
+     {
+     	$errhtml .= "Couldn't read results from the Umple compiler!";
+     }
+     else
+     {
+     	$results = $errInfo["results"];
+     	
+     	foreach($results as $result)
+     	{
+     		$line = intval($result["line"]) - 1; // We injected a statment, so we need to substract 1
+     		$severity = intval($result["severity"]) > 2 ? "Warning" : "Error";
+     		$msg = htmlspecialchars($result["message"]);
+     		     		
+     		$errhtml .= "{$severity} on line {$line} : {$msg} </br>";
+     	}
+     }
+ 	
+     $errhtml .= "</div>";
+        
+     $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
+  }
+  
   if ($sourceCode == "")
   {
     $html = "
@@ -91,10 +121,9 @@ else if (isset($_REQUEST["umpleCode"]))
         // the umple-help google group: umple-help@googlegroups.com
         // or post an issue at http://bugs.umple.org -- the Umple issues page
         // We are aware that error messages are not useful or nonexistent and
-        // we are working to fix that.
-        /* {$errorMessage} */"  ;
+        // we are working to fix that.";
         
-    echo $html;
+    echo $errhtml ."<p>URL_SPLIT" . $html;
     
   }
   else
@@ -125,7 +154,8 @@ else if (isset($_REQUEST["umpleCode"]))
        
        exec($command);
        exec("cd $thedir; rm javadocFromUmple.zip; /usr/bin/zip -r javadocFromUmple javadoc");
-        $html = "<a href=\"umpleonline/$thedir/javadocFromUmple.zip\">Download the following as a zip file</a>
+       
+       $html = "<a href=\"umpleonline/$thedir/javadocFromUmple.zip\">Download the following as a zip file</a>{$errhtml}
       <iframe width=100% height=1000 src=\"" . $theurldir . "/javadoc/\">This browser does not
       support iframes, so the javadoc cannot be displayed</iframe> 
      ";
@@ -134,13 +164,8 @@ else if (isset($_REQUEST["umpleCode"]))
     else // This is where the Java, PHP and other output is placed on the screen
     {
 	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
-	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a><p>URL_SPLIT";
+	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a>{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
-       
-       if($errorMessage != "") // Warning, not error
-       {
-          echo "/*Warnings: {$errorMessage}*/";
-       }
     }
   }
 }

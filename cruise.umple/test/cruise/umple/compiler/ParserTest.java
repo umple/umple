@@ -1022,7 +1022,7 @@ public class ParserTest
 	  
 	  Assert.assertEquals("this is an error zero, one", et.format(l));
 	  Assert.assertEquals(999, et.getErrorCode());
-	  Assert.assertEquals(9, et.getSevertiy());
+	  Assert.assertEquals(9, et.getSeverity());
   }
   
   @Test 
@@ -1035,7 +1035,7 @@ public class ParserTest
 	  
 	  ErrorType et = ets.getErrorTypeForCode(1001);
 	  Assert.assertEquals(1001, et.getErrorCode());
-	  Assert.assertEquals(10, et.getSevertiy());
+	  Assert.assertEquals(10, et.getSeverity());
 	  Assert.assertEquals("This is a test error {0}", et.getErrorFormat());
 	  
 	  et = ets.getErrorTypeForCode(1002);
@@ -1054,6 +1054,23 @@ public class ParserTest
 	  Assert.assertEquals("TestError Error on line: 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
   }
 
+  @Test 
+  public void jsonMessage()
+  {
+
+	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+	  ets.clear();
+	  
+	  ets.addErrorType(new ErrorType(1002, 5, "Test \"{0}\"", "TestError"));
+	  
+	  ParseResult pr = new ParseResult(true);
+	  
+	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file1",0,0,0), " \\' "));
+	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
+	  
+	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\",  \"errorType\" : \"TestError\", \"url\" : \"http:\\\\www.google.com\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\",  \"errorType\" : \"TestError\", \"url\" : \"http:\\\\www.google.com\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
+  }
+  
   @Test
   public void parseResultSeverity()
   {

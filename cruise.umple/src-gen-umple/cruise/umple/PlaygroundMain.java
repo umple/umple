@@ -97,7 +97,7 @@ public class PlaygroundMain
     }
     catch(UmpleCompilerException e)
     {
-   	  System.err.print(e.getMessage());
+   	  System.err.print(model.getLastResult().toJSON());
     }
      
     if ("-classList".equals(args[0]))

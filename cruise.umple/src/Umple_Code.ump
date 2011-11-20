@@ -151,6 +151,7 @@ class UmpleModel
     String input = SampleFileWriter.readContent(getUmpleFile().getFile());
     ParseResult result = parser.parse("program", input);
     boolean failed = !result.getWasSuccess();
+    lastResult = result;
     
     if(!failed)
         result = parser.analyze(getShouldGenerate());
