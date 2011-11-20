@@ -1,0 +1,36 @@
+<NotepadPlus>
+    <UserLang name="Umple" ext=".ump">
+        <Settings>
+            <Global caseIgnored="no" />
+            <TreatAsSymbol comment="no" commentLine="yes" />
+            <Prefix words1="no" words2="no" words3="no" words4="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Delimiters">&quot;00&quot;00</Keywords>
+            <Keywords name="Folder+">{</Keywords>
+            <Keywords name="Folder-">}</Keywords>
+            <Keywords name="Operators"></Keywords>
+            <Keywords name="Comment">1/* 2*/ 0//</Keywords>
+            <Keywords name="Words1">abstract &#x000D;&#x000A;activate &#x000D;&#x000A;after &#x000D;&#x000A;after &#x000D;&#x000A;after &#x000D;&#x000A;afterEvery &#x000D;&#x000A;as &#x000D;&#x000A;association &#x000D;&#x000A;association &#x000D;&#x000A;associationClass &#x000D;&#x000A;before &#x000D;&#x000A;cardinality &#x000D;&#x000A;class &#x000D;&#x000A;const &#x000D;&#x000A;constant &#x000D;&#x000A;deactivate &#x000D;&#x000A;debug &#x000D;&#x000A;defaulted &#x000D;&#x000A;depend &#x000D;&#x000A;do &#x000D;&#x000A;during &#x000D;&#x000A;entry &#x000D;&#x000A;execute &#x000D;&#x000A;exit &#x000D;&#x000A;external&#x000D;&#x000A;external &#x000D;&#x000A;final &#x000D;&#x000A;for &#x000D;&#x000A;generate &#x000D;&#x000A;immutable &#x000D;&#x000A;interface &#x000D;&#x000A;interface &#x000D;&#x000A;internal &#x000D;&#x000A;isA &#x000D;&#x000A;key &#x000D;&#x000A;lazy &#x000D;&#x000A;namespace &#x000D;&#x000A;onThisObject &#x000D;&#x000A;period &#x000D;&#x000A;position &#x000D;&#x000A;position.association&#x000D;&#x000A;protected &#x000D;&#x000A;public &#x000D;&#x000A;self &#x000D;&#x000A;settable &#x000D;&#x000A;singleton &#x000D;&#x000A;statemachine &#x000D;&#x000A;trace &#x000D;&#x000A;tracecase &#x000D;&#x000A;tracer &#x000D;&#x000A;unique &#x000D;&#x000A;unique &#x000D;&#x000A;until &#x000D;&#x000A;use &#x000D;&#x000A;where</Keywords>
+            <Keywords name="Words2"></Keywords>
+            <Keywords name="Words3"></Keywords>
+            <Keywords name="Words4"></Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" styleID="11" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="FOLDEROPEN" styleID="12" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="FOLDERCLOSE" styleID="13" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="KEYWORD1" styleID="5" fgColor="8000FF" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="KEYWORD2" styleID="6" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="KEYWORD3" styleID="7" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="KEYWORD4" styleID="8" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="COMMENT" styleID="1" fgColor="008000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="COMMENT LINE" styleID="2" fgColor="008000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="NUMBER" styleID="4" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="OPERATOR" styleID="10" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="DELIMINER1" styleID="14" fgColor="0000A0" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="DELIMINER2" styleID="15" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+            <WordsStyle name="DELIMINER3" styleID="16" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>
