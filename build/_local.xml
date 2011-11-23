@@ -4,7 +4,9 @@
   <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
   <property name="haltonfailure" value="false"/>
   <property name="shouldPackageUmpleOnline" value="false"/>
-  <property name="shouldDeploy" value="false"/>    
+  <property name="shouldDeploy" value="false"/>  
+  <property name="showJunitSummary" value="true"/>  
+  <property name="showJunitOutput" value="true"/>  
   <import file="_versionLast.xml" />
 
 </project>

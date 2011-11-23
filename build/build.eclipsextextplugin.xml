@@ -88,7 +88,7 @@
   ``````````````````````````` -->
   
   <target name="test">
-    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
       <jvmarg value="${jvmarg.01}"/>
       <jvmarg value="${jvmarg.02}" />
       

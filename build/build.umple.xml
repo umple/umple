@@ -161,6 +161,15 @@
       </manifest>
     </jar>
 
+    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.UmpleRunMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
     <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/vml/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -312,6 +321,14 @@
     <antcall target="compile" />
     <antcall target="template.test" />
   </target>
+
+  <!-- Run This Command if you are working outside Eclipse and want to see if the tests are passing -->
+  <target name="local" >
+    <antcall target="umpleSelf" />
+    <antcall target="compile" />
+    <antcall target="template.test" />
+  </target>
+
   
   <!-- Other projects that rely on UmpleCore can call this target to ensure the the application
        Is compiled -->

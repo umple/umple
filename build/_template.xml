@@ -111,15 +111,17 @@
   <!-- ```````````````````````````
     Test the application
   ``````````````````````````` -->
-  
+
   <target name="template.test">
-    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
       <jvmarg value="-d32"/>
       <!-- <jmvarg value="-XstartOnFirstThread"/> -->
-      <formatter type="xml"/>
+      <formatter type="xml" unless="${showJunitOutput}"/>
+      <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
       <batchtest fork="yes" todir="${test.output.path}">
         <fileset dir="${project.path}/test">
-          <include name="**/*Test*.java"/>
+          <include name="**/*UmpleRunMainTest*.java"/>
+          <!-- <include name="**/*Test*.java"/> -->
           <exclude name="**/AllTests.java"/>
         </fileset>
       </batchtest>
