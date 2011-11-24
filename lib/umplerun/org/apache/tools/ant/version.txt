@@ -1,0 +1,2 @@
+VERSION=1.7.0
+DATE=December 13 2006

@@ -43,14 +43,22 @@ public class UmpleRunMainTest
   }
   
  @Test
- public void CompileTheProject()
+ public void RunTheCommands()
  {
    SampleFileWriter.createFile("myfile.ump", "namespace test_package; class One{  }");
-   SampleFileWriter.createFile("myfile.cmd", "");
-   String[] args = new String[] {"myfile.ump",""};
+   SampleFileWriter.createFile("myfile.cmd", "new test_package.One");
+   String[] args = new String[] {"myfile.ump","myfile.cmd"};
    
    UmpleRunMain.main(args);
-   Assert.assertEquals("Compiling myfile.ump... success.\n", UmpleRunMain.console);
+   
+   String expected = "Compiling myfile.ump... success.\n" +
+                     "Building model... success.\n" +
+                     "Loading model into memory... success.\n" +
+                     "Running commands:\n" +
+                     "  >>> new test_package.One\n" +
+                     "Done.\n";
+   
+   Assert.assertEquals(expected, UmpleRunMain.console);
  }
   
 }

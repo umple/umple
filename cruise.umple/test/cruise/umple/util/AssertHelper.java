@@ -8,11 +8,20 @@
  */
 
 package cruise.umple.util;
+import java.io.File;
+
 import junit.framework.Assert;
 
 public class AssertHelper 
 {
 
+  public static void assertFileExists(String rawPath)
+  {
+    String filename = SampleFileWriter.rationalize(rawPath);
+    System.out.println("LOOKING FOR:" + filename);
+    Assert.assertEquals(true,(new File(filename)).exists());
+  }
+  
   public static void assertEitherEquals(String expectedOne, String expectedTwo, String actual)
   {
     if (!expectedOne.equals(actual))

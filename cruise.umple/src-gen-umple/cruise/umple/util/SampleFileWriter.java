@@ -157,19 +157,22 @@ public class SampleFileWriter
       return path;
     }
     
-    path = "../cruise.umple/" + path;
+    path = "../cruise.umple/" + rawPath;
     f = new File(path);
     if (f.exists())
     {
       return path;
     }
 
-    path = "/h/ralph/umple/trunk/cruise.umple/" + path;
+    path = "/h/ralph/umple/trunk/cruise.umple/" + rawPath;
     return path;
   }
   
   public static void createFile(String filename, String input)
   {
+    File f = new File(filename);
+    f.getAbsoluteFile().getParentFile().mkdirs();
+    
     try
     {
       BufferedWriter out = new BufferedWriter(new FileWriter(filename));

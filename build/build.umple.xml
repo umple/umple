@@ -15,12 +15,14 @@
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
+    <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="xtext_core.classpath"/>
   </path>
 
   <path id="xtext.project.classpath">
     <pathelement location="${bin.path}"/>
+    <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="xtext_core.classpath"/>
   </path>
@@ -151,8 +153,8 @@
         <attribute name="Class-Path" value="${umple_classpath}"/>
       </manifest>
     </jar>
-  
-    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error">
+
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** org/apache/tools/ant/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -161,7 +163,11 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error">
+    <copy todir="${bin.path}">
+      <fileset dir="lib/umplerun"/>
+    </copy>
+
+    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** org/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>

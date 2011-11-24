@@ -4,6 +4,10 @@
 package cruise.umple;
 import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
+import cruise.umple.builder.*;
+import cruise.umple.util.*;
+import java.net.*;
+import java.io.*;
 
 public class UmpleRunMain
 {
@@ -37,13 +41,14 @@ public class UmpleRunMain
    {
      console = "";
      
-     if (args.length == 0)
+     if (args.length < 2)
      {
        println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
        return;
      }
      
      String filename = args[0];
+     String cmdFilename = args[1];
      UmpleFile umpleFile = new UmpleFile(filename);
      UmpleModel model = new UmpleModel(umpleFile);
      
@@ -52,24 +57,36 @@ public class UmpleRunMain
          print("Compiling "+ filename +"... ");
          model.run();
          println("success.");
+         
+         print("Building model... ");
+         Builder b = new Builder();
+         URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
+         
+         if (jarfile == null)
+         {
+           println("failed");
+           return;
+         }
+         println("success.");
+
+         print("Loading model into memory... ");
+         URL urls [] = { jarfile };
+         URLClassLoader cl = new URLClassLoader(urls);
+         println("success.");
+         //Class<?> studentClass = cl.loadClass("test.Student");
+         
+         println("Running commands:");
+         for (String cmd : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
+         {
+             println("  >>> " + cmd);
+         }
+         println("Done.");
      }
-     catch(UmpleCompilerException e)
+     catch(Exception e)
      {
          println("failed.");
          printerr(e.getMessage());
      }
-     
-//     Compiler compiler = new Compiler();
-//     URL jarfile = compiler.compile(umpleFile.getPath());
-//     
-//     if (jarfile != null)
-//     {
-//       println("Success! Processed "+ filename +".");
-//     }
-//     else
-//     {
-//       println("Failure! Unable to process " + filename + ".");
-//     }
    }
    
    private static void print(String output)

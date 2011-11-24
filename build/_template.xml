@@ -14,6 +14,12 @@
     <pathelement location="lib/junit.jar"/>
     <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
   </path>
+  
+  <path id="umple.classpath">
+    <pathelement location="lib/ant.jar"/>
+    <pathelement location="lib/ant-launcher.jar"/>
+    <pathelement location="lib/tools.jar"/>
+  </path>
 
   <path id="xtext_core.classpath">
     <pathelement location="lib/xtextplugins/com.google.inject_2.0.0.v201003051000.jar" />
@@ -113,14 +119,13 @@
   ``````````````````````````` -->
 
   <target name="template.test">
-    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}" >
       <jvmarg value="-d32"/>
       <!-- <jmvarg value="-XstartOnFirstThread"/> -->
       <formatter type="xml" unless="${showJunitOutput}"/>
       <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
       <batchtest fork="yes" todir="${test.output.path}">
         <fileset dir="${project.path}/test">
-          <!-- <include name="**/*UmpleRunMainTest*.java"/> -->
           <include name="**/*Test*.java"/>
           <exclude name="**/AllTests.java"/>
         </fileset>

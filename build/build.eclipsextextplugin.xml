@@ -26,6 +26,7 @@
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <pathelement location="cruise.umple/bin"/>
+    <path refid="umple.classpath"/>
     <path refid="eclipse.classpath"/>
     <path refid="xtext_core.classpath"/>
     <path refid="junit4.classpath"/>
