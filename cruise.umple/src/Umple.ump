@@ -206,7 +206,6 @@ class Association
   Boolean isRightNavigable;
   Coordinate[] positions;
   0..1 -- 2 AssociationEnd ends;
-  Position tokenPosition = null;
   
   before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }

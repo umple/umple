@@ -16,7 +16,6 @@ public class Association
   private boolean isLeftNavigable;
   private boolean isRightNavigable;
   private List<Coordinate> positions;
-  private Position tokenPosition;
 
   //Association Associations
   private List<AssociationEnd> ends;
@@ -31,7 +30,6 @@ public class Association
     isLeftNavigable = aIsLeftNavigable;
     isRightNavigable = aIsRightNavigable;
     positions = new ArrayList<Coordinate>();
-    tokenPosition = null;
     ends = new ArrayList<AssociationEnd>();
     boolean didAddEnds = setEnds(allEnds);
     if (!didAddEnds)
@@ -83,14 +81,6 @@ public class Association
     return wasRemoved;
   }
 
-  public boolean setTokenPosition(Position aTokenPosition)
-  {
-    boolean wasSet = false;
-    tokenPosition = aTokenPosition;
-    wasSet = true;
-    return wasSet;
-  }
-
   public String getName()
   {
     if (name == null || "".equals(name)) { return this.deriveName(); }
@@ -135,11 +125,6 @@ public class Association
   {
     int index = positions.indexOf(aPosition);
     return index;
-  }
-
-  public Position getTokenPosition()
-  {
-    return tokenPosition;
   }
 
   public boolean isIsLeftNavigable()
