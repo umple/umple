@@ -155,11 +155,11 @@ private void init()
   //------------------------
 
   // When an error occurs, set the failed position and mark the compile as NOT successful
-  private void setFailedPosition(Position position)
+  private void setFailedPosition(Position position, int errorCode, String message)
   {
     //getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
-    getParseResult().addErrorMessage(new ErrorMessage(0,position,"TokenAnalysis"));
+    getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,message));
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual
@@ -296,7 +296,10 @@ private void analyzeCoreToken(Token t)
     }
     else if (t.is("namespace"))
     {
+    	if (currentPackageName.length() != 0)
+    		setFailedPosition(t.getPosition(), 3, t.getValue());
       currentPackageName = t.getValue();
+      
       if (model.getDefaultNamespace() == null)
       {
         model.setDefaultNamespace(currentPackageName);  
@@ -707,7 +710,7 @@ private void analyzeClassToken(Token t)
 
     if (leftAssociationToken == null || rightAssociationToken == null)
     {
-      setFailedPosition(classToken.getPosition());
+      setFailedPosition(classToken.getPosition(), 8, classToken.getValue("name"));
       return;
     }
 
@@ -764,7 +767,7 @@ private void analyzeClassToken(Token t)
       {
         UmpleClass aClass = model.addUmpleClass(e.getValue());
         aClass.setPackageName(model.getDefaultNamespace());
-        setFailedPosition(e.getKey());
+        setFailedPosition(e.getKey(), 5, e.getValue());
         return false;
       }
     }
@@ -881,12 +884,22 @@ private void checkSingletonAssociations() {
 		if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
     	yourEnd.getMultiplicity().setRange("0", "1");
     	yourEnd.getMultiplicity().setBound(null);  
+    	setFailedPosition(association.getTokenPosition(), 2, association.getName());
     }
         
     if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
     	myEnd.getMultiplicity().setRange("0", "1");
     	myEnd.getMultiplicity().setBound(null);
+    	setFailedPosition(association.getTokenPosition(), 2, association.getName());
     }
+	
+	if (myClass.getIsSingleton() && myEnd.getMultiplicity().getUpperBound() == -1) {
+		setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
+	}
+	
+	if (yourClass.getIsSingleton() && yourEnd.getMultiplicity().getUpperBound() == -1) {
+		setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
+	}
 		
 	}
 }
@@ -1045,7 +1058,7 @@ private void checkSingletonAssociations() {
   {
     if (aClass.getKey().isProvided())
     {
-      setFailedPosition(keyToken.getPosition());
+      setFailedPosition(keyToken.getPosition(), 7, keyToken.getParentToken().getValue("name"));
     }
 
     if (keyToken.is("defaultKey"))
@@ -1111,7 +1124,8 @@ private void checkSingletonAssociations() {
 
     if (!myMult.isValid())
     {
-      setFailedPosition(myMultToken.getPosition());
+    	String invalidBound = myBound == null ? invalidBound = myLowerBound + ".." + myUpperBound : myBound;    		
+      setFailedPosition(myMultToken.getPosition(), 4, invalidBound);
       return null;
     }
 
@@ -1121,7 +1135,7 @@ private void checkSingletonAssociations() {
     String yourBound = yourMultToken.getValue("bound");
     String yourLowerBound = yourMultToken.getValue("lowerBound");
     String yourUpperBound = yourMultToken.getValue("upperBound");
-    
+        
     Multiplicity yourMult = new Multiplicity();
     yourMult.setBound(yourBound);
     yourMult.setRange(yourLowerBound,yourUpperBound);
@@ -1131,11 +1145,12 @@ private void checkSingletonAssociations() {
     updateAssociationEnds(firstEnd,secondEnd);
 
     Association association = createAssociation(navigation,firstEnd,secondEnd);
-
+    association.setTokenPosition(associationToken.getPosition());
     if (!association.isValid())
     {
       Token atFaultToken = association.whoIsInvalid() == 0 ? myMultToken : yourMultToken;
-      setFailedPosition(atFaultToken.getPosition());
+      String invalidBound = atFaultToken.getValue("bound") == null ? invalidBound = atFaultToken.getValue("lowerBound") + ".." + atFaultToken.getValue("upperBound") : atFaultToken.getValue("bound");
+      setFailedPosition(atFaultToken.getPosition(), 9, invalidBound);
       return null;
     }
 
@@ -1190,15 +1205,16 @@ private void checkSingletonAssociations() {
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-    if (aClass.getIsSingleton()) {
-    	isLazy = true;
-    }
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("derivedValue");
-
+    if (aClass.getIsSingleton()) {
+    	isLazy = true;
+    	setFailedPosition(attributeToken.getPosition(), 1, name);
+    }
+    
     if (derivedValue != null)
     {
       value = derivedValue;
@@ -1206,7 +1222,7 @@ private void checkSingletonAssociations() {
 
     if ("defaulted".equals(modifier) && value == null)
     {
-      setFailedPosition(attributeToken.getPosition());
+      setFailedPosition(attributeToken.getPosition(), 6, attributeToken.getValue("name"));
       return;
     }
 

@@ -87,11 +87,11 @@ class UmpleInternalParser
   //------------------------
 
   // When an error occurs, set the failed position and mark the compile as NOT successful
-  private void setFailedPosition(Position position)
+  private void setFailedPosition(Position position, int errorCode, String message)
   {
     //getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
-    getParseResult().addErrorMessage(new ErrorMessage(0,position,"TokenAnalysis"));
+    getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,message));
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual

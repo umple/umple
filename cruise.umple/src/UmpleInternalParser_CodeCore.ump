@@ -30,7 +30,10 @@ class UmpleInternalParser
     }
     else if (t.is("namespace"))
     {
+    	if (currentPackageName.length() != 0)
+    		setFailedPosition(t.getPosition(), 3, t.getValue());
       currentPackageName = t.getValue();
+      
       if (model.getDefaultNamespace() == null)
       {
         model.setDefaultNamespace(currentPackageName);  
