@@ -42,7 +42,7 @@ public class UmpleRunMainTest
    Assert.assertEquals("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd\n", UmpleRunMain.console);
   }
   
- @Test
+ @Test @Ignore
  public void RunTheCommands()
  {
    SampleFileWriter.createFile("myfile.ump", "namespace test_package; class One{  }");
