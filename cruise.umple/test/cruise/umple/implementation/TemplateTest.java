@@ -51,6 +51,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Position.php");
     SampleFileWriter.destroy(pathToInput + "/Something.php");
     SampleFileWriter.destroy(pathToInput + "/Student.php");
+    SampleFileWriter.destroy(pathToInput + "/Garage.php");
     SampleFileWriter.destroy(pathToInput + "/SubMentor.php");
     SampleFileWriter.destroy(pathToInput + "/SubMentor2.php");
     SampleFileWriter.destroy(pathToInput + "/Token.php");
