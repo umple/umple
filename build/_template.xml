@@ -60,6 +60,8 @@
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.builder_1.0.2.v201102150722.jar"/>
     <pathelement location="lib/xtextplugins/org.antlr.runtime_3.2.0.v201101311130.jar"/>
     <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types.ui_2.0.0.v201106070531.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.codetemplates_2.0.1.v201108020636.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.codetemplates.ui_2.0.1.v201108020636.jar"/>
    </path>
 
   <!-- ```````````````````````````

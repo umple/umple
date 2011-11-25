@@ -7,7 +7,7 @@
   ``````````````````````````` -->
   <import file="_template.xml" />
 
-  <property name="project.path" value="cruise.umple.xtext"/>
+  <property name="project.path" value="cruise.umple"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple.xtext.ui"/>
   <property name="test.output.path" value="dist/qa/cruise.umple.xtext.ui"/>
@@ -72,11 +72,13 @@
     <echo message="${ant.project.name}: ${ant.file}"/>
 
     <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
-      <src path="${project.path}/src"/>
-      <src path="${project.path}/src-gen"/>
       <src path="cruise.umple/src"/>
       <src path="cruise.umple/src-gen-jet"/>
       <src path="cruise.umple/src-gen-umple"/>
+	<src path="cruise.umple.xtext/src"/>
+      <src path="cruise.umple.xtext/src-gen"/>
+	<src path="cruise.umple.xtext.ui/src"/>
+      <src path="cruise.umple.xtext.ui/src-gen"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
       <exclude name="**/data" />
@@ -143,12 +145,9 @@
 
     <copy todir="${plugin.files}">
       <fileset dir="cruise.umple.xtext.ui" includes="plugin.xml" />
-      <!-- TODO: THIS IS THE PROBLEM THE UI PROJECT IS NOT BEING COMPILED AND THE BIN DIRECTORY IS NOT PART OF THE REPO -->
-      <!-- <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" /> -->
       <fileset dir="cruise.umple.xtext.ui" includes="icons/**" />
       <fileset dir="cruise.umple.xtext.ui" includes="META-INF/MANIFEST.MF" />
-      <!-- why is this included twice? -->
-      <!-- <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" /> -->
+      <fileset dir="cruise.umple.xtext.ui/bin" includes="cruise/**" />
     </copy>
 
     <!-- Files needed by the Google Juice Dependency injection framework -->
