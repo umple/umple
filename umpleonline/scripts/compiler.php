@@ -24,6 +24,8 @@ else if (isset($_REQUEST["umpleCode"]))
 {
   $input = $_REQUEST["umpleCode"];
   $language = $_REQUEST["language"];
+  $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
+ 
   
   if ($language == "javadoc")
   {
@@ -48,11 +50,19 @@ else if (isset($_REQUEST["umpleCode"]))
   elseif (!in_array($language,array("Php","Java","Ruby","Cpp")))
   {  
     $filename = saveFile($input);
-    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename}");
+    $errorFilename = "{$filename}.erroroutput";
+    
+    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    $errors = getErrorHtml($errorFilename, 0);
+    
     if ($language != "Json")
     {
       $sourceCode = htmlspecialchars($sourceCode);
     }
+    
+    if($outputErr == "true")
+    	echo $errors ."<p>URL_SPLIT";
+    	
     echo $sourceCode;
     return;
   }
@@ -77,41 +87,12 @@ else if (isset($_REQUEST["umpleCode"]))
   exec($command);
   
   $sourceCode = readTemporaryFile($outputFilename);
-  $errorMessage = readTemporaryFile($errorFilename);
   
   $sourceCode = str_replace("<?php","",$sourceCode);
   $sourceCode = str_replace("?>","",$sourceCode);
   $sourceCode = htmlspecialchars($sourceCode);
   
-  $errhtml = "";
-  if($errorMessage != "") 
-  {
-  	 $errInfo = json_decode($errorMessage, true);
-     $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
-     $errhtml .= "<div id='errorRow' colspan='3' style='display:none'>";
-     
-     if($errInfo == null)
-     {
-     	$errhtml .= "Couldn't read results from the Umple compiler!";
-     }
-     else
-     {
-     	$results = $errInfo["results"];
-     	
-     	foreach($results as $result)
-     	{
-     		$line = intval($result["line"]) - 1; // We injected a statment, so we need to substract 1
-     		$severity = intval($result["severity"]) > 2 ? "Warning" : "Error";
-     		$msg = htmlspecialchars($result["message"]);
-     		     		
-     		$errhtml .= "{$severity} on line {$line} : {$msg} </br>";
-     	}
-     }
- 	
-     $errhtml .= "</div>";
-        
-     $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
-  }
+  $errhtml = getErrorHtml($errorFilename);
   
   if ($sourceCode == "")
   {
@@ -193,4 +174,43 @@ else
 {
   echo "Invalid use of compiler";
 }
+
+
+function getErrorHtml($errorFilename, $offset = 1) 
+{
+	
+  $errorMessage = readTemporaryFile($errorFilename);
+
+  if($errorMessage != "") 
+  {
+  	 $errInfo = json_decode($errorMessage, true);
+     $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
+     $errhtml .= "<div id='errorRow' colspan='3' style='display:none'>";
+     
+     if($errInfo == null)
+     {
+     	$errhtml .= "Couldn't read results from the Umple compiler!";
+     }
+     else
+     {
+     	$results = $errInfo["results"];
+     	
+     	foreach($results as $result)
+     	{
+     		$line = intval($result["line"]) - $offset; 
+     		$severity = intval($result["severity"]) > 2 ? "Warning" : "Error";
+     		$msg = htmlspecialchars($result["message"]);
+     		     		
+     		$errhtml .= "{$severity} on line {$line} : {$msg} </br>";
+     	}
+     }
+ 	
+     $errhtml .= "</div>";
+        
+     $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
+     return $errhtml;
+  }
+  return "";
+}
+
 ?>

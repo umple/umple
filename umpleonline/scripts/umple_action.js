@@ -834,7 +834,7 @@ Action.generateCode = function(languageStyle,languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
   jQuery(generateCodeSelector).showLoading();
-  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}",languageName));
+  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}",languageName),"true");
 }
 
 Action.photoReady = function()
@@ -1563,10 +1563,11 @@ Action.enableManualSync = function(enable)
   }
 }
 
-Action.ajax = function(callback,post)
+Action.ajax = function(callback,post,errors)
 {
   var modelAndPositioning = Page.getUmpleCode();
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
-  Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&umpleCode={1}&filename={2}",post,umpleCode,filename));
+  var errors = typeof(errors) != 'undefined' ? errors : "false";
+  Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
