@@ -7,7 +7,7 @@
   ``````````````````````````` -->
   <import file="_template.xml" />
 
-  <property name="project.path" value="cruise.umple"/>
+  <property name="project.path" value="cruise.umple.xtext.ui"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple.xtext.ui"/>
   <property name="test.output.path" value="dist/qa/cruise.umple.xtext.ui"/>
@@ -75,9 +75,9 @@
       <src path="cruise.umple/src"/>
       <src path="cruise.umple/src-gen-jet"/>
       <src path="cruise.umple/src-gen-umple"/>
-	<src path="cruise.umple.xtext/src"/>
+	    <src path="cruise.umple.xtext/src"/>
       <src path="cruise.umple.xtext/src-gen"/>
-	<src path="cruise.umple.xtext.ui/src"/>
+	    <src path="cruise.umple.xtext.ui/src"/>
       <src path="cruise.umple.xtext.ui/src-gen"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
