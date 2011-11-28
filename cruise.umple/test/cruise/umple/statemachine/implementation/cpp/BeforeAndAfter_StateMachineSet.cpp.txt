@@ -1,0 +1,71 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+class LightFixture
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Light { On, Off }
+  private Light light;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+  public LightFixture()
+  {
+    setLight(Light.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getLightFullName()
+  {
+    String answer = light.toString();
+    return answer;
+  }
+
+  public Light getLight()
+  {
+    return light;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (light)
+    {
+      case On:
+        setLight(Light.Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        setLight(Light.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setLight(Light aLight)
+  {
+    light = aLight;
+  }
+
+  public void delete()
+  {}
+
+};

@@ -167,29 +167,48 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void TracesSupport_StringTracer_MultipleAttributes()
+	public void TraceSupport_StringTracer_MultipleAttributes()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttribute.ump",languagePath + "/FileTracer_TraceMultipleAttribute."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test
-	public void TracesSupport_StringTracer_MultipleAttributesAfter()
+	public void TraceSupport_StringTracer_MultipleAttributesAfter()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeAfter.ump",languagePath + "/FileTracer_TraceMultipleAttributeAfter."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test
-	public void TracesSupport_StringTracer_MultipleAttributesUntil()
+	public void TraceSupport_StringTracer_MultipleAttributesUntil()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeUntil.ump",languagePath + "/FileTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test
-	public void TracesSupport_StringTracer_MultipleAttributesWhere()
+	public void TraceSupport_StringTracer_MultipleAttributesWhere()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeWhere.ump",languagePath + "/FileTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
 	}
 	  
+	
+	//*******************************//
+	//**** Trace State Machines *****//
+	//****    Code Generation   *****//
+	//*******************************//	
+
+	//====== Console tracer
+	@Test
+	public void TraceSupport_ConsoleTracer_State()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","GarageDoor");
+	}
+	//====== Console tracer
+	@Test
+	public void TraceSupport_FileTracer_State()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceState.ump",languagePath + "/FileTracer_TraceState."+ languagePath +".txt","GarageDoor");
+	}
+	
 	//***************************//
 	//**** Trace Association ****//
 	//****  Code Generation  ****//

@@ -9,4 +9,5 @@ public interface CodeTranslator
   // ABSTRACT METHODS 
 
  public String translate(String id, Attribute attribute);
+ public String translate(String id, StateMachine stm);
 }

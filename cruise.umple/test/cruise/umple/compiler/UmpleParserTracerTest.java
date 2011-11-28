@@ -1117,10 +1117,6 @@ public class UmpleParserTracerTest
   {
 	  assertParse("371_traceCardinality.ump","[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
   }
-
-  //***************************************************
-  //*************   Tracing state machines     ********
-  //***************************************************
   
   //***************************************************
   //*************        Trace Cases         **********
@@ -1195,6 +1191,29 @@ public class UmpleParserTracerTest
   {
 	  assertParse("403_traceCaseDeactivation.ump","[classDefinition][name:LightFixture][trace][tracecase_deact_name:tc1][trace][tracecase_deact_name:tc2][deactivate_for:1s]");
   }
+    
+  //***************************************************
+  //*************   Tracing State Machines     ********
+  //***************************************************
+  
+  @Test
+  public void traceState()
+  {
+	  assertParse("375_traceState.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][trace_entity:status]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("GarageDoor");
+	  StateMachine stm = clazz.getTraceDirective(0).getStateMachine(0);
+	  Assert.assertEquals(stm.numberOfStates(),5);
+	  Assert.assertEquals(stm.getStartState(),clazz.getStateMachine(0).getStartState());
+	  Assert.assertEquals(stm.getNestedStateMachines(),clazz.getStateMachine(0).getNestedStateMachines());
+	  Assert.assertEquals(stm.getState(0),clazz.getStateMachine(0).getState(0));
+	  Assert.assertEquals(stm.getState(1),clazz.getStateMachine(0).getState(1));
+	  Assert.assertEquals(stm.getState(2),clazz.getStateMachine(0).getState(2));
+	  Assert.assertEquals(stm.getState(3),clazz.getStateMachine(0).getState(3));
+	  Assert.assertEquals(stm.getState(4),clazz.getStateMachine(0).getState(4));
+  }
+  
+  //===================================
   
   @Test
   public void X()
@@ -1209,8 +1228,6 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(co, td.getCondition(index).getRhs().getComparisonOperator());
 	  Assert.assertEquals(rhs, td.getCondition(index).getRhs().getRhs());
   }
-  
-  //===================================
   
   private void assertParse(String filename, String expectedOutput)
   {

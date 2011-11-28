@@ -21,6 +21,7 @@ public class TraceDirective
   //TraceDirective Associations
   private List<TraceCondition> condition;
   private List<Attribute> attributes;
+  private List<StateMachine> stateMachines;
   private List<MethodTraceEntity> methodTraceEntities;
   private AssociationVariable associationVariable;
   private List<TraceCase> traceCases;
@@ -39,6 +40,7 @@ public class TraceDirective
     executeClause = null;
     condition = new ArrayList<TraceCondition>();
     attributes = new ArrayList<Attribute>();
+    stateMachines = new ArrayList<StateMachine>();
     methodTraceEntities = new ArrayList<MethodTraceEntity>();
     traceCases = new ArrayList<TraceCase>();
   }
@@ -169,6 +171,36 @@ public class TraceDirective
   public int indexOfAttribute(Attribute aAttribute)
   {
     int index = attributes.indexOf(aAttribute);
+    return index;
+  }
+
+  public StateMachine getStateMachine(int index)
+  {
+    StateMachine aStateMachine = stateMachines.get(index);
+    return aStateMachine;
+  }
+
+  public List<StateMachine> getStateMachines()
+  {
+    List<StateMachine> newStateMachines = Collections.unmodifiableList(stateMachines);
+    return newStateMachines;
+  }
+
+  public int numberOfStateMachines()
+  {
+    int number = stateMachines.size();
+    return number;
+  }
+
+  public boolean hasStateMachines()
+  {
+    boolean has = stateMachines.size() > 0;
+    return has;
+  }
+
+  public int indexOfStateMachine(StateMachine aStateMachine)
+  {
+    int index = stateMachines.indexOf(aStateMachine);
     return index;
   }
 
@@ -312,6 +344,56 @@ public class TraceDirective
       if (!wasRemoved)
       {
         attributes.add(oldIndex,aAttribute);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfStateMachines()
+  {
+    return 0;
+  }
+
+  public boolean addStateMachine(StateMachine aStateMachine)
+  {
+    boolean wasAdded = false;
+    if (stateMachines.contains(aStateMachine)) { return false; }
+    stateMachines.add(aStateMachine);
+    if (aStateMachine.indexOfTraceDirective(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aStateMachine.addTraceDirective(this);
+      if (!wasAdded)
+      {
+        stateMachines.remove(aStateMachine);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeStateMachine(StateMachine aStateMachine)
+  {
+    boolean wasRemoved = false;
+    if (!stateMachines.contains(aStateMachine))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = stateMachines.indexOf(aStateMachine);
+    stateMachines.remove(oldIndex);
+    if (aStateMachine.indexOfTraceDirective(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aStateMachine.removeTraceDirective(this);
+      if (!wasRemoved)
+      {
+        stateMachines.add(oldIndex,aStateMachine);
       }
     }
     return wasRemoved;
@@ -475,6 +557,12 @@ public class TraceDirective
     for(Attribute aAttribute : copyOfAttributes)
     {
       aAttribute.removeTraceDirective(this);
+    }
+    ArrayList<StateMachine> copyOfStateMachines = new ArrayList<StateMachine>(stateMachines);
+    stateMachines.clear();
+    for(StateMachine aStateMachine : copyOfStateMachines)
+    {
+      aStateMachine.removeTraceDirective(this);
     }
     ArrayList<MethodTraceEntity> copyOfMethodTraceEntities = new ArrayList<MethodTraceEntity>(methodTraceEntities);
     methodTraceEntities.clear();

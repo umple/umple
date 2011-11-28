@@ -19,6 +19,7 @@ public class StateMachine
   private UmpleClass umpleClass;
   private State parentState;
   private List<State> states;
+  private List<TraceDirective> traceDirectives;
 
   //Helper Variables
   private int cachedHashCode;
@@ -33,6 +34,7 @@ public class StateMachine
   {
     name = aName;
     states = new ArrayList<State>();
+    traceDirectives = new ArrayList<TraceDirective>();
     cachedHashCode = -1;
     canSetParentState = true;
     canSetName = true;
@@ -93,6 +95,36 @@ public class StateMachine
   public int indexOfState(State aState)
   {
     int index = states.indexOf(aState);
+    return index;
+  }
+
+  public TraceDirective getTraceDirective(int index)
+  {
+    TraceDirective aTraceDirective = traceDirectives.get(index);
+    return aTraceDirective;
+  }
+
+  public List<TraceDirective> getTraceDirectives()
+  {
+    List<TraceDirective> newTraceDirectives = Collections.unmodifiableList(traceDirectives);
+    return newTraceDirectives;
+  }
+
+  public int numberOfTraceDirectives()
+  {
+    int number = traceDirectives.size();
+    return number;
+  }
+
+  public boolean hasTraceDirectives()
+  {
+    boolean has = traceDirectives.size() > 0;
+    return has;
+  }
+
+  public int indexOfTraceDirective(TraceDirective aTraceDirective)
+  {
+    int index = traceDirectives.indexOf(aTraceDirective);
     return index;
   }
 
@@ -171,6 +203,56 @@ public class StateMachine
     return wasRemoved;
   }
 
+  public static int minimumNumberOfTraceDirectives()
+  {
+    return 0;
+  }
+
+  public boolean addTraceDirective(TraceDirective aTraceDirective)
+  {
+    boolean wasAdded = false;
+    if (traceDirectives.contains(aTraceDirective)) { return false; }
+    traceDirectives.add(aTraceDirective);
+    if (aTraceDirective.indexOfStateMachine(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aTraceDirective.addStateMachine(this);
+      if (!wasAdded)
+      {
+        traceDirectives.remove(aTraceDirective);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeTraceDirective(TraceDirective aTraceDirective)
+  {
+    boolean wasRemoved = false;
+    if (!traceDirectives.contains(aTraceDirective))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = traceDirectives.indexOf(aTraceDirective);
+    traceDirectives.remove(oldIndex);
+    if (aTraceDirective.indexOfStateMachine(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aTraceDirective.removeStateMachine(this);
+      if (!wasRemoved)
+      {
+        traceDirectives.add(oldIndex,aTraceDirective);
+      }
+    }
+    return wasRemoved;
+  }
+
   public boolean equals(Object obj)
   {
     if (obj == null) { return false; }
@@ -245,6 +327,12 @@ public class StateMachine
     for(State aState : states)
     {
       aState.delete();
+    }
+    ArrayList<TraceDirective> copyOfTraceDirectives = new ArrayList<TraceDirective>(traceDirectives);
+    traceDirectives.clear();
+    for(TraceDirective aTraceDirective : copyOfTraceDirectives)
+    {
+      aTraceDirective.removeStateMachine(this);
     }
   }
   

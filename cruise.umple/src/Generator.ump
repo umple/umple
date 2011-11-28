@@ -25,7 +25,7 @@ interface CodeGenerator
 interface CodeTranslator
 {
   String translate(String id, Attribute attribute);
-  
+  String translate(String id, StateMachine stm);
   // TODO: LH#171
   //String translate(String id, AssociationVariable associationVariable);
 }

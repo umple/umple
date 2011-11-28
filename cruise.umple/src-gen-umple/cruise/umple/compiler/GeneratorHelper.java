@@ -224,25 +224,33 @@ private static void postpareTrace(UmpleModel aModel)
   public static void prepareTraceDirectiveInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType) 
   {
 	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("attributeCode",attrCode);
+	  lookups.put("Code",attrCode);
 	  lookups.put("setMethod",t.translate("setMethod",attr));
-	  injectTraceDirective(traceDirective,lookups,conditionType);
+	  String injectionType = "after";
+	    
+	  if( "where".equals(conditionType) )
+		  injectionType = "before";  
+	  else if( "until".equals(conditionType) || "after".equals(conditionType) )
+		  injectionType = "after";
+	  injectTraceDirective(traceDirective,lookups,injectionType);
+  }
+  
+  public static void prepareTraceDirectiveInjectStateMachine( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 
+  {
+	  Map<String,String> lookups = new HashMap<String,String>();
+	  lookups.put("Code",stmCode);
+	  lookups.put("setMethod",t.translate("setMethod",stm));
+	  injectTraceDirective(traceDirective,lookups,injectionType);
   }
   
   // Inject the necessary "before" and "after" hooks to call the trace, this method expects the following action semantic lookups
   //  + setMethod: What is the name of the setMethod we are attaching the trace to
   //  + attributeCode: What is the trace code that should be executed
-  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String conditionType)
+  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String injectionType)
   {
     UmpleClass aClass = traceDirective.getUmpleClass();
     String setMethod = lookups.get("setMethod");
-    String code = lookups.get("attributeCode");
-    String injectionType = "after";
-    
-    if( "where".equals(conditionType) )
-    	injectionType = "before";
-    else if( "until".equals(conditionType) || "after".equals(conditionType) )
-    	injectionType = "after";
+    String code = lookups.get("Code");
 
     CodeInjection set = new CodeInjection(injectionType, setMethod, code);
     set.setIsInternal(true);

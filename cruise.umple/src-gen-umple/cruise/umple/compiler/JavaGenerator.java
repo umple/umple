@@ -739,6 +739,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	        {
 	        	processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
 	        }
+	        else if( traceDirective.hasStateMachines() )
+	        {
+	        	processTraceDirectiveStateMachines(traceDirective,t,consoleTemplate,"console");
+	        }
 	  }
   }
 
@@ -756,6 +760,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
           {
         	  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
           }
+          else if( traceDirective.hasStateMachines() )
+	      {
+        	  processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");
+	      }
 	  }
   }
 
@@ -824,7 +832,38 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   		  }
   	  }
   }
-
+  
+  //Process every state machine in a trace directive
+  private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String consoleTemplate, String tracer) {
+	
+	  // Go over all state machines in trace directive
+	  for( int i = 0 ; i < traceDirective.numberOfStateMachines() ; ++i )
+	  {
+		  StateMachine stm = traceDirective.getStateMachine(i);
+		  String stmCode = null;
+		  
+		  if(tracer.equals("console"))
+		  {
+			  stmCode = StringFormatter.format(consoleTemplate,"Previous state ",t.translate("stateMachineOne",traceDirective.getStateMachine(i)));
+	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+	  		  
+	  		  stmCode = StringFormatter.format(consoleTemplate,"Current state ",t.translate("stateMachineOne",traceDirective.getStateMachine(i)));
+			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+		  }
+		  else if(tracer.equals("file"))
+		  {
+			  stmCode = StringFormatter.format(consoleTemplate,"\"Previous state: \"+"+t.translate("stateMachineOne",traceDirective.getStateMachine(i)));
+	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+	  		  
+	  		  stmCode = StringFormatter.format(consoleTemplate,"\"Current state: \"+"+t.translate("stateMachineOne",traceDirective.getStateMachine(i)));
+			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+		  }
+		  
+		  
+	  }
+	  
+  }
+  
   // Process condition in a trace directive
   private static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
   {

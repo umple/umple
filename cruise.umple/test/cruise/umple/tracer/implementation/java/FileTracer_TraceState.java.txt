@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Date;
+
+
+public class GarageDoor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //GarageDoor State Machines
+  enum Status { Open, Closing, Closed, Opening, HalfOpen }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public GarageDoor()
+  {
+    setStatus(Status.Open);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean buttonOrObstacle()
+  {
+    boolean wasEventProcessed = false;
+
+    fileTracer("Event: buttonOrObstacle");
+    switch (status)
+    {
+      case Open:
+        setStatus(Status.Closing);
+        wasEventProcessed = true;
+        break;
+      case Closing:
+        setStatus(Status.Opening);
+        wasEventProcessed = true;
+        break;
+      case Closed:
+        setStatus(Status.Opening);
+        wasEventProcessed = true;
+        break;
+      case Opening:
+        setStatus(Status.HalfOpen);
+        wasEventProcessed = true;
+        break;
+      case HalfOpen:
+        setStatus(Status.Opening);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachBottom()
+  {
+    boolean wasEventProcessed = false;
+
+    fileTracer("Event: reachBottom");
+    switch (status)
+    {
+      case Closing:
+        setStatus(Status.Closed);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachTop()
+  {
+    boolean wasEventProcessed = false;
+
+    fileTracer("Event: reachTop");
+    switch (status)
+    {
+      case Opening:
+        setStatus(Status.Open);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    fileTracer("Previous state: "+status);
+    status = aStatus;
+    fileTracer("Current state: "+status);
+  }
+
+  public void delete()
+  {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  static void fileTracer(Object obj)
+  {
+    FileOutputStream fout = null;
+    Date date = new Date();
+    try
+    {
+      // Open an output stream
+      fout = new FileOutputStream ("TraceLog.txt",true);
+      new PrintStream(fout).println ("(Tracing log file)");
+    }
+    catch (IOException e)
+    {
+      System.err.println ("Unable to write to file");
+      System.exit(-1);
+    }
+    // Write traced Item information
+    new PrintStream(fout).println("Traced object value: " + obj);
+    new PrintStream(fout).println("Trace time : " + date);
+    try
+    {
+      // Close output stream
+      fout.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+}

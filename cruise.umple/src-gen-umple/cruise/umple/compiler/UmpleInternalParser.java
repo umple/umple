@@ -1584,8 +1584,20 @@ private void analyzeTraceToken(Token token)
   private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte)
   {
 	  Attribute attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
+	  List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+	  StateMachine stm = null;
 	  String methodName = traceToken.getValue("trace_entity");
 	  
+	  // here, i faced a problem of finding traced state machine because
+	  // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
+	  for( int i = 0 ; i < stms.size() ; ++i )
+		  if( stms.get(i).getFullName().equals(traceToken.getValue("trace_entity")))
+		  {
+			  stm = stms.get(i);
+			  break;
+		  }
+		  
+	  // if trace entity is a method
 	  if( methodName.contains("("))
 	  {
 		  if( mte.getName() !=  null)
@@ -1595,10 +1607,17 @@ private void analyzeTraceToken(Token token)
 		  mte.setName(methodName);
 		  traceDirective.addMethodTraceEntity(mte);
 	  }
+	  // if trace entity is an attribute
 	  else if( attr != null )
 	  {
 		  traceDirective.addAttribute(attr);
 	  }
+	  // if trace entity is a state machine
+	  else if( stm != null )
+	  {
+		  traceDirective.addStateMachine(stm);
+	  }
+	  
   }
   
   // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)

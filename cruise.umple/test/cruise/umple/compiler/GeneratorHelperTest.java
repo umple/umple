@@ -67,9 +67,9 @@ public class GeneratorHelperTest
 
     Map<String,String> lookups = new HashMap<String,String>();
     lookups.put("setMethod","setX");
-    lookups.put("attributeCode","x");
+    lookups.put("Code","x");
     
-    GeneratorHelper.injectTraceDirective(traceDirective, lookups, null);
+    GeneratorHelper.injectTraceDirective(traceDirective, lookups, "after");
 
     Assert.assertEquals(1,c.numberOfCodeInjections());
     CodeInjection inject = c.getCodeInjection(0);

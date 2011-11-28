@@ -49,6 +49,7 @@ class TraceDirective
  	duringClause = null;
  	executeClause = null;
  	0..* -- 0..* Attribute;
+ 	0..* -- 0..* StateMachine;
  	0..* -- 0..* MethodTraceEntity;
  	0..1 -- 0..1 AssociationVariable;
 }

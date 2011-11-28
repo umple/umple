@@ -3288,6 +3288,15 @@ public class JavaClassGenerator implements ILang
 
   for(StateMachine sm : uClass.getStateMachines(e))
   {
+  	for( TraceDirective tc : uClass.getTraceDirectives() )
+	{
+		for( int i = 0 ; i < tc.numberOfStateMachines() ; ++ i )
+			if( tc.getStateMachine(i) == sm )
+				if( model.getTraceType().equals("Console"))
+					allCases.append(StringFormatter.format("System.out.println(\"Event: {0}\");\n",gen.translate("eventMethod",e)));
+				else if( model.getTraceType().equals("File"))
+					allCases.append(StringFormatter.format("fileTracer(\"Event: {0}\");\n",gen.translate("eventMethod",e)));
+	}
     allCases.append(StringFormatter.format("    switch ({0})\n",gen.translate("stateMachineOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
     
@@ -3402,6 +3411,8 @@ public class JavaClassGenerator implements ILang
   boolean isFirstExit = true;
   State parentState = sm.getParentState();
   StateMachine parentSm = parentState != null ? parentState.getStateMachine() : null;
+  String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",sm)));
+  String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",sm)));
 
   StringBuilder entryActions = new StringBuilder();
   StringBuilder exitActions = new StringBuilder();
@@ -3489,11 +3500,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_317);
     stringBuffer.append( gen.translate("parameterOne",sm) );
     stringBuffer.append(TEXT_318);
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}", customSetPrefixCode); } 
     stringBuffer.append(TEXT_319);
     stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_320);
     stringBuffer.append( gen.translate("parameterOne",sm) );
     stringBuffer.append(TEXT_321);
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}", customSetPostfixCode); } 
      if (parentState != null) { 
     stringBuffer.append(TEXT_322);
     stringBuffer.append( gen.translate("stateMachineOne",parentSm) );

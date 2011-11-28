@@ -4,6 +4,8 @@
   boolean hasExit = false;
   boolean isFirstEntry = true;
   boolean isFirstExit = true;
+  String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",sm)));
+  String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",sm)));
 
   StringBuilder entryActions = new StringBuilder();
   StringBuilder exitActions = new StringBuilder();
@@ -95,7 +97,9 @@
 <% } %>
   private function <%=gen.translate("setMethod",sm)%>($<%= gen.translate("parameterOne",sm) %>)
   {
+  <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}", customSetPrefixCode); } %>
     $this-><%= gen.translate("stateMachineOne",sm) %> = $<%= gen.translate("parameterOne",sm) %>;
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}", customSetPostfixCode); } %>
 <% if (hasEntry) { %>
 
     // entry actions and do activities
