@@ -2,7 +2,6 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
-import java.util.*;
 
 public class Student
 {
@@ -15,7 +14,7 @@ public class Student
   private String number;
 
   //Student Associations
-  private List<Mentor> mentors;
+  private Mentor mentor;
 
   //------------------------
   // CONSTRUCTOR
@@ -24,7 +23,6 @@ public class Student
   public Student(String aNumber)
   {
     number = aNumber;
-    mentors = new ArrayList<Mentor>();
   }
 
   //------------------------
@@ -44,80 +42,49 @@ public class Student
     return number;
   }
 
-  public Mentor getMentor(int index)
+  public Mentor getMentor()
   {
-    Mentor aMentor = mentors.get(index);
-    return aMentor;
+    return mentor;
   }
 
-  public List<Mentor> getMentors()
+  public boolean setMentor(Mentor newMentor)
   {
-    List<Mentor> newMentors = Collections.unmodifiableList(mentors);
-    return newMentors;
-  }
-
-  public int numberOfMentors()
-  {
-    int number = mentors.size();
-    return number;
-  }
-
-  public boolean hasMentors()
-  {
-    boolean has = mentors.size() > 0;
-    return has;
-  }
-
-  public int indexOfMentor(Mentor aMentor)
-  {
-    int index = mentors.indexOf(aMentor);
-    return index;
-  }
-
-  public static int minimumNumberOfMentors()
-  {
-    return 0;
-  }
-
-  public boolean addMentor(Mentor aMentor)
-  {
-    boolean wasAdded = false;
-    if (mentors.contains(aMentor)) { return false; }
-    Student existingStudent = aMentor.getStudent();
-    if (existingStudent == null)
+    boolean wasSet = false;
+    if (newMentor == null)
     {
-      aMentor.setStudent(this);
+      Mentor existingMentor = mentor;
+      mentor = null;
+      
+      if (existingMentor != null && existingMentor.getStudent() != null)
+      {
+        existingMentor.setStudent(null);
+      }
+      wasSet = true;
+      return wasSet;
     }
-    else if (!this.equals(existingStudent))
-    {
-      existingStudent.removeMentor(aMentor);
-      addMentor(aMentor);
-    }
-    else
-    {
-      mentors.add(aMentor);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
 
-  public boolean removeMentor(Mentor aMentor)
-  {
-    boolean wasRemoved = false;
-    if (mentors.contains(aMentor))
+    Mentor currentMentor = getMentor();
+    if (currentMentor != null && !currentMentor.equals(newMentor))
     {
-      mentors.remove(aMentor);
-      aMentor.setStudent(null);
-      wasRemoved = true;
+      currentMentor.setStudent(null);
     }
-    return wasRemoved;
+
+    mentor = newMentor;
+    Student existingStudent = newMentor.getStudent();
+
+    if (!equals(existingStudent))
+    {
+      newMentor.setStudent(this);
+    }
+    wasSet = true;
+    return wasSet;
   }
 
   public void delete()
   {
-    for(Mentor aMentor : mentors)
+    if (mentor != null)
     {
-      aMentor.setStudent(null);
+      mentor.setStudent(null);
     }
   }
 
