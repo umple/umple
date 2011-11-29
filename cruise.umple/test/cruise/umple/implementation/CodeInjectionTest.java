@@ -37,6 +37,11 @@ public class CodeInjectionTest extends TemplateTest
   {
     assertUmpleTemplateFor("CodeInjectionWildCardTest.ump",languagePath + "/CodeInjectionWildCardTest."+ languagePath +".txt","Student");
   }
-  
+
+  @Test 
+  public void StateMachines()
+  {
+	  assertUmpleTemplateFor("CodeInjectionStateMachineTest.ump",languagePath + "/CodeInjectionStateMachineTest."+ languagePath +".txt","Example");
+  }
   
 }

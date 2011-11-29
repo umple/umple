@@ -56,9 +56,7 @@ class Example
 
   private void set_light(UNKNOWN ID: type a_light)
   {
-    System.out.println("About to flip");
     light = a_light
-    System.out.println("Just flipped");
   }
 
   def delete
