@@ -1271,7 +1271,7 @@ public class UmpleParserTest
   {
 	  
     boolean answer = parseWarnings(filename);
-    Assert.assertEquals(true, answer);
+    Assert.assertEquals(false, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
 
