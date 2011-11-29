@@ -54,6 +54,8 @@ public class UmpleConsoleMain
      catch(UmpleCompilerException e)
      {
     	 printerr(e.getMessage());
+    	 if(!model.isShouldGenerate())
+    		 System.exit(-1);
      }
      
 //     Compiler compiler = new Compiler();

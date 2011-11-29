@@ -197,7 +197,7 @@ public class ErrorTypeSingleton
            if(severityInt < 1 || severityInt > 5)
         	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
            
-           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type));
+           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type, url));
 		}
 		return true;
 	}
@@ -213,6 +213,6 @@ public class ErrorTypeSingleton
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 1, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal");
+		return new ErrorType(-1, 1, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal", "");
 	}
 }

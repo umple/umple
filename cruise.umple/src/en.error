@@ -1,6 +1,6 @@
 0 : 1, Parse, http://code.umple.org, Generic Umple Error '{0}' ; 
 
-100 : 1, Parse, http://, Expected one of '{0}', but found '{1}' ; 
+100 : 1, Parse, http://code.umple.org, Expected one of '{0}', but found '{1}' ; 
 
 1 : 5, Parse, http://code.umple.org, Lazy keyword missing from singleton class attribute '{0}' ; 
 
@@ -20,4 +20,4 @@
 
 9: 2, Parse, http://code.umple.org, Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
 
-10: 2, Parse, http://code.umple.org, Singleton class '{0}' cannot have multiplicity '*' ; 
+10: 3, Semantic, http://code.umple.org, Singleton class '{0}' cannot have multiplicity '*' ; 

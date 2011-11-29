@@ -1014,7 +1014,7 @@ public class ParserTest
   @Test
   public void errorTypeFormat()
   {
-	  ErrorType et = new ErrorType(999, 9, "this is an error {0}, {1}", "TestError");
+	  ErrorType et = new ErrorType(999, 9, "this is an error {0}, {1}", "TestError", "url");
 	  ArrayList<String> l = new ArrayList<String>();
 
 	  l.add("zero");
@@ -1023,6 +1023,7 @@ public class ParserTest
 	  Assert.assertEquals("this is an error zero, one", et.format(l));
 	  Assert.assertEquals(999, et.getErrorCode());
 	  Assert.assertEquals(9, et.getSeverity());
+	  Assert.assertEquals("url", et.getErrorUrl());
   }
   
   @Test 
@@ -1031,7 +1032,7 @@ public class ParserTest
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
 	  
-	  ets.addErrorType(new ErrorType(1001, 10, "This is a test error {0}", "TestError"));
+	  ets.addErrorType(new ErrorType(1001, 10, "This is a test error {0}", "TestError", "url"));
 	  
 	  ErrorType et = ets.getErrorTypeForCode(1001);
 	  Assert.assertEquals(1001, et.getErrorCode());
@@ -1048,10 +1049,15 @@ public class ParserTest
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
 	  
-	  ets.addErrorType(new ErrorType(1002, 5, "This is a test error {0}, {1}", "TestError"));
+	  ets.addErrorType(new ErrorType(1002, 5, "This is a test error {0}, {1}", "TestError", "url"));
 	  
 	  ErrorMessage em = new ErrorMessage(1002, new Position("filename",0,0,0), "zero", "one");
-	  Assert.assertEquals("TestError Error on line: 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
+	  Assert.assertEquals("TestError warning on line: 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
+	  
+
+	  ets.addErrorType(new ErrorType(1003, 2, "This is a test error {0}, {1}", "TestError", "url"));	  
+	  em = new ErrorMessage(1003, new Position("filename",0,0,0), "zero", "one");
+	  Assert.assertEquals("TestError error on line: 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
   }
 
   @Test 
@@ -1061,14 +1067,14 @@ public class ParserTest
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
 	  
-	  ets.addErrorType(new ErrorType(1002, 5, "Test \"{0}\"", "TestError"));
+	  ets.addErrorType(new ErrorType(1002, 5, "Test \"{0}\"", "TestError", "url"));
 	  
 	  ParseResult pr = new ParseResult(true);
 	  
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file1",0,0,0), " \\' "));
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
 	  
-	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\",  \"errorType\" : \"TestError\", \"url\" : \"http:\\\\www.google.com\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\",  \"errorType\" : \"TestError\", \"url\" : \"http:\\\\www.google.com\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
+	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\",  \"errorType\" : \"TestError\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\",  \"errorType\" : \"TestError\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
   }
   
   @Test
@@ -1077,8 +1083,8 @@ public class ParserTest
 	  ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
 	  ets.clear();
 	  
-	  ets.addErrorType(new ErrorType(1002, 5, "test1", "TestError"));
-	  ets.addErrorType(new ErrorType(1003, 1, "test2", "TestError"));
+	  ets.addErrorType(new ErrorType(1002, 5, "test1", "TestError", "url1"));
+	  ets.addErrorType(new ErrorType(1003, 1, "test2", "TestError", "url2"));
 
 	  ErrorMessage em = new ErrorMessage(1002, new Position("",0,0,0));
 	  

@@ -1279,7 +1279,7 @@ class ParseResult
    	 	String severity = String.valueOf(et.getSeverity());
    	 	String code     = String.valueOf(et.getErrorCode());
    	 	String type		= StringFormatter.sanitizeForJson(et.getErrorType());
-   	 	String url		= "http:\\\\www.google.com";
+   	 	String url		= StringFormatter.sanitizeForJson(et.getErrorUrl());
    	 	
    	 	ret += "{ \"errorCode\" : \"" + code + "\",";
    	 	ret += " \"severity\" : \"" +severity + "\", ";
@@ -1311,7 +1311,8 @@ class ErrorMessage
    }
    public String toString()
    {
-	   String err = errorType.getErrorType() + " Error on line: " + this.position.getLineNumber();
+   	   String sev = errorType.getSeverity() <= 2 ? "error" : "warning";
+	   String err = errorType.getErrorType() + " " + sev + " on line: " + this.position.getLineNumber();
 	   err += " of file \"" + this.position.getFilename() + "\":\n";
    	   return  err + errorType.format(this.parameters);
    }
@@ -1420,7 +1421,7 @@ class ErrorTypeSingleton
            if(severityInt < 1 || severityInt > 5)
         	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
            
-           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type));
+           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type, url));
 		}
 		return true;
 	}
@@ -1436,6 +1437,6 @@ class ErrorTypeSingleton
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 1, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal");
+		return new ErrorType(-1, 1, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal", "");
 	}
 }

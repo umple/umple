@@ -191,7 +191,7 @@ public class ParseResult
    	 	String severity = String.valueOf(et.getSeverity());
    	 	String code     = String.valueOf(et.getErrorCode());
    	 	String type		= StringFormatter.sanitizeForJson(et.getErrorType());
-   	 	String url		= "http:\\\\www.google.com";
+   	 	String url		= StringFormatter.sanitizeForJson(et.getErrorUrl());
    	 	
    	 	ret += "{ \"errorCode\" : \"" + code + "\",";
    	 	ret += " \"severity\" : \"" +severity + "\", ";

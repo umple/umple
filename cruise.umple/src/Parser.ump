@@ -44,6 +44,8 @@ class ErrorType
 	Integer severity;
 	String errorFormat;
 	String errorType;
+	String errorUrl;
+	
 	key {errorCode}
 }
 
