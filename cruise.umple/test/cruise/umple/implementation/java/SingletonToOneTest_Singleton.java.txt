@@ -62,34 +62,18 @@ public class Mentor
     return student;
   }
 
-  public boolean setStudent(Student newStudent)
+  public boolean setStudent(Student aStudent)
   {
     boolean wasSet = false;
-    if (newStudent == null)
+    Student existingStudent = student;
+    student = aStudent;
+    if (existingStudent != null && !existingStudent.equals(aStudent))
     {
-      Student existingStudent = student;
-      student = null;
-      
-      if (existingStudent != null && existingStudent.getMentor() != null)
-      {
-        existingStudent.setMentor(null);
-      }
-      wasSet = true;
-      return wasSet;
+      existingStudent.removeMentor(this);
     }
-
-    Student currentStudent = getStudent();
-    if (currentStudent != null && !currentStudent.equals(newStudent))
+    if (aStudent != null)
     {
-      currentStudent.setMentor(null);
-    }
-
-    student = newStudent;
-    Mentor existingMentor = newStudent.getMentor();
-
-    if (!equals(existingMentor))
-    {
-      newStudent.setMentor(this);
+      aStudent.addMentor(this);
     }
     wasSet = true;
     return wasSet;
@@ -99,7 +83,9 @@ public class Mentor
   {
     if (student != null)
     {
-      student.setMentor(null);
+      Student placeholderStudent = student;
+      this.student = null;
+      placeholderStudent.removeMentor(this);
     }
   }
 

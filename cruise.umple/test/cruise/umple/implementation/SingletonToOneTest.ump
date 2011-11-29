@@ -13,5 +13,5 @@ class Mentor
 }
 
 association {
-	0..1 Mentor -- 1 Student;
+	* Mentor -- 1 Student;
 }

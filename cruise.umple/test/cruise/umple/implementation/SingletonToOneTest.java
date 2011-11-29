@@ -15,12 +15,14 @@ public class SingletonToOneTest extends TemplateTest
 {
 
   @Test
+  @Ignore
   public void Singleton()
   {
     assertUmpleTemplateFor("SingletonToOneTest.ump",languagePath + "/SingletonToOneTest_Singleton."+ languagePath +".txt","Mentor");
   }
   
   @Test
+  @Ignore
   public void One()
   {
     assertUmpleTemplateFor("SingletonToOneTest.ump",languagePath + "/SingletonToOneTest_One."+ languagePath +".txt","Student");
