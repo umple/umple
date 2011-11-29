@@ -125,6 +125,13 @@ public class UmpleParserTest
     
   }
 
+  @Ignore
+  @Test
+  public void duplicateNamespace()
+  {
+	  assertHasWarningsParse("002_DuplicateNamespace.ump", new Position("002_duplicateNamespace.ump",5,10,28));
+  }
+  
   @Test
   public void invalidNamespace_noName()
   {
@@ -329,6 +336,12 @@ public class UmpleParserTest
   }
 
   @Test
+  public void singletonAttributeNotLazy()
+  {
+	  assertHasWarningsParse("007_singletonAttributeNotLazy.ump", new Position("007_singletonAttributeNotLazy.ump",3,1,29));
+  }
+  
+  @Test
   public void isABlahAttribute()
   {
     assertParse("008_isABlahAttribute.ump");
@@ -490,6 +503,12 @@ public class UmpleParserTest
     
     Association as = model.getAssociation(0);
     Assert.assertEquals("Counsellor",as.getName());
+  }
+  
+  @Test
+  public void singletonToOneAssociation()
+  {
+	  assertHasWarningsParse("009_singletonToOneAssociation.ump", new Position("009_singletonToOneAssociation.ump",3,1,29));
   }
 
   @Test
@@ -1022,13 +1041,13 @@ public class UmpleParserTest
   @Test
   public void cannotHaveDuplicateKeys()
   {
-    assertFailedParse("018_cannotHaveDuplicateKeys.ump",new Position("018_cannotHaveDuplicateKeys.ump",8,2,55));
+    assertHasWarningsParse("018_cannotHaveDuplicateKeys.ump",new Position("018_cannotHaveDuplicateKeys.ump",8,2,55));
   }
 
   @Test
   public void cannotHaveKeyAndDefaultKey()
   {
-    assertFailedParse("018_cannotHaveKeyAndDefaultKey.ump",new Position("018_cannotHaveKeyAndDefaultKey.ump",8,2,55));
+    assertHasWarningsParse("018_cannotHaveKeyAndDefaultKey.ump",new Position("018_cannotHaveKeyAndDefaultKey.ump",8,2,55));
   }  
   
   @Test
@@ -1222,6 +1241,20 @@ public class UmpleParserTest
     return answer;
   }
   
+  public boolean parseWarnings(String filename)
+  {
+    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+    model.setShouldGenerate(false);
+    parser = UmpleParserFactory.create(umpleParserName,model,true);
+    boolean answer = parser.parse("program", input).getWasSuccess();
+    if (answer)
+    {
+      answer = parser.analyze(false).getHasWarnings();
+    }
+    return answer;
+  }
+  
   public void assertParse(String filename)
   {
     Assert.assertEquals(true,parse(filename));
@@ -1231,6 +1264,14 @@ public class UmpleParserTest
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
+    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
+  }
+  
+  public void assertHasWarningsParse(String filename, Position expectedPosition)
+  {
+	  
+    boolean answer = parseWarnings(filename);
+    Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
 
