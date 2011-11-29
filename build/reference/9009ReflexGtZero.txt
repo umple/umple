@@ -1,0 +1,34 @@
+E009 Reflexive Lower Bound
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a reflexive association has a 
+multiplicity with a lower bound greater than one</h2>
+
+<p> A <a href="ReflexiveAssociations.html">reflexive association</a> must 
+have multiplicity with lower bounds of zero at both ends (e.g. *, 0.1 or 
+or 0..2), otherwise an illogical situation would result. For example, 
+creating a parent-child association on class Person (the example below) 
+with a lower bound of 2 would mean that every Person in the system must 
+have parents, <i>ad infinitum</i>.
+
+</p>
+
+
+@@example
+// This example generates the error message
+class Person {
+  * -- 2 Person parents;
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the error
+class Person {
+  * -- 0..2 Person parents;
+}
+@@endexample
+
+
