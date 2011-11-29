@@ -3201,6 +3201,7 @@ public class CppClassGenerator implements ILang
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (StateMachine sm : uClass.getAllStateMachines())  
   {
+
     if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
     {
       

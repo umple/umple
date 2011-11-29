@@ -1,0 +1,68 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Example
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Example State Machines
+  enum UNKNOWN ID: type { UNKNOWN ID: listStates }
+  private UNKNOWN ID: type light;
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    set_light(UNKNOWN ID: type.LightOn)
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  public UNKNOWN ID: type get_light
+    UNKNOWN ID: stateOne
+  end
+
+  def flip
+  {
+    wasEventProcessed = false;
+
+    switch (light)
+    {
+      case LightOn:
+        set_light(UNKNOWN ID: type.LightOff);
+        wasEventProcessed = true
+        break;
+      case LightOff:
+        set_light(UNKNOWN ID: type.LightOn);
+        wasEventProcessed = true
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void set_light(UNKNOWN ID: type a_light)
+  {
+    System.out.println("About to flip");
+    light = a_light
+    System.out.println("Just flipped");
+  }
+
+  def delete
+    @deleted = true
+  end
+
+end

@@ -2405,10 +2405,10 @@ public class RubyClassGenerator implements ILang
     {
       continue;
     }
-    
+
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isMethod",av)));
-
+    
     if (av.getIsDerived() && customGetPostfixCode != null)
     {
       
@@ -2593,6 +2593,7 @@ public class RubyClassGenerator implements ILang
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -Dmyenv=FILL_ME_IN.xml codegenMoveTemplates to move into the appropriate projects
   for (StateMachine sm : uClass.getAllStateMachines())  
   {
+
     if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
     {
       

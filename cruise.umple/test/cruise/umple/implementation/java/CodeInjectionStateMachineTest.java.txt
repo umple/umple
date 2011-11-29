@@ -1,0 +1,70 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class Example
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Example State Machines
+  enum Light { On, Off }
+  private Light light;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Example()
+  {
+    setLight(Light.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getLightFullName()
+  {
+    String answer = light.toString();
+    return answer;
+  }
+
+  public Light getLight()
+  {
+    return light;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (light)
+    {
+      case On:
+        setLight(Light.Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        setLight(Light.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setLight(Light aLight)
+  {
+    System.out.println("About to flip");
+    light = aLight;
+    System.out.println("Just flipped");
+  }
+
+  public void delete()
+  {}
+
+}
