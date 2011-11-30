@@ -183,12 +183,7 @@ function getErrorHtml($errorFilename, $offset = 1)
 
   if($errorMessage != "") 
   {
-  	 $errInfo = "";
-
-//     if(function_exists("json_decode"))
-//  	     $errInfo = json_decode($errorMessage, true);
-//  	 else
-  	     $errInfo = jsonDecode($errorMessage);
+     $errInfo = jsonDecode($errorMessage);
      $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
      $errhtml .= "<div id='errorRow' colspan='3' style='display:none'>";
      
@@ -218,6 +213,7 @@ function getErrorHtml($errorFilename, $offset = 1)
   return "";
 }
 
+// taken from http://php.net/manual/en/function.json-decode.php
 function jsonDecode ($json) 
 { 
       $json = str_replace(array("\\\\", "\\\""), array("&#92;", "&#34;"), $json); 

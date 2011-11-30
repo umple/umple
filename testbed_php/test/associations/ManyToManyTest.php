@@ -10,12 +10,8 @@ class ManyToManyTest extends UnitTestCase
     
     $m = new MentorN("blah");
     $this->assertEqual(0,$m->numberOfStudents());
-    ob_start();
-	phpinfo();
-	$inf = ob_get_contents();
-	ob_end_clean();
-    $this->assertEqual("$inf", "not1");
   }
+  
   function test_addStudent()
   {
     $m = new MentorN("blah");
