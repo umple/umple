@@ -44,6 +44,7 @@ class GarageDoor
   {
     $wasEventProcessed = false;
 
+    fileTracer("Event: buttonOrObstacle");
     if ($this->status == self::$StatusOpen)
     {
       $this->setStatus(self::$StatusClosing);
@@ -77,6 +78,7 @@ class GarageDoor
   {
     $wasEventProcessed = false;
 
+    fileTracer("Event: reachBottom");
     if ($this->status == self::$StatusClosing)
     {
       $this->setStatus(self::$StatusClosed);
@@ -90,6 +92,7 @@ class GarageDoor
   {
     $wasEventProcessed = false;
 
+    fileTracer("Event: reachTop");
     if ($this->status == self::$StatusOpening)
     {
       $this->setStatus(self::$StatusOpen);

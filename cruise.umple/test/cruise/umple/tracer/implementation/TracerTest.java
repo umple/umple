@@ -202,7 +202,20 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","GarageDoor");
 	}
-	//====== Console tracer
+	
+	@Test
+	public void TraceSupport_ConsoleTracer_EmptyAndNonEmptyStates()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_EmptyAndNonEmptyStates.ump",languagePath + "/ConsoleTracer_EmptyAndNonEmptyStates."+ languagePath +".txt","Light");
+	}
+	
+	@Test
+	public void TraceSupport_ConsoleTracer_TraceEntryAction()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceEntryAction.ump",languagePath + "/ConsoleTracer_TraceEntryAction."+ languagePath +".txt","Light");
+	}
+	
+	//====== File tracer
 	@Test
 	public void TraceSupport_FileTracer_State()
 	{
