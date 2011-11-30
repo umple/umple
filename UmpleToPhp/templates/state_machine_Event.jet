@@ -5,6 +5,15 @@
   boolean firstStateMachine = true;
   for(StateMachine sm : uClass.getStateMachines(e))
   {
+    for( TraceDirective tc : uClass.getTraceDirectives() )
+	{
+		for( int i = 0 ; i < tc.numberOfStateMachines() ; ++ i )
+			if( tc.getStateMachine(i) == sm )
+				if( model.getTraceType().equals("Console"))
+					allCases.append(StringFormatter.format("print(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
+				else if( model.getTraceType().equals("File"))
+					allCases.append(StringFormatter.format("fileTracer(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
+	}
     boolean first = true;
     if (!firstStateMachine)
     {
