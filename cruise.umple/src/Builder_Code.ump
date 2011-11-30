@@ -1,5 +1,109 @@
 namespace cruise.umple.builder;
 
+external Object {}
+external ClassLoader {}
+
+class Command 
+{
+  depend  java.util.regex.*;  
+  depend  java.lang.reflect.*;
+  String[] history;
+  String[] messages;
+  Object currentObject = null;
+  ClassLoader loader;
+
+  public String[] popMessages()
+  {
+    String[] local = getMessages();
+    messages = new ArrayList<String>();
+    return local;
+  }
+
+  public Object exec(String input)
+  {
+    addHistory(input);
+    
+    Matcher newObjectMatch = Pattern.compile("new ([^\\s]*)").matcher(input);
+    Matcher showMatch = Pattern.compile("show ([^\\s]*)").matcher(input);
+    if (newObjectMatch.matches())
+    {
+      return newObject(newObjectMatch.group(1));
+    }
+    else if (showMatch.matches())
+    {
+      return showResults(showMatch.group(1));
+    }
+    else
+    {
+      runMethod(input);
+      return null;
+    }
+    
+  }
+
+  public Object newObject(String className)
+  {
+    currentObject = null;
+    try 
+    {
+      Class classDefinition = Class.forName(className,true,loader);
+      currentObject = classDefinition.newInstance();
+    }
+    catch (Throwable e) {
+    }
+    
+    if (currentObject != null)
+    {
+      addMessage("Created " + className);
+    }
+    else
+    {
+      addMessage("Unable to create " + className);
+    }
+    
+    return currentObject;
+  }
+  
+  public void runMethod(String methodName)
+  {
+    callMethod(methodName,false);
+  }
+  
+  public Object showResults(String methodName)
+  {
+    return callMethod(methodName,true);
+  }
+  
+  private Object callMethod(String methodName, boolean showValue)
+  {
+    try 
+    {
+      Class c = currentObject.getClass();
+      Method m = c.getMethod(methodName);
+      Object answer = m.invoke(currentObject);
+      
+      if (showValue && answer == null)
+      {
+        addMessage(methodName + " = [NULL]");
+      }
+      else if (showValue)
+      {
+        addMessage(methodName + " = " + answer.toString());  
+      }
+      else
+      {
+        addMessage("Executed #" + methodName);  
+      }
+      return answer;
+    }
+    catch (Throwable e) {
+      addMessage("Unable to execute #" + methodName);  
+      return null;
+    }
+  }
+  
+}
+
 class Builder {
 
   depend java.io.*;
@@ -79,6 +183,9 @@ class Builder {
       "<project name=\"runtime-compiler\" default=\"go\" basedir=\".\">\n" +
       "  <target name=\"clean\">\n" +
       "    <delete file=\""+ jarname +"\" failonerror=\"false\" />\n" +
+      "    <delete failonerror=\"false\">\n" +
+      "        <fileset dir=\".\" includes=\"**/*.class\"/>\n" +
+      "      </delete>\n" +
       "  </target>\n" +
       "  <target name=\"compile\">\n" +
       "    <javac debug=\"true\" debuglevel=\"source,lines,vars\" includeAntRuntime=\"false\" destdir=\".\" srcdir=\".\" target=\""+ javaTarget +"\">\n" +

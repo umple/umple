@@ -73,13 +73,19 @@ public class UmpleRunMain
          URL urls [] = { jarfile };
          URLClassLoader cl = new URLClassLoader(urls);
          println("success.");
-         //Class<?> studentClass = cl.loadClass("test.Student");
+         
+         Command cmd = new Command(cl);
          
          println("Running commands:");
-         for (String cmd : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
+         for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
          {
-             println("  >>> " + cmd);
+           cmd.exec(input);
+           for(String message : cmd.popMessages())
+           {
+             println("  " + message);
+           }
          }
+         
          println("Done.");
      }
      catch(Exception e)

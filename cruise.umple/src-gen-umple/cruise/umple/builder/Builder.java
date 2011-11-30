@@ -104,6 +104,9 @@ public class Builder
       "<project name=\"runtime-compiler\" default=\"go\" basedir=\".\">\n" +
       "  <target name=\"clean\">\n" +
       "    <delete file=\""+ jarname +"\" failonerror=\"false\" />\n" +
+      "    <delete failonerror=\"false\">\n" +
+      "        <fileset dir=\".\" includes=\"**/*.class\"/>\n" +
+      "      </delete>\n" +
       "  </target>\n" +
       "  <target name=\"compile\">\n" +
       "    <javac debug=\"true\" debuglevel=\"source,lines,vars\" includeAntRuntime=\"false\" destdir=\".\" srcdir=\".\" target=\""+ javaTarget +"\">\n" +
