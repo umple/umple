@@ -10,8 +10,10 @@ class ManyToManyTest extends UnitTestCase
     
     $m = new MentorN("blah");
     $this->assertEqual(0,$m->numberOfStudents());
+    
+  	$v = function_exists("json_decode");
+    $this->assertEqual("$v", "not1");
   }
-  
   function test_addStudent()
   {
     $m = new MentorN("blah");

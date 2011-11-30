@@ -136,7 +136,7 @@ else if (isset($_REQUEST["umpleCode"]))
        exec($command);
        exec("cd $thedir; rm javadocFromUmple.zip; /usr/bin/zip -r javadocFromUmple javadoc");
        
-       $html = "<a href=\"umpleonline/$thedir/javadocFromUmple.zip\">Download the following as a zip file</a>{$errhtml}
+       $html = "<a href=\"umpleonline/$thedir/javadocFromUmple.zip\">Download the following as a zip file</a>&nbsp;{$errhtml}
       <iframe width=100% height=1000 src=\"" . $theurldir . "/javadoc/\">This browser does not
       support iframes, so the javadoc cannot be displayed</iframe> 
      ";
@@ -145,7 +145,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else // This is where the Java, PHP and other output is placed on the screen
     {
 	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
-	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a>{$errhtml}<p>URL_SPLIT";
+	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
     }
   }
@@ -183,7 +183,12 @@ function getErrorHtml($errorFilename, $offset = 1)
 
   if($errorMessage != "") 
   {
-  	 $errInfo = json_decode($errorMessage, true);
+  	 $errInfo = "";
+
+//     if(function_exists("json_decode"))
+//  	     $errInfo = json_decode($errorMessage, true);
+//  	 else
+  	     $errInfo = jsonDecode($errorMessage);
      $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
      $errhtml .= "<div id='errorRow' colspan='3' style='display:none'>";
      
@@ -213,4 +218,42 @@ function getErrorHtml($errorFilename, $offset = 1)
   return "";
 }
 
+function jsonDecode ($json) 
+{ 
+      $json = str_replace(array("\\\\", "\\\""), array("&#92;", "&#34;"), $json); 
+      $parts = preg_split("@(\"[^\"]*\")|([\[\]\{\},:])|\s@is", $json, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE); 
+      foreach ($parts as $index => $part) 
+      { 
+          if (strlen($part) == 1) 
+          { 
+              switch ($part) 
+              { 
+                  case "[": 
+                  case "{": 
+                      $parts[$index] = "array("; 
+                      break; 
+                  case "]": 
+                  case "}": 
+                      $parts[$index] = ")"; 
+                      break; 
+                  case ":": 
+                    $parts[$index] = "=>"; 
+                    break;    
+                  case ",": 
+                    break; 
+                  default: 
+                      return null; 
+              } 
+          } 
+          else 
+          { 
+              if ((substr($part, 0, 1) != "\"") || (substr($part, -1, 1) != "\"")) 
+              { 
+                  return null; 
+              } 
+          } 
+      } 
+      $json = str_replace(array("&#92;", "&#34;", "$"), array("\\\\", "\\\"", "\\$"), implode("", $parts)); 
+      return eval("return $json;"); 
+} 
 ?>
