@@ -20,7 +20,7 @@ Word:
 	singular=STRING ":" plural=STRING ";" ;	
 	
 Generate:	
-	'generate' (java?='Java' | Php?='Php'| Ruby='Ruby')  ";";
+	'generate' (java?='Java' | Php?='Php'| Ruby?='Ruby') (path=STRING (override?="--override-all")?)? ";";
 	
 UseStatement:
 	"use" (file=ID)";";
