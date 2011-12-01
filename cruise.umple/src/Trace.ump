@@ -49,9 +49,16 @@ class TraceDirective
  	duringClause = null;
  	executeClause = null;
  	0..* -- 0..* Attribute;
- 	0..* -- 0..* StateMachine;
+ 	0..* -- 0..* StateMachine_TraceItem;
  	0..* -- 0..* MethodTraceEntity;
  	0..1 -- 0..1 AssociationVariable;
+}
+
+class StateMachine_TraceItem
+{
+	boolean entry = false;
+	boolean exit = false;
+	0..* -- 1 StateMachine;
 }
 
 class TraceCase

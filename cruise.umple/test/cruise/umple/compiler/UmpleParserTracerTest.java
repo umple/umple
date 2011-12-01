@@ -1202,7 +1202,7 @@ public class UmpleParserTracerTest
 	  assertParse("375_traceState.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][trace_entity:status]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("GarageDoor");
-	  StateMachine stm = clazz.getTraceDirective(0).getStateMachine(0);
+	  StateMachine stm = clazz.getTraceDirective(0).getStateMachineTraceItem(0).getStateMachine();
 	  Assert.assertEquals(stm.numberOfStates(),5);
 	  Assert.assertEquals(stm.getStartState(),clazz.getStateMachine(0).getStartState());
 	  Assert.assertEquals(stm.getNestedStateMachines(),clazz.getStateMachine(0).getNestedStateMachines());

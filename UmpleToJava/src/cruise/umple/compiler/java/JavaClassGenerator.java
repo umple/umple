@@ -3290,8 +3290,8 @@ public class JavaClassGenerator implements ILang
   {
   	for( TraceDirective tc : uClass.getTraceDirectives() )
 	{
-		for( int i = 0 ; i < tc.numberOfStateMachines() ; ++ i )
-			if( tc.getStateMachine(i) == sm )
+		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+			if( tc.getStateMachineTraceItem(i).getStateMachine() == sm )
 				if( model.getTraceType().equals("Console"))
 					allCases.append(StringFormatter.format("System.out.println(\"Event: {0}\");\n",gen.translate("eventMethod",e)));
 				else if( model.getTraceType().equals("File"))

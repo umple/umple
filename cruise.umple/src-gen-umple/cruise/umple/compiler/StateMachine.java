@@ -19,7 +19,7 @@ public class StateMachine
   private UmpleClass umpleClass;
   private State parentState;
   private List<State> states;
-  private List<TraceDirective> traceDirectives;
+  private List<StateMachine_TraceItem> stateMachineTraceItems;
 
   //Helper Variables
   private int cachedHashCode;
@@ -34,7 +34,7 @@ public class StateMachine
   {
     name = aName;
     states = new ArrayList<State>();
-    traceDirectives = new ArrayList<TraceDirective>();
+    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
     cachedHashCode = -1;
     canSetParentState = true;
     canSetName = true;
@@ -98,33 +98,33 @@ public class StateMachine
     return index;
   }
 
-  public TraceDirective getTraceDirective(int index)
+  public StateMachine_TraceItem getStateMachineTraceItem(int index)
   {
-    TraceDirective aTraceDirective = traceDirectives.get(index);
-    return aTraceDirective;
+    StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
+    return aStateMachineTraceItem;
   }
 
-  public List<TraceDirective> getTraceDirectives()
+  public List<StateMachine_TraceItem> getStateMachineTraceItems()
   {
-    List<TraceDirective> newTraceDirectives = Collections.unmodifiableList(traceDirectives);
-    return newTraceDirectives;
+    List<StateMachine_TraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
+    return newStateMachineTraceItems;
   }
 
-  public int numberOfTraceDirectives()
+  public int numberOfStateMachineTraceItems()
   {
-    int number = traceDirectives.size();
+    int number = stateMachineTraceItems.size();
     return number;
   }
 
-  public boolean hasTraceDirectives()
+  public boolean hasStateMachineTraceItems()
   {
-    boolean has = traceDirectives.size() > 0;
+    boolean has = stateMachineTraceItems.size() > 0;
     return has;
   }
 
-  public int indexOfTraceDirective(TraceDirective aTraceDirective)
+  public int indexOfStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
   {
-    int index = traceDirectives.indexOf(aTraceDirective);
+    int index = stateMachineTraceItems.indexOf(aStateMachineTraceItem);
     return index;
   }
 
@@ -203,52 +203,42 @@ public class StateMachine
     return wasRemoved;
   }
 
-  public static int minimumNumberOfTraceDirectives()
+  public static int minimumNumberOfStateMachineTraceItems()
   {
     return 0;
   }
 
-  public boolean addTraceDirective(TraceDirective aTraceDirective)
+  public StateMachine_TraceItem addStateMachineTraceItem()
+  {
+    return new StateMachine_TraceItem(this);
+  }
+
+  public boolean addStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
   {
     boolean wasAdded = false;
-    if (traceDirectives.contains(aTraceDirective)) { return false; }
-    traceDirectives.add(aTraceDirective);
-    if (aTraceDirective.indexOfStateMachine(this) != -1)
+    if (stateMachineTraceItems.contains(aStateMachineTraceItem)) { return false; }
+    StateMachine existingStateMachine = aStateMachineTraceItem.getStateMachine();
+    boolean isNewStateMachine = existingStateMachine != null && !this.equals(existingStateMachine);
+    if (isNewStateMachine)
     {
-      wasAdded = true;
+      aStateMachineTraceItem.setStateMachine(this);
     }
     else
     {
-      wasAdded = aTraceDirective.addStateMachine(this);
-      if (!wasAdded)
-      {
-        traceDirectives.remove(aTraceDirective);
-      }
+      stateMachineTraceItems.add(aStateMachineTraceItem);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeTraceDirective(TraceDirective aTraceDirective)
+  public boolean removeStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
   {
     boolean wasRemoved = false;
-    if (!traceDirectives.contains(aTraceDirective))
+    //Unable to remove aStateMachineTraceItem, as it must always have a stateMachine
+    if (!this.equals(aStateMachineTraceItem.getStateMachine()))
     {
-      return wasRemoved;
-    }
-
-    int oldIndex = traceDirectives.indexOf(aTraceDirective);
-    traceDirectives.remove(oldIndex);
-    if (aTraceDirective.indexOfStateMachine(this) == -1)
-    {
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
       wasRemoved = true;
-    }
-    else
-    {
-      wasRemoved = aTraceDirective.removeStateMachine(this);
-      if (!wasRemoved)
-      {
-        traceDirectives.add(oldIndex,aTraceDirective);
-      }
     }
     return wasRemoved;
   }
@@ -328,11 +318,9 @@ public class StateMachine
     {
       aState.delete();
     }
-    ArrayList<TraceDirective> copyOfTraceDirectives = new ArrayList<TraceDirective>(traceDirectives);
-    traceDirectives.clear();
-    for(TraceDirective aTraceDirective : copyOfTraceDirectives)
+    for(StateMachine_TraceItem aStateMachineTraceItem : stateMachineTraceItems)
     {
-      aTraceDirective.removeStateMachine(this);
+      aStateMachineTraceItem.delete();
     }
   }
   
