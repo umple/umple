@@ -893,11 +893,11 @@ private void checkSingletonAssociations() {
     	setFailedPosition(association.getTokenPosition(), 2, association.getName());
     }
 		
-		if(myClass.getIsSingleton() && myEnd.getMultiplicity().getUpperBound() == 1) {
+		if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) {
 			setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
 		}
 		
-		if(yourClass.getIsSingleton() && yourEnd.getMultiplicity().getUpperBound() == -1) {
+		if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) {
 			setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
 		}
 	}
@@ -1122,7 +1122,7 @@ private void checkSingletonAssociations() {
     myMult.setRange(myLowerBound,myUpperBound);
 
     if (!myMult.isValid())
-    {
+    {    	    	
 	   	String invalidBound = myBound == null ? invalidBound = myLowerBound + ".." + myUpperBound : myBound;
       setFailedPosition(myMultToken.getPosition(), 4, invalidBound);
       return null;
