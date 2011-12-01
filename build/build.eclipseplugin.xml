@@ -149,6 +149,7 @@
 
     <copy todir="${plugin.files}">
       <fileset dir="cruise.umple/src" includes="*.grammar"/>
+      <fileset dir="cruise.umple/src" includes="*.error"/>
     </copy>
     
     <!-- Assemble plug-in jar -->

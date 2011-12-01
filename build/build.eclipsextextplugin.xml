@@ -159,6 +159,7 @@
 
     <copy todir="${plugin.files}">
       <fileset dir="cruise.umple/src" includes="*.grammar"/>
+      <fileset dir="cruise.umple/src" includes="*.error"/>
     </copy>
 
     <copy todir="${plugin.files}/cruise/umple/parser/antlr/internal">
