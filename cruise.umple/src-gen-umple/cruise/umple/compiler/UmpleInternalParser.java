@@ -1545,17 +1545,9 @@ private void analyzeTraceToken(Token token)
       
       for( Token traceToken : token.getSubTokens() )
       {
-    	  if( traceToken.is("trace_entity") )
+    	  if( traceToken.is("trace_entity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
     	  {
     		  analyzeTraceItem( traceToken , traceDirective , mte );
-    	  }
-    	  else if( traceToken.getName().equals("entry") )
-    	  {
-    		  mte.setEntry(true);
-    	  }
-    	  else if( traceToken.getName().equals("exit") )
-    	  {
-    		  mte.setExit(true);
     	  }
     	  else if( traceToken.is("traceWhere") )
     	  {
@@ -1602,19 +1594,44 @@ private void analyzeTraceToken(Token token)
 	  Attribute attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
 	  List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
 	  StateMachine stm = null;
+	  State state = null;
+	  boolean entryState = false;
 	  String methodName = traceToken.getValue("trace_entity");
 	  
 	  // here, i faced a problem of finding traced state machine because
 	  // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
 	  for( int i = 0 ; i < stms.size() ; ++i )
+	  {
+		  for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+		  {
+			  State nestedState = stms.get(i).getState(j);
+			  if( nestedState.getName().equals(traceToken.getValue("trace_entity")))
+			  {
+				  stm = new StateMachine(stms.get(i).getName());
+				  stm.addState(nestedState);
+				  state = nestedState;
+				  break;
+			  }  
+		  }
 		  if( stms.get(i).getFullName().equals(traceToken.getValue("trace_entity")))
 		  {
 			  stm = stms.get(i);
 			  break;
 		  }
+	  }
+  
+	  if( traceToken.getName().equals("entry") )
+	  {
+		  mte.setEntry(true);
 		  
+	  }
+	  else if( traceToken.getName().equals("exit") )
+	  {
+		  mte.setExit(true);
+	  }
+	  
 	  // if trace entity is a method
-	  if( methodName.contains("("))
+	  if( methodName != null && methodName.contains("("))
 	  {
 		  if( mte.getName() !=  null)
 		  {
@@ -1629,12 +1646,33 @@ private void analyzeTraceToken(Token token)
 		  traceDirective.addAttribute(attr);
 	  }
 	  // if trace entity is a state machine
-	  else if( stm != null )
+	  else if( stm != null && state == null )
 	  {
 		  StateMachine_TraceItem traced_stm = new StateMachine_TraceItem(stm);
 		  traced_stm.setEntry(true);
 		  traced_stm.setExit(true);
 		  traceDirective.addStateMachineTraceItem(traced_stm);
+	  }
+	  // if trace entity is a state
+	  else if( state != null )
+	  {
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem(stm);
+		  if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )
+		  {
+			  tracedStm.setEntry(true);
+			  tracedStm.setExit(false);
+		  }
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("exit") )
+		  {
+			  tracedStm.setEntry(false);
+			  tracedStm.setExit(true);
+		  }
+		  else
+		  {
+			  tracedStm.setEntry(true);
+			  tracedStm.setExit(true);
+		  }
+		  traceDirective.addStateMachineTraceItem(tracedStm);
 	  }
 	  
   }

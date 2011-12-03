@@ -13,5 +13,5 @@ class GarageDoor
       }
       HalfOpen { buttonOrObstacle -> Opening; }
   }
-  trace Closing;
+  trace status;
 }
