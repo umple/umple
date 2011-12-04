@@ -553,6 +553,10 @@ private void analyzeClassToken(Token t)
         Association association = analyzeAssociation(token, "");
         association.setName(name);
         unlinkedAssociations.add(association);
+
+	if (!getParseResult().getWasSuccess()) {
+	return;
+}
       }
     }
   }  
