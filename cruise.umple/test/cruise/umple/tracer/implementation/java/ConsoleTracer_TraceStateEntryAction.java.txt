@@ -1,7 +1,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-
+package example;
 
 public class Light
 {
@@ -59,9 +59,19 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
-    System.out.println("Previous state =" + status);
     status = aStatus;
-    System.out.println("Current state =" + status);
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        System.out.println("Tracing state On entry action(s)");
+        System.out.println("State On entry");
+        break;
+      case Off:
+        System.out.println("State Off entry");
+        break;
+    }
   }
 
   public void delete()

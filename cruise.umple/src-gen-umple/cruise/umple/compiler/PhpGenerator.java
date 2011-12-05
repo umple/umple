@@ -794,8 +794,12 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  {
 		  StateMachine stm = traceDirective.getStateMachineTraceItem(i).getStateMachine();
 		  String stmCode = null;
+		  boolean flag = true;
 		  
-		  if(tracer.equals("console"))
+		  if( traceDirective.getStateMachineTraceItem(i).getEntry() || traceDirective.getStateMachineTraceItem(i).getExit() )
+			  flag = false;
+		  
+		  if(tracer.equals("console") && flag)
 		  {
 			  stmCode = StringFormatter.format(consoleTemplate,"Previous state ",t.translate("stateMachineOne",stm));
 	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
@@ -803,7 +807,7 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  		  stmCode = StringFormatter.format(consoleTemplate,"Current state ",t.translate("stateMachineOne",stm));
 			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
 		  }
-		  else if(tracer.equals("file"))
+		  else if(tracer.equals("file") && flag)
 		  {
 			  stmCode = StringFormatter.format(consoleTemplate,t.translate("stateMachineOne",stm));
 	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");

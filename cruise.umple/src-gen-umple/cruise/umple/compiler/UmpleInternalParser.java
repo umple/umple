@@ -1653,8 +1653,8 @@ private void analyzeTraceToken(Token token)
 	  else if( stm != null && state == null )
 	  {
 		  StateMachine_TraceItem traced_stm = new StateMachine_TraceItem(stm);
-		  traced_stm.setEntry(true);
-		  traced_stm.setExit(true);
+		  traced_stm.setEntry(false);
+		  traced_stm.setExit(false);
 		  traceDirective.addStateMachineTraceItem(traced_stm);
 	  }
 	  // if trace entity is a state

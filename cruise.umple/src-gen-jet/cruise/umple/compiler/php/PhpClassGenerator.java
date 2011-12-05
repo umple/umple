@@ -3078,6 +3078,23 @@ public class PhpClassGenerator implements ILang
           if (isFirstEntry)
           {
             entryActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+            for( TraceDirective tc : uClass.getTraceDirectives() )
+        	  {
+        		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+        		{
+        		  StateMachine stm = tc.getStateMachineTraceItem(i).getStateMachine();
+        		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+        		  {
+        		  	State stat = stm.getState(j);
+        		  	String statName =  stm.getName() + stat.getName();
+        			if( statName.equalsIgnoreCase(gen.translate("stateOne",state)))
+            			if( model.getTraceType().equals("Console"))
+        					entryActions.append(StringFormatter.format( "\n      " + "print(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state)));
+         				else if( model.getTraceType().equals("File"))
+         					entryActions.append(StringFormatter.format( "\n      " + "fileTracer(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state))); 
+         		  }
+        		}
+        	  }
           }
           else
           {

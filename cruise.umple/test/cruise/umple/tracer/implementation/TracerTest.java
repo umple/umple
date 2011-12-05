@@ -198,9 +198,15 @@ public class TracerTest extends TracerTemplateTest
 
 	//====== Console tracer
 	@Test
+	public void TraceSupport_ConsoleTracer_StateMachine()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateMachine.ump",languagePath + "/ConsoleTracer_TraceStateMachine."+ languagePath +".txt","GarageDoor");
+	}
+	
+	@Test @Ignore
 	public void TraceSupport_ConsoleTracer_State()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","GarageDoor");
+		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","Light");
 	}
 	
 	@Test
@@ -210,9 +216,9 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void TraceSupport_ConsoleTracer_TraceEntryAction()
+	public void TraceSupport_ConsoleTracer_TraceStateEntryAction()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceEntryAction.ump",languagePath + "/ConsoleTracer_TraceEntryAction."+ languagePath +".txt","Light");
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryAction.ump",languagePath + "/ConsoleTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
 	}
 	
 	//====== File tracer
@@ -220,6 +226,12 @@ public class TracerTest extends TracerTemplateTest
 	public void TraceSupport_FileTracer_State()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceState.ump",languagePath + "/FileTracer_TraceState."+ languagePath +".txt","GarageDoor");
+	}
+	
+	@Test
+	public void TraceSupport_FileTracer_TraceStateEntryAction()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceStateEntryAction.ump",languagePath + "/FileTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
 	}
 	
 	//***************************//

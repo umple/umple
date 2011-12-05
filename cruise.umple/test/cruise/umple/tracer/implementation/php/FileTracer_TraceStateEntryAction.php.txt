@@ -1,0 +1,92 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Light
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Light State Machines
+  private static $StatusOn = 1;
+  private static $StatusOff = 2;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOn) { return "StatusOn"; }
+    elseif ($this->status == self::$StatusOff) { return "StatusOff"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->status == self::$StatusOn)
+    {
+      $this->setStatus(self::$StatusOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->status == self::$StatusOff)
+    {
+      $this->setStatus(self::$StatusOn);
+      $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusOn)
+    {
+      fileTracer("Tracing state StatusOn entry action(s)");
+      System.out.println("State On entry");
+    }
+    elseif ($this->status == self::$StatusOff)
+    {
+      System.out.println("State Off entry");
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  function fileTracer($tracedItem)
+  {
+    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+    fprintf($file,"Traced object value: $tracedItem".PHP_EOL);
+    fprintf($file,"Trace time: ".date(DATE_RFC822).PHP_EOL);
+    fclose($file);
+  }
+
+}
+?>

@@ -842,8 +842,12 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  {
 		  StateMachine stm = traceDirective.getStateMachineTraceItem(i).getStateMachine();
 		  String stmCode = null;
+		  boolean flag = true;
 		  
-		  if(tracer.equals("console"))
+		  if( traceDirective.getStateMachineTraceItem(i).getEntry() || traceDirective.getStateMachineTraceItem(i).getExit() )
+			  flag = false;
+		  
+		  if(tracer.equals("console") && flag )
 		  {
 			  stmCode = StringFormatter.format(consoleTemplate,"Previous state ",t.translate("stateMachineOne",stm));
 	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
@@ -851,7 +855,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  		  stmCode = StringFormatter.format(consoleTemplate,"Current state ",t.translate("stateMachineOne",stm));
 			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
 		  }
-		  else if(tracer.equals("file"))
+		  else if(tracer.equals("file") && flag )
 		  {
 			  stmCode = StringFormatter.format(consoleTemplate,"\"Previous state: \"+"+t.translate("stateMachineOne",stm));
 	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");

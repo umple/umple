@@ -3433,6 +3433,22 @@ public class JavaClassGenerator implements ILang
             entryActions.append("\n      ");
           }
           entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          for( TraceDirective tc : uClass.getTraceDirectives() )
+      	  {
+      		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+      		{
+      		  StateMachine stm = tc.getStateMachineTraceItem(i).getStateMachine();
+      		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+      		  {
+      		  	State stat = stm.getState(j);
+      			if( stat.getName().equals(gen.translate("stateOne",state)) )
+          			if( model.getTraceType().equals("Console"))
+      					entryActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state)));
+       				else if( model.getTraceType().equals("File"))
+       					entryActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state))); 
+       		  }
+      		}
+      	  }
         }
         hasEntry = true;
         hasThisEntry = true;
