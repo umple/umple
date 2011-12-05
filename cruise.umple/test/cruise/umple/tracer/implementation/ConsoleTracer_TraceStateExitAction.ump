@@ -1,0 +1,17 @@
+namespace example;
+
+class Light
+{
+  status
+  {
+    On {
+      entry / { doEntry(); }
+      exit / { doExit(); }
+      flip -> Off;
+    }
+    Off {
+      flip -> On;
+    }
+  }
+  trace exit On;
+}

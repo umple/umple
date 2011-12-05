@@ -3437,16 +3437,18 @@ public class JavaClassGenerator implements ILang
       	  {
       		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
       		{
-      		  StateMachine stm = tc.getStateMachineTraceItem(i).getStateMachine();
-      		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-      		  {
-      		  	State stat = stm.getState(j);
-      			if( stat.getName().equals(gen.translate("stateOne",state)) )
+      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+      		  StateMachine stm = tracedState.getStateMachine();
+      		  if( tracedState.getEntry() )
+      		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+      		    {
+      		  	  State stat = stm.getState(j);
+      			  if( stat.getName().equals(gen.translate("stateOne",state)) )
           			if( model.getTraceType().equals("Console"))
       					entryActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state)));
        				else if( model.getTraceType().equals("File"))
        					entryActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state))); 
-       		  }
+       		    }
       		}
       	  }
         }
@@ -3465,6 +3467,24 @@ public class JavaClassGenerator implements ILang
           }
           isFirstExit = false;
           exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          for( TraceDirective tc : uClass.getTraceDirectives() )
+      	  {
+      		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+      		{
+      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+      		  StateMachine stm = tracedState.getStateMachine();
+      		  if( tracedState.getExit() )
+      		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+      		    {
+      		  	  State stat = stm.getState(j);
+      			  if( stat.getName().equals(gen.translate("stateOne",state)) )
+          			if( model.getTraceType().equals("Console"))
+          				exitActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state)));
+       				else if( model.getTraceType().equals("File"))
+       					exitActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state))); 
+       		    }
+      		 }
+      	   }
         }
         hasExit = true;
         hasThisExit = true;

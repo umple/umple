@@ -221,6 +221,12 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryAction.ump",languagePath + "/ConsoleTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
 	}
 	
+	@Test
+	public void TraceSupport_ConsoleTracer_TraceStateExitAction()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateExitAction.ump",languagePath + "/ConsoleTracer_TraceStateExitAction."+ languagePath +".txt","Light");
+	}
+	
 	//====== File tracer
 	@Test
 	public void TraceSupport_FileTracer_State()
@@ -232,6 +238,12 @@ public class TracerTest extends TracerTemplateTest
 	public void TraceSupport_FileTracer_TraceStateEntryAction()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceStateEntryAction.ump",languagePath + "/FileTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
+	}
+	
+	@Test
+	public void TraceSupport_FileTracer_TraceStateExitAction()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceStateExitAction.ump",languagePath + "/FileTracer_TraceStateExitAction."+ languagePath +".txt","Light");
 	}
 	
 	//***************************//
