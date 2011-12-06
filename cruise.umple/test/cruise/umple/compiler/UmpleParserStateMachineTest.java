@@ -583,9 +583,21 @@ public class UmpleParserStateMachineTest
     
     Assert.assertEquals("Off", sm.getState(0).getTransition(0).getNextState().getName());
     Assert.assertEquals("On", sm.getState(1).getTransition(0).getNextState().getName());
-    
-    
   }  
+
+  @Test
+  public void reusingEventsInNestedStateMachines()
+  {
+    assertParse("200_reusingEventsInNestedStateMachines.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:status][state][stateName:S1][transition][event:e1][stateName:S1A][state][stateName:S1A][transition][event:e1][stateName:S1]");
+
+    UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
+    StateMachine sm = uClass.getStateMachine(0);
+    
+    List<Event> allEvents = sm.getEvents();
+    Assert.assertEquals(1,allEvents.size());
+    Assert.assertEquals("e1",allEvents.get(0).getName());
+    Assert.assertEquals(1,uClass.getEvents().size());
+  }
     
   private void assertParse(String filename, String expectedOutput)
   {

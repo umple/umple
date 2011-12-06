@@ -349,6 +349,43 @@ public class StateMachine
     return null;
   }
   
+  public List<Event> getAllEvents()
+  {
+    ArrayList<Event> allEvents = new ArrayList<Event>();
+    ArrayList<StateMachine> allSearch = new ArrayList<StateMachine>();
+    ArrayList<StateMachine> alreadySearched = new ArrayList<StateMachine>();
+    allSearch.add(this);
+    while (!allSearch.isEmpty())
+    {
+      StateMachine sm = allSearch.remove(0);
+      if (alreadySearched.contains(sm))
+      {
+        continue;
+      }
+      alreadySearched.add(sm);
+      if (sm.getParentState() != null)
+      {
+        allSearch.add(sm.getParentState().getStateMachine());
+        allSearch.addAll(sm.getParentState().getNestedStateMachines());
+      }
+      for (State aState : sm.states)
+      {
+        allSearch.addAll(aState.getNestedStateMachines());
+        for (int i=0; i<aState.numberOfTransitions(); i++)
+        {
+          
+          Transition aTransition = aState.getTransition(i);
+          Event e = aTransition.getEvent();
+          if (e != null && !allEvents.contains(e))
+          {
+            allEvents.add(e);
+          }
+        }
+      }
+    }
+    return allEvents;
+  }
+  
   public List<Event> getEvents()
   {
     ArrayList<Event> allEvents = new ArrayList<Event>();
@@ -380,7 +417,7 @@ public class StateMachine
   
   public Event findOrCreateEvent(String aName)
   {
-    for (Event aEvent : getEvents())
+    for (Event aEvent : getAllEvents())
     {
       if (aEvent.getName().equals(aName))
       {

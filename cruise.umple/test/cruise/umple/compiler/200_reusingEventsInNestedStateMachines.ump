@@ -1,0 +1,12 @@
+
+class OnOffSwitch
+{
+  status {
+    S1 {
+      e1 -> S1A;
+      S1A {
+        e1 -> S1;
+      }
+    }
+  }
+}

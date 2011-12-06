@@ -173,7 +173,7 @@ public class TemplateTest
     }
 
     File expected = new File(pathToInput, codeFile);
-    System.out.println(actual);
+    // System.out.println(actual);
     SampleFileWriter.assertFileContent(expected, actual);
   }
 

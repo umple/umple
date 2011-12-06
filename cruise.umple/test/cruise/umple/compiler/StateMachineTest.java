@@ -51,7 +51,7 @@ public class StateMachineTest
     Event same2 = sm.getEvent("flop");
     Assert.assertEquals(e2, same2);
   }
-  
+
   @Test
   public void getEvents_none()
   {
@@ -75,6 +75,31 @@ public class StateMachineTest
     
     Assert.assertEquals(1, sm.getEvents().size());
     Assert.assertEquals(e1, sm.getEvents().get(0));
+  }
+  
+  @Test
+  public void getAllEvents_none()
+  {
+    Assert.assertEquals(0, sm.getAllEvents().size());
+    
+    State s1 = new State("s1",sm);
+    Assert.assertEquals(0, sm.getAllEvents().size());
+    
+    new Transition(s1,s1);
+    Assert.assertEquals(0, sm.getAllEvents().size());
+
+  }
+  
+  @Test
+  public void getAllEvents_one()
+  {
+    State s1 = new State("s1",sm);
+    Transition t1 = new Transition(s1,s1);
+    Event e1 = new Event("e1");
+    t1.setEvent(e1);
+    
+    Assert.assertEquals(1, sm.getAllEvents().size());
+    Assert.assertEquals(e1, sm.getAllEvents().get(0));
   }
   
   @Test
@@ -214,6 +239,39 @@ public class StateMachineTest
     Event e1 = sm.findOrCreateEvent("e1");
     Assert.assertEquals("e1", e1.getName());
     Assert.assertSame(eOld, e1);
+  }   
+
+  @Test
+  public void findOrCreateEvent_lookThroughouEntireStructure()
+  {
+    StateMachine parentSm = new StateMachine("parent");
+    State parentS = new State("p1",parentSm);
+    parentS.addNestedStateMachine(sm);
+
+    Event e = parentSm.findOrCreateEvent("e1");
+    Transition t = new Transition(parentS,parentS);
+    t.setEvent(e);
+    
+    Event sameE = sm.findOrCreateEvent("e1");
+    Assert.assertEquals("e1",sameE.getName());
+    Assert.assertSame(e,sameE);
+  }
+
+  @Test
+  public void findOrCreateEvent_findeExistingInSubStateMachine()
+  {
+    StateMachine parentSm = new StateMachine("parent");
+    State parentS = new State("p1",parentSm);
+    parentS.addNestedStateMachine(sm);
+
+    Event e = sm.findOrCreateEvent("e1");
+    Transition t = new Transition(parentS,parentS);
+    t.setEvent(e);
+
+
+    Event sameE = parentSm.findOrCreateEvent("e1");
+    Assert.assertEquals("e1",sameE.getName());
+    Assert.assertSame(e,sameE);
   }   
   
   @Test
