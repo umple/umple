@@ -6,7 +6,7 @@
   <property name="shouldPackageUmpleOnline" value="false"/>
   <property name="shouldDeploy" value="false"/>  
   <property name="showJunitSummary" value="false"/>  
-  <property name="showJunitOutput" value="false"/>  
+  <property name="showJunitOutput" value="true"/>  
   <import file="_versionLast.xml" />
 
 </project>

@@ -16,6 +16,11 @@ public class TestClass
     return i;
   }
   
+  public int greaterThanI()
+  {
+    return i + 1;
+  }
+  
   public String alwaysNull()
   {
     return null;

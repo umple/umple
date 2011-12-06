@@ -1,73 +1,38 @@
-new example.StateMachineTest
-e2
-show getStatusFullName
-e5
-show getStatusFullName
-e2
-show getStatusFullName
-e5
-show getStatusFullName
-e5
-show getStatusFullName
-e1
-show getStatusFullName
-e3
-show getStatusFullName
-e3
-show getStatusFullName
-e5
-show getStatusFullName
-e1
-show getStatusFullName
-e2
-show getStatusFullName
-e1
-show getStatusFullName
-e1
-show getStatusFullName
-e1
-show getStatusFullName
-e3
-show getStatusFullName
-e4
-show getStatusFullName
-e4
-show getStatusFullName
-e1
-show getStatusFullName
-e2
-show getStatusFullName
-e2
-show getStatusFullName
-e4
-show getStatusFullName
-e1
-show getStatusFullName
-e2
-show getStatusFullName
-e4
-show getStatusFullName
-e4
-show getStatusFullName
-e5
-show getStatusFullName
-e1
-show getStatusFullName
-e2
-show getStatusFullName
-e4
-show getStatusFullName
-e1
-show getStatusFullName
-e5
-show getStatusFullName
-e2
-show getStatusFullName
-e1
-show getStatusFullName
-e4
-show getStatusFullName
-e3
-show getStatusFullName
-e5
-show getStatusFullName
+command,getStatusFullName,getV
+new example.StateMachineTest, S1, 0
+e2, S3.S2C, 0
+e5, S3.S1A.S2C, 2
+e2, S3.S1A.S2C, 3
+e5, S3.S1A.S2C, 2
+e5, S3.S1A.S2C, 2
+e1, S2.S1A.S2B, 5
+e3, S2.S1A.S2B, 5
+e3, S2.S1A.S2B, 10
+e5, S2.S1A.S2B, 5
+e1, S2.S1A.S2B, 5
+e2, S2.S1A.S2B, 5
+e1, S2.S1A.S2B, 5
+e1, S2.S1A.S2B, 5
+e1, S2.S1A.S2B, 5
+e3, S2.S1A.S2B, 5
+e4, S2.S1A.S2A, 5
+e4, S1.S1A.S2A, 5
+e1, S2.S1A.S2A, 5
+e2, S2.S1A.S2A, 5
+e2, S2.S1A.S2A, 5
+e4, S1.S1A.S2A, 5
+e1, S2.S1A.S2A, 5
+e2, S2.S1A.S2A, 5
+e4, S1.S1A.S2A, 5
+e4, S1.S1A.S2A, 5
+e5, S1.S1A.S2A, 5
+e1, S2.S1A.S2A, 5
+e2, S2.S1A.S2A, 5
+e4, S1.S1A.S2A, 5
+e1, S2.S1A.S2A, 5
+e5, S2.S1A.S2A, 5
+e2, S2.S1A.S2A, 5
+e1, S2.S1A.S2A, 5
+e4, S1.S1A.S2A, 5
+e3, S1.S1B.S1B1.S2A, 0
+e5, S1.S1A.S2A, 0

@@ -128,7 +128,8 @@
       <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
       <batchtest fork="yes" todir="${test.output.path}">
         <fileset dir="${project.path}/test">
-          <include name="**/*Test.java"/>
+          <!-- <include name="**/*Test.java"/> -->
+          <include name="**/*CommandTest.java"/>
           <exclude name="**/AllTests.java"/>
         </fileset>
       </batchtest>

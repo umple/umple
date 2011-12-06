@@ -16,6 +16,7 @@ public class Command
   //Command Attributes
   private List<String> history;
   private List<String> messages;
+  private List<String> attributes;
   private Object currentObject;
   private ClassLoader loader;
 
@@ -27,6 +28,7 @@ public class Command
   {
     history = new ArrayList<String>();
     messages = new ArrayList<String>();
+    attributes = new ArrayList<String>();
     currentObject = null;
     loader = aLoader;
   }
@@ -60,6 +62,20 @@ public class Command
   {
     boolean wasRemoved = false;
     wasRemoved = messages.remove(aMessage);
+    return wasRemoved;
+  }
+
+  public boolean addAttribute(String aAttribute)
+  {
+    boolean wasAdded = false;
+    wasAdded = attributes.add(aAttribute);
+    return wasAdded;
+  }
+
+  public boolean removeAttribute(String aAttribute)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = attributes.remove(aAttribute);
     return wasRemoved;
   }
 
@@ -139,6 +155,36 @@ public class Command
     return index;
   }
 
+  public String getAttribute(int index)
+  {
+    String aAttribute = attributes.get(index);
+    return aAttribute;
+  }
+
+  public String[] getAttributes()
+  {
+    String[] newAttributes = attributes.toArray(new String[attributes.size()]);
+    return newAttributes;
+  }
+
+  public int numberOfAttributes()
+  {
+    int number = attributes.size();
+    return number;
+  }
+
+  public boolean hasAttributes()
+  {
+    boolean has = attributes.size() > 0;
+    return has;
+  }
+
+  public int indexOfAttribute(String aAttribute)
+  {
+    int index = attributes.indexOf(aAttribute);
+    return index;
+  }
+
   public Object getCurrentObject()
   {
     return currentObject;
@@ -156,6 +202,24 @@ public class Command
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  public void addAttributes(String input)
+  {
+    if (input == null)
+    {
+      return;
+    }
+    boolean isFirst = true;
+    for(String d : input.split(","))
+    {
+      if (isFirst)
+      {
+        isFirst = false;
+        continue;
+      }
+      addAttribute(d);
+    }    
+  }
+
   public String[] popMessages()
   {
     String[] local = getMessages();
@@ -163,26 +227,51 @@ public class Command
     return local;
   }
 
-  public Object exec(String input)
+  public Object exec(String rawInput)
   {
-    addHistory(input);
+    addHistory(rawInput);
+    
+    String input = "";
+    ArrayList<String> assertions = new ArrayList<String>();
+    for(String d : rawInput.split(","))
+    {
+      if (input.isEmpty())
+      {
+        input = d;
+      }
+      else
+      {
+        assertions.add(d);
+      }
+    }
     
     Matcher newObjectMatch = Pattern.compile("new ([^\\s]*)").matcher(input);
     Matcher showMatch = Pattern.compile("show ([^\\s]*)").matcher(input);
+    Object answer = null;
     if (newObjectMatch.matches())
     {
-      return newObject(newObjectMatch.group(1));
+      answer = newObject(newObjectMatch.group(1));
     }
     else if (showMatch.matches())
     {
-      return showResults(showMatch.group(1));
+      answer = showResults(showMatch.group(1));
     }
     else
     {
       runMethod(input);
-      return null;
     }
     
+    for(int i=0; i<attributes.size(); i++)
+    {
+      if (i == assertions.size())
+      {
+        break;
+      }
+      String methodName = attributes.get(i);
+      String expectedValue = assertions.get(i);
+      assertMethod(methodName,expectedValue);
+    }
+    return answer;
   }
 
   public Object newObject(String className)
@@ -210,39 +299,76 @@ public class Command
   
   public void runMethod(String methodName)
   {
-    callMethod(methodName,false);
+    callMethod(methodName,false,true);
   }
   
   public Object showResults(String methodName)
   {
-    return callMethod(methodName,true);
+    return callMethod(methodName,true,false);
   }
   
-  private Object callMethod(String methodName, boolean showValue)
+  public boolean assertMethod(String methodName, String rawExpectedValue)
+  {
+    String expectedValue = rawExpectedValue.trim();
+    
+    if (expectedValue.equals(""))
+    {
+      return true;
+    }
+        
+    Object result = callMethod(methodName,false,false);
+    
+    boolean isNull = result == null;
+    boolean isNullButEqual = expectedValue.equals("NULL") && isNull;
+    boolean isEqual = !isNull && expectedValue.equals(result.toString());
+    
+    if (isNullButEqual || isEqual)
+    {
+      showValue(methodName,result);
+      return true;
+    }
+    else
+    {
+      String actualValue = isNull ? "[NULL]" : result.toString();
+      addMessage("!!! ASSERTION FAILED on "+ methodName +", EXPECTED "+ expectedValue +", ACTUAL " + actualValue);
+      return false;
+    }
+  }
+  
+  private Object callMethod(String methodName, boolean showValue, boolean showExecuted)
   {
     try 
     {
       Class c = currentObject.getClass();
       Method m = c.getMethod(methodName);
       Object answer = m.invoke(currentObject);
-      
-      if (showValue && answer == null)
-      {
-        addMessage(methodName + " = [NULL]");
-      }
-      else if (showValue)
-      {
-        addMessage(methodName + " = " + answer.toString());  
-      }
-      else
+
+      if (showExecuted)
       {
         addMessage("Executed #" + methodName);  
+      }
+      
+      if (showValue)
+      {
+        showValue(methodName,answer);
       }
       return answer;
     }
     catch (Throwable e) {
       addMessage("Unable to execute #" + methodName);  
       return null;
+    }
+  }
+  
+  private void showValue(String methodName, Object answer)
+  {
+    if (answer == null)
+    {
+      addMessage(methodName + " = [NULL]");
+    }
+    else
+    {
+      addMessage(methodName + " = " + answer.toString());  
     }
   }
 }

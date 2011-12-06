@@ -77,8 +77,15 @@ public class UmpleRunMain
          Command cmd = new Command(cl);
          
          println("Running commands:");
+         boolean isFirst = true;
          for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
          {
+           if (isFirst)
+           {
+             cmd.addAttributes(input);
+             isFirst = false;
+             continue;
+           }
            cmd.exec(input);
            for(String message : cmd.popMessages())
            {
