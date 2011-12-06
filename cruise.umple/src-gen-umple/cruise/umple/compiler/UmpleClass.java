@@ -20,6 +20,7 @@ public class UmpleClass extends UmpleElement
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
   private UmpleClass extendsClass;
+  private Token extendsToken;
   private List<UmpleInterface> parentInterface;
   private List<Depend> depends;
   private List<Method> methods;
@@ -167,6 +168,11 @@ public class UmpleClass extends UmpleElement
   public UmpleClass getExtendsClass()
   {
     return extendsClass;
+  }
+
+  public Token getExtendsToken()
+  {
+    return extendsToken;
   }
 
   public UmpleInterface getParentInterface(int index)
@@ -507,6 +513,14 @@ public class UmpleClass extends UmpleElement
     return wasSet;
   }
 
+  public boolean setExtendsToken(Token newExtendsToken)
+  {
+    boolean wasSet = false;
+    extendsToken = newExtendsToken;
+    wasSet = true;
+    return wasSet;
+  }
+
   public static int minimumNumberOfParentInterface()
   {
     return 0;
@@ -812,6 +826,7 @@ public class UmpleClass extends UmpleElement
   {
     codeInjections.clear();
     extendsClass = null;
+    extendsToken = null;
     parentInterface.clear();
     depends.clear();
     methods.clear();

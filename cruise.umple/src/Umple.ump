@@ -146,6 +146,7 @@ class UmpleClass
 
   1 -> * CodeInjection;
   * -> 0..1 UmpleClass extendsClass;
+  * -> 0..1 Token extendsToken;
   * -> 0..* UmpleInterface parentInterface;
   * -> * Depend;
   1 -> 0..* Method;

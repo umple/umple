@@ -21,6 +21,7 @@ class UmpleInternalParser
   internal Association[] unlinkedAssociations;
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
   internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
+  internal Map<UmpleClass,List<Token>> unlinkedExtendsTokens = new HashMap<UmpleClass,List<Token>>();
   internal Map<UmpleInterface,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
   internal List<Comment> lastComments = new ArrayList<Comment>();
  
@@ -152,6 +153,7 @@ class UmpleInternalParser
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
+      checkExtendsForCycles();
     }
   }
   
@@ -207,11 +209,14 @@ class UmpleInternalParser
   private void addExtendsTo(Token classToken, UmpleClass aClass)
   {
     List<String> extendsList = new ArrayList<String>();
+    List<Token> extendsTokenList = new ArrayList<Token>();
     for (Token extendsToken : classToken.getSubTokens()){
       if (extendsToken.getValue("extendsName") != null)
       { 
         extendsList.add(extendsToken.getValue("extendsName"));
+        extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
         unlinkedExtends.put(aClass, extendsList);
+        unlinkedExtendsTokens.put(aClass, extendsTokenList);
       }  
     }
   }
@@ -423,13 +428,14 @@ class UmpleInternalParser
   {
     return (model.getUmpleInterface(elementName) != null) ? false: true;
   }
-
+  
   private void addUnlinkedExtends()
   {  
     for (UmpleClass child : unlinkedExtends.keySet())
     {
       List<String> extendsNames = unlinkedExtends.get(child);
-
+      List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
+      
       if (extendsNames == null)
       {
         continue;
@@ -441,6 +447,11 @@ class UmpleInternalParser
         {
           UmpleClass parent = model.getUmpleClass(extendName); 
           child.setExtendsClass(parent);
+          try
+          {
+              child.setExtendsToken(extendsToken.get(i));
+          }
+          catch(Exception e){}
         }
         else {
           UmpleInterface uInterface=  model.getUmpleInterface(extendName);
@@ -450,7 +461,6 @@ class UmpleInternalParser
       }
     }
   }  
-
 
   private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass)
   {
@@ -493,6 +503,43 @@ class UmpleInternalParser
       return false;
     }
     return true;
+  }
+
+  private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
+  {
+	UmpleClass temp = null;
+	    
+	if(extend == null)
+		return null;
+		
+	if(map.containsKey(extend))
+		return extend;
+	
+	map.put(extend, true);
+	
+    if(parent.equals(extend.getExtendsClass()))
+      return extend.getExtendsClass();
+      
+    temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
+    return temp;
+  }
+
+  private void checkExtendsForCycles()
+  {
+    for(UmpleClass C : model.getUmpleClasses())
+	{
+      HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
+      if(C.getExtendsClass() != null)
+      {
+        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) {
+    	  Token t = C.getExtendsToken();
+    	  if(t.getValue().equals(C.getName()))
+      	    getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
+    	  else
+            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),C.getName()));
+    	}
+      }
+    }
   }
 
 private void checkSingletonAssociations() {

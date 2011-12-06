@@ -40,6 +40,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private List<Association> unlinkedAssociations;
   private Map<Position,String> positionToClassNameReference;
   private Map<UmpleClass,List<String>> unlinkedExtends;
+  private Map<UmpleClass,List<Token>> unlinkedExtendsTokens;
   private Map<UmpleInterface,List<String>> unlinkedInterfaceExtends;
   private List<Comment> lastComments;
   private StateMachine placeholderStateMachine;
@@ -61,6 +62,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     unlinkedAssociations = new ArrayList<Association>();
     positionToClassNameReference = new HashMap<Position, String>();
     unlinkedExtends = new HashMap<UmpleClass,List<String>>();
+    unlinkedExtendsTokens = new HashMap<UmpleClass,List<Token>>();
     unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
     lastComments = new ArrayList<Comment>();
     placeholderStateMachine = null;
@@ -534,6 +536,7 @@ private void analyzeClassToken(Token t)
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
+      checkExtendsForCycles();
     }
   }
   
@@ -589,11 +592,14 @@ private void analyzeClassToken(Token t)
   private void addExtendsTo(Token classToken, UmpleClass aClass)
   {
     List<String> extendsList = new ArrayList<String>();
+    List<Token> extendsTokenList = new ArrayList<Token>();
     for (Token extendsToken : classToken.getSubTokens()){
       if (extendsToken.getValue("extendsName") != null)
       { 
         extendsList.add(extendsToken.getValue("extendsName"));
+        extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
         unlinkedExtends.put(aClass, extendsList);
+        unlinkedExtendsTokens.put(aClass, extendsTokenList);
       }  
     }
   }
@@ -805,13 +811,14 @@ private void analyzeClassToken(Token t)
   {
     return (model.getUmpleInterface(elementName) != null) ? false: true;
   }
-
+  
   private void addUnlinkedExtends()
   {  
     for (UmpleClass child : unlinkedExtends.keySet())
     {
       List<String> extendsNames = unlinkedExtends.get(child);
-
+      List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
+      
       if (extendsNames == null)
       {
         continue;
@@ -823,6 +830,11 @@ private void analyzeClassToken(Token t)
         {
           UmpleClass parent = model.getUmpleClass(extendName); 
           child.setExtendsClass(parent);
+          try
+          {
+              child.setExtendsToken(extendsToken.get(i));
+          }
+          catch(Exception e){}
         }
         else {
           UmpleInterface uInterface=  model.getUmpleInterface(extendName);
@@ -832,7 +844,6 @@ private void analyzeClassToken(Token t)
       }
     }
   }  
-
 
   private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass)
   {
@@ -875,6 +886,43 @@ private void analyzeClassToken(Token t)
       return false;
     }
     return true;
+  }
+
+  private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
+  {
+	UmpleClass temp = null;
+	    
+	if(extend == null)
+		return null;
+		
+	if(map.containsKey(extend))
+		return extend;
+	
+	map.put(extend, true);
+	
+    if(parent.equals(extend.getExtendsClass()))
+      return extend.getExtendsClass();
+      
+    temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
+    return temp;
+  }
+
+  private void checkExtendsForCycles()
+  {
+    for(UmpleClass C : model.getUmpleClasses())
+	{
+      HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
+      if(C.getExtendsClass() != null)
+      {
+        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) {
+    	  Token t = C.getExtendsToken();
+    	  if(t.getValue().equals(C.getName()))
+      	    getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
+    	  else
+            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),C.getName()));
+    	}
+      }
+    }
   }
 
 private void checkSingletonAssociations() {

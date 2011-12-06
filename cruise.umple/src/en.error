@@ -21,3 +21,7 @@
 9: 2, Parse, http://umple.org/E009ReflexiveLowerBound.html, Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
 
 10: 3, Semantic, http://code.umple.org, Singleton class '{0}' cannot have multiplicity greater than 1 ; 
+
+11: 2, Semantic, http://code.umple.org, Class '{0}' cannot cyclically extend itself ; 
+
+12: 2, Semantic, http://code.umple.org, Class '{0}' cannot cyclically extend class '{1}'  ; 

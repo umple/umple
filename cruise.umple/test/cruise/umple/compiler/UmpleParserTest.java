@@ -317,6 +317,18 @@ public class UmpleParserTest
     Assert.assertEquals(false,aClass.isRoot());
   }
   
+  @Test
+  public void isA_SimpleCycle()
+  {
+    assertFailedParse("007_isA_SimpleCycle.ump", new Position("007_isA_SimpleCycle.ump",6,0,34)); 
+  }
+  
+  @Test
+  public void isA_ComplexCycle()
+  {
+    assertFailedParse("007_isA_ComplexCycle.ump", new Position("007_isA_ComplexCycle.ump",10,0,71)); 
+  }
+   
   
   @Test
   public void isA_Grouped()
