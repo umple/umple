@@ -216,7 +216,7 @@ public class Command
         isFirst = false;
         continue;
       }
-      addAttribute(d);
+      addAttribute(d.trim());
     }    
   }
 

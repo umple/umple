@@ -35,6 +35,13 @@ public class CommandTest
     Assert.assertArrayEquals(new String[] { "a", "b", "c" },cmd.getAttributes());
   }
 
+  @Test
+  public void addAttributes_trimeSpaces()
+  {
+    cmd.addAttributes("methodName , a  ,  b,c  ");
+    Assert.assertArrayEquals(new String[] { "a", "b", "c" },cmd.getAttributes());
+  }
+
 
   @Test
   public void addAttributes_handleNull()
