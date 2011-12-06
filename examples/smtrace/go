@@ -1,0 +1,3 @@
+#!/bin/bash
+# should be run from this directory (e.g. cd examples/smtrace ./go)
+java -jar ../../dist/umplerun.jar sm.model trace.cmd
