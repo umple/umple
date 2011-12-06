@@ -85,8 +85,9 @@ public class StateMachineTest
   public boolean e2()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case S1:
         exitStatus();
@@ -106,8 +107,12 @@ public class StateMachineTest
   public boolean e1()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    StatusS1 aStatusS1 = statusS1;
+    StatusS1S1B aStatusS1S1B = statusS1S1B;
+    StatusS2 aStatusS2 = statusS2;
+    switch (aStatus)
     {
       case S3:
         exitStatus();
@@ -116,7 +121,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS1)
+    switch (aStatusS1)
     {
       case S1A:
         setStatus(Status.S2);
@@ -124,7 +129,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS1S1B)
+    switch (aStatusS1S1B)
     {
       case S1B2:
         if (v>4)
@@ -142,7 +147,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS2)
+    switch (aStatusS2)
     {
       case S2A:
         setStatus(Status.S2);
@@ -161,8 +166,11 @@ public class StateMachineTest
   public boolean e3()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    StatusS1S1B aStatusS1S1B = statusS1S1B;
+    StatusS2 aStatusS2 = statusS2;
+    switch (aStatus)
     {
       case S3:
         exitStatus();
@@ -171,7 +179,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS1S1B)
+    switch (aStatusS1S1B)
     {
       case S1B1:
         setStatusS2(StatusS2.S2B);
@@ -183,7 +191,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS2)
+    switch (aStatusS2)
     {
       case S2A:
         setStatusS1S1B(StatusS1S1B.S1B1);
@@ -197,8 +205,11 @@ public class StateMachineTest
   public boolean e5()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    StatusS1 aStatusS1 = statusS1;
+    StatusS2 aStatusS2 = statusS2;
+    switch (aStatus)
     {
       case S3:
         exitStatus();
@@ -207,7 +218,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS1)
+    switch (aStatusS1)
     {
       case S1B:
         exitStatusS1();
@@ -216,7 +227,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS2)
+    switch (aStatusS2)
     {
       case S2C:
         setV(2);
@@ -231,8 +242,9 @@ public class StateMachineTest
   public boolean enterS1()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS1)
+    
+    StatusS1 aStatusS1 = statusS1;
+    switch (aStatusS1)
     {
       case Null:
         setStatusS1(StatusS1.S1A);
@@ -246,8 +258,9 @@ public class StateMachineTest
   public boolean exitS1()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS1)
+    
+    StatusS1 aStatusS1 = statusS1;
+    switch (aStatusS1)
     {
       case S1A:
         setStatusS1(StatusS1.Null);
@@ -266,8 +279,9 @@ public class StateMachineTest
   public boolean enterS1B()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS1S1B)
+    
+    StatusS1S1B aStatusS1S1B = statusS1S1B;
+    switch (aStatusS1S1B)
     {
       case Null:
         setStatusS1S1B(StatusS1S1B.S1B1);
@@ -281,8 +295,9 @@ public class StateMachineTest
   public boolean exitS1B()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS1S1B)
+    
+    StatusS1S1B aStatusS1S1B = statusS1S1B;
+    switch (aStatusS1S1B)
     {
       case S1B1:
         setStatusS1S1B(StatusS1S1B.Null);
@@ -300,8 +315,10 @@ public class StateMachineTest
   public boolean e4()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS1S1B)
+    
+    StatusS1S1B aStatusS1S1B = statusS1S1B;
+    StatusS2 aStatusS2 = statusS2;
+    switch (aStatusS1S1B)
     {
       case S1B1:
         setStatusS1S1B(StatusS1S1B.S1B2);
@@ -313,7 +330,7 @@ public class StateMachineTest
         break;
     }
 
-    switch (statusS2)
+    switch (aStatusS2)
     {
       case S2A:
         setStatus(Status.S1);
@@ -335,8 +352,9 @@ public class StateMachineTest
   public boolean enterS2()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS2)
+    
+    StatusS2 aStatusS2 = statusS2;
+    switch (aStatusS2)
     {
       case Null:
         setStatusS2(StatusS2.S2A);
@@ -350,8 +368,9 @@ public class StateMachineTest
   public boolean exitS2()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusS2)
+    
+    StatusS2 aStatusS2 = statusS2;
+    switch (aStatusS2)
     {
       case S2A:
         setStatusS2(StatusS2.Null);

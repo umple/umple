@@ -1,38 +1,38 @@
-command,getStatusFullName,getV
-new example.StateMachineTest, S1, 0
-e2, S3.S2C, 0
-e5, S3.S1A.S2C, 2
-e2, S3.S1A.S2C, 3
-e5, S3.S1A.S2C, 2
-e5, S3.S1A.S2C, 2
-e1, S2.S1A.S2B, 5
-e3, S2.S1A.S2B, 5
-e3, S2.S1A.S2B, 10
-e5, S2.S1A.S2B, 5
-e1, S2.S1A.S2B, 5
-e2, S2.S1A.S2B, 5
-e1, S2.S1A.S2B, 5
-e1, S2.S1A.S2B, 5
-e1, S2.S1A.S2B, 5
-e3, S2.S1A.S2B, 5
-e4, S2.S1A.S2A, 5
-e4, S1.S1A.S2A, 5
-e1, S2.S1A.S2A, 5
-e2, S2.S1A.S2A, 5
-e2, S2.S1A.S2A, 5
-e4, S1.S1A.S2A, 5
-e1, S2.S1A.S2A, 5
-e2, S2.S1A.S2A, 5
-e4, S1.S1A.S2A, 5
-e4, S1.S1A.S2A, 5
-e5, S1.S1A.S2A, 5
-e1, S2.S1A.S2A, 5
-e2, S2.S1A.S2A, 5
-e4, S1.S1A.S2A, 5
-e1, S2.S1A.S2A, 5
-e5, S2.S1A.S2A, 5
-e2, S2.S1A.S2A, 5
-e1, S2.S1A.S2A, 5
-e4, S1.S1A.S2A, 5
-e3, S1.S1B.S1B1.S2A, 0
-e5, S1.S1A.S2A, 0
+command,getStatus,getStatusS1,getStatusS1S1B,getStatusS2,getV
+new example.StateMachineTest,  S1,  Null,  Null,  Null,  0
+e2,   S3,  Null,  Null,  S2C,   0
+e5,   S3,  S1A,   Null,  S2C,   2
+e2,   S3,  S1A,   Null,  S2C,   3
+e5,   S3,  S1A,   Null,  S2C,   2
+e5,   S3,  S1A,   Null,  S2C,   2
+e1,   S2,  S1A,   Null,  S2B,   5
+e3,   S2,  S1A,   Null,  S2B,   5
+e3,   S2,  S1A,   Null,  S2B,   5
+e5,   S2,  S1A,   Null,  S2B,   5
+e1,   S2,  S1A,   Null,  S2B,   5
+e2,   S2,  S1A,   Null,  S2B,   5
+e1,   S2,  S1A,   Null,  S2B,   5
+e1,   S2,  S1A,   Null,  S2B,   5
+e1,   S2,  S1A,   Null,  S2B,   5
+e3,   S2,  S1A,   Null,  S2B,   5
+e4,   S2,  S1A,   Null,  S2A,   5
+e4,   S1,  S1A,   Null,  S2A,   5
+e1,   S2,  S1A,   Null,  S2A,   5
+e2,   S2,  S1A,   Null,  S2A,   5
+e2,   S2,  S1A,   Null,  S2A,   5
+e4,   S1,  S1A,   Null,  S2A,   5
+e1,   S2,  S1A,   Null,  S2A,   5
+e2,   S2,  S1A,   Null,  S2A,   5
+e4,   S1,  S1A,   Null,  S2A,   5
+e4,   S1,  S1A,   Null,  S2A,   5
+e5,   S1,  S1A,   Null,  S2A,   5
+e1,   S2,  S1A,   Null,  S2A,   5
+e2,   S2,  S1A,   Null,  S2A,   5
+e4,   S1,  S1A,   Null,  S2A,   5
+e1,   S2,  S1A,   Null,  S2A,   5
+e5,   S2,  S1A,   Null,  S2A,   5
+e2,   S2,  S1A,   Null,  S2A,   5
+e1,   S2,  S1A,   Null,  S2A,   5
+e4,   S1,  S1A,   Null,  S2A,   5
+e3,   S1,  S1B,   S1B1,  S2A,   0
+e5,   S1,  S1A,   Null,  S2A,   0

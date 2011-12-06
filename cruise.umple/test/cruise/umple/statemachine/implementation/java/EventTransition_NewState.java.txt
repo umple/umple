@@ -41,8 +41,9 @@ public class Light
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulb)
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
     {
       case Off:
         setBulb(Bulb.On);

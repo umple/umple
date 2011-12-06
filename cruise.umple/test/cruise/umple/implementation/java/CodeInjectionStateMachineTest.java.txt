@@ -41,8 +41,9 @@ public class Example
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (light)
+    
+    Light aLight = light;
+    switch (aLight)
     {
       case On:
         setLight(Light.Off);

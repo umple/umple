@@ -317,9 +317,9 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_297 = "()" + NL + "  {" + NL + "    return ";
   protected final String TEXT_298 = ";" + NL + "  }" + NL;
   protected final String TEXT_299 = NL + "  public boolean ";
-  protected final String TEXT_300 = "()" + NL + "  {" + NL + "    boolean wasEventProcessed = false;" + NL;
+  protected final String TEXT_300 = "()" + NL + "  {" + NL + "    boolean wasEventProcessed = false;";
   protected final String TEXT_301 = NL + "    ";
-  protected final String TEXT_302 = NL + NL + "    return wasEventProcessed;" + NL + "  }" + NL;
+  protected final String TEXT_302 = NL + "    return wasEventProcessed;" + NL + "  }" + NL;
   protected final String TEXT_303 = NL + "  public boolean ";
   protected final String TEXT_304 = "(";
   protected final String TEXT_305 = " ";
@@ -3287,6 +3287,7 @@ public class JavaClassGenerator implements ILang
     
     
   StringBuffer allCases = new StringBuffer();
+  StringBuffer allDeclarations = new StringBuffer();
 
   for(StateMachine sm : uClass.getStateMachines(e))
   {
@@ -3298,16 +3299,17 @@ public class JavaClassGenerator implements ILang
 			  {
 				  if( model.getTraceType().equals("Console"))
 				  {
-					  allCases.append(StringFormatter.format("System.out.println(\"Event: {0}\");\n",gen.translate("eventMethod",e)));
+					  allCases.append(StringFormatter.format("\n    System.out.println(\"Event: {0}\");",gen.translate("eventMethod",e)));
 					}
 				  else if( model.getTraceType().equals("File"))
 				  {
-					  allCases.append(StringFormatter.format("fileTracer(\"Event: {0}\");\n",gen.translate("eventMethod",e)));
+					  allCases.append(StringFormatter.format("\n    fileTracer(\"Event: {0}\");",gen.translate("eventMethod",e)));
 					}
 				}
 			}
 	  }
-    allCases.append(StringFormatter.format("    switch ({0})\n",gen.translate("stateMachineOne",sm)));
+	  allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
+    allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
     
     for(State state : sm.getStates())
@@ -3373,11 +3375,11 @@ public class JavaClassGenerator implements ILang
         allCases.append(StringFormatter.format("        break;\n"));
       }
     } 
-    allCases.append(StringFormatter.format("    }\n\n"));
+    allCases.append(StringFormatter.format("    }\n"));
   }
   
 
-  String outputCases = allCases.toString().trim();
+  String outputCases = allDeclarations.toString() + allCases.toString();
 
     stringBuffer.append(TEXT_299);
     stringBuffer.append(gen.translate("eventMethod",e));

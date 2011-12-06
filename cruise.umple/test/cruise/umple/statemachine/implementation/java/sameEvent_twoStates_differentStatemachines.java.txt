@@ -55,8 +55,10 @@ public class LightFixture
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulb)
+    
+    Bulb aBulb = bulb;
+    AnotherBulb aAnotherBulb = anotherBulb;
+    switch (aBulb)
     {
       case On:
         setBulb(Bulb.Off);
@@ -68,7 +70,7 @@ public class LightFixture
         break;
     }
 
-    switch (anotherBulb)
+    switch (aAnotherBulb)
     {
       case On:
         setAnotherBulb(AnotherBulb.Amber);
@@ -82,8 +84,9 @@ public class LightFixture
   public boolean unflip()
   {
     boolean wasEventProcessed = false;
-
-    switch (anotherBulb)
+    
+    AnotherBulb aAnotherBulb = anotherBulb;
+    switch (aAnotherBulb)
     {
       case Amber:
         setAnotherBulb(AnotherBulb.On);

@@ -58,8 +58,9 @@ public class CourseB
   public boolean anEvent()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Open:
         exitStatus();

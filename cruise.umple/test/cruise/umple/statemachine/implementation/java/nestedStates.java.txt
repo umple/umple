@@ -50,8 +50,9 @@ public class LightFixture
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulb)
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
     {
       case Off:
         setBulb(Bulb.On);
@@ -70,8 +71,9 @@ public class LightFixture
   public boolean enterOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulbOn)
+    
+    BulbOn aBulbOn = bulbOn;
+    switch (aBulbOn)
     {
       case Null:
         setBulbOn(BulbOn.Normal);
@@ -85,8 +87,9 @@ public class LightFixture
   public boolean exitOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulbOn)
+    
+    BulbOn aBulbOn = bulbOn;
+    switch (aBulbOn)
     {
       case Normal:
         setBulbOn(BulbOn.Null);
@@ -104,8 +107,9 @@ public class LightFixture
   public boolean touch()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulbOn)
+    
+    BulbOn aBulbOn = bulbOn;
+    switch (aBulbOn)
     {
       case Normal:
         setBulbOn(BulbOn.Dimmed);

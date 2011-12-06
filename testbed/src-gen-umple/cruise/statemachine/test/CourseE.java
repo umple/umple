@@ -99,8 +99,9 @@ public class CourseE
   public boolean turnOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Off:
         exitStatus();
@@ -115,8 +116,9 @@ public class CourseE
   public boolean turnSleep()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Off:
         exitStatus();
@@ -131,8 +133,9 @@ public class CourseE
   public boolean wake()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Sleep:
         exitStatus();
@@ -147,8 +150,9 @@ public class CourseE
   public boolean turnOff()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case On:
         exitStatus();
@@ -163,8 +167,9 @@ public class CourseE
   public boolean enterOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusOn)
+    
+    StatusOn aStatusOn = statusOn;
+    switch (aStatusOn)
     {
       case Null:
         setStatusOn(StatusOn.Play);
@@ -178,8 +183,9 @@ public class CourseE
   public boolean exitOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusOn)
+    
+    StatusOn aStatusOn = statusOn;
+    switch (aStatusOn)
     {
       case Play:
         exitStatusOn();
@@ -199,8 +205,9 @@ public class CourseE
   public boolean push()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusOn)
+    
+    StatusOn aStatusOn = statusOn;
+    switch (aStatusOn)
     {
       case Play:
         exitStatusOn();
@@ -220,8 +227,9 @@ public class CourseE
   public boolean standby()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusOn)
+    
+    StatusOn aStatusOn = statusOn;
+    switch (aStatusOn)
     {
       case Pause:
         exitStatusOn();

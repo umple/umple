@@ -41,9 +41,10 @@ public class Light
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
+    
+    Status aStatus = status;
     System.out.println("Event: flip");
-    switch (status)
+    switch (aStatus)
     {
       case On:
         setStatus(Status.Off);

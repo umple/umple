@@ -54,3 +54,28 @@ class CourseF
   
   }
 }
+
+class CourseG
+{
+  status
+  {
+    On
+    {
+      turnOff -> Off;
+      Idle
+      {
+        flip -> Running;
+      }
+      Running
+      {
+        
+      }
+    }
+    Off
+    {
+      flip -> Idle;
+    }
+    
+  }
+  
+}

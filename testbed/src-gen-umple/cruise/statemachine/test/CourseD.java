@@ -45,8 +45,9 @@ public class CourseD
   public boolean timeoutOpenToClosed()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Open:
         exitStatus();

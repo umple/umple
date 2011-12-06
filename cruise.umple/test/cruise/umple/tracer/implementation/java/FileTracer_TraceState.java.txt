@@ -46,9 +46,10 @@ public class GarageDoor
   public boolean buttonOrObstacle()
   {
     boolean wasEventProcessed = false;
-
+    
+    Status aStatus = status;
     fileTracer("Event: buttonOrObstacle");
-    switch (status)
+    switch (aStatus)
     {
       case Open:
         setStatus(Status.Closing);
@@ -78,9 +79,10 @@ public class GarageDoor
   public boolean reachBottom()
   {
     boolean wasEventProcessed = false;
-
+    
+    Status aStatus = status;
     fileTracer("Event: reachBottom");
-    switch (status)
+    switch (aStatus)
     {
       case Closing:
         setStatus(Status.Closed);
@@ -94,9 +96,10 @@ public class GarageDoor
   public boolean reachTop()
   {
     boolean wasEventProcessed = false;
-
+    
+    Status aStatus = status;
     fileTracer("Event: reachTop");
-    switch (status)
+    switch (aStatus)
     {
       case Opening:
         setStatus(Status.Open);

@@ -59,8 +59,9 @@ public class CourseF
   public boolean turnOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Off:
         setStatus(Status.On);
@@ -74,8 +75,9 @@ public class CourseF
   public boolean turnOff()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case On:
         exitStatus();
@@ -90,8 +92,10 @@ public class CourseF
   public boolean enterOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusMotorIdle)
+    
+    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
+    StatusFanIdle aStatusFanIdle = statusFanIdle;
+    switch (aStatusMotorIdle)
     {
       case Null:
         setStatusMotorIdle(StatusMotorIdle.MotorIdle);
@@ -99,7 +103,7 @@ public class CourseF
         break;
     }
 
-    switch (statusFanIdle)
+    switch (aStatusFanIdle)
     {
       case Null:
         setStatusFanIdle(StatusFanIdle.FanIdle);
@@ -113,8 +117,10 @@ public class CourseF
   public boolean exitOn()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusMotorIdle)
+    
+    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
+    StatusFanIdle aStatusFanIdle = statusFanIdle;
+    switch (aStatusMotorIdle)
     {
       case MotorIdle:
         setStatusMotorIdle(StatusMotorIdle.Null);
@@ -126,7 +132,7 @@ public class CourseF
         break;
     }
 
-    switch (statusFanIdle)
+    switch (aStatusFanIdle)
     {
       case FanIdle:
         setStatusFanIdle(StatusFanIdle.Null);
@@ -144,8 +150,9 @@ public class CourseF
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusMotorIdle)
+    
+    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
+    switch (aStatusMotorIdle)
     {
       case MotorIdle:
         setStatusMotorIdle(StatusMotorIdle.MotorRunning);
@@ -163,8 +170,9 @@ public class CourseF
   public boolean flop()
   {
     boolean wasEventProcessed = false;
-
-    switch (statusFanIdle)
+    
+    StatusFanIdle aStatusFanIdle = statusFanIdle;
+    switch (aStatusFanIdle)
     {
       case FanIdle:
         setStatusFanIdle(StatusFanIdle.FanRunning);

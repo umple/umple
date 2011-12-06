@@ -63,8 +63,9 @@ public class Garage
   public boolean pressButton()
   {
     boolean wasEventProcessed = false;
-
-    switch (GarageDoor)
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
     {
       case Open:
         if (getEntranceClear())

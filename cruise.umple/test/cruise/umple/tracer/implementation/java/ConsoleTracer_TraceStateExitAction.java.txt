@@ -41,8 +41,9 @@ public class Light
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case On:
         exitStatus();

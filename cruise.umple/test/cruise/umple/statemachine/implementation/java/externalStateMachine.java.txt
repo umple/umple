@@ -41,8 +41,9 @@ public class Course
   public boolean register()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Open:
         setStatus(Status.Closed);
@@ -56,8 +57,9 @@ public class Course
   public boolean deregister()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Closed:
         setStatus(Status.Open);

@@ -90,8 +90,9 @@ public class CourseC
   public boolean flip()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Open:
         setStatus(Status.Closed);

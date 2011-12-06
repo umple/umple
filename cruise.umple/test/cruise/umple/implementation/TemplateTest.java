@@ -74,6 +74,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
+    SampleFileWriter.destroy(pathToInput + "/StateMachineTest.php");
 
     SampleFileWriter.destroy(pathToInput + "/Example.php");
     SampleFileWriter.destroy(pathToInput + "/example.rb");
@@ -179,7 +180,7 @@ public class TemplateTest
     }
 
     File expected = new File(pathToInput, codeFile);
-    // System.out.println(actual);
+    System.out.println(actual);
     SampleFileWriter.assertFileContent(expected, actual);
   }
 

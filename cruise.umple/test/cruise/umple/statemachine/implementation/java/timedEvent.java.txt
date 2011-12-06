@@ -63,8 +63,9 @@ public class Mentor
   public boolean timeoutOkToNotOk()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Ok:
         exitStatus();
@@ -79,8 +80,9 @@ public class Mentor
   public boolean timeoutNotOkayToOk()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case NotOkay:
         exitStatus();

@@ -58,8 +58,9 @@ public class LightFixture
   public boolean push()
   {
     boolean wasEventProcessed = false;
-
-    switch (bulb)
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
     {
       case On:
         if (brightness < 1)

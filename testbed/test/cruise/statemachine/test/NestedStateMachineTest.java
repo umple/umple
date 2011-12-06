@@ -90,5 +90,16 @@ public class NestedStateMachineTest
     Assert.assertEquals(CourseE.StatusOn.Pause, course.getStatusOn());    
   }    
   
+  @Test
+  public void ShouldOnlyApplyEventsToCurrentState()
+  {
+    CourseG course = new CourseG();
+    Assert.assertEquals(CourseG.Status.On,course.getStatus());
+    course.turnOff();
+    course.flip();
+    Assert.assertEquals(CourseG.Status.On,course.getStatus());
+    Assert.assertEquals(CourseG.StatusOn.Idle,course.getStatusOn());
+  }
+  
   
 }
