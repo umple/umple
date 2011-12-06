@@ -837,17 +837,19 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   //Process every state machine in a trace directive
   private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String consoleTemplate, String tracer) {
 	
+	  TraceRecord traceRecord = traceDirective.getTraceRecord();
 	  // Go over all state machines in trace directive
 	  for( int i = 0 ; i < traceDirective.numberOfStateMachineTraceItems() ; ++i )
 	  {
-		  StateMachine stm = traceDirective.getStateMachineTraceItem(i).getStateMachine();
+		  StateMachine_TraceItem tracedState = traceDirective.getStateMachineTraceItem(i);
+		  StateMachine stm = tracedState.getStateMachine();
 		  String stmCode = null;
 		  boolean flag = true;
 		  
 		  if( traceDirective.getStateMachineTraceItem(i).getEntry() || traceDirective.getStateMachineTraceItem(i).getExit() )
 			  flag = false;
 		  
-		  if(tracer.equals("console") && flag )
+		  if(tracer.equals("console") && tracedState.getTraceStateMachineFlag() )
 		  {
 			  stmCode = StringFormatter.format(consoleTemplate,"Previous state ",t.translate("stateMachineOne",stm));
 	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
@@ -855,7 +857,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  		  stmCode = StringFormatter.format(consoleTemplate,"Current state ",t.translate("stateMachineOne",stm));
 			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
 		  }
-		  else if(tracer.equals("file") && flag )
+		  else if(tracer.equals("file") && tracedState.getTraceStateMachineFlag() )
 		  {
 			  stmCode = StringFormatter.format(consoleTemplate,"\"Previous state: \"+"+t.translate("stateMachineOne",stm));
 	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
@@ -864,7 +866,20 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
 		  }
 		  
-		  
+		  if(tracer.equals("console") && traceRecord != null )
+		  {
+			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+			  stmCode += StringFormatter.format(consoleTemplate,"Previous state ",t.translate("stateMachineOne",stm));
+	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+
+			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  		  stmCode += StringFormatter.format(consoleTemplate,"Current state ",t.translate("stateMachineOne",stm));
+			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+			  
+			  stmCode = "if( " + t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  		  stmCode += "System.out.println(\"Exit of " + stm.getState(0).getName() + ", value of " + traceRecord.getRecord() +  ": \" + "+traceRecord.getRecord()+");";
+			  GeneratorHelper.tmp(traceDirective,t,stm,stmCode,"after");
+		  }
 	  }
 	  
   }

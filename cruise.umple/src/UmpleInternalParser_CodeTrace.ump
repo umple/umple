@@ -83,7 +83,13 @@ private void analyzeTraceToken(Token token)
     	  else if( traceToken.is("trace_duration") )
     	  {
     		  traceDirective.setDuringClause(token.getValue("trace_duration"));
-    	  }	  
+    	  }
+    	  else if( traceToken.is("trace_record") )
+    	  {
+    		  TraceRecord traceRecord = new TraceRecord(traceDirective);
+    		  traceRecord.setRecord(token.getValue("trace_record"));
+    		  traceDirective.setTraceRecord(traceRecord);
+    	  }
     	  else if( traceToken.is("trace_execute") )
     	  {
     		  traceDirective.setExecuteClause(token.getValue("trace_execute"));
@@ -157,8 +163,9 @@ private void analyzeTraceToken(Token token)
 	  else if( stm != null && state == null )
 	  {
 		  StateMachine_TraceItem traced_stm = new StateMachine_TraceItem(stm);
-		  traced_stm.setEntry(false);
-		  traced_stm.setExit(false);
+		  traced_stm.setEntry(true);
+		  traced_stm.setExit(true);
+		  traced_stm.setTraceStateMachineFlag(true);
 		  traceDirective.addStateMachineTraceItem(traced_stm);
 	  }
 	  // if trace entity is a state

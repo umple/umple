@@ -47,6 +47,23 @@ private static void postpareTrace(UmpleModel aModel)
 	  injectTraceDirective(traceDirective,lookups,injectionType);
   }
   
+  public static void tmp( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 
+  {
+	  Map<String,String> lookups = new HashMap<String,String>();
+	  lookups.put("Code",stmCode);
+	  lookups.put("exitMethod",t.translate("exitMethod",stm));
+	  tmp2(traceDirective,lookups,injectionType);
+  }
+  public static void tmp2(TraceDirective traceDirective, Map<String,String> lookups, String injectionType)
+  {
+    UmpleClass aClass = traceDirective.getUmpleClass();
+    String setMethod = lookups.get("exitMethod");
+    String code = lookups.get("Code");
+
+    CodeInjection set = new CodeInjection(injectionType, setMethod, code);
+    set.setIsInternal(true);
+    aClass.addCodeInjection(set);  
+  }
   // Inject the necessary "before" and "after" hooks to call the trace, this method expects the following action semantic lookups
   //  + setMethod: What is the name of the setMethod we are attaching the trace to
   //  + attributeCode: What is the trace code that should be executed

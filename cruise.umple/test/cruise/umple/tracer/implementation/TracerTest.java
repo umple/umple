@@ -197,7 +197,7 @@ public class TracerTest extends TracerTemplateTest
 	//*******************************//	
 
 	//====== Console tracer
-	@Test
+	@Test @Ignore
 	public void TraceSupport_ConsoleTracer_StateMachine()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateMachine.ump",languagePath + "/ConsoleTracer_TraceStateMachine."+ languagePath +".txt","GarageDoor");
@@ -219,6 +219,12 @@ public class TracerTest extends TracerTemplateTest
 	public void TraceSupport_ConsoleTracer_TraceStateEntryAction()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryAction.ump",languagePath + "/ConsoleTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
+	}
+	
+	@Test
+	public void TraceSupport_ConsoleTracer_TraceStateEntryRecord()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryRecord.ump",languagePath + "/ConsoleTracer_TraceStateEntryRecord."+ languagePath +".txt","StateMachineTest");
 	}
 	
 	@Test

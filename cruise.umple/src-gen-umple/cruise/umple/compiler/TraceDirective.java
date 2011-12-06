@@ -24,6 +24,7 @@ public class TraceDirective
   private List<StateMachine_TraceItem> stateMachineTraceItems;
   private List<MethodTraceEntity> methodTraceEntities;
   private AssociationVariable associationVariable;
+  private TraceRecord traceRecord;
   private List<TraceCase> traceCases;
   private UmpleClass umpleClass;
 
@@ -237,6 +238,11 @@ public class TraceDirective
   public AssociationVariable getAssociationVariable()
   {
     return associationVariable;
+  }
+
+  public TraceRecord getTraceRecord()
+  {
+    return traceRecord;
   }
 
   public TraceCase getTraceCase(int index)
@@ -482,6 +488,33 @@ public class TraceDirective
     return wasSet;
   }
 
+  public boolean setTraceRecord(TraceRecord newTraceRecord)
+  {
+    boolean wasSet = false;
+    if (traceRecord != null && !traceRecord.equals(newTraceRecord) && equals(traceRecord.getTraceDirective()))
+    {
+      //Unable to setTraceRecord, as existing traceRecord would become an orphan
+      return wasSet;
+    }
+
+    traceRecord = newTraceRecord;
+    TraceDirective oldTraceDirective = newTraceRecord != null ? newTraceRecord.getTraceDirective() : null;
+
+    if (!this.equals(oldTraceDirective))
+    {
+      if (oldTraceDirective != null)
+      {
+        oldTraceDirective.traceRecord = null;
+      }
+      if (traceRecord != null)
+      {
+        traceRecord.setTraceDirective(this);
+      }
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public static int minimumNumberOfTraceCases()
   {
     return 0;
@@ -573,6 +606,12 @@ public class TraceDirective
     if (associationVariable != null)
     {
       associationVariable.setTraceDirective(null);
+    }
+    TraceRecord existingTraceRecord = traceRecord;
+    traceRecord = null;
+    if (existingTraceRecord != null)
+    {
+      existingTraceRecord.delete();
     }
     ArrayList<TraceCase> copyOfTraceCases = new ArrayList<TraceCase>(traceCases);
     traceCases.clear();

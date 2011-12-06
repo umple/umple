@@ -1229,6 +1229,21 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceEmptyAndNonEmptyState()
+  {
+	  assertParse("375_traceEmptyAndNonEmptyStates.ump","[namespace:example][classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][trace][trace_entity:status]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Light");
+	  StateMachine_TraceItem traceState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
+	  Assert.assertEquals(traceState.getEntry(), true);
+	  Assert.assertEquals(traceState.getExit(), true);
+	  Assert.assertEquals(traceState.getTraceStateMachineFlag(), true);
+	  StateMachine stm = traceState.getStateMachine();
+	  Assert.assertEquals(stm.numberOfStates(),2);
+	  Assert.assertEquals(stm,clazz.getStateMachine(0));
+  }
+  
+  @Test
   public void traceEntryOfState()
   {
 	  assertParse("376_traceEntryOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
@@ -1286,6 +1301,23 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(stm.numberOfStates(),1);
 	  State state = stm.getState(0);
 	  Assert.assertEquals(state,clazz.getStateMachine(0).getState(1));
+  }
+  
+  @Test
+  public void traceStateRecord()
+  {
+	  assertParse("378_traceStateRecord.ump","[classDefinition][name:Light][attribute][type:Integer][name:v][value:0][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][action][actionCode:setV(2);][stateName:On][trace][trace_entity:On][trace_record:v]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Light");
+	  TraceDirective tc = clazz.getTraceDirective(0);
+	  Assert.assertEquals(tc.getTraceRecord().getRecord(),"v");
+	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
+	  Assert.assertEquals(tracedState.getEntry(),true);
+	  Assert.assertEquals(tracedState.getExit(),true);
+	  StateMachine stm = tracedState.getStateMachine();
+	  Assert.assertEquals(stm.numberOfStates(),1);
+	  State state = stm.getState(0);
+	  Assert.assertEquals(state,clazz.getStateMachine(0).getState(0));
   }
   
   //===================================

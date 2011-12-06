@@ -14,6 +14,7 @@ public class StateMachine_TraceItem
   //StateMachine_TraceItem Attributes
   private boolean entry;
   private boolean exit;
+  private boolean traceStateMachineFlag;
 
   //StateMachine_TraceItem Associations
   private StateMachine stateMachine;
@@ -27,6 +28,7 @@ public class StateMachine_TraceItem
   {
     entry = false;
     exit = false;
+    traceStateMachineFlag = false;
     boolean didAddStateMachine = setStateMachine(aStateMachine);
     if (!didAddStateMachine)
     {
@@ -55,6 +57,14 @@ public class StateMachine_TraceItem
     return wasSet;
   }
 
+  public boolean setTraceStateMachineFlag(boolean aTraceStateMachineFlag)
+  {
+    boolean wasSet = false;
+    traceStateMachineFlag = aTraceStateMachineFlag;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean getEntry()
   {
     return entry;
@@ -63,6 +73,11 @@ public class StateMachine_TraceItem
   public boolean getExit()
   {
     return exit;
+  }
+
+  public boolean getTraceStateMachineFlag()
+  {
+    return traceStateMachineFlag;
   }
 
   public StateMachine getStateMachine()

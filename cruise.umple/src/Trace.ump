@@ -33,6 +33,11 @@ class ConditionRhs
 	comparisonOperator = null;
 }
 
+class TraceRecord
+{
+	record = null;
+}
+
 class MethodTraceEntity
 {
 	name = null;
@@ -52,12 +57,14 @@ class TraceDirective
  	0..* -- 0..* StateMachine_TraceItem;
  	0..* -- 0..* MethodTraceEntity;
  	0..1 -- 0..1 AssociationVariable;
+ 	1 -- 0..1 TraceRecord;
 }
 
 class StateMachine_TraceItem
 {
 	boolean entry = false;
 	boolean exit = false;
+	boolean traceStateMachineFlag = false;
 	0..* -- 1 StateMachine;
 }
 

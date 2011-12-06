@@ -123,7 +123,7 @@ traceType- : tracer [traceType] ;<br />
 <br />
 trace : [[traceDirective]] | [[traceCase]]<br />
 <br />
-traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? ;<br />
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;<br />
 <br />
 traceItem- : ( entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )*<br />
 <br />
@@ -134,6 +134,7 @@ traceAfter : after [[traceCondition]]<br />
 traceFor- : for [trace_for]<br />
 tracePeriod- : period [trace_period]<br />
 traceDuring- : during [trace_duration]<br />
+traceRecord- : record [trace_record]<br />
 <br />
 traceCondition- : [LHS] [[conditionRHS]]<br />
 conditionRHS- : [comparison_operator] [RHS]<br />

@@ -1,0 +1,14 @@
+class Light
+{
+  Integer v = 0;
+  status
+  {
+    On { 
+      flip -> Off;
+    }
+    Off { 
+      flip -> / {setV(2);} On;
+    }
+  }
+  trace On record v;
+}

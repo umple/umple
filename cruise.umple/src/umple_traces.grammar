@@ -4,7 +4,7 @@ traceType- : tracer [traceType] ;
 
 trace : [[traceDirective]] | [[traceCase]]
 
-traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? ;
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;
 
 traceItem- : ( entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )* 
 
@@ -15,6 +15,7 @@ traceAfter : after [[traceCondition]]
 traceFor- : for [trace_for]
 tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
+traceRecord- : record [trace_record]
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]
