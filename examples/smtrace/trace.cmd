@@ -1,8 +1,8 @@
 command,getStatus,getStatusS1,getStatusS1S1B,getStatusS2,getV
 new example.StateMachineTest,  S1,  Null,  Null,  Null,  0
-e2,   S3,  Null,  Null,  S2C,   0
-e5,   S3,  S1A,   Null,  S2C,   2
-e2,   S3,  S1A,   Null,  S2C,   3
+e2,   S2,  Null,  Null,  S2C,   0
+e5,   S3,  Null,  Null,  S2C,   2
+e2,   S3,  Null,  Null,  S2C,   3
 e5,   S3,  S1A,   Null,  S2C,   2
 e5,   S3,  S1A,   Null,  S2C,   2
 e1,   S2,  S1A,   Null,  S2B,   5
