@@ -252,6 +252,23 @@ public class UmpleClassTest
     Assert.assertEquals("e1",e1.getName());
   }
 
+  @Test
+  public void findOrCreateEvent_lookThroughouEntireStructure()
+  {
+    StateMachine sm = new StateMachine("sm");
+    StateMachine parentSm = new StateMachine("parent");
+    State parentS = new State("p1",parentSm);
+    parentS.addNestedStateMachine(sm);
+    parentSm.setUmpleClass(umpleClass);
+
+    Event e = umpleClass.findOrCreateEvent("e1");
+    Transition t = new Transition(parentS,parentS);
+    t.setEvent(e);
+        
+    Event sameE = umpleClass.findOrCreateEvent("e1");
+    Assert.assertEquals("e1",sameE.getName());
+    Assert.assertSame(e,sameE);
+  }
   
   @Test
   public void findOrCreateEvent_NewBecauseNotAssociatedToAnyStateMachine()

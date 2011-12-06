@@ -330,6 +330,7 @@
 
   <!-- Run This Command if you are working outside Eclipse and want to see if the tests are passing -->
   <target name="local" >
+    
     <antcall target="umpleSelf" />
     <antcall target="compile" />
     <antcall target="template.test" />

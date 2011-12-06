@@ -953,7 +953,7 @@ public class UmpleClass extends UmpleElement
     
     for (StateMachine sm : getStateMachines())
     {
-      for (Event aEvent : sm.getEvents())
+      for (Event aEvent : sm.getAllEvents())
       {
         if (aName.equals(aEvent.getName()))
         {

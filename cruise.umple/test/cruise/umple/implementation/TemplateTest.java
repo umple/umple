@@ -51,6 +51,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Position.php");
     SampleFileWriter.destroy(pathToInput + "/Something.php");
     SampleFileWriter.destroy(pathToInput + "/Student.php");
+    SampleFileWriter.destroy(pathToInput + "/php/Student.php");
     SampleFileWriter.destroy(pathToInput + "/Garage.php");
     SampleFileWriter.destroy(pathToInput + "/SubMentor.php");
     SampleFileWriter.destroy(pathToInput + "/SubMentor2.php");
@@ -73,6 +74,11 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
+
+    SampleFileWriter.destroy(pathToInput + "/Example.php");
+    SampleFileWriter.destroy(pathToInput + "/example.rb");
+    SampleFileWriter.destroy(pathToInput + "/Example.java");
+    SampleFileWriter.destroy(pathToInput + "/GarageDoor.php");
 
     SampleFileWriter.destroy(pathToInput + "/ICodeTranslator.php");
     SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
