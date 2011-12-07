@@ -34,15 +34,15 @@ class Garage
   // INTERFACE
   //------------------------
 
-  public boolean setEntranceClear(boolean aEntranceClear)
+  boolean setEntranceClear(boolean aEntranceClear)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     entranceClear = aEntranceClear;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean getEntranceClear()
+  boolean getEntranceClear()
   {
     return entranceClear;
   }

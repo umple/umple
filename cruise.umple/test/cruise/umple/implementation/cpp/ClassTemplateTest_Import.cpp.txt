@@ -33,20 +33,20 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  boolean setName(String aName)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     name = aName;
     wasSet = true;
     return wasSet;
   }
 
-  public String getName()
+  String getName()
   {
     return name;
   }
 
-  public Student getStudent()
+  Student getStudent()
   {
     return student;
   }

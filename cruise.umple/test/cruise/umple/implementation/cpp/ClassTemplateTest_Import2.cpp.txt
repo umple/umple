@@ -43,26 +43,26 @@ class Student
   // INTERFACE
   //------------------------
 
-  public boolean setNumber(String aNumber)
+  boolean setNumber(String aNumber)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     number = aNumber;
     wasSet = true;
     return wasSet;
   }
 
-  public String getNumber()
+  String getNumber()
   {
     return number;
   }
 
-  public Mentor getMentor(int index)
+  Mentor getMentor(int index)
   {
     Mentor aMentor = mentors.get(index);
     return aMentor;
   }
 
-  public List<Mentor> getMentors()
+  List<Mentor> getMentors()
   {
     List<Mentor> newMentors = Collections.unmodifiableList(mentors);
     return newMentors;
@@ -86,13 +86,13 @@ class Student
     return index;
   }
 
-  public Course getCourse(int index)
+  Course getCourse(int index)
   {
     Course aCourse = courses.get(index);
     return aCourse;
   }
 
-  public List<Course> getCourses()
+  List<Course> getCourses()
   {
     List<Course> newCourses = Collections.unmodifiableList(courses);
     return newCourses;
@@ -152,9 +152,9 @@ class Student
     return wasRemoved;
   }
 
-  public boolean setMentors(Mentor... newMentors)
+  boolean setMentors(Mentor... newMentors)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     if (newMentors.length < minimumNumberOfMentors())
     {
       return wasSet;
@@ -206,7 +206,7 @@ class Student
     return wasSet;
   }
 
-  private void setStudent(Mentor aMentor, Student aStudent)
+  void setStudent(Mentor aMentor, Student aStudent)
   {
     try
     {

@@ -29,15 +29,15 @@ class Token
   // INTERFACE
   //------------------------
 
-  public boolean setP(Position aP)
+  boolean setP(Position aP)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     p = aP;
     wasSet = true;
     return wasSet;
   }
 
-  public Position getP()
+  Position getP()
   {
     return p;
   }

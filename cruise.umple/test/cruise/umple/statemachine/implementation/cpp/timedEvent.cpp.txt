@@ -39,15 +39,15 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  public boolean setHowLongUntilOk(int aHowLongUntilOk)
+  boolean setHowLongUntilOk(int aHowLongUntilOk)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     howLongUntilOk = aHowLongUntilOk;
     wasSet = true;
     return wasSet;
   }
 
-  public int getHowLongUntilOk()
+  int getHowLongUntilOk()
   {
     return howLongUntilOk;
   }

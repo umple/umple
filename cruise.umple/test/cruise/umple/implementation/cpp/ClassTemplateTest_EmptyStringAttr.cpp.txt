@@ -29,15 +29,15 @@ class Student
   // INTERFACE
   //------------------------
 
-  public boolean setGrade(String aGrade)
+  boolean setGrade(String aGrade)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     grade = aGrade;
     wasSet = true;
     return wasSet;
   }
 
-  public String getGrade()
+  String getGrade()
   {
     return grade;
   }

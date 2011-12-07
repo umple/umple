@@ -30,45 +30,45 @@ class Token
   // INTERFACE
   //------------------------
 
-  public boolean addPosition(Position aPosition)
+  boolean addPosition(Position aPosition)
   {
-    boolean wasAdded = false;
+    bool wasAdded = false;
     wasAdded = positions.add(aPosition);
     return wasAdded;
   }
 
-  public boolean removePosition(Position aPosition)
+  boolean removePosition(Position aPosition)
   {
-    boolean wasRemoved = false;
+    bool wasRemoved = false;
     wasRemoved = positions.remove(aPosition);
     return wasRemoved;
   }
 
-  public Position getPosition(int index)
+  Position getPosition(int index)
   {
     Position aPosition = positions.get(index);
     return aPosition;
   }
 
-  public Position[] getPositions()
+  Position[] getPositions()
   {
     Position[] newPositions = positions.toArray(new Position[positions.size()]);
     return newPositions;
   }
 
-  public int numberOfPositions()
+  int numberOfPositions()
   {
     int number = positions.size();
     return number;
   }
 
-  public boolean hasPositions()
+  boolean hasPositions()
   {
     boolean has = positions.size() > 0;
     return has;
   }
 
-  public int indexOfPosition(Position aPosition)
+  int indexOfPosition(Position aPosition)
   {
     int index = positions.indexOf(aPosition);
     return index;

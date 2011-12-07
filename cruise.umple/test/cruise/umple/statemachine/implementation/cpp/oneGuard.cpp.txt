@@ -34,15 +34,15 @@ class LightFixture
   // INTERFACE
   //------------------------
 
-  public boolean setBrightness(int aBrightness)
+  boolean setBrightness(int aBrightness)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     brightness = aBrightness;
     wasSet = true;
     return wasSet;
   }
 
-  public int getBrightness()
+  int getBrightness()
   {
     return brightness;
   }
