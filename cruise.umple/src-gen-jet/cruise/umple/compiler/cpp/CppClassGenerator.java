@@ -6797,7 +6797,7 @@ public class CppClassGenerator implements ILang
     {
     	for (Method aMethod : uClass.getMethods()) 
     	{
-    		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+    		String methodModifier = aMethod.getModifier().equals("") ? "" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
     		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();

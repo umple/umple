@@ -28,12 +28,12 @@ class Something implements ISomething
   {}
 
   @Override
-  public String getCode(String [] aParam, Integer anotherParam){
+   String getCode(String [] aParam, Integer anotherParam){
             return "";
   }
 
   @Override
-  public String isValid(){
+   String isValid(){
             return "";
   }
 
