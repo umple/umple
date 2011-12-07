@@ -221,6 +221,14 @@ public class StringFormatter
   	return prePath + File.separator + path + File.separator;
   }
   
+  public static String stripLeadingPath(String filename)
+  {  	
+	int index = 0;
+	while(filename.indexOf(File.separatorChar, index) != -1)
+	  index = filename.indexOf(File.separatorChar, index) + 1;
+  	return filename.substring(index);
+  }
+  
   public static String sanitizeForJson(String input){
 	 String ret = "";
      for (int i=0; i<input.length(); i++)

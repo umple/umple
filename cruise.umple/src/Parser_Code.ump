@@ -1313,7 +1313,7 @@ class ErrorMessage
    {
    	   String sev = errorType.getSeverity() <= 2 ? "error" : "warning";
 	   String err = errorType.getErrorType() + " " + sev + " on line: " + this.position.getLineNumber();
-	   err += " of file \"" + this.position.getFilename() + "\":\n";
+	   err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
    	   return  err + errorType.format(this.parameters);
    }
    
@@ -1378,22 +1378,22 @@ class ErrorTypeSingleton
 		while(textParser.peek() != null)
 		{
 		   Position p = textParser.currentPosition();
-		   
-           String code = textParser.nextUntil(false, ":");
-           textParser.next();
+
+           String code = textParser.nextUntil(false,":");
+           textParser.nextAfter(false,":");
 
            String severity = textParser.nextUntil(false, ",");
-           textParser.next();
+           textParser.nextAfter(false,",");
 
            String type = textParser.nextUntil(false, ",");
-           textParser.next();
+           textParser.nextAfter(false,",");
 
            String url = textParser.nextUntil(false, ",");
-           textParser.next();
+           textParser.nextAfter(false,",");
 
            String formatString = textParser.nextUntil(false, ";");
-           textParser.next();
-           
+           textParser.nextAfter(false,";");
+
            int codeInt;
            int severityInt;
            

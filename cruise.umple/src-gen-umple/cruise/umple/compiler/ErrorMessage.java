@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.util.StringFormatter;
 import java.util.*;
 
 public class ErrorMessage
@@ -137,7 +138,7 @@ public String getFormattedMessage()
    {
    	   String sev = errorType.getSeverity() <= 2 ? "error" : "warning";
 	   String err = errorType.getErrorType() + " " + sev + " on line: " + this.position.getLineNumber();
-	   err += " of file \"" + this.position.getFilename() + "\":\n";
+	   err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
    	   return  err + errorType.format(this.parameters);
    }
 }

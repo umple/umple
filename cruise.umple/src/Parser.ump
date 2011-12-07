@@ -33,9 +33,11 @@ class ParseResult
 
 class ErrorMessage
 {
-	* -> 1 ErrorType;
-	* -> 1 Position;
-	String[] parameters;
+  * -> 1 ErrorType;
+  * -> 1 Position;
+  String[] parameters;
+	
+  depend  cruise.umple.util.StringFormatter;
 }
 
 class ErrorType

@@ -296,4 +296,12 @@ public class StringFormatterTest
     
   }
   
+  @Test
+  public void StripLeadingPaths()
+  {
+    Assert.assertEquals("filename.ump",StringFormatter.stripLeadingPath("cdrive" + File.separator + "yo" + File.separator + "filename.ump"));
+    Assert.assertEquals("filename.ump",StringFormatter.stripLeadingPath("yo" + File.separator + "filename.ump"));
+    Assert.assertEquals("filename.ump",StringFormatter.stripLeadingPath("filename.ump"));
+  }
+  
 }

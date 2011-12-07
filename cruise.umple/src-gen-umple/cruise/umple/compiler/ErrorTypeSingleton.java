@@ -154,22 +154,22 @@ public class ErrorTypeSingleton
 		while(textParser.peek() != null)
 		{
 		   Position p = textParser.currentPosition();
-		   
-           String code = textParser.nextUntil(false, ":");
-           textParser.next();
+
+           String code = textParser.nextUntil(false,":");
+           textParser.nextAfter(false,":");
 
            String severity = textParser.nextUntil(false, ",");
-           textParser.next();
+           textParser.nextAfter(false,",");
 
            String type = textParser.nextUntil(false, ",");
-           textParser.next();
+           textParser.nextAfter(false,",");
 
            String url = textParser.nextUntil(false, ",");
-           textParser.next();
+           textParser.nextAfter(false,",");
 
            String formatString = textParser.nextUntil(false, ";");
-           textParser.next();
-           
+           textParser.nextAfter(false,";");
+
            int codeInt;
            int severityInt;
            
