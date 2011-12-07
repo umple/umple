@@ -13,7 +13,7 @@ class SubMentor2 extends Mentor
   //------------------------
 
   //SubMentor2 Attributes
-  private String subName;
+  String subName;
 
   //------------------------
   // CONSTRUCTOR

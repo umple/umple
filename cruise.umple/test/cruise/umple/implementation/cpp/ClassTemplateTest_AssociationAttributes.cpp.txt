@@ -13,7 +13,7 @@ class Token
   //------------------------
 
   //Token Attributes
-  private Position p;
+  Position p;
 
   //------------------------
   // CONSTRUCTOR

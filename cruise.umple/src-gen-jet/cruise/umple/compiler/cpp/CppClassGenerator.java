@@ -1813,13 +1813,13 @@ public class CppClassGenerator implements ILang
     if (av.isConstant())
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  public static final {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
+      append(stringBuffer, "  const static {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
     }
     else if (av.getIsAutounique())
     {
       String defaultValue = av.getValue() == null ? "1" : av.getValue();
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private static int next{0} = {1};", av.getUpperCaseName(), defaultValue);
+      append(stringBuffer, "  static int next{0} = {1};", av.getUpperCaseName(), defaultValue);
     }
   }
   
@@ -1835,7 +1835,7 @@ public class CppClassGenerator implements ILang
       appendln(stringBuffer, "");
       isFirst = false;
     }
-    append(stringBuffer, "  private static {0} theInstance = null;", uClass.getName());
+    append(stringBuffer, "  static {0} theInstance = null;", uClass.getName());
   }
 }
 
@@ -1873,7 +1873,7 @@ public class CppClassGenerator implements ILang
     }
 
     appendln(stringBuffer, "");
-    append(stringBuffer, "  private {0} {1};", type, attribute);
+    append(stringBuffer, "  {0} {1};", type, attribute);
   }
   
   isFirst = true;
@@ -1891,7 +1891,7 @@ public class CppClassGenerator implements ILang
       isFirst = false;
     }
     appendln(stringBuffer, "");
-    append(stringBuffer, "  private int {0};", gen.translate("attributeOne",av));
+    append(stringBuffer, "  int {0};", gen.translate("attributeOne",av));
   }
 }
 

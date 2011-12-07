@@ -16,7 +16,7 @@ class Student
   //------------------------
 
   //Student Attributes
-  private String number;
+  String number;
 
   //Student Associations
   private List<Mentor> mentors;

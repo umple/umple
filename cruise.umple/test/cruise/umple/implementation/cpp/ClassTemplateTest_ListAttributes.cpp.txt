@@ -14,7 +14,7 @@ class Token
   //------------------------
 
   //Token Attributes
-  private List<Position> positions;
+  List<Position> positions;
 
   //------------------------
   // CONSTRUCTOR

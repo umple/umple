@@ -33,7 +33,7 @@
     }
 
     appendln(stringBuffer, "");
-    append(stringBuffer, "  private {0} {1};", type, attribute);
+    append(stringBuffer, "  {0} {1};", type, attribute);
   }
   
   isFirst = true;
@@ -51,7 +51,7 @@
       isFirst = false;
     }
     appendln(stringBuffer, "");
-    append(stringBuffer, "  private int {0};", gen.translate("attributeOne",av));
+    append(stringBuffer, "  int {0};", gen.translate("attributeOne",av));
   }
 }
 %>

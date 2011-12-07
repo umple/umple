@@ -13,7 +13,7 @@ class Student
   //------------------------
 
   //Student Attributes
-  private String grade;
+  String grade;
 
   //------------------------
   // CONSTRUCTOR

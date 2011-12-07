@@ -14,36 +14,36 @@ class Mentor
   // STATIC VARIABLES
   //------------------------
 
-  public static final int MAX = 100;
-  public static final int MIN = -99;
-  public static final String HELLO = "Hello";
-  private static int nextX = 1;
+  const static int MAX = 100;
+  const static int MIN = -99;
+  const static String HELLO = "Hello";
+  static int nextX = 1;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Mentor Attributes
-  private String str;
-  private String str2;
-  private String someName;
-  private double lDoub;
-  private boolean lBool;
-  private String name;
-  private Date d;
-  private Time t;
-  private int i;
-  private String p;
-  private String q;
-  private String r;
-  private String s;
-  private Date t;
-  private Time u;
-  private Date v;
-  private Time w;
+  String str;
+  String str2;
+  String someName;
+  double lDoub;
+  boolean lBool;
+  String name;
+  Date d;
+  Time t;
+  int i;
+  String p;
+  String q;
+  String r;
+  String s;
+  Date t;
+  Time u;
+  Date v;
+  Time w;
 
   //Autounique Attributes
-  private int x;
+  int x;
 
   //Helper Variables
   private boolean canSetStr;

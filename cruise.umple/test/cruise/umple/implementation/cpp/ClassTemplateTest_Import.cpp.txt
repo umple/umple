@@ -14,7 +14,7 @@ class Mentor
   //------------------------
 
   //Mentor Attributes
-  private String name;
+  String name;
 
   //Mentor Associations
   private Student student;

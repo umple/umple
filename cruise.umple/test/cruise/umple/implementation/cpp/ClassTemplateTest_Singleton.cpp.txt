@@ -12,7 +12,7 @@ class Application
   // STATIC VARIABLES
   //------------------------
 
-  private static Application theInstance = null;
+  static Application theInstance = null;
 
   //------------------------
   // MEMBER VARIABLES
