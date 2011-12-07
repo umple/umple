@@ -1,5 +1,5 @@
 command,getStatus,getStatusS1,getStatusS1S1B,getStatusS2,getV
-new example.StateMachineTest,  S1,  Null,  Null,  Null,  0
+new example.StateMachineTest,  S1,  S1A,  Null,  Null,  0
 e2,   S2,  Null,  Null,  S2C,   0
 e5,   S3,  Null,  Null,  S2C,   2
 e2,   S3,  Null,  Null,  S2C,   3
