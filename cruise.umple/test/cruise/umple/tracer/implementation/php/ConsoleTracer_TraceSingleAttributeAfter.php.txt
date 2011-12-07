@@ -1,0 +1,73 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $x;
+  private $y;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aX, $aY)
+  {
+    $this->x = $aX;
+    $this->y = $aY;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setX($aX)
+  {
+    $wasSet = false;
+    $this->x = $aX;
+    $wasSet = true;
+    if( $x == 6 )
+    {
+      print("x={$aX}");
+    }
+    return $wasSet;
+  }
+
+  public function setY($aY)
+  {
+    $wasSet = false;
+    $this->y = $aY;
+    $wasSet = true;
+    if( $y == "tim" )
+    {
+      print("y={$aY}");
+    }
+    return $wasSet;
+  }
+
+  public function getX()
+  {
+    return $this->x;
+  }
+
+  public function getY()
+  {
+    return $this->y;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

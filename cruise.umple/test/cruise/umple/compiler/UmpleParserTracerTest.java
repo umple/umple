@@ -97,6 +97,22 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceSingleAttributeBoolean()
+  {
+	  assertParse("310_traceSingleAttributeBoolean.ump","[classDefinition][name:LightFixture][attribute][type:Boolean][name:flag][trace][trace_entity:flag]");
+	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  Assert.assertEquals("Boolean",clazz.getAttribute("flag").getType());
+	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  TraceDirective traceDirective = clazz.getTraceDirective(0);
+	  Assert.assertEquals(clazz.getAttribute("flag"),traceDirective.getAttribute(0));
+	  Assert.assertEquals(false,traceDirective.hasCondition());
+	  Assert.assertEquals(0,traceDirective.getForClause());
+	  Assert.assertEquals(null,traceDirective.getPeriodClause());
+	  Assert.assertEquals(null,traceDirective.getDuringClause());
+	  Assert.assertEquals(null,traceDirective.getExecuteClause());
+  }
+  
+  @Test
   public void traceSingleAttributeList()
   {
 //	  assertParse("310_traceSingleAttributeList.ump","[classDefinition][name:LightFixture][attribute][type:Integer][list:[]][name:id][attribute][type:String][list:[]][name:name][trace][trace_entity:id][trace][trace_entity:name]");
@@ -280,6 +296,25 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(null,traceDirective4.getPeriodClause());
 	  Assert.assertEquals(null,traceDirective4.getDuringClause());
 	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getExecuteClause());
+  }
+  
+  @Test
+  public void traceSingleAttributeRecord()
+  {
+	  assertParse("318_traceSingleAttributeRecord.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
+	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
+	  Assert.assertEquals(0,traceDirective1.getForClause());
+	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+	  TraceRecord record = traceDirective1.getTraceRecord();
+	  Assert.assertEquals("id",record.getRecord());
   }
   
   @Test

@@ -1,0 +1,8 @@
+namespace example;
+
+class Tracer
+{
+  x;
+  y;
+  trace x,y;
+}

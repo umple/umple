@@ -804,11 +804,11 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   // Process every attribute in a trace directive
   private static void processTraceDirectiveAttributes( TraceDirective traceDirective, CodeTranslator t, String template ) 
   {	  
+	  String attrCode = null, conditionType = null;
 	  // Go over all attributes in trace directive
 	  for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
 	  {
 		  Attribute attr = traceDirective.getAttribute(i);
-		  String attrCode = null, conditionType = null;
   		
 		  // Process trace directive conditions if it has any 
 		  if( traceDirective.hasCondition() )
@@ -832,6 +832,13 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
   		  }
   	  }
+	  if( traceDirective.getTraceRecord() != null )
+	  {
+		  TraceRecord record = traceDirective.getTraceRecord();
+		  // simple trace directive that traces attributes without any extra fragments
+  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
+  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceDirective.getAttribute(0),attrCode,conditionType);  
+	  }
   }
   
   //Process every state machine in a trace directive
