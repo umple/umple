@@ -4,6 +4,7 @@
 namespace example;
 
 class StateMachineTest {
+
   Integer v = 0;
   status {
     S1 {
@@ -51,4 +52,11 @@ class StateMachineTest {
       e5 -> S1;
     }
   } // end status state machine
+
+  
+  trace S3 record v;
+  
+  public void v5() { setV(5); }
+  public void v0() { setV(0); }
+  
 } // end class

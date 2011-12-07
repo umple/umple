@@ -1,3 +1,4 @@
 #!/bin/bash
 # should be run from this directory (e.g. cd examples/smtrace ./go)
+# add --debug to the end if you DO NOT want to generate the code from umple, but rather debug the existing code
 java -jar ../../dist/umplerun.jar sm.model trace.cmd
