@@ -13,7 +13,7 @@ class Garage
   //------------------------
 
   //Garage Attributes
-  private boolean entranceClear;
+  boolean entranceClear;
 
   //Garage State Machines
   enum GarageDoor { Open, Closing }

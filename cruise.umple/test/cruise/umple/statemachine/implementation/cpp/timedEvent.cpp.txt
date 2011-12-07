@@ -14,7 +14,7 @@ class Mentor
   //------------------------
 
   //Mentor Attributes
-  private int howLongUntilOk;
+  int howLongUntilOk;
 
   //Mentor State Machines
   enum Status { Ok, NotOkay, NotOk }
