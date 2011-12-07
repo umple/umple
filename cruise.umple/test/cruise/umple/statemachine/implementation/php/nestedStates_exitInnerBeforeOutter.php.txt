@@ -24,8 +24,8 @@ class LightFixture
 
   public function __construct()
   {
+    $this->setBulbOn(self::$BulbOnNull);
     $this->setBulb(self::$BulbOff);
-    if ($this->bulbOn == null) { $this->setBulbOn(self::$BulbOnNull); }
   }
 
   //------------------------

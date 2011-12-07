@@ -41,16 +41,6 @@
         continue;
       }
       
-      boolean hasExitAction = false;
-      for(Action action : state.getActions())
-      {
-        if ("exit".equals(action.getActionType()))
-        {
-          hasExitAction = true;
-          break;
-        }
-      }
-  
       if (first)
       {
         allCases.append(StringFormatter.format("\n    if (${0} == self::${1})\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
@@ -71,7 +61,7 @@
           allCases.append(StringFormatter.format("      if ({0})\n",t.getGuard().getCondition()));
           allCases.append(StringFormatter.format("      {\n"));
         }
-        if (hasExitAction)
+        if (state.getHasExitAction())
         {
           allCases.append(StringFormatter.format("{0}      $this->{1}();\n",spaceOffset,gen.translate("exitMethod",sm)));
         }

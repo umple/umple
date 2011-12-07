@@ -26,7 +26,6 @@ public class StateMachineTest
     sm.setUmpleClass(clazz);
   }
   
-
   @Test
   public void getEventByName()
   {

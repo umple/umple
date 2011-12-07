@@ -142,11 +142,11 @@
       continue;
     }
     hasBody = true;
-    %><%@ include file="constructor_StateMachineAssignDefault.jet"%><%
     for (StateMachine nestedSm : sm.getNestedStateMachines())
     {
       %><%@ include file="constructor_NestedStateMachineAssignDefault.jet"%><%
     }
+    %><%@ include file="constructor_StateMachineAssignDefault.jet"%><%
   }  
   
   if (uClass.getKey().isProvided())

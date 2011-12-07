@@ -24,9 +24,9 @@ public class CourseF
 
   public CourseF()
   {
+    setStatusMotorIdle(StatusMotorIdle.Null);
+    setStatusFanIdle(StatusFanIdle.Null);
     setStatus(Status.Off);
-    if (statusMotorIdle == null) { setStatusMotorIdle(StatusMotorIdle.Null); }
-    if (statusFanIdle == null) { setStatusFanIdle(StatusFanIdle.Null); }
   }
 
   //------------------------

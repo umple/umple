@@ -30,10 +30,10 @@ public class StateMachineTest
   public StateMachineTest()
   {
     v = 0;
+    setStatusS1(StatusS1.Null);
+    setStatusS1S1B(StatusS1S1B.Null);
+    setStatusS2(StatusS2.Null);
     setStatus(Status.S1);
-    if (statusS1 == null) { setStatusS1(StatusS1.Null); }
-    if (statusS1S1B == null) { setStatusS1S1B(StatusS1S1B.Null); }
-    if (statusS2 == null) { setStatusS2(StatusS2.Null); }
   }
 
   //------------------------

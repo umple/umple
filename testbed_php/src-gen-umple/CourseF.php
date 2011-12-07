@@ -28,9 +28,9 @@ class CourseF
 
   public function __construct()
   {
+    $this->setStatusMotorIdle(self::$StatusMotorIdleNull);
+    $this->setStatusFanIdle(self::$StatusFanIdleNull);
     $this->setStatus(self::$StatusOff);
-    if ($this->statusMotorIdle == null) { $this->setStatusMotorIdle(self::$StatusMotorIdleNull); }
-    if ($this->statusFanIdle == null) { $this->setStatusFanIdle(self::$StatusFanIdleNull); }
   }
 
   //------------------------

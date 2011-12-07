@@ -27,8 +27,8 @@ public class CourseE
   public CourseE()
   {
     logs = new ArrayList<String>();
+    setStatusOn(StatusOn.Null);
     setStatus(Status.Off);
-    if (statusOn == null) { setStatusOn(StatusOn.Null); }
   }
 
   //------------------------

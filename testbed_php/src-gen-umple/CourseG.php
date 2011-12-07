@@ -24,8 +24,8 @@ class CourseG
 
   public function __construct()
   {
+    $this->setStatusOn(self::$StatusOnNull);
     $this->setStatus(self::$StatusOn);
-    if ($this->statusOn == null) { $this->setStatusOn(self::$StatusOnNull); }
   }
 
   //------------------------

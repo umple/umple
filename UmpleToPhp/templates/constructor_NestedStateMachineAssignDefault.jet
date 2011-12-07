@@ -1,2 +1,2 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
-    if ($this-><%=gen.translate("stateMachineOne",nestedSm)%> == null) { $this-><%=gen.translate("setMethod",nestedSm)%>(self::$<%=gen.translate("stateNull",nestedSm)%>); }
+    $this-><%=gen.translate("setMethod",nestedSm)%>(self::$<%=gen.translate("stateNull",nestedSm)%>);

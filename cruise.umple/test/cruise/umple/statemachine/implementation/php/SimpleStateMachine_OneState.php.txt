@@ -40,7 +40,7 @@ class Student
 
   public function setGrade($aGrade)
   {
-    if ($aGrade == "GradePass")
+    if ($aGrade == "GradePass" || $aGrade == self::$GradePass)
     {
       $this->grade = self::$GradePass;
       return true;

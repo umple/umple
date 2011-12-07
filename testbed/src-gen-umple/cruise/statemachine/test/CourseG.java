@@ -22,8 +22,8 @@ public class CourseG
 
   public CourseG()
   {
+    setStatusOn(StatusOn.Null);
     setStatus(Status.On);
-    if (statusOn == null) { setStatusOn(StatusOn.Null); }
   }
 
   //------------------------

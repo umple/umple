@@ -38,10 +38,10 @@ class StateMachineTest
   public function __construct()
   {
     $this->v = 0;
+    $this->setStatusS1(self::$StatusS1Null);
+    $this->setStatusS1S1B(self::$StatusS1S1BNull);
+    $this->setStatusS2(self::$StatusS2Null);
     $this->setStatus(self::$StatusS1);
-    if ($this->statusS1 == null) { $this->setStatusS1(self::$StatusS1Null); }
-    if ($this->statusS1S1B == null) { $this->setStatusS1S1B(self::$StatusS1S1BNull); }
-    if ($this->statusS2 == null) { $this->setStatusS2(self::$StatusS2Null); }
   }
 
   //------------------------

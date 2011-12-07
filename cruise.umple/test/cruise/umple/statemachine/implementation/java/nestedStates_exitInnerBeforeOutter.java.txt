@@ -22,8 +22,8 @@ public class LightFixture
 
   public LightFixture()
   {
+    setBulbOn(BulbOn.Null);
     setBulb(Bulb.Off);
-    if (bulbOn == null) { setBulbOn(BulbOn.Null); }
   }
 
   //------------------------

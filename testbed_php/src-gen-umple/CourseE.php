@@ -29,8 +29,8 @@ class CourseE
   public function __construct()
   {
     $this->logs = array();
+    $this->setStatusOn(self::$StatusOnNull);
     $this->setStatus(self::$StatusOff);
-    if ($this->statusOn == null) { $this->setStatusOn(self::$StatusOnNull); }
   }
 
   //------------------------

@@ -92,6 +92,39 @@ class NestedStateMachineTest extends UnitTestCase
     $this->assertEqual("StatusOn",$course->getStatus());
     $this->assertEqual("StatusOnIdle",$course->getStatusOn());
   }
+
+  function test_ShouldStartInTheMostNestedStartState_SimpleStateMachine()
+  {
+    $course = new CourseH();
+    $this->assertEqual("StatusOn.StatusOnRunning.StatusOnRunningPlay",$course->getStatusFullName());
+    $this->assertEqual("StatusOn",$course->getStatus());
+    $this->assertEqual("StatusOnRunning",$course->getStatusOn());
+    $this->assertEqual("StatusOnRunningPlay",$course->getStatusOnRunning());
+    
+    $course->setStatus("StatusOff");
+    $this->assertEqual("StatusOff.StatusOffIdle",$course->getStatusFullName());
+    $this->assertEqual("StatusOff",$course->getStatus());
+    $this->assertEqual("StatusOffIdle",$course->getStatusOff());
+    $this->assertEqual("StatusOnNull",$course->getStatusOn());
+    $this->assertEqual("StatusOnRunningNull",$course->getStatusOnRunning());
+  }
+  
+  function test_ShouldStartInTheMostNestedStartState_ComplexStateMachine()
+  {
+    $course = new CourseI();
+    $this->assertEqual("StatusOn.StatusOnRunning.StatusOnRunningPlay",$course->getStatusFullName());
+    $this->assertEqual("StatusOn",$course->getStatus());
+    $this->assertEqual("StatusOnRunning",$course->getStatusOn());
+    $this->assertEqual("StatusOnRunningPlay",$course->getStatusOnRunning());
+    
+    $course->flip();
+    $this->assertEqual("StatusOff.StatusOffFull",$course->getStatusFullName());
+    $this->assertEqual("StatusOff",$course->getStatus());
+    $this->assertEqual("StatusOffFull",$course->getStatusOff());
+    $this->assertEqual("StatusOnNull",$course->getStatusOn());
+    $this->assertEqual("StatusOnRunningNull",$course->getStatusOnRunning());
+    
+  }  
   
   
 }

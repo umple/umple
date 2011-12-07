@@ -34,6 +34,28 @@ public class StateTest
   }
   
   @Test
+  public void getHasExitAction_getHasEntryAction()
+  {
+    Assert.assertEquals(false,state.getHasExitAction());
+    Assert.assertEquals(false,state.getHasEntryAction());
+    
+    Action action = new Action("x");
+    state.addAction(action);
+    Assert.assertEquals(false,state.getHasExitAction());
+    Assert.assertEquals(false,state.getHasEntryAction());
+
+    action.setActionType("entry");
+    Assert.assertEquals(false,state.getHasExitAction());
+    Assert.assertEquals(true,state.getHasEntryAction());
+    
+    action.setActionType("exit");
+    Assert.assertEquals(true,state.getHasExitAction());
+    Assert.assertEquals(false,state.getHasEntryAction());
+
+  }
+  
+  
+  @Test
   public void getIsConcurrent_NoNestedStates()
   {
     Assert.assertEquals(false,state.getIsConcurrent());

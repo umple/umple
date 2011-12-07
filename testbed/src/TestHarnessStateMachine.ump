@@ -79,3 +79,60 @@ class CourseG
   }
   
 }
+
+class CourseH
+{
+  status
+  {
+    On
+    {
+      Running
+      {
+        Play
+        {
+        }
+      }
+    }
+    Off
+    {
+      Idle
+      {
+      }
+      Full
+      {
+      }    
+    }
+  }
+}
+
+
+class CourseI
+{
+  status
+  {
+    On
+    {
+      flip -> Off;
+      Running
+      {
+        flip -> Idle;
+        Play
+        {
+          flip -> Full;
+        }
+      }
+    }
+    Off
+    {
+      flip -> On;
+      Idle
+      {
+        flip -> Running;
+      }
+      Full
+      {
+        flip -> Play;
+      }    
+    }
+  }
+}

@@ -42,12 +42,12 @@ class Course
 
   public function setStatus($aStatus)
   {
-    if ($aStatus == "StatusOpen")
+    if ($aStatus == "StatusOpen" || $aStatus == self::$StatusOpen)
     {
       $this->status = self::$StatusOpen;
       return true;
     }
-    elseif ($aStatus == "StatusFull")
+    elseif ($aStatus == "StatusFull" || $aStatus == self::$StatusFull)
     {
       $this->status = self::$StatusFull;
       return true;

@@ -38,16 +38,6 @@
 
       allCases.append(StringFormatter.format("      case {0}:\n",gen.translate("stateOne",state)));
 
-      boolean hasExitAction = false;
-      for(Action action : state.getActions())
-      {
-        if ("exit".equals(action.getActionType()))
-        {
-          hasExitAction = true;
-          break;
-        }
-      }
-  
       boolean needsBreak = true;
       for (Transition t : allT)
       {
@@ -58,7 +48,7 @@
           allCases.append(StringFormatter.format("        if ({0})\n",t.getGuard().getCondition()));
           allCases.append(StringFormatter.format("        {\n"));
         }
-        if (hasExitAction)
+        if (state.getHasExitAction())
         {
           allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",sm)));
         }

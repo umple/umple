@@ -101,5 +101,41 @@ public class NestedStateMachineTest
     Assert.assertEquals(CourseG.StatusOn.Idle,course.getStatusOn());
   }
   
+  @Test
+  public void ShouldStartInTheMostNestedStartState_SimpleStateMachine()
+  {
+    CourseH course = new CourseH();
+    Assert.assertEquals("On.Running.Play",course.getStatusFullName());
+    Assert.assertEquals(CourseH.Status.On,course.getStatus());
+    Assert.assertEquals(CourseH.StatusOn.Running,course.getStatusOn());
+    Assert.assertEquals(CourseH.StatusOnRunning.Play,course.getStatusOnRunning());
+    
+    course.setStatus(CourseH.Status.Off);
+    Assert.assertEquals("Off.Idle",course.getStatusFullName());
+    Assert.assertEquals(CourseH.Status.Off,course.getStatus());
+    Assert.assertEquals(CourseH.StatusOff.Idle,course.getStatusOff());
+    Assert.assertEquals(CourseH.StatusOn.Null,course.getStatusOn());
+    Assert.assertEquals(CourseH.StatusOnRunning.Null,course.getStatusOnRunning());
+    
+  }
+  
+  
+  @Test
+  public void ShouldStartInTheMostNestedStartState_ComplexStateMachine()
+  {
+    CourseI course = new CourseI();
+    Assert.assertEquals("On.Running.Play",course.getStatusFullName());
+    Assert.assertEquals(CourseI.Status.On,course.getStatus());
+    Assert.assertEquals(CourseI.StatusOn.Running,course.getStatusOn());
+    Assert.assertEquals(CourseI.StatusOnRunning.Play,course.getStatusOnRunning());
+    
+    course.flip();
+    Assert.assertEquals("Off.Full",course.getStatusFullName());
+    Assert.assertEquals(CourseI.Status.Off,course.getStatus());
+    Assert.assertEquals(CourseI.StatusOff.Full,course.getStatusOff());
+    Assert.assertEquals(CourseI.StatusOn.Null,course.getStatusOn());
+    Assert.assertEquals(CourseI.StatusOnRunning.Null,course.getStatusOnRunning());
+    
+  }  
   
 }
