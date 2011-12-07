@@ -162,10 +162,10 @@
   {
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}", customSetPrefixCode); } %>
     <%= gen.translate("stateMachineOne",sm) %> = <%= gen.translate("parameterOne",sm) %>;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}", customSetPostfixCode); } %>
 <% if (parentState != null) { %>
     if (<%= gen.translate("stateMachineOne",parentSm) %> != <%= gen.translate("type",parentSm) %>.<%= gen.translate("stateOne",parentState) %> && <%= gen.translate("parameterOne",sm) %> != <%= gen.translate("type",sm) %>.<%= gen.translate("stateNull",sm) %>) { <%=gen.translate("setMethod",parentSm)%>(<%= gen.translate("type",parentSm) %>.<%= gen.translate("stateOne",parentState) %>); }
 <% } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}", customSetPostfixCode); } %>
 <% if (hasEntry) { %>
 
     // entry actions and do activities

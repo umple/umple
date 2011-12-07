@@ -27,6 +27,12 @@ class Example
   // INTERFACE
   //------------------------
 
+  public function getLightFullName()
+  {
+    $answer = $this->getLight();
+    return $answer;
+  }
+
   public function getLight()
   {
     if ($this->light == self::$LightOn) { return "LightOn"; }
@@ -37,18 +43,18 @@ class Example
   public function flip()
   {
     $wasEventProcessed = false;
-
-    if ($this->light == self::$LightOn)
+    
+    $aLight = $this->light;
+    if ($aLight == self::$LightOn)
     {
       $this->setLight(self::$LightOff);
       $wasEventProcessed = true;
     }
-    elseif ($this->light == self::$LightOff)
+    elseif ($aLight == self::$LightOff)
     {
       $this->setLight(self::$LightOn);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

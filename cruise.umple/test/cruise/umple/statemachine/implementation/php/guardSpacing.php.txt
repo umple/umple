@@ -49,6 +49,12 @@ class Garage
     return $this->entranceClear;
   }
 
+  public function getGarageDoorFullName()
+  {
+    $answer = $this->getGarageDoor();
+    return $answer;
+  }
+
   public function getGarageDoor()
   {
     if ($this->GarageDoor == self::$GarageDoorOpen) { return "GarageDoorOpen"; }
@@ -59,8 +65,9 @@ class Garage
   public function pressButton()
   {
     $wasEventProcessed = false;
-
-    if ($this->GarageDoor == self::$GarageDoorOpen)
+    
+    $aGarageDoor = $this->GarageDoor;
+    if ($aGarageDoor == self::$GarageDoorOpen)
     {
       if (getEntranceClear())
       {
@@ -68,7 +75,6 @@ class Garage
         $wasEventProcessed = true;
       }
     }
-
     return $wasEventProcessed;
   }
 

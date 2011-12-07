@@ -27,6 +27,12 @@ class Light
   // INTERFACE
   //------------------------
 
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
   public function getBulb()
   {
     if ($this->bulb == self::$BulbOff) { return "BulbOff"; }
@@ -37,18 +43,18 @@ class Light
   public function flip()
   {
     $wasEventProcessed = false;
-
-    if ($this->bulb == self::$BulbOff)
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOff)
     {
       $this->setBulb(self::$BulbOn);
       $wasEventProcessed = true;
     }
-    elseif ($this->bulb == self::$BulbOn)
+    elseif ($aBulb == self::$BulbOn)
     {
       $this->setBulb(self::$BulbOff);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

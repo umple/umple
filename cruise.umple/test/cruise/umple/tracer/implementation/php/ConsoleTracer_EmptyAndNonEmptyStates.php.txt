@@ -27,6 +27,12 @@ class Light
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOn) { return "StatusOn"; }
@@ -37,14 +43,15 @@ class Light
   public function flip()
   {
     $wasEventProcessed = false;
-
+    
+    $aStatus = $this->status;
     print("Event: flip");
-    if ($this->status == self::$StatusOn)
+    
+    if ($aStatus == self::$StatusOn)
     {
       $this->setStatus(self::$StatusOff);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

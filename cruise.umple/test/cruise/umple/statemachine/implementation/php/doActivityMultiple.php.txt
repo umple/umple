@@ -27,6 +27,12 @@ class Lamp
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOn) { return "StatusOn"; }
@@ -37,18 +43,18 @@ class Lamp
   public function press()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOn)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
     {
       $this->setStatus(self::$StatusOff);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusOff)
+    elseif ($aStatus == self::$StatusOff)
     {
       $this->setStatus(self::$StatusOn);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

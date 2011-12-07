@@ -47,7 +47,7 @@
       hasBody = true;
       %><%@ include file="constructor_AttributeAssignList.jet"%><%
     }
-    else if (av.getModifier().equals("defaulted"))
+    else if ("defaulted".equals(av.getModifier()))
     {
       hasBody = true;
       %><%@ include file="constructor_AttributeAssignDefaulted.jet"%><% 

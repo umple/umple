@@ -27,6 +27,12 @@ class CourseD
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
@@ -37,13 +43,13 @@ class CourseD
   public function timeoutOpenToClosed()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOpen)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
     {
       $this->setStatus(self::$StatusClosed);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

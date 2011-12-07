@@ -44,6 +44,12 @@ class LightFixture
     return $this->brightness;
   }
 
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
   public function getBulb()
   {
     if ($this->bulb == self::$BulbOn) { return "BulbOn"; }
@@ -54,8 +60,9 @@ class LightFixture
   public function push()
   {
     $wasEventProcessed = false;
-
-    if ($this->bulb == self::$BulbOn)
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOn)
     {
       if (brightness < 1)
       {
@@ -63,7 +70,6 @@ class LightFixture
         $wasEventProcessed = true;
       }
     }
-
     return $wasEventProcessed;
   }
 

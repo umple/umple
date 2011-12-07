@@ -79,6 +79,12 @@ class CourseC
     return $index;
   }
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
@@ -89,18 +95,18 @@ class CourseC
   public function flip()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOpen)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
     {
       $this->setStatus(self::$StatusClosed);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusClosed)
+    elseif ($aStatus == self::$StatusClosed)
     {
       $this->setStatus(self::$StatusOpen);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

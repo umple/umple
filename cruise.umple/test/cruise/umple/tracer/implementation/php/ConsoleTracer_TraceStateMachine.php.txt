@@ -30,6 +30,12 @@ class GarageDoor
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
@@ -70,7 +76,6 @@ class GarageDoor
       $this->setStatus(self::$StatusOpening);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
@@ -84,7 +89,6 @@ class GarageDoor
       $this->setStatus(self::$StatusClosed);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
@@ -98,7 +102,6 @@ class GarageDoor
       $this->setStatus(self::$StatusOpen);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

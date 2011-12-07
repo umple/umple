@@ -1,19 +1,30 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
 <%
   StringBuffer allCases = new StringBuffer();
+  StringBuffer allDeclarations = new StringBuffer();
 
   boolean firstStateMachine = true;
   for(StateMachine sm : uClass.getStateMachines(e))
   {
     for( TraceDirective tc : uClass.getTraceDirectives() )
-	{
-		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
-			if( tc.getStateMachineTraceItem(i).getStateMachine() == sm )
-				if( model.getTraceType().equals("Console"))
-					allCases.append(StringFormatter.format("print(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
-				else if( model.getTraceType().equals("File"))
-					allCases.append(StringFormatter.format("fileTracer(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
-	}
+  	{
+  		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+  		{
+  			if( tc.getStateMachineTraceItem(i).getStateMachine() == sm )
+  			{
+  				if( model.getTraceType().equals("Console"))
+  				{
+  					allCases.append(StringFormatter.format("\n    print(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
+  				}
+  				else if( model.getTraceType().equals("File"))
+  				{
+  					allCases.append(StringFormatter.format("\n    fileTracer(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
+  				}
+  			}
+  		}
+  	}
+  	allDeclarations.append(StringFormatter.format("\n    ${0} = $this->{1};",gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
+  	
     boolean first = true;
     if (!firstStateMachine)
     {
@@ -42,11 +53,11 @@
   
       if (first)
       {
-        allCases.append(StringFormatter.format("if ($this->{0} == self::${1})\n",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+        allCases.append(StringFormatter.format("\n    if (${0} == self::${1})\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
       }
       else
       {
-        allCases.append(StringFormatter.format("\n    elseif ($this->{0} == self::${1})\n",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+        allCases.append(StringFormatter.format("\n    elseif (${0} == self::${1})\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
       }
       allCases.append(StringFormatter.format("    {\n"));
   
@@ -70,7 +81,7 @@
           allCases.append(StringFormatter.format("{0}      {1}\n",spaceOffset,a1.getActionCode()));
         }
   
-        allCases.append(StringFormatter.format("{0}      $this->{1}(self::${2});\n",spaceOffset,gen.translate("setMethod",sm),gen.translate("stateOne",nextState)));
+        allCases.append(StringFormatter.format("{0}      $this->{1}(self::${2});\n",spaceOffset,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
         allCases.append(StringFormatter.format("{0}      $wasEventProcessed = true;\n",spaceOffset));
   
         if (t.getGuard() != null)
@@ -83,14 +94,12 @@
     }
     firstStateMachine = false;
   }
-  String outputCases = allCases.toString().trim();
+  String outputCases = allDeclarations.toString() + allCases.toString();
 %>
   public function <%=gen.translate("eventMethod",e)%>()
   {
     $wasEventProcessed = false;
-
     <%= outputCases %>
-
     return $wasEventProcessed;
   }
 

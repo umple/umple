@@ -27,6 +27,12 @@ class Garage
   // INTERFACE
   //------------------------
 
+  public function getGarageDoorFullName()
+  {
+    $answer = $this->getGarageDoor();
+    return $answer;
+  }
+
   public function getGarageDoor()
   {
     if ($this->GarageDoor == self::$GarageDoorClosed) { return "GarageDoorClosed"; }
@@ -37,14 +43,14 @@ class Garage
   public function pressButton()
   {
     $wasEventProcessed = false;
-
-    if ($this->GarageDoor == self::$GarageDoorClosed)
+    
+    $aGarageDoor = $this->GarageDoor;
+    if ($aGarageDoor == self::$GarageDoorClosed)
     {
       turnLightOn();
       $this->setGarageDoor(self::$GarageDoorOpening);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

@@ -25,12 +25,19 @@ class CourseG
   public function __construct()
   {
     $this->setStatus(self::$StatusOn);
-    if ($this->status == null) { $this->setStatus(self::$OnNull); }
+    if ($this->statusOn == null) { $this->setStatusOn(self::$StatusOnNull); }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    if ($this->statusOn != self::$StatusOnNull) { $answer .= "." . $this->getStatusOn(); }
+    return $answer;
+  }
 
   public function getStatus()
   {
@@ -50,64 +57,66 @@ class CourseG
   public function turnOff()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOn)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
     {
       $this->exitStatus();
       $this->setStatus(self::$StatusOff);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function flip()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOff)
+    
+    $aStatus = $this->status;
+    $aStatusOn = $this->statusOn;
+    if ($aStatus == self::$StatusOff)
     {
-      $this->setStatus(self::$StatusOnIdle);
+      $this->setStatusOn(self::$StatusOnIdle);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusOn == self::$StatusOnIdle)
+    
+    if ($aStatusOn == self::$StatusOnIdle)
     {
       $this->setStatusOn(self::$StatusOnRunning);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function enterOn()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusOn == self::$StatusOnNull)
+    
+    $aStatusOn = $this->statusOn;
+    if ($aStatusOn == self::$StatusOnNull)
     {
       $this->setStatusOn(self::$StatusOnIdle);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function exitOn()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusOn == self::$StatusOnIdle)
+    
+    $aStatusOn = $this->statusOn;
+    if ($aStatusOn == self::$StatusOnIdle)
     {
       $this->setStatusOn(self::$StatusOnNull);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusOn == self::$StatusOnRunning)
+    elseif ($aStatusOn == self::$StatusOnRunning)
     {
       $this->setStatusOn(self::$StatusOnNull);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
@@ -126,13 +135,14 @@ class CourseG
     // entry actions and do activities
     if ($this->status == self::$StatusOn)
     {
-      if ($this->statusOn == self::$StatusOnNull) { $this->setStatusOn("StatusOnIdle"); }
+      if ($this->statusOn == self::$StatusOnNull) { $this->setStatusOn(self::$StatusOnIdle); }
     }
   }
 
   private function setStatusOn($aStatusOn)
   {
     $this->statusOn = $aStatusOn;
+    if ($this->status != self::$StatusOn && $aStatusOn != self::$StatusOnNull) { $this->setStatus(self::$StatusOn); }
   }
 
   public function equals($compareTo)

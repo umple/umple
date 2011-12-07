@@ -29,13 +29,21 @@ class CourseF
   public function __construct()
   {
     $this->setStatus(self::$StatusOff);
-    if ($this->status == null) { $this->setStatus(self::$OffNull); }
-    if ($this->status == null) { $this->setStatus(self::$OffNull); }
+    if ($this->statusMotorIdle == null) { $this->setStatusMotorIdle(self::$StatusMotorIdleNull); }
+    if ($this->statusFanIdle == null) { $this->setStatusFanIdle(self::$StatusFanIdleNull); }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    if ($this->statusMotorIdle != self::$StatusMotorIdleNull) { $answer .= "." . $this->getStatusMotorIdle(); }
+    if ($this->statusFanIdle != self::$StatusFanIdleNull) { $answer .= "." . $this->getStatusFanIdle(); }
+    return $answer;
+  }
 
   public function getStatus()
   {
@@ -63,111 +71,115 @@ class CourseF
   public function turnOn()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOff)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOff)
     {
       $this->setStatus(self::$StatusOn);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function turnOff()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOn)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
     {
       $this->exitStatus();
       $this->setStatus(self::$StatusOff);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function enterOn()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusMotorIdle == self::$StatusMotorIdleNull)
+    
+    $aStatusMotorIdle = $this->statusMotorIdle;
+    $aStatusFanIdle = $this->statusFanIdle;
+    if ($aStatusMotorIdle == self::$StatusMotorIdleNull)
     {
       $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusFanIdle == self::$StatusFanIdleNull)
+    
+    if ($aStatusFanIdle == self::$StatusFanIdleNull)
     {
       $this->setStatusFanIdle(self::$StatusFanIdleFanIdle);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function exitOn()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusMotorIdle == self::$StatusMotorIdleMotorIdle)
+    
+    $aStatusMotorIdle = $this->statusMotorIdle;
+    $aStatusFanIdle = $this->statusFanIdle;
+    if ($aStatusMotorIdle == self::$StatusMotorIdleMotorIdle)
     {
       $this->setStatusMotorIdle(self::$StatusMotorIdleNull);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusMotorIdle == self::$StatusMotorIdleMotorRunning)
+    elseif ($aStatusMotorIdle == self::$StatusMotorIdleMotorRunning)
     {
       $this->setStatusMotorIdle(self::$StatusMotorIdleNull);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusFanIdle == self::$StatusFanIdleFanIdle)
+    
+    if ($aStatusFanIdle == self::$StatusFanIdleFanIdle)
     {
       $this->setStatusFanIdle(self::$StatusFanIdleNull);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusFanIdle == self::$StatusFanIdleFanRunning)
+    elseif ($aStatusFanIdle == self::$StatusFanIdleFanRunning)
     {
       $this->setStatusFanIdle(self::$StatusFanIdleNull);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function flip()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusMotorIdle == self::$StatusMotorIdleMotorIdle)
+    
+    $aStatusMotorIdle = $this->statusMotorIdle;
+    if ($aStatusMotorIdle == self::$StatusMotorIdleMotorIdle)
     {
       $this->setStatusMotorIdle(self::$StatusMotorIdleMotorRunning);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusMotorIdle == self::$StatusMotorIdleMotorRunning)
+    elseif ($aStatusMotorIdle == self::$StatusMotorIdleMotorRunning)
     {
       $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function flop()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusFanIdle == self::$StatusFanIdleFanIdle)
+    
+    $aStatusFanIdle = $this->statusFanIdle;
+    if ($aStatusFanIdle == self::$StatusFanIdleFanIdle)
     {
       $this->setStatusFanIdle(self::$StatusFanIdleFanRunning);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusFanIdle == self::$StatusFanIdleFanRunning)
+    elseif ($aStatusFanIdle == self::$StatusFanIdleFanRunning)
     {
       $this->setStatusFanIdle(self::$StatusFanIdleFanIdle);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
@@ -186,19 +198,21 @@ class CourseF
     // entry actions and do activities
     if ($this->status == self::$StatusOn)
     {
-      if ($this->statusMotorIdle == self::$StatusMotorIdleNull) { $this->setStatusMotorIdle("StatusMotorIdleMotorIdle"); }
-      if ($this->statusFanIdle == self::$StatusFanIdleNull) { $this->setStatusFanIdle("StatusFanIdleFanIdle"); }
+      if ($this->statusMotorIdle == self::$StatusMotorIdleNull) { $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle); }
+      if ($this->statusFanIdle == self::$StatusFanIdleNull) { $this->setStatusFanIdle(self::$StatusFanIdleFanIdle); }
     }
   }
 
   private function setStatusMotorIdle($aStatusMotorIdle)
   {
     $this->statusMotorIdle = $aStatusMotorIdle;
+    if ($this->status != self::$StatusOn && $aStatusMotorIdle != self::$StatusMotorIdleNull) { $this->setStatus(self::$StatusOn); }
   }
 
   private function setStatusFanIdle($aStatusFanIdle)
   {
     $this->statusFanIdle = $aStatusFanIdle;
+    if ($this->status != self::$StatusOn && $aStatusFanIdle != self::$StatusFanIdleNull) { $this->setStatus(self::$StatusOn); }
   }
 
   public function equals($compareTo)

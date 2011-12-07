@@ -887,7 +887,7 @@ private String getExtendClassesNames(UmpleClass uClass)
       Map<String,String> lookups = new HashMap<String,String>();
       lookups.put("entryEventName",translate("enterMethod",parentState));
       lookups.put("exitEventName",translate("exitMethod",parentState));
-      lookups.put("parentEntryActionCode",StringFormatter.format("if ($this->{0} == self::${1}) { $this->{2}(\"{3}\"); }"
+      lookups.put("parentEntryActionCode",StringFormatter.format("if ($this->{0} == self::${1}) { $this->{2}(self::${3}); }"
           ,translate("stateMachineOne",sm)
           ,translate("stateNull",sm)
           ,translate("setMethod",sm)

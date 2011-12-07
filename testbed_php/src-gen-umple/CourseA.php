@@ -23,6 +23,12 @@ class CourseA
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     return null;

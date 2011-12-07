@@ -26,6 +26,12 @@ class Student
   // INTERFACE
   //------------------------
 
+  public function getGradeFullName()
+  {
+    $answer = $this->getGrade();
+    return $answer;
+  }
+
   public function getGrade()
   {
     if ($this->grade == self::$GradePass) { return "GradePass"; }

@@ -44,6 +44,12 @@ class CourseB
     return $this->log;
   }
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
@@ -54,19 +60,19 @@ class CourseB
   public function anEvent()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOpen)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
     {
       $this->exitStatus();
       $this->setStatus(self::$StatusClosed);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusClosed)
+    elseif ($aStatus == self::$StatusClosed)
     {
       $this->setStatus(self::$StatusOpen);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

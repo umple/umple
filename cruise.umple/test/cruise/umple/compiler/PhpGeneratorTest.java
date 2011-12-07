@@ -875,7 +875,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("$this->exitOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
-    Assert.assertEquals("if ($this->bulbOn == self::$BulbOnNull) { $this->setBulbOn(\"BulbOnNormal\"); }",onState.getAction(1).getActionCode());
+    Assert.assertEquals("if ($this->bulbOn == self::$BulbOnNull) { $this->setBulbOn(self::$BulbOnNormal); }",onState.getAction(1).getActionCode());
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,onState.numberOfActions());

@@ -26,6 +26,12 @@ class Course
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
@@ -35,13 +41,13 @@ class Course
   public function register()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOpen)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
     {
       $this->setStatus(self::$StatusOpen);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

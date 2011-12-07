@@ -30,6 +30,12 @@ class GarageDoor
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
@@ -43,62 +49,65 @@ class GarageDoor
   public function buttonOrObstacle()
   {
     $wasEventProcessed = false;
-
+    
+    $aStatus = $this->status;
     fileTracer("Event: buttonOrObstacle");
-    if ($this->status == self::$StatusOpen)
+    
+    if ($aStatus == self::$StatusOpen)
     {
       $this->setStatus(self::$StatusClosing);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusClosing)
+    elseif ($aStatus == self::$StatusClosing)
     {
       $this->setStatus(self::$StatusOpening);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusClosed)
+    elseif ($aStatus == self::$StatusClosed)
     {
       $this->setStatus(self::$StatusOpening);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusOpening)
+    elseif ($aStatus == self::$StatusOpening)
     {
       $this->setStatus(self::$StatusHalfOpen);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusHalfOpen)
+    elseif ($aStatus == self::$StatusHalfOpen)
     {
       $this->setStatus(self::$StatusOpening);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function reachBottom()
   {
     $wasEventProcessed = false;
-
+    
+    $aStatus = $this->status;
     fileTracer("Event: reachBottom");
-    if ($this->status == self::$StatusClosing)
+    
+    if ($aStatus == self::$StatusClosing)
     {
       $this->setStatus(self::$StatusClosed);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function reachTop()
   {
     $wasEventProcessed = false;
-
+    
+    $aStatus = $this->status;
     fileTracer("Event: reachTop");
-    if ($this->status == self::$StatusOpening)
+    
+    if ($aStatus == self::$StatusOpening)
     {
       $this->setStatus(self::$StatusOpen);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

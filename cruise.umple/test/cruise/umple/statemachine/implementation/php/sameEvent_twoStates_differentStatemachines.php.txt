@@ -32,6 +32,18 @@ class LightFixture
   // INTERFACE
   //------------------------
 
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getAnotherBulbFullName()
+  {
+    $answer = $this->getAnotherBulb();
+    return $answer;
+  }
+
   public function getBulb()
   {
     if ($this->bulb == self::$BulbOn) { return "BulbOn"; }
@@ -49,37 +61,39 @@ class LightFixture
   public function flip()
   {
     $wasEventProcessed = false;
-
-    if ($this->bulb == self::$BulbOn)
+    
+    $aBulb = $this->bulb;
+    $aAnotherBulb = $this->anotherBulb;
+    if ($aBulb == self::$BulbOn)
     {
       $this->setBulb(self::$BulbOff);
       $wasEventProcessed = true;
     }
-    elseif ($this->bulb == self::$BulbOff)
+    elseif ($aBulb == self::$BulbOff)
     {
       $this->setBulb(self::$BulbOn);
       $wasEventProcessed = true;
     }
 
-    if ($this->anotherBulb == self::$AnotherBulbOn)
+    
+    if ($aAnotherBulb == self::$AnotherBulbOn)
     {
       $this->setAnotherBulb(self::$AnotherBulbAmber);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function unflip()
   {
     $wasEventProcessed = false;
-
-    if ($this->anotherBulb == self::$AnotherBulbAmber)
+    
+    $aAnotherBulb = $this->anotherBulb;
+    if ($aAnotherBulb == self::$AnotherBulbAmber)
     {
       $this->setAnotherBulb(self::$AnotherBulbOn);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

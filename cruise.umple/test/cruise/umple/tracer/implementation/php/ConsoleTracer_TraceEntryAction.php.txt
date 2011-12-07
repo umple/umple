@@ -27,6 +27,12 @@ class Light
   // INTERFACE
   //------------------------
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOn) { return "StatusOn"; }
@@ -49,7 +55,6 @@ class Light
       $this->setStatus(self::$StatusOn);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

@@ -45,6 +45,12 @@ class Mentor
     return $this->howLongUntilOk;
   }
 
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
   public function getStatus()
   {
     if ($this->status == self::$StatusOk) { return "StatusOk"; }
@@ -56,26 +62,26 @@ class Mentor
   public function timeoutOkToNotOk()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusOk)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOk)
     {
       $this->setStatus(self::$StatusNotOk);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function timeoutNotOkayToOk()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusNotOkay)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusNotOkay)
     {
       $this->setStatus(self::$StatusOk);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 

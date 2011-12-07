@@ -39,9 +39,9 @@ class StateMachineTest
   {
     $this->v = 0;
     $this->setStatus(self::$StatusS1);
-    if ($this->status == null) { $this->setStatus(self::$S1Null); }
-    if ($this->status == null) { $this->setStatus(self::$S1Null); }
-    if ($this->status == null) { $this->setStatus(self::$S1Null); }
+    if ($this->statusS1 == null) { $this->setStatusS1(self::$StatusS1Null); }
+    if ($this->statusS1S1B == null) { $this->setStatusS1S1B(self::$StatusS1S1BNull); }
+    if ($this->statusS2 == null) { $this->setStatusS2(self::$StatusS2Null); }
   }
 
   //------------------------
@@ -59,6 +59,15 @@ class StateMachineTest
   public function getV()
   {
     return $this->v;
+  }
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    if ($this->statusS1 != self::$StatusS1Null) { $answer .= "." . $this->getStatusS1(); }
+    if ($this->statusS1S1B != self::$StatusS1S1BNull) { $answer .= "." . $this->getStatusS1S1B(); }
+    if ($this->statusS2 != self::$StatusS2Null) { $answer .= "." . $this->getStatusS2(); }
+    return $answer;
   }
 
   public function getStatus()
@@ -97,258 +106,274 @@ class StateMachineTest
   public function e2()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusS1)
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusS1)
     {
       $this->exitStatus();
-      $this->setStatus(self::$StatusS2S2C);
+      $this->setStatusS2(self::$StatusS2S2C);
       $wasEventProcessed = true;
     }
-    elseif ($this->status == self::$StatusS3)
+    elseif ($aStatus == self::$StatusS3)
     {
       $this->exitStatus();
       $this->setStatus(self::$StatusS2);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function e1()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusS3)
+    
+    $aStatus = $this->status;
+    $aStatusS1 = $this->statusS1;
+    $aStatusS1S1B = $this->statusS1S1B;
+    $aStatusS2 = $this->statusS2;
+    if ($aStatus == self::$StatusS3)
     {
       $this->exitStatus();
-      $this->setStatus(self::$StatusS1S1A);
+      $this->setStatusS1(self::$StatusS1S1A);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusS1 == self::$StatusS1S1A)
+    
+    if ($aStatusS1 == self::$StatusS1S1A)
     {
-      $this->setStatusS1(self::$StatusS2);
+      $this->setStatus(self::$StatusS2);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusS1S1B == self::$StatusS1S1BS1B2)
+    
+    if ($aStatusS1S1B == self::$StatusS1S1BS1B2)
     {
       if (v>4)
       {
-        $this->setStatusS1S1B(self::$StatusS3);
+        $this->setStatus(self::$StatusS3);
         $wasEventProcessed = true;
       }
       if (v<1)
       {
-        $this->setStatusS1S1B(self::$StatusS2);
+        $this->setStatus(self::$StatusS2);
         $wasEventProcessed = true;
       }
     }
 
-    if ($this->statusS2 == self::$StatusS2S2A)
+    
+    if ($aStatusS2 == self::$StatusS2S2A)
     {
-      $this->setStatusS2(self::$StatusS2);
+      $this->setStatus(self::$StatusS2);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS2 == self::$StatusS2S2C)
+    elseif ($aStatusS2 == self::$StatusS2S2C)
     {
       setV(5);
       $this->setStatusS2(self::$StatusS2S2B);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function e3()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusS3)
+    
+    $aStatus = $this->status;
+    $aStatusS1S1B = $this->statusS1S1B;
+    $aStatusS2 = $this->statusS2;
+    if ($aStatus == self::$StatusS3)
     {
       $this->exitStatus();
-      $this->setStatus(self::$StatusS2S2C);
+      $this->setStatusS2(self::$StatusS2S2C);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusS1S1B == self::$StatusS1S1BS1B1)
+    
+    if ($aStatusS1S1B == self::$StatusS1S1BS1B1)
     {
-      $this->setStatusS1S1B(self::$StatusS2S2B);
+      $this->setStatusS2(self::$StatusS2S2B);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS1S1B == self::$StatusS1S1BS1B2)
+    elseif ($aStatusS1S1B == self::$StatusS1S1BS1B2)
     {
-      $this->setStatusS1S1B(self::$StatusS1S1A);
-      $wasEventProcessed = true;
-    }
-
-    if ($this->statusS2 == self::$StatusS2S2A)
-    {
-      $this->setStatusS2(self::$StatusS1S1BS1B1);
+      $this->setStatusS1(self::$StatusS1S1A);
       $wasEventProcessed = true;
     }
 
+    
+    if ($aStatusS2 == self::$StatusS2S2A)
+    {
+      $this->setStatusS1S1B(self::$StatusS1S1BS1B1);
+      $wasEventProcessed = true;
+    }
     return $wasEventProcessed;
   }
 
   public function e5()
   {
     $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusS3)
+    
+    $aStatus = $this->status;
+    $aStatusS1 = $this->statusS1;
+    $aStatusS2 = $this->statusS2;
+    if ($aStatus == self::$StatusS3)
     {
       $this->exitStatus();
       $this->setStatus(self::$StatusS1);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusS1 == self::$StatusS1S1B)
+    
+    if ($aStatusS1 == self::$StatusS1S1B)
     {
       $this->exitStatusS1();
       $this->setStatusS1(self::$StatusS1S1A);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusS2 == self::$StatusS2S2C)
+    
+    if ($aStatusS2 == self::$StatusS2S2C)
     {
       setV(2);
-      $this->setStatusS2(self::$StatusS3);
+      $this->setStatus(self::$StatusS3);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function enterS1()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS1 == self::$StatusS1Null)
+    
+    $aStatusS1 = $this->statusS1;
+    if ($aStatusS1 == self::$StatusS1Null)
     {
       $this->setStatusS1(self::$StatusS1S1A);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function exitS1()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS1 == self::$StatusS1S1A)
+    
+    $aStatusS1 = $this->statusS1;
+    if ($aStatusS1 == self::$StatusS1S1A)
     {
       $this->setStatusS1(self::$StatusS1Null);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS1 == self::$StatusS1S1B)
+    elseif ($aStatusS1 == self::$StatusS1S1B)
     {
       $this->exitStatusS1();
       $this->setStatusS1(self::$StatusS1Null);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function enterS1B()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS1S1B == self::$StatusS1S1BNull)
+    
+    $aStatusS1S1B = $this->statusS1S1B;
+    if ($aStatusS1S1B == self::$StatusS1S1BNull)
     {
       $this->setStatusS1S1B(self::$StatusS1S1BS1B1);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function exitS1B()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS1S1B == self::$StatusS1S1BS1B1)
+    
+    $aStatusS1S1B = $this->statusS1S1B;
+    if ($aStatusS1S1B == self::$StatusS1S1BS1B1)
     {
       $this->setStatusS1S1B(self::$StatusS1S1BNull);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS1S1B == self::$StatusS1S1BS1B2)
+    elseif ($aStatusS1S1B == self::$StatusS1S1BS1B2)
     {
       $this->setStatusS1S1B(self::$StatusS1S1BNull);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function e4()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS1S1B == self::$StatusS1S1BS1B1)
+    
+    $aStatusS1S1B = $this->statusS1S1B;
+    $aStatusS2 = $this->statusS2;
+    if ($aStatusS1S1B == self::$StatusS1S1BS1B1)
     {
       $this->setStatusS1S1B(self::$StatusS1S1BS1B2);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS1S1B == self::$StatusS1S1BS1B2)
+    elseif ($aStatusS1S1B == self::$StatusS1S1BS1B2)
     {
       $this->setStatusS1S1B(self::$StatusS1S1BS1B1);
       $wasEventProcessed = true;
     }
 
-    if ($this->statusS2 == self::$StatusS2S2A)
+    
+    if ($aStatusS2 == self::$StatusS2S2A)
     {
-      $this->setStatusS2(self::$StatusS1);
+      $this->setStatus(self::$StatusS1);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS2 == self::$StatusS2S2B)
+    elseif ($aStatusS2 == self::$StatusS2S2B)
     {
       $this->setStatusS2(self::$StatusS2S2A);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS2 == self::$StatusS2S2C)
+    elseif ($aStatusS2 == self::$StatusS2S2C)
     {
       $this->setStatusS2(self::$StatusS2S2B);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function enterS2()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS2 == self::$StatusS2Null)
+    
+    $aStatusS2 = $this->statusS2;
+    if ($aStatusS2 == self::$StatusS2Null)
     {
       $this->setStatusS2(self::$StatusS2S2A);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
   public function exitS2()
   {
     $wasEventProcessed = false;
-
-    if ($this->statusS2 == self::$StatusS2S2A)
+    
+    $aStatusS2 = $this->statusS2;
+    if ($aStatusS2 == self::$StatusS2S2A)
     {
       $this->setStatusS2(self::$StatusS2Null);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS2 == self::$StatusS2S2B)
+    elseif ($aStatusS2 == self::$StatusS2S2B)
     {
       $this->setStatusS2(self::$StatusS2Null);
       $wasEventProcessed = true;
     }
-    elseif ($this->statusS2 == self::$StatusS2S2C)
+    elseif ($aStatusS2 == self::$StatusS2S2C)
     {
       $this->setStatusS2(self::$StatusS2Null);
       $wasEventProcessed = true;
     }
-
     return $wasEventProcessed;
   }
 
@@ -367,6 +392,8 @@ class StateMachineTest
     {
       setV(3);
     }
+    if( status.equals(int.S3) )
+      print("Exit of S3, value of v: " + v);
   }
 
   private function setStatus($aStatus)
@@ -380,11 +407,11 @@ class StateMachineTest
     // entry actions and do activities
     if ($this->status == self::$StatusS1)
     {
-      if ($this->statusS1 == self::$StatusS1Null) { $this->setStatusS1("StatusS1S1A"); }
+      if ($this->statusS1 == self::$StatusS1Null) { $this->setStatusS1(self::$StatusS1S1A); }
     }
     elseif ($this->status == self::$StatusS2)
     {
-      if ($this->statusS2 == self::$StatusS2Null) { $this->setStatusS2("StatusS2S2A"); }
+      if ($this->statusS2 == self::$StatusS2Null) { $this->setStatusS2(self::$StatusS2S2A); }
     }
   }
 
@@ -399,17 +426,19 @@ class StateMachineTest
   private function setStatusS1($aStatusS1)
   {
     $this->statusS1 = $aStatusS1;
+    if ($this->status != self::$StatusS1 && $aStatusS1 != self::$StatusS1Null) { $this->setStatus(self::$StatusS1); }
 
     // entry actions and do activities
     if ($this->statusS1 == self::$StatusS1S1B)
     {
-      if ($this->statusS1S1B == self::$StatusS1S1BNull) { $this->setStatusS1S1B("StatusS1S1BS1B1"); }
+      if ($this->statusS1S1B == self::$StatusS1S1BNull) { $this->setStatusS1S1B(self::$StatusS1S1BS1B1); }
     }
   }
 
   private function setStatusS1S1B($aStatusS1S1B)
   {
     $this->statusS1S1B = $aStatusS1S1B;
+    if ($this->statusS1 != self::$StatusS1S1B && $aStatusS1S1B != self::$StatusS1S1BNull) { $this->setStatusS1(self::$StatusS1S1B); }
 
     // entry actions and do activities
     if ($this->statusS1S1B == self::$StatusS1S1BS1B1)
@@ -421,6 +450,7 @@ class StateMachineTest
   private function setStatusS2($aStatusS2)
   {
     $this->statusS2 = $aStatusS2;
+    if ($this->status != self::$StatusS2 && $aStatusS2 != self::$StatusS2Null) { $this->setStatus(self::$StatusS2); }
   }
 
   public function equals($compareTo)
