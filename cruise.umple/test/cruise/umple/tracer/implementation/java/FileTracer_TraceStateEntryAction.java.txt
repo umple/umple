@@ -71,7 +71,6 @@ public class Light
     switch(status)
     {
       case On:
-        fileTracer("Tracing state On entry action(s)");
         System.out.println("State On entry");
         break;
       case Off:

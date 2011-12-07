@@ -234,6 +234,12 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
+	public void TraceSupport_ConsoleTracer_TraceNestedStateEntryRecord()
+	{
+//		assertUmpleTemplateFor("ConsoleTracer_TraceNestedStateEntryRecord.ump",languagePath + "/ConsoleTracer_TraceNestedStateEntryRecord."+ languagePath +".txt","StateMachineTest");
+	}
+	
+	@Test
 	public void TraceSupport_ConsoleTracer_TraceStateExitAction()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateExitAction.ump",languagePath + "/ConsoleTracer_TraceStateExitAction."+ languagePath +".txt","Light");

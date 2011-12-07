@@ -69,7 +69,6 @@ public class Light
     switch(status)
     {
       case On:
-        fileTracer("Tracing state On exit action(s)");
         doExit();
         break;
     }

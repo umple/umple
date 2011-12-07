@@ -66,7 +66,6 @@ public class Light
     switch(status)
     {
       case On:
-        System.out.println("Tracing state On entry action(s)");
         System.out.println("State On entry");
         break;
       case Off:

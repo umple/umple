@@ -410,7 +410,6 @@ public class StateMachineTest
         setV(6);
         break;
       case S3:
-        System.out.println("Tracing state S3 exit action(s)");
         setV(3);
         break;
     }
