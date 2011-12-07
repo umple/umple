@@ -974,7 +974,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
         	                  getOutput()) + 
         	                  aClass.getPackageName().replace(".", File.separator);
         	                  
-    String filename = path + File.separator + aClass.getName() + ".java";
+    String filename = path + File.separator + aClass.getName() + ".cpp";
     File file = new File(path);
     file.mkdirs();
 
