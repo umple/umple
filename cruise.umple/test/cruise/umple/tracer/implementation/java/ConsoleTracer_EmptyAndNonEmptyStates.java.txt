@@ -43,7 +43,7 @@ public class Light
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    System.out.println("Event: flip");
+    System.out.println("Event=flip");
     switch (aStatus)
     {
       case On:
@@ -57,9 +57,9 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
-    System.out.println("Previous state =" + status);
+    System.out.println("state=" + status);
     status = aStatus;
-    System.out.println("Current state =" + status);
+    System.out.println("state=" + status);
   }
 
   public void delete()

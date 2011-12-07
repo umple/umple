@@ -87,6 +87,7 @@ public class StateMachineTest
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
+    StatusS2 aStatusS2 = statusS2;
     switch (aStatus)
     {
       case S1:
@@ -97,6 +98,14 @@ public class StateMachineTest
       case S3:
         exitStatus();
         setStatus(Status.S2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (aStatusS2)
+    {
+      case S2C:
+        setStatus(Status.S3);
         wasEventProcessed = true;
         break;
     }
@@ -406,16 +415,16 @@ public class StateMachineTest
         break;
     }
     if( status.equals(Status.S3) )
-      System.out.println("Exit of S3, value of v: " + v);
+      System.out.println("action=S3-exit, v=" + v);
   }
 
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.S3) )
-      System.out.println("Previous state =" + status);
+      System.out.println("state=" + status);
     status = aStatus;
     if( aStatus.equals(Status.S3) )
-      System.out.println("Current state =" + status);
+      System.out.println("state=" + status);
 
     // entry actions and do activities
     switch(status)
@@ -428,7 +437,7 @@ public class StateMachineTest
         break;
     }
     if( aStatus.equals(Status.S3) )
-      System.out.println("Entry of S3, value of v =" + v);
+      System.out.println("action=S3-entry, v=" + v);
   }
 
   private void exitStatusS1()

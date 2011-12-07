@@ -37,6 +37,7 @@ class StateMachineTest {
       }
       S2C {
         e1 -> / {setV(5);} S2B;
+        e2 -> S3;
         e5 -> / {setV(2);} S3;
         e4 -> S2B;
       }

@@ -3296,11 +3296,11 @@ public class JavaClassGenerator implements ILang
 			  {
 				  if( model.getTraceType().equals("Console"))
 				  {
-					  allCases.append(StringFormatter.format("\n    System.out.println(\"Event: {0}\");",gen.translate("eventMethod",e)));
+					  allCases.append(StringFormatter.format("\n    System.out.println(\"Event={0}\");",gen.translate("eventMethod",e)));
 					}
 				  else if( model.getTraceType().equals("File"))
 				  {
-					  allCases.append(StringFormatter.format("\n    fileTracer(\"Event: {0}\");",gen.translate("eventMethod",e)));
+					  allCases.append(StringFormatter.format("\n    fileTracer(\"Event={0}\");",gen.translate("eventMethod",e)));
 					}
 				}
 			}
@@ -3388,35 +3388,6 @@ public class JavaClassGenerator implements ILang
     {
       
     
-  StringBuffer allNestedSetCases = new StringBuffer();
-  
-  for(State s : sm.getStates())
-  {
-    if (s.numberOfNestedStateMachines() == 0 )
-    {
-      continue;
-    }
-    StateMachine subSm = s.getNestedStateMachine(0);
-    State subS = subSm.getStartState();
-
-    if (subS == null)
-    {
-      continue;
-    }
-    
-    allNestedSetCases.append(StringFormatter.format("    if ({0} == {1}.{2}) { {3}({4}.{5}); }\n"
-      , gen.translate("parameterOne",sm)
-      , gen.translate("type",sm)
-      , gen.translate("stateOne",s)
-      , gen.translate("setMethod",subSm)
-      , gen.translate("type",subSm)
-      , gen.translate("stateOne",subS)
-    ));
-  }
-  
-  String nestedSetOutput = allNestedSetCases.toString().trim();
-
-    
   StringBuffer allExitCases = new StringBuffer();
   StringBuffer allEnterCases = new StringBuffer();
   
@@ -3467,35 +3438,6 @@ public class JavaClassGenerator implements ILang
     else if (sm.numberOfStates() > 0)
     {
       
-    
-  StringBuffer allNestedSetCases = new StringBuffer();
-  
-  for(State s : sm.getStates())
-  {
-    if (s.numberOfNestedStateMachines() == 0 )
-    {
-      continue;
-    }
-    StateMachine subSm = s.getNestedStateMachine(0);
-    State subS = subSm.getStartState();
-
-    if (subS == null)
-    {
-      continue;
-    }
-    
-    allNestedSetCases.append(StringFormatter.format("    if ({0} == {1}.{2}) { {3}({4}.{5}); }\n"
-      , gen.translate("parameterOne",sm)
-      , gen.translate("type",sm)
-      , gen.translate("stateOne",s)
-      , gen.translate("setMethod",subSm)
-      , gen.translate("type",subSm)
-      , gen.translate("stateOne",subS)
-    ));
-  }
-  
-  String nestedSetOutput = allNestedSetCases.toString().trim();
-
     
   boolean hasEntry = false;
   boolean hasExit = false;
@@ -3607,9 +3549,9 @@ public class JavaClassGenerator implements ILang
   		      traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
   		      traceRecords.append("\n      ");
     		  if( model.getTraceType().equals("Console"))
-    		    traceRecords.append(StringFormatter.format("System.out.println(\"Entry of {0}, value of {1} =\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+    		    traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
  			  else if( model.getTraceType().equals("File"))
-      		    traceRecords.append(StringFormatter.format("fileTracer(\"Entry of {0}, value of {1} =\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+      		    traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
 		  	}
  		  }
 		}

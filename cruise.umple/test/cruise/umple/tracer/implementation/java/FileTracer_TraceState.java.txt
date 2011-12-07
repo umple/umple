@@ -48,7 +48,7 @@ public class GarageDoor
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    fileTracer("Event: buttonOrObstacle");
+    fileTracer("Event=buttonOrObstacle");
     switch (aStatus)
     {
       case Open:
@@ -81,7 +81,7 @@ public class GarageDoor
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    fileTracer("Event: reachBottom");
+    fileTracer("Event=reachBottom");
     switch (aStatus)
     {
       case Closing:
@@ -98,7 +98,7 @@ public class GarageDoor
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    fileTracer("Event: reachTop");
+    fileTracer("Event=reachTop");
     switch (aStatus)
     {
       case Opening:
@@ -112,9 +112,9 @@ public class GarageDoor
 
   private void setStatus(Status aStatus)
   {
-    fileTracer("Previous state: "+status);
+    fileTracer("status"+status);
     status = aStatus;
-    fileTracer("Current state: "+status);
+    fileTracer("status"+status);
   }
 
   public void delete()

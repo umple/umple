@@ -2957,11 +2957,11 @@ public class PhpClassGenerator implements ILang
   			{
   				if( model.getTraceType().equals("Console"))
   				{
-  					allCases.append(StringFormatter.format("\n    print(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
+  					allCases.append(StringFormatter.format("\n    print(\"Event={0}\");\n    ",gen.translate("eventMethod",e)));
   				}
   				else if( model.getTraceType().equals("File"))
   				{
-  					allCases.append(StringFormatter.format("\n    fileTracer(\"Event: {0}\");\n    ",gen.translate("eventMethod",e)));
+  					allCases.append(StringFormatter.format("\n    fileTracer(\"Event={0}\");\n    ",gen.translate("eventMethod",e)));
   				}
   			}
   		}

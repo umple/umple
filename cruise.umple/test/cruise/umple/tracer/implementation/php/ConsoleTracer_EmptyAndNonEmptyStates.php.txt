@@ -45,7 +45,7 @@ class Light
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
-    print("Event: flip");
+    print("Event=flip");
     
     if ($aStatus == self::$StatusOn)
     {
@@ -57,9 +57,9 @@ class Light
 
   private function setStatus($aStatus)
   {
-    print("Previous state ={$status}");
+    print("state={$status}");
     $this->status = $aStatus;
-    print("Current state ={$status}");
+    print("state={$status}");
   }
 
   public function equals($compareTo)

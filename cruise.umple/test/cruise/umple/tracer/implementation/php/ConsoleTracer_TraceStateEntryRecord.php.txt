@@ -108,6 +108,7 @@ class StateMachineTest
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
+    $aStatusS2 = $this->statusS2;
     if ($aStatus == self::$StatusS1)
     {
       $this->exitStatus();
@@ -118,6 +119,13 @@ class StateMachineTest
     {
       $this->exitStatus();
       $this->setStatus(self::$StatusS2);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aStatusS2 == self::$StatusS2S2C)
+    {
+      $this->setStatus(self::$StatusS3);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -393,16 +401,16 @@ class StateMachineTest
       setV(3);
     }
     if( status.equals(int.S3) )
-      print("Exit of S3, value of v: " + v);
+      print("action=S3-exit, v=$" + v);
   }
 
   private function setStatus($aStatus)
   {
     if( aStatus.equals(int.S3) )
-      print("Previous state ={$status}");
+      print("state={$status}");
     $this->status = $aStatus;
     if( aStatus.equals(int.S3) )
-      print("Current state ={$status}");
+      print("state={$status}");
 
     // entry actions and do activities
     if ($this->status == self::$StatusS1)

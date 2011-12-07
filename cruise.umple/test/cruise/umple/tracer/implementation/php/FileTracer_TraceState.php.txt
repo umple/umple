@@ -51,7 +51,7 @@ class GarageDoor
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
-    fileTracer("Event: buttonOrObstacle");
+    fileTracer("Event=buttonOrObstacle");
     
     if ($aStatus == self::$StatusOpen)
     {
@@ -86,7 +86,7 @@ class GarageDoor
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
-    fileTracer("Event: reachBottom");
+    fileTracer("Event=reachBottom");
     
     if ($aStatus == self::$StatusClosing)
     {
@@ -101,7 +101,7 @@ class GarageDoor
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
-    fileTracer("Event: reachTop");
+    fileTracer("Event=reachTop");
     
     if ($aStatus == self::$StatusOpening)
     {
