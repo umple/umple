@@ -71,7 +71,7 @@ public class TracerTest extends TracerTemplateTest
 	@Test
 	public void TraceSupportSingleAttributeRecord()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributerecord.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test
