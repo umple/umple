@@ -43,6 +43,7 @@ public class TemplateTest
 
     SampleFileWriter.destroy(pathToInput + "/ISomething.java");
     SampleFileWriter.destroy(pathToInput + "/Token.java");
+    SampleFileWriter.destroy(pathToInput + "/Token.cpp");
     SampleFileWriter.destroy(pathToInput + "/Garbage.php");
     SampleFileWriter.destroy(pathToInput + "/IGarbage.php");
     SampleFileWriter.destroy(pathToInput + "/Mentor.php");

@@ -328,6 +328,31 @@ public class StateMachine
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  public boolean getHasExitAction()
+  {
+    return getHasAction("exit");
+  }
+  
+  public boolean getHasEntryAction()
+  {
+    return getHasAction("entry");
+  }
+  
+  private boolean getHasAction(String actionType)
+  {
+    for(State state : getStates())
+    {
+      for(Action action : state.getActions())
+      {
+        if (actionType.equals(action.getActionType()))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  
   public Event getEvent(String eventName)
   {
     if (eventName == null)

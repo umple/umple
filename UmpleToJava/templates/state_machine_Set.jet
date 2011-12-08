@@ -117,8 +117,7 @@
  		  }
 		}
 	  }
-	}
-	
+  }	
     if (state.getActivity() != null)
     {
       if (!hasThisEntry)

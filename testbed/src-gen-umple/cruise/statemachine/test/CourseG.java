@@ -81,6 +81,7 @@ public class CourseG
     switch (aStatusOn)
     {
       case Idle:
+        exitStatus();
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;
@@ -89,7 +90,7 @@ public class CourseG
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  private boolean enterOn()
   {
     boolean wasEventProcessed = false;
     
@@ -105,7 +106,7 @@ public class CourseG
     return wasEventProcessed;
   }
 
-  public boolean exitOn()
+  private boolean exitOn()
   {
     boolean wasEventProcessed = false;
     

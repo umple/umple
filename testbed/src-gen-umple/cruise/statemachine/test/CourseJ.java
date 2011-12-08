@@ -1,19 +1,16 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
-package example;
+package cruise.statemachine.test;
 
-public class StateMachineTest
+public class CourseJ
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //StateMachineTest Attributes
-  private int v;
-
-  //StateMachineTest State Machines
+  //CourseJ State Machines
   enum Status { S1, S2, S3 }
   enum StatusS1 { Null, S1A, S1B }
   enum StatusS1S1B { Null, S1B1, S1B2 }
@@ -27,9 +24,8 @@ public class StateMachineTest
   // CONSTRUCTOR
   //------------------------
 
-  public StateMachineTest()
+  public CourseJ()
   {
-    v = 0;
     setStatusS1(StatusS1.Null);
     setStatusS1S1B(StatusS1S1B.Null);
     setStatusS2(StatusS2.Null);
@@ -39,19 +35,6 @@ public class StateMachineTest
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setV(int aV)
-  {
-    boolean wasSet = false;
-    v = aV;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public int getV()
-  {
-    return v;
-  }
 
   public String getStatusFullName()
   {
@@ -96,7 +79,6 @@ public class StateMachineTest
         wasEventProcessed = true;
         break;
       case S3:
-        exitStatus();
         setStatus(Status.S2);
         wasEventProcessed = true;
         break;
@@ -125,7 +107,6 @@ public class StateMachineTest
     switch (aStatus)
     {
       case S3:
-        exitStatus();
         setStatusS1(StatusS1.S1A);
         wasEventProcessed = true;
         break;
@@ -143,20 +124,9 @@ public class StateMachineTest
     switch (aStatusS1S1B)
     {
       case S1B2:
-        if (v>4)
-        {
-          exitStatusS1();
-          setStatus(Status.S3);
-          wasEventProcessed = true;
-          break;
-        }
-        if (v<1)
-        {
-          exitStatusS1();
-          setStatus(Status.S2);
-          wasEventProcessed = true;
-          break;
-        }
+        exitStatusS1();
+        setStatus(Status.S3);
+        wasEventProcessed = true;
         break;
     }
 
@@ -168,7 +138,6 @@ public class StateMachineTest
         break;
       case S2C:
         exitStatus();
-        setV(5);
         setStatusS2(StatusS2.S2B);
         wasEventProcessed = true;
         break;
@@ -187,7 +156,6 @@ public class StateMachineTest
     switch (aStatus)
     {
       case S3:
-        exitStatus();
         setStatusS2(StatusS2.S2C);
         wasEventProcessed = true;
         break;
@@ -229,7 +197,6 @@ public class StateMachineTest
     switch (aStatus)
     {
       case S3:
-        exitStatus();
         setStatus(Status.S1);
         wasEventProcessed = true;
         break;
@@ -248,7 +215,6 @@ public class StateMachineTest
     {
       case S2C:
         exitStatus();
-        setV(2);
         setStatus(Status.S3);
         wasEventProcessed = true;
         break;
@@ -406,23 +372,13 @@ public class StateMachineTest
         break;
       case S2:
         exitS2();
-        setV(6);
-        break;
-      case S3:
-        setV(3);
         break;
     }
-    if( status.equals(Status.S3) )
-      System.out.println("action=S3-exit, v=" + v);
   }
 
   private void setStatus(Status aStatus)
   {
-    if( aStatus.equals(Status.S3) )
-      System.out.println("state=" + status);
     status = aStatus;
-    if( aStatus.equals(Status.S3) )
-      System.out.println("state=" + status);
 
     // entry actions and do activities
     switch(status)
@@ -434,8 +390,6 @@ public class StateMachineTest
         if (statusS2 == StatusS2.Null) { setStatusS2(StatusS2.S2A); }
         break;
     }
-    if( aStatus.equals(Status.S3) )
-      System.out.println("action=S3-entry, v=" + v);
   }
 
   private void exitStatusS1()
@@ -466,14 +420,6 @@ public class StateMachineTest
   {
     statusS1S1B = aStatusS1S1B;
     if (statusS1 != StatusS1.S1B && aStatusS1S1B != StatusS1S1B.Null) { setStatusS1(StatusS1.S1B); }
-
-    // entry actions and do activities
-    switch(statusS1S1B)
-    {
-      case S1B1:
-        setV(0);
-        break;
-    }
   }
 
   private void setStatusS2(StatusS2 aStatusS2)

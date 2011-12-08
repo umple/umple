@@ -45,7 +45,7 @@ public class UmpleConsoleMain
      String filename = args[0];
      UmpleFile umpleFile = new UmpleFile(filename);
      UmpleModel model = new UmpleModel(umpleFile);
-     
+
      try
      {
     	 model.run();

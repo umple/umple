@@ -65,11 +65,29 @@ public class CourseH
     return statusOff;
   }
 
-  public boolean enterOn()
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case On:
+        exitStatus();
+        setStatus(Status.Off);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterOn()
   {
     boolean wasEventProcessed = false;
     
     StatusOn aStatusOn = statusOn;
+    StatusOnRunning aStatusOnRunning = statusOnRunning;
     switch (aStatusOn)
     {
       case Null:
@@ -78,31 +96,6 @@ public class CourseH
         break;
     }
 
-    return wasEventProcessed;
-  }
-
-  public boolean exitOn()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOn aStatusOn = statusOn;
-    switch (aStatusOn)
-    {
-      case Running:
-        exitStatusOn();
-        setStatusOn(StatusOn.Null);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean enterRunning()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOnRunning aStatusOnRunning = statusOnRunning;
     switch (aStatusOnRunning)
     {
       case Null:
@@ -114,11 +107,20 @@ public class CourseH
     return wasEventProcessed;
   }
 
-  public boolean exitRunning()
+  private boolean exitOn()
   {
     boolean wasEventProcessed = false;
     
+    StatusOn aStatusOn = statusOn;
     StatusOnRunning aStatusOnRunning = statusOnRunning;
+    switch (aStatusOn)
+    {
+      case Running:
+        setStatusOn(StatusOn.Null);
+        wasEventProcessed = true;
+        break;
+    }
+
     switch (aStatusOnRunning)
     {
       case Play:
@@ -130,7 +132,7 @@ public class CourseH
     return wasEventProcessed;
   }
 
-  public boolean enterOff()
+  private boolean enterOff()
   {
     boolean wasEventProcessed = false;
     
@@ -146,7 +148,7 @@ public class CourseH
     return wasEventProcessed;
   }
 
-  public boolean exitOff()
+  private boolean exitOff()
   {
     boolean wasEventProcessed = false;
     
@@ -166,14 +168,33 @@ public class CourseH
     return wasEventProcessed;
   }
 
-  public boolean setStatus(Status aStatus)
+  private void exitStatus()
   {
-    if (status == Status.On && aStatus != Status.On ) { exitOn(); }
-    if (status == Status.Off && aStatus != Status.Off ) { exitOff(); }
-    if (status != Status.On && aStatus == Status.On ) { enterOn(); }
-    if (status != Status.Off && aStatus == Status.Off ) { enterOff(); }
+    switch(status)
+    {
+      case On:
+        exitOn();
+        break;
+      case Off:
+        exitOff();
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
     status = aStatus;
-    return true;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Running); }
+        break;
+      case Off:
+        if (statusOff == StatusOff.Null) { setStatusOff(StatusOff.Idle); }
+        break;
+    }
   }
 
   private void exitStatusOn()
@@ -181,7 +202,7 @@ public class CourseH
     switch(statusOn)
     {
       case Running:
-        exitRunning();
+        exitOn();
         break;
     }
   }

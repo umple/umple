@@ -27,6 +27,32 @@ public class StateMachineTest
   }
   
   @Test
+  public void getHasExitAction_getHasEntryAction()
+  {
+    
+    new State("s1",sm);
+    State stateB = new State("s2",sm);
+    
+    Assert.assertEquals(false,sm.getHasExitAction());
+    Assert.assertEquals(false,sm.getHasEntryAction());
+    
+    Action action = new Action("x");
+    stateB.addAction(action);
+    Assert.assertEquals(false,sm.getHasExitAction());
+    Assert.assertEquals(false,sm.getHasEntryAction());
+
+    action.setActionType("entry");
+    Assert.assertEquals(false,sm.getHasExitAction());
+    Assert.assertEquals(true,sm.getHasEntryAction());
+    
+    action.setActionType("exit");
+    Assert.assertEquals(true,sm.getHasExitAction());
+    Assert.assertEquals(false,sm.getHasEntryAction());
+
+  }
+  
+  
+  @Test
   public void getEventByName()
   {
     Assert.assertEquals(null, sm.getEvent(null));

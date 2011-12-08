@@ -78,38 +78,33 @@ class CourseH
     return null;
   }
 
-  public function enterOn()
+  public function flip()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
+    {
+      $this->exitStatus();
+      $this->setStatus(self::$StatusOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterOn()
   {
     $wasEventProcessed = false;
     
     $aStatusOn = $this->statusOn;
+    $aStatusOnRunning = $this->statusOnRunning;
     if ($aStatusOn == self::$StatusOnNull)
     {
       $this->setStatusOn(self::$StatusOnRunning);
       $wasEventProcessed = true;
     }
-    return $wasEventProcessed;
-  }
 
-  public function exitOn()
-  {
-    $wasEventProcessed = false;
     
-    $aStatusOn = $this->statusOn;
-    if ($aStatusOn == self::$StatusOnRunning)
-    {
-      $this->exitStatusOn();
-      $this->setStatusOn(self::$StatusOnNull);
-      $wasEventProcessed = true;
-    }
-    return $wasEventProcessed;
-  }
-
-  public function enterRunning()
-  {
-    $wasEventProcessed = false;
-    
-    $aStatusOnRunning = $this->statusOnRunning;
     if ($aStatusOnRunning == self::$StatusOnRunningNull)
     {
       $this->setStatusOnRunning(self::$StatusOnRunningPlay);
@@ -118,11 +113,19 @@ class CourseH
     return $wasEventProcessed;
   }
 
-  public function exitRunning()
+  private function exitOn()
   {
     $wasEventProcessed = false;
     
+    $aStatusOn = $this->statusOn;
     $aStatusOnRunning = $this->statusOnRunning;
+    if ($aStatusOn == self::$StatusOnRunning)
+    {
+      $this->setStatusOn(self::$StatusOnNull);
+      $wasEventProcessed = true;
+    }
+
+    
     if ($aStatusOnRunning == self::$StatusOnRunningPlay)
     {
       $this->setStatusOnRunning(self::$StatusOnRunningNull);
@@ -131,7 +134,7 @@ class CourseH
     return $wasEventProcessed;
   }
 
-  public function enterOff()
+  private function enterOff()
   {
     $wasEventProcessed = false;
     
@@ -144,7 +147,7 @@ class CourseH
     return $wasEventProcessed;
   }
 
-  public function exitOff()
+  private function exitOff()
   {
     $wasEventProcessed = false;
     
@@ -162,25 +165,30 @@ class CourseH
     return $wasEventProcessed;
   }
 
-  public function setStatus($aStatus)
+  private function exitStatus()
   {
-    if ($this->status == self::$StatusOn && ($aStatus != self::$StatusOn && $aStatus != "StatusOn") ) { $this->exitOn(); }
-    if ($this->status == self::$StatusOff && ($aStatus != self::$StatusOff && $aStatus != "StatusOff") ) { $this->exitOff(); }
-    if ($this->status != self::$StatusOn && ($aStatus == self::$StatusOn || $aStatus == "StatusOn") ) { $this->enterOn(); }
-    if ($this->status != self::$StatusOff && ($aStatus == self::$StatusOff || $aStatus == "StatusOff") ) { $this->enterOff(); }
-    if ($aStatus == "StatusOn" || $aStatus == self::$StatusOn)
+    if ($this->status == self::$StatusOn)
     {
-      $this->status = self::$StatusOn;
-      return true;
+      $this->exitOn();
     }
-    elseif ($aStatus == "StatusOff" || $aStatus == self::$StatusOff)
+    elseif ($this->status == self::$StatusOff)
     {
-      $this->status = self::$StatusOff;
-      return true;
+      $this->exitOff();
     }
-    else
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusOn)
     {
-      return false;
+      if ($this->statusOn == self::$StatusOnNull) { $this->setStatusOn(self::$StatusOnRunning); }
+    }
+    elseif ($this->status == self::$StatusOff)
+    {
+      if ($this->statusOff == self::$StatusOffNull) { $this->setStatusOff(self::$StatusOffIdle); }
     }
   }
 
@@ -188,7 +196,7 @@ class CourseH
   {
     if ($this->statusOn == self::$StatusOnRunning)
     {
-      $this->exitRunning();
+      $this->exitOn();
     }
   }
 

@@ -110,6 +110,7 @@ class CourseI
     
     if ($aStatusOnRunning == self::$StatusOnRunningPlay)
     {
+      $this->exitStatusOn();
       $this->setStatusOff(self::$StatusOffFull);
       $wasEventProcessed = true;
     }
@@ -117,49 +118,32 @@ class CourseI
     
     if ($aStatusOff == self::$StatusOffIdle)
     {
+      $this->exitStatus();
       $this->setStatusOn(self::$StatusOnRunning);
       $wasEventProcessed = true;
     }
     elseif ($aStatusOff == self::$StatusOffFull)
     {
+      $this->exitStatus();
       $this->setStatusOnRunning(self::$StatusOnRunningPlay);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
   }
 
-  public function enterOn()
+  private function enterOn()
   {
     $wasEventProcessed = false;
     
     $aStatusOn = $this->statusOn;
+    $aStatusOnRunning = $this->statusOnRunning;
     if ($aStatusOn == self::$StatusOnNull)
     {
       $this->setStatusOn(self::$StatusOnRunning);
       $wasEventProcessed = true;
     }
-    return $wasEventProcessed;
-  }
 
-  public function exitOn()
-  {
-    $wasEventProcessed = false;
     
-    $aStatusOn = $this->statusOn;
-    if ($aStatusOn == self::$StatusOnRunning)
-    {
-      $this->exitStatusOn();
-      $this->setStatusOn(self::$StatusOnNull);
-      $wasEventProcessed = true;
-    }
-    return $wasEventProcessed;
-  }
-
-  public function enterRunning()
-  {
-    $wasEventProcessed = false;
-    
-    $aStatusOnRunning = $this->statusOnRunning;
     if ($aStatusOnRunning == self::$StatusOnRunningNull)
     {
       $this->setStatusOnRunning(self::$StatusOnRunningPlay);
@@ -168,11 +152,19 @@ class CourseI
     return $wasEventProcessed;
   }
 
-  public function exitRunning()
+  private function exitOn()
   {
     $wasEventProcessed = false;
     
+    $aStatusOn = $this->statusOn;
     $aStatusOnRunning = $this->statusOnRunning;
+    if ($aStatusOn == self::$StatusOnRunning)
+    {
+      $this->setStatusOn(self::$StatusOnNull);
+      $wasEventProcessed = true;
+    }
+
+    
     if ($aStatusOnRunning == self::$StatusOnRunningPlay)
     {
       $this->setStatusOnRunning(self::$StatusOnRunningNull);
@@ -181,7 +173,7 @@ class CourseI
     return $wasEventProcessed;
   }
 
-  public function enterOff()
+  private function enterOff()
   {
     $wasEventProcessed = false;
     
@@ -194,7 +186,7 @@ class CourseI
     return $wasEventProcessed;
   }
 
-  public function exitOff()
+  private function exitOff()
   {
     $wasEventProcessed = false;
     
@@ -243,7 +235,7 @@ class CourseI
   {
     if ($this->statusOn == self::$StatusOnRunning)
     {
-      $this->exitRunning();
+      $this->exitOn();
     }
   }
 

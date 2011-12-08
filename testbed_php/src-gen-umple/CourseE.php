@@ -164,7 +164,7 @@ class CourseE
     return $wasEventProcessed;
   }
 
-  public function enterOn()
+  private function enterOn()
   {
     $wasEventProcessed = false;
     
@@ -177,20 +177,18 @@ class CourseE
     return $wasEventProcessed;
   }
 
-  public function exitOn()
+  private function exitOn()
   {
     $wasEventProcessed = false;
     
     $aStatusOn = $this->statusOn;
     if ($aStatusOn == self::$StatusOnPlay)
     {
-      $this->exitStatusOn();
       $this->setStatusOn(self::$StatusOnNull);
       $wasEventProcessed = true;
     }
     elseif ($aStatusOn == self::$StatusOnPause)
     {
-      $this->exitStatusOn();
       $this->setStatusOn(self::$StatusOnNull);
       $wasEventProcessed = true;
     }

@@ -56,14 +56,16 @@
       {
         State nextState = t.getNextState();
         String spaceOffset = t.getGuard() == null ? "" : "  ";
+        StateMachine exitSm = state.exitableStateMachine(nextState);
+        
         if (t.getGuard() != null)
         {
           allCases.append(StringFormatter.format("      if ({0})\n",t.getGuard().getCondition()));
           allCases.append(StringFormatter.format("      {\n"));
         }
-        if (state.getHasExitAction())
+        if (exitSm != null && !e.getIsInternal()) //&& !state.equals(exitSm) 
         {
-          allCases.append(StringFormatter.format("{0}      $this->{1}();\n",spaceOffset,gen.translate("exitMethod",sm)));
+          allCases.append(StringFormatter.format("{0}      $this->{1}();\n",spaceOffset,gen.translate("exitMethod",exitSm)));
         }
         if (t.getAction() != null)
         {
@@ -84,12 +86,13 @@
     }
     firstStateMachine = false;
   }
-  String outputCases = allDeclarations.toString() + allCases.toString();
+  String scope = e.getIsInternal() ? "private" : "public";
+  String eventOutput = allDeclarations.toString() + allCases.toString();
 %>
-  public function <%=gen.translate("eventMethod",e)%>()
+  <%= scope %> function <%=gen.translate("eventMethod",e)%>()
   {
     $wasEventProcessed = false;
-    <%= outputCases %>
+    <%= eventOutput %>
     return $wasEventProcessed;
   }
 

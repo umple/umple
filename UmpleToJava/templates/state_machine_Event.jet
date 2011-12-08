@@ -13,11 +13,11 @@
 			  {
 				  if( model.getTraceType().equals("Console"))
 				  {
-					  allCases.append(StringFormatter.format("\n    System.out.println(\"Event={0}\");",gen.translate("eventMethod",e)));
+				    allCases.append(StringFormatter.format("\n    System.out.println(\"Event={0}\");",gen.translate("eventMethod",e)));
 					}
 				  else if( model.getTraceType().equals("File"))
 				  {
-					  allCases.append(StringFormatter.format("\n    fileTracer(\"Event={0}\");",gen.translate("eventMethod",e)));
+				    allCases.append(StringFormatter.format("\n    fileTracer(\"Event={0}\");",gen.translate("eventMethod",e)));
 					}
 				}
 			}
@@ -25,7 +25,7 @@
 	  allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
     allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
-    
+
     for(State state : sm.getStates())
     {
   
@@ -41,24 +41,27 @@
       boolean needsBreak = true;
       for (Transition t : allT)
       {
+        
         State nextState = t.getNextState();
         String tabSpace = t.getGuard() == null ? "        " : "          ";
+        StateMachine exitSm = state.exitableStateMachine(nextState);
+        
         if (t.getGuard() != null)
         {
           allCases.append(StringFormatter.format("        if ({0})\n",t.getGuard().getCondition()));
           allCases.append(StringFormatter.format("        {\n"));
         }
-        if (state.getHasExitAction())
+        if (exitSm != null && !e.getIsInternal()) //&& !state.equals(exitSm) 
         {
-          allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",sm)));
+          allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",exitSm)));
         }
         if (t.getAction() != null)
         {
-          Action a1= t.getAction();
+          Action a1 = t.getAction();
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
         }
-
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
+
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
         allCases.append(StringFormatter.format("{0}break;\n",tabSpace));
 
@@ -82,13 +85,13 @@
     allCases.append(StringFormatter.format("    }\n"));
   }
   
-
-  String outputCases = allDeclarations.toString() + allCases.toString();
+  String scope = e.getIsInternal() ? "private" : "public";
+  String eventOutput = allDeclarations.toString() + allCases.toString();
 %>
-  public boolean <%=gen.translate("eventMethod",e)%>()
+  <%= scope %> boolean <%=gen.translate("eventMethod",e)%>()
   {
     boolean wasEventProcessed = false;
-    <%= outputCases %>
+    <%= eventOutput %>
     return wasEventProcessed;
   }
 

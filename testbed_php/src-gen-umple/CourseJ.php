@@ -1,18 +1,15 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
-class StateMachineTest
+class CourseJ
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //StateMachineTest Attributes
-  private $v;
-
-  //StateMachineTest State Machines
+  //CourseJ State Machines
   private static $StatusS1 = 1;
   private static $StatusS2 = 2;
   private static $StatusS3 = 3;
@@ -37,7 +34,6 @@ class StateMachineTest
 
   public function __construct()
   {
-    $this->v = 0;
     $this->setStatusS1(self::$StatusS1Null);
     $this->setStatusS1S1B(self::$StatusS1S1BNull);
     $this->setStatusS2(self::$StatusS2Null);
@@ -47,19 +43,6 @@ class StateMachineTest
   //------------------------
   // INTERFACE
   //------------------------
-
-  public function setV($aV)
-  {
-    $wasSet = false;
-    $this->v = $aV;
-    $wasSet = true;
-    return $wasSet;
-  }
-
-  public function getV()
-  {
-    return $this->v;
-  }
 
   public function getStatusFullName()
   {
@@ -117,7 +100,6 @@ class StateMachineTest
     }
     elseif ($aStatus == self::$StatusS3)
     {
-      $this->exitStatus();
       $this->setStatus(self::$StatusS2);
       $wasEventProcessed = true;
     }
@@ -142,7 +124,6 @@ class StateMachineTest
     $aStatusS2 = $this->statusS2;
     if ($aStatus == self::$StatusS3)
     {
-      $this->exitStatus();
       $this->setStatusS1(self::$StatusS1S1A);
       $wasEventProcessed = true;
     }
@@ -158,18 +139,9 @@ class StateMachineTest
     
     if ($aStatusS1S1B == self::$StatusS1S1BS1B2)
     {
-      if (v>4)
-      {
-        $this->exitStatusS1();
-        $this->setStatus(self::$StatusS3);
-        $wasEventProcessed = true;
-      }
-      if (v<1)
-      {
-        $this->exitStatusS1();
-        $this->setStatus(self::$StatusS2);
-        $wasEventProcessed = true;
-      }
+      $this->exitStatusS1();
+      $this->setStatus(self::$StatusS3);
+      $wasEventProcessed = true;
     }
 
     
@@ -181,7 +153,6 @@ class StateMachineTest
     elseif ($aStatusS2 == self::$StatusS2S2C)
     {
       $this->exitStatus();
-      setV(5);
       $this->setStatusS2(self::$StatusS2S2B);
       $wasEventProcessed = true;
     }
@@ -197,7 +168,6 @@ class StateMachineTest
     $aStatusS2 = $this->statusS2;
     if ($aStatus == self::$StatusS3)
     {
-      $this->exitStatus();
       $this->setStatusS2(self::$StatusS2S2C);
       $wasEventProcessed = true;
     }
@@ -235,7 +205,6 @@ class StateMachineTest
     $aStatusS2 = $this->statusS2;
     if ($aStatus == self::$StatusS3)
     {
-      $this->exitStatus();
       $this->setStatus(self::$StatusS1);
       $wasEventProcessed = true;
     }
@@ -252,7 +221,6 @@ class StateMachineTest
     if ($aStatusS2 == self::$StatusS2S2C)
     {
       $this->exitStatus();
-      setV(2);
       $this->setStatus(self::$StatusS3);
       $wasEventProcessed = true;
     }
@@ -397,23 +365,12 @@ class StateMachineTest
     elseif ($this->status == self::$StatusS2)
     {
       $this->exitS2();
-      setV(6);
     }
-    elseif ($this->status == self::$StatusS3)
-    {
-      setV(3);
-    }
-    if( status.equals(int.S3) )
-      print("action=S3-exit, v=$" + v);
   }
 
   private function setStatus($aStatus)
   {
-    if( aStatus.equals(int.S3) )
-      print("state={$status}");
     $this->status = $aStatus;
-    if( aStatus.equals(int.S3) )
-      print("state={$status}");
 
     // entry actions and do activities
     if ($this->status == self::$StatusS1)
@@ -450,12 +407,6 @@ class StateMachineTest
   {
     $this->statusS1S1B = $aStatusS1S1B;
     if ($this->statusS1 != self::$StatusS1S1B && $aStatusS1S1B != self::$StatusS1S1BNull) { $this->setStatusS1(self::$StatusS1S1B); }
-
-    // entry actions and do activities
-    if ($this->statusS1S1B == self::$StatusS1S1BS1B1)
-    {
-      setV(0);
-    }
   }
 
   private function setStatusS2($aStatusS2)

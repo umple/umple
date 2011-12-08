@@ -567,6 +567,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("setName",generator.translate("setMethod",attr));
     Assert.assertEquals("enterName",generator.translate("enterMethod",attr));
     Assert.assertEquals("exitName",generator.translate("exitMethod",attr));
+    Assert.assertEquals("doExitName",generator.translate("doExitMethod",attr));
     Assert.assertEquals("getName",generator.translate("getMethod",attr));
     Assert.assertEquals("newNames",generator.translate("parameterMany",attr));
     Assert.assertEquals("newName",generator.translate("parameterNew",attr));
@@ -715,6 +716,7 @@ public class JavaGeneratorTest
     Event e = new Event("register");
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",e));
     Assert.assertEquals("register",generator.translate("eventMethod",e));
+    Assert.assertEquals("doRegister",generator.translate("doEventMethod",e));
     Assert.assertEquals("startRegisterHandler",generator.translate("eventStartMethod",e));
     Assert.assertEquals("stopRegisterHandler",generator.translate("eventStopMethod",e));
     Assert.assertEquals("registerHandler",generator.translate("eventHandler",e));
@@ -1023,6 +1025,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("removeStudent",generator.relatedTranslate("removeMethod",av));
     Assert.assertEquals("setStudent",generator.relatedTranslate("setMethod",av));
     Assert.assertEquals("exitStudent",generator.relatedTranslate("exitMethod",av));
+    Assert.assertEquals("doExitStudent",generator.relatedTranslate("doExitMethod",av));
     Assert.assertEquals("resetStudent",generator.relatedTranslate("resetMethod",av));
     Assert.assertEquals("getStudent",generator.relatedTranslate("getMethod",av));
     Assert.assertEquals("getDefaultStudent",generator.relatedTranslate("getDefaultMethod",av));
@@ -1071,6 +1074,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("removeMentor",generator.translate("removeMethod",av));
     Assert.assertEquals("setMentor",generator.translate("setMethod",av));
     Assert.assertEquals("exitMentor",generator.translate("exitMethod",av));
+    Assert.assertEquals("doExitMentor",generator.translate("doExitMethod",av));
     Assert.assertEquals("getMentor",generator.translate("getMethod",av));
     Assert.assertEquals("newMentors",generator.translate("parameterMany",av));
     Assert.assertEquals("newMentor",generator.translate("parameterNew",av));
@@ -1111,6 +1115,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("removeStudent",generator.translate("removeMethod",relatedAv));
     Assert.assertEquals("setStudent",generator.translate("setMethod",relatedAv));
     Assert.assertEquals("exitStudent",generator.translate("exitMethod",relatedAv));    
+    Assert.assertEquals("doExitStudent",generator.translate("doExitMethod",relatedAv));    
     Assert.assertEquals("resetStudent",generator.translate("resetMethod",relatedAv));
     Assert.assertEquals("newStudents",generator.translate("parameterMany",relatedAv));
     Assert.assertEquals("newStudent",generator.translate("parameterNew",relatedAv));
@@ -1154,6 +1159,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("removeMentor",generator.translate("removeMethod",av));
     Assert.assertEquals("setMentor",generator.translate("setMethod",av));
     Assert.assertEquals("exitMentor",generator.translate("exitMethod",av));
+    Assert.assertEquals("doExitMentor",generator.translate("doExitMethod",av));
     Assert.assertEquals("getMentor",generator.translate("getMethod",av));
     Assert.assertEquals("newMentors",generator.translate("parameterMany",av));
     Assert.assertEquals("newMentor",generator.translate("parameterNew",av));
@@ -1194,6 +1200,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("removeStudent",generator.translate("removeMethod",relatedAv));
     Assert.assertEquals("setStudent",generator.translate("setMethod",relatedAv));
     Assert.assertEquals("exitStudent",generator.translate("exitMethod",relatedAv));    
+    Assert.assertEquals("doExitStudent",generator.translate("doExitMethod",relatedAv));    
     Assert.assertEquals("resetStudent",generator.translate("resetMethod",relatedAv));
     Assert.assertEquals("newStudents",generator.translate("parameterMany",relatedAv));
     Assert.assertEquals("newStudent",generator.translate("parameterNew",relatedAv));

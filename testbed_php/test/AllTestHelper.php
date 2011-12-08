@@ -19,7 +19,6 @@ function loadTestsIn($test,$directoryName)
   if ($handle = opendir($directoryName)) { 
     while (false !== ($file = readdir($handle))) 
     { 
-      // if (endsWith($file,"NestedStateMachineTest.php"))
       if (endsWith($file,"Test.php")) 
       { 
         $test->addTestFile("{$directoryName}/{$file}");

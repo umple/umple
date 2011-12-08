@@ -604,7 +604,7 @@ private String getExtendClassesNames(UmpleClass uClass)
     lookups.put("fileTemplate","fileTracer(${0});");
     lookups.put("extraCode",executeMethods);
     //GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
-	prepareAllTraces(this,model,aClass,lookups);
+	  prepareAllTraces(this,model,aClass,lookups);
 	     
     for (StateMachine sm : aClass.getStateMachines())
     {
@@ -891,6 +891,10 @@ private String getExtendClassesNames(UmpleClass uClass)
     if (sm.getParentState() != null)
     {
       State parentState = sm.getParentState();
+      while(parentState.getStateMachine().getParentState() != null)
+      {
+        parentState = parentState.getStateMachine().getParentState();
+      }
       Map<String,String> lookups = new HashMap<String,String>();
       lookups.put("entryEventName",translate("enterMethod",parentState));
       lookups.put("exitEventName",translate("exitMethod",parentState));

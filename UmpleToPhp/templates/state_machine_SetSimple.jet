@@ -4,6 +4,8 @@
   StringBuffer allCases = new StringBuffer();
   StringBuffer allExitCases = new StringBuffer();
   StringBuffer allEnterCases = new StringBuffer();
+  boolean hasExit = sm.getHasExitAction();
+  boolean hasEntry = sm.getHasEntryAction();
 
   for (State state : sm.getStates())
   {
@@ -21,7 +23,7 @@
     allCases.append(StringFormatter.format("      return true;\n"));
     allCases.append(StringFormatter.format("    }\n"));
 
-    if (state.getHasExitAction())
+    if (hasExit)
     {
       allExitCases.append(StringFormatter.format("    if ($this->{0} == self::${1} && (${2} != self::${1} && ${2} != \"{1}\") ) { $this->{3}(); }\n"
         , gen.translate("stateMachineOne",sm)
@@ -31,7 +33,7 @@
       ));
     }
 
-    if (state.getHasEntryAction())
+    if (hasEntry)
     {
       allEnterCases.append(StringFormatter.format("    if ($this->{0} != self::${1} && (${2} == self::${1} || ${2} == \"{1}\") ) { $this->{3}(); }\n"
         , gen.translate("stateMachineOne",sm)

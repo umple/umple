@@ -83,13 +83,14 @@ class CourseG
     
     if ($aStatusOn == self::$StatusOnIdle)
     {
+      $this->exitStatus();
       $this->setStatusOn(self::$StatusOnRunning);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
   }
 
-  public function enterOn()
+  private function enterOn()
   {
     $wasEventProcessed = false;
     
@@ -102,7 +103,7 @@ class CourseG
     return $wasEventProcessed;
   }
 
-  public function exitOn()
+  private function exitOn()
   {
     $wasEventProcessed = false;
     

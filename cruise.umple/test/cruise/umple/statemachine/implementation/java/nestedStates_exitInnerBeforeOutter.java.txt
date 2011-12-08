@@ -68,7 +68,7 @@ public class LightFixture
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  private boolean enterOn()
   {
     boolean wasEventProcessed = false;
     
@@ -84,7 +84,7 @@ public class LightFixture
     return wasEventProcessed;
   }
 
-  public boolean exitOn()
+  private boolean exitOn()
   {
     boolean wasEventProcessed = false;
     
@@ -112,10 +112,12 @@ public class LightFixture
     switch (aBulbOn)
     {
       case Normal:
+        exitBulb();
         setBulbOn(BulbOn.Dimmed);
         wasEventProcessed = true;
         break;
       case Dimmed:
+        exitBulb();
         setBulb(Bulb.Off);
         wasEventProcessed = true;
         break;

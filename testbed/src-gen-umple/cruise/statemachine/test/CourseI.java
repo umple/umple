@@ -99,6 +99,7 @@ public class CourseI
     switch (aStatusOnRunning)
     {
       case Play:
+        exitStatusOn();
         setStatusOff(StatusOff.Full);
         wasEventProcessed = true;
         break;
@@ -107,10 +108,12 @@ public class CourseI
     switch (aStatusOff)
     {
       case Idle:
+        exitStatus();
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;
       case Full:
+        exitStatus();
         setStatusOnRunning(StatusOnRunning.Play);
         wasEventProcessed = true;
         break;
@@ -119,11 +122,12 @@ public class CourseI
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  private boolean enterOn()
   {
     boolean wasEventProcessed = false;
     
     StatusOn aStatusOn = statusOn;
+    StatusOnRunning aStatusOnRunning = statusOnRunning;
     switch (aStatusOn)
     {
       case Null:
@@ -132,31 +136,6 @@ public class CourseI
         break;
     }
 
-    return wasEventProcessed;
-  }
-
-  public boolean exitOn()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOn aStatusOn = statusOn;
-    switch (aStatusOn)
-    {
-      case Running:
-        exitStatusOn();
-        setStatusOn(StatusOn.Null);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean enterRunning()
-  {
-    boolean wasEventProcessed = false;
-    
-    StatusOnRunning aStatusOnRunning = statusOnRunning;
     switch (aStatusOnRunning)
     {
       case Null:
@@ -168,11 +147,20 @@ public class CourseI
     return wasEventProcessed;
   }
 
-  public boolean exitRunning()
+  private boolean exitOn()
   {
     boolean wasEventProcessed = false;
     
+    StatusOn aStatusOn = statusOn;
     StatusOnRunning aStatusOnRunning = statusOnRunning;
+    switch (aStatusOn)
+    {
+      case Running:
+        setStatusOn(StatusOn.Null);
+        wasEventProcessed = true;
+        break;
+    }
+
     switch (aStatusOnRunning)
     {
       case Play:
@@ -184,7 +172,7 @@ public class CourseI
     return wasEventProcessed;
   }
 
-  public boolean enterOff()
+  private boolean enterOff()
   {
     boolean wasEventProcessed = false;
     
@@ -200,7 +188,7 @@ public class CourseI
     return wasEventProcessed;
   }
 
-  public boolean exitOff()
+  private boolean exitOff()
   {
     boolean wasEventProcessed = false;
     
@@ -254,7 +242,7 @@ public class CourseI
     switch(statusOn)
     {
       case Running:
-        exitRunning();
+        exitOn();
         break;
     }
   }

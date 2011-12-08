@@ -86,6 +86,7 @@ class CourseH
   {
     On
     {
+      flip -> Off;
       Running
       {
         Play
@@ -133,6 +134,51 @@ class CourseI
       {
         flip -> Play;
       }    
+    }
+  }
+}
+
+class CourseJ {
+  status {
+    S1 {
+      e2 -> S2C;
+      S1A {
+        e1 -> S2;
+      }
+      S1B {
+        e5 -> S1A;
+        S1B1 {
+          e3 -> S2B;
+          e4 -> S1B2;
+        }
+        S1B2 {
+          e1 -> S3;
+          e3 -> S1A;
+          e4 -> S1B1;
+        }
+      }
+    }
+    S2 {
+      S2A {
+        e3-> S1B1;
+        e1-> S2;
+        e4 -> S1;
+      }
+      S2B {
+        e4 -> S2A;
+      }
+      S2C {
+        e1 -> S2B;
+        e2 -> S3;
+        e5 -> S3;
+        e4 -> S2B;
+      }
+    }
+    S3 {
+      e1 -> S1A;
+      e2 -> S2;
+      e3 -> S2C;
+      e5 -> S1;
     }
   }
 }

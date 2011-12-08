@@ -73,7 +73,7 @@ class LightFixture
     return $wasEventProcessed;
   }
 
-  public function enterOn()
+  private function enterOn()
   {
     $wasEventProcessed = false;
     
@@ -86,7 +86,7 @@ class LightFixture
     return $wasEventProcessed;
   }
 
-  public function exitOn()
+  private function exitOn()
   {
     $wasEventProcessed = false;
     
@@ -111,11 +111,13 @@ class LightFixture
     $aBulbOn = $this->bulbOn;
     if ($aBulbOn == self::$BulbOnNormal)
     {
+      $this->exitBulb();
       $this->setBulbOn(self::$BulbOnDimmed);
       $wasEventProcessed = true;
     }
     elseif ($aBulbOn == self::$BulbOnDimmed)
     {
+      $this->exitBulb();
       $this->setBulb(self::$BulbOff);
       $wasEventProcessed = true;
     }

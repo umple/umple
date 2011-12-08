@@ -167,7 +167,7 @@ private static void postpareStateMachine(UmpleModel aModel)
     if (sm.getStartState() != null)
     {
   
-      if (concurrentIndex == 0)
+      if (concurrentIndex == 0 && parentExitActionCode != null)
       {
         Action parentExitAction = new Action(parentExitActionCode);
         parentExitAction.setIsInternal(true);

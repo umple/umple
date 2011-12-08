@@ -107,6 +107,8 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("eventStartMethod", "start{0}Handler");
     UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");    
     UpperCaseSingularLookupMap.put("stateNull", "Null");
+    UpperCaseSingularLookupMap.put("doExitMethod", "doExit{0}");
+    UpperCaseSingularLookupMap.put("doEventMethod", "do{0}");
 
     UpperCasePluralLookupMap = new HashMap<String, String>();
     UpperCasePluralLookupMap.put("parameterMany", "new{0}");
@@ -977,6 +979,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     if (sm.getParentState() != null)
     {
       State parentState = sm.getParentState();
+      while(parentState.getStateMachine().getParentState() != null)
+      {
+        parentState = parentState.getStateMachine().getParentState();
+      }
       Map<String,String> lookups = new HashMap<String,String>();
       lookups.put("entryEventName",translate("enterMethod",parentState));
       lookups.put("exitEventName",translate("exitMethod",parentState));
@@ -988,7 +994,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
           ,translate("stateOne",sm.getStartState()))
       );
       lookups.put("parentExitActionCode",StringFormatter.format("{0}();",translate("exitMethod",parentState)));
-      GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);  
+      GeneratorHelper.prepareNestedStateMachine(sm,concurrentIndex,lookups);    
     }
 
     for (State s : sm.getStates())

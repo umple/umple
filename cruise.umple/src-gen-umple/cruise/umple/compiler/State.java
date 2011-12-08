@@ -422,28 +422,6 @@ public class State
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public boolean getHasExitAction()
-  {
-    return getHasAction("exit");
-  }
-  
-  public boolean getHasEntryAction()
-  {
-    return getHasAction("entry");
-  }
-  
-  private boolean getHasAction(String actionType)
-  {
-    for(Action action : getActions())
-    {
-      if (actionType.equals(action.getActionType()))
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public Transition addTransition(State nextState, int index)
   {
     Transition newTransition = new Transition(this,nextState);
@@ -461,7 +439,7 @@ public class State
 
   public String getType()
   {
-    return numberOfTransitions() == 0 ? "Simple" : "Complex";
+    return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 ? "Simple" : "Complex";
   }
   
   public String newTimedEventName(State toState)
@@ -497,5 +475,49 @@ public class State
       }
     }
     return all;
+  }
+  
+  public boolean getHasExitAction()
+  {
+    return getHasAction("exit");
+  }
+  
+  public boolean getHasEntryAction()
+  {
+    return getHasAction("entry");
+  }
+  
+  private boolean getHasAction(String actionType)
+  {
+    for(Action action : getActions())
+    {
+      if (actionType.equals(action.getActionType()))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public StateMachine exitableStateMachine(State nextState)
+  {
+    if (getHasExitAction() && !equals(nextState))
+    {
+      return getStateMachine();
+    }
+    State currentState = getStateMachine().getParentState();
+    while (currentState != null)
+    {
+      StateMachine sm = currentState.getStateMachine();
+      if (currentState.getHasExitAction() && !currentState.equals(nextState))
+      {
+        return sm;
+      }
+      else
+      {
+        currentState = sm.getParentState();
+      }
+    }
+    return null;
   }
 }

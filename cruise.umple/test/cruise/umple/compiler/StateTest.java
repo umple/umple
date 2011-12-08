@@ -34,28 +34,6 @@ public class StateTest
   }
   
   @Test
-  public void getHasExitAction_getHasEntryAction()
-  {
-    Assert.assertEquals(false,state.getHasExitAction());
-    Assert.assertEquals(false,state.getHasEntryAction());
-    
-    Action action = new Action("x");
-    state.addAction(action);
-    Assert.assertEquals(false,state.getHasExitAction());
-    Assert.assertEquals(false,state.getHasEntryAction());
-
-    action.setActionType("entry");
-    Assert.assertEquals(false,state.getHasExitAction());
-    Assert.assertEquals(true,state.getHasEntryAction());
-    
-    action.setActionType("exit");
-    Assert.assertEquals(true,state.getHasExitAction());
-    Assert.assertEquals(false,state.getHasEntryAction());
-
-  }
-  
-  
-  @Test
   public void getIsConcurrent_NoNestedStates()
   {
     Assert.assertEquals(false,state.getIsConcurrent());
@@ -132,6 +110,14 @@ public class StateTest
     state.setIsStartState(true);
     Assert.assertEquals(true, state.getIsStartState());
   }
+
+  @Test
+  public void getType_Nested()
+  {
+    State state = new State("s1",sm);
+    state.addNestedStateMachine(new StateMachine("sm2"));
+    Assert.assertEquals("Complex",state.getType());
+  } 
   
   @Test
   public void getTypeBasedOnIfYouHaveTransitionsOrNot()

@@ -51,12 +51,21 @@ public class UmpleRunMain
      String cmdFilename = args[1];
      UmpleFile umpleFile = new UmpleFile(filename);
      UmpleModel model = new UmpleModel(umpleFile);
+     boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
+     boolean shouldCompile = !shouldDebug;
      
      try
      {
-         print("Compiling "+ filename +"... ");
-         model.run();
-         println("success.");
+         if (shouldCompile)
+         {
+           print("Compiling "+ filename +"... ");
+           model.run();
+           println("success.");
+         }
+         else
+         {
+           print("Skipping compilation, entering debug mode");
+         }
          
          print("Building model... ");
          Builder b = new Builder();

@@ -164,7 +164,7 @@ public class CourseE
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  private boolean enterOn()
   {
     boolean wasEventProcessed = false;
     
@@ -180,7 +180,7 @@ public class CourseE
     return wasEventProcessed;
   }
 
-  public boolean exitOn()
+  private boolean exitOn()
   {
     boolean wasEventProcessed = false;
     
@@ -188,12 +188,10 @@ public class CourseE
     switch (aStatusOn)
     {
       case Play:
-        exitStatusOn();
         setStatusOn(StatusOn.Null);
         wasEventProcessed = true;
         break;
       case Pause:
-        exitStatusOn();
         setStatusOn(StatusOn.Null);
         wasEventProcessed = true;
         break;

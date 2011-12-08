@@ -16,11 +16,9 @@ public class Ignore
   {
     final StringBuffer stringBuffer = new StringBuffer();
     
-
 {
-
 	//==== Tracing Code    
-    if( model.getTraceType().equals("File") && uClass.hasTraceDirectives() )
+  if( model.getTraceType().equals("File") && uClass.hasTraceDirectives() )
 	{
 		appendln(stringBuffer, "");
 		appendln(stringBuffer, "  //------------------------");
@@ -38,7 +36,7 @@ public class Ignore
 		appendln(stringBuffer, "    }");
 		appendln(stringBuffer, "    catch (IOException e)");
 		appendln(stringBuffer, "    {");
-	    appendln(stringBuffer, "      System.err.println ({0}Unable to write to file{1});",'"','"');
+	  appendln(stringBuffer, "      System.err.println ({0}Unable to write to file{1});",'"','"');
 		appendln(stringBuffer, "      System.exit(-1);");
 		appendln(stringBuffer, "    }");
 		appendln(stringBuffer, "    // Write traced Item information");
@@ -56,7 +54,6 @@ public class Ignore
 		appendln(stringBuffer, "  }");
 	}
 }
-
 
     return stringBuffer.toString();
   }

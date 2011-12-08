@@ -95,7 +95,7 @@ class CourseF
     return $wasEventProcessed;
   }
 
-  public function enterOn()
+  private function enterOn()
   {
     $wasEventProcessed = false;
     
@@ -116,7 +116,7 @@ class CourseF
     return $wasEventProcessed;
   }
 
-  public function exitOn()
+  private function exitOn()
   {
     $wasEventProcessed = false;
     
@@ -154,11 +154,13 @@ class CourseF
     $aStatusMotorIdle = $this->statusMotorIdle;
     if ($aStatusMotorIdle == self::$StatusMotorIdleMotorIdle)
     {
+      $this->exitStatus();
       $this->setStatusMotorIdle(self::$StatusMotorIdleMotorRunning);
       $wasEventProcessed = true;
     }
     elseif ($aStatusMotorIdle == self::$StatusMotorIdleMotorRunning)
     {
+      $this->exitStatus();
       $this->setStatusMotorIdle(self::$StatusMotorIdleMotorIdle);
       $wasEventProcessed = true;
     }
@@ -172,11 +174,13 @@ class CourseF
     $aStatusFanIdle = $this->statusFanIdle;
     if ($aStatusFanIdle == self::$StatusFanIdleFanIdle)
     {
+      $this->exitStatus();
       $this->setStatusFanIdle(self::$StatusFanIdleFanRunning);
       $wasEventProcessed = true;
     }
     elseif ($aStatusFanIdle == self::$StatusFanIdleFanRunning)
     {
+      $this->exitStatus();
       $this->setStatusFanIdle(self::$StatusFanIdleFanIdle);
       $wasEventProcessed = true;
     }

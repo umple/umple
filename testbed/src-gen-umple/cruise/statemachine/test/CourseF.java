@@ -89,7 +89,7 @@ public class CourseF
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  private boolean enterOn()
   {
     boolean wasEventProcessed = false;
     
@@ -114,7 +114,7 @@ public class CourseF
     return wasEventProcessed;
   }
 
-  public boolean exitOn()
+  private boolean exitOn()
   {
     boolean wasEventProcessed = false;
     
@@ -155,10 +155,12 @@ public class CourseF
     switch (aStatusMotorIdle)
     {
       case MotorIdle:
+        exitStatus();
         setStatusMotorIdle(StatusMotorIdle.MotorRunning);
         wasEventProcessed = true;
         break;
       case MotorRunning:
+        exitStatus();
         setStatusMotorIdle(StatusMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
@@ -175,10 +177,12 @@ public class CourseF
     switch (aStatusFanIdle)
     {
       case FanIdle:
+        exitStatus();
         setStatusFanIdle(StatusFanIdle.FanRunning);
         wasEventProcessed = true;
         break;
       case FanRunning:
+        exitStatus();
         setStatusFanIdle(StatusFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
