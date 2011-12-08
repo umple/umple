@@ -207,12 +207,18 @@ public class ErrorTypeSingleton
 	  this.errorTypes = new ArrayList<ErrorType>();
 	}
 	
+	public void reset()
+	{
+	  clear();
+	  init();
+	}
+	
 	public ErrorType getErrorTypeForCode(int code)
 	{
 		for(ErrorType et : this.errorTypes)
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 1, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal", "");
+		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal", "");
 	}
 }

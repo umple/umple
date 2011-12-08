@@ -1242,6 +1242,7 @@ public class UmpleParserTest
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    ErrorTypeSingleton.getInstance().reset();
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
     parser = UmpleParserFactory.create(umpleParserName,model,true);
@@ -1256,6 +1257,13 @@ public class UmpleParserTest
   public boolean parseWarnings(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+
+    // The error singleton really must be reset before use,
+    // other tests may have written into the error code entries 
+    // that you want to use. Resetting it fills it with the default
+    // entries from en.error
+    ErrorTypeSingleton.getInstance().reset();
+    
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
     parser = UmpleParserFactory.create(umpleParserName,model,true);
@@ -1281,9 +1289,8 @@ public class UmpleParserTest
   
   public void assertHasWarningsParse(String filename, Position expectedPosition)
   {
-	  
     boolean answer = parseWarnings(filename);
-    Assert.assertEquals(false, answer);
+    Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
 
