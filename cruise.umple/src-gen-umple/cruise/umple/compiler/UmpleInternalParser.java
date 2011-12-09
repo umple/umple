@@ -1257,7 +1257,7 @@ private void checkSingletonAssociations() {
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-    if (aClass.getIsSingleton()) {
+    if (aClass.getIsSingleton() && !isLazy) {
     	isLazy = true;
     	setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
     }
