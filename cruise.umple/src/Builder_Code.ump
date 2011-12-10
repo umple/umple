@@ -231,7 +231,16 @@ class Builder {
   {
     try
     {
-      Process p = Runtime.getRuntime().exec("ant -f " + (new File(buildFilename)).getAbsolutePath());
+      Process p;
+      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    	  p = Runtime.getRuntime().exec("ant.bat -f " + (new File(buildFilename)).getAbsolutePath());
+      }
+      else {
+    	p = Runtime.getRuntime().exec("ant -f " + (new File(buildFilename)).getAbsolutePath());
+      }
+      //Uncomment these lines if the process has been failing. It might give you an idea of what's going on.
+      //BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      //System.out.println(b.readLine());
       p.waitFor();
       return true;  
     }
