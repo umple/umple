@@ -1,27 +1,14 @@
-0 : 1, Parse, http://code.umple.org, Generic Umple Error '{0}' ; 
-
-100 : 1, Parse, http://code.umple.org, Expected one of '{0}', but found '{1}' ; 
-
-1 : 5, Parse, http://code.umple.org, Lazy keyword missing from singleton class attribute '{0}' ; 
-
-2 : 5, Parse, http://code.umple.org, Association is referencing a singleton class with multiplicity 1 '{0}' ; 
-
-3 : 5, Parse, http://code.umple.org, Duplicate namespace declaration '{0}' ; 
-
-4: 2, Parse, http://code.umple.org, Invalid multiplicity '{0}' ; 
-
-5: 2, Parse, http://code.umple.org, Association end '{0}' is not a class ; 
-
-6: 2, Parse, http://code.umple.org, Defaulted variable '{0}' is not defined ; 
-
-7: 3, Parse, http://code.umple.org, Default key already specified in class '{0}' ; 
-
-8: 2, Parse, http://code.umple.org, Association class '{0}' is missing an end ; 
-
-9: 2, Parse, http://umple.org/E009ReflexiveLowerBound.html, Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
-
-10: 3, Semantic, http://code.umple.org, Singleton class '{0}' cannot have multiplicity greater than 1 ; 
-
-11: 2, Semantic, http://code.umple.org, Class '{0}' cannot cyclically extend itself ; 
-
-12: 2, Semantic, http://code.umple.org, Class '{0}' cannot cyclically extend class '{1}'  ; 
+0 : 1, http://code.umple.org, Generic Umple Error '{0}' ; 
+100 : 1, http://code.umple.org, Expected one of '{0}', but found '{1}' ; 
+1 : 5, http://code.umple.org, Lazy keyword missing from singleton class attribute '{0}' ; 
+2 : 5, http://code.umple.org, Association is referencing a singleton class with multiplicity 1 '{0}' ; 
+3 : 5, http://code.umple.org, Duplicate namespace declaration '{0}' ; 
+4: 2, http://code.umple.org, Invalid multiplicity '{0}' ; 
+5: 2, http://code.umple.org, Association end '{0}' is not a class ; 
+6: 2, http://code.umple.org, Defaulted variable '{0}' is not defined ; 
+7: 3, http://code.umple.org, Default key already specified in class '{0}' ; 
+8: 2, http://code.umple.org, Association class '{0}' is missing an end ; 
+9: 2, http://umple.org/E009ReflexiveLowerBound.html, Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
+10: 3, http://code.umple.org, Singleton class '{0}' cannot have multiplicity greater than 1 ; 
+11: 2, http://code.umple.org, Class '{0}' cannot cyclically extend itself ; 
+12: 2, http://code.umple.org, Class '{0}' cannot cyclically extend class '{1}'  ; 
