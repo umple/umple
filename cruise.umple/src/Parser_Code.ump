@@ -1277,12 +1277,10 @@ class ParseResult
    	 	String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
    	 	String severity = String.valueOf(et.getSeverity());
    	 	String code     = String.valueOf(et.getErrorCode());
-   	 	String type		= StringFormatter.sanitizeForJson(et.getErrorType());
    	 	String url		= StringFormatter.sanitizeForJson(et.getErrorUrl());
    	 	
    	 	ret += "{ \"errorCode\" : \"" + code + "\",";
    	 	ret += " \"severity\" : \"" +severity + "\", ";
-   	 	ret += " \"errorType\" : \"" + type + "\", ";
    	 	ret += "\"url\" : \"" + url + "\", ";
    	 	ret += "\"line\" : \"" + line + "\", ";
    	 	ret += "\"filename\" : \"" + file + "\", ";
@@ -1310,8 +1308,8 @@ class ErrorMessage
    }
    public String toString()
    {
-   	   String sev = errorType.getSeverity() <= 2 ? "error" : "warning";
-	   String err = errorType.getErrorType() + " " + sev + " on line: " + this.position.getLineNumber();
+   	   String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
+	   String err = sev + " on line " + this.position.getLineNumber();
 	   err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
    	   return  err + errorType.format(this.parameters);
    }
@@ -1384,9 +1382,6 @@ class ErrorTypeSingleton
            String severity = textParser.nextUntil(false, ",");
            textParser.nextAfter(false,",");
 
-           String type = textParser.nextUntil(false, ",");
-           textParser.nextAfter(false,",");
-
            String url = textParser.nextUntil(false, ",");
            textParser.nextAfter(false,",");
 
@@ -1396,7 +1391,7 @@ class ErrorTypeSingleton
            int codeInt;
            int severityInt;
            
-           if(code == null || severity == null || type == null || url == null || formatString == null)
+           if(code == null || severity == null || url == null || formatString == null)
               throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
            
            try
@@ -1420,7 +1415,7 @@ class ErrorTypeSingleton
            if(severityInt < 1 || severityInt > 5)
         	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
            
-           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type, url));
+           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
 		}
 		return true;
 	}
@@ -1442,6 +1437,6 @@ class ErrorTypeSingleton
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal", "");
+		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
 	}
 }
