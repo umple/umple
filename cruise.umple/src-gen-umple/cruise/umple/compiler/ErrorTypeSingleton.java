@@ -161,9 +161,6 @@ public class ErrorTypeSingleton
            String severity = textParser.nextUntil(false, ",");
            textParser.nextAfter(false,",");
 
-           String type = textParser.nextUntil(false, ",");
-           textParser.nextAfter(false,",");
-
            String url = textParser.nextUntil(false, ",");
            textParser.nextAfter(false,",");
 
@@ -173,7 +170,7 @@ public class ErrorTypeSingleton
            int codeInt;
            int severityInt;
            
-           if(code == null || severity == null || type == null || url == null || formatString == null)
+           if(code == null || severity == null || url == null || formatString == null)
               throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
            
            try
@@ -197,7 +194,7 @@ public class ErrorTypeSingleton
            if(severityInt < 1 || severityInt > 5)
         	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
            
-           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, type, url));
+           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
 		}
 		return true;
 	}
@@ -219,6 +216,6 @@ public class ErrorTypeSingleton
 			if(et.getErrorCode() == code)
 				return et;
 				
-		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "UmpleInternal", "");
+		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
 	}
 }

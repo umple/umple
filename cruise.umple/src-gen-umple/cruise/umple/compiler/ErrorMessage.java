@@ -136,8 +136,8 @@ public String getFormattedMessage()
    }
    public String toString()
    {
-   	   String sev = errorType.getSeverity() <= 2 ? "error" : "warning";
-	   String err = errorType.getErrorType() + " " + sev + " on line: " + this.position.getLineNumber();
+   	   String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
+	   String err = sev + " on line " + this.position.getLineNumber();
 	   err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
    	   return  err + errorType.format(this.parameters);
    }

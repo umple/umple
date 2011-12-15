@@ -190,12 +190,10 @@ public class ParseResult
    	 	String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
    	 	String severity = String.valueOf(et.getSeverity());
    	 	String code     = String.valueOf(et.getErrorCode());
-   	 	String type		= StringFormatter.sanitizeForJson(et.getErrorType());
    	 	String url		= StringFormatter.sanitizeForJson(et.getErrorUrl());
    	 	
    	 	ret += "{ \"errorCode\" : \"" + code + "\",";
    	 	ret += " \"severity\" : \"" +severity + "\", ";
-   	 	ret += " \"errorType\" : \"" + type + "\", ";
    	 	ret += "\"url\" : \"" + url + "\", ";
    	 	ret += "\"line\" : \"" + line + "\", ";
    	 	ret += "\"filename\" : \"" + file + "\", ";

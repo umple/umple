@@ -16,7 +16,6 @@ public class ErrorType
   private int errorCode;
   private int severity;
   private String errorFormat;
-  private String errorType;
   private String errorUrl;
 
   //Helper Variables
@@ -27,12 +26,11 @@ public class ErrorType
   // CONSTRUCTOR
   //------------------------
 
-  public ErrorType(int aErrorCode, int aSeverity, String aErrorFormat, String aErrorType, String aErrorUrl)
+  public ErrorType(int aErrorCode, int aSeverity, String aErrorFormat, String aErrorUrl)
   {
     errorCode = aErrorCode;
     severity = aSeverity;
     errorFormat = aErrorFormat;
-    errorType = aErrorType;
     errorUrl = aErrorUrl;
     cachedHashCode = -1;
     canSetErrorCode = true;
@@ -67,14 +65,6 @@ public class ErrorType
     return wasSet;
   }
 
-  public boolean setErrorType(String aErrorType)
-  {
-    boolean wasSet = false;
-    errorType = aErrorType;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setErrorUrl(String aErrorUrl)
   {
     boolean wasSet = false;
@@ -96,11 +86,6 @@ public class ErrorType
   public String getErrorFormat()
   {
     return errorFormat;
-  }
-
-  public String getErrorType()
-  {
-    return errorType;
   }
 
   public String getErrorUrl()
