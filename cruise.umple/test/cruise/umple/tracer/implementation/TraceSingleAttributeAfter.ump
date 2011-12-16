@@ -1,9 +1,0 @@
-namespace example;
-
-class Tracer
-{
-	Integer x;
-	String y;
-	trace y after y == "tim";
-	trace x after x == 6;
-}
