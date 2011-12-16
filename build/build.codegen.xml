@@ -15,6 +15,7 @@
     <copy todir="UmpleToCpp/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
     </copy>
+    <!-- The SQL generator doesn't use any of the UmpleToTemplate templates -->
   </target>
   
   <!-- Translate the *.jet and *.jumpjet files into Java source code -->

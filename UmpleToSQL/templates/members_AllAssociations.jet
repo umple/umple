@@ -1,0 +1,48 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  /*
+   This class needs a lot of work, for every possible assoxciation type,
+   a relationship between the different tables must be established.
+   
+   You may want to break these into seperate files as the other projects do, 
+   I.e:
+    association_ManyToOne.jet
+    association_MNToMany.jet 
+    etc...
+    
+    I've left it as it appears from the ruby generator.
+  */
+  boolean isFirstAssociation = true;
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    
+    String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
+ 
+    if (isFirst)
+    {
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "  #------------------------");
+      appendln(stringBuffer, "  # MEMBER VARIABLES");
+      append(stringBuffer, "  #------------------------");
+      isFirst = false;
+    }
+    
+    if (isFirstAssociation)
+    {
+      appendln(stringBuffer, "");
+      appendln(stringBuffer, "");
+      appendln(stringBuffer,"  #{0} Associations - for documentation purposes", uClass.getName());
+      append(stringBuffer,"  #attr_reader :{0}",attribute);
+      isFirstAssociation = false;
+    }
+    else
+    {
+      append(stringBuffer,", :{0}",attribute);
+    }
+  }
+%>

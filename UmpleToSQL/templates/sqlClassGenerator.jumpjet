@@ -1,0 +1,47 @@
+<%@ jet package="cruise.umple.compiler.sql" class="SQLClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+/*
+A brief outline of what needs to be done:
+
+Associations, Auto-unique variables
+
+*/
+
+  UmpleClass uClass = (UmpleClass) uElement;
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  SQLGenerator gen = new SQLGenerator();
+  gen.setModel(model);
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+    }
+    else
+    {
+      newCodeToInject = inject.getCode();
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }
+
+  boolean isFirst = true;
+
+%>
+
+<%=gen.translate("packageDefinition",uClass)%>
+
+<% if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("RubyMultiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Hash",uClass.getComments()));} } %>
+CREATE TABLE <%=uClass.getName() %><%= gen.translate("isA",uClass) /* a bit of work needs to be done here, if we inherit, do we just add those attributes to the table?*/ %> (
+
+  <%@ include file="members_AllStatics.jet" %>
+  <%@ include file="members_AllAttributes.jet" %>
+  <%@ include file="members_AllAssociations.jet" %>
+  
+);
+<%=gen.translate("packageDefinitionEnd",uClass)%>

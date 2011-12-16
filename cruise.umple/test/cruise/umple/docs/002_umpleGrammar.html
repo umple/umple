@@ -35,8 +35,8 @@ program- : ( [[comment]] | [[directive]] )*<br />
 directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]]<br />
 glossary : glossary { [[word]]* }<br />
 word : [singular] : [plural] ;<br />
-generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] ;<br />
-generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi] " [**output] " [=override:--override|--override-all]? ;<br />
+generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] ;<br />
+generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] " [**output] " [=override:--override|--override-all]? ;<br />
 useStatement- : use [use] ;<br />
 namespace- : namespace [namespace] ;<br />
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />

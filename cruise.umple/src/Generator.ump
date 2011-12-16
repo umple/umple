@@ -175,6 +175,21 @@ class RubyGenerator
   String output = "";
 }
 
+class SQLGenerator
+{
+  isA CodeGenerator;
+  isA CodeTranslator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.sql.*;  
+  
+  UmpleModel model = null;
+  String output = "";
+}
+
 use Umple.ump;
 use StateMachine.ump;
 use GeneratorHelper_Code.ump;
@@ -183,3 +198,4 @@ use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodePhp.ump;
 use Generator_CodeCpp.ump;
+use Generator_CodeSQL.ump;

@@ -76,6 +76,9 @@
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
       <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes="*.svn" />
     </copy>
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
+      <fileset dir="UmpleToSQL/src/cruise/umple/compiler/sql" excludes="*.svn" />
+    </copy>
   </target>
   
   <!-- ```````````````````````````
