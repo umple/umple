@@ -166,5 +166,11 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("BeforeAndAfter_StateMachineSet.ump",languagePath + "/BeforeAndAfter_StateMachineSet."+ languagePath +".txt","LightFixture");
   }
 
-  
+
+  @Test
+  public void finalState()
+  {
+    assertUmpleTemplateFor("FinalState.ump",languagePath + "/FinalState."+ languagePath +".txt","Mentor");
+  }
+
 }

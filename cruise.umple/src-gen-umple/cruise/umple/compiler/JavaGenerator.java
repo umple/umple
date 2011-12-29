@@ -363,25 +363,29 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     return "null";
   }
   
-  public String translate(String name, UmpleClass aClass)
+  public String translate(String keyName, UmpleClass aClass)
   {
-    if ("constructorMandatory".equals(name))
+    if ("constructorMandatory".equals(keyName))
     {
       return aClass.getGeneratedClass().getLookup("constructorSignature_mandatory");
     }
-    else if ("packageDefinition".equals(name))
+    else if ("packageDefinition".equals(keyName))
     {
       return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";"; 
     }
-    else if ("type".equals(name))
+    else if ("type".equals(keyName))
     {
       return aClass.getName();
     }
-    else if ("isA".equals(name))
+    else if ("isA".equals(keyName))
     {
       return getExtendAndImplements(aClass);
     }
-    return "UNKNOWN ID: " + name;
+    else if ("deleteMethod".equals(keyName))
+    {
+      return "delete";
+    }
+    return "UNKNOWN ID: " + keyName;
   }
   
   private String getImplementsForInterfaces(UmpleInterface uInterface)
@@ -696,6 +700,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     boolean hasTimedEvents = false;
     for (StateMachine sm : aClass.getStateMachines())
     {
+      prepareFinalStateFor(sm);
       prepareNestedStatesFor(sm,0);
       hasTimedEvents = prepareTimedEvents(sm) || hasTimedEvents;
     }
@@ -972,6 +977,14 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       }
     }
     return hasTimedEvents;
+  }
+  
+  private void prepareFinalStateFor(StateMachine sm)
+  {
+    Map<String,String> lookups = new HashMap<String,String>();
+    String deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
+    lookups.put("deleteActionCode",deleteActionCode);
+    GeneratorHelper.prepareFinalState(sm,lookups);
   }
   
   private void prepareNestedStatesFor(StateMachine sm,int concurrentIndex)

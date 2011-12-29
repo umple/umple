@@ -230,6 +230,11 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     {
      return getExtendAndImplements(aClass);
     }
+    else if ("deleteMethod".equals(keyName))
+    {
+      return "delete";
+    }
+    
     return "UNKNOWN ID: " + keyName;
   }
   
@@ -662,6 +667,7 @@ private String getExtendClassesNames(UmpleClass uClass)
 	     
     for (StateMachine sm : aClass.getStateMachines())
     {
+      prepareFinalStateFor(sm);
       prepareNestedStatesFor(sm,0);
     }    
     
@@ -939,6 +945,14 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  return null;
   }
   //====================== End of Tracing code
+  
+  private void prepareFinalStateFor(StateMachine sm)
+  {
+    Map<String,String> lookups = new HashMap<String,String>();
+    String deleteActionCode = StringFormatter.format("$this->{0}();",translate("deleteMethod",sm.getUmpleClass()));
+    lookups.put("deleteActionCode",deleteActionCode);
+    GeneratorHelper.prepareFinalState(sm,lookups);
+  }
   
   private void prepareNestedStatesFor(StateMachine sm,int concurrentIndex)
   {

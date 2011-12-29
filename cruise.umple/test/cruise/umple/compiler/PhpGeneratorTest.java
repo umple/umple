@@ -35,6 +35,28 @@ public class PhpGeneratorTest
   }
   
   @Test
+  public void addFinalState()
+  {
+    UmpleClass c = model.addUmpleClass("Student");
+    StateMachine sm = new StateMachine("bulb");
+    sm.setUmpleClass(c);
+    State finalState = new State("Final",sm);
+    Action action = new Action("blah");
+    finalState.addAction(action);
+    
+    sm.addState(finalState);
+
+    generator.prepare();
+    Assert.assertEquals(2,finalState.numberOfActions());
+    Action finalAction = finalState.getAction(1);
+    Assert.assertEquals("$this->delete();",finalAction.getActionCode());
+    Assert.assertEquals("entry",finalAction.getActionType());
+    
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(1,finalState.numberOfActions());
+  }  
+  
+  @Test
   public void addGeneratedClass()
   {
     UmpleClass c = model.addUmpleClass("Student");
@@ -644,6 +666,7 @@ public class PhpGeneratorTest
     UmpleClass c = model.addUmpleClass("Student");
 
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",c));
+    Assert.assertEquals("delete",generator.translate("deleteMethod",c));
     Assert.assertEquals("Student",generator.translate("type",c));
   } 
   

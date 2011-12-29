@@ -37,6 +37,28 @@ public class JavaGeneratorTest
   }
   
   @Test
+  public void addFinalState()
+  {
+    UmpleClass c = model.addUmpleClass("Student");
+    StateMachine sm = new StateMachine("bulb");
+    sm.setUmpleClass(c);
+    State finalState = new State("Final",sm);
+    Action action = new Action("blah");
+    finalState.addAction(action);
+    
+    sm.addState(finalState);
+
+    generator.prepare();
+    Assert.assertEquals(2,finalState.numberOfActions());
+    Action finalAction = finalState.getAction(1);
+    Assert.assertEquals("delete();",finalAction.getActionCode());
+    Assert.assertEquals("entry",finalAction.getActionType());
+    
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(1,finalState.numberOfActions());
+  }
+  
+  @Test
   public void addGeneratedClass()
   {
     UmpleClass c = model.addUmpleClass("Student");
@@ -707,6 +729,7 @@ public class JavaGeneratorTest
     UmpleClass c = model.addUmpleClass("Student");
 
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",c));
+    Assert.assertEquals("delete",generator.translate("deleteMethod",c));
     Assert.assertEquals("Student",generator.translate("type",c));
   }   
   
@@ -734,7 +757,7 @@ public class JavaGeneratorTest
     c.addAssociationVariable(av);
     c2.addAssociationVariable(relatedAv);
     
-    assertOtherTranslate(av);
+    assertOtherTranslate(c,av);
   }
 
   @Test
@@ -1009,7 +1032,7 @@ public class JavaGeneratorTest
     Assert.assertEquals(1,nestedSm2.numberOfStates());
   }  
   
-  private void assertOtherTranslate(AssociationVariable av)
+  private void assertOtherTranslate(UmpleClass c, AssociationVariable av)
   {
     Assert.assertEquals("UNKNOWN ID: blah", generator.relatedTranslate("blah", av));
     Assert.assertEquals("newStudents",generator.relatedTranslate("parameter",av));

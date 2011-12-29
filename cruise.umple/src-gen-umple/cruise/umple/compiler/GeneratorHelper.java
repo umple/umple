@@ -151,6 +151,21 @@ private static void postpareStateMachine(UmpleModel aModel)
     }
   }  
 
+  // Add the necessary entry action to delete the object once the final state is reached
+  public static void prepareFinalState(StateMachine sm, Map<String,String> lookups)
+  {
+    for (State s : sm.getStates())
+    {
+      if (s.isFinalState())
+      {
+        Action entryAction = new Action(lookups.get("deleteActionCode"));
+        entryAction.setIsInternal(true);
+        entryAction.setActionType("entry");
+        s.addAction(entryAction);
+      }
+    }
+  }  
+
   // Add the necessary before / after hooks to support nested state machines
   public static void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups)
   {
