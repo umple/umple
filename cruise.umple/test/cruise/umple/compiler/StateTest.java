@@ -204,4 +204,16 @@ public class StateTest
     Assert.assertEquals(b, s.getAction(1));
   }
 
+  @Test
+  public void isFinalBasedOnName()
+  {
+    State s = new State("Final",sm);
+    Assert.assertEquals(true, s.isFinalState());
+    
+    s = new State("NotFinal",sm);
+    Assert.assertEquals(false, s.isFinalState());
+    s.setName("Final");
+    Assert.assertEquals(true, s.isFinalState());
+  }
+  
 }

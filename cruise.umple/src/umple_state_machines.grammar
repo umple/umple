@@ -4,7 +4,8 @@ stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]
 inlineStateMachine : [name] { ( [[comment]] | [[state]] )* }
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[state]]* } 
 enum : [name] { } | [name] { [stateName] (, [stateName])* }
-state : ( [=final] )? [stateName] { ( [[comment]] | [=changeType:-|*]? [[stateEntity]] )* }
+state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
+stateInternal- : [[comment]] | [=changeType:-|*]? [[stateEntity]]
 stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]
 transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]

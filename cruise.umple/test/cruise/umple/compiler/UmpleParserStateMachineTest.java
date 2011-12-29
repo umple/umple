@@ -612,7 +612,23 @@ public class UmpleParserStateMachineTest
     State s2 = sm.findState("Off");
     Assert.assertEquals(true,s2.isFinalState());
   }
+  
+  @Test
+  public void finalStateReservedWord()
+  {
+    assertParse("200_finalStateReservedWord.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Final][state][stateName:Final]");
     
+    UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
+    StateMachine sm = uClass.getStateMachine(0);
+    State s1 = sm.findState("On");
+    Assert.assertEquals(false,s1.isFinalState());
+    
+    State s2 = sm.findState("Final");
+    Assert.assertEquals("Final",s2.getName());
+    Assert.assertEquals(true,s2.isFinalState());
+  }
+  
+
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);

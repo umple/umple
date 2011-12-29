@@ -162,6 +162,7 @@ public class State
 
   public boolean isFinalState()
   {
+    if ("Final".equals(name)) { finalState = true; }
     return finalState;
   }
 

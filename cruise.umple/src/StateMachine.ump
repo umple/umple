@@ -38,6 +38,8 @@ class State
   Boolean isHistoryState = false;
   Boolean isDeepHistoryState = false;
   Boolean finalState = false;
+  
+  before isFinalState { if ("Final".equals(name)) { finalState = true; } }
  
 }
 
