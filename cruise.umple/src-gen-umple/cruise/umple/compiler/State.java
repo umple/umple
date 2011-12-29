@@ -17,6 +17,7 @@ public class State
   private boolean isInternal;
   private boolean isHistoryState;
   private boolean isDeepHistoryState;
+  private boolean finalState;
 
   //State Associations
   private Activity activity;
@@ -36,6 +37,7 @@ public class State
     isInternal = false;
     isHistoryState = false;
     isDeepHistoryState = false;
+    finalState = false;
     actions = new ArrayList<Action>();
     boolean didAddStateMachine = setStateMachine(aStateMachine);
     if (!didAddStateMachine)
@@ -90,6 +92,14 @@ public class State
     return wasSet;
   }
 
+  public boolean setFinalState(boolean aFinalState)
+  {
+    boolean wasSet = false;
+    finalState = aFinalState;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getName()
   {
     return name;
@@ -120,6 +130,11 @@ public class State
     return isDeepHistoryState;
   }
 
+  public boolean getFinalState()
+  {
+    return finalState;
+  }
+
   public boolean isIsConcurrent()
   {
     return numberOfNestedStateMachines() > 1;
@@ -143,6 +158,11 @@ public class State
   public boolean isIsDeepHistoryState()
   {
     return isDeepHistoryState;
+  }
+
+  public boolean isFinalState()
+  {
+    return finalState;
   }
 
   public Activity getActivity()

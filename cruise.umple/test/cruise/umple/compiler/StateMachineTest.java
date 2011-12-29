@@ -27,6 +27,16 @@ public class StateMachineTest
   }
   
   @Test
+  public void isFinalState()
+  {
+    State state = new State("s",sm);
+    Assert.assertEquals(false,state.isFinalState());
+    
+    state.setFinalState(true);
+    Assert.assertEquals(true,state.isFinalState());
+  }
+  
+  @Test
   public void getHasExitAction_getHasEntryAction()
   {
     

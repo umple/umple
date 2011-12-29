@@ -37,6 +37,7 @@ class State
   Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
   Boolean isHistoryState = false;
   Boolean isDeepHistoryState = false;
+  Boolean finalState = false;
  
 }
 

@@ -1439,6 +1439,7 @@ private void analyzeStateMachineToken(Token token)
   private void populateStateMachine(Token stateMachineToken, StateMachine sm)
   {
     boolean isFirst = true;
+    boolean isFinalState = false;
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
       if (!stateToken.is("state") && !stateToken.is("stateName"))
@@ -1447,25 +1448,31 @@ private void analyzeStateMachineToken(Token token)
       }
 
       State s = createStateFromDefinition(stateToken,sm);
+      s.setFinalState(isFinalState);
       if (isFirst)
       {
         s.setIsStartState(true);
       }
       isFirst = false;
+      isFinalState = false;
       analyzeState(stateToken, s);
     }
   }
 
   private void analyzeState(Token stateToken, State fromState)
   {
-      boolean addNewSm = true;
-      boolean isConcurrentState = false;
+    boolean addNewSm = true;
+    boolean isConcurrentState = false;
+    boolean isFinalState = false;
     for(Token subToken : stateToken.getSubTokens())
     {
-      if (subToken.is("transition"))
+      if (subToken.is("final"))
+      {
+        fromState.setFinalState(true);
+      }
+      else if (subToken.is("transition"))
       {
         analyzeTransition(subToken, fromState); 
-        continue;
       }
       else if (subToken.is("activity"))
       {

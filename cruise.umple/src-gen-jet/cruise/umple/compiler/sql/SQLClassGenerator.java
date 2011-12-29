@@ -181,7 +181,7 @@ Associations, Auto-unique variables
       isFirst = false;
     }
     appendln(stringBuffer, "");
-    append(stringBuffer, "   {0} INTEGER AUTO INCREMENT,", gen.translate("attributeOne",av));
+    append(stringBuffer, "\n   {0} INTEGER AUTO INCREMENT,", gen.translate("attributeOne",av));
   }
   String tKey = "";
   for(String key : uClass.getKey().getMembers()){
