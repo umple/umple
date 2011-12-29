@@ -155,13 +155,28 @@ public class CourseF
     switch (aStatusMotorIdle)
     {
       case MotorIdle:
-        exitStatus();
         setStatusMotorIdle(StatusMotorIdle.MotorRunning);
         wasEventProcessed = true;
         break;
       case MotorRunning:
-        exitStatus();
         setStatusMotorIdle(StatusMotorIdle.MotorIdle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean flup()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusMotorIdle aStatusMotorIdle = statusMotorIdle;
+    switch (aStatusMotorIdle)
+    {
+      case MotorIdle:
+        exitStatus();
+        setStatus(Status.Off);
         wasEventProcessed = true;
         break;
     }
@@ -177,12 +192,10 @@ public class CourseF
     switch (aStatusFanIdle)
     {
       case FanIdle:
-        exitStatus();
         setStatusFanIdle(StatusFanIdle.FanRunning);
         wasEventProcessed = true;
         break;
       case FanRunning:
-        exitStatus();
         setStatusFanIdle(StatusFanIdle.FanIdle);
         wasEventProcessed = true;
         break;

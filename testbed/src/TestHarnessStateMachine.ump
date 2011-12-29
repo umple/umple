@@ -30,7 +30,8 @@ class CourseF
       turnOff -> Off;
       MotorIdle
       {
-        flip -> MotorRunning; 
+        flip -> MotorRunning;
+        flup -> Off;
       }
       MotorRunning
       {

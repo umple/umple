@@ -126,9 +126,7 @@
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
 
-  <target name="package">
-    <echo message="Package Version: ${umple.version}" />
-  
+  <target name="packageJars">
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error" excludes="**/*Test.class">
       <manifest>
@@ -195,7 +193,11 @@
     <copy todir="../umpleonline/update">
       <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
     </copy> -->
+  </target>
 	  
+  <target name="package">
+    <echo message="Package Version: ${umple.version}" />
+	  <antcall target="packageJars" />
 	  <antcall target="packageUmpleonline" />
 	  <antcall target="packageDocs" />
   </target>

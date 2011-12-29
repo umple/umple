@@ -152,7 +152,6 @@ class CourseJ
     }
     elseif ($aStatusS2 == self::$StatusS2S2C)
     {
-      $this->exitStatus();
       $this->setStatusS2(self::$StatusS2S2B);
       $wasEventProcessed = true;
     }
@@ -287,13 +286,11 @@ class CourseJ
     $aStatusS2 = $this->statusS2;
     if ($aStatusS1S1B == self::$StatusS1S1BS1B1)
     {
-      $this->exitStatusS1();
       $this->setStatusS1S1B(self::$StatusS1S1BS1B2);
       $wasEventProcessed = true;
     }
     elseif ($aStatusS1S1B == self::$StatusS1S1BS1B2)
     {
-      $this->exitStatusS1();
       $this->setStatusS1S1B(self::$StatusS1S1BS1B1);
       $wasEventProcessed = true;
     }
@@ -307,13 +304,11 @@ class CourseJ
     }
     elseif ($aStatusS2 == self::$StatusS2S2B)
     {
-      $this->exitStatus();
       $this->setStatusS2(self::$StatusS2S2A);
       $wasEventProcessed = true;
     }
     elseif ($aStatusS2 == self::$StatusS2S2C)
     {
-      $this->exitStatus();
       $this->setStatusS2(self::$StatusS2S2B);
       $wasEventProcessed = true;
     }

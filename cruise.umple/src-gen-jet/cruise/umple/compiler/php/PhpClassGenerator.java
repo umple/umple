@@ -3007,7 +3007,7 @@ public class PhpClassGenerator implements ILang
           allCases.append(StringFormatter.format("      if ({0})\n",t.getGuard().getCondition()));
           allCases.append(StringFormatter.format("      {\n"));
         }
-        if (exitSm != null && !e.getIsInternal()) //&& !state.equals(exitSm) 
+        if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
         {
           allCases.append(StringFormatter.format("{0}      $this->{1}();\n",spaceOffset,gen.translate("exitMethod",exitSm)));
         }

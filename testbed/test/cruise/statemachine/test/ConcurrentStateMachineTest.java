@@ -40,5 +40,23 @@ public class ConcurrentStateMachineTest
     
   }
 
+  @Test
+  public void StayWithinState()
+  {
+    CourseF course = new CourseF();
+    course.turnOn();
+    course.flip();
+
+    Assert.assertEquals(CourseF.Status.On, course.getStatus());
+    Assert.assertEquals(CourseF.StatusMotorIdle.MotorRunning, course.getStatusMotorIdle());    
+    Assert.assertEquals(CourseF.StatusFanIdle.FanIdle, course.getStatusFanIdle());
+
+    course.flop();
+
+    Assert.assertEquals(CourseF.Status.On, course.getStatus());
+    Assert.assertEquals(CourseF.StatusMotorIdle.MotorRunning, course.getStatusMotorIdle());    
+    Assert.assertEquals(CourseF.StatusFanIdle.FanRunning, course.getStatusFanIdle());
+  }
+  
 
 }

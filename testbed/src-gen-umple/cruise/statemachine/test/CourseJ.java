@@ -137,7 +137,6 @@ public class CourseJ
         wasEventProcessed = true;
         break;
       case S2C:
-        exitStatus();
         setStatusS2(StatusS2.S2B);
         wasEventProcessed = true;
         break;
@@ -290,12 +289,10 @@ public class CourseJ
     switch (aStatusS1S1B)
     {
       case S1B1:
-        exitStatusS1();
         setStatusS1S1B(StatusS1S1B.S1B2);
         wasEventProcessed = true;
         break;
       case S1B2:
-        exitStatusS1();
         setStatusS1S1B(StatusS1S1B.S1B1);
         wasEventProcessed = true;
         break;
@@ -309,12 +306,10 @@ public class CourseJ
         wasEventProcessed = true;
         break;
       case S2B:
-        exitStatus();
         setStatusS2(StatusS2.S2A);
         wasEventProcessed = true;
         break;
       case S2C:
-        exitStatus();
         setStatusS2(StatusS2.S2B);
         wasEventProcessed = true;
         break;

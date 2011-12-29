@@ -16,7 +16,7 @@ import org.junit.*;
 public class StateMachineTest
 {
   UmpleClass clazz;
-  StateMachine sm;
+  StateMachine sm, sm2;
   
   @Before
   public void setUp()
@@ -24,7 +24,11 @@ public class StateMachineTest
     clazz = new UmpleClass("Course");
     sm = new StateMachine("sm");
     sm.setUmpleClass(clazz);
+  
+    sm2 = new StateMachine("sm2");
+    sm2.setUmpleClass(clazz);
   }
+
   
   @Test
   public void isFinalState()

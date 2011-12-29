@@ -81,7 +81,6 @@ public class CourseG
     switch (aStatusOn)
     {
       case Idle:
-        exitStatus();
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;

@@ -83,7 +83,6 @@ class CourseG
     
     if ($aStatusOn == self::$StatusOnIdle)
     {
-      $this->exitStatus();
       $this->setStatusOn(self::$StatusOnRunning);
       $wasEventProcessed = true;
     }

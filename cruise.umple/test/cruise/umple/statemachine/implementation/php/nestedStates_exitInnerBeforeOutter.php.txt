@@ -111,7 +111,6 @@ class LightFixture
     $aBulbOn = $this->bulbOn;
     if ($aBulbOn == self::$BulbOnNormal)
     {
-      $this->exitBulb();
       $this->setBulbOn(self::$BulbOnDimmed);
       $wasEventProcessed = true;
     }

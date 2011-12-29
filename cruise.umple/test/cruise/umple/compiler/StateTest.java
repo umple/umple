@@ -16,7 +16,7 @@ import org.junit.*;
 public class StateTest
 {
   UmpleClass clazz;
-  StateMachine sm;
+  StateMachine sm, sm2;
   State state;
   
   Event e1,e2;
@@ -31,6 +31,8 @@ public class StateTest
     
     e1 = new Event("e1");
     e2 = new Event("e2");
+    
+    sm2 = new StateMachine("sm2");
   }
   
   @Test
@@ -215,5 +217,80 @@ public class StateTest
     s.setName("Final");
     Assert.assertEquals(true, s.isFinalState());
   }
+
+  @Test
+  public void isSameState_null()
+  {
+    State s = new State("s1",sm);
+    Assert.assertEquals(false,s.isSameState(null,null));
+    Assert.assertEquals(false,s.isSameState(null,sm));
+    Assert.assertEquals(true,s.isSameState(s,null));
+  }  
+
+  @Test
+  public void isSameState_siblings()
+  {
+    State s = new State("s1",sm);
+    Assert.assertEquals(true,s.isSameState(s,sm));
+    
+    State s2 = new State("nots1",sm);
+    Assert.assertEquals(false,s.isSameState(s2,sm));
+    Assert.assertEquals(false,s2.isSameState(s,sm));
+  }
+
+  @Test
+  public void isSameState_differentStateMachines()
+  {
+    State s = new State("s1",sm);
+    Assert.assertEquals(true,s.isSameState(s,sm));
+    
+    State s2 = new State("nots1",sm2);
+    Assert.assertEquals(false,s.isSameState(s2,sm));
+    Assert.assertEquals(false,s2.isSameState(s,sm));
+  }
+
+  @Test
+  public void isSameState_self()
+  {
+    Assert.assertEquals(true,state.isSameState(state,sm));
+  }
+
+  
+  @Test
+  public void isSameState_nestedSm()
+  {
+    State s = new State("s1",sm);
+    State s2 = new State("s2",sm);
+    
+    StateMachine nested1 = new StateMachine("nested1");
+    State sA = new State("sA",nested1);
+    State sB = new State("sB",nested1);
+    
+    StateMachine nested2 = new StateMachine("nested2");
+    State sX = new State("sX",nested2);
+    State sY = new State("sY",nested2);
+
+    nested1.setParentState(s);
+    nested2.setParentState(sA);
+    
+    Assert.assertEquals(true,s.isSameState(sA,sm));
+    Assert.assertEquals(true,s.isSameState(sB,sm));
+    Assert.assertEquals(true,s.isSameState(sX,sm));
+    Assert.assertEquals(true,sA.isSameState(s,sm));
+    Assert.assertEquals(true,sB.isSameState(s,sm));
+    Assert.assertEquals(true,sX.isSameState(s,sm));
+
+    Assert.assertEquals(true,sA.isSameState(sB,sm));
+    Assert.assertEquals(true,sB.isSameState(sA,sm));
+
+    Assert.assertEquals(true,sX.isSameState(sY,sm));
+    Assert.assertEquals(true,sX.isSameState(sY,nested1));
+    Assert.assertEquals(false,sX.isSameState(sY,nested2));
+
+    Assert.assertEquals(true,sX.isSameState(sB,sm));
+    Assert.assertEquals(false,sX.isSameState(sB,nested1));
+    Assert.assertEquals(false,sX.isSameState(sB,nested2));
+
+  }  
   
 }

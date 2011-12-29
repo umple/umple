@@ -79,7 +79,7 @@ class CourseE
       }      
       
     }
- }
+  }
  
 }
 
@@ -91,6 +91,37 @@ class CourseK
   {
     On { flip -> Final; }
     Final { }
+  }
+
+  after delete {  addLog("deleted"); }
+  
+}
+
+class CourseL
+{
+  String[] logs;
+  
+  status
+  {
+    On
+    {
+      MotorIdle
+      {
+        flip -> FinalMotorIdle; 
+      }
+      
+      final FinalMotorIdle {}
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> FinalFanIdle;  
+      }
+      
+      final FinalFanIdle {}
+    }
+
   }
 
   after delete {  addLog("deleted"); }

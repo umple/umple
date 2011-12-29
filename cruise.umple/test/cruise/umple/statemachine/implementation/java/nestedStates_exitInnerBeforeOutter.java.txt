@@ -112,7 +112,6 @@ public class LightFixture
     switch (aBulbOn)
     {
       case Normal:
-        exitBulb();
         setBulbOn(BulbOn.Dimmed);
         wasEventProcessed = true;
         break;

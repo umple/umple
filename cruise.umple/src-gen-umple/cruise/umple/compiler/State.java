@@ -443,6 +443,34 @@ public class State
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  public boolean isSameState(State state, StateMachine relativeTo)
+  {
+    if (this.equals(state))
+    {
+      return true;
+    }
+    
+    State mySuper = findSuperState(this,relativeTo);
+    State yourSuper = findSuperState(state,relativeTo);
+    return mySuper != null && mySuper.equals(yourSuper); 
+  }
+  
+  private State findSuperState(State me, StateMachine lookFor)
+  {
+    if (me == null || lookFor == null)
+    {
+      return null;
+    }
+    else if (lookFor.equals(me.getStateMachine()))
+    {
+      return me;
+    }
+    else
+    {
+      return findSuperState(me.getStateMachine().getParentState(),lookFor);
+    }
+  } 
+
   public Transition addTransition(State nextState, int index)
   {
     Transition newTransition = new Transition(this,nextState);
