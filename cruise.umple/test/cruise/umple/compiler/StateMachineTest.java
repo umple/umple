@@ -213,8 +213,35 @@ public class StateMachineTest
     Assert.assertEquals(sm, s1.getStateMachine());
     Assert.assertEquals(1,sm.numberOfStates());
     Assert.assertSame(sOld, s1);
-  }  
+  }
+  
+  @Test
+  public void findState_final()
+  {
+    State s1 = new State("s1",sm);
+    new State("Final",sm);
+    
+    StateMachine innerSm = new StateMachine("innerSm");
+    s1.addNestedStateMachine(innerSm);
+    
+    State alsoFinal = innerSm.findState("Final");
+    Assert.assertEquals(null,alsoFinal);
+  }
+  
+  @Test
+  public void findState_finalSearchNestedIgnored()
+  {
+    State s1 = new State("s1",sm);
+    
+    StateMachine innerSm = new StateMachine("innerSm");
+    s1.addNestedStateMachine(innerSm);
+    new State("Final",innerSm);
 
+    State alsoFinal = sm.findState("Final", true);
+    Assert.assertEquals(null,alsoFinal);
+  }
+
+  
   @Test
   public void findState_ignoreNestingIfRequested()
   {
@@ -464,6 +491,67 @@ public class StateMachineTest
     Assert.assertEquals(2,sm.numberOfStates());
     Assert.assertEquals(n,sm.getState(0));
     Assert.assertEquals(s,sm.getState(1));
+  }
+
+  @Test
+  public void hasFinalStates_NotConcurrent()
+  {
+    Assert.assertEquals(false,sm.hasFinalStates());
+    new State("s1",sm);
+    Assert.assertEquals(false,sm.hasFinalStates());
+    new State("Final",sm);
+    Assert.assertEquals(false,sm.hasFinalStates());
+  }
+  
+  @Test
+  public void hasFinalStates_Concurrent()
+  {
+    
+    State s1 = new State("s1",sm);
+    State s2 = new State("s2",sm);
+    StateMachine n1 = new StateMachine("n1");
+    StateMachine n2 = new StateMachine("n2");
+    
+    n1.setParentState(s1);
+    n2.setParentState(s2);
+    
+    Assert.assertEquals(false,sm.hasFinalStates());
+    
+    new State("Final",n1);
+    Assert.assertEquals(true,sm.hasFinalStates());
+  }
+  
+  
+  @Test
+  public void getFinalStates_Concurrent()
+  {
+    
+    State s1 = new State("s1",sm);
+    State s2 = new State("s2",sm);
+    StateMachine n1 = new StateMachine("n1");
+    StateMachine n2 = new StateMachine("n2");
+    
+    n1.setParentState(s1);
+    n2.setParentState(s2);
+    
+    Assert.assertEquals(false,sm.hasFinalStates());
+    
+    new State("Final",n1);
+    Assert.assertEquals(1,sm.getFinalStates().size());
+
+    new State("Final",n2);
+    Assert.assertEquals(2,sm.getFinalStates().size());
+  
+  }  
+
+  @Test
+  public void getFinalStates_NotConcurrent()
+  {
+    Assert.assertEquals(0,sm.getFinalStates().size());
+    new State("s1",sm);
+    Assert.assertEquals(0,sm.getFinalStates().size());
+    new State("Final",sm);
+    Assert.assertEquals(0,sm.getFinalStates().size());
   }
   
 }

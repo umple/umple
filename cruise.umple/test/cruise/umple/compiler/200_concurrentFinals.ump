@@ -1,0 +1,21 @@
+class OnOffSwitch
+{
+  bulb
+  {
+    On
+    {
+      MotorIdle
+      {
+        flip -> Final; 
+      }
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> Final;  
+      }
+      
+    }
+  }
+}

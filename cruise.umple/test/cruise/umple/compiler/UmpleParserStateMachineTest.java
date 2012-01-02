@@ -628,6 +628,22 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true,s2.isFinalState());
   }
   
+  @Test
+  public void concurrentFinals()
+  {
+    assertParse("200_concurrentFinals.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:MotorIdle][transition][event:flip][stateName:Final][||:||][state][stateName:FanIdle][transition][event:flop][stateName:Final]");
+    
+    UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
+    StateMachine sm = uClass.getStateMachine(0);
+    State on = sm.findState("On");
+    State motorFinal = on.getNestedStateMachine(0).findState("Final");
+    State fanFinal = on.getNestedStateMachine(1).findState("Final");
+    
+    Assert.assertNotSame(motorFinal, fanFinal);
+    Assert.assertEquals(true,motorFinal.isFinalState());
+    Assert.assertEquals(true,fanFinal.isFinalState());
+  }
+  
 
   private void assertParse(String filename, String expectedOutput)
   {

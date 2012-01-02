@@ -107,19 +107,16 @@ class CourseL
     {
       MotorIdle
       {
-        flip -> FinalMotorIdle; 
+        flip -> Final; 
       }
-      
-      final FinalMotorIdle {}
       
       ||
       
       FanIdle
       {
-        flop -> FinalFanIdle;  
+        flop -> Final;  
       }
       
-      final FinalFanIdle {}
     }
 
   }

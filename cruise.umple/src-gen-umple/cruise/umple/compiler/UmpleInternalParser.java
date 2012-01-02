@@ -1406,14 +1406,22 @@ private void analyzeStateMachineToken(Token token)
   {
     String name = transitionToken.getValue("stateName");
     State nextState = sm.findState(name);
-    if (nextState == null)
+    
+    if ("Final".equals(name))
     {
-      nextState = placeholderStateMachine.findState(name);
+      nextState = new State(name,sm);
     }
-
-    if (nextState == null)
+    else
     {
-      nextState = new State(transitionToken.getValue("stateName"),placeholderStateMachine);
+      if (nextState == null)
+      {
+        nextState = placeholderStateMachine.findState(name);
+      }
+
+      if (nextState == null)
+      {
+        nextState = new State(name,placeholderStateMachine);
+      }
     }
     return nextState;
   }

@@ -57,6 +57,41 @@ public class PhpGeneratorTest
   }  
   
   @Test
+  public void addNestedFinalState()
+  {
+    UmpleClass c = model.addUmpleClass("Student");
+    StateMachine sm = new StateMachine("bulb");
+    sm.setUmpleClass(c);
+
+    
+    State s1 = new State("s1",sm);
+    State s2 = new State("s2",sm);
+    StateMachine n1 = new StateMachine("n1");
+    StateMachine n2 = new StateMachine("n2");
+    n1.setParentState(s1);
+    n2.setParentState(s2);
+    
+    State final1 = new State("Final",n1);
+    State final2 = new State("Final",n2);
+    
+    generator.prepare();
+    Assert.assertEquals(1,final1.numberOfActions());
+    Assert.assertEquals(1,final2.numberOfActions());
+
+    Action finalAction = final1.getAction(0);
+    Assert.assertEquals("if ($this->isBulbFinal()) { $this->delete(); }",finalAction.getActionCode());
+    Assert.assertEquals("entry",finalAction.getActionType());
+    
+    finalAction = final2.getAction(0);
+    Assert.assertEquals("if ($this->isBulbFinal()) { $this->delete(); }",finalAction.getActionCode());
+    Assert.assertEquals("entry",finalAction.getActionType());
+
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(0,final1.numberOfActions());
+    Assert.assertEquals(0,final2.numberOfActions());
+  }    
+  
+  @Test
   public void addGeneratedClass()
   {
     UmpleClass c = model.addUmpleClass("Student");
@@ -800,12 +835,24 @@ public class PhpGeneratorTest
   public void translate_stateMachines()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    StateMachine sm = new StateMachine("grade");
+    StateMachine sm = new StateMachine("Grade");
     sm.setUmpleClass(c);
 
+    new State("s1",sm);
+    new State("s2",sm);
+
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
-    Assert.assertEquals("grade",generator.translate("stateMachineOne",sm));
+    Assert.assertEquals("Grade",generator.translate("stateMachineOne",sm));
+    Assert.assertEquals("aGrade",generator.translate("parameterOne",sm));
+    Assert.assertEquals("placeholderGrade",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getGrade",generator.translate("getMethod",sm));
+    Assert.assertEquals("getGradeFullName",generator.translate("getFullMethod",sm));
+    Assert.assertEquals("isGradeFinal",generator.translate("isFinalMethod",sm));
+    Assert.assertEquals("String",generator.translate("typeFull",sm));
+    Assert.assertEquals("String",generator.translate("typeGet",sm));
+    Assert.assertEquals("int",generator.translate("type",sm));
+    Assert.assertEquals("GradeNull",generator.translate("stateNull",sm));
+    Assert.assertEquals("GradeS1, GradeS2",generator.translate("listStates",sm));
   }
   
   @Test
@@ -868,6 +915,7 @@ public class PhpGeneratorTest
     Assert.assertEquals("placeholderVcrOn",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getVcrOn",generator.translate("getMethod",sm));
     Assert.assertEquals("getVcrOnFullName",generator.translate("getFullMethod",sm));
+    Assert.assertEquals("isVcrOnFinal",generator.translate("isFinalMethod",sm));
     Assert.assertEquals("String",generator.translate("typeGet",sm));
     Assert.assertEquals("int",generator.translate("type",sm));
     Assert.assertEquals("VcrOnNull",generator.translate("stateNull",sm));

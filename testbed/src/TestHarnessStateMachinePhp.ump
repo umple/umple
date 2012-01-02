@@ -96,3 +96,31 @@ class CourseK
   after delete {  $this->addLog("deleted"); }
   
 }
+
+class CourseL
+{
+  String[] logs;
+  
+  status
+  {
+    On
+    {
+      MotorIdle
+      {
+        flip -> Final; 
+      }
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> Final;  
+      }
+      
+    }
+
+  }
+
+  after delete {  $this->addLog("deleted"); }
+  
+}

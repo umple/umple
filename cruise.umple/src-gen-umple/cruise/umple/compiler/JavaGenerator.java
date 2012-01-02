@@ -99,6 +99,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("getMethod", "get{0}");
     UpperCaseSingularLookupMap.put("isMethod", "is{0}");
     UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");    
+    UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");
     UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
     UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
     UpperCaseSingularLookupMap.put("hasMethod", "has{0}");
@@ -700,8 +701,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     boolean hasTimedEvents = false;
     for (StateMachine sm : aClass.getStateMachines())
     {
-      prepareFinalStateFor(sm);
-      prepareNestedStatesFor(sm,0);
+      prepareNestedStatesFor(sm,null,0);
       hasTimedEvents = prepareTimedEvents(sm) || hasTimedEvents;
     }
         
@@ -979,17 +979,28 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     return hasTimedEvents;
   }
   
-  private void prepareFinalStateFor(StateMachine sm)
+  private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)
   {
     Map<String,String> lookups = new HashMap<String,String>();
-    String deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
+    
+    String deleteActionCode;
+    if (parentSm != null && parentSm.hasFinalStates())
+    {
+      deleteActionCode = StringFormatter.format("if ({1}()) { {0}(); }",translate("deleteMethod",sm.getUmpleClass()),translate("isFinalMethod",parentSm));
+    }
+    else
+    {
+      deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
+    }
+
     lookups.put("deleteActionCode",deleteActionCode);
     GeneratorHelper.prepareFinalState(sm,lookups);
   }
   
-  private void prepareNestedStatesFor(StateMachine sm,int concurrentIndex)
+  private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
   {
-    if (sm.getParentState() != null)
+    prepareFinalStateFor(sm,parentSm);  
+    if (sm.getParentState() != null && sm.getStartState() != null)
     {
       State parentState = sm.getParentState();
       while(parentState.getStateMachine().getParentState() != null)
@@ -1015,7 +1026,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       int nestedSmIndex = 0;
       for (StateMachine nestedSm : s.getNestedStateMachines())
       {
-        prepareNestedStatesFor(nestedSm,nestedSmIndex);
+        prepareNestedStatesFor(nestedSm,sm,nestedSmIndex);
         nestedSmIndex += 1;
       }
     }

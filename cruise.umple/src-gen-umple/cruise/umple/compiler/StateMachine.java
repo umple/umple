@@ -432,14 +432,49 @@ public class StateMachine
 
   public State findState(String aName)
   {
-    return findState(aName,true);
+    boolean isFinal = "Final".equals(aName);
+    boolean searchNestedStateMachines = !isFinal;
+    boolean isAtRoot = isFinal;
+    return findState(aName,searchNestedStateMachines,isAtRoot);
   }
 
   public State findState(String aName, boolean searchNestedStateMachines)
   {
-    return findState(aName,searchNestedStateMachines,false); 
+    boolean isFinal = "Final".equals(aName);
+    searchNestedStateMachines = !isFinal && searchNestedStateMachines;
+    boolean isAtRoot = isFinal;
+    return findState(aName,searchNestedStateMachines,isAtRoot); 
   } 
   
+  public List<State> getFinalStates()
+  {
+    List<StateMachine> all = new ArrayList<StateMachine>();
+    all.addAll(getNestedStateMachines());
+    return getFinalStatesIn(all);
+  }
+  
+  public boolean hasFinalStates()
+  {
+    return !getFinalStates().isEmpty();
+  }
+  
+  private List<State> getFinalStatesIn(List<StateMachine> allStateMachines)
+  {
+    List<State> all = new ArrayList<State>();
+    for (StateMachine sm : allStateMachines)
+    {
+      for(State s : sm.getStates())
+      {
+        if (s.isFinalState())
+        {
+          all.add(s);
+          break;
+        }
+      }
+    }
+    return all;    
+  }
+
   public Event findOrCreateEvent(String aName)
   {
     for (Event aEvent : getAllEvents())

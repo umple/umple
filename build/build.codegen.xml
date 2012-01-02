@@ -38,6 +38,10 @@
     </copy>
   </target> -->
 
+  <target name="build" >
+    <antcall target="prepare" />
+    <antcall target="generate" />
+  </target>
 
 </project>
 
