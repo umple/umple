@@ -1606,6 +1606,31 @@ public class RubyClassGenerator implements ILang
   }
 
     
+{
+  boolean isFirstDoActivity = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      if (state.getActivity() == null)
+      {
+        continue;
+      }
+
+      if (isFirstDoActivity)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  #{0} Do Activity Threads", uClass.getName());
+        isFirstDoActivity = false;
+      }
+      append(stringBuffer, "\n  #attr_reader {0};", gen.translate("doActivityThread",state));
+    }
+  }
+}
+
+    
 
   boolean isFirstAssociation = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
@@ -2702,7 +2727,7 @@ public class RubyClassGenerator implements ILang
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
     }
     
     if (hasThisEntry)

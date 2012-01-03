@@ -255,6 +255,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     {
       return StringFormatter.format("doActivity{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
     }
+    else if ("doActivityThread".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}Thread",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
+    }
     else if ("type".equals(keyName))
     {
       return getUpperCaseName(state.getStateMachine().getName());
@@ -979,6 +983,21 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     return hasTimedEvents;
   }
   
+  private void prepareDoActivityThreadInterrupt(StateMachine sm)
+  {
+    for(State state : sm.getStates())
+    {
+      if (state.getActivity() != null)
+      {
+        String code = StringFormatter.format("if ({0} != null) { {0}.interrupt(); }",translate("doActivityThread",state));
+        Action interruptAction = new Action(code);
+        interruptAction.setIsInternal(true);
+        interruptAction.setActionType("exit");
+        state.addAction(interruptAction);
+      }
+    }
+  }
+  
   private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)
   {
     Map<String,String> lookups = new HashMap<String,String>();
@@ -999,7 +1018,8 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   
   private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
   {
-    prepareFinalStateFor(sm,parentSm);  
+    prepareFinalStateFor(sm,parentSm); 
+    prepareDoActivityThreadInterrupt(sm); 
     if (sm.getParentState() != null && sm.getStartState() != null)
     {
       State parentState = sm.getParentState();

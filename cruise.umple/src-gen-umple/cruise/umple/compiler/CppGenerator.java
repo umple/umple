@@ -95,7 +95,8 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
     UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
     UpperCaseSingularLookupMap.put("getMethod", "get{0}");
-    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");    
+    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
+    UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");    
     UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
     UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
     UpperCaseSingularLookupMap.put("hasMethod", "has{0}");
@@ -248,6 +249,10 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     else if ("doActivityMethod".equals(keyName))
     {
       return StringFormatter.format("doActivity{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
+    }
+    else if ("doActivityThread".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}Thread",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
     }
     else if ("type".equals(keyName))
     {

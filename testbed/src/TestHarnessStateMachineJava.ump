@@ -25,15 +25,15 @@ class CourseC
     Open {
       entry / { addLog("Open Entry"); }
       flip -> Closed;
-      do 
-      {  
-        Thread.sleep(400);
-        addLog("Do Activity On Open");
-      }
     }
     Closed {
       entry / { addLog("Closed Entry"); }
       flip -> Open;
+      do 
+      {  
+        Thread.sleep(400);
+        addLog("Do Activity On Closed");
+      }
     }
   }
 }

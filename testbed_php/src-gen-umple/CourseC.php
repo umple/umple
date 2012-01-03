@@ -17,6 +17,9 @@ class CourseC
   private static $StatusClosed = 2;
   private $status;
 
+  //CourseC Do Activity Threads
+  private $doActivityStatusOpenThread = null;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------

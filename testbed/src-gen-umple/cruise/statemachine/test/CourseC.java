@@ -18,6 +18,9 @@ public class CourseC
   enum Status { Open, Closed }
   private Status status;
 
+  //CourseC Do Activity Threads
+  Thread doActivityStatusClosedThread = null;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -99,12 +102,23 @@ public class CourseC
         wasEventProcessed = true;
         break;
       case Closed:
+        exitStatus();
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
     }
 
     return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case Closed:
+        if (doActivityStatusClosedThread != null) { doActivityStatusClosedThread.interrupt(); }
+        break;
+    }
   }
 
   private void setStatus(Status aStatus)
@@ -116,18 +130,25 @@ public class CourseC
     {
       case Open:
         addLog("Open Entry");
-        new DoActivityThread(this,"doActivityStatusOpen");
         break;
       case Closed:
         addLog("Closed Entry");
+        doActivityStatusClosedThread = new DoActivityThread(this,"doActivityStatusClosed");
         break;
     }
   }
 
-  private void doActivityStatusOpen() throws InterruptedException
+  private void doActivityStatusClosed()
   {
-    Thread.sleep(400);
-        addLog("Do Activity On Open");
+    try
+    {
+      Thread.sleep(400);
+        addLog("Do Activity On Closed");
+    }
+    catch (InterruptedException e)
+    {
+
+    }
   }
 
   private static class DoActivityThread extends Thread
@@ -144,16 +165,9 @@ public class CourseC
     
     public void run()
     {
-      try
+      if ("doActivityStatusClosed".equals(doActivityMethodName))
       {
-        if ("doActivityStatusOpen".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusOpen();
-        }
-      }
-      catch (InterruptedException e)
-      {
-        e.printStackTrace();
+        controller.doActivityStatusClosed();
       }
     }
   }

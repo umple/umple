@@ -19,9 +19,9 @@
           output.append(StringFormatter.format("\n        else if"));
         }
         output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
-        output.append(StringFormatter.format("        {\n"));
-        output.append(StringFormatter.format("          controller.{0}();\n",gen.translate("doActivityMethod",state)));
-        output.append(StringFormatter.format("        }"));
+        output.append(StringFormatter.format("      {\n"));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("      }"));
       }
     }
   }
@@ -40,14 +40,7 @@
     
     public void run()
     {
-      try
-      {
-        <%= output %>
-      }
-      catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      }
+      <%= output %>
     }
   }
 

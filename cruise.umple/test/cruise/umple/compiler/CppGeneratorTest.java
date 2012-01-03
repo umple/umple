@@ -636,46 +636,26 @@ public class CppGeneratorTest
   }
   
   @Test
-  public void translate_StateMachines()
-  {
-    UmpleClass c = model.addUmpleClass("Student");
-    StateMachine sm = new StateMachine("Vcr");
-    sm.setUmpleClass(c);
-
-    new State("s1",sm);
-    new State("s2",sm);
-    
-    Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
-    Assert.assertEquals("Vcr",generator.translate("stateMachineOne",sm));
-    Assert.assertEquals("aVcr",generator.translate("parameterOne",sm));
-    Assert.assertEquals("placeholderVcr",generator.translate("removeParameterOne",sm));    
-    Assert.assertEquals("getVcr",generator.translate("getMethod",sm));
-    Assert.assertEquals("getVcrFullName",generator.translate("getFullMethod",sm));
-    Assert.assertEquals("String",generator.translate("typeFull",sm));
-    Assert.assertEquals("String",generator.translate("typeGet",sm));
-    Assert.assertEquals("Vcr",generator.translate("type",sm));
-    Assert.assertEquals("Null",generator.translate("stateNull",sm));
-    Assert.assertEquals("s1, s2",generator.translate("listStates",sm));
-
-  }
-  
-  @Test
   public void translate_stateMachines()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    StateMachine sm = new StateMachine("grade");
+    StateMachine sm = new StateMachine("Grade");
     sm.setUmpleClass(c);
 
     new State("s1",sm);
     new State("s2",sm);
     
     Assert.assertEquals("UNKNOWN ID: blah",generator.translate("blah",sm));
-    Assert.assertEquals("grade",generator.translate("stateMachineOne",sm));
+    Assert.assertEquals("Grade",generator.translate("stateMachineOne",sm));
     Assert.assertEquals("aGrade",generator.translate("parameterOne",sm));
     Assert.assertEquals("placeholderGrade",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getGrade",generator.translate("getMethod",sm));
+    Assert.assertEquals("getGradeFullName",generator.translate("getFullMethod",sm));
+    Assert.assertEquals("isGradeFinal",generator.translate("isFinalMethod",sm));
+    Assert.assertEquals("String",generator.translate("typeFull",sm));
     Assert.assertEquals("String",generator.translate("typeGet",sm));
     Assert.assertEquals("Grade",generator.translate("type",sm));
+    Assert.assertEquals("Null",generator.translate("stateNull",sm));
     Assert.assertEquals("s1, s2",generator.translate("listStates",sm));
   }
 
@@ -693,12 +673,14 @@ public class CppGeneratorTest
     Assert.assertEquals("\"Pass\"",generator.translate("stateString",state));
     Assert.assertEquals("Grade",generator.translate("type",state));
     Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",state));
+    Assert.assertEquals("doActivityGradePassThread",generator.translate("doActivityThread",state));
     
     Activity activity = new Activity("//the code",state);
     state.setActivity(activity);
     Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",state));
     
-  } 
+  }   
+  
   
   @Test
   public void translate_class()

@@ -14,6 +14,9 @@ public class Switch
   enum Status { On, Off }
   private Status status;
 
+  //Switch Do Activity Threads
+  Thread doActivityStatusOffThread = null;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -54,6 +57,16 @@ public class Switch
     return wasEventProcessed;
   }
 
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case Off:
+        if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); }
+        break;
+    }
+  }
+
   private void setStatus(Status aStatus)
   {
     status = aStatus;
@@ -62,14 +75,21 @@ public class Switch
     switch(status)
     {
       case Off:
-        new DoActivityThread(this,"doActivityStatusOff");
+        doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff");
         break;
     }
   }
 
-  private void doActivityStatusOff() throws InterruptedException
+  private void doActivityStatusOff()
   {
-    keepDoing();
+    try
+    {
+      keepDoing();
+    }
+    catch (InterruptedException e)
+    {
+
+    }
   }
 
   private static class DoActivityThread extends Thread
@@ -86,16 +106,9 @@ public class Switch
     
     public void run()
     {
-      try
+      if ("doActivityStatusOff".equals(doActivityMethodName))
       {
-        if ("doActivityStatusOff".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusOff();
-        }
-      }
-      catch (InterruptedException e)
-      {
-        e.printStackTrace();
+        controller.doActivityStatusOff();
       }
     }
   }

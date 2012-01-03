@@ -37,6 +37,24 @@ public class JavaGeneratorTest
   }
   
   @Test
+  public void addDoAcitivityExitAction()
+  {
+    UmpleClass c = model.addUmpleClass("Student");
+    StateMachine sm = new StateMachine("bulb");
+    sm.setUmpleClass(c);
+    State s1 = new State("s1",sm);
+    new Activity("blah",s1);
+    
+    generator.prepare();
+    
+    Assert.assertEquals(1,s1.numberOfActions());
+    Action exitAction = s1.getAction(0);
+    
+    Assert.assertEquals("if (doActivityBulbS1Thread != null) { doActivityBulbS1Thread.interrupt(); }",exitAction.getActionCode());
+    Assert.assertEquals("exit",exitAction.getActionType());
+  }
+  
+  @Test
   public void addFinalState()
   {
     UmpleClass c = model.addUmpleClass("Student");
@@ -730,6 +748,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("\"Pass\"",generator.translate("stateString",state));
     Assert.assertEquals("Grade",generator.translate("type",state));
     Assert.assertEquals("doActivityGradePass",generator.translate("doActivityMethod",state));
+    Assert.assertEquals("doActivityGradePassThread",generator.translate("doActivityThread",state));
     
     Activity activity = new Activity("//the code",state);
     state.setActivity(activity);

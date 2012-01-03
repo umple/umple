@@ -34,6 +34,7 @@ class <%= uClass.getName() %><%= gen.translate("isA",uClass) %>
   <%@ include file="members_AllStatics.jet" %>
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllStateMachines.jet" %>
+  <%@ include file="members_AllDoActivities.jet" %>
   <%@ include file="members_AllAssociations.jet" %>
   <%@ include file="members_AllHelpers.jet" %>
 

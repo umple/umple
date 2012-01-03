@@ -16,6 +16,10 @@ class Lamp
   enum Status { On, Off }
   private Status status;
 
+  //Lamp Do Activity Threads
+  Thread doActivityStatusOnThread = null;
+  Thread doActivityStatusOffThread = null;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -68,22 +72,36 @@ class Lamp
     switch(status)
     {
       case On:
-        new DoActivityThread(this,"doActivityStatusOn");
+        doActivityStatusOnThread = new DoActivityThread(this,"doActivityStatusOn");
         break;
       case Off:
-        new DoActivityThread(this,"doActivityStatusOff");
+        doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff");
         break;
     }
   }
 
-  private void doActivityStatusOn() throws InterruptedException
+  private void doActivityStatusOn()
   {
-    alsoDo();
+     try
+     {
+       alsoDo();
+     }
+     catch (InterruptedException e)
+     {
+ 
+     }
   }
 
-  private void doActivityStatusOff() throws InterruptedException
+  private void doActivityStatusOff()
   {
-    keepDoing();
+     try
+     {
+       keepDoing();
+     }
+     catch (InterruptedException e)
+     {
+ 
+     }
   }
 
   private static class DoActivityThread extends Thread
@@ -100,20 +118,13 @@ class Lamp
     
     public void run()
     {
-      try
+      if ("doActivityStatusOn".equals(doActivityMethodName))
       {
-        if ("doActivityStatusOn".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusOn();
-        }
-        else if ("doActivityStatusOff".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusOff();
-        }
+        controller.doActivityStatusOn();
       }
-      catch (InterruptedException e)
+        else if ("doActivityStatusOff".equals(doActivityMethodName))
       {
-        e.printStackTrace();
+        controller.doActivityStatusOff();
       }
     }
   }

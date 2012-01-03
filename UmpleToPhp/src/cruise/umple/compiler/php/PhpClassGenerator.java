@@ -1672,6 +1672,31 @@ public class PhpClassGenerator implements ILang
     
 {
   isFirst = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      if (state.getActivity() == null)
+      {
+        continue;
+      }
+
+      if (isFirst)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+        isFirst = false;
+      }
+      append(stringBuffer, "\n  private ${0} = null;", gen.translate("doActivityThread",state));
+    }
+  }
+}
+
+    
+{
+  isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
     if (!av.getIsNavigable())

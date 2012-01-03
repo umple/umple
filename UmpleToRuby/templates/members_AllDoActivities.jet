@@ -1,0 +1,26 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+{
+  boolean isFirstDoActivity = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      if (state.getActivity() == null)
+      {
+        continue;
+      }
+
+      if (isFirstDoActivity)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  #{0} Do Activity Threads", uClass.getName());
+        isFirstDoActivity = false;
+      }
+      append(stringBuffer, "\n  #attr_reader {0};", gen.translate("doActivityThread",state));
+    }
+  }
+}
+%>

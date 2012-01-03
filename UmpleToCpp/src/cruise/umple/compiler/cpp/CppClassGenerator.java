@@ -1567,15 +1567,15 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1547 = NL + "    ";
   protected final String TEXT_1548 = NL + "    return cachedHashCode;" + NL + "  }" + NL;
   protected final String TEXT_1549 = NL + "  private void ";
-  protected final String TEXT_1550 = "() throws InterruptedException" + NL + "  {";
-  protected final String TEXT_1551 = NL + "    ";
-  protected final String TEXT_1552 = NL + "  }" + NL;
+  protected final String TEXT_1550 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
+  protected final String TEXT_1551 = NL + "       ";
+  protected final String TEXT_1552 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
   protected final String TEXT_1553 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
   protected final String TEXT_1554 = NL + "    ";
   protected final String TEXT_1555 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_1556 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {" + NL + "      try" + NL + "      {";
-  protected final String TEXT_1557 = NL + "        ";
-  protected final String TEXT_1558 = NL + "      }" + NL + "      catch (InterruptedException e)" + NL + "      {" + NL + "        e.printStackTrace();" + NL + "      }" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1556 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
+  protected final String TEXT_1557 = NL + "      ";
+  protected final String TEXT_1558 = NL + "    }" + NL + "  }" + NL;
   protected final String TEXT_1559 = NL + "  private void ";
   protected final String TEXT_1560 = "()" + NL + "  {";
   protected final String TEXT_1561 = NL + "    ";
@@ -1927,6 +1927,31 @@ public class CppClassGenerator implements ILang
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
+  }
+}
+
+    
+{
+  isFirst = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      if (state.getActivity() == null)
+      {
+        continue;
+      }
+
+      if (isFirst)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+        isFirst = false;
+      }
+      append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",state));
+    }
   }
 }
 
@@ -3314,7 +3339,7 @@ public class CppClassGenerator implements ILang
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
     }
     
     if (hasThisEntry)
@@ -6376,9 +6401,9 @@ public class CppClassGenerator implements ILang
           output.append(StringFormatter.format("\n        else if"));
         }
         output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
-        output.append(StringFormatter.format("        {\n"));
-        output.append(StringFormatter.format("          controller.{0}();\n",gen.translate("doActivityMethod",state)));
-        output.append(StringFormatter.format("        }"));
+        output.append(StringFormatter.format("      {\n"));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("      }"));
       }
     }
   }

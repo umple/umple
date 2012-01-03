@@ -14,6 +14,10 @@ class Lamp
   private static $StatusOff = 2;
   private $status;
 
+  //Lamp Do Activity Threads
+  private $doActivityStatusOnThread = null;
+  private $doActivityStatusOffThread = null;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------

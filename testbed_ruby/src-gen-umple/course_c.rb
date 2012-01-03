@@ -19,6 +19,9 @@ class CourseC
   enum UNKNOWN ID: type { UNKNOWN ID: listStates }
   private UNKNOWN ID: type status;
 
+  #CourseC Do Activity Threads
+  #attr_reader UNKNOWN ID: doActivityThread;
+
   #------------------------
   # CONSTRUCTOR
   #------------------------
@@ -105,7 +108,7 @@ class CourseC
     {
       case StatusOpen:
         $this->addLog("Open Entry");
-        new DoActivityThread(this,"doActivityStatusOpen");
+        UNKNOWN ID: doActivityThread = new DoActivityThread(this,"doActivityStatusOpen");
         break;
       case StatusClosed:
         $this->addLog("Closed Entry");

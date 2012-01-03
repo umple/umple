@@ -363,6 +363,10 @@ private String getExtendClassesNames(UmpleClass uClass)
     {
       return StringFormatter.format("doActivity{0}",fullStateName); 
     }
+    else if ("doActivityThread".equals(keyName))
+    {
+      return StringFormatter.format("doActivity{0}{1}Thread",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
+    }
     
     return "UNKNOWN ID: " + keyName;
   }

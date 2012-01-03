@@ -1599,15 +1599,15 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1579 = NL + "    ";
   protected final String TEXT_1580 = NL + "    return cachedHashCode;" + NL + "  }" + NL;
   protected final String TEXT_1581 = NL + "  private void ";
-  protected final String TEXT_1582 = "() throws InterruptedException" + NL + "  {";
-  protected final String TEXT_1583 = NL + "    ";
-  protected final String TEXT_1584 = NL + "  }" + NL;
+  protected final String TEXT_1582 = "()" + NL + "  {" + NL + "    try" + NL + "    {";
+  protected final String TEXT_1583 = NL + "      ";
+  protected final String TEXT_1584 = NL + "    }" + NL + "    catch (InterruptedException e)" + NL + "    {" + NL + "" + NL + "    }" + NL + "  }" + NL;
   protected final String TEXT_1585 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
   protected final String TEXT_1586 = NL + "    ";
   protected final String TEXT_1587 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_1588 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {" + NL + "      try" + NL + "      {";
-  protected final String TEXT_1589 = NL + "        ";
-  protected final String TEXT_1590 = NL + "      }" + NL + "      catch (InterruptedException e)" + NL + "      {" + NL + "        e.printStackTrace();" + NL + "      }" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1588 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
+  protected final String TEXT_1589 = NL + "      ";
+  protected final String TEXT_1590 = NL + "    }" + NL + "  }" + NL;
   protected final String TEXT_1591 = NL + "  private void ";
   protected final String TEXT_1592 = "()" + NL + "  {";
   protected final String TEXT_1593 = NL + "    ";
@@ -1965,6 +1965,31 @@ public class JavaClassGenerator implements ILang
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
+  }
+}
+
+    
+{
+  isFirst = true;
+  for(StateMachine sm : uClass.getAllStateMachines())
+  {
+    
+    for (State state : sm.getStates())
+    {
+      if (state.getActivity() == null)
+      {
+        continue;
+      }
+
+      if (isFirst)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        append(stringBuffer,"  //{0} Do Activity Threads", uClass.getName());
+        isFirst = false;
+      }
+      append(stringBuffer, "\n  Thread {0} = null;", gen.translate("doActivityThread",state));
+    }
   }
 }
 
@@ -3566,32 +3591,36 @@ public class JavaClassGenerator implements ILang
     }
   
     for( TraceDirective tc : uClass.getTraceDirectives() )
-	{
-  	  TraceRecord traceRecord = tc.getTraceRecord();
-	  for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
 	  {
-	    StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
-	    StateMachine stm = tracedState.getStateMachine();
-		if( traceRecord != null )
-		{
-		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-		  {
-		  	State stat = stm.getState(j);
+  	  TraceRecord traceRecord = tc.getTraceRecord();
+	    for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+	    {
+	      StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+	      StateMachine stm = tracedState.getStateMachine();
+		    if( traceRecord != null )
+		    {
+		      for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+		      {
+		  	    State stat = stm.getState(j);
 
-		  	if( stat == state )
-		  	{
-		  	  traceRecords.append("\n    ");
-  		      traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
-  		      traceRecords.append("\n      ");
-    		  if( model.getTraceType().equals("Console"))
-    		    traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
- 			  else if( model.getTraceType().equals("File"))
-      		    traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
-		  	}
- 		  }
-		}
-	  }
-  }	
+		  	    if( stat == state )
+		  	    {
+		  	      traceRecords.append("\n    ");
+  		        traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
+  		        traceRecords.append("\n      ");
+    		      if( model.getTraceType().equals("Console"))
+    		      {
+    		        traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+ 			        }
+ 			        else if( model.getTraceType().equals("File"))
+      		    {
+      		      traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+      		    }
+		  	    }
+ 		      }
+		    }
+	    }
+    }	
     if (state.getActivity() != null)
     {
       if (!hasThisEntry)
@@ -3605,7 +3634,7 @@ public class JavaClassGenerator implements ILang
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
-      entryActions.append(StringFormatter.format("\n        new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state)));
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
     }
     
     if (hasThisEntry)
@@ -6674,9 +6703,9 @@ public class JavaClassGenerator implements ILang
           output.append(StringFormatter.format("\n        else if"));
         }
         output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
-        output.append(StringFormatter.format("        {\n"));
-        output.append(StringFormatter.format("          controller.{0}();\n",gen.translate("doActivityMethod",state)));
-        output.append(StringFormatter.format("        }"));
+        output.append(StringFormatter.format("      {\n"));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("      }"));
       }
     }
   }
