@@ -18,11 +18,15 @@ class UmpleInternalParser
 {
   internal StateMachine placeholderStateMachine = null;
   internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
-  internal Map<UmpleClass,Pair> umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
   
   // Analyze state machine related tokens
-  private void analyzeStateMachineToken(Token token)
+  private void analyzeStateMachineToken(Token token, int analysisStep)
   {
+    if (analysisStep != 1)
+    {
+      return;
+    }
+  
     if (token.is("stateMachineDefinition"))
     {
       analyzeStateMachineDefinition(token);
@@ -54,27 +58,7 @@ class UmpleInternalParser
   
   private void postTokenStateMachineAnalysis()
   {
-    addReferencedStateMachines();
-  }
-  
-  private void addReferencedStateMachines()
-  {
-    for (UmpleClass clazz : umpleClassToStateMachineDefinition.keySet())
-    {
-      Pair nameToDefinition = umpleClassToStateMachineDefinition.get(clazz);
-      Token stateMachineToken = stateMachineNameToToken.get(nameToDefinition.getValue());
-      if (stateMachineToken == null)
-      {
-        continue;
-      }
-
-      StateMachine sm = new StateMachine(nameToDefinition.getName());
-      sm.setUmpleClass(clazz);
-
-      // analyze meta states
-
-      populateStateMachine(stateMachineToken,sm);
-    }
+    
   }
   
   private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
@@ -86,11 +70,26 @@ class UmpleInternalParser
   private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass)
   {
     String name = stateMachineToken.getValue("name");
-    String value = stateMachineToken.getValue("definitionName");
-    umpleClassToStateMachineDefinition.put(aClass,new Pair(name,value));
+    String definitionName = stateMachineToken.getValue("definitionName");
+      
+    Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
+    if (stateMachineDefinitionToken == null)
+    {
+      return;
+    }
 
+    StateMachine sm = new StateMachine(name);
+    sm.setUmpleClass(aClass);
+    populateStateMachine(stateMachineDefinitionToken,sm);
+    Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
+    if (extendedStateMachineTokens != null)
+    {
+      for (Token t : extendedStateMachineTokens.getSubTokens())
+      {
+        System.out.println("Looking at: " + t.getName());
+      }
+    }
 
-    // analyze meta states
   }
 
   private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClass aClass)

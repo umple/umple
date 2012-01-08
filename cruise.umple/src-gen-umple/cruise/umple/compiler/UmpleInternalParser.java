@@ -36,6 +36,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private UmpleModel model;
   private List<String> unparsedUmpleFiles;
   private List<String> parsedUmpleFiles;
+  private boolean shouldProcessAgain;
+  private boolean shouldProcessClassAgain;
   private List<AssociationVariable> unlinkedAssociationVariables;
   private List<Association> unlinkedAssociations;
   private Map<Position,String> positionToClassNameReference;
@@ -45,7 +47,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private List<Comment> lastComments;
   private StateMachine placeholderStateMachine;
   private Map<String,Token> stateMachineNameToToken;
-  private Map<UmpleClass,Pair> umpleClassToStateMachineDefinition;
 
   //------------------------
   // CONSTRUCTOR
@@ -58,6 +59,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     model = aModel;
     unparsedUmpleFiles = new ArrayList<String>();
     parsedUmpleFiles = new ArrayList<String>();
+    shouldProcessAgain = false;
+    shouldProcessClassAgain = false;
     unlinkedAssociationVariables = new ArrayList<AssociationVariable>();
     unlinkedAssociations = new ArrayList<Association>();
     positionToClassNameReference = new HashMap<Position, String>();
@@ -67,7 +70,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     lastComments = new ArrayList<Comment>();
     placeholderStateMachine = null;
     stateMachineNameToToken = new HashMap<String, Token>();
-    umpleClassToStateMachineDefinition = new HashMap<UmpleClass, Pair>();
     init();
   }
 
@@ -165,43 +167,60 @@ private void init()
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual
+  // Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
   // analyzeToken and quits early if a problem arises
   private void analyzeAllTokens(Token rootToken)
   {
-    for(Token t : rootToken.getSubTokens())
+    int analysisStep = 0;
+    shouldProcessAgain = true;
+    do
     {
-      analyzeToken(t);
-      if (!getParseResult().getWasSuccess())
+      analysisStep += 1;
+      shouldProcessAgain = false;
+      for(Token t : rootToken.getSubTokens())
       {
-        return;
+        analyzeToken(t,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
       }
     }
+    while (shouldProcessAgain);
   }
 
   // Delegate function to analyze a token within the context of a class
-  // Each token is analyzed twice, analysisStep is "1" is for the first round of analysis
-  // and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
+  // Each token is analyzed as long as "shouldProcessClassAgain" is set to true during the analysis
+  // "1" is for the first round of analysis and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
   // put everything under the "1"
-  private void analyzeAllTokens(Token rootToken, UmpleClass aClass, int analysisStep)
+  private void analyzeAllTokens(Token rootToken, UmpleClass aClass)
   {
-    for(Token token : rootToken.getSubTokens())
+    int analysisStep = 0;
+    shouldProcessClassAgain = true;
+    do
     {
-      analyzeToken(token,aClass,analysisStep);
-      if (!getParseResult().getWasSuccess())
+      analysisStep += 1;
+      shouldProcessClassAgain = false;
+      for(Token token : rootToken.getSubTokens())
       {
-        break;
+        analyzeToken(token,aClass,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
       }
     }
+    while (shouldProcessClassAgain);
   }
 
   // Delegate function to analyze a token and send it to the write
-  private void analyzeToken(Token t)
+  private void analyzeToken(Token t, int analysisStep)
   {
-    analyzeCoreToken(t);
-    analyzeClassToken(t);
-    analyzeStateMachineToken(t);
-    analyzeTraceToken(t);
-    analyzeLayoutToken(t);
+    analyzeCoreToken(t,analysisStep);
+    analyzeClassToken(t,analysisStep);
+    analyzeStateMachineToken(t,analysisStep);
+    analyzeTraceToken(t,analysisStep);
+    analyzeLayoutToken(t,analysisStep);
   }
 
   // Analyze an individual token, delegates to the various components in Umple
@@ -286,8 +305,13 @@ private void init()
       addNecessaryFiles();
     }    
   }
-private void analyzeCoreToken(Token t)
+private void analyzeCoreToken(Token t, int analyzeCoreToken)
   {
+    if (analyzeCoreToken != 1)
+    {
+      return;
+    }
+  
     if (t.is("generate") || t.is("generate_path"))
     {
     	analyzeGenerate(t);
@@ -295,17 +319,6 @@ private void analyzeCoreToken(Token t)
     else if (t.is("glossary"))
     {
       analyzeGlossary(t);
-    }
-    else if (t.is("namespace"))
-    {
-    	//if (currentPackageName.length() != 0)
-    	//setFailedPosition(t.getPosition(), 3, t.getValue());
-    	
-      currentPackageName = t.getValue();
-      if (model.getDefaultNamespace() == null)
-      {
-        model.setDefaultNamespace(currentPackageName);  
-      }
     }
     else if (t.is("debug"))
     {
@@ -409,15 +422,28 @@ private void analyzeCoreToken(Token t)
       model.addGenerate(genToken.getValue());
   	}
   }
-private void analyzeClassToken(Token t)
+private void analyzeClassToken(Token t, int analysisStep)
   {
+    if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    
     boolean shouldConsumeComment = lastComments.size() > 0;
       
   	if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
   	{
   	  shouldConsumeComment = false;
-  	  
   	}
+    else if (t.is("namespace"))
+    {
+      currentPackageName = t.getValue();
+      if (model.getDefaultNamespace() == null)
+      {
+        model.setDefaultNamespace(currentPackageName);  
+      }
+    }
     else if (t.is("inlineComment"))
     {
       analyzeComment(t);
@@ -457,25 +483,6 @@ private void analyzeClassToken(Token t)
     
   }  
   
-  private void analyzeComment(Token token)
-  {
-  	if (!token.getValue().equals("$?[End_of_model]$?")) {
-  		
-  	lastComments.add(new Comment(token.getValue()));
-  	}
-  }
-  
-  private void analyzeMultilineComment(Token token)
-  {
-  	String inlineComments[] = token.getValue().split("\n");
-  	
-  	for (int i = 0; i < inlineComments.length; i++) {
-  		Comment comment = new Comment(inlineComments[i]);
-  		comment.isInline = false;
-  		lastComments.add(comment);
-  	}
-  }
-  
   // Analyzed class content tokens
   private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep)
   {
@@ -483,6 +490,7 @@ private void analyzeClassToken(Token t)
     {
       return;
     }
+    
     if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
@@ -525,8 +533,27 @@ private void analyzeClassToken(Token t)
     {
       analyzeSymmetricReflexiveAssociation(token,aClass);
     }
-  }  
+  }    
   
+  private void analyzeComment(Token token)
+  {
+  	if (!token.getValue().equals("$?[End_of_model]$?")) {
+  		
+  	lastComments.add(new Comment(token.getValue()));
+  	}
+  }
+  
+  private void analyzeMultilineComment(Token token)
+  {
+  	String inlineComments[] = token.getValue().split("\n");
+  	
+  	for (int i = 0; i < inlineComments.length; i++) {
+  		Comment comment = new Comment(inlineComments[i]);
+  		comment.isInline = false;
+  		lastComments.add(comment);
+  	}
+  }
+
   // Link associations, association variables and extends that were "defined" after their use
   private void postTokenClassAnalysis()
   {
@@ -584,8 +611,7 @@ private void analyzeClassToken(Token t)
     {
     	classToken.setName(classToken.getName());	
     }
-    analyzeAllTokens(classToken,aClass,1);
-    analyzeAllTokens(classToken,aClass,2);
+    analyzeAllTokens(classToken,aClass);
     return aClass;
   }
   
@@ -695,8 +721,7 @@ private void analyzeClassToken(Token t)
   {
     AssociationClass aClass = model.addAssociationClass(classToken.getValue("name"));
     addExtendsTo(classToken, aClass);
-    analyzeAllTokens(classToken,aClass,1);
-    analyzeAllTokens(classToken,aClass,2);
+    analyzeAllTokens(classToken,aClass);
     
     aClass.setPackageName(currentPackageName);
 
@@ -1314,8 +1339,13 @@ private void checkSingletonAssociations() {
     aClass.addAttribute(attribute);
 
   }
-private void analyzeStateMachineToken(Token token)
+private void analyzeStateMachineToken(Token token, int analysisStep)
   {
+    if (analysisStep != 1)
+    {
+      return;
+    }
+  
     if (token.is("stateMachineDefinition"))
     {
       analyzeStateMachineDefinition(token);
@@ -1347,27 +1377,7 @@ private void analyzeStateMachineToken(Token token)
   
   private void postTokenStateMachineAnalysis()
   {
-    addReferencedStateMachines();
-  }
-  
-  private void addReferencedStateMachines()
-  {
-    for (UmpleClass clazz : umpleClassToStateMachineDefinition.keySet())
-    {
-      Pair nameToDefinition = umpleClassToStateMachineDefinition.get(clazz);
-      Token stateMachineToken = stateMachineNameToToken.get(nameToDefinition.getValue());
-      if (stateMachineToken == null)
-      {
-        continue;
-      }
-
-      StateMachine sm = new StateMachine(nameToDefinition.getName());
-      sm.setUmpleClass(clazz);
-
-      // analyze meta states
-
-      populateStateMachine(stateMachineToken,sm);
-    }
+    
   }
   
   private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
@@ -1379,11 +1389,26 @@ private void analyzeStateMachineToken(Token token)
   private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass)
   {
     String name = stateMachineToken.getValue("name");
-    String value = stateMachineToken.getValue("definitionName");
-    umpleClassToStateMachineDefinition.put(aClass,new Pair(name,value));
+    String definitionName = stateMachineToken.getValue("definitionName");
+      
+    Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
+    if (stateMachineDefinitionToken == null)
+    {
+      return;
+    }
 
+    StateMachine sm = new StateMachine(name);
+    sm.setUmpleClass(aClass);
+    populateStateMachine(stateMachineDefinitionToken,sm);
+    Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
+    if (extendedStateMachineTokens != null)
+    {
+      for (Token t : extendedStateMachineTokens.getSubTokens())
+      {
+        System.out.println("Looking at: " + t.getName());
+      }
+    }
 
-    // analyze meta states
   }
 
   private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClass aClass)
@@ -1576,23 +1601,27 @@ private void analyzeStateMachineToken(Token token)
     }
 
   }
-private void analyzeTraceToken(Token token)
+private void analyzeTraceToken(Token token, int analysisStep)
   {
+    
+    if (analysisStep != 1)
+    {
+      return;
+    }
+    
     if (token.is("traceType"))
     {
       model.setTraceType(token.getValue("traceType"));
     }
   }
-  //****************************************
-  //********* Trace Glue Code   ************
-  //****************************************
   
   // Process trace related tokens within the context of a class
   private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
   {
     // Only process trace tokens once all other entities have been analyzed
-    if (analysisStep != 2)
+    if (analysisStep == 1 || shouldProcessClassAgain)
     {
+      shouldProcessClassAgain = true;
       return;
     }
     
@@ -1859,20 +1888,21 @@ private void analyzeTraceToken(Token token)
   //****************************************
   //********* End of Trace Glue Code   *****
   //****************************************
-private void analyzeLayoutToken(Token token)
+private void analyzeLayoutToken(Token token, int analysisStep)
   {
-
   }
 
   // There are currently no core tokens of concern in the context of an UmpleClass
   // This method is available if needed
   private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep)
   {
-    if (analysisStep != 2)
+    // Only process layout tokens once all other entities have been analyzed
+    if (analysisStep == 1 || shouldProcessClassAgain)
     {
+      shouldProcessClassAgain = true;
       return;
     }
-    
+  
     if (token.is("elementPosition"))
     {
       aClass.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));

@@ -26,15 +26,28 @@ class UmpleInternalParser
   internal List<Comment> lastComments = new ArrayList<Comment>();
  
   // Analyze class definitions and related tokens
-  private void analyzeClassToken(Token t)
+  private void analyzeClassToken(Token t, int analysisStep)
   {
+    if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+    
     boolean shouldConsumeComment = lastComments.size() > 0;
       
   	if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
   	{
   	  shouldConsumeComment = false;
-  	  
   	}
+    else if (t.is("namespace"))
+    {
+      currentPackageName = t.getValue();
+      if (model.getDefaultNamespace() == null)
+      {
+        model.setDefaultNamespace(currentPackageName);  
+      }
+    }
     else if (t.is("inlineComment"))
     {
       analyzeComment(t);
@@ -74,25 +87,6 @@ class UmpleInternalParser
     
   }  
   
-  private void analyzeComment(Token token)
-  {
-  	if (!token.getValue().equals("$?[End_of_model]$?")) {
-  		
-  	lastComments.add(new Comment(token.getValue()));
-  	}
-  }
-  
-  private void analyzeMultilineComment(Token token)
-  {
-  	String inlineComments[] = token.getValue().split("\n");
-  	
-  	for (int i = 0; i < inlineComments.length; i++) {
-  		Comment comment = new Comment(inlineComments[i]);
-  		comment.isInline = false;
-  		lastComments.add(comment);
-  	}
-  }
-  
   // Analyzed class content tokens
   private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep)
   {
@@ -100,6 +94,7 @@ class UmpleInternalParser
     {
       return;
     }
+    
     if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
@@ -142,8 +137,27 @@ class UmpleInternalParser
     {
       analyzeSymmetricReflexiveAssociation(token,aClass);
     }
-  }  
+  }    
   
+  private void analyzeComment(Token token)
+  {
+  	if (!token.getValue().equals("$?[End_of_model]$?")) {
+  		
+  	lastComments.add(new Comment(token.getValue()));
+  	}
+  }
+  
+  private void analyzeMultilineComment(Token token)
+  {
+  	String inlineComments[] = token.getValue().split("\n");
+  	
+  	for (int i = 0; i < inlineComments.length; i++) {
+  		Comment comment = new Comment(inlineComments[i]);
+  		comment.isInline = false;
+  		lastComments.add(comment);
+  	}
+  }
+
   // Link associations, association variables and extends that were "defined" after their use
   private void postTokenClassAnalysis()
   {
@@ -201,8 +215,7 @@ class UmpleInternalParser
     {
     	classToken.setName(classToken.getName());	
     }
-    analyzeAllTokens(classToken,aClass,1);
-    analyzeAllTokens(classToken,aClass,2);
+    analyzeAllTokens(classToken,aClass);
     return aClass;
   }
   
@@ -312,8 +325,7 @@ class UmpleInternalParser
   {
     AssociationClass aClass = model.addAssociationClass(classToken.getValue("name"));
     addExtendsTo(classToken, aClass);
-    analyzeAllTokens(classToken,aClass,1);
-    analyzeAllTokens(classToken,aClass,2);
+    analyzeAllTokens(classToken,aClass);
     
     aClass.setPackageName(currentPackageName);
 

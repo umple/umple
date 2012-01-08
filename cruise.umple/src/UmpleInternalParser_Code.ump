@@ -35,6 +35,9 @@ class UmpleInternalParser
   
   internal String[] unparsedUmpleFiles;
   internal String[] parsedUmpleFiles;
+  internal Boolean shouldProcessAgain = false;
+  internal Boolean shouldProcessClassAgain = false;
+  
   after constructor { init(); }
   
   public UmpleInternalParser()
@@ -95,43 +98,60 @@ class UmpleInternalParser
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual
+  // Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
   // analyzeToken and quits early if a problem arises
   private void analyzeAllTokens(Token rootToken)
   {
-    for(Token t : rootToken.getSubTokens())
+    int analysisStep = 0;
+    shouldProcessAgain = true;
+    do
     {
-      analyzeToken(t);
-      if (!getParseResult().getWasSuccess())
+      analysisStep += 1;
+      shouldProcessAgain = false;
+      for(Token t : rootToken.getSubTokens())
       {
-        return;
+        analyzeToken(t,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
       }
     }
+    while (shouldProcessAgain);
   }
 
   // Delegate function to analyze a token within the context of a class
-  // Each token is analyzed twice, analysisStep is "1" is for the first round of analysis
-  // and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
+  // Each token is analyzed as long as "shouldProcessClassAgain" is set to true during the analysis
+  // "1" is for the first round of analysis and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
   // put everything under the "1"
-  private void analyzeAllTokens(Token rootToken, UmpleClass aClass, int analysisStep)
+  private void analyzeAllTokens(Token rootToken, UmpleClass aClass)
   {
-    for(Token token : rootToken.getSubTokens())
+    int analysisStep = 0;
+    shouldProcessClassAgain = true;
+    do
     {
-      analyzeToken(token,aClass,analysisStep);
-      if (!getParseResult().getWasSuccess())
+      analysisStep += 1;
+      shouldProcessClassAgain = false;
+      for(Token token : rootToken.getSubTokens())
       {
-        break;
+        analyzeToken(token,aClass,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
       }
     }
+    while (shouldProcessClassAgain);
   }
 
   // Delegate function to analyze a token and send it to the write
-  private void analyzeToken(Token t)
+  private void analyzeToken(Token t, int analysisStep)
   {
-    analyzeCoreToken(t);
-    analyzeClassToken(t);
-    analyzeStateMachineToken(t);
-    analyzeTraceToken(t);
-    analyzeLayoutToken(t);
+    analyzeCoreToken(t,analysisStep);
+    analyzeClassToken(t,analysisStep);
+    analyzeStateMachineToken(t,analysisStep);
+    analyzeTraceToken(t,analysisStep);
+    analyzeLayoutToken(t,analysisStep);
   }
 
   // Analyze an individual token, delegates to the various components in Umple

@@ -2,11 +2,11 @@ class Dryer {
   status {
     On {
       Rotating{
-        dryingCompleted -> final ;
+        dryingCompleted -> Final;
       }
       ||
       Heating {
-        dryingCompleted -> final ;
+        dryingCompleted -> Final;
       }
     fire -> Off ;
     }

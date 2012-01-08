@@ -15,7 +15,8 @@ namespace cruise.umple.compiler;
 
 class GeneratorHelper
 {
-private static void postpareTrace(UmpleModel aModel)
+  
+  private static void postpareTrace(UmpleModel aModel)
   {}
 
   // Currently no internal trace entities to remove at the class level

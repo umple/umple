@@ -18,20 +18,21 @@ class UmpleInternalParser
 {
 
   // Analyze layout tokens to the Umple language
-  private void analyzeLayoutToken(Token token)
+  private void analyzeLayoutToken(Token token, int analysisStep)
   {
-
   }
 
   // There are currently no core tokens of concern in the context of an UmpleClass
   // This method is available if needed
   private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep)
   {
-    if (analysisStep != 2)
+    // Only process layout tokens once all other entities have been analyzed
+    if (analysisStep == 1 || shouldProcessClassAgain)
     {
+      shouldProcessClassAgain = true;
       return;
     }
-    
+  
     if (token.is("elementPosition"))
     {
       aClass.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));

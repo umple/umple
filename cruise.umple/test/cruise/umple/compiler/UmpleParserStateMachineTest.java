@@ -602,7 +602,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void finalState()
   {
-    assertParse("200_finalState.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Off][state][final:final][stateName:Off]");
+    assertParse("211_finalState.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Off][state][final:final][stateName:Off]");
     
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
@@ -616,7 +616,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void finalStateReservedWord()
   {
-    assertParse("200_finalStateReservedWord.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Final][state][stateName:Final]");
+    assertParse("211_finalStateReservedWord.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][stateName:Final][state][stateName:Final]");
     
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
@@ -631,7 +631,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void concurrentFinals()
   {
-    assertParse("200_concurrentFinals.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:MotorIdle][transition][event:flip][stateName:Final][||:||][state][stateName:FanIdle][transition][event:flop][stateName:Final]");
+    assertParse("211_concurrentFinals.ump","[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][state][stateName:MotorIdle][transition][event:flip][stateName:Final][||:||][state][stateName:FanIdle][transition][event:flop][stateName:Final]");
     
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
@@ -642,6 +642,68 @@ public class UmpleParserStateMachineTest
     Assert.assertNotSame(motorFinal, fanFinal);
     Assert.assertEquals(true,motorFinal.isFinalState());
     Assert.assertEquals(true,fanFinal.isFinalState());
+  }
+  
+  @Test
+  public void finalStateInOneConcurrentRegion()
+  {
+    assertParse("211_finalState_inOneConcurrentRegion.ump","[classDefinition][name:Dryer][stateMachine][inlineStateMachine][name:status][state][stateName:On][state][stateName:Rotating][transition][event:dryingCompleted][stateName:Final][||:||][state][stateName:Heating][transition][event:fire][stateName:Off][state][stateName:Off]");
+    
+    UmpleClass uClass = model.getUmpleClass("Dryer");
+
+    State state = uClass.getStateMachine(0).findState("On").getNestedStateMachine(0).findState("Final");
+    Assert.assertEquals(true,state.isFinalState());
+  
+    state = uClass.getStateMachine(0).findState("On").getNestedStateMachine(1).findState("Final");
+    Assert.assertEquals(null,state);
+
+  }
+  
+  @Test
+  public void finalStateInTwoConcurrentRegions()
+  {
+    assertParse("211_finalState_inTwoConcurrentRegions.ump","[classDefinition][name:Dryer][stateMachine][inlineStateMachine][name:status][state][stateName:On][state][stateName:Rotating][transition][event:dryingCompleted][stateName:Final][||:||][state][stateName:Heating][transition][event:dryingCompleted][stateName:Final][transition][event:fire][stateName:Off][state][stateName:Off]");
+
+    UmpleClass uClass = model.getUmpleClass("Dryer");
+
+    State final1 = uClass.getStateMachine(0).findState("On").getNestedStateMachine(0).findState("Final");
+    Assert.assertEquals(true,final1.isFinalState());
+  
+    State final2 = uClass.getStateMachine(0).findState("On").getNestedStateMachine(1).findState("Final");
+    Assert.assertEquals(true,final2.isFinalState());
+
+    Assert.assertNotSame(final1, final2);
+  }
+  
+  @Test
+  public void finalStateNoAction()
+  {
+    assertParse("211_finalState_noAction.ump","[classDefinition][name:DVDplayer][stateMachine][inlineStateMachine][name:DVDplayerStatus][state][stateName:NormalOperation][state][stateName:On][state][stateName:Playing][transition][event:stop][stateName:Stopped][state][stateName:Stopped][transition][event:play][stateName:Playing][transition][event:pause][stateName:Paused][state][stateName:history][state][stateName:Off][transition][event:turnOn][stateName:Final]");
+
+    UmpleClass uClass = model.getUmpleClass("DVDplayer");
+    State final1 = uClass.getStateMachine(0).findState("NormalOperation").getNestedStateMachine(0).findState("Final");
+    Assert.assertEquals(true,final1.isFinalState());
+  }
+
+  @Test
+  public void finalStateWithAction()
+  {
+    assertParse("211_finalState_withAction.ump","[classDefinition][name:DVDplayer][stateMachine][inlineStateMachine][name:DVDplayerStatus][state][stateName:NormalOperation][state][stateName:On][state][stateName:Playing][transition][event:stop][stateName:Stopped][state][stateName:Stopped][transition][event:play][stateName:Playing][transition][event:pause][stateName:Paused][state][stateName:history][state][stateName:Off][transition][event:turnOn][action][actionCode:actionCode][stateName:Final]");
+
+    UmpleClass uClass = model.getUmpleClass("DVDplayer");
+    State final1 = uClass.getStateMachine(0).findState("NormalOperation").getNestedStateMachine(0).findState("Final");
+    Assert.assertEquals(true,final1.isFinalState());
+  }
+
+  @Test @Ignore
+  public void addEvent()
+  {
+    assertParse("212_mixin_addEvent.ump","[stateMachineDefinition][name:Machine][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][classDefinition][name:OnOffSwitch][stateMachine][referencedStateMachine][name:bulb][definitionName:Machine][extendedStateMachine][state][stateName:On][changeType:+][transition][event:push][stateName:On]");
+
+    UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
+    StateMachine sm = uClass.getStateMachine(0);
+    State on = sm.findState("On");
+    Assert.assertEquals(2,on.numberOfTransitions());
   }
   
 

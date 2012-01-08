@@ -18,8 +18,13 @@ class UmpleInternalParser
 {
   
   // Analyze core tokens to the Umple language
-  private void analyzeCoreToken(Token t)
+  private void analyzeCoreToken(Token t, int analyzeCoreToken)
   {
+    if (analyzeCoreToken != 1)
+    {
+      return;
+    }
+  
     if (t.is("generate") || t.is("generate_path"))
     {
     	analyzeGenerate(t);
@@ -27,17 +32,6 @@ class UmpleInternalParser
     else if (t.is("glossary"))
     {
       analyzeGlossary(t);
-    }
-    else if (t.is("namespace"))
-    {
-    	//if (currentPackageName.length() != 0)
-    	//setFailedPosition(t.getPosition(), 3, t.getValue());
-    	
-      currentPackageName = t.getValue();
-      if (model.getDefaultNamespace() == null)
-      {
-        model.setDefaultNamespace(currentPackageName);  
-      }
     }
     else if (t.is("debug"))
     {

@@ -17,7 +17,7 @@ class DVDplayer
 
       }
       Off {
-        turnOn/{actionCode}-> final ;
+        turnOn/{actionCode} -> Final;
       }
     }
   }

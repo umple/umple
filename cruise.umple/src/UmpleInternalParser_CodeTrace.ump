@@ -17,23 +17,31 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
 
-private void analyzeTraceToken(Token token)
+  //****************************************
+  //********* Trace Glue Code   ************
+  //****************************************
+
+  private void analyzeTraceToken(Token token, int analysisStep)
   {
+    
+    if (analysisStep != 1)
+    {
+      return;
+    }
+    
     if (token.is("traceType"))
     {
       model.setTraceType(token.getValue("traceType"));
     }
   }
-  //****************************************
-  //********* Trace Glue Code   ************
-  //****************************************
   
   // Process trace related tokens within the context of a class
   private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
   {
     // Only process trace tokens once all other entities have been analyzed
-    if (analysisStep != 2)
+    if (analysisStep == 1 || shouldProcessClassAgain)
     {
+      shouldProcessClassAgain = true;
       return;
     }
     

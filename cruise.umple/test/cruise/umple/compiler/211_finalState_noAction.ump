@@ -15,7 +15,7 @@ class DVDplayer
         history {}
       }
       Off {
-        turnOn -> final ;
+        turnOn -> Final;
       }
     }
   }
