@@ -22,7 +22,10 @@ public class Transition
 
   //Helper Variables
   private int cachedHashCode;
+  private boolean canSetEvent;
   private boolean canSetNextState;
+  private boolean canSetGuard;
+  private boolean canSetAction;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,7 +34,10 @@ public class Transition
   public Transition(State aFromState, State aNextState)
   {
     cachedHashCode = -1;
+    canSetEvent = true;
     canSetNextState = true;
+    canSetGuard = true;
+    canSetAction = true;
     isInternal = false;
     boolean didAddFromState = setFromState(aFromState);
     if (!didAddFromState)
@@ -95,6 +101,7 @@ public class Transition
   public boolean setEvent(Event newEvent)
   {
     boolean wasSet = false;
+    if (!canSetEvent) { return false; }
     event = newEvent;
     wasSet = true;
     return wasSet;
@@ -142,6 +149,7 @@ public class Transition
   public boolean setGuard(Guard newGuard)
   {
     boolean wasSet = false;
+    if (!canSetGuard) { return false; }
     guard = newGuard;
     wasSet = true;
     return wasSet;
@@ -150,6 +158,7 @@ public class Transition
   public boolean setAction(Action newAction)
   {
     boolean wasSet = false;
+    if (!canSetAction) { return false; }
     action = newAction;
     wasSet = true;
     return wasSet;
@@ -162,11 +171,38 @@ public class Transition
 
     Transition compareTo = (Transition)obj;
   
+    if (event == null && compareTo.event != null)
+    {
+      return false;
+    }
+    else if (event != null && !event.equals(compareTo.event))
+    {
+      return false;
+    }
+
     if (nextState == null && compareTo.nextState != null)
     {
       return false;
     }
     else if (nextState != null && !nextState.equals(compareTo.nextState))
+    {
+      return false;
+    }
+
+    if (guard == null && compareTo.guard != null)
+    {
+      return false;
+    }
+    else if (guard != null && !guard.equals(compareTo.guard))
+    {
+      return false;
+    }
+
+    if (action == null && compareTo.action != null)
+    {
+      return false;
+    }
+    else if (action != null && !action.equals(compareTo.action))
     {
       return false;
     }
@@ -181,6 +217,14 @@ public class Transition
       return cachedHashCode;
     }
     cachedHashCode = 17;
+    if (event != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + event.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
     if (nextState != null)
     {
       cachedHashCode = cachedHashCode * 23 + nextState.hashCode();
@@ -189,8 +233,27 @@ public class Transition
     {
       cachedHashCode = cachedHashCode * 23;
     }
+    if (guard != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + guard.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+    if (action != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + action.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
 
+    canSetEvent = false;
     canSetNextState = false;
+    canSetGuard = false;
+    canSetAction = false;
     return cachedHashCode;
   }
 

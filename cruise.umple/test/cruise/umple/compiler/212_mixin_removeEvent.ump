@@ -1,7 +1,7 @@
 
 statemachine Machine
 {
-  On { flip->Off; }
+  On { flip -> Off; flop -> Off; }
   Off {}
 }
 
@@ -9,6 +9,6 @@ class OnOffSwitch
 {
   bulb as Machine
   {
-    On { - push -> Off; }
+    On { - flip -> Off; }
   }
 }

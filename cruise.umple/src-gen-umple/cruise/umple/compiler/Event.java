@@ -16,12 +16,18 @@ public class Event
   private String timerInSeconds;
   private boolean isInternal;
 
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetName;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Event(String aName)
   {
+    cachedHashCode = -1;
+    canSetName = true;
     name = aName;
     isTimer = false;
     timerInSeconds = "0";
@@ -35,6 +41,7 @@ public class Event
   public boolean setName(String aName)
   {
     boolean wasSet = false;
+    if (!canSetName) { return false; }
     name = aName;
     wasSet = true;
     return wasSet;
@@ -92,6 +99,45 @@ public class Event
   public boolean isIsInternal()
   {
     return isInternal;
+  }
+
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Event compareTo = (Event)obj;
+  
+    if (name == null && compareTo.name != null)
+    {
+      return false;
+    }
+    else if (name != null && !name.equals(compareTo.name))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    if (name != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + name.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetName = false;
+    return cachedHashCode;
   }
 
   public void delete()

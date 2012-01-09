@@ -21,5 +21,17 @@ public class EventTest
     Assert.assertEquals("blah",e.getName());
   }
   
+  @Test
+  public void equalsOnlyCaresAboutName()
+  {
+    Event e = new Event("x");
+    Event e2 = new Event("x");
+    Assert.assertEquals(e, e2);
+    
+    e2.setName("y");
+    Assert.assertEquals(false, e.equals(e2));
+  }
+  
+  
   
 }

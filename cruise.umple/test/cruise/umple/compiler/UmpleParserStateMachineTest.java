@@ -710,12 +710,13 @@ public class UmpleParserStateMachineTest
   @Test
   public void removeEvent()
   {
-    assertParse("212_mixin_removeEvent.ump","[stateMachineDefinition][name:Machine][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][classDefinition][name:OnOffSwitch][stateMachine][referencedStateMachine][name:bulb][definitionName:Machine][extendedStateMachine][state][stateName:On][changeType:-][transition][event:push][stateName:Off]");
+    assertParse("212_mixin_removeEvent.ump","[stateMachineDefinition][name:Machine][state][stateName:On][transition][event:flip][stateName:Off][transition][event:flop][stateName:Off][state][stateName:Off][classDefinition][name:OnOffSwitch][stateMachine][referencedStateMachine][name:bulb][definitionName:Machine][extendedStateMachine][state][stateName:On][changeType:-][transition][event:flip][stateName:Off]");
 
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
     State on = sm.findState("On");
-    Assert.assertEquals(0,on.numberOfTransitions());
+    Assert.assertEquals(1,on.numberOfTransitions());
+    Assert.assertEquals("flop", on.getTransition(0).getEvent().getName());
   }
 
   @Test

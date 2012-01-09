@@ -51,4 +51,49 @@ public class TransitionTest
     Assert.assertEquals(t, t2);
   }
   
+  @Test
+  public void equalsChecksGuard()
+  {
+    Transition t = Transition.createPlaceholder(too);
+    Transition t2 = Transition.createPlaceholder(too);
+
+    t.setGuard(new Guard("x"));
+    t2.setGuard(new Guard("x"));
+    Assert.assertEquals(t, t2);
+
+    t2.setGuard(new Guard("y"));
+    Assert.assertEquals(false, t.equals(t2));
+  
+  }
+  
+  @Test
+  public void equalsChecksEvent()
+  {
+    Transition t = Transition.createPlaceholder(too);
+    Transition t2 = Transition.createPlaceholder(too);
+
+    t.setEvent(new Event("e"));
+    t2.setEvent(new Event("e"));
+    
+    Assert.assertEquals(t, t2);
+
+    t2.setEvent(new Event("y"));
+    Assert.assertEquals(false, t.equals(t2));
+  }
+  
+  @Test
+  public void equalsChecksAction()
+  {
+    Transition t = Transition.createPlaceholder(too);
+    Transition t2 = Transition.createPlaceholder(too);
+
+    t.setAction(new Action("a"));
+    t2.setAction(new Action("a"));
+    
+    Assert.assertEquals(t, t2);
+
+    t2.setAction(new Action("y"));
+    Assert.assertEquals(false, t.equals(t2));
+  }  
+  
 }

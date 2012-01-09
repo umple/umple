@@ -59,7 +59,7 @@ class Transition
   * -> 0..1 Guard;
   0..1 -> 0..1 Action;
   
-  key { nextState } 
+  key { event, nextState, guard, action } 
   
 }
 
@@ -68,6 +68,8 @@ class Action
   actionType = null;
   actionCode;  // target language code
   Boolean isInternal = false;
+  
+  key { actionType, actionCode } 
 }
 
 class Event
@@ -77,11 +79,14 @@ class Event
   timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
 
   Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+  
+  key { name }
 }
 
 class Guard
 {
   condition; // target language code
+  key { condition }
 }
 
 use Umple.ump;
