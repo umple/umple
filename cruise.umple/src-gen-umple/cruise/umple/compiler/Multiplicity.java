@@ -31,13 +31,13 @@ public class Multiplicity
 
   public Multiplicity()
   {
-    bound = null;
-    minimum = null;
-    maximum = null;
     cachedHashCode = -1;
     canSetBound = true;
     canSetMinimum = true;
     canSetMaximum = true;
+    bound = null;
+    minimum = null;
+    maximum = null;
   }
 
   //------------------------

@@ -1698,6 +1698,28 @@ public class RubyClassGenerator implements ILang
     append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
   }
   
+  if (uClass.getKey().isProvided())
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "    @cachedHashCode = -1");
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null && !"immutable".equals(av.getModifier()))
+    {
+      appendln(stringBuffer, "");
+      append(stringBuffer, "    @{0} = true", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      appendln(stringBuffer, "");
+      append(stringBuffer, "    @{0} = true", gen.translate("associationCanSet",as));
+    }
+  }   
+  
   for (Attribute av : uClass.getAttributes())
   {
     if (av.getIsAutounique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
@@ -2052,28 +2074,6 @@ public class RubyClassGenerator implements ILang
     
     }
   }
-  
-  if (uClass.getKey().isProvided())
-  {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "    @cachedHashCode = -1");
-  }
-  
-  for(String memberId : uClass.getKey().getMembers())
-  {
-    Attribute av = uClass.getAttribute(memberId);
-    AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
-    {
-      appendln(stringBuffer, "");
-      append(stringBuffer, "    @{0} = true", gen.translate("attributeCanSet",av));
-    }
-    else if (as != null)
-    {
-      appendln(stringBuffer, "");
-      append(stringBuffer, "    @{0} = true", gen.translate("associationCanSet",as));
-    }
-  } 
   
   if (customConstructorPostfixCode != null)
   {

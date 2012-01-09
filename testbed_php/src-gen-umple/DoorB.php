@@ -22,9 +22,9 @@ class DoorB
 
   public function __construct($aId)
   {
-    $this->id = $aId;
     $this->cachedHashCode = -1;
     $this->canSetId = true;
+    $this->id = $aId;
   }
 
   //------------------------

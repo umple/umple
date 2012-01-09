@@ -22,11 +22,11 @@ class Mentor
   def initialize()
     @initialized = false
     @deleted = false
-    @main = nil
-    @secondaries = []
     @cachedHashCode = -1
     @can_set_main = true
     @can_set_secondaries = true
+    @main = nil
+    @secondaries = []
     @initialized = true
   end
 

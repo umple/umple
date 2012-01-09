@@ -33,16 +33,16 @@ public class Coordinate
 
   public Coordinate(int aX, int aY, int aWidth, int aHeight)
   {
-    x = aX;
-    y = aY;
-    width = aWidth;
-    height = aHeight;
-    setStatus(Status.Explicit);
     cachedHashCode = -1;
     canSetX = true;
     canSetY = true;
     canSetWidth = true;
     canSetHeight = true;
+    x = aX;
+    y = aY;
+    width = aWidth;
+    height = aHeight;
+    setStatus(Status.Explicit);
     updateStatus();
   }
 

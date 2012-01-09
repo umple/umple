@@ -29,6 +29,7 @@ public class Student
 
   public Student(double aDoubleId, boolean aBooleanId, String aStringId)
   {
+    cachedHashCode = -1;
     canSetIntId = true;
     doubleId = aDoubleId;
     canSetDoubleId = false;
@@ -36,7 +37,6 @@ public class Student
     canSetBooleanId = false;
     stringId = aStringId;
     canSetStringId = false;
-    cachedHashCode = -1;
   }
 
   //------------------------

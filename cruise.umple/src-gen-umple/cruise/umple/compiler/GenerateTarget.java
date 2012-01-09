@@ -26,12 +26,12 @@ public class GenerateTarget
 
   public GenerateTarget(String aLanguage, String aPath)
   {
+    cachedHashCode = -1;
+    canSetLanguage = true;
     language = aLanguage;
     path = aPath;
     override = false;
     overrideAll = false;
-    cachedHashCode = -1;
-    canSetLanguage = true;
   }
 
   //------------------------

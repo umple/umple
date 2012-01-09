@@ -39,18 +39,18 @@ public class AssociationEnd
 
   public AssociationEnd(String aRoleName, String aClassName, String aModifier, String aReferenceToClassName, Multiplicity aMultiplicity)
   {
-    roleName = aRoleName;
-    className = aClassName;
-    modifier = aModifier;
-    referenceToClassName = aReferenceToClassName;
-    multiplicity = aMultiplicity;
-    isDefaultRoleName = false;
     cachedHashCode = -1;
     canSetMultiplicity = true;
     canSetRoleName = true;
     canSetClassName = true;
     canSetModifier = true;
     canSetReferenceToClassName = true;
+    roleName = aRoleName;
+    className = aClassName;
+    modifier = aModifier;
+    referenceToClassName = aReferenceToClassName;
+    multiplicity = aMultiplicity;
+    isDefaultRoleName = false;
   }
 
   //------------------------

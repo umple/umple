@@ -1403,10 +1403,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
     if (extendedStateMachineTokens != null)
     {
-      for (Token t : extendedStateMachineTokens.getSubTokens())
-      {
-        System.out.println("Looking at: " + t.getName());
-      }
+      populateStateMachine(extendedStateMachineTokens, sm);
     }
 
   }
@@ -1473,6 +1470,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   {
     boolean isFirst = true;
     boolean isFinalState = false;
+    
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
       if (!stateToken.is("state") && !stateToken.is("stateName"))
@@ -1497,15 +1495,21 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     boolean addNewSm = true;
     boolean isConcurrentState = false;
     boolean isFinalState = false;
+    String changeType = null;
+    
     for(Token subToken : stateToken.getSubTokens())
     {
-      if (subToken.is("final"))
+      if (subToken.is("changeType"))
+      {
+        changeType = subToken.getValue();
+      }
+      else if (subToken.is("final"))
       {
         fromState.setFinalState(true);
       }
       else if (subToken.is("transition"))
       {
-        analyzeTransition(subToken, fromState); 
+        analyzeTransition(subToken, fromState, changeType); 
       }
       else if (subToken.is("activity"))
       {
@@ -1562,10 +1566,19 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   }
 
 
-  private void analyzeTransition(Token transitionToken, State fromState)
+  private void analyzeTransition(Token transitionToken, State fromState, String changeType)
   {
     State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
-    Transition t = new Transition(fromState, nextState);
+    
+    Transition t; 
+    if ("-".equals(changeType))
+    {
+      t = Transition.createPlaceholder(nextState);
+    }
+    else
+    {
+      t = new Transition(fromState, nextState);
+    }
 
     String eventName = transitionToken.getValue("event");
     String eventTimerAmount = transitionToken.getValue("timer");
@@ -1598,6 +1611,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
         event.setTimerInSeconds(eventTimerAmount);
       }
       t.setEvent(event);
+      
+      if ("-".equals(changeType))
+      {
+        fromState.removeTransition(t);      
+      }
     }
 
   }

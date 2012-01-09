@@ -35,13 +35,6 @@ public class WidgetA
 
   public WidgetA(String aId, int aIntId, double aDoubleId, boolean aBoolId, Date aDateId, WidgetB aWidgetId, String aIgnore)
   {
-    id = aId;
-    intId = aIntId;
-    doubleId = aDoubleId;
-    boolId = aBoolId;
-    dateId = aDateId;
-    widgetId = aWidgetId;
-    ignore = aIgnore;
     cachedHashCode = -1;
     canSetId = true;
     canSetIntId = true;
@@ -49,6 +42,13 @@ public class WidgetA
     canSetBoolId = true;
     canSetDateId = true;
     canSetWidgetId = true;
+    id = aId;
+    intId = aIntId;
+    doubleId = aDoubleId;
+    boolId = aBoolId;
+    dateId = aDateId;
+    widgetId = aWidgetId;
+    ignore = aIgnore;
   }
 
   //------------------------

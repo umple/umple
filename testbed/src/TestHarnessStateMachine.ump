@@ -183,3 +183,46 @@ class CourseJ {
     }
   }
 }
+
+class CourseM
+{
+  one
+  {
+    On { flip -> Off; }
+    Off { }
+  }
+  two
+  {
+    Slow { flip -> Fast; }
+    Fast { } 
+  }
+  
+}
+
+statemachine MachineN
+{
+  On { stay -> On; }
+  Off { }
+}
+
+class CourseN
+{
+  one as MachineN
+  {
+    On { 
+      + flip -> Off; 
+    }
+  }
+}
+
+
+class CourseO
+{
+  one as MachineN
+  {
+    On
+    {
+      - stay -> On;
+    }
+  }
+}

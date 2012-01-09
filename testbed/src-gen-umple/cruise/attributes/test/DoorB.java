@@ -23,9 +23,9 @@ public class DoorB
 
   public DoorB(int aId)
   {
-    id = aId;
     cachedHashCode = -1;
     canSetId = true;
+    id = aId;
   }
 
   //------------------------

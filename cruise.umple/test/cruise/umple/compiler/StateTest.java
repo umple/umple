@@ -260,7 +260,7 @@ public class StateTest
   public void isSameState_nestedSm()
   {
     State s = new State("s1",sm);
-    State s2 = new State("s2",sm);
+    new State("s2",sm);
     
     StateMachine nested1 = new StateMachine("nested1");
     State sA = new State("sA",nested1);
@@ -290,7 +290,19 @@ public class StateTest
     Assert.assertEquals(true,sX.isSameState(sB,sm));
     Assert.assertEquals(false,sX.isSameState(sB,nested1));
     Assert.assertEquals(false,sX.isSameState(sB,nested2));
-
   }  
+
+  
+  @Test
+  public void removeTransition_simple()
+  {
+    State state = new State("On",sm);
+    State state2 = new State("Off",sm);
+    new Transition(state, state2);
+    
+    Transition deleteT = Transition.createPlaceholder(state2);
+    state.removeTransition(deleteT);
+    Assert.assertEquals(0, state.numberOfTransitions());
+  }
   
 }

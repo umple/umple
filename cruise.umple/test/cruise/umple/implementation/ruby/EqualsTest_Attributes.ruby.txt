@@ -22,17 +22,17 @@ class Student
   def initialize(a_intId, a_doubleId, a_booleanId, a_stringId)
     @initialized = false
     @deleted = false
-    @intId = a_intId
-    @doubleId = a_doubleId
-    @booleanId = a_booleanId
-    @stringId = a_stringId
-    @stringListIds = []
     @cachedHashCode = -1
     @can_set_intId = true
     @can_set_doubleId = true
     @can_set_booleanId = true
     @can_set_stringId = true
     @can_set_stringListIds = true
+    @intId = a_intId
+    @doubleId = a_doubleId
+    @booleanId = a_booleanId
+    @stringId = a_stringId
+    @stringListIds = []
     @initialized = true
   end
 

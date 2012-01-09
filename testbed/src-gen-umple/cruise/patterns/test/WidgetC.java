@@ -23,9 +23,9 @@ public class WidgetC
 
   public WidgetC(String aId)
   {
-    id = aId;
     cachedHashCode = -1;
     canSetId = true;
+    id = aId;
   }
 
   //------------------------

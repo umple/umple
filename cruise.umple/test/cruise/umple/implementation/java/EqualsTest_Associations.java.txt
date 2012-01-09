@@ -26,10 +26,10 @@ public class Mentor
 
   public Mentor()
   {
-    secondaries = new ArrayList<Course>();
     cachedHashCode = -1;
     canSetMain = true;
     canSetSecondaries = true;
+    secondaries = new ArrayList<Course>();
   }
 
   //------------------------

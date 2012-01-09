@@ -31,10 +31,10 @@ public class Concern
 
   public Concern(String aName)
   {
-    name = aName;
-    variationPoints = new ArrayList<VariationPoint>();
     cachedHashCode = -1;
     canSetName = true;
+    name = aName;
+    variationPoints = new ArrayList<VariationPoint>();
   }
 
   //------------------------

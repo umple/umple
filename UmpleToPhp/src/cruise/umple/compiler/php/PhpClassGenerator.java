@@ -1825,6 +1825,31 @@ public class PhpClassGenerator implements ILang
     hasBody = true;
   }
   
+  if (uClass.getKey().isProvided())
+  {
+    hasBody = true;
+    appendln(stringBuffer, "");
+    append(stringBuffer, "    $this->cachedHashCode = -1;");
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null && !"immutable".equals(av.getModifier()))
+    {
+      hasBody = true;
+      appendln(stringBuffer, "");
+      append(stringBuffer, "    $this->{0} = true;", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      hasBody = true;
+      appendln(stringBuffer, "");
+      append(stringBuffer, "    $this->{0} = true;", gen.translate("associationCanSet",as));
+    }
+  }
+  
   for (Attribute av : uClass.getAttributes())
   {
     if (av.getIsAutounique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
@@ -2210,32 +2235,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_89);
     
   }  
-  
-  if (uClass.getKey().isProvided())
-  {
-    hasBody = true;
-    appendln(stringBuffer, "");
-    append(stringBuffer, "    $this->cachedHashCode = -1;");
-  }
-  
-  for(String memberId : uClass.getKey().getMembers())
-  {
-    Attribute av = uClass.getAttribute(memberId);
-    AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
-    {
-      hasBody = true;
-      appendln(stringBuffer, "");
-      append(stringBuffer, "    $this->{0} = true;", gen.translate("attributeCanSet",av));
-    }
-    else if (as != null)
-    {
-      hasBody = true;
-      appendln(stringBuffer, "");
-      append(stringBuffer, "    $this->{0} = true;", gen.translate("associationCanSet",as));
-    }
-  }
-  
+
   if (customConstructorPostfixCode != null)
   {
     append(stringBuffer, "\n    {0}",customConstructorPostfixCode);

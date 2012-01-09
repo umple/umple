@@ -28,12 +28,12 @@ public class ErrorType
 
   public ErrorType(int aErrorCode, int aSeverity, String aErrorFormat, String aErrorUrl)
   {
+    cachedHashCode = -1;
+    canSetErrorCode = true;
     errorCode = aErrorCode;
     severity = aSeverity;
     errorFormat = aErrorFormat;
     errorUrl = aErrorUrl;
-    cachedHashCode = -1;
-    canSetErrorCode = true;
   }
 
   //------------------------

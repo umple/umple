@@ -24,10 +24,10 @@ public class Depend
 
   public Depend(String aName)
   {
-    name = aName;
-    isInternal = false;
     cachedHashCode = -1;
     canSetName = true;
+    name = aName;
+    isInternal = false;
   }
 
   //------------------------

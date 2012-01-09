@@ -30,17 +30,17 @@ class Student
 
   public function __construct($aIntId, $aDoubleId, $aBooleanId, $aStringId)
   {
-    $this->intId = $aIntId;
-    $this->doubleId = $aDoubleId;
-    $this->booleanId = $aBooleanId;
-    $this->stringId = $aStringId;
-    $this->stringListIds = array();
     $this->cachedHashCode = -1;
     $this->canSetIntId = true;
     $this->canSetDoubleId = true;
     $this->canSetBooleanId = true;
     $this->canSetStringId = true;
     $this->canSetStringListIds = true;
+    $this->intId = $aIntId;
+    $this->doubleId = $aDoubleId;
+    $this->booleanId = $aBooleanId;
+    $this->stringId = $aStringId;
+    $this->stringListIds = array();
   }
 
   //------------------------

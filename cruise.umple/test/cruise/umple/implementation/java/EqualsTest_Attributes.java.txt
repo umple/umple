@@ -32,17 +32,17 @@ public class Student
 
   public Student(int aIntId, double aDoubleId, boolean aBooleanId, String aStringId)
   {
-    intId = aIntId;
-    doubleId = aDoubleId;
-    booleanId = aBooleanId;
-    stringId = aStringId;
-    stringListIds = new ArrayList<String>();
     cachedHashCode = -1;
     canSetIntId = true;
     canSetDoubleId = true;
     canSetBooleanId = true;
     canSetStringId = true;
     canSetStringListIds = true;
+    intId = aIntId;
+    doubleId = aDoubleId;
+    booleanId = aBooleanId;
+    stringId = aStringId;
+    stringListIds = new ArrayList<String>();
   }
 
   //------------------------

@@ -34,11 +34,11 @@ public class Point
 
   public Point(int aX, int aY)
   {
-    x = aX;
-    y = aY;
     cachedHashCode = -1;
     canSetX = true;
     canSetY = true;
+    x = aX;
+    y = aY;
   }
 
   //------------------------

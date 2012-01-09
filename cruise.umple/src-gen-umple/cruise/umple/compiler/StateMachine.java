@@ -32,12 +32,12 @@ public class StateMachine
 
   public StateMachine(String aName)
   {
-    name = aName;
-    states = new ArrayList<State>();
-    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
     cachedHashCode = -1;
     canSetParentState = true;
     canSetName = true;
+    name = aName;
+    states = new ArrayList<State>();
+    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
   }
 
   //------------------------

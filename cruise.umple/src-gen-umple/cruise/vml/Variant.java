@@ -28,10 +28,10 @@ public class Variant
 
   public Variant(String aName)
   {
-    name = aName;
     cachedHashCode = -1;
     canSetName = true;
     canSetCodeSnippet = true;
+    name = aName;
   }
 
   //------------------------

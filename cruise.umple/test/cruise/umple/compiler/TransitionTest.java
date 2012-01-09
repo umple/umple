@@ -35,4 +35,20 @@ public class TransitionTest
     Assert.assertEquals(true,t.getIsInternal());
   }
   
+  @Test
+  public void createPlaceholder()
+  {
+    Transition t = Transition.createPlaceholder(too);
+    Assert.assertEquals("null",t.getFromState().getName());
+    Assert.assertEquals(too, t.getNextState());
+  }
+  
+  @Test
+  public void equalsIgnoreFromState()
+  {
+    Transition t = Transition.createPlaceholder(too);
+    Transition t2 = Transition.createPlaceholder(too);
+    Assert.assertEquals(t, t2);
+  }
+  
 }

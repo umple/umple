@@ -20,12 +20,18 @@ public class Transition
   private Guard guard;
   private Action action;
 
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetNextState;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Transition(State aFromState, State aNextState)
   {
+    cachedHashCode = -1;
+    canSetNextState = true;
     isInternal = false;
     boolean didAddFromState = setFromState(aFromState);
     if (!didAddFromState)
@@ -115,6 +121,7 @@ public class Transition
   public boolean setNextState(State newNextState)
   {
     boolean wasSet = false;
+    if (!canSetNextState) { return false; }
     if (newNextState != null)
     {
       nextState = newNextState;
@@ -139,6 +146,45 @@ public class Transition
     return wasSet;
   }
 
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Transition compareTo = (Transition)obj;
+  
+    if (nextState == null && compareTo.nextState != null)
+    {
+      return false;
+    }
+    else if (nextState != null && !nextState.equals(compareTo.nextState))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    if (nextState != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + nextState.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetNextState = false;
+    return cachedHashCode;
+  }
+
   public void delete()
   {
     event = null;
@@ -149,5 +195,15 @@ public class Transition
     guard = null;
     action = null;
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public static Transition createPlaceholder(State nextState)
+  {
+    StateMachine nullSm = new StateMachine("null");
+    State nullState = new State("null",nullSm);
+    return new Transition(nullState, nextState);
+  }
 }

@@ -36,14 +36,14 @@ public class VariationPoint
 
   public VariationPoint(String aName)
   {
-    name = aName;
-    variants = new ArrayList<Variant>();
-    requires = new ArrayList<VariationPoint>();
-    setKind(Kind.Optional);
     cachedHashCode = -1;
     canSetConcern = true;
     canSetName = true;
     canSetCodeSnippet = true;
+    name = aName;
+    variants = new ArrayList<Variant>();
+    requires = new ArrayList<VariationPoint>();
+    setKind(Kind.Optional);
   }
 
   //------------------------

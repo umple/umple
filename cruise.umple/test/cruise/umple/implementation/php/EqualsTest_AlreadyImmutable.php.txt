@@ -28,6 +28,7 @@ class Student
 
   public function __construct($aDoubleId, $aBooleanId, $aStringId)
   {
+    $this->cachedHashCode = -1;
     $this->canSetIntId = true;
     $this->doubleId = $aDoubleId;
     $this->canSetDoubleId = false;
@@ -35,7 +36,6 @@ class Student
     $this->canSetBooleanId = false;
     $this->stringId = $aStringId;
     $this->canSetStringId = false;
-    $this->cachedHashCode = -1;
   }
 
   //------------------------

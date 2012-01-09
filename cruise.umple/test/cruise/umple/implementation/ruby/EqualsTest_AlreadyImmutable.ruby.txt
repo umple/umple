@@ -22,6 +22,7 @@ class Student
   def initialize(a_doubleId, a_booleanId, a_stringId)
     @initialized = false
     @deleted = false
+    @cachedHashCode = -1
     @can_set_intId = true
     @doubleId = a_doubleId
     @can_set_doubleId = false
@@ -29,7 +30,6 @@ class Student
     @can_set_booleanId = false
     @stringId = a_stringId
     @can_set_stringId = false
-    @cachedHashCode = -1
     @initialized = true
   end
 

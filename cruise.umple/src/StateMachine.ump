@@ -59,6 +59,8 @@ class Transition
   * -> 0..1 Guard;
   0..1 -> 0..1 Action;
   
+  key { nextState } 
+  
 }
 
 class Action

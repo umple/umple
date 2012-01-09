@@ -2139,6 +2139,31 @@ public class JavaClassGenerator implements ILang
     append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
     hasBody = true;
   }
+
+  if (uClass.getKey().isProvided())
+  {
+    hasBody = true;
+    appendln(stringBuffer, "");
+    append(stringBuffer, "    cachedHashCode = -1;");
+  }
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null && !"immutable".equals(av.getModifier()))
+    {
+      hasBody = true;
+      appendln(stringBuffer, "");
+      append(stringBuffer, "    {0} = true;", gen.translate("attributeCanSet",av));
+    }
+    else if (as != null)
+    {
+      hasBody = true;
+      appendln(stringBuffer, "");
+      append(stringBuffer, "    {0} = true;", gen.translate("associationCanSet",as));
+    }
+  } 
   
   for (Attribute av : uClass.getAttributes())
   {
@@ -2513,31 +2538,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_88);
     
   }
-  
-  if (uClass.getKey().isProvided())
-  {
-    hasBody = true;
-    appendln(stringBuffer, "");
-    append(stringBuffer, "    cachedHashCode = -1;");
-  }
-  
-  for(String memberId : uClass.getKey().getMembers())
-  {
-    Attribute av = uClass.getAttribute(memberId);
-    AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
-    {
-      hasBody = true;
-      appendln(stringBuffer, "");
-      append(stringBuffer, "    {0} = true;", gen.translate("attributeCanSet",av));
-    }
-    else if (as != null)
-    {
-      hasBody = true;
-      appendln(stringBuffer, "");
-      append(stringBuffer, "    {0} = true;", gen.translate("associationCanSet",as));
-    }
-  } 
   
   if (customConstructorPostfixCode != null)
   {

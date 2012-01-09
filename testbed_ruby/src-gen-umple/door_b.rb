@@ -22,9 +22,9 @@ class DoorB
   def initialize(a_id)
     @initialized = false
     @deleted = false
-    @id = a_id
     @cachedHashCode = -1
     @can_set_id = true
+    @id = a_id
     @initialized = true
   end
 

@@ -29,15 +29,15 @@ public class Position
 
   public Position(String aFilename, int aLineNumber, int aCharacterOffset, int aOffset)
   {
-    filename = aFilename;
-    lineNumber = aLineNumber;
-    characterOffset = aCharacterOffset;
-    offset = aOffset;
     cachedHashCode = -1;
     canSetFilename = true;
     canSetLineNumber = true;
     canSetCharacterOffset = true;
     canSetOffset = true;
+    filename = aFilename;
+    lineNumber = aLineNumber;
+    characterOffset = aCharacterOffset;
+    offset = aOffset;
   }
 
   //------------------------

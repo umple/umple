@@ -23,9 +23,9 @@ public class CodeSnippet
 
   public CodeSnippet(String aCode)
   {
-    code = aCode;
     cachedHashCode = -1;
     canSetCode = true;
+    code = aCode;
   }
 
   //------------------------

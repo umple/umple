@@ -24,10 +24,10 @@ class Mentor
 
   public function __construct()
   {
-    $this->secondaries = array();
     $this->cachedHashCode = -1;
     $this->canSetMain = true;
     $this->canSetSecondaries = true;
+    $this->secondaries = array();
   }
 
   //------------------------
