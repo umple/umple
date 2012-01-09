@@ -106,7 +106,7 @@ stateMachineDefinition : statemachine [name] { [[state]]* }<br />
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]<br />
 inlineStateMachine : [name] { ( [[comment]] | [[state]] )* }<br />
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }<br />
-extendedStateMachine : ( [[comment]] | [[state]] )*<br />
+extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*<br />
 enum : [name] { } | [name] { [stateName] (, [stateName])* }<br />
 state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* }<br />
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]<br />

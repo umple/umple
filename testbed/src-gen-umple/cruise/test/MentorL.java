@@ -197,8 +197,9 @@ public class MentorL
 
   public void delete()
   {
-    for(StudentL aStudent : students)
+    for(int i=students.size(); i > 0; i--)
     {
+      StudentL aStudent = students.get(i - 1);
       aStudent.delete();
     }
     if (program != null)

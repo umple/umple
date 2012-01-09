@@ -226,3 +226,15 @@ class CourseO
     }
   }
 }
+
+class CourseP
+{
+  one as MachineN
+  {
+    - Off { }
+    + Amber { }
+    On {
+     flip -> Amber;
+    } 
+  }
+}

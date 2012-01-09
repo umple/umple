@@ -1470,23 +1470,34 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   {
     boolean isFirst = true;
     boolean isFinalState = false;
+    String changeType = null;
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
       if (!stateToken.is("state") && !stateToken.is("stateName"))
       {
+        if (stateToken.is("changeType")) { changeType = stateToken.getValue(); }      
         continue;
       }
 
-      State s = createStateFromDefinition(stateToken,sm);
-      s.setFinalState(isFinalState);
-      if (isFirst)
+      if ("-".equals(changeType))
       {
-        s.setIsStartState(true);
+        State deleteMe = sm.findState(stateToken.getValue("stateName"));
+        if (deleteMe != null) { deleteMe.delete(); }
       }
-      isFirst = false;
-      isFinalState = false;
-      analyzeState(stateToken, s);
+      else
+      {
+        State s = createStateFromDefinition(stateToken,sm);
+        s.setFinalState(isFinalState);
+        if (isFirst)
+        {
+          s.setIsStartState(true);
+        }
+        isFirst = false;
+        isFinalState = false;
+        analyzeState(stateToken, s);
+        changeType = null;
+      }
     }
   }
 

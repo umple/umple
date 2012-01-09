@@ -172,8 +172,9 @@ public class MentorZ
 
   public void delete()
   {
-    for(StudentZ aStudent : students)
+    for(int i=students.size(); i > 0; i--)
     {
+      StudentZ aStudent = students.get(i - 1);
       aStudent.delete();
     }
     if (program != null)

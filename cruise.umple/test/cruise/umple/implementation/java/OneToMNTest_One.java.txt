@@ -153,8 +153,9 @@ public class Mentor
 
   public void delete()
   {
-    for(Pupil aPupil : pupils)
+    for(int i=pupils.size(); i > 0; i--)
     {
+      Pupil aPupil = pupils.get(i - 1);
       aPupil.delete();
     }
   }

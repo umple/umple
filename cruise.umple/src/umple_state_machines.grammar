@@ -3,7 +3,7 @@ stateMachineDefinition : statemachine [name] { [[state]]* }
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]  
 inlineStateMachine : [name] { ( [[comment]] | [[state]] )* }
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }
-extendedStateMachine : ( [[comment]] | [[state]] )*
+extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 enum : [name] { } | [name] { [stateName] (, [stateName])* }
 state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]

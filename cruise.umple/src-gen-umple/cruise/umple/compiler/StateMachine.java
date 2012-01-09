@@ -314,12 +314,14 @@ public class StateMachine
       this.parentState = null;
       placeholderParentState.removeNestedStateMachine(this);
     }
-    for(State aState : states)
+    for(int i=states.size(); i > 0; i--)
     {
+      State aState = states.get(i - 1);
       aState.delete();
     }
-    for(StateMachine_TraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    for(int i=stateMachineTraceItems.size(); i > 0; i--)
     {
+      StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(i - 1);
       aStateMachineTraceItem.delete();
     }
   }

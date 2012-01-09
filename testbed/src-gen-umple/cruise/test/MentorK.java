@@ -192,8 +192,9 @@ public class MentorK
 
   public void delete()
   {
-    for(StudentK aStudent : students)
+    for(int i=students.size(); i > 0; i--)
     {
+      StudentK aStudent = students.get(i - 1);
       aStudent.delete();
     }
     if (program != null)

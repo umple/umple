@@ -155,8 +155,9 @@ public class MentorJ
 
   public void delete()
   {
-    for(StudentJ aStudent : students)
+    for(int i=students.size(); i > 0; i--)
     {
+      StudentJ aStudent = students.get(i - 1);
       aStudent.delete();
     }
     if (program != null)

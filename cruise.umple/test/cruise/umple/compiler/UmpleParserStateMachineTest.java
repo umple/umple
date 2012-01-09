@@ -718,6 +718,20 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(0,on.numberOfTransitions());
   }
 
+  @Test
+  public void removeState()
+  {
+    assertParse("212_mixin_removeState.ump","[stateMachineDefinition][name:Machine][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][classDefinition][name:OnOffSwitch][stateMachine][referencedStateMachine][name:bulb][definitionName:Machine][extendedStateMachine][changeType:-][state][stateName:Off]");
+
+    UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
+    StateMachine sm = uClass.getStateMachine(0);
+    State on = sm.findState("On");
+    State off = sm.findState("Off");
+    Assert.assertEquals(0,on.numberOfTransitions());
+    Assert.assertEquals(null,off);
+  }
+
+  
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);

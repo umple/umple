@@ -55,7 +55,7 @@ class Transition
 
   * -> 0..1 Event; 
   * -- 1 State fromState;  
-  * -> 1 State nextState;
+  * nextTransition -- 1 State nextState;
   * -> 0..1 Guard;
   0..1 -> 0..1 Action;
   

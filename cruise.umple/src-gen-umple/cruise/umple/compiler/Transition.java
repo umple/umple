@@ -38,9 +38,10 @@ public class Transition
     {
       throw new RuntimeException("Unable to create transition due to fromState");
     }
-    if (!setNextState(aNextState))
+    boolean didAddNextState = setNextState(aNextState);
+    if (!didAddNextState)
     {
-      throw new RuntimeException("Unable to create Transition due to aNextState");
+      throw new RuntimeException("Unable to create nextTransition due to nextState");
     }
   }
 
@@ -118,15 +119,23 @@ public class Transition
     return wasSet;
   }
 
-  public boolean setNextState(State newNextState)
+  public boolean setNextState(State aNextState)
   {
     boolean wasSet = false;
     if (!canSetNextState) { return false; }
-    if (newNextState != null)
+    if (aNextState == null)
     {
-      nextState = newNextState;
-      wasSet = true;
+      return wasSet;
     }
+
+    State existingNextState = nextState;
+    nextState = aNextState;
+    if (existingNextState != null && !existingNextState.equals(aNextState))
+    {
+      existingNextState.removeNextTransition(this);
+    }
+    nextState.addNextTransition(this);
+    wasSet = true;
     return wasSet;
   }
 
@@ -191,7 +200,9 @@ public class Transition
     State placeholderFromState = fromState;
     this.fromState = null;
     placeholderFromState.removeTransition(this);
-    nextState = null;
+    State placeholderNextState = nextState;
+    this.nextState = null;
+    placeholderNextState.removeNextTransition(this);
     guard = null;
     action = null;
   }

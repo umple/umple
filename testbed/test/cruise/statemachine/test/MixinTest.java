@@ -37,5 +37,21 @@ public class MixinTest
     }
   }
   
+  @Test
+  public void AddState()
+  {
+    Assert.assertEquals(CourseP.One.Amber,CourseP.One.valueOf("Amber"));
+    CourseP course = new CourseP();
+    course.flip();
+    Assert.assertEquals(CourseP.One.Amber,course.getOne());
+  }
+  
+  @Test(expected = IllegalArgumentException.class)  
+  public void RemoveState()
+  {
+    CourseP.One.valueOf("Off");
+  }
+
+  
 }
 

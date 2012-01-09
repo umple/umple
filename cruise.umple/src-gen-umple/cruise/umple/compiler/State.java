@@ -25,6 +25,7 @@ public class State
   private StateMachine stateMachine;
   private List<StateMachine> nestedStateMachines;
   private List<Transition> transitions;
+  private List<Transition> nextTransition;
 
   //------------------------
   // CONSTRUCTOR
@@ -46,6 +47,7 @@ public class State
     }
     nestedStateMachines = new ArrayList<StateMachine>();
     transitions = new ArrayList<Transition>();
+    nextTransition = new ArrayList<Transition>();
   }
 
   //------------------------
@@ -266,6 +268,36 @@ public class State
     return index;
   }
 
+  public Transition getNextTransition(int index)
+  {
+    Transition aNextTransition = nextTransition.get(index);
+    return aNextTransition;
+  }
+
+  public List<Transition> getNextTransition()
+  {
+    List<Transition> newNextTransition = Collections.unmodifiableList(nextTransition);
+    return newNextTransition;
+  }
+
+  public int numberOfNextTransition()
+  {
+    int number = nextTransition.size();
+    return number;
+  }
+
+  public boolean hasNextTransition()
+  {
+    boolean has = nextTransition.size() > 0;
+    return has;
+  }
+
+  public int indexOfNextTransition(Transition aNextTransition)
+  {
+    int index = nextTransition.indexOf(aNextTransition);
+    return index;
+  }
+
   public boolean setActivity(Activity newActivity)
   {
     boolean wasSet = false;
@@ -390,7 +422,6 @@ public class State
   {
     boolean wasAdded = false;
     if (transitions.contains(aTransition)) { return false; }
-    if (transitions.contains(aTransition)) { return false; }
     State existingFromState = aTransition.getFromState();
     boolean isNewFromState = existingFromState != null && !this.equals(existingFromState);
     if (isNewFromState)
@@ -417,6 +448,46 @@ public class State
     return wasRemoved;
   }
 
+  public static int minimumNumberOfNextTransition()
+  {
+    return 0;
+  }
+
+  public Transition addNextTransition(State aFromState)
+  {
+    return new Transition(aFromState, this);
+  }
+
+  public boolean addNextTransition(Transition aNextTransition)
+  {
+    boolean wasAdded = false;
+    if (nextTransition.contains(aNextTransition)) { return false; }
+    State existingNextState = aNextTransition.getNextState();
+    boolean isNewNextState = existingNextState != null && !this.equals(existingNextState);
+    if (isNewNextState)
+    {
+      aNextTransition.setNextState(this);
+    }
+    else
+    {
+      nextTransition.add(aNextTransition);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeNextTransition(Transition aNextTransition)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aNextTransition, as it must always have a nextState
+    if (!this.equals(aNextTransition.getNextState()))
+    {
+      nextTransition.remove(aNextTransition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public void delete()
   {
     Activity existingActivity = activity;
@@ -433,9 +504,15 @@ public class State
     {
       aNestedStateMachine.setParentState(null);
     }
-    for(Transition aTransition : transitions)
+    for(int i=transitions.size(); i > 0; i--)
     {
+      Transition aTransition = transitions.get(i - 1);
       aTransition.delete();
+    }
+    for(int i=nextTransition.size(); i > 0; i--)
+    {
+      Transition aNextTransition = nextTransition.get(i - 1);
+      aNextTransition.delete();
     }
   }
   

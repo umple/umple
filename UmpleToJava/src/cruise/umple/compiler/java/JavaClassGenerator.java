@@ -1740,22 +1740,24 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1720 = NL + "      ";
   protected final String TEXT_1721 = ".";
   protected final String TEXT_1722 = "(this);" + NL + "    }";
-  protected final String TEXT_1723 = NL + "    for(";
-  protected final String TEXT_1724 = " ";
-  protected final String TEXT_1725 = " : ";
-  protected final String TEXT_1726 = ")" + NL + "    {";
-  protected final String TEXT_1727 = NL + "      ";
-  protected final String TEXT_1728 = ".delete();" + NL + "    }";
-  protected final String TEXT_1729 = NL + "    for(";
-  protected final String TEXT_1730 = " ";
-  protected final String TEXT_1731 = " : ";
-  protected final String TEXT_1732 = ")" + NL + "    {";
-  protected final String TEXT_1733 = NL + "      ";
-  protected final String TEXT_1734 = ".";
-  protected final String TEXT_1735 = "(null);" + NL + "    }";
-  protected final String TEXT_1736 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_1737 = NL + "  ";
-  protected final String TEXT_1738 = NL + "}";
+  protected final String TEXT_1723 = NL + "    for(int i=";
+  protected final String TEXT_1724 = ".size(); i > 0; i--)" + NL + "    {";
+  protected final String TEXT_1725 = NL + "      ";
+  protected final String TEXT_1726 = " ";
+  protected final String TEXT_1727 = " = ";
+  protected final String TEXT_1728 = ".get(i - 1);";
+  protected final String TEXT_1729 = NL + "      ";
+  protected final String TEXT_1730 = ".delete();" + NL + "    }";
+  protected final String TEXT_1731 = NL + "    for(";
+  protected final String TEXT_1732 = " ";
+  protected final String TEXT_1733 = " : ";
+  protected final String TEXT_1734 = ")" + NL + "    {";
+  protected final String TEXT_1735 = NL + "      ";
+  protected final String TEXT_1736 = ".";
+  protected final String TEXT_1737 = "(null);" + NL + "    }";
+  protected final String TEXT_1738 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_1739 = NL + "  ";
+  protected final String TEXT_1740 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -7088,32 +7090,35 @@ public class JavaClassGenerator implements ILang
     {
       
     stringBuffer.append(TEXT_1723);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1724);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1725);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1724);
+    stringBuffer.append(TEXT_1725);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1726);
-    stringBuffer.append(TEXT_1727);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1727);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1728);
+    stringBuffer.append(TEXT_1729);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1730);
     
     }
     else if (av.isMany() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1729);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1730);
-    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1731);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1732);
-    stringBuffer.append(TEXT_1733);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1733);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1734);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1735);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1736);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1737);
     
     }
     else
@@ -7196,8 +7201,8 @@ public class JavaClassGenerator implements ILang
 
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_1736);
-    stringBuffer.append(TEXT_1737);
+    stringBuffer.append(TEXT_1738);
+    stringBuffer.append(TEXT_1739);
     stringBuffer.append(uClass.getExtraCode());
      } 
     
@@ -7240,7 +7245,7 @@ public class JavaClassGenerator implements ILang
 	}
 }
 
-    stringBuffer.append(TEXT_1738);
+    stringBuffer.append(TEXT_1740);
     return stringBuffer.toString();
   }
 }

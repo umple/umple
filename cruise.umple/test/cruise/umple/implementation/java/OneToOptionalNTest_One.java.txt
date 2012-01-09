@@ -133,8 +133,9 @@ public class Mentor
 
   public void delete()
   {
-    for(Student aStudent : students)
+    for(int i=students.size(); i > 0; i--)
     {
+      Student aStudent = students.get(i - 1);
       aStudent.delete();
     }
   }
