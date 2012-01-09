@@ -15,7 +15,7 @@ public class FinalStateTest
   }
   
   @Test
-  public void CallDeleteOnlyOnceAllFinalStatesAreReached()
+  public void CallDeleteAsSoonAsOneFinalStateIsReached()
   {
     CourseL c = new CourseL();
     Assert.assertEquals(CourseL.Status.On,c.getStatus());
@@ -24,20 +24,13 @@ public class FinalStateTest
 
     c.flip();
 
+    Assert.assertEquals(1,c.numberOfLogs());
+    Assert.assertEquals("deleted",c.getLog(0));
+
     Assert.assertEquals(CourseL.Status.On,c.getStatus());
     Assert.assertEquals(CourseL.StatusMotorIdle.Final,c.getStatusMotorIdle());
     Assert.assertEquals(CourseL.StatusFanIdle.FanIdle,c.getStatusFanIdle());
     
-    
-    Assert.assertEquals(0,c.numberOfLogs());
-    c.flop();
-
-    Assert.assertEquals(CourseL.Status.On,c.getStatus());
-    Assert.assertEquals(CourseL.StatusMotorIdle.Final,c.getStatusMotorIdle());
-    Assert.assertEquals(CourseL.StatusFanIdle.Final,c.getStatusFanIdle());
-    
-    Assert.assertEquals(1,c.numberOfLogs());
-    Assert.assertEquals("deleted",c.getLog(0));
   }
   
   

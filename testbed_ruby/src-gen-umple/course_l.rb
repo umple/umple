@@ -83,11 +83,6 @@ class CourseL
     UNKNOWN ID: stateOne
   end
 
-  private boolean UNKNOWN ID: isFinalMethod()
-  {
-    return statusMotorIdle == UNKNOWN ID: type.MotorIdleFinal && statusFanIdle == UNKNOWN ID: type.FanIdleFinal;
-  }
-
   public UNKNOWN ID: type get_statusMotorIdle
     UNKNOWN ID: stateOne
   end

@@ -95,11 +95,6 @@ public class CourseL
     return status;
   }
 
-  private boolean isStatusFinal()
-  {
-    return statusMotorIdle == StatusMotorIdle.Final && statusFanIdle == StatusFanIdle.Final;
-  }
-
   public StatusMotorIdle getStatusMotorIdle()
   {
     return statusMotorIdle;
@@ -233,7 +228,7 @@ public class CourseL
     switch(statusMotorIdle)
     {
       case Final:
-        if (isStatusFinal()) { delete(); }
+        delete();
         break;
     }
   }
@@ -247,7 +242,7 @@ public class CourseL
     switch(statusFanIdle)
     {
       case Final:
-        if (isStatusFinal()) { delete(); }
+        delete();
         break;
     }
   }

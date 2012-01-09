@@ -102,11 +102,6 @@ class CourseL
     return null;
   }
 
-  private function isStatusFinal()
-  {
-    return $this->statusMotorIdle == self::$StatusMotorIdleFinal && $this->statusFanIdle == self::$StatusFanIdleFinal;
-  }
-
   public function getStatusMotorIdle()
   {
     if ($this->statusMotorIdle == self::$StatusMotorIdleNull) { return "StatusMotorIdleNull"; }
@@ -229,7 +224,7 @@ class CourseL
     // entry actions and do activities
     if ($this->statusMotorIdle == self::$StatusMotorIdleFinal)
     {
-      if ($this->isStatusFinal()) { $this->delete(); }
+      $this->delete();
     }
   }
 
@@ -241,7 +236,7 @@ class CourseL
     // entry actions and do activities
     if ($this->statusFanIdle == self::$StatusFanIdleFinal)
     {
-      if ($this->isStatusFinal()) { $this->delete(); }
+      $this->delete();
     }
   }
 

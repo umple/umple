@@ -1003,14 +1003,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     Map<String,String> lookups = new HashMap<String,String>();
     
     String deleteActionCode;
-    if (parentSm != null && parentSm.hasFinalStates())
-    {
-      deleteActionCode = StringFormatter.format("if ({1}()) { {0}(); }",translate("deleteMethod",sm.getUmpleClass()),translate("isFinalMethod",parentSm));
-    }
-    else
-    {
-      deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
-    }
+    deleteActionCode = StringFormatter.format("{0}();",translate("deleteMethod",sm.getUmpleClass()));
 
     lookups.put("deleteActionCode",deleteActionCode);
     GeneratorHelper.prepareFinalState(sm,lookups);

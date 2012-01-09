@@ -11,10 +11,6 @@
   for(StateMachine sm : uClass.getAllStateMachines())
   {
     %><%@ include file="state_machine_Get.jet" %><%
-    if (sm.hasFinalStates())
-    {
-      %><%@ include file="state_machine_IsFinal.jet" %><%  
-    }
   }
 }
 %>

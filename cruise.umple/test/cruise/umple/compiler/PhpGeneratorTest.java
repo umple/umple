@@ -79,11 +79,11 @@ public class PhpGeneratorTest
     Assert.assertEquals(1,final2.numberOfActions());
 
     Action finalAction = final1.getAction(0);
-    Assert.assertEquals("if ($this->isBulbFinal()) { $this->delete(); }",finalAction.getActionCode());
+    Assert.assertEquals("$this->delete();",finalAction.getActionCode());
     Assert.assertEquals("entry",finalAction.getActionType());
     
     finalAction = final2.getAction(0);
-    Assert.assertEquals("if ($this->isBulbFinal()) { $this->delete(); }",finalAction.getActionCode());
+    Assert.assertEquals("$this->delete();",finalAction.getActionCode());
     Assert.assertEquals("entry",finalAction.getActionType());
 
     GeneratorHelper.postpare(model);
