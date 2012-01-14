@@ -3,7 +3,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
-import java.util.*;
+#include <java.util.*>;
 
 class Mentor
 {
@@ -39,7 +39,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  boolean setHowLongUntilOk(int aHowLongUntilOk)
+  bool setHowLongUntilOk(int aHowLongUntilOk)
   {
     bool wasSet = false;
     howLongUntilOk = aHowLongUntilOk;

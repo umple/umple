@@ -4,12 +4,12 @@
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
 %>
 <% if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { %>
-  public static int <%=gen.translate("minimumNumberOfMethod",av)%>()
+  static int <%=gen.translate("minimumNumberOfMethod",av)%>()
   {
     return <%=av.getMultiplicity().getLowerBound()%>;
   }
 <% } else { %>
-  public static int <%=gen.translate("minimumNumberOfMethod",av)%>()
+  static int <%=gen.translate("minimumNumberOfMethod",av)%>()
   {
     <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } %>
     int minimum = <%=av.getMultiplicity().getLowerBound()%>;

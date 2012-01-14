@@ -3,7 +3,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
-import java.util.*;
+#include <java.util.*>;
 
 class Token
 {
@@ -30,14 +30,14 @@ class Token
   // INTERFACE
   //------------------------
 
-  boolean addPosition(Position aPosition)
+  bool addPosition(Position aPosition)
   {
     bool wasAdded = false;
     wasAdded = positions.add(aPosition);
     return wasAdded;
   }
 
-  boolean removePosition(Position aPosition)
+  bool removePosition(Position aPosition)
   {
     bool wasRemoved = false;
     wasRemoved = positions.remove(aPosition);
@@ -62,9 +62,9 @@ class Token
     return number;
   }
 
-  boolean hasPositions()
+  bool hasPositions()
   {
-    boolean has = positions.size() > 0;
+    bool has = positions.size() > 0;
     return has;
   }
 

@@ -3,12 +3,12 @@
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",depend.getName());
+    append(stringBuffer, "#include <{0}>;",depend.getName());
   }
   
   for (String anImport : gClass.getMultiLookup("import"))
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",anImport);
+    append(stringBuffer, "#include <{0}>;",anImport);
   }
 %>

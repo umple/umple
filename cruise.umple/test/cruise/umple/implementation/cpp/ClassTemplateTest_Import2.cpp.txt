@@ -3,9 +3,9 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example.two;
-import java.util.*;
-import example.one.*;
-import example.three.*;
+#include <java.util.*>;
+#include <example.one.*>;
+#include <example.three.*>;
 
 class Student
 {
@@ -43,7 +43,7 @@ class Student
   // INTERFACE
   //------------------------
 
-  boolean setNumber(String aNumber)
+  bool setNumber(String aNumber)
   {
     bool wasSet = false;
     number = aNumber;
@@ -68,24 +68,24 @@ class Student
     return newMentors;
   }
 
-  public int numberOfMentors()
+  int numberOfMentors()
   {
     int number = mentors.size();
     return number;
   }
 
-  public boolean hasMentors()
+  bool hasMentors()
   {
-    boolean has = mentors.size() > 0;
+    bool has = mentors.size() > 0;
     return has;
   }
-
-  public int indexOfMentor(Mentor aMentor)
+  
+  int indexOfMentor(Mentor aMentor)
   {
     int index = mentors.indexOf(aMentor);
     return index;
   }
-
+  
   Course getCourse(int index)
   {
     Course aCourse = courses.get(index);
@@ -98,32 +98,32 @@ class Student
     return newCourses;
   }
 
-  public int numberOfCourses()
+  int numberOfCourses()
   {
     int number = courses.size();
     return number;
   }
 
-  public boolean hasCourses()
+  bool hasCourses()
   {
-    boolean has = courses.size() > 0;
+    bool has = courses.size() > 0;
     return has;
   }
-
-  public int indexOfCourse(Course aCourse)
+  
+  int indexOfCourse(Course aCourse)
   {
     int index = courses.indexOf(aCourse);
     return index;
   }
-
-  public static int minimumNumberOfMentors()
+  
+  static int minimumNumberOfMentors()
   {
     return 1;
   }
 
-  public boolean addMentor(Mentor aMentor)
+  bool addMentor(Mentor aMentor)
   {
-    boolean wasAdded = false;
+    bool wasAdded = false;
     if (mentors.contains(aMentor)) { return false; }
     Student existingStudent = aMentor.getStudent();
     if (existingStudent != null && existingStudent.numberOfMentors() <= minimumNumberOfMentors())
@@ -140,9 +140,9 @@ class Student
     return wasAdded;
   }
 
-  public boolean removeMentor(Mentor aMentor)
+  bool removeMentor(Mentor aMentor)
   {
-    boolean wasRemoved = false;
+    bool wasRemoved = false;
     if (mentors.contains(aMentor) && numberOfMentors() > minimumNumberOfMentors())
     {
       mentors.remove(aMentor);
@@ -151,8 +151,7 @@ class Student
     }
     return wasRemoved;
   }
-
-  boolean setMentors(Mentor... newMentors)
+  bool setMentors(Mentor... newMentors)
   {
     bool wasSet = false;
     if (newMentors.length < minimumNumberOfMentors())
@@ -220,14 +219,14 @@ class Student
     }
   }
 
-  public static int minimumNumberOfCourses()
+  static int minimumNumberOfCourses()
   {
     return 0;
   }
 
-  public boolean addCourse(Course aCourse)
+  bool addCourse(Course aCourse)
   {
-    boolean wasAdded = false;
+    bool wasAdded = false;
     if (courses.contains(aCourse)) { return false; }
     courses.add(aCourse);
     if (aCourse.indexOfStudent(this) != -1)
@@ -245,9 +244,9 @@ class Student
     return wasAdded;
   }
 
-  public boolean removeCourse(Course aCourse)
+  bool removeCourse(Course aCourse)
   {
-    boolean wasRemoved = false;
+    bool wasRemoved = false;
     if (!courses.contains(aCourse))
     {
       return wasRemoved;

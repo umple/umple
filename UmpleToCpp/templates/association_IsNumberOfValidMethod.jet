@@ -1,12 +1,13 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public boolean <%=gen.translate("isNumberOfValidMethod",av)%>()
+  bool <%=gen.translate("isNumberOfValidMethod",av)%>()
   {
     <% if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } %>
 <% if (av.getMultiplicity().isUpperBoundMany()) { %>
-    boolean isValid = <%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("minimumNumberOfMethod",av)%>();
+    bool isValid = <%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("minimumNumberOfMethod",av)%>();
 <% } else { %>
-    boolean isValid = <%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("minimumNumberOfMethod",av)%>() && <%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("maximumNumberOfMethod",av)%>();
+    bool isValid = <%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("minimumNumberOfMethod",av)%>() && <%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("maximumNumberOfMethod",av)%>();
 <% } %>
     <% if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } %>
     return isValid;
   }
+  

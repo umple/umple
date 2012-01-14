@@ -145,7 +145,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     
     UmpleToJavaPrimitiveMap = new HashMap<String, String>();
     UmpleToJavaPrimitiveMap.put("Integer","int");
-    UmpleToJavaPrimitiveMap.put("Boolean","boolean");
+    UmpleToJavaPrimitiveMap.put("Boolean","bool");
     UmpleToJavaPrimitiveMap.put("Double","double");
     UmpleToJavaPrimitiveMap.put("Float","float");
     
@@ -573,7 +573,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
     if (aType == null || aType.length() == 0)
     {
-      return "String";
+      return "string";
     }
     else if (aType.equals("Integer"))
     {
@@ -585,7 +585,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     }
     else if (aType.equals("Boolean"))
     {
-      return "boolean";
+      return "bool";
     }
     else
     {

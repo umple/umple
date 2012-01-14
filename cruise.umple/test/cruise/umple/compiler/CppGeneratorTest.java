@@ -145,10 +145,10 @@ public class CppGeneratorTest
   public void typeOf()
   {
     Assert.assertEquals("int",CppGenerator.typeOf("Integer"));
-    Assert.assertEquals("String",CppGenerator.typeOf(""));
-    Assert.assertEquals("String",CppGenerator.typeOf(null));
+    Assert.assertEquals("string",CppGenerator.typeOf(""));
+    Assert.assertEquals("string",CppGenerator.typeOf(null));
     Assert.assertEquals("double",CppGenerator.typeOf("Double"));
-    Assert.assertEquals("boolean",CppGenerator.typeOf("Boolean"));
+    Assert.assertEquals("bool",CppGenerator.typeOf("Boolean"));
     Assert.assertEquals("Blah",CppGenerator.typeOf("Blah"));
   }
   
@@ -782,9 +782,9 @@ public class CppGeneratorTest
     Assert.assertEquals("Integer", generator.translate("typeMany",av));
 
     av.setType("Boolean");
-    Assert.assertEquals("boolean",generator.getType(av));
+    Assert.assertEquals("bool",generator.getType(av));
     Assert.assertEquals(false,generator.isNullable(av));
-    Assert.assertEquals("boolean", generator.translate("type",av));
+    Assert.assertEquals("bool", generator.translate("type",av));
     
     av.setType("Double");
     Assert.assertEquals("double",generator.getType(av));

@@ -30,7 +30,7 @@ class SubMentor2 extends Mentor
   // INTERFACE
   //------------------------
 
-  boolean setSubName(String aSubName)
+  bool setSubName(String aSubName)
   {
     bool wasSet = false;
     subName = aSubName;

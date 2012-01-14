@@ -3,8 +3,8 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
-import java.sql.Date;
-import java.sql.Time;
+#include <java.sql.Date>;
+#include <java.sql.Time>;
 
 class Mentor
 {
@@ -28,7 +28,7 @@ class Mentor
   String str2;
   String someName;
   double lDoub;
-  boolean lBool;
+  bool lBool;
   String name;
   Date d;
   Time t;
@@ -83,7 +83,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  boolean setStr2(String aStr2)
+  bool setStr2(String aStr2)
   {
     bool wasSet = false;
     if (!canSetStr2) { return false; }
@@ -93,7 +93,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setSomeName(String aSomeName)
+  bool setSomeName(String aSomeName)
   {
     bool wasSet = false;
     someName = aSomeName;
@@ -101,7 +101,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setLDoub(double aLDoub)
+  bool setLDoub(double aLDoub)
   {
     bool wasSet = false;
     lDoub = aLDoub;
@@ -109,7 +109,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setLBool(boolean aLBool)
+  bool setLBool(bool aLBool)
   {
     bool wasSet = false;
     lBool = aLBool;
@@ -117,7 +117,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setName(String aName)
+  bool setName(String aName)
   {
     bool wasSet = false;
     name = aName;
@@ -125,7 +125,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setD(Date aD)
+  bool setD(Date aD)
   {
     bool wasSet = false;
     d = aD;
@@ -133,7 +133,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setI(int aI)
+  bool setI(int aI)
   {
     bool wasSet = false;
     i = aI;
@@ -141,7 +141,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setP(String aP)
+  bool setP(String aP)
   {
     bool wasSet = false;
     p = aP;
@@ -149,7 +149,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean resetP()
+  bool resetP()
   {
     bool wasReset = false;
     p = getDefaultP();
@@ -157,7 +157,7 @@ class Mentor
     return wasReset;
   }
 
-  boolean setQ(String aQ)
+  bool setQ(String aQ)
   {
     bool wasSet = false;
     q = aQ;
@@ -165,7 +165,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setR(String aR)
+  bool setR(String aR)
   {
     bool wasSet = false;
     r = aR;
@@ -173,7 +173,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean resetR()
+  bool resetR()
   {
     bool wasReset = false;
     r = getDefaultR();
@@ -181,7 +181,7 @@ class Mentor
     return wasReset;
   }
 
-  boolean setT(Date aT)
+  bool setT(Date aT)
   {
     bool wasSet = false;
     t = aT;
@@ -189,7 +189,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setU(Time aU)
+  bool setU(Time aU)
   {
     bool wasSet = false;
     u = aU;
@@ -197,7 +197,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean setV(Date aV)
+  bool setV(Date aV)
   {
     bool wasSet = false;
     v = aV;
@@ -205,7 +205,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean resetV()
+  bool resetV()
   {
     bool wasReset = false;
     v = getDefaultV();
@@ -213,7 +213,7 @@ class Mentor
     return wasReset;
   }
 
-  boolean setW(Time aW)
+  bool setW(Time aW)
   {
     bool wasSet = false;
     w = aW;
@@ -221,7 +221,7 @@ class Mentor
     return wasSet;
   }
 
-  boolean resetW()
+  bool resetW()
   {
     bool wasReset = false;
     w = getDefaultW();
@@ -249,7 +249,7 @@ class Mentor
     return lDoub;
   }
 
-  boolean getLBool()
+  bool getLBool()
   {
     return lBool;
   }

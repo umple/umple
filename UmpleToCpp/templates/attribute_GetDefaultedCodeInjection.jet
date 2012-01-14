@@ -6,4 +6,3 @@
     <% if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPostfixCode); } %>
     return <%=gen.translate("parameterOne",av)%>;
   }
-

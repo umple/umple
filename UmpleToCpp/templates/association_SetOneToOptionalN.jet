@@ -1,7 +1,7 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
-    boolean wasSet = false;
+    bool wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
     //Must provide <%=gen.translate("associationOne",av)%> to <%=gen.relatedTranslate("associationOne",av)%>
     if (<%=gen.translate("parameterOne",av)%> == null)
@@ -21,7 +21,7 @@
     <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>;
     if (<%=gen.translate("parameterExisting",av)%> != null && !<%=gen.translate("parameterExisting",av)%>.equals(<%=gen.translate("parameterOne",av)%>))
     {
-      boolean didRemove = <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
+      bool didRemove = <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
       if (!didRemove)
       {
         <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterExisting",av)%>;
@@ -35,3 +35,4 @@
     return wasSet;
   }
 
+  

@@ -13,7 +13,7 @@ class Garage
   //------------------------
 
   //Garage Attributes
-  boolean entranceClear;
+  bool entranceClear;
 
   //Garage State Machines
   enum GarageDoor { Open, Closing }
@@ -24,7 +24,7 @@ class Garage
   //------------------------
   public:
 
-  public Garage(boolean aEntranceClear)
+  public Garage(bool aEntranceClear)
   {
     entranceClear = aEntranceClear;
     setGarageDoor(GarageDoor.Open);
@@ -34,7 +34,7 @@ class Garage
   // INTERFACE
   //------------------------
 
-  boolean setEntranceClear(boolean aEntranceClear)
+  bool setEntranceClear(bool aEntranceClear)
   {
     bool wasSet = false;
     entranceClear = aEntranceClear;
@@ -42,7 +42,7 @@ class Garage
     return wasSet;
   }
 
-  boolean getEntranceClear()
+  bool getEntranceClear()
   {
     return entranceClear;
   }

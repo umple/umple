@@ -34,7 +34,7 @@ class LightFixture
   // INTERFACE
   //------------------------
 
-  boolean setBrightness(int aBrightness)
+  bool setBrightness(int aBrightness)
   {
     bool wasSet = false;
     brightness = aBrightness;

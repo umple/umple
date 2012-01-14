@@ -3,7 +3,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example.one;
-import example.two.*;
+#include <example.two.*>;
 
 class Mentor
 {
@@ -33,7 +33,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  boolean setName(String aName)
+  bool setName(String aName)
   {
     bool wasSet = false;
     name = aName;

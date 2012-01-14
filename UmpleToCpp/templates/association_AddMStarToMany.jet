@@ -1,7 +1,7 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
-    boolean wasRemoved = false;
+    bool wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
     if (!<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
     {
@@ -32,4 +32,3 @@
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
     return wasRemoved;
   }
-

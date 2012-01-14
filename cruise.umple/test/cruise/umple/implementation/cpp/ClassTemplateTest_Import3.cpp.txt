@@ -3,8 +3,8 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example.three;
-import java.util.*;
-import example.two.*;
+#include <java.util.*>;
+#include <example.two.*>;
 
 class Course
 {
@@ -43,32 +43,32 @@ class Course
     return newStudents;
   }
 
-  public int numberOfStudents()
+  int numberOfStudents()
   {
     int number = students.size();
     return number;
   }
 
-  public boolean hasStudents()
+  bool hasStudents()
   {
-    boolean has = students.size() > 0;
+    bool has = students.size() > 0;
     return has;
   }
-
-  public int indexOfStudent(Student aStudent)
+  
+  int indexOfStudent(Student aStudent)
   {
     int index = students.indexOf(aStudent);
     return index;
   }
-
-  public static int minimumNumberOfStudents()
+  
+  static int minimumNumberOfStudents()
   {
     return 0;
   }
 
-  public boolean addStudent(Student aStudent)
+  bool addStudent(Student aStudent)
   {
-    boolean wasAdded = false;
+    bool wasAdded = false;
     if (students.contains(aStudent)) { return false; }
     students.add(aStudent);
     if (aStudent.indexOfCourse(this) != -1)
@@ -86,9 +86,9 @@ class Course
     return wasAdded;
   }
 
-  public boolean removeStudent(Student aStudent)
+  bool removeStudent(Student aStudent)
   {
-    boolean wasRemoved = false;
+    bool wasRemoved = false;
     if (!students.contains(aStudent))
     {
       return wasRemoved;

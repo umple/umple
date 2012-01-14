@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public <%=gen.translate("type",av)%> <%=gen.translate("addMethod",av)%>(<%=gen.translate("methodArgumentsExcept",relatedAssociation)%>)
+  <%=gen.translate("type",av)%> <%=gen.translate("addMethod",av)%>(<%=gen.translate("methodArgumentsExcept",relatedAssociation)%>)
   {
     if (<%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("maximumNumberOfMethod",av)%>())
     {
@@ -11,9 +11,9 @@
     }
   }
 
-  public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
-    boolean wasAdded = false;
+    bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
     if (<%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("maximumNumberOfMethod",av)%>())
     {
@@ -22,7 +22,7 @@
     }
 
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
-    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);
+    bool <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);
 
     if (<%=gen.relatedTranslate("parameterIsNew",av)%> && <%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
@@ -43,9 +43,9 @@
     return wasAdded;
   }
 
-  public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
-    boolean wasRemoved = false;
+    bool wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
     //Unable to remove <%=gen.translate("parameterOne",av)%>, as it must always have a <%=gen.relatedTranslate("associationOne",av)%>
     if (this.equals(<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
@@ -66,4 +66,3 @@
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
     return wasRemoved;
   }
-

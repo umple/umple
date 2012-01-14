@@ -29,7 +29,7 @@ class Token
   // INTERFACE
   //------------------------
 
-  boolean setP(Position aP)
+  bool setP(Position aP)
   {
     bool wasSet = false;
     p = aP;

@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     bool wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
@@ -9,7 +9,7 @@
     return wasSet;
   }
 
-  boolean <%=gen.translate("resetMethod",av)%>()
+  bool <%=gen.translate("resetMethod",av)%>()
   {
     bool wasReset = false;
     <% if (customResetPrefixCode != null) { append(stringBuffer, "\n    {0}",customResetPrefixCode); } %>
@@ -19,3 +19,4 @@
     return wasReset;
   }
 
+  

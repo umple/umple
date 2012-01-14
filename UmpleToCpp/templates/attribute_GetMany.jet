@@ -23,10 +23,10 @@
     return number;
   }
 
-  boolean <%=gen.translate("hasManyMethod",av)%>()
+  bool <%=gen.translate("hasManyMethod",av)%>()
   {
     <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } %>
-    boolean has = <%=gen.translate("attributeMany",av)%>.size() > 0;
+    bool has = <%=gen.translate("attributeMany",av)%>.size() > 0;
     <% if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } %>
     return has;
   }
@@ -39,3 +39,4 @@
     return index;
   }
 
+  

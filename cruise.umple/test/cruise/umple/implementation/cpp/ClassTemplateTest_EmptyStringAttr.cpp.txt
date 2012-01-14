@@ -29,7 +29,7 @@ class Student
   // INTERFACE
   //------------------------
 
-  boolean setGrade(String aGrade)
+  bool setGrade(String aGrade)
   {
     bool wasSet = false;
     grade = aGrade;

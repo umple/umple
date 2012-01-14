@@ -15,7 +15,7 @@
     return <%=gen.translate("parameterMany",av)%>;
   }
 
-  public int <%=gen.translate("numberOfMethod",av)%>()
+  int <%=gen.translate("numberOfMethod",av)%>()
   {
     <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } %>
     int number = <%=gen.translate("associationMany",av)%>.size();
@@ -23,19 +23,20 @@
     return number;
   }
 
-  public boolean <%=gen.translate("hasManyMethod",av)%>()
+  bool <%=gen.translate("hasManyMethod",av)%>()
   {
     <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } %>
-    boolean has = <%=gen.translate("associationMany",av)%>.size() > 0;
+    bool has = <%=gen.translate("associationMany",av)%>.size() > 0;
     <% if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } %>
     return has;
   }
-
-  public int <%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  
+  int <%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } %>
     int index = <%=gen.translate("associationMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);
     <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } %>
     return index;
   }
-
+  
+  
