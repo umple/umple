@@ -925,21 +925,29 @@ class CppGenerator
         	                  getOutput()) + 
         	                  aClass.getPackageName().replace(".", File.separator);
         	                  
-    String filename = path + File.separator + aClass.getName() + ".cpp";
+  String filename = path + File.separator + aClass.getName() + ".cpp";
     File file = new File(path);
     file.mkdirs();
 
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
+        
+    //Creating a header file for each class created.
+    String hfilename = path + File.separator + aClass.getName() + ".h";
+    BufferedWriter hbw = new BufferedWriter(new FileWriter(hfilename));
+
     String contents = language.getCode(model, aClass);
     model.getGeneratedCode().put(aClass.getName(),contents);
+    
     try
     {
       bw.write(contents);
+      hbw.write(contents);
       bw.flush();
     }
     finally
     {
       bw.close();
+      hbw.close();
     }
   }
 }
