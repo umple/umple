@@ -904,9 +904,9 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   
   private void addAttributeImports(UmpleClass aClass, GeneratedClass genClass)
   {
-    String timeImport = "java.sql.Time";
-    String dateImport = "java.sql.Date";
-    String utilImport = "java.util.*";
+    String timeImport = "time.h";
+    String dateImport = "time.h";
+    String utilImport = "iostream";
     
     for (Attribute av : aClass.getAttributes()) 
     {
