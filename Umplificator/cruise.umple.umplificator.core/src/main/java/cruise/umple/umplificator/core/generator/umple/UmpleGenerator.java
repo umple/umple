@@ -20,7 +20,7 @@ import cruise.umple.compiler.UmpleClass;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
 import cruise.umple.umplificator.core.inventory.JavaProjectInventory;
-import cruise.umple.umplificator.umple.UmpleClassGenerator;
+import cruise.umple.umplificator.UmpleClassGenerator;
 
 
 /**
