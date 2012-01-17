@@ -362,7 +362,7 @@ public class CppGeneratorTest
     UmpleClass c = model.addUmpleClass("Student");
     c.addAttribute(new Attribute("name","Time","defaulted","\"1\"",false));
     generator.prepare();
-    assertImport(c,"java.sql.Time");
+    assertImport(c,"time.h");
   }
   
   @Test
@@ -372,7 +372,7 @@ public class CppGeneratorTest
     UmpleModel model = parse(input);
     
     UmpleClass child = model.getUmpleClass("Child");
-    assertImport(child,"java.sql.Date");
+    assertImport(child,"time.h");
   }
   
   @Test
@@ -414,10 +414,10 @@ public class CppGeneratorTest
     UmpleModel model = parse(input);
 
     UmpleClass activity = model.getUmpleClass("Activity");
-    assertImport(activity,"java.util.*","java.sql.Date");
+    assertImport(activity,"java.util.*","time.h");
 
     UmpleClass task = model.getUmpleClass("Result");
-    assertImport(task,"java.util.*","java.sql.Date");
+    assertImport(task,"java.util.*","time.h");
   }
   
   @Test
@@ -427,10 +427,10 @@ public class CppGeneratorTest
     UmpleModel model = parse(input);
     
     UmpleClass cheque = model.getUmpleClass("Cheque");
-    assertImport(cheque,"java.sql.Date");
+    assertImport(cheque,"time.h");
     
     UmpleClass bankAccount = model.getUmpleClass("BankAccount");
-    assertImport(bankAccount,"java.util.*","java.sql.Date");
+    assertImport(bankAccount,"java.util.*","time.h");
     
     UmpleClass bank = model.getUmpleClass("Bank");
     assertImport(bank);
@@ -453,7 +453,7 @@ public class CppGeneratorTest
     flight.addAssociationVariable(airlineVar);
     
     generator.prepare();
-    assertImport(airline,"java.util.*","java.sql.Time");
+    assertImport(airline,"java.util.*","time.h");
   }
   
   @Test
@@ -462,7 +462,7 @@ public class CppGeneratorTest
     UmpleClass c = model.addUmpleClass("Student");
     c.addAttribute(new Attribute("name","Date","defaulted","\"1\"",false));
     generator.prepare();
-    assertImport(c,"java.sql.Date");
+    assertImport(c,"time.h");
   }  
 
   @Test
@@ -482,7 +482,7 @@ public class CppGeneratorTest
     av.setIsList(true);
     c.addAttribute(av);
     generator.prepare();
-    assertImport(c,"java.util.*");
+    assertImport(c,"iostream");
   }  
 
   @Test
