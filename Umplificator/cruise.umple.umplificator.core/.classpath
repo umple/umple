@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="/lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
 	<classpathentry kind="lib" path="/lib/junit.jar"/>
+	<classpathentry kind="lib" path="/lib/umple.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
