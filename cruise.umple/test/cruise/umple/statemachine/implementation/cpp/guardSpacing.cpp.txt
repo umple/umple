@@ -34,7 +34,7 @@ class Garage
   // INTERFACE
   //------------------------
 
-  bool setEntranceClear(bool aEntranceClear)
+  bool Garage::setEntranceClear(bool aEntranceClear)
   {
     bool wasSet = false;
     entranceClear = aEntranceClear;
@@ -42,7 +42,7 @@ class Garage
     return wasSet;
   }
 
-  bool getEntranceClear()
+  bool Garage::getEntranceClear()
   {
     return entranceClear;
   }

@@ -3,7 +3,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
-#include <java.util.*>;
+#include <iostream.h>;
 
 class Token
 {
@@ -30,45 +30,45 @@ class Token
   // INTERFACE
   //------------------------
 
-  bool addPosition(Position aPosition)
+  bool Token::addPosition(Position aPosition)
   {
     bool wasAdded = false;
     wasAdded = positions.add(aPosition);
     return wasAdded;
   }
 
-  bool removePosition(Position aPosition)
+  bool Token::removePosition(Position aPosition)
   {
     bool wasRemoved = false;
     wasRemoved = positions.remove(aPosition);
     return wasRemoved;
   }
 
-  Position getPosition(int index)
+  Position Token::getPosition(int index)
   {
     Position aPosition = positions.get(index);
     return aPosition;
   }
 
-  Position[] getPositions()
+  Position[] Token::getPositions()
   {
     Position[] newPositions = positions.toArray(new Position[positions.size()]);
     return newPositions;
   }
 
-  int numberOfPositions()
+  int Token::numberOfPositions()
   {
     int number = positions.size();
     return number;
   }
 
-  bool hasPositions()
+  bool Token::hasPositions()
   {
     bool has = positions.size() > 0;
     return has;
   }
 
-  int indexOfPosition(Position aPosition)
+  int Token::indexOfPosition(Position aPosition)
   {
     int index = positions.indexOf(aPosition);
     return index;

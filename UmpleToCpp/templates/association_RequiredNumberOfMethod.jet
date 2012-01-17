@@ -4,12 +4,12 @@
     String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
 %>
 <% if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { %>
-  static int <%=gen.translate("requiredNumberOfMethod",av)%>()
+  static int <%=gen.translate("type",uClass)%>::<%=gen.translate("requiredNumberOfMethod",av)%>()
   {
     return <%=av.getMultiplicity().getLowerBound()%>;
   }
 <% } else { %>
-  static int <%=gen.translate("requiredNumberOfMethod",av)%>()
+  static int <%=gen.translate("type",uClass)%>::<%=gen.translate("requiredNumberOfMethod",av)%>()
   {
     <% if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } %>
     int required = <%=av.getMultiplicity().getLowerBound()%>;

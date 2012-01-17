@@ -34,7 +34,7 @@ class LightFixture
   // INTERFACE
   //------------------------
 
-  bool setBrightness(int aBrightness)
+  bool LightFixture::setBrightness(int aBrightness)
   {
     bool wasSet = false;
     brightness = aBrightness;
@@ -42,7 +42,7 @@ class LightFixture
     return wasSet;
   }
 
-  int getBrightness()
+  int LightFixture::getBrightness()
   {
     return brightness;
   }

@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  bool <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
@@ -27,7 +27,7 @@
     return wasAdded;
   }
 
-  bool <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     bool wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>

@@ -33,7 +33,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  bool setName(String aName)
+  bool Mentor::setName(String aName)
   {
     bool wasSet = false;
     name = aName;
@@ -41,12 +41,12 @@ class Mentor
     return wasSet;
   }
 
-  String getName()
+  String Mentor::getName()
   {
     return name;
   }
 
-  Student getStudent()
+  Student Mentor::getStudent()
   {
     return student;
   }

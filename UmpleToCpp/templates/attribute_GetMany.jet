@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>(int index)
+  <%=gen.translate("type",av)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",av)%>(int index)
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
     <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("attributeMany",av)%>.get(index);
@@ -7,7 +7,7 @@
     return <%=gen.translate("parameterOne",av)%>;
   }
 
-  <%=gen.translate("type",av)%>[] <%=gen.translate("getManyMethod",av)%>()
+  <%=gen.translate("type",av)%>[] <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>()
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
     <%=gen.translate("type",av)%>[] <%=gen.translate("parameterMany",av)%> = <%=gen.translate("attributeMany",av)%>.toArray(new <%=gen.translate("type",av)%>[<%=gen.translate("attributeMany",av)%>.size()]);
@@ -15,7 +15,7 @@
     return <%=gen.translate("parameterMany",av)%>;
   }
 
-  int <%=gen.translate("numberOfMethod",av)%>()
+  int <%=gen.translate("type",uClass)%>::<%=gen.translate("numberOfMethod",av)%>()
   {
     <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } %>
     int number = <%=gen.translate("attributeMany",av)%>.size();
@@ -23,7 +23,7 @@
     return number;
   }
 
-  bool <%=gen.translate("hasManyMethod",av)%>()
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("hasManyMethod",av)%>()
   {
     <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } %>
     bool has = <%=gen.translate("attributeMany",av)%>.size() > 0;
@@ -31,7 +31,7 @@
     return has;
   }
 
-  int <%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  int <%=gen.translate("type",uClass)%>::<%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } %>
     int index = <%=gen.translate("attributeMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);

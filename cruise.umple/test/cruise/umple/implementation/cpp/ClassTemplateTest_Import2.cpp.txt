@@ -43,7 +43,7 @@ class Student
   // INTERFACE
   //------------------------
 
-  bool setNumber(String aNumber)
+  bool Student::setNumber(String aNumber)
   {
     bool wasSet = false;
     number = aNumber;
@@ -51,66 +51,66 @@ class Student
     return wasSet;
   }
 
-  String getNumber()
+  String Student::getNumber()
   {
     return number;
   }
 
-  Mentor getMentor(int index)
+  Mentor Student::getMentor(int index)
   {
     Mentor aMentor = mentors.get(index);
     return aMentor;
   }
 
-  List<Mentor> getMentors()
+  List<Mentor> Student::getMentors()
   {
     List<Mentor> newMentors = Collections.unmodifiableList(mentors);
     return newMentors;
   }
 
-  int numberOfMentors()
+  int Student::numberOfMentors()
   {
     int number = mentors.size();
     return number;
   }
 
-  bool hasMentors()
+  bool Student::hasMentors()
   {
     bool has = mentors.size() > 0;
     return has;
   }
   
-  int indexOfMentor(Mentor aMentor)
+  int Student::indexOfMentor(Mentor aMentor)
   {
     int index = mentors.indexOf(aMentor);
     return index;
   }
   
-  Course getCourse(int index)
+  Course Student::getCourse(int index)
   {
     Course aCourse = courses.get(index);
     return aCourse;
   }
 
-  List<Course> getCourses()
+  List<Course> Student::getCourses()
   {
     List<Course> newCourses = Collections.unmodifiableList(courses);
     return newCourses;
   }
 
-  int numberOfCourses()
+  int Student::numberOfCourses()
   {
     int number = courses.size();
     return number;
   }
 
-  bool hasCourses()
+  bool Student::hasCourses()
   {
     bool has = courses.size() > 0;
     return has;
   }
   
-  int indexOfCourse(Course aCourse)
+  int Student::indexOfCourse(Course aCourse)
   {
     int index = courses.indexOf(aCourse);
     return index;
@@ -121,7 +121,7 @@ class Student
     return 1;
   }
 
-  bool addMentor(Mentor aMentor)
+  bool Student::addMentor(Mentor aMentor)
   {
     bool wasAdded = false;
     if (mentors.contains(aMentor)) { return false; }
@@ -140,7 +140,7 @@ class Student
     return wasAdded;
   }
 
-  bool removeMentor(Mentor aMentor)
+  bool Student::removeMentor(Mentor aMentor)
   {
     bool wasRemoved = false;
     if (mentors.contains(aMentor) && numberOfMentors() > minimumNumberOfMentors())
@@ -151,7 +151,7 @@ class Student
     }
     return wasRemoved;
   }
-  bool setMentors(Mentor... newMentors)
+  bool Student::setMentors(Mentor... newMentors)
   {
     bool wasSet = false;
     if (newMentors.length < minimumNumberOfMentors())
@@ -205,7 +205,7 @@ class Student
     return wasSet;
   }
 
-  void setStudent(Mentor aMentor, Student aStudent)
+  void Student::setStudent(Mentor aMentor, Student aStudent)
   {
     try
     {
@@ -224,7 +224,7 @@ class Student
     return 0;
   }
 
-  bool addCourse(Course aCourse)
+  bool Student::addCourse(Course aCourse)
   {
     bool wasAdded = false;
     if (courses.contains(aCourse)) { return false; }
@@ -244,7 +244,7 @@ class Student
     return wasAdded;
   }
 
-  bool removeCourse(Course aCourse)
+  bool Student::removeCourse(Course aCourse)
   {
     bool wasRemoved = false;
     if (!courses.contains(aCourse))

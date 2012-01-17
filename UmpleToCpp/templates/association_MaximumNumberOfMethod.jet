@@ -6,12 +6,12 @@
     String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
 %>
 <% if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { %>
-  static int <%=gen.translate("maximumNumberOfMethod",av)%>()
+  static int <%=gen.translate("type",uClass)%>::<%=gen.translate("maximumNumberOfMethod",av)%>()
   {
     return <%=av.getMultiplicity().getUpperBound()%>;
   }
 <% } else { %>
-  static int <%=gen.translate("maximumNumberOfMethod",av)%>()
+  static int <%=gen.translate("type",uClass)%>::<%=gen.translate("maximumNumberOfMethod",av)%>()
   {
     <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } %>
     int maximum = <%=av.getMultiplicity().getUpperBound()%>;

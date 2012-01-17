@@ -31,31 +31,31 @@ class Course
   // INTERFACE
   //------------------------
 
-  Student getStudent(int index)
+  Student Course::getStudent(int index)
   {
     Student aStudent = students.get(index);
     return aStudent;
   }
 
-  List<Student> getStudents()
+  List<Student> Course::getStudents()
   {
     List<Student> newStudents = Collections.unmodifiableList(students);
     return newStudents;
   }
 
-  int numberOfStudents()
+  int Course::numberOfStudents()
   {
     int number = students.size();
     return number;
   }
 
-  bool hasStudents()
+  bool Course::hasStudents()
   {
     bool has = students.size() > 0;
     return has;
   }
   
-  int indexOfStudent(Student aStudent)
+  int Course::indexOfStudent(Student aStudent)
   {
     int index = students.indexOf(aStudent);
     return index;
@@ -66,7 +66,7 @@ class Course
     return 0;
   }
 
-  bool addStudent(Student aStudent)
+  bool Course::addStudent(Student aStudent)
   {
     bool wasAdded = false;
     if (students.contains(aStudent)) { return false; }
@@ -86,7 +86,7 @@ class Course
     return wasAdded;
   }
 
-  bool removeStudent(Student aStudent)
+  bool Course::removeStudent(Student aStudent)
   {
     bool wasRemoved = false;
     if (!students.contains(aStudent))

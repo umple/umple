@@ -29,7 +29,7 @@ class Token
   // INTERFACE
   //------------------------
 
-  bool setP(Position aP)
+  bool Token::setP(Position aP)
   {
     bool wasSet = false;
     p = aP;
@@ -37,7 +37,7 @@ class Token
     return wasSet;
   }
 
-  Position getP()
+  Position Token::getP()
   {
     return p;
   }

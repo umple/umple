@@ -29,7 +29,7 @@ class Student
   // INTERFACE
   //------------------------
 
-  bool setGrade(String aGrade)
+  bool Student::setGrade(String aGrade)
   {
     bool wasSet = false;
     grade = aGrade;
@@ -37,7 +37,7 @@ class Student
     return wasSet;
   }
 
-  String getGrade()
+  String Student::getGrade()
   {
     return grade;
   }

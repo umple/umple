@@ -30,7 +30,7 @@ class SubMentor2 extends Mentor
   // INTERFACE
   //------------------------
 
-  bool setSubName(String aSubName)
+  bool SubMentor2::setSubName(String aSubName)
   {
     bool wasSet = false;
     subName = aSubName;
@@ -38,7 +38,7 @@ class SubMentor2 extends Mentor
     return wasSet;
   }
 
-  String getSubName()
+  String SubMentor2::getSubName()
   {
     return subName;
   }

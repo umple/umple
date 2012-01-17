@@ -28,12 +28,12 @@ class CodeTranslator
   {}
 
 
-   String translate(String id, Attribute attribute){
+   String CodeTranslator::translate(String id, Attribute attribute){
       return "1";
   }
 
 
-   String translate(String id, AssociationVariable associationVariable){
+   String CodeTranslator::translate(String id, AssociationVariable associationVariable){
       return "1";
   }
 

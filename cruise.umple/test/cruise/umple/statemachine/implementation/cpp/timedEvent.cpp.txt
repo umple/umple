@@ -39,7 +39,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  bool setHowLongUntilOk(int aHowLongUntilOk)
+  bool Mentor::setHowLongUntilOk(int aHowLongUntilOk)
   {
     bool wasSet = false;
     howLongUntilOk = aHowLongUntilOk;
@@ -47,7 +47,7 @@ class Mentor
     return wasSet;
   }
 
-  int getHowLongUntilOk()
+  int Mentor::getHowLongUntilOk()
   {
     return howLongUntilOk;
   }
