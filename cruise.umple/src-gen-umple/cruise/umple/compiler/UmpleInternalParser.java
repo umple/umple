@@ -1665,6 +1665,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
   private void analyzeTraceStatement( UmpleClass aClass, Token token)
   {
 	  TraceDirective traceDirective = new TraceDirective();
+	  Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
       MethodTraceEntity mte = new MethodTraceEntity();
       traceDirective.setUmpleClass(aClass);
       
@@ -1672,7 +1673,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
       {
     	  if( traceToken.is("trace_entity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
     	  {
-    		  analyzeTraceItem( traceToken , traceDirective , mte );
+    		  analyzeTraceItem( traceToken , traceDirective , mte, traceAttr);
     	  }
     	  else if( traceToken.is("traceWhere") )
     	  {
@@ -1691,15 +1692,15 @@ private void analyzeTraceToken(Token token, int analysisStep)
     	  }  	  
     	  else if( traceToken.is("trace_for") )
     	  {
-    		  traceDirective.setForClause(Integer.parseInt(token.getValue("trace_for")));
+    		  traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for")));
     	  } 	  
     	  else if( traceToken.is("trace_period") )
     	  {
-    		  traceDirective.setPeriodClause(token.getValue("trace_period"));
+    		  traceAttr.setPeriodClause(token.getValue("trace_period"));
     	  }	  
     	  else if( traceToken.is("trace_duration") )
     	  {
-    		  traceDirective.setDuringClause(token.getValue("trace_duration"));
+    		  traceAttr.setDuringClause(token.getValue("trace_duration"));
     	  }
     	  else if( traceToken.is("trace_record") )
     	  {
@@ -1709,7 +1710,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
     	  }
     	  else if( traceToken.is("trace_execute") )
     	  {
-    		  traceDirective.setExecuteClause(token.getValue("trace_execute"));
+    		  traceAttr.setExecuteClause(token.getValue("trace_execute"));
     	  }  
     	  else if( traceToken.is("tracecase_name") )
     	  {
@@ -1717,16 +1718,19 @@ private void analyzeTraceToken(Token token, int analysisStep)
     		  return;
     	  }
       }
+      
+      if( traceAttr.numberOfAttributes() > 0 )
+    	  traceDirective.addAttributeTraceItem(traceAttr);
+      
   }
   
   // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
-  private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte)
+  private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, Attribute_TraceItem traceAttr)
   {
 	  Attribute attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
 	  List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
 	  StateMachine stm = null;
 	  State state = null;
-	  boolean entryState = false;
 	  String methodName = traceToken.getValue("trace_entity");
 	  
 	  // here, i faced a problem of finding traced state machine because
@@ -1774,7 +1778,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  // if trace entity is an attribute
 	  else if( attr != null )
 	  {
-		  traceDirective.addAttribute(attr);
+		  traceAttr.addAttribute(attr);
 	  }
 	  // if trace entity is a state machine
 	  else if( stm != null && state == null )
@@ -1808,8 +1812,8 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  }
 	  
   }
-  
-  // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
+
+// Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
   // Returns a trace condition filled with left and right hands operands, with comparison operator used
   private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType )
   {
@@ -1861,11 +1865,12 @@ private void analyzeTraceToken(Token token, int analysisStep)
   // This method analyzes trace directive fragments inside a trace case
   private void analyzeTraceDirectiveFragments( TraceDirective traceDirective , UmpleClass aClass , Token traceToken , Token token )
   {
+	  Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
       MethodTraceEntity mte = new MethodTraceEntity();
       
       if( traceToken.is("trace_entity") )  
       {
-    	  analyzeTraceItem( traceToken , traceDirective , mte );
+    	  analyzeTraceItem( traceToken , traceDirective , mte, traceAttr );
       }
       else if( traceToken.getName().equals("entry") )
       {
@@ -1892,21 +1897,23 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  }	    	
       else if( traceToken.is("trace_for") )  	
       {	
-    	  traceDirective.setForClause(Integer.parseInt(token.getValue("trace_for"))); 	  
+    	  traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for"))); 	  
       } 	     	
       else if( traceToken.is("trace_period") )   	
       {  	
-    	  traceDirective.setPeriodClause(token.getValue("trace_period"));   	  
+    	  traceAttr.setPeriodClause(token.getValue("trace_period"));   	  
       }	     	
       else if( traceToken.is("trace_duration") )   	
       {   	
-    	  traceDirective.setDuringClause(token.getValue("trace_duration"));   	  
+    	  traceAttr.setDuringClause(token.getValue("trace_duration"));   	  
       }	     	
       else if( traceToken.is("trace_execute") )   	
       { 	
-    	  traceDirective.setExecuteClause(token.getValue("trace_execute")); 	  
+    	  traceAttr.setExecuteClause(token.getValue("trace_execute")); 	  
       }
-     
+      
+      if( traceAttr.numberOfAttributes() > 0 )
+    	  traceDirective.addAttributeTraceItem(traceAttr);
   }
   
   // Perform post token analysis on trace related elements of the Umple language

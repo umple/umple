@@ -215,7 +215,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","Light");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceSupport_ConsoleTracer_EmptyAndNonEmptyStates()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_EmptyAndNonEmptyStates.ump",languagePath + "/ConsoleTracer_EmptyAndNonEmptyStates."+ languagePath +".txt","Light");
@@ -227,7 +227,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryAction.ump",languagePath + "/ConsoleTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceSupport_ConsoleTracer_TraceStateEntryRecord()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryRecord.ump",languagePath + "/ConsoleTracer_TraceStateEntryRecord."+ languagePath +".txt","StateMachineTest");
@@ -246,7 +246,7 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	//====== File tracer
-	@Test
+	@Test @Ignore
 	public void TraceSupport_FileTracer_State()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceState.ump",languagePath + "/FileTracer_TraceState."+ languagePath +".txt","GarageDoor");

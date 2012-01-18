@@ -3,8 +3,7 @@ class LightFixture
 	String name;
 	Integer id;
 	tracecase tc1 {
-  		trace name execute {record ("objectBeingTraced"), record("x",name)};
+  		trace name;
   		trace id where name == "tim";
-  		trace method1() during 150s;
 	}
 }

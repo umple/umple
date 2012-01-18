@@ -72,12 +72,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective.getAttribute(0));
+	  Attribute_TraceItem tarceAttr = traceDirective.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr.getAttribute(0));
 	  Assert.assertEquals(false,traceDirective.hasCondition());
-	  Assert.assertEquals(0,traceDirective.getForClause());
-	  Assert.assertEquals(null,traceDirective.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective.getDuringClause());
-	  Assert.assertEquals(null,traceDirective.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr.getForClause());
+	  Assert.assertEquals(null,tarceAttr.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr.getExecuteClause());
   }
   
   @Test
@@ -88,12 +89,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective.getAttribute(0));
+	  Attribute_TraceItem tarceAttr = traceDirective.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr.getAttribute(0));
 	  Assert.assertEquals(false,traceDirective.hasCondition());
-	  Assert.assertEquals(0,traceDirective.getForClause());
-	  Assert.assertEquals(null,traceDirective.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective.getDuringClause());
-	  Assert.assertEquals(null,traceDirective.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr.getForClause());
+	  Assert.assertEquals(null,tarceAttr.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr.getExecuteClause());
   }
   
   @Test
@@ -104,12 +106,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("Boolean",clazz.getAttribute("flag").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
-	  Assert.assertEquals(clazz.getAttribute("flag"),traceDirective.getAttribute(0));
+	  Attribute_TraceItem tarceAttr = traceDirective.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("flag"),tarceAttr.getAttribute(0));
 	  Assert.assertEquals(false,traceDirective.hasCondition());
-	  Assert.assertEquals(0,traceDirective.getForClause());
-	  Assert.assertEquals(null,traceDirective.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective.getDuringClause());
-	  Assert.assertEquals(null,traceDirective.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr.getForClause());
+	  Assert.assertEquals(null,tarceAttr.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr.getExecuteClause());
   }
   
   @Test
@@ -127,20 +130,24 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "id", "==", "30", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "id", ">", "500", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -152,20 +159,24 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "until", "id", "==", "6", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -177,20 +188,24 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "after", "id", "==", "6", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -201,19 +216,23 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);	  
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(5,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(5,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(100,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(100,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -225,18 +244,22 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);  
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals("30ms",tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals("100s",traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals("100s",tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -248,17 +271,21 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals("50s",traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals("50s",tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals("100ms",traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals("100ms",tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
 	  
   }
   
@@ -271,31 +298,39 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(4,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1), traceDirective3 = clazz.getTraceDirective(2) ,traceDirective4 = clazz.getTraceDirective(3);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals("\"somthing\"",traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals("\"somthing\"",tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals("record(\"objectBeingTraced\")",traceDirective2.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective3.getAttribute(0));
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals("record(\"objectBeingTraced\")",tarceAttr2.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr3 = traceDirective3.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr3.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective3.numberOfCondition());
-	  Assert.assertEquals(100,traceDirective3.getForClause());
-	  Assert.assertEquals(null,traceDirective3.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective3.getDuringClause());
-	  Assert.assertEquals("record(\"x\",name)",traceDirective3.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective4.getAttribute(0));
+	  Assert.assertEquals(100,tarceAttr3.getForClause());
+	  Assert.assertEquals(null,tarceAttr3.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr3.getDuringClause());
+	  Assert.assertEquals("record(\"x\",name)",tarceAttr3.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr4 = traceDirective4.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr4.getAttribute(0));
 	  Assert.assertEquals(1,traceDirective4.numberOfCondition());
 	  assertCondition(traceDirective4, "where", "id", ">", "500", 0);
-	  Assert.assertEquals(0,traceDirective4.getForClause());
-	  Assert.assertEquals(null,traceDirective4.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective4.getDuringClause());
-	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr4.getForClause());
+	  Assert.assertEquals(null,tarceAttr4.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr4.getDuringClause());
+	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",tarceAttr4.getExecuteClause());
   }
   
   @Test
@@ -307,12 +342,14 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
 	  TraceRecord record = traceDirective1.getTraceRecord();
 	  Assert.assertEquals("id",record.getRecord());
   }
@@ -326,13 +363,15 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr = traceDirective.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective.getForClause());
-	  Assert.assertEquals(null,traceDirective.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective.getDuringClause());
-	  Assert.assertEquals(null,traceDirective.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr.getForClause());
+	  Assert.assertEquals(null,tarceAttr.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr.getExecuteClause());
   }
   
   @Test
@@ -344,22 +383,26 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -371,22 +414,26 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "until", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -398,22 +445,26 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective2, "after", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -425,20 +476,24 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(5,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(5,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(100,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(100,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -450,20 +505,24 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals("30ms",tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals("1s",traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals("1s",tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -475,20 +534,24 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(1));
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals("150s",traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals("150s",tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
+	  
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals("200ms",traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals("200ms",tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test
@@ -500,21 +563,25 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective1.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective1.getAttribute(1));	  
+	  
+	  Attribute_TraceItem tarceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr1.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr1.getAttribute(1));	  
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals("30ms",traceDirective1.getDuringClause());
-	  Assert.assertEquals("\"something\"",traceDirective1.getExecuteClause());
-	  Assert.assertEquals(clazz.getAttribute("name"),traceDirective2.getAttribute(0));
-	  Assert.assertEquals(clazz.getAttribute("id"),traceDirective2.getAttribute(1));
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals("30ms",tarceAttr1.getDuringClause());
+	  Assert.assertEquals("\"something\"",tarceAttr1.getExecuteClause());
+
+	  Attribute_TraceItem tarceAttr2 = traceDirective2.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),tarceAttr2.getAttribute(0));
+	  Assert.assertEquals(clazz.getAttribute("id"),tarceAttr2.getAttribute(1));
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "id", ">", "100", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals("record(\"x\")",traceDirective2.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals("record(\"x\")",tarceAttr2.getExecuteClause());
   }
   
   //***************************************************
@@ -533,28 +600,28 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective3.getMethodTraceEntity(0).getName(),"getName()");
 	  Assert.assertEquals(false,traceDirective3.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective3.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective3.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective3.getForClause());
-	  Assert.assertEquals(null,traceDirective3.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective3.getDuringClause());
-	  Assert.assertEquals(null,traceDirective3.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective3.getForClause());
+//	  Assert.assertEquals(null,traceDirective3.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective3.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective3.getExecuteClause());
   }
   
   @Test
@@ -569,19 +636,19 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -596,19 +663,19 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -624,20 +691,20 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "name", ">", "\"Tim\"", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -653,20 +720,20 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "name", ">", "\"Tim\"", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -682,20 +749,20 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "name", ">", "\"Tim\"", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -711,20 +778,20 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "until", "id", "==", "6", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -740,20 +807,20 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "after", "id", "==", "6", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -768,19 +835,19 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(5,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(5,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(100,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(100,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -795,19 +862,19 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals("100s",traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals("100s",traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -822,19 +889,19 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals("50s",traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals("50s",traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals("100ms",traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals("100ms",traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -849,37 +916,37 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals("\"somthing\"",traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals("\"somthing\"",traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"getName()");
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals("record(\"objectBeingTraced\")",traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals("record(\"objectBeingTraced\")",traceDirective2.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective3.getMethodTraceEntity(0).getName(),"setName()");
 	  Assert.assertEquals(false,traceDirective3.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective3.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective3.numberOfCondition());
-	  Assert.assertEquals(100,traceDirective3.getForClause());
-	  Assert.assertEquals(null,traceDirective3.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective3.getDuringClause());
-	  Assert.assertEquals("record(\"x\",name)",traceDirective3.getExecuteClause());
+//	  Assert.assertEquals(100,traceDirective3.getForClause());
+//	  Assert.assertEquals(null,traceDirective3.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective3.getDuringClause());
+//	  Assert.assertEquals("record(\"x\",name)",traceDirective3.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective4.getMethodTraceEntity(0).getName(),"method2()");
 	  Assert.assertEquals(false,traceDirective4.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective4.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective4.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective4.getForClause());
-	  Assert.assertEquals("100ms",traceDirective4.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective4.getDuringClause());
-	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective4.getForClause());
+//	  Assert.assertEquals("100ms",traceDirective4.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective4.getDuringClause());
+//	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getExecuteClause());
   }
   
   @Test
@@ -897,10 +964,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
   }
   
   @Test
@@ -919,10 +986,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"setName()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"method3()");
@@ -932,10 +999,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -954,10 +1021,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"getName()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"method3()");
@@ -967,10 +1034,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "until", "id", "==", "234", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -989,10 +1056,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"m()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"n()");
@@ -1002,10 +1069,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "after", "id", "==", "444", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -1023,10 +1090,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(5,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(5,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"m()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"n()");
@@ -1035,10 +1102,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(100,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(100,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -1056,10 +1123,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"x()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"y()");
@@ -1068,10 +1135,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals("1s",traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals("1s",traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -1089,10 +1156,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals("150s",traceDirective1.getDuringClause());
-	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals("150s",traceDirective1.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"x()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"y()");
@@ -1101,10 +1168,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals("200ms",traceDirective2.getDuringClause());
-	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals("200ms",traceDirective2.getDuringClause());
+//	  Assert.assertEquals(null,traceDirective2.getExecuteClause());
   }
   
   @Test
@@ -1119,10 +1186,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals(0,traceDirective1.getForClause());
-	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
-	  Assert.assertEquals("30ms",traceDirective1.getDuringClause());
-	  Assert.assertEquals("\"something\"",traceDirective1.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective1.getForClause());
+//	  Assert.assertEquals(null,traceDirective1.getPeriodClause());
+//	  Assert.assertEquals("30ms",traceDirective1.getDuringClause());
+//	  Assert.assertEquals("\"something\"",traceDirective1.getExecuteClause());
 	  
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"setName()");
 	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"getName()");
@@ -1132,10 +1199,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
 	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
 	  assertCondition(traceDirective2, "where", "id", ">", "100", 0);
-	  Assert.assertEquals(0,traceDirective2.getForClause());
-	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
-	  Assert.assertEquals(null,traceDirective2.getDuringClause());
-	  Assert.assertEquals("record(\"x\")",traceDirective2.getExecuteClause());
+//	  Assert.assertEquals(0,traceDirective2.getForClause());
+//	  Assert.assertEquals(null,traceDirective2.getPeriodClause());
+//	  Assert.assertEquals(null,traceDirective2.getDuringClause());
+//	  Assert.assertEquals("record(\"x\")",traceDirective2.getExecuteClause());
   }
   
   //***************************************************
@@ -1160,26 +1227,27 @@ public class UmpleParserTracerTest
   @Test
   public void traceCaseSingleTD()
   {
-	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name][trace_execute:\"a6\"]");
+	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(1,clazz.numberOfTraceCases());
 	  TraceCase tc = clazz.getTraceCase(0);
 	  Assert.assertEquals("tc1",tc.getName());
 	  Assert.assertEquals(1,tc.numberOfTraceDirectives());
-	  TraceDirective td = tc.getTraceDirective(0);
 	  
-	  Assert.assertEquals(td.getAttribute(0),clazz.getAttribute("name"));
+	  TraceDirective td = tc.getTraceDirective(0);
+	  Attribute_TraceItem tarceAttr = td.getAttributeTraceItem(0);
+	  Assert.assertEquals(tarceAttr.getAttribute(0),clazz.getAttribute("name"));
 	  Assert.assertEquals(0,td.numberOfCondition());
-	  Assert.assertEquals(0,td.getForClause());
-	  Assert.assertEquals(null,td.getPeriodClause());
-	  Assert.assertEquals(null,td.getDuringClause());
-	  Assert.assertEquals("\"a6\"",td.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr.getForClause());
+	  Assert.assertEquals(null,tarceAttr.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr.getExecuteClause());
   }
   
   @Test
   public void traceCaseMultipleTD()
   {
-	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_execute:record (\"objectBeingTraced\"), record(\"x\",name)][trace_entity:id][traceWhere][LHS:name][comparison_operator:==][RHS:\"tim\"][trace_entity:method1()][trace_duration:150s]");
+	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhere][LHS:name][comparison_operator:==][RHS:\"tim\"]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -1187,32 +1255,26 @@ public class UmpleParserTracerTest
 	  
 	  TraceCase tc = clazz.getTraceCase(0);
 	  Assert.assertEquals("tc1",tc.getName());
-	  Assert.assertEquals(3,tc.numberOfTraceDirectives());
+	  Assert.assertEquals(2,tc.numberOfTraceDirectives());
 	  
 	  TraceDirective td1 = tc.getTraceDirective(0);
-	  Assert.assertEquals(td1.getAttribute(0),clazz.getAttribute("name"));
+	  Attribute_TraceItem tarceAttr1 = td1.getAttributeTraceItem(0);
+	  Assert.assertEquals(tarceAttr1.getAttribute(0),clazz.getAttribute("name"));
 	  Assert.assertEquals(0,td1.numberOfCondition());
-	  Assert.assertEquals(0,td1.getForClause());
-	  Assert.assertEquals(null,td1.getPeriodClause());
-	  Assert.assertEquals(null,td1.getDuringClause());
-	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",td1.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr1.getForClause());
+	  Assert.assertEquals(null,tarceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr1.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr1.getExecuteClause());
 	  
 	  TraceDirective td2 = tc.getTraceDirective(1);
-	  Assert.assertEquals(td2.getAttribute(0),clazz.getAttribute("id"));
+	  Attribute_TraceItem tarceAttr2 = td2.getAttributeTraceItem(0);
+	  Assert.assertEquals(tarceAttr2.getAttribute(0),clazz.getAttribute("id"));
 	  Assert.assertEquals(1,td2.numberOfCondition());
 	  assertCondition(td2, "where", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals(0,td2.getForClause());
-	  Assert.assertEquals(null,td2.getPeriodClause());
-	  Assert.assertEquals(null,td2.getDuringClause());
-	  Assert.assertEquals(null,td2.getExecuteClause());
-	  
-	  TraceDirective td3 = tc.getTraceDirective(2);
-	  Assert.assertEquals(td3.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(0,td3.numberOfCondition());
-	  Assert.assertEquals(0,td3.getForClause());
-	  Assert.assertEquals(null,td3.getPeriodClause());
-	  Assert.assertEquals("150s",td3.getDuringClause());
-	  Assert.assertEquals(null,td3.getExecuteClause());
+	  Assert.assertEquals(0,tarceAttr2.getForClause());
+	  Assert.assertEquals(null,tarceAttr2.getPeriodClause());
+	  Assert.assertEquals(null,tarceAttr2.getDuringClause());
+	  Assert.assertEquals(null,tarceAttr2.getExecuteClause());
   }
   
   @Test

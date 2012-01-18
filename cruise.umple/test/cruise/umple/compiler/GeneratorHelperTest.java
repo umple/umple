@@ -63,7 +63,9 @@ public class GeneratorHelperTest
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
-    traceDirective.addAttribute(attr);
+    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    traceAttr.addAttribute(attr);
+    traceDirective.addAttributeTraceItem(traceAttr);
 
     Map<String,String> lookups = new HashMap<String,String>();
     lookups.put("setMethod","setX");

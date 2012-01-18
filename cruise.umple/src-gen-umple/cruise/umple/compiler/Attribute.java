@@ -18,7 +18,7 @@ public class Attribute extends UmpleVariable
   private boolean isLazy;
 
   //Attribute Associations
-  private List<TraceDirective> traceDirectives;
+  private List<Attribute_TraceItem> attributeTraceItems;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,7 +31,7 @@ public class Attribute extends UmpleVariable
     isList = false;
     isDerived = false;
     isLazy = false;
-    traceDirectives = new ArrayList<TraceDirective>();
+    attributeTraceItems = new ArrayList<Attribute_TraceItem>();
   }
 
   //------------------------
@@ -110,81 +110,81 @@ public class Attribute extends UmpleVariable
     return isLazy;
   }
 
-  public TraceDirective getTraceDirective(int index)
+  public Attribute_TraceItem getAttributeTraceItem(int index)
   {
-    TraceDirective aTraceDirective = traceDirectives.get(index);
-    return aTraceDirective;
+    Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(index);
+    return aAttributeTraceItem;
   }
 
-  public List<TraceDirective> getTraceDirectives()
+  public List<Attribute_TraceItem> getAttributeTraceItems()
   {
-    List<TraceDirective> newTraceDirectives = Collections.unmodifiableList(traceDirectives);
-    return newTraceDirectives;
+    List<Attribute_TraceItem> newAttributeTraceItems = Collections.unmodifiableList(attributeTraceItems);
+    return newAttributeTraceItems;
   }
 
-  public int numberOfTraceDirectives()
+  public int numberOfAttributeTraceItems()
   {
-    int number = traceDirectives.size();
+    int number = attributeTraceItems.size();
     return number;
   }
 
-  public boolean hasTraceDirectives()
+  public boolean hasAttributeTraceItems()
   {
-    boolean has = traceDirectives.size() > 0;
+    boolean has = attributeTraceItems.size() > 0;
     return has;
   }
 
-  public int indexOfTraceDirective(TraceDirective aTraceDirective)
+  public int indexOfAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
   {
-    int index = traceDirectives.indexOf(aTraceDirective);
+    int index = attributeTraceItems.indexOf(aAttributeTraceItem);
     return index;
   }
 
-  public static int minimumNumberOfTraceDirectives()
+  public static int minimumNumberOfAttributeTraceItems()
   {
     return 0;
   }
 
-  public boolean addTraceDirective(TraceDirective aTraceDirective)
+  public boolean addAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
   {
     boolean wasAdded = false;
-    if (traceDirectives.contains(aTraceDirective)) { return false; }
-    traceDirectives.add(aTraceDirective);
-    if (aTraceDirective.indexOfAttribute(this) != -1)
+    if (attributeTraceItems.contains(aAttributeTraceItem)) { return false; }
+    attributeTraceItems.add(aAttributeTraceItem);
+    if (aAttributeTraceItem.indexOfAttribute(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aTraceDirective.addAttribute(this);
+      wasAdded = aAttributeTraceItem.addAttribute(this);
       if (!wasAdded)
       {
-        traceDirectives.remove(aTraceDirective);
+        attributeTraceItems.remove(aAttributeTraceItem);
       }
     }
     return wasAdded;
   }
 
-  public boolean removeTraceDirective(TraceDirective aTraceDirective)
+  public boolean removeAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
   {
     boolean wasRemoved = false;
-    if (!traceDirectives.contains(aTraceDirective))
+    if (!attributeTraceItems.contains(aAttributeTraceItem))
     {
       return wasRemoved;
     }
 
-    int oldIndex = traceDirectives.indexOf(aTraceDirective);
-    traceDirectives.remove(oldIndex);
-    if (aTraceDirective.indexOfAttribute(this) == -1)
+    int oldIndex = attributeTraceItems.indexOf(aAttributeTraceItem);
+    attributeTraceItems.remove(oldIndex);
+    if (aAttributeTraceItem.indexOfAttribute(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aTraceDirective.removeAttribute(this);
+      wasRemoved = aAttributeTraceItem.removeAttribute(this);
       if (!wasRemoved)
       {
-        traceDirectives.add(oldIndex,aTraceDirective);
+        attributeTraceItems.add(oldIndex,aAttributeTraceItem);
       }
     }
     return wasRemoved;
@@ -192,11 +192,11 @@ public class Attribute extends UmpleVariable
 
   public void delete()
   {
-    ArrayList<TraceDirective> copyOfTraceDirectives = new ArrayList<TraceDirective>(traceDirectives);
-    traceDirectives.clear();
-    for(TraceDirective aTraceDirective : copyOfTraceDirectives)
+    ArrayList<Attribute_TraceItem> copyOfAttributeTraceItems = new ArrayList<Attribute_TraceItem>(attributeTraceItems);
+    attributeTraceItems.clear();
+    for(Attribute_TraceItem aAttributeTraceItem : copyOfAttributeTraceItems)
     {
-      aTraceDirective.removeAttribute(this);
+      aAttributeTraceItem.removeAttribute(this);
     }
     super.delete();
   }

@@ -48,16 +48,23 @@ class MethodTraceEntity
 class TraceDirective
 {
 	Integer id = 0;
-  	0..1 -> 0..* TraceCondition condition;
- 	Integer forClause = 0;
+    1 -- 0..* Attribute_TraceItem;
+ 	0..* -- 0..* StateMachine_TraceItem;
+ 	0..* -- 0..* MethodTraceEntity;
+ 	0..1 -- 0..1 AssociationVariable;
+ 	1 -> 0..* TraceCondition condition;
+ 	1 -- 0..1 TraceRecord;
+}
+
+class Attribute_TraceItem
+{
+	boolean traceSet = false;
+	boolean traceGet = false;
+	Integer forClause = 0;
  	periodClause = null;
  	duringClause = null;
  	executeClause = null;
  	0..* -- 0..* Attribute;
- 	0..* -- 0..* StateMachine_TraceItem;
- 	0..* -- 0..* MethodTraceEntity;
- 	0..1 -- 0..1 AssociationVariable;
- 	1 -- 0..1 TraceRecord;
 }
 
 class StateMachine_TraceItem

@@ -708,7 +708,7 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
 	  {  
 	    	// if the traceItem is an attribute
-	        if (traceDirective.hasAttributes())
+	        if (traceDirective.hasAttributeTraceItems())
 	        {
 	        	processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
 	        }
@@ -729,7 +729,7 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
 	  {
 		  // if the traceItem is an attribute
-          if (traceDirective.hasAttributes())
+          if (traceDirective.hasAttributeTraceItems())
           {
         	  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
           }
@@ -766,7 +766,7 @@ private String getExtendClassesNames(UmpleClass uClass)
             aClass.addDepend(d);
           }
           // if the traceItem is an attribute
-          if (traceDirective.hasAttributes())
+          if (traceDirective.hasAttributeTraceItems())
           {
         	  processTraceDirectiveAttributes(traceDirective,t,stringTemplate);	 
           }
@@ -777,29 +777,32 @@ private String getExtendClassesNames(UmpleClass uClass)
   private static void processTraceDirectiveAttributes( TraceDirective traceDirective, CodeTranslator t, String template ) 
   {	  
 	  String attrCode = null, conditionType = null;
-	  // Go over all attributes in trace directive
-	  for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
+	  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
 	  {
-		  Attribute attr = traceDirective.getAttribute(i);
-  		
-		  // Process trace directive conditions if it has any 
-		  if( traceDirective.hasCondition() )
+		  // Go over all attributes in trace directive
+		  for( int i = 0 ; i < traceAttr.numberOfAttributes() ; ++i )
 		  {
-			  processTraceCondition(traceDirective,t,template,attr);		
+			  Attribute attr = traceAttr.getAttribute(i);
+	  		
+			  // Process trace directive conditions if it has any 
+			  if( traceDirective.hasCondition() )
+			  {
+				  processTraceCondition(traceDirective,t,template,attr);		
+			  }
+	  		  else
+	  		  {
+	  			  // simple trace directive that traces attributes without any extra fragments
+	      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
+	      		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
+	  		  }
+	  	  }
+		  if( traceDirective.getTraceRecord() != null )
+		  {
+			  TraceRecord record = traceDirective.getTraceRecord();
+			  // simple trace directive that traces attributes without any extra fragments
+	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
+	  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceAttr.getAttribute(0),attrCode,conditionType);  
 		  }
-  		  else
-  		  {
-  			  // simple trace directive that traces attributes without any extra fragments
-      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-      		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
-  		  }
-  	  }
-	  if( traceDirective.getTraceRecord() != null )
-	  {
-		  TraceRecord record = traceDirective.getTraceRecord();
-		  // simple trace directive that traces attributes without any extra fragments
-  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceDirective.getAttribute(0),attrCode,conditionType);  
 	  }
   }
   

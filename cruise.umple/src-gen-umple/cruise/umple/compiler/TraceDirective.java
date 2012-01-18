@@ -13,17 +13,13 @@ public class TraceDirective
 
   //TraceDirective Attributes
   private int id;
-  private int forClause;
-  private String periodClause;
-  private String duringClause;
-  private String executeClause;
 
   //TraceDirective Associations
-  private List<TraceCondition> condition;
-  private List<Attribute> attributes;
+  private List<Attribute_TraceItem> attributeTraceItems;
   private List<StateMachine_TraceItem> stateMachineTraceItems;
   private List<MethodTraceEntity> methodTraceEntities;
   private AssociationVariable associationVariable;
+  private List<TraceCondition> condition;
   private TraceRecord traceRecord;
   private List<TraceCase> traceCases;
   private UmpleClass umpleClass;
@@ -35,14 +31,10 @@ public class TraceDirective
   public TraceDirective()
   {
     id = 0;
-    forClause = 0;
-    periodClause = null;
-    duringClause = null;
-    executeClause = null;
-    condition = new ArrayList<TraceCondition>();
-    attributes = new ArrayList<Attribute>();
+    attributeTraceItems = new ArrayList<Attribute_TraceItem>();
     stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
     methodTraceEntities = new ArrayList<MethodTraceEntity>();
+    condition = new ArrayList<TraceCondition>();
     traceCases = new ArrayList<TraceCase>();
   }
 
@@ -58,120 +50,38 @@ public class TraceDirective
     return wasSet;
   }
 
-  public boolean setForClause(int aForClause)
-  {
-    boolean wasSet = false;
-    forClause = aForClause;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setPeriodClause(String aPeriodClause)
-  {
-    boolean wasSet = false;
-    periodClause = aPeriodClause;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setDuringClause(String aDuringClause)
-  {
-    boolean wasSet = false;
-    duringClause = aDuringClause;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setExecuteClause(String aExecuteClause)
-  {
-    boolean wasSet = false;
-    executeClause = aExecuteClause;
-    wasSet = true;
-    return wasSet;
-  }
-
   public int getId()
   {
     return id;
   }
 
-  public int getForClause()
+  public Attribute_TraceItem getAttributeTraceItem(int index)
   {
-    return forClause;
+    Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(index);
+    return aAttributeTraceItem;
   }
 
-  public String getPeriodClause()
+  public List<Attribute_TraceItem> getAttributeTraceItems()
   {
-    return periodClause;
+    List<Attribute_TraceItem> newAttributeTraceItems = Collections.unmodifiableList(attributeTraceItems);
+    return newAttributeTraceItems;
   }
 
-  public String getDuringClause()
+  public int numberOfAttributeTraceItems()
   {
-    return duringClause;
-  }
-
-  public String getExecuteClause()
-  {
-    return executeClause;
-  }
-
-  public TraceCondition getCondition(int index)
-  {
-    TraceCondition aCondition = condition.get(index);
-    return aCondition;
-  }
-
-  public List<TraceCondition> getCondition()
-  {
-    List<TraceCondition> newCondition = Collections.unmodifiableList(condition);
-    return newCondition;
-  }
-
-  public int numberOfCondition()
-  {
-    int number = condition.size();
+    int number = attributeTraceItems.size();
     return number;
   }
 
-  public boolean hasCondition()
+  public boolean hasAttributeTraceItems()
   {
-    boolean has = condition.size() > 0;
+    boolean has = attributeTraceItems.size() > 0;
     return has;
   }
 
-  public int indexOfCondition(TraceCondition aCondition)
+  public int indexOfAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
   {
-    int index = condition.indexOf(aCondition);
-    return index;
-  }
-
-  public Attribute getAttribute(int index)
-  {
-    Attribute aAttribute = attributes.get(index);
-    return aAttribute;
-  }
-
-  public List<Attribute> getAttributes()
-  {
-    List<Attribute> newAttributes = Collections.unmodifiableList(attributes);
-    return newAttributes;
-  }
-
-  public int numberOfAttributes()
-  {
-    int number = attributes.size();
-    return number;
-  }
-
-  public boolean hasAttributes()
-  {
-    boolean has = attributes.size() > 0;
-    return has;
-  }
-
-  public int indexOfAttribute(Attribute aAttribute)
-  {
-    int index = attributes.indexOf(aAttribute);
+    int index = attributeTraceItems.indexOf(aAttributeTraceItem);
     return index;
   }
 
@@ -240,6 +150,36 @@ public class TraceDirective
     return associationVariable;
   }
 
+  public TraceCondition getCondition(int index)
+  {
+    TraceCondition aCondition = condition.get(index);
+    return aCondition;
+  }
+
+  public List<TraceCondition> getCondition()
+  {
+    List<TraceCondition> newCondition = Collections.unmodifiableList(condition);
+    return newCondition;
+  }
+
+  public int numberOfCondition()
+  {
+    int number = condition.size();
+    return number;
+  }
+
+  public boolean hasCondition()
+  {
+    boolean has = condition.size() > 0;
+    return has;
+  }
+
+  public int indexOfCondition(TraceCondition aCondition)
+  {
+    int index = condition.indexOf(aCondition);
+    return index;
+  }
+
   public TraceRecord getTraceRecord()
   {
     return traceRecord;
@@ -280,77 +220,42 @@ public class TraceDirective
     return umpleClass;
   }
 
-  public static int minimumNumberOfCondition()
+  public static int minimumNumberOfAttributeTraceItems()
   {
     return 0;
   }
 
-  public boolean addCondition(TraceCondition aCondition)
+  public Attribute_TraceItem addAttributeTraceItem()
+  {
+    return new Attribute_TraceItem(this);
+  }
+
+  public boolean addAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
   {
     boolean wasAdded = false;
-    if (condition.contains(aCondition)) { return false; }
-    condition.add(aCondition);
+    if (attributeTraceItems.contains(aAttributeTraceItem)) { return false; }
+    TraceDirective existingTraceDirective = aAttributeTraceItem.getTraceDirective();
+    boolean isNewTraceDirective = existingTraceDirective != null && !this.equals(existingTraceDirective);
+    if (isNewTraceDirective)
+    {
+      aAttributeTraceItem.setTraceDirective(this);
+    }
+    else
+    {
+      attributeTraceItems.add(aAttributeTraceItem);
+    }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeCondition(TraceCondition aCondition)
+  public boolean removeAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
   {
     boolean wasRemoved = false;
-    if (condition.contains(aCondition))
+    //Unable to remove aAttributeTraceItem, as it must always have a traceDirective
+    if (!this.equals(aAttributeTraceItem.getTraceDirective()))
     {
-      condition.remove(aCondition);
+      attributeTraceItems.remove(aAttributeTraceItem);
       wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
-  public static int minimumNumberOfAttributes()
-  {
-    return 0;
-  }
-
-  public boolean addAttribute(Attribute aAttribute)
-  {
-    boolean wasAdded = false;
-    if (attributes.contains(aAttribute)) { return false; }
-    attributes.add(aAttribute);
-    if (aAttribute.indexOfTraceDirective(this) != -1)
-    {
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = aAttribute.addTraceDirective(this);
-      if (!wasAdded)
-      {
-        attributes.remove(aAttribute);
-      }
-    }
-    return wasAdded;
-  }
-
-  public boolean removeAttribute(Attribute aAttribute)
-  {
-    boolean wasRemoved = false;
-    if (!attributes.contains(aAttribute))
-    {
-      return wasRemoved;
-    }
-
-    int oldIndex = attributes.indexOf(aAttribute);
-    attributes.remove(oldIndex);
-    if (aAttribute.indexOfTraceDirective(this) == -1)
-    {
-      wasRemoved = true;
-    }
-    else
-    {
-      wasRemoved = aAttribute.removeTraceDirective(this);
-      if (!wasRemoved)
-      {
-        attributes.add(oldIndex,aAttribute);
-      }
     }
     return wasRemoved;
   }
@@ -488,6 +393,31 @@ public class TraceDirective
     return wasSet;
   }
 
+  public static int minimumNumberOfCondition()
+  {
+    return 0;
+  }
+
+  public boolean addCondition(TraceCondition aCondition)
+  {
+    boolean wasAdded = false;
+    if (condition.contains(aCondition)) { return false; }
+    condition.add(aCondition);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeCondition(TraceCondition aCondition)
+  {
+    boolean wasRemoved = false;
+    if (condition.contains(aCondition))
+    {
+      condition.remove(aCondition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public boolean setTraceRecord(TraceRecord newTraceRecord)
   {
     boolean wasSet = false;
@@ -584,12 +514,10 @@ public class TraceDirective
 
   public void delete()
   {
-    condition.clear();
-    ArrayList<Attribute> copyOfAttributes = new ArrayList<Attribute>(attributes);
-    attributes.clear();
-    for(Attribute aAttribute : copyOfAttributes)
+    for(int i=attributeTraceItems.size(); i > 0; i--)
     {
-      aAttribute.removeTraceDirective(this);
+      Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(i - 1);
+      aAttributeTraceItem.delete();
     }
     ArrayList<StateMachine_TraceItem> copyOfStateMachineTraceItems = new ArrayList<StateMachine_TraceItem>(stateMachineTraceItems);
     stateMachineTraceItems.clear();
@@ -607,6 +535,7 @@ public class TraceDirective
     {
       associationVariable.setTraceDirective(null);
     }
+    condition.clear();
     TraceRecord existingTraceRecord = traceRecord;
     traceRecord = null;
     if (existingTraceRecord != null)

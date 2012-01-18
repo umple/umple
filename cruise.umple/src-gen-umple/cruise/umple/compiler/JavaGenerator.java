@@ -746,7 +746,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
 	  {  
 	    	// if the traceItem is an attribute
-	        if (traceDirective.hasAttributes())
+	        if (traceDirective.hasAttributeTraceItems())
 	        {
 	        	processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
 	        }
@@ -768,7 +768,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
 	  {
 		  // if the traceItem is an attribute
-          if (traceDirective.hasAttributes())
+          if (traceDirective.hasAttributeTraceItems())
           {
         	  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
           }
@@ -805,7 +805,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
             aClass.addDepend(d);
           }
           // if the traceItem is an attribute
-          if (traceDirective.hasAttributes())
+          if (traceDirective.hasAttributeTraceItems())
           {
         	  processTraceDirectiveAttributes(traceDirective,t,stringTemplate);	 
           }
@@ -816,40 +816,45 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   private static void processTraceDirectiveAttributes( TraceDirective traceDirective, CodeTranslator t, String template ) 
   {	  
 	  String attrCode = null, conditionType = null;
-	  // Go over all attributes in trace directive
-	  for( int i = 0 ; i < traceDirective.numberOfAttributes() ; ++i )
+	  
+	  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
 	  {
-		  Attribute attr = traceDirective.getAttribute(i);
-  		
-		  // Process trace directive conditions if it has any 
-		  if( traceDirective.hasCondition() )
+		  // Go over all attributes in trace directive
+		  for( int i = 0 ; i < traceAttr.numberOfAttributes() ; ++i )
 		  {
-			  processTraceCondition(traceDirective,t,template,attr);		
+			  Attribute attr = traceAttr.getAttribute(i);
+	  		
+			  // Process trace directive conditions if it has any 
+			  if( traceDirective.hasCondition() )
+			  {
+				  processTraceCondition(traceDirective,t,template,attr);		
+			  }
+	  		  else
+	  		  {
+	  			  // simple trace directive that traces attributes without any extra fragments
+	      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
+	      		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
+	  		  }
+	  		
+			  if( traceAttr.getPeriodClause() != null )
+	  		  {
+	  			  attrCode = "Thread thr1 = new Thread(tracePeriod(" + preparePeriod(traceAttr.getPeriodClause()) + "));\n";
+	  			  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  			  attrCode = "thr1.start();\n";
+	  			  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	    		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
+	    		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  		  }
+	  	  }
+		  if( traceDirective.getTraceRecord() != null )
+		  {
+			  TraceRecord record = traceDirective.getTraceRecord();
+			  // simple trace directive that traces attributes without any extra fragments
+	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
+	  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceAttr.getAttribute(0),attrCode,conditionType);  
 		  }
-  		  else
-  		  {
-  			  // simple trace directive that traces attributes without any extra fragments
-      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-      		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
-  		  }
-  		
-		  if( traceDirective.getPeriodClause() != null )
-  		  {
-  			  attrCode = "Thread thr1 = new Thread(tracePeriod(" + preparePeriod(traceDirective.getPeriodClause()) + "));\n";
-  			  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-  			  attrCode = "thr1.start();\n";
-  			  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-    		  attrCode = StringFormatter.format(template,t.translate("attribute",traceDirective.getAttribute(i)),t.translate("parameter",traceDirective.getAttribute(i)));
-    		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-  		  }
-  	  }
-	  if( traceDirective.getTraceRecord() != null )
-	  {
-		  TraceRecord record = traceDirective.getTraceRecord();
-		  // simple trace directive that traces attributes without any extra fragments
-  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceDirective.getAttribute(0),attrCode,conditionType);  
 	  }
+	  
   }
   
   //Process every state machine in a trace directive

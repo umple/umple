@@ -35,7 +35,9 @@ public class JavaGeneratorTraceTest
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
-    traceDirective.addAttribute(attr);
+    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    traceAttr.addAttribute(attr);
+    traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
 
     Assert.assertEquals(1,c.numberOfCodeInjections());
@@ -59,7 +61,9 @@ public class JavaGeneratorTraceTest
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
-    traceDirective.addAttribute(attr);
+    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    traceAttr.addAttribute(attr);
+    traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
 
     Assert.assertEquals(1,model.numberOfUmpleClasses());
@@ -82,7 +86,9 @@ public class JavaGeneratorTraceTest
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
-    traceDirective.addAttribute(attr);
+    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    traceAttr.addAttribute(attr);
+    traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
 
     Assert.assertEquals(1,model.numberOfUmpleClasses());
@@ -115,7 +121,9 @@ public class JavaGeneratorTraceTest
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
-    traceDirective.addAttribute(attr);
+    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    traceAttr.addAttribute(attr);
+    traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
 
     Assert.assertEquals(0,c.numberOfDepends());
