@@ -9,7 +9,9 @@
   <property name="shouldPackageUmpleOnline" value="true"/>
   <property name="shouldDeploy" value="true"/>
   <property name="showJunitSummary" value="false"/>
-  <property name="showJunitOutput" value="false"/>  
+  <property name="showJunitOutput" value="false"/> 
+  <property name="rake_cmd" value="rake"/>  
+   
   <import file="_versionNew.xml" />
 
 

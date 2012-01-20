@@ -7,7 +7,7 @@
   <property name="shouldDeploy" value="false"/>  
   <property name="showJunitSummary" value="false"/>  
   <property name="showJunitOutput" value="false"/>  
-  <property name="rake_cmd" value="rake"/>  
+  <property name="rake_cmd" value="rake.bat"/>  
   
   <import file="_versionLast.xml" />
 
