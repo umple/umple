@@ -1,0 +1,7 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>(int index);
+  <%=gen.translate("type",av)%>[] <%=gen.translate("getManyMethod",av)%>();
+  int <%=gen.translate("numberOfMethod",av)%>();
+  bool <%=gen.translate("hasManyMethod",av)%>();
+  int <%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>);
+  

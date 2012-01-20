@@ -1,0 +1,395 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+  
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+
+    if (!av.getIsNavigable())
+    {
+      continue;
+    } 
+
+    String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
+    String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
+
+    String customSetManyPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setManyMethod",av)));
+    String customSetManyPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setManyMethod",av)));
+
+    String customAddPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("addMethod",av)));
+    String customAddPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("addMethod",av)));
+  
+    String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
+    String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
+
+    String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
+    String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));
+    
+    String includeFileOne = null;
+    String includeFileTwo = null;
+    
+    boolean hasIsNumberOfValidMethod = false;
+    boolean hasAddManyToManyTemplateMethod = false;
+    boolean hasMaximumNumberOfMethod = av.isMany() && !av.isStar();
+    boolean hasMinimumNumberOfMethod = av.isMany();
+    boolean hasRequiredNumberOfMethod = av.isN();
+    boolean hasRemoveManyTemplateMethod = false;
+    String includeFile = null;
+    String includeFile2 = null;
+
+
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOptionalOne())
+      {
+        includeFile = "header_association_SetUnidirectionalOptionalOne.jet";
+      }
+      else if (av.isOnlyOne())
+      {
+        includeFile = "header_association_SetUnidirectionalOne.jet";
+      }
+      else if (av.isMStar())
+      {
+        includeFile = "header_association_AddUnidirectionalMStar.jet";
+        includeFile2 = "header_association_SetUnidirectionalMStar.jet";
+      }
+      else if (av.isMN())
+      {
+        includeFile = "header_association_AddUnidirectionalMN.jet";
+        includeFile2 = "header_association_SetUnidirectionalMN.jet";
+      }
+      else if (av.isN())
+      {
+        includeFile = "header_association_SetUnidirectionalN.jet";
+      }
+      else if (av.isOptionalN())
+      {
+        includeFile = "header_association_AddUnidirectionalOptionalN.jet";
+        includeFile2 = "header_association_SetUnidirectionalOptionalN.jet";
+      }
+      else if (av.isMany())
+      {
+        includeFile = "header_association_AddUnidirectionalMany.jet";
+      }
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+    {
+      //ignore
+    }  
+    else if (av.isN() && relatedAssociation.isOptionalOne())
+    { 
+      includeFile = "header_association_SetNToOptionalOne.jet";
+    }
+    else if (av.isMN() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "header_association_AddMNToOptionalOne.jet";
+      includeFile2 = "header_association_SetMNToOptionalOne.jet";
+    }
+    else if (av.isMandatoryMany() && av.isStar() && relatedAssociation.isMany())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "header_association_AddMStarToMany.jet";
+      includeFile2 = "header_association_SetMStarToMany.jet";
+    }
+    else if ((av.isMN() || av.isN()) && relatedAssociation.isMandatoryMany())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "header_association_AddMNToMany.jet";
+      includeFile2 = "header_association_SetMNToMany.jet";
+    }
+    else if ((av.isMN() || av.isN()) && relatedAssociation.isOptionalN())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "header_association_AddMNToMany.jet";
+    }
+    else if ((av.isMN() || av.isN()) && !relatedAssociation.isOne())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "header_association_AddMNToMany.jet";
+      includeFile2 = "header_association_SetMNToMany.jet";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "header_association_SetOptionalOneToOptionalOne.jet";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOne())
+    {
+      includeFile = "header_association_SetOptionalOneToOne.jet";
+    }
+    else if (av.isOne() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "header_association_SetOneToOptionalOne.jet";
+    }
+    else if (av.isMandatoryMany() && av.isStar() && relatedAssociation.isOne())
+    {
+      hasIsNumberOfValidMethod = true;
+      includeFile = "header_association_AddMandatoryManyToOne.jet";
+    }
+    else if ((av.isMN() || av.isN()) && relatedAssociation.isOnlyOne())
+    {
+      hasIsNumberOfValidMethod = true;
+      includeFile = "header_association_AddMNToOnlyOne.jet";
+    }
+    else if (av.isOptionalN() && relatedAssociation.isOnlyOne())
+    {
+      includeFile = "header_association_AddOptionalNToOne.jet";
+    }
+    else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isOptionalN()))
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = true;
+    }
+    else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = true;
+      includeFile = "header_association_SetOptionalNToMany.jet";
+    }
+    else if (av.isMany() && relatedAssociation.isOnlyOne())
+    {
+      includeFile = "header_association_AddManyToOne.jet";
+    }
+    else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = true;
+    }
+    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = true;
+    }
+    else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "header_association_AddOptionalNToOptionalOne.jet";
+    }
+    else if (av.isMany() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "header_association_AddManyToOptionalOne.jet";
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isMandatoryMany() && relatedAssociation.isStar())
+    {
+      includeFile = "header_association_SetOneToMandatoryMany.jet";
+    }
+    else if (av.isOnlyOne() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+    {
+      includeFile = "header_association_SetOneToAtMostN.jet";
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isOptionalN())
+    {
+      includeFile = "header_association_SetOneToAtMostN.jet";
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()))
+    {
+      includeFile = "header_association_SetOneToMany.jet";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalN())
+    {
+      includeFile = "header_association_SetOptionalOneToOptionalN.jet";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+    {
+      includeFile = "header_association_SetOptionalOneToMany.jet";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isMandatory())
+    {
+      //ignore
+    }
+    else
+    {
+      %>//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP <%=av%> : <%=relatedAssociation%><%
+    }
+
+    boolean addNewLine = false;
+    if (hasIsNumberOfValidMethod)
+    {
+      if (addNewLine) { appendln(stringBuffer,""); }
+      addNewLine = true;
+      %><%@ include file="header_association_IsNumberOfValidMethod.jet" %><%
+    }
+    
+    if (hasRequiredNumberOfMethod)
+    {
+      if (addNewLine) { appendln(stringBuffer,""); }
+      addNewLine = true;
+      %><%@ include file="header_association_RequiredNumberOfMethod.jet" %><%
+    }
+
+    if (hasMinimumNumberOfMethod)
+    {
+      if (addNewLine) { appendln(stringBuffer,""); }
+      addNewLine = true;
+      %><%@ include file="header_association_MinimumNumberOfMethod.jet" %><%
+    }
+    
+    if (hasMaximumNumberOfMethod)
+    {
+      if (addNewLine) { appendln(stringBuffer,""); }
+      addNewLine = true;
+      %><%@ include file="header_association_MaximumNumberOfMethod.jet" %><%
+    }
+    
+    if (hasAddManyToManyTemplateMethod)
+    {
+      if (addNewLine) { appendln(stringBuffer,""); }
+      addNewLine = true;
+      %><%@ include file="header_association_AddManyToManyMethod.jet" %><%
+    }
+    
+    if (hasRemoveManyTemplateMethod)
+    {
+      if (addNewLine) { appendln(stringBuffer,""); }
+      addNewLine = true;
+      %><%@ include file="header_association_RemoveMany.jet" %><%
+    }
+
+    if (addNewLine) { appendln(stringBuffer,""); }
+    addNewLine = true;
+    
+    // How do you dynamically include a file in JET?!?
+    if (includeFile == "header_association_SetUnidirectionalOptionalOne.jet")
+    {
+      %><%@ include file="header_association_SetUnidirectionalOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetUnidirectionalOne.jet")
+    {
+      %><%@ include file="header_association_SetUnidirectionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOptionalOneToOne.jet")
+    {
+      %><%@ include file="header_association_SetOptionalOneToOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOneToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_SetOneToOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_AddMandatoryManyToOne.jet")
+    {
+      %><%@ include file="header_association_AddMandatoryManyToOne.jet"%><%
+    }
+    else if (includeFile == "header_association_AddMNToOnlyOne.jet")
+    {
+      %><%@ include file="header_association_AddMNToOnlyOne.jet"%><%
+    }
+    else if (includeFile == "header_association_AddOptionalNToOne.jet")
+    {
+      %><%@ include file="header_association_AddOptionalNToOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOptionalNToMany.jet")
+    {
+      %><%@ include file="header_association_SetOptionalNToMany.jet"%><%
+    }
+    else if (includeFile == "header_association_AddManyToOne.jet")
+    {
+      %><%@ include file="header_association_AddManyToOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOptionalOneToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_SetOptionalOneToOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_AddMNToMany.jet")
+    {
+      %><%@ include file="header_association_AddMNToMany.jet"%><%
+    }
+    else if (includeFile == "header_association_AddMStarToMany.jet")
+    {
+      %><%@ include file="header_association_AddMStarToMany.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOptionalOneToOptionalN.jet")
+    {
+      %><%@ include file="header_association_SetOptionalOneToOptionalN.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOneToMany.jet")
+    {
+      %><%@ include file="header_association_SetOneToMany.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOneToAtMostN.jet")
+    {
+      %><%@ include file="header_association_SetOneToAtMostN.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOneToMandatoryMany.jet")
+    {
+      %><%@ include file="header_association_SetOneToMandatoryMany.jet"%><%
+    }
+    else if (includeFile == "header_association_AddManyToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_AddManyToOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetOptionalOneToMany.jet")
+    {
+      %><%@ include file="header_association_SetOptionalOneToMany.jet"%><%
+    }
+    else if (includeFile == "header_association_AddOptionalNToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_AddOptionalNToOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_AddUnidirectionalMN.jet")
+    {
+      %><%@ include file="header_association_AddUnidirectionalMN.jet"%><%
+    }
+    else if (includeFile == "header_association_AddMNToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_AddMNToOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_SetNToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_SetNToOptionalOne.jet"%><%
+    }
+    else if (includeFile == "header_association_AddUnidirectionalMany.jet")
+    {
+      %><%@ include file="header_association_AddUnidirectionalMany.jet"%><%
+    }
+    else if (includeFile == "header_association_AddUnidirectionalOptionalN.jet")
+    {
+      %><%@ include file="header_association_AddUnidirectionalOptionalN.jet"%><%
+    }
+    else if (includeFile == "header_association_AddUnidirectionalMStar.jet")
+    {
+      %><%@ include file="header_association_AddUnidirectionalMStar.jet"%><%
+    }
+    else if (includeFile == "header_association_SetUnidirectionalN.jet")
+    {
+      %><%@ include file="header_association_SetUnidirectionalN.jet"%><%
+    }
+    else if (includeFile != null)
+    {
+      appendln(stringBuffer,"You forgot to include {0}",includeFile);
+    }
+    
+    if (includeFile2 == "header_association_SetMNToMany.jet")
+    {
+      %><%@ include file="header_association_SetMNToMany.jet"%><%
+    }
+    else if (includeFile2 == "header_association_SetMStarToMany.jet")
+    {
+      %><%@ include file="header_association_SetMStarToMany.jet"%><%
+    }
+    else if (includeFile2 == "header_association_SetUnidirectionalMN.jet")
+    {
+      %><%@ include file="header_association_SetUnidirectionalMN.jet"%><%
+    }
+    else if (includeFile2 == "header_association_SetMNToOptionalOne.jet")
+    {
+      %><%@ include file="header_association_SetMNToOptionalOne.jet"%><%
+    }
+    else if (includeFile2 == "header_association_SetUnidirectionalOptionalN.jet")
+    {
+      %><%@ include file="header_association_SetUnidirectionalOptionalN.jet"%><%
+    }
+    else if (includeFile2 == "header_association_SetUnidirectionalMStar.jet")
+    {
+      %><%@ include file="header_association_SetUnidirectionalMStar.jet"%><%
+    }
+    else if (includeFile2 != null)
+    {
+      appendln(stringBuffer,"You forgot to include {0}",includeFile2);
+    }
+  }
+%>
