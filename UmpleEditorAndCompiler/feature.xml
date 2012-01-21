@@ -2,7 +2,7 @@
 <feature
       id="UmpleEditorAndCompiler"
       label="UmpleEditorAndCompiler"
-      version="1.14.0.605">
+      version="1.15.0.963">
 
    <description url="http://cruise.site.uottawa.ca/umple/">
       Umple is a model-oriented programming language that lets you
@@ -11,22 +11,15 @@
    </description>
 
    <copyright url="http://cruise.site.uottawa.ca/umple/">
-	Copyright 2008-2011 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan.
+      Copyright 2008-2011 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan.
    </copyright>
 
    <license url="http://cruise.site.uottawa.ca/umple/">
-	Copyright 2008-2011 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan
-	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.   
+      Copyright 2008-2011 Timothy C. Lethbridge, Andrew Forward, Omar Badreddin, Dusan Brestovansky, Julie Filion, Miguel Garzon, Hamoud Aljamaan
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    </license>
-
-   <plugin
-         id="cruise.umple.xtext.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="com.google.inject"
@@ -233,6 +226,20 @@
 
    <plugin
          id="org.eclipse.xtext.common.types.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="cruise.umple.xtext"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="cruise.umple.xtext.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
