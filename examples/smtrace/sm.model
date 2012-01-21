@@ -54,7 +54,7 @@ class StateMachineTest {
   } // end status state machine
 
   
-  trace S3 record v;
+  trace status record v;
   
   public void v5() { setV(5); }
   public void v0() { setV(0); }
