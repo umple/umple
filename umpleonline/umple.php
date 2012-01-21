@@ -51,8 +51,12 @@ $output = readTemporaryFile($filename);
   <td id="paletteColumn" class="paletteColumn">
     <div class="paletteWrapper" id="paletteWrapper">
     <div id="palette" class="palette">
+    
+    <!-- GROUP 1 OF OPTIONS -->
+    
       <h3><a href="#">LOAD & SAVE</a></h3>
       <div class="section">
+
       <ul class="first">
         <li class="subtitle"> Load </li>
         <li id="itemLoadExamples">
@@ -97,6 +101,7 @@ $output = readTemporaryFile($filename);
           </select>
         </li>
         </ul>
+
         <ul class="second">
           <li class="subtitle">SAVE</li>
 <?php if (isBookmark($filename)) { ?>
@@ -104,20 +109,23 @@ $output = readTemporaryFile($filename);
 <?php } else { ?>
             <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
 <?php } ?>
-
-
-
-          
+          <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
+          <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
         </ul>
+        
         <ul class="second">
           <li class="subtitle">NEW</li>
           <li> <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> </li>
         </ul>
 
       </div>
-      
+
+
+    <!-- GROUP 2 OF OPTIONS -->
+          
       <h3><a href="#">TOOLS</a></h3>
       <div class="section">
+      
       <ul class = "first toggle">
         <li class="subtitle"> Draw </li>
         <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class."><img id="buttonAddClass" src="scripts/class.png" title="Add Class" /> Class</li>
@@ -128,28 +136,16 @@ $output = readTemporaryFile($filename);
         <li id="buttonUndo" name="paletteItem"><img src="scripts/undo.ico" title="Undo"> Undo </li>
         <li id="buttonRedo" name="paletteItem"><img src="scripts/redo.ico" title="Redo"> Redo </li>
       </ul>
-      <ul>
+      
+      <ul class="second">
         <li class="subtitle"> Synchronize </li>
         <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.ico" title="Manually sync the diagram" /> Sync Diagram </li>
       </ul>
+
       <div id="buttonCodeComplete" title="Code Generation Complete">See below.</div>
-      <ul>
-        <li class="subtitle"> Generate </li>
-        <li>
-          <select id="inputGenerateCode" name="inputLanguage" class="button">
-            <option value="java:Java">Java Code</option>
-            <option value="javadoc:javadoc">Java API Doc</option>
-            <option value="php:Php">PHP Code</option>
-            <option value="ruby:Ruby">Ruby Code</option>
-            <option value="xml:Ecore">Ecore</option>
-            <option value="java:TextUml">TextUml</option>
-            <option value="xml:Papyrus">Papyrus XMI</option>
-            <option value="java:Yuml">Yuml</option>
-            <option value="java:Json">Json</option>
-          </select>
-        </li>
-        <li><div id="buttonGenerateCode" class="jQueryPaletteButton" value="Generate Code"></div></li>      
-      </ul>
+
+      <?php generateMenu("") ?>
+      
       </div>
       
       <h3><a href="#">OPTIONS</a></h3>
@@ -177,12 +173,11 @@ $output = readTemporaryFile($filename);
           <li id="buttonYumlImage" class="yuml"><img src="scripts/yuml.png" title="Generate Yuml Image" /> Yuml View</li>
           <li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li>
           <!--<li id="buttonUigu" class="uigu"><img src="scripts/uigu.png" title="Generate UI" /> Generate UI</li>-->
-          <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
-          <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
+
         </ul>
       </div>
     </div>
-    </div>
+    </div> 
   </td>
  
   <td id="umpleCanvasColumn" class="umpleCanvasColumn">

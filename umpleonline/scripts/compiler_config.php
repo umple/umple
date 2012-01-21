@@ -12,6 +12,29 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+function generateMenu($buttonSuffix)
+{
+  $generatemenu = "<ul class=\"second\">
+        <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
+        <li>
+          <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
+            <option value=\"java:Java\">Java Code</option>
+            <option value=\"javadoc:javadoc\">Java API Doc</option>
+            <option value=\"php:Php\">PHP Code</option>
+            <option value=\"ruby:Ruby\">Ruby Code</option>
+            <option value=\"xml:Ecore\">Ecore</option>
+            <option value=\"java:TextUml\">TextUml</option>
+            <option value=\"xml:Papyrus\">Papyrus XMI</option>
+            <option value=\"java:Yuml\">Yuml</option>
+            <option value=\"java:Json\">Json</option>
+          </select>
+        </li>
+        <li><div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div></li>      
+      </ul>";
+
+   echo $generatemenu;
+}
+
 function saveFile($input, $filename = null)
 {
   if ($filename == null)
