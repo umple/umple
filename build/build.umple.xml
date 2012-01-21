@@ -219,6 +219,7 @@
     <copy tofile="cruise.umple/test/data/Genealogy/b/GenealogyB.ump" file="umpleonline/ump/GenealogyB.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Genealogy/c/GenealogyC.ump" file="umpleonline/ump/GenealogyC.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/GeographicalInfo/GeographicalInformationSystem.ump" file="umpleonline/ump/GeographicalInformationSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Hospital/Hospital.ump" file="umpleonline/ump/Hospital.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Hotel/Hotel.ump" file="umpleonline/ump/Hotel.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Insurance/Insurance.ump" file="umpleonline/ump/Insurance.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump" file="umpleonline/ump/MailOrderSystemClientOrder.ump" overwrite="true" />

@@ -1045,6 +1045,7 @@ Action.loadExample = function loadExample()
   else if (sel=="MailOrderSystemClientOrder.ump"){Page.setUmpleCanvasSize(780,535);}
   else if (sel=="ManufactoringPlantController.ump"){Page.setUmpleCanvasSize(620,505);}
   else if (sel=="InventoryManagement.ump"){Page.setUmpleCanvasSize(625,570);}
+  else if (sel=="Hospital.ump"){Page.setUmpleCanvasSize(650,400);}
   else if (sel=="Hotel.ump"){Page.setUmpleCanvasSize(820,550);}
   else if (sel=="Library.ump"){Page.setUmpleCanvasSize(780,500);}
   else if (sel=="PoliceSystem.ump"){Page.setUmpleCanvasSize(725,570);} 
