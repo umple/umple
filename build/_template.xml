@@ -112,6 +112,7 @@
     <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
