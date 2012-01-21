@@ -87,7 +87,9 @@
     <replace dir="cruise.umple/test/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
       <include name="**/*.txt"/>
     </replace>
-
+    <replace file="cruise.umple/src/UmpleVersion.ump" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
     <!-- Xtext UI Project Manifest File -->
     <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
@@ -107,6 +109,9 @@
     <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.txt"/>
     </replace>
+    <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->

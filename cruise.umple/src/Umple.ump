@@ -325,9 +325,9 @@ class GenerateTarget
   key{language}
 }
 
+use UmpleVersion.ump;
 use UmpleHelper.ump;
 use UmpleDiagram.ump;
 use StateMachine.ump;
 use Util_Code.ump;
 use Umple_Code.ump;
-

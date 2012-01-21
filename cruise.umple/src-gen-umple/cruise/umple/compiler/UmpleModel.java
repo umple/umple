@@ -31,6 +31,7 @@ public class UmpleModel
   private Coordinate offsetFromEdge;
   private int reflexiveSegmentLength;
   private String traceType;
+  private String versionNumber;
 
   //UmpleModel Associations
   private List<Association> associations;
@@ -61,6 +62,7 @@ public class UmpleModel
     offsetFromEdge = new Coordinate(10,30,0,0);
     reflexiveSegmentLength = 15;
     traceType = "Console";
+    versionNumber = "1.15.0.963";
     associations = new ArrayList<Association>();
     umpleClasses = new ArrayList<UmpleClass>();
     stateMachineDefinitions = new ArrayList<StateMachine>();
@@ -165,6 +167,14 @@ public class UmpleModel
     return wasSet;
   }
 
+  public boolean setVersionNumber(String aVersionNumber)
+  {
+    boolean wasSet = false;
+    versionNumber = aVersionNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleFile getUmpleFile()
   {
     return umpleFile;
@@ -243,6 +253,11 @@ public class UmpleModel
   public String getTraceType()
   {
     return traceType;
+  }
+
+  public String getVersionNumber()
+  {
+    return versionNumber;
   }
 
   public boolean isShouldGenerate()

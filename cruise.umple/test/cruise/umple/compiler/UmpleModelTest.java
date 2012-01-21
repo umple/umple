@@ -259,4 +259,10 @@ public class UmpleModelTest
     
   }
   
+  @Test
+  public void getVersionNumber()
+  {
+    Assert.assertEquals("@UMPLE_VERSION@",model.getVersionNumber());
+  }
+  
 }

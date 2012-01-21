@@ -12,7 +12,6 @@ public class UmpleXtextParser implements UmpleParser
 
   //UmpleXtextParser Attributes
   private UmpleInternalParser temp;
-  private cruise.umple.parser.antlr.UmpleParser antlr;
 
   //------------------------
   // CONSTRUCTOR
@@ -21,7 +20,6 @@ public class UmpleXtextParser implements UmpleParser
   public UmpleXtextParser()
   {
     temp = new UmpleInternalParser();
-    antlr = new cruise.umple.parser.antlr.UmpleParser();
   }
 
   //------------------------
@@ -36,22 +34,9 @@ public class UmpleXtextParser implements UmpleParser
     return wasSet;
   }
 
-  public boolean setAntlr(cruise.umple.parser.antlr.UmpleParser aAntlr)
-  {
-    boolean wasSet = false;
-    antlr = aAntlr;
-    wasSet = true;
-    return wasSet;
-  }
-
   public UmpleInternalParser getTemp()
   {
     return temp;
-  }
-
-  public cruise.umple.parser.antlr.UmpleParser getAntlr()
-  {
-    return antlr;
   }
 
   public void delete()

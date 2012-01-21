@@ -24,7 +24,7 @@ class UmpleXtextParser
   // depend cruise.umple.UmpleStandaloneSetup;
 
   UmpleInternalParser temp = new UmpleInternalParser();
-  cruise.umple.parser.antlr.UmpleParser antlr = new cruise.umple.parser.antlr.UmpleParser();
+  //cruise.umple.parser.antlr.UmpleParser antlr = new cruise.umple.parser.antlr.UmpleParser();
   
 }
 
