@@ -545,7 +545,9 @@ Page.showGeneratedCode = function(code,language)
         bodycode = codeparts[1];
     }
     jQuery("#generatedCodeRow").html(format(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
-    SyntaxHighlighter.highlight("code");
+    if(zipurl.indexOf("Show/Hide errors and warnings") == -1) {
+      SyntaxHighlighter.highlight("code");
+    }
   }
   else {
       jQuery("#generatedCodeRow").html(format('{0}',code));

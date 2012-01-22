@@ -97,9 +97,9 @@ else if (isset($_REQUEST["umpleCode"]))
   if ($sourceCode == "")
   {
     $html = "
-        // An error occurred interpreting your Umple code, please review it and try again.
-        // If the problem persists, please email the Umple code to
-        // the umple-help google group: umple-help@googlegroups.com";
+        An error occurred interpreting your Umple code, please review it and try again.
+        If the problem persists, please email the Umple code to
+        the umple-help google group: umple-help@googlegroups.com";
         
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
@@ -192,9 +192,12 @@ function getErrorHtml($errorFilename, $offset = 1)
      {
      	$results = $errInfo["results"];
      	
+     	
      	foreach($results as $result)
      	{
+     		$url = $result["url"];
      		$line = intval($result["line"]) - $offset; 
+     		$errorCode = $result["errorCode"];
      		$severityInt = intval($result["severity"]);
      		if($severityInt > 2) {
      		  $severity = "Warning";
@@ -205,10 +208,9 @@ function getErrorHtml($errorFilename, $offset = 1)
      		  $severity = "Error";
      		  $textcolor = "<font color=\"red\">";
      		}
-//     		$severity = intval($result["severity"]) > 2 ? "Warning" : "Error";
      		$msg = htmlspecialchars($result["message"]);
      		     		
-     		$errhtml .= $textcolor." {$severity} on line {$line} : {$msg}</font></br>";
+     		$errhtml .= $textcolor." {$severity} on line {$line} : {$msg}.</font> <i><a href=\"{$url}\">More information ({$errorCode})</a></i></br>";
      	}
      }
  	
