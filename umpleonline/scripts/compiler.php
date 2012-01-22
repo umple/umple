@@ -195,10 +195,20 @@ function getErrorHtml($errorFilename, $offset = 1)
      	foreach($results as $result)
      	{
      		$line = intval($result["line"]) - $offset; 
-     		$severity = intval($result["severity"]) > 2 ? "Warning" : "Error";
+     		$severityInt = intval($result["severity"]);
+     		if($severityInt > 2) {
+     		  $severity = "Warning";
+     		  $textcolor = "<font color=\"black\">";
+     		}
+     		else
+     		{
+     		  $severity = "Error";
+     		  $textcolor = "<font color=\"red\">";
+     		}
+//     		$severity = intval($result["severity"]) > 2 ? "Warning" : "Error";
      		$msg = htmlspecialchars($result["message"]);
      		     		
-     		$errhtml .= "{$severity} on line {$line} : {$msg} </br>";
+     		$errhtml .= $textcolor." {$severity} on line {$line} : {$msg}</font></br>";
      	}
      }
  	
