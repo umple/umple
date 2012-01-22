@@ -17,16 +17,14 @@ class UmpleConsoleMain
   depend cruise.umple.compiler.*;
   depend cruise.umple.compiler.exceptions.*;
   
-  // TODO: IMPORT not working on the build machine - might be chicken and egg
-  // depend joptsimple.*;
+  depend joptsimple.*;
   
   public static String console;
   
    public static void main(String[] args) 
    {
      
-     // TODO: IMPORT not working on the build machine - might be chicken and egg
-     // OptionParser deleteMe = new OptionParser();
+     OptionParser deleteMe = new OptionParser();
      
      console = "";
      
