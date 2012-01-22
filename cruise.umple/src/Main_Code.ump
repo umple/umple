@@ -16,11 +16,15 @@ class UmpleConsoleMain
 
   depend cruise.umple.compiler.*;
   depend cruise.umple.compiler.exceptions.*;
+  depend joptsimple.*;
   
   public static String console;
   
    public static void main(String[] args) 
    {
+     
+     OptionParser deleteMe = new OptionParser();
+     
      console = "";
      
      if (args.length == 0)

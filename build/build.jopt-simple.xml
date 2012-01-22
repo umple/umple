@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleSandbox" >
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+  <import file="_template.xml" />
+
+  <property name="project.path" value="jopt-simple"/>
+  <property name="bin.path" value="${project.path}/bin"/>
+  <property name="dist.path" value="dist/jopt-simple"/>
+  <property name="test.output.path" value="dist/qa/sandbox"/>
+  <property name="haltonfailure" value="true"/>
+  <property name="test.output.path" value="dist/qa/sandbox"/>
+
+  <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="junit4.classpath"/>
+  </path>
+
+  <!-- ```````````````````````````
+    Compile the application
+  ``````````````````````````` -->
+
+  <target name="compile">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+      <src path="${project.path}/src/main/java"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/.git"/>
+      <exclude name="**/*.ump" />
+      <classpath refid="project.classpath"/>
+    </javac>
+  </target>
+
+  <!-- ```````````````````````````
+    Build the application
+  ``````````````````````````` -->
+  
+  <target name="build" >
+    <echo>Building the jopt-simple project for use on our command line tools</echo>
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
+    <antcall target="compile" />
+  </target>
+  
+  
+</project>
+

@@ -4,6 +4,7 @@
 package cruise.umple;
 import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
+import joptsimple.*;
 
 public class UmpleConsoleMain
 {
@@ -34,6 +35,9 @@ public class UmpleConsoleMain
   
    public static void main(String[] args) 
    {
+     
+     OptionParser deleteMe = new OptionParser();
+     
      console = "";
      
      if (args.length == 0)

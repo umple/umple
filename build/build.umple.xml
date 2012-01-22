@@ -9,6 +9,7 @@
 
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
+  <property name="jopt-simple.project.path" value="jopt-simple"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple"/>
   <property name="test.output.path" value="dist/qa/cruise.umple"/>
@@ -95,6 +96,7 @@
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
+      <src path="${jopt-simple.project.path}/src/main/java"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
       <exclude name="**/data" />
@@ -128,7 +130,7 @@
 
   <target name="packageJars">
     <property name="umple_classpath" value=" " />
-    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error" excludes="**/*Test.class">
+    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error" excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -137,7 +139,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error">
+    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -146,7 +148,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** *.grammar *.error">
+    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -155,7 +157,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** org/apache/tools/ant/** *.grammar *.error">
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -168,7 +170,7 @@
       <fileset dir="lib/umplerun"/>
     </copy>
 
-    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** org/** *.grammar *.error">
+    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -177,7 +179,7 @@
       </manifest>
     </jar>
 
-    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/vml/** *.grammar *.error">
+    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error cruise/vml/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
