@@ -2,7 +2,7 @@ require 'test/unit'
 require './src-gen-umple/student_n'
 require './src-gen-umple/mentor_n'
 
-module CruiseTest
+module CruiseAssociations
 class ManyToManyTest < Test::Unit::TestCase
     
   def test_CreateNew

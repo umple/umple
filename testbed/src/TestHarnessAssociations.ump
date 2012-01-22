@@ -1,4 +1,4 @@
-namespace cruise.test;
+namespace cruise.associations;
 
 class MentorA
 {
@@ -572,3 +572,15 @@ class StudentAL
 
 class ProgramAL
 {}
+
+
+class MentorAM
+{
+  name;
+  0..1 mentor -- * StudentAM students;  
+}
+
+class StudentAM
+{
+  Integer id;
+}

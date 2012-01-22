@@ -3,7 +3,7 @@ require './src-gen-umple/student_p'
 require './src-gen-umple/mentor_p'
 require './src-gen-umple/program_p'
 
-module CruiseTest
+module CruiseAssociations
 class UnidirectionalManyTest < Test::Unit::TestCase
 
   def test_add_student

@@ -3,7 +3,7 @@
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
-module CruiseTest
+module CruiseAssociations
 
 class MentorU
 

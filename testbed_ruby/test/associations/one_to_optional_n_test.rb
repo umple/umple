@@ -3,7 +3,7 @@ require './src-gen-umple/student_z'
 require './src-gen-umple/mentor_z'
 require './src-gen-umple/program_z'
 
-module CruiseTest
+module CruiseAssociations
 class OneToOptionalNTest < Test::Unit::TestCase
 
   def test_cannotCreateNullStudent

@@ -3,7 +3,7 @@ require './src-gen-umple/student_a_a'
 require './src-gen-umple/mentor_a_a'
 require './src-gen-umple/program_a_a'
 
-module CruiseTest
+module CruiseAssociations
 class ManyToOptionalNTest < Test::Unit::TestCase
 
   def test_CreateStudentWithoutMentor

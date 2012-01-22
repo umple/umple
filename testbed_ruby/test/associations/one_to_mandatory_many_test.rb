@@ -3,7 +3,7 @@ require './src-gen-umple/student_m'
 require './src-gen-umple/mentor_m'
 require './src-gen-umple/program_m'
 
-module CruiseTest
+module CruiseAssociations
 class OneToMandatoryManyTest < Test::Unit::TestCase
 
   def test_cannotCreateNullStudent

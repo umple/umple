@@ -3,7 +3,7 @@ require './src-gen-umple/student_a_e'
 require './src-gen-umple/mentor_a_e'
 require './src-gen-umple/program_a_e'
 
-module CruiseTest
+module CruiseAssociations
 class OptionalNToOptionalNTest < Test::Unit::TestCase
 
   def test_CreateNew

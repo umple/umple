@@ -3,7 +3,7 @@ require './src-gen-umple/student_a_l'
 require './src-gen-umple/mentor_a_l'
 require './src-gen-umple/program_a_l'
 
-module CruiseTest
+module CruiseAssociations
 class UnidirectionalMStarTest < Test::Unit::TestCase
 
   def test_constructorTooFew

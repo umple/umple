@@ -3,7 +3,7 @@ require './src-gen-umple/student_'
 require './src-gen-umple/mentor_'
 require './src-gen-umple/program_'
 
-module CruiseTest
+module CruiseAssociations
 class DoActivityTest < Test::Unit::TestCase
 
     

@@ -1,7 +1,7 @@
 require 'test/unit'
 require './src-gen-umple/mentor_h'
 
-module CruiseTest
+module CruiseAssociations
 class ReflexiveOptionalOneTest < Test::Unit::TestCase
 
   def test_SetSuperMentor

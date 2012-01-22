@@ -1,7 +1,7 @@
 require 'test/unit'
 require './src-gen-umple/mentor_a_f'
 
-module CruiseTest
+module CruiseAssociations
 class ReflexiveOneTest < Test::Unit::TestCase
 
   def test_get_friend

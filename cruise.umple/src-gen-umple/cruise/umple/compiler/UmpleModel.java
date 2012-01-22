@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -62,7 +62,7 @@ public class UmpleModel
     offsetFromEdge = new Coordinate(10,30,0,0);
     reflexiveSegmentLength = 15;
     traceType = "Console";
-    versionNumber = "1.15.0.963";
+    versionNumber = "@UMPLE_VERSION@";
     associations = new ArrayList<Association>();
     umpleClasses = new ArrayList<UmpleClass>();
     stateMachineDefinitions = new ArrayList<StateMachine>();
