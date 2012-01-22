@@ -210,7 +210,7 @@ function getErrorHtml($errorFilename, $offset = 1)
      		}
      		$msg = htmlspecialchars($result["message"]);
      		     		
-     		$errhtml .= $textcolor." {$severity} on line {$line} : {$msg}.</font> <i><a href=\"{$url}\">More information ({$errorCode})</a></i></br>";
+     		$errhtml .= $textcolor." {$severity} on line {$line} : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
      	}
      }
  	
