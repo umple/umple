@@ -4,7 +4,6 @@
 package cruise.umple;
 import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
-import joptsimple.*;
 
 public class UmpleConsoleMain
 {
@@ -36,7 +35,8 @@ public class UmpleConsoleMain
    public static void main(String[] args) 
    {
      
-     OptionParser deleteMe = new OptionParser();
+     // TODO: IMPORT not working on the build machine - might be chicken and egg
+     // OptionParser deleteMe = new OptionParser();
      
      console = "";
      
