@@ -185,7 +185,7 @@ function getErrorHtml($errorFilename, $offset = 1)
   {
      $errInfo = jsonDecode($errorMessage);
      $errhtml = "<a href='#' id='errorClick'>Show/Hide errors and warnings</a>";
-     $errhtml .= "<div id='errorRow' colspan='3' style='display:none'>";
+     $errhtml .= "<div id='errorRow' colspan='3' >";  // style='display:none'
      
      if($errInfo == null)
      {
