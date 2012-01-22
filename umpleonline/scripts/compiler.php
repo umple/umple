@@ -99,10 +99,7 @@ else if (isset($_REQUEST["umpleCode"]))
     $html = "
         // An error occurred interpreting your Umple code, please review it and try again.
         // If the problem persists, please email the Umple code to
-        // the umple-help google group: umple-help@googlegroups.com
-        // or post an issue at http://bugs.umple.org -- the Umple issues page
-        // We are aware that error messages are not useful or nonexistent and
-        // we are working to fix that.";
+        // the umple-help google group: umple-help@googlegroups.com";
         
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
