@@ -115,6 +115,24 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
 	}
+	
+	@Test
+	public void TraceSupportMultipleAttributeSet()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeSet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeSet."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void TraceSupportMultipleAttributeGet()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeGet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupportMultipleAttributeOnlyGet()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeOnlyGet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+	}
 	//========= File tracer
 	@Test
 	public void TraceSupport_FileTracer_SingleAttribute()
@@ -180,6 +198,24 @@ public class TracerTest extends TracerTemplateTest
 	public void TraceSupport_FileTracer_SingleAttributeOnlyGet()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupport_FileTracer_MultipleAttributeSet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeSet.ump",languagePath + "/FileTracer_TraceMultipleAttributeSet."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void TraceSupport_FileTracer_MultipleAttributeGet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeGet.ump",languagePath + "/FileTracer_TraceMultipleAttributeGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupport_FileTracer_MultipleAttributeOnlyGet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceMultipleAttributeOnlyGet."+ languagePath +".txt","Tracer");
 	}
 	
 	//========= String tracer
