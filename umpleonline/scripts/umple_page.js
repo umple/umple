@@ -213,6 +213,11 @@ Page.initSourceCodeArea = function()
   jQuery(generatedCodeRowSelector).hide();
 }
 
+Page.hideGeneratedCode = function()
+{
+  jQuery("#generatedCodeRow").hide();
+}
+
 Page.initCanvasArea = function()
 {
   var canvas = jQuery("#" + Page.umpleCanvasId());
@@ -392,6 +397,8 @@ Page.splitUmpleCode = function(umpleCode)
 Page.setUmpleCode = function(umpleCode)
 {
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
+ 
+  Page.hideGeneratedCode();
   
   jQuery("#umpleLayoutEditor").val(modelAndPositioning[1]);
   jQuery("#umpleModelEditor").val(modelAndPositioning[0]);
@@ -537,6 +544,7 @@ Page.showGeneratedCode = function(code,language)
     var codeparts = code.split('URL_SPLIT');
     var zipurl = "";
     var bodycode = "";
+    var warningToggleLoc = 0;
     if(codeparts.length == 1) {
         bodycode = codeparts[0];
     }
@@ -545,7 +553,8 @@ Page.showGeneratedCode = function(code,language)
         bodycode = codeparts[1];
     }
     jQuery("#generatedCodeRow").html(format(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
-    if(zipurl.indexOf("Show/Hide errors and warnings") == -1) {
+    warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
+    if(warningToggleLoc > 30 || warningToggleLoc == -1) {
       SyntaxHighlighter.highlight("code");
     }
   }
