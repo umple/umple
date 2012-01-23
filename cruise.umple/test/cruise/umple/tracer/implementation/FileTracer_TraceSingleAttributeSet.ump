@@ -1,0 +1,7 @@
+namespace example;
+tracer File;
+class Tracer
+{
+	Integer id;
+	trace set id;
+}

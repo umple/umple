@@ -164,6 +164,24 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeWhere.ump",languagePath + "/FileTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
 	}
 	
+	@Test
+	public void TraceSupport_FileTracer_SingleAttributeSet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeSet.ump",languagePath + "/FileTracer_TraceSingleAttributeSet."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void TraceSupport_FileTracer_SingleAttributeGet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeGet.ump",languagePath + "/FileTracer_TraceSingleAttributeGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupport_FileTracer_SingleAttributeOnlyGet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+	}
+	
 	//========= String tracer
 	@Test
 	public void TraceSupport_StringTracer_SingleAttribute()
