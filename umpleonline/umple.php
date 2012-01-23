@@ -49,12 +49,40 @@ $output = readTemporaryFile($filename);
   </td>
   
   <td id="paletteColumn" class="paletteColumn">
+
+  
     <div class="paletteWrapper" id="paletteWrapper">
     <div id="palette" class="palette">
-    
+
+
     <!-- GROUP 1 OF OPTIONS -->
     
-      <h3><a href="#">LOAD & SAVE</a></h3>
+      <h3><a href="#">SAVE & RESET</a></h3>
+      <div class="section">
+
+
+        <ul class="first">
+          <li class="subtitle">SAVE</li>
+<?php if (isBookmark($filename)) { ?>
+            <div class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark this Link for Future Use</a></div>
+<?php } else { ?>
+            <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
+<?php } ?>
+          <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
+          <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
+        </ul>
+        
+        <ul class="second">
+          <li class="subtitle">RESET</li>
+          <li> <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> </li>
+        </ul>
+
+      </div>
+
+    
+    <!-- GROUP 2 OF OPTIONS -->
+          
+      <h3><a href="#tools">TOOLS</a></h3>
       <div class="section">
 
       <ul class="first">
@@ -101,32 +129,8 @@ $output = readTemporaryFile($filename);
           </select>
         </li>
         </ul>
-
-        <ul class="second">
-          <li class="subtitle">SAVE</li>
-<?php if (isBookmark($filename)) { ?>
-            <div class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark this Link for Future Use</a></div>
-<?php } else { ?>
-            <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
-<?php } ?>
-          <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
-          <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
-        </ul>
-        
-        <ul class="second">
-          <li class="subtitle">NEW</li>
-          <li> <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> </li>
-        </ul>
-
-      </div>
-
-
-    <!-- GROUP 2 OF OPTIONS -->
-          
-      <h3><a href="#">TOOLS</a></h3>
-      <div class="section">
       
-      <ul class = "first toggle">
+      <ul class = "second toggle">
         <li class="subtitle"> Draw </li>
         <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class."><img id="buttonAddClass" src="scripts/class.png" title="Add Class" /> Class</li>
         <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association."><img id="buttonAddAssociation" src="scripts/assoc.png" title="Add Assocation" /> Association</li>
@@ -135,20 +139,20 @@ $output = readTemporaryFile($filename);
         <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model."><img id="buttonDeleteEntity" src="scripts/delete.png" title="Delete" /> Delete</li>
         <li id="buttonUndo" name="paletteItem"><img src="scripts/undo.ico" title="Undo"> Undo </li>
         <li id="buttonRedo" name="paletteItem"><img src="scripts/redo.ico" title="Redo"> Redo </li>
+        <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.ico" title="Manually sync the diagram" /> Sync Diagram </li>        
       </ul>
       
-      <ul class="second">
-        <li class="subtitle"> Synchronize </li>
-        <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.ico" title="Manually sync the diagram" /> Sync Diagram </li>
-      </ul>
-
       <div id="buttonCodeComplete" title="Code Generation Complete">See below.</div>
 
       <?php generateMenu("") ?>
       
       </div>
+
+
+
+    <!-- GROUP 2 OF OPTIONS -->
       
-      <h3><a href="#">OPTIONS</a></h3>
+      <h3><a href="#options">OPTIONS</a></h3>
       <div class="section">
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
         <ul class="first">
