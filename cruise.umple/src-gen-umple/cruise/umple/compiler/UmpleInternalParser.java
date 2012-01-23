@@ -959,16 +959,16 @@ private void checkSingletonAssociations() {
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
 
 		if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
-    	yourEnd.getMultiplicity().setRange("0", "1");
-    	yourEnd.getMultiplicity().setBound(null);
-    	setFailedPosition(association.getTokenPosition(), 2, association.getName());  
-    }
+         yourEnd.getMultiplicity().setRange("0", "1");
+         yourEnd.getMultiplicity().setBound(null);
+         setFailedPosition(association.getTokenPosition(), 2, association.getName());  
+      }
         
-    if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
-    	myEnd.getMultiplicity().setRange("0", "1");
-    	myEnd.getMultiplicity().setBound(null);
-    	setFailedPosition(association.getTokenPosition(), 2, association.getName());
-    }
+      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
+         myEnd.getMultiplicity().setRange("0", "1");
+         myEnd.getMultiplicity().setBound(null);
+         setFailedPosition(association.getTokenPosition(), 2, association.getName());
+      }
 		
 		if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) {
 			setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
@@ -1198,6 +1198,7 @@ private void checkSingletonAssociations() {
     myMult.setBound(myBound);
     myMult.setRange(myLowerBound,myUpperBound);
 
+    // Report an error if the multiplicity is invalid
     if (!myMult.isValid())
     {    	    	
 	   	String invalidBound = myBound == null ? invalidBound = myLowerBound + ".." + myUpperBound : myBound;
@@ -1216,6 +1217,14 @@ private void checkSingletonAssociations() {
     yourMult.setBound(yourBound);
     yourMult.setRange(yourLowerBound,yourUpperBound);
 
+    // Report an error if the multiplicity is invalid
+    if (!yourMult.isValid())
+    {    	    	
+	   	String invalidBound = yourBound == null ? invalidBound = yourLowerBound + ".." + yourUpperBound : yourBound;
+      setFailedPosition(yourMultToken.getPosition(), 4, invalidBound);
+      return null;
+    }
+
     AssociationEnd firstEnd = new AssociationEnd(myName,myType,myModifier,yourType,myMult);
     AssociationEnd secondEnd = new AssociationEnd(yourName,yourType,yourModifier,myType,yourMult);
     updateAssociationEnds(firstEnd,secondEnd);
@@ -1231,6 +1240,7 @@ private void checkSingletonAssociations() {
       return null;
     }
 
+    positionToClassNameReference.put(myMultToken.getPosition("type"),myType);
     positionToClassNameReference.put(yourMultToken.getPosition("type"),yourType);
     model.addAssociation(association);
     return association;
