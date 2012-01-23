@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<h2>>Umple syntactic error reported when no default value is specified after an attribute that is marked defaulted</h2>
+<h2>Umple syntactic error reported when no default value is specified after an attribute that is marked defaulted</h2>
 
 <p>The keyword 'defaulted' means that the attribute will be given a default value if the value is not set in the constructor. Omitting the default value is therefore illogical. The default value is specified after an equals sign.
 </p>
