@@ -1,0 +1,42 @@
+W002 Singleton With Required Object
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a singleton class has an
+association with a multiplicity lower bound of 1 at the other end of the association</h2>
+
+<p>The constructor of a singleton can't take any arguments. Therefore it can't have a required link to another object, since this would have to be specified in the constructor. Any associations to other classes should therefore have multiplicity with lower bound of zero.
+
+</p>
+
+<p>Note: Conceptually this warning would also have been  produced if the lower bound was something
+greater than 1 (e.g. 5). However Umple treats a multiplicity specified with a lower bound > 1 as if the multiplicity lower bound was 0. The programmer is supposed to add the n elements immediately after construction. The API has a validity check method to verify this has been done. 
+
+</p>
+
+
+@@example
+// This example generates the warning message
+class X {
+  singleton;
+  0..1 -- 1 Y;
+}
+
+class Y {
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the warning
+class X {
+  singleton;
+  0..1 -- 0..1 Y;
+}
+
+class Y {
+}
+@@endexample
+
+

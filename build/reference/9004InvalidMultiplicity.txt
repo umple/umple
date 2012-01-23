@@ -1,0 +1,50 @@
+E004 Invalid Multiplicity
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple syntactic error reported when an invalid multiplicity is specified</h2>
+
+<p>Valid multiplicities in Umple include
+<ul>
+<li>0..1 (either zero or one object)</li>
+<li>1 (exactly one object)</li>
+<li>0..* (any number of objects)</li>
+<li>* (any number of objects -- a shortcut for 0..*)</li>
+<li>1..* (one or more objects)</li>
+<li>0..5 (up to 5 objects)</li>
+<li>1..5 (between 1 and 5 objects)</li>
+<li>2..5 (between 2 and 5 objects)</li>
+<li>2..* (at least 2 objects)</li>
+<li>5 (exactly 5 objects)</li>
+<li>Any other similar pattern where other integers appear instead of 2 and 5 in the above. </li>
+</ul>
+
+</p>
+
+<p>When this error message appears, the multiplicity doesn't fit any of the above patterns. A common error, for example, is to use the notation 'n', as found in Entity-Relationship Diagrams. This is not valid in Umple; only integers, and * may appear.
+</p>
+
+
+@@example
+// This example generates the error message
+class X {
+  1 -- 0..1..2 Y;
+}
+
+class Y {
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the error
+class X {
+  1 -- 0..2 Y;
+}
+
+class Y {
+}
+@@endexample
+
+

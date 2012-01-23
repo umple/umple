@@ -1,0 +1,27 @@
+E006 Missing Default
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>>Umple syntactic error reported when no default value is specified after an attribute that is marked defaulted</h2>
+
+<p>The keyword 'defaulted' means that the attribute will be given a default value if the value is not set in the constructor. Omitting the default value is therefore illogical. The default value is specified after an equals sign.
+</p>
+
+
+@@example
+// This example generates the error message
+class X {
+  defaulted Integer a;
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the error
+class X {
+  defaulted Integer a = 5;
+}
+@@endexample
+
+
