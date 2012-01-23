@@ -1,7 +1,5 @@
 class LightFixture
 {
 	trace method1() execute { "somthing" };
-    trace getName() execute { record("objectBeingTraced") };
-    trace setName() execute { record("x",name) } for 100;
     trace method2() execute { record ("objectBeingTraced"), record("x",name) } period 100ms;
 }

@@ -127,7 +127,7 @@ trace : [[traceDirective]] | [[traceCase]]<br />
 <br />
 traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;<br />
 <br />
-traceItem- : ( entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )*<br />
+traceItem- : ( set | get | onlyGet | entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )*<br />
 <br />
 executeClause- :  execute { [**trace_execute] }<br />
 traceWhere :  where [[traceCondition]]<br />

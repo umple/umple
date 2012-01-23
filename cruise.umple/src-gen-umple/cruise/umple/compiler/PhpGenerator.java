@@ -793,7 +793,7 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  		  {
 	  			  // simple trace directive that traces attributes without any extra fragments
 	      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
-	      		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
+	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
 	  		  }
 	  	  }
 		  if( traceDirective.getTraceRecord() != null )
@@ -801,7 +801,7 @@ private String getExtendClassesNames(UmpleClass uClass)
 			  TraceRecord record = traceDirective.getTraceRecord();
 			  // simple trace directive that traces attributes without any extra fragments
 	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-	  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceAttr.getAttribute(0),attrCode,conditionType);  
+	  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);  
 		  }
 	  }
   }

@@ -29,7 +29,7 @@ public class Attribute_TraceItem
 
   public Attribute_TraceItem(TraceDirective aTraceDirective)
   {
-    traceSet = false;
+    traceSet = true;
     traceGet = false;
     forClause = 0;
     periodClause = null;

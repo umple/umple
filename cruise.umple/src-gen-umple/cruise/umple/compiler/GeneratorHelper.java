@@ -233,21 +233,40 @@ private static void postpareTrace(UmpleModel aModel)
   private static void postpareTrace(UmpleClass aClass)
   {}
   
+  public static void prepareTraceDirectiveAttributeInject( TraceDirective traceDirective, CodeTranslator t, Attribute_TraceItem traceAttr, Attribute attr, String attrCode, String conditionType) 
+  {
+	  if( traceAttr.getTraceSet() == true && traceAttr.getTraceGet() == false )
+		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  else if( traceAttr.getTraceSet() == false && traceAttr.getTraceGet() == true )
+		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"getMethod");
+	  else if( traceAttr.getTraceSet() == true && traceAttr.getTraceGet() == true )
+	  {
+		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"getMethod");
+	  }
+  }
+  
   // Assigns and prepares trace code injection before calling "injectTraceDirective"
   //  + setMethod: What is the name of the setMethod we are attaching the trace to
   //  + attrCode: What is the trace code that should be executed
-  public static void prepareTraceDirectiveInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType) 
+  public static void prepareTraceDirectiveInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType, String method) 
   {
 	  Map<String,String> lookups = new HashMap<String,String>();
 	  lookups.put("Code",attrCode);
-	  lookups.put("setMethod",t.translate("setMethod",attr));
+	  if( method.equals("setMethod") )
+		  lookups.put("setMethod",t.translate("setMethod",attr));
+	  if( method.equals("getMethod") )
+		  lookups.put("getMethod",t.translate("getMethod",attr));
 	  String injectionType = "after";
 	    
 	  if( "where".equals(conditionType) )
 		  injectionType = "before";  
 	  else if( "until".equals(conditionType) || "after".equals(conditionType) )
 		  injectionType = "after";
-	  injectTraceDirective(traceDirective,lookups,injectionType);
+	  if( method.equals("setMethod") )
+		  injectTraceDirective(traceDirective,lookups,injectionType,"setMethod");
+	  if( method.equals("getMethod") )
+		  injectTraceDirective(traceDirective,lookups,injectionType,"getMethod");
   }
   
   public static void prepareTraceDirectiveInjectStateMachine( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 
@@ -255,7 +274,7 @@ private static void postpareTrace(UmpleModel aModel)
 	  Map<String,String> lookups = new HashMap<String,String>();
 	  lookups.put("Code",stmCode);
 	  lookups.put("setMethod",t.translate("setMethod",stm));
-	  injectTraceDirective(traceDirective,lookups,injectionType);
+	  injectTraceDirective(traceDirective,lookups,injectionType,"setMethod");
   }
   
   public static void tmp( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 
@@ -278,13 +297,13 @@ private static void postpareTrace(UmpleModel aModel)
   // Inject the necessary "before" and "after" hooks to call the trace, this method expects the following action semantic lookups
   //  + setMethod: What is the name of the setMethod we are attaching the trace to
   //  + attributeCode: What is the trace code that should be executed
-  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String injectionType)
+  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String injectionType, String method)
   {
     UmpleClass aClass = traceDirective.getUmpleClass();
-    String setMethod = lookups.get("setMethod");
+    String Method = lookups.get(method);
     String code = lookups.get("Code");
 
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code);
+    CodeInjection set = new CodeInjection(injectionType, Method, code);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }

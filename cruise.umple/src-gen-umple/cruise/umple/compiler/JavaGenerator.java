@@ -833,17 +833,17 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  		  {
 	  			  // simple trace directive that traces attributes without any extra fragments
 	      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
-	      		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);  
+	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
 	  		  }
 	  		
 			  if( traceAttr.getPeriodClause() != null )
 	  		  {
 	  			  attrCode = "Thread thr1 = new Thread(tracePeriod(" + preparePeriod(traceAttr.getPeriodClause()) + "));\n";
-	  			  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  			  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
 	  			  attrCode = "thr1.start();\n";
-	  			  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  			  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
 	    		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
-	    		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	    		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
 	  		  }
 	  	  }
 		  if( traceDirective.getTraceRecord() != null )
@@ -851,7 +851,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 			  TraceRecord record = traceDirective.getTraceRecord();
 			  // simple trace directive that traces attributes without any extra fragments
 	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-	  		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,traceAttr.getAttribute(0),attrCode,conditionType);  
+	  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);  
 		  }
 	  }
 	  
@@ -929,16 +929,16 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 		  conditionType = "after";  
 	  }
 	   
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
 
 	  attrCode = "{";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
 	  	  
 	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
 
 	  attrCode = "}";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
   }
   
   private static String getComparisonOperatorInverse(String co) {

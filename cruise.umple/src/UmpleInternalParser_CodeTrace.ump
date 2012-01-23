@@ -170,6 +170,20 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  else if( attr != null )
 	  {
 		  traceAttr.addAttribute(attr);
+		  if( traceToken.getParentToken().getSubToken(1).getName().equals("set") )
+		  {
+			  traceAttr.setTraceSet(true);
+		  }
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("get") )
+		  {
+			  traceAttr.setTraceSet(true);
+			  traceAttr.setTraceGet(true);
+		  }
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("onlyGet") )
+		  {
+			  traceAttr.setTraceSet(false);
+			  traceAttr.setTraceGet(true);
+		  }
 	  }
 	  // if trace entity is a state machine
 	  else if( stm != null && state == null )

@@ -97,7 +97,24 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeUntil.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
 	}
+	
+	@Test
+	public void TraceSupportSingleAttributeSet()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeSet.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeSet."+ languagePath +".txt","Tracer");
+	}
 	  
+	@Test
+	public void TraceSupportSingleAttributeGet()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeGet.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupportSingleAttributeOnlyGet()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+	}
 	//========= File tracer
 	@Test
 	public void TraceSupport_FileTracer_SingleAttribute()

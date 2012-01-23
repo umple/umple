@@ -58,7 +58,7 @@ class TraceDirective
 
 class Attribute_TraceItem
 {
-	boolean traceSet = false;
+	boolean traceSet = true;   // defualt case is to trace setters
 	boolean traceGet = false;
 	Integer forClause = 0;
  	periodClause = null;

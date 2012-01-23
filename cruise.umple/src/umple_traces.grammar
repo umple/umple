@@ -6,7 +6,7 @@ trace : [[traceDirective]] | [[traceCase]]
 
 traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;
 
-traceItem- : ( entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )* 
+traceItem- : ( set | get | onlyGet | entry | exit | cardinality )?  [trace_entity] ( , [trace_entity] )* 
 
 executeClause- :  execute { [**trace_execute] }
 traceWhere :  where [[traceCondition]]
