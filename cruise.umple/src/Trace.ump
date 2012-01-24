@@ -21,8 +21,10 @@ class UmpleModel
 
 class TraceCondition
 {
-	// condition may be where, until or after
+	// condition may be where, until, after, or giving
 	conditionType = null;
+	boolean preCondition  = false;
+	boolean postCondition = false;
 	lhs = null;
 	0..1 -> 1 ConditionRhs rhs;
 }

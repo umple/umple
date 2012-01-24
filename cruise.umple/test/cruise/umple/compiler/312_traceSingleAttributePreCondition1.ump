@@ -1,0 +1,7 @@
+namespace example;
+
+class Tracer
+{
+	Integer a,b;
+	trace when a < b;
+}

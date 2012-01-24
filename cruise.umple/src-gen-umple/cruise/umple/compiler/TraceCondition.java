@@ -12,6 +12,8 @@ public class TraceCondition
 
   //TraceCondition Attributes
   private String conditionType;
+  private boolean preCondition;
+  private boolean postCondition;
   private String lhs;
 
   //TraceCondition Associations
@@ -24,6 +26,8 @@ public class TraceCondition
   public TraceCondition(ConditionRhs aRhs)
   {
     conditionType = null;
+    preCondition = false;
+    postCondition = false;
     lhs = null;
     if (!setRhs(aRhs))
     {
@@ -43,6 +47,22 @@ public class TraceCondition
     return wasSet;
   }
 
+  public boolean setPreCondition(boolean aPreCondition)
+  {
+    boolean wasSet = false;
+    preCondition = aPreCondition;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setPostCondition(boolean aPostCondition)
+  {
+    boolean wasSet = false;
+    postCondition = aPostCondition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setLhs(String aLhs)
   {
     boolean wasSet = false;
@@ -54,6 +74,16 @@ public class TraceCondition
   public String getConditionType()
   {
     return conditionType;
+  }
+
+  public boolean getPreCondition()
+  {
+    return preCondition;
+  }
+
+  public boolean getPostCondition()
+  {
+    return postCondition;
   }
 
   public String getLhs()

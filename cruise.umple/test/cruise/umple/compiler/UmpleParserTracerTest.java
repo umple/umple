@@ -209,6 +209,42 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceSingleAttributePostCondition1()
+  {
+//	  assertParse("311_traceSingleAttributePostCondition1.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceAfter][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceAfter][LHS:id][comparison_operator:==][RHS:6]");
+  }
+  
+  @Test
+  public void traceSingleAttributePostCondition2()
+  {
+	  assertParse("311_traceSingleAttributePostCondition2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a,b][trace][LHS:a][comparison_operator:<][RHS:b]");
+  }
+  
+  @Test
+  public void traceSingleAttributePostCondition3()
+  {
+	  assertParse("311_traceSingleAttributePostCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a,b,c][trace][trace_entity:c][traceGiving][LHS:a][comparison_operator:<][RHS:b]");
+  }
+  
+  @Test
+  public void traceSingleAttributePreCondition1()
+  {
+	  assertParse("312_traceSingleAttributePreCondition1.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a,b][trace][LHS:a][comparison_operator:<][RHS:b]");
+  }
+  
+  @Test
+  public void traceSingleAttributePreCondition2()
+  {
+	  assertParse("312_traceSingleAttributePreCondition2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a,b,c][trace][trace_entity:c][traceWhen][LHS:a][comparison_operator:<][RHS:b]");
+  }
+  
+  @Test
+  public void traceSingleAttributePreCondition3()
+  {
+	  assertParse("312_traceSingleAttributePreCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a,b,c][trace][trace_entity:c][traceWhen][LHS:a][comparison_operator:<][RHS:b]");
+  }
+  
+  @Test
   public void traceSingleAttributeOccurences()
   {
 	  assertParse("315_traceSingleAttributeOccurences.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_for:5][trace][trace_entity:id][trace_for:100]");
