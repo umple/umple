@@ -1,0 +1,43 @@
+E012 Class Indirectly Subclass of Self
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a class is designated as a subclass of itself, through some other class.</h2>
+
+<p>The inheritance hierarchy cannot have cycles. It must be a strict tree. It is therefore not allowed to make a cycle or loop, in which a class is indirectly a subclass of itself.
+
+</p>
+
+
+@@example
+// This example generates the error message
+class A {
+  isA C;
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  isA B;
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the error
+class A {
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  isA B;
+}
+@@endexample
+
+

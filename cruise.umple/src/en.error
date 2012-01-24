@@ -7,8 +7,8 @@
 5: 2, http://umple.org/E005UndefinedClassinAssociation.html, Association end '{0}' is not a class ; 
 6: 2, http://umple.org/E006MissingDefault.html, No default value is specified for a defaulted attribute '{0}' ; 
 7: 3, http://manual.umple.org, Default key already specified in class '{0}' ; 
-8: 2, http://manual.umple.org, Association class '{0}' is missing an end ; 
+8: 2, http://umple.org/E008AssociationClassMissingEnd.html, Association class '{0}' is missing an end ; 
 9: 2, http://umple.org/E009ReflexiveLowerBound.html, Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
 10: 3, http://umple.org/W010SingletonMultiplicityOver1.html, Singleton class '{0}' cannot have multiplicity greater than 1 ; 
-11: 2, http://manual.umple.org, Class '{0}' cannot cyclically extend itself ; 
-12: 2, http://manual.umple.org, Class '{0}' cannot cyclically extend class '{1}'  ; 
+11: 2, http://umple.org/E011ClassisSubclassOfSelf.html, Class '{0}' cannot cyclically extend itself ; 
+12: 2, http://umple.org/E012ClassIndirectlySubclassofSelf.html, Class '{0}' cannot cyclically extend class '{1}'  ; 

@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<h2>Umple semantic warning reported when a a singleton class has an
+<h2>Umple semantic warning reported when a singleton class has an
 association with incoming multiplicity > 1</h2>
 
 <p> Since there can only be one instance of a singleton class, it is
