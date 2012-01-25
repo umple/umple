@@ -47,12 +47,17 @@ else if (isset($_REQUEST["umpleCode"]))
     echo $modelId;
     return;
   }
-  elseif (!in_array($language,array("Php","Java","Ruby","Cpp")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","SQL")))
   {  
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";
     
-    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    if ($language == "Experimental-Cpp" || $language == "Experimental-SQL") {
+      $sourceCode = executeCommand("echo \"{$language} is under development. Output is currently only available to developers of Umple\" 2> {$errorFilename}");
+    }
+    else {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    }
     $errors = getErrorHtml($errorFilename, 0);
     
     if ($language != "Json")
@@ -67,7 +72,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
-  // Generate the Java, PHP, Ruby or Cpp and put it into the right directory
+  // Generate the Java, PHP, Ruby, Cpp or SQL and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   
   $outputFilename = "{$filename}.output";
@@ -210,7 +215,7 @@ function getErrorHtml($errorFilename, $offset = 1)
      		}
      		$msg = htmlspecialchars($result["message"]);
      		     		
-     		$errhtml .= $textcolor." {$severity} on line {$line} : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+     		$errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
      	}
      }
  	

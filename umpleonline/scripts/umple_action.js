@@ -33,6 +33,14 @@ Action.clicked = function(event)
   {
     Action.generateCode("java","Java");
   }
+    else if (action == "CppCode")
+  {
+    Action.generateCode("cpp","Cpp");
+  }
+  else if (action == "SQLCode")
+  {
+    Action.generateCode("sql","SQL");
+  }
   else if (action == "JavaAPIDoc")
   {
     Action.generateCode("javadoc","javadoc");
@@ -833,8 +841,14 @@ Action.generalizationSelected = function(obj)
 Action.generateCode = function(languageStyle,languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
+  var advancedMode = document.getElementById("advancedMode").value;
+  var actualLanguage = languageName;
+  if (advancedMode=="0" && (languageName == "Cpp" || languageName == "SQL"))
+  {
+    actualLanguage = "Experimental-"+languageName;
+  }
   jQuery(generateCodeSelector).showLoading();
-  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}",languageName),"true");
+  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}",actualLanguage),"true");
 }
 
 Action.photoReady = function()
@@ -1062,6 +1076,8 @@ Action.loadExampleCallback = function(response)
   History.save(response.responseText);
   
   Action.updateUmpleDiagram();
+  Action.setCaretPosition(0);
+  Action.updateLineNumberDisplay();
 }
 
 Action.customSizeTyped = function()
@@ -1123,9 +1139,89 @@ Action.keyboardShortcut = function(event)
   }
 }
 
+Action.getCaretPosition = function() // TIM Returns the line number
+{
+  var ctrl = document.getElementById('umpleModelEditor');
+  var CaretPos = 0;	// IE Support
+  if (document.selection) {
+	ctrl.focus ();
+		var Sel = document.selection.createRange ();
+		Sel.moveStart ('character', -ctrl.value.length);
+		CaretPos = Sel.text.length;
+	}
+	// Other browser support
+	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+		CaretPos = ctrl.selectionStart;
+	
+	var nlcount=1;
+	var theCode=Page.getUmpleCode();
+	for(var ch=1; ch<(CaretPos); ch++)
+	{
+	   if(theCode.charAt(ch)=="\n") nlcount++;
+	}
+	return nlcount;
+}
+
+Action.setCaretPosition = function(line){
+  if(line=="av") {
+    // Special backdoor to turn on experimental features
+    document.getElementById('advancedMode').value=1;
+  }
+  else
+  {
+    var ctrl = document.getElementById('umpleModelEditor');
+    var startPos=0;
+    var endPos=-1;
+
+    if(line<1)
+    {
+      endPos=0;
+    }
+    else
+    {
+      var theCode=Page.getUmpleCode();
+      for(var ch=1; ch<theCode.length; ch++)
+      {
+        if(theCode.charAt(ch)=='\n')
+        {
+          line--;
+          if(line==1) startPos=ch+1;
+          if(line==0) {
+            endPos=ch; 
+            break;
+          }
+        }
+      }
+      if(endPos==-1) { // got to end
+        endPos=theCode.length;
+        if(line!=1) startPos=endPos;
+      }
+    }
+    
+	if(ctrl.setSelectionRange)
+	{
+		ctrl.focus();
+		ctrl.setSelectionRange(startPos,endPos);
+	}
+	else if (ctrl.createTextRange) {
+		var range = ctrl.createTextRange();
+		range.collapse(true);
+		range.moveEnd('character', startPos);
+		range.moveStart('character', endPos);
+		range.select();
+	}
+  }
+}
+
+Action.updateLineNumberDisplay = function()
+{
+  jQuery("#linenum").val(Action.getCaretPosition());
+}
+
 Action.umpleTyped = function(eventObject)
 {
   var target = eventObject.target.id;
+  Action.updateLineNumberDisplay();
   if (Action.manualSync && Action.diagramInSync)
   {
   	if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);

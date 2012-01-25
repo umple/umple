@@ -60,6 +60,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonJavaAPIDoc");
 //  Page.initAction("buttonZip");
   Page.initAction("buttonRubyCode");
+  Page.initAction("buttonSqlCode");
+  Page.initAction("buttonCppCode");
   Page.initAction("buttonPhotoReady");
   Page.initAction("buttonSimulateCode");
   Page.initAction("buttonShowHideTextEditor");
@@ -191,6 +193,8 @@ Page.initAction = function(id)
 Page.initUmpleTextArea = function()
 {
   jQuery("#umpleModelEditor").keyup(function(eventObject){Action.umpleTyped(eventObject);});
+
+jQuery("#umpleModelEditor").mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
   jQuery("#umpleLayoutEditor").keyup(function(eventObject){Action.umpleTyped(eventObject);});
   jQuery("#umpleModelEditor").focus(function(){Action.focusOn("umpleModelEditor", true);});
   jQuery("#umpleLayoutEditor").focus(function(){Action.focusOn("umpleLayoutEditor", true);});

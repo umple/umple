@@ -29,12 +29,18 @@ $output = readTemporaryFile($filename);
   </table>
   
 <input id="filename" type="hidden" value="<?php echo $filename ?>" />
+<input id="advancedMode" type="hidden" value="0" />
+
+<div class="bookmarkableUrl">
+
+<span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value)"></input>&nbsp; &nbsp;</span> 
 
 <?php if (isBookmark($filename)) { ?>
-  <div class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a></div>
+  <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a>
 <?php } else { ?>
-  <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
+  <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a>
 <?php } ?>
+</div>
 
 <table id="container" class="container">
 
