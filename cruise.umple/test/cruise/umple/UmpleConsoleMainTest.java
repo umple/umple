@@ -43,14 +43,27 @@ public class UmpleConsoleMainTest
   }
   
 
-  @Test @Ignore
+  @Test
   public void Version()
   {
    String[] args = new String[] { "--version"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("@UMPLE_VERSION@", UmpleConsoleMain.console);
+   Assert.assertEquals("Version: @UMPLE_VERSION@\n", UmpleConsoleMain.console);
+
+   args = new String[] { "-v"  };
+   
+   UmpleConsoleMain.main(args);
+   Assert.assertEquals("Version: @UMPLE_VERSION@\n", UmpleConsoleMain.console);
   }
 
-  
+  @Test
+  public void badArgument()
+  {
+   String[] args = new String[] { "--IDONTEXIST"  };
+   
+   UmpleConsoleMain.main(args);
+   Assert.assertEquals("Option:\'IDONTEXIST\' is not a recognized option\n", UmpleConsoleMain.console);
+  }
+
 }

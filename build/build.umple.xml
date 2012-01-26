@@ -33,7 +33,7 @@
   ``````````````````````````` -->
 
   <target name="umpleSelf">
-    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
   </target>

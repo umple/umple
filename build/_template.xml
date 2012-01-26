@@ -14,7 +14,7 @@
     <pathelement location="lib/junit.jar"/>
     <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
   </path>
-  
+
   <path id="umple.classpath">
     <pathelement location="lib/ant.jar"/>
     <pathelement location="lib/ant-launcher.jar"/>
@@ -90,6 +90,7 @@
     <replace file="cruise.umple/src/UmpleVersion.ump" token="@UMPLE_VERSION@" value="${umple.version}" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
     <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="@UMPLE_VERSION@" value="${umple.version}" />
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
     <!-- Xtext UI Project Manifest File -->
     <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />

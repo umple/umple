@@ -66,15 +66,15 @@ public class UmpleRunMain
          {
            print("Skipping compilation, entering debug mode");
          }
-         
+
          print("Building model... ");
          Builder b = new Builder();
          URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
-         
+
          if (jarfile == null)
          {
-           println("failed");
-           return;
+             println("failed");
+             return;
          }
          println("success.");
 
