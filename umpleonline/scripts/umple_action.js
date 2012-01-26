@@ -1141,17 +1141,23 @@ Action.keyboardShortcut = function(event)
 
 Action.getCaretPosition = function() // TIM Returns the line number
 {
-  var ctrl = document.getElementById('umpleModelEditor');
-  var CaretPos = 0;	// IE Support
-  if (document.selection) {
-	ctrl.focus ();
-		var Sel = document.selection.createRange ();
-		Sel.moveStart ('character', -ctrl.value.length);
-		CaretPos = Sel.text.length;
-	}
-	// Other browser support
+	var ctrl = document.getElementById('umpleModelEditor');
+	var CaretPos = 0; // IE Support
+	if (document.selection) {
+	  ctrl.focus(); 
+	  var DocSel = document.selection.createRange(); 
+	  if (DocSel == null) { 
+	      CaretPos = 0; 
+	  } 
+	  var region = ctrl.createTextRange(),
+	  regionCaret = region.duplicate(); 
+	  region.moveToBookmark(DocSel.getBookmark()); 
+	  regionCaret.setEndPoint('EndToStart', region); 
+	  CaretPos = regionCaret.text.length; 
+	 }
+	 // Other browser support
 	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
-		CaretPos = ctrl.selectionStart;
+	  CaretPos = ctrl.selectionStart;
 	
 	var nlcount=1;
 	var theCode=Page.getUmpleCode();
