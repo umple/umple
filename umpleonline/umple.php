@@ -143,9 +143,9 @@ $output = readTemporaryFile($filename);
         <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem"><img id="buttonBendAssociation" src="scripts/assocbend.jpg" title="Bend Assocation" /> Bend Assoc.</li> -->
         <li id="buttonAddGeneralization" class="toggleToolItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class."><img id="buttonAddGeneralization" src="scripts/generalization.png" title="Add Generalization" /> Generalization</li>
         <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model."><img id="buttonDeleteEntity" src="scripts/delete.png" title="Delete" /> Delete</li>
-        <li id="buttonUndo" name="paletteItem"><img src="scripts/undo.ico" title="Undo"> Undo </li>
-        <li id="buttonRedo" name="paletteItem"><img src="scripts/redo.ico" title="Redo"> Redo </li>
-        <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.ico" title="Manually sync the diagram" /> Sync Diagram </li>        
+        <li id="buttonUndo" name="paletteItem"><img src="scripts/undo.png" title="Undo"> Undo </li>
+        <li id="buttonRedo" name="paletteItem"><img src="scripts/redo.png" title="Redo"> Redo </li>
+        <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.png" title="Manually sync the diagram" /> Sync Diagram </li>        
       </ul>
       
       <div id="buttonCodeComplete" title="Code Generation Complete">See below.</div>
@@ -174,8 +174,8 @@ $output = readTemporaryFile($filename);
         </ul>
         <ul>
           <li class="subtitle"> Canvas Size </li>
-          <li id="buttonSmaller" name="paletteItem"><img id="buttonSmaller" src="scripts/smaller.ico" title="Reduce the size of the canvas" /> Smaller</li>
-          <li id="buttonLarger" name="paletteItem"><img id="buttonLarger" src="scripts/larger.ico" title="Increase the size of the canvas" /> Larger</li>
+          <li id="buttonSmaller" name="paletteItem"><img id="buttonSmaller" src="scripts/smaller.png" title="Reduce the size of the canvas" /> Smaller</li>
+          <li id="buttonLarger" name="paletteItem"><img id="buttonLarger" src="scripts/larger.png" title="Increase the size of the canvas" /> Larger</li>
         </ul>
         <ul>
           <li class="subtitle"> Other Views </li>
