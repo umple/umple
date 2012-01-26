@@ -25,12 +25,12 @@
     {
       if (av.getIsLazy())
       {
-        %><%@ include file="attribute_SetImmutable.jet" %><%
+        %><%@ include file="header_attribute_SetImmutable.jet" %><%
       }
     }
     else if (av.getModifier().equals("defaulted"))
     {
-      %><%@ include file="attribute_SetDefaulted.jet" %><%
+      %><%@ include file="header_attribute_SetDefaulted.jet" %><%
     }
     else if (av.getIsList())
     {

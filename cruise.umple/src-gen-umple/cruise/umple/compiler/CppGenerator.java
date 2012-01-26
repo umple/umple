@@ -18,6 +18,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   //CppGenerator Attributes
   private UmpleModel model;
   private String output;
+  private boolean callHeader;
 
   //------------------------
   // CONSTRUCTOR
@@ -27,6 +28,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
     model = null;
     output = "";
+    callHeader = false;
   }
 
   //------------------------
@@ -49,6 +51,14 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     return wasSet;
   }
 
+  public boolean setCallHeader(boolean aCallHeader)
+  {
+    boolean wasSet = false;
+    callHeader = aCallHeader;
+    wasSet = true;
+    return wasSet;
+  }
+
   public UmpleModel getModel()
   {
     return model;
@@ -57,6 +67,11 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   public String getOutput()
   {
     return output;
+  }
+
+  public boolean getCallHeader()
+  {
+    return callHeader;
   }
 
   public void delete()
@@ -183,19 +198,28 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   }
   
   
-  public ILang getLanguageFor(UmpleElement aElement)
+    public ILang getLanguageFor(UmpleElement aElement)
   {
-    if (aElement instanceof UmpleInterface)
+	if (aElement instanceof UmpleInterface)
     {
       return new CppInterfaceGenerator();
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new CppClassGenerator();
-    } 
-    else{
-        return null;        
+    	if (callHeader == false)
+    	{
+    		callHeader = true;
+    		return new CppClassGenerator();
+    	}
+    	
+    	else if (callHeader == true)
+    	{
+    		callHeader = false;
+    		return new CppHeaderGenerator();
+    	}
+      
     }
+    return null;
   }
   
   public String getType(UmpleVariable av)
@@ -973,6 +997,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   private void writeFile(UmpleElement aClass) throws IOException
   {
     ILang language = getLanguageFor(aClass);
+    ILang headerlanguage = getLanguageFor(aClass);
 
     String path = StringFormatter.addPathOrAbsolute( 
     						  model.getUmpleFile().getPath(), 
@@ -989,13 +1014,17 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     String hfilename = path + File.separator + aClass.getName() + ".h";
     BufferedWriter hbw = new BufferedWriter(new FileWriter(hfilename));
 
+    
+    String headerContent = headerlanguage.getCode(model, aClass);
+    model.getGeneratedCode().put(aClass.getName(),headerContent);
     String contents = language.getCode(model, aClass);
     model.getGeneratedCode().put(aClass.getName(),contents);
+    
     
     try
     {
       bw.write(contents);
-      hbw.write(contents);
+      hbw.write(headerContent);
       bw.flush();
     }
     finally

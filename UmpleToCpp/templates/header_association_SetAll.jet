@@ -1,7 +1,6 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
 <%
-  // TODO: This is not a generic file, please read mroe carefully when you copy-and-paste code
-  // This file should only (at present) belong to Cpp as our other languages do not support header files
+  // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
@@ -213,48 +212,42 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_IsNumberOfValidMethod.jet"
+      %><%@ include file="header_association_IsNumberOfValidMethod.jet" %><%
     }
     
     if (hasRequiredNumberOfMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_RequiredNumberOfMethod.jet"
+      %><%@ include file="header_association_RequiredNumberOfMethod.jet" %><%
     }
 
     if (hasMinimumNumberOfMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_MinimumNumberOfMethod.jet"
+      %><%@ include file="header_association_MinimumNumberOfMethod.jet" %><%
     }
     
     if (hasMaximumNumberOfMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_MaximumNumberOfMethod.jet"
+      %><%@ include file="header_association_MaximumNumberOfMethod.jet" %><%
     }
     
     if (hasAddManyToManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_AddManyToManyMethod.jet"
+      %><%@ include file="header_association_AddManyToManyMethod.jet" %><%
     }
     
     if (hasRemoveManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_RemoveMany.jet"
+      %><%@ include file="header_association_RemoveMany.jet" %><%
     }
 
     if (addNewLine) { appendln(stringBuffer,""); }
@@ -263,23 +256,19 @@
     // How do you dynamically include a file in JET?!?
     if (includeFile == "header_association_SetUnidirectionalOptionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetUnidirectionalOptionalOne.jet"
+      %><%@ include file="header_association_SetUnidirectionalOptionalOne.jet"%><%
     }
     else if (includeFile == "header_association_SetUnidirectionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetUnidirectionalOne.jet"
+      %><%@ include file="header_association_SetUnidirectionalOne.jet"%><%
     }
     else if (includeFile == "header_association_SetOptionalOneToOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOptionalOneToOne.jet"
+      %><%@ include file="header_association_SetOptionalOneToOne.jet"%><%
     }
     else if (includeFile == "header_association_SetOneToOptionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOneToOptionalOne.jet"
+      %><%@ include file="header_association_SetOneToOptionalOne.jet"%><%
     }
     else if (includeFile == "header_association_AddMandatoryManyToOne.jet")
     {
@@ -295,8 +284,7 @@
     }
     else if (includeFile == "header_association_SetOptionalNToMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOptionalNToMany.jet"
+      %><%@ include file="header_association_SetOptionalNToMany.jet"%><%
     }
     else if (includeFile == "header_association_AddManyToOne.jet")
     {
@@ -304,8 +292,7 @@
     }
     else if (includeFile == "header_association_SetOptionalOneToOptionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOptionalOneToOptionalOne.jet"
+      %><%@ include file="header_association_SetOptionalOneToOptionalOne.jet"%><%
     }
     else if (includeFile == "header_association_AddMNToMany.jet")
     {
@@ -313,38 +300,31 @@
     }
     else if (includeFile == "header_association_AddMStarToMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_AddMStarToMany.jet"
+      %><%@ include file="header_association_AddMStarToMany.jet"%><%
     }
     else if (includeFile == "header_association_SetOptionalOneToOptionalN.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOptionalOneToOptionalN.jet"
+      %><%@ include file="header_association_SetOptionalOneToOptionalN.jet"%><%
     }
     else if (includeFile == "header_association_SetOneToMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOneToMany.jet"
+      %><%@ include file="header_association_SetOneToMany.jet"%><%
     }
     else if (includeFile == "header_association_SetOneToAtMostN.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOneToAtMostN.jet"
+      %><%@ include file="header_association_SetOneToAtMostN.jet"%><%
     }
     else if (includeFile == "header_association_SetOneToMandatoryMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOneToMandatoryMany.jet"
+      %><%@ include file="header_association_SetOneToMandatoryMany.jet"%><%
     }
     else if (includeFile == "header_association_AddManyToOptionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_AddManyToOptionalOne.jet"
+      %><%@ include file="header_association_AddManyToOptionalOne.jet"%><%
     }
     else if (includeFile == "header_association_SetOptionalOneToMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetOptionalOneToMany.jet"
+      %><%@ include file="header_association_SetOptionalOneToMany.jet"%><%
     }
     else if (includeFile == "header_association_AddOptionalNToOptionalOne.jet")
     {
@@ -360,8 +340,7 @@
     }
     else if (includeFile == "header_association_SetNToOptionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetNToOptionalOne.jet"
+      %><%@ include file="header_association_SetNToOptionalOne.jet"%><%
     }
     else if (includeFile == "header_association_AddUnidirectionalMany.jet")
     {
@@ -377,8 +356,7 @@
     }
     else if (includeFile == "header_association_SetUnidirectionalN.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetUnidirectionalN.jet"
+      %><%@ include file="header_association_SetUnidirectionalN.jet"%><%
     }
     else if (includeFile != null)
     {
@@ -387,33 +365,27 @@
     
     if (includeFile2 == "header_association_SetMNToMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetMNToMany.jet"
+      %><%@ include file="header_association_SetMNToMany.jet"%><%
     }
     else if (includeFile2 == "header_association_SetMStarToMany.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetMStarToMany.jet"
+      %><%@ include file="header_association_SetMStarToMany.jet"%><%
     }
     else if (includeFile2 == "header_association_SetUnidirectionalMN.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetUnidirectionalMN.jet"
+      %><%@ include file="header_association_SetUnidirectionalMN.jet"%><%
     }
     else if (includeFile2 == "header_association_SetMNToOptionalOne.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetMNToOptionalOne.jet"
+      %><%@ include file="header_association_SetMNToOptionalOne.jet"%><%
     }
     else if (includeFile2 == "header_association_SetUnidirectionalOptionalN.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetUnidirectionalOptionalN.jet"
+      %><%@ include file="header_association_SetUnidirectionalOptionalN.jet"%><%
     }
     else if (includeFile2 == "header_association_SetUnidirectionalMStar.jet")
     {
-      // TODO: INCLUDED FILE DOES NOT EXIST, COMMENTING OUT
-      // include file="header_association_SetUnidirectionalMStar.jet"
+      %><%@ include file="header_association_SetUnidirectionalMStar.jet"%><%
     }
     else if (includeFile2 != null)
     {

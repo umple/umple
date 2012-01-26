@@ -29,12 +29,14 @@
 %>
 
 <%@ include file="import_packages.jet" %>
+#ifndef _<%=uClass.getName()%>
+#define _<%=uClass.getName()%>
 
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
 class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 {
-	//------------------------
-  // Attributes
+   //------------------------
+  // Attributes for header file
   //------------------------
   private:
   <%@ include file="members_AllStatics.jet" %>
@@ -55,13 +57,13 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   // INTERFACE
   //------------------------
 
-  <%@ include file="attribute_Set_All.jet" %>
-  <%@ include file="attribute_Get_All.jet" %>
+  <%@ include file="header_attribute_SetAll.jet" %>
+  <%@ include file="header_attribute_GetAll.jet" %>
   <%@ include file="state_machine_Get_All.jet" %>
   <%@ include file="state_machine_Events_All.jet" %>
   <%@ include file="state_machine_Set_All.jet" %>
-  <%@ include file="association_Get_All.jet" %>
-  <%@ include file="association_Set_All.jet" %>
+  <%@ include file="header_association_Get_All.jet" %>
+  <%@ include file="header_association_SetAll.jet" %>
 <% if (uClass.getKey().isProvided()) { %>
   <%@ include file="equals.jet" %>
 <% } %>
@@ -69,7 +71,7 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   <%@ include file="state_machine_timedEvent_All.jet" %>
   <%@ include file="delete_All.jet" %>
 <% if (uClass.hasMethods()) { %>
-  <%@ include file="class_MethodDeclaration.jet" %>
+  <%@ include file="header_MethodDeclaration.jet" %>
 <% } %>
 <% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>
   //------------------------
@@ -79,3 +81,5 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   <%=uClass.getExtraCode()%>
 <% } %>
 };
+
+#endif
