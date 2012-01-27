@@ -33,7 +33,7 @@ $output = readTemporaryFile($filename);
 
 <div class="bookmarkableUrl">
 
-<span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value);  Action.updateLineNumberDisplay();"></input>&nbsp; &nbsp;</span> 
+<span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value);  setTimeout(function() {Action.updateLineNumberDisplay();},25);"></input>&nbsp; &nbsp;</span> 
 
 <?php if (isBookmark($filename)) { ?>
   <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a>
