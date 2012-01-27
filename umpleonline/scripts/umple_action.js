@@ -1271,6 +1271,7 @@ Action.setCaretPosition = function(line){
 		range.moveEnd('character', endPos);
 		range.moveStart('character', startPos);
 		range.select();
+		ctrl.focus();
 	}
   }
 }
