@@ -1934,6 +1934,34 @@ public class JavaClassGenerator implements ILang
     appendln(stringBuffer, "");
     append(stringBuffer, "  private int {0};", gen.translate("attributeOne",av));
   }
+  
+  isFirst = true;
+  for( TraceDirective td : uClass.getTraceDirectives() )
+  {
+	  for( TraceCondition traceCond : td.getCondition() )
+	  {
+		  if(traceCond.getConditionType().equals("until") )
+		  {
+			  if (isFirst)
+			  {
+				  appendln(stringBuffer, "");
+				  append(stringBuffer, "  //Trace Attributes");
+				  isFirst = false;
+			  }
+			  for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
+			  {
+				  for( Attribute attr : traceAttr.getAttributes() )
+				  {
+					  String attrName = gen.translate("attribute",attr);
+					  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+					  appendln(stringBuffer, "");
+					  append(stringBuffer, "  private boolean {0} = true;", "trace" + attrName + "Until");  
+				  }
+			  }  
+		  }
+		  
+	  }
+  }
 }
 
     

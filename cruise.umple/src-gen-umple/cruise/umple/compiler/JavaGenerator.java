@@ -920,7 +920,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  }
 	  else if( tc.getConditionType().equals("until") )  
 	  {  
-		  attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";  
+		  attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " && " + getFlag(t,attr,"Until") +" )";  
 		  conditionType = "until";		 
 	  }
 	  else if( tc.getConditionType().equals("after") )
@@ -939,6 +939,29 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 
 	  attrCode = "}";
 	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  
+	  if( tc.getConditionType().equals("until") )  
+	  {  
+		  attrCode = "else";
+		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+		  attrCode = "{";
+		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+		  	  
+		  attrCode = "  " + getFlag(t, attr, "Until") + " = false;";
+		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+		  attrCode = "}";
+		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+		 
+	  }
+  }
+  
+  private static String getFlag(CodeTranslator t, Attribute attr, String conditionType)
+  {
+	  String attrName = t.translate("attribute",attr);
+	  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+	  return "trace" + attrName + conditionType;  
   }
   
   private static String getComparisonOperatorInverse(String co) {

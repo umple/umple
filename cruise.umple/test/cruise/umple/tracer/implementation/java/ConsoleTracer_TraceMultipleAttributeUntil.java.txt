@@ -13,6 +13,9 @@ public class Tracer
   //Tracer Attributes
   private int id;
   private String name;
+  //Trace Attributes
+  private boolean traceNameUntil = true;
+  private boolean traceIdUntil = true;
 
   //------------------------
   // CONSTRUCTOR
@@ -33,9 +36,13 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    if( id != 6 )
+    if( id != 6 && traceIdUntil )
     {
       System.out.println("id=" + aId);
+    }
+    else
+    {
+      traceIdUntil = false;
     }
     return wasSet;
   }
@@ -45,9 +52,13 @@ public class Tracer
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    if( id != 6 )
+    if( id != 6 && traceNameUntil )
     {
       System.out.println("name=" + aName);
+    }
+    else
+    {
+      traceNameUntil = false;
     }
     return wasSet;
   }
