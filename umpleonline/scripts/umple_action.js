@@ -1143,7 +1143,10 @@ Action.keyboardShortcut = function(event)
 Action.getCaretPosition = function() // TIM Returns the line number
 {
 	var ctrl = document.getElementById('umpleModelEditor');
-	var CaretPos = 0; // IE Support
+	// var CaretPos = 0;
+	
+	var CaretPos = Action.getInputSelectionStart(ctrl);
+	/*
 	if (document.selection) {
 	  ctrl.focus(); 
 	  var DocSel = document.selection.createRange(); 
@@ -1156,9 +1159,9 @@ Action.getCaretPosition = function() // TIM Returns the line number
 	  regionCaret.setEndPoint('EndToStart', region); 
 	  CaretPos = regionCaret.text.length; 
 	 }
-	 // Other browser support
 	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
 	  CaretPos = ctrl.selectionStart;
+    */
 	
 	var nlcount=1;
 	var theCode=Page.getRawUmpleCode();
@@ -1179,6 +1182,42 @@ Action.getCaretPosition = function() // TIM Returns the line number
 	}
 	return nlcount;
 }
+
+// The following from http://stackoverflow.com/questions/263743/how-to-get-cursor-position-in-textarea/3373056#3373056
+Action.getInputSelectionStart = function(el) {
+    var start = 0, normalizedValue, range, textInputRange, len, endRange;
+
+    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
+        start = el.selectionStart;
+    } else { // IE Support
+        range = document.selection.createRange();
+
+        if (range && range.parentElement() == el) {
+            len = el.value.length;
+            normalizedValue = el.value.replace(/\r\n/g, "\n");
+
+            // Create a working TextRange that lives only in the input
+            textInputRange = el.createTextRange();
+            textInputRange.moveToBookmark(range.getBookmark());
+
+            // Check if the start and end of the selection are at the very end
+            // of the input, since moveStart/moveEnd doesn't return what we want
+            // in those cases
+            endRange = el.createTextRange();
+            endRange.collapse(false);
+
+            if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
+                start = len;
+            } else {
+                start = -textInputRange.moveStart("character", -len);
+                start += normalizedValue.slice(0, start).split("\n").length - 1;
+            }
+        }
+    }
+
+    return start;
+}
+
 
 Action.setCaretPosition = function(line){
   if(line=="av") {
@@ -1229,8 +1268,8 @@ Action.setCaretPosition = function(line){
 	else if (ctrl.createTextRange) {
 		var range = ctrl.createTextRange();
 		range.collapse(true);
-		range.moveEnd('character', startPos);
-		range.moveStart('character', endPos);
+		range.moveEnd('character', endPos);
+		range.moveStart('character', startPos);
 		range.select();
 	}
   }
