@@ -359,10 +359,15 @@ Page.canShowHovers = function()
   return Page.selectedItem == null || Page.selectedItem == "DeleteEntity";
 }
 
-Page.getUmpleCode = function()
+Page.getRawUmpleCode = function()
 {
 	// TODO: use .text() for ACE, .val otherwise
-  var model = jQuery("#umpleModelEditor").val().replace(Page.modelDelimiter, "");
+   return jQuery("#umpleModelEditor").val();
+}
+
+Page.getUmpleCode = function()
+{
+  var model = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var regex = new RegExp(/^\d+/); //starts with digit, one or more E.G. 12345class X
   var lineNumbers = regex.exec(model);
   var modelCleaned = model.replace(lineNumbers,"");
@@ -572,9 +577,25 @@ Page.setFilename = function(filename)
   jQuery("#filename").val(filename);
 }
 
+Page.setFeedbackMessage = function(feedbackMessage)
+{
+  document.getElementById('feedbackMessage').innerHTML=feedbackMessage;
+}
+
+Page.catFeedbackMessage = function(feedbackMessage)
+{
+  var origMsg = document.getElementById('feedbackMessage').innerHTML;
+  document.getElementById('feedbackMessage').innerHTML=origMsg+feedbackMessage;
+}
+
 Page.getFilename = function()
 {
   return jQuery("#filename").val();
+}
+
+Page.getAdvancedMode = function()
+{
+  return document.getElementById("advancedMode").value;
 }
 
 jQuery.fn.selectRange = function(start, end) {

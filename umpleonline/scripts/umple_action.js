@@ -838,12 +838,13 @@ Action.generalizationSelected = function(obj)
   }
 }
 
+Page.isAdvancedMode =
+
 Action.generateCode = function(languageStyle,languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
-  var advancedMode = document.getElementById("advancedMode").value;
   var actualLanguage = languageName;
-  if (advancedMode=="0" && (languageName == "Cpp" || languageName == "SQL"))
+  if (Page.getAdvancedMode() == 0 && (languageName == "Cpp" || languageName == "SQL"))
   {
     actualLanguage = "Experimental-"+languageName;
   }
@@ -1160,10 +1161,21 @@ Action.getCaretPosition = function() // TIM Returns the line number
 	  CaretPos = ctrl.selectionStart;
 	
 	var nlcount=1;
-	var theCode=Page.getUmpleCode();
-	for(var ch=1; ch<(CaretPos); ch++)
+	var theCode=Page.getRawUmpleCode();
+
+	// The following for debugging
+	if (Page.getAdvancedMode() == 2) { // debug
+	      Page.setFeedbackMessage("");
+    }
+
+	for(var ch=0; ch<(CaretPos); ch++)
 	{
 	   if(theCode.charAt(ch)=="\n") nlcount++;
+	   
+	   // The following for debugging
+	   if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
+	     Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
+	   }
 	}
 	return nlcount;
 }
@@ -1172,6 +1184,11 @@ Action.setCaretPosition = function(line){
   if(line=="av") {
     // Special backdoor to turn on experimental features
     document.getElementById('advancedMode').value=1;
+    Page.setFeedbackMessage("");
+  }
+  else if(line=="db") { // turn on debugging and do certain debugging options
+    document.getElementById('advancedMode').value=2;
+    Page.setFeedbackMessage("Debug Mode");
   }
   else
   {
@@ -1185,8 +1202,8 @@ Action.setCaretPosition = function(line){
     }
     else
     {
-      var theCode=Page.getUmpleCode();
-      for(var ch=1; ch<theCode.length; ch++)
+      var theCode=Page.getRawUmpleCode();
+      for(var ch=0; ch<theCode.length; ch++)
       {
         if(theCode.charAt(ch)=='\n')
         {
@@ -1226,8 +1243,18 @@ Action.updateLineNumberDisplay = function()
 
 Action.umpleTyped = function(eventObject)
 {
-  var target = eventObject.target.id;
+  // debug - output key code
+  // if (Page.getAdvancedMode() == 2) { // debug
+  //   Page.catFeedbackMessage("["+eventObject.keyCode+"] ")
+  // }
   Action.updateLineNumberDisplay();
+
+  var eventCode = eventObject.keyCode;
+  
+  // Ignore 33=pgup 34=pgdn 35=end 36=hom 37=lef 38=up 39=rt 40=dn
+  if(eventCode>=33 && eventCode <=40) return
+
+  var target = eventObject.target.id;
   if (Action.manualSync && Action.diagramInSync)
   {
   	if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);

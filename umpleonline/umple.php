@@ -40,6 +40,9 @@ $output = readTemporaryFile($filename);
 <?php } else { ?>
   <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a>
 <?php } ?>
+
+&nbsp; &nbsp;<span id=feedbackMessage></span>
+
 </div>
 
 <table id="container" class="container">
