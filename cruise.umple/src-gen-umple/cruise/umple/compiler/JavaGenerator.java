@@ -910,25 +910,30 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   // Process condition in a trace directive
   private static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
   {
-	  String attrCode = null, conditionType = null;
 	  TraceCondition tc = traceDirective.getCondition(0);
 	  
 	  if( tc.getConditionType().equals("where") )
 	  {
-		  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-		  conditionType = "where";	  
+		  processWhereCondition(traceDirective, t, template, attr);		
 	  }
 	  else if( tc.getConditionType().equals("until") )  
-	  {  
-		  attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " && " + getFlag(t,attr,"Until") +" )";  
-		  conditionType = "until";		 
+	  {
+		  processUntilCondition(traceDirective, t, template, attr);		 
 	  }
 	  else if( tc.getConditionType().equals("after") )
 	  {
-		  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-		  conditionType = "after";  
+		  processAfterCondition(traceDirective, t, template, attr); 
 	  }
-	   
+  }
+  
+  public static void processUntilCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	  String attrCode = null, conditionType = null;
+	  TraceCondition tc = traceDirective.getCondition(0);
+	  
+	  attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " && " + getFlag(t,attr,"Until") +" )";  
+	  conditionType = "until";
+	  
 	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
 
 	  attrCode = "{";
@@ -939,22 +944,72 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 
 	  attrCode = "}";
 	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "else";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "{";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  	  
+	  attrCode = "  " + getFlag(t, attr, "Until") + " = false;";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "}";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+  }
+  
+  public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	  String attrCode = null, conditionType = null;
+	  TraceCondition tc = traceDirective.getCondition(0);
 	  
-	  if( tc.getConditionType().equals("until") )  
-	  {  
-		  attrCode = "else";
-		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
+	  conditionType = "where";
+	  
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
 
-		  attrCode = "{";
-		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
-		  	  
-		  attrCode = "  " + getFlag(t, attr, "Until") + " = false;";
-		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  attrCode = "{";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  	  
+	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
 
-		  attrCode = "}";
-		  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
-		 
-	  }
+	  attrCode = "}";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");	  
+  }
+  
+  public static void processAfterCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	  String attrCode = null, conditionType = null;
+	  TraceCondition tc = traceDirective.getCondition(0);
+	  
+	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
+	  conditionType = "after";  
+	  
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "{";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  	  
+	  attrCode = "  " + getFlag(t, attr, "After") + " = true;";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "}";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  
+	  attrCode = "if( " + getFlag(t,attr,"After") +" )";  	  
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "{";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  	  
+	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
+	  attrCode = "}";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+
   }
   
   private static String getFlag(CodeTranslator t, Attribute attr, String conditionType)

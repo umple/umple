@@ -11,55 +11,66 @@ public class Tracer
   //------------------------
 
   //Tracer Attributes
-  private int x;
-  private String y;
+  private int id;
+  private String name;
+  //Trace Attributes
+  private boolean traceNameAfter = false;
+  private boolean traceIdAfter = false;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Tracer(int aX, String aY)
+  public Tracer(int aId, String aName)
   {
-    x = aX;
-    y = aY;
+    id = aId;
+    name = aName;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setX(int aX)
+  public boolean setId(int aId)
   {
     boolean wasSet = false;
-    x = aX;
+    id = aId;
     wasSet = true;
-    if( x == 6 )
+    if( id > 232100 )
     {
-      System.out.println("x=" + aX);
+      traceIdAfter = true;
+    }
+    if( traceIdAfter )
+    {
+      System.out.println("id=" + aId);
     }
     return wasSet;
   }
 
-  public boolean setY(String aY)
+  public boolean setName(String aName)
   {
     boolean wasSet = false;
-    y = aY;
+    name = aName;
     wasSet = true;
-    if( y == "tim" )
+    if( name == "tim" )
     {
-      System.out.println("y=" + aY);
+      traceNameAfter = true;
+    }
+    if( traceNameAfter )
+    {
+      System.out.println("name=" + aName);
     }
     return wasSet;
   }
 
-  public int getX()
+  public int getId()
   {
-    return x;
+    return id;
   }
 
-  public String getY()
+  public String getName()
   {
-    return y;
+    return name;
   }
 
   public void delete()

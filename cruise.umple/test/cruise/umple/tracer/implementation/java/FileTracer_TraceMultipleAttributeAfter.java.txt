@@ -18,6 +18,9 @@ public class Tracer
   //Tracer Attributes
   private int id;
   private String name;
+  //Trace Attributes
+  private boolean traceNameAfter = false;
+  private boolean traceIdAfter = false;
 
   //------------------------
   // CONSTRUCTOR
@@ -40,6 +43,10 @@ public class Tracer
     wasSet = true;
     if( id == 234 )
     {
+      traceIdAfter = true;
+    }
+    if( traceIdAfter )
+    {
       fileTracer(id);
     }
     return wasSet;
@@ -51,6 +58,10 @@ public class Tracer
     name = aName;
     wasSet = true;
     if( id == 234 )
+    {
+      traceNameAfter = true;
+    }
+    if( traceNameAfter )
     {
       fileTracer(name);
     }

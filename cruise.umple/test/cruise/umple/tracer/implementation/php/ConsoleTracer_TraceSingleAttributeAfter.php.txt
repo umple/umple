@@ -10,55 +10,55 @@ class Tracer
   //------------------------
 
   //Tracer Attributes
-  private $x;
-  private $y;
+  private $id;
+  private $name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aX, $aY)
+  public function __construct($aId, $aName)
   {
-    $this->x = $aX;
-    $this->y = $aY;
+    $this->id = $aId;
+    $this->name = $aName;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function setX($aX)
+  public function setId($aId)
   {
     $wasSet = false;
-    $this->x = $aX;
+    $this->id = $aId;
     $wasSet = true;
-    if( $x == 6 )
+    if( $id > 232100 )
     {
-      print("x={$aX}");
+      print("id={$aId}");
     }
     return $wasSet;
   }
 
-  public function setY($aY)
+  public function setName($aName)
   {
     $wasSet = false;
-    $this->y = $aY;
+    $this->name = $aName;
     $wasSet = true;
-    if( $y == "tim" )
+    if( $name == "tim" )
     {
-      print("y={$aY}");
+      print("name={$aName}");
     }
     return $wasSet;
   }
 
-  public function getX()
+  public function getId()
   {
-    return $this->x;
+    return $this->id;
   }
 
-  public function getY()
+  public function getName()
   {
-    return $this->y;
+    return $this->name;
   }
 
   public function equals($compareTo)

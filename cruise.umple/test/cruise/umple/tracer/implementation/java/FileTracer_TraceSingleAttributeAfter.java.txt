@@ -18,6 +18,9 @@ public class Tracer
   //Tracer Attributes
   private int x;
   private String y;
+  //Trace Attributes
+  private boolean traceYAfter = false;
+  private boolean traceXAfter = false;
 
   //------------------------
   // CONSTRUCTOR
@@ -40,6 +43,10 @@ public class Tracer
     wasSet = true;
     if( x == 6 )
     {
+      traceXAfter = true;
+    }
+    if( traceXAfter )
+    {
       fileTracer(x);
     }
     return wasSet;
@@ -51,6 +58,10 @@ public class Tracer
     y = aY;
     wasSet = true;
     if( y == "tim" )
+    {
+      traceYAfter = true;
+    }
+    if( traceYAfter )
     {
       fileTracer(y);
     }

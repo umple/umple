@@ -1940,14 +1940,14 @@ public class JavaClassGenerator implements ILang
   {
 	  for( TraceCondition traceCond : td.getCondition() )
 	  {
+		  if (isFirst && (traceCond.getConditionType().equals("until") ||  traceCond.getConditionType().equals("after")))
+		  {
+			  appendln(stringBuffer, "");
+			  append(stringBuffer, "  //Trace Attributes");
+			  isFirst = false;
+		  }
 		  if(traceCond.getConditionType().equals("until") )
 		  {
-			  if (isFirst)
-			  {
-				  appendln(stringBuffer, "");
-				  append(stringBuffer, "  //Trace Attributes");
-				  isFirst = false;
-			  }
 			  for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
 			  {
 				  for( Attribute attr : traceAttr.getAttributes() )
@@ -1958,6 +1958,19 @@ public class JavaClassGenerator implements ILang
 					  append(stringBuffer, "  private boolean {0} = true;", "trace" + attrName + "Until");  
 				  }
 			  }  
+		  }
+		  if(traceCond.getConditionType().equals("after") )
+		  {
+			  for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
+			  {
+				  for( Attribute attr : traceAttr.getAttributes() )
+				  {
+					  String attrName = gen.translate("attribute",attr);
+					  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+					  appendln(stringBuffer, "");
+					  append(stringBuffer, "  private boolean {0} = false;", "trace" + attrName + "After");  
+				  }
+			  }
 		  }
 		  
 	  }
