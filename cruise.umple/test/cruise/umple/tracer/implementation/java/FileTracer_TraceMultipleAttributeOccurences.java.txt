@@ -1,0 +1,111 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Date;
+
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int id;
+  private String name;
+  //Trace Attributes
+  private int traceNameFor = 5;
+  private int traceIdFor = 5;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aId, String aName)
+  {
+    id = aId;
+    name = aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    if( traceIdFor > 0 )
+    {
+      fileTracer(id);
+      --traceIdFor;
+    }
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    if( traceNameFor > 0 )
+    {
+      fileTracer(name);
+      --traceNameFor;
+    }
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void delete()
+  {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  static void fileTracer(Object obj)
+  {
+    FileOutputStream fout = null;
+    Date date = new Date();
+    try
+    {
+      // Open an output stream
+      fout = new FileOutputStream ("TraceLog.txt",true);
+      new PrintStream(fout).println ("(Tracing log file)");
+    }
+    catch (IOException e)
+    {
+      System.err.println ("Unable to write to file");
+      System.exit(-1);
+    }
+    // Write traced Item information
+    new PrintStream(fout).println("Traced object value: " + obj);
+    new PrintStream(fout).println("Trace time : " + date);
+    try
+    {
+      // Close output stream
+      fout.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+}

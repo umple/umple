@@ -775,12 +775,18 @@ class JavaGenerator
 			  {
 				  processTraceCondition(traceDirective,t,template,attr);		
 			  }
+			  else if( traceAttr.getForClause() != 0 )
+			  {
+				  processOccurences(traceDirective,t,template,attr);
+			  }
 	  		  else
 	  		  {
 	  			  // simple trace directive that traces attributes without any extra fragments
 	      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
 	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
 	  		  }
+			  
+			  
 	  		
 			  if( traceAttr.getPeriodClause() != null )
 	  		  {
@@ -803,9 +809,20 @@ class JavaGenerator
 	  
   }
   
-  //Process every state machine in a trace directive
-  private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String consoleTemplate, String tracer) {
-	
+  private static void processOccurences(TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr) 
+  {
+	  String attrCode = null, Type = "For";
+	  attrCode = "if( " + getFlag(t,attr,"For") +" > 0 )\n    ";	  
+	  attrCode += "{\n  ";  	  
+	  attrCode += "    " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr)) + "\n  ";
+	  attrCode += "    --" + getFlag(t,attr,"For") + ";\n    ";
+	  attrCode += "}";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,Type,"setMethod");	  
+  }
+
+//Process every state machine in a trace directive
+  private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String consoleTemplate, String tracer) 
+  {
 	  TraceRecord traceRecord = traceDirective.getTraceRecord();
 	  // Go over all state machines in trace directive
 	  for( int i = 0 ; i < traceDirective.numberOfStateMachineTraceItems() ; ++i )

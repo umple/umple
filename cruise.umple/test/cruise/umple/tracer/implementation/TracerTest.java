@@ -117,6 +117,12 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
+	public void TraceSupportSingleAttributeOccurences()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeOccurences.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeOccurences."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
 	public void TraceSupportMultipleAttributeSet()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeSet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeSet."+ languagePath +".txt","Tracer");
@@ -132,6 +138,12 @@ public class TracerTest extends TracerTemplateTest
 	public void TraceSupportMultipleAttributeOnlyGet()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeOnlyGet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupportMultipleAttributeOccurences()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeOccurences.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeOccurences."+ languagePath +".txt","Tracer");
 	}
 	//========= File tracer
 	@Test
@@ -156,6 +168,12 @@ public class TracerTest extends TracerTemplateTest
 	public void TraceSupport_FileTracer_SingleAttributeWhere()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeWhere.ump",languagePath + "/FileTracer_TraceSingleAttributeWhere."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void TraceSupport_FileTracer_SingleAttributeOccurences()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeOccurences.ump",languagePath + "/FileTracer_TraceSingleAttributeOccurences."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test
@@ -218,6 +236,11 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceMultipleAttributeOnlyGet."+ languagePath +".txt","Tracer");
 	}
 	
+	@Test
+	public void TraceSupport_FileTracer_MultipleAttributeOccurences()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeOccurences.ump",languagePath + "/FileTracer_TraceMultipleAttributeOccurences."+ languagePath +".txt","Tracer");
+	}
 	//========= String tracer
 	@Test
 	public void TraceSupport_StringTracer_SingleAttribute()

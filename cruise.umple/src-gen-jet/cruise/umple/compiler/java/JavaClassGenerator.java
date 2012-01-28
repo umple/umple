@@ -1974,6 +1974,25 @@ public class JavaClassGenerator implements ILang
 		  }
 		  
 	  }
+	  for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
+	  {
+		  if( traceAttr.getForClause() != 0 )
+		  {
+			  if (isFirst)
+			  {
+				  appendln(stringBuffer, "");
+				  append(stringBuffer, "  //Trace Attributes");
+				  isFirst = false;
+			  }
+			  for( Attribute attr : traceAttr.getAttributes() )
+			  {
+				  String attrName = gen.translate("attribute",attr);
+				  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+				  appendln(stringBuffer, "");
+				  append(stringBuffer, "  private int {0} = {1};", "trace" + attrName + "For",traceAttr.getForClause());  
+			  }
+		  }
+	  }
   }
 }
 
