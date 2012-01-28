@@ -1,6 +1,0 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore" %>
-    boolean <%=gen.translate("didAdd",av)%> = <%=gen.translate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>);
-    if (!<%=gen.translate("didAdd",av)%>)
-    {
-      throw new RuntimeException("Unable to create <%=gen.relatedTranslate("associationOne",av)%> due to <%=gen.translate("associationOne",av)%>");
-    }
