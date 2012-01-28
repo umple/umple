@@ -1,0 +1,36 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  {
+    bool wasSet = false;
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    //Must provide <%=gen.translate("associationOne",av)%> to <%=gen.relatedTranslate("associationOne",av)%>
+    if (<%=gen.translate("parameterOne",av)%> == null)
+    {
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      return wasSet;
+    }
+
+    //<%=gen.translate("associationOne",av)%> already at maximum (<%=relatedAssociation.getMultiplicity().getUpperBound()%>)
+    if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("numberOfMethod",av)%>() >= <%=gen.translate("type",av)%>.<%=gen.relatedTranslate("maximumNumberOfMethod",av)%>())
+    {
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      return wasSet;
+    }
+    
+    <%=gen.translate("type",av)%> <%=gen.translate("parameterExisting",av)%> = <%=gen.translate("associationOne",av)%>;
+    <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>;
+    if (<%=gen.translate("parameterExisting",av)%> != null && !<%=gen.translate("parameterExisting",av)%>.equals(<%=gen.translate("parameterOne",av)%>))
+    {
+      bool didRemove = <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
+      if (!didRemove)
+      {
+        <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterExisting",av)%>;
+        <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+        return wasSet;
+      }
+    }
+    <%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
+    wasSet = true;
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    return wasSet;
+  }

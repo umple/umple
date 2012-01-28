@@ -1,0 +1,24 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  StringBuilder output = new StringBuilder(); 
+  List<StateMachine> allParents = new ArrayList<StateMachine>();
+  allParents.add(sm);
+  while (allParents.size() > 0) 
+  {
+    StateMachine parentSm = allParents.get(0);
+    allParents.remove(0);
+    for (StateMachine childSm : parentSm.getNestedStateMachines()) 
+    {
+      output.append(StringFormatter.format("\n    if ({0} != {1}.Null) { answer += \".\" + {0}.toString(); }",gen.translate("stateMachineOne",childSm),gen.translate("type",childSm)));
+      allParents.addAll(childSm.getNestedStateMachines());
+    }     
+  }
+  String outputAsString = output.toString();
+%>
+  public <%=gen.translate("typeFull",sm)%> <%=gen.translate("getFullMethod",sm)%>()
+  {
+    String answer = <%=gen.translate("stateMachineOne",sm)%>.toString();
+    <% if (outputAsString.length() > 0) { append(stringBuffer, "{0}",outputAsString); } %>
+    return answer;
+  }
+
