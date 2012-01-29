@@ -792,6 +792,24 @@ class Parser
           {
             String value = null;
             int startIndex = inputParser.currentIndex();
+            
+            // Only proceed to check for an empty comment if it is possible that we could have just had one.
+            if (startIndex >= 3 && currentRule.equals("*inlineComment"))
+            {
+            	String lastThree = inputParser.getText().substring(startIndex - 3, startIndex);
+            	
+            	// Empty comment in the most basic form.  Ignore looking for a complete comment since there is none, go to next definition.
+            	if (lastThree.equals("//\n"))
+            	{
+            		continue;
+            	}
+            	// Empty comment with spaces.  Ignore looking for a complete comment since there is none, go to next definition.
+            	else if (lastThree.charAt(2) == '\n')
+            	{
+            		continue;
+            	}
+            }
+            
             if (part.isToEndOfLine())
             {
               value = inputParser.nextLine();

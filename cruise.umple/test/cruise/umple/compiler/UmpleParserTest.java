@@ -39,6 +39,34 @@ public class UmpleParserTest
   }
   
   @Test
+  public void emptyComment()
+  {
+	  assertParse("001_emptyComment.ump");
+	  Assert.assertEquals(1, model.numberOfUmpleClasses());
+  }
+  
+  @Test
+  public void multipleEmptyComments()
+  {
+	  assertParse("001_multipleEmptyComments.ump");
+	  Assert.assertEquals(3, model.numberOfUmpleClasses());
+  }
+  
+  @Test
+  public void emptyCommentWithSpaces()
+  {
+	  assertParse("001_emptyCommentWithSpaces.ump");
+	  Assert.assertEquals(1, model.numberOfUmpleClasses());
+  }
+  
+  @Test
+  public void multipleEmptyCommentsWithSpaces()
+  {
+	  assertParse("001_multipleEmptyCommentsWithSpaces.ump");
+	  Assert.assertEquals(5, model.numberOfUmpleClasses());
+  }
+  
+  @Test
   public void languageDefault()
   {
     assertParse("001_empty.ump");

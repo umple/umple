@@ -24,6 +24,10 @@ public class UmpleInternalParserTest extends UmpleParserTest
     
     fileToOutputs.put("001_empty.ump", "");
     fileToOutputs.put("001_empty.ump", "");
+    fileToOutputs.put("001_emptyComment.ump", "[classDefinition][name:Student]");
+    fileToOutputs.put("001_emptyCommentWithSpaces.ump", "[classDefinition][name:Student]");
+    fileToOutputs.put("001_multipleEmptyComments.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][classDefinition][name:Teacher]");
+    fileToOutputs.put("001_multipleEmptyCommentsWithSpaces.ump", "[classDefinition][name:Foo][classDefinition][name:Bar][classDefinition][name:Foobar][classDefinition][name:Student][classDefinition][name:Mentor]");
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
     fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");

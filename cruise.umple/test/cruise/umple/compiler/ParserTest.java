@@ -1178,6 +1178,55 @@ public class ParserTest
 	  //assertParse(false, parser.parse("test", "a b; b;"));	  
 	  
   }
+  
+  @Test
+  public void commentEndOfLineTest()
+  {
+	  parser.addRule("program : [[comment]] [var]");
+	  parser.addRule("comment : // [*inlineComment]");
+	  assertParse(true, parser.parse("program", "//\nblah"));
+  }
+  
+  @Test
+  public void commentEndOfLineTest2()
+  {
+	  parser.addRule("program : [[comment]] [var]");
+	  parser.addRule("comment : // [*inlineComment]");
+	  assertParse(true, parser.parse("program", "//test\nblah"));
+  }
+  
+  @Test
+  public void commentEndOfLineTest3()
+  {
+	  parser.addRule("program : [[comment]] [var] [[comment]] [var]");
+	  parser.addRule("comment : // [*inlineComment]");
+	  assertParse(true, parser.parse("program", "//\nfoo\n//\nbar"));
+  }
+  
+  @Test
+  public void longCommentWithSpacesBasic()
+  {
+	  parser.addRule("program : [[comment]] [var]");
+	  parser.addRule("comment : // [*inlineComment]");
+	  assertParse(true, parser.parse("program", "// \nfoobar"));
+  }
+  
+  @Test
+  public void longCommentWithSpacesModerate()
+  {
+	  parser.addRule("program : [[comment]] [var]");
+	  parser.addRule("comment : // [*inlineComment]");
+	  assertParse(true, parser.parse("program", "//          \nfoobar"));
+  }
+  
+  @Test
+  public void longCommentWithSpacesAdvanced()
+  {
+	  parser.addRule("program : [[comment]] [var] [[comment]] [var] [[comment]] [var] [[comment]] [var] [[comment]] [var]");
+	  parser.addRule("comment : // [*inlineComment]");
+	  assertParse(true, parser.parse("program", "// \nfoobar\n//          \nabc\n//  \n123\n//          \nblah\n// \nstudent"));
+  }
+  
   private void assertParse(Position expected, ParseResult result)
   {
     Assert.assertEquals(expected, result.getPosition());
