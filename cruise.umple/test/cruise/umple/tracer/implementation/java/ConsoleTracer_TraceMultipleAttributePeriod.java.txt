@@ -34,7 +34,7 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    traceIdPeriod(100);
+    traceIdPeriod(30);
     return wasSet;
   }
 

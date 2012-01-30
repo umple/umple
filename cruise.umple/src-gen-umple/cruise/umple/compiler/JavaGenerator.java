@@ -831,25 +831,17 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 			  }
 			  else if( traceAttr.getForClause() != 0 )
 			  {
-				  processOccurences(traceDirective,t,template,attr);
+				  processOccurrences(traceDirective,t,template,attr);
 			  }
+			  else if( traceAttr.getPeriodClause() != null )
+	  		  {
+				  processPeriod(traceDirective,t,template,attr,traceAttr.getPeriodClause());
+	  		  }
 	  		  else
 	  		  {
 	  			  // simple trace directive that traces attributes without any extra fragments
 	      		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
 	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
-	  		  }
-			  
-			  
-	  		
-			  if( traceAttr.getPeriodClause() != null )
-	  		  {
-	  			  attrCode = "Thread thr1 = new Thread(tracePeriod(" + preparePeriod(traceAttr.getPeriodClause()) + "));\n";
-	  			  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
-	  			  attrCode = "thr1.start();\n";
-	  			  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
-	    		  attrCode = StringFormatter.format(template,t.translate("attribute",traceAttr.getAttribute(i)),t.translate("parameter",traceAttr.getAttribute(i)));
-	    		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
 	  		  }
 	  	  }
 		  if( traceDirective.getTraceRecord() != null )
@@ -863,7 +855,16 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  
   }
   
-  private static void processOccurences(TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr) 
+  //Process Period in a trace directive (i.e. "period" keyword) and injects appropriate code
+  private static void processPeriod(TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr, String period) 
+  {
+	  String attrCode = null, Type = "Period";
+	  attrCode = getFlag(t, attr, "Period") + "(" + preparePeriod(period) + ");";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,Type,"setMethod");	  
+  }
+
+  //Process Occurrences in a trace directive (i.e. "for" keyword) and injects appropriate code
+  private static void processOccurrences(TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr) 
   {
 	  String attrCode = null, Type = "For";
 	  attrCode = "if( " + getFlag(t,attr,"For") +" > 0 )\n    ";	  
@@ -874,7 +875,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,Type,"setMethod");	  
   }
 
-//Process every state machine in a trace directive
+  //Process every state machine in a trace directive
   private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String consoleTemplate, String tracer) 
   {
 	  TraceRecord traceRecord = traceDirective.getTraceRecord();

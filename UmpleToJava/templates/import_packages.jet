@@ -19,4 +19,20 @@
 	appendln(stringBuffer, "import java.io.PrintStream;");
 	appendln(stringBuffer, "import java.util.Date;");
   }
+  else if( uClass.hasTraceDirectives() )
+  {
+	  isFirst = true;
+	  for( TraceDirective td : uClass.getTraceDirectives() )
+	  {
+	    for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
+	    {
+	      if( traceAttr.getPeriodClause() != null && isFirst )
+	      {
+	        appendln(stringBuffer, "");
+	        append(stringBuffer, "import java.util.Date;");
+	        isFirst = false;
+	      }
+	    }
+	  }
+  }
 %>

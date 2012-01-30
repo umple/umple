@@ -1,5 +1,5 @@
 namespace example;
-
+tracer File;
 class Tracer
 {
 	Integer id;

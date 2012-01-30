@@ -1,9 +1,8 @@
 namespace example;
-
+tracer File;
 class Tracer
 {
 	Integer id;
 	String name;
-	trace name period 30ms;
-	trace id period 100s;
+	trace name,id period 30ms;
 }
