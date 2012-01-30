@@ -810,6 +810,30 @@ class Parser
             	}
             }
             
+            // Only proceed to check for an empty multiLine comment if it is possible that we could have just had one.
+            if (startIndex >= 2 && currentRule.equals("**multilineComment"))
+            {
+            	boolean emptyMultiLineComment = false;
+            	
+            	String testString = inputParser.getText();
+            	
+            	// Starting where the input parser currently is, look ahead to see if this is an empty multiLine comment.
+            	for (int i = startIndex; i < testString.length() - 2 && emptyMultiLineComment == false; i++)
+            	{
+            		if (testString.substring(i, i + 2).equals("*/"))
+            		{
+            			emptyMultiLineComment = true;
+            		}
+            		else if (!testString.substring(i, i + 1).equals("\n") && !testString.substring(i, i + 1).equals(" "))
+            		{
+            			break;
+            		}
+            	}
+            	
+            	// Since an empty multiLine comment was found, ignore looking for a complete comment since there is none.
+            	if (emptyMultiLineComment) continue;
+            }
+            
             if (part.isToEndOfLine())
             {
               value = inputParser.nextLine();

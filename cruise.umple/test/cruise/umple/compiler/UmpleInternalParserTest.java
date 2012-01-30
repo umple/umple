@@ -28,6 +28,12 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("001_emptyCommentWithSpaces.ump", "[classDefinition][name:Student]");
     fileToOutputs.put("001_multipleEmptyComments.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][classDefinition][name:Teacher]");
     fileToOutputs.put("001_multipleEmptyCommentsWithSpaces.ump", "[classDefinition][name:Foo][classDefinition][name:Bar][classDefinition][name:Foobar][classDefinition][name:Student][classDefinition][name:Mentor]");
+    fileToOutputs.put("001_emptyMultiLineComment.ump", "[classDefinition][name:Student]");
+    fileToOutputs.put("001_emptyMultiLineCommentWithSpaces.ump", "[classDefinition][name:Student]");
+    
+    expectedResult = "[classDefinition][name:Foo][classDefinition][name:Bar][multilineComment:*][classDefinition][name:Foobar][multilineComment:* \n * \n *][classDefinition][name:Student][multilineComment:*                                        \n *    \n       \n *   \n *  \n *][classDefinition][name:Mentor][classDefinition][name:Teacher]";
+    fileToOutputs.put("001_multipleEmptyMultiLineCommentsWithSpaces.ump", expectedResult);
+    
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
     fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");
