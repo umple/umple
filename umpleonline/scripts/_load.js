@@ -6,10 +6,17 @@ document.write('<script type="text/javascript" src="scripts/scriptaculous.js"><\
 //JQUERY
 // OLD document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.4.2.min.js"></script>');
 document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.min.js"></script>');
+
 document.write('<link href="scripts/jquery/showLoading/css/showLoading.css" rel="stylesheet" media="screen" /> ');
 document.write('<script type="text/javascript" src="scripts/jquery/showLoading/js/jquery.showLoading.min.js"></script>');
-document.write('<link href="scripts/jquery/ui/css/custom-theme/jquery-ui-1.8.4.custom.css" rel="stylesheet" media="screen" /> ');
-document.write('<script type="text/javascript" src="scripts/jquery/ui/js/jquery-ui-1.8.4.custom.min.js"></script>');
+
+// OLD document.write('<link href="scripts/jquery/ui/css/custom-theme/jquery-ui-1.8.4.custom.css" rel="stylesheet" media="screen" /> ');
+// OLD document.write('<script type="text/javascript" src="scripts/jquery/ui/js/jquery-ui-1.8.4.custom.min.js"></script>');
+
+// NEW replacing above
+document.write('<link href="scripts/jquery/jquery-ui-1.8.17.custom.css" rel="stylesheet" media="screen" /> ');
+document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.17.custom.min.js"></script>');
+
 document.write('<script type="text/javascript" src="scripts/jquery/caretRange/caretRange.js"></script>');
 
 //General helpers
