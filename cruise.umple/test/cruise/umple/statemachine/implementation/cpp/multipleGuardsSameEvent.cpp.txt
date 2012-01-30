@@ -24,7 +24,7 @@ class LightFixture
   //------------------------
   public:
 
-  public LightFixture()
+ LightFixture::LightFixture()
   {
     brightness = 0;
     setBulb(Bulb.On);

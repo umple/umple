@@ -24,7 +24,7 @@ class Mentor
   //------------------------
   public:
 
-  public Mentor(String aName)
+ Mentor::Mentor(String aName)
   {
     name = aName;
   }

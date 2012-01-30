@@ -21,7 +21,7 @@ class Light
   //------------------------
   public:
 
-  public Light()
+ Light::Light()
   {
     setBulb(Bulb.Off);
   }

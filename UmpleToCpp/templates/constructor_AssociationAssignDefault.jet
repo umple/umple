@@ -8,7 +8,7 @@
   if (av.isOptionalMany())
   {
     appendln(stringBuffer,"");
-    append(stringBuffer, "    {0} = new ArrayList<{1}>();", gen.translate("associationMany",av), gen.getType(av));
+    append(stringBuffer, "    {0} = new vector<{1}*>();", gen.translate("associationMany",av), gen.getType(av));
   }
   else if (av.isMandatoryMany())
   {
@@ -16,8 +16,8 @@
   }
   else if (av.getMultiplicity().getLowerBound() > 0)
   {
-    %><%=gen.translate("associationMany",av)%> = new ArrayList<<%=gen.getType(av)%>>();
-    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);<%
+    %><%=gen.translate("associationMany",av)%> = new vector<<%=gen.getType(av)%>*>();
+    <%=gen.translate("associationMany",av)%>.push_back(<%=gen.translate("parameterOne",av)%>);<%
   }
   else
   {

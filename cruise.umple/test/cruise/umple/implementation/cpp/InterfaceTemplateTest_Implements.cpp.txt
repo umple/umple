@@ -17,7 +17,7 @@ class Something implements ISomething
   //------------------------
   public:
 
-  public Something()
+ Something::Something()
   {}
 
   //------------------------

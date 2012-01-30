@@ -24,7 +24,7 @@ public class Switch
   //------------------------
   public:
 
-  public Switch()
+ Switch::Switch()
   {
     status = On;
   }

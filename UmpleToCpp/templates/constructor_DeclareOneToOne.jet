@@ -5,13 +5,13 @@
   hasBody = false;
 %>
 
-  public <%=uClass.getName()%>(<%=gen.translate("constructorMandatory",uClass)%>)
+  <%=uClass.getName()%>::<%=uClass.getName()%>(<%=gen.translate("constructorMandatory",uClass)%>)
   {
 <%
   if (!uClass.isRoot())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "    super({0});", gClass.getParentClass().getLookup("constructorSignature_caller"));
+    append(stringBuffer, "    uClass.getName():{0}({1});", gClass.getParentClass().getLookup("constructorSignature_caller"),gClass.getParentClass().getClass().getName());
     hasBody = true;
   }
   

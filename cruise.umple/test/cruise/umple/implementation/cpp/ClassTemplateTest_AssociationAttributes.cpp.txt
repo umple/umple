@@ -20,7 +20,7 @@ class Token
   //------------------------
   public:
 
-  public Token(Position aP)
+ Token::Token(Position aP)
   {
     p = aP;
   }

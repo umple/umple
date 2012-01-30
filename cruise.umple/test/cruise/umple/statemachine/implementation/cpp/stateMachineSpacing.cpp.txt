@@ -21,7 +21,7 @@ class Garage
   //------------------------
   public:
 
-  public Garage()
+ Garage::Garage()
   {
     setGarageDoor(GarageDoor.Closed);
   }

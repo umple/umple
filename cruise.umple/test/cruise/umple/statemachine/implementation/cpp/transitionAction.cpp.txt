@@ -21,7 +21,7 @@ class Course
   //------------------------
   public:
 
-  public Course()
+ Course::Course()
   {
     setStatus(Status.Open);
   }

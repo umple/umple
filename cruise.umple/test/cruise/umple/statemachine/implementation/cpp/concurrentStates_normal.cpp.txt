@@ -25,7 +25,7 @@ class LightFixture
   //------------------------
   public:
 
-  public LightFixture()
+ LightFixture::LightFixture()
   {
     setStatus(Status.Off);
     if (statusMotorIdle == null) { setStatusMotorIdle(StatusMotorIdle.Null); }

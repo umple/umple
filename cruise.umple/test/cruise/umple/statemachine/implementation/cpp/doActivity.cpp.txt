@@ -24,7 +24,7 @@ class Switch
   //------------------------
   public:
 
-  public Switch()
+ Switch::Switch()
   {
     setStatus(Status.On);
   }

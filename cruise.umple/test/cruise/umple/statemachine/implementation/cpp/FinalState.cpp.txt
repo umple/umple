@@ -21,7 +21,7 @@ class Mentor
   //------------------------
   public:
 
-  public Mentor()
+ Mentor::Mentor()
   {
     setStatus(Status.Ok);
   }

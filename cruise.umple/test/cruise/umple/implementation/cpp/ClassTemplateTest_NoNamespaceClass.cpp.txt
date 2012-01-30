@@ -17,7 +17,7 @@ class Token
   //------------------------
   public:
 
-  public Token()
+ Token::Token()
   {}
 
   //------------------------

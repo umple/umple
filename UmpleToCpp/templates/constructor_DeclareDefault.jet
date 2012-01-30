@@ -7,7 +7,7 @@
   appendln(stringBuffer, "");
 
   String accessibility = uClass.getIsSingleton() ? "private" : "public";
-  append(stringBuffer,"  {0} {1}({2})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
+  append(stringBuffer," {0}::{0}({1})",new Object[] {uClass.getName(), gClass.getLookup("constructorSignature")});
 
   String extraNote = null;
   

@@ -22,9 +22,9 @@ class Course
   //------------------------
   public:
 
-  public Course()
+ Course::Course()
   {
-    students = new ArrayList<Student>();
+    students = new vector<Student*>();
   }
 
   //------------------------

@@ -21,9 +21,9 @@ class Token
   //------------------------
   public:
 
-  public Token()
+ Token::Token()
   {
-    positions = new ArrayList<Position>();
+    positions = new vector<Position*>();
   }
 
   //------------------------

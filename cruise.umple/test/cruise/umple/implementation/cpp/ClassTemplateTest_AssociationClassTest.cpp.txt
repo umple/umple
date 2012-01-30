@@ -22,7 +22,7 @@ public class Registration
   // CONSTRUCTOR
   //------------------------
 
-  public Registration(String aGrade)
+  Registration::Registration(String aGrade)
   {
     grade = aGrade;
   }

@@ -22,7 +22,7 @@ class Student
   //------------------------
   public:
 
-  public Student()
+ Student::Student()
   {}
 
   //------------------------

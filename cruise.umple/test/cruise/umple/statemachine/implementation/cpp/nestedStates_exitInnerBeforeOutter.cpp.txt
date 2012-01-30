@@ -23,7 +23,7 @@ class LightFixture
   //------------------------
   public:
 
-  public LightFixture()
+ LightFixture::LightFixture()
   {
     setBulb(Bulb.Off);
     if (bulbOn == null) { setBulbOn(BulbOn.Null); }

@@ -17,7 +17,7 @@ class CodeTranslator implements ICodeTranslator
   //------------------------
   public:
 
-  public CodeTranslator()
+ CodeTranslator::CodeTranslator()
   {}
 
   //------------------------

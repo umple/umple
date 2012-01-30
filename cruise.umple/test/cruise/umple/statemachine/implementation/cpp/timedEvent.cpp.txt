@@ -29,7 +29,7 @@ class Mentor
   //------------------------
   public:
 
-  public Mentor()
+ Mentor::Mentor()
   {
     howLongUntilOk = 3;
     setStatus(Status.Ok);

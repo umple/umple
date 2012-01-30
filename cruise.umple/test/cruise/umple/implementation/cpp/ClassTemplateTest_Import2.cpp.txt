@@ -27,16 +27,16 @@ class Student
   //------------------------
   public:
 
-  public Student(String aNumber, Mentor... allMentors)
+ Student::Student(String aNumber, Mentor... allMentors)
   {
     number = aNumber;
-    mentors = new ArrayList<Mentor>();
-    boolean didAddMentors = setMentors(allMentors);
+    mentors = new vector<Mentor*>();
+    bool didAddMentors = setMentors(allMentors);
     if (!didAddMentors)
     {
       throw new RuntimeException("Unable to create Student, must have at least 1 mentors");
     }
-    courses = new ArrayList<Course>();
+    courses = new vector<Course*>();
   }
 
   //------------------------

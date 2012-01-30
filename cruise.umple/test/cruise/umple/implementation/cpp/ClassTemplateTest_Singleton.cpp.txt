@@ -23,10 +23,10 @@ class Application
   //------------------------
   public:
 
-  private Application()
+ Application::Application()
   {}
 
-  public static Application getInstance()
+  static Application getInstance()
   {
     if(theInstance == null)
     {

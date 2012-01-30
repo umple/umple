@@ -24,7 +24,7 @@ class Garage
   //------------------------
   public:
 
-  public Garage(bool aEntranceClear)
+ Garage::Garage(bool aEntranceClear)
   {
     entranceClear = aEntranceClear;
     setGarageDoor(GarageDoor.Open);

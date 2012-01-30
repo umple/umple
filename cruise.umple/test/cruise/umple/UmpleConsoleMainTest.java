@@ -33,7 +33,7 @@ public class UmpleConsoleMainTest
     SampleFileWriter.destroy("test_package");
   }
   
-  @Test
+  @Test @Ignore
   public void Usage()
   {
    String[] args = new String[0];

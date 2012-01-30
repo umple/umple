@@ -21,7 +21,7 @@ class Student
   //------------------------
   public:
 
-  public Student()
+ Student::Student()
   {
     setGrade(Grade.Pass);
   }

@@ -17,7 +17,7 @@ class CodeTranslator
   //------------------------
   public:
 
-  public CodeTranslator()
+ CodeTranslator::CodeTranslator()
   {}
 
   //------------------------

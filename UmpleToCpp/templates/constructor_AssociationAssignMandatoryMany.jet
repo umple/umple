@@ -15,8 +15,8 @@
   }
   
 %>
-    <%=gen.translate("associationMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
-    boolean <%=gen.translate("didAddMany",av)%> = <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterAll",av)%>);
+    <%=gen.translate("associationMany",av)%> = new vector<<%=gen.translate("type",av)%>*>();
+    bool <%=gen.translate("didAddMany",av)%> = <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterAll",av)%>);
     if (!<%=gen.translate("didAddMany",av)%>)
     {
       throw new RuntimeException("Unable to create <%=gen.relatedTranslate("type",av)%>, must have <%=requiredNumber%> <%=gen.translate("associationMany",av)%>");

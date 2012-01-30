@@ -54,7 +54,7 @@ class Mentor
   //------------------------
   public:
 
-  public Mentor(String aStr, Date aD, int aI)
+ Mentor::Mentor(String aStr, Date aD, int aI)
   {
     str = aStr;
     canSetStr = false;
