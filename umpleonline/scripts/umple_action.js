@@ -1261,6 +1261,11 @@ Action.setCaretPosition = function(line){
   }
 }
 
+Action.delayedFocus = function(ms) {
+  var ctrl=document.getElementById('umpleModelEditor');
+  setTimeout(function() {ctrl.focus();},ms);
+}
+
 Action.updateLineNumberDisplay = function()
 {
   jQuery("#linenum").val(Action.getCaretPosition());
