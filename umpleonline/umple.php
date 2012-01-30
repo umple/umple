@@ -22,7 +22,10 @@ $output = readTemporaryFile($filename);
         <p class="pagedescription">
         Draw on the right, write (Umple) model code on the left. Generate Java, PHP or Ruby code from your models. <br/>
         Visit <a href="http://cruise.site.uottawa.ca/umple/UsingUmpleOnline.html">the User Manual</a> or <a href="http://cruise.site.uottawa.ca/umple/">the Umple Home Page</a> for help.
-        <a href="download_eclipse_umple_plugin.html">Download Eclipse Plugin</a>
+        <a href="download_eclipse_umple_plugin.html">Download Umple</a>
+        <noscript>
+        <br/><font color="red">Since you have JavaScript disabled this page will not work. To use Umple, download the command line compiler or use Eclipse.</font>
+        </noscript>
         </p>
       </td>
     </tr>
@@ -33,12 +36,12 @@ $output = readTemporaryFile($filename);
 
 <div class="bookmarkableUrl">
 
-<span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value);  setTimeout(function() {Action.updateLineNumberDisplay();},25);"></input>&nbsp; &nbsp;</span> 
+<span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value)"></input>&nbsp; &nbsp;</span> 
 
 <?php if (isBookmark($filename)) { ?>
-  <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmarkable URL</a>
+  <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Changes at this URL are saved</a>
 <?php } else { ?>
-  <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a>
+  <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Create Bookmarkable URL</a>
 <?php } ?>
 
 &nbsp; &nbsp;<span id=feedbackMessage></span>

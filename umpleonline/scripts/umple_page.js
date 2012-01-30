@@ -361,12 +361,12 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
-	// TODO: use .text() for ACE, .val otherwise
-   return jQuery("#umpleModelEditor").val();
+  return document.getElementById('umpleModelEditor').value;
 }
 
 Page.getUmpleCode = function()
 {
+  // TODO This had been instrumented with ACE. Needs cleaning up
   var model = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var regex = new RegExp(/^\d+/); //starts with digit, one or more E.G. 12345class X
   var lineNumbers = regex.exec(model);

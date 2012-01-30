@@ -152,14 +152,12 @@ function nextFilename($basedir = "../ump", $prefix = "tmp")
   {
     $id = rand(0,999999);
     $dirname = "{$basedir}/{$prefix}{$id}";
-    $uiguDirname = "{$dirname}/uigu";
     $filename = "{$dirname}/model.ump";
     
     if (!file_exists($dirname))
     {
         
       mkdir($dirname);
-      mkdir($uiguDirname);
       return $filename;
     }
   }
@@ -214,6 +212,7 @@ function showUserInterface($filename)
   $umpleDir = dirname($filename);
 
   $uiguDirectory = "../{$umpleDir}/uigu";
+  // Above directory isn't made by default .. TODO Add code to make it
   $uiguProjectName = "../{$umpleDir}/model";
   $buildFile = "../../scripts/JFXProvider/build.xml";
   $urlPath = "{$umpleDir}/model.jnlp";
@@ -339,5 +338,8 @@ function executeCommand($command)
 
 function cleanupOldFiles()
 {
-  executeCommand("find ump -type f -mtime +3 | grep -v .svn | grep /tmp | xargs rm -rf");
+  if(rand(1,100) == 50) {
+  // 1 percent of the time delete old temp directories older than 3 days ago
+    executeCommand("find ump -depth 1 -type d -mtime +3 | grep -v .svn | grep /tmp | xargs rm -rf");
+  }
 }

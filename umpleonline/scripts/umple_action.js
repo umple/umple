@@ -1143,33 +1143,11 @@ Action.keyboardShortcut = function(event)
 Action.getCaretPosition = function() // TIM Returns the line number
 {
 	var ctrl = document.getElementById('umpleModelEditor');
-	// var CaretPos = 0;
 	
 	var CaretPos = Action.getInputSelectionStart(ctrl);
-	/*
-	if (document.selection) {
-	  ctrl.focus(); 
-	  var DocSel = document.selection.createRange(); 
-	  if (DocSel == null) { 
-	      CaretPos = 0; 
-	  } 
-	  var region = ctrl.createTextRange(),
-	  regionCaret = region.duplicate(); 
-	  region.moveToBookmark(DocSel.getBookmark()); 
-	  regionCaret.setEndPoint('EndToStart', region); 
-	  CaretPos = regionCaret.text.length; 
-	 }
-	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
-	  CaretPos = ctrl.selectionStart;
-    */
 	
 	var nlcount=1;
 	var theCode=Page.getRawUmpleCode();
-
-	// The following for debugging
-	if (Page.getAdvancedMode() == 2) { // debug
-	      Page.setFeedbackMessage("");
-    }
 
 	for(var ch=0; ch<(CaretPos); ch++)
 	{
@@ -1188,8 +1166,17 @@ Action.getInputSelectionStart = function(el) {
     var start = 0, normalizedValue, range, textInputRange, len, endRange;
 
     if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
-        start = el.selectionStart;
-    } else { // IE Support
+      start = el.selectionStart;
+      // The following for debugging
+	  if (Page.getAdvancedMode() == 2) { // debug
+	    Page.setFeedbackMessage("Non-IE browser ");
+      }
+    }
+    else { // IE Support
+      // The following for debugging
+	  if (Page.getAdvancedMode() == 2) { // debug
+	    Page.setFeedbackMessage("IE-type browser ");
+      }
         range = document.selection.createRange();
 
         if (range && range.parentElement() == el) {
@@ -1217,7 +1204,6 @@ Action.getInputSelectionStart = function(el) {
 
     return start;
 }
-
 
 Action.setCaretPosition = function(line){
   if(line=="av") {

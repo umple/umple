@@ -15,7 +15,7 @@ $filename = "ump/{$tempModelId}/model.ump";
 
 if (!is_file($filename))
 {
-  echo "Temporary model {$tempModelId} no longer exist";
+  echo "<html><body>Javascript seems to be off. You cannot save the model.<br> <a href=\"download_eclipse_umple_plugin.html\">Use Umple locally on your machine.</a></body></html>";
   exit;
 }
 
