@@ -21,11 +21,11 @@
     
     if (av.isOne())
     {
-      append(stringBuffer, "  private {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
+      append(stringBuffer, "  {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
     }
     else
     {
-      append(stringBuffer, "  private List<{0}> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
+      append(stringBuffer, "   vector<{0}*> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
     }
   }
 }

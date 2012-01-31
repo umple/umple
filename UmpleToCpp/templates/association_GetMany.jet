@@ -7,10 +7,10 @@
     return <%=gen.translate("parameterOne",av)%>;
   }
 
-  List<<%=gen.translate("type",av)%>> <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>()
+  vector<<%=gen.translate("type",av)%>*> <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>()
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
-    List<<%=gen.translate("type",av)%>> <%=gen.translate("parameterMany",av)%> = Collections.unmodifiableList(<%=gen.translate("associationMany",av)%>);
+    vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterMany",av)%> = Collections.unmodifiableList(<%=gen.translate("associationMany",av)%>);
     <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } %>
     return <%=gen.translate("parameterMany",av)%>;
   }

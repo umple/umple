@@ -367,12 +367,12 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_347 = " = ";
   protected final String TEXT_348 = ".get(index);";
   protected final String TEXT_349 = NL + "    return ";
-  protected final String TEXT_350 = ";" + NL + "  }" + NL + "" + NL + "  List<";
-  protected final String TEXT_351 = "> ";
+  protected final String TEXT_350 = ";" + NL + "  }" + NL + "" + NL + "  vector<";
+  protected final String TEXT_351 = "*> ";
   protected final String TEXT_352 = "::";
   protected final String TEXT_353 = "()" + NL + "  {";
-  protected final String TEXT_354 = NL + "    List<";
-  protected final String TEXT_355 = "> ";
+  protected final String TEXT_354 = NL + "    vector<";
+  protected final String TEXT_355 = "*> ";
   protected final String TEXT_356 = " = Collections.unmodifiableList(";
   protected final String TEXT_357 = ");";
   protected final String TEXT_358 = NL + "    return ";
@@ -727,10 +727,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_707 = "(";
   protected final String TEXT_708 = "... ";
   protected final String TEXT_709 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_710 = NL + "    ArrayList<";
-  protected final String TEXT_711 = "> ";
-  protected final String TEXT_712 = " = new ArrayList<";
-  protected final String TEXT_713 = ">();" + NL + "    for (";
+  protected final String TEXT_710 = NL + "    vector<";
+  protected final String TEXT_711 = "*> ";
+  protected final String TEXT_712 = " = new vector<";
+  protected final String TEXT_713 = "*>();" + NL + "    for (";
   protected final String TEXT_714 = " ";
   protected final String TEXT_715 = " : ";
   protected final String TEXT_716 = ")" + NL + "    {" + NL + "      if (";
@@ -743,10 +743,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_723 = ".length || ";
   protected final String TEXT_724 = ".size() > ";
   protected final String TEXT_725 = "())" + NL + "    {";
-  protected final String TEXT_726 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    ArrayList<";
-  protected final String TEXT_727 = "> ";
-  protected final String TEXT_728 = " = new ArrayList<";
-  protected final String TEXT_729 = ">(";
+  protected final String TEXT_726 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_727 = "*> ";
+  protected final String TEXT_728 = " = new vector<";
+  protected final String TEXT_729 = "*>(";
   protected final String TEXT_730 = ");";
   protected final String TEXT_731 = NL + "    ";
   protected final String TEXT_732 = ".clear();" + NL + "    for (";
@@ -1216,10 +1216,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1196 = "(";
   protected final String TEXT_1197 = "... ";
   protected final String TEXT_1198 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1199 = NL + "    ArrayList<";
-  protected final String TEXT_1200 = "> ";
-  protected final String TEXT_1201 = " = new ArrayList<";
-  protected final String TEXT_1202 = ">();" + NL + "    for (";
+  protected final String TEXT_1199 = NL + "    vector<";
+  protected final String TEXT_1200 = "*> ";
+  protected final String TEXT_1201 = " = new vector<";
+  protected final String TEXT_1202 = "*>();" + NL + "    for (";
   protected final String TEXT_1203 = " ";
   protected final String TEXT_1204 = " : ";
   protected final String TEXT_1205 = ")" + NL + "    {" + NL + "      if (";
@@ -1341,10 +1341,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1321 = "(";
   protected final String TEXT_1322 = "... ";
   protected final String TEXT_1323 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1324 = NL + "    ArrayList<";
-  protected final String TEXT_1325 = "> ";
-  protected final String TEXT_1326 = " = new ArrayList<";
-  protected final String TEXT_1327 = ">();" + NL + "    for (";
+  protected final String TEXT_1324 = NL + "    vector<";
+  protected final String TEXT_1325 = "*> ";
+  protected final String TEXT_1326 = " = new vector<";
+  protected final String TEXT_1327 = "*>();" + NL + "    for (";
   protected final String TEXT_1328 = " ";
   protected final String TEXT_1329 = " : ";
   protected final String TEXT_1330 = ")" + NL + "    {" + NL + "      if (";
@@ -1369,10 +1369,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1349 = "(";
   protected final String TEXT_1350 = "... ";
   protected final String TEXT_1351 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1352 = NL + "    ArrayList<";
-  protected final String TEXT_1353 = "> ";
-  protected final String TEXT_1354 = " = new ArrayList<";
-  protected final String TEXT_1355 = ">();" + NL + "    for (";
+  protected final String TEXT_1352 = NL + "    vector<";
+  protected final String TEXT_1353 = "*> ";
+  protected final String TEXT_1354 = " = new vector<";
+  protected final String TEXT_1355 = "*>();" + NL + "    for (";
   protected final String TEXT_1356 = " ";
   protected final String TEXT_1357 = " : ";
   protected final String TEXT_1358 = ")" + NL + "    {" + NL + "      if (";
@@ -1387,10 +1387,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1367 = "() || ";
   protected final String TEXT_1368 = ".size() > ";
   protected final String TEXT_1369 = "())" + NL + "    {";
-  protected final String TEXT_1370 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    ArrayList<";
-  protected final String TEXT_1371 = "> ";
-  protected final String TEXT_1372 = " = new ArrayList<";
-  protected final String TEXT_1373 = ">(";
+  protected final String TEXT_1370 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_1371 = "*> ";
+  protected final String TEXT_1372 = " = new vector<";
+  protected final String TEXT_1373 = "*>(";
   protected final String TEXT_1374 = ");";
   protected final String TEXT_1375 = NL + "    ";
   protected final String TEXT_1376 = ".clear();" + NL + "    for (";
@@ -1420,10 +1420,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1400 = "(";
   protected final String TEXT_1401 = "... ";
   protected final String TEXT_1402 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1403 = NL + "    ArrayList<";
-  protected final String TEXT_1404 = "> ";
-  protected final String TEXT_1405 = " = new ArrayList<";
-  protected final String TEXT_1406 = ">();" + NL + "    for (";
+  protected final String TEXT_1403 = NL + "    vector<";
+  protected final String TEXT_1404 = "*> ";
+  protected final String TEXT_1405 = " = new vector<";
+  protected final String TEXT_1406 = "*>();" + NL + "    for (";
   protected final String TEXT_1407 = " ";
   protected final String TEXT_1408 = " : ";
   protected final String TEXT_1409 = ")" + NL + "    {" + NL + "      if (";
@@ -1436,10 +1436,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1416 = ".length || ";
   protected final String TEXT_1417 = ".size() < ";
   protected final String TEXT_1418 = "())" + NL + "    {";
-  protected final String TEXT_1419 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    ArrayList<";
-  protected final String TEXT_1420 = "> ";
-  protected final String TEXT_1421 = " = new ArrayList<";
-  protected final String TEXT_1422 = ">(";
+  protected final String TEXT_1419 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_1420 = "*> ";
+  protected final String TEXT_1421 = " = new vector<";
+  protected final String TEXT_1422 = "*>(";
   protected final String TEXT_1423 = ");";
   protected final String TEXT_1424 = NL + "    ";
   protected final String TEXT_1425 = ".clear();" + NL + "    for (";
@@ -1469,10 +1469,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1449 = "(";
   protected final String TEXT_1450 = "... ";
   protected final String TEXT_1451 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1452 = NL + "    ArrayList<";
-  protected final String TEXT_1453 = "> ";
-  protected final String TEXT_1454 = " = new ArrayList<";
-  protected final String TEXT_1455 = ">();" + NL + "    for (";
+  protected final String TEXT_1452 = NL + "    vector<";
+  protected final String TEXT_1453 = "*> ";
+  protected final String TEXT_1454 = " = new vector<";
+  protected final String TEXT_1455 = "*>();" + NL + "    for (";
   protected final String TEXT_1456 = " ";
   protected final String TEXT_1457 = " : ";
   protected final String TEXT_1458 = ")" + NL + "    {" + NL + "      if (";
@@ -1503,10 +1503,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1483 = ".length < ";
   protected final String TEXT_1484 = "()";
   protected final String TEXT_1485 = ")" + NL + "    {";
-  protected final String TEXT_1486 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    ArrayList<";
-  protected final String TEXT_1487 = "> ";
-  protected final String TEXT_1488 = " = new ArrayList<";
-  protected final String TEXT_1489 = ">();" + NL + "    HashMap<";
+  protected final String TEXT_1486 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_1487 = "*> ";
+  protected final String TEXT_1488 = " = new vector<";
+  protected final String TEXT_1489 = "*>();" + NL + "    HashMap<";
   protected final String TEXT_1490 = ",Integer> ";
   protected final String TEXT_1491 = " = new HashMap<";
   protected final String TEXT_1492 = ",Integer>();" + NL + "    for (";
@@ -1586,10 +1586,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1566 = "(";
   protected final String TEXT_1567 = "... ";
   protected final String TEXT_1568 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1569 = NL + "    ArrayList<";
-  protected final String TEXT_1570 = "> ";
-  protected final String TEXT_1571 = " = new ArrayList<";
-  protected final String TEXT_1572 = ">();" + NL + "    for (";
+  protected final String TEXT_1569 = NL + "    vector<";
+  protected final String TEXT_1570 = "*> ";
+  protected final String TEXT_1571 = " = new vector<";
+  protected final String TEXT_1572 = "*>();" + NL + "    for (";
   protected final String TEXT_1573 = " ";
   protected final String TEXT_1574 = " : ";
   protected final String TEXT_1575 = ")" + NL + "    {" + NL + "      if (";
@@ -1614,10 +1614,10 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1594 = "(";
   protected final String TEXT_1595 = "... ";
   protected final String TEXT_1596 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1597 = NL + "    ArrayList<";
-  protected final String TEXT_1598 = "> ";
-  protected final String TEXT_1599 = " = new ArrayList<";
-  protected final String TEXT_1600 = ">();" + NL + "    for (";
+  protected final String TEXT_1597 = NL + "    vector<";
+  protected final String TEXT_1598 = "*> ";
+  protected final String TEXT_1599 = " = new vector<";
+  protected final String TEXT_1600 = "*>();" + NL + "    for (";
   protected final String TEXT_1601 = " ";
   protected final String TEXT_1602 = " : ";
   protected final String TEXT_1603 = ")" + NL + "    {" + NL + "      if (";
@@ -2058,11 +2058,11 @@ public class CppClassGenerator implements ILang
     
     if (av.isOne())
     {
-      append(stringBuffer, "  private {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
+      append(stringBuffer, "  {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
     }
     else
     {
-      append(stringBuffer, "  private List<{0}> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
+      append(stringBuffer, "   vector<{0}*> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
     }
   }
 }
@@ -2077,7 +2077,7 @@ public class CppClassGenerator implements ILang
     appendln(stringBuffer, "");
     appendln(stringBuffer, "");
     appendln(stringBuffer,"  //Helper Variables");
-    append(stringBuffer, "  private int cachedHashCode;");
+    append(stringBuffer, "  int cachedHashCode;");
   }
 
   for (Attribute av : uClass.getAttributes())
@@ -2095,7 +2095,7 @@ public class CppClassGenerator implements ILang
       {
         appendln(stringBuffer, "");
       }
-      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
     }
   }
   
@@ -2106,12 +2106,12 @@ public class CppClassGenerator implements ILang
     if (av != null && !"immutable".equals(av.getModifier()))
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
     }
     else if (as != null)
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private boolean {0};", gen.translate("associationCanSet",as));
+      append(stringBuffer, "  bool {0};", gen.translate("associationCanSet",as));
     }
   }
   
@@ -2135,7 +2135,7 @@ public class CppClassGenerator implements ILang
       {
         appendln(stringBuffer, "");
       }
-      append(stringBuffer, "  private TimedEventHandler {0};", gen.translate("eventHandler",e));
+      append(stringBuffer, "  TimedEventHandler {0};", gen.translate("eventHandler",e));
     }
   }
 }

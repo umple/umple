@@ -45,9 +45,9 @@ class Mentor
   int x;
 
   //Helper Variables
-  private boolean canSetStr;
-  private boolean canSetStr2;
-  private boolean canSetS;
+  bool canSetStr;
+  bool canSetStr2;
+  bool canSetS;
 
   //------------------------
   // CONSTRUCTOR

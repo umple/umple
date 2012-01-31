@@ -19,8 +19,8 @@ class Student
   String number;
 
   //Student Associations
-  private List<Mentor> mentors;
-  private List<Course> courses;
+   vector<Mentor*> mentors;
+   vector<Course*> courses;
 
   //------------------------
   // CONSTRUCTOR
@@ -62,9 +62,9 @@ class Student
     return aMentor;
   }
 
-  List<Mentor> Student::getMentors()
+  vector<Mentor*> Student::getMentors()
   {
-    List<Mentor> newMentors = Collections.unmodifiableList(mentors);
+    vector<Mentor*> newMentors = Collections.unmodifiableList(mentors);
     return newMentors;
   }
 
@@ -92,9 +92,9 @@ class Student
     return aCourse;
   }
 
-  List<Course> Student::getCourses()
+  vector<Course*> Student::getCourses()
   {
-    List<Course> newCourses = Collections.unmodifiableList(courses);
+    vector<Course*> newCourses = Collections.unmodifiableList(courses);
     return newCourses;
   }
 
@@ -159,7 +159,7 @@ class Student
       return wasSet;
     }
 
-    ArrayList<Mentor> checkNewMentors = new ArrayList<Mentor>();
+    vector<Mentor*> checkNewMentors = new vector<Mentor*>();
     HashMap<Student,Integer> studentToNewMentors = new HashMap<Student,Integer>();
     for (Mentor aMentor : newMentors)
     {

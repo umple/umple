@@ -17,7 +17,7 @@ class Mentor
   String name;
 
   //Mentor Associations
-  private Student student;
+  Student student;
 
   //------------------------
   // CONSTRUCTOR

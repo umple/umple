@@ -21,8 +21,8 @@ class Mentor
   private Status status;
 
   //Helper Variables
-  private TimedEventHandler timeoutOkToNotOkHandler;
-  private TimedEventHandler timeoutNotOkayToOkHandler;
+  TimedEventHandler timeoutOkToNotOkHandler;
+  TimedEventHandler timeoutNotOkayToOkHandler;
 
   //------------------------
   // CONSTRUCTOR

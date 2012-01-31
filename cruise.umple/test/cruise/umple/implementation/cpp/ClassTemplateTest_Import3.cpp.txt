@@ -15,7 +15,7 @@ class Course
   //------------------------
 
   //Course Associations
-  private List<Student> students;
+   vector<Student*> students;
 
   //------------------------
   // CONSTRUCTOR
@@ -37,9 +37,9 @@ class Course
     return aStudent;
   }
 
-  List<Student> Course::getStudents()
+  vector<Student*> Course::getStudents()
   {
-    List<Student> newStudents = Collections.unmodifiableList(students);
+    vector<Student*> newStudents = Collections.unmodifiableList(students);
     return newStudents;
   }
 

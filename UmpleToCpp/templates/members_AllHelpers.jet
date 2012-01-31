@@ -9,7 +9,7 @@
     appendln(stringBuffer, "");
     appendln(stringBuffer, "");
     appendln(stringBuffer,"  //Helper Variables");
-    append(stringBuffer, "  private int cachedHashCode;");
+    append(stringBuffer, "  int cachedHashCode;");
   }
 
   for (Attribute av : uClass.getAttributes())
@@ -27,7 +27,7 @@
       {
         appendln(stringBuffer, "");
       }
-      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
     }
   }
   
@@ -38,12 +38,12 @@
     if (av != null && !"immutable".equals(av.getModifier()))
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
     }
     else if (as != null)
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private boolean {0};", gen.translate("associationCanSet",as));
+      append(stringBuffer, "  bool {0};", gen.translate("associationCanSet",as));
     }
   }
   
@@ -67,7 +67,7 @@
       {
         appendln(stringBuffer, "");
       }
-      append(stringBuffer, "  private TimedEventHandler {0};", gen.translate("eventHandler",e));
+      append(stringBuffer, "  TimedEventHandler {0};", gen.translate("eventHandler",e));
     }
   }
 }

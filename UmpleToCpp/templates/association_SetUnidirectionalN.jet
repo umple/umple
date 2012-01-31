@@ -3,7 +3,7 @@
   {
     bool wasSet = false;
     <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
-    ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterVerifiedMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
+    vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterVerifiedMany",av)%> = new vector<<%=gen.translate("type",av)%>*>();
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
     {
       if (<%=gen.translate("parameterVerifiedMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))

@@ -786,11 +786,11 @@ public class CppHeaderGenerator implements ILang
     
     if (av.isOne())
     {
-      append(stringBuffer, "  private {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
+      append(stringBuffer, "  {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
     }
     else
     {
-      append(stringBuffer, "  private List<{0}> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
+      append(stringBuffer, "   vector<{0}*> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
     }
   }
 }
@@ -805,7 +805,7 @@ public class CppHeaderGenerator implements ILang
     appendln(stringBuffer, "");
     appendln(stringBuffer, "");
     appendln(stringBuffer,"  //Helper Variables");
-    append(stringBuffer, "  private int cachedHashCode;");
+    append(stringBuffer, "  int cachedHashCode;");
   }
 
   for (Attribute av : uClass.getAttributes())
@@ -823,7 +823,7 @@ public class CppHeaderGenerator implements ILang
       {
         appendln(stringBuffer, "");
       }
-      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
     }
   }
   
@@ -834,12 +834,12 @@ public class CppHeaderGenerator implements ILang
     if (av != null && !"immutable".equals(av.getModifier()))
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private boolean {0};", gen.translate("attributeCanSet",av));
+      append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
     }
     else if (as != null)
     {
       appendln(stringBuffer, "");
-      append(stringBuffer, "  private boolean {0};", gen.translate("associationCanSet",as));
+      append(stringBuffer, "  bool {0};", gen.translate("associationCanSet",as));
     }
   }
   
@@ -863,7 +863,7 @@ public class CppHeaderGenerator implements ILang
       {
         appendln(stringBuffer, "");
       }
-      append(stringBuffer, "  private TimedEventHandler {0};", gen.translate("eventHandler",e));
+      append(stringBuffer, "  TimedEventHandler {0};", gen.translate("eventHandler",e));
     }
   }
 }
