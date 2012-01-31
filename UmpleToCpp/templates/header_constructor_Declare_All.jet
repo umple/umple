@@ -1,0 +1,19 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  boolean isOneToOne = false;
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    AssociationVariable relatedAssocation = av.getRelatedAssociation();
+    if (av.isOnlyOne() && relatedAssocation.isOnlyOne() && av.getIsNavigable() && relatedAssocation.getIsNavigable())
+    {
+      isOneToOne = true;
+      break;
+    }
+  }
+  %><%@ include file="header_constructor_DeclareDefault.jet" %><%
+  if (isOneToOne)
+  {
+    %><%@ include file="header_constructor_DeclareOneToOne.jet" %><%
+  }
+
+%>

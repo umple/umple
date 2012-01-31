@@ -11,7 +11,7 @@
   if (!uClass.isRoot())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "    uClass.getName():{0}({1});", gClass.getParentClass().getLookup("constructorSignature_caller"),gClass.getParentClass().getClass().getName());
+    append(stringBuffer, "    {3}::{0}({1});", gClass.getParentClass().getLookup("constructorSignature_caller"),gClass.getParentClass().getClass().getName(),uClass.getName());
     hasBody = true;
   }
   
