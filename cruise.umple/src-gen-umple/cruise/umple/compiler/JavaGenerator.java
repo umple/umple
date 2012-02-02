@@ -768,9 +768,41 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  }
   }
 
-  private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String string) 
+  // "File Tracer" Look through all traces and inject the necessary code, it requires the following lookup
+  //  + fileTemplate
+  private static void prepareFileTraces(UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
-	  String attrCode;
+	  String fileTemplate = templateLookups.get("fileTemplate");
+	  
+	// Go over each trace directive
+	for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	{  
+		if( traceDirective.getTraceRecord() != null )
+		{
+			if( traceDirective.getTraceRecord().getRecordOnly() )
+				processTraceRecord(traceDirective,t,fileTemplate,"file");
+			else
+			{
+				processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
+				processTraceRecord(traceDirective,t,fileTemplate,"file");	
+			}      
+		}
+		// if the traceItem is an attribute
+		else if (traceDirective.hasAttributeTraceItems())
+		{
+			processTraceDirectiveAttributes(traceDirective,t,fileTemplate);		
+		}
+		// if the traceItem is a state machine
+		else if( traceDirective.hasStateMachineTraceItems() )
+		{
+			processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");	
+		}		  
+	}
+  }
+  
+  private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String templateType) 
+  {
+	  String attrCode = null;
 	  if( traceDirective.getTraceRecord() != null )
 	  {
 		  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
@@ -780,7 +812,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 				  TraceRecord record = traceDirective.getTraceRecord();
 				  if( record.getRecord() != null )
 				  {
-					  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
+					  if( templateType.equals("file"))
+						  attrCode = StringFormatter.format(template,record.getRecord());
+					  else if( templateType.equals("console"))
+						  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
 		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
 				  }
 				  for( Attribute attr : record.getAttributes() )
@@ -791,27 +826,6 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 			  }
 			  
 		  }
-	  }
-  }
-
-// "File Tracer" Look through all traces and inject the necessary code, it requires the following lookup
-  //  + fileTemplate
-  private static void prepareFileTraces(UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
-  {
-	  String fileTemplate = templateLookups.get("fileTemplate");
-	  
-	  // Go over each trace directive
-	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
-	  {
-		  // if the traceItem is an attribute
-          if (traceDirective.hasAttributeTraceItems())
-          {
-        	  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
-          }
-          else if( traceDirective.hasStateMachineTraceItems() )
-	      {
-        	  processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");
-	      }
 	  }
   }
 
@@ -1054,7 +1068,6 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  return period[0];
   }
   //====================== End of Tracing code
-   
    
   private boolean prepareTimedEvents(StateMachine sm)
   {

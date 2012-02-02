@@ -159,7 +159,7 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void ConsoleTracer_tMultipleAttributeOccurences()
+	public void ConsoleTracer_MultipleAttributeOccurences()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeOccurences.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeOccurences."+ languagePath +".txt","Tracer");
 	}
@@ -200,6 +200,24 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("FileTracer_TraceSingleAttribute.ump",languagePath + "/FileTracer_TraceSingleAttribute."+ languagePath +".txt","Tracer");
 	}
+	
+	@Test
+	public void FileTracer_SingleAttributeSet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeSet.ump",languagePath + "/FileTracer_TraceSingleAttributeSet."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void FileTracer_SingleAttributeGet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeGet.ump",languagePath + "/FileTracer_TraceSingleAttributeGet."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_SingleAttributeOnlyGet()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+	}
 	  
 	@Test
 	public void FileTracer_SingleAttributeAfter()
@@ -232,47 +250,35 @@ public class TracerTest extends TracerTemplateTest
 	}
 	  
 	@Test
+	public void FileTracer_SingleAttributeRecord1()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeRecord1.ump",languagePath + "/FileTracer_TraceSingleAttributeRecord1."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_SingleAttributeRecord2()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeRecord2.ump",languagePath + "/FileTracer_TraceSingleAttributeRecord2."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_SingleAttributeRecord3()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeRecord3.ump",languagePath + "/FileTracer_TraceSingleAttributeRecord3."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_SingleAttributeRecord4()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeRecord4.ump",languagePath + "/FileTracer_TraceSingleAttributeRecord4."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
 	public void FileTracer_MultipleAttributes()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttribute.ump",languagePath + "/FileTracer_TraceMultipleAttribute."+ languagePath +".txt","Tracer");
 	}
 	  
-	@Test
-	public void FileTracer_MultipleAttributesAfter()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeAfter.ump",languagePath + "/FileTracer_TraceMultipleAttributeAfter."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void FileTracer_MultipleAttributesUntil()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeUntil.ump",languagePath + "/FileTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void FileTracer_MultipleAttributesWhere()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeWhere.ump",languagePath + "/FileTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
-	}
-	
-	@Test
-	public void FileTracer_SingleAttributeSet()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeSet.ump",languagePath + "/FileTracer_TraceSingleAttributeSet."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void FileTracer_SingleAttributeGet()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeGet.ump",languagePath + "/FileTracer_TraceSingleAttributeGet."+ languagePath +".txt","Tracer");
-	}
-	
-	@Test
-	public void FileTracer_SingleAttributeOnlyGet()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
-	}
-	
 	@Test
 	public void FileTracer_MultipleAttributeSet()
 	{
@@ -292,6 +298,24 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
+	public void FileTracer_MultipleAttributesAfter()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeAfter.ump",languagePath + "/FileTracer_TraceMultipleAttributeAfter."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void FileTracer_MultipleAttributesUntil()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeUntil.ump",languagePath + "/FileTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void FileTracer_MultipleAttributesWhere()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeWhere.ump",languagePath + "/FileTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
 	public void FileTracer_MultipleAttributeOccurences()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeOccurences.ump",languagePath + "/FileTracer_TraceMultipleAttributeOccurences."+ languagePath +".txt","Tracer");
@@ -301,6 +325,30 @@ public class TracerTest extends TracerTemplateTest
 	public void FileTracer_MultipleAttributesPeriod()
 	{
 		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributePeriod.ump",languagePath + "/FileTracer_TraceMultipleAttributePeriod."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_MultipleAttributesRecord1()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeRecord1.ump",languagePath + "/FileTracer_TraceMultipleAttributeRecord1."+ languagePath +".txt","Tracer");
+	}	
+	
+	@Test
+	public void FileTracer_MultipleAttributesRecord2()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeRecord2.ump",languagePath + "/FileTracer_TraceMultipleAttributeRecord2."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_MultipleAttributesRecord3()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeRecord3.ump",languagePath + "/FileTracer_TraceMultipleAttributeRecord3."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void FileTracer_MultipleAttributesRecord4()
+	{
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeRecord4.ump",languagePath + "/FileTracer_TraceMultipleAttributeRecord4."+ languagePath +".txt","Tracer");
 	}
 	
 	//========= String tracer
