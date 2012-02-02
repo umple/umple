@@ -72,6 +72,7 @@ public class EcoreGenerator implements CodeGenerator
     String packageName;
     String nsURI;
     List<String> allTypes = new ArrayList<String>();
+    List<String> interfacesProcessed = new ArrayList<String>();
     
     code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     
@@ -100,8 +101,11 @@ public class EcoreGenerator implements CodeGenerator
 		  superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
 	      interfaceFlag =   " interface=\"true\"" ; 
 	      abstractFlag =   "abstract=\"true\"" ; 
-	      code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
-	      code.append("  </eClassifiers>\n");
+		  if (!(interfacesProcessed.contains(uInterface.getName()))){
+	      	interfacesProcessed.add(uInterface.getName());
+	      	code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
+	      	code.append("  </eClassifiers>\n");
+	   	  }
       }
      
       code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uClass.getName(),superStructureFlag));

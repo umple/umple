@@ -11,7 +11,7 @@ Umple will regenerate all Java files.
 */
 
 generate Java "../src-gen-umple";
-//generate Ecore;
+generate Ecore;
 
 use Documenter.ump;
 use Generator.ump;
