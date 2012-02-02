@@ -741,24 +741,56 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   private static void prepareConsoleTraces( UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
 	  String consoleTemplate = templateLookups.get("consoleTemplate");
-	  
+
 	  // Go over each trace directive
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
 	  {  
-	    	// if the traceItem is an attribute
-	        if (traceDirective.hasAttributeTraceItems())
-	        {
-	        	processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
-	        }
-	     // if the traceItem is a state machine
-	        else if( traceDirective.hasStateMachineTraceItems() )
-	        {
-	        	processTraceDirectiveStateMachines(traceDirective,t,consoleTemplate,"console");
-	        }
+		  if( traceDirective.getTraceRecord() != null )
+	      {
+			  if( traceDirective.getTraceRecord().getRecordOnly() )
+				  processTraceRecord(traceDirective,t,consoleTemplate,"console");
+			  else
+			  {
+				  processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);
+				  processTraceRecord(traceDirective,t,consoleTemplate,"console");
+			  }
+	      }
+	      // if the traceItem is an attribute
+		  else if (traceDirective.hasAttributeTraceItems())
+	      {
+			  processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
+	      }
+	      // if the traceItem is a state machine
+	      else if( traceDirective.hasStateMachineTraceItems() )
+	      {
+	    	  processTraceDirectiveStateMachines(traceDirective,t,consoleTemplate,"console");
+	      }
 	  }
   }
 
-  // "File Tracer" Look through all traces and inject the necessary code, it requires the following lookup
+  private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String string) 
+  {
+	  String attrCode;
+	  if( traceDirective.getTraceRecord() != null )
+	  {
+		  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
+		  {
+			  TraceRecord record = traceDirective.getTraceRecord();
+			  if( record.getRecord() != null )
+			  {
+				  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
+	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,null);
+			  }
+			  for( Attribute attr : record.getAttributes() )
+			  {
+				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
+	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,null);
+			  }
+		  }
+	  }
+  }
+
+// "File Tracer" Look through all traces and inject the necessary code, it requires the following lookup
   //  + fileTemplate
   private static void prepareFileTraces(UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
@@ -844,13 +876,19 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
 	  		  }
 	  	  }
-		  if( traceDirective.getTraceRecord() != null )
-		  {
-			  TraceRecord record = traceDirective.getTraceRecord();
-			  // simple trace directive that traces attributes without any extra fragments
-	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-	  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);  
-		  }
+//		  if( traceDirective.getTraceRecord() != null )
+//		  {
+//			  TraceRecord record = traceDirective.getTraceRecord();
+//			  for( Attribute attr : record.getAttributes() )
+//			  {
+//				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+//	      		  System.out.println("this ="+attrCode);
+//	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);
+//			  }
+//			  // simple trace directive that traces attributes without any extra fragments
+////	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
+////	  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);  
+//		  }
 	  }
 	  
   }

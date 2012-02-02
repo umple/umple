@@ -5,7 +5,6 @@ tracer String;
 
 class PersonA
 {
-  name = "x";
-  trace name;
-
+  name;
+  //trace name;
 }

@@ -246,6 +246,11 @@ private static void postpareTrace(UmpleModel aModel)
 	  }
   }
   
+  public static void prepareTraceRecordAttributeInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType) 
+  {
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+  }
+  
   // Assigns and prepares trace code injection before calling "injectTraceDirective"
   //  + setMethod: What is the name of the setMethod we are attaching the trace to
   //  + attrCode: What is the trace code that should be executed

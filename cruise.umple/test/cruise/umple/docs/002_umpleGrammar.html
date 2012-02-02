@@ -141,7 +141,8 @@ traceWhen :   when   [[traceCondition]]<br />
 traceFor- : for [trace_for]<br />
 tracePeriod- : period [trace_period]<br />
 traceDuring- : during [trace_duration]<br />
-traceRecord- : record [trace_record]<br />
+traceRecord- : record [[recordEntity]]<br />
+recordEntity- : ( only )? [**trace_record] ( , [**trace_record] )*<br />
 <br />
 traceCondition- : [LHS] [[conditionRHS]]<br />
 conditionRHS- : [comparison_operator] [RHS]<br />

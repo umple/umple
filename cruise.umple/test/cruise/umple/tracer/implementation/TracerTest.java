@@ -69,9 +69,27 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void ConsoleTracer_SingleAttributeRecord()
+	public void ConsoleTracer_SingleAttributeRecord1()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord1.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord1."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void ConsoleTracer_SingleAttributeRecord2()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord2.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord2."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void ConsoleTracer_SingleAttributeRecord3()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord3.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord3."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void ConsoleTracer_SingleAttributeRecord4()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord4.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord4."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test

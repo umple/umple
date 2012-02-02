@@ -1677,7 +1677,10 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  TraceDirective traceDirective = new TraceDirective();
 	  Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
       MethodTraceEntity mte = new MethodTraceEntity();
+      TraceRecord traceRecord = null;
       traceDirective.setUmpleClass(aClass);
+      
+      boolean isFirst = true;
       
       for( Token traceToken : token.getSubTokens() )
       {
@@ -1712,11 +1715,16 @@ private void analyzeTraceToken(Token token, int analysisStep)
     	  {
     		  traceAttr.setDuringClause(token.getValue("trace_duration"));
     	  }
-    	  else if( traceToken.is("trace_record") )
+    	  else if( traceToken.is("trace_record") || traceToken.getName().equals("only") )
     	  {
-    		  TraceRecord traceRecord = new TraceRecord(traceDirective);
-    		  traceRecord.setRecord(token.getValue("trace_record"));
-    		  traceDirective.setTraceRecord(traceRecord);
+    		  if( isFirst )
+    		  {
+    			  traceRecord = new TraceRecord(traceDirective);
+    			  analyzeTraceRecord(traceDirective,traceToken,traceRecord);
+    			  isFirst = false;
+    		  }
+    		  else
+    			  analyzeTraceRecord(traceDirective,traceToken,traceRecord);
     	  }
     	  else if( traceToken.is("trace_execute") )
     	  {
@@ -1734,6 +1742,23 @@ private void analyzeTraceToken(Token token, int analysisStep)
       
   }
   
+  // Analyze trace record in a trace directive
+  private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord) 
+  {
+	  String record = token.getValue("trace_record");
+	  Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
+	  
+	  // trace only what is in the record entity
+	  if( token.getName().equals("only") )
+		  traceRecord.setRecordOnly(true);  
+	  // recording a String 
+	  else if( record.contains("\"") )
+		  traceRecord.setRecord(record);
+	  // recording an attribute
+	  else if( attr != null )
+		  traceRecord.addAttribute(attr);
+  }
+
   // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
   private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, Attribute_TraceItem traceAttr)
   {

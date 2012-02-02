@@ -370,10 +370,10 @@ public class UmpleParserTracerTest
   }
   
   @Test
-  public void traceSingleAttributeRecord()
+  public void traceSingleAttributeRecord1()
   {
-	  assertParse("318_traceSingleAttributeRecord.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  assertParse("318_traceSingleAttributeRecord1.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
@@ -386,8 +386,83 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(null,traceAttr1.getPeriodClause());
 	  Assert.assertEquals(null,traceAttr1.getDuringClause());
 	  Assert.assertEquals(null,traceAttr1.getExecuteClause());
+	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
-	  Assert.assertEquals("id",record.getRecord());
+	  Assert.assertEquals(record.getRecord(),null);
+	  Assert.assertEquals(record.getRecordOnly(),false);
+	  Assert.assertEquals(clazz.getAttribute("id"),record.getAttribute(0));
+  }
+  
+  @Test
+  public void traceSingleAttributeRecord2()
+  {
+	  assertParse("318_traceSingleAttributeRecord2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
+	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  
+	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
+	  Assert.assertEquals(0,traceAttr1.getForClause());
+	  Assert.assertEquals(null,traceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,traceAttr1.getDuringClause());
+	  Assert.assertEquals(null,traceAttr1.getExecuteClause());
+	  
+	  TraceRecord record = traceDirective1.getTraceRecord();
+	  Assert.assertEquals(record.getRecord(),null);
+	  Assert.assertEquals(record.getRecordOnly(),true);
+	  Assert.assertEquals(clazz.getAttribute("id"),record.getAttribute(0));
+  }
+  
+  @Test
+  public void traceSingleAttributeRecord3()
+  {
+	  assertParse("318_traceSingleAttributeRecord3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:\"i am tracing name\"]");
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
+	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  
+	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
+	  Assert.assertEquals(0,traceAttr1.getForClause());
+	  Assert.assertEquals(null,traceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,traceAttr1.getDuringClause());
+	  Assert.assertEquals(null,traceAttr1.getExecuteClause());
+	  
+	  TraceRecord record = traceDirective1.getTraceRecord();
+	  Assert.assertEquals(record.getRecord(),"\"i am tracing name\"");
+	  Assert.assertEquals(record.getRecordOnly(),false);
+  }
+  
+  @Test
+  public void traceSingleAttributeRecord4()
+  {
+	  assertParse("318_traceSingleAttributeRecord4.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:Integer][name:contact][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id][trace_record:contact]");
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
+	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  
+	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals(clazz.getAttribute("name"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
+	  Assert.assertEquals(0,traceAttr1.getForClause());
+	  Assert.assertEquals(null,traceAttr1.getPeriodClause());
+	  Assert.assertEquals(null,traceAttr1.getDuringClause());
+	  Assert.assertEquals(null,traceAttr1.getExecuteClause());
+	  
+	  TraceRecord record = traceDirective1.getTraceRecord();
+	  Assert.assertEquals(record.getRecord(),null);
+	  Assert.assertEquals(record.getRecordOnly(),false);
+	  Assert.assertEquals(record.getAttribute(0),clazz.getAttribute("id"));
+	  Assert.assertEquals(record.getAttribute(1),clazz.getAttribute("contact"));
   }
   
   @Test
@@ -1543,7 +1618,10 @@ public class UmpleParserTracerTest
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  TraceDirective tc = clazz.getTraceDirective(0);
-	  Assert.assertEquals(tc.getTraceRecord().getRecord(),"v");
+	  TraceRecord traceRecord = tc.getTraceRecord();
+	  Assert.assertEquals(traceRecord.getAttribute(0),clazz.getAttribute("v"));
+	  Assert.assertEquals(traceRecord.getRecord(),null);
+	  Assert.assertEquals(traceRecord.getRecordOnly(),false);
 	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
 	  Assert.assertEquals(tracedState.getEntry(),true);
 	  Assert.assertEquals(tracedState.getExit(),true);

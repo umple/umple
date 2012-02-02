@@ -19,6 +19,7 @@ public class StateMachine
   private UmpleClass umpleClass;
   private State parentState;
   private List<State> states;
+  private List<TraceRecord> traceRecords;
   private List<StateMachine_TraceItem> stateMachineTraceItems;
 
   //Helper Variables
@@ -37,6 +38,7 @@ public class StateMachine
     canSetName = true;
     name = aName;
     states = new ArrayList<State>();
+    traceRecords = new ArrayList<TraceRecord>();
     stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
   }
 
@@ -95,6 +97,36 @@ public class StateMachine
   public int indexOfState(State aState)
   {
     int index = states.indexOf(aState);
+    return index;
+  }
+
+  public TraceRecord getTraceRecord(int index)
+  {
+    TraceRecord aTraceRecord = traceRecords.get(index);
+    return aTraceRecord;
+  }
+
+  public List<TraceRecord> getTraceRecords()
+  {
+    List<TraceRecord> newTraceRecords = Collections.unmodifiableList(traceRecords);
+    return newTraceRecords;
+  }
+
+  public int numberOfTraceRecords()
+  {
+    int number = traceRecords.size();
+    return number;
+  }
+
+  public boolean hasTraceRecords()
+  {
+    boolean has = traceRecords.size() > 0;
+    return has;
+  }
+
+  public int indexOfTraceRecord(TraceRecord aTraceRecord)
+  {
+    int index = traceRecords.indexOf(aTraceRecord);
     return index;
   }
 
@@ -199,6 +231,56 @@ public class StateMachine
     {
       states.remove(aState);
       wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfTraceRecords()
+  {
+    return 0;
+  }
+
+  public boolean addTraceRecord(TraceRecord aTraceRecord)
+  {
+    boolean wasAdded = false;
+    if (traceRecords.contains(aTraceRecord)) { return false; }
+    traceRecords.add(aTraceRecord);
+    if (aTraceRecord.indexOfStateMachine(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aTraceRecord.addStateMachine(this);
+      if (!wasAdded)
+      {
+        traceRecords.remove(aTraceRecord);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeTraceRecord(TraceRecord aTraceRecord)
+  {
+    boolean wasRemoved = false;
+    if (!traceRecords.contains(aTraceRecord))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = traceRecords.indexOf(aTraceRecord);
+    traceRecords.remove(oldIndex);
+    if (aTraceRecord.indexOfStateMachine(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aTraceRecord.removeStateMachine(this);
+      if (!wasRemoved)
+      {
+        traceRecords.add(oldIndex,aTraceRecord);
+      }
     }
     return wasRemoved;
   }
@@ -318,6 +400,12 @@ public class StateMachine
     {
       State aState = states.get(i - 1);
       aState.delete();
+    }
+    ArrayList<TraceRecord> copyOfTraceRecords = new ArrayList<TraceRecord>(traceRecords);
+    traceRecords.clear();
+    for(TraceRecord aTraceRecord : copyOfTraceRecords)
+    {
+      aTraceRecord.removeStateMachine(this);
     }
     for(int i=stateMachineTraceItems.size(); i > 0; i--)
     {

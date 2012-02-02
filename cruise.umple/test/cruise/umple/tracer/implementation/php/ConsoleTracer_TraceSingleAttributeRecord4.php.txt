@@ -1,0 +1,82 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $id;
+  private $contact;
+  private $name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aId, $aContact, $aName)
+  {
+    $this->id = $aId;
+    $this->contact = $aContact;
+    $this->name = $aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setContact($aContact)
+  {
+    $wasSet = false;
+    $this->contact = $aContact;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    print("name={$aName}");
+    print("={$}");
+    return $wasSet;
+  }
+
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  public function getContact()
+  {
+    return $this->contact;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

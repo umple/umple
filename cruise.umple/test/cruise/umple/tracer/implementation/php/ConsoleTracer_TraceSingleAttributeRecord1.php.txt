@@ -1,23 +1,25 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-class PersonA
+class Tracer
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //PersonA Attributes
+  //Tracer Attributes
+  private $id;
   private $name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName)
+  public function __construct($aId, $aName)
   {
+    $this->id = $aId;
     $this->name = $aName;
   }
 
@@ -25,12 +27,27 @@ class PersonA
   // INTERFACE
   //------------------------
 
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
   public function setName($aName)
   {
     $wasSet = false;
     $this->name = $aName;
     $wasSet = true;
+    print("name={$aName}");
+    print("={$}");
     return $wasSet;
+  }
+
+  public function getId()
+  {
+    return $this->id;
   }
 
   public function getName()

@@ -20,7 +20,8 @@ traceWhen :   when   [[traceCondition]]
 traceFor- : for [trace_for]
 tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
-traceRecord- : record [trace_record]
+traceRecord- : record [[recordEntity]]
+recordEntity- : ( only )? [**trace_record] ( , [**trace_record] )*
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]

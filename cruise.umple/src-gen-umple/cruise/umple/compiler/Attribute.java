@@ -18,6 +18,7 @@ public class Attribute extends UmpleVariable
   private boolean isLazy;
 
   //Attribute Associations
+  private List<TraceRecord> traceRecords;
   private List<Attribute_TraceItem> attributeTraceItems;
 
   //------------------------
@@ -31,6 +32,7 @@ public class Attribute extends UmpleVariable
     isList = false;
     isDerived = false;
     isLazy = false;
+    traceRecords = new ArrayList<TraceRecord>();
     attributeTraceItems = new ArrayList<Attribute_TraceItem>();
   }
 
@@ -110,6 +112,36 @@ public class Attribute extends UmpleVariable
     return isLazy;
   }
 
+  public TraceRecord getTraceRecord(int index)
+  {
+    TraceRecord aTraceRecord = traceRecords.get(index);
+    return aTraceRecord;
+  }
+
+  public List<TraceRecord> getTraceRecords()
+  {
+    List<TraceRecord> newTraceRecords = Collections.unmodifiableList(traceRecords);
+    return newTraceRecords;
+  }
+
+  public int numberOfTraceRecords()
+  {
+    int number = traceRecords.size();
+    return number;
+  }
+
+  public boolean hasTraceRecords()
+  {
+    boolean has = traceRecords.size() > 0;
+    return has;
+  }
+
+  public int indexOfTraceRecord(TraceRecord aTraceRecord)
+  {
+    int index = traceRecords.indexOf(aTraceRecord);
+    return index;
+  }
+
   public Attribute_TraceItem getAttributeTraceItem(int index)
   {
     Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(index);
@@ -138,6 +170,56 @@ public class Attribute extends UmpleVariable
   {
     int index = attributeTraceItems.indexOf(aAttributeTraceItem);
     return index;
+  }
+
+  public static int minimumNumberOfTraceRecords()
+  {
+    return 0;
+  }
+
+  public boolean addTraceRecord(TraceRecord aTraceRecord)
+  {
+    boolean wasAdded = false;
+    if (traceRecords.contains(aTraceRecord)) { return false; }
+    traceRecords.add(aTraceRecord);
+    if (aTraceRecord.indexOfAttribute(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aTraceRecord.addAttribute(this);
+      if (!wasAdded)
+      {
+        traceRecords.remove(aTraceRecord);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeTraceRecord(TraceRecord aTraceRecord)
+  {
+    boolean wasRemoved = false;
+    if (!traceRecords.contains(aTraceRecord))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = traceRecords.indexOf(aTraceRecord);
+    traceRecords.remove(oldIndex);
+    if (aTraceRecord.indexOfAttribute(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aTraceRecord.removeAttribute(this);
+      if (!wasRemoved)
+      {
+        traceRecords.add(oldIndex,aTraceRecord);
+      }
+    }
+    return wasRemoved;
   }
 
   public static int minimumNumberOfAttributeTraceItems()
@@ -192,6 +274,12 @@ public class Attribute extends UmpleVariable
 
   public void delete()
   {
+    ArrayList<TraceRecord> copyOfTraceRecords = new ArrayList<TraceRecord>(traceRecords);
+    traceRecords.clear();
+    for(TraceRecord aTraceRecord : copyOfTraceRecords)
+    {
+      aTraceRecord.removeAttribute(this);
+    }
     ArrayList<Attribute_TraceItem> copyOfAttributeTraceItems = new ArrayList<Attribute_TraceItem>(attributeTraceItems);
     attributeTraceItems.clear();
     for(Attribute_TraceItem aAttributeTraceItem : copyOfAttributeTraceItems)
