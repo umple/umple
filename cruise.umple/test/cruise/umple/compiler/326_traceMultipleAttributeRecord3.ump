@@ -1,0 +1,8 @@
+namespace example;
+
+class Tracer
+{
+	Integer id;
+	String name;
+	trace name,id record "i am tracing in class Tracer";
+}

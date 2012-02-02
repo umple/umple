@@ -719,19 +719,23 @@ class JavaGenerator
 	  String attrCode;
 	  if( traceDirective.getTraceRecord() != null )
 	  {
-		  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
+		  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
 		  {
-			  TraceRecord record = traceDirective.getTraceRecord();
-			  if( record.getRecord() != null )
+			  for( Attribute traceAttr : traceAttrItem.getAttributes() )
 			  {
-				  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
-	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,null);
+				  TraceRecord record = traceDirective.getTraceRecord();
+				  if( record.getRecord() != null )
+				  {
+					  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
+		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+				  }
+				  for( Attribute attr : record.getAttributes() )
+				  {
+					  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
+		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+				  }
 			  }
-			  for( Attribute attr : record.getAttributes() )
-			  {
-				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
-	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,null);
-			  }
+			  
 		  }
 	  }
   }
