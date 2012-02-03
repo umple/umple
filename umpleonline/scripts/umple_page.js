@@ -233,7 +233,7 @@ Page.initCanvasArea = function()
   var defaultHeight = canvas.height();
   Action.minCanvasSize = new UmplePosition(0,0,defaultWidth,defaultHeight);
   
-  var windowHeight = jQuery(window).height();
+  var windowHeight = jQuery(window).height()-35;
   var windowWidth = jQuery(window).width();
   
   var startupWidth = windowWidth - offsetLeft - Page.padding;
