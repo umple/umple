@@ -64,8 +64,10 @@ class Method {
   name;
   type;
   Boolean isImplemented;
+  
    1 -> 0..* MethodParameter;
    1 -> 0..1 MethodBody;
+   1 -> * Comment;
 }
 
 class Modifier{

@@ -34,6 +34,36 @@ public class UmpleInternalParserTest extends UmpleParserTest
     expectedResult = "[classDefinition][name:Foo][classDefinition][name:Bar][multilineComment:*][classDefinition][name:Foobar][multilineComment:* \n * \n *][classDefinition][name:Student][multilineComment:*                                        \n *    \n       \n *   \n *  \n *][classDefinition][name:Mentor][classDefinition][name:Teacher]";
     fileToOutputs.put("001_multipleEmptyMultiLineCommentsWithSpaces.ump", expectedResult);
     
+    expectedResult = "[classDefinition][name:Foo][inlineComment:I am a comment above a method.]" + 
+    		"[concreteMethodDeclaration][type:void][methodDeclarator]" + 
+    		"[methodName:testMethod][parameterList][code:// I am a comment inside a method.\n" +
+    		"    System.out.println(\"Hello world!\");]";
+    
+    fileToOutputs.put("001_methodComment.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a comment above a method.][concreteMethodDeclaration][type:void][methodDeclarator][methodName:testMethod][parameterList][code:System.out.println(\"Hello world!\");]";
+    
+    fileToOutputs.put("001_multilineMethodComment.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo]" + 
+    		"[inlineComment:Inline comment above method.][concreteMethodDeclaration]" +
+    		"[type:void][methodDeclarator][methodName:testMethod1][parameterList]" +
+    		"[code:System.out.println(\"Hello world!\");]" +
+    		"[inlineComment:Multiple inline comments][inlineComment:above method.]" +
+    		"[concreteMethodDeclaration][type:void][methodDeclarator]" +
+    		"[methodName:testMethod2][parameterList]" +
+    		"[code:System.out.println(\"Hello world!\");]" +
+    		"[multilineComment:Multiline comment above method.]" + 
+    		"[concreteMethodDeclaration][type:void][methodDeclarator]" +
+    		"[methodName:testMethod3][parameterList]" +
+    		"[code:System.out.println(\"Hello world!\");]" +
+    		"[multilineComment:* Multiple multiline comments\n\t * above method.]" +
+    		"[concreteMethodDeclaration][type:void][methodDeclarator]" +
+    		"[methodName:testMethod4][parameterList]" +
+    		"[code:System.out.println(\"Hello world!\");]";
+    
+    fileToOutputs.put("001_multipleMethodComments.ump", expectedResult);
+    
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
     fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");
@@ -118,6 +148,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("014_interfaceMultipleImplements.ump", "[interfaceDefinition][name:ISuper][interfaceDefinition][name:IOtherSuper][interfaceDefinition][name:IOther][interfaceMemberDeclaration][extendsName:ISuper][extendsName:IOtherSuper]");
     fileToOutputs.put("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][classDefinition][name:Something][attribute][type:implements][name:ISomething][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
     fileToOutputs.put("015_classMethods.ump", "[classDefinition][name:Student][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
+    
     fileToOutputs.put("015_base.ump", "[use:015_Student.ump][use:015_Mentor.ump][classDefinition][name:Student][use:015_Student.ump][classDefinition][name:Mentor][extendsName:Student]");
     fileToOutputs.put("016_classPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
     fileToOutputs.put("016_defaultClassPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");

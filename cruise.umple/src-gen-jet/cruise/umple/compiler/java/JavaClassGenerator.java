@@ -7217,7 +7217,7 @@ public class JavaClassGenerator implements ILang
     		String paramType="";
     		String aSingleParameter="";
     		String isList="";
-    	    String parameters = "";
+    	    String parameters = ""; 
     		if (aMethod.hasMethodParameters())
     		{
     			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
@@ -7228,8 +7228,13 @@ public class JavaClassGenerator implements ILang
     				aSingleParameter = paramType + isList + paramName;
         			parameters += aSingleParameter + ", ";
     			}
+    			
     			String finalParams = parameters.substring(0, parameters.length()-2);
-    			appendln(stringBuffer, "");
+
+				appendln(stringBuffer, "");
+				
+				if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+				
     			appendln(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
     			appendln(stringBuffer, "{");
@@ -7238,8 +7243,12 @@ public class JavaClassGenerator implements ILang
     			
     		}
     		else{
-    			appendln(stringBuffer, "");
-    			appendln(stringBuffer,override);
+    		
+	   			appendln(stringBuffer, "");
+	   			
+	   			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+	   			
+    			appendln(stringBuffer,override);    			
     			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
     		    appendln(stringBuffer, "{");
     			appendln(stringBuffer, properMethodBody);

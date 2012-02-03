@@ -1275,6 +1275,17 @@ public class ParserTest
 	  assertParse(true, parser.parse("program", "/**/\nfoo\n/*     \n  */\nbar\n/*\n    \n  *\n*/\nfoobar"));
   }
   
+  @Test
+  public void methodComment()
+  {
+	  parser.addRule("program : [[comment]] [[concreteMethodDeclaration]]");
+	  parser.addRule("comment : /* [**multilineComment] */");
+	  parser.addRule("concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] }");
+	  parser.addRule("methodDeclarator : [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET");
+	  
+	  assertParse(true, parser.parse("program", "/* This is a comment */\nvoid print()\n{\nSystem.out.println(\"derp\");\n}\n"));
+  }
+  
   private void assertParse(Position expected, ParseResult result)
   {
     Assert.assertEquals(expected, result.getPosition());

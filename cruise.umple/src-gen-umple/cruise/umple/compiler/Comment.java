@@ -50,30 +50,41 @@ public class Comment
   public Boolean isInline = true;
 
   public static String format(String type,List<Comment> allComments)
-  {
-  
-    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "RubyMultiline") ? "" : (type == "Multiline") ? "" : "// ";
+  { 
+    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "" : (type == "Multiline") ? "" : "// ";
   
     if (allComments.size() == 0)
     {
-      return null;
+    	return null;
     }
 
     String output = "";
       
-    for(Comment c : allComments)
+    for (Comment c : allComments)
     {
-      output += commentDelimiter + c.getText() + "\n"; 
+    	output += commentDelimiter + c.getText() + "\n"; 
     }
     
-    if(type == "Javadoc")
-      output = "/**\n" + output + " */";
-     
-       if (type == "RubyMultiline")
-     output = "=begin\n" + output + "=end";
-      
-      if (type == "Multiline")
-      output = "/*\n" + output + "*/";
+    if (type == "Javadoc")
+    {
+    	output = "/**\n" + output + " */";
+    }
+    
+    if (type == "Method Javadoc")
+    {
+    	output = "  /**\n" + output + "   */";
+    }
+    
+    if (type == "RubyMultiline")
+    {
+    	output = "=begin\n" + output + "=end";
+   	}
+   	
+   	if (type == "Multiline")
+   	{
+   		output = "/*\n" + output + "*/";
+   	}
+   	
     return output.trim();
   }
 }

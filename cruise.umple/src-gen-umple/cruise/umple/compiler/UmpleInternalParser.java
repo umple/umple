@@ -491,7 +491,23 @@ private void analyzeClassToken(Token t, int analysisStep)
       return;
     }
     
-    if (token.is("classDefinition"))
+    boolean shouldConsumeComment = lastComments.size() > 0;
+    
+  	if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
+  	{
+  	  shouldConsumeComment = false;
+  	}
+  	else if (token.is("inlineComment"))
+    {
+      analyzeComment(token);
+      shouldConsumeComment = false;
+    }
+    else if (token.is("multilineComment"))
+    {
+    	analyzeMultilineComment(token);
+    	shouldConsumeComment = false;
+    }
+    else if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
       childClass.setExtendsClass(aClass);
@@ -532,6 +548,11 @@ private void analyzeClassToken(Token t, int analysisStep)
     else if (token.is("symmetricReflexiveAssociation"))
     {
       analyzeSymmetricReflexiveAssociation(token,aClass);
+    }
+    
+    if (shouldConsumeComment)
+    {
+      lastComments.clear();
     }
   }    
   
@@ -1017,6 +1038,13 @@ private void checkSingletonAssociations() {
   {
     String modifier = "";
     Method aMethod = new Method("","","",false);
+    
+    // Add comments above the method to the method.
+    for (Comment c : lastComments)
+    {
+    	aMethod.addComment(c);
+    }
+    
     for(Token token : method.getSubTokens())
     {
       if (token.is("modifier"))

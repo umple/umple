@@ -1,0 +1,10 @@
+class Foo
+{
+	/* 
+	 * I am a comment above a method.
+	 */
+	void testMethod()
+	{
+		System.out.println("Hello world!");
+	}
+}

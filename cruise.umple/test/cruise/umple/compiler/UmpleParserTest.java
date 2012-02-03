@@ -88,6 +88,48 @@ public class UmpleParserTest
   }
   
   @Test
+  public void methodCommentDetection()
+  {
+	  assertParse("001_methodComment.ump");
+	  
+	  Assert.assertEquals(true, model.getUmpleClass(0).numberOfMethods() == 1);
+  }
+  
+  @Test
+  public void inlineCommentAboveMethod()
+  {
+	  assertParse("001_methodComment.ump");
+	  
+	  /*model.generate()
+	  Collection<String> c = model.getGeneratedCode().values();
+	  String generatedCode = (String)c.iterator().next();
+	  	  
+	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
+	  System.out.println("Size of collection: " + c.size());*/
+	  
+	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
+  }
+  
+  @Test
+  public void multilineCommentAboveMethod()
+  {
+	  assertParse("001_multilineMethodComment.ump");
+	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
+  }
+  
+  @Test
+  public void multipleMethodComments()
+  {
+	  assertParse("001_multipleMethodComments.ump");
+	  
+	  // Check to see if the methods have the correct number of comments associated with them.
+	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getMethod(1).numberOfComments());
+	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(2).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getMethod(3).numberOfComments());
+  }
+  
+  @Test
   public void languageDefault()
   {
     assertParse("001_empty.ump");

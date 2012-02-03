@@ -23,6 +23,7 @@ public class Method
   //Method Associations
   private List<MethodParameter> methodParameters;
   private MethodBody methodBody;
+  private List<Comment> comments;
 
   //------------------------
   // CONSTRUCTOR
@@ -35,6 +36,7 @@ public class Method
     type = aType;
     isImplemented = aIsImplemented;
     methodParameters = new ArrayList<MethodParameter>();
+    comments = new ArrayList<Comment>();
   }
 
   //------------------------
@@ -133,6 +135,36 @@ public class Method
     return methodBody;
   }
 
+  public Comment getComment(int index)
+  {
+    Comment aComment = comments.get(index);
+    return aComment;
+  }
+
+  public List<Comment> getComments()
+  {
+    List<Comment> newComments = Collections.unmodifiableList(comments);
+    return newComments;
+  }
+
+  public int numberOfComments()
+  {
+    int number = comments.size();
+    return number;
+  }
+
+  public boolean hasComments()
+  {
+    boolean has = comments.size() > 0;
+    return has;
+  }
+
+  public int indexOfComment(Comment aComment)
+  {
+    int index = comments.indexOf(aComment);
+    return index;
+  }
+
   public static int minimumNumberOfMethodParameters()
   {
     return 0;
@@ -166,10 +198,36 @@ public class Method
     return wasSet;
   }
 
+  public static int minimumNumberOfComments()
+  {
+    return 0;
+  }
+
+  public boolean addComment(Comment aComment)
+  {
+    boolean wasAdded = false;
+    if (comments.contains(aComment)) { return false; }
+    comments.add(aComment);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeComment(Comment aComment)
+  {
+    boolean wasRemoved = false;
+    if (comments.contains(aComment))
+    {
+      comments.remove(aComment);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public void delete()
   {
     methodParameters.clear();
     methodBody = null;
+    comments.clear();
   }
   
   //------------------------
