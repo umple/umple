@@ -98,10 +98,10 @@ Page.initOptions = function()
   jQuery("#buttonPhotoReady").attr('checked', false);
   jQuery("#buttonManualSync").attr('checked', false);
   
-  jQuery("#buttonShowHideTextEditor").attr('disabled', '');
-  jQuery("#buttonShowHideCanvas").attr('disabled', '');
-  jQuery("#buttonPhotoReady").attr('disabled', '');
-  jQuery("#buttonManualSync").attr('disabled', '');
+  jQuery("#buttonShowHideTextEditor").attr('disabled', false);
+  jQuery("#buttonShowHideCanvas").attr('disabled', false);
+  jQuery("#buttonPhotoReady").attr('disabled', false);
+  jQuery("#buttonManualSync").attr('disabled', false);
   
   Action.showHideLayoutEditor(true);
 }
@@ -128,14 +128,14 @@ Page.enableCheckBoxItem = function(boxId, listItemId, doEnable)
   
   if (doEnable)
   {
-  	checkbox.attr('disabled', '');
+  	checkbox.attr('disabled', false);
   	checkbox.css('cursor', 'pointer');
   	listItem.css('color', 'Black');
   	
   }
   else
   {
-  	checkbox.attr('disabled', 'disabled');
+  	checkbox.attr('disabled', true);
 	checkbox.css('cursor', 'not-allowed');
 	listItem.css('color', 'Silver');
   }
@@ -151,14 +151,14 @@ Page.enablePaletteItem = function(id, doEnable)
   if (doEnable)
   {
   	item.removeClass();
-  	item.attr('disabled', '');
+  	item.attr('disabled', true);
   	Page.initHighlighter(id);
   }
   else
   {
   	item.removeClass();
   	item.addClass("disabled");
-  	item.attr('disabled', 'disabled');
+  	item.attr('disabled', false);
   	Page.removeHighlighter(id);
   }
 }

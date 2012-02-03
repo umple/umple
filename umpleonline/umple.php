@@ -175,7 +175,7 @@ $output = readTemporaryFile($filename);
         </ul>
         <ul>
           <li class="subtitle"> Preferences </li>
-          <li id="photoReadyListItem"> <input id="buttonPhotoReady" class="checkbox" type="checkbox" title="View UML diagram as a PNG image" name="photoReady" value="photoReady"/> Photo Ready </li>
+          <li id="photoReadyListItem"> <input id="buttonPhotoReady" class="checkbox" type="checkbox" title="Remove editing handles from diagram" name="buttonPhotoReady" value="buttonPhotoReady"/> Photo Ready </li>
           <li id="manualSyncListItem"> <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> Manual Sync </li>          
         </ul>
         <ul>

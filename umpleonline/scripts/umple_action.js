@@ -280,7 +280,7 @@ Action.showHideTextEditor = function(doShow)
   	if (!canvasVisible) canvasColumn.hide();
   	
   	// disable the show/hide layout editor option
-  	layoutBox.attr('disabled', '');
+  	layoutBox.attr('disabled', false);
   	layoutBox.css('cursor', 'pointer');
   	layoutListItem.css('color', 'Black');
   }
@@ -288,7 +288,7 @@ Action.showHideTextEditor = function(doShow)
   {
   	canvas.width(canvas.width() + textEditor.width());
   	textEditor.hide();
-	layoutBox.attr('disabled', 'disabled');
+	layoutBox.attr('disabled', true);
 	layoutBox.css('cursor', 'not-allowed');
 	layoutListItem.css('color', 'DimGray');
   }
@@ -313,9 +313,9 @@ Action.showHideCanvas = function(doShow)
   	if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
   	if (!Action.manualSync || Action.diagramInSync)
   	{
-      Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
+  	  Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
       Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", true);
-  	
+
  	  Page.enablePaletteItem('buttonAddClass', true);
   	  Page.enablePaletteItem('buttonAddAssociation', true);
   	  Page.enablePaletteItem('buttonAddGeneralization', true);
@@ -331,9 +331,10 @@ Action.showHideCanvas = function(doShow)
   {
   	canvas.hide();
   	Action.manualSync = true;
-  	
+
 	Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
   	Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);
+
   	
 	Page.enablePaletteItem('buttonAddClass', false);
   	Page.enablePaletteItem('buttonAddAssociation', false);
