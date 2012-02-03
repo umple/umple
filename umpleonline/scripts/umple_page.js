@@ -427,7 +427,7 @@ Page.showDiagramSyncNeeded = function(doShow)
 {
   var canvas = jQuery("#umpleCanvas");
   var messageDiv =  '<div id="syncNeededMessage" class="syncNeededMessage unselectable">' +
-  				    'Diagram is out of sync. ' +
+  				    'Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text. ' +
   					'</div>';
   if (doShow)
   {
@@ -549,7 +549,7 @@ Page.showGeneratedCode = function(code,language)
 {
   jQuery("#generatedCodeRow").show();
 
-  if(language!="javadoc") {
+  if(language!="javadoc" && language !="diagramUpdate") {
     var codeparts = code.split('URL_SPLIT');
     var zipurl = "";
     var bodycode = "";

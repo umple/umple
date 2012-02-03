@@ -21,8 +21,10 @@ $output = readTemporaryFile($filename);
       <td>
         <p class="pagedescription">
         Draw on the right, write (Umple) model code on the left. Generate Java, PHP or Ruby code from your models. <br/>
-        Visit <a href="http://cruise.site.uottawa.ca/umple/UsingUmpleOnline.html">the User Manual</a> or <a href="http://cruise.site.uottawa.ca/umple/">the Umple Home Page</a> for help.
-        <a href="download_eclipse_umple_plugin.html">Download Umple</a>
+        Visit <a href="http://cruise.site.uottawa.ca/umple/UsingUmpleOnline.html" target=helppage">the User Manual</a> or <a href="http://cruise.site.uottawa.ca/umple/">the Umple Home Page</a> for help.
+        &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
+        &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
+
         <noscript>
         <br/><font color="red">Since you have JavaScript disabled this page will not work. To use Umple, download the command line compiler or use Eclipse.</font>
         </noscript>
@@ -175,7 +177,7 @@ $output = readTemporaryFile($filename);
         </ul>
         <ul>
           <li class="subtitle"> Preferences </li>
-          <li id="photoReadyListItem"> <input id="buttonPhotoReady" class="checkbox" type="checkbox" title="Remove editing handles from diagram" name="buttonPhotoReady" value="buttonPhotoReady"/> Photo Ready </li>
+          <li id="photoReadyListItem"> <input id="buttonPhotoReady" class="checkbox" type="checkbox" title="Remove editing handles from diagram" name="photoReady" value="photoReady"/> Photo Ready </li>
           <li id="manualSyncListItem"> <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> Manual Sync </li>          
         </ul>
         <ul>

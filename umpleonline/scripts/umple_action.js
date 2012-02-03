@@ -1345,10 +1345,28 @@ Action.updateUmpleDiagram = function()
 
 Action.updateUmpleDiagramCallback = function(response)
 {
-  var umpleJson = response.responseText;
-  var newSystem = Json.toObject(umpleJson);
+  var codeparts = response.responseText.split('URL_SPLIT');
+  var errorMessage=codeparts[0];
+  var umpleJson=codeparts[1];
   
-  UmpleSystem.merge(newSystem);
+  if(umpleJson == "null" || umpleJson == "") {
+    Page.enableDiagram(false);
+    Action.diagramInSync = false;
+    Page.setFeedbackMessage("The Umple model/code cannot be compiled; <a href=\"\#errorClick\">see explanation at the bottom.</a> To fix: edit the text or click undo");
+    Page.showGeneratedCode(errorMessage,"diagramUpdate");
+  }
+  else {  // reset feedback message when error is corrected
+    if(!Action.diagramInSync)
+    {
+      Page.enableDiagram(true);
+      Action.diagramInSync=true;
+    }
+    Page.setFeedbackMessage("");
+    Page.hideGeneratedCode();
+    var newSystem = Json.toObject(umpleJson);
+    UmpleSystem.merge(newSystem);
+  }
+  
   Page.hideLoading();
 }
 
@@ -1729,6 +1747,7 @@ Action.ajax = function(callback,post,errors)
   var modelAndPositioning = Page.getUmpleCode();
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
-  var errors = typeof(errors) != 'undefined' ? errors : "false";
-  Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
+  // var errors = typeof(errors) != 'undefined' ? errors : "false";
+  var errors = "true";    
+    Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }

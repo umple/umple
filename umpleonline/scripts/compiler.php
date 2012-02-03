@@ -101,11 +101,19 @@ else if (isset($_REQUEST["umpleCode"]))
   
   if ($sourceCode == "")
   {
-    $html = "
+    if($input == "//$?[End_of_model]$?") {
+      $html = "
+        Please create in Umple model textually (on the left side of the screen)
+        or visually (on the right side of the screen),
+        and then choose Generate Code again.";
+    }
+    else
+    {
+      $html = "
         An error occurred interpreting your Umple code, please review it and try again.
         If the problem persists, please email the Umple code to
-        the umple-help google group: umple-help@googlegroups.com";
-        
+        the umple-help google group: umple-help@googlegroups.com". $input . "X";
+    }
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
   }
