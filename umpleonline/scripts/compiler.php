@@ -112,7 +112,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $html = "
         An error occurred interpreting your Umple code, please review it and try again.
         If the problem persists, please email the Umple code to
-        the umple-help google group: umple-help@googlegroups.com". $input . "X";
+        the umple-help google group: umple-help@googlegroups.com";
     }
     echo $errhtml ."<p>URL_SPLIT" . $html;
     
