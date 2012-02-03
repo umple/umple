@@ -773,33 +773,34 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   private static void prepareFileTraces(UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
 	  String fileTemplate = templateLookups.get("fileTemplate");
-	  
-	// Go over each trace directive
-	for (TraceDirective traceDirective : aClass.getTraceDirectives())
-	{  
-		if( traceDirective.getTraceRecord() != null )
-		{
-			if( traceDirective.getTraceRecord().getRecordOnly() )
-				processTraceRecord(traceDirective,t,fileTemplate,"file");
-			else
-			{
-				processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
-				processTraceRecord(traceDirective,t,fileTemplate,"file");	
-			}      
-		}
-		// if the traceItem is an attribute
-		else if (traceDirective.hasAttributeTraceItems())
-		{
-			processTraceDirectiveAttributes(traceDirective,t,fileTemplate);		
-		}
-		// if the traceItem is a state machine
-		else if( traceDirective.hasStateMachineTraceItems() )
-		{
-			processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");	
-		}		  
-	}
+	  	
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {  
+		  if( traceDirective.getTraceRecord() != null )
+	 	  {
+			  if( traceDirective.getTraceRecord().getRecordOnly() )
+				  processTraceRecord(traceDirective,t,fileTemplate,"file");
+			  else
+			  {
+				  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
+				  processTraceRecord(traceDirective,t,fileTemplate,"file");	
+			  }      
+		  }
+		  // if the traceItem is an attribute
+		  else if (traceDirective.hasAttributeTraceItems())
+		  {
+			  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);		
+		  }
+		  // if the traceItem is a state machine
+		  else if( traceDirective.hasStateMachineTraceItems() )
+		  {
+			  processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");	
+		  }		  
+	  }
   }
   
+  //Process trace record in a trace directive
   private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String templateType) 
   {
 	  String attrCode = null;
@@ -894,21 +895,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
 	  		  }
 	  	  }
-//		  if( traceDirective.getTraceRecord() != null )
-//		  {
-//			  TraceRecord record = traceDirective.getTraceRecord();
-//			  for( Attribute attr : record.getAttributes() )
-//			  {
-//				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-//	      		  System.out.println("this ="+attrCode);
-//	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);
-//			  }
-//			  // simple trace directive that traces attributes without any extra fragments
-////	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-////	  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);  
-//		  }
 	  }
-	  
   }
   
   //Process Period in a trace directive (i.e. "period" keyword) and injects appropriate code

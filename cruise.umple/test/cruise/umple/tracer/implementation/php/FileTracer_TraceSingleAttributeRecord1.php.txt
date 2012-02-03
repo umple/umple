@@ -41,7 +41,7 @@ class Tracer
     $this->name = $aName;
     $wasSet = true;
     fileTracer($name);
-    fileTracer($);
+    fileTracer($id);
     return $wasSet;
   }
 

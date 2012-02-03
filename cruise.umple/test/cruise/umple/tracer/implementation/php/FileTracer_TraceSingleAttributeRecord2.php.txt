@@ -40,8 +40,7 @@ class Tracer
     $wasSet = false;
     $this->name = $aName;
     $wasSet = true;
-    fileTracer($name);
-    fileTracer($);
+    fileTracer($id);
     return $wasSet;
   }
 

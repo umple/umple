@@ -33,6 +33,7 @@ class Tracer
     $this->id = $aId;
     $wasSet = true;
     fileTracer($id);
+    fileTracer($"i am tracing in class Tracer");
     return $wasSet;
   }
 

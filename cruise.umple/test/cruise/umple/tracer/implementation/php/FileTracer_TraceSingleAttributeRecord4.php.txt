@@ -51,7 +51,8 @@ class Tracer
     $this->name = $aName;
     $wasSet = true;
     fileTracer($name);
-    fileTracer($);
+    fileTracer($id);
+    fileTracer($contact);
     return $wasSet;
   }
 

@@ -42,8 +42,7 @@ class Tracer
     $wasSet = false;
     $this->name = $aName;
     $wasSet = true;
-    print("name={$aName}");
-    print("={$}");
+    print("id={$id}");
     return $wasSet;
   }
 
@@ -52,7 +51,7 @@ class Tracer
     $wasSet = false;
     $this->address = $aAddress;
     $wasSet = true;
-    print("address={$aAddress}");
+    print("id={$id}");
     return $wasSet;
   }
 

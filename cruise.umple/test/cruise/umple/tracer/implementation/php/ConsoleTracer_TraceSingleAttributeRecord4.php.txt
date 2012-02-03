@@ -51,7 +51,8 @@ class Tracer
     $this->name = $aName;
     $wasSet = true;
     print("name={$aName}");
-    print("={$}");
+    print("id={$id}");
+    print("contact={$contact}");
     return $wasSet;
   }
 

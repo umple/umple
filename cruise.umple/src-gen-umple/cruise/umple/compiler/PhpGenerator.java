@@ -703,19 +703,30 @@ private String getExtendClassesNames(UmpleClass uClass)
   private static void prepareConsoleTraces( UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
 	  String consoleTemplate = templateLookups.get("consoleTemplate");
-	  
+
 	  // Go over each trace directive
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
 	  {  
-	    	// if the traceItem is an attribute
-	        if (traceDirective.hasAttributeTraceItems())
-	        {
-	        	processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
-	        }
-	        else if(traceDirective.hasStateMachineTraceItems())
-	        {
-	        	processTraceDirectiveStateMachines(traceDirective,t,consoleTemplate,"console");
-	        }
+		  if( traceDirective.getTraceRecord() != null )
+	      {
+			  if( traceDirective.getTraceRecord().getRecordOnly() )
+				  processTraceRecord(traceDirective,t,consoleTemplate,"console");
+			  else
+			  {
+				  processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);
+				  processTraceRecord(traceDirective,t,consoleTemplate,"console");
+			  }
+	      }
+	      // if the traceItem is an attribute
+		  else if (traceDirective.hasAttributeTraceItems())
+	      {
+			  processTraceDirectiveAttributes(traceDirective,t,consoleTemplate);	
+	      }
+	      // if the traceItem is a state machine
+	      else if( traceDirective.hasStateMachineTraceItems() )
+	      {
+	    	  processTraceDirectiveStateMachines(traceDirective,t,consoleTemplate,"console");
+	      }
 	  }
   }
 
@@ -724,19 +735,30 @@ private String getExtendClassesNames(UmpleClass uClass)
   private static void prepareFileTraces(UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
   {
 	  String fileTemplate = templateLookups.get("fileTemplate");
-	  
+	  	
 	  // Go over each trace directive
 	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
-	  {
+	  {  
+		  if( traceDirective.getTraceRecord() != null )
+	 	  {
+			  if( traceDirective.getTraceRecord().getRecordOnly() )
+				  processTraceRecord(traceDirective,t,fileTemplate,"file");
+			  else
+			  {
+				  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
+				  processTraceRecord(traceDirective,t,fileTemplate,"file");	
+			  }      
+		  }
 		  // if the traceItem is an attribute
-          if (traceDirective.hasAttributeTraceItems())
-          {
-        	  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);
-          }
-          else if( traceDirective.hasStateMachineTraceItems() )
-	      {
-        	  processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");
-	      }
+		  else if (traceDirective.hasAttributeTraceItems())
+		  {
+			  processTraceDirectiveAttributes(traceDirective,t,fileTemplate);		
+		  }
+		  // if the traceItem is a state machine
+		  else if( traceDirective.hasStateMachineTraceItems() )
+		  {
+			  processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");	
+		  }		  
 	  }
   }
 
@@ -773,10 +795,41 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  }
   }
   
+  //Process trace record in a trace directive
+  private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String templateType) 
+  {
+	  String attrCode = null;
+	  if( traceDirective.getTraceRecord() != null )
+	  {
+		  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
+		  {
+			  for( Attribute traceAttr : traceAttrItem.getAttributes() )
+			  {
+				  TraceRecord record = traceDirective.getTraceRecord();
+				  if( record.getRecord() != null )
+				  {
+					  if( templateType.equals("file"))
+						  attrCode = StringFormatter.format(template,record.getRecord());
+					  else if( templateType.equals("console"))
+						  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
+		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+				  }
+				  for( Attribute attr : record.getAttributes() )
+				  {
+					  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
+		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+				  }
+			  }
+			  
+		  }
+	  }
+  }
+  
   // Process every attribute in a trace directive
   private static void processTraceDirectiveAttributes( TraceDirective traceDirective, CodeTranslator t, String template ) 
   {	  
 	  String attrCode = null, conditionType = null;
+	  
 	  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
 	  {
 		  // Go over all attributes in trace directive
@@ -796,13 +849,6 @@ private String getExtendClassesNames(UmpleClass uClass)
 	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
 	  		  }
 	  	  }
-		  if( traceDirective.getTraceRecord() != null )
-		  {
-			  TraceRecord record = traceDirective.getTraceRecord();
-			  // simple trace directive that traces attributes without any extra fragments
-	  		  attrCode = StringFormatter.format(template,record.getRecord(),record.getRecord());
-	  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,traceAttr.getAttribute(0),attrCode,conditionType);  
-		  }
 	  }
   }
   
@@ -858,35 +904,69 @@ private String getExtendClassesNames(UmpleClass uClass)
   // Process condition in a trace directive
   private static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
   {
-	  String attrCode = null, conditionType = null;
 	  TraceCondition tc = traceDirective.getCondition(0);
 	  
 	  if( tc.getConditionType().equals("where") )
-	  {
-		  attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-		  conditionType = "where";	  
-	  }
+		  processWhereCondition(traceDirective, t, template, attr);	
 	  else if( tc.getConditionType().equals("until") )  
-	  {  
-		  attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";  
-		  conditionType = "until";		 
-	  }
+		  processUntilCondition(traceDirective, t, template, attr);		 
 	  else if( tc.getConditionType().equals("after") )
-	  {
-		  attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-		  conditionType = "after";  
-	  }
-	   
+		  processAfterCondition(traceDirective, t, template, attr);	  
+  }
+  
+  //process "where" conditions and injects needed code where appropriate
+  public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	 String attrCode = null, conditionType = "where";
+	 TraceCondition tc = traceDirective.getCondition(0);
+	 attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	 attrCode = "{";
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
+	 attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	 attrCode = "}";
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+  }
+  
+  //process "until" conditions and injects needed code where appropriate
+  public static void processUntilCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	  String attrCode = null, conditionType = "until";
+	  TraceCondition tc = traceDirective.getCondition(0);  
+	  attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";  
 	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-
 	  attrCode = "{";
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	  	  
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
 	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
 	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-
 	  attrCode = "}";
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType); 
+  }
+  
+  //process "After" conditions and injects needed code where appropriate
+  public static void processAfterCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	  String attrCode = null, conditionType = "after";
+	  TraceCondition tc = traceDirective.getCondition(0);
+	  attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
 	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  attrCode = "{";
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
+	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	  attrCode = "}";
+	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType); 
+  }
+  
+  // main purpose is to get trace attributes nameing convention
+  // e.g. trace attribute id with condition until -> method returns "traceIdUntil"
+  // e.g. trace attribute name with condition after -> method returns "traceNameAfter"
+  private static String getFlag(CodeTranslator t, Attribute attr, String conditionType)
+  {
+	  String attrName = t.translate("attribute",attr);
+	  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
+	  return "trace" + attrName + conditionType;  
   }
   
   // Assigns and prepares trace code injection before calling "injectTraceDirective"

@@ -42,8 +42,7 @@ class Tracer
     $wasSet = false;
     $this->name = $aName;
     $wasSet = true;
-    fileTracer($name);
-    fileTracer($);
+    fileTracer($id);
     return $wasSet;
   }
 
@@ -52,7 +51,7 @@ class Tracer
     $wasSet = false;
     $this->address = $aAddress;
     $wasSet = true;
-    fileTracer($address);
+    fileTracer($id);
     return $wasSet;
   }
 

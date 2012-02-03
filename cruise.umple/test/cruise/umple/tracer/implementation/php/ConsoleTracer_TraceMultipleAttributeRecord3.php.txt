@@ -33,6 +33,7 @@ class Tracer
     $this->id = $aId;
     $wasSet = true;
     print("id={$aId}");
+    print("RecordString={$"i am tracing in class Tracer"}");
     return $wasSet;
   }
 
@@ -42,7 +43,7 @@ class Tracer
     $this->name = $aName;
     $wasSet = true;
     print("name={$aName}");
-    print(""i am tracing in class Tracer"={$"i am tracing in class Tracer"}");
+    print("RecordString={$"i am tracing in class Tracer"}");
     return $wasSet;
   }
 
