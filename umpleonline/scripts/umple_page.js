@@ -582,6 +582,11 @@ Page.setFeedbackMessage = function(feedbackMessage)
   document.getElementById('feedbackMessage').innerHTML=feedbackMessage;
 }
 
+Page.getFeedbackMessage = function()
+{
+  return document.getElementById('feedbackMessage').innerHTML;
+}
+
 Page.catFeedbackMessage = function(feedbackMessage)
 {
   var origMsg = document.getElementById('feedbackMessage').innerHTML;

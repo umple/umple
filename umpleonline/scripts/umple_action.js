@@ -1621,41 +1621,81 @@ Action.associationMoved = function(dragDivSelector, addToQueue)
 
 Action.classNameChanged = function(diagramId,oldName,newName)
 {
-  var umpleClass = UmpleSystem.renameClass(diagramId,oldName,newName);
+  if(newName.length=0 || !newName.match(/^[_a-zA-Z1-8]+$/))
+  {
+
+    Action.updateUmpleDiagram();
+    var message="Class names must be alphanumeric. &lt;"+(newName.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
+)+"&gt is not valid.";
+    setTimeout(function() {Page.setFeedbackMessage(message);},2000);
+    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
+  }
+  else
+  {
+    var umpleClass = UmpleSystem.renameClass(diagramId,oldName,newName);
+
+    var editClass = Json.toString(umpleClass);
+    delete umpleClass.oldname;
   
-  var editClass = Json.toString(umpleClass);
-  delete umpleClass.oldname;
-  
-  Page.showModelLoading();
-  Page.showLayoutLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+    Page.showModelLoading();
+    Page.showLayoutLoading();
+     Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+    }
+}
+
+Action.validateAttributeName = function(newAttribute)
+{
+  return newAttribute.length!=0  && (
+     newAttribute.match(/^[_a-zA-Z1-8]+$/) ||
+     newAttribute.match(/^[_a-zA-Z1-8]+[\u0020]*:[\u0020]*[_a-zA-Z1-8]+$/)
+     )
 }
 
 Action.attributeNameChanged = function(diagramId,index,oldName,newAttribute)
 {
-  var umpleClass = UmpleSystem.find(diagramId);
-  umpleClass.attributes[index].set(newAttribute);
-  UmpleSystem.redraw(umpleClass);
+  if(!Action.validateAttributeName(newAttribute))
+  {
+    Action.updateUmpleDiagram();
+    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(newAttribute.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
+)+"&gt is not valid.");},2000);
+    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
+  }
+  else
+  {
+    var umpleClass = UmpleSystem.find(diagramId);
+    umpleClass.attributes[index].set(newAttribute);
+    UmpleSystem.redraw(umpleClass);
   
-  var editClass = Json.toString(umpleClass);
-  Page.showModelLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-  umpleClass.resetAttribute(index);
+    var editClass = Json.toString(umpleClass);
+    Page.showModelLoading();
+      Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+    umpleClass.resetAttribute(index);
+  }
 }
 
 Action.attributeNew = function(diagramId,attributeInput)
 {
-  var umpleClass = UmpleSystem.find(diagramId);
-  var attributeIndex = umpleClass.addAttribute(attributeInput);
+  if(!Action.validateAttributeName(attributeInput))
+  {
+     Action.updateUmpleDiagram();
+    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(attributeInput.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
+)+"&gt is not valid.");},2000);
+    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
+  }
+  else
+  {
+    var umpleClass = UmpleSystem.find(diagramId);
+    var attributeIndex = umpleClass.addAttribute(attributeInput);
 
-  var editClass = Json.toString(umpleClass);
-  Page.showModelLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+    var editClass = Json.toString(umpleClass);
+    Page.showModelLoading();
+      Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
 
-  umpleClass.resetAttribute(attributeIndex);
-  UmpleSystem.updateClass(umpleClass);
-  UmpleSystem.redrawGeneralizationsTo(umpleClass);
-  UmpleSystem.trimOverlappingAssociations(umpleClass);
+    umpleClass.resetAttribute(attributeIndex);
+    UmpleSystem.updateClass(umpleClass);
+    UmpleSystem.redrawGeneralizationsTo(umpleClass);
+    UmpleSystem.trimOverlappingAssociations(umpleClass);
+  }
 }
 
 Action.attributeDelete = function(diagramId,index)
