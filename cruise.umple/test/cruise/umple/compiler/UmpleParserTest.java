@@ -113,6 +113,12 @@ public class UmpleParserTest
   {
 	  assertParse("001_multipleMethodComments.ump");
 	  
+	  /*model.generate();
+	  Collection<String> c = model.getGeneratedCode().values();
+	  String generatedCode = (String)c.iterator().next();
+	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
+	  */
+	  
 	  // Check to see if the methods have the correct number of comments associated with them.
 	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
 	  Assert.assertEquals(2, model.getUmpleClass(0).getMethod(1).numberOfComments());
@@ -124,14 +130,6 @@ public class UmpleParserTest
   public void attributeInlineComment()
   {
 	  assertParse("001_attributeInlineComment.ump");
-	  
-	  /*
-	  model.generate();
-	  Collection<String> c = model.getGeneratedCode().values();
-	  String generatedCode = (String)c.iterator().next();
-	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
-	  */
-	  
 	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
   }
   
@@ -146,6 +144,13 @@ public class UmpleParserTest
   public void multipleAttributeComments()
   {
 	  assertParse("001_multipleAttributeComments.ump");
+	  
+	  /*
+	  model.generate();
+	  Collection<String> c = model.getGeneratedCode().values();
+	  String generatedCode = (String)c.iterator().next();
+	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
+	  */
 	  
 	  // Check to see if the attributes have the correct number of comments associated with them.
 	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());

@@ -8,7 +8,7 @@ package cruise.umple.compiler;
  * {
  * isA GeneratedElement;
  * //code = null;
- * * -> 1 UmpleModel model;
+ * -> 1 UmpleModel model;
  * 0..1 -> 1 UmpleInterface uInterface;
  * }
  */

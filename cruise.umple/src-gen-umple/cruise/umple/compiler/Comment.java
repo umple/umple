@@ -62,6 +62,27 @@ public class Comment
       
     for (Comment c : allComments)
     {
+    	if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Method Javadoc")
+    	{
+    		int startIndex = 0;
+    		
+    		// Go through each letter of the current comment to find start of content.
+    		for (int i = 0; i < c.getText().length(); i++)
+    		{
+    			char letter = c.getText().charAt(i);
+    			// Remove these letters until the actual content is found in the line.
+    			if (letter == ' ' || letter == '\t' || letter == '*')
+    			{
+    				startIndex++;
+    			}
+    			// Comment content found, set comment to start here.
+    			else
+    			{
+    				c.setText(c.getText().substring(startIndex));
+    				break;
+    			}
+    		}
+    	}
     	output += commentDelimiter + c.getText() + "\n"; 
     }
     
