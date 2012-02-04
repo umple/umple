@@ -1374,6 +1374,13 @@ private void checkSingletonAssociations() {
     }
 
     attribute.setIsList(isList);
+    
+    // Add comments above the attribute to the attribute.
+    for (Comment c : lastComments)
+    {
+    	attribute.addComment(c);
+    }
+    
     aClass.addAttribute(attribute);
 
   }

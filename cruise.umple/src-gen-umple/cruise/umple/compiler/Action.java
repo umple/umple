@@ -13,6 +13,10 @@ public class Action
   //Action Attributes
   private String actionType;
   private String actionCode;
+
+  /**
+   * target language code
+   */
   private boolean isInternal;
 
   //Helper Variables

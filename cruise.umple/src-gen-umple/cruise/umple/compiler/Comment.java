@@ -51,7 +51,7 @@ public class Comment
 
   public static String format(String type,List<Comment> allComments)
   { 
-    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "" : (type == "Multiline") ? "" : "// ";
+    String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "" : (type == "Multiline") ? "" : "// ";
   
     if (allComments.size() == 0)
     {
@@ -68,6 +68,11 @@ public class Comment
     if (type == "Javadoc")
     {
     	output = "/**\n" + output + " */";
+    }
+    
+    if (type == "Attribute Javadoc")
+    {
+    	output = "  /**\n" + output + "   */";
     }
     
     if (type == "Method Javadoc")

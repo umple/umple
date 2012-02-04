@@ -11,6 +11,14 @@ public class UmpleXtextParser implements UmpleParser
   //------------------------
 
   //UmpleXtextParser Attributes
+
+  /**
+   * depend  java.io.*;
+   * depend  org.eclipse.xtext.parser.*;
+   * depend  org.eclipse.xtext.parser.antlr.*;
+   * depend  com.google.inject.*;
+   * depend cruise.umple.UmpleStandaloneSetup;
+   */
   private UmpleInternalParser temp;
 
   //------------------------

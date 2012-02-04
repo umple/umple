@@ -16,6 +16,10 @@ public class Multiplicity
 
   //Multiplicity Attributes
   private String bound;
+
+  /**
+   * used when minimum=maximum;
+   */
   private String minimum;
   private String maximum;
 

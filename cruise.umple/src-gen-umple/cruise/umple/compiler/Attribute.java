@@ -13,11 +13,16 @@ public class Attribute extends UmpleVariable
 
   //Attribute Attributes
   private boolean isAutounique;
+
+  /**
+   * TODO: should default to false, but constructors would need updating
+   */
   private boolean isList;
   private boolean isDerived;
   private boolean isLazy;
 
   //Attribute Associations
+  private List<Comment> comments;
   private List<TraceRecord> traceRecords;
   private List<Attribute_TraceItem> attributeTraceItems;
 
@@ -32,6 +37,7 @@ public class Attribute extends UmpleVariable
     isList = false;
     isDerived = false;
     isLazy = false;
+    comments = new ArrayList<Comment>();
     traceRecords = new ArrayList<TraceRecord>();
     attributeTraceItems = new ArrayList<Attribute_TraceItem>();
   }
@@ -112,6 +118,36 @@ public class Attribute extends UmpleVariable
     return isLazy;
   }
 
+  public Comment getComment(int index)
+  {
+    Comment aComment = comments.get(index);
+    return aComment;
+  }
+
+  public List<Comment> getComments()
+  {
+    List<Comment> newComments = Collections.unmodifiableList(comments);
+    return newComments;
+  }
+
+  public int numberOfComments()
+  {
+    int number = comments.size();
+    return number;
+  }
+
+  public boolean hasComments()
+  {
+    boolean has = comments.size() > 0;
+    return has;
+  }
+
+  public int indexOfComment(Comment aComment)
+  {
+    int index = comments.indexOf(aComment);
+    return index;
+  }
+
   public TraceRecord getTraceRecord(int index)
   {
     TraceRecord aTraceRecord = traceRecords.get(index);
@@ -170,6 +206,31 @@ public class Attribute extends UmpleVariable
   {
     int index = attributeTraceItems.indexOf(aAttributeTraceItem);
     return index;
+  }
+
+  public static int minimumNumberOfComments()
+  {
+    return 0;
+  }
+
+  public boolean addComment(Comment aComment)
+  {
+    boolean wasAdded = false;
+    if (comments.contains(aComment)) { return false; }
+    comments.add(aComment);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeComment(Comment aComment)
+  {
+    boolean wasRemoved = false;
+    if (comments.contains(aComment))
+    {
+      comments.remove(aComment);
+      wasRemoved = true;
+    }
+    return wasRemoved;
   }
 
   public static int minimumNumberOfTraceRecords()
@@ -274,6 +335,7 @@ public class Attribute extends UmpleVariable
 
   public void delete()
   {
+    comments.clear();
     ArrayList<TraceRecord> copyOfTraceRecords = new ArrayList<TraceRecord>(traceRecords);
     traceRecords.clear();
     for(TraceRecord aTraceRecord : copyOfTraceRecords)

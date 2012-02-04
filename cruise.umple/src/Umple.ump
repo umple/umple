@@ -200,6 +200,8 @@ class Attribute
   Boolean isList = false;
   Boolean isDerived = false;
   Boolean isLazy = false;  
+  
+  1 -> * Comment;
 }
 
 class Association

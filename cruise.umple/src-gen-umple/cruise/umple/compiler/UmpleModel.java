@@ -30,10 +30,18 @@ public class UmpleModel
   private boolean debugMode;
   private ParseResult lastResult;
   private Map<String,String> generatedCode;
+
+  /**
+   * data for default class positioning
+   */
   private Coordinate levelOffset;
   private Coordinate initialOffset;
   private Coordinate classSize;
   private int maxYLevels;
+
+  /**
+   * data for default association positioning
+   */
   private Coordinate offsetFromEdge;
   private int reflexiveSegmentLength;
   private String traceType;

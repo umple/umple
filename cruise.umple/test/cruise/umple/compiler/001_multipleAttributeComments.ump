@@ -1,0 +1,18 @@
+class Foo
+{
+	// Inline comment above attribute.
+	testAttribute1;
+	
+	// Multiple inline comments
+	// above attribute.
+	testAttribute2;
+	
+	/* Multiline comment above method. */
+	testAttribute3;
+	
+	/*
+	 * Multiple multiline comments
+	 * above attribute.
+	 */
+	testAttribute4;
+}

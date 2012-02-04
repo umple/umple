@@ -39,11 +39,11 @@ public class UmpleInternalParserTest extends UmpleParserTest
     		"[methodName:testMethod][parameterList][code:// I am a comment inside a method.\n" +
     		"    System.out.println(\"Hello world!\");]";
     
-    fileToOutputs.put("001_methodComment.ump", expectedResult);
+    fileToOutputs.put("001_methodInlineComment.ump", expectedResult);
     
     expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a comment above a method.][concreteMethodDeclaration][type:void][methodDeclarator][methodName:testMethod][parameterList][code:System.out.println(\"Hello world!\");]";
     
-    fileToOutputs.put("001_multilineMethodComment.ump", expectedResult);
+    fileToOutputs.put("001_methodMultilineComment.ump", expectedResult);
     
     expectedResult = "[classDefinition][name:Foo]" + 
     		"[inlineComment:Inline comment above method.][concreteMethodDeclaration]" +
@@ -63,6 +63,19 @@ public class UmpleInternalParserTest extends UmpleParserTest
     		"[code:System.out.println(\"Hello world!\");]";
     
     fileToOutputs.put("001_multipleMethodComments.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo][inlineComment:I am a inline comment above an attribute.][attribute][name:bar]";
+    fileToOutputs.put("001_attributeInlineComment.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a multiline comment above a method.][attribute][name:name]";
+    fileToOutputs.put("001_attributeMultilineComment.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo][inlineComment:Inline comment above attribute.][attribute][name:testAttribute1]" +
+    		"[inlineComment:Multiple inline comments][inlineComment:above attribute.][attribute][name:testAttribute2]" +
+    		"[multilineComment:Multiline comment above method.][attribute][name:testAttribute3]" +
+    		"[multilineComment:* Multiple multiline comments\n\t * above attribute.][attribute][name:testAttribute4]";
+    
+    fileToOutputs.put("001_multipleAttributeComments.ump", expectedResult);
     
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");

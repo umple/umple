@@ -16,6 +16,10 @@ public class Parser
   //Parser Attributes
   private String filename;
   private String name;
+
+  /**
+   * default 'program'
+   */
   private List<String> grammarRules;
   private ParseResult parseResult;
   private Position _curParsePos;

@@ -11,6 +11,10 @@ public class TraceCondition
   //------------------------
 
   //TraceCondition Attributes
+
+  /**
+   * condition may be where, until, after, or giving
+   */
   private String conditionType;
   private boolean preCondition;
   private boolean postCondition;

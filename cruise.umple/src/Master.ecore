@@ -408,6 +408,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isList" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDerived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLazy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/attributes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/attributes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeTraceItems" lowerBound="0" upperBound="-1" eType="#//Attribute_TraceItem" eOpposite="#//Attribute_TraceItem/attributes"/>
@@ -471,6 +472,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/comments"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/comments"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" lowerBound="1" upperBound="1" eType="#//Attribute" eOpposite="#//Attribute/comments"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GenerateTarget">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

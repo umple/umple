@@ -88,32 +88,23 @@ public class UmpleParserTest
   }
   
   @Test
-  public void methodCommentDetection()
+  public void methodDetection()
   {
-	  assertParse("001_methodComment.ump");
-	  
+	  assertParse("001_methodInlineComment.ump");
 	  Assert.assertEquals(true, model.getUmpleClass(0).numberOfMethods() == 1);
   }
   
   @Test
-  public void inlineCommentAboveMethod()
+  public void methodInlineComment()
   {
-	  assertParse("001_methodComment.ump");
-	  
-	  /*model.generate()
-	  Collection<String> c = model.getGeneratedCode().values();
-	  String generatedCode = (String)c.iterator().next();
-	  	  
-	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
-	  System.out.println("Size of collection: " + c.size());*/
-	  
+	  assertParse("001_methodInlineComment.ump");
 	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
   }
   
   @Test
-  public void multilineCommentAboveMethod()
+  public void methodMultilineComment()
   {
-	  assertParse("001_multilineMethodComment.ump");
+	  assertParse("001_methodMultilineComment.ump");
 	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
   }
   
@@ -127,6 +118,40 @@ public class UmpleParserTest
 	  Assert.assertEquals(2, model.getUmpleClass(0).getMethod(1).numberOfComments());
 	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(2).numberOfComments());
 	  Assert.assertEquals(2, model.getUmpleClass(0).getMethod(3).numberOfComments());
+  }
+  
+  @Test
+  public void attributeInlineComment()
+  {
+	  assertParse("001_attributeInlineComment.ump");
+	  
+	  /*
+	  model.generate();
+	  Collection<String> c = model.getGeneratedCode().values();
+	  String generatedCode = (String)c.iterator().next();
+	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
+	  */
+	  
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
+  }
+  
+  @Test
+  public void attributeMultilineComment()
+  {
+	  assertParse("001_attributeMultilineComment.ump");
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
+  }
+  
+  @Test
+  public void multipleAttributeComments()
+  {
+	  assertParse("001_multipleAttributeComments.ump");
+	  
+	  // Check to see if the attributes have the correct number of comments associated with them.
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAttribute(1).numberOfComments());
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(2).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAttribute(3).numberOfComments());
   }
   
   @Test

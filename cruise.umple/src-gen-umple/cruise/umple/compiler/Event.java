@@ -14,6 +14,10 @@ public class Event
   private String name;
   private boolean isTimer;
   private String timerInSeconds;
+
+  /**
+   * TODO: how do you specify milliseconds etc.
+   */
   private boolean isInternal;
 
   //Helper Variables
