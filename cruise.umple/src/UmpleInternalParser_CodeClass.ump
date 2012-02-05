@@ -914,6 +914,12 @@ private void checkSingletonAssociations() {
     AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
     myAs.setRelatedAssociation(yourAs);
 
+	// Add comments above the association to the association.
+    for (Comment c : lastComments)
+    {
+    	yourAs.addComment(c);
+    }
+
     unlinkedAssociationVariables.add(yourAs);
     aClass.addAssociationVariable(yourAs);
     aClass.addAssociation(association);

@@ -18,6 +18,10 @@ public class ParseResult
   private boolean _acceptsErrors;
 
   //ParseResult Associations
+
+  /**
+   * Position is left for now, as not to break things
+   */
   private Position position;
   private List<ErrorMessage> errorMessages;
 

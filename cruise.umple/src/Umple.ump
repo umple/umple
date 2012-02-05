@@ -245,6 +245,8 @@ class AssociationVariable
   Multiplicity multiplicity;
   Boolean isNavigable;
   0..1 self relatedAssociation;
+  
+  1 -> * Comment;
 }
 
 // TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)

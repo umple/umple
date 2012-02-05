@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 /**
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
@@ -19,6 +20,7 @@ public class AssociationVariable extends UmpleVariable
 
   //AssociationVariable Associations
   private AssociationVariable relatedAssociation;
+  private List<Comment> comments;
   private TraceDirective traceDirective;
 
   //------------------------
@@ -30,6 +32,7 @@ public class AssociationVariable extends UmpleVariable
     super(aName, aType, aModifier, aValue);
     multiplicity = aMultiplicity;
     isNavigable = aIsNavigable;
+    comments = new ArrayList<Comment>();
   }
 
   //------------------------
@@ -72,6 +75,36 @@ public class AssociationVariable extends UmpleVariable
     return relatedAssociation;
   }
 
+  public Comment getComment(int index)
+  {
+    Comment aComment = comments.get(index);
+    return aComment;
+  }
+
+  public List<Comment> getComments()
+  {
+    List<Comment> newComments = Collections.unmodifiableList(comments);
+    return newComments;
+  }
+
+  public int numberOfComments()
+  {
+    int number = comments.size();
+    return number;
+  }
+
+  public boolean hasComments()
+  {
+    boolean has = comments.size() > 0;
+    return has;
+  }
+
+  public int indexOfComment(Comment aComment)
+  {
+    int index = comments.indexOf(aComment);
+    return index;
+  }
+
   public TraceDirective getTraceDirective()
   {
     return traceDirective;
@@ -108,6 +141,31 @@ public class AssociationVariable extends UmpleVariable
     }
     wasSet = true;
     return wasSet;
+  }
+
+  public static int minimumNumberOfComments()
+  {
+    return 0;
+  }
+
+  public boolean addComment(Comment aComment)
+  {
+    boolean wasAdded = false;
+    if (comments.contains(aComment)) { return false; }
+    comments.add(aComment);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeComment(Comment aComment)
+  {
+    boolean wasRemoved = false;
+    if (comments.contains(aComment))
+    {
+      comments.remove(aComment);
+      wasRemoved = true;
+    }
+    return wasRemoved;
   }
 
   public boolean setTraceDirective(TraceDirective newTraceDirective)
@@ -149,6 +207,7 @@ public class AssociationVariable extends UmpleVariable
     {
       relatedAssociation.setRelatedAssociation(null);
     }
+    comments.clear();
     if (traceDirective != null)
     {
       traceDirective.setAssociationVariable(null);

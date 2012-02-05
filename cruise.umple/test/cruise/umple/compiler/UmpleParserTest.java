@@ -113,12 +113,6 @@ public class UmpleParserTest
   {
 	  assertParse("001_multipleMethodComments.ump");
 	  
-	  /*model.generate();
-	  Collection<String> c = model.getGeneratedCode().values();
-	  String generatedCode = (String)c.iterator().next();
-	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
-	  */
-	  
 	  // Check to see if the methods have the correct number of comments associated with them.
 	  Assert.assertEquals(1, model.getUmpleClass(0).getMethod(0).numberOfComments());
 	  Assert.assertEquals(2, model.getUmpleClass(0).getMethod(1).numberOfComments());
@@ -145,6 +139,32 @@ public class UmpleParserTest
   {
 	  assertParse("001_multipleAttributeComments.ump");
 	  
+	  // Check to see if the attributes have the correct number of comments associated with them.
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAttribute(1).numberOfComments());
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(2).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAttribute(3).numberOfComments());
+  }
+  
+  @Test
+  public void associationInlineComment()
+  {
+	  assertParse("001_associationInlineComment.ump");
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
+  }
+  
+  @Test
+  public void associationMultilineComment()
+  {
+	  assertParse("001_associationMultilineComment.ump");
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
+  }
+  
+  @Test
+  public void multipleAssociationComments()
+  {
+	  assertParse("001_multipleAssociationComments.ump");
+	  
 	  /*
 	  model.generate();
 	  Collection<String> c = model.getGeneratedCode().values();
@@ -153,10 +173,10 @@ public class UmpleParserTest
 	  */
 	  
 	  // Check to see if the attributes have the correct number of comments associated with them.
-	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
-	  Assert.assertEquals(2, model.getUmpleClass(0).getAttribute(1).numberOfComments());
-	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(2).numberOfComments());
-	  Assert.assertEquals(2, model.getUmpleClass(0).getAttribute(3).numberOfComments());
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAssociationVariable(1).numberOfComments());
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(2).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAssociationVariable(3).numberOfComments());
   }
   
   @Test

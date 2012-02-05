@@ -77,6 +77,29 @@ public class UmpleInternalParserTest extends UmpleParserTest
     
     fileToOutputs.put("001_multipleAttributeComments.ump", expectedResult);
     
+    expectedResult = "[classDefinition][name:Foo][inlineComment:I am a inline comment above an association.]" +
+    		"[inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Bar]" +
+    		"[classDefinition][name:Bar]";
+    
+    fileToOutputs.put("001_associationInlineComment.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a multiline comment above an association.]" +
+    		"[inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Bar]" +
+    		"[classDefinition][name:Bar]";
+    
+    fileToOutputs.put("001_associationMultilineComment.ump", expectedResult);
+    
+    expectedResult = "[classDefinition][name:Foo][inlineComment:Inline comment above association.][inlineAssociation]" +
+    		"[inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Bar1][inlineComment:Multiple inline comments]" +
+    		"[inlineComment:above association.][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*]" +
+    		"[type:Bar2][multilineComment:Multiline comment above association.][inlineAssociation][inlineAssociationEnd][bound:1]" +
+    		"[arrow:--][associationEnd][bound:*][type:Bar3]" +
+    		"[multilineComment:* Multiple multiline comments\n\t * above association.][inlineAssociation][inlineAssociationEnd]" +
+    		"[bound:1][arrow:--][associationEnd][bound:*][type:Bar4][classDefinition][name:Bar1][classDefinition][name:Bar2]" +
+    		"[classDefinition][name:Bar3][classDefinition][name:Bar4]";
+    
+    fileToOutputs.put("001_multipleAssociationComments.ump", expectedResult);
+    
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
     fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");

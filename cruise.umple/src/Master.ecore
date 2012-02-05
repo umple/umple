@@ -435,6 +435,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="AssociationVariable" eSuperTypes="#//UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="multiplicity" eType="#//Multiplicity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNavigable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/associationVariable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/associationVariables"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="0" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/associationVariable"/>
   </eClassifiers>
@@ -473,6 +474,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/comments"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/comments"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" lowerBound="1" upperBound="1" eType="#//Attribute" eOpposite="#//Attribute/comments"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariables" lowerBound="0" upperBound="-1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/umpleClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GenerateTarget">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
