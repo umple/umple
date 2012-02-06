@@ -8,7 +8,6 @@
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
   
-
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
@@ -33,6 +32,9 @@
     }
 
     appendln(stringBuffer, "");
+    
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+   
     append(stringBuffer, "  {0} {1};", type, attribute);
   }
   

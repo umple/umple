@@ -661,7 +661,6 @@ public class CppHeaderGenerator implements ILang
   appendln(stringBuffer, "  // MEMBER VARIABLES");
   append(stringBuffer, "  //------------------------");
   
-
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
@@ -686,6 +685,9 @@ public class CppHeaderGenerator implements ILang
     }
 
     appendln(stringBuffer, "");
+    
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+   
     append(stringBuffer, "  {0} {1};", type, attribute);
   }
   
@@ -778,11 +780,14 @@ public class CppHeaderGenerator implements ILang
     {
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
+      
       append(stringBuffer,"  //{0} Associations", uClass.getName());
       isFirst = false;
     }
   
     appendln(stringBuffer, "");
+    
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
     
     if (av.isOne())
     {
