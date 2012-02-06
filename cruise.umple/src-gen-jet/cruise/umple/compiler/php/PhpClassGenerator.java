@@ -1591,6 +1591,9 @@ public class PhpClassGenerator implements ILang
     }
 
     appendln(stringBuffer, "");
+    
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    
     append(stringBuffer, "  private ${0};", attribute);
   }
   
@@ -1711,6 +1714,8 @@ public class PhpClassGenerator implements ILang
   
     appendln(stringBuffer, "");
     String lookup = av.isOne() ? "associationOne" : "associationMany";
+    
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
     
     if (av.isOptionalOne() && av.getRelatedAssociation().isMandatory())
     {
