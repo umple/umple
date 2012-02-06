@@ -13,6 +13,7 @@ Action.textUpdateQueue = [];
 Action.canCreateByDrag = true;
 Action.manualSync = false;
 Action.diagramInSync = true;
+Action.freshLoad = false;
 
 Action.clicked = function(event)
 {
@@ -1073,13 +1074,14 @@ Action.loadExample = function loadExample()
 
 Action.loadExampleCallback = function(response)
 {
+  Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
   History.save(response.responseText);
-  
   Action.updateUmpleDiagram();
-  Action.setCaretPosition(0);
+  Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
+
 }
 
 Action.customSizeTyped = function()
@@ -1211,54 +1213,71 @@ Action.setCaretPosition = function(line){
     // Special backdoor to turn on experimental features
     document.getElementById('advancedMode').value=1;
     Page.setFeedbackMessage("");
+    return;
   }
-  else if(line=="db") { // turn on debugging and do certain debugging options
+  if(line=="db") { // turn on debugging and do certain debugging options
     document.getElementById('advancedMode').value=2;
     Page.setFeedbackMessage("Debug Mode");
+    return;
+  }
+  if(line.substr(0,2)=="cm") {
+    if(line.substr(2,1)=="0" && Page.codeMirrorOn) {
+      Page.setFeedbackMessage("Turning code mirroring off");
+      Page.codeMirrorEditor.toTextArea();
+      Page.codeMirrorOn=false;
+      jQuery("#linenum").val("0");
+    }
+    else if(line.substr(2,1)=="1" && !Page.codeMirrorOn) {
+      Page.initCodeMirrorEditor();
+      jQuery("#linenum").val("0");
+    }
+    return;
+  }
+  if(Page.codeMirrorOn) {
+    Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
+    Page.codeMirrorEditor.focus();
+    return;
+  }
+  var ctrl = document.getElementById('umpleModelEditor');
+  var startPos=0;
+  var endPos=-1;
+
+  if(line<1)
+  {
+    endPos=0;
   }
   else
   {
-    var ctrl = document.getElementById('umpleModelEditor');
-    var startPos=0;
-    var endPos=-1;
-
-    if(line<1)
+    var theCode=Page.getRawUmpleCode();
+    for(var ch=0; ch<theCode.length; ch++)
     {
-      endPos=0;
-    }
-    else
-    {
-      var theCode=Page.getRawUmpleCode();
-      for(var ch=0; ch<theCode.length; ch++)
+      if(theCode.charAt(ch)=='\n')
       {
-        if(theCode.charAt(ch)=='\n')
-        {
-          line--;
-          if(line==1) startPos=ch+1;
-          if(line==0) {
-            endPos=ch; 
-            break;
-          }
+        line--;
+        if(line==1) startPos=ch+1;
+        if(line==0) {
+          endPos=ch; 
+          break;
         }
       }
-      if(endPos==-1) { // got to end
-        endPos=theCode.length;
-        if(line!=1) startPos=endPos;
-      }
     }
-    
-	if(ctrl.setSelectionRange)
-	{
-		ctrl.focus();
-		ctrl.setSelectionRange(startPos,endPos);
-	}
-	else if (ctrl.createTextRange) {
-		var range = ctrl.createTextRange();
-		range.collapse(true);
-		range.moveEnd('character', endPos);
-		range.moveStart('character', startPos);
-		range.select();
-	}
+    if(endPos==-1) { // got to end
+      endPos=theCode.length;
+      if(line!=1) startPos=endPos;
+    }
+  }
+
+  if(ctrl.setSelectionRange)
+  {
+    ctrl.focus();
+    ctrl.setSelectionRange(startPos,endPos);
+  }
+  else if (ctrl.createTextRange) {
+    var range = ctrl.createTextRange();
+    range.collapse(true);
+    range.moveEnd('character', endPos);
+    range.moveStart('character', startPos);
+    range.select();
   }
 }
 
@@ -1286,6 +1305,26 @@ Action.umpleTyped = function(eventObject)
   if(eventCode>=33 && eventCode <=40) return
 
   var target = eventObject.target.id;
+  Action.umpleTypingActivity(target);
+}
+
+Action.umpleCodeMirrorCursorActivity = function() {
+  var line = Page.codeMirrorEditor.getCursor(true).line+1;
+  jQuery("#linenum").val(line);
+}
+
+Action.umpleCodeMirrorTypingActivity = function() {
+  if(Action.freshLoad == false) {
+    Page.codeMirrorEditor.save();
+    Action.umpleTypingActivity("codeMirrorEditor");
+  }
+  else {
+    Page.catFeedbackMessage("***");
+    Action.freshLoad = false;
+  }
+}
+
+Action.umpleTypingActivity = function(target) {
   if (Action.manualSync && Action.diagramInSync)
   {
   	if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);
@@ -1305,7 +1344,9 @@ Action.processTyping = function(target, manuallySynchronized)
   History.save(Page.getUmpleCode());
   if (!Action.manualSync || manuallySynchronized)
   {
-    if (target == "umpleModelEditor") Action.updateLayoutEditorAndDiagram();
+    if (target == "umpleModelEditor" || target == "codeMirrorEditor") {
+      Action.updateLayoutEditorAndDiagram();
+    }
     else Action.updateUmpleDiagram();
     Action.diagramInSync = true;
     Page.enablePaletteItem("buttonSyncDiagram", false);

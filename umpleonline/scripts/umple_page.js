@@ -10,6 +10,10 @@ Page.shortcutsEnabled = true;
 Page.modelDelimiter = "//$?[End_of_model]$?";
 Page.padding = 30;
 
+Page.codeMirrorOn = false;
+Page.codeMirrorEditor = null;
+
+
 Page.init = function()
 { 
   jQuery.noConflict();
@@ -200,8 +204,23 @@ jQuery("#umpleModelEditor").mousedown(function(){setTimeout("jQuery(\"#linenum\"
   jQuery("#umpleLayoutEditor").focus(function(){Action.focusOn("umpleLayoutEditor", true);});
   jQuery("#umpleModelEditor").blur(function(){Action.focusOn("umpleModelEditor", false);});
   jQuery("#umpleLayoutEditor").blur(function(){Action.focusOn("umpleLayoutEditor", false);});
-  // Action.updateLayoutEditorAndDiagram();
-  // History.save(Page.getUmpleCode());
+
+  // Uncomment the following line after experiments are complete
+  // Page.initCodeMirrorEditor();
+}
+
+Page.initCodeMirrorEditor = function() {
+  Page.codeMirrorEditor = CodeMirror.fromTextArea(
+     document.getElementById('umpleModelEditor'),{
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-java",
+        lineWrapping: true,
+        onChange: function(ed, changes) {Action.umpleCodeMirrorTypingActivity();},
+        onCursorActivity: function() {Action.umpleCodeMirrorCursorActivity();}
+      }
+      );
+  Page.codeMirrorOn = true;  
 }
 
 Page.isPhotoReady = function()
@@ -410,6 +429,11 @@ Page.setUmpleCode = function(umpleCode)
   Page.hideGeneratedCode();
   
   jQuery("#umpleLayoutEditor").val(modelAndPositioning[1]);
+
+
+  if(Page.codeMirrorOn) {
+    Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
+  }
   jQuery("#umpleModelEditor").val(modelAndPositioning[0]);
 }
 
