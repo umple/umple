@@ -233,6 +233,246 @@ private static void postpareTrace(UmpleModel aModel)
   private static void postpareTrace(UmpleClass aClass)
   {}
   
+  // Process traces based on tracer selected
+  // Current Tracers supported ( Console / File / String ) to be added later ( LTTNG / Dtrace )
+  public static void prepareAllTraces(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  {    
+      if ("Console".equals(model.getTraceType()))
+      {
+    	  prepareConsoleTraces(model,aClass,t,templateLookups);
+      }
+      else if ("File".equals(model.getTraceType()))
+      {
+    	  prepareFileTraces(model,aClass,t,templateLookups);
+      }
+      else if ("String".equals(model.getTraceType()))
+      {
+    	  prepareStringTraces(model,aClass,t,templateLookups);
+      }
+  }
+  
+  // "Console Tracer" Look through all trace directives and inject the necessary code, it requires the following lookup
+  //  + consoleTemplate
+  private static void prepareConsoleTraces( UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
+  {
+	  String consoleTemplate = templateLookups.get("consoleTemplate");
+
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {  
+		  if( traceDirective.getTraceRecord() != null )
+	      {
+			  if( traceDirective.getTraceRecord().getRecordOnly() )
+				  processTraceRecord(traceDirective,t,consoleTemplate,"console");
+			  else
+			  {
+				  processTraceDirectiveAttributes(model,traceDirective,t,consoleTemplate);
+				  processTraceRecord(traceDirective,t,consoleTemplate,"console");
+			  }
+	      }
+	      // if the traceItem is an attribute
+		  else if (traceDirective.hasAttributeTraceItems())
+	      {
+			  processTraceDirectiveAttributes(model,traceDirective,t,consoleTemplate);	
+	      }
+	      // if the traceItem is a state machine
+	      else if( traceDirective.hasStateMachineTraceItems() )
+	      {
+	    	  processTraceDirectiveStateMachines(traceDirective,t,consoleTemplate,"console");
+	      }
+	  }
+  }
+  
+  // "File Tracer" Look through all trace directives and inject the necessary code, it requires the following lookup
+  //  + fileTemplate
+  private static void prepareFileTraces( UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
+  {
+	  String fileTemplate = templateLookups.get("fileTemplate");
+	  	
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {  
+		  if( traceDirective.getTraceRecord() != null )
+	 	  {
+			  if( traceDirective.getTraceRecord().getRecordOnly() )
+				  processTraceRecord(traceDirective,t,fileTemplate,"file");
+			  else
+			  {
+				  processTraceDirectiveAttributes(model,traceDirective,t,fileTemplate);
+				  processTraceRecord(traceDirective,t,fileTemplate,"file");	
+			  }      
+		  }
+		  // if the traceItem is an attribute
+		  else if (traceDirective.hasAttributeTraceItems())
+		  {
+			  processTraceDirectiveAttributes(model,traceDirective,t,fileTemplate);		
+		  }
+		  // if the traceItem is a state machine
+		  else if( traceDirective.hasStateMachineTraceItems() )
+		  {
+			  processTraceDirectiveStateMachines(traceDirective,t,fileTemplate,"file");	
+		  }		  
+	  }
+  }
+
+  // "String Tracer" Look through all traces and inject the necessary code it requires the following lookups
+  //  + stringTemplate
+  //  + dependPackage 
+  //  + executeMethod
+  private static void prepareStringTraces(UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
+  {
+	  String stringTemplate = templateLookups.get("stringTemplate");
+	  String dependPackage = templateLookups.get("dependPackage");
+	  String extraCode = templateLookups.get("extraCode");
+	  
+	  // Go over each trace directive
+	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
+	  {
+		  Map<String,String> lookups = new HashMap<String,String>();
+		  String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
+          lookups.put("packageName",packageName);
+          lookups.put("extraCode",extraCode);
+          GeneratorHelper.prepareStringTracer(model, lookups);
+
+          if (dependPackage != null && !packageName.equals(aClass.getPackageName()))
+          {
+            Depend d = new Depend(packageName + ".*");
+            d.setIsInternal(true);
+            aClass.addDepend(d);
+          }
+          // if the traceItem is an attribute
+          if (traceDirective.hasAttributeTraceItems())
+          {
+        	  processTraceDirectiveAttributes(model,traceDirective,t,stringTemplate);	 
+          }
+	  }
+  }
+  
+  // Process every attribute in a trace directive
+  private static void processTraceDirectiveAttributes( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template ) 
+  {	  
+	  String attrCode = null, conditionType = null;
+	  
+	  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
+	  {
+		  // Go over all attributes in attribute trace item
+		  for( Attribute attr : traceAttr.getAttributes() )
+		  {	  		
+			  if( model.getDefaultGenerate().equals("Java"))
+			  {
+				  // Process trace directive conditions if it has any 
+				  if( traceDirective.hasCondition() )
+				  {
+					  JavaGenerator.processTraceCondition(traceDirective,t,template,attr);		
+				  }
+				  else if( traceAttr.getForClause() != 0 )
+				  {
+					  JavaGenerator.processOccurrences(traceDirective,t,template,attr);
+				  }
+				  else if( traceAttr.getPeriodClause() != null )
+		  		  {
+					  JavaGenerator.processPeriod(traceDirective,t,template,attr,traceAttr.getPeriodClause());
+		  		  }
+		  		  else
+		  		  {
+		  			  // simple trace directive that traces attributes without any extra fragments
+		      		  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
+		  		  }
+			  }
+			  if( model.getDefaultGenerate().equals("Php"))
+			  {
+				  // Process trace directive conditions if it has any 
+				  if( traceDirective.hasCondition() )
+				  {
+					  PhpGenerator.processTraceCondition(traceDirective,t,template,attr);		
+				  }
+		  		  else
+		  		  {
+		  			  // simple trace directive that traces attributes without any extra fragments
+		      		  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+		      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
+		  		  }
+			  }
+	  	  }
+	  }
+  }
+  
+  // Process every state machine in a trace directive
+  private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String consoleTemplate, String tracer) 
+  {
+	  TraceRecord traceRecord = traceDirective.getTraceRecord();
+
+	  for( StateMachine_TraceItem tracedState : traceDirective.getStateMachineTraceItems() )
+	  {
+		  StateMachine stm = tracedState.getStateMachine();
+		  String stmCode = null;
+		  boolean flag = true;
+		  
+		  if( tracedState.getEntry() || tracedState.getExit() )
+			  flag = false;
+		  
+		  if(tracer.equals("console") && tracedState.getTraceStateMachineFlag() )
+		  {
+			  stmCode = StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+	  		  
+	  		  stmCode = StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+		  }
+		  else if(tracer.equals("file") && tracedState.getTraceStateMachineFlag() )
+		  {
+			  stmCode = StringFormatter.format(consoleTemplate,"\"status\"+"+t.translate("stateMachineOne",stm));
+	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+	  		  
+	  		  stmCode = StringFormatter.format(consoleTemplate,"\"status\"+"+t.translate("stateMachineOne",stm));
+			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+		  }
+		  
+		  if(tracer.equals("console") && traceRecord != null )
+		  {
+			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+			  stmCode += StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+	  		  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+
+			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  		  stmCode += StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+			  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+			  
+			  stmCode = "if( " + t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  		  stmCode += "System.out.println(\"action=" + stm.getState(0).getName() + "-exit" +", " + traceRecord.getRecord() +  "=\" + "+traceRecord.getRecord()+");";
+			  GeneratorHelper.tmp(traceDirective,t,stm,stmCode,"after");
+		  }
+	  }
+  }
+  
+  // Process trace record in a trace directive
+  private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String templateType) 
+  {
+	  String attrCode = null;
+	  
+	  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
+	  {
+		  for( Attribute traceAttr : traceAttrItem.getAttributes() )
+		  {
+			  TraceRecord record = traceDirective.getTraceRecord();
+			  if( record.getRecord() != null )
+			  {  
+				  if( templateType.equals("file"))
+					  attrCode = StringFormatter.format(template,record.getRecord());
+				  else if( templateType.equals("console"))
+					  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
+	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+			  }
+			  for( Attribute attr : record.getAttributes() )
+			  {
+				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
+	      		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+			  }  
+		  }	   
+	  } 
+  }
+  
   public static void prepareTraceDirectiveAttributeInject( TraceDirective traceDirective, CodeTranslator t, Attribute_TraceItem traceAttr, Attribute attr, String attrCode, String conditionType) 
   {
 	  if( traceAttr.getTraceSet() == true && traceAttr.getTraceGet() == false )

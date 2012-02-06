@@ -124,7 +124,7 @@ public class JavaGeneratorTraceTest
     Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
     traceAttr.addAttribute(attr);
     traceDirective.addAttributeTraceItem(traceAttr);
-    generator.prepare();
+//    generator.prepare();
 
     Assert.assertEquals(0,c.numberOfDepends());
   } 
