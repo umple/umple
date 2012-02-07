@@ -212,12 +212,14 @@ jQuery("#umpleModelEditor").mousedown(function(){setTimeout("jQuery(\"#linenum\"
 }
 
 Page.initCodeMirrorEditor = function() {
+  var foldFunc = CodeMirror.newFoldFunction(CodeMirror.braceRangeFinder);
   Page.codeMirrorEditor = CodeMirror.fromTextArea(
      document.getElementById('umpleModelEditor'),{
         lineNumbers: true,
         matchBrackets: true,
-        mode: "text/x-java",
+        mode: "text/x-umple",
         lineWrapping: true,
+        onGutterClick: foldFunc,
         onChange: function(ed, changes) {Action.umpleCodeMirrorTypingActivity();},
         onCursorActivity: function() {Action.umpleCodeMirrorCursorActivity();}
       }

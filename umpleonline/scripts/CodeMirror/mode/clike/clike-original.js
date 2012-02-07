@@ -231,30 +231,4 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
       }
     }
   });
-  CodeMirror.defineMIME("text/x-umple", {
-    name: "clike",
-    keywords: words("abstract activate after afterEvery as assert association "+
-       "associationClass before " +
-       "boolean Boolean break byte cardinality " +
-       "case catch char class const constant continue Date deactivate debug " +
-       "default defaulted depend " + 
-       "do double Double during else entry enum execute exit " +
-       "extends external final finally float Float for generate " +
-       "goto if immutable implements import " +
-       "instanceof int Integer interface internal isA key lazy long " +
-       "namespace native new onThisObject package period position " +
-       "private protected public " +
-       "return self settable short singleton statemachine " +
-       "static strictfp String super switch "+
-       "synchronized this throw throws Time trace tracecase tracer transient " +
-       "try unique until use where void volatile while"),
-    blockKeywords: words("catch class do else finally for if switch try while"),
-    atoms: words("true false null"),
-    hooks: {
-      "@": function(stream, state) {
-        stream.eatWhile(/[\w\$_]/);
-        return "meta";
-      }
-    }
-  });
 }());

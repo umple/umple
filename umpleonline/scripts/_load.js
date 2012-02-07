@@ -61,15 +61,9 @@ document.write('<script type="text/javascript" src="scripts/umple_generalization
 document.write('<script type="text/javascript" src="scripts/umple_attribute.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_history.js"><\/script>');
 
-// Ace editor
-// STILL WORKING ON ACE LOADER
-// document.write('<script type="text/javascript" src="scripts/ace/ace.js"><\/script>');
-// document.write('<script type="text/javascript" src="scripts/ace/mode-java.js"><\/script>');
-// document.write('<script type="text/javascript" src="scripts/ace_loader.js"><\/script>');
-// document.write('<script type="text/javascript" src="scripts/ace/theme-clouds.js"><\/script>');
-
-// Code mirror - trying this instead of ACE. If this works we will get rid of ACE
+// Code mirror
 document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"><\/script>');  // contains C-like mode
+document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/foldcode.js"><\/script>');
 
 document.write('<link href="scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" type="text/css" />');
