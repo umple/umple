@@ -12,6 +12,7 @@ Page.padding = 30;
 
 Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
+Page.hLine = null;
 
 
 Page.init = function()
@@ -221,9 +222,13 @@ Page.initCodeMirrorEditor = function() {
         lineWrapping: true,
         onGutterClick: foldFunc,
         onChange: function(ed, changes) {Action.umpleCodeMirrorTypingActivity();},
-        onCursorActivity: function() {Action.umpleCodeMirrorCursorActivity();}
+        onCursorActivity: function() {
+          Page.codeMirrorEditor.setLineClass(Page.hLine, null);
+          Page.hLine = Page.codeMirrorEditor.setLineClass(Page.codeMirrorEditor.getCursor().line, "activeline");
+          Action.umpleCodeMirrorCursorActivity();}
       }
       );
+  Page.hLine = Page.codeMirrorEditor.setLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
 }
 

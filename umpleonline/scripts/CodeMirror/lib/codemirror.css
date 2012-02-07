@@ -3,6 +3,8 @@
   font-family: monospace;
 }
 
+.activeline {background: #e8f2ff !important;}
+
 .CodeMirror-scroll {
   overflow: auto;
   height: 100%;  /* Modified for UmpleOnline */
