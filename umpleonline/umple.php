@@ -55,11 +55,9 @@ $output = readTemporaryFile($filename);
 <tr class="mainApplication">   
 
   <td id="textEditorColumn"  tabIndex="2"  class="textEditorColumn">
-    <!-- TODO: GET ACE TO WORK (Using normal text area until then) -->
-    <!-- <div id="umpleModelEditor" style="height: 520px; width: 420px">class A{}</div> -->
-    <textarea id="umpleModelEditor" class="umpleModelEditor" wrap="off" rows="24" >
+    <textarea id="umpleModelEditor" class="umpleModelEditor" wrap="off" rows="48" cols="80">
     </textarea>
-    <textarea id="umpleLayoutEditor" class="umpleLayoutEditor" wrap="off" > </textarea>
+    <textarea id="umpleLayoutEditor" class="umpleLayoutEditor" wrap="off"> </textarea>
   </td>
   
   <td id="paletteColumn" class="paletteColumn">

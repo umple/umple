@@ -5,17 +5,7 @@
 
 .CodeMirror-scroll {
   overflow: auto;
-  height: 100%;  /* Modified for UmpleOnline */
-  
-  /* The following added for UmpleOnline */
-  padding-top: 2px;
-  padding-left: 5px;
-  background-color: White;
-  border:Gray solid 1px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  padding-bottom: 2px;
-  
+  height: 300px;
   /* This is needed to prevent an IE[67] bug where the scrolled content
      is visible outside of the scrolling box. */
   position: relative;

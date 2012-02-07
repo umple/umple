@@ -107,7 +107,7 @@ Page.initOptions = function()
   jQuery("#buttonPhotoReady").attr('disabled', false);
   jQuery("#buttonManualSync").attr('disabled', false);
   
-  Action.showHideLayoutEditor(true);
+  Action.showHideLayoutEditor(true); // hide the layout editor
 }
 
 Page.initHighlighter = function(id)
@@ -205,8 +205,10 @@ jQuery("#umpleModelEditor").mousedown(function(){setTimeout("jQuery(\"#linenum\"
   jQuery("#umpleModelEditor").blur(function(){Action.focusOn("umpleModelEditor", false);});
   jQuery("#umpleLayoutEditor").blur(function(){Action.focusOn("umpleLayoutEditor", false);});
 
-  // Uncomment the following line after experiments are complete
-  // Page.initCodeMirrorEditor();
+  // Uncomment the following line to turn CodeMirror on by default; comment out to
+  // require the user to type cm1 to turn code mirror on
+  Page.initCodeMirrorEditor();
+  Page.resizeCodeMirrorEditor( jQuery("#umpleModelEditor").height());
 }
 
 Page.initCodeMirrorEditor = function() {
@@ -221,6 +223,14 @@ Page.initCodeMirrorEditor = function() {
       }
       );
   Page.codeMirrorOn = true;  
+}
+
+Page.resizeCodeMirrorEditor = function(newHeight) {
+   Page.setFeedbackMessage("Will Set new height to "+newHeight);
+
+   Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
+   Page.setFeedbackMessage("Set new height to "+newHeight);
+   Page.codeMirrorEditor.refresh();
 }
 
 Page.isPhotoReady = function()
@@ -526,11 +536,17 @@ Page.setUmpleCanvasSize = function(width, height)
   if (jQuery("#buttonShowHideLayoutEditor").attr('checked'))
   {
     jQuery("#umpleModelEditor").height(height*0.7 + 3);
+    if(Page.codeMirrorOn) {
+       Page.resizeCodeMirrorEditor(height*0.7 + 3);
+    }
     jQuery("#umpleLayoutEditor").height(height*0.3);
   }
   else
   {
     jQuery("#umpleModelEditor").height(height + 6);
+    if(Page.codeMirrorOn) {
+       Page.resizeCodeMirrorEditor(height + 6);
+    }
   }
   
   jQuery("#palette").height(height + 7);

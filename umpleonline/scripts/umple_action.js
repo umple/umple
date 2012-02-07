@@ -246,7 +246,7 @@ Action.showHideLayoutEditor = function(doShow)
    
   if (doShow == undefined) doShow = layoutEditor.is(":visible");
   
-  if (doShow)
+  if (doShow)  // warning: This works backwards to intuition
   {
   	newHeight = layoutEditor.height() + (modelEditor.height()) + 3;
     layoutEditor.hide(); 	
@@ -257,6 +257,9 @@ Action.showHideLayoutEditor = function(doShow)
   	newHeight = modelEditor.height() - (layoutEditor.height()) - 3; 
   }
   modelEditor.height(newHeight);
+  if(Page.codeMirrorOn) {
+    Page.resizeCodeMirrorEditor(newHeight);
+  }
 }
 
 Action.showHideTextEditor = function(doShow)
@@ -1209,29 +1212,37 @@ Action.getInputSelectionStart = function(el) {
 }
 
 Action.setCaretPosition = function(line){
-  if(line=="av") {
-    // Special backdoor to turn on experimental features
-    document.getElementById('advancedMode').value=1;
-    Page.setFeedbackMessage("");
-    return;
-  }
-  if(line=="db") { // turn on debugging and do certain debugging options
-    document.getElementById('advancedMode').value=2;
-    Page.setFeedbackMessage("Debug Mode");
-    return;
-  }
-  if(line.substr(0,2)=="cm") {
-    if(line.substr(2,1)=="0" && Page.codeMirrorOn) {
-      Page.setFeedbackMessage("Turning code mirroring off");
-      Page.codeMirrorEditor.toTextArea();
-      Page.codeMirrorOn=false;
-      jQuery("#linenum").val("0");
+  if(isNaN(line-0)) {
+    // It is not a number so must be a special hidden command
+    if(line=="av") {
+      // Special backdoor to turn on experimental features
+      document.getElementById('advancedMode').value=1;
+      Page.setFeedbackMessage("");
+      return;
     }
-    else if(line.substr(2,1)=="1" && !Page.codeMirrorOn) {
-      Page.initCodeMirrorEditor();
-      jQuery("#linenum").val("0");
+    if(line=="db") { // turn on debugging and do certain debugging options
+      document.getElementById('advancedMode').value=2;
+      Page.setFeedbackMessage("Debug Mode");
+      return;
     }
-    return;
+    if(line.substr(0,2)=="cm") {
+      if(line.substr(2,1)=="0" && Page.codeMirrorOn) {
+        Page.setFeedbackMessage("Turning code mirroring off");
+        Page.codeMirrorEditor.toTextArea();
+        Page.codeMirrorOn=false;
+        jQuery("#linenum").val("0");
+      }
+      else if(line.substr(2,1)=="1" && !Page.codeMirrorOn) {
+        Page.initCodeMirrorEditor();
+        jQuery("#linenum").val("0");
+      }
+      return;
+    }
+    else
+    {
+      Page.setFeedbackMessage("Invalid line number entered");
+      return;
+    }
   }
   if(Page.codeMirrorOn) {
     Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
