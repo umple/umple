@@ -16,6 +16,7 @@ public class UmpleClass extends UmpleElement
   private boolean isSingleton;
   private List<Association> associations;
   private Key key;
+  private boolean immutable;
 
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
@@ -43,6 +44,7 @@ public class UmpleClass extends UmpleElement
     isSingleton = false;
     associations = new ArrayList<Association>();
     key = new Key();
+    immutable = false;
     codeInjections = new ArrayList<CodeInjection>();
     parentInterface = new ArrayList<UmpleInterface>();
     depends = new ArrayList<Depend>();
@@ -90,6 +92,14 @@ public class UmpleClass extends UmpleElement
     return wasSet;
   }
 
+  public boolean setImmutable(boolean aImmutable)
+  {
+    boolean wasSet = false;
+    immutable = aImmutable;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean getIsSingleton()
   {
     return isSingleton;
@@ -130,9 +140,19 @@ public class UmpleClass extends UmpleElement
     return key;
   }
 
+  public boolean getImmutable()
+  {
+    return immutable;
+  }
+
   public boolean isIsSingleton()
   {
     return isSingleton;
+  }
+
+  public boolean isImmutable()
+  {
+    return immutable;
   }
 
   public CodeInjection getCodeInjection(int index)
@@ -635,11 +655,25 @@ public class UmpleClass extends UmpleElement
     return 0;
   }
 
+  public Attribute addAttribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique)
+  {
+    return new Attribute(aName, aType, aModifier, aValue, aIsAutounique, this);
+  }
+
   public boolean addAttribute(Attribute aAttribute)
   {
     boolean wasAdded = false;
     if (attributes.contains(aAttribute)) { return false; }
-    attributes.add(aAttribute);
+    UmpleClass existingUmpleClass = aAttribute.getUmpleClass();
+    boolean isNewUmpleClass = existingUmpleClass != null && !this.equals(existingUmpleClass);
+    if (isNewUmpleClass)
+    {
+      aAttribute.setUmpleClass(this);
+    }
+    else
+    {
+      attributes.add(aAttribute);
+    }
     wasAdded = true;
     return wasAdded;
   }
@@ -647,7 +681,8 @@ public class UmpleClass extends UmpleElement
   public boolean removeAttribute(Attribute aAttribute)
   {
     boolean wasRemoved = false;
-    if (attributes.contains(aAttribute))
+    //Unable to remove aAttribute, as it must always have a umpleClass
+    if (!this.equals(aAttribute.getUmpleClass()))
     {
       attributes.remove(aAttribute);
       wasRemoved = true;
@@ -832,7 +867,11 @@ public class UmpleClass extends UmpleElement
     methods.clear();
     constants.clear();
     uniqueIdentifier = null;
-    attributes.clear();
+    for(int i=attributes.size(); i > 0; i--)
+    {
+      Attribute aAttribute = attributes.get(i - 1);
+      aAttribute.delete();
+    }
     associationVariables.clear();
     comments.clear();
     for(TraceDirective aTraceDirective : traceDirectives)

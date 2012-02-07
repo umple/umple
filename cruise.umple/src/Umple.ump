@@ -88,7 +88,12 @@ class UniqueIdentifier { }
 }
 
 class MethodParameter{
-    isA Attribute;
+  isA UmpleVariable;
+  
+  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+  Boolean isList = false;
+  Boolean isDerived = false;
+  Boolean isLazy = false;  
 }
  
 // NOT used right now
@@ -145,6 +150,7 @@ class UmpleClass
   Boolean isSingleton = false;
   Association[] associations;
   Key key = new Key();
+  Boolean immutable = false;
 
   1 -> * CodeInjection;
   * -> 0..1 UmpleClass extendsClass;
@@ -154,7 +160,7 @@ class UmpleClass
   1 -> 0..* Method;
   1 -> 0..* Constant;
   1 -> 0..1 UniqueIdentifier;
-  1 -> * Attribute;
+  1 -- * Attribute;
   1 -> * AssociationVariable;
   1 -> * Comment;
   

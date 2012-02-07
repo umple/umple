@@ -59,7 +59,7 @@ public class GeneratorHelperTest
   public void prepare_postpare_traceDirective_attribute()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);

@@ -332,7 +332,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="UniqueIdentifier" eSuperTypes="#//UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/uniqueIdentifier"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MethodParameter" eSuperTypes="#//Attribute">
+  <eClassifiers xsi:type="ecore:EClass" name="MethodParameter" eSuperTypes="#//UmpleVariable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAutounique" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isList" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDerived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLazy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/methodParameters"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Type">
@@ -369,6 +373,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSingleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associations" eType="#//Association" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="key" eType="#//Key"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="immutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection" eOpposite="#//CodeInjection/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/umpleClasses"/>

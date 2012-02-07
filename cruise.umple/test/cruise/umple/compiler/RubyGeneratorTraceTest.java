@@ -29,7 +29,7 @@ public class RubyGeneratorTraceTest
   public void prepare_postpare_traceItem_attribute()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
@@ -55,7 +55,7 @@ public class RubyGeneratorTraceTest
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
@@ -79,7 +79,7 @@ public class RubyGeneratorTraceTest
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);
@@ -113,7 +113,7 @@ public class RubyGeneratorTraceTest
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("blah");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceDirective traceDirective = new TraceDirective();
     
     traceDirective.setUmpleClass(c);

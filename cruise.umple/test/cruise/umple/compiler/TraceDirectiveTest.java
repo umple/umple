@@ -65,10 +65,10 @@ public class TraceDirectiveTest
 //  {
 //    Assert.assertEquals(false,traceDirective.hasAttributes());
 //    Assert.assertEquals(0,traceDirective.numberOfAttributes());
-//    Attribute a = new Attribute("name","String",null,null,false);
+//    Attribute a = new Attribute("name","String",null,null,false,c);
 //    traceDirective.addAttribute(a);
 //    Assert.assertEquals(a,traceDirective.getAttribute(0));
-//    Attribute b = new Attribute("id","Integer",null,null,false);
+//    Attribute b = new Attribute("id","Integer",null,null,false,c);
 //    traceDirective.addAttribute(b);
 //    Assert.assertEquals(b,traceDirective.getAttribute(1));
 //  }

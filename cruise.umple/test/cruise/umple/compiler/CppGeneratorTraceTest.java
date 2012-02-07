@@ -32,7 +32,7 @@ public class CppGeneratorTraceTest
   public void prepare_postpare_traceItem_attribute()
   {
     UmpleClass c = model.addUmpleClass("LightFixture");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceItem traceItem = new TraceItem();
     
 //    traceItem.setUmpleClass(c);
@@ -56,7 +56,7 @@ public class CppGeneratorTraceTest
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceItem traceItem = new TraceItem();
     
 //    traceItem.setUmpleClass(c);
@@ -79,7 +79,7 @@ public class CppGeneratorTraceTest
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceItem traceItem = new TraceItem();
     
 //    traceItem.setUmpleClass(c);
@@ -112,7 +112,7 @@ public class CppGeneratorTraceTest
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("blah");
-    Attribute attr = new Attribute("name","String",null,null,false);
+    Attribute attr = new Attribute("name","String",null,null,false,c);
     TraceItem traceItem = new TraceItem();
     
 //    traceItem.setUmpleClass(c);

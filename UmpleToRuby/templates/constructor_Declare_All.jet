@@ -35,7 +35,7 @@
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
+    if (av != null  && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "    @{0} = true", gen.translate("attributeCanSet",av));
@@ -62,11 +62,11 @@
     {
       %><%@ include file="constructor_AttributeAssignDefaulted.jet"%><% 
     }
-    else if ("immutable".equals(av.getModifier()) && av.getIsLazy())
+    else if (av.isImmutable() && av.getIsLazy())
     {
       %><%@ include file="constructor_AttributeUnassignedImmutable.jet"%><%
     }
-    else if ("immutable".equals(av.getModifier()))
+    else if (av.isImmutable())
     {
       %><%@ include file="constructor_AttributeAssignImmutable.jet"%><% 
     }

@@ -51,4 +51,14 @@ public class UmpleVariableTest
     v = new UmpleVariable(null,null,null,null);
     Assert.assertEquals(null,v.getName());
   }
+  
+  @Test
+  public void isImmutable()
+  {
+    UmpleVariable v = new UmpleVariable(null,"Student",null,null);
+    Assert.assertEquals(false, v.isImmutable());
+    
+    v.setModifier("immutable");
+    Assert.assertEquals(true, v.isImmutable());
+  }
 }

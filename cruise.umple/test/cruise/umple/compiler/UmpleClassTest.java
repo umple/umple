@@ -60,7 +60,7 @@ public class UmpleClassTest
   public void addAttribute_WithAttributeVar()
   {
     int valsBefore = umpleClass.getAttributes().size();
-    umpleClass.addAttribute(new Attribute("asd", "sad", "immutable", "asd", false));
+    Attribute attr = new Attribute("asd", "sad", "immutable", "asd", false, umpleClass);
     Assert.assertEquals(valsBefore + 1, umpleClass.getAttributes().size());
   }
 
@@ -86,8 +86,7 @@ public class UmpleClassTest
   @Test
   public void getAttributeByName()
   {
-    Attribute v = new Attribute("aName",null,null,null,false);
-    umpleClass.addAttribute(v);
+    Attribute v = new Attribute("aName",null,null,null,false,umpleClass);
     Assert.assertEquals(v,umpleClass.getAttribute("aName"));
     Assert.assertEquals(null,umpleClass.getAttribute("aSomethingElse"));
   }
@@ -214,7 +213,7 @@ public class UmpleClassTest
   public void isAttributeClass_simple()
   {
     Assert.assertEquals(true, umpleClass.isAttributeClass());
-    umpleClass.addAttribute(new Attribute("aName","aType",null,"",false));
+    Attribute attr = new Attribute("aName","aType",null,"",false, umpleClass);
     Assert.assertEquals(true, umpleClass.isAttributeClass());
   }
   
@@ -687,6 +686,16 @@ public class UmpleClassTest
     Comment comment = new Comment("Blah");
     umpleClass.addComment(comment);
     Assert.assertEquals(comment, umpleClass.getComment(0));
+  }
+  
+  @Test
+  public void isImmutable()
+  {
+    UmpleClass c = new UmpleClass("Student");
+    Assert.assertEquals(false, c.isImmutable());
+    
+    c.setImmutable(true);
+    Assert.assertEquals(true, c.isImmutable());
   }
   
   private Multiplicity createMultiplicity(int lower, int upper)

@@ -1711,7 +1711,7 @@ public class RubyClassGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
+    if (av != null  && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "    @{0} = true", gen.translate("attributeCanSet",av));
@@ -1745,7 +1745,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("resetMethod",av));
      
     }
-    else if ("immutable".equals(av.getModifier()) && av.getIsLazy())
+    else if (av.isImmutable() && av.getIsLazy())
     {
       
     stringBuffer.append(TEXT_12);
@@ -1753,7 +1753,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_13);
     
     }
-    else if ("immutable".equals(av.getModifier()))
+    else if (av.isImmutable())
     {
       
     
@@ -2111,7 +2111,7 @@ public class RubyClassGenerator implements ILang
     String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
     String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
     
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (av.getIsLazy())
       {

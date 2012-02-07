@@ -770,9 +770,8 @@ private String getExtendClassesNames(UmpleClass uClass)
       aClass.setIsInternal(true);
       aClass.setIsSingleton(true); 
       aClass.setPackageName(lookups.get("packageName"));
-      Attribute traces = new Attribute("traces","String",null,null,false);
+      Attribute traces = new Attribute("traces","String",null,null,false,aClass);
       traces.setIsList(true);
-      aClass.addAttribute(traces);
       aClass.appendExtraCode(lookups.get("extraCode"));
     }
     aClass.createGeneratedClass(model);

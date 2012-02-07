@@ -13,62 +13,90 @@ import org.junit.*;
 
 public class AttributeTest
 {
-
+  
+  UmpleClass clazz;
+  Attribute attr;
+  
+  @Before
+  public void setUp()
+  {
+    clazz = new UmpleClass("Student");
+    attr = new Attribute("a",null,null,null,false,clazz);
+  }
+  
   @Test
   public void getName()
   {
-    Attribute v;
-    
-    v = new Attribute(null, "MyType", "", "", true);
-    Assert.assertEquals(null, v.getName());
+    Assert.assertEquals("a", attr.getName());
   }
   
   @Test
   public void TypesIsANormalVariableNow()
   {
-    Attribute v;
-    
-    v = new Attribute("a", "Blah", "", "", true);
-    Assert.assertEquals("Blah", v.getType());
+    attr = new Attribute("a", "Blah", "", "", true,clazz);
+    Assert.assertEquals("Blah", attr.getType());
   }
   
   @Test
   public void isConstant()
   {
-    Attribute v;
-    
-    v = new Attribute("a","Blah","const","1",false);
-    Assert.assertEquals(true, v.isConstant());
+    attr = new Attribute("a","Blah","const","1",false,clazz);
+    Assert.assertEquals(true, attr.isConstant());
 
-    v = new Attribute("a","Blah","notconst","1",false);
-    Assert.assertEquals(false, v.isConstant());
+    attr = new Attribute("a","Blah","notconst","1",false,clazz);
+    Assert.assertEquals(false, attr.isConstant());
     
   }
   
   @Test
   public void isPrimitive()
   {
-    Attribute av;
+    Assert.assertEquals(true,attr.isPrimitive());
+
+    attr.setType("String");
+    Assert.assertEquals(true,attr.isPrimitive());
+
+    attr.setType("Integer");
+    Assert.assertEquals(true,attr.isPrimitive());
+    attr.setType("Double");
+    Assert.assertEquals(true,attr.isPrimitive());
+    attr.setType("Boolean");
+    Assert.assertEquals(true,attr.isPrimitive());
+    attr.setType("Date");
+    Assert.assertEquals(true,attr.isPrimitive());
+    attr.setType("Time");
+    Assert.assertEquals(true,attr.isPrimitive());
+
+    attr.setType("Address");
+    Assert.assertEquals(false,attr.isPrimitive());
     
-    av = new Attribute("a",null,null,null,false);
-    Assert.assertEquals(true,av.isPrimitive());
-
-    av.setType("String");
-    Assert.assertEquals(true,av.isPrimitive());
-
-    av.setType("Integer");
-    Assert.assertEquals(true,av.isPrimitive());
-    av.setType("Double");
-    Assert.assertEquals(true,av.isPrimitive());
-    av.setType("Boolean");
-    Assert.assertEquals(true,av.isPrimitive());
-    av.setType("Date");
-    Assert.assertEquals(true,av.isPrimitive());
-    av.setType("Time");
-    Assert.assertEquals(true,av.isPrimitive());
-
-    av.setType("Address");
-    Assert.assertEquals(false,av.isPrimitive());
+  }
+  
+  @Test
+  public void isImmutable()
+  {
+    Assert.assertEquals(false, attr.isImmutable());
     
+    attr.setModifier("immutable");
+    Assert.assertEquals(true, attr.isImmutable());
+  }
+  
+  @Test
+  public void isImmutable_basedOnClass()
+  {
+    UmpleClass c = new UmpleClass("Student");
+    c.addAttribute(attr);
+    c.setImmutable(false);
+    
+    Assert.assertEquals(false, attr.isImmutable());
+    
+    attr.setModifier("immutable");
+    Assert.assertEquals(true, attr.isImmutable());
+        
+    c.setImmutable(true);
+    Assert.assertEquals(true, attr.isImmutable());
+    
+    attr.setModifier(null);    
+    Assert.assertEquals(true, attr.isImmutable());
   }
 }

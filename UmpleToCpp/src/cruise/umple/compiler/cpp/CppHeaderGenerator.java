@@ -815,7 +815,7 @@ public class CppHeaderGenerator implements ILang
 
   for (Attribute av : uClass.getAttributes())
   {
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (isFirst)
       {
@@ -836,7 +836,7 @@ public class CppHeaderGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
+    if (av != null  && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
@@ -989,7 +989,7 @@ public class CppHeaderGenerator implements ILang
     String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
     String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
     
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (av.getIsLazy())
       {
@@ -997,9 +997,9 @@ public class CppHeaderGenerator implements ILang
     stringBuffer.append(TEXT_18);
     stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_19);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_20);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_21);
     
       }

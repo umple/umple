@@ -77,7 +77,7 @@ public class UmpleModelTest
     Assert.assertEquals(null,model.getUmpleClass("Teacher"));
     
     UmpleClass uClass = model.addUmpleClass("Teacher");
-    uClass.addAttribute(new Attribute("x","String",null,null,false));
+    Attribute attr = new Attribute("x","String",null,null,false,uClass);
     
     UmpleClass sameClass = model.addUmpleClass("Teacher");
     Assert.assertSame(uClass,sameClass);

@@ -30,7 +30,8 @@ public class KeyTest
   @Test
   public void isKey_Attribute()
   {
-    Attribute av = new Attribute("id","String",null,null,false);
+    UmpleClass clazz = new UmpleClass("Student");
+    Attribute av = new Attribute("id","String",null,null,false,clazz);
     Key key = new Key();
     
     Assert.assertEquals(false, key.isMember(av));

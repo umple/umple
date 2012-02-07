@@ -187,6 +187,14 @@ public class UmpleParserTest
   }
   
   @Test
+  public void immutableClass()
+  {
+    assertParse("022_immutableClass.ump");
+    Assert.assertEquals(true,model.getUmpleClass("Student").isImmutable());
+    Assert.assertEquals(false,model.getUmpleClass("Mentor").isImmutable());
+  }
+  
+  @Test
   public void javaLanguage()
   {
     assertParse("001_javaLanguage.ump");

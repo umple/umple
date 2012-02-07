@@ -156,7 +156,7 @@ public class JavaGeneratorTest
   public void attributesConstructor_single()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("name","Integer",null,null,false));
+    Attribute attr = new Attribute("name","Integer",null,null,false,c);
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
     Assert.assertEquals("int aName",g.getLookup("constructorSignature"));
@@ -167,7 +167,7 @@ public class JavaGeneratorTest
   public void attributesConstructor_defaulted()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("name","Integer","defaulted",null,false));
+    Attribute attr = new Attribute("name","Integer","defaulted",null,false,c);
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
     Assert.assertEquals("",g.getLookup("constructorSignature"));
@@ -177,9 +177,11 @@ public class JavaGeneratorTest
   @Test
   public void attributesConstructor_multiple()
   {
+    Attribute attr;
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("fname","Integer",null,null,false));
-    c.addAttribute(new Attribute("lname","Integer",null,null,false));
+    
+    attr = new Attribute("fname","Integer",null,null,false,c);
+    attr = new Attribute("lname","Integer",null,null,false,c);
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
     Assert.assertEquals("int aFname, int aLname",g.getLookup("constructorSignature"));
@@ -189,10 +191,11 @@ public class JavaGeneratorTest
   @Test
   public void attributesConstructor_ignore()
   {
+    Attribute attr;
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("hasValue","Integer",null,"1",false));
-    c.addAttribute(new Attribute("isAutounique","Integer",null,null,true));
-    c.addAttribute(new Attribute("isUnique","Integer","unique",null,true));
+    attr = new Attribute("hasValue","Integer",null,"1",false,c);
+    attr = new Attribute("isAutounique","Integer",null,null,true,c);
+    attr = new Attribute("isUnique","Integer","unique",null,true,c);
 
     
     generator.prepare();
@@ -205,7 +208,7 @@ public class JavaGeneratorTest
   public void attributesConstructor_defaultedWithValue()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("name","String","defaulted","\"1\"",false));
+    Attribute attr = new Attribute("name","String","defaulted","\"1\"",false,c);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
@@ -255,10 +258,10 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     
     c.addAssociationVariable(av);
-    c.addAttribute(new Attribute("id","Integer",null,null,false));
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
 
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
@@ -285,10 +288,10 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     
     c.addAssociationVariable(av);
-    c.addAttribute(new Attribute("id","Integer",null,null,false));
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
 
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
@@ -308,9 +311,8 @@ public class JavaGeneratorTest
   public void ignoreListAttributesInConstructor()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    Attribute av = new Attribute("name","Integer","defaulted","\"1\"",false);
+    Attribute av = new Attribute("name","Integer","defaulted","\"1\"",false,c);
     av.setIsList(true);
-    c.addAttribute(av);
     generator.prepare();
 
     generator.prepare();
@@ -333,10 +335,10 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     
     c.addAssociationVariable(av);
-    c.addAttribute(new Attribute("id","Integer",null,null,false));
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
 
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
@@ -360,10 +362,10 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     
     c.addAssociationVariable(av);
-    c.addAttribute(new Attribute("id","Integer",null,null,false));
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
 
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
@@ -388,10 +390,10 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     
     c.addAssociationVariable(av);
-    c.addAttribute(new Attribute("id","Integer",null,null,false));
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
 
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
@@ -433,7 +435,7 @@ public class JavaGeneratorTest
   public void imports_Time()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("name","Time","defaulted","\"1\"",false));
+    Attribute attr = new Attribute("name","Time","defaulted","\"1\"",false,c);
     generator.prepare();
     assertImport(c,"java.sql.Time");
   }
@@ -516,7 +518,7 @@ public class JavaGeneratorTest
     UmpleClass airline = model.addUmpleClass("Airline");
     
     UmpleClass flight = model.addUmpleClass("Flight");
-    flight.addAttribute(new Attribute("time","Time",null,null,false));
+    Attribute attr = new Attribute("time","Time",null,null,false,flight);
     
     AssociationVariable airlineVar = new AssociationVariable("airline","Airline","","",createMultiplicity(1,1),true);
     AssociationVariable flightVar = new AssociationVariable("flight","Flight","","",createMultiplicity(0,-1),true);
@@ -533,7 +535,7 @@ public class JavaGeneratorTest
   public void imports_Date()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("name","Date","defaulted","\"1\"",false));
+    Attribute attr = new Attribute("name","Date","defaulted","\"1\"",false,c);
     generator.prepare();
     assertImport(c,"java.sql.Date");
   }  
@@ -542,7 +544,7 @@ public class JavaGeneratorTest
   public void imports_None()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    c.addAttribute(new Attribute("name","Integer","defaulted","\"1\"",false));
+    Attribute attr = new Attribute("name","Integer","defaulted","\"1\"",false,c);
     generator.prepare();
     assertImport(c);
   }
@@ -551,9 +553,8 @@ public class JavaGeneratorTest
   public void imports_ListAttribute()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    Attribute av = new Attribute("name","Integer","defaulted","\"1\"",false);
+    Attribute av = new Attribute("name","Integer","defaulted","\"1\"",false,c);
     av.setIsList(true);
-    c.addAttribute(av);
     generator.prepare();
     assertImport(c,"java.util.*");
   }  
@@ -597,24 +598,25 @@ public class JavaGeneratorTest
   @Test
   public void translate_ParameterValueDateTime()
   {
+    UmpleClass c = new UmpleClass("Student");
     Attribute av;
     
-    av = new Attribute("name","Time","defaulted","\"1\"",false);
+    av = new Attribute("name","Time","defaulted","\"1\"",false,c);
     Assert.assertEquals("Time.valueOf(\"1\")", generator.translate("parameterValue", av));
 
-    av = new Attribute("name","Date","defaulted","\"2\"",false);
+    av = new Attribute("name","Date","defaulted","\"2\"",false,c);
     Assert.assertEquals("Date.valueOf(\"2\")", generator.translate("parameterValue", av));
 
-    av = new Attribute("name","Time","defaulted","blah1()",false);
+    av = new Attribute("name","Time","defaulted","blah1()",false,c);
     Assert.assertEquals("blah1()", generator.translate("parameterValue", av));
 
-    av = new Attribute("name","Date","defaulted","blah2()",false);
+    av = new Attribute("name","Date","defaulted","blah2()",false,c);
     Assert.assertEquals("blah2()", generator.translate("parameterValue", av));
 
-    av = new Attribute("name","Time","defaulted",null,false);
+    av = new Attribute("name","Time","defaulted",null,false,c);
     Assert.assertEquals("null", generator.translate("parameterValue", av));
 
-    av = new Attribute("name","Date","defaulted",null,false);
+    av = new Attribute("name","Date","defaulted",null,false,c);
     Assert.assertEquals("null", generator.translate("parameterValue", av));
     
   }
@@ -623,9 +625,8 @@ public class JavaGeneratorTest
   public void translate_plural()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    Attribute attr = new Attribute("names","String",null,null,false);
+    Attribute attr = new Attribute("names","String",null,null,false,c);
     attr.setIsList(true);
-    c.addAttribute(attr);
     
     Assert.assertEquals("newNames",generator.translate("parameter",attr));
     Assert.assertEquals("aName",generator.translate("parameterOne",attr));
@@ -798,12 +799,9 @@ public class JavaGeneratorTest
   {
     UmpleClass c = model.addUmpleClass("Student");
 
-    Attribute avOne = new Attribute("id","String",null,null,false);
-    Attribute avMany = new Attribute("values","String",null,null,false); 
+    Attribute avOne = new Attribute("id","String",null,null,false,c);
+    Attribute avMany = new Attribute("values","String",null,null,false,c); 
     avMany.setIsList(true);
-    
-    c.addAttribute(avOne);
-    c.addAttribute(avMany);
     
     Assert.assertEquals("canSetId", generator.translate("attributeCanSet", avOne));
     Assert.assertEquals("canSetValues", generator.translate("attributeCanSet", avMany));
@@ -827,8 +825,7 @@ public class JavaGeneratorTest
   public void translate_Attribute()
   {
     UmpleClass c = model.addUmpleClass("Student");
-    Attribute av = new Attribute("mentor","Mentor",null,"3",false);
-    c.addAttribute(av);
+    Attribute av = new Attribute("mentor","Mentor",null,"3",false,c);
     assertTranslate(av, null);
   }
   
@@ -845,7 +842,8 @@ public class JavaGeneratorTest
   @Test
   public void getType_isNullable()
   {
-    Attribute av = new Attribute("mentor","Mentor",null,"3",false);
+    UmpleClass c = new UmpleClass("Student");
+    Attribute av = new Attribute("mentor","Mentor",null,"3",false,c);
     Assert.assertEquals("Mentor",generator.getType(av));
     Assert.assertEquals(true,generator.isNullable(av));
     Assert.assertEquals("Mentor", generator.translate("type",av));
@@ -889,7 +887,7 @@ public class JavaGeneratorTest
   @Test
   public void translateCallerArguments()
   {
-    
+    Attribute attr;
     UmpleClass c = model.addUmpleClass("Student");
     UmpleClass c2 = model.addUmpleClass("Mentor");
 
@@ -898,8 +896,8 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     c.addAssociationVariable(av);
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
-    c.addAttribute(new Attribute("number","Integer",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
+    attr = new Attribute("number","Integer",null,null,false,c);
 
     generator.prepare();
     
@@ -937,7 +935,7 @@ public class JavaGeneratorTest
   @Test
   public void callerArgumentsForMandatory()
   {
-    
+    Attribute attr;
     UmpleClass c = model.addUmpleClass("Student");
     UmpleClass c2 = model.addUmpleClass("Mentor");
 
@@ -946,8 +944,8 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     c.addAssociationVariable(av);
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
-    c.addAttribute(new Attribute("number","Integer",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
+    attr = new Attribute("number","Integer",null,null,false,c);
 
     generator.prepare();
     
@@ -1296,10 +1294,10 @@ public class JavaGeneratorTest
     av.setRelatedAssociation(relatedAv);
     
     c.addAssociationVariable(av);
-    c.addAttribute(new Attribute("id","Integer",null,null,false));
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
 
     c2.addAssociationVariable(relatedAv);
-    c2.addAttribute(new Attribute("name","String",null,null,false));
+    attr = new Attribute("name","String",null,null,false,c2);
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();

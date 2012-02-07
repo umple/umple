@@ -632,6 +632,12 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
     	classToken.setName(classToken.getName());	
     }
+    
+    if (classToken.getValue("immutable") != null)
+    {
+		aClass.setImmutable(true);
+    }
+    
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
@@ -1364,7 +1370,7 @@ private void checkSingletonAssociations() {
       type = "String";
     }
 
-    Attribute attribute = new Attribute(name,type,modifier,value,isAutounique);
+    Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
     attribute.setIsLazy(isLazy);
     boolean isList = attributeToken.getValue("list") != null;
 
@@ -1380,15 +1386,12 @@ private void checkSingletonAssociations() {
     }
 
     attribute.setIsList(isList);
-    
+
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
     {
     	attribute.addComment(c);
     }
-    
-    aClass.addAttribute(attribute);
-
   }
 private void analyzeStateMachineToken(Token token, int analysisStep)
   {

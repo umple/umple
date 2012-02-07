@@ -1743,7 +1743,7 @@ public class PhpClassGenerator implements ILang
 
   for (Attribute av : uClass.getAttributes())
   {
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (isFirst)
       {
@@ -1764,7 +1764,7 @@ public class PhpClassGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
+    if (av != null  && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "  private ${0};", gen.translate("attributeCanSet",av));
@@ -1838,7 +1838,7 @@ public class PhpClassGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
+    if (av != null  && !av.isImmutable())
     {
       hasBody = true;
       appendln(stringBuffer, "");
@@ -1879,7 +1879,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_10);
      
     }
-    else if ("immutable".equals(av.getModifier()) && av.getIsLazy())
+    else if (av.isImmutable() && av.getIsLazy())
     {
       hasBody = true;
       
@@ -1888,7 +1888,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_12);
     
     }
-    else if ("immutable".equals(av.getModifier()))
+    else if (av.isImmutable())
     {
       hasBody = true;
       
@@ -2485,7 +2485,7 @@ public class PhpClassGenerator implements ILang
     String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
     String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
     
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (av.getIsLazy())
       {

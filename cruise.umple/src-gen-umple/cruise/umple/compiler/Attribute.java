@@ -23,6 +23,7 @@ public class Attribute extends UmpleVariable
 
   //Attribute Associations
   private List<Comment> comments;
+  private UmpleClass umpleClass;
   private List<TraceRecord> traceRecords;
   private List<Attribute_TraceItem> attributeTraceItems;
 
@@ -30,7 +31,7 @@ public class Attribute extends UmpleVariable
   // CONSTRUCTOR
   //------------------------
 
-  public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique)
+  public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleClass aUmpleClass)
   {
     super(aName, aType, aModifier, aValue);
     isAutounique = aIsAutounique;
@@ -38,6 +39,11 @@ public class Attribute extends UmpleVariable
     isDerived = false;
     isLazy = false;
     comments = new ArrayList<Comment>();
+    boolean didAddUmpleClass = setUmpleClass(aUmpleClass);
+    if (!didAddUmpleClass)
+    {
+      throw new RuntimeException("Unable to create attribute due to umpleClass");
+    }
     traceRecords = new ArrayList<TraceRecord>();
     attributeTraceItems = new ArrayList<Attribute_TraceItem>();
   }
@@ -148,6 +154,11 @@ public class Attribute extends UmpleVariable
     return index;
   }
 
+  public UmpleClass getUmpleClass()
+  {
+    return umpleClass;
+  }
+
   public TraceRecord getTraceRecord(int index)
   {
     TraceRecord aTraceRecord = traceRecords.get(index);
@@ -231,6 +242,25 @@ public class Attribute extends UmpleVariable
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean setUmpleClass(UmpleClass aUmpleClass)
+  {
+    boolean wasSet = false;
+    if (aUmpleClass == null)
+    {
+      return wasSet;
+    }
+
+    UmpleClass existingUmpleClass = umpleClass;
+    umpleClass = aUmpleClass;
+    if (existingUmpleClass != null && !existingUmpleClass.equals(aUmpleClass))
+    {
+      existingUmpleClass.removeAttribute(this);
+    }
+    umpleClass.addAttribute(this);
+    wasSet = true;
+    return wasSet;
   }
 
   public static int minimumNumberOfTraceRecords()
@@ -336,6 +366,9 @@ public class Attribute extends UmpleVariable
   public void delete()
   {
     comments.clear();
+    UmpleClass placeholderUmpleClass = umpleClass;
+    this.umpleClass = null;
+    placeholderUmpleClass.removeAttribute(this);
     ArrayList<TraceRecord> copyOfTraceRecords = new ArrayList<TraceRecord>(traceRecords);
     traceRecords.clear();
     for(TraceRecord aTraceRecord : copyOfTraceRecords)
@@ -363,5 +396,14 @@ public class Attribute extends UmpleVariable
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
+  }
+  
+  
+  public boolean isImmutable()
+  {
+  	boolean varIsImmutable = super.isImmutable();
+  	boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
+  	  	
+  	return (varIsImmutable || classIsImmutable);
   }
 }
