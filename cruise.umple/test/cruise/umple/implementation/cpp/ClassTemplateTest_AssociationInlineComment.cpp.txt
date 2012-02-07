@@ -1,0 +1,114 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+#include <java.util.*>;
+
+class Foo
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Associations
+
+  /**
+   * I am a inline comment above an association.
+   */
+   vector<Bar*> bars;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+ Foo::Foo()
+  {
+    bars = new vector<Bar*>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  Bar Foo::getBar(int index)
+  {
+    Bar aBar = bars.get(index);
+    return aBar;
+  }
+
+  vector<Bar*> Foo::getBars()
+  {
+    vector<Bar*> newBars = Collections.unmodifiableList(bars);
+    return newBars;
+  }
+
+  int Foo::numberOfBars()
+  {
+    int number = bars.size();
+    return number;
+  }
+
+  bool Foo::hasBars()
+  {
+    bool has = bars.size() > 0;
+    return has;
+  }
+  
+  int Foo::indexOfBar(Bar aBar)
+  {
+    int index = bars.indexOf(aBar);
+    return index;
+  }
+  
+  static int minimumNumberOfBars()
+  {
+    return 0;
+  }
+
+  Bar Foo::addBar()
+  {
+    return new Bar(this);
+  }
+
+  bool Foo::addBar(Bar aBar)
+  {
+    bool wasAdded = false;
+    if (bars.contains(aBar)) { return false; }
+    Foo existingFoo = aBar.getFoo();
+    bool isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar.setFoo(this);
+    }
+    else
+    {
+      bars.add(aBar);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  bool Foo::removeBar(Bar aBar)
+  {
+    bool wasRemoved = false;
+    //Unable to remove aBar, as it must always have a foo
+    if (!this.equals(aBar.getFoo()))
+    {
+      bars.remove(aBar);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  public void delete()
+  {
+    for(Bar aBar : bars)
+    {
+      aBar.delete();
+    }
+  }
+
+};

@@ -132,6 +132,47 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ruby/ruby_code");
     SampleFileWriter.destroy(pathToInput + "/java/java_code");
     SampleFileWriter.destroy(pathToInput + "/php/php_code");
+    
+    // Tear down missing comment detection tests.
+    SampleFileWriter.destroy(pathToInput + "/Foo.java");
+    
+    SampleFileWriter.destroy(pathToInput + "/Bar.java");
+    SampleFileWriter.destroy(pathToInput + "/Bar1.java");
+    SampleFileWriter.destroy(pathToInput + "/Bar2.java");
+    SampleFileWriter.destroy(pathToInput + "/Bar3.java");
+    SampleFileWriter.destroy(pathToInput + "/Bar4.java");
+    
+    SampleFileWriter.destroy(pathToInput + "/Bar.cpp");
+    SampleFileWriter.destroy(pathToInput + "/Bar1.cpp");
+    SampleFileWriter.destroy(pathToInput + "/Bar2.cpp");
+    SampleFileWriter.destroy(pathToInput + "/Bar3.cpp");
+    SampleFileWriter.destroy(pathToInput + "/Bar4.cpp");
+    
+    SampleFileWriter.destroy(pathToInput + "/Foo.cpp");
+    SampleFileWriter.destroy(pathToInput + "/Foo.h");
+
+    SampleFileWriter.destroy(pathToInput + "/Bar.h");
+    SampleFileWriter.destroy(pathToInput + "/Bar1.h");
+    SampleFileWriter.destroy(pathToInput + "/Bar2.h");
+    SampleFileWriter.destroy(pathToInput + "/Bar3.h");
+    SampleFileWriter.destroy(pathToInput + "/Bar4.h");
+    
+    SampleFileWriter.destroy(pathToInput + "/bar_1.rb");
+    SampleFileWriter.destroy(pathToInput + "/bar_2.rb");
+    SampleFileWriter.destroy(pathToInput + "/bar_3.rb");
+    SampleFileWriter.destroy(pathToInput + "/bar_4.rb");
+    SampleFileWriter.destroy(pathToInput + "/foo.rb");
+    SampleFileWriter.destroy(pathToInput + "/bar.rb");
+
+
+    SampleFileWriter.destroy(pathToInput + "/Bar.php");
+    SampleFileWriter.destroy(pathToInput + "/Bar1.php");
+    SampleFileWriter.destroy(pathToInput + "/Bar2.php");
+    SampleFileWriter.destroy(pathToInput + "/Bar3.php");
+    SampleFileWriter.destroy(pathToInput + "/Bar4.php");
+    SampleFileWriter.destroy(pathToInput + "/Foo.php");
+
+    
   }
 
   @Test
@@ -159,6 +200,7 @@ public class TemplateTest
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className)
   {
+	  System.out.println("Umplefile: [" + umpleFile + "]");
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
 
     String actual = null;
@@ -181,6 +223,8 @@ public class TemplateTest
       actual = model.getGeneratedCode().get(className);
     }
 
+    System.out.println("Looking for codefile in: [" + pathToInput + "] filename: [" + codeFile + "]");
+    
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
     SampleFileWriter.assertFileContent(expected, actual);

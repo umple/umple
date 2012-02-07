@@ -1,0 +1,88 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Foo
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Foo Attributes - for documentation purposes
+
+  =begin
+  Inline comment above attribute.
+  =end
+  #attr_reader :testAttribute1, :testAttribute2, :testAttribute3, :testAttribute4
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_testAttribute1, a_testAttribute2, a_testAttribute3, a_testAttribute4)
+    @initialized = false
+    @deleted = false
+    @testAttribute1 = a_testAttribute1
+    @testAttribute2 = a_testAttribute2
+    @testAttribute3 = a_testAttribute3
+    @testAttribute4 = a_testAttribute4
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_testAttribute1(a_testAttribute1)
+    was_set = false
+    @testAttribute1 = a_testAttribute1
+    was_set = true
+    was_set
+  end
+
+  def set_testAttribute2(a_testAttribute2)
+    was_set = false
+    @testAttribute2 = a_testAttribute2
+    was_set = true
+    was_set
+  end
+
+  def set_testAttribute3(a_testAttribute3)
+    was_set = false
+    @testAttribute3 = a_testAttribute3
+    was_set = true
+    was_set
+  end
+
+  def set_testAttribute4(a_testAttribute4)
+    was_set = false
+    @testAttribute4 = a_testAttribute4
+    was_set = true
+    was_set
+  end
+
+  def get_testAttribute1
+    @testAttribute1
+  end
+
+  def get_testAttribute2
+    @testAttribute2
+  end
+
+  def get_testAttribute3
+    @testAttribute3
+  end
+
+  def get_testAttribute4
+    @testAttribute4
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end

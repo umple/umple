@@ -1,0 +1,9 @@
+class Foo
+{
+  // I am a comment above a method.
+  void testMethod()
+  {
+    // I am a comment inside a method.
+    System.out.println("Hello world!");
+  }
+}

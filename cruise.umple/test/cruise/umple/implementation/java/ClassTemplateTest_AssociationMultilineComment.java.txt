@@ -1,0 +1,113 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Associations
+
+  /**
+   * I am a multiline comment above an association.
+   */
+  private List<Bar> bars;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo()
+  {
+    bars = new ArrayList<Bar>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Bar getBar(int index)
+  {
+    Bar aBar = bars.get(index);
+    return aBar;
+  }
+
+  public List<Bar> getBars()
+  {
+    List<Bar> newBars = Collections.unmodifiableList(bars);
+    return newBars;
+  }
+
+  public int numberOfBars()
+  {
+    int number = bars.size();
+    return number;
+  }
+
+  public boolean hasBars()
+  {
+    boolean has = bars.size() > 0;
+    return has;
+  }
+
+  public int indexOfBar(Bar aBar)
+  {
+    int index = bars.indexOf(aBar);
+    return index;
+  }
+
+  public static int minimumNumberOfBars()
+  {
+    return 0;
+  }
+
+  public Bar addBar()
+  {
+    return new Bar(this);
+  }
+
+  public boolean addBar(Bar aBar)
+  {
+    boolean wasAdded = false;
+    if (bars.contains(aBar)) { return false; }
+    Foo existingFoo = aBar.getFoo();
+    boolean isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar.setFoo(this);
+    }
+    else
+    {
+      bars.add(aBar);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeBar(Bar aBar)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aBar, as it must always have a foo
+    if (!this.equals(aBar.getFoo()))
+    {
+      bars.remove(aBar);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public void delete()
+  {
+    for(int i=bars.size(); i > 0; i--)
+    {
+      Bar aBar = bars.get(i - 1);
+      aBar.delete();
+    }
+  }
+
+}

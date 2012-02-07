@@ -1,0 +1,358 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Associations
+
+  /**
+   * Inline comment above association.
+   */
+  private List<Bar1> bar1s;
+
+  /**
+   * Multiple inline comments
+   * above association.
+   */
+  private List<Bar2> bar2s;
+
+  /**
+   * Multiline comment above association.
+   */
+  private List<Bar3> bar3s;
+
+  /**
+   * Multiple multiline comments
+   * above association.
+   */
+  private List<Bar4> bar4s;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo()
+  {
+    bar1s = new ArrayList<Bar1>();
+    bar2s = new ArrayList<Bar2>();
+    bar3s = new ArrayList<Bar3>();
+    bar4s = new ArrayList<Bar4>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Bar1 getBar1(int index)
+  {
+    Bar1 aBar1 = bar1s.get(index);
+    return aBar1;
+  }
+
+  public List<Bar1> getBar1s()
+  {
+    List<Bar1> newBar1s = Collections.unmodifiableList(bar1s);
+    return newBar1s;
+  }
+
+  public int numberOfBar1s()
+  {
+    int number = bar1s.size();
+    return number;
+  }
+
+  public boolean hasBar1s()
+  {
+    boolean has = bar1s.size() > 0;
+    return has;
+  }
+
+  public int indexOfBar1(Bar1 aBar1)
+  {
+    int index = bar1s.indexOf(aBar1);
+    return index;
+  }
+
+  public Bar2 getBar2(int index)
+  {
+    Bar2 aBar2 = bar2s.get(index);
+    return aBar2;
+  }
+
+  public List<Bar2> getBar2s()
+  {
+    List<Bar2> newBar2s = Collections.unmodifiableList(bar2s);
+    return newBar2s;
+  }
+
+  public int numberOfBar2s()
+  {
+    int number = bar2s.size();
+    return number;
+  }
+
+  public boolean hasBar2s()
+  {
+    boolean has = bar2s.size() > 0;
+    return has;
+  }
+
+  public int indexOfBar2(Bar2 aBar2)
+  {
+    int index = bar2s.indexOf(aBar2);
+    return index;
+  }
+
+  public Bar3 getBar3(int index)
+  {
+    Bar3 aBar3 = bar3s.get(index);
+    return aBar3;
+  }
+
+  public List<Bar3> getBar3s()
+  {
+    List<Bar3> newBar3s = Collections.unmodifiableList(bar3s);
+    return newBar3s;
+  }
+
+  public int numberOfBar3s()
+  {
+    int number = bar3s.size();
+    return number;
+  }
+
+  public boolean hasBar3s()
+  {
+    boolean has = bar3s.size() > 0;
+    return has;
+  }
+
+  public int indexOfBar3(Bar3 aBar3)
+  {
+    int index = bar3s.indexOf(aBar3);
+    return index;
+  }
+
+  public Bar4 getBar4(int index)
+  {
+    Bar4 aBar4 = bar4s.get(index);
+    return aBar4;
+  }
+
+  public List<Bar4> getBar4s()
+  {
+    List<Bar4> newBar4s = Collections.unmodifiableList(bar4s);
+    return newBar4s;
+  }
+
+  public int numberOfBar4s()
+  {
+    int number = bar4s.size();
+    return number;
+  }
+
+  public boolean hasBar4s()
+  {
+    boolean has = bar4s.size() > 0;
+    return has;
+  }
+
+  public int indexOfBar4(Bar4 aBar4)
+  {
+    int index = bar4s.indexOf(aBar4);
+    return index;
+  }
+
+  public static int minimumNumberOfBar1s()
+  {
+    return 0;
+  }
+
+  public Bar1 addBar1()
+  {
+    return new Bar1(this);
+  }
+
+  public boolean addBar1(Bar1 aBar1)
+  {
+    boolean wasAdded = false;
+    if (bar1s.contains(aBar1)) { return false; }
+    Foo existingFoo = aBar1.getFoo();
+    boolean isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar1.setFoo(this);
+    }
+    else
+    {
+      bar1s.add(aBar1);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeBar1(Bar1 aBar1)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aBar1, as it must always have a foo
+    if (!this.equals(aBar1.getFoo()))
+    {
+      bar1s.remove(aBar1);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfBar2s()
+  {
+    return 0;
+  }
+
+  public Bar2 addBar2()
+  {
+    return new Bar2(this);
+  }
+
+  public boolean addBar2(Bar2 aBar2)
+  {
+    boolean wasAdded = false;
+    if (bar2s.contains(aBar2)) { return false; }
+    Foo existingFoo = aBar2.getFoo();
+    boolean isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar2.setFoo(this);
+    }
+    else
+    {
+      bar2s.add(aBar2);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeBar2(Bar2 aBar2)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aBar2, as it must always have a foo
+    if (!this.equals(aBar2.getFoo()))
+    {
+      bar2s.remove(aBar2);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfBar3s()
+  {
+    return 0;
+  }
+
+  public Bar3 addBar3()
+  {
+    return new Bar3(this);
+  }
+
+  public boolean addBar3(Bar3 aBar3)
+  {
+    boolean wasAdded = false;
+    if (bar3s.contains(aBar3)) { return false; }
+    Foo existingFoo = aBar3.getFoo();
+    boolean isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar3.setFoo(this);
+    }
+    else
+    {
+      bar3s.add(aBar3);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeBar3(Bar3 aBar3)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aBar3, as it must always have a foo
+    if (!this.equals(aBar3.getFoo()))
+    {
+      bar3s.remove(aBar3);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfBar4s()
+  {
+    return 0;
+  }
+
+  public Bar4 addBar4()
+  {
+    return new Bar4(this);
+  }
+
+  public boolean addBar4(Bar4 aBar4)
+  {
+    boolean wasAdded = false;
+    if (bar4s.contains(aBar4)) { return false; }
+    Foo existingFoo = aBar4.getFoo();
+    boolean isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar4.setFoo(this);
+    }
+    else
+    {
+      bar4s.add(aBar4);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeBar4(Bar4 aBar4)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aBar4, as it must always have a foo
+    if (!this.equals(aBar4.getFoo()))
+    {
+      bar4s.remove(aBar4);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public void delete()
+  {
+    for(int i=bar1s.size(); i > 0; i--)
+    {
+      Bar1 aBar1 = bar1s.get(i - 1);
+      aBar1.delete();
+    }
+    for(int i=bar2s.size(); i > 0; i--)
+    {
+      Bar2 aBar2 = bar2s.get(i - 1);
+      aBar2.delete();
+    }
+    for(int i=bar3s.size(); i > 0; i--)
+    {
+      Bar3 aBar3 = bar3s.get(i - 1);
+      aBar3.delete();
+    }
+    for(int i=bar4s.size(); i > 0; i--)
+    {
+      Bar4 aBar4 = bar4s.get(i - 1);
+      aBar4.delete();
+    }
+  }
+
+}

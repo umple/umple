@@ -1,0 +1,108 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * Inline comment above attribute.
+   */
+  private String testAttribute1;
+
+  /**
+   * Multiple inline comments
+   * above attribute.
+   */
+  private String testAttribute2;
+
+  /**
+   * Multiline comment above attribute.
+   */
+  private String testAttribute3;
+
+  /**
+   * Multiple multiline comments
+   * above attribute.
+   */
+  private String testAttribute4;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo(String aTestAttribute1, String aTestAttribute2, String aTestAttribute3, String aTestAttribute4)
+  {
+    testAttribute1 = aTestAttribute1;
+    testAttribute2 = aTestAttribute2;
+    testAttribute3 = aTestAttribute3;
+    testAttribute4 = aTestAttribute4;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setTestAttribute1(String aTestAttribute1)
+  {
+    boolean wasSet = false;
+    testAttribute1 = aTestAttribute1;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTestAttribute2(String aTestAttribute2)
+  {
+    boolean wasSet = false;
+    testAttribute2 = aTestAttribute2;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTestAttribute3(String aTestAttribute3)
+  {
+    boolean wasSet = false;
+    testAttribute3 = aTestAttribute3;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTestAttribute4(String aTestAttribute4)
+  {
+    boolean wasSet = false;
+    testAttribute4 = aTestAttribute4;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getTestAttribute1()
+  {
+    return testAttribute1;
+  }
+
+  public String getTestAttribute2()
+  {
+    return testAttribute2;
+  }
+
+  public String getTestAttribute3()
+  {
+    return testAttribute3;
+  }
+
+  public String getTestAttribute4()
+  {
+    return testAttribute4;
+  }
+
+  public void delete()
+  {}
+
+}

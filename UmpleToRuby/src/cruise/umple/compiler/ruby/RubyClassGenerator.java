@@ -1522,6 +1522,9 @@ public class RubyClassGenerator implements ILang
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
       appendln(stringBuffer,"  #{0} Attributes - for documentation purposes", uClass.getName());
+      
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", av.getComments())); }
+      
       append(stringBuffer,"  #attr_reader :{0}",attribute);
       isFirst = false;
     }
@@ -1654,6 +1657,9 @@ public class RubyClassGenerator implements ILang
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
       appendln(stringBuffer,"  #{0} Associations - for documentation purposes", uClass.getName());
+      
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", av.getComments())); }
+      
       append(stringBuffer,"  #attr_reader :{0}",attribute);
       isFirstAssociation = false;
     }
@@ -5744,12 +5750,18 @@ public class RubyClassGenerator implements ILang
     			}
     			String finalParams = parameters.substring(0, parameters.length()-1);
     			appendln(stringBuffer, "");
+    			
+    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
+    			
     			append(stringBuffer, " def {0} ({1})", methodName, finalParams);	
 				appendln(stringBuffer, "end");
     			
     		}
     		else{
     			appendln(stringBuffer, "");
+    			
+    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
+    			
     			append(stringBuffer, " def {0}()", methodName);
     			appendln(stringBuffer, "end");
     		}

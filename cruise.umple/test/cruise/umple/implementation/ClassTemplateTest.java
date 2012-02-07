@@ -122,5 +122,69 @@ public class ClassTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("ClassTemplateTest_EmptyStringAttr.ump",languagePath + "/ClassTemplateTest_EmptyStringAttr."+languagePath+".txt","Student");
   }
   
+  /*
+   * Tests for missing comments in generated code.
+   */
+  @Test
+  public void AttributeInlineComment()
+  {
+	  assertUmpleTemplateFor("AttributeInlineComment.ump",languagePath + "/ClassTemplateTest_AttributeInlineComment."+languagePath+".txt","Foo");
+  }
   
+  @Test
+  public void AttributeMultilineComment()
+  {
+	  assertUmpleTemplateFor("AttributeMultilineComment.ump",languagePath + "/ClassTemplateTest_AttributeMultilineComment."+languagePath+".txt","Foo");
+  }
+  
+  @Test
+  public void MultipleAttributeComments()
+  {
+	  assertUmpleTemplateFor("MultipleAttributeComments.ump",languagePath + "/ClassTemplateTest_MultipleAttributeComments."+languagePath+".txt","Foo");
+  }
+  
+  @Test
+  public void AssociationInlineComment()
+  {
+	  assertUmpleTemplateFor("AssociationInlineComment.ump",languagePath + "/ClassTemplateTest_AssociationInlineComment."+languagePath+".txt","Foo");
+  }
+  
+  @Test
+  public void AssociationMultilineComment()
+  {
+	  assertUmpleTemplateFor("AssociationMultilineComment.ump",languagePath + "/ClassTemplateTest_AssociationMultilineComment."+languagePath+".txt","Foo");
+  }
+  
+  @Test
+  public void MultipleAssociationComments()
+  {
+	  assertUmpleTemplateFor("MultipleAssociationComments.ump",languagePath + "/ClassTemplateTest_MultipleAssociationComments."+languagePath+".txt","Foo");
+  }
+  
+  @Test
+  public void MethodInlineComment()
+  {
+	  if (languagePath != "php")
+	  {
+		  assertUmpleTemplateFor("MethodInlineComment.ump",languagePath + "/ClassTemplateTest_MethodInlineComment."+languagePath+".txt","Foo");
+	  }
+  }
+  
+  @Test
+  public void MethodMultilineComment()
+  {
+	  if (languagePath != "php")
+	  {
+		  assertUmpleTemplateFor("MethodMultilineComment.ump",languagePath + "/ClassTemplateTest_MethodMultilineComment."+languagePath+".txt","Foo");
+	  }
+  }
+  
+  @Test
+  public void MultipleMethodComments()
+  {
+	  if (languagePath != "php")
+	  {
+		  assertUmpleTemplateFor("MultipleMethodComments.ump",languagePath + "/ClassTemplateTest_MultipleMethodComments."+languagePath+".txt","Foo");
+	  }
+  }
 }

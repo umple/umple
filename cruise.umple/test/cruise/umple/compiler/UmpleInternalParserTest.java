@@ -67,12 +67,12 @@ public class UmpleInternalParserTest extends UmpleParserTest
     expectedResult = "[classDefinition][name:Foo][inlineComment:I am a inline comment above an attribute.][attribute][name:bar]";
     fileToOutputs.put("001_attributeInlineComment.ump", expectedResult);
     
-    expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a multiline comment above a method.][attribute][name:name]";
+    expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a multiline comment above an attribute.][attribute][name:name]";
     fileToOutputs.put("001_attributeMultilineComment.ump", expectedResult);
     
     expectedResult = "[classDefinition][name:Foo][inlineComment:Inline comment above attribute.][attribute][name:testAttribute1]" +
     		"[inlineComment:Multiple inline comments][inlineComment:above attribute.][attribute][name:testAttribute2]" +
-    		"[multilineComment:Multiline comment above method.][attribute][name:testAttribute3]" +
+    		"[multilineComment:Multiline comment above attribute.][attribute][name:testAttribute3]" +
     		"[multilineComment:* Multiple multiline comments\n\t * above attribute.][attribute][name:testAttribute4]";
     
     fileToOutputs.put("001_multipleAttributeComments.ump", expectedResult);

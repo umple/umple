@@ -51,7 +51,46 @@ public class Comment
 
   public static String format(String type,List<Comment> allComments)
   {
-  	String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "" : (type == "Multiline") ? "" : "// ";
+  	//String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
+    
+    String commentDelimiter;
+    
+    if (type == "Hash")
+    {
+    	commentDelimiter = "# ";
+    }
+    else if (type == "Javadoc")
+    {
+    	commentDelimiter = " * ";
+    }
+    else if (type == "Attribute Javadoc")
+    {
+    	commentDelimiter = "   * ";
+    }
+    else if (type == "Association Javadoc")
+    {
+    	commentDelimiter = "   * ";
+    }
+    else if (type == "Method Javadoc")
+    {
+    	commentDelimiter = "   * ";
+    }
+    else if (type == "RubyMultiline")
+    {
+    	commentDelimiter = "";
+    }
+    else if (type == "RubyMultiline Internal")
+    {
+    	commentDelimiter = "  ";
+    }
+    else if (type == "Multiline")
+    {
+    	commentDelimiter = "";
+    }
+    else
+    {
+    	commentDelimiter = "// ";
+    }
     
     if (allComments.size() == 0)
     {
@@ -62,7 +101,7 @@ public class Comment
       
     for (Comment c : allComments)
     {
-    	if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Association Javadoc" || type == "Method Javadoc")
+    	if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Association Javadoc" || type == "Method Javadoc" || type == "RubyMultiline Internal")
     	{
     		int startIndex = 0;
     		
@@ -109,6 +148,11 @@ public class Comment
     if (type == "RubyMultiline")
     {
     	output = "=begin\n" + output + "=end";
+   	}
+   	
+   	if (type == "RubyMultiline Internal")
+   	{
+   		output = "  =begin\n" + output + "  =end";
    	}
    	
    	if (type == "Multiline")

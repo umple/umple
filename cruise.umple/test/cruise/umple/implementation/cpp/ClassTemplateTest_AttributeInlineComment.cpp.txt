@@ -1,0 +1,52 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+class Foo
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * I am a inline comment above an attribute.
+   */
+  String bar;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+ Foo::Foo(String aBar)
+  {
+    bar = aBar;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Foo::setBar(String aBar)
+  {
+    bool wasSet = false;
+    bar = aBar;
+    wasSet = true;
+    return wasSet;
+  }
+
+  String Foo::getBar()
+  {
+    return bar;
+  }
+
+  public void delete()
+  {}
+
+};

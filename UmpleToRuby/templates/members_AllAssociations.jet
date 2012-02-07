@@ -26,6 +26,9 @@
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
       appendln(stringBuffer,"  #{0} Associations - for documentation purposes", uClass.getName());
+      
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", av.getComments())); }
+      
       append(stringBuffer,"  #attr_reader :{0}",attribute);
       isFirstAssociation = false;
     }

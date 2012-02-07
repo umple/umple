@@ -1,0 +1,54 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * I am a inline comment above an attribute.
+   */
+  private $bar;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aBar)
+  {
+    $this->bar = $aBar;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setBar($aBar)
+  {
+    $wasSet = false;
+    $this->bar = $aBar;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getBar()
+  {
+    return $this->bar;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

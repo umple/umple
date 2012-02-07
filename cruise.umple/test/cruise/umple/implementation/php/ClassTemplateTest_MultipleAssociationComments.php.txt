@@ -1,0 +1,406 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Associations
+
+  /**
+   * Inline comment above association.
+   */
+  private $bar1s;
+
+  /**
+   * Multiple inline comments
+   * above association.
+   */
+  private $bar2s;
+
+  /**
+   * Multiline comment above association.
+   */
+  private $bar3s;
+
+  /**
+   * Multiple multiline comments
+   * above association.
+   */
+  private $bar4s;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->bar1s = array();
+    $this->bar2s = array();
+    $this->bar3s = array();
+    $this->bar4s = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBar1($index)
+  {
+    $aBar1 = $this->bar1s[$index];
+    return $aBar1;
+  }
+
+  public function getBar1s()
+  {
+    $newBar1s = $this->bar1s;
+    return $newBar1s;
+  }
+
+  public function numberOfBar1s()
+  {
+    $number = count($this->bar1s);
+    return $number;
+  }
+
+  public function hasBar1s()
+  {
+    $has = $this->numberOfBar1s() > 0;
+    return $has;
+  }
+
+  public function indexOfBar1($aBar1)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->bar1s as $bar1)
+    {
+      if ($bar1->equals($aBar1))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public function getBar2($index)
+  {
+    $aBar2 = $this->bar2s[$index];
+    return $aBar2;
+  }
+
+  public function getBar2s()
+  {
+    $newBar2s = $this->bar2s;
+    return $newBar2s;
+  }
+
+  public function numberOfBar2s()
+  {
+    $number = count($this->bar2s);
+    return $number;
+  }
+
+  public function hasBar2s()
+  {
+    $has = $this->numberOfBar2s() > 0;
+    return $has;
+  }
+
+  public function indexOfBar2($aBar2)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->bar2s as $bar2)
+    {
+      if ($bar2->equals($aBar2))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public function getBar3($index)
+  {
+    $aBar3 = $this->bar3s[$index];
+    return $aBar3;
+  }
+
+  public function getBar3s()
+  {
+    $newBar3s = $this->bar3s;
+    return $newBar3s;
+  }
+
+  public function numberOfBar3s()
+  {
+    $number = count($this->bar3s);
+    return $number;
+  }
+
+  public function hasBar3s()
+  {
+    $has = $this->numberOfBar3s() > 0;
+    return $has;
+  }
+
+  public function indexOfBar3($aBar3)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->bar3s as $bar3)
+    {
+      if ($bar3->equals($aBar3))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public function getBar4($index)
+  {
+    $aBar4 = $this->bar4s[$index];
+    return $aBar4;
+  }
+
+  public function getBar4s()
+  {
+    $newBar4s = $this->bar4s;
+    return $newBar4s;
+  }
+
+  public function numberOfBar4s()
+  {
+    $number = count($this->bar4s);
+    return $number;
+  }
+
+  public function hasBar4s()
+  {
+    $has = $this->numberOfBar4s() > 0;
+    return $has;
+  }
+
+  public function indexOfBar4($aBar4)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->bar4s as $bar4)
+    {
+      if ($bar4->equals($aBar4))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfBar1s()
+  {
+    return 0;
+  }
+
+  public function addBar1Via()
+  {
+    return new Bar1($this);
+  }
+
+  public function addBar1($aBar1)
+  {
+    $wasAdded = false;
+    if ($this->indexOfBar1($aBar1) !== -1) { return false; }
+    $existingFoo = $aBar1->getFoo();
+    $isNewFoo = $existingFoo != null && $this !== $existingFoo;
+    if ($isNewFoo)
+    {
+      $aBar1->setFoo($this);
+    }
+    else
+    {
+      $this->bar1s[] = $aBar1;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeBar1($aBar1)
+  {
+    $wasRemoved = false;
+    //Unable to remove aBar1, as it must always have a foo
+    if ($this !== $aBar1->getFoo())
+    {
+      unset($this->bar1s[$this->indexOfBar1($aBar1)]);
+      $this->bar1s = array_values($this->bar1s);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public static function minimumNumberOfBar2s()
+  {
+    return 0;
+  }
+
+  public function addBar2Via()
+  {
+    return new Bar2($this);
+  }
+
+  public function addBar2($aBar2)
+  {
+    $wasAdded = false;
+    if ($this->indexOfBar2($aBar2) !== -1) { return false; }
+    $existingFoo = $aBar2->getFoo();
+    $isNewFoo = $existingFoo != null && $this !== $existingFoo;
+    if ($isNewFoo)
+    {
+      $aBar2->setFoo($this);
+    }
+    else
+    {
+      $this->bar2s[] = $aBar2;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeBar2($aBar2)
+  {
+    $wasRemoved = false;
+    //Unable to remove aBar2, as it must always have a foo
+    if ($this !== $aBar2->getFoo())
+    {
+      unset($this->bar2s[$this->indexOfBar2($aBar2)]);
+      $this->bar2s = array_values($this->bar2s);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public static function minimumNumberOfBar3s()
+  {
+    return 0;
+  }
+
+  public function addBar3Via()
+  {
+    return new Bar3($this);
+  }
+
+  public function addBar3($aBar3)
+  {
+    $wasAdded = false;
+    if ($this->indexOfBar3($aBar3) !== -1) { return false; }
+    $existingFoo = $aBar3->getFoo();
+    $isNewFoo = $existingFoo != null && $this !== $existingFoo;
+    if ($isNewFoo)
+    {
+      $aBar3->setFoo($this);
+    }
+    else
+    {
+      $this->bar3s[] = $aBar3;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeBar3($aBar3)
+  {
+    $wasRemoved = false;
+    //Unable to remove aBar3, as it must always have a foo
+    if ($this !== $aBar3->getFoo())
+    {
+      unset($this->bar3s[$this->indexOfBar3($aBar3)]);
+      $this->bar3s = array_values($this->bar3s);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public static function minimumNumberOfBar4s()
+  {
+    return 0;
+  }
+
+  public function addBar4Via()
+  {
+    return new Bar4($this);
+  }
+
+  public function addBar4($aBar4)
+  {
+    $wasAdded = false;
+    if ($this->indexOfBar4($aBar4) !== -1) { return false; }
+    $existingFoo = $aBar4->getFoo();
+    $isNewFoo = $existingFoo != null && $this !== $existingFoo;
+    if ($isNewFoo)
+    {
+      $aBar4->setFoo($this);
+    }
+    else
+    {
+      $this->bar4s[] = $aBar4;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeBar4($aBar4)
+  {
+    $wasRemoved = false;
+    //Unable to remove aBar4, as it must always have a foo
+    if ($this !== $aBar4->getFoo())
+    {
+      unset($this->bar4s[$this->indexOfBar4($aBar4)]);
+      $this->bar4s = array_values($this->bar4s);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->bar1s as $aBar1)
+    {
+      $aBar1->delete();
+    }
+    foreach ($this->bar2s as $aBar2)
+    {
+      $aBar2->delete();
+    }
+    foreach ($this->bar3s as $aBar3)
+    {
+      $aBar3->delete();
+    }
+    foreach ($this->bar4s as $aBar4)
+    {
+      $aBar4->delete();
+    }
+  }
+
+}
+?>

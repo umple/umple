@@ -1,0 +1,272 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Foo
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Foo Associations - for documentation purposes
+
+  =begin
+  Inline comment above association.
+  =end
+  #attr_reader :bar1s, :bar2s, :bar3s, :bar4s
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @bar1s = []
+    @bar2s = []
+    @bar3s = []
+    @bar4s = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_bar1(index)
+    a_bar1 = @bar1s[index]
+    a_bar1
+  end
+
+  def get_bar1s
+    new_bar1s = @bar1s.dup
+    new_bar1s
+  end
+
+  def number_of_bar1s
+    number = @bar1s.size
+    number
+  end
+
+  def has_bar1s
+    has = @bar1s.size > 0
+    has
+  end
+
+  def index_of_bar1(a_bar1)
+    index = @bar1s.index(a_bar1)
+    index = -1 if index.nil?
+    index
+  end
+
+  def get_bar2(index)
+    a_bar2 = @bar2s[index]
+    a_bar2
+  end
+
+  def get_bar2s
+    new_bar2s = @bar2s.dup
+    new_bar2s
+  end
+
+  def number_of_bar2s
+    number = @bar2s.size
+    number
+  end
+
+  def has_bar2s
+    has = @bar2s.size > 0
+    has
+  end
+
+  def index_of_bar2(a_bar2)
+    index = @bar2s.index(a_bar2)
+    index = -1 if index.nil?
+    index
+  end
+
+  def get_bar3(index)
+    a_bar3 = @bar3s[index]
+    a_bar3
+  end
+
+  def get_bar3s
+    new_bar3s = @bar3s.dup
+    new_bar3s
+  end
+
+  def number_of_bar3s
+    number = @bar3s.size
+    number
+  end
+
+  def has_bar3s
+    has = @bar3s.size > 0
+    has
+  end
+
+  def index_of_bar3(a_bar3)
+    index = @bar3s.index(a_bar3)
+    index = -1 if index.nil?
+    index
+  end
+
+  def get_bar4(index)
+    a_bar4 = @bar4s[index]
+    a_bar4
+  end
+
+  def get_bar4s
+    new_bar4s = @bar4s.dup
+    new_bar4s
+  end
+
+  def number_of_bar4s
+    number = @bar4s.size
+    number
+  end
+
+  def has_bar4s
+    has = @bar4s.size > 0
+    has
+  end
+
+  def index_of_bar4(a_bar4)
+    index = @bar4s.index(a_bar4)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_bar1s
+    0
+  end
+
+  def add_bar1(a_bar1)
+    was_added = false
+    return false if index_of_bar1(a_bar1) != -1
+    existing_foo = a_bar1.get_foo
+    is_new_foo = (!existing_foo.nil? and !existing_foo.eql?(self))
+    if is_new_foo
+      a_bar1.set_foo(self)
+    else
+      @bar1s << a_bar1
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_bar1(a_bar1)
+    was_removed = false
+    # Unable to remove a_bar1, as it must always have a foo
+    unless a_bar1.get_foo.eql?(self)
+      @bar1s.delete(a_bar1)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def self.minimum_number_of_bar2s
+    0
+  end
+
+  def add_bar2(a_bar2)
+    was_added = false
+    return false if index_of_bar2(a_bar2) != -1
+    existing_foo = a_bar2.get_foo
+    is_new_foo = (!existing_foo.nil? and !existing_foo.eql?(self))
+    if is_new_foo
+      a_bar2.set_foo(self)
+    else
+      @bar2s << a_bar2
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_bar2(a_bar2)
+    was_removed = false
+    # Unable to remove a_bar2, as it must always have a foo
+    unless a_bar2.get_foo.eql?(self)
+      @bar2s.delete(a_bar2)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def self.minimum_number_of_bar3s
+    0
+  end
+
+  def add_bar3(a_bar3)
+    was_added = false
+    return false if index_of_bar3(a_bar3) != -1
+    existing_foo = a_bar3.get_foo
+    is_new_foo = (!existing_foo.nil? and !existing_foo.eql?(self))
+    if is_new_foo
+      a_bar3.set_foo(self)
+    else
+      @bar3s << a_bar3
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_bar3(a_bar3)
+    was_removed = false
+    # Unable to remove a_bar3, as it must always have a foo
+    unless a_bar3.get_foo.eql?(self)
+      @bar3s.delete(a_bar3)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def self.minimum_number_of_bar4s
+    0
+  end
+
+  def add_bar4(a_bar4)
+    was_added = false
+    return false if index_of_bar4(a_bar4) != -1
+    existing_foo = a_bar4.get_foo
+    is_new_foo = (!existing_foo.nil? and !existing_foo.eql?(self))
+    if is_new_foo
+      a_bar4.set_foo(self)
+    else
+      @bar4s << a_bar4
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_bar4(a_bar4)
+    was_removed = false
+    # Unable to remove a_bar4, as it must always have a foo
+    unless a_bar4.get_foo.eql?(self)
+      @bar4s.delete(a_bar4)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def delete
+    @deleted = true
+    @bar1s.each do |a_bar1|
+      a_bar1.delete
+    end
+    @bar2s.each do |a_bar2|
+      a_bar2.delete
+    end
+    @bar3s.each do |a_bar3|
+      a_bar3.delete
+    end
+    @bar4s.each do |a_bar4|
+      a_bar4.delete
+    end
+  end
+
+end

@@ -1,0 +1,64 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+class Foo
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+ Foo::Foo()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+
+  /**
+   * Inline comment above method.
+   */
+   void Foo::testMethod1(){
+      System.out.println("Hello world!");
+  }
+
+
+  /**
+   * Multiple inline comments
+   * above method.
+   */
+   void Foo::testMethod2(){
+      System.out.println("Hello world!");
+  }
+
+
+  /**
+   * Multiline comment above method.
+   */
+   void Foo::testMethod3(){
+      System.out.println("Hello world!");
+  }
+
+
+  /**
+   * Multiple multiline comments
+   * above method.
+   */
+   void Foo::testMethod4(){
+      System.out.println("Hello world!");
+  }
+
+};

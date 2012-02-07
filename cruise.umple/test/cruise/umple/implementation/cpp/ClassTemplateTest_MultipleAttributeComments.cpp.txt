@@ -1,0 +1,111 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+class Foo
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * Inline comment above attribute.
+   */
+  String testAttribute1;
+
+  /**
+   * Multiple inline comments
+   * above attribute.
+   */
+  String testAttribute2;
+
+  /**
+   * Multiline comment above attribute.
+   */
+  String testAttribute3;
+
+  /**
+   * Multiple multiline comments
+   * above attribute.
+   */
+  String testAttribute4;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+ Foo::Foo(String aTestAttribute1, String aTestAttribute2, String aTestAttribute3, String aTestAttribute4)
+  {
+    testAttribute1 = aTestAttribute1;
+    testAttribute2 = aTestAttribute2;
+    testAttribute3 = aTestAttribute3;
+    testAttribute4 = aTestAttribute4;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Foo::setTestAttribute1(String aTestAttribute1)
+  {
+    bool wasSet = false;
+    testAttribute1 = aTestAttribute1;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Foo::setTestAttribute2(String aTestAttribute2)
+  {
+    bool wasSet = false;
+    testAttribute2 = aTestAttribute2;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Foo::setTestAttribute3(String aTestAttribute3)
+  {
+    bool wasSet = false;
+    testAttribute3 = aTestAttribute3;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Foo::setTestAttribute4(String aTestAttribute4)
+  {
+    bool wasSet = false;
+    testAttribute4 = aTestAttribute4;
+    wasSet = true;
+    return wasSet;
+  }
+
+  String Foo::getTestAttribute1()
+  {
+    return testAttribute1;
+  }
+
+  String Foo::getTestAttribute2()
+  {
+    return testAttribute2;
+  }
+
+  String Foo::getTestAttribute3()
+  {
+    return testAttribute3;
+  }
+
+  String Foo::getTestAttribute4()
+  {
+    return testAttribute4;
+  }
+
+  public void delete()
+  {}
+
+};
