@@ -213,6 +213,23 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     return "UNKNOWN ID: " + name;
   }
   
+  public String translate(String methodType)
+  {
+    if ("String".equals(methodType))
+    {
+      return "\"\"";
+    }
+    if ("int".equals(methodType))
+    {
+      return "0";
+    }
+    if ("boolean".equals(methodType))
+    {
+      return "false";
+    }       
+    return "null";
+  }
+  
   public String translate(String keyName, UmpleClass aClass)
   {
     if ("constructorMandatory".equals(keyName))

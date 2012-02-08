@@ -4,6 +4,5 @@ class Foo
   void testMethod()
   {
     // I am a comment inside a method.
-    System.out.println("Hello world!");
   }
 }

@@ -200,7 +200,7 @@ public class TemplateTest
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className)
   {
-	  System.out.println("Umplefile: [" + umpleFile + "]");
+	  //System.out.println("Umplefile: [" + umpleFile + "]");
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
 
     String actual = null;
@@ -223,10 +223,11 @@ public class TemplateTest
       actual = model.getGeneratedCode().get(className);
     }
 
-    System.out.println("Looking for codefile in: [" + pathToInput + "] filename: [" + codeFile + "]");
+    //System.out.println("Looking for codefile in: [" + pathToInput + "] filename: [" + codeFile + "]");
     
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
+    
     SampleFileWriter.assertFileContent(expected, actual);
   }
 

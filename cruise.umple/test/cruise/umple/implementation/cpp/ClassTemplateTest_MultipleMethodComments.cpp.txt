@@ -32,7 +32,7 @@ class Foo
    * Inline comment above method.
    */
    void Foo::testMethod1(){
-      System.out.println("Hello world!");
+      // I am a comment inside a method.
   }
 
 
@@ -41,7 +41,7 @@ class Foo
    * above method.
    */
    void Foo::testMethod2(){
-      System.out.println("Hello world!");
+      // I am a comment inside a method.
   }
 
 
@@ -49,7 +49,7 @@ class Foo
    * Multiline comment above method.
    */
    void Foo::testMethod3(){
-      System.out.println("Hello world!");
+      // I am a comment inside a method.
   }
 
 
@@ -58,7 +58,7 @@ class Foo
    * above method.
    */
    void Foo::testMethod4(){
-      System.out.println("Hello world!");
+      // I am a comment inside a method.
   }
 
 };

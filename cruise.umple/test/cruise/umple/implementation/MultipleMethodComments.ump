@@ -3,20 +3,20 @@ class Foo
 	// Inline comment above method.
 	void testMethod1()
 	{
-		System.out.println("Hello world!");
+		// I am a comment inside a method.
 	}
 	
 	// Multiple inline comments
 	// above method.
 	void testMethod2()
 	{
-		System.out.println("Hello world!");
+		// I am a comment inside a method.
 	}
 	
 	/* Multiline comment above method. */
 	void testMethod3()
 	{
-		System.out.println("Hello world!");
+		// I am a comment inside a method.
 	}
 	
 	/*
@@ -25,6 +25,6 @@ class Foo
 	 */
 	void testMethod4()
 	{
-		System.out.println("Hello world!");
+		// I am a comment inside a method.
 	}
 }

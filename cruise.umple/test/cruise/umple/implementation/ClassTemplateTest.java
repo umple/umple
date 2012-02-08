@@ -164,27 +164,18 @@ public class ClassTemplateTest extends TemplateTest
   @Test
   public void MethodInlineComment()
   {
-	  if (languagePath != "php")
-	  {
-		  assertUmpleTemplateFor("MethodInlineComment.ump",languagePath + "/ClassTemplateTest_MethodInlineComment."+languagePath+".txt","Foo");
-	  }
+	  assertUmpleTemplateFor("MethodInlineComment.ump",languagePath + "/ClassTemplateTest_MethodInlineComment."+languagePath+".txt","Foo");
   }
   
   @Test
   public void MethodMultilineComment()
   {
-	  if (languagePath != "php")
-	  {
-		  assertUmpleTemplateFor("MethodMultilineComment.ump",languagePath + "/ClassTemplateTest_MethodMultilineComment."+languagePath+".txt","Foo");
-	  }
+	  assertUmpleTemplateFor("MethodMultilineComment.ump",languagePath + "/ClassTemplateTest_MethodMultilineComment."+languagePath+".txt","Foo");
   }
   
   @Test
   public void MultipleMethodComments()
   {
-	  if (languagePath != "php")
-	  {
-		  assertUmpleTemplateFor("MultipleMethodComments.ump",languagePath + "/ClassTemplateTest_MultipleMethodComments."+languagePath+".txt","Foo");
-	  }
+	  assertUmpleTemplateFor("MultipleMethodComments.ump",languagePath + "/ClassTemplateTest_MultipleMethodComments."+languagePath+".txt","Foo");
   }
 }

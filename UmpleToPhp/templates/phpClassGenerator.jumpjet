@@ -62,6 +62,9 @@ class <%= uClass.getName() %><%= gen.translate("isA",uClass) %>
   <%@ include file="equals_default.jet" %>
 <% } %>
   <%@ include file="delete_All.jet" %>
+<% if (uClass.hasMethods()) { %>
+  <%@ include file="class_MethodDeclaration.jet" %>
+<% } %>
 <% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

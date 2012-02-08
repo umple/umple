@@ -1,9 +1,8 @@
+<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-
-
-public class Foo
+class Foo
 {
 
   //------------------------
@@ -14,22 +13,29 @@ public class Foo
   // CONSTRUCTOR
   //------------------------
 
-  public Foo()
+  public function __construct()
   {}
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public void delete()
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
   {}
 
 
   /**
    * I am a comment above a method.
    */
-  public void testMethod(){
-      // I am a comment inside a method.
+  public function testMethod()
+  {
+    // I am a comment inside a method.
   }
 
 }
+?>

@@ -6240,6 +6240,70 @@ public class PhpClassGenerator implements ILang
   
   
 
+     if (uClass.hasMethods()) { 
+    
+    if (uClass.hasMethods())
+    {
+    	for (Method aMethod : uClass.getMethods()) 
+    	{
+    		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+    		String methodName = aMethod.getName();
+    		String methodType = "function";
+    		String methodBody = aMethod.getIsImplemented() ? "      return \"\";" : aMethod.getMethodBody().getExtraCode();    		
+    		
+    		/*String methodBody = "";
+    		if (aMethod.getMethodBody() != null && aMethod.getMethodBody().getExtraCode() != null)
+    		{
+    			methodBody = aMethod.getMethodBody().getExtraCode();
+    		}*/
+    		
+    		String properMethodBody = "    " + methodBody; 
+    		//String override =  aMethod.getIsImplemented() ? "  @Override" : "";
+    		String paramName="";
+    		String paramType="";
+    		String aSingleParameter="";
+    		String isList="";
+    	    String parameters = "";
+    		if (aMethod.hasMethodParameters())
+    		{
+    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+    			{
+    				paramName = aMethodParam.getName();
+    				paramType = aMethodParam.getType();
+    				isList = aMethodParam.getIsList() ? " [] " : " ";
+    				aSingleParameter = paramType + isList + paramName;
+        			parameters += aSingleParameter + ", ";
+    			}
+    			
+    			String finalParams = parameters.substring(0, parameters.length()-2);
+
+				appendln(stringBuffer, "");
+				
+				if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Method Javadoc",aMethod.getComments())); }
+				
+    			//appendln(stringBuffer,override);
+    			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
+    			appendln(stringBuffer, "\n  {");
+    			appendln(stringBuffer, properMethodBody);
+    			appendln(stringBuffer, "  }");
+    			
+    		}
+    		else{
+    		
+	   			appendln(stringBuffer, "");
+	   			
+	   			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Method Javadoc",aMethod.getComments())); }
+	   			
+    			//appendln(stringBuffer,override);    			
+    			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
+    		    appendln(stringBuffer, "\n  {");
+    			appendln(stringBuffer, properMethodBody);
+    			appendln(stringBuffer, "  }");
+    		}
+    	}
+    }
+
+     } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
     stringBuffer.append(TEXT_1437);
     stringBuffer.append(TEXT_1438);

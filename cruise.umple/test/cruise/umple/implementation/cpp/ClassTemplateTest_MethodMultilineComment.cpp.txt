@@ -32,7 +32,7 @@ class Foo
    * I am a comment above a method.
    */
    void Foo::testMethod(){
-      System.out.println("Hello world!");
+      // I am a comment inside a method.
   }
 
 };
