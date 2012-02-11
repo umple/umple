@@ -1931,7 +1931,7 @@ public class JavaClassGenerator implements ILang
 
     appendln(stringBuffer, "");
     
-    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    //if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
     
     append(stringBuffer, "  private {0} {1};", type, attribute);
   }
@@ -3147,6 +3147,7 @@ public class JavaClassGenerator implements ILang
       else
       {
         
+     if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } 
     stringBuffer.append(TEXT_228);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_229);
@@ -3233,6 +3234,7 @@ public class JavaClassGenerator implements ILang
       else
       {
         
+     if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } 
     stringBuffer.append(TEXT_256);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_257);

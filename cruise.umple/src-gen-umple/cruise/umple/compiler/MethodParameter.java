@@ -12,10 +12,6 @@ public class MethodParameter extends UmpleVariable
 
   //MethodParameter Attributes
   private boolean isAutounique;
-
-  /**
-   * TODO: should default to false, but constructors would need updating
-   */
   private boolean isList;
   private boolean isDerived;
   private boolean isLazy;
@@ -74,6 +70,9 @@ public class MethodParameter extends UmpleVariable
     return isAutounique;
   }
 
+  /**
+   * TODO: should default to false, but constructors would need updating
+   */
   public boolean getIsList()
   {
     return isList;

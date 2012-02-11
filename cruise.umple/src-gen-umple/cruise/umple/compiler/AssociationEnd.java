@@ -18,10 +18,6 @@ public class AssociationEnd
   private String roleName;
   private String className;
   private String modifier;
-
-  /**
-   * potential enum 'internal'
-   */
   private String referenceToClassName;
   private Multiplicity multiplicity;
   private boolean isDefaultRoleName;
@@ -132,6 +128,9 @@ public class AssociationEnd
     return modifier;
   }
 
+  /**
+   * potential enum 'internal'
+   */
   public String getReferenceToClassName()
   {
     if (referenceToClassName == null) { return ""; }

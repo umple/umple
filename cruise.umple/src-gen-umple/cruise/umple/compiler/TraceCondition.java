@@ -11,10 +11,6 @@ public class TraceCondition
   //------------------------
 
   //TraceCondition Attributes
-
-  /**
-   * condition may be where, until, after, or giving
-   */
   private String conditionType;
   private boolean preCondition;
   private boolean postCondition;
@@ -75,6 +71,9 @@ public class TraceCondition
     return wasSet;
   }
 
+  /**
+   * condition may be where, until, after, or giving
+   */
   public String getConditionType()
   {
     return conditionType;

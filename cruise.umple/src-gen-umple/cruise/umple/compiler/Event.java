@@ -14,10 +14,6 @@ public class Event
   private String name;
   private boolean isTimer;
   private String timerInSeconds;
-
-  /**
-   * TODO: how do you specify milliseconds etc.
-   */
   private boolean isInternal;
 
   //Helper Variables
@@ -90,6 +86,9 @@ public class Event
     return timerInSeconds;
   }
 
+  /**
+   * TODO: how do you specify milliseconds etc.
+   */
   public boolean getIsInternal()
   {
     return isInternal;

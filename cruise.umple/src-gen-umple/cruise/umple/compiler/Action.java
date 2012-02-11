@@ -13,10 +13,6 @@ public class Action
   //Action Attributes
   private String actionType;
   private String actionCode;
-
-  /**
-   * target language code
-   */
   private boolean isInternal;
 
   //Helper Variables
@@ -78,6 +74,9 @@ public class Action
     return actionCode;
   }
 
+  /**
+   * target language code
+   */
   public boolean getIsInternal()
   {
     return isInternal;

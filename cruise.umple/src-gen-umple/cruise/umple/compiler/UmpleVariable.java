@@ -19,10 +19,6 @@ public class UmpleVariable
   private String name;
   private String type;
   private String modifier;
-
-  /**
-   * potential enum, 'settable'
-   */
   private String value;
 
   //------------------------
@@ -90,6 +86,9 @@ public class UmpleVariable
     return modifier;
   }
 
+  /**
+   * potential enum, 'settable'
+   */
   public String getValue()
   {
     return value;

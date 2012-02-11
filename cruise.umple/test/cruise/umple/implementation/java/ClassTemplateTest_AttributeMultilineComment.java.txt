@@ -11,10 +11,6 @@ public class Foo
   //------------------------
 
   //Foo Attributes
-
-  /**
-   * I am a multiline comment above an attribute.
-   */
   private String name;
 
   //------------------------
@@ -38,6 +34,9 @@ public class Foo
     return wasSet;
   }
 
+  /**
+   * I am a multiline comment above an attribute.
+   */
   public String getName()
   {
     return name;

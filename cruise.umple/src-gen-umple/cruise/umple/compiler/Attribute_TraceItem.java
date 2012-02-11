@@ -13,10 +13,6 @@ public class Attribute_TraceItem
 
   //Attribute_TraceItem Attributes
   private boolean traceSet;
-
-  /**
-   * defualt case is to trace setters
-   */
   private boolean traceGet;
   private int forClause;
   private String periodClause;
@@ -104,6 +100,9 @@ public class Attribute_TraceItem
     return traceSet;
   }
 
+  /**
+   * defualt case is to trace setters
+   */
   public boolean getTraceGet()
   {
     return traceGet;

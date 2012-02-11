@@ -16,10 +16,6 @@ public class Multiplicity
 
   //Multiplicity Attributes
   private String bound;
-
-  /**
-   * used when minimum=maximum;
-   */
   private String minimum;
   private String maximum;
 
@@ -80,6 +76,9 @@ public class Multiplicity
     return bound;
   }
 
+  /**
+   * used when minimum=maximum;
+   */
   public String getMinimum()
   {
     return minimum;

@@ -11,27 +11,9 @@ public class Foo
   //------------------------
 
   //Foo Attributes
-
-  /**
-   * Inline comment above attribute.
-   */
   private String testAttribute1;
-
-  /**
-   * Multiple inline comments
-   * above attribute.
-   */
   private String testAttribute2;
-
-  /**
-   * Multiline comment above attribute.
-   */
   private String testAttribute3;
-
-  /**
-   * Multiple multiline comments
-   * above attribute.
-   */
   private String testAttribute4;
 
   //------------------------
@@ -82,21 +64,35 @@ public class Foo
     return wasSet;
   }
 
+  /**
+   * Inline comment above attribute.
+   */
   public String getTestAttribute1()
   {
     return testAttribute1;
   }
 
+  /**
+   * Multiple inline comments
+   * above attribute.
+   */
   public String getTestAttribute2()
   {
     return testAttribute2;
   }
 
+  /**
+   * Multiline comment above attribute.
+   */
   public String getTestAttribute3()
   {
     return testAttribute3;
   }
 
+  /**
+   * Multiple multiline comments
+   * above attribute.
+   */
   public String getTestAttribute4()
   {
     return testAttribute4;

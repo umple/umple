@@ -11,10 +11,6 @@ public class Foo
   //------------------------
 
   //Foo Attributes
-
-  /**
-   * I am a inline comment above an attribute.
-   */
   private String bar;
 
   //------------------------
@@ -38,6 +34,9 @@ public class Foo
     return wasSet;
   }
 
+  /**
+   * I am a inline comment above an attribute.
+   */
   public String getBar()
   {
     return bar;

@@ -15,10 +15,6 @@ public class State
   private String name;
   private boolean isStartState;
   private boolean isInternal;
-
-  /**
-   * for code generation only e.g. ouside scope of nested state
-   */
   private boolean isHistoryState;
   private boolean isDeepHistoryState;
   private boolean finalState;
@@ -126,6 +122,9 @@ public class State
     return isInternal;
   }
 
+  /**
+   * for code generation only e.g. ouside scope of nested state
+   */
   public boolean getIsHistoryState()
   {
     return isHistoryState;
