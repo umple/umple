@@ -20,7 +20,7 @@
   
     appendln(stringBuffer, "");
     
-    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
+    //if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
     
     if (av.isOne())
     {

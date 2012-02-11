@@ -11,10 +11,6 @@ public class GeneratedClass extends GeneratedElement
   //------------------------
 
   //GeneratedClass Associations
-
-  /**
-   * code = null;
-   */
   private UmpleModel model;
   private UmpleClass uClass;
   private GeneratedClass parentClass;

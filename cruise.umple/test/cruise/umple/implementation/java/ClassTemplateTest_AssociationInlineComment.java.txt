@@ -12,10 +12,6 @@ public class Foo
   //------------------------
 
   //Foo Associations
-
-  /**
-   * I am a inline comment above an association.
-   */
   private List<Bar> bars;
 
   //------------------------
@@ -37,6 +33,9 @@ public class Foo
     return aBar;
   }
 
+  /**
+   * I am a inline comment above an association.
+   */
   public List<Bar> getBars()
   {
     List<Bar> newBars = Collections.unmodifiableList(bars);

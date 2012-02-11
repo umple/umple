@@ -12,27 +12,9 @@ public class Foo
   //------------------------
 
   //Foo Associations
-
-  /**
-   * Inline comment above association.
-   */
   private List<Bar1> bar1s;
-
-  /**
-   * Multiple inline comments
-   * above association.
-   */
   private List<Bar2> bar2s;
-
-  /**
-   * Multiline comment above association.
-   */
   private List<Bar3> bar3s;
-
-  /**
-   * Multiple multiline comments
-   * above association.
-   */
   private List<Bar4> bar4s;
 
   //------------------------
@@ -57,6 +39,9 @@ public class Foo
     return aBar1;
   }
 
+  /**
+   * Inline comment above association.
+   */
   public List<Bar1> getBar1s()
   {
     List<Bar1> newBar1s = Collections.unmodifiableList(bar1s);
@@ -87,6 +72,10 @@ public class Foo
     return aBar2;
   }
 
+  /**
+   * Multiple inline comments
+   * above association.
+   */
   public List<Bar2> getBar2s()
   {
     List<Bar2> newBar2s = Collections.unmodifiableList(bar2s);
@@ -117,6 +106,9 @@ public class Foo
     return aBar3;
   }
 
+  /**
+   * Multiline comment above association.
+   */
   public List<Bar3> getBar3s()
   {
     List<Bar3> newBar3s = Collections.unmodifiableList(bar3s);
@@ -147,6 +139,10 @@ public class Foo
     return aBar4;
   }
 
+  /**
+   * Multiple multiline comments
+   * above association.
+   */
   public List<Bar4> getBar4s()
   {
     List<Bar4> newBar4s = Collections.unmodifiableList(bar4s);

@@ -7,6 +7,7 @@
     return <%=gen.translate("parameterOne",av)%>;
   }
 
+  <% if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } %>
   public List<<%=gen.translate("type",av)%>> <%=gen.translate("getManyMethod",av)%>()
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
