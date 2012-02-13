@@ -30,7 +30,7 @@ saved), click 'Start Over'</li>
 
 <br />
 
-<li><b>To save of your work</b>, there are three approaches:
+<li><b>To save your work</b>, there are three approaches:
 
 <ol>
 <li><b>click 'Save Model for Future Editing'

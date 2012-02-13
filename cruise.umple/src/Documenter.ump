@@ -53,6 +53,7 @@ class Template
   const SyntaxTemplate = syntaxTemplate();
   const NavigationHeaderTemplate = navigationHeaderTemplate();
   const NavigationItemTemplate = navigationItemTemplate();
+  const NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
 }
 
 use Parser.ump;

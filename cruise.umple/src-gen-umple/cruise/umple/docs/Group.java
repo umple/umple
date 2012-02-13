@@ -103,5 +103,13 @@ public class Group
   {
     contents.clear();
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String getGroupIdName()
+  {
+    return name.replace(" ","");
+  }
 }

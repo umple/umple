@@ -47,7 +47,6 @@ class DocumenterMain
 }
 
 
-
 class Documenter
 {
   
@@ -67,7 +66,7 @@ class Documenter
     
     if (getParser().analyze().getWasSuccess())
     {
-      String message = "Created Goups:";
+      String message = "Created Groups:";
       for (Group g : getParser().getGroups())
       {
         message += " [" + g.getName() + "]";
@@ -87,18 +86,48 @@ class Documenter
   {
     File file = new File(path);
     file.mkdirs();
-    
-    String navigationOutput = toNavigationHtml();
+    String navigationOutput = "";
+    String sectionsToHide = "";
+    String prevNextOutput = "";
+    Group group = null;
+    Content content = null;
+    int numGroups = getParser().numberOfGroups();
+    int numContents = 0;
+
     Hashtable<String,String> referenceLookup = createReferenceLookup();
-    for (Group group : getParser().getGroups())
+    for (int gi=0; gi<numGroups; gi++)
     {
-      for (Content content : group.getContents())
+      group = getParser().getGroup(gi);
+      sectionsToHide = toSectionsToHideHtml(group);
+      numContents = group.numberOfContents();
+      for (int ci=0; ci<numContents; ci++)
       {
+        content = group.getContent(ci);
+        navigationOutput = toNavigationHtml(group, content);
         if (content.getShouldIncludeReferences())
         {
           updateReferences(content,referenceLookup);
         }
-        String htmlOutput = toHtml(content, navigationOutput);
+        
+        prevNextOutput="&nbsp; &nbsp;";
+
+        // Add file link to previous page if there is one
+        if(ci>0) {
+          prevNextOutput +="<a href=\"" + group.getContent(ci-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+        }
+        else if(gi > 0) {
+          prevNextOutput +="<a href=\"" + getParser().getGroup(gi-1).getContent(getParser().getGroup(gi-1).numberOfContents()-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+        }
+
+        // Add file link to next page if there is one
+        if(ci<(numContents -1)) {
+          prevNextOutput +="<a href=\"" + group.getContent(ci+1).getTitleFilename() + "\">[Next]</a>&nbsp; &nbsp;";
+        }
+        else if(gi<(numGroups -1)) {
+          prevNextOutput +="<a href=\"" + getParser().getGroup(gi+1).getContent(0).getTitleFilename() + "\">[Next]</a>&nbsp &nbsp;";
+        }
+        
+        String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput);
         
         if (htmlOutput.length() == 0)
         {
@@ -117,6 +146,7 @@ class Documenter
   public String toHtml(String title)
   {
     Content selectedContent = null;
+    Group selectedGroup = null;
     
     for (Group group : getParser().getGroups())
     {
@@ -125,12 +155,13 @@ class Documenter
         if (content.getTitle().equals(title))
         {
           selectedContent = content;
+          selectedGroup = group;
           break;
         }
       }
     }
     
-    return toHtml(selectedContent, toNavigationHtml());
+    return toHtml(selectedContent, toNavigationHtml(selectedGroup, selectedContent),  toSectionsToHideHtml(selectedGroup), "");
   }
 
   private Hashtable<String, String> createReferenceLookup()
@@ -200,7 +231,7 @@ class Documenter
     }
   }
   
-  private String toHtml(Content selectedContent, String navigationOutput)
+  private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput)
   {
     int endOfExampleBeforePosition=0;
     
@@ -211,7 +242,10 @@ class Documenter
     
     String htmlOutput = Template.HtmlTemplate;
     htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
+    htmlOutput = htmlOutput.replace("@@PREVNEXT@@", prevNextOutput);
     htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
+    htmlOutput = htmlOutput.replace("@@SECTIONSTOHIDE@@", toHideOutput);
+
     htmlOutput = htmlOutput.replace("@@DESCRIPTION@@", selectedContent.getDescription());
     
     if (selectedContent.getSyntax() == null)
@@ -247,24 +281,49 @@ class Documenter
     return htmlOutput;
   }
   
-  private String toNavigationHtml()
+  private String toNavigationHtml(Group groupToAlwaysShow, Content contentToNotHighlight)
   {
     String navigationOutput = "";
+    String theFileName = "";
+    String nextGroupItem = "";
     for (Group group : getParser().getGroups())
     {
       String nextGroupHeader = Template.NavigationHeaderTemplate;
-      nextGroupHeader = nextGroupHeader.replace("@@NAVIGATION_HEADER_NAME@@",group.getName());
+      nextGroupHeader = nextGroupHeader
+        .replace("@@NAVIGATION_HEADER_NAME@@",group.getName())
+        .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName())
+        .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName());
       navigationOutput += nextGroupHeader;
 
       for (Content content : group.getContents())
       {
-        String nextGroupItem = Template.NavigationItemTemplate;
-        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle()); 
-        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
+        if(content == contentToNotHighlight) {
+          nextGroupItem = Template.NavigationItemTemplateNoAnchor;
+        }
+        else {
+          nextGroupItem = Template.NavigationItemTemplate;
+        }
+        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle());
+        if(content != contentToNotHighlight) {
+          nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
+        }
         navigationOutput += nextGroupItem;
       }
+      navigationOutput +="        </div>";
     }
     return navigationOutput;
+  }
+  
+  private String toSectionsToHideHtml(Group groupToAlwaysShow)
+  {
+    String sectionsToHideOutput = "";
+    for (Group group : getParser().getGroups())
+    {
+      if(group != groupToAlwaysShow) {
+        sectionsToHideOutput +="showHide(\"" + group.getGroupIdName() + "\");\n";
+      }
+    }
+    return sectionsToHideOutput;
   }
 }
 
@@ -274,6 +333,14 @@ class Content
   public String getTitleFilename()
   {
     return title.replace(" ","") + ".html";
+  }
+}
+
+class Group
+{
+  public String getGroupIdName()
+  {
+    return name.replace(" ","");
   }
 }
 
@@ -347,14 +414,20 @@ class Template
   
   private static String navigationHeaderTemplate()
   {
-    return "        <div class=\"level1\">@@NAVIGATION_HEADER_NAME@@</div>" + "\n";
+    return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
+           "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
   
   private static String navigationItemTemplate()
   {
-    return "        <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
+    return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
-  
+ 
+  private static String navigationItemTemplateNoAnchor()
+  {
+    return "          <div class=\"level2\"><b>@@NAVIGATION_ITEM_NAME@@</b></div>" + "\n";
+  }
+    
   private static String exampleTemplate()
   {
     String template = "" + 
@@ -389,7 +462,19 @@ class Template
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
-        "  <title>@@TITLE@@</title>" + "\n" +
+        "  <title>Umple User Manual: @@TITLE@@</title>" + "\n" +
+        "  <script type=\"text/javascript\">" + "\n" +
+        "    function showHide(section)" + "\n" +
+        "    {" + "\n" +
+        "      var sectionDivStyle = document.getElementById(section).style;" + "\n" +
+        "      if(sectionDivStyle.display==\"none\") {" + "\n" +
+        "        sectionDivStyle.display=\"inherit\";" + "\n" +
+        "      }" + "\n" +
+        "      else {" + "\n" +
+        "        sectionDivStyle.display=\"none\";" + "\n" +
+        "      }" + "\n" +
+        "    }" + "\n" +
+        "  </script>" + "\n" +
         "</head>" + "\n" +
         "" + "\n" +
         "<body>" + "\n" +
@@ -404,25 +489,28 @@ class Template
         "    <td class=\"menu\">" + "\n" +
         "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">Umple Home<br/>Page</a></div>" + "\n" +
         "@@NAVIGATION@@" + "\n" +
+        "<div class=\"level1\">@@PREVNEXT@@</div>\n" +
         "    </td>" + "\n" +
         "" + "\n" +
         "    <td class=\"dotSeparator\"><img src=\"files/dots.gif\" alt=\"list of dots\" /></td>" + "\n" +
         "" + "\n" +
         "      <td class=\"content\">" + "\n" +
         "" + "\n" +
-        "      <h1>@@TITLE@@</h1>" + "\n" +
+        "      <h2><i>Umple User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
+        "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +
         "@@SYNTAX@@" + "\n" +
         "@@EXAMPLE@@" + "\n" +
         "      </td>" + "\n" +
         "    </tr>" + "\n" +
-        "  </tbody></table>" + "\n" +
+        "  </tbody></table>" + 
         "<link type=\"text/css\" rel=\"stylesheet\" href=\"syntaxhighlighter/SyntaxHighlighter.css\"></link>" + "\n" +
         "<script language=\"javascript\" src=\"syntaxhighlighter/shCore.js\"></script>" + "\n" +
         "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushCSharp.js\"></script>" + "\n" +
         "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushXml.js\"></script>" + "\n" +
         "<script language=\"javascript\">" + "\n" +
+        "@@SECTIONSTOHIDE@@" + "\n" +
         "dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';" + "\n" +
         "dp.SyntaxHighlighter.HighlightAll('code');" + "\n" +
         "</script>" + "\n" +

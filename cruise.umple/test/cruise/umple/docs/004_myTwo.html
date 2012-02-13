@@ -4,7 +4,19 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" type="text/css" href="files/layout.css" />
   <script type="text/javascript" src="files/script.js"></script>
-  <title>myTwo</title>
+  <title>Umple User Manual: myTwo</title>
+  <script type="text/javascript">
+    function showHide(section)
+    {
+      var sectionDivStyle = document.getElementById(section).style;
+      if(sectionDivStyle.display=="none") {
+        sectionDivStyle.display="inherit";
+      }
+      else {
+        sectionDivStyle.display="none";
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -18,17 +30,19 @@
 
     <td class="menu">
       <div class="title"><a href="http://cruise.site.uottawa.ca/umple">Umple Home<br/>Page</a></div>
-        <div class="level1">General</div>
-        <div class="level2"><a href="myOne.html" >myOne</a></div>
-        <div class="level2"><a href="myTwo.html" >myTwo</a></div>
-
+        <div class="level1"><a href="javascript:showHide('General');">General</a></div>
+        <div id="General">          <div class="level2"><a href="myOne.html" >myOne</a></div>
+          <div class="level2"><b>myTwo</b></div>
+        </div>
+<div class="level1">&nbsp; &nbsp;<a href="myOne.html">[Previous]</a>&nbsp &nbsp;</div>
     </td>
 
     <td class="dotSeparator"><img src="files/dots.gif" alt="list of dots" /></td>
 
       <td class="content">
 
-      <h1>myTwo</h1>
+      <h2><i>Umple User Manual &nbsp; &nbsp;<a href="myOne.html">[Previous]</a>&nbsp &nbsp;</i></h2>
+      <h1><font size="+1">myTwo</font></h1>
       <p class="description"><a href="myOne.html">myOne</a> references myTwo</p>
 
       <h3>Syntax</h3>
@@ -40,12 +54,12 @@
 
       </td>
     </tr>
-  </tbody></table>
-<link type="text/css" rel="stylesheet" href="syntaxhighlighter/SyntaxHighlighter.css"></link>
+  </tbody></table><link type="text/css" rel="stylesheet" href="syntaxhighlighter/SyntaxHighlighter.css"></link>
 <script language="javascript" src="syntaxhighlighter/shCore.js"></script>
 <script language="javascript" src="syntaxhighlighter/shBrushCSharp.js"></script>
 <script language="javascript" src="syntaxhighlighter/shBrushXml.js"></script>
 <script language="javascript">
+
 dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';
 dp.SyntaxHighlighter.HighlightAll('code');
 </script>

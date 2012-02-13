@@ -15,6 +15,7 @@ public class Template
   public static final String SyntaxTemplate = syntaxTemplate();
   public static final String NavigationHeaderTemplate = navigationHeaderTemplate();
   public static final String NavigationItemTemplate = navigationItemTemplate();
+  public static final String NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
 
   //------------------------
   // MEMBER VARIABLES
@@ -40,14 +41,20 @@ public class Template
   
   private static String navigationHeaderTemplate()
   {
-    return "        <div class=\"level1\">@@NAVIGATION_HEADER_NAME@@</div>" + "\n";
+    return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
+           "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
   
   private static String navigationItemTemplate()
   {
-    return "        <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
+    return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
-  
+ 
+  private static String navigationItemTemplateNoAnchor()
+  {
+    return "          <div class=\"level2\"><b>@@NAVIGATION_ITEM_NAME@@</b></div>" + "\n";
+  }
+    
   private static String exampleTemplate()
   {
     String template = "" + 
@@ -82,7 +89,19 @@ public class Template
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
-        "  <title>@@TITLE@@</title>" + "\n" +
+        "  <title>Umple User Manual: @@TITLE@@</title>" + "\n" +
+        "  <script type=\"text/javascript\">" + "\n" +
+        "    function showHide(section)" + "\n" +
+        "    {" + "\n" +
+        "      var sectionDivStyle = document.getElementById(section).style;" + "\n" +
+        "      if(sectionDivStyle.display==\"none\") {" + "\n" +
+        "        sectionDivStyle.display=\"inherit\";" + "\n" +
+        "      }" + "\n" +
+        "      else {" + "\n" +
+        "        sectionDivStyle.display=\"none\";" + "\n" +
+        "      }" + "\n" +
+        "    }" + "\n" +
+        "  </script>" + "\n" +
         "</head>" + "\n" +
         "" + "\n" +
         "<body>" + "\n" +
@@ -97,25 +116,28 @@ public class Template
         "    <td class=\"menu\">" + "\n" +
         "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">Umple Home<br/>Page</a></div>" + "\n" +
         "@@NAVIGATION@@" + "\n" +
+        "<div class=\"level1\">@@PREVNEXT@@</div>\n" +
         "    </td>" + "\n" +
         "" + "\n" +
         "    <td class=\"dotSeparator\"><img src=\"files/dots.gif\" alt=\"list of dots\" /></td>" + "\n" +
         "" + "\n" +
         "      <td class=\"content\">" + "\n" +
         "" + "\n" +
-        "      <h1>@@TITLE@@</h1>" + "\n" +
+        "      <h2><i>Umple User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
+        "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +
         "@@SYNTAX@@" + "\n" +
         "@@EXAMPLE@@" + "\n" +
         "      </td>" + "\n" +
         "    </tr>" + "\n" +
-        "  </tbody></table>" + "\n" +
+        "  </tbody></table>" + 
         "<link type=\"text/css\" rel=\"stylesheet\" href=\"syntaxhighlighter/SyntaxHighlighter.css\"></link>" + "\n" +
         "<script language=\"javascript\" src=\"syntaxhighlighter/shCore.js\"></script>" + "\n" +
         "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushCSharp.js\"></script>" + "\n" +
         "<script language=\"javascript\" src=\"syntaxhighlighter/shBrushXml.js\"></script>" + "\n" +
         "<script language=\"javascript\">" + "\n" +
+        "@@SECTIONSTOHIDE@@" + "\n" +
         "dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';" + "\n" +
         "dp.SyntaxHighlighter.HighlightAll('code');" + "\n" +
         "</script>" + "\n" +

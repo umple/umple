@@ -146,7 +146,7 @@ public class Documenter
     
     if (getParser().analyze().getWasSuccess())
     {
-      String message = "Created Goups:";
+      String message = "Created Groups:";
       for (Group g : getParser().getGroups())
       {
         message += " [" + g.getName() + "]";
@@ -166,18 +166,48 @@ public class Documenter
   {
     File file = new File(path);
     file.mkdirs();
-    
-    String navigationOutput = toNavigationHtml();
+    String navigationOutput = "";
+    String sectionsToHide = "";
+    String prevNextOutput = "";
+    Group group = null;
+    Content content = null;
+    int numGroups = getParser().numberOfGroups();
+    int numContents = 0;
+
     Hashtable<String,String> referenceLookup = createReferenceLookup();
-    for (Group group : getParser().getGroups())
+    for (int gi=0; gi<numGroups; gi++)
     {
-      for (Content content : group.getContents())
+      group = getParser().getGroup(gi);
+      sectionsToHide = toSectionsToHideHtml(group);
+      numContents = group.numberOfContents();
+      for (int ci=0; ci<numContents; ci++)
       {
+        content = group.getContent(ci);
+        navigationOutput = toNavigationHtml(group, content);
         if (content.getShouldIncludeReferences())
         {
           updateReferences(content,referenceLookup);
         }
-        String htmlOutput = toHtml(content, navigationOutput);
+        
+        prevNextOutput="&nbsp; &nbsp;";
+
+        // Add file link to previous page if there is one
+        if(ci>0) {
+          prevNextOutput +="<a href=\"" + group.getContent(ci-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+        }
+        else if(gi > 0) {
+          prevNextOutput +="<a href=\"" + getParser().getGroup(gi-1).getContent(getParser().getGroup(gi-1).numberOfContents()-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+        }
+
+        // Add file link to next page if there is one
+        if(ci<(numContents -1)) {
+          prevNextOutput +="<a href=\"" + group.getContent(ci+1).getTitleFilename() + "\">[Next]</a>&nbsp; &nbsp;";
+        }
+        else if(gi<(numGroups -1)) {
+          prevNextOutput +="<a href=\"" + getParser().getGroup(gi+1).getContent(0).getTitleFilename() + "\">[Next]</a>&nbsp &nbsp;";
+        }
+        
+        String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput);
         
         if (htmlOutput.length() == 0)
         {
@@ -196,6 +226,7 @@ public class Documenter
   public String toHtml(String title)
   {
     Content selectedContent = null;
+    Group selectedGroup = null;
     
     for (Group group : getParser().getGroups())
     {
@@ -204,12 +235,13 @@ public class Documenter
         if (content.getTitle().equals(title))
         {
           selectedContent = content;
+          selectedGroup = group;
           break;
         }
       }
     }
     
-    return toHtml(selectedContent, toNavigationHtml());
+    return toHtml(selectedContent, toNavigationHtml(selectedGroup, selectedContent),  toSectionsToHideHtml(selectedGroup), "");
   }
 
   private Hashtable<String, String> createReferenceLookup()
@@ -279,7 +311,7 @@ public class Documenter
     }
   }
   
-  private String toHtml(Content selectedContent, String navigationOutput)
+  private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput)
   {
     int endOfExampleBeforePosition=0;
     
@@ -290,7 +322,10 @@ public class Documenter
     
     String htmlOutput = Template.HtmlTemplate;
     htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
+    htmlOutput = htmlOutput.replace("@@PREVNEXT@@", prevNextOutput);
     htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
+    htmlOutput = htmlOutput.replace("@@SECTIONSTOHIDE@@", toHideOutput);
+
     htmlOutput = htmlOutput.replace("@@DESCRIPTION@@", selectedContent.getDescription());
     
     if (selectedContent.getSyntax() == null)
@@ -326,23 +361,48 @@ public class Documenter
     return htmlOutput;
   }
   
-  private String toNavigationHtml()
+  private String toNavigationHtml(Group groupToAlwaysShow, Content contentToNotHighlight)
   {
     String navigationOutput = "";
+    String theFileName = "";
+    String nextGroupItem = "";
     for (Group group : getParser().getGroups())
     {
       String nextGroupHeader = Template.NavigationHeaderTemplate;
-      nextGroupHeader = nextGroupHeader.replace("@@NAVIGATION_HEADER_NAME@@",group.getName());
+      nextGroupHeader = nextGroupHeader
+        .replace("@@NAVIGATION_HEADER_NAME@@",group.getName())
+        .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName())
+        .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName());
       navigationOutput += nextGroupHeader;
 
       for (Content content : group.getContents())
       {
-        String nextGroupItem = Template.NavigationItemTemplate;
-        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle()); 
-        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
+        if(content == contentToNotHighlight) {
+          nextGroupItem = Template.NavigationItemTemplateNoAnchor;
+        }
+        else {
+          nextGroupItem = Template.NavigationItemTemplate;
+        }
+        nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle());
+        if(content != contentToNotHighlight) {
+          nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
+        }
         navigationOutput += nextGroupItem;
       }
+      navigationOutput +="        </div>";
     }
     return navigationOutput;
+  }
+  
+  private String toSectionsToHideHtml(Group groupToAlwaysShow)
+  {
+    String sectionsToHideOutput = "";
+    for (Group group : getParser().getGroups())
+    {
+      if(group != groupToAlwaysShow) {
+        sectionsToHideOutput +="showHide(\"" + group.getGroupIdName() + "\");\n";
+      }
+    }
+    return sectionsToHideOutput;
   }
 }
