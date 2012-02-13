@@ -30,7 +30,9 @@ class Foo
   =begin
   I am a comment above a method.
   =end
- def testMethod()end
+  def testMethod()
+    // I am a comment inside a method.
+  end
 
 
 

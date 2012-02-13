@@ -26,38 +26,10 @@ class Foo
     @deleted = true
   end
 
-
-  =begin
-  Inline comment above method.
-  =end
-  def testMethod1()
-    // I am a comment inside a method.
-  end
-
-
-  =begin
-  Multiple inline comments
-  above method.
-  =end
-  def testMethod2()
-    // I am a comment inside a method.
-  end
-
-
-  =begin
-  Multiline comment above method.
-  =end
-  def testMethod3()
-    // I am a comment inside a method.
-  end
-
-
-  =begin
-  Multiple multiline comments
-  above method.
-  =end
-  def testMethod4()
-    // I am a comment inside a method.
+  def testMethod (firstName,lastName)
+    @fullName = firstName + ' ' + lastName
+		@greeting = 'Hello there ' + @fullName
+		@greeting = @greeting + ', how are you doing?'
   end
 
 

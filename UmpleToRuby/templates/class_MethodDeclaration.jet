@@ -5,6 +5,37 @@
     	for (Method aMethod : uClass.getMethods()) 
     	{
     		String methodName = aMethod.getName();
+    		
+    		String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
+    		String properMethodBody = "    " + methodBody;
+    		
+    		/*String lines[] = properMethodBody.split("\n");
+    		properMethodBody = "";
+    		int lineNumber = 0;
+    		
+		    for (String line : lines)
+		    {
+		    	int startIndex = 0;
+				
+				// Go through each line ensuring there are at most 4 spaces for the prefix.
+				for (int i = 0; i < line.length(); i++)
+				{
+					char letter = line.charAt(i);
+					// Remove these letters until the actual content is found in the line.
+					if (letter == ' ' || letter == '\t')
+					{
+						startIndex++;
+					}
+					// Line content found, start the line from here.
+					else
+					{
+						line = line.substring(startIndex);
+						properMethodBody += "    " + line + "\n";
+						break;
+					}
+				}
+		    }*/
+    		
     		String paramName="";
     	    String parameters = "";
     		if (aMethod.hasMethodParameters())
@@ -19,8 +50,11 @@
     			
     			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
     			
-    			append(stringBuffer, " def {0} ({1})", methodName, finalParams);	
-				appendln(stringBuffer, "end");
+    			append(stringBuffer, "  def {0} ({1})\n", methodName, finalParams);	
+    			
+    			appendln(stringBuffer, properMethodBody);
+    			
+				appendln(stringBuffer, "  end");
     			
     		}
     		else{
@@ -28,8 +62,11 @@
     			
     			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
     			
-    			append(stringBuffer, " def {0}()", methodName);
-    			appendln(stringBuffer, "end");
+    			append(stringBuffer, "  def {0}()\n", methodName);
+    			
+    			appendln(stringBuffer, properMethodBody);
+    			
+    			appendln(stringBuffer, "  end");
     		}
     	}
     }

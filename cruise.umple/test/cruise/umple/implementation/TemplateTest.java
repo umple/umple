@@ -227,6 +227,7 @@ public class TemplateTest
     
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
+    System.out.println("Expected: " + expected.toString());
     
     SampleFileWriter.assertFileContent(expected, actual);
   }
