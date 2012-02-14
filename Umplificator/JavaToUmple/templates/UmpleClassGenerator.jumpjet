@@ -3,11 +3,12 @@
 
 namespace <%=uClass.getNamespace(0) %> ;
 
-class <%=uClass.getName()%>
+class <%=uClass.getName()%> 
 {
   <%@ include file="depends.jet" %>
   <%@ include file="inheritance.jet" %>
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllAssociations.jet" %>
   <%@ include file="members_AllMethods.jet" %>
+  <%=uClass.getExtraCode()%>
 }

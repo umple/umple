@@ -2,7 +2,9 @@
 <%
   for (Depend depend : uClass.getDepends())
   {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "depend {0};",depend.getName());
+  	if (depend != null) {
+   	    appendln(stringBuffer, "");
+    	append(stringBuffer, "depend {0};",depend.getName());
+    }
   }
 %>

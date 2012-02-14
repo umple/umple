@@ -39,8 +39,28 @@
                class="cruise.umple.umplificator.core.ui.action.UmplifyElementAction"
                enablesFor="*"
                id="cruise.umple.umplificator.ui.action.UmplifyElementAction"
-               label="Umplify Element"
-               menubarPath="cruise.umple.umplificator.ui.menu.contextMenu/group1">
+               label="Umplify Classes"
+               menubarPath="cruise.umple.umplificator.ui.menu.contextMenu/group1"
+               state="true"
+               style="radio">
+         </action>
+              <action
+                    class="cruise.umple.umplificator.core.ui.action.UmplifyElementAction"
+                    enablesFor="*"
+                    id="cruise.umple.umplificator.ui.action.UmplifyElementAction"
+                    label="Umplify Attributes"
+                    menubarPath="cruise.umple.umplificator.ui.menu.contextMenu/group1"
+                    state="false"
+                    style="radio">
+         </action>
+              <action
+                    class="cruise.umple.umplificator.core.ui.action.UmplifyElementAction"
+                    enablesFor="*"
+                    id="cruise.umple.umplificator.ui.action.UmplifyElementAction"
+                    label="Umplify Associations"
+                    menubarPath="cruise.umple.umplificator.ui.menu.contextMenu/group1"
+                    state="false"
+                    style="radio">
          </action>
         
       </objectContribution>

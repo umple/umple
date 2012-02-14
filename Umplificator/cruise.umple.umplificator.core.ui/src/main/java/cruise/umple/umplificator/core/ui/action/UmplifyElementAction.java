@@ -27,6 +27,7 @@ public class UmplifyElementAction implements IObjectActionDelegate {
 	private static Logger logger = Logger.getLogger(UmplifyElementAction.class);
 	private IStructuredSelection selection;
 	private Shell shell;
+	private String levelOfRefactoring ;
 	
 	/**
 	 * The constructor.
@@ -62,9 +63,10 @@ public class UmplifyElementAction implements IObjectActionDelegate {
 		MessageDialog.openInformation(
 				shell,
 				"Umplificator",
-				"Umplificating Class");
+				"Umplificating Process Started");
 		logger.info("Umplificating a class has started");
 		IStructuredSelection structured = (IStructuredSelection)selection;
+		levelOfRefactoring = action.getText();
 		umplifyElement(structured.getFirstElement());
 	}
 
@@ -82,17 +84,30 @@ public class UmplifyElementAction implements IObjectActionDelegate {
 	}
 
 	private boolean umplifyUnit(ICompilationUnit unit){
-		UmpleGenerator.translateJavaClass(unit);
+		UmpleGenerator.translateJavaClass(unit, getLevelOfUmplification());
 		return false;
 	}
 	private boolean umplifyPackage(IPackageFragment aPackage){
-		UmpleGenerator.translateJavaClassesInPackage(aPackage);
+		UmpleGenerator.translateJavaClassesInPackage(aPackage, getLevelOfUmplification());
 		return false;
 	}
 	private boolean umplifyProject(IJavaProject project){
-		UmpleGenerator.translateJavaClassesInProject(project);
+		UmpleGenerator.translateJavaClassesInProject(project,getLevelOfUmplification());
 		return false;
 	}
+	
+	private int getLevelOfUmplification(){
+		if (levelOfRefactoring.equals("Umplify Classes")){
+			return 0;	
+		}
+		else if (levelOfRefactoring.equals("Umplify Attributes")){
+			return 1;	
+		}
+		else{
+			return 2;	
+		}
+	}
+	
 	
 	/**
 	 * We can use this method to dispose of any system

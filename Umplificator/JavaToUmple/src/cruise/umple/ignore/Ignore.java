@@ -15,9 +15,6 @@ public class Ignore
   public String generate(Object argument)
   {
     final StringBuffer stringBuffer = new StringBuffer();
-    
-
-
     return stringBuffer.toString();
   }
 }

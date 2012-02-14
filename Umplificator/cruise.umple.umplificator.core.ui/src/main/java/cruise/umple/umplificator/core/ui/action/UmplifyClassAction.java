@@ -69,7 +69,7 @@ public class UmplifyClassAction implements IObjectActionDelegate {
 
 
 	private void umplifyUnit(ICompilationUnit unit){
-		UmpleGenerator.translateJavaClass(unit);
+		//UmpleGenerator.translateJavaClass(unit);
 	}
 	
 	/**

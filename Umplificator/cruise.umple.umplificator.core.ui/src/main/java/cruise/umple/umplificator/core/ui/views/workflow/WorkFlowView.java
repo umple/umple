@@ -282,7 +282,7 @@ public class WorkFlowView extends ViewPart {
 	public void createPreconfiguredTask(){
 		workflow = currentJavaProject.getWorkflowModel();
 		WorkflowFactory factory = WorkflowFactory.eINSTANCE;
-
+/*
 		RefactoringTask newTask = factory.createRefactoringTask();
 		newTask.setName("Class Refactoring");
 		newTask.setDescription("True");
@@ -303,7 +303,7 @@ public class WorkFlowView extends ViewPart {
 		
 		workflow.getRefactoringTask().add(newTask);
 		workflow.getRefactoringTask().add(attributeTask);
-		workflow.getRefactoringTask().add(associationTask);
+		workflow.getRefactoringTask().add(associationTask);*/
 		currentJavaProject.updateResources();
 	}
 

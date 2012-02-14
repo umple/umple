@@ -33,7 +33,6 @@ import cruise.umple.umplificator.UmpleClassGenerator;
 public class UmpleGenerator {
 	
 	private static Logger logger = Logger.getLogger(UmpleGenerator.class);
-	private static String SOURCE_FOLDER = "src";
 	
 	public static String translatePackageName(ICompilationUnit unit) throws JavaModelException {
 		IType type = unit.getType(unit.getElementName());
@@ -93,24 +92,24 @@ public class UmpleGenerator {
 		return methodContent.toString();
 	}
 	
-	public static void translateJavaClassesInPackage(IPackageFragment aPackage) {
+	public static void translateJavaClassesInPackage(IPackageFragment aPackage,int level) {
 		ICompilationUnit [] units= JavaPackageInventory.getUnitsFromPackage(aPackage);
 		for (ICompilationUnit unit: units){
-			translateJavaClass(unit);
+			translateJavaClass(unit,level);
 		}
 		
 	}
 	
-	public static void translateJavaClassesInProject(IJavaProject project) {
+	public static void translateJavaClassesInProject(IJavaProject project, int level) {
 		IPackageFragment [] packages = JavaProjectInventory.getPackagesFromProject(project);
 		for (IPackageFragment aPackage: packages){
-			translateJavaClassesInPackage(aPackage);
+			translateJavaClassesInPackage(aPackage,level);
 		}
 	}
 	
-	public static void translateJavaClass(ICompilationUnit unit){
+	public static void translateJavaClass(ICompilationUnit unit, int level){
 	    JavaMetamodelConverter converter = new JavaMetamodelConverter();
-	    UmpleClass uClass = converter.getUmpleClassFromJavaClass(unit);
+	    UmpleClass uClass = converter.getUmpleClassFromJavaClass(unit, level);
 	    UmpleClassGenerator generator = new UmpleClassGenerator();
 		writeFile(unit, generator.getCode(null, uClass));
 	}
@@ -130,8 +129,8 @@ public class UmpleGenerator {
 		String fileName= className + ".ump";
 		try {
 			String subFolderNames = unit.getType(unit.getElementName()).getPackageFragment().getElementName().replace(".", File.separator);
-			String pathForUmpleFile = File.separator + SOURCE_FOLDER +  File.separator + subFolderNames +   File.separator + fileName; 
-			IFile outputFile = unit.getJavaProject().getProject().getFile(pathForUmpleFile); 
+			String pathForUmpleFile = File.separator + "src/main/java" +  File.separator + subFolderNames +   File.separator + fileName; 
+			IFile outputFile = unit.getJavaProject().getProject().getFile(pathForUmpleFile);
 			InputStream source = new ByteArrayInputStream(contents.toString().getBytes());
 			
 			if (outputFile.exists()) {

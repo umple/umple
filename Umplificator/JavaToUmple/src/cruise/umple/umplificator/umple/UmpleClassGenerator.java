@@ -20,10 +20,12 @@ public class UmpleClassGenerator
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the Java Umplificator!*/" + NL + "" + NL + "namespace ";
   protected final String TEXT_2 = " ;" + NL + "" + NL + "class ";
-  protected final String TEXT_3 = NL + "{";
+  protected final String TEXT_3 = " " + NL + "{";
   protected final String TEXT_4 = NL + "  isA ";
   protected final String TEXT_5 = ";";
-  protected final String TEXT_6 = NL + "}";
+  protected final String TEXT_6 = NL;
+  protected final String TEXT_7 = NL + "  ";
+  protected final String TEXT_8 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -52,8 +54,10 @@ public class UmpleClassGenerator
     
   for (Depend depend : uClass.getDepends())
   {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "depend {0};",depend.getName());
+  	if (depend != null) {
+   	    appendln(stringBuffer, "");
+    	append(stringBuffer, "depend {0};",depend.getName());
+    }
   }
 
     if (uClass.getExtendsClass() != null){
@@ -61,21 +65,25 @@ public class UmpleClassGenerator
     stringBuffer.append(uClass.getExtendsClass().getName() );
     stringBuffer.append(TEXT_5);
     }
+    stringBuffer.append(TEXT_6);
     
   for (Attribute av : uClass.getAttributes()) 
   {
-  	String name = av.getName();
-	String type = av.getType();
-	String value= "= " + av.getValue();
-	String attr  = type + " " + name + value + ";" +  "\n";			
+  	if (av != null){
+  		String name = av.getName();
+		String type = av.getType();
+		String value= (av.getValue().length() > 0) ?  "= " + av.getValue() : "" ;
+		String attr  = type + " " + name + value + ";";
+	    appendln(stringBuffer, "");
+	    append(stringBuffer, attr);
+	}			
   }
 
     
 
-    
-
-
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_7);
+    stringBuffer.append(uClass.getExtraCode());
+    stringBuffer.append(TEXT_8);
     return stringBuffer.toString();
   }
 }
