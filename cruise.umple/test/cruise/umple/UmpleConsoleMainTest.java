@@ -9,6 +9,8 @@
 
 package cruise.umple;
 
+import java.io.*;
+
 import org.junit.*;
 
 import cruise.umple.util.SampleFileWriter;
@@ -39,7 +41,7 @@ public class UmpleConsoleMainTest
    String[] args = new String[0];
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Usage: java -jar umple.jar <umple_file>\nExample: java -jar umple.jar airline.ump\n", UmpleConsoleMain.console);
+   Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", UmpleConsoleMain.console);
   }
   
 
@@ -63,7 +65,41 @@ public class UmpleConsoleMainTest
    String[] args = new String[] { "--IDONTEXIST"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Option:\'IDONTEXIST\' is not a recognized option\n", UmpleConsoleMain.console);
+   Assert.assertEquals("Option:\'IDONTEXIST\' is not a recognized option\nUsage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", UmpleConsoleMain.console);
   }
-
+  
+  @Test
+  public void outputLang() {
+	String[] javaargs = new String[] {"-g", "Java", "testclass.ump"};
+	String[] cppargs = new String[] {"-g", "Cpp", "testclass.ump"};
+	String[] phpargs = new String[] {"-g", "Php", "testclass.ump"};
+	
+	try {
+		BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
+	
+	    out.write("class testclass {}");
+	    out.close();
+	    UmpleConsoleMain.main(javaargs);
+	    File javaout = new File("testclass.java");
+	    Assert.assertEquals(true, javaout.exists());
+	    javaout.delete();
+	    
+	    UmpleConsoleMain.main(cppargs);
+	    File cppout = new File("testclass.cpp");
+	    File chout = new File("testclass.h");
+	    Assert.assertEquals(true, cppout.exists());
+	    Assert.assertEquals(true, chout.exists());
+	    cppout.delete();
+	    chout.delete();
+	    
+	    UmpleConsoleMain.main(phpargs);
+	    File phpout = new File("testclass.php");
+	    Assert.assertEquals(true, phpout.exists());
+	    phpout.delete();
+	    
+	    new File("testclass.ump").delete();
+	} catch (IOException e) {
+		Assert.fail();
+	}
+  }
 }

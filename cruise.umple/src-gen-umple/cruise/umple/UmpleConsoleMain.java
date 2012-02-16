@@ -7,6 +7,7 @@ import cruise.umple.compiler.exceptions.*;
 import java.util.List;
 import java.util.Arrays;
 import joptsimple.*;
+import java.io.IOException;
 
 public class UmpleConsoleMain
 {
@@ -34,6 +35,7 @@ public class UmpleConsoleMain
   //------------------------
   
   public static String console;
+  private static OptionParser optparser;
   
    public static void main(String[] args) 
    {
@@ -48,13 +50,20 @@ public class UmpleConsoleMain
      List<String> nonOpt = optset.nonOptionArguments();
 
      if (nonOpt.isEmpty()) {
+         println("Please specify <umple_file> for process");
          printUsage();
          return;
      }
      
      String filename = nonOpt.get(0);
+     println(filename);
      UmpleFile umpleFile = new UmpleFile(filename);
      UmpleModel model = new UmpleModel(umpleFile);
+
+     if (optset.has("generate")) {
+         String lang = (String)optset.valueOf("generate");
+         model.addGenerate(lang);
+     }
 
      try
      {
@@ -92,8 +101,17 @@ public class UmpleConsoleMain
    	System.err.print(err);
    }
    private static void printUsage() {
-       println("Usage: java -jar umple.jar <umple_file>\nExample: java -jar umple.jar airline.ump");
+       println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
+       try{
+           optparser.printHelpOn(System.out);
+       } catch (IOException e) {
+       }
    }
+   /**
+    * optionProcess: process the option arguments
+    * Argument: optSet - set of the options and corresponding arguments
+    * Return: boolean - If application should terminate immediately after return
+    */
    private static boolean optionProcess(OptionSet optSet) {
        if (optSet == null) {
            return true;
@@ -102,19 +120,26 @@ public class UmpleConsoleMain
            println("Version: " + UmpleModel.versionNumber);
            return true;
        }
+       if (optSet.has("help")) {
+           printUsage();
+           return true;
+       }
        return false;
    }
 
    private static OptionSet optParse(String[] args)
    {
-       OptionParser parser = new OptionParser();
-       parser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+       optparser = new OptionParser();
+       optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+       optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+       optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language").withRequiredArg().ofType(String.class);
 
        OptionSet optSet = null;
        try {
-           optSet = parser.parse(args);
+           optSet = optparser.parse(args);
        } catch (joptsimple.OptionException e) {
            println("Option:" + e.getMessage());
+           printUsage();
        }
        return optSet;
    }
