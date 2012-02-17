@@ -21,6 +21,7 @@ public class AssociationVariable extends UmpleVariable
   //AssociationVariable Associations
   private AssociationVariable relatedAssociation;
   private List<Comment> comments;
+  private UmpleClass umpleClass;
   private TraceDirective traceDirective;
 
   //------------------------
@@ -50,6 +51,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setIsNavigable(boolean aIsNavigable)
   {
     boolean wasSet = false;
+    if (aIsNavigable && !canBeNavigable()) { return false; }
     isNavigable = aIsNavigable;
     wasSet = true;
     return wasSet;
@@ -105,6 +107,11 @@ public class AssociationVariable extends UmpleVariable
     return index;
   }
 
+  public UmpleClass getUmpleClass()
+  {
+    return umpleClass;
+  }
+
   public TraceDirective getTraceDirective()
   {
     return traceDirective;
@@ -113,6 +120,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setRelatedAssociation(AssociationVariable newRelatedAssociation)
   {
     boolean wasSet = false;
+    if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }
     if (newRelatedAssociation == null)
     {
       AssociationVariable existingRelatedAssociation = relatedAssociation;
@@ -168,6 +176,24 @@ public class AssociationVariable extends UmpleVariable
     return wasRemoved;
   }
 
+  public boolean setUmpleClass(UmpleClass aUmpleClass)
+  {
+    boolean wasSet = false;
+    if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; }
+    UmpleClass existingUmpleClass = umpleClass;
+    umpleClass = aUmpleClass;
+    if (existingUmpleClass != null && !existingUmpleClass.equals(aUmpleClass))
+    {
+      existingUmpleClass.removeAssociationVariable(this);
+    }
+    if (aUmpleClass != null)
+    {
+      aUmpleClass.addAssociationVariable(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setTraceDirective(TraceDirective newTraceDirective)
   {
     boolean wasSet = false;
@@ -208,6 +234,12 @@ public class AssociationVariable extends UmpleVariable
       relatedAssociation.setRelatedAssociation(null);
     }
     comments.clear();
+    if (umpleClass != null)
+    {
+      UmpleClass placeholderUmpleClass = umpleClass;
+      this.umpleClass = null;
+      placeholderUmpleClass.removeAssociationVariable(this);
+    }
     if (traceDirective != null)
     {
       traceDirective.setAssociationVariable(null);
@@ -315,5 +347,68 @@ public class AssociationVariable extends UmpleVariable
   public boolean isMandatoryMany()
   {
     return multiplicity.getLowerBound() > 0 && isMany();
+  }
+  
+  public boolean isImmutable()
+  {
+  	AssociationVariable related = getRelatedAssociation();
+  	Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
+  	
+  	Boolean myUmpleClassIsImmutable = 
+  			(getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+  	Boolean yourUmpleClassIsImmutable = 
+  			(related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
+  	
+  	return (super.isImmutable() || relatedAssocIsImmutable 
+  		|| myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
+  }
+  
+  public boolean setImmutable(boolean aImmutable)
+  {
+  	boolean wasSet = false;
+  	if (!aImmutable)
+  	{
+  	  setModifier(null);
+  	  wasSet = true;
+  	}
+  	else if (aImmutable && canBeImmutable())
+  	{
+  	  setModifier("immutable");
+  	  wasSet = true;
+  	}
+  	return wasSet;
+  }
+  
+  public boolean canBeImmutable()
+  {
+  	AssociationVariable related = getRelatedAssociation();
+  	
+  	if (getIsNavigable() && related != null && related.getIsNavigable())
+  	{
+  	  return false;
+  	}
+    return true;
+  }
+  
+  public boolean canBeNavigable()
+  {
+  	AssociationVariable related = getRelatedAssociation();
+  	
+    if (umpleClass != null && umpleClass.isImmutable() && related != null && related.getIsNavigable())
+    {
+      return false;
+    }	
+    return true;
+  }
+  
+  private boolean canBeRelatedAssociation(AssociationVariable aRelatedAssociation)
+  {
+  	if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
+  	{
+  		return true;
+  	}
+  	
+  	return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
+  		aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
   }
 }

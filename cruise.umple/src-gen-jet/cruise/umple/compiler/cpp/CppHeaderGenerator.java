@@ -836,7 +836,7 @@ public class CppHeaderGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null  && !av.isImmutable())
+    if (av != null && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
@@ -997,9 +997,9 @@ public class CppHeaderGenerator implements ILang
     stringBuffer.append(TEXT_18);
     stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_19);
-    stringBuffer.append(gen.translate("setMethod",av));
-    stringBuffer.append(TEXT_20);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_20);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_21);
     
       }

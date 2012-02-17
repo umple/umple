@@ -2108,7 +2108,7 @@ public class CppClassGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null  && !av.isImmutable())
+    if (av != null && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));
@@ -2199,7 +2199,7 @@ public class CppClassGenerator implements ILang
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null  && !av.isImmutable())
+    if (av != null && !av.isImmutable())
     {
       hasBody = true;
       appendln(stringBuffer, "");

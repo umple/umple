@@ -21,7 +21,7 @@
     String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
     String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
     
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (av.getIsLazy())
       {

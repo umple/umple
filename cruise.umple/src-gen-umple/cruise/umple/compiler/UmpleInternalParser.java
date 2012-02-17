@@ -812,7 +812,10 @@ private void analyzeClassToken(Token t, int analysisStep)
     updateAssociationEnds(rightFirstEnd,rightSecondEnd);
 
     Association leftAssociation = new Association(true,true,leftFirstEnd,leftSecondEnd);
+    leftAssociation.setTokenPosition(leftAssociationToken.getPosition());
+    
     Association rightAssociation = new Association(true,true,rightFirstEnd,rightSecondEnd);
+    rightAssociation.setTokenPosition(rightAssociationToken.getPosition());
 
     model.addAssociation(leftAssociation);
     model.addAssociation(rightAssociation);
@@ -843,8 +846,16 @@ private void analyzeClassToken(Token t, int analysisStep)
       UmpleClass aClass = model.getUmpleClass(av.getType());
       UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());       
       
-      aClass.addAssociationVariable(av.getRelatedAssociation());
-      aClass.addAssociation(bClass.getAssociation(bClass.indexOfAssociationVariable(av)));
+      Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
+      
+      boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
+      if (!added)
+      {
+    	  setFailedPosition(assoc.getTokenPosition(), 13, aClass.getName() + " and " + bClass.getName());
+    	  return;
+      }
+      
+      aClass.addAssociation(assoc);
 
       if (av.getIsNavigable())
       {
@@ -1032,7 +1043,13 @@ private void checkSingletonAssociations() {
       myClass.addAssociationVariable(yourAs);
       myClass.addAssociation(association);
 
-      yourClass.addAssociationVariable(myAs);
+      boolean added = yourClass.addAssociationVariable(myAs);
+      if (!added)
+      {
+    	  setFailedPosition(association.getTokenPosition(), 13, myClass.getName() + " and " + yourClass.getName());
+    	  return;
+      }
+      
       yourClass.addAssociation(association);
 
 
@@ -1331,9 +1348,17 @@ private void checkSingletonAssociations() {
     	yourAs.addComment(c);
     }
 
-    unlinkedAssociationVariables.add(yourAs);
-    aClass.addAssociationVariable(yourAs);
-    aClass.addAssociation(association);
+    boolean added = aClass.addAssociationVariable(yourAs);
+    if (added)
+    {
+      unlinkedAssociationVariables.add(yourAs);
+      aClass.addAssociation(association);
+    }
+    else
+    {
+    	setFailedPosition(inlineAssociationToken.getPosition(), 13, myEnd.getClassName() + " and " + yourEnd.getClassName());
+    }
+    
   }
 
   private void analyzeAttribute(Token attributeToken, UmpleClass aClass)

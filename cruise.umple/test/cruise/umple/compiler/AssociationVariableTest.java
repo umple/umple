@@ -332,6 +332,167 @@ public class AssociationVariableTest
     Assert.assertEquals(var2, var1.getRelatedAssociation());
     Assert.assertEquals(var1, var2.getRelatedAssociation());
   }
+  
+  
+  @Test
+  public void isImmutable()
+  {
+	AssociationVariable assoc1 = new AssociationVariable("x","y","","",createMultiplicity(1,1),true);
+	Assert.assertEquals(false, assoc1.isImmutable());
+	
+	AssociationVariable assoc2 = new AssociationVariable("x","y", "","",createMultiplicity(1,1),true);
+	assoc1.setRelatedAssociation(assoc2);
+	Assert.assertEquals(false, assoc1.isImmutable());
+	Assert.assertEquals(false, assoc2.isImmutable());
+	
+	assoc1.setModifier("immutable");
+	Assert.assertEquals(true, assoc1.isImmutable());
+    Assert.assertEquals(true, assoc2.isImmutable());
+    
+    assoc2.setModifier("immutable");
+	Assert.assertEquals(true, assoc1.isImmutable());
+    Assert.assertEquals(true, assoc2.isImmutable());
+  }
+  
+  @Test
+  public void isImmutable_basedOnClass()
+  {
+    UmpleClass c = new UmpleClass("Student");
+    UmpleClass c2 = new UmpleClass("Mentor");
+    
+    AssociationVariable assoc1 = new AssociationVariable("x","Mentor","","",createMultiplicity(1,1),true);
+	AssociationVariable assoc2 = new AssociationVariable("y","Student", "","",createMultiplicity(1,1),false);
+	assoc1.setRelatedAssociation(assoc2);
+	c.addAssociationVariable(assoc1);
+	Assert.assertEquals(false, assoc1.isImmutable());
+	Assert.assertEquals(false, assoc2.isImmutable());
+	
+	Assert.assertTrue(c.setImmutable(true));
+	Assert.assertEquals(true, assoc1.isImmutable());
+    Assert.assertEquals(true, assoc2.isImmutable());
+    
+    c.removeAssociationVariable(assoc1);
+    Assert.assertTrue(c.setImmutable(false));
+    
+    
+    assoc1 = new AssociationVariable("x","Mentor","","",createMultiplicity(0,1),true);
+	assoc2 = new AssociationVariable("y","Student", "","",createMultiplicity(0,2),false);
+	assoc1.setRelatedAssociation(assoc2);
+	Assert.assertTrue(c.addAssociationVariable(assoc1));
+	Assert.assertTrue(c2.addAssociationVariable(assoc2));
+	
+	Assert.assertEquals(false, assoc1.isImmutable());
+	Assert.assertEquals(false, assoc2.isImmutable());
+	
+	Assert.assertTrue(c2.setImmutable(true));
+	Assert.assertTrue(c.setImmutable(true));
+	Assert.assertEquals(true, assoc1.isImmutable());
+    Assert.assertEquals(true, assoc2.isImmutable());
+    
+    Assert.assertTrue(c.setImmutable(false));
+    Assert.assertEquals(false, assoc1.isImmutable());
+	Assert.assertEquals(false, assoc2.isImmutable());
+  }
+  
+  @Test
+  public void canBeMadeImmutable()
+  {
+	UmpleClass c = new UmpleClass("Student");
+	UmpleClass c2 = new UmpleClass("Mentor");
+	    
+	AssociationVariable assoc1 = new AssociationVariable("x","Mentor","","",createMultiplicity(1,1),true);
+	AssociationVariable assoc2 = new AssociationVariable("y","Student", "","",createMultiplicity(1,1),true);
+	assoc1.setRelatedAssociation(assoc2);
+	
+	Assert.assertFalse(assoc1.setImmutable(true));
+	assoc1.setIsNavigable(false);
+	Assert.assertTrue(assoc1.setImmutable(true));
+	
+	Assert.assertTrue(assoc1.setImmutable(false));
+	assoc1.setIsNavigable(true);
+	
+	c.addAssociationVariable(assoc1);
+	c2.addAssociationVariable(assoc2);
+	Assert.assertFalse(assoc1.setImmutable(true));
+	assoc1.setIsNavigable(false);
+	Assert.assertTrue(assoc1.setImmutable(true));
+  }
+  
+  @Test
+  public void canBeMadeNavigableWithImmutableClass()
+  {
+	UmpleClass c = new UmpleClass("Student");
+	UmpleClass c2 = new UmpleClass("Mentor");
+	    
+	AssociationVariable assoc1 = new AssociationVariable("x","Mentor","","",createMultiplicity(1,1),true);
+	AssociationVariable assoc2 = new AssociationVariable("y","Student", "","",createMultiplicity(1,1),false);
+	assoc1.setRelatedAssociation(assoc2);	
+	
+	Assert.assertTrue(assoc2.setIsNavigable(true));
+	Assert.assertTrue(assoc2.setIsNavigable(false));
+	
+	c2.setImmutable(true);
+	c2.addAssociationVariable(assoc2);
+	Assert.assertFalse(assoc2.setIsNavigable(true));
+	Assert.assertTrue(assoc1.setIsNavigable(false));
+	Assert.assertTrue(assoc2.setIsNavigable(true));
+	
+	Assert.assertTrue(assoc2.setIsNavigable(false));
+	Assert.assertTrue(assoc1.setIsNavigable(true));
+	
+	c.addAssociationVariable(assoc1);
+	Assert.assertFalse(assoc2.setIsNavigable(true));
+	Assert.assertTrue(assoc1.setIsNavigable(false));
+	Assert.assertTrue(assoc2.setIsNavigable(true));
+  }
+  
+  @Test
+  public void canSetRelatedAssociationWithImmutableClass()
+  {
+	  UmpleClass aClass = new UmpleClass("aClass");
+	  UmpleClass bClass = new UmpleClass("bClass");
+	  
+	  Multiplicity mult = new Multiplicity();
+	  mult.setRange("0", "10");
+	  AssociationVariable a = new AssociationVariable("a", "a", "", "", mult, true);
+	  mult = new Multiplicity();
+	  mult.setRange("1", "1");
+	  AssociationVariable b = new AssociationVariable("b", "b", "", "", mult, true);
+	  
+	  aClass.addAssociationVariable(a);
+	  bClass.addAssociationVariable(b);	  
+	  Assert.assertTrue(a.setRelatedAssociation(b));
+	  
+	  aClass.removeAssociationVariable(a);
+	  
+	  a = new AssociationVariable("a", "a", "", "", mult, true);
+	  b = new AssociationVariable("b", "b", "", "", mult, true);
+	  aClass.addAssociationVariable(a);
+	  bClass.addAssociationVariable(b);
+	  Assert.assertTrue(aClass.setImmutable(true)); 
+	  Assert.assertFalse(a.setRelatedAssociation(b));
+	  
+	  b.setIsNavigable(false);	  
+	  Assert.assertFalse(a.setRelatedAssociation(b));
+	  
+	  b.setIsNavigable(true);
+	  a.setIsNavigable(false);
+	  Assert.assertTrue(a.setRelatedAssociation(b));
+	  
+	  a = new AssociationVariable("a", "a", "", "", mult, true);
+	  b = new AssociationVariable("b", "b", "", "", mult, false);
+	  aClass.addAssociationVariable(a);
+	  bClass.addAssociationVariable(b);
+	  bClass.setImmutable(true);
+	  Assert.assertTrue(a.setRelatedAssociation(b));
+	  
+	  // asymmetric reflexive association
+	  a = new AssociationVariable("a", "a", "", "", mult, true);
+	  b = new AssociationVariable("b", "b", "", "", mult, false);
+	  aClass.addAssociationVariable(a);
+	  aClass.addAssociationVariable(b);
+	  Assert.assertTrue(a.setRelatedAssociation(b));
+  }
 
   private Multiplicity createMultiplicity(int lower, int upper)
   {

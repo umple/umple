@@ -14,7 +14,7 @@
 
   for (Attribute av : uClass.getAttributes())
   {
-    if ("immutable".equals(av.getModifier()))
+    if (av.isImmutable())
     {
       if (isFirst)
       {
@@ -35,7 +35,7 @@
   {
     Attribute av = uClass.getAttribute(memberId);
     AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null && !"immutable".equals(av.getModifier()))
+    if (av != null && !av.isImmutable())
     {
       appendln(stringBuffer, "");
       append(stringBuffer, "  bool {0};", gen.translate("attributeCanSet",av));

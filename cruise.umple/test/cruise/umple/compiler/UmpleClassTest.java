@@ -698,6 +698,84 @@ public class UmpleClassTest
     Assert.assertEquals(true, c.isImmutable());
   }
   
+  @Test
+  public void classImmutabilityRulesDontInterfereWithNonImmutableClassAssociations()
+  {
+	  UmpleClass a = new UmpleClass("a");
+	  UmpleClass b = new UmpleClass("b");
+	  
+	  Multiplicity mult = new Multiplicity();
+	  mult.setRange("0", "1");
+	  
+	  // bidirectional association
+	  AssociationVariable aEnd = new AssociationVariable("a","a","","",mult,true);  
+	  AssociationVariable bEnd = new AssociationVariable("b","b","","",mult,true); 
+	  aEnd.setRelatedAssociation(bEnd);
+	  
+	  Assert.assertTrue(a.addAssociationVariable(aEnd));
+	  Assert.assertTrue(b.addAssociationVariable(bEnd));
+	  
+	  // unidirectional association
+	  aEnd = new AssociationVariable("a","a","","",mult,false);  
+	  bEnd = new AssociationVariable("b","b","","",mult,true);
+	  aEnd.setRelatedAssociation(bEnd);
+	  
+	  Assert.assertTrue(a.addAssociationVariable(aEnd));
+	  Assert.assertTrue(b.addAssociationVariable(bEnd));
+  }
+  
+  @Test
+  public void classImmutabilityCanOnlyBeChangedWithValidAssociations()
+  {
+	UmpleClass a = new UmpleClass("A");
+	UmpleClass b = new UmpleClass("B");
+
+	Multiplicity mult = new Multiplicity();
+	mult.setRange("0","1");
+	AssociationVariable aEnd = new AssociationVariable("a","a","","",mult,false);  
+	AssociationVariable bEnd = new AssociationVariable("b","b","","",mult,true); 	
+	
+	a.addAssociationVariable(aEnd);
+	Assert.assertTrue(a.setImmutable(true));
+	Assert.assertTrue(a.setImmutable(false));
+	
+	b.addAssociationVariable(bEnd);
+	Assert.assertTrue(b.setImmutable(true));
+	Assert.assertTrue(b.setImmutable(false));
+	
+	aEnd.setRelatedAssociation(bEnd);
+	
+	// "mutable -> immutable" and "immutable -> immutable" are valid
+	Assert.assertTrue(a.setImmutable(true));
+	Assert.assertTrue(b.setImmutable(true));
+	
+	// "immutable -> mutable" is invalid
+	Assert.assertFalse(a.setImmutable(false));
+	
+	Assert.assertTrue(b.setImmutable(false));
+	Assert.assertTrue(a.setImmutable(false));
+	
+	aEnd.setIsNavigable(true);
+	Assert.assertFalse(a.setImmutable(true));
+	Assert.assertFalse(b.setImmutable(true));
+	
+	// asymmetric reflexive association should succeed
+	mult = new Multiplicity();
+	mult.setRange("1","1");
+	
+	Assert.assertTrue(a.removeAssociationVariable(aEnd));
+	Assert.assertTrue(a.setImmutable(false));
+	
+	AssociationVariable cEnd = new AssociationVariable("c","c","","",mult,false);  
+	AssociationVariable dEnd = new AssociationVariable("d","d","","",mult,true); 
+	cEnd.setRelatedAssociation(dEnd);
+	a.addAssociationVariable(cEnd);
+	a.addAssociationVariable(dEnd);
+	
+	Assert.assertTrue(a.setImmutable(true));
+	Assert.assertTrue(a.setImmutable(false));
+  }
+  
   private Multiplicity createMultiplicity(int lower, int upper)
   {
     Multiplicity m = new Multiplicity();

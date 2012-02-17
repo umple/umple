@@ -12,3 +12,4 @@
 10: 3, http://umple.org/W010SingletonMultiplicityOver1.html, Singleton class '{0}' cannot have multiplicity greater than 1 ; 
 11: 2, http://umple.org/E011ClassisSubclassOfSelf.html, Class '{0}' cannot cyclically extend itself ; 
 12: 2, http://umple.org/E012ClassIndirectlySubclassofSelf.html, Class '{0}' cannot cyclically extend class '{1}'  ; 
+13: 1, http://manual.umple.org, Association between '{0}' is invalid for immutable class ;

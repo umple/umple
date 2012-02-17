@@ -1,0 +1,10 @@
+class StudentD
+{
+	immutable;
+	* <- 1 MentorD;
+}
+
+class MentorD
+{
+	immutable;
+}

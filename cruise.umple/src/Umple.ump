@@ -161,11 +161,15 @@ class UmpleClass
   1 -> 0..* Constant;
   1 -> 0..1 UniqueIdentifier;
   1 -- * Attribute;
-  1 -> * AssociationVariable;
+  0..1 -- * AssociationVariable;
   1 -> * Comment;
   
   
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
+  
+  before setImmutable { if (!allAssociationsSupportClassImmutabilityRules(aImmutable)) { return false; } }
+  
+  before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
 }
 
 class Depend
@@ -250,9 +254,16 @@ class AssociationVariable
   isA UmpleVariable;
   Multiplicity multiplicity;
   Boolean isNavigable;
+  
   0..1 self relatedAssociation;
   
   1 -> * Comment;
+  
+  before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
+  
+  before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
+  
+  before setIsNavigable { if (aIsNavigable && !canBeNavigable()) { return false; } }
 }
 
 // TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
