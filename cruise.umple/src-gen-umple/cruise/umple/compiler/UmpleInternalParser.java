@@ -918,25 +918,34 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     String methodName = aMethod.getName();
 
-    //1. Verify if method to be added is a setter or a getter
-    String accessorName = methodName.substring(0,3);
-    if ((accessorName.equals("get")) || (accessorName.equals("set"))){
-      String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
-      Attribute attr = uClass.getAttribute(possibleAttributeName);
-      if (attr != null){
-        return false;
-      }
+    // Have to check for short method names.
+    if (methodName.length() >= 3)
+    {
+    	//1. Verify if method to be added is a setter or a getter
+        String accessorName = methodName.substring(0,3);
+        if ((accessorName.equals("get")) || (accessorName.equals("set")))
+        {
+          String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
+          Attribute attr = uClass.getAttribute(possibleAttributeName);
+          if (attr != null)
+          {
+            return false;
+          }
+        }
+        //2. Verify if method to be added is a constructor
+        if (aMethod.getType().equals("public"))
+        {
+          uClass.appendExtraCode(aMethod.toString());
+          return false;
+        }  
+        //3. Verify if method from interface is already part of the Class extracode
+        String match = "public " + aMethod.getType() + " " + aMethod.getName();    
+        if (uClass.getExtraCode().contains(match))
+        {
+          return false;
+        }
     }
-    //2. Verify if method to be added is a constructor
-    if (aMethod.getType().equals("public")){
-      uClass.appendExtraCode(aMethod.toString());
-      return false;
-    }  
-    //3. Verify if method from interface is already part of the Class extracode
-    String match = "public " + aMethod.getType() + " " + aMethod.getName();    
-    if (uClass.getExtraCode().contains(match)){
-      return false;
-    }
+    
     return true;
   }
 

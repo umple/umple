@@ -100,6 +100,9 @@ public class UmpleInternalParserTest extends UmpleParserTest
     
     fileToOutputs.put("001_multipleAssociationComments.ump", expectedResult);
     
+    fileToOutputs.put("001_oneCharacterMethod.ump", "[classDefinition][name:X][concreteMethodDeclaration][type:void][methodDeclarator][methodName:m][parameterList][code:z=1;]");
+    fileToOutputs.put("001_twoCharacterMethod.ump", "[classDefinition][name:X][concreteMethodDeclaration][type:void][methodDeclarator][methodName:m1][parameterList][code:z=1;]");
+    
     fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
     fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
     fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");

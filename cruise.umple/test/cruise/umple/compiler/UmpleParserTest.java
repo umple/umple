@@ -165,6 +165,18 @@ public class UmpleParserTest
   {
 	  assertParse("001_multipleAssociationComments.ump");
 	  
+	  // Check to see if the attributes have the correct number of comments associated with them.
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAssociationVariable(1).numberOfComments());
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(2).numberOfComments());
+	  Assert.assertEquals(2, model.getUmpleClass(0).getAssociationVariable(3).numberOfComments());
+  }
+  
+  @Test
+  public void oneCharacterMethod()
+  {
+	  assertParse("001_oneCharacterMethod.ump");
+	  
 	  /*
 	  model.generate();
 	  Collection<String> c = model.getGeneratedCode().values();
@@ -172,11 +184,28 @@ public class UmpleParserTest
 	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
 	  */
 	  
-	  // Check to see if the attributes have the correct number of comments associated with them.
-	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
-	  Assert.assertEquals(2, model.getUmpleClass(0).getAssociationVariable(1).numberOfComments());
-	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(2).numberOfComments());
-	  Assert.assertEquals(2, model.getUmpleClass(0).getAssociationVariable(3).numberOfComments());
+	  // Ensure that a class exists, along with a method when the method name is short.
+	  Assert.assertEquals(1, model.numberOfUmpleClasses());
+	  Assert.assertEquals(1, model.getUmpleClass(0).numberOfMethods());
+	  Assert.assertEquals("m", model.getUmpleClass(0).getMethod(0).getName());
+  }
+  
+  @Test
+  public void twoCharacterMethod()
+  {
+	  assertParse("001_twoCharacterMethod.ump");
+	  
+	  /*
+	  model.generate();
+	  Collection<String> c = model.getGeneratedCode().values();
+	  String generatedCode = (String)c.iterator().next();
+	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
+	  */
+	  
+	  // Ensure that a class exists, along with a method when the method name is short.
+	  Assert.assertEquals(1, model.numberOfUmpleClasses());
+	  Assert.assertEquals(1, model.getUmpleClass(0).numberOfMethods());
+	  Assert.assertEquals("m1", model.getUmpleClass(0).getMethod(0).getName());
   }
   
   @Test
