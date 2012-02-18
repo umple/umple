@@ -43,6 +43,12 @@ class UmpleInternalParser
     
     if (token.is("stateMachine"))
     {
+      if (aClass.isImmutable())
+      {
+    	  setFailedPosition(token.getPosition(), 15, aClass.getName());
+    	  return;
+      }
+      
       Token subToken = token.getSubToken(0);
       if (subToken.is("enum") || subToken.is("inlineStateMachine"))
       {
@@ -79,7 +85,13 @@ class UmpleInternalParser
     }
 
     StateMachine sm = new StateMachine(name);
-    sm.setUmpleClass(aClass);
+    boolean wasSet = sm.setUmpleClass(aClass);
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    }
+    
     populateStateMachine(stateMachineDefinitionToken,sm);
     Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
     if (extendedStateMachineTokens != null)
@@ -94,8 +106,15 @@ class UmpleInternalParser
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
     stateMachineNameToToken.put(name,stateMachineToken);
+    
     StateMachine sm = new StateMachine(name);
-    sm.setUmpleClass(aClass);
+    boolean wasSet = sm.setUmpleClass(aClass);
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    }
+    
     populateStateMachine(stateMachineToken, sm);
 
     while (placeholderStateMachine.numberOfStates() > 0)

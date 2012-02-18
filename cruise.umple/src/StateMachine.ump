@@ -22,6 +22,7 @@ class StateMachine
   
   key { parentState, name } 
   
+  before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
 }
 
 class State

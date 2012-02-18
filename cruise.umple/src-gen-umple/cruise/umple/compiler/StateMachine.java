@@ -163,6 +163,7 @@ public class StateMachine
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
+    if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;
     if (existingUmpleClass != null && !existingUmpleClass.equals(aUmpleClass))

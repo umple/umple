@@ -159,11 +159,11 @@ private void init()
   //------------------------
 
   // When an error occurs, set the failed position and mark the compile as NOT successful
-  private void setFailedPosition(Position position, int errorCode, String message)
+  private void setFailedPosition(Position position, int errorCode, String... messages)
   {
     //getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
-    getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,message));
+    getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
   }
 
   // Analyze all child tokens of the "root" token.  This delegates to a individual
@@ -635,7 +635,12 @@ private void analyzeClassToken(Token t, int analysisStep)
     
     if (classToken.getValue("immutable") != null)
     {
-		aClass.setImmutable(true);
+		boolean wasSet = aClass.setImmutable(true);
+		if (!wasSet)
+		{
+			// Future-proofing: currently all paths cause wasSet to be true
+			setFailedPosition(classToken.getPosition(), 14, classToken.getName());
+		}
     }
     
     analyzeAllTokens(classToken,aClass);
@@ -851,7 +856,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
       if (!added)
       {
-    	  setFailedPosition(assoc.getTokenPosition(), 13, aClass.getName() + " and " + bClass.getName());
+    	  setFailedPosition(assoc.getTokenPosition(),13,aClass.getName(),bClass.getName());
     	  return;
       }
       
@@ -1046,7 +1051,7 @@ private void checkSingletonAssociations() {
       boolean added = yourClass.addAssociationVariable(myAs);
       if (!added)
       {
-    	  setFailedPosition(association.getTokenPosition(), 13, myClass.getName() + " and " + yourClass.getName());
+    	  setFailedPosition(association.getTokenPosition(),13,myClass.getName(),yourClass.getName());
     	  return;
       }
       
@@ -1356,7 +1361,7 @@ private void checkSingletonAssociations() {
     }
     else
     {
-    	setFailedPosition(inlineAssociationToken.getPosition(), 13, myEnd.getClassName() + " and " + yourEnd.getClassName());
+    	setFailedPosition(inlineAssociationToken.getPosition(),13,myEnd.getClassName(),yourEnd.getClassName());
     }
     
   }
@@ -1450,6 +1455,12 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     
     if (token.is("stateMachine"))
     {
+      if (aClass.isImmutable())
+      {
+    	  setFailedPosition(token.getPosition(), 15, aClass.getName());
+    	  return;
+      }
+      
       Token subToken = token.getSubToken(0);
       if (subToken.is("enum") || subToken.is("inlineStateMachine"))
       {
@@ -1486,7 +1497,13 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     }
 
     StateMachine sm = new StateMachine(name);
-    sm.setUmpleClass(aClass);
+    boolean wasSet = sm.setUmpleClass(aClass);
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    }
+    
     populateStateMachine(stateMachineDefinitionToken,sm);
     Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
     if (extendedStateMachineTokens != null)
@@ -1501,8 +1518,15 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
     stateMachineNameToToken.put(name,stateMachineToken);
+    
     StateMachine sm = new StateMachine(name);
-    sm.setUmpleClass(aClass);
+    boolean wasSet = sm.setUmpleClass(aClass);
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    }
+    
     populateStateMachine(stateMachineToken, sm);
 
     while (placeholderStateMachine.numberOfStates() > 0)

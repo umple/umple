@@ -1,0 +1,14 @@
+statemachine sm {  
+   s1 {  
+      e1 -> s2;   
+   }  
+   s2 {  
+      e1 -> s1;  
+   }  
+} 
+
+class SomeClass
+{
+  immutable;
+  machine as sm;
+}

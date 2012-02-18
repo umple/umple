@@ -1,0 +1,13 @@
+class MutableClass
+{
+	1 -> * OtherClass;	
+}
+
+class OtherClass
+{
+}
+
+class MutableClass
+{
+	immutable;
+}

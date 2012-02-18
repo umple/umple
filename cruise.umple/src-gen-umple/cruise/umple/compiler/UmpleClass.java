@@ -1149,6 +1149,8 @@ public class UmpleClass extends UmpleElement
   
   private boolean allAssociationsSupportClassImmutabilityRules(boolean isImmutable)
   {
+  	if (this.hasStateMachines()) { return false; }
+  	
   	for (AssociationVariable av : associationVariables)
   	{
   	  if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }

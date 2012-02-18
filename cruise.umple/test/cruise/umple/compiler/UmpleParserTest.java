@@ -314,9 +314,21 @@ public class UmpleParserTest
   }
   
   @Test
-  public void associationsForMutableClassesParseCorrectly()
+  public void associationsForMutableClassesParseSuccessfully()
   {
 	  assertParse("022_mutableClassesValidAssociations.ump");
+  }
+  
+  @Test
+  public void classCanNotBeChangedToImmutableWithInvalidAssociations()
+  {
+	  assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22));
+  }
+  
+  @Test
+  public void immutableClassMayNotContainStateMachines()
+  {
+	  assertHasWarningsParse("022_stateMachineInImmutableClass.ump", new Position("022_stateMachineInImmutableClass.ump",13,2,128));
   }
   
   @Test

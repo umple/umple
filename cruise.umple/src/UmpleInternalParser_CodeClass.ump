@@ -239,7 +239,12 @@ class UmpleInternalParser
     
     if (classToken.getValue("immutable") != null)
     {
-		aClass.setImmutable(true);
+		boolean wasSet = aClass.setImmutable(true);
+		if (!wasSet)
+		{
+			// Future-proofing: currently all paths cause wasSet to be true
+			setFailedPosition(classToken.getPosition(), 14, classToken.getName());
+		}
     }
     
     analyzeAllTokens(classToken,aClass);
@@ -455,7 +460,7 @@ class UmpleInternalParser
       boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
       if (!added)
       {
-    	  setFailedPosition(assoc.getTokenPosition(), 13, aClass.getName() + " and " + bClass.getName());
+    	  setFailedPosition(assoc.getTokenPosition(),13,aClass.getName(),bClass.getName());
     	  return;
       }
       
@@ -650,7 +655,7 @@ private void checkSingletonAssociations() {
       boolean added = yourClass.addAssociationVariable(myAs);
       if (!added)
       {
-    	  setFailedPosition(association.getTokenPosition(), 13, myClass.getName() + " and " + yourClass.getName());
+    	  setFailedPosition(association.getTokenPosition(),13,myClass.getName(),yourClass.getName());
     	  return;
       }
       
@@ -960,7 +965,7 @@ private void checkSingletonAssociations() {
     }
     else
     {
-    	setFailedPosition(inlineAssociationToken.getPosition(), 13, myEnd.getClassName() + " and " + yourEnd.getClassName());
+    	setFailedPosition(inlineAssociationToken.getPosition(),13,myEnd.getClassName(),yourEnd.getClassName());
     }
     
   }

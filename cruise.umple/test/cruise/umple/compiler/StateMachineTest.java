@@ -554,4 +554,16 @@ public class StateMachineTest
     Assert.assertEquals(0,sm.getFinalStates().size());
   }
   
+  @Test
+  public void cannotAddImmutableClass()
+  {
+	  UmpleClass clazz1 = new UmpleClass("SomeClass");
+	  UmpleClass clazz2 = new UmpleClass("SomeOtherClass");
+	  
+	  Assert.assertTrue(clazz2.setImmutable(true));
+	  
+	  Assert.assertTrue(sm.setUmpleClass(clazz1));
+	  Assert.assertFalse(sm.setUmpleClass(clazz2));
+  }
+  
 }

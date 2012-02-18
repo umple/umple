@@ -774,6 +774,11 @@ public class UmpleClassTest
 	
 	Assert.assertTrue(a.setImmutable(true));
 	Assert.assertTrue(a.setImmutable(false));
+	
+	// all state machines prevent immutability
+	StateMachine sm = new StateMachine("machine");
+	a.addStateMachine(sm);
+	Assert.assertFalse(a.setImmutable(true));
   }
   
   private Multiplicity createMultiplicity(int lower, int upper)
