@@ -31,7 +31,11 @@ public class Student
     canSetNumber = false;
     canSetMentors = true;
     mentors = new ArrayList<Mentor>();
-    setMentors(allMentors);
+    boolean didAddMentors = setMentors(allMentors);
+    if (!didAddMentors)
+    {
+      throw new RuntimeException("Unable to create Student, must not have duplicate mentors.");
+    }
   }
 
   //------------------------
@@ -84,17 +88,27 @@ public class Student
     if (!canSetMentors) { return wasSet; }
     canSetMentors = false;
 
+    ArrayList<Mentor> verifiedMentors = new ArrayList<Mentor>();
     for (Mentor aMentor : newMentors)
     {
-      if (mentors.contains(aMentor))
+      if (verifiedMentors.contains(aMentor))
       {
         continue;
       }
-      mentors.add(aMentor);
+      verifiedMentors.add(aMentor);
     }
+
+    if (verifiedMentors.size() != newMentors.length)
+    {
+      return wasSet;
+    }
+
+    mentors.clear();
+    mentors.addAll(verifiedMentors);
     wasSet = true;
     return wasSet;
   }
+
   public void delete()
   {}
 

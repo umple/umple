@@ -138,6 +138,11 @@
         hasBody = true;
         %><%@ include file="constructor_AssociationAssignMandatoryMany.jet"%><%
       }
+      else if (av.isOptionalN() && av.isImmutable())
+      {
+        hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalN.jet"%><%
+      }
       else if (av.isMany() && av.isImmutable())
       {
       	hasBody = true;

@@ -1,0 +1,64 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $name;
+  private $studentNumber;
+
+  //Helper Variables
+  private $canSetName;
+  private $canSetStudentNumber;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName)
+  {
+    $this->name = $aName;
+    $this->canSetName = false;
+    $this->canSetStudentNumber = true;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setStudentNumber($aStudentNumber)
+  {
+    $wasSet = false;
+    if (!$this->canSetStudentNumber) { return false; }
+    $this->canSetStudentNumber = false;
+    $this->studentNumber = $aStudentNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getStudentNumber()
+  {
+    return $this->studentNumber;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

@@ -1,0 +1,62 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+class Student
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  String name;
+  String studentNumber;
+
+  //Helper Variables
+  bool canSetName;
+  bool canSetStudentNumber;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+ Student::Student(String aName)
+  {
+    name = aName;
+    canSetName = false;
+    canSetStudentNumber = true;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Student::setStudentNumber(String aStudentNumber)
+  {
+    bool wasSet = false;
+    if (!canSetStudentNumber) { return false; }
+    canSetStudentNumber = false;
+    studentNumber = aStudentNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  String Student::getName()
+  {
+    return name;
+  }
+
+  String Student::getStudentNumber()
+  {
+    return studentNumber;
+  }
+
+  public void delete()
+  {}
+
+};

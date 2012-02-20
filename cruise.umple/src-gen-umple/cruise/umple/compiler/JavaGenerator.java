@@ -652,7 +652,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 
     for(Attribute av : aClass.getAttributes())
     {
-      if (av.getModifier().equals("immutable") || aClass.getKey().isMember(av))
+      if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
         CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);

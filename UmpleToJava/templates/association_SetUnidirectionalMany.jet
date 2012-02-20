@@ -10,15 +10,27 @@
     		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
     	} 
     %>
+    ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterVerifiedMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
     {
-      if (<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
+      if (<%=gen.translate("parameterVerifiedMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
       {
         continue;
       }
-      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("parameterVerifiedMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
     }
+
+    if (<%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=gen.translate("parameterMany",av)%>.length)
+    {
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      return wasSet;
+    }
+
+    <%=gen.translate("associationMany",av)%>.clear();
+    <%=gen.translate("associationMany",av)%>.addAll(<%=gen.translate("parameterVerifiedMany",av)%>);
     wasSet = true;
     <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
     return wasSet;
   }
+
+  

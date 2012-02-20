@@ -178,4 +178,10 @@ public class ClassTemplateTest extends TemplateTest
   {
 	  assertUmpleTemplateFor("MultipleMethodComments.ump",languagePath + "/ClassTemplateTest_MultipleMethodComments."+languagePath+".txt","Foo");
   }
+  
+  @Test
+  public void LazyAttributeOnImmutableClass()
+  {
+	  assertUmpleTemplateFor("ClassTemplateTest_LazyAttributeOnImmutableClass.ump",languagePath + "/ClassTemplateTest_LazyAttributeOnImmutableClass."+languagePath+".txt","Student");
+  }
 }
