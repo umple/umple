@@ -1,0 +1,26 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<% String accessModifier = (av.isImmutable()) ? "private" : "public"; %>
+  <%= accessModifier %> boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
+  {
+    boolean wasSet = false;
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (av.isImmutable()) 
+    	{ 
+    		appendln(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
+    		appendln(stringBuffer, "    {0} = false;", gen.translate("associationCanSet",av)); 
+    		appendln(stringBuffer, "    if ({0} == null)", gen.translate("parameterMany",av));
+    		appendln(stringBuffer, "    {\n      wasSet = true;\n      return wasSet;\n    }");
+    	} 
+    %>
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
+    {
+      if (<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
+      {
+        continue;
+      }
+      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    }
+    wasSet = true;
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    return wasSet;
+  }

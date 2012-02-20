@@ -1,8 +1,15 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%>)
+ <% String accessModifier = (av.isImmutable()) ? "private" : "public"; %>
+  <%= accessModifier %> boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%>)
   {
     boolean wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (av.isImmutable()) 
+    	{ 
+    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
+    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
+    	}
+    %>
     if (<%=gen.translate("parameterNew",av)%> != null)
     {
       <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterNew",av)%>;

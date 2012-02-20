@@ -1,0 +1,11 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  private boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  {
+    boolean wasAdded = false;
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    <%= gen.translate("attributeCanSet",av) %> = false;
+    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    wasAdded = true;
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    return wasAdded;
+  }

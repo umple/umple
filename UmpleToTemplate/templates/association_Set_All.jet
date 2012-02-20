@@ -51,12 +51,18 @@
       }
       else if (av.isMStar())
       {
-        includeFile = "association_AddUnidirectionalMStar.jet";
+        if (!av.isImmutable())
+        {
+          includeFile = "association_AddUnidirectionalMStar.jet";
+        }
         includeFile2 = "association_SetUnidirectionalMStar.jet";
       }
       else if (av.isMN())
       {
-        includeFile = "association_AddUnidirectionalMN.jet";
+      	if (!av.isImmutable())
+      	{
+          includeFile = "association_AddUnidirectionalMN.jet";
+        }
         includeFile2 = "association_SetUnidirectionalMN.jet";
       }
       else if (av.isN())
@@ -65,8 +71,15 @@
       }
       else if (av.isOptionalN())
       {
-        includeFile = "association_AddUnidirectionalOptionalN.jet";
+        if (!av.isImmutable())
+      	{
+          includeFile = "association_AddUnidirectionalOptionalN.jet";
+        }
         includeFile2 = "association_SetUnidirectionalOptionalN.jet";
+      }
+      else if (av.isImmutable() && av.isMany())
+      {
+      	includeFile = "association_SetUnidirectionalMany.jet";
       }
       else if (av.isMany())
       {
@@ -144,12 +157,18 @@
     else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isOptionalN()))
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
       includeFile = "association_SetOptionalNToMany.jet";
     }
     else if (av.isMany() && relatedAssociation.isOnlyOne())
@@ -159,12 +178,18 @@
     else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isN()))
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
     {
@@ -357,6 +382,10 @@
     else if (includeFile == "association_SetUnidirectionalN.jet")
     {
       %><%@ include file="association_SetUnidirectionalN.jet"%><%
+    }
+    else if (includeFile == "association_SetUnidirectionalMany.jet")
+    {
+    	%><%@ include file="association_SetUnidirectionalMany.jet"%><%
     }
     else if (includeFile != null)
     {

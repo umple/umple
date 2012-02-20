@@ -1,8 +1,17 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
+<% String accessModifier = (av.isImmutable()) ? "private" : "public"; %>
+  <%= accessModifier %> boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
   {
     boolean wasSet = false;
     <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (av.isImmutable()) 
+    	{ 
+    		appendln(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
+    		appendln(stringBuffer, "    {0} = false;", gen.translate("associationCanSet",av)); 
+    		appendln(stringBuffer, "    if ({0} == null)", gen.translate("parameterMany",av));
+    		appendln(stringBuffer, "    {\n      wasSet = true;\n      return wasSet;\n    }");
+    	} 
+    %>
     ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterVerifiedMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
     {

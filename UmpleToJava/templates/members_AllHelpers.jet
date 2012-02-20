@@ -31,6 +31,29 @@
     }
   }
   
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    if (av.isImmutable())
+    {
+      if (isFirst)
+      {
+        isFirst = false;
+        appendln(stringBuffer, "");
+        appendln(stringBuffer, "");
+        appendln(stringBuffer,"  //Helper Variables");
+      } 
+      else
+      {
+        appendln(stringBuffer, "");
+      }
+      append(stringBuffer, "  private boolean {0};", gen.translate("associationCanSet",av));
+    }
+  }
+  
   for(String memberId : uClass.getKey().getMembers())
   {
     Attribute av = uClass.getAttribute(memberId);
