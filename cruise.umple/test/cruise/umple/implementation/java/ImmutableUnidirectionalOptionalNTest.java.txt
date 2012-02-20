@@ -92,11 +92,6 @@ public class Student
     boolean wasSet = false;
     if (!canSetMentors) { return wasSet; }
     canSetMentors = false;
-    if (newMentors == null)
-    {
-      wasSet = true;
-      return wasSet;
-    }
 
     ArrayList<Mentor> verifiedMentors = new ArrayList<Mentor>();
     for (Mentor aMentor : newMentors)

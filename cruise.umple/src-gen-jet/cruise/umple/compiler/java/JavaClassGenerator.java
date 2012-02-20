@@ -2132,7 +2132,6 @@ public class JavaClassGenerator implements ILang
     {    
       	append(stringBuffer, "  private List<{0}> {1};", gen.translate("typeMany",av), gen.translate("attributeMany",av));
     }
-    
   }
 }
 
@@ -6207,10 +6206,8 @@ public class JavaClassGenerator implements ILang
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
      if (av.isImmutable()) 
     	{ 
-    		appendln(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		appendln(stringBuffer, "    {0} = false;", gen.translate("associationCanSet",av)); 
-    		appendln(stringBuffer, "    if ({0} == null)", gen.translate("parameterMany",av));
-    		appendln(stringBuffer, "    {\n      wasSet = true;\n      return wasSet;\n    }");
+    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
+    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
     	} 
     
     stringBuffer.append(TEXT_1319);
@@ -6681,10 +6678,8 @@ public class JavaClassGenerator implements ILang
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
      if (av.isImmutable()) 
     	{ 
-    		appendln(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		appendln(stringBuffer, "    {0} = false;", gen.translate("associationCanSet",av)); 
-    		appendln(stringBuffer, "    if ({0} == null)", gen.translate("parameterMany",av));
-    		appendln(stringBuffer, "    {\n      wasSet = true;\n      return wasSet;\n    }");
+    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
+    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
     	} 
     
     stringBuffer.append(TEXT_1547);
