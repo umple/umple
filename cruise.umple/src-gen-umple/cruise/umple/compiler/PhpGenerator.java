@@ -906,7 +906,7 @@ private String getExtendClassesNames(UmpleClass uClass)
     {
       AssociationVariable relatedAv = av.getRelatedAssociation();
 
-      if (av.getMultiplicity().getLowerBound() == 0 || !av.getIsNavigable())
+      if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable()) || !av.getIsNavigable())
       {
         continue;
       }

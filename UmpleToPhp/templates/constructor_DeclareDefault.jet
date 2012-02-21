@@ -109,6 +109,15 @@
     }
   }
   
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+  	if (!av.getIsNavigable() || !av.isImmutable())
+  	{
+  	  continue;
+  	}
+    append(stringBuffer, "\n    ${0}->{1} = true;", instanceIdentifier, gen.translate("associationCanSet",av));
+  }
+  
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
@@ -125,10 +134,25 @@
         hasBody = true;
         %><%@ include file="constructor_AssociationAssignUndirectionalOne.jet"%><%
       }
+      else if (av.isOptionalOne() && av.isImmutable())
+      {
+        hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalOne.jet"%><%
+      }
       else if (av.isMandatoryMany())
       {
         hasBody = true;
         %><%@ include file="constructor_AssociationAssignMandatoryMany.jet"%><%
+      }
+      else if (av.isOptionalN() && av.isImmutable())
+      {
+        hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalN.jet"%><%
+      }
+      else if (av.isMany() && av.isImmutable())
+      {
+      	hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalMany.jet"%><%
       }
       else if (av.isMany())
       {

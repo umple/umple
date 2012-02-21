@@ -22,7 +22,7 @@
     
     if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Association Javadoc", av.getComments())); }
     
-    if (av.isOptionalOne() && av.getRelatedAssociation().isMandatory())
+    if (av.isOptionalOne() && av.getRelatedAssociation().isMandatory() && !av.isImmutable())
     {
       append(stringBuffer, "  public ${0}; //until PHP 5.3 (setAccessible)", gen.translate(lookup,av));
     }
