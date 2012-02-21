@@ -30,14 +30,14 @@ class UmpleConsoleMain
      console = "";
 
      OptionSet optset = optParse(args);
-     if (optionProcess(optset)) {
+     if (preModelOptionProcess(optset)) {
          return;
      }
 
      List<String> nonOpt = optset.nonOptionArguments();
 
      if (nonOpt.isEmpty()) {
-         println("Please specify <umple_file> for process");
+         println("Please specify <umple_file> to process");
          printUsage();
          return;
      }
@@ -47,9 +47,8 @@ class UmpleConsoleMain
      UmpleFile umpleFile = new UmpleFile(filename);
      UmpleModel model = new UmpleModel(umpleFile);
 
-     if (optset.has("generate")) {
-         String lang = (String)optset.valueOf("generate");
-         model.addGenerate(lang);
+     if (postModelOptionProcess(optset, model)) {
+         return;
      }
 
      try
@@ -95,11 +94,11 @@ class UmpleConsoleMain
        }
    }
    /**
-    * optionProcess: process the option arguments
+    * optionProcess: process the option arguments which does not require UmpleModel
     * Argument: optSet - set of the options and corresponding arguments
     * Return: boolean - If application should terminate immediately after return
     */
-   private static boolean optionProcess(OptionSet optSet) {
+   private static boolean preModelOptionProcess(OptionSet optSet) {
        if (optSet == null) {
            return true;
        }
@@ -114,12 +113,32 @@ class UmpleConsoleMain
        return false;
    }
 
+   private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model) {
+       if (optset.has("generate")) {
+           boolean override=false;
+           String path = "";
+           if (optset.has("override")) {
+               override = true;
+           }
+           if (optset.has("path")) {
+               path = (String)optset.valueOf("path");
+           }
+           String lang = (String)optset.valueOf("generate");
+           GenerateTarget gt = new GenerateTarget(lang, path);
+           gt.setOverrideAll(override);
+           model.addGenerate(Arrays.asList(gt));
+       }
+       return false;
+   }
+
    private static OptionSet optParse(String[] args)
    {
        optparser = new OptionParser();
        optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
        optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-       optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language").withRequiredArg().ofType(String.class);
+       optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,Yuml").withRequiredArg().ofType(String.class);
+       optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, ouptut will only generate language <lang>");
+       optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
 
        OptionSet optSet = null;
        try {

@@ -658,7 +658,7 @@ public class UmpleModel
     }
     catch (Exception e)
     {
-      throw new UmpleCompilerException("Unable to generate code",e);
+      throw new UmpleCompilerException("Unable to generate code\n",e);
     }
   }
   

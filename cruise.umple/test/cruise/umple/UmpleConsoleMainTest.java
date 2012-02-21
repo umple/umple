@@ -69,6 +69,55 @@ public class UmpleConsoleMainTest
   }
   
   @Test
+  public void generateOverride() {
+		String[] cppargs = new String[] {"-g", "Cpp", "--override", "testclass.ump"};
+		
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
+		    out.write("generate Java; class testclass {}");
+		    out.close();
+		    
+		    UmpleConsoleMain.main(cppargs);
+		    File javaout = new File("testclass.java");
+		    File cppout = new File("testclass.cpp");
+		    File chout = new File("testclass.h");
+		    Assert.assertEquals(false, javaout.exists());
+		    Assert.assertEquals(true, cppout.exists());
+		    Assert.assertEquals(true, chout.exists()); 
+		    javaout.delete();
+		    cppout.delete();
+		    chout.delete();
+		    
+		    new File("testclass.ump").delete();
+		} catch (IOException e) {
+			Assert.fail();
+		}
+  }
+  
+  @Test
+  public void generatePath() {
+		String[] cppargs = new String[] {"-g", "Cpp", "--path", "/tmp", "testclass.ump"};
+		
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
+		    out.write("class testclass {}");
+		    out.close();
+		    
+		    UmpleConsoleMain.main(cppargs);
+		    File cppout = new File("/tmp/testclass.cpp");
+		    File chout = new File("/tmp/testclass.h");
+		    Assert.assertEquals(true, cppout.exists());
+		    Assert.assertEquals(true, chout.exists()); 
+		    cppout.delete();
+		    chout.delete();
+		    
+		    new File("testclass.ump").delete();
+		} catch (IOException e) {
+			Assert.fail();
+		}
+  }
+  
+  @Test
   public void outputLang() {
 	String[] javaargs = new String[] {"-g", "Java", "testclass.ump"};
 	String[] cppargs = new String[] {"-g", "Cpp", "testclass.ump"};
