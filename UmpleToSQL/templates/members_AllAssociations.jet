@@ -1,18 +1,16 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
   /*
-   This class needs a lot of work, for every possible assoxciation type,
+   This class needs a lot of work, for every possible association type,
    a relationship between the different tables must be established.
    
-   You may want to break these into seperate files as the other projects do, 
+   You may want to break these into separate files as the other projects do, 
    I.e:
     association_ManyToOne.jet
     association_MNToMany.jet 
     etc...
-    
-    I've left it as it appears from the ruby generator.
   */
-  boolean isFirstAssociation = true;
+  isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
     if (!av.getIsNavigable())
@@ -26,23 +24,32 @@
     {
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
-      appendln(stringBuffer, "  #------------------------");
-      appendln(stringBuffer, "  # MEMBER VARIABLES");
-      append(stringBuffer, "  #------------------------");
+      appendln(stringBuffer,"  /*{0} Associations*/", gen.translate("type", uClass));
       isFirst = false;
     }
     
-    if (isFirstAssociation)
-    {
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      appendln(stringBuffer,"  #{0} Associations - for documentation purposes", uClass.getName());
-      append(stringBuffer,"  #attr_reader :{0}",attribute);
-      isFirstAssociation = false;
+    if (av.isN() || av.isMandatoryOne())
+    { 
+      UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
+      for(int i = 0; i < av.getMultiplicity().getUpperBound(); i += 1)
+      { 
+	    for(String foreignPrimaryKeyName : associatedUClass.getKey().getMembers())
+	    {
+	      Attribute foreignPK = associatedUClass.getAttribute(foreignPrimaryKeyName);
+	      if (foreignPK == null) //Check if the given key is a constant.
+  	      {
+  	        append(stringBuffer, "/*Warning: Constant attribute in associated class' Primary Key*/ ");
+  	      }
+  	      else
+  	      {
+	        appendln(stringBuffer, "  {0}_{1}{2} {3},", gen.translate("type", associatedUClass),
+	                                                    gen.translate("attributeOne", foreignPK), 
+	                                                    av.isN() ? "_" + i : "", 
+	                                                    gen.translate("type", foreignPK));
+	      }
+	    }
+      }
     }
-    else
-    {
-      append(stringBuffer,", :{0}",attribute);
-    }
+    
   }
 %>

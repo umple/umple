@@ -20,6 +20,7 @@ public class Ignore
   // SQL doesn't have a notion of a static 'member' or variable,
   // however, it may be useful to document static members in the code
   // so this template has been left as is.
+  
   if (uClass.getIsSingleton())
   {
     append(stringBuffer, "  include Singleton");
@@ -29,7 +30,7 @@ public class Ignore
   for(Attribute av : uClass.getAttributes())
   {
   
-    if (!av.isConstant() && !av.getIsAutounique())
+    if (!av.isConstant())
     {
       continue;
     }
@@ -38,23 +39,14 @@ public class Ignore
     {
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
-      appendln(stringBuffer, "  -------------------------");
-      appendln(stringBuffer, "  -- STATIC VARIABLES");
-      appendln(stringBuffer, "  -------------------------");
+      appendln(stringBuffer, "  /*-----------------------*/");
+      appendln(stringBuffer, "  /* STATIC VARIABLES      */");
+      appendln(stringBuffer, "  /*-----------------------*/");
       isFirst = false;
     }
   
-    if (av.isConstant())
-    {
-      appendln(stringBuffer, "");
-      append(stringBuffer, "  {0} = {1};", gen.translate("attributeConstant",av), gen.translate("parameterValue",av));
-    }
-    else if (av.getIsAutounique())
-    {
-      String defaultValue = av.getValue() == null ? "1" : av.getValue();
-      appendln(stringBuffer, "");
-      append(stringBuffer, "  @@{0} = {1}", gen.translate("parameterNext",av), defaultValue);
-    }
+    appendln(stringBuffer, "");
+    appendln(stringBuffer, "  {0} {1} DEFAULT '{2}' CHECK ({1} = '{2}'),", gen.translate("attributeConstant",av), gen.translate("type",av), gen.translate("parameterValue",av));
   }
   
 

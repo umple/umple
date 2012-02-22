@@ -36,8 +36,8 @@ Associations, Auto-unique variables
 
 <%=gen.translate("packageDefinition",uClass)%>
 
-<% if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("RubyMultiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Hash",uClass.getComments()));} } %>
-CREATE TABLE <%=uClass.getName() %><%= gen.translate("isA",uClass) /* a bit of work needs to be done here, if we inherit, do we just add those attributes to the table?*/ %> (
+<% if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } %>
+CREATE TABLE `<% if (uClass.getPackageName() != "") { append(stringBuffer, "{0}`.`", gen.translate("packageName", uClass));} %><%=gen.translate("type", uClass) %>`<%= gen.translate("isA",uClass) /* a bit of work needs to be done here, if we inherit, do we just add those attributes to the table?*/ %> (
 
   <%@ include file="members_AllStatics.jet" %>
   <%@ include file="members_AllAttributes.jet" %>

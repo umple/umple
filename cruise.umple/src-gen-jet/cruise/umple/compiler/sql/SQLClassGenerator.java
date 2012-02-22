@@ -22,10 +22,11 @@ public class SQLClassGenerator implements ILang
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL;
-  protected final String TEXT_5 = NL + "CREATE TABLE ";
-  protected final String TEXT_6 = " (" + NL;
-  protected final String TEXT_7 = NL + "  " + NL + ");";
-  protected final String TEXT_8 = NL;
+  protected final String TEXT_5 = NL + "CREATE TABLE `";
+  protected final String TEXT_6 = "`";
+  protected final String TEXT_7 = " (" + NL;
+  protected final String TEXT_8 = NL + "  " + NL + ");";
+  protected final String TEXT_9 = NL;
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -84,16 +85,19 @@ Associations, Auto-unique variables
     stringBuffer.append(TEXT_3);
     stringBuffer.append(gen.translate("packageDefinition",uClass));
     stringBuffer.append(TEXT_4);
-     if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("RubyMultiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Hash",uClass.getComments()));} } 
+     if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } 
     stringBuffer.append(TEXT_5);
-    stringBuffer.append(uClass.getName() );
-    stringBuffer.append( gen.translate("isA",uClass) /* a bit of work needs to be done here, if we inherit, do we just add those attributes to the table?*/ );
+     if (uClass.getPackageName() != "") { append(stringBuffer, "{0}`.`", gen.translate("packageName", uClass));} 
+    stringBuffer.append(gen.translate("type", uClass) );
     stringBuffer.append(TEXT_6);
+    stringBuffer.append( gen.translate("isA",uClass) /* a bit of work needs to be done here, if we inherit, do we just add those attributes to the table?*/ );
+    stringBuffer.append(TEXT_7);
     
   
   // SQL doesn't have a notion of a static 'member' or variable,
   // however, it may be useful to document static members in the code
   // so this template has been left as is.
+  
   if (uClass.getIsSingleton())
   {
     append(stringBuffer, "  include Singleton");
@@ -103,7 +107,7 @@ Associations, Auto-unique variables
   for(Attribute av : uClass.getAttributes())
   {
   
-    if (!av.isConstant() && !av.getIsAutounique())
+    if (!av.isConstant())
     {
       continue;
     }
@@ -112,36 +116,37 @@ Associations, Auto-unique variables
     {
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
-      appendln(stringBuffer, "  -------------------------");
-      appendln(stringBuffer, "  -- STATIC VARIABLES");
-      appendln(stringBuffer, "  -------------------------");
+      appendln(stringBuffer, "  /*-----------------------*/");
+      appendln(stringBuffer, "  /* STATIC VARIABLES      */");
+      appendln(stringBuffer, "  /*-----------------------*/");
       isFirst = false;
     }
   
-    if (av.isConstant())
-    {
-      appendln(stringBuffer, "");
-      append(stringBuffer, "  {0} = {1};", gen.translate("attributeConstant",av), gen.translate("parameterValue",av));
-    }
-    else if (av.getIsAutounique())
-    {
-      String defaultValue = av.getValue() == null ? "1" : av.getValue();
-      appendln(stringBuffer, "");
-      append(stringBuffer, "  @@{0} = {1}", gen.translate("parameterNext",av), defaultValue);
-    }
+    appendln(stringBuffer, "");
+    appendln(stringBuffer, "  {0} {1} DEFAULT '{2}' CHECK ({1} = '{2}'),", gen.translate("attributeConstant",av), gen.translate("type",av), gen.translate("parameterValue",av));
   }
   
 
     
 {
-  appendln(stringBuffer, "  --------------------------");
-  appendln(stringBuffer, "  -- MEMBER VARIABLES");
-  append(stringBuffer, "  --------------------------");
+  appendln(stringBuffer, "");
+  appendln(stringBuffer, "");
+  appendln(stringBuffer, "  /*------------------------*/");
+  appendln(stringBuffer, "  /* MEMBER VARIABLES       */");
+  append(stringBuffer, "  /*------------------------*/");
+
+  //Check for Primary Key
+  boolean noKey = false;
+  String genKeyName = gen.translate("type", uClass) + "_id";
+  if (uClass.getKey().getMembers().length == 0)
+  {
+  	noKey = true;
+  }
 
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
-    if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
+    if (av.isConstant())
     {
       continue;
     }
@@ -149,61 +154,72 @@ Associations, Auto-unique variables
     {
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
-      append(stringBuffer,"  --{0} Attributes", uClass.getName());
+      appendln(stringBuffer,"  /*{0} Attributes*/", gen.translate("type", uClass));      
+      if (noKey)
+      {
+        appendln(stringBuffer, "  /*Warning: No Primary Key specified. {0} was generated.*/", genKeyName);
+        appendln(stringBuffer, "  {0} INT AUTO_INCREMENT,", genKeyName);
+      }
       isFirst = false;
     }
     
     String type = gen.translate("type",av);
     String attribute = gen.translate("attributeOne",av);
-    
     if (av.getIsList())
     {
       attribute = gen.translate("attributeMany",av);
       type = StringFormatter.format("List<{0}>",gen.translate("typeMany",av));
     }
-
-    appendln(stringBuffer, "");
-    append(stringBuffer, "  {0} {1},", attribute, type);
+    
+    append(stringBuffer, "  {0} {1}", attribute, type);
+    
+    if (av.getIsAutounique())
+    {
+   	  append(stringBuffer, " AUTO_INCREMENT");
+    }
+    else if (gen.translate("parameterValue",av).compareToIgnoreCase("null") != 0)
+    {
+   	  append(stringBuffer, " DEFAULT '{0}'", gen.translate("parameterValue",av));
+    }
+        
+    appendln(stringBuffer, ",");
   }
   
-  isFirst = true;
-  for(Attribute av : uClass.getAttributes())
+  
+  //Primary Key Generation
+  if (!noKey)
   {
-    if (!av.getIsAutounique())
-    {
-      continue;
-    }
-    if (isFirst)
-    {
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      append(stringBuffer,"  --Autounique Attributes");
-      isFirst = false;
-    }
-    appendln(stringBuffer, "");
-    append(stringBuffer, "\n   {0} INTEGER AUTO INCREMENT,", gen.translate("attributeOne",av));
+  	String tKey = "";
+  	for(String key : uClass.getKey().getMembers())
+  	{
+  	  if (uClass.getAttribute(key) == null) //Check if the given key is a constant.
+  	  {
+  	    tKey += "/*Warning: Constant attribute in Primary Key*/ ";
+  	  }
+	  tKey += StringFormatter.toUnderscore(key) + ", ";
+  	}
+  	//Remove trailing comma
+  	tKey = tKey.substring(0, tKey.length()-2);
+  	appendln(stringBuffer, "  PRIMARY KEY({0}),", tKey);
   }
-  String tKey = "";
-  for(String key : uClass.getKey().getMembers()){
-		  tKey += key + ", ";
+  else
+  {
+  	appendln(stringBuffer, "  PRIMARY KEY({0}),", genKeyName);
   }
-  append(stringBuffer, "   PRIMARY KEY({0}),", tKey);
 }
 
     
   /*
-   This class needs a lot of work, for every possible assoxciation type,
+   This class needs a lot of work, for every possible association type,
    a relationship between the different tables must be established.
    
-   You may want to break these into seperate files as the other projects do, 
+   You may want to break these into separate files as the other projects do, 
    I.e:
     association_ManyToOne.jet
     association_MNToMany.jet 
     etc...
-    
-    I've left it as it appears from the ruby generator.
   */
-  boolean isFirstAssociation = true;
+  isFirst = true;
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
     if (!av.getIsNavigable())
@@ -217,28 +233,37 @@ Associations, Auto-unique variables
     {
       appendln(stringBuffer, "");
       appendln(stringBuffer, "");
-      appendln(stringBuffer, "  #------------------------");
-      appendln(stringBuffer, "  # MEMBER VARIABLES");
-      append(stringBuffer, "  #------------------------");
+      appendln(stringBuffer,"  /*{0} Associations*/", gen.translate("type", uClass));
       isFirst = false;
     }
     
-    if (isFirstAssociation)
-    {
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      appendln(stringBuffer,"  #{0} Associations - for documentation purposes", uClass.getName());
-      append(stringBuffer,"  #attr_reader :{0}",attribute);
-      isFirstAssociation = false;
+    if (av.isN() || av.isMandatoryOne())
+    { 
+      UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
+      for(int i = 0; i < av.getMultiplicity().getUpperBound(); i += 1)
+      { 
+	    for(String foreignPrimaryKeyName : associatedUClass.getKey().getMembers())
+	    {
+	      Attribute foreignPK = associatedUClass.getAttribute(foreignPrimaryKeyName);
+	      if (foreignPK == null) //Check if the given key is a constant.
+  	      {
+  	        append(stringBuffer, "/*Warning: Constant attribute in associated class' Primary Key*/ ");
+  	      }
+  	      else
+  	      {
+	        appendln(stringBuffer, "  {0}_{1}{2} {3},", gen.translate("type", associatedUClass),
+	                                                    gen.translate("attributeOne", foreignPK), 
+	                                                    av.isN() ? "_" + i : "", 
+	                                                    gen.translate("type", foreignPK));
+	      }
+	    }
+      }
     }
-    else
-    {
-      append(stringBuffer,", :{0}",attribute);
-    }
+    
   }
 
-    stringBuffer.append(TEXT_7);
     stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_9);
     stringBuffer.append(gen.translate("packageDefinitionEnd",uClass));
     return stringBuffer.toString();
   }
