@@ -13,18 +13,22 @@ class Student
   #------------------------
 
   #Student Attributes - for documentation purposes
-  #attr_reader :name, :studentNumber
+  #attr_reader :number
+
+  #Student Associations - for documentation purposes
+  #attr_reader :mentor
 
   #------------------------
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_name)
+  def initialize(a_number, a_mentor)
     @initialized = false
     @deleted = false
-    @name = a_name
-    @can_set_name = false
-    @can_set_studentNumber = true
+    @number = a_number
+    @can_set_number = false
+    @can_set_mentor = true
+    set_mentor(a_mentor)
     @initialized = true
   end
 
@@ -32,21 +36,21 @@ class Student
   # INTERFACE
   #------------------------
 
-  def set_studentNumber(a_studentNumber)
+  def get_number
+    @number
+  end
+
+  def get_mentor
+    @mentor
+  end
+
+  def set_mentor(new_mentor)
     was_set = false
-    return false unless @can_set_studentNumber
-    @can_set_studentNumber = false
-    @studentNumber = a_studentNumber
+    return false unless @can_set_mentor
+    @can_set_mentor = false
+    @mentor = new_mentor
     was_set = true
     was_set
-  end
-
-  def get_name
-    @name
-  end
-
-  def get_studentNumber
-    @studentNumber
   end
 
   def delete

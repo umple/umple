@@ -573,6 +573,15 @@ class RubyGenerator
         aClass.addCodeInjection(inject);
       }
       
+      if (av.isImmutable())
+      {
+        String code = StringFormatter.format("return false unless @{0}\n    @{0} = false",translate("associationCanSet",av));
+        String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
+        CodeInjection inject = new CodeInjection("before", methods, code);
+        inject.setIsInternal(true);
+        aClass.addCodeInjection(inject);
+      }
+      
       if (av.getIsNavigable()  && av.isMandatoryOne() && av.getRelatedAssociation().isMandatory())
       {
         String code = StringFormatter.format("raise \"Mandatory relationship with {0} not satisfied\" if (@initialized and !@deleted and @{1}.nil?)",av.getName(),translate("associationOne",av));
@@ -636,7 +645,7 @@ class RubyGenerator
     {
       AssociationVariable relatedAv = av.getRelatedAssociation();
 
-      if (av.getMultiplicity().getLowerBound() == 0 || !av.getIsNavigable())
+      if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable())|| !av.getIsNavigable())
       {
         continue;
       }

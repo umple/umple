@@ -18,7 +18,7 @@
   {
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
     
-    if (!av.getIsNavigable())
+    if (!av.getIsNavigable() || av.isImmutable())
     {
       continue;
     }

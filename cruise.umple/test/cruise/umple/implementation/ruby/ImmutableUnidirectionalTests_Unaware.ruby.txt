@@ -5,15 +5,15 @@
 
 module Example
 
-class Student
+class Mentor
 
 
   #------------------------
   # MEMBER VARIABLES
   #------------------------
 
-  #Student Attributes - for documentation purposes
-  #attr_reader :name, :studentNumber
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name
 
   #------------------------
   # CONSTRUCTOR
@@ -24,7 +24,6 @@ class Student
     @deleted = false
     @name = a_name
     @can_set_name = false
-    @can_set_studentNumber = true
     @initialized = true
   end
 
@@ -32,21 +31,8 @@ class Student
   # INTERFACE
   #------------------------
 
-  def set_studentNumber(a_studentNumber)
-    was_set = false
-    return false unless @can_set_studentNumber
-    @can_set_studentNumber = false
-    @studentNumber = a_studentNumber
-    was_set = true
-    was_set
-  end
-
   def get_name
     @name
-  end
-
-  def get_studentNumber
-    @studentNumber
   end
 
   def delete

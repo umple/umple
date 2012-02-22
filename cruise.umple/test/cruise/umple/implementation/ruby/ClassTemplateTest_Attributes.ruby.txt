@@ -67,7 +67,7 @@ class Mentor
   def set_str2(a_str2)
     was_set = false
     return false unless @can_set_str2
-    can_set_str2 = false;
+    @can_set_str2 = false
     @str2 = a_str2
     was_set = true
     was_set

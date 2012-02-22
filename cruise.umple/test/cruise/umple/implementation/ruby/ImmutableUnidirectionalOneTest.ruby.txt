@@ -1,0 +1,69 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :number
+
+  #Student Associations - for documentation purposes
+  #attr_reader :mentor
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number, a_mentor)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @can_set_number = false
+    @can_set_mentor = true
+    unless set_mentor(a_mentor)
+      raise "Unable to create Student due to a_mentor" 
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_number
+    raise "Mandatory relationship with mentor not satisfied" if (@initialized and !@deleted and @mentor.nil?)
+    @number
+  end
+
+  def get_mentor
+    raise "Mandatory relationship with mentor not satisfied" if (@initialized and !@deleted and @mentor.nil?)
+    @mentor
+  end
+
+  def set_mentor(new_mentor)
+    was_set = false
+    return false unless @can_set_mentor
+    @can_set_mentor = false
+    raise "Mandatory relationship with mentor not satisfied" if (@initialized and !@deleted and @mentor.nil?)
+    unless new_mentor.nil?
+      @mentor = new_mentor
+      was_set = true
+    end
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    raise "Mandatory relationship with mentor not satisfied" if (@initialized and !@deleted and @mentor.nil?)
+  end
+
+end
+end

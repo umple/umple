@@ -37,7 +37,7 @@ class Student
     was_set = false
     print "start set_id";
     return false unless @can_set_id
-    can_set_id = false;
+    @can_set_id = false
     @id = a_id
     was_set = true
     print "end set_id";
