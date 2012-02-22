@@ -4,26 +4,57 @@ noreferences
 
 @@description
 <p>      
-A class can contain any of the following items. Interfaces are limited to those marked [Interfaces]:
+A class can contain any of the following items. <a href="interfaceDefinition.html">Interfaces</a> are limited to those indicated.
 </p>
 
 <ul>
 
-<li>Comments describe the intent of your class [Interfaces too]]</li>
+<li><b><a href="UmpleComments.html">Comments</a></b> describe the intent of your class (or interface), and any other elements in the class.</li>
 
-<li>isA directives that specify a superclass to your class (i.e. a Supervisor could be descrbied as "isA Person") [Interfaces can have more than one]</li>
+<br />
 
-<li>Attribute describing simple data that can be found in any element of the class (i.e. name, dob, amount)</li>
+<li><b><a href="isAclause.html">isA directives</a></b> that specify a superclass to your class (i.e. a Supervisor could be descrbied as "isA Person") [Interfaces can have more than one]</li>
 
-<li>A singleton declaration that limits the system to only one instance of this class (e.g. there may only be one Bank in a banking system)</li>
+<br />
 
-<li>Depends clauses that describe external dependencies that might be used by your class within methods</li>
+<li><b><a href="SingletonPattern.html">A singleton directive</a></b> that limits the system to only one instance of this class (e.g. there may only be one Bank in a banking system)</li>
 
-<li>Associations that define links to instances of other classes (or to other instances of this class). </li>
+<br />
 
-<li>Internal class definitions that define subclass of this class</li>
+<li><b><a href="ImmutablePattern.html">An immutable directive</a></b> that ensures that once constructed, an instance cannot be modified (under development).</li>
 
-<li>Methods that provide behaviour for the class [Interfaces can have declarations of methods only]</li>
+<br />
 
-<li>State machine definitions that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls.
+<li><b><a href="Dependclause.html">Depend directives</a></b> that describe external dependencies that might be used by your class within methods (Interfaces can contain these too).</li>
+
+<br />
+
+<li><b><a href="AttributeDefinition.html">Attributes</a></b> describing simple data that can be found in any element of the class (i.e. name, dob, amount)</li>
+
+<br />
+
+<li><b><a href="BasicStateMachines.html">State machine definitions</a></b> that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls.
+
+<br />
+
+<li><b><a href="InlineAssociations.html">Inline associations</a></b> that define links to instances of other classes (or to other instances of this class). </li>
+
+<br />
+
+<li><b><a href="KeysforEqualityandHashing.html">Key directives</a></b> indicating which attributes (or in future, associations) are going to be used to define when one element is equal to another.</li>
+
+<br />
+
+<li><b>Class definitions nested inside this class</b> that define subclass of this class as an alternative to using the isA clause.</li>
+
+<br />
+
+<li><b><a href="TracingBasics.html">Trace directives</a></b> to direct generation of traces from the code.</li>
+
+<br />
+
+<li><b><a href="MethodDefinition.html">Methods</a></b> that provide behaviour for the class. (Interfaces can have declarations of methods only; no method bodies)</li>
+
+<br />
+
 </ul>

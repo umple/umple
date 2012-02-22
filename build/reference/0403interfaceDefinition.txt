@@ -1,19 +1,20 @@
-interfaceDefinition
+interface Definition
 Classes and Interfaces
 noreferences
 
 @@description
 <p>      
-The interface command defines an object-oriented interface.  An interface can be 
-composed of the following things: 
+An interface defines a list of <a href="MethodDefinition.html">methods</a> that are to be implemented in one or more classes.  An interface can be composed of the following elements: 
 </p>
 
 <ul>
-<li>Dependencies</li>
-<li>Arbitrary "code" in a native language (e.g. Java, PHP) to define the interface methods</li>
+<li><a href="Dependclause.html">Dependencies</a></li>
+<li><a href="MethodDefinition.html">Method declarations</a></li>
 </ul>
 
-<p class="description">Umple currently supports Java and PHP as native languages.</p>
+<p class="description">Umple currently supports Java, PHP and Ruby as native languages.</p>
+
+<p>To implement an interface in a class, or to create subinterfaces, use an <a href="isAclause.html">isA clause</a>.</p<
 
 @@syntax
 interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] } <br/>&nbsp;<br/>

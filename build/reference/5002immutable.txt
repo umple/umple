@@ -1,0 +1,27 @@
+Immutable Pattern
+Patterns
+noreferences
+
+@@description
+<p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and then cannot be set.</p>
+
+<p>Individual attributes can be marked as immutable instead o the entire class; or they can be marked as <a href="LazyImmutableAttributes.html">lazy immutable</a> if they need to be initialized after the constructor has finished.</p>
+
+<p>This feature is currently under development.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Immutable_object" target=wikipedia">For more details on the Immutable pattern, see this Wikipedia page.</a></p>
+
+<br />
+
+@@syntax
+immutable;
+
+@@example
+
+class Point2D
+{
+  immutable;
+  Float x;
+  Float y;
+}
+@@endexample

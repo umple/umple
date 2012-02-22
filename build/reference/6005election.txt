@@ -6,8 +6,6 @@ noreferences
 <br />
 <img src="examples/election.png" title="Election System UML Model"/>
 
-@@syntax
-N/A
 
 @@example
 namespace electoral;

@@ -7,12 +7,44 @@ noreferences
 Directives appear as the 'main' entries in an Umple file.</p>
 
 <ul>
-<li><a href="UseStatements.html">Use statements</a> result in inclusion of other Umple files to allow for modularization and reuse.</li>
+<li><b><a href="UseStatements.html">Use statements</a></b> result in inclusion of other Umple files to allow for modularization and reuse.</li>
+
+<br />
 
 <li><b>Entity declarations</b> define the top level model or code elements including <a href="ClassDefinition.html">classes</a>, <a href="InterfaceDefinition.html">interfaces</a>, <a href="AssociationDefinition.html">associations</a> and <a href="AssociationClassDefinition.html">association classes</a>. Other model or code elements, such as <a href="MethodDefinition.html">methods</a> or <a href="AttributeDefinition.html">attributes</a> must be placed <i>inside</i> these entities.</li>
 
-<li><a href="NamespaceDirectives.html">Namespace directives</a> gather entitles in logical groups. Within a namespace, entitles must have different names. Namespaces affect code generation; for example they correspond to packages in Java.</li>
+<br />
+
+<li><b><a href="NamespaceDirectives.html">Namespace directives</a></b> gather entitles in logical groups. Within a namespace, entitles must have different names. Namespaces affect code generation; for example they correspond to packages in Java.</li>
+
+<br />
+
+<li><b>Generate directives</b> tell Umple one or more generated outputs to create. You can omit these entirely and specify them on the command line or using UmpleOnline. As a second argument on the generate directive, you can specify a path (directory) where the output should be put. You can also specify --override-all to ensure subsequent directives are ignored.</li>
+
+<br />
+
+<li><b>The tracer directive</b> is under development and tells Umple which tracing tool to use in order to <a href="TracingBasics.html">trace execution of the code</a>.</li>
 
 </ul>
 
-<p><b><i>Next topic if reading in sequence:</i></b> Use Statements.</p>
+@@syntax
+
+directive- : [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]&nbsp;<br/>
+
+&nbsp;<br/>
+generate- : <font color="purple">generate</font> [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] ;&nbsp;<br/>
+
+&nbsp;<br/>
+generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] " [**output] " [=override:<font color="purple">--override</font>|<<font color="purple">--override-all</font>]? ;&nbsp;<br/>
+
+&nbsp;<br/>
+useStatement- : <font color="purple">use</font> [use] ;&nbsp;<br/>
+
+&nbsp;<br/>
+namespace- : <font color="purple">namespace</font> [namespace] ;&nbsp;<br/>
+
+&nbsp;<br/>
+entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]&nbsp;<br/>
+
+&nbsp;<br/>
+traceType- : <font color="purple">tracer</font> [traceType] ;

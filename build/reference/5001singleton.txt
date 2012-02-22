@@ -1,12 +1,16 @@
 Singleton Pattern
-Other Features
+Patterns
 noreferences
 
 @@description
-The Singleton pattern to mark a class as a singleon class. The code ensures that only one object of the class is instantiated at runtime.
+<p>Use the Singleton keyword to mark a class as a singleon class. The code ensures that only one object of the class is instantiated at runtime.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Singleton_pattern" target=wikipedia">For more details on the Singleton pattern, see this Wikipedia page.</a></p>
+
+<br />
 
 @@syntax
-singleton ;
+singleton;
 
 @@example
 

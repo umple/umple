@@ -3,15 +3,19 @@ Classes and Interfaces
 noreferences
 
 @@description
-<p>Used to denote an inheritance relationship (generalization) between two classes</p>
+<p>The isA keyword is ysed to denote an inheritance relationship (generalization) between two classes, or a class and the interfaces it implements.</p>
 
 <p>This corresponds to keywords such as 'extends', 'subclass', etc. in other languages. The isA keyword was chosen so as to be independent of other languages.</p>
+
+<p>Note that it is possible to avoid using the isA keyword, by directly embedding a subclass inside a superclass. Note that this does <i>not</i> create an inner class in the Java sense, but instead creates a subclass. The two examples below give identical results.</p>
+
+<br />
 
 @@syntax
 isA [extendsName] ;
 
 @@example
-
+// A superclass-subclass relationship defined using the isA keyword
 class Person
 {
   name;
@@ -31,5 +35,25 @@ class Person
 class Student
 {
   position 50 141 135 63;
+}
+@@endexample
+
+@@example
+// A superclass-subclass relationship defined
+// by embedding the subclass in the superclass
+class Person
+{
+  name;
+  
+  class Student
+  {
+    Integer number;
+  }
+}
+//$?[End_of_model]$?
+
+class Person
+{
+  position 59 24 109 60;
 }
 @@endexample

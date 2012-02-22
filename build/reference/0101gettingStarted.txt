@@ -58,12 +58,12 @@ UML diagrams of your program.</li>
 
 </ul>
 
-<p>The term "Umple" derives from "Umple Programming Language", "Simple" 
+<p>The term "Umple" derives from "UML Programming Language", "Simple" 
 and "Ample".</p>
 
 <p>The quickest way to get started with Umple is to go to <a 
-href="http://try.umple.org/">UmpleOnline</a>, to choose 'Load & Save' and 
-browse the examples listed under 'Select Example'. Each of these user manual
+href="http://try.umple.org/">UmpleOnline</a>, and 
+select an example listed under 'Select Example'. Each of these user manual
 pages also allows you to instantly load the examples into UmpleOnline.</p>
 
 <p>To learn more about Umple, read the links on the left of this page, or 
@@ -71,8 +71,6 @@ go to the <a href="http://www.umple.org">Umple Home page</a>. In
 particular, you should browse the <a 
 href="http://code.google.com/p/umple/wiki/Tutorials">tutorials and videos 
 about Umple</a></p>
-
-<p><b><i>Next topic if reading in sequence:</i></b> <a href="UmpleTools.html">Umple Tools</a>.</p>
 
 <hr />
 

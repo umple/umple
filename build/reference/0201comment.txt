@@ -8,12 +8,18 @@ Comments provide a mechanism to document your work to provide some insight into
 <i>how</i>.
 
 <p>
-Comments should be used just like in any programming language
+Comments should be used just like in any programming language.
 </p>
 
 <p>
-Comments can be either inlineComments, or multilineComments.
+Comments immediately before <a href="ClassDefinition.html">class definitions</a>, <a href="AttributeDefinition.html">attribute definitions</a>, <a href="AssociationDefinition.html">association definitions</a> and <a href="MethodDefinition.html">method definitions</a>, as well as comments embedded in methods will be output into the generated code. Comments before definitions in Java will use Javadoc style; this means that when you generate JavaDoc output the API documentation will contain the comments. You are encouraged to create your Java comments using <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/solaris/javadoc.html#javadoctags">Javadoc tags.</a>
 </p>
+
+<p>
+Comments can be either <a href="InlineComments.html">inlineComments</a>, or <a href="MultilineComments.html">multilineComments</a>.
+</p>
+
+<br />
 
 @@example
 // The Umple system is both fun and efficient to development with

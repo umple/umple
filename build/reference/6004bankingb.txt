@@ -6,8 +6,6 @@ noreferences
 
 <img src="examples/bankingb.png" width="90%" title="Banking System UML Model"/>
 
-@@syntax
-N/A
 
 @@example
 namespace banking.b;

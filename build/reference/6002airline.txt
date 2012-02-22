@@ -7,8 +7,6 @@ noreferences
 
 <img src="examples/airline.png" title="Airline System UML Model" width="90%" />
 
-@@syntax
-N/A
 
 @@example
 namespace Airline;

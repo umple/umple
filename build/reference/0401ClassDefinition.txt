@@ -4,21 +4,13 @@ noreferences
 
 @@description
 <p>      
-A class definition defines an object-oriented  class available for use in your system.  A class can be 
-composed of many things including: 
+A class definition defines an object-oriented  class available for use as a type in your system.  
 </p>
 
-<ul>
-<li><a href="isAclause.html">Specification of inheritance from a superclass using the
- isA keyword</a>.</li>
-<li><a href="Dependclause.html">Dependencies</a></li>
-<li><a href="AttributeDefinition.html">Attributes</a></li>
-<li><a href="BasicStateMachines.html">State machines defining attributes whose
-behaviour is controlled by a sequence of events</a></li>
-<li><a href="AssociationDefinition.html">Associations</a></li>
-<li><a href="MethodDefinition.html">Methods containing "code" in a native language (e.g. Java)</a></li>
+<p>To define a class, specify the keyword 'class', followed by the name of the class (starting in a capital letter) and then the body of the class within curly brackets. The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
 
-</ul>
+<br />
+
 
 @@syntax
 class [name] { [[classContent]]* } <br/>&nbsp;<br/>

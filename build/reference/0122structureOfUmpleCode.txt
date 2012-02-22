@@ -6,11 +6,11 @@ noreferences
 
 <p><b>Organizing the contents of an Umple (.ump) file</b></p>
 
-<p>An Umple file will contain a number of directives. These can be:
+<p>An Umple file will contain a number of <a href="TypesofDirectives.html">directives</a>. These can be:
 
 <ul>
 
-<li>Entitles such as <a href="ClassDefinition.html">classes</a> or 
+<li><b>Entitles</b> such as <a href="ClassDefinition.html">classes</a> or 
 <a href="interfaceDefinition.html">interfaces</a>. These look very similar to 
 the definitions of classes or interfaces in Java. Indeed they can be 
 identical to what you would find in a Java (or PHP or Ruby) file. However, 
@@ -43,7 +43,7 @@ system. However <i>methods</i> are treated differently: They are passed
 through essentially unchanged to the resulting system.</p>
 
 <p>If you include methods in Umple code, you therefore have to ensure that 
-any give Umple file has methods of just one chosen target language (Java, 
+any given Umple file has methods of just one chosen target language (Java, 
 PHP, Ruby).</p>
 
 <p>The resulting system will contain many more methods than those that you 
@@ -54,7 +54,7 @@ target language. In other words, when you compile Umple constructs such as
 assocations, attributes and state machines, you are generating many 
 methods that you can call; the set of methods you can call is the 
 generated API. You can find out the API by using Javadoc, or a similar 
-tool, on the generated code.</p>
+tool, on the generated code. One of the options in <a href="UsingUmpleOnline.html">UmpleOnline</a> is to generate Javadoc output.</p>
 
 &nbsp;<br />
 
@@ -83,4 +83,3 @@ mechanisms allow for a form of product-line development. Umple does,
 however, have an extra feature, called <a 
 href="http://cruise.site.uottawa.ca/umpleonline/vml.php">VML</a> that should assist with this when complete.</p>
 
-<p><b><i>Next topic if reading in sequence:</i></b> Umple Comments.</p>

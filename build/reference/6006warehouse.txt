@@ -5,8 +5,6 @@ noreferences
 @@description
 <img src="examples/warehouse.png" width="90%" title="Warehouse System UML Model"/>
 
-@@syntax
-N/A
 
 @@example
 namespace warehouse;

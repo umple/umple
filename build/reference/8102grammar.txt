@@ -1,9 +1,9 @@
-Grammar Syntax
+Umple Grammar
 Grammar To Define Umple
 noreferences
 
 @@description
-Below is the complete grammar for the Umple Language.  Refer to our "Grammar Notation" section for an explanation of our
+Below is the complete grammar for the Umple Language.  Refer to our <a href="GrammarNotation.html">Grammar Notation section</a> for an explanation of our
 EBNF syntax.
 <br />
 <pre>

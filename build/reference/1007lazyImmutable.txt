@@ -12,6 +12,10 @@ will return false if you try again. This is useful for interacting with
 architectures where objects are constructed for you, so you have no ability
 to specify constructor arguments.<p>
 
+<p>Note that if the lazy keyword is omitted, then there will be no set method and an argument will be present in the constructor to initialize the attribute. See also the <a href="ImmutablePattern.html">immutable pattern</a>.</p>
+
+<br />
+
 @@example
 class A 
 {

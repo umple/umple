@@ -1,5 +1,5 @@
 Keys for Equality and Hashing
-Other Features
+Patterns
 noreferences
 
 @@description
