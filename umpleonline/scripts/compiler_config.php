@@ -12,6 +12,10 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+if (php_uname('s') == "Darwin") {
+  $GLOBALS["OS"] = "Mac";
+}
+
 function generateMenu($buttonSuffix)
 {
   $generatemenu = "<ul class=\"second\">
@@ -52,7 +56,15 @@ function saveFile($input, $filename = null)
   }
   
   $fh = fopen($filename, 'w');
-  fwrite($fh, $input);
+  
+  if($GLOBALS["OS"] == "Mac") {
+    $contents = stripslashes($input);
+  }
+  else {
+    $contents = $input;
+  }
+  
+  fwrite($fh, $contents);
   fclose($fh);
   return $filename;
 }
@@ -97,6 +109,30 @@ function extractFilename()
   if (isset($_REQUEST["model"]))
   {
     $filename = "../ump/". $_REQUEST["model"] ."/model.ump";
+    if (!file_exists("ump/" . $filename)) {
+      $destfile = nextFilename("ump");
+      $filename = "../" . $destfile;
+
+      file_put_contents($destfile, "// Saved URL ending in " . $_REQUEST["model"] . " cannot be found");
+    }
+    else  // file does exist
+    {
+      // Check if there is a password lock on the model
+      if (file_exists("ump/" . $_REQUEST["model"] ."/readonlylock.txt"))
+      {
+        // TODO: Open the read only file and check if the
+        // There is an argument with a matching overwrite key
+        // For now, just ensure that the saved URL can only
+        // be overwritten if the argument &overwrite=yes is supplied
+        if (!$_REQUEST["overwrite"] == "yes") { 
+          $readOnly = true;
+          $fileToCopy = "ump/" . $filename;
+          $destfile = nextFilename("ump");
+          $filename = "../" . $destfile;
+          copy($fileToCopy, $destfile);
+        }
+      }
+    }
   }
   // If the argument is example=X then copy the example and open it
   elseif (isset($_REQUEST['example']) && $_REQUEST["example"] != "")
@@ -124,18 +160,22 @@ function extractFilename()
     $filename = "../" . nextFilename("ump");
   }
  
-  // Open any file. Needs maintenance TODO consider removing
+  // The only other option is that there is a filename option
   else
   {
     $destfile = nextFilename("ump");
     $filename = "../" . $destfile;
-
-    file_put_contents($destfile, file_get_contents("http://" . $_REQUEST["filename"]));
     
-    // To ensure the file is http file_get_contents(preg_match('@^http://@i', $_REQUEST['url'])?$_REQUEST['url']:$default_file);
-    // Copy the file as in example=above
-    // http://php.net/manual/en/function.file-get-contents.php
-    // or http://www.bin-co.com/php/scripts/load/
+    if(!substr($_REQUEST["filename"],-4)==".ump") {
+       file_put_contents($destfile, "// URL in filename argument must end in .ump and the initial http:// must be omitted");
+    }
+    else
+    {
+      file_put_contents($destfile, file_get_contents("http://" . $_REQUEST["filename"]));
+      if(substr($http_response_header[0],-2)!="OK") {
+        file_put_contents($destfile, "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load http://" . $_REQUEST["filename"]);
+      }
+    }
   }
   return $filename;
 }

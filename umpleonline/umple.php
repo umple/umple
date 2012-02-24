@@ -2,7 +2,8 @@
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 $filename = extractFilename();
-$output = readTemporaryFile($filename);
+$readOnly = false;
+$output = readTemporaryFile("ump/" . $filename);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -27,7 +28,10 @@ $output = readTemporaryFile($filename);
 
         <noscript>
         <br/><font color="red">Since you have JavaScript disabled this page will not work. To use Umple, download the command line compiler or use Eclipse.</font>
-        </noscript>
+        <pre>
+<?php echo $output ?>
+        </pre>
+        </noscript> 
         </p>
       </td>
     </tr>
@@ -206,7 +210,7 @@ $output = readTemporaryFile($filename);
 
 <script language="JavaScript">
   Page.init();
-  Page.setUmpleCode("<?php $output ?>");
+  // Page.setUmpleCode("<?php $output ?>");
 </script>
 
 

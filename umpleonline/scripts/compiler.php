@@ -43,6 +43,8 @@ else if (isset($_REQUEST["umpleCode"]))
     executeCommand("java -jar umple.jar {$filename}");
     $filename = saveFile("generate Simulate \"./\" --override-all;\n" . $input);
     executeCommand("java -jar umple.jar {$filename}");
+    // Restore file so it doesn't have the 'generate' command in front
+    saveFile($input);
     $modelId = getFilenameId($filename);
     echo $modelId;
     return;
@@ -91,6 +93,9 @@ else if (isset($_REQUEST["umpleCode"]))
   $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";    
   exec($command);
   
+  // Restore file so it doesn't have the 'generate' command in front
+  saveFile($input);
+  
   $sourceCode = readTemporaryFile($outputFilename);
   
   $sourceCode = str_replace("<?php","",$sourceCode);
@@ -103,7 +108,7 @@ else if (isset($_REQUEST["umpleCode"]))
   {
     if($input == "//$?[End_of_model]$?") {
       $html = "
-        Please create in Umple model textually (on the left side of the screen)
+        Please create an Umple model textually (on the left side of the screen)
         or visually (on the right side of the screen),
         and then choose Generate Code again.";
     }
