@@ -14,6 +14,7 @@ Action.canCreateByDrag = true;
 Action.manualSync = false;
 Action.diagramInSync = true;
 Action.freshLoad = false;
+Action.gentime = new Date().getTime();
 
 Action.clicked = function(event)
 {
@@ -875,6 +876,7 @@ Action.photoReady = function()
 Action.generateCodeCallback = function(response,language)
 {
   Page.showGeneratedCode(response.responseText,language);
+  Action.gentime = new Date().getTime();
   var generateCodeSelector = "#buttonGenerateCode";
   jQuery(generateCodeSelector).hideLoading();
   Page.showCodeDone();
@@ -1014,7 +1016,10 @@ Action.umpleCanvasClicked = function(event)
 Action.updateUmpleTextCallback = function(response)
 {
   History.save(response.responseText);
+  Action.freshLoad = true;
+
   Page.setUmpleCode(response.responseText);
+  // Page.catFeedbackMessage("update text callback");
   
   if (Action.textUpdateQueue.length > 0)
   {
@@ -1330,7 +1335,6 @@ Action.umpleCodeMirrorTypingActivity = function() {
     Action.umpleTypingActivity("codeMirrorEditor");
   }
   else {
-    Page.catFeedbackMessage("***");
     Action.freshLoad = false;
   }
 }
@@ -1414,7 +1418,11 @@ Action.updateUmpleDiagramCallback = function(response)
       Action.diagramInSync=true;
     }
     Page.setFeedbackMessage("");
-    Page.hideGeneratedCode();
+    if (new Date().getTime()-Action.gentime > 5000)
+    {
+      // Erase generated code if it was generated a long time ago
+      Page.hideGeneratedCode();
+    }
     var newSystem = Json.toObject(umpleJson);
     UmpleSystem.merge(newSystem);
   }

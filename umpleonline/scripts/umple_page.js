@@ -233,10 +233,8 @@ Page.initCodeMirrorEditor = function() {
 }
 
 Page.resizeCodeMirrorEditor = function(newHeight) {
-   Page.setFeedbackMessage("Will Set new height to "+newHeight);
 
    Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
-   Page.setFeedbackMessage("Set new height to "+newHeight);
    Page.codeMirrorEditor.refresh();
 }
 
