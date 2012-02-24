@@ -506,7 +506,7 @@ private static void postpareTrace(UmpleModel aModel)
 	    
 	  if( "where".equals(conditionType) )
 		  injectionType = "before";  
-	  else if( "until".equals(conditionType) || "after".equals(conditionType) )
+	  else if( "until".equals(conditionType) || "after".equals(conditionType) || "giving".equals(conditionType) )
 		  injectionType = "after";
 	  if( method.equals("setMethod") )
 		  injectTraceDirective(traceDirective,lookups,injectionType,"setMethod");

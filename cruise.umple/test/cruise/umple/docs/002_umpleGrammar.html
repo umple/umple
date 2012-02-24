@@ -140,18 +140,17 @@ traceType- : tracer [traceType] ;<br />
 <br />
 trace : [[traceDirective]] | [[traceCase]]<br />
 <br />
-traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceGiving]]? [[traceWhen]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;<br />
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceGiving]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;<br />
 <br />
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]<br />
 traceEntity- : ( set | get | onlyGet | entry | exit | cardinality )? [trace_entity] ( , [trace_entity] )*<br />
-PreOrPostCondition- : (giving | when)? [[traceCondition]]<br />
+PreOrPostCondition- : (giving | where)? [[traceCondition]]<br />
 <br />
 executeClause- : execute { [**trace_execute] }<br />
 traceWhere :  where  [[traceCondition]]<br />
 traceUntil :  until  [[traceCondition]]<br />
 traceAfter :  after  [[traceCondition]]<br />
 traceGiving : giving [[traceCondition]]<br />
-traceWhen :   when   [[traceCondition]]<br />
 <br />
 traceFor- : for [trace_for]<br />
 tracePeriod- : period [trace_period]<br />

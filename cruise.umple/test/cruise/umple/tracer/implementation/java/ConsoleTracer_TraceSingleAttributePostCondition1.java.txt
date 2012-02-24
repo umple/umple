@@ -1,0 +1,64 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int a;
+  private int b;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aA, int aB)
+  {
+    a = aA;
+    b = aB;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setA(int aA)
+  {
+    boolean wasSet = false;
+    a = aA;
+    wasSet = true;
+    if( a < b )
+    {
+      System.out.println("a=" + aA);
+    }
+    return wasSet;
+  }
+
+  public boolean setB(int aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getA()
+  {
+    return a;
+  }
+
+  public int getB()
+  {
+    return b;
+  }
+
+  public void delete()
+  {}
+
+}

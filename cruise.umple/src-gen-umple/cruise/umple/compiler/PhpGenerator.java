@@ -702,6 +702,8 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  
 	  if( tc.getConditionType().equals("where") )
 		  processWhereCondition(traceDirective, t, template, attr);	
+	  else if( tc.getConditionType().equals("giving") )  
+		  processGivingCondition(traceDirective, t, template, attr);	
 	  else if( tc.getConditionType().equals("until") )  
 		  processUntilCondition(traceDirective, t, template, attr);		 
 	  else if( tc.getConditionType().equals("after") )
@@ -712,6 +714,21 @@ private String getExtendClassesNames(UmpleClass uClass)
   public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
   {
 	 String attrCode = null, conditionType = "where";
+	 TraceCondition tc = traceDirective.getCondition(0);
+	 attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	 attrCode = "{";
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
+	 attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+	 attrCode = "}";
+	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
+  }
+  
+  //process "giving" conditions and injects needed code where appropriate
+  public static void processGivingCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	 String attrCode = null, conditionType = "giving";
 	 TraceCondition tc = traceDirective.getCondition(0);
 	 attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
 	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
@@ -806,7 +823,7 @@ private String getExtendClassesNames(UmpleClass uClass)
     
     if( "where".equals(conditionType) )
     	injectionType = "before";
-    else if( "until".equals(conditionType) || "after".equals(conditionType) )
+    else if( "until".equals(conditionType) || "after".equals(conditionType) || "giving".equals(conditionType) )
     	injectionType = "after";
 
     CodeInjection set = new CodeInjection(injectionType, setMethod, code);

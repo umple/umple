@@ -5,5 +5,5 @@ class Tracer
 	Integer a;
 	Integer b;
 	Integer c;
-	trace get c where a < b;
+	trace b,c giving a < b;
 }

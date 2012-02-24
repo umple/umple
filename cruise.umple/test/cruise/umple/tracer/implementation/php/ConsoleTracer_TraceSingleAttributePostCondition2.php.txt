@@ -1,0 +1,84 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $a;
+  private $b;
+  private $c;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aA, $aB, $aC)
+  {
+    $this->a = $aA;
+    $this->b = $aB;
+    $this->c = $aC;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setA($aA)
+  {
+    $wasSet = false;
+    $this->a = $aA;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setB($aB)
+  {
+    $wasSet = false;
+    $this->b = $aB;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setC($aC)
+  {
+    $wasSet = false;
+    $this->c = $aC;
+    $wasSet = true;
+    if( $a < b )
+    {
+      print("c={$aC}");
+    }
+    return $wasSet;
+  }
+
+  public function getA()
+  {
+    return $this->a;
+  }
+
+  public function getB()
+  {
+    return $this->b;
+  }
+
+  public function getC()
+  {
+    return $this->c;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

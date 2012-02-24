@@ -743,8 +743,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  
 	  if( tc.getConditionType().equals("where") )
 		  processWhereCondition(traceDirective, t, template, attr);	
+	  else if( tc.getConditionType().equals("giving") )  
+		  processGivingCondition(traceDirective, t, template, attr);
 	  else if( tc.getConditionType().equals("until") )  
-		  processUntilCondition(traceDirective, t, template, attr);		 
+		  processUntilCondition(traceDirective, t, template, attr);	
 	  else if( tc.getConditionType().equals("after") )
 		  processAfterCondition(traceDirective, t, template, attr);
   }
@@ -753,6 +755,18 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
   {
 	  String attrCode = null, conditionType = "where";
+	  TraceCondition tc = traceDirective.getCondition(0);
+	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n    ";  
+	  attrCode += "{\n  ";  	  
+	  attrCode += "    " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr)) + "\n    ";
+	  attrCode += "}";
+	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");	  
+  }
+  
+  // process "giving" conditions and injects needed code where appropriate
+  public static void processGivingCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  {
+	  String attrCode = null, conditionType = "giving";
 	  TraceCondition tc = traceDirective.getCondition(0);
 	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n    ";  
 	  attrCode += "{\n  ";  	  

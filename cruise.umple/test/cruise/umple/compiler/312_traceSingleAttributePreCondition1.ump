@@ -3,5 +3,5 @@ namespace example;
 class Tracer
 {
 	Integer a,b;
-	trace when a < b;
+	trace where a < b;
 }

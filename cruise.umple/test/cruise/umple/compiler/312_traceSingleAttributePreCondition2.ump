@@ -2,6 +2,8 @@ namespace example;
 
 class Tracer
 {
-	Integer a,b,c;
-	trace c when a < b;
+	Integer a;
+	Integer b;
+	Integer c;
+	trace c where a < b;
 }

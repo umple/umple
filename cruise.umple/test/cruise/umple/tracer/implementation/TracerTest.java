@@ -61,6 +61,18 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeAfter.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeAfter."+ languagePath +".txt","Tracer");
 	}
+	
+	@Test
+	public void ConsoleTracer_SingleAttributePostCondition1()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributePostCondition1.ump",languagePath + "/ConsoleTracer_TraceSingleAttributePostCondition1."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void ConsoleTracer_SingleAttributePostCondition2()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributePostCondition2.ump",languagePath + "/ConsoleTracer_TraceSingleAttributePostCondition2."+ languagePath +".txt","Tracer");
+	}
 	  
 	@Test
 	public void ConsoleTracer_SingleAttributePeriod()
@@ -90,31 +102,7 @@ public class TracerTest extends TracerTemplateTest
 	public void ConsoleTracer_SingleAttributeRecord4()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeRecord4.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeRecord4."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void ConsoleTracer_MultipleAttributes()
-	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttribute.ump",languagePath + "/ConsoleTracer_TraceMultipleAttribute."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void ConsoleTracer_MultipleAttributeWhereCondition()
-	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeWhere.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void ConsoleTracer_MultipleAttributeAfterCondition()
-	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeAfter.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeAfter."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void ConsoleTracer_MultipleAttributeUntilCondition()
-	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeUntil.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
-	}
+	}	  
 	
 	@Test
 	public void ConsoleTracer_SingleAttributeSet()
@@ -192,6 +180,36 @@ public class TracerTest extends TracerTemplateTest
 	public void ConsoleTracer_MultipleAttributesRecord4()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeRecord4.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeRecord4."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void ConsoleTracer_MultipleAttributes()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttribute.ump",languagePath + "/ConsoleTracer_TraceMultipleAttribute."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void ConsoleTracer_MultipleAttributeWhereCondition()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeWhere.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void ConsoleTracer_MultipleAttributeAfterCondition()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeAfter.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeAfter."+ languagePath +".txt","Tracer");
+	}
+	  
+	@Test
+	public void ConsoleTracer_MultipleAttributeUntilCondition()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeUntil.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
+	}
+	
+	@Test
+	public void ConsoleTracer_MultipleAttributePostCondition()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributePostCondition.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributePostCondition."+ languagePath +".txt","Tracer");
 	}
 	
 	//========= File tracer

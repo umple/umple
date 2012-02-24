@@ -77,12 +77,12 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
   {
 
     UpperCaseSingularLookupMap = new HashMap<String, String>();
-    UpperCaseSingularLookupMap.put("attributeConstant", "{0}");
 
     UpperCasePluralLookupMap = new HashMap<String, String>();
 
     AsIsSingularLookupMap = new HashMap<String, String>();
-    AsIsSingularLookupMap.put("attributeOne","{0}");
+    AsIsSingularLookupMap.put("attributeOne", "{0}");
+    AsIsSingularLookupMap.put("attributeConstant", "{0}");
 
     AsIsPluralLookupMap = new HashMap<String, String>();
 
@@ -91,10 +91,9 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
     OneOrManyLookup.add("parameter");
     
     UmpleToSQLPrimitiveMap = new HashMap<String, String>();
-    UmpleToSQLPrimitiveMap.put("Integer","INTEGER");
-    UmpleToSQLPrimitiveMap.put("Boolean","BOOLEAN");
-    UmpleToSQLPrimitiveMap.put("Double","DOUBLE PRECISION");
-    UmpleToSQLPrimitiveMap.put("Float","FLOAT");
+    UmpleToSQLPrimitiveMap.put("Integer","INT");
+    UmpleToSQLPrimitiveMap.put("Boolean","BIT");
+    UmpleToSQLPrimitiveMap.put("String","VARCHAR(255)");
     // There are easily more primitives that could be added here
   }
   
@@ -121,14 +120,18 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
   {
     String myType = av.getType();
     
-    if (myType == null || myType.length() == 0 || !UmpleToSQLPrimitiveMap.containsKey(myType))
+    if (myType == null || myType.length() == 0)
     {
       return "BLOB";
     }
-    else
+    else if (UmpleToSQLPrimitiveMap.containsKey(myType))
     {
       return UmpleToSQLPrimitiveMap.get(myType);
     }
+    else
+    {
+      return myType.toUpperCase();
+    }  
   }
   
   public boolean isNullable(UmpleVariable av)
@@ -161,8 +164,8 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
   {
     if ("packageDefinition".equals(name))
     {
-      String moduleName = StringFormatter.toPascalCase(aInterface.getPackageName());
-      return aInterface.getPackageName().length() == 0 ? "" : "module " + moduleName; 
+      String moduleName = StringFormatter.toUnderscore(aInterface.getPackageName());
+      return aInterface.getPackageName().length() == 0 ? "" : "CREATE DATABASE `" + moduleName +"`;"; 
       }
     return "";
   }
@@ -173,18 +176,23 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
     {
       return aClass.getGeneratedClass().getLookup("constructorSignature_mandatory");
     }
+    else if ("packageName".equals(name))
+    {
+      String moduleName = StringFormatter.toUnderscore(aClass.getPackageName());
+      return aClass.getPackageName().length() == 0 ? "" : moduleName; 
+    }
     else if ("packageDefinition".equals(name))
     {
-      String moduleName = StringFormatter.toPascalCase(aClass.getPackageName());
-      return aClass.getPackageName().length() == 0 ? "" : "module " + moduleName; 
+      String moduleName = StringFormatter.toUnderscore(aClass.getPackageName());
+      return aClass.getPackageName().length() == 0 ? "" : "CREATE DATABASE `" + moduleName +"`;"; 
     }
     else if ("packageDefinitionEnd".equals(name))
     {
-      return aClass.getPackageName().length() == 0 ? "" : "end";
+      return "";
     }
     else if ("type".equals(name))
     {
-      return aClass.getName();
+      return StringFormatter.toUnderscore(aClass.getName());
     } 
     else if ("isA".equals(name))
     {
@@ -259,11 +267,11 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
     }
     else if (AsIsPluralLookupMap.containsKey(keyName))
     {
-      return StringFormatter.format(AsIsPluralLookupMap.get(keyName),pluralName);
+      return StringFormatter.format(AsIsPluralLookupMap.get(keyName),StringFormatter.toUnderscore(pluralName));
     }
     else if (AsIsSingularLookupMap.containsKey(keyName))
     {
-      return StringFormatter.format(AsIsSingularLookupMap.get(keyName),singularName);
+      return StringFormatter.format(AsIsSingularLookupMap.get(keyName),StringFormatter.toUnderscore(singularName));
     }
     else if ("parameterValue".equals(keyName))
     {
@@ -281,6 +289,10 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
       {
         return StringFormatter.format("Time.parse({0})",av.getValue());
       }
+      else if (isString)
+      {
+        return av.getValue().substring(1, av.getValue().length() - 1);
+      }
       else
       {
         return av.getValue();
@@ -288,11 +300,19 @@ public class SQLGenerator implements CodeGenerator,CodeTranslator
     }
     else if ("type".equals(keyName))
     {
-      return getType(av);
+      if (av instanceof Attribute)
+      {
+        return getType(av).toUpperCase();
+      }
+      return StringFormatter.toUnderscore(getType(av));
     }
     else if ("typeMany".equals(keyName))
     {
-      return isNullable(av) ? getType(av) : av.getType();
+      if (av instanceof Attribute)
+      {
+        return isNullable(av) ? getType(av).toUpperCase() : av.getType().toUpperCase();
+      }
+      return StringFormatter.toUnderscore(isNullable(av) ? getType(av) : av.getType());
     }
     
     if (av instanceof AssociationVariable)

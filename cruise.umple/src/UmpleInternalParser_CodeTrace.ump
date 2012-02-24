@@ -74,6 +74,18 @@ private void analyzeTraceToken(Token token, int analysisStep)
     		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
     		  traceDirective.addCondition(tc);
     	  }
+    	  else if( traceToken.is("traceGiving") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "giving");
+    		  traceDirective.addCondition(tc);
+    	  }
+    	  else if ( traceToken.getName().equals("giving") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( token, "giving");
+    		  traceDirective.addCondition(tc);
+    		  Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("LHS"));
+    		  traceAttr.addAttribute(attr);
+    	  }
     	  else if( traceToken.is("traceUntil") )
     	  {
     		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
