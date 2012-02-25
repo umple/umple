@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * Represents a parameter in a method and its various forms.
+ */
 public class MethodParameter extends UmpleVariable
 {
 
@@ -65,6 +68,9 @@ public class MethodParameter extends UmpleVariable
     return wasSet;
   }
 
+  /**
+   * Specifies whether or not the method parameter is auto unique.
+   */
   public boolean getIsAutounique()
   {
     return isAutounique;
@@ -72,17 +78,24 @@ public class MethodParameter extends UmpleVariable
 
   /**
    * TODO: should default to false, but constructors would need updating
+   * Specifies whether or not the method parameter is a list.
    */
   public boolean getIsList()
   {
     return isList;
   }
 
+  /**
+   * Specifies whether or not the method parameter is derived.
+   */
   public boolean getIsDerived()
   {
     return isDerived;
   }
 
+  /**
+   * Specifies whether or not the method parameter is lazy.
+   */
   public boolean getIsLazy()
   {
     return isLazy;

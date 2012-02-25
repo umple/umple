@@ -3,6 +3,10 @@
 
 package cruise.umple.compiler;
 
+/**
+ * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
+ * filename, the line number and the corresponding offset on that line number.
+ */
 public class Position
 {
 
@@ -80,21 +84,33 @@ public class Position
     return wasSet;
   }
 
+  /**
+   * The filename of the position.
+   */
   public String getFilename()
   {
     return filename;
   }
 
+  /**
+   * The line number of the position.
+   */
   public int getLineNumber()
   {
     return lineNumber;
   }
 
+  /**
+   * The character offset of the position.
+   */
   public int getCharacterOffset()
   {
     return characterOffset;
   }
 
+  /**
+   * The offset of the position.
+   */
   public int getOffset()
   {
     return offset;

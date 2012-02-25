@@ -4,6 +4,11 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Represents a rule, which has a name and contains definitions that describe it.
+ *  * 
+ * Examples of this are a class definition.
+ */
 public class Rule
 {
 
@@ -61,6 +66,9 @@ public class Rule
     return wasRemoved;
   }
 
+  /**
+   * The name of the rule.
+   */
   public String getName()
   {
     return name;

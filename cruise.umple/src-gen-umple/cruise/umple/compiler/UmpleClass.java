@@ -5,6 +5,9 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * Represents an Umple class.
+ */
 public class UmpleClass extends UmpleElement
 {
 
@@ -101,6 +104,9 @@ public class UmpleClass extends UmpleElement
     return wasSet;
   }
 
+  /**
+   * Specifies whether or not the Umple class is a singleton.
+   */
   public boolean getIsSingleton()
   {
     return isSingleton;
@@ -141,6 +147,9 @@ public class UmpleClass extends UmpleElement
     return key;
   }
 
+  /**
+   * Specifies whether or not the Umple class is immutable.
+   */
   public boolean getImmutable()
   {
     return immutable;
@@ -262,6 +271,9 @@ public class UmpleClass extends UmpleElement
     return aMethod;
   }
 
+  /**
+   * The methods contained within the Umple class.
+   */
   public List<Method> getMethods()
   {
     List<Method> newMethods = Collections.unmodifiableList(methods);
@@ -292,6 +304,9 @@ public class UmpleClass extends UmpleElement
     return aConstant;
   }
 
+  /**
+   * The constants contained within the Umple class.
+   */
   public List<Constant> getConstants()
   {
     List<Constant> newConstants = Collections.unmodifiableList(constants);
@@ -327,6 +342,9 @@ public class UmpleClass extends UmpleElement
     return aAttribute;
   }
 
+  /**
+   * The attributes contained within the Umple class.
+   */
   public List<Attribute> getAttributes()
   {
     List<Attribute> newAttributes = Collections.unmodifiableList(attributes);
@@ -357,6 +375,9 @@ public class UmpleClass extends UmpleElement
     return aAssociationVariable;
   }
 
+  /**
+   * The associations contained within the Umple class.
+   */
   public List<AssociationVariable> getAssociationVariables()
   {
     List<AssociationVariable> newAssociationVariables = Collections.unmodifiableList(associationVariables);
@@ -387,6 +408,9 @@ public class UmpleClass extends UmpleElement
     return aComment;
   }
 
+  /**
+   * The comments associated with the Umple class.
+   */
   public List<Comment> getComments()
   {
     List<Comment> newComments = Collections.unmodifiableList(comments);

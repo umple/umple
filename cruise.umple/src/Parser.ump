@@ -18,32 +18,54 @@ class Couple
   0..1 -- 0..* Couple ignores;
 }
 
+/*
+ * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
+ */
 class ParseResult
 {
-  Boolean wasSuccess;
-  Boolean hasWarnings = false;
-  internal Boolean _acceptsErrors = true;
+	// Specifies whether or not the parsing was successful.
+	Boolean wasSuccess;
+	
+	// Specifies whether or not the parsing has warnings.
+	Boolean hasWarnings = false;
+	
+	internal Boolean _acceptsErrors = true;
   
-  // Position is left for now, as not to break things
-  * -> 0..1 Position;
-  * -> * ErrorMessage;
+  	// Position is left for now, as not to break things
+  	* -> 0..1 Position;
+  	
+  	// The error messages related to parsing.
+  	* -> * ErrorMessage;
 
-  depend  cruise.umple.util.StringFormatter;
+  	depend  cruise.umple.util.StringFormatter;
 }
 
+/*
+ * Represents an error message, typically used with parsing.
+ */
 class ErrorMessage
 {
-  * -> 1 ErrorType;
-  * -> 1 Position;
-  String[] parameters;
+	// Indicates the type of error.
+  	* -> 1 ErrorType;
+  	
+	* -> 1 Position;
 	
-  depend  cruise.umple.util.StringFormatter;
+	String[] parameters;
+		
+	depend  cruise.umple.util.StringFormatter;
 }
 
+/*
+ * Represents an error type, which contains an error code, the severity of the error, etc.
+ */
 class ErrorType
 {
+	// The error code.
 	Integer errorCode;
+	
+	// The severity of the error.
 	Integer severity;
+	
 	String errorFormat;
 	String errorUrl;
 	
@@ -60,35 +82,63 @@ class ErrorTypeSingleton
 	depend java.io.*;
 }
 
+/*
+ * Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
+ * these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
+ * track of the positions that the input parser parsed things at.
+ */
 class Token
 {
-  name;
-  value;
-  0..1 parentToken -- * Token subTokens;
-  * -> 0..1 Position;
+	// The name of the token.
+  	name;
+  	
+  	// The value of the token.
+  	value;
+  	0..1 parentToken -- * Token subTokens;
+  	* -> 0..1 Position;
   
-  before getName { if (name == null) { return ""; } }
-  before getValue { if (value == null) { return ""; } }
+  	before getName { if (name == null) { return ""; } }
+  	before getValue { if (value == null) { return ""; } }
   
-  before setPosition {String tFilename = position == null ? newPosition.getFilename() : position.getFilename();}
-  after setPosition {position.setFilename(tFilename);}
+  	before setPosition {String tFilename = position == null ? newPosition.getFilename() : position.getFilename();}
+  	after setPosition {position.setFilename(tFilename);}
 }
 
+/*
+ * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
+ * filename, the line number and the corresponding offset on that line number.
+ */
 class Position
 {
-  String filename;
-  Integer lineNumber;
-  Integer characterOffset;
-  Integer offset;
+	// The filename of the position.
+  	String filename;
+  	
+  	// The line number of the position.
+  	Integer lineNumber;
+  	
+  	// The character offset of the position.
+  	Integer characterOffset;
+  	
+  	// The offset of the position.
+  	Integer offset;
 
-  key { filename, lineNumber, characterOffset, offset }
+  	key { filename, lineNumber, characterOffset, offset }
 }
 
+/*
+ * Represents a rule, which has a name and contains definitions that describe it.
+ * 
+ * Examples of this are a class definition.
+ */
 class Rule
 {
-  name;
-  Boolean shouldHide = false;
-  String[] definitions;
+	// The name of the rule.
+  	name;
+  	
+  	Boolean shouldHide = false;
+  	
+  	// The definitions associated with the rule.
+  	String[] definitions;
 }
 
 class RulePartValue

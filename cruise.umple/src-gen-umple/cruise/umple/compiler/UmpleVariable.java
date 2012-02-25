@@ -70,16 +70,25 @@ public class UmpleVariable
     return wasSet;
   }
 
+  /**
+   * The name of the Umple variable.
+   */
   public String getName()
   {
     return name;
   }
 
+  /**
+   * The type of the Umple variable.
+   */
   public String getType()
   {
     return type;
   }
 
+  /**
+   * The modifier associated with the Umple variable.
+   */
   public String getModifier()
   {
     if (modifier == null) { return "settable"; }
@@ -88,6 +97,7 @@ public class UmpleVariable
 
   /**
    * potential enum, 'settable'
+   * The value of the Umple variable.
    */
   public String getValue()
   {

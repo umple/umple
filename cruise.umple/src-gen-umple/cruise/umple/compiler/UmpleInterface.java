@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Represents an Umple interface.
+ */
 public class UmpleInterface extends UmpleElement
 {
 
@@ -70,6 +73,9 @@ public class UmpleInterface extends UmpleElement
     return aMethod;
   }
 
+  /**
+   * The methods contained within the Umple interface.
+   */
   public List<Method> getMethods()
   {
     List<Method> newMethods = Collections.unmodifiableList(methods);
@@ -130,6 +136,9 @@ public class UmpleInterface extends UmpleElement
     return aConstant;
   }
 
+  /**
+   * The constants contained within the Umple interface.
+   */
   public List<Constant> getConstants()
   {
     List<Constant> newConstants = Collections.unmodifiableList(constants);

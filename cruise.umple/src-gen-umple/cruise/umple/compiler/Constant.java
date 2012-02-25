@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * Represents a constant.
+ */
 public class Constant
 {
 
@@ -64,21 +67,33 @@ public class Constant
     return wasSet;
   }
 
+  /**
+   * The name of the constant.
+   */
   public String getName()
   {
     return name;
   }
 
+  /**
+   * The type of the constant.
+   */
   public String getType()
   {
     return type;
   }
 
+  /**
+   * The modifier of the constant.
+   */
   public String getModifier()
   {
     return modifier;
   }
 
+  /**
+   * The value of the constant.
+   */
   public String getValue()
   {
     return value;

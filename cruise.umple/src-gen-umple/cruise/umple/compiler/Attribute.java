@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Represents an attribute.
+ */
 public class Attribute extends UmpleVariable
 {
 
@@ -80,6 +83,9 @@ public class Attribute extends UmpleVariable
     return wasSet;
   }
 
+  /**
+   * Specifies whether or not the method parameter is auto unique.
+   */
   public boolean getIsAutounique()
   {
     return isAutounique;
@@ -87,17 +93,24 @@ public class Attribute extends UmpleVariable
 
   /**
    * TODO: should default to false, but constructors would need updating
+   * Specifies whether or not the method parameter is a list.
    */
   public boolean getIsList()
   {
     return isList;
   }
 
+  /**
+   * Specifies whether or not the method parameter is derived.
+   */
   public boolean getIsDerived()
   {
     return isDerived;
   }
 
+  /**
+   * Specifies whether or not the method parameter is lazy.
+   */
   public boolean getIsLazy()
   {
     return isLazy;
@@ -129,6 +142,9 @@ public class Attribute extends UmpleVariable
     return aComment;
   }
 
+  /**
+   * The comments associated with the attribute.
+   */
   public List<Comment> getComments()
   {
     List<Comment> newComments = Collections.unmodifiableList(comments);

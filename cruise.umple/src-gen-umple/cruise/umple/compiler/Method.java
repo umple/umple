@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * Code supporting interfaces
+ * A method which recides inside an Umple class.
  */
 public class Method
 {
@@ -75,21 +75,33 @@ public class Method
     return wasSet;
   }
 
+  /**
+   * The modifier associated with the method.
+   */
   public String getModifier()
   {
     return modifier;
   }
 
+  /**
+   * The name of the method.
+   */
   public String getName()
   {
     return name;
   }
 
+  /**
+   * The type of the method.
+   */
   public String getType()
   {
     return type;
   }
 
+  /**
+   * Specifies whether or not the method is implemented.
+   */
   public boolean getIsImplemented()
   {
     return isImplemented;
@@ -106,6 +118,9 @@ public class Method
     return aMethodParameter;
   }
 
+  /**
+   * The method parameters.
+   */
   public List<MethodParameter> getMethodParameters()
   {
     List<MethodParameter> newMethodParameters = Collections.unmodifiableList(methodParameters);
@@ -141,6 +156,9 @@ public class Method
     return aComment;
   }
 
+  /**
+   * The comments associated with the method.
+   */
   public List<Comment> getComments()
   {
     List<Comment> newComments = Collections.unmodifiableList(comments);

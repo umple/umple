@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * An element partaining to an entity with Umple.
+ */
 public class UmpleElement
 {
 
@@ -102,11 +105,17 @@ public class UmpleElement
     return wasSet;
   }
 
+  /**
+   * The name of the Umple element.
+   */
   public String getName()
   {
     return name;
   }
 
+  /**
+   * The modifier associated with the Umple element.
+   */
   public String getModifier()
   {
     return modifier;
@@ -147,16 +156,25 @@ public class UmpleElement
     return packageName;
   }
 
+  /**
+   * The code associated with the Umple element.
+   */
   public String getExtraCode()
   {
     return extraCode;
   }
 
+  /**
+   * Specifies whether or not the Umple element is internal.
+   */
   public boolean getIsInternal()
   {
     return isInternal;
   }
 
+  /**
+   * Specifies the position of this Umple element (ex. The UmpleOnline diagram).
+   */
   public Coordinate getPosition()
   {
     return position;

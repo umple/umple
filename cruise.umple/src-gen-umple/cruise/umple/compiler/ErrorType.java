@@ -5,6 +5,9 @@ package cruise.umple.compiler;
 import cruise.umple.util.StringFormatter;
 import java.util.List;
 
+/**
+ * Represents an error type, which contains an error code, the severity of the error, etc.
+ */
 public class ErrorType
 {
 
@@ -73,11 +76,17 @@ public class ErrorType
     return wasSet;
   }
 
+  /**
+   * The error code.
+   */
   public int getErrorCode()
   {
     return errorCode;
   }
 
+  /**
+   * The severity of the error.
+   */
   public int getSeverity()
   {
     return severity;

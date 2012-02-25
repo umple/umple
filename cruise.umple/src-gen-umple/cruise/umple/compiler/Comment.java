@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Represents a comment, such as those found around classes, methods, attributes and associations.
+ */
 public class Comment
 {
 
@@ -35,6 +38,9 @@ public class Comment
     return wasSet;
   }
 
+  /**
+   * The text associated with the comment.
+   */
   public String getText()
   {
     return text;

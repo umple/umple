@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * Represents the generation target, such as the target language.
+ */
 public class GenerateTarget
 {
 
@@ -71,6 +74,9 @@ public class GenerateTarget
     return wasSet;
   }
 
+  /**
+   * The target language, such as Java, Cpp, Php or Ruby.
+   */
   public String getLanguage()
   {
     return language;

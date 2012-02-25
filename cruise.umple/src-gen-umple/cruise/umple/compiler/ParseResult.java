@@ -5,6 +5,9 @@ package cruise.umple.compiler;
 import cruise.umple.util.StringFormatter;
 import java.util.*;
 
+/**
+ * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
+ */
 public class ParseResult
 {
 
@@ -53,11 +56,17 @@ public class ParseResult
     return wasSet;
   }
 
+  /**
+   * Specifies whether or not the parsing was successful.
+   */
   public boolean getWasSuccess()
   {
     return wasSuccess;
   }
 
+  /**
+   * Specifies whether or not the parsing has warnings.
+   */
   public boolean getHasWarnings()
   {
     return hasWarnings;
@@ -84,6 +93,9 @@ public class ParseResult
     return aErrorMessage;
   }
 
+  /**
+   * The error messages related to parsing.
+   */
   public List<ErrorMessage> getErrorMessages()
   {
     List<ErrorMessage> newErrorMessages = Collections.unmodifiableList(errorMessages);

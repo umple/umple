@@ -440,6 +440,11 @@ public Token reset()
     rules.addAll(innerParser.rules);
   }
 
+  /**
+   * Parses input based on a rule.
+   * 
+   * @return The result of the parsing.
+   */
   public ParseResult parse(String ruleName, String input)
   {
     TextParser inputParser = new TextParser(filename, input);
@@ -450,8 +455,14 @@ public Token reset()
     return parseResult;
   }
   
+  /**
+   * Parses a rule and its definitions.
+   * 
+   * @return True if successful, false otherwise.
+   */
   private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
   {
+  	// Go through each rule.
     for (Rule r : rules)
     {
       if (!r.getName().equals(ruleName))
@@ -469,6 +480,7 @@ public Token reset()
         currentToken = new Token(ruleName,"START_TOKEN",inputParser.currentPosition().copy()); 
       }
       
+      // Go through each definition, from the current rule.
       for (String definition : r.getDefinitions())
       {
         int currentTokenSize = currentToken.numberOfSubTokens();

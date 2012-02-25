@@ -6,6 +6,9 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import java.util.*;
 
+/**
+ * The main meta-model of Umple.
+ */
 public class UmpleModel
 {
 

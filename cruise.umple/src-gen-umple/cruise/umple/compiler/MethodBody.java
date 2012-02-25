@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * The contents of a method, such as the code within it.
+ */
 public class MethodBody
 {
 
@@ -34,6 +37,9 @@ public class MethodBody
     return wasSet;
   }
 
+  /**
+   * The code within the method body.
+   */
   public String getExtraCode()
   {
     return extraCode;

@@ -83,6 +83,9 @@ public class AssociationVariable extends UmpleVariable
     return aComment;
   }
 
+  /**
+   * The comments associated with the association.
+   */
   public List<Comment> getComments()
   {
     List<Comment> newComments = Collections.unmodifiableList(comments);

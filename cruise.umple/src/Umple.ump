@@ -11,89 +11,149 @@ The main Umple metamodel.
 
 namespace cruise.umple.compiler;
 
+/*
+ * The main meta-model of Umple.
+ */
 class UmpleModel
 {
-  depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
-  isA Runnable;
-  
-  UmpleFile umpleFile;
-  defaultPackage = null;
-  GenerateTarget[] generates;
-  Boolean shouldGenerate = true;
-  Glossary glossary = new Glossary();
-  String defaultNamespace = null;
-  String code = null;
-  Boolean debugMode = false;
-  ParseResult lastResult = null;
-  
-  Map<String,String> generatedCode = new HashMap<String,String>();
-  
-  // data for default class positioning
-  internal Coordinate levelOffset = new Coordinate(200,100,0,0);
-  internal Coordinate initialOffset = new Coordinate(50,30,0,0);
-  internal Coordinate classSize = new Coordinate(0,0,109,45);
-  internal int maxYLevels = 5;
-  
-  // data for default association positioning
-  internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
-  internal int reflexiveSegmentLength = 15;
-  
-  1 -> * Association;
-  1 -> * UmpleClass;
-  1 -> * StateMachine stateMachineDefinitions;
-  1 -> * UmpleInterface;
+	depend cruise.umple.util.*;
+	depend cruise.umple.compiler.exceptions.*;
+	isA Runnable;
+	
+	UmpleFile umpleFile;
+	defaultPackage = null;
+	GenerateTarget[] generates;
+	Boolean shouldGenerate = true;
+	Glossary glossary = new Glossary();
+	String defaultNamespace = null;
+	String code = null;
+	Boolean debugMode = false;
+	ParseResult lastResult = null;
+	
+	Map<String,String> generatedCode = new HashMap<String,String>();
+	
+	// data for default class positioning
+	internal Coordinate levelOffset = new Coordinate(200,100,0,0);
+	internal Coordinate initialOffset = new Coordinate(50,30,0,0);
+	internal Coordinate classSize = new Coordinate(0,0,109,45);
+	internal int maxYLevels = 5;
+	
+	// data for default association positioning
+	internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
+	internal int reflexiveSegmentLength = 15;
+	
+	1 -> * Association;
+	1 -> * UmpleClass;
+	1 -> * StateMachine stateMachineDefinitions;
+	1 -> * UmpleInterface;
 }
 
+/*
+ * An element partaining to an entity with Umple.
+ */
 class UmpleElement
 {
-  name;
-  modifier = null;
-  String[] namespaces;
-  packageName = "";
-  extraCode = "";
-  Boolean isInternal = false;
-  Coordinate position = new Coordinate(-1,-1,-1,-1);
-  
-  before setPackageName { if (aPackageName == null) { return false; } }  
+	// The name of the Umple element.
+	name;
+	
+	// The modifier associated with the Umple element.
+	modifier = null;
+	
+	String[] namespaces;
+	
+	packageName = "";
+	
+	// The code associated with the Umple element.
+	extraCode = "";
+	
+	// Specifies whether or not the Umple element is internal.
+	Boolean isInternal = false;
+	
+	// Specifies the position of this Umple element (ex. The UmpleOnline diagram).
+	Coordinate position = new Coordinate(-1,-1,-1,-1);
+	
+	before setPackageName { if (aPackageName == null) { return false; } }  
 }
 
-/* Code supporting interfaces  */
-class Method {
-  modifier; 
-  name;
-  type;
-  Boolean isImplemented;
-  
-   1 -> 0..* MethodParameter;
-   1 -> 0..1 MethodBody;
-   1 -> * Comment;
+/*
+ * A method which recides inside an Umple class.
+ */
+class Method
+{
+	// The modifier associated with the method.
+	modifier;
+	
+	// The name of the method. 
+	name;
+	
+	// The type of the method.
+	type;
+	
+	// Specifies whether or not the method is implemented.
+	Boolean isImplemented;
+	
+	// The method parameters.
+	1 -> 0..* MethodParameter;
+	
+	// The body of the method.
+	1 -> 0..1 MethodBody;
+	
+	// The comments associated with the method.
+	1 -> * Comment;
 }
 
-class Modifier{
-String [] name;
+class Modifier
+{
+	String [] name;
 }
- 
-class MethodBody{
+
+/*
+ * The contents of a method, such as the code within it.
+ */
+class MethodBody
+{
+	// The code within the method body.
     extraCode;
 }
- 
-class Constant{
-  name;
-  type;
-  modifier; 
-  value;
-  
-class UniqueIdentifier { } 
+
+/*
+ * Represents a constant.
+ */
+class Constant
+{
+	// The name of the constant.
+	name;
+	
+	// The type of the constant.
+	type;
+	
+	// The modifier of the constant.
+	modifier; 
+	
+	// The value of the constant.
+	value;
+
+	class UniqueIdentifier { } 
 }
 
-class MethodParameter{
-  isA UmpleVariable;
-  
-  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
-  Boolean isList = false;
-  Boolean isDerived = false;
-  Boolean isLazy = false;  
+/*
+ * Represents a parameter in a method and its various forms.
+ */
+class MethodParameter
+{
+	isA UmpleVariable;
+	
+	// Specifies whether or not the method parameter is auto unique.
+	Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+	
+	// Specifies whether or not the method parameter is a list.
+	Boolean isList = false;
+	
+	// Specifies whether or not the method parameter is derived.
+	Boolean isDerived = false;
+	
+	// Specifies whether or not the method parameter is lazy.
+	Boolean isLazy = false;
 }
  
 // NOT used right now
@@ -114,76 +174,101 @@ class ReferenceType{
    * -> 0..1 UmpleInterface;
 }
 
-
 class CodeInjection
 {
-  type;
-  operation;
-  code;
-  Boolean isInternal = false;
+	type;
+	operation;
+	code;
+	Boolean isInternal = false;
 }
 
 class Key
 {
-  Boolean isDefault = false;
-  String[] members;
+	Boolean isDefault = false;
+	String[] members;
 }
 
+/*
+ * Represents an Umple interface.
+ */
 class UmpleInterface
 {
-  isA UmpleElement;
- 
-  * -> 0..* UmpleInterface extendsInterface;
-  1 -> 0..* Method;
-  * -> * Depend;
-  1 -> 0..* Constant;
- 
-  before setPackageName { if (aPackageName == null) { return false; } }
-  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+	isA UmpleElement;
+	 
+	* -> 0..* UmpleInterface extendsInterface;
+	
+	// The methods contained within the Umple interface.
+	1 -> 0..* Method;
+	
+	* -> * Depend;
+	
+	// The constants contained within the Umple interface.
+	1 -> 0..* Constant;
+	before setPackageName { if (aPackageName == null) { return false; } }
+	before addDepend { if (depends.contains(aDepend)) { return false; } }  
 }
 
+/*
+ * Represents an Umple class.
+ */
 class UmpleClass
 {
-  depend cruise.umple.util.*;
+	depend cruise.umple.util.*;
 
-  isA UmpleElement;
-  Boolean isSingleton = false;
-  Association[] associations;
-  Key key = new Key();
-  Boolean immutable = false;
+	isA UmpleElement;
+  
+	// Specifies whether or not the Umple class is a singleton.
+	Boolean isSingleton = false;
 
-  1 -> * CodeInjection;
-  * -> 0..1 UmpleClass extendsClass;
-  * -> 0..1 Token extendsToken;
-  * -> 0..* UmpleInterface parentInterface;
-  * -> * Depend;
-  1 -> 0..* Method;
-  1 -> 0..* Constant;
-  1 -> 0..1 UniqueIdentifier;
-  1 -- * Attribute;
-  0..1 -- * AssociationVariable;
-  1 -> * Comment;
+	Association[] associations;
+
+	Key key = new Key();
   
-  
-  before addDepend { if (depends.contains(aDepend)) { return false; } }  
-  
-  before setImmutable { if (!allAssociationsSupportClassImmutabilityRules(aImmutable)) { return false; } }
-  
-  before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
+	// Specifies whether or not the Umple class is immutable.
+	Boolean immutable = false;
+
+	1 -> * CodeInjection;
+	* -> 0..1 UmpleClass extendsClass;
+	* -> 0..1 Token extendsToken;
+	* -> 0..* UmpleInterface parentInterface;
+	* -> * Depend;
+
+	// The methods contained within the Umple class.
+	1 -> 0..* Method;
+
+	// The constants contained within the Umple class.
+	1 -> 0..* Constant;
+
+	1 -> 0..1 UniqueIdentifier;
+
+	// The attributes contained within the Umple class.
+	1 -- * Attribute;
+
+	// The associations contained within the Umple class.
+	0..1 -- * AssociationVariable;
+
+	// The comments associated with the Umple class.
+	1 -> * Comment;
+
+	before addDepend { if (depends.contains(aDepend)) { return false; } }  
+
+	before setImmutable { if (!allAssociationsSupportClassImmutabilityRules(aImmutable)) { return false; } }
+
+	before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
 }
 
 class Depend
 {
-  name;
-  Boolean isInternal = false;
-  
-  key { name }
+	name;
+	Boolean isInternal = false;
+
+	key { name }
 }
 
 class AssociationClass
 {
-  isA UmpleClass;
-  1 -> 0..2 Association associatedTo;
+	isA UmpleClass;
+	1 -> 0..2 Association associatedTo;
 }
 
 // Superclass for tracking member variables in all target languages
@@ -191,27 +276,46 @@ class AssociationClass
 // This class should go and instead AssociationEnd should be the member variable
 class UmpleVariable
 {
-  name;
-  type;
-  modifier; // potential enum, 'settable'
-  value;
-  
-  before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
-  before getModifier { if (modifier == null) { return "settable"; } }
-  
-  class UniqueIdentifier { }  
+	// The name of the Umple variable.
+	name;
+	
+	// The type of the Umple variable.
+	type;
+	
+	// The modifier associated with the Umple variable.
+	modifier; // potential enum, 'settable'
+	
+	// The value of the Umple variable.
+	value;
+
+	before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
+	
+	before getModifier { if (modifier == null) { return "settable"; } }
+
+	class UniqueIdentifier { }  
 }
 
+/*
+ * Represents an attribute.
+ */
 class Attribute
 {
-  isA UmpleVariable;
-  
-  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
-  Boolean isList = false;
-  Boolean isDerived = false;
-  Boolean isLazy = false;  
-  
-  1 -> * Comment;
+	isA UmpleVariable;
+	
+	// Specifies whether or not the method parameter is auto unique.
+	Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+	
+	// Specifies whether or not the method parameter is a list.
+	Boolean isList = false;
+	
+	// Specifies whether or not the method parameter is derived.
+	Boolean isDerived = false;
+	
+	// Specifies whether or not the method parameter is lazy.
+	Boolean isLazy = false;
+	
+	// The comments associated with the attribute.
+	1 -> * Comment;
 }
 
 class Association
@@ -251,19 +355,20 @@ class AssociationEnd
 // TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
 class AssociationVariable
 {
-  isA UmpleVariable;
-  Multiplicity multiplicity;
-  Boolean isNavigable;
+	isA UmpleVariable;
+	Multiplicity multiplicity;
+	Boolean isNavigable;
   
-  0..1 self relatedAssociation;
+	0..1 self relatedAssociation;
+	
+	// The comments associated with the association.
+	1 -> * Comment;
+
+	before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
   
-  1 -> * Comment;
+	before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
   
-  before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
-  
-  before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
-  
-  before setIsNavigable { if (aIsNavigable && !canBeNavigable()) { return false; } }
+	before setIsNavigable { if (aIsNavigable && !canBeNavigable()) { return false; } }
 }
 
 // TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
@@ -330,22 +435,32 @@ class Coordinate
   key { x, y, width, height }
 }
 
+/*
+ * Represents a comment, such as those found around classes, methods, attributes and associations.
+ */
 class Comment
 {
-  depend java.util.*;
-  text;
+	depend java.util.*;
+	  
+	// The text associated with the comment.
+	text;
 }
 
+/*
+ * Represents the generation target, such as the target language.
+ */
 class GenerateTarget
 {
-  language;
-  path;
-  
-  Boolean override = false;
-  Boolean overrideAll = false;
-   
-  before getPath{if(path == null) path = ""; }
-  key{language}
+	// The target language, such as Java, Cpp, Php or Ruby.
+	language;
+	
+	path;
+
+	Boolean override = false;
+	Boolean overrideAll = false;
+
+	before getPath{if(path == null) path = ""; }
+	key{language}
 }
 
 use UmpleVersion.ump;

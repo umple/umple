@@ -5,6 +5,9 @@ package cruise.umple.compiler;
 import cruise.umple.util.StringFormatter;
 import java.util.*;
 
+/**
+ * Represents an error message, typically used with parsing.
+ */
 public class ErrorMessage
 {
 

@@ -4,6 +4,11 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
+ * these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
+ * track of the positions that the input parser parsed things at.
+ */
 public class Token
 {
 
@@ -51,12 +56,18 @@ public class Token
     return wasSet;
   }
 
+  /**
+   * The name of the token.
+   */
   public String getName()
   {
     if (name == null) { return ""; }
     return name;
   }
 
+  /**
+   * The value of the token.
+   */
   public String getValue()
   {
     if (value == null) { return ""; }
