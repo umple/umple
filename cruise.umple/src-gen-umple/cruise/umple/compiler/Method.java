@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * A method which recides inside an Umple class.
+ * A method which recides inside an Umple Class.
  */
 public class Method
 {
@@ -157,7 +157,7 @@ public class Method
   }
 
   /**
-   * The comments associated with the method.
+   * The comments associated with the method (such as the Javadoc above it).
    */
   public List<Comment> getComments()
   {

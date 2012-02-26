@@ -8,6 +8,13 @@ import java.util.*;
 
 /**
  * The main meta-model of Umple.
+ * 
+ * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
+ * the classes, attributes, associations, methods, etc that were in it.
+ * 
+ * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
+ * 
+ * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  */
 public class UmpleModel
 {
@@ -174,6 +181,9 @@ public class UmpleModel
     return wasSet;
   }
 
+  /**
+   * The Umple file (.ump) that was used to derive the model.
+   */
   public UmpleFile getUmpleFile()
   {
     return umpleFile;
@@ -270,6 +280,9 @@ public class UmpleModel
     return aAssociation;
   }
 
+  /**
+   * The Associations contained within the model.
+   */
   public List<Association> getAssociations()
   {
     List<Association> newAssociations = Collections.unmodifiableList(associations);
@@ -300,6 +313,9 @@ public class UmpleModel
     return aUmpleClass;
   }
 
+  /**
+   * The Umple Classes contained within the model.
+   */
   public List<UmpleClass> getUmpleClasses()
   {
     List<UmpleClass> newUmpleClasses = Collections.unmodifiableList(umpleClasses);
@@ -330,6 +346,9 @@ public class UmpleModel
     return aStateMachineDefinition;
   }
 
+  /**
+   * The State Machines contained within the model.
+   */
   public List<StateMachine> getStateMachineDefinitions()
   {
     List<StateMachine> newStateMachineDefinitions = Collections.unmodifiableList(stateMachineDefinitions);
@@ -360,6 +379,9 @@ public class UmpleModel
     return aUmpleInterface;
   }
 
+  /**
+   * The Umple interfaces contained within the model.
+   */
   public List<UmpleInterface> getUmpleInterfaces()
   {
     List<UmpleInterface> newUmpleInterfaces = Collections.unmodifiableList(umpleInterfaces);
@@ -644,17 +666,22 @@ public class UmpleModel
     	throw new UmpleCompilerException(result.toString(),null);
   }  
   
-   // Generates the actual code
+  // Generates the actual code
   public void generate()
   {
     try
     {
       for (GenerateTarget target : getGenerates())
       {
+      	// Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
+        
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
+        
+        // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
         generator.setModel(this);
+        
         generator.setOutput(target.getPath());
         generator.generate();
       }

@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
+ */
 public class GeneratedClass extends GeneratedElement
 {
 

@@ -122,9 +122,12 @@ public class ClassTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("ClassTemplateTest_EmptyStringAttr.ump",languagePath + "/ClassTemplateTest_EmptyStringAttr."+languagePath+".txt","Student");
   }
   
-  /*
-   * Tests for missing comments in generated code.
-   */
+  
+  //
+  // Tests for missing comments in generated code.
+  //
+  
+  
   @Test
   public void AttributeInlineComment()
   {
@@ -177,6 +180,24 @@ public class ClassTemplateTest extends TemplateTest
   public void MultipleMethodComments()
   {
 	  assertUmpleTemplateFor("MultipleMethodComments.ump",languagePath + "/ClassTemplateTest_MultipleMethodComments."+languagePath+".txt","Foo");
+  }
+  
+  
+  //
+  // Special case comment tests for classes and methods where comments may contain empty lines in them.
+  //
+  
+  
+  @Test
+  public void ClassCommentWithEmptyLines()
+  {
+	  assertUmpleTemplateFor("ClassCommentWithEmptyLines.ump",languagePath + "/ClassTemplateTest_ClassCommentWithEmptyLines."+languagePath+".txt","Foo");
+  }
+  
+  @Test
+  public void MethodCommentWithEmptyLines()
+  {
+	  assertUmpleTemplateFor("MethodCommentWithEmptyLines.ump",languagePath + "/ClassTemplateTest_MethodCommentWithEmptyLines."+languagePath+".txt","Foo");
   }
   
   @Test

@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 
 /**
- * Represents the generation target, such as the target language.
+ * Represents the generation target, such as what the generated output language will be.
  */
 public class GenerateTarget
 {

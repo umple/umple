@@ -143,7 +143,7 @@ public class Attribute extends UmpleVariable
   }
 
   /**
-   * The comments associated with the attribute.
+   * The comments associated with the attribute (such as the Javadoc above it).
    */
   public List<Comment> getComments()
   {

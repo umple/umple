@@ -1,0 +1,44 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/*
+* I am a class comment.
+ * 
+ * Notice how there are 4 empty lines below me.
+ * 
+ * 
+ * 
+ * 
+ * And 2 below me.
+ * 
+ * 
+ * These lines should come out as we see here.
+ * Comments such as these are often used to improve readability through whitespace clarity.
+*/
+class Foo
+{
+  private:
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public:
+
+ Foo::Foo()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+};

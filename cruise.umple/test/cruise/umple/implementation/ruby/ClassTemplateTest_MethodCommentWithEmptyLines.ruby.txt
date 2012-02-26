@@ -1,0 +1,50 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Foo
+
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def delete
+    @deleted = true
+  end
+
+
+  =begin
+  I am a method comment.
+  
+  Notice how there are 4 empty lines below me.
+  
+  
+  
+  
+  And 2 below me.
+  
+  
+  These lines should come out as we see here.
+  Comments such as these are often used to improve readability through whitespace clarity.
+  =end
+  def testMethod()
+    // I am a test method.
+  end
+
+
+
+end

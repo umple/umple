@@ -1,0 +1,52 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+
+  /**
+   * I am a method comment.
+   * 
+   * Notice how there are 4 empty lines below me.
+   * 
+   * 
+   * 
+   * 
+   * And 2 below me.
+   * 
+   * 
+   * These lines should come out as we see here.
+   * Comments such as these are often used to improve readability through whitespace clarity.
+   */
+  public function testMethod()
+  {
+    // I am a test method.
+  }
+
+}
+?>

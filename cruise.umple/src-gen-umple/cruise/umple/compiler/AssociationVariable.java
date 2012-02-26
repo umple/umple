@@ -84,7 +84,7 @@ public class AssociationVariable extends UmpleVariable
   }
 
   /**
-   * The comments associated with the association.
+   * The comments associated with the association (such as the Javadoc above it).
    */
   public List<Comment> getComments()
   {

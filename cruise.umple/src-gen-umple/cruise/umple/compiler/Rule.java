@@ -6,7 +6,7 @@ import java.util.*;
 
 /**
  * Represents a rule, which has a name and contains definitions that describe it.
- *  * 
+ * 
  * Examples of this are a class definition.
  */
 public class Rule

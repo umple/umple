@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
+ */
 public class Association
 {
 
@@ -91,6 +94,9 @@ public class Association
     return wasSet;
   }
 
+  /**
+   * The name of the association.
+   */
   public String getName()
   {
     if (name == null || "".equals(name)) { return this.deriveName(); }

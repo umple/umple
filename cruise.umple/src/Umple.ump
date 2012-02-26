@@ -13,6 +13,13 @@ namespace cruise.umple.compiler;
 
 /*
  * The main meta-model of Umple.
+ * 
+ * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
+ * the classes, attributes, associations, methods, etc that were in it.
+ * 
+ * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
+ * 
+ * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  */
 class UmpleModel
 {
@@ -20,7 +27,9 @@ class UmpleModel
 	depend cruise.umple.compiler.exceptions.*;
 	isA Runnable;
 	
+	// The Umple file (.ump) that was used to derive the model.
 	UmpleFile umpleFile;
+	
 	defaultPackage = null;
 	GenerateTarget[] generates;
 	Boolean shouldGenerate = true;
@@ -42,9 +51,16 @@ class UmpleModel
 	internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
 	internal int reflexiveSegmentLength = 15;
 	
+	// The Associations contained within the model.
 	1 -> * Association;
+	
+	// The Umple Classes contained within the model.
 	1 -> * UmpleClass;
+	
+	// The State Machines contained within the model.
 	1 -> * StateMachine stateMachineDefinitions;
+	
+	// The Umple interfaces contained within the model.
 	1 -> * UmpleInterface;
 }
 
@@ -76,7 +92,7 @@ class UmpleElement
 }
 
 /*
- * A method which recides inside an Umple class.
+ * A method which recides inside an Umple Class.
  */
 class Method
 {
@@ -95,10 +111,10 @@ class Method
 	// The method parameters.
 	1 -> 0..* MethodParameter;
 	
-	// The body of the method.
+	// The body of the method (such as the code within).
 	1 -> 0..1 MethodBody;
 	
-	// The comments associated with the method.
+	// The comments associated with the method (such as the Javadoc above it).
 	1 -> * Comment;
 }
 
@@ -204,12 +220,13 @@ class UmpleInterface
 	
 	// The constants contained within the Umple interface.
 	1 -> 0..* Constant;
+	
 	before setPackageName { if (aPackageName == null) { return false; } }
 	before addDepend { if (depends.contains(aDepend)) { return false; } }  
 }
 
 /*
- * Represents an Umple class.
+ * Represents an Umple class which can contain attributes, associations and methods.
  */
 class UmpleClass
 {
@@ -228,7 +245,10 @@ class UmpleClass
 	Boolean immutable = false;
 
 	1 -> * CodeInjection;
+	
+	// The Umple Class's super class (if there is one).
 	* -> 0..1 UmpleClass extendsClass;
+	
 	* -> 0..1 Token extendsToken;
 	* -> 0..* UmpleInterface parentInterface;
 	* -> * Depend;
@@ -247,7 +267,7 @@ class UmpleClass
 	// The associations contained within the Umple class.
 	0..1 -- * AssociationVariable;
 
-	// The comments associated with the Umple class.
+	// The comments associated with the Umple Class (such as the Javadoc above it).
 	1 -> * Comment;
 
 	before addDepend { if (depends.contains(aDepend)) { return false; } }  
@@ -314,21 +334,25 @@ class Attribute
 	// Specifies whether or not the method parameter is lazy.
 	Boolean isLazy = false;
 	
-	// The comments associated with the attribute.
+	// The comments associated with the attribute (such as the Javadoc above it).
 	1 -> * Comment;
 }
 
+/*
+ * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
+ */
 class Association
 {
-  name = null;
-  Boolean isLeftNavigable;
-  Boolean isRightNavigable;
-  Coordinate[] positions;
-  0..1 -- 2 AssociationEnd ends;
-  Position tokenPosition = null;
+	// The name of the association.
+  	name = null;
+  	Boolean isLeftNavigable;
+  	Boolean isRightNavigable;
+  	Coordinate[] positions;
+  	0..1 -- 2 AssociationEnd ends;
+  	Position tokenPosition = null;
   
-  before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
-  after constructor { this.setLeftAndRight(); }
+  	before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
+  	after constructor { this.setLeftAndRight(); }
 }
 
 
@@ -361,7 +385,7 @@ class AssociationVariable
   
 	0..1 self relatedAssociation;
 	
-	// The comments associated with the association.
+	// The comments associated with the association (such as the Javadoc above it).
 	1 -> * Comment;
 
 	before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
@@ -392,13 +416,21 @@ class GeneratedElement
   depend java.util.*;
 }
 
+/*
+ * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
+ */
 class GeneratedClass
 {
-  isA GeneratedElement;
-  //code = null;
-  * -> 1 UmpleModel model;
-  0..1 -> 1 UmpleClass uClass;
-  0..1 -> 0..1 GeneratedClass parentClass;
+	isA GeneratedElement;
+ 
+ 	// Generated classes come from an Umple model (which comes from an Umple file), hence many generated classes to one model.
+	* -> 1 UmpleModel model;
+	
+	// Generated classes are translated from an Umple class, hence the relation.
+  	0..1 -> 1 UmpleClass uClass;
+  	
+  	// Generated classes may have a parent class/super class.
+  	0..1 -> 0..1 GeneratedClass parentClass;
 }
 
 //class GeneratedInterface
@@ -447,7 +479,7 @@ class Comment
 }
 
 /*
- * Represents the generation target, such as the target language.
+ * Represents the generation target, such as what the generated output language will be.
  */
 class GenerateTarget
 {

@@ -6,7 +6,7 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * Represents an Umple class.
+ * Represents an Umple class which can contain attributes, associations and methods.
  */
 public class UmpleClass extends UmpleElement
 {
@@ -409,7 +409,7 @@ public class UmpleClass extends UmpleElement
   }
 
   /**
-   * The comments associated with the Umple class.
+   * The comments associated with the Umple Class (such as the Javadoc above it).
    */
   public List<Comment> getComments()
   {
