@@ -30,7 +30,6 @@ class Tracer
     $wasSet = false;
     $this->id = $aId;
     $wasSet = true;
-    print("id={$aId}");
     return $wasSet;
   }
 

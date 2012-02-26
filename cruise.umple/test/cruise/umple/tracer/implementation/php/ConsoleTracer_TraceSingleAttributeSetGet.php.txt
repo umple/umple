@@ -11,16 +11,14 @@ class Tracer
 
   //Tracer Attributes
   private $id;
-  private $name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aId, $aName)
+  public function __construct($aId)
   {
     $this->id = $aId;
-    $this->name = $aName;
   }
 
   //------------------------
@@ -32,14 +30,7 @@ class Tracer
     $wasSet = false;
     $this->id = $aId;
     $wasSet = true;
-    return $wasSet;
-  }
-
-  public function setName($aName)
-  {
-    $wasSet = false;
-    $this->name = $aName;
-    $wasSet = true;
+    print("id={$aId}");
     return $wasSet;
   }
 
@@ -48,13 +39,6 @@ class Tracer
     $aId = $this->id;
     print("id={$aId}");
     return $aId;
-  }
-
-  public function getName()
-  {
-    $aName = $this->name;
-    print("name={$aName}");
-    return $aName;
   }
 
   public function equals($compareTo)

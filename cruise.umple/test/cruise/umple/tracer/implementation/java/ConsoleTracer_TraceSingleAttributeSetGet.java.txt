@@ -12,16 +12,14 @@ public class Tracer
 
   //Tracer Attributes
   private int id;
-  private String name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Tracer(int aId, String aName)
+  public Tracer(int aId)
   {
     id = aId;
-    name = aName;
   }
 
   //------------------------
@@ -33,14 +31,7 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setName(String aName)
-  {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
+    System.out.println("id=" + aId);
     return wasSet;
   }
 
@@ -49,13 +40,6 @@ public class Tracer
     int aId = id;
     System.out.println("id=" + aId);
     return aId;
-  }
-
-  public String getName()
-  {
-    String aName = name;
-    System.out.println("name=" + aName);
-    return aName;
   }
 
   public void delete()

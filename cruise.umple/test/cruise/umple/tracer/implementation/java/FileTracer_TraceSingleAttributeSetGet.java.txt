@@ -36,6 +36,7 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
+    fileTracer(id);
     return wasSet;
   }
 

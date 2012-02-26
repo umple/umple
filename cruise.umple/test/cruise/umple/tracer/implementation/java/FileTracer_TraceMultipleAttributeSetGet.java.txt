@@ -17,14 +17,16 @@ public class Tracer
 
   //Tracer Attributes
   private int id;
+  private String name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Tracer(int aId)
+  public Tracer(int aId, String aName)
   {
     id = aId;
+    name = aName;
   }
 
   //------------------------
@@ -36,6 +38,16 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
+    fileTracer(id);
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    fileTracer(name);
     return wasSet;
   }
 
@@ -44,6 +56,13 @@ public class Tracer
     int aId = id;
     fileTracer(id);
     return aId;
+  }
+
+  public String getName()
+  {
+    String aName = name;
+    fileTracer(name);
+    return aName;
   }
 
   public void delete()

@@ -242,7 +242,7 @@ public class UmpleParserTracerTest
 
 	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals(clazz.getAttribute("c"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(true,traceAttr1.getTraceSet());
+	  Assert.assertEquals(false,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
 	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
 	  assertCondition(traceDirective1, "where", "a", "<", "b", 0);
@@ -798,7 +798,7 @@ public class UmpleParserTracerTest
 	  
 	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals(clazz.getAttribute("id"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(true,traceAttr1.getTraceSet());
+	  Assert.assertEquals(false,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
 	  Assert.assertEquals(0,traceAttr1.getForClause());
@@ -820,7 +820,7 @@ public class UmpleParserTracerTest
 	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals(clazz.getAttribute("id"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals(clazz.getAttribute("name"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(true,traceAttr1.getTraceSet());
+	  Assert.assertEquals(false,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
 	  Assert.assertEquals(0,traceAttr1.getForClause());
@@ -830,9 +830,9 @@ public class UmpleParserTracerTest
   }
   
   @Test 
-  public void traceSingleAttributeOnlyGet()
+  public void traceSingleAttributeSetGet()
   {
-	  assertParse("329_traceSingleAttributeOnlyGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
+	  assertParse("329_traceSingleAttributeSetGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
@@ -840,7 +840,7 @@ public class UmpleParserTracerTest
 	  
 	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals(clazz.getAttribute("id"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(false,traceAttr1.getTraceSet());
+	  Assert.assertEquals(true,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
 	  Assert.assertEquals(0,traceAttr1.getForClause());
@@ -850,9 +850,9 @@ public class UmpleParserTracerTest
   }
   
   @Test 
-  public void traceMultipleAttributeOnlyGet()
+  public void traceMultipleAttributeSetGet()
   {
-	  assertParse("329_traceMultipleAttributeOnlyGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
+	  assertParse("329_traceMultipleAttributeSetGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -862,7 +862,7 @@ public class UmpleParserTracerTest
 	  Attribute_TraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals(clazz.getAttribute("id"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals(clazz.getAttribute("name"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(false,traceAttr1.getTraceSet());
+	  Assert.assertEquals(true,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
 	  Assert.assertEquals(0,traceAttr1.getForClause());

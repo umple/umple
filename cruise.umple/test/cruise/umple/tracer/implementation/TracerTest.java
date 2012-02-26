@@ -117,9 +117,9 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void ConsoleTracer_SingleAttributeOnlyGet()
+	public void ConsoleTracer_SingleAttributeSetGet()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeSetGet.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeSetGet."+ languagePath +".txt","Tracer");
 	}
 	
 	@Test
@@ -141,9 +141,9 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void ConsoleTracer_MultipleAttributeOnlyGet()
+	public void ConsoleTracer_MultipleAttributeSetGet()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeOnlyGet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("ConsoleTracer_TraceMultipleAttributeSetGet.ump",languagePath + "/ConsoleTracer_TraceMultipleAttributeSetGet."+ languagePath +".txt","Tracer");
 	}
 	
 	@Test
@@ -232,9 +232,9 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void FileTracer_SingleAttributeOnlyGet()
+	public void FileTracer_SingleAttributeSetGet()
 	{
-		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceSingleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("FileTracer_TraceSingleAttributeSetGet.ump",languagePath + "/FileTracer_TraceSingleAttributeSetGet."+ languagePath +".txt","Tracer");
 	}
 	  
 	@Test
@@ -310,9 +310,9 @@ public class TracerTest extends TracerTemplateTest
 	}
 	
 	@Test
-	public void FileTracer_MultipleAttributeOnlyGet()
+	public void FileTracer_MultipleAttributeSetGet()
 	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeOnlyGet.ump",languagePath + "/FileTracer_TraceMultipleAttributeOnlyGet."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeSetGet.ump",languagePath + "/FileTracer_TraceMultipleAttributeSetGet."+ languagePath +".txt","Tracer");
 	}
 	
 	@Test

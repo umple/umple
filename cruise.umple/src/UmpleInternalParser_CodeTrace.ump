@@ -213,12 +213,12 @@ private void analyzeTraceToken(Token token, int analysisStep)
 		  }
 		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("get") )
 		  {
-			  traceAttr.setTraceSet(true);
+			  traceAttr.setTraceSet(false);
 			  traceAttr.setTraceGet(true);
 		  }
-		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("onlyGet") )
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("set,get") )
 		  {
-			  traceAttr.setTraceSet(false);
+			  traceAttr.setTraceSet(true);
 			  traceAttr.setTraceGet(true);
 		  }
 	  }

@@ -143,7 +143,7 @@ trace : [[traceDirective]] | [[traceCase]]<br />
 traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceGiving]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;<br />
 <br />
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]<br />
-traceEntity- : ( set | get | onlyGet | entry | exit | cardinality )? [trace_entity] ( , [trace_entity] )*<br />
+traceEntity- : ( set,get | set | get | entry | exit | cardinality )? [trace_entity] ( , [trace_entity] )*<br />
 PreOrPostCondition- : (giving | where)? [[traceCondition]]<br />
 <br />
 executeClause- : execute { [**trace_execute] }<br />

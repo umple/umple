@@ -31,7 +31,6 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    System.out.println("id=" + aId);
     return wasSet;
   }
 

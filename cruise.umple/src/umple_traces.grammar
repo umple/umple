@@ -7,7 +7,7 @@ trace : [[traceDirective]] | [[traceCase]]
 traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceGiving]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;
 
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
-traceEntity- : ( set | get | onlyGet | entry | exit | cardinality )? [trace_entity] ( , [trace_entity] )* 
+traceEntity- : ( set,get | set | get | entry | exit | cardinality )? [trace_entity] ( , [trace_entity] )* 
 PreOrPostCondition- : (giving | where)? [[traceCondition]]
 
 executeClause- : execute { [**trace_execute] }
