@@ -150,29 +150,40 @@ class RulePartValue
 
 class RulePart
 {
-  name;
-  multiplicity;
-  String[] nextIdentifiers;
-  Integer maximumPartsFound = -1;
-  type { Static, Variable, Rule }
+	// The name of the rule part.
+	name;
+	
+	multiplicity;
+	String[] nextIdentifiers;
+	Integer maximumPartsFound = -1;
+  
+	// A rule part is either static, variable or rule.
+	type { Static, Variable, Rule }
 
-  before addNextIdentifier { if (aNextIdentifier == null) { return false; } }
-  before getMultiplicity { if (multiplicity == null) { return "1"; } }
+	before addNextIdentifier { if (aNextIdentifier == null) { return false; } }
+	before getMultiplicity { if (multiplicity == null) { return "1"; } }
 }
 
+/*
+ * Parses an Umple file (.ump) based on grammar rules.
+ * 
+ * As parsing is going on "tokens" will be created and linked together in a hierarchy fashion based on what was parsed.
+ */
 class Parser
 {
-  depend java.io.*;
-  depend cruise.umple.util.*;
-
-  String filename = null;
-  String name; // default 'program'
-  String[] grammarRules;
-  * -> * Rule;
-  * -> * Couple;
-  ParseResult parseResult = new ParseResult(true);
-  internal Position _curParsePos = null;
-  Token rootToken = reset();
+	depend java.io.*;
+	depend cruise.umple.util.*;
+	
+	// The Umple file (.ump) that will be parsed.
+	String filename = null;
+	
+	String name; // default 'program'
+	String[] grammarRules;
+	* -> * Rule;
+	* -> * Couple;
+	ParseResult parseResult = new ParseResult(true);
+	internal Position _curParsePos = null;
+	Token rootToken = reset();
 }
 
 class RuleInstance

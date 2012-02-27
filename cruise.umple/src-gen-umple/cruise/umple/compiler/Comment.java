@@ -55,6 +55,16 @@ public class Comment
   
   public Boolean isInline = true;
 
+	/**
+	 * Used to take a comment and process it into a format appropriate for displaying in generated code.
+	 * 
+	 * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).
+	 * 
+	 * @param type Indicates the type of comment which determines how the comments are formatted.  The types are: Hash, Javadoc, Attribute Javadoc, Association Javadoc, Method Javadoc, RubyMultiline, RubyMultiline Internal and Multiline.  Defaults to "//" if not specified.
+	 * @param allComments A list of comments to be processed and formatted all together as one.
+	 * 
+	 * @return The processed/formatted comment appropriate for use in generated code output.
+	 */
 	public static String format(String type,List<Comment> allComments)
 	{
 		//String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";

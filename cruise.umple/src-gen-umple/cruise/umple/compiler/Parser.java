@@ -6,6 +6,11 @@ import java.io.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * Parses an Umple file (.ump) based on grammar rules.
+ * 
+ * As parsing is going on "tokens" will be created and linked together in a hierarchy fashion based on what was parsed.
+ */
 public class Parser
 {
 
@@ -91,6 +96,9 @@ public class Parser
     return wasSet;
   }
 
+  /**
+   * The Umple file (.ump) that will be parsed.
+   */
   public String getFilename()
   {
     return filename;
@@ -443,26 +451,44 @@ public Token reset()
   /**
    * Parses input based on a rule.
    * 
+   * @param ruleName The rule to parse based on.
+   * @param input The textual input to parse (such as that from the Umple file).
+   * 
    * @return The result of the parsing.
    */
   public ParseResult parse(String ruleName, String input)
   {
+  	// Create a new instance of a text parser to parse the input from the Umple file.
     TextParser inputParser = new TextParser(filename, input);
+    
+    // Initialize the parse result.
     parseResult.setPosition(inputParser.currentPosition());
+    
     _curParsePos = inputParser.currentPosition();
+    
+    // Parse the input and store whether or not it was successful in doing so.  As its parsing it will build up a hierarchy of tokens.
     boolean didParse = parse(ruleName, inputParser, rootToken, 0);
+    
     parseResult.setWasSuccess(didParse);
+    
     return parseResult;
   }
   
   /**
-   * Parses a rule and its definitions.
+   * Parses input initialized into a textual parser and builds up a tree-like structure of tokens representing what was parsed.
    * 
-   * @return True if successful, false otherwise.
+   * It is VERY important to know this method, as its extremely vital to where a significant amount of parsing is done.
+   * 
+   * @param ruleName The rule to begin parsing off of.
+   * @param inputParser The textual parser that is initialized to start parsing input from a pre-determined Umple file.
+   * @param parentToken The current token, that will be built off of.
+   * @param level The level The current level the parser is at (related to the token tree).
+   * 
+   * @return True if the input was successfully parsed, false otherwise.
    */
   private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
   {
-  	// Go through each rule.
+	// Go through each rule.
     for (Rule r : rules)
     {
       if (!r.getName().equals(ruleName))
@@ -470,7 +496,9 @@ public Token reset()
         continue;
       }
       
+      // Create a new empty token that will later on be populated based on what is parsed as things get parsed and added to the token tree.
       Token currentToken = null;
+      
       if (r.getShouldHide())
       {
         currentToken = parentToken;
@@ -484,16 +512,26 @@ public Token reset()
       for (String definition : r.getDefinitions())
       {
         int currentTokenSize = currentToken.numberOfSubTokens();
+        
+        // Assume the parsing will succeed and prove otherwise (if theres an error).
         boolean isSucceeding = true;
+        
+        // Store where the input parser currently is on the text so that if an error occurs later we can reset to this spot.
         int savedIndex = inputParser.currentIndex();
         
         RuleInstance instance = new RuleInstance(this);
         instance.configureDefinition(definition, stopAts);
+        
+        // As long as there are more sub parts to the rule, parse based on them.
         while (instance.hasMoreRuleParts())
         {
           Position startTokenPosition = inputParser.currentPosition().copy();
+          
+          // Store the current rule from the rule instance which will be used to determine how the parsing proceeds.
           RulePart part = instance.nextRulePart();
+          
           String currentRule = part.getName();
+          
           if (part.isStatic())
           {
             String inputValue = inputParser.nextAt(currentRule);
@@ -502,10 +540,17 @@ public Token reset()
               isSucceeding = false;
               break;
             }
+            
+            // Add what we just parsed (the value of what was parsed that was a "static") as a subtoken of our current token.
+            // Essentially build up the token tree.
             currentToken.addSubToken(new Token(inputValue, "STATIC", startTokenPosition));
+            
+            // Update the parsers position in the input (from the textual parser) as well as store this information in the parsing result.
             _curParsePos = inputParser.currentPosition();
             parseResult.setPosition(inputParser.currentPosition());
           }
+          // This is where most of the work is done, a variable is essentially any "content" of a rule/definition.
+          // (ex. The rule could be an "inlineComment"  and the actual "part" (if its variable) is the content associated for it.
           else if (part.isVariable())
           {
             String value = null;
@@ -606,6 +651,8 @@ public Token reset()
               if (isSucceeding)
               {
                 instance.resetRulePart();
+                
+                // Back up the textual parser to the saved index since something went wrong.
                 restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
                 continue;
               }
@@ -618,6 +665,8 @@ public Token reset()
             {
               instance.removeRulePart(part);
               instance.resetRulePart();
+              
+              // Back up the textual parser to the saved index since something went wrong.
               restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
               continue;
             }
@@ -634,12 +683,15 @@ public Token reset()
                 }
                 String innerName = allValues[innerI].getName();
                 Position innerPosition = allValues[innerI].getPosition();
+                
+                // Update the token tree, create a new token based on what was just parsed and add it to the tree.
                 currentToken.addSubToken(new Token(innerName,innerValue, startTokenPosition.add(innerPosition)));
               }
             }
             else
             {
-              currentToken.addSubToken(new Token(part.getDisplayName(), value, startTokenPosition));
+            	// Update the token tree, create a new token based on what was just parsed and add it to the tree.
+            	currentToken.addSubToken(new Token(part.getDisplayName(), value, startTokenPosition));
             }
           }
           else if (part.isRule())
@@ -656,6 +708,8 @@ public Token reset()
               {
                 instance.removeRulePart(part);
                 instance.resetRulePart();
+                
+                // Back up the textual parser to the saved index since something went wrong.
                 restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
                 continue;
               }
@@ -667,6 +721,8 @@ public Token reset()
               {
                 instance.removeRulePart(part);
                 instance.resetRulePart();
+                
+                // Back up the textual parser to the saved index since something went wrong.
                 restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
                 continue;
               }
@@ -682,26 +738,35 @@ public Token reset()
           }
         }
         
+        // If there is currently a problem parsing (error, etc) back up the textual input parser.
         if (!isSucceeding)
         {
-          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+        	// Back up the textual parser to the saved index since something went wrong.
+        	restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
         }
         else if (inputParser.peek() != null && level == 0)
         {
-          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
-          parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
-          return false;
+        	// Back up the textual parser to the saved index since something went wrong.
+        	restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+        	
+        	// Since there was a critical error, store an error message in the parsing result.
+        	parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
+        	
+        	return false;
         }
+        // Otherwise if everything is okay we will add what we have parsed (which should be in a token by now) to the "parent/root" token.
         else
         {
           if (!r.getShouldHide())
           {
+        	// Update the token tree, add the current token to the parent.
             parentToken.addSubToken(currentToken);
           }
           return true;
         }
       }
     }
+    
     return false;
   }
   

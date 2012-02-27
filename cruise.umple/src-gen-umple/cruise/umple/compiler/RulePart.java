@@ -77,6 +77,9 @@ public class RulePart
     return wasSet;
   }
 
+  /**
+   * The name of the rule part.
+   */
   public String getName()
   {
     return name;
