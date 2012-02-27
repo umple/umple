@@ -38,7 +38,7 @@ public class Tracer
     wasSet = true;
     if( id != 6 && traceIdUntil )
     {
-      System.out.println("id=" + aId);
+      System.err.println("id=" + aId);
     }
     else
     {
@@ -54,7 +54,7 @@ public class Tracer
     wasSet = true;
     if( id != 6 && traceNameUntil )
     {
-      System.out.println("name=" + aName);
+      System.err.println("name=" + aName);
     }
     else
     {

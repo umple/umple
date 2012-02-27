@@ -59,9 +59,9 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
-    System.out.println("Previous state =" + status);
+    System.err.println("Previous state =" + status);
     status = aStatus;
-    System.out.println("Current state =" + status);
+    System.err.println("Current state =" + status);
   }
 
   public void delete()

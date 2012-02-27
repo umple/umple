@@ -408,16 +408,16 @@ public class StateMachineTest
         break;
     }
     if( status.equals(Status.S3) )
-      System.out.println("action=S3-exit, v=" + v);
+      System.err.println("action=S3-exit, v=" + v);
   }
 
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.S3) )
-      System.out.println("state=" + status);
+      System.err.println("state=" + status);
     status = aStatus;
     if( aStatus.equals(Status.S3) )
-      System.out.println("state=" + status);
+      System.err.println("state=" + status);
 
     // entry actions and do activities
     switch(status)
@@ -430,7 +430,7 @@ public class StateMachineTest
         break;
     }
     if( aStatus.equals(Status.S3) )
-      System.out.println("action=S3-entry, v=" + v);
+      System.err.println("action=S3-entry, v=" + v);
   }
 
   private void exitStatusS1()

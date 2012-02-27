@@ -33,7 +33,7 @@ public class Tracer
     boolean wasSet = false;
     if( name == "tim" )
     {
-      System.out.println("id=" + aId);
+      System.err.println("id=" + aId);
     }
     id = aId;
     wasSet = true;
@@ -45,7 +45,7 @@ public class Tracer
     boolean wasSet = false;
     if( name == "tim" )
     {
-      System.out.println("name=" + aName);
+      System.err.println("name=" + aName);
     }
     name = aName;
     wasSet = true;

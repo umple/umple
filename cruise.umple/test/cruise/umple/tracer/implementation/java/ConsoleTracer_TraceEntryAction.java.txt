@@ -42,7 +42,7 @@ public class Light
   {
     boolean wasEventProcessed = false;
 
-    System.out.println("Event: flip");
+    System.err.println("Event: flip");
     switch (status)
     {
       case On:
@@ -60,16 +60,16 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
-    System.out.println("Previous state =" + status);
+    System.err.println("Previous state =" + status);
     status = aStatus;
-    System.out.println("Current state =" + status);
+    System.err.println("Current state =" + status);
 
     // entry actions and do activities
     switch(status)
     {
       case On:
-        System.out.println("entry");
-        System.out.println("entry2");
+        System.err.println("entry");
+        System.err.println("entry2");
         break;
     }
   }

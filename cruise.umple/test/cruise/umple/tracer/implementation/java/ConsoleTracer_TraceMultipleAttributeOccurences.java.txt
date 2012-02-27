@@ -38,7 +38,7 @@ public class Tracer
     wasSet = true;
     if( traceIdFor > 0 )
     {
-      System.out.println("id=" + aId);
+      System.err.println("id=" + aId);
       --traceIdFor;
     }
     return wasSet;
@@ -51,7 +51,7 @@ public class Tracer
     wasSet = true;
     if( traceNameFor > 0 )
     {
-      System.out.println("name=" + aName);
+      System.err.println("name=" + aName);
       --traceNameFor;
     }
     return wasSet;

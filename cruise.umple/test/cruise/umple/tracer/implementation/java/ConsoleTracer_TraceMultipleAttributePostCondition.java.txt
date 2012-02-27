@@ -45,7 +45,7 @@ public class Tracer
     wasSet = true;
     if( a < b )
     {
-      System.out.println("b=" + aB);
+      System.err.println("b=" + aB);
     }
     return wasSet;
   }
@@ -57,7 +57,7 @@ public class Tracer
     wasSet = true;
     if( a < b )
     {
-      System.out.println("c=" + aC);
+      System.err.println("c=" + aC);
     }
     return wasSet;
   }

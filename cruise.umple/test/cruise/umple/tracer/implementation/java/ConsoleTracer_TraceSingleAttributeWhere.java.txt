@@ -31,7 +31,7 @@ public class Tracer
     boolean wasSet = false;
     if( x == 100 )
     {
-      System.out.println("x=" + aX);
+      System.err.println("x=" + aX);
     }
     x = aX;
     wasSet = true;

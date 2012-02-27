@@ -82,7 +82,7 @@ public class Ignore
           appendln(stringBuffer, "         while( true )");
           appendln(stringBuffer, "         {");
           appendln(stringBuffer, "           Date date = new Date();");
-          appendln(stringBuffer, "           System.out.println(\"{0}=\"+{1} +\", t =\"+date.toString());",attrName,attr.getName());
+          appendln(stringBuffer, "           System.err.println(\"{0}=\"+{1} +\", t =\"+date.toString());",attrName,attr.getName());
           appendln(stringBuffer, "           try");
           appendln(stringBuffer, "           {Thread.sleep(period);}");
           appendln(stringBuffer, "           catch (InterruptedException e)");

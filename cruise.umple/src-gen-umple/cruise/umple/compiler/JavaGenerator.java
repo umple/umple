@@ -693,7 +693,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     Map<String,String> lookups = new HashMap<String,String>();
     String executeMethods = "public static void execute(String message) { getInstance().addTrace(message); }\n";
     executeMethods += "public void reset() { getInstance().traces.clear(); }";
-    lookups.put("consoleTemplate","System.out.println(\"{0}=\" + {1});");
+    lookups.put("consoleTemplate","System.err.println(\"{0}=\" + {1});");
     lookups.put("stringTemplate","StringTracer.execute(\"{0}=\" + {1});");
     lookups.put("fileTemplate","fileTracer({0});");
     lookups.put("dependPackage","1");

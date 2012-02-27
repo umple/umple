@@ -35,7 +35,7 @@ public class Tracer
     wasSet = true;
     if( a < b )
     {
-      System.out.println("a=" + aA);
+      System.err.println("a=" + aA);
     }
     return wasSet;
   }

@@ -42,7 +42,7 @@ public class Tracer
     }
     if( traceIdAfter )
     {
-      System.out.println("id=" + aId);
+      System.err.println("id=" + aId);
     }
     return wasSet;
   }
@@ -58,7 +58,7 @@ public class Tracer
     }
     if( traceNameAfter )
     {
-      System.out.println("name=" + aName);
+      System.err.println("name=" + aName);
     }
     return wasSet;
   }

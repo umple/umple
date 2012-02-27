@@ -43,7 +43,7 @@ public class Tracer
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    System.out.println("id=" + id);
+    System.err.println("id=" + id);
     return wasSet;
   }
 
@@ -52,7 +52,7 @@ public class Tracer
     boolean wasSet = false;
     address = aAddress;
     wasSet = true;
-    System.out.println("id=" + id);
+    System.err.println("id=" + id);
     return wasSet;
   }
 

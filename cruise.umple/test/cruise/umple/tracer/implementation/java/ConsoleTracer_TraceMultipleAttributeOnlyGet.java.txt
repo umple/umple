@@ -47,14 +47,14 @@ public class Tracer
   public int getId()
   {
     int aId = id;
-    System.out.println("id=" + aId);
+    System.err.println("id=" + aId);
     return aId;
   }
 
   public String getName()
   {
     String aName = name;
-    System.out.println("name=" + aName);
+    System.err.println("name=" + aName);
     return aName;
   }
 

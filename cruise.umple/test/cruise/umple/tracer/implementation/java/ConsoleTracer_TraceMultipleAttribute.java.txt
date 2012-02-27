@@ -33,7 +33,7 @@ public class Tracer
     boolean wasSet = false;
     x = aX;
     wasSet = true;
-    System.out.println("x=" + aX);
+    System.err.println("x=" + aX);
     return wasSet;
   }
 
@@ -42,7 +42,7 @@ public class Tracer
     boolean wasSet = false;
     y = aY;
     wasSet = true;
-    System.out.println("y=" + aY);
+    System.err.println("y=" + aY);
     return wasSet;
   }
 

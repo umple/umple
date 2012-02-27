@@ -31,14 +31,14 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    System.out.println("id=" + aId);
+    System.err.println("id=" + aId);
     return wasSet;
   }
 
   public int getId()
   {
     int aId = id;
-    System.out.println("id=" + aId);
+    System.err.println("id=" + aId);
     return aId;
   }
 

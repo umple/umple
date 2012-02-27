@@ -33,8 +33,8 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    System.out.println("id=" + aId);
-    System.out.println("RecordString=" + "i am tracing in class Tracer");
+    System.err.println("id=" + aId);
+    System.err.println("RecordString=" + "i am tracing in class Tracer");
     return wasSet;
   }
 
@@ -43,8 +43,8 @@ public class Tracer
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    System.out.println("name=" + aName);
-    System.out.println("RecordString=" + "i am tracing in class Tracer");
+    System.err.println("name=" + aName);
+    System.err.println("RecordString=" + "i am tracing in class Tracer");
     return wasSet;
   }
 

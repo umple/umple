@@ -51,9 +51,9 @@ public class Tracer
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    System.out.println("name=" + aName);
-    System.out.println("id=" + id);
-    System.out.println("contact=" + contact);
+    System.err.println("name=" + aName);
+    System.err.println("id=" + id);
+    System.err.println("contact=" + contact);
     return wasSet;
   }
 

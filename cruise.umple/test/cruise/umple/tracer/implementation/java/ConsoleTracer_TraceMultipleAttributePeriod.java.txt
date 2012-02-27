@@ -73,7 +73,7 @@ public class Tracer
          while( true )
          {
            Date date = new Date();
-           System.out.println("Name="+name +", t ="+date.toString());
+           System.err.println("Name="+name +", t ="+date.toString());
            try
            {Thread.sleep(period);}
            catch (InterruptedException e)
@@ -92,7 +92,7 @@ public class Tracer
          while( true )
          {
            Date date = new Date();
-           System.out.println("Id="+id +", t ="+date.toString());
+           System.err.println("Id="+id +", t ="+date.toString());
            try
            {Thread.sleep(period);}
            catch (InterruptedException e)
