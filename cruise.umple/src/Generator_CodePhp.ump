@@ -641,6 +641,25 @@ private String getExtendClassesNames(UmpleClass uClass)
   }
   
   //====================== Start of Tracing code  
+  
+  // Process every attribute in an AttributeTraceItem
+  static void processAttribute( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr) 
+  {
+	  String attrCode = null, conditionType = null;
+	  
+	  // Process trace directive conditions if it has any 
+	  if( traceDirective.hasCondition() )
+	  {
+		  processTraceCondition(traceDirective,t,template,attr);		
+	  }  
+	  else
+	  {
+		  // simple trace directive that traces attributes without any extra fragments
+  		  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);   
+	  }
+  }
+  
   // Process condition in a trace directive
   static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
   {
@@ -714,16 +733,6 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
 	  attrCode = "}";
 	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType); 
-  }
-  
-  // main purpose is to get trace attributes nameing convention
-  // e.g. trace attribute id with condition until -> method returns "traceIdUntil"
-  // e.g. trace attribute name with condition after -> method returns "traceNameAfter"
-  private static String getFlag(CodeTranslator t, Attribute attr, String conditionType)
-  {
-	  String attrName = t.translate("attribute",attr);
-	  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
-	  return "trace" + attrName + conditionType;  
   }
   
   // Assigns and prepares trace code injection before calling "injectTraceDirective"

@@ -662,16 +662,42 @@ class JavaGenerator
   }
   
   //====================== Start of Tracing code 
-  //Process Period in a trace directive (i.e. "period" keyword) and injects appropriate code
-  static void processPeriod(TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr, String period) 
+  // Process every attribute in an AttributeTraceItem
+  static void processAttribute( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr) 
+  {
+	  String attrCode = null, conditionType = null;
+	  
+	  // Process trace directive conditions if it has any 
+	  if( traceDirective.hasCondition() )
+	  {
+		  processTraceCondition(traceDirective,t,template,traceAttr,attr);		
+	  }
+	  else if( traceAttr.getForClause() != 0 )
+	  {
+		  processOccurrences(traceDirective,t,template,traceAttr,attr);
+	  }
+	  else if( traceAttr.getPeriodClause() != null )  
+	  {	
+		  processPeriod(traceDirective,t,template,traceAttr,attr,traceAttr.getPeriodClause());
+	  }
+	  else
+	  {
+		  // simple trace directive that traces attributes without any extra fragments  
+		  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
+  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);  
+	  }
+  }
+  
+  // Process Period in a trace directive (i.e. "period" keyword) and injects appropriate code
+  static void processPeriod(TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr, String period) 
   {
 	  String attrCode = null, Type = "Period";
 	  attrCode = getFlag(t, attr, "Period") + "(" + preparePeriod(period) + ");";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,Type,"setMethod");	  
+	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,Type);	  
   }
 
   //Process Occurrences in a trace directive (i.e. "for" keyword) and injects appropriate code
-  static void processOccurrences(TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr) 
+  static void processOccurrences(TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr) 
   {
 	  String attrCode = null, Type = "For";
 	  attrCode = "if( " + getFlag(t,attr,"For") +" > 0 )\n    ";	  
@@ -679,26 +705,26 @@ class JavaGenerator
 	  attrCode += "    " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr)) + "\n  ";
 	  attrCode += "    --" + getFlag(t,attr,"For") + ";\n    ";
 	  attrCode += "}";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,Type,"setMethod");	  
+	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,Type);	  
   }
 
   // Process condition in a trace directive based on its type
-  static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
+  static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr ) 
   {
 	  TraceCondition tc = traceDirective.getCondition(0);
 	  
 	  if( tc.getConditionType().equals("where") )
-		  processWhereCondition(traceDirective, t, template, attr);	
+		  processWhereCondition(traceDirective,t,template,traceAttr,attr);	
 	  else if( tc.getConditionType().equals("giving") )  
-		  processGivingCondition(traceDirective, t, template, attr);
+		  processGivingCondition(traceDirective,t,template,traceAttr,attr);
 	  else if( tc.getConditionType().equals("until") )  
-		  processUntilCondition(traceDirective, t, template, attr);	
+		  processUntilCondition(traceDirective,t,template,traceAttr,attr);	
 	  else if( tc.getConditionType().equals("after") )
-		  processAfterCondition(traceDirective, t, template, attr);
+		  processAfterCondition(traceDirective,t,template,traceAttr,attr);
   }
   
   // process "where" conditions and injects needed code where appropriate
-  public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr )
   {
 	  String attrCode = null, conditionType = "where";
 	  TraceCondition tc = traceDirective.getCondition(0);
@@ -706,11 +732,11 @@ class JavaGenerator
 	  attrCode += "{\n  ";  	  
 	  attrCode += "    " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr)) + "\n    ";
 	  attrCode += "}";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");	  
+	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);	  
   }
   
   // process "giving" conditions and injects needed code where appropriate
-  public static void processGivingCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  public static void processGivingCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr )
   {
 	  String attrCode = null, conditionType = "giving";
 	  TraceCondition tc = traceDirective.getCondition(0);
@@ -718,11 +744,11 @@ class JavaGenerator
 	  attrCode += "{\n  ";  	  
 	  attrCode += "    " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr)) + "\n    ";
 	  attrCode += "}";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");	  
+	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);	  
   }
   
   //process "until" conditions and injects needed code where appropriate
-  public static void processUntilCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  public static void processUntilCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr )
   {
 	  String attrCode = null, conditionType = "until";
 	  TraceCondition tc = traceDirective.getCondition(0);  
@@ -734,11 +760,11 @@ class JavaGenerator
 	  attrCode += "{\n  ";  	  
 	  attrCode += "    " + getFlag(t, attr, "Until") + " = false;\n    ";
 	  attrCode += "}";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
   }
   
   //process "After" conditions and injects needed code where appropriate
-  public static void processAfterCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
+  public static void processAfterCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr )
   {
 	  String attrCode = null, conditionType = "after";
 	  TraceCondition tc = traceDirective.getCondition(0);
@@ -750,7 +776,7 @@ class JavaGenerator
 	  attrCode += "{\n  ";	  	  
 	  attrCode += "    " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr)) + "\n    ";
 	  attrCode += "}";
-	  GeneratorHelper.prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
+	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
   }
   
   // main purpose is to get trace attributes nameing convention
