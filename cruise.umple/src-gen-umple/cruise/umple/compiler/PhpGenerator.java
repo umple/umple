@@ -714,6 +714,33 @@ private String getExtendClassesNames(UmpleClass uClass)
 	  }
   }
   
+  // Process trace record in a trace directive
+  static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String tracer) 
+  {
+	  String attrCode = null;
+	  
+	  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
+	  {
+		  for( Attribute traceAttr : traceAttrItem.getAttributes() )
+		  {
+			  TraceRecord record = traceDirective.getTraceRecord();
+			  if( record.getRecord() != null )
+			  {  
+				  if( tracer.equals("file"))
+					  attrCode = StringFormatter.format(template,record.getRecord());
+				  else if( tracer.equals("console"))
+					  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
+				  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+			  }
+			  for( Attribute attr : record.getAttributes() )
+			  {
+				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
+				  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
+			  }  
+		  }	   
+	  } 
+  }
+  
   // Process condition in a trace directive
   static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
   {

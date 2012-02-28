@@ -310,13 +310,7 @@ private static void postpareTrace(UmpleModel aModel)
 		  // process trace record if found
 		  if( traceDirective.getTraceRecord() != null )
 		  {
-			  if( traceDirective.getTraceRecord().getRecordOnly() )
-				  processTraceRecord(traceDirective,t,template,tracer);
-			  else
-			  {
-				  processTraceDirectiveAttributes(model,traceDirective,t,template);
-				  processTraceRecord(traceDirective,t,template,tracer);	
-			  }        
+			  processTraceRecord(model,traceDirective,t,template,tracer);        
 		  }
 		  // if the traceItem is an attribute
 		  else if (traceDirective.hasAttributeTraceItems())
@@ -330,7 +324,7 @@ private static void postpareTrace(UmpleModel aModel)
 		  }		  	  
 	  }
   }
-  
+
   //**************************************************** 
   //*******  Methods dealing with Attribute Trace Items
   //****************************************************
@@ -375,10 +369,10 @@ private static void postpareTrace(UmpleModel aModel)
 		  
 		  if(tracer.equals("console") && tracedState.getTraceStateMachineFlag() )
 		  {
-			  stmCode = StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+			  stmCode = StringFormatter.format(consoleTemplate,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
 	  		  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
 	  		  
-	  		  stmCode = StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+	  		  stmCode = StringFormatter.format(consoleTemplate,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
 			  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
 		  }
 		  else if(tracer.equals("file") && tracedState.getTraceStateMachineFlag() )
@@ -393,11 +387,11 @@ private static void postpareTrace(UmpleModel aModel)
 		  if(tracer.equals("console") && traceRecord != null )
 		  {
 			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-			  stmCode += StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+			  stmCode += StringFormatter.format(consoleTemplate,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
 	  		  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
 
 			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  		  stmCode += StringFormatter.format(consoleTemplate,"state",t.translate("stateMachineOne",stm));
+	  		  stmCode += StringFormatter.format(consoleTemplate,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
 			  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
 			  
 			  stmCode = "if( " + t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
@@ -410,33 +404,32 @@ private static void postpareTrace(UmpleModel aModel)
   //*********************************************** 
   //*******  Methods dealing with Trace Record
   //*********************************************** 
-  // Process trace record in a trace directive
-  private static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String tracer) 
+
+  private static void processTraceRecord(UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, String tracer) 
   {
-	  String attrCode = null;
-	  
-	  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
+	  if( model.getDefaultGenerate().equals("Java"))
 	  {
-		  for( Attribute traceAttr : traceAttrItem.getAttributes() )
+		  if( traceDirective.getTraceRecord().getRecordOnly() )
+			  JavaGenerator.processTraceRecord(traceDirective,t,template,tracer);
+		  else
 		  {
-			  TraceRecord record = traceDirective.getTraceRecord();
-			  if( record.getRecord() != null )
-			  {  
-				  if( tracer.equals("file"))
-					  attrCode = StringFormatter.format(template,record.getRecord());
-				  else if( tracer.equals("console"))
-					  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
-	      		  prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
-			  }
-			  for( Attribute attr : record.getAttributes() )
-			  {
-				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
-	      		  prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
-			  }  
-		  }	   
-	  } 
+			  processTraceDirectiveAttributes(model,traceDirective,t,template);
+			  JavaGenerator.processTraceRecord(traceDirective,t,template,tracer);	
+		  }
+	  }
+	  if( model.getDefaultGenerate().equals("Php"))
+	  {
+		  if( traceDirective.getTraceRecord().getRecordOnly() )
+			  PhpGenerator.processTraceRecord(traceDirective,t,template,tracer);
+		  else
+		  {
+			  processTraceDirectiveAttributes(model,traceDirective,t,template);
+			  PhpGenerator.processTraceRecord(traceDirective,t,template,tracer);	
+		  }
+	  }
+
   }
-  
+
   //********************************************************
   //*******  Methods dealing with Code Injections
   //********************************************************
@@ -539,5 +532,11 @@ private static void postpareTrace(UmpleModel aModel)
       aClass.appendExtraCode(lookups.get("extraCode"));
     }
     aClass.createGeneratedClass(model);
+  }
+  
+  static String prepareConsistentOutput(String param1, String param2) 
+  {
+	  String output = StringFormatter.format("\"{0}=\" + {1}",param1,param2);
+	  return output;
   }
 }

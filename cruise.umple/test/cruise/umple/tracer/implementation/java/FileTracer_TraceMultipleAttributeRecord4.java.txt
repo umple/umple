@@ -42,9 +42,9 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    fileTracer(id);
-    fileTracer(address);
-    fileTracer(contact);
+    fileTracer("id=" + aId);
+    fileTracer("address=" + address);
+    fileTracer("contact=" + contact);
     return wasSet;
   }
 
@@ -61,9 +61,9 @@ public class Tracer
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    fileTracer(name);
-    fileTracer(address);
-    fileTracer(contact);
+    fileTracer("name=" + aName);
+    fileTracer("address=" + address);
+    fileTracer("contact=" + contact);
     return wasSet;
   }
 
@@ -110,7 +110,6 @@ public class Tracer
     {
       // Open an output stream
       fout = new FileOutputStream ("TraceLog.txt",true);
-      new PrintStream(fout).println ("(Tracing log file)");
     }
     catch (IOException e)
     {
@@ -118,8 +117,7 @@ public class Tracer
       System.exit(-1);
     }
     // Write traced Item information
-    new PrintStream(fout).println("Traced object value: " + obj);
-    new PrintStream(fout).println("Trace time : " + date);
+    new PrintStream(fout).println(obj);
     try
     {
       // Close output stream

@@ -394,30 +394,6 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("StringTracer_TraceSingleAttributeWhere.ump",languagePath + "/StringTracer_TraceSingleAttributeWhere."+ languagePath +".txt","Tracer");
 	}
 	
-	@Test
-	public void StringTracer_MultipleAttributes()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttribute.ump",languagePath + "/FileTracer_TraceMultipleAttribute."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void StringTracer_MultipleAttributesAfter()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeAfter.ump",languagePath + "/FileTracer_TraceMultipleAttributeAfter."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void StringTracer_MultipleAttributesUntil()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeUntil.ump",languagePath + "/FileTracer_TraceMultipleAttributeUntil."+ languagePath +".txt","Tracer");
-	}
-	  
-	@Test
-	public void StringTracer_MultipleAttributesWhere()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceMultipleAttributeWhere.ump",languagePath + "/FileTracer_TraceMultipleAttributeWhere."+ languagePath +".txt","Tracer");
-	}
-	
 	//*******************************//
 	//**** Trace State Machines *****//
 	//****    Code Generation   *****//

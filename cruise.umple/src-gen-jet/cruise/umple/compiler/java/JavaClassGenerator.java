@@ -7571,7 +7571,6 @@ public class JavaClassGenerator implements ILang
 	appendln(stringBuffer, "    {");
 	appendln(stringBuffer, "      // Open an output stream");
 	appendln(stringBuffer, "      fout = new FileOutputStream ({0}TraceLog.txt{1},true);",'"','"');
-	appendln(stringBuffer, "      new PrintStream(fout).println ({0}(Tracing log file){1});",'"','"');
 	appendln(stringBuffer, "    }");
 	appendln(stringBuffer, "    catch (IOException e)");
 	appendln(stringBuffer, "    {");
@@ -7579,8 +7578,7 @@ public class JavaClassGenerator implements ILang
 	appendln(stringBuffer, "      System.exit(-1);");
 	appendln(stringBuffer, "    }");
 	appendln(stringBuffer, "    // Write traced Item information");
-	appendln(stringBuffer, "    new PrintStream(fout).println(\"Traced object value: \" + obj);");
-	appendln(stringBuffer, "    new PrintStream(fout).println({0}Trace time : {1} + date);",'"','"');
+	appendln(stringBuffer, "    new PrintStream(fout).println(obj);");
 	appendln(stringBuffer, "    try");
 	appendln(stringBuffer, "    {");
 	appendln(stringBuffer, "      // Close output stream");

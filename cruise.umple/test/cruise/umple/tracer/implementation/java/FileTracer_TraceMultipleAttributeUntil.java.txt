@@ -43,7 +43,7 @@ public class Tracer
     wasSet = true;
     if( id != 6 && traceIdUntil )
     {
-      fileTracer(id);
+      fileTracer("id=" + aId);
     }
     else
     {
@@ -59,7 +59,7 @@ public class Tracer
     wasSet = true;
     if( id != 6 && traceNameUntil )
     {
-      fileTracer(name);
+      fileTracer("name=" + aName);
     }
     else
     {
@@ -93,7 +93,6 @@ public class Tracer
     {
       // Open an output stream
       fout = new FileOutputStream ("TraceLog.txt",true);
-      new PrintStream(fout).println ("(Tracing log file)");
     }
     catch (IOException e)
     {
@@ -101,8 +100,7 @@ public class Tracer
       System.exit(-1);
     }
     // Write traced Item information
-    new PrintStream(fout).println("Traced object value: " + obj);
-    new PrintStream(fout).println("Trace time : " + date);
+    new PrintStream(fout).println(obj);
     try
     {
       // Close output stream
