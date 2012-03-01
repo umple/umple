@@ -1,3 +1,8 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Loads all the js code for UmpleLine
 
 //PROTOTYPE
 document.write('<script type="text/javascript" src="scripts/prototype.js"><\/script>');
@@ -10,10 +15,7 @@ document.write('<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.
 document.write('<link href="scripts/jquery/showLoading/css/showLoading.css" rel="stylesheet" media="screen" /> ');
 document.write('<script type="text/javascript" src="scripts/jquery/showLoading/js/jquery.showLoading.min.js"></script>');
 
-// OLD document.write('<link href="scripts/jquery/ui/css/custom-theme/jquery-ui-1.8.4.custom.css" rel="stylesheet" media="screen" /> ');
-// OLD document.write('<script type="text/javascript" src="scripts/jquery/ui/js/jquery-ui-1.8.4.custom.min.js"></script>');
-
-// NEW replacing above
+// Jquery
 document.write('<link href="scripts/jquery/jquery-ui-1.8.17.custom.css" rel="stylesheet" media="screen" /> ');
 document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.17.custom.min.js"></script>');
 

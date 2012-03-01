@@ -1,6 +1,9 @@
 // Copyright: All contributers to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
+//
+// Actions triggered by UI elements in UmpleOnline
+// plus helper functions
 Action = new Object();
 Action.waiting_time = 1500;
 Action.oldTimeout = null;
@@ -167,27 +170,18 @@ Action.startOver = function()
 Action.undo = function()
 {
   if (jQuery("#buttonUndo").hasClass("disabled")) return;
-  
-  if (Action.manualSync && Action.diagramInSync)
-  {
-  	Action.diagramInSync = false;
-  	Page.enablePaletteItem("buttonSyncDiagram", true);
-  	Page.enableDiagram(false);
-  }
-  
-  var afterUndo = History.getPreviousVersion();
-  if (afterUndo == History.noChange)
-  {
-  	return;
-  }
-  Page.setUmpleCode(afterUndo);
-  if (!Action.manualSync) Action.updateUmpleDiagram();
+  Action.redoOrUndo(true);
 }
 
 Action.redo = function()
 {
   if (jQuery("#buttonRedo").hasClass("disabled")) return;
-  
+  Action.redoOrUndo(false);
+}
+
+Action.redoOrUndo = function(isUndo)
+{
+  var afterHistoryChange = "";
   if (Action.manualSync && Action.diagramInSync)
   {
   	Action.diagramInSync = false;
@@ -195,15 +189,19 @@ Action.redo = function()
   	Page.enableDiagram(false);
   }
   
-  var afterRedo = History.getNextVersion();
-  if (afterRedo == History.noChange)
+  if (isUndo) afterHistoryChange = History.getPreviousVersion();
+  else afterHistoryChange = History.getNextVersion();
+  
+  if (afterHistoryChange == History.noChange)
   {
-  	return;
+  	afterHistoryChange = "";
   }
-  Page.setUmpleCode(afterRedo);
+  Action.freshLoad = true;
+  Page.setUmpleCode(afterHistoryChange);
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
 
+// Initial load of a file (e.g. example or blank) at initialization
 Action.loadFile = function()
 {
   var filename = Page.getFilename();
@@ -217,8 +215,11 @@ Action.loadFile = function()
   }
 }
 
+// Triggered by the above Action.loadFile. Initial load of a file at startup
 Action.loadFileCallback = function(response)
 {
+  Action.freshLoad = true;
+  History.save(response.responseText,"loadFileCallback");
   Page.setUmpleCode(response.responseText);
   if (!Action.manualSync) Action.updateUmpleDiagram();
 }
@@ -1013,9 +1014,11 @@ Action.umpleCanvasClicked = function(event)
   }
 }
 
+// Called whenever any change is made on the graphic pane
+// such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
-  History.save(response.responseText);
+  History.save(response.responseText, "TextCallback");
   Action.freshLoad = true;
 
   Page.setUmpleCode(response.responseText);
@@ -1085,7 +1088,7 @@ Action.loadExampleCallback = function(response)
   Action.freshLoad = true;
   Page.setUmpleCode(response.responseText);
   Page.hideLoading();
-  History.save(response.responseText);
+  History.save(response.responseText, "loadExampleCallback");
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
@@ -1356,7 +1359,7 @@ Action.umpleTypingActivity = function(target) {
 
 Action.processTyping = function(target, manuallySynchronized)
 {
-  History.save(Page.getUmpleCode());
+  History.save(Page.getUmpleCode(), "processTyping");
   if (!Action.manualSync || manuallySynchronized)
   {
     if (target == "umpleModelEditor" || target == "codeMirrorEditor") {

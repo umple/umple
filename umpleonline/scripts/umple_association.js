@@ -1,3 +1,9 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Models associations in the graphical view of UmpleOnline
+
 UmpleAssociationFactory = new Object();
 
 UmpleAssociationFactory.create = function(data)

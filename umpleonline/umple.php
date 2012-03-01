@@ -1,4 +1,9 @@
 <?php
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Main program that generates UmpleOnline
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 $filename = extractFilename();

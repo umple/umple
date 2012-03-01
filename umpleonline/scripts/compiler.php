@@ -2,6 +2,25 @@
 // Copyright: All contributers to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
+//
+// Invoked on the UmpleOnline server to cause one of the
+// two jars to be run with appropriate arguments (umple.jar or umplesync.jar)
+//
+// Involed as an Ajax call by umple_action.js in the following places:
+// Action.ajax - near the end of that file - for most compilation tasks
+// Action.loadFile using ajax.js - argument load  - load a user saved file
+// Action.loadExample - argument exampleCode - one of the pre-canned examples
+// Action.saveNewFile using ajax.js - argument save 
+// Action.pngImage, Action.ymlImageCallback
+// Action.uiguCallback - argument asUI
+//
+// This file also formats the output from the jars for presentation back on
+// the UmpleOnline screen
+//
+// Most of the helper methods are in compiler_config.php, except
+// getErrorHtml, which reads the generated error file, and jsonDecode
+//
+
 require_once("compiler_config.php");
 
 if (isset($_REQUEST["save"]))

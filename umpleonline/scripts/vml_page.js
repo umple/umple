@@ -1,3 +1,9 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Describes the various elements of the page in the VML online tool
+// TODO needs maintenance
 
 Page = new Object();
 

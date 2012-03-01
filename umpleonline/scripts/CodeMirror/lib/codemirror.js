@@ -4,6 +4,9 @@
 // the CodeMirror function. Below that, at the bottom of the file,
 // some utilities are defined.
 
+// CHANGE FOR UMPLE ARE INCLUDED. WHEN UPDATING CODEMIRROR TAGGED UMPLE
+// FIND THOSE CHANGES AND RE-APPLY THEM
+
 // CodeMirror is the only global var we claim
 var CodeMirror = (function() {
   // This is the function that produces an editor instance. It's
@@ -581,8 +584,14 @@ var CodeMirror = (function() {
       updateInput = true;
       to.push(out);
     }
-    function undo() {unredoHelper(history.done, history.undone, -1);}
-    function redo() {unredoHelper(history.undone, history.done, 1);}
+    function undo() {
+      Action.undo(); // ENSURES UMPLE INTERCEPTS UNDO
+      // unredoHelper(history.done, history.undone, -1);
+    }
+    function redo() {
+      Actionb.redo(); // ENSURES UMPLE INTERCEPTS REDO
+      // unredoHelper(history.undone, history.done, 1);
+    }
 
     function updateLinesNoUndo(from, to, newText, selFrom, selTo) {
       if (suppressEdits) return;

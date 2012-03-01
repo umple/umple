@@ -1,3 +1,9 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Initializing and maintaining the various areas on the screen in UmpleOnline
+
 Page = new Object();
 Page.selectedItem = null;
 Page.selectedClass = null;
@@ -437,7 +443,7 @@ Page.splitUmpleCode = function(umpleCode)
   return modelAndPositioning;
 }  
 
-Page.setUmpleCode = function(umpleCode)
+Page.setUmpleCode = function(umpleCode, reason)
 {
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
  

@@ -1,3 +1,8 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Models generalizations in the graphical view of UmpleOnline
 
 function UmpleGeneralization()
 {

@@ -1,3 +1,9 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Models classes in the graphical view of UmpleOnline
+
 UmpleClassFactory = new Object();
 UmpleClassFactory.defaultSize = new UmplePosition(0,0,109,41);
 UmpleClassFactory.verticalError = new UmplePosition(0,-1,0,0);

@@ -1,13 +1,19 @@
 <?php
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+//
+// Utility functions invoked primarily by compiler.php and umple.php
+// 
+// To run UmpleOnline locally, you may need to set the following constants
+// based on your home computer settings
 
-//To run UmpleOnline locally, you will need to set the following constants based on your home computer settings
-
-// JULIE FILION
+// Windows installations of UmpleOnline Server
 // $GLOBALS["JAVA_HOME"] = "C:\Program Files\Java\jdk1.6.0_17";
 // $GLOBALS["ANT_EXEC"] = "C:\Ant\apache-ant-1.8.1\bin\ant";
 // $GLOBALS["OS"] = "Windows";
  
-// CRUISE SERVER
+// CRUISE SERVER and MAC OS installations
 $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
