@@ -26,6 +26,8 @@ class UmpleInternalParser
   depend java.io.*;
   depend cruise.umple.util.*;
   currentPackageName = "";
+  
+  // The Umple meta model which will be populated based on what was parsed.
   UmpleModel model;
 
   after setModel{if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}}

@@ -99,6 +99,9 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return currentPackageName;
   }
 
+  /**
+   * The Umple meta model which will be populated based on what was parsed.
+   */
   public UmpleModel getModel()
   {
     return model;
@@ -430,8 +433,10 @@ private void analyzeClassToken(Token t, int analysisStep)
       return;
     }
     
+    // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-      
+    
+    // Determine what the current token is primarily, and based on that the analysis procedure is determined.
   	if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
   	{
   	  shouldConsumeComment = false;
@@ -448,8 +453,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
       analyzeComment(t);
       shouldConsumeComment = false;
-    }  
-    
+    } 
     else if (t.is("multilineComment"))
     {
     	analyzeMultilineComment(t);
@@ -476,6 +480,8 @@ private void analyzeClassToken(Token t, int analysisStep)
       analyzeAllAssociations(t);
     }
     
+    // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
+    // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
@@ -483,7 +489,15 @@ private void analyzeClassToken(Token t, int analysisStep)
     
   }  
   
-  // Analyzed class content tokens
+  /*
+   * Analyze class content tokens.
+   * 
+   * @param token The current token that will be analyzed to determine how to further make use of it (is it a method, comment, 
+   * attribute, etc?)
+   * @param aClass The Umple class used such that parsed content such as methods, attributes, comments, etc may be added to
+   * it.
+   * @param analysisStep Used to determine whether or not things should be analyzed more than once (multi-pass).
+   */
   private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep)
   {
     if (analysisStep != 1)
@@ -491,8 +505,10 @@ private void analyzeClassToken(Token t, int analysisStep)
       return;
     }
     
+    // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
     
+    // Determine what the current token is primarily, and based on that the analysis procedure is determined.
   	if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
   	{
   	  shouldConsumeComment = false;
@@ -550,25 +566,46 @@ private void analyzeClassToken(Token t, int analysisStep)
       analyzeSymmetricReflexiveAssociation(token,aClass);
     }
     
+    // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
+    // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
     }
   }    
   
+  /**
+   * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
+   * a class, attribute, association, method or otherwise.
+   * 
+   * Note that this is for an inline comment rather than a multiline comment.
+   * 
+   * @param token The current token which has been flagged to be a comment to analyze, containing its value.
+   */
   private void analyzeComment(Token token)
   {
-  	if (!token.getValue().equals("$?[End_of_model]$?")) {
-  		
-  	lastComments.add(new Comment(token.getValue()));
+  	if (!token.getValue().equals("$?[End_of_model]$?")) 
+  	{
+  		lastComments.add(new Comment(token.getValue()));
   	}
   }
   
+  /**
+   * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
+   * a class, attribute, association, method or otherwise.
+   * 
+   * Note that this is for a multiline comment, which essentially means the possibility of multiple inline comments (1 per line)
+   * that will be concatenated together.
+   * 
+   * @param token The current token which has been flagged to be a comment to analyze, containing its value.
+   */
   private void analyzeMultilineComment(Token token)
   {
   	String inlineComments[] = token.getValue().split("\n");
   	
-  	for (int i = 0; i < inlineComments.length; i++) {
+  	// Go through the inline comments and add them to the list of comments waiting to be applied.
+  	for (int i = 0; i < inlineComments.length; i++) 
+  	{
   		Comment comment = new Comment(inlineComments[i]);
   		comment.isInline = false;
   		lastComments.add(comment);
@@ -580,11 +617,11 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     if (verifyClassesInUse())
     {
-    	checkSingletonAssociations();
-      addUnlinkedAssociationVariables();
-      addUnlinkedAssociations();
-      addUnlinkedExtends();
-      checkExtendsForCycles();
+		checkSingletonAssociations();
+		addUnlinkedAssociationVariables();
+		addUnlinkedAssociations();
+		addUnlinkedExtends();
+		checkExtendsForCycles();
     }
   }
   
@@ -593,34 +630,53 @@ private void analyzeClassToken(Token t, int analysisStep)
       addUnlinkedInterfaceExtends();
   }
   
-  
+  /*
+   * Analyzes all associations that are part of the given token indicated to be related to an association.
+   * 
+   * @param associationToken The token indicated to be an association where sub tokens will be analyzed from to further
+   * analyze the individual associations.
+   */
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
+    
+    // Go through every token that is a child of the current token (all associations part of this association).
     for(Token token : associationToken.getSubTokens())
     {
       if (token.is("association"))
       {
+      	// Analyze the individual association.
         Association association = analyzeAssociation(token, "");
         association.setName(name);
         unlinkedAssociations.add(association);
 
-	if (!getParseResult().getWasSuccess()) {
-	return;
-}
+		if (!getParseResult().getWasSuccess()) 
+		{
+			return;
+		}
       }
     }
   }  
 
+  /*
+   * Analyzes a class token to populate an Umple class.
+   * 
+   * This is also where the list of currently parsed comments will be added to the Umple class.
+   * 
+   * @param classToken The token which contains the data to be analyzed to populate an Umple class.
+   * 
+   * @return An Umple class populated with data based on the analysis of the class token.
+   */
   private UmpleClass analyzeClass(Token classToken)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
-        
+    
+    // Add all the comments in the comment list to the Umple class.
     for (Comment c : lastComments)
     {
       aClass.addComment(c);
     }
-        
+    
     addExtendsTo(classToken, aClass);
     if (classToken.getValue("singleton") != null)
     {
@@ -647,11 +703,20 @@ private void analyzeClassToken(Token t, int analysisStep)
     return aClass;
   }
   
+  /*
+   * Takes an Umple class and analyzes a class token to add classes which extend it.
+   * 
+   * @param classToken The token to be analyzed to add subclasses to the specified Umple class.
+   * @param aClass The Umple class for which subclasses will be added.
+   */
   private void addExtendsTo(Token classToken, UmpleClass aClass)
   {
     List<String> extendsList = new ArrayList<String>();
     List<Token> extendsTokenList = new ArrayList<Token>();
-    for (Token extendsToken : classToken.getSubTokens()){
+    
+    // Go through all sub-tokens of the class token to add subclasses related to the Umple class.
+    for (Token extendsToken : classToken.getSubTokens())
+    {
       if (extendsToken.getValue("extendsName") != null)
       { 
         extendsList.add(extendsToken.getValue("extendsName"));
@@ -662,10 +727,19 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
   }
     
+  /*
+   * Takes an Umple interface and analyzes a class token, much like the one for Umple classes, to deal with inheritance.
+   * 
+   * @param classToken The token to be analyzed to deal with inheritance with the Umple interface.
+   * @param aInterface The Umple interface for which inheritance will be dealt with (the token).
+   */
   private void addExtendsTo(Token classToken, UmpleInterface aInterface)
   {
     List<String> extendsList = new ArrayList<String>();
-    for (Token extendsToken : classToken.getSubTokens()){
+    
+    // Go through all sub-tokens of the class token to deal with inheritance in relation to the Umple interface.
+    for (Token extendsToken : classToken.getSubTokens())
+    {
       if (extendsToken.getValue("extendsName") != null)
       { 
         extendsList.add(extendsToken.getValue("extendsName"));
@@ -718,13 +792,14 @@ private void analyzeClassToken(Token t, int analysisStep)
 
       if (extendsNames == null)
       {
-        continue;
+        	continue;
       }
 
-      for (int i=0; i < extendsNames.size();i++){
-        String extendName= extendsNames.get(i);
-          UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-          child.addExtendsInterface(uInterface);
+      for (int i=0; i < extendsNames.size();i++)
+      {
+			String extendName= extendsNames.get(i);
+          	UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+          	child.addExtendsInterface(uInterface);
       }
     }
   }  
@@ -930,6 +1005,14 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
   }
 
+  /*
+   * Used to determine if a method is a contructor or a getter/setter.
+   * 
+   * @param uClass The Umple class for which the method is contained.
+   * @param aMethod The method which is contained within the Umple class.
+   * 
+   * @return True if the method is a constructor, getter/setter, false otherwise.
+   */
   private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod)
   {
     String methodName = aMethod.getName();
@@ -991,7 +1074,8 @@ private void analyzeClassToken(Token t, int analysisStep)
       HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
       if(C.getExtendsClass() != null)
       {
-        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) {
+        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
+        {
     	  Token t = C.getExtendsToken();
     	  if(t.getValue().equals(C.getName()))
       	    getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
@@ -1002,35 +1086,41 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
   }
 
-private void checkSingletonAssociations() {
-	for (Association association : model.getAssociations()) {
-		AssociationEnd myEnd = association.getEnd(0);
-      AssociationEnd yourEnd = association.getEnd(1);
-
-      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
-      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-
-		if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
-         yourEnd.getMultiplicity().setRange("0", "1");
-         yourEnd.getMultiplicity().setBound(null);
-         setFailedPosition(association.getTokenPosition(), 2, association.getName());  
-      }
-        
-      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) {
-         myEnd.getMultiplicity().setRange("0", "1");
-         myEnd.getMultiplicity().setBound(null);
-         setFailedPosition(association.getTokenPosition(), 2, association.getName());
-      }
-		
-		if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) {
-			setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
-		}
-		
-		if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) {
-			setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
+	private void checkSingletonAssociations() 
+	{
+		for (Association association : model.getAssociations()) 
+		{
+			AssociationEnd myEnd = association.getEnd(0);
+	      	AssociationEnd yourEnd = association.getEnd(1);
+	
+	      	UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+	      	UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+	
+			if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+			{
+		         yourEnd.getMultiplicity().setRange("0", "1");
+		         yourEnd.getMultiplicity().setBound(null);
+		         setFailedPosition(association.getTokenPosition(), 2, association.getName());  
+	      	}
+	        
+	      	if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+	      	{
+		         myEnd.getMultiplicity().setRange("0", "1");
+		         myEnd.getMultiplicity().setBound(null);
+		         setFailedPosition(association.getTokenPosition(), 2, association.getName());
+	      	}
+			
+			if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) 
+			{
+				setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
+			}
+			
+			if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) 
+			{
+				setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
+			}
 		}
 	}
-}
 
   private void addUnlinkedAssociations()
   {
@@ -1071,6 +1161,13 @@ private void checkSingletonAssociations() {
     }
   }
 
+  /*
+   * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
+   * method instance and added to an Umple element (which could be an Umple class).
+   * 
+   * @param method The token flagged to be the method.
+   * @param uElement The Umple element for which the method will be added.
+   */
   private void analyzeMethod(Token method, UmpleElement uElement)
   {
     String modifier = "";
@@ -1082,6 +1179,7 @@ private void checkSingletonAssociations() {
     	aMethod.addComment(c);
     }
     
+    // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     for(Token token : method.getSubTokens())
     {
       if (token.is("modifier"))
@@ -1108,38 +1206,54 @@ private void checkSingletonAssociations() {
     {
       UmpleClass uClass = (UmpleClass) uElement;
       boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
-      if (!uClass.hasMethod(aMethod) && shouldAddMethod ){
+      if (!uClass.hasMethod(aMethod) && shouldAddMethod )
+      {
         uClass.addMethod(aMethod); 
       }
     }
     else if (uElement instanceof UmpleInterface)
     {
       UmpleInterface uInterface = (UmpleInterface) uElement;
-      if (!uInterface.hasMethod(aMethod)){
+      if (!uInterface.hasMethod(aMethod))
+      {
         uInterface.addMethod(aMethod); 
       }
     }  
   }
 
+  /*
+   * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the
+   * method name, type and parameters.
+   * 
+   * @param token The token flagged to be a method header.
+   * @param aMethod The method to be populated from the analysis of the token.
+   */
   private void analyzeMethodDeclarator(Token token, Method aMethod)
   {
+  	// Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
     for(Token methodToken : token.getSubTokens())
     {
-      if (methodToken.is("methodName")){
+      if (methodToken.is("methodName"))
+      {
         aMethod.setName(methodToken.getValue());
       }
-      if (methodToken.is("parameterList")){
+      if (methodToken.is("parameterList"))
+      {
         for(Token parameterToken : methodToken.getSubTokens())
         {
           boolean isList = false;
-          if (parameterToken.is("parameter")){
+          if (parameterToken.is("parameter"))
+          {
             String paramType="";
-            if (parameterToken.getSubToken("type") != null){
+            if (parameterToken.getSubToken("type") != null)
+            {
               paramType = parameterToken.getSubToken("type").getValue();
             }
-            if (parameterToken.getSubToken("list") != null){
+            if (parameterToken.getSubToken("list") != null)
+            {
               isList = parameterToken.getSubToken("list").getValue() != null;        
             }
+            
             String paramName = parameterToken.getSubToken("name").getValue();
             MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
             aParameter.setIsList(isList);
@@ -1150,10 +1264,17 @@ private void checkSingletonAssociations() {
     }
   }
 
+  /*
+   * Analyzes a constant, from a token flagged to be one, to add a constant instance to an Umple element.
+   * 
+   * @param constantToken The token flagged to be a constant.
+   * @param uElement The Umple element for which a new constant will be added (populated from analysis of the token).
+   */
   private void analyzeConstant(Token constantToken, UmpleElement uElement)
   {
     Constant aConstant = new Constant("","","","");
     String modifier = "";
+    
     // Create the Constant Object
     for(Token token : constantToken.getSubTokens())
     {
@@ -1331,6 +1452,12 @@ private void checkSingletonAssociations() {
     }
   }
 
+  /*
+   * Analyzes a token flagged to be an association within an Umple class to create an instance of one and add it to the class.
+   * 
+   * @param inlineAssociationToken The token flagged to be an inline association.
+   * @param aClass The Umple class for which an association instance will be added (populated from analysis of the token).
+   */
   private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleClass aClass)
   {
     Association association = analyzeAssociation(inlineAssociationToken,aClass.getName());
@@ -1363,18 +1490,25 @@ private void checkSingletonAssociations() {
     {
     	setFailedPosition(inlineAssociationToken.getPosition(),13,myEnd.getClassName(),yourEnd.getClassName());
     }
-    
   }
 
+  /*
+   * Analyzes a token flagged to be an attribute within an Umple class to create an instance of one and add it to the class.
+   * 
+   * @param attributeToken The token flagged to be an attribute.
+   * @param aClass The Umple class for which an attribute instance will be added (populated from analysis of the token).
+   */
   private void analyzeAttribute(Token attributeToken, UmpleClass aClass)
   {
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-    if (aClass.getIsSingleton() && !isLazy) {
+    if (aClass.getIsSingleton() && !isLazy) 
+    {
     	isLazy = true;
     	setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
     }
+    
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
