@@ -68,7 +68,7 @@ public class SimulateGenerator implements CodeGenerator
   public void generate()
   {
     StringBuilder code = new StringBuilder();
-    
+
     code.append("<?php\n");
     code.append("$modelOverview = new ModelOverview();\n");
     for (UmpleClass uClass : model.getUmpleClasses())
@@ -86,7 +86,7 @@ public class SimulateGenerator implements CodeGenerator
       {
         AssociationEnd myEnd = as.getEnd(0);
         AssociationEnd theirEnd = as.getEnd(1);
-        
+
         if (internalAssociations.contains(as))
         {
           continue;
@@ -108,7 +108,7 @@ public class SimulateGenerator implements CodeGenerator
           code.append(StringFormatter.format("new AssociationEnd({0},{1},\"{2}\",\"{3}\",$aClass);\n",theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getRoleName()));
         }
       }
-      
+
       for (StateMachine sm : uClass.getStateMachines())
       {
         code.append(StringFormatter.format("$aStateMachine = new StateMachine(\"{0}\",$aClass);\n",StringFormatter.toPascalCase(sm.getName())));
@@ -120,33 +120,33 @@ public class SimulateGenerator implements CodeGenerator
     }
 
     /*    
-    if (model.numberOfUmpleClasses() > 0 && model.getUmpleClass(0).numberOfStateMachines() > 0)
-    {
-      UmpleClass uClass = model.getUmpleClass(0);
-      StateMachine machine = uClass.getStateMachine(0);
-      code.append("<?php\n");
-      code.append(StringFormatter.format("$model = retrieveModel('inputModel',new {0}());\n",uClass.getName()));
-      code.append(StringFormatter.format("$stateMachineName = '{0}';\n",StringFormatter.toPascalCase(machine.getName())));
-      
-      boolean isFirst = true;
-      code.append("$allEventNames = array(");
-      for (Event e : machine.getEvents())
-      {
-        if (!isFirst)
-        {
+          if (model.numberOfUmpleClasses() > 0 && model.getUmpleClass(0).numberOfStateMachines() > 0)
+          {
+          UmpleClass uClass = model.getUmpleClass(0);
+          StateMachine machine = uClass.getStateMachine(0);
+          code.append("<?php\n");
+          code.append(StringFormatter.format("$model = retrieveModel('inputModel',new {0}());\n",uClass.getName()));
+          code.append(StringFormatter.format("$stateMachineName = '{0}';\n",StringFormatter.toPascalCase(machine.getName())));
+
+          boolean isFirst = true;
+          code.append("$allEventNames = array(");
+          for (Event e : machine.getEvents())
+          {
+          if (!isFirst)
+          {
           code.append(",");
-        }
-        isFirst = false;
-        code.append(StringFormatter.format("'{0}'",e.getName()));
-      }
-      code.append(");\n");
-    }
-    */
+          }
+          isFirst = false;
+          code.append(StringFormatter.format("'{0}'",e.getName()));
+          }
+          code.append(");\n");
+          }
+     */
 
     model.setCode(code.toString());
     writeModel();
   }
-  
+
   private void writeModel()
   {
     try

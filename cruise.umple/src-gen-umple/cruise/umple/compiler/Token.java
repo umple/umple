@@ -207,7 +207,7 @@ public void addSubToken(int index, Token aSubToken)
   {
     subTokens.add(index,aSubToken);
   }
-  
+
   public Position getPosition(String tokenName)
   {
     Token t = getSubToken(tokenName);
@@ -220,7 +220,7 @@ public void addSubToken(int index, Token aSubToken)
       return null;
     }
   }
-  
+
   public int getInnerLength()
   {
     if ("START_TOKEN".equals(getValue()))
@@ -236,7 +236,7 @@ public void addSubToken(int index, Token aSubToken)
       return getValue().length();
     }
   }
-  
+
   public int getLength()
   {
     if (getParentToken() != null)
@@ -246,7 +246,7 @@ public void addSubToken(int index, Token aSubToken)
       int startOffset = this.getPosition().getOffset();
       int myIndex = getParentToken().indexOfSubToken(this);
       int nextIndex = myIndex + 1;
-      
+
       boolean hasMoreSiblings = nextIndex < getParentToken().numberOfSubTokens();
 
       if (hasMoreSiblings)
@@ -291,12 +291,12 @@ public void addSubToken(int index, Token aSubToken)
       return lastSubToken.getPosition().getOffset() + lastSubToken.getValue().length() - getPosition().getOffset();  
     }
   }
-  
+
   public int getIntValue(String tokenName)
   {
     return getIntValue(tokenName,0);
   }
-  
+
   public int getIntValue(String tokenName, int defaultIfInvalid)
   {
     String value = getValue(tokenName);
@@ -316,7 +316,7 @@ public void addSubToken(int index, Token aSubToken)
       }
     }
   }
-  
+
   public Token getSubToken(String tokenName, int offset)
   {
     if (is(tokenName))
@@ -340,12 +340,12 @@ public void addSubToken(int index, Token aSubToken)
     }
     return null;
   }
-  
+
   public Token getSubToken(String tokenName)
   {
     return getSubToken(tokenName,0);
   }
-  
+
   public String getValue(String tokenName)
   {
     Token t = getSubToken(tokenName);
@@ -364,22 +364,22 @@ public void addSubToken(int index, Token aSubToken)
   {
     return getName().equals(aName) && !isStatic();
   }
-  
+
   public boolean isStatic(String aName)
   {
     return getName().equals(aName) && isStatic();
   }
-  
+
   public boolean isStatic()
   {
     return "STATIC".equals(getValue());
   }
-  
+
   public boolean isValue(String compareTo)
   {
     return getValue().equals(compareTo);
   }
-  
+
   public void remove(int index)
   {
     if (index < 0 || index >= subTokens.size())

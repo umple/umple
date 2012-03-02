@@ -138,7 +138,7 @@ public class ErrorType
   //------------------------
   
   public String format(List<String> arguments)
-   {
-      return StringFormatter.format(errorFormat, arguments.toArray());
-   }
+  {
+    return StringFormatter.format(errorFormat, arguments.toArray());
+  }
 }

@@ -5,33 +5,33 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
-*/
+ */
 
 namespace cruise.umple.compiler;
 
 class Couple
 {
-  
+
   public boolean isBalanced(String input)
   {
-    
+
     if (input == null)
     {
       return true;
     }
-    
+
     input = removeIgnoredText(input);
-    
+
     int numberOfOpen = 0;
     int numberOfClosed = 0;
-    
+
     int currentIndex = 0;
     while ((currentIndex = input.indexOf(open,currentIndex)) != -1)
     {
       numberOfOpen += 1;
       currentIndex += 1;
     }
-    
+
     currentIndex = 0;
     while (numberOfClosed <= numberOfOpen && (currentIndex = input.indexOf(close,currentIndex)) != -1)
     {
@@ -41,11 +41,11 @@ class Couple
     return numberOfOpen <= numberOfClosed;
   }
 
-  
+
   public String removeIgnoredText(String input)
   {
     String output = input;
-    
+
     for (Couple ignore : ignores)
     {
       output = ignore.removeIgnoredText(output);
@@ -54,7 +54,7 @@ class Couple
       {
         int endIndex = output.indexOf(ignore.getClose(),startIndex+ignore.getOpen().length());
         int endIndexOffset = ignore.getClose().length();
-        
+
         if (startIndex == 0 && (endIndex == -1 || endIndex == output.length() - 1))
         {
           output = "";
@@ -75,23 +75,23 @@ class Couple
     }
     return output;
   }  
-  
+
 }
 
 class Token
 {
-  
+
   public Token(String aName, String aValue, Position aPosition)
   {
     this(aName,aValue);
     setPosition(aPosition);
   }
-  
+
   public void addSubToken(int index, Token aSubToken)
   {
     subTokens.add(index,aSubToken);
   }
-  
+
   public Position getPosition(String tokenName)
   {
     Token t = getSubToken(tokenName);
@@ -104,7 +104,7 @@ class Token
       return null;
     }
   }
-  
+
   public int getInnerLength()
   {
     if ("START_TOKEN".equals(getValue()))
@@ -120,7 +120,7 @@ class Token
       return getValue().length();
     }
   }
-  
+
   public int getLength()
   {
     if (getParentToken() != null)
@@ -130,7 +130,7 @@ class Token
       int startOffset = this.getPosition().getOffset();
       int myIndex = getParentToken().indexOfSubToken(this);
       int nextIndex = myIndex + 1;
-      
+
       boolean hasMoreSiblings = nextIndex < getParentToken().numberOfSubTokens();
 
       if (hasMoreSiblings)
@@ -175,12 +175,12 @@ class Token
       return lastSubToken.getPosition().getOffset() + lastSubToken.getValue().length() - getPosition().getOffset();  
     }
   }
-  
+
   public int getIntValue(String tokenName)
   {
     return getIntValue(tokenName,0);
   }
-  
+
   public int getIntValue(String tokenName, int defaultIfInvalid)
   {
     String value = getValue(tokenName);
@@ -200,7 +200,7 @@ class Token
       }
     }
   }
-  
+
   public Token getSubToken(String tokenName, int offset)
   {
     if (is(tokenName))
@@ -224,12 +224,12 @@ class Token
     }
     return null;
   }
-  
+
   public Token getSubToken(String tokenName)
   {
     return getSubToken(tokenName,0);
   }
-  
+
   public String getValue(String tokenName)
   {
     Token t = getSubToken(tokenName);
@@ -248,22 +248,22 @@ class Token
   {
     return getName().equals(aName) && !isStatic();
   }
-  
+
   public boolean isStatic(String aName)
   {
     return getName().equals(aName) && isStatic();
   }
-  
+
   public boolean isStatic()
   {
     return "STATIC".equals(getValue());
   }
-  
+
   public boolean isValue(String compareTo)
   {
     return getValue().equals(compareTo);
   }
-  
+
   public void remove(int index)
   {
     if (index < 0 || index >= subTokens.size())
@@ -272,24 +272,24 @@ class Token
     }
     subTokens.remove(index);
   }
-  
+
 }
 
 class Position
 {
   public Position(int aLineNumber, int aCharacterOffset, int aOffset)
   {
-  	this(null, aLineNumber, aCharacterOffset, aOffset);
+    this(null, aLineNumber, aCharacterOffset, aOffset);
   }
-  
+
   public Position copy()
   {
     return new Position(filename,lineNumber,characterOffset,offset);
   }
-  
+
   public Position add(Position more)
   {
-  	String tfile = filename == null ? more.getFilename() : filename;
+    String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 
@@ -297,7 +297,7 @@ class Position
   {
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
-  
+
 }
 
 class RulePart
@@ -325,7 +325,7 @@ class RulePart
       return name.substring(2);
     }
     else if (isAlphanumeric()) {
-    	return name.substring(1);
+      return name.substring(1);
     }
     else
     {
@@ -337,19 +337,19 @@ class RulePart
   {
     nextIdentifiers.clear();
   }
-  
+
   public String[] getInnerNames()
   {
     if (!hasInnerNames())
     {
       return new String[0];
     }
-    
+
     TextParser parser = new TextParser(name);
     parser.load(parser.nextUntil(">"));
     ArrayList<String> allNames = new ArrayList<String>();
-    
-    
+
+
     while(parser.nextUntil(",") != null)
     {
       allNames.add(parser.name());
@@ -372,7 +372,7 @@ class RulePart
     }
     return number > 0 && number <= getInnerNames().length;
   }
-  
+
   public RulePartValue[] getInnerValues(String value)
   {
     if (!hasInnerNames())
@@ -394,17 +394,17 @@ class RulePart
     {
       return allRulePartValues;
     }
-    
+
     ArrayList<String> allUnorderedValues = new ArrayList<String>();
     ArrayList<Position> allUnorderedPositions = new ArrayList<Position>();
-    
+
     TextParser parser = new TextParser(value);
     while(parser.peek() != null)
     {
       allUnorderedPositions.add(parser.currentPosition().copy());
       allUnorderedValues.add(parser.next());
     }
-    
+
     int[] allValueIndicies = new int[allNames.length];
 
     TextParser namesParser = new TextParser(name);
@@ -425,19 +425,19 @@ class RulePart
       int currentIndex = allValueIndicies[i];
       String orderedValue = currentIndex <= maximumIndex ? allUnorderedValues.get(unorderedIndex) : null;
       Position orderedPosition = currentIndex <= maximumIndex ? allUnorderedPositions.get(unorderedIndex++) : null;
-      
+
       allRulePartValues[i].setValue(orderedValue);
       allRulePartValues[i].setPosition(orderedPosition);
     }
-    
+
     return allRulePartValues;
   }
-  
+
   public boolean hasInnerNames()
   {
     return getName() != null && getName().indexOf(",") != -1;
   }
-  
+
   public boolean isStatic()
   {
     return Type.Static.equals(getType()); 
@@ -447,17 +447,17 @@ class RulePart
   {
     return getName().startsWith("**");
   }
-  
+
   public boolean isToEndOfLine()
   {
     return !isMultiWord() && getName().startsWith("*");
   }
-  
+
   public boolean isAlphanumeric() {
-  	return getName().startsWith("~");
+    return getName().startsWith("~");
   }
-  
-  
+
+
   public boolean isVariable()
   {
     return Type.Variable.equals(getType()); 
@@ -467,22 +467,22 @@ class RulePart
   {
     return isVariable() && name != null && name.startsWith("="); 
   }
-  
+
   public String[] getEnums()
   {
     if (name == null)
     {
       return new String[0];
     }
-    
+
     TextParser parser = new TextParser(name);
     parser.nextAfter(":");
-    
+
     if (parser.peek() == null)
     {
       return new String[] {getDisplayName()}; 
     }
-    
+
     ArrayList<String> allEnums = new ArrayList<String>();
     while (parser.nextUntil("|") != null)
     {
@@ -491,14 +491,14 @@ class RulePart
     }
     return allEnums.toArray(new String[allEnums.size()]);
   }
-  
+
   public boolean isEnumValue(String input)
   {
     if (!isEnum() || input == null)
     {
       return false;
     }
-    
+
     for (String aEnum : getEnums())
     {
       if (aEnum.equals(input))
@@ -508,40 +508,40 @@ class RulePart
     }
     return false;
   }
-  
+
   public boolean isRule()
   {
     return Type.Rule.equals(getType()); 
   }  
-  
-  
+
+
   public boolean isOne()
   {
     return "1".equals(getMultiplicity());
   }
-  
+
   public boolean isOptional()
   {
     return "?".equals(getMultiplicity());
   }
-  
+
   public boolean isMany()
   {
     return "*".equals(getMultiplicity());
   }
-  
+
   public boolean isAnonymous()
   {
     return getName().startsWith("anonymous::");
   }
-  
+
   public String toString()
   {
     StringBuffer answer = new StringBuffer();
     answer.append("Nexts:");
     for (int i=0; i<nextIdentifiers.size(); i++)
     {
-     answer.append("[" + nextIdentifiers.get(i) + "]");
+      answer.append("[" + nextIdentifiers.get(i) + "]");
     }
     answer.append("\n");
     return answer.toString();
@@ -568,13 +568,13 @@ class Parser
     couples = new ArrayList<Couple>();
   }
 
-  
+
   public Token reset()
   {
     rootToken = new Token(getName(),"ROOT", new Position(filename,1,0,0));
     return rootToken;
   }
-  
+
   public Rule getRule(String ruleName)
   {
     for (Rule r : rules)
@@ -593,7 +593,7 @@ class Parser
     toString(answer,rootToken);
     return answer.toString();
   }
-  
+
   public String toGrammar()
   {
     StringBuilder answer = new StringBuilder();
@@ -603,7 +603,7 @@ class Parser
       {
         answer.append("<br />\n");
       }
-      
+
       String cleanedUpRule = rule;
       cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "-(");
       cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", "-)");
@@ -612,7 +612,7 @@ class Parser
     }
     return answer.toString();
   }
-  
+
   public StringBuffer toString(StringBuffer stringSoFar, Token currentToken)
   {
     if ("START_TOKEN".equals(currentToken.getValue()))
@@ -627,7 +627,7 @@ class Parser
     {
       stringSoFar.append("[" + currentToken.getName() + ":" + currentToken.getValue() + "]");
     }
-    
+
     for(Token subToken : currentToken.getSubTokens())
     {
       toString(stringSoFar,subToken);
@@ -670,13 +670,13 @@ class Parser
           addRule(nextRule);
           numberOfRulesProcessed += 1;
         }
-        
+
       } 
       while (nextRule != null);
     }
     catch (Exception e)
     {
-      
+
     }
     finally
     {
@@ -691,7 +691,7 @@ class Parser
     input = input.replace("-(","OPEN_ROUND_BRACKET");
     input = input.replace("-)","CLOSE_ROUND_BRACKET");
     input = input.replace("-||","DOUBLE_OR_BARS");
-    
+
     grammarRules.add(input);
     TextParser ruleParser = new TextParser(input);
     String name = ruleParser.next();
@@ -701,10 +701,10 @@ class Parser
       shouldHide = true;
       name = name.substring(0,name.length() - 1);
     }
-    
+
     ruleParser.nextAt(":");
     int startIndex = ruleParser.previousIndex();
-    
+
     int index = 0;
     Parser innerParser = new Parser("innerParser");
     while (ruleParser.lookFor("(",")",true) != null)
@@ -716,7 +716,7 @@ class Parser
     }
     ruleParser.reset(startIndex);
     ruleParser.nextAt(":");
-    
+
     Rule newRule = new Rule(name);
     newRule.setShouldHide(shouldHide);
     while (ruleParser.nextUntil(false,"|") != null)
@@ -749,22 +749,22 @@ class Parser
    */
   public ParseResult parse(String ruleName, String input)
   {
-  	// Create a new instance of a text parser to parse the input from the Umple file.
+    // Create a new instance of a text parser to parse the input from the Umple file.
     TextParser inputParser = new TextParser(filename, input);
-    
+
     // Initialize the parse result.
     parseResult.setPosition(inputParser.currentPosition());
-    
+
     _curParsePos = inputParser.currentPosition();
-    
+
     // Parse the input and store whether or not it was successful in doing so.  As its parsing it will build up a hierarchy of tokens.
     boolean didParse = parse(ruleName, inputParser, rootToken, 0);
-    
+
     parseResult.setWasSuccess(didParse);
-    
+
     return parseResult;
   }
-  
+
   /**
    * Parses input initialized into a textual parser and builds up a tree-like structure of tokens representing what was parsed.
    * 
@@ -779,17 +779,17 @@ class Parser
    */
   private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
   {
-	// Go through each rule.
+    // Go through each rule.
     for (Rule r : rules)
     {
       if (!r.getName().equals(ruleName))
       {
         continue;
       }
-      
+
       // Create a new empty token that will later on be populated based on what is parsed as things get parsed and added to the token tree.
       Token currentToken = null;
-      
+
       if (r.getShouldHide())
       {
         currentToken = parentToken;
@@ -798,31 +798,31 @@ class Parser
       {
         currentToken = new Token(ruleName,"START_TOKEN",inputParser.currentPosition().copy()); 
       }
-      
+
       // Go through each definition, from the current rule.
       for (String definition : r.getDefinitions())
       {
         int currentTokenSize = currentToken.numberOfSubTokens();
-        
+
         // Assume the parsing will succeed and prove otherwise (if theres an error).
         boolean isSucceeding = true;
-        
+
         // Store where the input parser currently is on the text so that if an error occurs later we can reset to this spot.
         int savedIndex = inputParser.currentIndex();
-        
+
         RuleInstance instance = new RuleInstance(this);
         instance.configureDefinition(definition, stopAts);
-        
+
         // As long as there are more sub parts to the rule, parse based on them.
         while (instance.hasMoreRuleParts())
         {
           Position startTokenPosition = inputParser.currentPosition().copy();
-          
+
           // Store the current rule from the rule instance which will be used to determine how the parsing proceeds.
           RulePart part = instance.nextRulePart();
-          
+
           String currentRule = part.getName();
-          
+
           if (part.isStatic())
           {
             String inputValue = inputParser.nextAt(currentRule);
@@ -831,11 +831,11 @@ class Parser
               isSucceeding = false;
               break;
             }
-            
+
             // Add what we just parsed (the value of what was parsed that was a "static") as a subtoken of our current token.
             // Essentially build up the token tree.
             currentToken.addSubToken(new Token(inputValue, "STATIC", startTokenPosition));
-            
+
             // Update the parsers position in the input (from the textual parser) as well as store this information in the parsing result.
             _curParsePos = inputParser.currentPosition();
             parseResult.setPosition(inputParser.currentPosition());
@@ -846,70 +846,70 @@ class Parser
           {
             String value = null;
             int startIndex = inputParser.currentIndex();
-            
+
             // Only proceed to check for an empty comment if it is possible that we could have just had one.
             if (startIndex >= 3 && currentRule.equals("*inlineComment"))
             {
-            	String lastThree = inputParser.getText().substring(startIndex - 3, startIndex);
-            	
-            	// Empty comment in the most basic form.  Ignore looking for a complete comment since there is none, go to next definition.
-            	if (lastThree.equals("//\n"))
-            	{
-            		continue;
-            	}
-            	// Empty comment with spaces.  Ignore looking for a complete comment since there is none, go to next definition.
-            	else if (lastThree.charAt(2) == '\n')
-            	{
-            		continue;
-            	}
+              String lastThree = inputParser.getText().substring(startIndex - 3, startIndex);
+
+              // Empty comment in the most basic form.  Ignore looking for a complete comment since there is none, go to next definition.
+              if (lastThree.equals("//\n"))
+              {
+                continue;
+              }
+              // Empty comment with spaces.  Ignore looking for a complete comment since there is none, go to next definition.
+              else if (lastThree.charAt(2) == '\n')
+              {
+                continue;
+              }
             }
-            
+
             // Only proceed to check for an empty multiLine comment if it is possible that we could have just had one.
             if (startIndex >= 2 && currentRule.equals("**multilineComment"))
             {
-            	boolean emptyMultiLineComment = false;
-            	
-            	String testString = inputParser.getText();
-            	
-            	// Starting where the input parser currently is, look ahead to see if this is an empty multiLine comment.
-            	for (int i = startIndex; i < testString.length() - 2 && emptyMultiLineComment == false; i++)
-            	{
-            		if (testString.substring(i, i + 2).equals("*/"))
-            		{
-            			emptyMultiLineComment = true;
-            		}
-            		else if (!testString.substring(i, i + 1).equals("\n") && !testString.substring(i, i + 1).equals(" "))
-            		{
-            			break;
-            		}
-            	}
-            	
-            	// Since an empty multiLine comment was found, ignore looking for a complete comment since there is none.
-            	if (emptyMultiLineComment) continue;
+              boolean emptyMultiLineComment = false;
+
+              String testString = inputParser.getText();
+
+              // Starting where the input parser currently is, look ahead to see if this is an empty multiLine comment.
+              for (int i = startIndex; i < testString.length() - 2 && emptyMultiLineComment == false; i++)
+              {
+                if (testString.substring(i, i + 2).equals("*/"))
+                {
+                  emptyMultiLineComment = true;
+                }
+                else if (!testString.substring(i, i + 1).equals("\n") && !testString.substring(i, i + 1).equals(" "))
+                {
+                  break;
+                }
+              }
+
+              // Since an empty multiLine comment was found, ignore looking for a complete comment since there is none.
+              if (emptyMultiLineComment) continue;
             }
-            
+
             if (part.isToEndOfLine())
             {
               value = inputParser.nextLine();
             }
             else if (part.getNextIdentifiers().length > 0)
             {
-           	  boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
+              boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
               boolean isAlphaNumeric = part.isAlphanumeric();
               value = inputParser.nextUntil(stopAtSpace, isAlphaNumeric, part.getNextIdentifiers());
-              
+
               while (part.isMultiWord() && !isBalanced(value))
               {
                 int internalIndex = inputParser.currentIndex();
                 inputParser.nextAt(part.getNextIdentifiers());
                 String nextValue = inputParser.nextUntil(stopAtSpace,part.getNextIdentifiers());
-                
+
                 if (inputParser.peekAt(part.getNextIdentifiers()) == null)
                 {
                   inputParser.reset(internalIndex);
                   break;
                 }
-                
+
                 value = inputParser.extractFrom(startIndex);
                 if (nextValue == null && inputParser.peekAt(part.getNextIdentifiers()) == null)
                 {
@@ -925,24 +925,24 @@ class Parser
             {
               value = inputParser.next();
             }
-            
+
             if (part.isEnum() && !part.isEnumValue(value))
             {
               value = null;
             }
-            
+
             if (part.hasInnerNames() && !part.isValidInnerValues(value))
             {
               value = null;
             }
-            
+
             if (value == null && part.isOne())
             {
               isSucceeding = instance.removeOptionalPart();
               if (isSucceeding)
               {
                 instance.resetRulePart();
-                
+
                 // Back up the textual parser to the saved index since something went wrong.
                 restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
                 continue;
@@ -956,12 +956,12 @@ class Parser
             {
               instance.removeRulePart(part);
               instance.resetRulePart();
-              
+
               // Back up the textual parser to the saved index since something went wrong.
               restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
               continue;
             }
-            
+
             if (part.hasInnerNames())
             {
               RulePartValue[] allValues = part.getInnerValues(value);
@@ -974,15 +974,15 @@ class Parser
                 }
                 String innerName = allValues[innerI].getName();
                 Position innerPosition = allValues[innerI].getPosition();
-                
+
                 // Update the token tree, create a new token based on what was just parsed and add it to the tree.
                 currentToken.addSubToken(new Token(innerName,innerValue, startTokenPosition.add(innerPosition)));
               }
             }
             else
             {
-            	// Update the token tree, create a new token based on what was just parsed and add it to the tree.
-            	currentToken.addSubToken(new Token(part.getDisplayName(), value, startTokenPosition));
+              // Update the token tree, create a new token based on what was just parsed and add it to the tree.
+              currentToken.addSubToken(new Token(part.getDisplayName(), value, startTokenPosition));
             }
           }
           else if (part.isRule())
@@ -999,7 +999,7 @@ class Parser
               {
                 instance.removeRulePart(part);
                 instance.resetRulePart();
-                
+
                 // Back up the textual parser to the saved index since something went wrong.
                 restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
                 continue;
@@ -1012,12 +1012,12 @@ class Parser
               {
                 instance.removeRulePart(part);
                 instance.resetRulePart();
-                
+
                 // Back up the textual parser to the saved index since something went wrong.
                 restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
                 continue;
               }
-            
+
               isSucceeding = true;
               int numberFoundSoFar = 0;
               while (part.isWithinLimits(numberFoundSoFar) && parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers()))
@@ -1028,39 +1028,39 @@ class Parser
             }
           }
         }
-        
+
         // If there is currently a problem parsing (error, etc) back up the textual input parser.
         if (!isSucceeding)
         {
-        	// Back up the textual parser to the saved index since something went wrong.
-        	restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+          // Back up the textual parser to the saved index since something went wrong.
+          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
         }
         else if (inputParser.peek() != null && level == 0)
         {
-        	// Back up the textual parser to the saved index since something went wrong.
-        	restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
-        	
-        	// Since there was a critical error, store an error message in the parsing result.
-        	parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
-        	
-        	return false;
+          // Back up the textual parser to the saved index since something went wrong.
+          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+
+          // Since there was a critical error, store an error message in the parsing result.
+          parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
+
+          return false;
         }
         // Otherwise if everything is okay we will add what we have parsed (which should be in a token by now) to the "parent/root" token.
         else
         {
           if (!r.getShouldHide())
           {
-        	// Update the token tree, add the current token to the parent.
+            // Update the token tree, add the current token to the parent.
             parentToken.addSubToken(currentToken);
           }
           return true;
         }
       }
     }
-    
+
     return false;
   }
-  
+
   private void restorePrevious(TextParser inputParser, int savedIndex, Token currentToken, int size)
   {
     inputParser.reset(savedIndex);
@@ -1069,14 +1069,14 @@ class Parser
       currentToken.remove(size);
     }
   }
-  
+
   private boolean isWithinVariable(String definition)
   {
     int openBracket = definition.lastIndexOf("[");
     int closeBracket = definition.lastIndexOf("]");
     return openBracket > closeBracket;
   }
-  
+
   private boolean isBalanced(String input)
   {
     for (Couple couple : couples)
@@ -1088,12 +1088,12 @@ class Parser
     }
     return true;
   }
-  
+
   public Token getToken(int index)
   {
     return rootToken.getSubToken(index);
   }
-  
+
   public List<Token> getTokens()
   {
     return rootToken.getSubTokens();
@@ -1113,8 +1113,8 @@ class Parser
   {
     return rootToken.indexOfSubToken(aToken);
   }
-  
-  
+
+
 }
 
 class RuleInstance
@@ -1136,7 +1136,7 @@ class RuleInstance
     }
     updateNextIdentifier();
   }
-  
+
   public boolean hasMoreRuleParts()
   {
     return rulePartsIndex < ruleParts.size();
@@ -1195,17 +1195,17 @@ class RuleInstance
     RulePart currentPart = getRulePart(i);
     currentPart.removeNextIdentifiers();
     int lastIndex = numberOfRuleParts() - 1;
-    
+
     if (i == lastIndex)
     {
       updateLastNextPart(currentPart);
       return;
     }
-    
+
     if (currentPart.isRule() && currentPart.isMany())
     {
       Rule r = parser.getRule(currentPart.getName());
-      
+
       if (r.numberOfDefinitions() > 0)
       {
         TextParser textParser = new TextParser(r.getDefinition(0));
@@ -1216,17 +1216,17 @@ class RuleInstance
 
     int nextPartOffset = 1;
     RulePart nextPart = getRulePart(i + nextPartOffset);
-    
+
     if (nextPart.isMany() && (i + nextPartOffset) == lastIndex)
     {
       updateLastNextPart(currentPart);
     }
-    
+
     while (nextPart.isRule())
     {
-      
+
       Rule r = parser.getRule(nextPart.getName());
-      
+
       boolean keepTrying = false;
       while (r != null)
       {
@@ -1234,8 +1234,8 @@ class RuleInstance
         {
           TextParser textParser = new TextParser(definition);
           RulePart ruleFirstPart = analyzeRule(textParser.next());
-          
-          
+
+
           if (ruleFirstPart.isRule())
           {
             r = parser.getRule(ruleFirstPart.getName());
@@ -1247,7 +1247,7 @@ class RuleInstance
             addNextIdentifierFor(currentPart,ruleFirstPart);
           }
         }
-        
+
         if (keepTrying)
         {
           keepTrying = false;
@@ -1257,7 +1257,7 @@ class RuleInstance
           r = null;
         }
       }
-      
+
       nextPartOffset++;
       if ( (i+nextPartOffset) < ruleParts.size() && (nextPart.isOptional() || nextPart.isMany()) && !currentPart.isMany())
       {
@@ -1268,13 +1268,13 @@ class RuleInstance
         nextPart = new RulePart(null,null);
       }
     }
-    
+
     if (!nextPart.isRule())
     {
       addNextIdentifierFor(currentPart,nextPart);
     }
   }
-  
+
   private void updateLastNextPart(RulePart part)
   {
     for (String stop : stopAts)
@@ -1341,218 +1341,218 @@ class RuleInstance
 
     return part;
   }
-  
+
 }
 
 class ParseResult
 {
-   before addErrorMessage {
-   	
+  before addErrorMessage {
+
     if(!_acceptsErrors)
-    	return true; // This should technically return false
-   }
-   
-   after addErrorMessage 
-   {
-   	// If the severity level is 1 then it's the most severe error
-   	// And we stop accepting errors (The parser may continue to parse,
-   	// as but we won't report any further errors, as they may be non-sensical)
+      return true; // This should technically return false
+  }
+
+  after addErrorMessage 
+  {
+    // If the severity level is 1 then it's the most severe error
+    // And we stop accepting errors (The parser may continue to parse,
+    // as but we won't report any further errors, as they may be non-sensical)
     if(aErrorMessage.getErrorType().getSeverity() == 1){
-    	_acceptsErrors = false;
-    	wasSuccess = false;
+      _acceptsErrors = false;
+      wasSuccess = false;
     }
-    
+
     // Otherwise, if the severity is 2, we may have an error, 
     // but we'll continue to compile and generate additional errors/warnings 
     else if(aErrorMessage.getErrorType().getSeverity() == 2)  
-    	wasSuccess = false;
-    	
+      wasSuccess = false;
+
     // Everything else must be a warning.
     else
-    	hasWarnings = true;
-   }
-   
-   public String toString()
-   {
-   	 String ret = "";
-   	 for(ErrorMessage em : errorMessages)
-   	    ret += em.toString() + "\n";
-   	 return ret;
-   }
-   
-   public String toJSON ()
-   {
-   	 String ret = "{ \"results\" : [ ";
-   	 boolean hasOne = false;
-   	 for(ErrorMessage em : errorMessages)
-   	 {
-   	 	ErrorType et = em.getErrorType();
-   	 	
-   	 	String line     = String.valueOf(em.getPosition().getLineNumber());
-   	 	String file     = StringFormatter.sanitizeForJson(em.getPosition().getFilename());
-   	 	String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
-   	 	String severity = String.valueOf(et.getSeverity());
-   	 	String code     = String.valueOf(et.getErrorCode());
-   	 	String url		= StringFormatter.sanitizeForJson(et.getErrorUrl());
-   	 	
-   	 	ret += "{ \"errorCode\" : \"" + code + "\",";
-   	 	ret += " \"severity\" : \"" +severity + "\", ";
-   	 	ret += "\"url\" : \"" + url + "\", ";
-   	 	ret += "\"line\" : \"" + line + "\", ";
-   	 	ret += "\"filename\" : \"" + file + "\", ";
-   	 	ret += "\"message\" : \"" + message + "\"},";
-   	 	hasOne = true;
-   	 }
-   	 
-   	 if(hasOne)
-   	 	ret = ret.substring(0, ret.length()-1);
-     ret += "]}";
-     return ret;
-   } 
+      hasWarnings = true;
+  }
+
+  public String toString()
+  {
+    String ret = "";
+    for(ErrorMessage em : errorMessages)
+      ret += em.toString() + "\n";
+    return ret;
+  }
+
+  public String toJSON ()
+  {
+    String ret = "{ \"results\" : [ ";
+    boolean hasOne = false;
+    for(ErrorMessage em : errorMessages)
+    {
+      ErrorType et = em.getErrorType();
+
+      String line     = String.valueOf(em.getPosition().getLineNumber());
+      String file     = StringFormatter.sanitizeForJson(em.getPosition().getFilename());
+      String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
+      String severity = String.valueOf(et.getSeverity());
+      String code     = String.valueOf(et.getErrorCode());
+      String url    = StringFormatter.sanitizeForJson(et.getErrorUrl());
+
+      ret += "{ \"errorCode\" : \"" + code + "\",";
+      ret += " \"severity\" : \"" +severity + "\", ";
+      ret += "\"url\" : \"" + url + "\", ";
+      ret += "\"line\" : \"" + line + "\", ";
+      ret += "\"filename\" : \"" + file + "\", ";
+      ret += "\"message\" : \"" + message + "\"},";
+      hasOne = true;
+    }
+
+    if(hasOne)
+      ret = ret.substring(0, ret.length()-1);
+    ret += "]}";
+    return ret;
+  } 
 }
 
 class ErrorMessage
 {
-   public ErrorMessage(int errorCode, Position pos, String... parameters)  
-   {
-      this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
-	  this.parameters = Arrays.asList(parameters);
-   }
-   public String getFormattedMessage()
-   {
-   	   return errorType.format(this.parameters);
-   }
-   public String toString()
-   {
-   	   String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
-	   String err = sev + " on line " + this.position.getLineNumber();
-	   err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
-   	   return  err + errorType.format(this.parameters);
-   }
-   
+  public ErrorMessage(int errorCode, Position pos, String... parameters)  
+  {
+    this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
+    this.parameters = Arrays.asList(parameters);
+  }
+  public String getFormattedMessage()
+  {
+    return errorType.format(this.parameters);
+  }
+  public String toString()
+  {
+    String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
+    String err = sev + " on line " + this.position.getLineNumber();
+    err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
+    return  err + errorType.format(this.parameters);
+  }
+
 }
 
 class ErrorType
 {
-   depend cruise.umple.util.StringFormatter;
-   depend java.util.List;
-   
-   public String format(List<String> arguments)
-   {
-      return StringFormatter.format(errorFormat, arguments.toArray());
-   }
+  depend cruise.umple.util.StringFormatter;
+  depend java.util.List;
+
+  public String format(List<String> arguments)
+  {
+    return StringFormatter.format(errorFormat, arguments.toArray());
+  }
 }
 
 class ErrorTypeSingleton
 {
-	after constructor{init();}
+  after constructor{init();}
 
-	private void init()
-	{
-	  String filename = "/en.error";
-      String input = readFile(filename);
-      parse(new TextParser(filename, input));
-	}
-	
-    public String readFile(String filenameOrResourcePath)
+  private void init()
+  {
+    String filename = "/en.error";
+    String input = readFile(filename);
+    parse(new TextParser(filename, input));
+  }
+
+  public String readFile(String filenameOrResourcePath)
+  {
+    InputStream resourceStream = null;
+    BufferedReader reader = null;
+    String str = "";
+    try
     {
-      InputStream resourceStream = null;
-      BufferedReader reader = null;
-      String str = "";
+      if ((new File(filenameOrResourcePath)).exists())
+      {
+        reader = new BufferedReader(new FileReader(filenameOrResourcePath));
+      }
+      else
+      {
+        resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
+      String line;
+      while((line=reader.readLine())!=null)
+        str += line;
+    }
+    catch (Exception e)
+    {
+      str = null;
+    }
+    finally
+    {
+      SampleFileWriter.closeAsRequired(reader);
+      SampleFileWriter.closeAsRequired(resourceStream);
+    }    
+    return str;
+  }
+
+  private boolean parse(TextParser textParser)
+  { 
+    while(textParser.peek() != null)
+    {
+      Position p = textParser.currentPosition();
+
+      String code = textParser.nextUntil(false,":");
+      textParser.nextAfter(false,":");
+
+      String severity = textParser.nextUntil(false, ",");
+      textParser.nextAfter(false,",");
+
+      String url = textParser.nextUntil(false, ",");
+      textParser.nextAfter(false,",");
+
+      String formatString = textParser.nextUntil(false, ";");
+      textParser.nextAfter(false,";");
+
+      int codeInt;
+      int severityInt;
+
+      if(code == null || severity == null || url == null || formatString == null)
+        throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
+
       try
       {
-        if ((new File(filenameOrResourcePath)).exists())
-        {
-          reader = new BufferedReader(new FileReader(filenameOrResourcePath));
-        }
-        else
-        {
-          resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
-          reader = new BufferedReader(new InputStreamReader(resourceStream));
-        }
-        String line;
-        while((line=reader.readLine())!=null)
-    	  str += line;
+        codeInt = Integer.parseInt(code);
       }
-      catch (Exception e)
+      catch(NumberFormatException e)
       {
-        str = null;
+        throw new UmpleCompilerException("Error code must be an integer (line " + p.getLineNumber()+")",null);
       }
-      finally
+
+      try
       {
-        SampleFileWriter.closeAsRequired(reader);
-        SampleFileWriter.closeAsRequired(resourceStream);
-      }    
-      return str;
+        severityInt = Integer.parseInt(severity);
+      }
+      catch(NumberFormatException e)
+      {
+        throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
+      }
+
+      if(severityInt < 1 || severityInt > 5)
+        throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
+
+      this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
     }
-    
-	private boolean parse(TextParser textParser)
-	{ 
-		while(textParser.peek() != null)
-		{
-		   Position p = textParser.currentPosition();
+    return true;
+  }
 
-           String code = textParser.nextUntil(false,":");
-           textParser.nextAfter(false,":");
+  public void clear()
+  {
+    this.errorTypes = new ArrayList<ErrorType>();
+  }
 
-           String severity = textParser.nextUntil(false, ",");
-           textParser.nextAfter(false,",");
+  public void reset()
+  {
+    clear();
+    init();
+  }
 
-           String url = textParser.nextUntil(false, ",");
-           textParser.nextAfter(false,",");
+  public ErrorType getErrorTypeForCode(int code)
+  {
+    for(ErrorType et : this.errorTypes)
+      if(et.getErrorCode() == code)
+        return et;
 
-           String formatString = textParser.nextUntil(false, ";");
-           textParser.nextAfter(false,";");
-
-           int codeInt;
-           int severityInt;
-           
-           if(code == null || severity == null || url == null || formatString == null)
-              throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
-           
-           try
-           {
-              codeInt = Integer.parseInt(code);
-           }
-           catch(NumberFormatException e)
-           {
-        	   throw new UmpleCompilerException("Error code must be an integer (line " + p.getLineNumber()+")",null);
-           }
-           
-           try
-           {
-        	  severityInt = Integer.parseInt(severity);
-           }
-           catch(NumberFormatException e)
-           {
-        	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
-           }
-
-           if(severityInt < 1 || severityInt > 5)
-        	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
-           
-           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
-		}
-		return true;
-	}
-	
-	public void clear()
-	{
-	  this.errorTypes = new ArrayList<ErrorType>();
-	}
-	
-	public void reset()
-	{
-	  clear();
-	  init();
-	}
-	
-	public ErrorType getErrorTypeForCode(int code)
-	{
-		for(ErrorType et : this.errorTypes)
-			if(et.getErrorCode() == code)
-				return et;
-				
-		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
-	}
+    return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
+  }
 }

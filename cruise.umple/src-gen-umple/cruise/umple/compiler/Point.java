@@ -128,7 +128,7 @@ public class Point
       return new Point(p, n - (p-1) * p);
     }
   }
-  
+
   public String toString()
   {
     return "(" + getX() + "," + getY() + ")";

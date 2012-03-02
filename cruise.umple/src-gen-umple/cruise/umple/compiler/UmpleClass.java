@@ -955,7 +955,7 @@ public class UmpleClass extends UmpleElement
       return all;
     }
     String formattedMethod = StringFormatter.toUnderscore(method);
-    
+
     for (CodeInjection code : getCodeInjections())
     {
       if (code.getOperation() == null || !type.equals(code.getType()))
@@ -966,11 +966,11 @@ public class UmpleClass extends UmpleElement
       boolean isAllExcludes = true;
       TriState isMatch = new TriState(false);
       TriState isMatchOnExclude = new TriState(true);
-      
+
       String[] allOperations = code.getOperation().split(",");
       for (String operation : allOperations)
       {
-        
+
         boolean isNot = false;
         if (operation.startsWith("!"))
         {
@@ -982,7 +982,7 @@ public class UmpleClass extends UmpleElement
           isAllExcludes = false;
         }
         isMatchOnExclude.setIsSet(true);
-        
+
         String regexOperation = StringFormatter.toUnderscore(operation);
         regexOperation = regexOperation.replace("_*", "*");
         regexOperation = regexOperation.replace("*", ".*");
@@ -998,13 +998,13 @@ public class UmpleClass extends UmpleElement
           isMatch.setStatus(true);
         }
       }
-      
+
       if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue()) 
       {
         all.add(code);
       }
     } 
-    
+
     return all;
   }
 
@@ -1029,7 +1029,7 @@ public class UmpleClass extends UmpleElement
     {
       allEvents.addAll(sm.getEvents());
     }
-    
+
     List<Event> allUniqueEvents = new ArrayList<Event>();
     for (Event e : allEvents)
     {
@@ -1047,7 +1047,7 @@ public class UmpleClass extends UmpleElement
     {
       return null;
     }
-    
+
     for (StateMachine sm : getStateMachines())
     {
       for (Event aEvent : sm.getAllEvents())
@@ -1068,7 +1068,7 @@ public class UmpleClass extends UmpleElement
       addNamespace(aNamespace);
     }
   }
-  
+
   public AssociationVariable getAssociationVariable(String name)
   {
     for (AssociationVariable av : associationVariables)
@@ -1080,7 +1080,7 @@ public class UmpleClass extends UmpleElement
     }
     return null;
   }
-  
+
   public AssociationVariable getAssociationVariableFor(UmpleClass uClass)
   {
     for (AssociationVariable av : associationVariables)
@@ -1092,33 +1092,33 @@ public class UmpleClass extends UmpleElement
     }
     return null;
   }
-  
-  
- public boolean hasMethod(Method comparedMethod){
-	  boolean isMethod=false;
-	  String methodName = comparedMethod.getName();
-	  int numberOfParams = comparedMethod.getMethodParameters().size();
-	  for (Method aMethod : this.getMethods()){
-		  // Compare method names
-		  if (aMethod.getName().equals(methodName)){	
-			  // Now compare parameters
-			  if (numberOfParams == aMethod.getMethodParameters().size()){
-				  for (MethodParameter param: aMethod.getMethodParameters()){
-					 for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
-					  if (param.getType().equals(paramToCompare.getType())){
-						  isMethod=true;			  
-					  }
-					  else{
-						  return false;
-					  }
-					 }
-				  }
-			  }
-		  }
-	  }
-	  return isMethod;  
+
+
+  public boolean hasMethod(Method comparedMethod){
+    boolean isMethod=false;
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){	
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size()){
+          for (MethodParameter param: aMethod.getMethodParameters()){
+            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+              if (param.getType().equals(paramToCompare.getType())){
+                isMethod=true;			  
+              }
+              else{
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return isMethod;  
   }
-  
+
   public Attribute getAttribute(String name)
   {
     for (Attribute av : attributes)
@@ -1130,12 +1130,12 @@ public class UmpleClass extends UmpleElement
     }
     return null;
   }
-  
+
   public boolean isRoot()
   {
     return extendsClass == null;
   }
-  
+
   protected GeneratedClass gClass = null;
   public GeneratedClass getGeneratedClass()
   {
@@ -1151,14 +1151,14 @@ public class UmpleClass extends UmpleElement
     }
     return getGeneratedClass();
   }
-  
-  
-  
+
+
+
   public boolean hasUniqueIdentifier()
   {
     return getUniqueIdentifier() != null;
   }
-  
+
   public boolean isAttributeClass()
   {
     for (AssociationVariable association : getAssociationVariables())
@@ -1170,47 +1170,47 @@ public class UmpleClass extends UmpleElement
     }
     return true;
   }
-  
+
   private boolean allAssociationsSupportClassImmutabilityRules(boolean isImmutable)
   {
-  	if (this.hasStateMachines()) { return false; }
-  	
-  	for (AssociationVariable av : associationVariables)
-  	{
-  	  if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }
-  	}
-  	return true;
+    if (this.hasStateMachines()) { return false; }
+
+    for (AssociationVariable av : associationVariables)
+    {
+      if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }
+    }
+    return true;
   }
-  
+
   protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, 
-  	AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
+      AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
   {
-  	boolean satisfied = false;
-  	if (!myClassImmutable && !yourClassImmutable)
-  	{
+    boolean satisfied = false;
+    if (!myClassImmutable && !yourClassImmutable)
+    {
       satisfied = true;
-  	}
-  	else if (myAV == null || yourAV == null || myClass == null || yourClass == null)
-  	{
-  	  satisfied = true;
-  	} 
-  	else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
-  	{
-  	  satisfied = true;
-  	}
-  	else if (myClassImmutable && yourClassImmutable && (!myAV.getIsNavigable() || !yourAV.getIsNavigable()))
-  	{
+    }
+    else if (myAV == null || yourAV == null || myClass == null || yourClass == null)
+    {
       satisfied = true;
-  	}
-  	return satisfied;
+    } 
+    else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
+    {
+      satisfied = true;
+    }
+    else if (myClassImmutable && yourClassImmutable && (!myAV.getIsNavigable() || !yourAV.getIsNavigable()))
+    {
+      satisfied = true;
+    }
+    return satisfied;
   }
-  
+
   protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myClassImmutable)
   {
-  	AssociationVariable relatedAV = myAV.getRelatedAssociation();
-  	UmpleClass relatedClass = (relatedAV == null) ? null : relatedAV.getUmpleClass();
-  	boolean relatedClassImmutable = (relatedClass == null) ? false : ((relatedClass == this) ? myClassImmutable : relatedClass.isImmutable());
-  	
-  	return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
+    AssociationVariable relatedAV = myAV.getRelatedAssociation();
+    UmpleClass relatedClass = (relatedAV == null) ? null : relatedAV.getUmpleClass();
+    boolean relatedClassImmutable = (relatedClass == null) ? false : ((relatedClass == this) ? myClassImmutable : relatedClass.isImmutable());
+
+    return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
   }
 }

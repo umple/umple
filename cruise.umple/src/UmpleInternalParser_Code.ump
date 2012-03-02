@@ -46,16 +46,16 @@ class UmpleInternalParser
   }
 
   public UmpleInternalParser(UmpleModel aModel)
-  {	 
-  	this("UmpleInternalParser", aModel);
+  {   
+    this("UmpleInternalParser", aModel);
   }
 
   private void init()
   {
-	if(model.getUmpleFile() != null)
-	{
-		setFilename(model.getUmpleFile().getFileName());
-		setRootToken(reset()); // Makes sure the root token position has the filename
+    if(model.getUmpleFile() != null)
+    {
+      setFilename(model.getUmpleFile().getFileName());
+      setRootToken(reset()); // Makes sure the root token position has the filename
     }
     
     addCouple(new Couple("\"","\""));

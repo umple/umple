@@ -70,9 +70,9 @@ public class PapyrusGenerator implements CodeGenerator
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
     ArrayList<Association> allAssociations = new ArrayList<Association>();
-    
+
     code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    
+
     boolean isFirst = true;
     int packageAssociationIndex = 0;
     for (UmpleClass uClass : model.getUmpleClasses())
@@ -81,7 +81,7 @@ public class PapyrusGenerator implements CodeGenerator
       if (isFirst)
       {
         isFirst = false;
-        
+
         code.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:uml=\"http://www.eclipse.org/uml2/2.1.0/UML\" xmi:id=\"_{0}\" name=\"{0}\">\n",model.getUmpleFile().getSimpleFileName()));
         code.append(StringFormatter.format("  <packageImport xmi:id=\"_packageImport.0\">\n"));
         code.append(StringFormatter.format("    <importedPackage xmi:type=\"uml:Model\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0\"/>\n"));
@@ -96,19 +96,19 @@ public class PapyrusGenerator implements CodeGenerator
 
       if (uClass.getExtendsClass() != null)
       {
-    	  code.append(StringFormatter.format("    <generalization xmi:id=\"{0}-_generalization.0\" general=\"{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
+        code.append(StringFormatter.format("    <generalization xmi:id=\"{0}-_generalization.0\" general=\"{1}\"/>\n",uClass.getName(),uClass.getExtendsClass().getName()));
       }
 
       String implementedInterfaces="";
       if (uClass.hasParentInterface()){
-    	  for (UmpleInterface uInterface : uClass.getParentInterface())
-    	  {
-    		  implementedInterfaces += uInterface.getName() + "," ; 
-    	  }
-    	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
-    	  code.append(StringFormatter.format("    <interfaceRealization xmi:id=\"{0}-_interfaceRealization.0\" supplier=\"{1}\" client=\"{0}\" contract=\"{1}\"/>\n",uClass.getName(),implementedInterfaces));
+        for (UmpleInterface uInterface : uClass.getParentInterface())
+        {
+          implementedInterfaces += uInterface.getName() + "," ; 
+        }
+        implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
+        code.append(StringFormatter.format("    <interfaceRealization xmi:id=\"{0}-_interfaceRealization.0\" supplier=\"{1}\" client=\"{0}\" contract=\"{1}\"/>\n",uClass.getName(),implementedInterfaces));
       }
-      
+
       for(Attribute av : uClass.getAttributes())
       {
         String typeName = av.getType() == null ? "String" : av.getType();
@@ -133,7 +133,7 @@ public class PapyrusGenerator implements CodeGenerator
         code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
         code.append("    </ownedAttribute>\n");
       }
-      
+
       for(Association as : uClass.getAssociations())
       {
         if (allAssociations.contains(as))
@@ -145,12 +145,12 @@ public class PapyrusGenerator implements CodeGenerator
         AssociationEnd right = as.getEnd(1);
         String[] leftRange = left.getMultiplicity().getRangeParts();
         String[] rightRange = right.getMultiplicity().getRangeParts();
-        
+
         String associationId = as.getName() == null ? StringFormatter.format("_packagedElement.{0}",packageAssociationIndex) : as.getName();
         String associationName = as.getName() == null ? "" : StringFormatter.format(" name=\"{0}\"",as.getName());
 
         subCode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:Association\" xmi:id=\"{0}\"{3} memberEnd=\"{0}-{1} {0}-{2}\" navigableOwnedEnd=\"{0}-{1} {0}-{2}\">\n",associationId,left.getRoleName(),right.getRoleName(),associationName));
-        
+
         subCode.append(StringFormatter.format("    <ownedEnd xmi:id=\"{0}-{1}\" name=\"{1}\" type=\"{2}\" association=\"{0}\">\n",associationId,left.getRoleName(),left.getClassName()));
         subCode.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[1]));
         subCode.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralInteger\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"{2}\"/>\n",associationId,left.getRoleName(),leftRange[0]));
@@ -162,7 +162,7 @@ public class PapyrusGenerator implements CodeGenerator
         subCode.append("  </packagedElement>\n");
         packageAssociationIndex += 1;          
       }
-      
+
       for (StateMachine sm : uClass.getStateMachines())
       {
         if ("Simple".equals(sm.getType()))
@@ -185,19 +185,19 @@ public class PapyrusGenerator implements CodeGenerator
       code.append("  </packagedElement>\n");
       code.append(subCode.toString());
     }
-    
+
     boolean isFirstInterface = model.hasUmpleInterfaces() ? true : false;
-	 for (UmpleInterface uInterface : model.getUmpleInterfaces())
+    for (UmpleInterface uInterface : model.getUmpleInterfaces())
     {
-        if (isFirstInterface)
-    	 {
+      if (isFirstInterface)
+      {
         isFirstInterface = false;
         String clientDependency = StringFormatter.format(" clientDependency=\"{0}-_interfaceRealization.0\"",uInterface.getName()) ;
         String packageType = "uml:Interface"; 
         code.append(StringFormatter.format("  <packagedElement xmi:type=\"{1}\" xmi:id=\"{0}\" name=\"{0}\">\n",uInterface.getName(),packageType,clientDependency));
-        }
+      }
     }
-  
+
     if (!isFirst && !isFirstInterface)
     {
       code.append("  <profileApplication xmi:id=\"_profileApplication.0\">\n");
@@ -212,7 +212,7 @@ public class PapyrusGenerator implements CodeGenerator
     model.setCode(code.toString());
     writeModel();
   }
-  
+
   private void writeModel()
   {
     try

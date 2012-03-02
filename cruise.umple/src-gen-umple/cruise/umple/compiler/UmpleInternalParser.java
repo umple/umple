@@ -124,10 +124,10 @@ this("UmpleInternalParser", aModel);
   }
 private void init()
   {
-	if(model.getUmpleFile() != null)
-	{
-		setFilename(model.getUmpleFile().getFileName());
-		setRootToken(reset()); // Makes sure the root token position has the filename
+    if(model.getUmpleFile() != null)
+    {
+      setFilename(model.getUmpleFile().getFileName());
+      setRootToken(reset()); // Makes sure the root token position has the filename
     }
     
     addCouple(new Couple("\"","\""));
@@ -432,15 +432,15 @@ private void analyzeClassToken(Token t, int analysisStep)
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
       return;
     }
-    
+
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    
+
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
-  	if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
-  	{
-  	  shouldConsumeComment = false;
-  	}
+    if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
+    {
+      shouldConsumeComment = false;
+    }
     else if (t.is("namespace"))
     {
       currentPackageName = t.getValue();
@@ -456,8 +456,8 @@ private void analyzeClassToken(Token t, int analysisStep)
     } 
     else if (t.is("multilineComment"))
     {
-    	analyzeMultilineComment(t);
-    	shouldConsumeComment = false;
+      analyzeMultilineComment(t);
+      shouldConsumeComment = false;
     }
     else if (t.is("classDefinition"))
     {
@@ -479,16 +479,16 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
       analyzeAllAssociations(t);
     }
-    
+
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
     {
       lastComments.clear();
     }
-    
+
   }  
-  
+
   /*
    * Analyze class content tokens.
    * 
@@ -504,24 +504,24 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
       return;
     }
-    
+
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
-    
+
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
-  	if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
-  	{
-  	  shouldConsumeComment = false;
-  	}
-  	else if (token.is("inlineComment"))
+    if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
+    {
+      shouldConsumeComment = false;
+    }
+    else if (token.is("inlineComment"))
     {
       analyzeComment(token);
       shouldConsumeComment = false;
     }
     else if (token.is("multilineComment"))
     {
-    	analyzeMultilineComment(token);
-    	shouldConsumeComment = false;
+      analyzeMultilineComment(token);
+      shouldConsumeComment = false;
     }
     else if (token.is("classDefinition"))
     {
@@ -565,7 +565,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
       analyzeSymmetricReflexiveAssociation(token,aClass);
     }
-    
+
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
     if (shouldConsumeComment)
@@ -573,7 +573,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       lastComments.clear();
     }
   }    
-  
+
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
    * a class, attribute, association, method or otherwise.
@@ -584,12 +584,12 @@ private void analyzeClassToken(Token t, int analysisStep)
    */
   private void analyzeComment(Token token)
   {
-  	if (!token.getValue().equals("$?[End_of_model]$?")) 
-  	{
-  		lastComments.add(new Comment(token.getValue()));
-  	}
+    if (!token.getValue().equals("$?[End_of_model]$?")) 
+    {
+      lastComments.add(new Comment(token.getValue()));
+    }
   }
-  
+
   /**
    * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
    * a class, attribute, association, method or otherwise.
@@ -601,15 +601,15 @@ private void analyzeClassToken(Token t, int analysisStep)
    */
   private void analyzeMultilineComment(Token token)
   {
-  	String inlineComments[] = token.getValue().split("\n");
-  	
-  	// Go through the inline comments and add them to the list of comments waiting to be applied.
-  	for (int i = 0; i < inlineComments.length; i++) 
-  	{
-  		Comment comment = new Comment(inlineComments[i]);
-  		comment.isInline = false;
-  		lastComments.add(comment);
-  	}
+    String inlineComments[] = token.getValue().split("\n");
+
+    // Go through the inline comments and add them to the list of comments waiting to be applied.
+    for (int i = 0; i < inlineComments.length; i++) 
+    {
+      Comment comment = new Comment(inlineComments[i]);
+      comment.isInline = false;
+      lastComments.add(comment);
+    }
   }
 
   // Link associations, association variables and extends that were "defined" after their use
@@ -617,19 +617,19 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     if (verifyClassesInUse())
     {
-		checkSingletonAssociations();
-		addUnlinkedAssociationVariables();
-		addUnlinkedAssociations();
-		addUnlinkedExtends();
-		checkExtendsForCycles();
+      checkSingletonAssociations();
+      addUnlinkedAssociationVariables();
+      addUnlinkedAssociations();
+      addUnlinkedExtends();
+      checkExtendsForCycles();
     }
   }
-  
+
   private void postTokenInterfaceAnalysis()
   {
-      addUnlinkedInterfaceExtends();
+    addUnlinkedInterfaceExtends();
   }
-  
+
   /*
    * Analyzes all associations that are part of the given token indicated to be related to an association.
    * 
@@ -639,21 +639,21 @@ private void analyzeClassToken(Token t, int analysisStep)
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
-    
+
     // Go through every token that is a child of the current token (all associations part of this association).
     for(Token token : associationToken.getSubTokens())
     {
       if (token.is("association"))
       {
-      	// Analyze the individual association.
+        // Analyze the individual association.
         Association association = analyzeAssociation(token, "");
         association.setName(name);
         unlinkedAssociations.add(association);
 
-		if (!getParseResult().getWasSuccess()) 
-		{
-			return;
-		}
+        if (!getParseResult().getWasSuccess()) 
+        {
+          return;
+        }
       }
     }
   }  
@@ -670,39 +670,39 @@ private void analyzeClassToken(Token t, int analysisStep)
   private UmpleClass analyzeClass(Token classToken)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
-    
+
     // Add all the comments in the comment list to the Umple class.
     for (Comment c : lastComments)
     {
       aClass.addComment(c);
     }
-    
+
     addExtendsTo(classToken, aClass);
     if (classToken.getValue("singleton") != null)
     {
       aClass.setIsSingleton(true);
     }
     aClass.setPackageName(currentPackageName);
-    
+
     if (aClass.getIsSingleton()) 
     {
-    	classToken.setName(classToken.getName());	
+      classToken.setName(classToken.getName());	
     }
-    
+
     if (classToken.getValue("immutable") != null)
     {
-		boolean wasSet = aClass.setImmutable(true);
-		if (!wasSet)
-		{
-			// Future-proofing: currently all paths cause wasSet to be true
-			setFailedPosition(classToken.getPosition(), 14, classToken.getName());
-		}
+      boolean wasSet = aClass.setImmutable(true);
+      if (!wasSet)
+      {
+        // Future-proofing: currently all paths cause wasSet to be true
+        setFailedPosition(classToken.getPosition(), 14, classToken.getName());
+      }
     }
-    
+
     analyzeAllTokens(classToken,aClass);
     return aClass;
   }
-  
+
   /*
    * Takes an Umple class and analyzes a class token to add classes which extend it.
    * 
@@ -713,7 +713,7 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     List<String> extendsList = new ArrayList<String>();
     List<Token> extendsTokenList = new ArrayList<Token>();
-    
+
     // Go through all sub-tokens of the class token to add subclasses related to the Umple class.
     for (Token extendsToken : classToken.getSubTokens())
     {
@@ -726,7 +726,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       }  
     }
   }
-    
+
   /*
    * Takes an Umple interface and analyzes a class token, much like the one for Umple classes, to deal with inheritance.
    * 
@@ -736,7 +736,7 @@ private void analyzeClassToken(Token t, int analysisStep)
   private void addExtendsTo(Token classToken, UmpleInterface aInterface)
   {
     List<String> extendsList = new ArrayList<String>();
-    
+
     // Go through all sub-tokens of the class token to deal with inheritance in relation to the Umple interface.
     for (Token extendsToken : classToken.getSubTokens())
     {
@@ -754,7 +754,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     aClass.setModifier("external");
     return aClass;
   }
-  
+
   private void analyzeInterface(Token t)
   {
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
@@ -792,14 +792,14 @@ private void analyzeClassToken(Token t, int analysisStep)
 
       if (extendsNames == null)
       {
-        	continue;
+        continue;
       }
 
       for (int i=0; i < extendsNames.size();i++)
       {
-			String extendName= extendsNames.get(i);
-          	UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-          	child.addExtendsInterface(uInterface);
+        String extendName= extendsNames.get(i);
+        UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+        child.addExtendsInterface(uInterface);
       }
     }
   }  
@@ -829,7 +829,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     AssociationClass aClass = model.addAssociationClass(classToken.getValue("name"));
     addExtendsTo(classToken, aClass);
     analyzeAllTokens(classToken,aClass);
-    
+
     aClass.setPackageName(currentPackageName);
 
     Token leftAssociationToken = null;
@@ -893,7 +893,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
     Association leftAssociation = new Association(true,true,leftFirstEnd,leftSecondEnd);
     leftAssociation.setTokenPosition(leftAssociationToken.getPosition());
-    
+
     Association rightAssociation = new Association(true,true,rightFirstEnd,rightSecondEnd);
     rightAssociation.setTokenPosition(rightAssociationToken.getPosition());
 
@@ -903,7 +903,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     unlinkedAssociations.add(leftAssociation);
     unlinkedAssociations.add(rightAssociation);
   }
-  
+
   private boolean verifyClassesInUse()
   {
     for(Map.Entry<Position, String> e : positionToClassNameReference.entrySet())
@@ -918,23 +918,23 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
     return true;
   }
-  
+
   private void addUnlinkedAssociationVariables()
   {
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
       UmpleClass aClass = model.getUmpleClass(av.getType());
       UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());       
-      
+
       Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
-      
+
       boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
       if (!added)
       {
-    	  setFailedPosition(assoc.getTokenPosition(),13,aClass.getName(),bClass.getName());
-    	  return;
+        setFailedPosition(assoc.getTokenPosition(),13,aClass.getName(),bClass.getName());
+        return;
       }
-      
+
       aClass.addAssociation(assoc);
 
       if (av.getIsNavigable())
@@ -954,14 +954,14 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     return (model.getUmpleInterface(elementName) != null) ? false: true;
   }
-  
+
   private void addUnlinkedExtends()
   {  
     for (UmpleClass child : unlinkedExtends.keySet())
     {
       List<String> extendsNames = unlinkedExtends.get(child);
       List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
-      
+
       if (extendsNames == null)
       {
         continue;
@@ -975,7 +975,7 @@ private void analyzeClassToken(Token t, int analysisStep)
           child.setExtendsClass(parent);
           try
           {
-              child.setExtendsToken(extendsToken.get(i));
+            child.setExtendsToken(extendsToken.get(i));
           }
           catch(Exception e){}
         }
@@ -1020,49 +1020,49 @@ private void analyzeClassToken(Token t, int analysisStep)
     // Have to check for short method names.
     if (methodName.length() >= 3)
     {
-    	//1. Verify if method to be added is a setter or a getter
-        String accessorName = methodName.substring(0,3);
-        if ((accessorName.equals("get")) || (accessorName.equals("set")))
-        {
-          String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
-          Attribute attr = uClass.getAttribute(possibleAttributeName);
-          if (attr != null)
-          {
-            return false;
-          }
-        }
-        //2. Verify if method to be added is a constructor
-        if (aMethod.getType().equals("public"))
-        {
-          uClass.appendExtraCode(aMethod.toString());
-          return false;
-        }  
-        //3. Verify if method from interface is already part of the Class extracode
-        String match = "public " + aMethod.getType() + " " + aMethod.getName();    
-        if (uClass.getExtraCode().contains(match))
+      //1. Verify if method to be added is a setter or a getter
+      String accessorName = methodName.substring(0,3);
+      if ((accessorName.equals("get")) || (accessorName.equals("set")))
+      {
+        String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
+        Attribute attr = uClass.getAttribute(possibleAttributeName);
+        if (attr != null)
         {
           return false;
         }
+      }
+      //2. Verify if method to be added is a constructor
+      if (aMethod.getType().equals("public"))
+      {
+        uClass.appendExtraCode(aMethod.toString());
+        return false;
+      }  
+      //3. Verify if method from interface is already part of the Class extracode
+      String match = "public " + aMethod.getType() + " " + aMethod.getName();    
+      if (uClass.getExtraCode().contains(match))
+      {
+        return false;
+      }
     }
-    
+
     return true;
   }
 
   private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
   {
-	UmpleClass temp = null;
-	    
-	if(extend == null)
-		return null;
-		
-	if(map.containsKey(extend))
-		return extend;
-	
-	map.put(extend, true);
-	
+    UmpleClass temp = null;
+
+    if(extend == null)
+      return null;
+
+    if(map.containsKey(extend))
+      return extend;
+
+    map.put(extend, true);
+
     if(parent.equals(extend.getExtendsClass()))
       return extend.getExtendsClass();
-      
+
     temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
     return temp;
   }
@@ -1070,57 +1070,57 @@ private void analyzeClassToken(Token t, int analysisStep)
   private void checkExtendsForCycles()
   {
     for(UmpleClass C : model.getUmpleClasses())
-	{
+    {
       HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
       if(C.getExtendsClass() != null)
       {
         if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
         {
-    	  Token t = C.getExtendsToken();
-    	  if(t.getValue().equals(C.getName()))
-      	    getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
-    	  else
+          Token t = C.getExtendsToken();
+          if(t.getValue().equals(C.getName()))
+            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
+          else
             getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),C.getName()));
-    	}
+        }
       }
     }
   }
 
-	private void checkSingletonAssociations() 
-	{
-		for (Association association : model.getAssociations()) 
-		{
-			AssociationEnd myEnd = association.getEnd(0);
-	      	AssociationEnd yourEnd = association.getEnd(1);
-	
-	      	UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
-	      	UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-	
-			if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
-			{
-		         yourEnd.getMultiplicity().setRange("0", "1");
-		         yourEnd.getMultiplicity().setBound(null);
-		         setFailedPosition(association.getTokenPosition(), 2, association.getName());  
-	      	}
-	        
-	      	if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
-	      	{
-		         myEnd.getMultiplicity().setRange("0", "1");
-		         myEnd.getMultiplicity().setBound(null);
-		         setFailedPosition(association.getTokenPosition(), 2, association.getName());
-	      	}
-			
-			if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) 
-			{
-				setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
-			}
-			
-			if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) 
-			{
-				setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
-			}
-		}
-	}
+  private void checkSingletonAssociations() 
+  {
+    for (Association association : model.getAssociations()) 
+    {
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+
+      if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+      {
+        yourEnd.getMultiplicity().setRange("0", "1");
+        yourEnd.getMultiplicity().setBound(null);
+        setFailedPosition(association.getTokenPosition(), 2, association.getName());  
+      }
+
+      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+      {
+        myEnd.getMultiplicity().setRange("0", "1");
+        myEnd.getMultiplicity().setBound(null);
+        setFailedPosition(association.getTokenPosition(), 2, association.getName());
+      }
+
+      if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) 
+      {
+        setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
+      }
+
+      if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) 
+      {
+        setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
+      }
+    }
+  }
 
   private void addUnlinkedAssociations()
   {
@@ -1131,7 +1131,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-    	
+
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       myAs.setRelatedAssociation(yourAs);
@@ -1141,10 +1141,10 @@ private void analyzeClassToken(Token t, int analysisStep)
       boolean added = yourClass.addAssociationVariable(myAs);
       if (!added)
       {
-    	  setFailedPosition(association.getTokenPosition(),13,myClass.getName(),yourClass.getName());
-    	  return;
+        setFailedPosition(association.getTokenPosition(),13,myClass.getName(),yourClass.getName());
+        return;
       }
-      
+
       yourClass.addAssociation(association);
 
 
@@ -1172,13 +1172,13 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     String modifier = "";
     Method aMethod = new Method("","","",false);
-    
+
     // Add comments above the method to the method.
     for (Comment c : lastComments)
     {
-    	aMethod.addComment(c);
+      aMethod.addComment(c);
     }
-    
+
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     for(Token token : method.getSubTokens())
     {
@@ -1230,7 +1230,7 @@ private void analyzeClassToken(Token t, int analysisStep)
    */
   private void analyzeMethodDeclarator(Token token, Method aMethod)
   {
-  	// Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
+    // Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
     for(Token methodToken : token.getSubTokens())
     {
       if (methodToken.is("methodName"))
@@ -1253,7 +1253,7 @@ private void analyzeClassToken(Token t, int analysisStep)
             {
               isList = parameterToken.getSubToken("list").getValue() != null;        
             }
-            
+
             String paramName = parameterToken.getSubToken("name").getValue();
             MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
             aParameter.setIsList(isList);
@@ -1274,7 +1274,7 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     Constant aConstant = new Constant("","","","");
     String modifier = "";
-    
+
     // Create the Constant Object
     for(Token token : constantToken.getSubTokens())
     {
@@ -1375,7 +1375,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
     String myName = myMultToken.getValue("roleName");
     String myType = myMultToken.getValue("type") == null ? defaultMyType : myMultToken.getValue("type");
-        
+
     String myModifier = myMultToken.getValue("modifier");
     String myBound = myMultToken.getValue("bound");
     String myLowerBound = myMultToken.getValue("lowerBound");
@@ -1387,7 +1387,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     // Report an error if the multiplicity is invalid
     if (!myMult.isValid())
     {    	    	
-	   	String invalidBound = myBound == null ? invalidBound = myLowerBound + ".." + myUpperBound : myBound;
+      String invalidBound = myBound == null ? invalidBound = myLowerBound + ".." + myUpperBound : myBound;
       setFailedPosition(myMultToken.getPosition(), 4, invalidBound);
       return null;
     }
@@ -1398,7 +1398,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     String yourBound = yourMultToken.getValue("bound");
     String yourLowerBound = yourMultToken.getValue("lowerBound");
     String yourUpperBound = yourMultToken.getValue("upperBound");
-    
+
     Multiplicity yourMult = new Multiplicity();
     yourMult.setBound(yourBound);
     yourMult.setRange(yourLowerBound,yourUpperBound);
@@ -1406,7 +1406,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     // Report an error if the multiplicity is invalid
     if (!yourMult.isValid())
     {    	    	
-	   	String invalidBound = yourBound == null ? invalidBound = yourLowerBound + ".." + yourUpperBound : yourBound;
+      String invalidBound = yourBound == null ? invalidBound = yourLowerBound + ".." + yourUpperBound : yourBound;
       setFailedPosition(yourMultToken.getPosition(), 4, invalidBound);
       return null;
     }
@@ -1417,7 +1417,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
     Association association = createAssociation(navigation,firstEnd,secondEnd);
 
-	association.setTokenPosition(associationToken.getPosition());
+    association.setTokenPosition(associationToken.getPosition());
     if (!association.isValid())
     {
       Token atFaultToken = association.whoIsInvalid() == 0 ? myMultToken : yourMultToken;
@@ -1434,7 +1434,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
   private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd)
   {
-  	  	
+
     if (firstEnd.getRoleName().length() == 0)
     { 
       String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());
@@ -1474,10 +1474,10 @@ private void analyzeClassToken(Token t, int analysisStep)
     AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
     myAs.setRelatedAssociation(yourAs);
 
-	// Add comments above the association to the association.
+    // Add comments above the association to the association.
     for (Comment c : lastComments)
     {
-    	yourAs.addComment(c);
+      yourAs.addComment(c);
     }
 
     boolean added = aClass.addAssociationVariable(yourAs);
@@ -1488,7 +1488,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
     else
     {
-    	setFailedPosition(inlineAssociationToken.getPosition(),13,myEnd.getClassName(),yourEnd.getClassName());
+      setFailedPosition(inlineAssociationToken.getPosition(),13,myEnd.getClassName(),yourEnd.getClassName());
     }
   }
 
@@ -1505,10 +1505,10 @@ private void analyzeClassToken(Token t, int analysisStep)
     boolean isLazy = attributeToken.getValue("lazy") != null;
     if (aClass.getIsSingleton() && !isLazy) 
     {
-    	isLazy = true;
-    	setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
+      isLazy = true;
+      setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
     }
-    
+
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
@@ -1563,7 +1563,7 @@ private void analyzeClassToken(Token t, int analysisStep)
     // Add comments above the attribute to the attribute.
     for (Comment c : lastComments)
     {
-    	attribute.addComment(c);
+      attribute.addComment(c);
     }
   }
 private void analyzeStateMachineToken(Token token, int analysisStep)

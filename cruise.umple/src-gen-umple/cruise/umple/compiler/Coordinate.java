@@ -190,42 +190,42 @@ public class Coordinate
   {
     return new Point(x,y);
   }
-  
+
   public Point getTopRight()
   {
     return new Point(x+width,y);
   }
-  
+
   public Point getBottomLeft()
   {
     return new Point(x,y+height);
   }
-  
+
   public Point getBottomRight()
   {
     return new Point(x+width,y+height);
   }
-  
+
   public Point getTopMiddle()
   {
     return new Point(x+width/2,y);
   }
-  
+
   public Point getBottomMiddle()
   {
     return new Point(x+width/2,y+height);
   }
-  
+
   public Point getRightMiddle()
   {
     return new Point(x+width,y+height/2);
   }
-  
+
   public Point getLeftMiddle()
   {
     return new Point(x,y+height/2);
   }
-  
+
   public String whereIs(Coordinate neighbour)
   {
     int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
@@ -251,7 +251,7 @@ public class Coordinate
       return "right";
     }
   }
-  
+
   public int distanceTo(Coordinate other)
   {
     int a = other.getX() - getX();
@@ -259,12 +259,12 @@ public class Coordinate
     int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
     return c; 
   }
-  
+
   public String toString()
   {
     return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
   }
-  
+
   private void updateStatus()
   {
     if (x == -1 && y == -1 && width == -1 && height == -1)

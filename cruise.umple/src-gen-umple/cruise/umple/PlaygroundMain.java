@@ -38,12 +38,12 @@ public class PlaygroundMain
   //------------------------
   
   public static String console = "";
-  
+
   public static void main(String[] args)
   {
     console = "";
     String answer = "";
-    
+
     if (args.length == 0)
     {
       print("Invalid format, please try again specifying:\n");
@@ -61,7 +61,7 @@ public class PlaygroundMain
       String deltaCode = args[1];
       String filename = args[2];
       String umpleCode = SampleFileWriter.readContent(new File(filename));
-      
+
       SynchronizationAction action = action(actionType,deltaCode,umpleCode);
       if (action != null)
       {
@@ -97,9 +97,9 @@ public class PlaygroundMain
     }
     catch(UmpleCompilerException e)
     {
-   	  System.err.print(model.getLastResult().toJSON());
+      System.err.print(model.getLastResult().toJSON());
     }
-     
+
     if ("-classList".equals(args[0]))
     {
       for (UmpleClass aClass : model.getUmpleClasses())
@@ -140,13 +140,13 @@ public class PlaygroundMain
 
     print(answer);
   }
-   
+
   private static void print(String output)
   {
     console += output;
     System.out.print(output);
   }
-  
+
   private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
   {
     if ("-addClass".equals(type))

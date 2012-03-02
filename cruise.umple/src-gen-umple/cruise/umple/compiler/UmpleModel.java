@@ -547,7 +547,7 @@ public class UmpleModel
     }
     return newClass;
   }
-  
+
   public Association getAssociation(String name)
   {
     for (Association a : associations)
@@ -559,7 +559,7 @@ public class UmpleModel
     }
     return null;
   }
-  
+
   public AssociationClass addAssociationClass(String className)
   {
     AssociationClass newClass = (AssociationClass) getUmpleClass(className);
@@ -573,18 +573,18 @@ public class UmpleModel
 
   public void addGenerate(String lang)
   {
-     addGenerate(new GenerateTarget(lang, null));
+    addGenerate(new GenerateTarget(lang, null));
   }
-  
+
   public void addGenerate(Collection <?extends GenerateTarget> c)
   {
-	 generates.addAll(c);
+    generates.addAll(c);
   }
-  
+
   public String getDefaultGenerate()
   {
-  	// Note that this method should be getDefaultGenerateLanguage
-  	// To avoid rippling changes throughout the code, the name is left as is 
+    // Note that this method should be getDefaultGenerateLanguage
+    // To avoid rippling changes throughout the code, the name is left as is 
     if (numberOfGenerates() == 0)
     {
       return null;
@@ -594,7 +594,7 @@ public class UmpleModel
       return getGenerate(0).getLanguage();
     }
   }
-  
+
   public String getDefaultGeneratePath()
   {
     if (numberOfGenerates() == 0)
@@ -606,12 +606,12 @@ public class UmpleModel
       return getGenerate(0).getPath() == null ? "./" : getGenerate(0).getPath();
     }
   }
-  
+
   public void clearGenerates()
   {
-  	 generates.clear();
+    generates.clear();
   }
-  
+
   public UmpleClass getUmpleClass(String name)
   {
     for (UmpleClass aClass : getUmpleClasses())
@@ -623,7 +623,7 @@ public class UmpleModel
     }
     return null;
   }
-  
+
   public UmpleInterface getUmpleInterface(String name)
   {
     for (UmpleInterface aInterface : getUmpleInterfaces())
@@ -635,8 +635,8 @@ public class UmpleModel
     }
     return null;
   }
-  
-  
+
+
   public StateMachine getStateMachineDefinition(String name)
   {
     for (StateMachine aStateMachine : getStateMachineDefinitions())
@@ -648,7 +648,7 @@ public class UmpleModel
     }
     return null;
   }
-    
+
   public void run()
   {
     UmpleParser parser = new UmpleInternalParser(this);
@@ -656,16 +656,16 @@ public class UmpleModel
     ParseResult result = parser.parse("program", input);
     boolean failed = !result.getWasSuccess();
     lastResult = result;
-    
+
     if(!failed)
-        result = parser.analyze(getShouldGenerate());
+      result = parser.analyze(getShouldGenerate());
 
     failed |= !result.getWasSuccess();
 
     if(failed || result.getHasWarnings())
-    	throw new UmpleCompilerException(result.toString(),null);
+      throw new UmpleCompilerException(result.toString(),null);
   }  
-  
+
   // Generates the actual code
   public void generate()
   {
@@ -673,15 +673,15 @@ public class UmpleModel
     {
       for (GenerateTarget target : getGenerates())
       {
-      	// Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
+        // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
-        
+
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
-        
+
         // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
         generator.setModel(this);
-        
+
         generator.setOutput(target.getPath());
         generator.generate();
       }
@@ -691,14 +691,14 @@ public class UmpleModel
       throw new UmpleCompilerException("Unable to generate code\n",e);
     }
   }
-  
+
   public Coordinate getDefaultClassPosition(int numDefaults)
   {
     int xIndex  = 0;
     int yIndex = 0;
     int yOffset = 0;
     int xOffset = 0;
-    
+
     xIndex = (numDefaults-1) / (maxYLevels);
     yIndex = (numDefaults-1) % (maxYLevels);
     yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
@@ -706,106 +706,106 @@ public class UmpleModel
 
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
-  
+
   public Coordinate[] getDefaultAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
-  	int offsetX = offsetFromEdge.getY();
-  	
-  	String classOne = a.getEnd(0).getClassName();
-  	String classTwo = a.getEnd(1).getClassName();
-  	Coordinate classOnePos = getUmpleClass(classOne).getPosition();
-  	Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
-  	
-  	if (classOne.equals(classTwo))
-  	{
-  	  return getDefaultReflexiveAssociationPosition(a);
-  	}
-  	
-  	int num = 1;
-  	String tempClass1 = "";
-  	String tempClass2 = "";
-  	for (Association temp : getAssociations())
-  	{
-  	  tempClass1 = temp.getEnd(0).getClassName();
-  	  tempClass2 = temp.getEnd(1).getClassName();
-  	  
-  	  if (temp.getName().equals(a.getName()) &&
-  	  	  tempClass1.equals(classOne)        && 
-  	  	  tempClass2.equals(classTwo)) 
-  	  {
-  	  	 break; 
-  	  }
-  	  
-  	  if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
-  	  else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
-  	}
-  	
-  	Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
-  	Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
-  	Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
-  	Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
-  	classOneNoX.setX(0);
-  	classTwoNoX.setX(0);
-  	classOneNoY.setY(0);
-  	classTwoNoY.setY(0);
-  	String whereVert = classOneNoX.whereIs(classTwoNoX);
-  	String whereHorz = classOneNoY.whereIs(classTwoNoY);
-  	 
-  	// alternative 1: left/right wall of class one to left/right wall of class two
-  	int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
-  	int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
-  	int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
-  	int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
-  	Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
-  	Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
-  	Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
-  									  classOnePos.getY() + offsetOne.getY(),
-  									  0,0);
-  	Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
-  									  classTwoPos.getY() + offsetTwo.getY(),
-  									  0,0);
-  	
-  	int distance = start.distanceTo(end);
-  	
-  	// alternative 2: top/bottom wall of class one to top/bottom wall of class two
-  	int altXOne = num*offsetX;
-  	int altXTwo = num*offsetX;
-  	int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
-  	int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
-  	Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
-  	Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
-  	Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
-  									     classOnePos.getY() + altOffsetOne.getY(),
-  									     0,0);
-  	Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
-  									     classTwoPos.getY() + altOffsetTwo.getY(),
-  									     0,0);
-  	
-  	int altDistance = altStart.distanceTo(altEnd);
-  	
-  	// choose alternative that generates the shortest line
-  	if (altDistance < distance)
-  	{
+    int offsetX = offsetFromEdge.getY();
+
+    String classOne = a.getEnd(0).getClassName();
+    String classTwo = a.getEnd(1).getClassName();
+    Coordinate classOnePos = getUmpleClass(classOne).getPosition();
+    Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
+
+    if (classOne.equals(classTwo))
+    {
+      return getDefaultReflexiveAssociationPosition(a);
+    }
+
+    int num = 1;
+    String tempClass1 = "";
+    String tempClass2 = "";
+    for (Association temp : getAssociations())
+    {
+      tempClass1 = temp.getEnd(0).getClassName();
+      tempClass2 = temp.getEnd(1).getClassName();
+
+      if (temp.getName().equals(a.getName()) &&
+          tempClass1.equals(classOne)        && 
+          tempClass2.equals(classTwo)) 
+      {
+        break; 
+      }
+
+      if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
+      else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
+    }
+
+    Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+    Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+    Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+    Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+    classOneNoX.setX(0);
+    classTwoNoX.setX(0);
+    classOneNoY.setY(0);
+    classTwoNoY.setY(0);
+    String whereVert = classOneNoX.whereIs(classTwoNoX);
+    String whereHorz = classOneNoY.whereIs(classTwoNoY);
+
+    // alternative 1: left/right wall of class one to left/right wall of class two
+    int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
+    int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
+    int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
+    int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
+    Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
+    Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
+    Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
+        classOnePos.getY() + offsetOne.getY(),
+        0,0);
+    Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
+        classTwoPos.getY() + offsetTwo.getY(),
+        0,0);
+
+    int distance = start.distanceTo(end);
+
+    // alternative 2: top/bottom wall of class one to top/bottom wall of class two
+    int altXOne = num*offsetX;
+    int altXTwo = num*offsetX;
+    int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
+    int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
+    Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
+    Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
+    Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
+        classOnePos.getY() + altOffsetOne.getY(),
+        0,0);
+    Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
+        classTwoPos.getY() + altOffsetTwo.getY(),
+        0,0);
+
+    int altDistance = altStart.distanceTo(altEnd);
+
+    // choose alternative that generates the shortest line
+    if (altDistance < distance)
+    {
       defaults[0] = altOffsetOne;
-  	  defaults[1] = altOffsetTwo;
-  	} 
-  	else
+      defaults[1] = altOffsetTwo;
+    } 
+    else
     {
       defaults[0] = offsetOne;
       defaults[1] = offsetTwo;
-  	}
-    
+    }
+
     return defaults;
   }
-  
+
   private Coordinate[] getDefaultReflexiveAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
     Coordinate position = getUmpleClass(name).getPosition();
-    
+
     // determine which corner the association should be positioned at
     int index = 0;
     for (int i=0; i < numberOfAssociations(); i++)
@@ -822,10 +822,10 @@ public class UmpleModel
         }
       }
     }
-    
+
     Coordinate offsetOne = new Coordinate(0,0,0,0);
     Coordinate offsetTwo = new Coordinate(0,0,0,0);
-    
+
     if (index % 4 == 0)
     {
       offsetOne.setX(reflexiveSegmentLength);
@@ -854,10 +854,10 @@ public class UmpleModel
       offsetTwo.setX(0);
       offsetTwo.setY(reflexiveSegmentLength);
     }
-    
+
     defaults[0] = offsetOne;
     defaults[1] = offsetTwo;
-    
+
     return defaults;
-   }
+  }
 }

@@ -111,111 +111,111 @@ public class ErrorTypeSingleton
   //------------------------
   
   private void init()
-	{
-	  String filename = "/en.error";
-      String input = readFile(filename);
-      parse(new TextParser(filename, input));
-	}
-	
-    public String readFile(String filenameOrResourcePath)
+  {
+    String filename = "/en.error";
+    String input = readFile(filename);
+    parse(new TextParser(filename, input));
+  }
+
+  public String readFile(String filenameOrResourcePath)
+  {
+    InputStream resourceStream = null;
+    BufferedReader reader = null;
+    String str = "";
+    try
     {
-      InputStream resourceStream = null;
-      BufferedReader reader = null;
-      String str = "";
+      if ((new File(filenameOrResourcePath)).exists())
+      {
+        reader = new BufferedReader(new FileReader(filenameOrResourcePath));
+      }
+      else
+      {
+        resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
+      String line;
+      while((line=reader.readLine())!=null)
+        str += line;
+    }
+    catch (Exception e)
+    {
+      str = null;
+    }
+    finally
+    {
+      SampleFileWriter.closeAsRequired(reader);
+      SampleFileWriter.closeAsRequired(resourceStream);
+    }    
+    return str;
+  }
+
+  private boolean parse(TextParser textParser)
+  { 
+    while(textParser.peek() != null)
+    {
+      Position p = textParser.currentPosition();
+
+      String code = textParser.nextUntil(false,":");
+      textParser.nextAfter(false,":");
+
+      String severity = textParser.nextUntil(false, ",");
+      textParser.nextAfter(false,",");
+
+      String url = textParser.nextUntil(false, ",");
+      textParser.nextAfter(false,",");
+
+      String formatString = textParser.nextUntil(false, ";");
+      textParser.nextAfter(false,";");
+
+      int codeInt;
+      int severityInt;
+
+      if(code == null || severity == null || url == null || formatString == null)
+        throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
+
       try
       {
-        if ((new File(filenameOrResourcePath)).exists())
-        {
-          reader = new BufferedReader(new FileReader(filenameOrResourcePath));
-        }
-        else
-        {
-          resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
-          reader = new BufferedReader(new InputStreamReader(resourceStream));
-        }
-        String line;
-        while((line=reader.readLine())!=null)
-    	  str += line;
+        codeInt = Integer.parseInt(code);
       }
-      catch (Exception e)
+      catch(NumberFormatException e)
       {
-        str = null;
+        throw new UmpleCompilerException("Error code must be an integer (line " + p.getLineNumber()+")",null);
       }
-      finally
+
+      try
       {
-        SampleFileWriter.closeAsRequired(reader);
-        SampleFileWriter.closeAsRequired(resourceStream);
-      }    
-      return str;
+        severityInt = Integer.parseInt(severity);
+      }
+      catch(NumberFormatException e)
+      {
+        throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
+      }
+
+      if(severityInt < 1 || severityInt > 5)
+        throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
+
+      this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
     }
-    
-	private boolean parse(TextParser textParser)
-	{ 
-		while(textParser.peek() != null)
-		{
-		   Position p = textParser.currentPosition();
+    return true;
+  }
 
-           String code = textParser.nextUntil(false,":");
-           textParser.nextAfter(false,":");
+  public void clear()
+  {
+    this.errorTypes = new ArrayList<ErrorType>();
+  }
 
-           String severity = textParser.nextUntil(false, ",");
-           textParser.nextAfter(false,",");
+  public void reset()
+  {
+    clear();
+    init();
+  }
 
-           String url = textParser.nextUntil(false, ",");
-           textParser.nextAfter(false,",");
+  public ErrorType getErrorTypeForCode(int code)
+  {
+    for(ErrorType et : this.errorTypes)
+      if(et.getErrorCode() == code)
+        return et;
 
-           String formatString = textParser.nextUntil(false, ";");
-           textParser.nextAfter(false,";");
-
-           int codeInt;
-           int severityInt;
-           
-           if(code == null || severity == null || url == null || formatString == null)
-              throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
-           
-           try
-           {
-              codeInt = Integer.parseInt(code);
-           }
-           catch(NumberFormatException e)
-           {
-        	   throw new UmpleCompilerException("Error code must be an integer (line " + p.getLineNumber()+")",null);
-           }
-           
-           try
-           {
-        	  severityInt = Integer.parseInt(severity);
-           }
-           catch(NumberFormatException e)
-           {
-        	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
-           }
-
-           if(severityInt < 1 || severityInt > 5)
-        	   throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
-           
-           this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
-		}
-		return true;
-	}
-	
-	public void clear()
-	{
-	  this.errorTypes = new ArrayList<ErrorType>();
-	}
-	
-	public void reset()
-	{
-	  clear();
-	  init();
-	}
-	
-	public ErrorType getErrorTypeForCode(int code)
-	{
-		for(ErrorType et : this.errorTypes)
-			if(et.getErrorCode() == code)
-				return et;
-				
-		return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
-	}
+    return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
+  }
 }

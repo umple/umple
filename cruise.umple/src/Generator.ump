@@ -8,7 +8,7 @@ http://umple.org/license
 Definitions of the different code- or model-transformation generators
 Note that some generators such as Umlet and Violet are in their own files
 
-*/
+ */
 
 
 namespace cruise.umple.compiler;
@@ -124,7 +124,7 @@ class JavaGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.java.*;  
-  
+
   UmpleModel model = null;
   String output = "";
 }
@@ -139,7 +139,7 @@ class CppGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.cpp.*;  
-  
+
   UmpleModel model = null;
   String output = "";
 }
@@ -155,7 +155,7 @@ class PhpGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.php.*;  
-  
+
   UmpleModel model = null;
   String output = "";
 }
@@ -170,7 +170,7 @@ class RubyGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.ruby.*;  
-  
+
   UmpleModel model = null;
   String output = "";
 }
@@ -185,7 +185,7 @@ class SQLGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.sql.*;  
-  
+
   UmpleModel model = null;
   String output = "";
 }

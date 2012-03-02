@@ -193,10 +193,10 @@ public Position copy()
   {
     return new Position(filename,lineNumber,characterOffset,offset);
   }
-  
+
   public Position add(Position more)
   {
-  	String tfile = filename == null ? more.getFilename() : filename;
+    String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 

@@ -171,24 +171,24 @@ public class Couple
   
   public boolean isBalanced(String input)
   {
-    
+
     if (input == null)
     {
       return true;
     }
-    
+
     input = removeIgnoredText(input);
-    
+
     int numberOfOpen = 0;
     int numberOfClosed = 0;
-    
+
     int currentIndex = 0;
     while ((currentIndex = input.indexOf(open,currentIndex)) != -1)
     {
       numberOfOpen += 1;
       currentIndex += 1;
     }
-    
+
     currentIndex = 0;
     while (numberOfClosed <= numberOfOpen && (currentIndex = input.indexOf(close,currentIndex)) != -1)
     {
@@ -198,11 +198,11 @@ public class Couple
     return numberOfOpen <= numberOfClosed;
   }
 
-  
+
   public String removeIgnoredText(String input)
   {
     String output = input;
-    
+
     for (Couple ignore : ignores)
     {
       output = ignore.removeIgnoredText(output);
@@ -211,7 +211,7 @@ public class Couple
       {
         int endIndex = output.indexOf(ignore.getClose(),startIndex+ignore.getOpen().length());
         int endIndexOffset = ignore.getClose().length();
-        
+
         if (startIndex == 0 && (endIndex == -1 || endIndex == output.length() - 1))
         {
           output = "";

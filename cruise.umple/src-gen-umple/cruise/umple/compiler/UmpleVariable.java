@@ -126,9 +126,9 @@ public class UmpleVariable
       return name.toUpperCase().charAt(0) + name.substring(1);
     }
   }
-  
+
   public boolean isImmutable()
   {
-  	return "immutable".equals(modifier);
+    return "immutable".equals(modifier);
   }
 }

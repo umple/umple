@@ -7,7 +7,7 @@ http://umple.org/license
 
 Command line tools: To compile Umple files, or to do diffs
 
-*/
+ */
 
 namespace cruise.umple;
 
@@ -20,135 +20,140 @@ class UmpleConsoleMain
   depend java.util.Arrays;
   depend joptsimple.*;
   depend java.io.IOException;
-  
+
   public static String console;
   private static OptionParser optparser;
-  
-   public static void main(String[] args) 
-   {
-     
-     console = "";
 
-     OptionSet optset = optParse(args);
-     if (preModelOptionProcess(optset)) {
-         return;
-     }
+  public static void main(String[] args) 
+  {
 
-     List<String> nonOpt = optset.nonOptionArguments();
+    console = "";
 
-     if (nonOpt.isEmpty()) {
-         println("Please specify <umple_file> to process");
-         printUsage();
-         return;
-     }
-     
-     String filename = nonOpt.get(0);
-     println(filename);
-     UmpleFile umpleFile = new UmpleFile(filename);
-     UmpleModel model = new UmpleModel(umpleFile);
+    OptionSet optset = optParse(args);
+    if (preModelOptionProcess(optset)) {
+      return;
+    }
 
-     if (postModelOptionProcess(optset, model)) {
-         return;
-     }
+    List<String> nonOpt = optset.nonOptionArguments();
 
-     try
-     {
-    	 model.run();
-    	 println("Success! Processed "+ filename +".");
-     }
-     catch(UmpleCompilerException e)
-     {
-    	 printerr(e.getMessage());
-    	 if(!model.isShouldGenerate())
-    		 System.exit(-1);
-     }
-     
-//     Compiler compiler = new Compiler();
-//     URL jarfile = compiler.compile(umpleFile.getPath());
-//     
-//     if (jarfile != null)
-//     {
-//       println("Success! Processed "+ filename +".");
-//     }
-//     else
-//     {
-//       println("Failure! Unable to process " + filename + ".");
-//     }
-   }
-   
-   private static void println(String output)
-   {
-     console += output + "\n";
-     System.out.println(output);
-   }
-   private static void printerr(String err)
-   {
-   	console += err;
-   	System.err.print(err);
-   }
-   private static void printUsage() {
-       println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
-       try{
-           optparser.printHelpOn(System.out);
-       } catch (IOException e) {
-       }
-   }
-   /**
-    * optionProcess: process the option arguments which does not require UmpleModel
-    * Argument: optSet - set of the options and corresponding arguments
-    * Return: boolean - If application should terminate immediately after return
-    */
-   private static boolean preModelOptionProcess(OptionSet optSet) {
-       if (optSet == null) {
-           return true;
-       }
-       if (optSet.has("version")) {
-           println("Version: " + UmpleModel.versionNumber);
-           return true;
-       }
-       if (optSet.has("help")) {
-           printUsage();
-           return true;
-       }
-       return false;
-   }
+    if (nonOpt.isEmpty()) {
+      println("Please specify <umple_file> to process");
+      printUsage();
+      return;
+    }
 
-   private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model) {
-       if (optset.has("generate")) {
-           boolean override=false;
-           String path = "";
-           if (optset.has("override")) {
-               override = true;
-           }
-           if (optset.has("path")) {
-               path = (String)optset.valueOf("path");
-           }
-           String lang = (String)optset.valueOf("generate");
-           GenerateTarget gt = new GenerateTarget(lang, path);
-           gt.setOverrideAll(override);
-           model.addGenerate(Arrays.asList(gt));
-       }
-       return false;
-   }
+    String filename = nonOpt.get(0);
+    println(filename);
+    UmpleFile umpleFile = new UmpleFile(filename);
+    UmpleModel model = new UmpleModel(umpleFile);
 
-   private static OptionSet optParse(String[] args)
-   {
-       optparser = new OptionParser();
-       optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
-       optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-       optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,Yuml").withRequiredArg().ofType(String.class);
-       optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, ouptut will only generate language <lang>");
-       optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
+    if (postModelOptionProcess(optset, model)) {
+      return;
+    }
 
-       OptionSet optSet = null;
-       try {
-           optSet = optparser.parse(args);
-       } catch (joptsimple.OptionException e) {
-           println("Option:" + e.getMessage());
-           printUsage();
-       }
-       return optSet;
-   }
+    try
+    {
+      model.run();
+      println("Success! Processed "+ filename +".");
+    }
+    catch(UmpleCompilerException e)
+    {
+      printerr(e.getMessage());
+      if(!model.isShouldGenerate())
+        System.exit(-1);
+    }
+
+    //     Compiler compiler = new Compiler();
+    //     URL jarfile = compiler.compile(umpleFile.getPath());
+    //     
+    //     if (jarfile != null)
+    //     {
+    //       println("Success! Processed "+ filename +".");
+    //     }
+    //     else
+    //     {
+    //       println("Failure! Unable to process " + filename + ".");
+    //     }
+  }
+
+  private static void println(String output)
+  {
+    console += output + "\n";
+    System.out.println(output);
+  }
+  private static void printerr(String err)
+  {
+    console += err;
+    System.err.print(err);
+  }
+  private static void printUsage() {
+    println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
+    try{
+      optparser.printHelpOn(System.out);
+    } catch (IOException e) {
+    }
+  }
+  /**
+   * optionProcess: process the option arguments which does not require UmpleModel
+   * Argument: optSet - set of the options and corresponding arguments
+   * Return: boolean - If application should terminate immediately after return
+   */
+  private static boolean preModelOptionProcess(OptionSet optSet) {
+    if (optSet == null) {
+      return true;
+    }
+    if (optSet.has("version")) {
+      println("Version: " + UmpleModel.versionNumber);
+      return true;
+    }
+    if (optSet.has("help")) {
+      printUsage();
+      return true;
+    }
+    return false;
+  }
+
+  private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model) {
+    if (optset.has("generate")) {
+      boolean override=false;
+      String path = "";
+      if (optset.has("override")) {
+        override = true;
+      }
+      if (optset.has("path")) {
+        path = (String)optset.valueOf("path");
+      }
+      String lang = (String)optset.valueOf("generate");
+      GenerateTarget gt = new GenerateTarget(lang, path);
+      gt.setOverrideAll(override);
+      model.addGenerate(Arrays.asList(gt));
+    }
+    return false;
+  }
+
+  private static OptionSet optParse(String[] args)
+  {
+    optparser = new OptionParser();
+    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+    optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,Yuml").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, ouptut will only generate language <lang>");
+    optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
+
+    OptionSet optSet = null;
+
+    try 
+    {
+      optSet = optparser.parse(args);
+    } 
+    catch (joptsimple.OptionException e) 
+    {
+      println("Option:" + e.getMessage());
+      printUsage();
+    }
+
+    return optSet;
+  }
 }
 
 
@@ -161,107 +166,107 @@ class UmpleRunMain
   depend cruise.umple.util.*;
   depend java.net.*;
   depend java.io.*;
-  
+
   public static String console;
   public static boolean displayOutput = true;
-  
-   public static void main(String[] args) 
-   {
-     console = "";
-     
-     if (args.length < 2)
-     {
-       println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
-       return;
-     }
-     
-     String filename = args[0];
-     String cmdFilename = args[1];
-     UmpleFile umpleFile = new UmpleFile(filename);
-     UmpleModel model = new UmpleModel(umpleFile);
-     boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
-     boolean shouldCompile = !shouldDebug;
-     
-     try
-     {
-         if (shouldCompile)
-         {
-           print("Compiling "+ filename +"... ");
-           model.run();
-           println("success.");
-         }
-         else
-         {
-           print("Skipping compilation, entering debug mode");
-         }
 
-         print("Building model... ");
-         Builder b = new Builder();
-         URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
+  public static void main(String[] args) 
+  {
+    console = "";
 
-         if (jarfile == null)
-         {
-             println("failed");
-             return;
-         }
-         println("success.");
+    if (args.length < 2)
+    {
+      println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
+      return;
+    }
 
-         print("Loading model into memory... ");
-         URL urls [] = { jarfile };
-         URLClassLoader cl = new URLClassLoader(urls);
-         println("success.");
-         
-         Command cmd = new Command(cl);
-         
-         println("Running commands:");
-         boolean isFirst = true;
-         for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
-         {
-           if (isFirst)
-           {
-             cmd.addAttributes(input);
-             isFirst = false;
-             continue;
-           }
-           cmd.exec(input);
-           for(String message : cmd.popMessages())
-           {
-             println("  " + message);
-           }
-         }
-         
-         println("Done.");
-     }
-     catch(Exception e)
-     {
-         println("failed.");
-         printerr(e.getMessage());
-     }
-   }
-   
-   private static void print(String output)
-   {
-     console += output;
-     if (displayOutput)
-     {
-       System.out.print(output);  
-     }
-     
-   }
-   
-   private static void println(String output)
-   {
-     print(output + "\n");
-   }
+    String filename = args[0];
+    String cmdFilename = args[1];
+    UmpleFile umpleFile = new UmpleFile(filename);
+    UmpleModel model = new UmpleModel(umpleFile);
+    boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
+    boolean shouldCompile = !shouldDebug;
 
-   private static void printerr(String err)
-   {
-     console += err;
-     if (displayOutput)
-     {
-       System.err.print(err);
-     }
-   }
+    try
+    {
+      if (shouldCompile)
+      {
+        print("Compiling "+ filename +"... ");
+        model.run();
+        println("success.");
+      }
+      else
+      {
+        print("Skipping compilation, entering debug mode");
+      }
+
+      print("Building model... ");
+      Builder b = new Builder();
+      URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
+
+      if (jarfile == null)
+      {
+        println("failed");
+        return;
+      }
+      println("success.");
+
+      print("Loading model into memory... ");
+      URL urls [] = { jarfile };
+      URLClassLoader cl = new URLClassLoader(urls);
+      println("success.");
+
+      Command cmd = new Command(cl);
+
+      println("Running commands:");
+      boolean isFirst = true;
+      for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
+      {
+        if (isFirst)
+        {
+          cmd.addAttributes(input);
+          isFirst = false;
+          continue;
+        }
+        cmd.exec(input);
+        for(String message : cmd.popMessages())
+        {
+          println("  " + message);
+        }
+      }
+
+      println("Done.");
+    }
+    catch(Exception e)
+    {
+      println("failed.");
+      printerr(e.getMessage());
+    }
+  }
+
+  private static void print(String output)
+  {
+    console += output;
+    if (displayOutput)
+    {
+      System.out.print(output);  
+    }
+
+  }
+
+  private static void println(String output)
+  {
+    print(output + "\n");
+  }
+
+  private static void printerr(String err)
+  {
+    console += err;
+    if (displayOutput)
+    {
+      System.err.print(err);
+    }
+  }
 }
 
 
@@ -274,14 +279,14 @@ class PlaygroundMain
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.util.*;
   depend java.io.*;
-  
+
   public static String console = "";
-  
+
   public static void main(String[] args)
   {
     console = "";
     String answer = "";
-    
+
     if (args.length == 0)
     {
       print("Invalid format, please try again specifying:\n");
@@ -299,7 +304,7 @@ class PlaygroundMain
       String deltaCode = args[1];
       String filename = args[2];
       String umpleCode = SampleFileWriter.readContent(new File(filename));
-      
+
       SynchronizationAction action = action(actionType,deltaCode,umpleCode);
       if (action != null)
       {
@@ -335,9 +340,9 @@ class PlaygroundMain
     }
     catch(UmpleCompilerException e)
     {
-   	  System.err.print(model.getLastResult().toJSON());
+      System.err.print(model.getLastResult().toJSON());
     }
-     
+
     if ("-classList".equals(args[0]))
     {
       for (UmpleClass aClass : model.getUmpleClasses())
@@ -378,13 +383,13 @@ class PlaygroundMain
 
     print(answer);
   }
-   
+
   private static void print(String output)
   {
     console += output;
     System.out.print(output);
   }
-  
+
   private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
   {
     if ("-addClass".equals(type))

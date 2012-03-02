@@ -178,7 +178,7 @@ public class Multiplicity
     minimum = lowerBound;
     maximum = upperBound;
   }
-  
+
   public String getRange()
   {
     String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
@@ -192,29 +192,29 @@ public class Multiplicity
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return new String[] { lowerBound, upperBound };
   }
-  
+
   public boolean isValid()
   {
     if ("*".equals(getMinimum()))
     {
       return false;
     }
-    
+
     if ("-1".equals(getMinimum()) || "-1".equals(getMaximum()) || "-1".equals(getBound()))
     {
       return false;
     }
-    
+
     if (getLowerBound() < -1 || getUpperBound() < -1)
     {
       return false;
     }
-  
+
     if (getLowerBound() > getUpperBound() && !isUpperBoundMany())
     {
       return false;
     }
-  
+
     return true;
   }
 
@@ -229,7 +229,7 @@ public class Multiplicity
       maximum = compareTo.maximum;
     }
   }
-    
+
   public int getLowerBound()
   {
     if (getBound() != null)
@@ -241,7 +241,7 @@ public class Multiplicity
       return parseInt(getMinimum(),-1);
     }
   }
-  
+
   public int getUpperBound()
   {
     if (getBound() != null)
@@ -253,7 +253,7 @@ public class Multiplicity
       return parseInt(getMaximum(),-1);
     }
   }
-  
+
   public boolean isLowerBoundMany()
   {
     return getLowerBound() == -1;
@@ -263,7 +263,7 @@ public class Multiplicity
   {
     return getUpperBound() == -1;
   }
-  
+
   public boolean isLowerBoundNumeric()
   {
     return getLowerBound() >= -1;
@@ -273,12 +273,12 @@ public class Multiplicity
   {
     return getUpperBound() >= -1;
   }
-  
+
   public boolean isMany()
   {
     return getUpperBound() > 1 || getUpperBound() == -1;
   }
-  
+
   public boolean isOne()
   {
     return getUpperBound() == 1;

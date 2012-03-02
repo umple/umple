@@ -17,7 +17,7 @@ c) Delegating to our code generator to produce the necessary artifacts (i.e. Jav
 
 Please refer to UmpleInternalParser_Code.ump for implementation details.
 
-*/
+ */
 
 class UmpleInternalParser
 {
@@ -26,7 +26,7 @@ class UmpleInternalParser
   depend java.io.*;
   depend cruise.umple.util.*;
   currentPackageName = "";
-  
+
   // The Umple meta model which will be populated based on what was parsed.
   UmpleModel model;
 

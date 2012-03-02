@@ -41,7 +41,7 @@ public class GeneratedElement
   {
     lookups.put(aKey, aValue);
   }
-  
+
   public String getLookup(String aKey)
   {
     if (aKey == null)
@@ -53,7 +53,7 @@ public class GeneratedElement
       return lookups.get(aKey);  
     }
   }
-  
+
   public boolean addMultiLookup(String aKey, String aValue)
   {
     List<String> oldList = null;
@@ -65,17 +65,17 @@ public class GeneratedElement
     {
       oldList = new ArrayList<String>();
     }
-    
+
     if (aValue == null || "".equals(aValue) || oldList.contains(aValue))
     {
       return false;
     }
-    
+
     oldList.add(aValue);
     multiLookups.put(aKey, oldList);
     return true;
   }
-  
+
   public String[] getMultiLookup(String aKey)
   {
     if (aKey == null || !multiLookups.containsKey(aKey))
@@ -85,11 +85,11 @@ public class GeneratedElement
     else
     {
       List<String> list = multiLookups.get(aKey);
-      
+
       return list.toArray(new String[list.size()]);
     }
   }
-  
+
   public String toString()
   {
     String answer = "<<";

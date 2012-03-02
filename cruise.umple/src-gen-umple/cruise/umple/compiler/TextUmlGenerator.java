@@ -70,7 +70,7 @@ public class TextUmlGenerator implements CodeGenerator
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
     ArrayList<Association> allAssociations = new ArrayList<Association>();
-    
+
     boolean isFirst = true;
     for (UmpleClass uClass : model.getUmpleClasses())
     {
@@ -90,21 +90,21 @@ public class TextUmlGenerator implements CodeGenerator
         code.append("    primitive Boolean;\n");
         code.append("  end;\n\n");
       }
-       
+
       String classDeclaration = "class ";
       classDeclaration += uClass.getName();
       if (uClass.getExtendsClass() != null)
       {
-          classDeclaration += StringFormatter.format(" specializes {0}",uClass.getExtendsClass().getName());
+        classDeclaration += StringFormatter.format(" specializes {0}",uClass.getExtendsClass().getName());
       }
       String implementedInterfaces="";
       if (uClass.hasParentInterface()){
-    	  for (UmpleInterface uInterface : uClass.getParentInterface())
-    	  {
-    		  implementedInterfaces += uInterface.getName() + "," ; 
-    	  }
-    	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
-    	  classDeclaration += StringFormatter.format(" implements {0}",implementedInterfaces);
+        for (UmpleInterface uInterface : uClass.getParentInterface())
+        {
+          implementedInterfaces += uInterface.getName() + "," ; 
+        }
+        implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1);	
+        classDeclaration += StringFormatter.format(" implements {0}",implementedInterfaces);
       }
       code.append(StringFormatter.format("  {0}\n",classDeclaration));
       for(Attribute av : uClass.getAttributes())
@@ -112,7 +112,7 @@ public class TextUmlGenerator implements CodeGenerator
         String typeName = av.getType() == null ? "String" : av.getType();
         code.append(StringFormatter.format("    attribute {1} : {0};\n",typeName,av.getName()));
       }
-      
+
       for(Association as : uClass.getAssociations())
       {
         if (allAssociations.contains(as))
@@ -122,14 +122,14 @@ public class TextUmlGenerator implements CodeGenerator
         allAssociations.add(as);
         AssociationEnd left = as.getEnd(0);
         AssociationEnd right = as.getEnd(1);
-        
+
         String assocName = as.getName() == null ? "" : StringFormatter.format(" {0}",as.getName());
         subCode.append(StringFormatter.format("  association{0}\n",assocName));
         subCode.append(StringFormatter.format("    navigable role {0} : {1}{2};\n",left.getRoleName(),left.getClassName(),left.getMultiplicity().getRange()));
         subCode.append(StringFormatter.format("    navigable role {0} : {1}{2};\n",right.getRoleName(),right.getClassName(),right.getMultiplicity().getRange()));
         subCode.append("  end;\n\n");
       }
-      
+
       for (StateMachine sm : uClass.getStateMachines())
       {
         if ("Simple".equals(sm.getType()))
@@ -154,35 +154,35 @@ public class TextUmlGenerator implements CodeGenerator
           subCode.append("\n  end;\n\n");
         }
       }     
-      
+
       code.append("  end;\n\n");
       code.append(subCode.toString());
     }
-      
-     boolean isFirstInterface = model.hasUmpleInterfaces() ? true : false;
-  	 for (UmpleInterface uInterface : model.getUmpleInterfaces())
+
+    boolean isFirstInterface = model.hasUmpleInterfaces() ? true : false;
+    for (UmpleInterface uInterface : model.getUmpleInterfaces())
+    {
+      subCode =  new StringBuilder();
+      if (isFirstInterface)
       {
-  		 subCode =  new StringBuilder();
-         if (isFirstInterface)
-      	 {
-          isFirstInterface = false;
-          String interfaceDeclaration = "interface ";
-          interfaceDeclaration += uInterface.getName();
-          subCode.append(StringFormatter.format("  {0}\n",interfaceDeclaration));
-          subCode.append("  end;\n\n");
-          }
-         code.append(subCode.toString());
+        isFirstInterface = false;
+        String interfaceDeclaration = "interface ";
+        interfaceDeclaration += uInterface.getName();
+        subCode.append(StringFormatter.format("  {0}\n",interfaceDeclaration));
+        subCode.append("  end;\n\n");
       }
-    
+      code.append(subCode.toString());
+    }
+
     if (!isFirst && !isFirstInterface)
     {
       code.append("end.\n");
     }
-    
+
     model.setCode(code.toString());
     writeModel();
   }
-  
+
   private void writeModel()
   {
     try

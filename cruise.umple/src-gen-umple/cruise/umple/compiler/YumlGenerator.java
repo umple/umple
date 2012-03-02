@@ -87,7 +87,7 @@ public class YumlGenerator implements CodeGenerator
           if (aVar.getType() == null)
           {
             yuml.append(StringFormatter.format("{0};",aVar.getName(),aVar.getType()));  
-            
+
           }
           else
           {
@@ -96,15 +96,15 @@ public class YumlGenerator implements CodeGenerator
         }
       }
       yuml.append("],");
-       
+
       if (aClass.getExtendsClass() != null)
       {
         UmpleClass parent = aClass.getExtendsClass();
         yuml.append(StringFormatter.format("[{0}]^-[{1}],",parent.getName(),aClass.getName()));
       }
-      
+
     }
-    
+
     for (Association aAssoc : model.getAssociations())
     {
       UmpleClass c1 = model.getUmpleClass(aAssoc.getEnd(0).getClassName());
@@ -114,13 +114,13 @@ public class YumlGenerator implements CodeGenerator
       List<AssociationEnd> assocEnds= aAssoc.getEnds();
       AssociationEnd roleName1= new AssociationEnd(null,null,null,null, null);
       AssociationEnd roleName2= new AssociationEnd(null,null,null,null, null);
-      
+
       if(!assocEnds.isEmpty())
       {  
-    	      	  roleName1 = assocEnds.get(0);
-    	  	      roleName2= assocEnds.get(1);
-       }
-      
+        roleName1 = assocEnds.get(0);
+        roleName2= assocEnds.get(1);
+      }
+
       String direction = "-";
       if (aAssoc.getIsLeftNavigable() && !aAssoc.getIsRightNavigable())
       {
@@ -132,7 +132,7 @@ public class YumlGenerator implements CodeGenerator
       }
       yuml.append(StringFormatter.format("[{0}]{5}{2}{4}{6}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction,roleName1.getRoleName(),roleName2.getRoleName()));
     }
-    
+
     model.setCode(yuml.toString());
   }
 }

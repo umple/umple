@@ -300,12 +300,12 @@ public class AssociationEnd
   {
     return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
   }
-  
+
   public String getDisplayRoleName()
   {
     return isDefaultRoleName ? "" : getRoleName();
   }
-  
+
   public String toSimpleString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -325,7 +325,7 @@ public class AssociationEnd
       return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
     }
   }
-  
+
   public String toGenericString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -353,7 +353,7 @@ public class AssociationEnd
   public String toString()
   {
     String asText = "";
-    
+
     if (!getModifier().equals("internal"))
     {
       asText += getModifier() + " " + asText;
@@ -377,15 +377,15 @@ public class AssociationEnd
 
     return asText;
   }
-  
+
   private String formatEnd(int aValue)
   {
     return aValue == MULT_MANY ? "*" : aValue + "";
   }
-  
+
   private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
   {
-    
+
     if (aValue == MULT_MANY)
     {
       return "*";

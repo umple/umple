@@ -131,17 +131,17 @@ public class ErrorMessage
   
    public ErrorMessage(int errorCode,Position pos,String... parameters)  {
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
-	  this.parameters = Arrays.asList(parameters);
+    this.parameters = Arrays.asList(parameters);
   }
 public String getFormattedMessage()
-   {
-   	   return errorType.format(this.parameters);
-   }
-   public String toString()
-   {
-   	   String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
-	   String err = sev + " on line " + this.position.getLineNumber();
-	   err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
-   	   return  err + errorType.format(this.parameters);
-   }
+  {
+    return errorType.format(this.parameters);
+  }
+  public String toString()
+  {
+    String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
+    String err = sev + " on line " + this.position.getLineNumber();
+    err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
+    return  err + errorType.format(this.parameters);
+  }
 }

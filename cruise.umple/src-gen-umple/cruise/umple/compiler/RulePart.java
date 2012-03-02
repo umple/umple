@@ -172,7 +172,7 @@ public class RulePart
       return name.substring(2);
     }
     else if (isAlphanumeric()) {
-    	return name.substring(1);
+      return name.substring(1);
     }
     else
     {
@@ -184,19 +184,19 @@ public class RulePart
   {
     nextIdentifiers.clear();
   }
-  
+
   public String[] getInnerNames()
   {
     if (!hasInnerNames())
     {
       return new String[0];
     }
-    
+
     TextParser parser = new TextParser(name);
     parser.load(parser.nextUntil(">"));
     ArrayList<String> allNames = new ArrayList<String>();
-    
-    
+
+
     while(parser.nextUntil(",") != null)
     {
       allNames.add(parser.name());
@@ -219,7 +219,7 @@ public class RulePart
     }
     return number > 0 && number <= getInnerNames().length;
   }
-  
+
   public RulePartValue[] getInnerValues(String value)
   {
     if (!hasInnerNames())
@@ -241,17 +241,17 @@ public class RulePart
     {
       return allRulePartValues;
     }
-    
+
     ArrayList<String> allUnorderedValues = new ArrayList<String>();
     ArrayList<Position> allUnorderedPositions = new ArrayList<Position>();
-    
+
     TextParser parser = new TextParser(value);
     while(parser.peek() != null)
     {
       allUnorderedPositions.add(parser.currentPosition().copy());
       allUnorderedValues.add(parser.next());
     }
-    
+
     int[] allValueIndicies = new int[allNames.length];
 
     TextParser namesParser = new TextParser(name);
@@ -272,19 +272,19 @@ public class RulePart
       int currentIndex = allValueIndicies[i];
       String orderedValue = currentIndex <= maximumIndex ? allUnorderedValues.get(unorderedIndex) : null;
       Position orderedPosition = currentIndex <= maximumIndex ? allUnorderedPositions.get(unorderedIndex++) : null;
-      
+
       allRulePartValues[i].setValue(orderedValue);
       allRulePartValues[i].setPosition(orderedPosition);
     }
-    
+
     return allRulePartValues;
   }
-  
+
   public boolean hasInnerNames()
   {
     return getName() != null && getName().indexOf(",") != -1;
   }
-  
+
   public boolean isStatic()
   {
     return Type.Static.equals(getType()); 
@@ -294,17 +294,17 @@ public class RulePart
   {
     return getName().startsWith("**");
   }
-  
+
   public boolean isToEndOfLine()
   {
     return !isMultiWord() && getName().startsWith("*");
   }
-  
+
   public boolean isAlphanumeric() {
-  	return getName().startsWith("~");
+    return getName().startsWith("~");
   }
-  
-  
+
+
   public boolean isVariable()
   {
     return Type.Variable.equals(getType()); 
@@ -314,22 +314,22 @@ public class RulePart
   {
     return isVariable() && name != null && name.startsWith("="); 
   }
-  
+
   public String[] getEnums()
   {
     if (name == null)
     {
       return new String[0];
     }
-    
+
     TextParser parser = new TextParser(name);
     parser.nextAfter(":");
-    
+
     if (parser.peek() == null)
     {
       return new String[] {getDisplayName()}; 
     }
-    
+
     ArrayList<String> allEnums = new ArrayList<String>();
     while (parser.nextUntil("|") != null)
     {
@@ -338,14 +338,14 @@ public class RulePart
     }
     return allEnums.toArray(new String[allEnums.size()]);
   }
-  
+
   public boolean isEnumValue(String input)
   {
     if (!isEnum() || input == null)
     {
       return false;
     }
-    
+
     for (String aEnum : getEnums())
     {
       if (aEnum.equals(input))
@@ -355,40 +355,40 @@ public class RulePart
     }
     return false;
   }
-  
+
   public boolean isRule()
   {
     return Type.Rule.equals(getType()); 
   }  
-  
-  
+
+
   public boolean isOne()
   {
     return "1".equals(getMultiplicity());
   }
-  
+
   public boolean isOptional()
   {
     return "?".equals(getMultiplicity());
   }
-  
+
   public boolean isMany()
   {
     return "*".equals(getMultiplicity());
   }
-  
+
   public boolean isAnonymous()
   {
     return getName().startsWith("anonymous::");
   }
-  
+
   public String toString()
   {
     StringBuffer answer = new StringBuffer();
     answer.append("Nexts:");
     for (int i=0; i<nextIdentifiers.size(); i++)
     {
-     answer.append("[" + nextIdentifiers.get(i) + "]");
+      answer.append("[" + nextIdentifiers.get(i) + "]");
     }
     answer.append("\n");
     return answer.toString();

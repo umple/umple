@@ -8,7 +8,7 @@ http://umple.org/license
 Parser for the grammar that can be used to define any grammar
 UmpleParser.ump is the key example
 
-*/
+ */
 namespace cruise.umple.compiler;
 
 class Couple
@@ -23,21 +23,21 @@ class Couple
  */
 class ParseResult
 {
-	// Specifies whether or not the parsing was successful.
-	Boolean wasSuccess;
-	
-	// Specifies whether or not the parsing has warnings.
-	Boolean hasWarnings = false;
-	
-	internal Boolean _acceptsErrors = true;
-  
-  	// Position is left for now, as not to break things
-  	* -> 0..1 Position;
-  	
-  	// The error messages related to parsing.
-  	* -> * ErrorMessage;
+  // Specifies whether or not the parsing was successful.
+  Boolean wasSuccess;
 
-  	depend  cruise.umple.util.StringFormatter;
+  // Specifies whether or not the parsing has warnings.
+  Boolean hasWarnings = false;
+
+  internal Boolean _acceptsErrors = true;
+
+  // Position is left for now, as not to break things
+  * -> 0..1 Position;
+
+  // The error messages related to parsing.
+  * -> * ErrorMessage;
+
+  depend  cruise.umple.util.StringFormatter;
 }
 
 /*
@@ -45,14 +45,14 @@ class ParseResult
  */
 class ErrorMessage
 {
-	// Indicates the type of error.
-  	* -> 1 ErrorType;
-  	
-	* -> 1 Position;
-	
-	String[] parameters;
-		
-	depend  cruise.umple.util.StringFormatter;
+  // Indicates the type of error.
+  * -> 1 ErrorType;
+
+  * -> 1 Position;
+
+  String[] parameters;
+
+  depend  cruise.umple.util.StringFormatter;
 }
 
 /*
@@ -60,26 +60,26 @@ class ErrorMessage
  */
 class ErrorType
 {
-	// The error code.
-	Integer errorCode;
-	
-	// The severity of the error.
-	Integer severity;
-	
-	String errorFormat;
-	String errorUrl;
-	
-	key {errorCode}
+  // The error code.
+  Integer errorCode;
+
+  // The severity of the error.
+  Integer severity;
+
+  String errorFormat;
+  String errorUrl;
+
+  key {errorCode}
 }
 
 class ErrorTypeSingleton
 {
-	singleton;
-	1 -> * ErrorType;
-    
-	depend cruise.umple.compiler.exceptions.UmpleCompilerException;
-	depend cruise.umple.util.SampleFileWriter;
-	depend java.io.*;
+  singleton;
+  1 -> * ErrorType;
+
+  depend cruise.umple.compiler.exceptions.UmpleCompilerException;
+  depend cruise.umple.util.SampleFileWriter;
+  depend java.io.*;
 }
 
 /*
@@ -89,19 +89,19 @@ class ErrorTypeSingleton
  */
 class Token
 {
-	// The name of the token.
-  	name;
-  	
-  	// The value of the token.
-  	value;
-  	0..1 parentToken -- * Token subTokens;
-  	* -> 0..1 Position;
-  
-  	before getName { if (name == null) { return ""; } }
-  	before getValue { if (value == null) { return ""; } }
-  
-  	before setPosition {String tFilename = position == null ? newPosition.getFilename() : position.getFilename();}
-  	after setPosition {position.setFilename(tFilename);}
+  // The name of the token.
+  name;
+
+  // The value of the token.
+  value;
+  0..1 parentToken -- * Token subTokens;
+  * -> 0..1 Position;
+
+  before getName { if (name == null) { return ""; } }
+  before getValue { if (value == null) { return ""; } }
+
+  before setPosition {String tFilename = position == null ? newPosition.getFilename() : position.getFilename();}
+  after setPosition {position.setFilename(tFilename);}
 }
 
 /*
@@ -110,19 +110,19 @@ class Token
  */
 class Position
 {
-	// The filename of the position.
-  	String filename;
-  	
-  	// The line number of the position.
-  	Integer lineNumber;
-  	
-  	// The character offset of the position.
-  	Integer characterOffset;
-  	
-  	// The offset of the position.
-  	Integer offset;
+  // The filename of the position.
+  String filename;
 
-  	key { filename, lineNumber, characterOffset, offset }
+  // The line number of the position.
+  Integer lineNumber;
+
+  // The character offset of the position.
+  Integer characterOffset;
+
+  // The offset of the position.
+  Integer offset;
+
+  key { filename, lineNumber, characterOffset, offset }
 }
 
 /*
@@ -132,13 +132,13 @@ class Position
  */
 class Rule
 {
-	// The name of the rule.
-  	name;
-  	
-  	Boolean shouldHide = false;
-  	
-  	// The definitions associated with the rule.
-  	String[] definitions;
+  // The name of the rule.
+  name;
+
+  Boolean shouldHide = false;
+
+  // The definitions associated with the rule.
+  String[] definitions;
 }
 
 class RulePartValue
@@ -150,18 +150,18 @@ class RulePartValue
 
 class RulePart
 {
-	// The name of the rule part.
-	name;
-	
-	multiplicity;
-	String[] nextIdentifiers;
-	Integer maximumPartsFound = -1;
-  
-	// A rule part is either static, variable or rule.
-	type { Static, Variable, Rule }
+  // The name of the rule part.
+  name;
 
-	before addNextIdentifier { if (aNextIdentifier == null) { return false; } }
-	before getMultiplicity { if (multiplicity == null) { return "1"; } }
+  multiplicity;
+  String[] nextIdentifiers;
+  Integer maximumPartsFound = -1;
+
+  // A rule part is either static, variable or rule.
+  type { Static, Variable, Rule }
+
+  before addNextIdentifier { if (aNextIdentifier == null) { return false; } }
+  before getMultiplicity { if (multiplicity == null) { return "1"; } }
 }
 
 /*
@@ -171,19 +171,19 @@ class RulePart
  */
 class Parser
 {
-	depend java.io.*;
-	depend cruise.umple.util.*;
-	
-	// The Umple file (.ump) that will be parsed.
-	String filename = null;
-	
-	String name; // default 'program'
-	String[] grammarRules;
-	* -> * Rule;
-	* -> * Couple;
-	ParseResult parseResult = new ParseResult(true);
-	internal Position _curParsePos = null;
-	Token rootToken = reset();
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  // The Umple file (.ump) that will be parsed.
+  String filename = null;
+
+  String name; // default 'program'
+  String[] grammarRules;
+  * -> * Rule;
+  * -> * Couple;
+  ParseResult parseResult = new ParseResult(true);
+  internal Position _curParsePos = null;
+  Token rootToken = reset();
 }
 
 class RuleInstance

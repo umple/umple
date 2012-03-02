@@ -407,18 +407,18 @@ public class Attribute extends UmpleVariable
   {
     return "const".equals(getModifier());
   }  
-  
+
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
-  
-  
+
+
   public boolean isImmutable()
   {
-  	boolean varIsImmutable = super.isImmutable();
-  	boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
-  	  	
-  	return (varIsImmutable || classIsImmutable);
+    boolean varIsImmutable = super.isImmutable();
+    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
+
+    return (varIsImmutable || classIsImmutable);
   }
 }

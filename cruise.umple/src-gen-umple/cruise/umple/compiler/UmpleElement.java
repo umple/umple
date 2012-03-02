@@ -196,7 +196,7 @@ public class UmpleElement
   {
     appendExtraCode(newCode,true);
   }
-  
+
   public void appendExtraCode(String newCode, boolean addNewline)
   {
     if (newCode == null) 

@@ -254,33 +254,33 @@ public class Method
   
   public String toString()
   {
-	  StringBuffer methodBuffer = new StringBuffer();
-	  methodBuffer.append(" " + this.getType()+ " " + this.getName());
-	  methodBuffer.append("(");
-	  String paramName="";
-	  String paramType="";
-	  String aSingleParameter="";
-	  String isList="";
-	  String parameters = "";
-	  String finalParams= "";
-	  if (this.hasMethodParameters()){
-		  for (MethodParameter aMethodParam : this.getMethodParameters()) 
-		  {
-			  paramName = aMethodParam.getName();
-			  paramType = aMethodParam.getType();
-			  isList = aMethodParam.getIsList() ? " [] " : " ";
-			  aSingleParameter = paramType + isList + paramName;
-			  parameters += aSingleParameter + ",";
-		  }
-		  finalParams = parameters.substring(0, parameters.length()-1);
-		  methodBuffer.append(finalParams);
-	  }
-	  methodBuffer.append(")");
-	  methodBuffer.append("  {");
-	  methodBuffer.append(System.getProperty("line.separator"));
-	  methodBuffer.append(    this.getMethodBody().getExtraCode());
-	  methodBuffer.append(System.getProperty("line.separator"));
-	  methodBuffer.append("  }");
-	  return methodBuffer.toString();
+    StringBuffer methodBuffer = new StringBuffer();
+    methodBuffer.append(" " + this.getType()+ " " + this.getName());
+    methodBuffer.append("(");
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+    if (this.hasMethodParameters()){
+      for (MethodParameter aMethodParam : this.getMethodParameters()) 
+      {
+        paramName = aMethodParam.getName();
+        paramType = aMethodParam.getType();
+        isList = aMethodParam.getIsList() ? " [] " : " ";
+        aSingleParameter = paramType + isList + paramName;
+        parameters += aSingleParameter + ",";
+      }
+      finalParams = parameters.substring(0, parameters.length()-1);
+      methodBuffer.append(finalParams);
+    }
+    methodBuffer.append(")");
+    methodBuffer.append("  {");
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append(    this.getMethodBody().getExtraCode());
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append("  }");
+    return methodBuffer.toString();
   }
 }

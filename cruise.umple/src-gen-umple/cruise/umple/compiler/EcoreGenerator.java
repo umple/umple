@@ -73,9 +73,9 @@ public class EcoreGenerator implements CodeGenerator
     String nsURI;
     List<String> allTypes = new ArrayList<String>();
     List<String> interfacesProcessed = new ArrayList<String>();
-    
+
     code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    
+
     boolean isFirst = true;
     for (UmpleClass uClass : model.getUmpleClasses())
     {
@@ -97,17 +97,17 @@ public class EcoreGenerator implements CodeGenerator
         superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uClass.getExtendsClass().getName()); 
       }
       else if (uClass.hasParentInterface()){
-		  UmpleInterface uInterface = uClass.getParentInterface(0);
-		  superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
-	      interfaceFlag =   " interface=\"true\"" ; 
-	      abstractFlag =   "abstract=\"true\"" ; 
-		  if (!(interfacesProcessed.contains(uInterface.getName()))){
-	      	interfacesProcessed.add(uInterface.getName());
-	      	code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
-	      	code.append("  </eClassifiers>\n");
-	   	  }
+        UmpleInterface uInterface = uClass.getParentInterface(0);
+        superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
+        interfaceFlag =   " interface=\"true\"" ; 
+        abstractFlag =   "abstract=\"true\"" ; 
+        if (!(interfacesProcessed.contains(uInterface.getName()))){
+          interfacesProcessed.add(uInterface.getName());
+          code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
+          code.append("  </eClassifiers>\n");
+        }
       }
-     
+
       code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uClass.getName(),superStructureFlag));
 
       for(Attribute av : uClass.getAttributes())
@@ -115,7 +115,7 @@ public class EcoreGenerator implements CodeGenerator
         String typeName = av.getType() == null ? "String" : av.getType();
         String upperBound = av.getIsList() ? " upperBound=\"-1\"" : "";
         String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
-        
+
         if (typeName.equals("String") || typeName.equals("Boolean") || typeName.equals("Double") || typeName.equals("Date"))
         {
           code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//E{1}\"{2}/>\n",attrName,typeName,upperBound));
@@ -138,23 +138,23 @@ public class EcoreGenerator implements CodeGenerator
           safeType = safeType.replace("<", "%3C");
           safeType = safeType.replace(",","%2C");
           safeType = safeType.replace(">", "%3E");
-          
+
           String safeType2 = typeName;
           safeType2 = safeType2.replace("<", "&lt;");
           String lookupType = typeName;
           int ltIndex = lookupType.indexOf("<");
-          
+
           if (ltIndex >= 0)
           {
             lookupType = lookupType.substring(0,ltIndex);
           }
           code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"#//{1}\"{2}/>\n",attrName,safeType,upperBound));
-          
+
           if (!allTypes.contains(safeType))
           {
             allTypes.add(safeType);
             String typeInstanceClassName = getFullyQualifiedName("java.lang",lookupType);
-          
+
             if (typeInstanceClassName == null)
             {
               for (Depend d : uClass.getDepends())
@@ -175,16 +175,16 @@ public class EcoreGenerator implements CodeGenerator
               subCode.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EDataType\" name=\"{0}\"/>\n",safeType2));
             }
           }
-          
+
         }
       }
-      
+
       ArrayList<Association> internalAssociations = new ArrayList<Association>();
       for(Association as : uClass.getAssociations())
       {
         AssociationEnd myEnd = as.getEnd(0);
         AssociationEnd theirEnd = as.getEnd(1);
-        
+
         if (internalAssociations.contains(as))
         {
           continue;
@@ -206,7 +206,7 @@ public class EcoreGenerator implements CodeGenerator
           code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
         }
       }
-      
+
       for (StateMachine sm : uClass.getStateMachines())
       {
         if ("Simple".equals(sm.getType()))
@@ -228,7 +228,7 @@ public class EcoreGenerator implements CodeGenerator
       code.append("  </eClassifiers>\n");
       code.append(subCode.toString());
     }
-    
+
     if (!isFirst)
     {
       code.append("</ecore:EPackage>\n");
@@ -254,16 +254,16 @@ public class EcoreGenerator implements CodeGenerator
   }
 
   private String getTargetNamespaceName(){ 
-     if (model.getDefaultNamespace() != null){
-	if (model.getDefaultNamespace().length() > 0 )
-	{
-	   String [] namespaces = model.getDefaultNamespace().split("\\.");	
-	   return namespaces[namespaces.length-1];
-	}
-     }
+    if (model.getDefaultNamespace() != null){
+      if (model.getDefaultNamespace().length() > 0 )
+      {
+        String [] namespaces = model.getDefaultNamespace().split("\\.");	
+        return namespaces[namespaces.length-1];
+      }
+    }
     return model.getUmpleFile().getSimpleFileName();
   }
-  
+
   private void writeModel()
   {
     try

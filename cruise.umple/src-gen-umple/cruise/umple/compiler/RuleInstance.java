@@ -181,7 +181,7 @@ public class RuleInstance
     }
     updateNextIdentifier();
   }
-  
+
   public boolean hasMoreRuleParts()
   {
     return rulePartsIndex < ruleParts.size();
@@ -240,17 +240,17 @@ public class RuleInstance
     RulePart currentPart = getRulePart(i);
     currentPart.removeNextIdentifiers();
     int lastIndex = numberOfRuleParts() - 1;
-    
+
     if (i == lastIndex)
     {
       updateLastNextPart(currentPart);
       return;
     }
-    
+
     if (currentPart.isRule() && currentPart.isMany())
     {
       Rule r = parser.getRule(currentPart.getName());
-      
+
       if (r.numberOfDefinitions() > 0)
       {
         TextParser textParser = new TextParser(r.getDefinition(0));
@@ -261,17 +261,17 @@ public class RuleInstance
 
     int nextPartOffset = 1;
     RulePart nextPart = getRulePart(i + nextPartOffset);
-    
+
     if (nextPart.isMany() && (i + nextPartOffset) == lastIndex)
     {
       updateLastNextPart(currentPart);
     }
-    
+
     while (nextPart.isRule())
     {
-      
+
       Rule r = parser.getRule(nextPart.getName());
-      
+
       boolean keepTrying = false;
       while (r != null)
       {
@@ -279,8 +279,8 @@ public class RuleInstance
         {
           TextParser textParser = new TextParser(definition);
           RulePart ruleFirstPart = analyzeRule(textParser.next());
-          
-          
+
+
           if (ruleFirstPart.isRule())
           {
             r = parser.getRule(ruleFirstPart.getName());
@@ -292,7 +292,7 @@ public class RuleInstance
             addNextIdentifierFor(currentPart,ruleFirstPart);
           }
         }
-        
+
         if (keepTrying)
         {
           keepTrying = false;
@@ -302,7 +302,7 @@ public class RuleInstance
           r = null;
         }
       }
-      
+
       nextPartOffset++;
       if ( (i+nextPartOffset) < ruleParts.size() && (nextPart.isOptional() || nextPart.isMany()) && !currentPart.isMany())
       {
@@ -313,13 +313,13 @@ public class RuleInstance
         nextPart = new RulePart(null,null);
       }
     }
-    
+
     if (!nextPart.isRule())
     {
       addNextIdentifierFor(currentPart,nextPart);
     }
   }
-  
+
   private void updateLastNextPart(RulePart part)
   {
     for (String stop : stopAts)

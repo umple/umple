@@ -7,7 +7,7 @@ http://umple.org/license
 
 Methods for the metamodel found in Umple.ump. Most of these are mixins.
 
-*/
+ */
 
 
 namespace cruise.umple.compiler;
@@ -43,7 +43,7 @@ class UmpleModel
     }
     return newClass;
   }
-  
+
   public Association getAssociation(String name)
   {
     for (Association a : associations)
@@ -55,7 +55,7 @@ class UmpleModel
     }
     return null;
   }
-  
+
   public AssociationClass addAssociationClass(String className)
   {
     AssociationClass newClass = (AssociationClass) getUmpleClass(className);
@@ -69,18 +69,18 @@ class UmpleModel
 
   public void addGenerate(String lang)
   {
-     addGenerate(new GenerateTarget(lang, null));
+    addGenerate(new GenerateTarget(lang, null));
   }
-  
+
   public void addGenerate(Collection <?extends GenerateTarget> c)
   {
-	 generates.addAll(c);
+    generates.addAll(c);
   }
-  
+
   public String getDefaultGenerate()
   {
-  	// Note that this method should be getDefaultGenerateLanguage
-  	// To avoid rippling changes throughout the code, the name is left as is 
+    // Note that this method should be getDefaultGenerateLanguage
+    // To avoid rippling changes throughout the code, the name is left as is 
     if (numberOfGenerates() == 0)
     {
       return null;
@@ -90,7 +90,7 @@ class UmpleModel
       return getGenerate(0).getLanguage();
     }
   }
-  
+
   public String getDefaultGeneratePath()
   {
     if (numberOfGenerates() == 0)
@@ -102,12 +102,12 @@ class UmpleModel
       return getGenerate(0).getPath() == null ? "./" : getGenerate(0).getPath();
     }
   }
-  
+
   public void clearGenerates()
   {
-  	 generates.clear();
+    generates.clear();
   }
-  
+
   public UmpleClass getUmpleClass(String name)
   {
     for (UmpleClass aClass : getUmpleClasses())
@@ -119,7 +119,7 @@ class UmpleModel
     }
     return null;
   }
-  
+
   public UmpleInterface getUmpleInterface(String name)
   {
     for (UmpleInterface aInterface : getUmpleInterfaces())
@@ -131,8 +131,8 @@ class UmpleModel
     }
     return null;
   }
-  
-  
+
+
   public StateMachine getStateMachineDefinition(String name)
   {
     for (StateMachine aStateMachine : getStateMachineDefinitions())
@@ -144,7 +144,7 @@ class UmpleModel
     }
     return null;
   }
-    
+
   public void run()
   {
     UmpleParser parser = new UmpleInternalParser(this);
@@ -152,16 +152,16 @@ class UmpleModel
     ParseResult result = parser.parse("program", input);
     boolean failed = !result.getWasSuccess();
     lastResult = result;
-    
+
     if(!failed)
-        result = parser.analyze(getShouldGenerate());
+      result = parser.analyze(getShouldGenerate());
 
     failed |= !result.getWasSuccess();
 
     if(failed || result.getHasWarnings())
-    	throw new UmpleCompilerException(result.toString(),null);
+      throw new UmpleCompilerException(result.toString(),null);
   }  
-  
+
   // Generates the actual code
   public void generate()
   {
@@ -169,15 +169,15 @@ class UmpleModel
     {
       for (GenerateTarget target : getGenerates())
       {
-      	// Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
+        // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
-        
+
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
-        
+
         // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
         generator.setModel(this);
-        
+
         generator.setOutput(target.getPath());
         generator.generate();
       }
@@ -187,14 +187,14 @@ class UmpleModel
       throw new UmpleCompilerException("Unable to generate code\n",e);
     }
   }
-  
+
   public Coordinate getDefaultClassPosition(int numDefaults)
   {
     int xIndex  = 0;
     int yIndex = 0;
     int yOffset = 0;
     int xOffset = 0;
-    
+
     xIndex = (numDefaults-1) / (maxYLevels);
     yIndex = (numDefaults-1) % (maxYLevels);
     yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
@@ -202,106 +202,106 @@ class UmpleModel
 
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
-  
+
   public Coordinate[] getDefaultAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
-  	int offsetX = offsetFromEdge.getY();
-  	
-  	String classOne = a.getEnd(0).getClassName();
-  	String classTwo = a.getEnd(1).getClassName();
-  	Coordinate classOnePos = getUmpleClass(classOne).getPosition();
-  	Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
-  	
-  	if (classOne.equals(classTwo))
-  	{
-  	  return getDefaultReflexiveAssociationPosition(a);
-  	}
-  	
-  	int num = 1;
-  	String tempClass1 = "";
-  	String tempClass2 = "";
-  	for (Association temp : getAssociations())
-  	{
-  	  tempClass1 = temp.getEnd(0).getClassName();
-  	  tempClass2 = temp.getEnd(1).getClassName();
-  	  
-  	  if (temp.getName().equals(a.getName()) &&
-  	  	  tempClass1.equals(classOne)        && 
-  	  	  tempClass2.equals(classTwo)) 
-  	  {
-  	  	 break; 
-  	  }
-  	  
-  	  if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
-  	  else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
-  	}
-  	
-  	Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
-  	Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
-  	Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
-  	Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
-  	classOneNoX.setX(0);
-  	classTwoNoX.setX(0);
-  	classOneNoY.setY(0);
-  	classTwoNoY.setY(0);
-  	String whereVert = classOneNoX.whereIs(classTwoNoX);
-  	String whereHorz = classOneNoY.whereIs(classTwoNoY);
-  	 
-  	// alternative 1: left/right wall of class one to left/right wall of class two
-  	int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
-  	int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
-  	int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
-  	int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
-  	Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
-  	Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
-  	Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
-  									  classOnePos.getY() + offsetOne.getY(),
-  									  0,0);
-  	Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
-  									  classTwoPos.getY() + offsetTwo.getY(),
-  									  0,0);
-  	
-  	int distance = start.distanceTo(end);
-  	
-  	// alternative 2: top/bottom wall of class one to top/bottom wall of class two
-  	int altXOne = num*offsetX;
-  	int altXTwo = num*offsetX;
-  	int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
-  	int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
-  	Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
-  	Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
-  	Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
-  									     classOnePos.getY() + altOffsetOne.getY(),
-  									     0,0);
-  	Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
-  									     classTwoPos.getY() + altOffsetTwo.getY(),
-  									     0,0);
-  	
-  	int altDistance = altStart.distanceTo(altEnd);
-  	
-  	// choose alternative that generates the shortest line
-  	if (altDistance < distance)
-  	{
+    int offsetX = offsetFromEdge.getY();
+
+    String classOne = a.getEnd(0).getClassName();
+    String classTwo = a.getEnd(1).getClassName();
+    Coordinate classOnePos = getUmpleClass(classOne).getPosition();
+    Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
+
+    if (classOne.equals(classTwo))
+    {
+      return getDefaultReflexiveAssociationPosition(a);
+    }
+
+    int num = 1;
+    String tempClass1 = "";
+    String tempClass2 = "";
+    for (Association temp : getAssociations())
+    {
+      tempClass1 = temp.getEnd(0).getClassName();
+      tempClass2 = temp.getEnd(1).getClassName();
+
+      if (temp.getName().equals(a.getName()) &&
+          tempClass1.equals(classOne)        && 
+          tempClass2.equals(classTwo)) 
+      {
+        break; 
+      }
+
+      if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
+      else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
+    }
+
+    Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+    Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+    Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+    Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+    classOneNoX.setX(0);
+    classTwoNoX.setX(0);
+    classOneNoY.setY(0);
+    classTwoNoY.setY(0);
+    String whereVert = classOneNoX.whereIs(classTwoNoX);
+    String whereHorz = classOneNoY.whereIs(classTwoNoY);
+
+    // alternative 1: left/right wall of class one to left/right wall of class two
+    int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
+    int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
+    int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
+    int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
+    Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
+    Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
+    Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
+        classOnePos.getY() + offsetOne.getY(),
+        0,0);
+    Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
+        classTwoPos.getY() + offsetTwo.getY(),
+        0,0);
+
+    int distance = start.distanceTo(end);
+
+    // alternative 2: top/bottom wall of class one to top/bottom wall of class two
+    int altXOne = num*offsetX;
+    int altXTwo = num*offsetX;
+    int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
+    int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
+    Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
+    Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
+    Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
+        classOnePos.getY() + altOffsetOne.getY(),
+        0,0);
+    Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
+        classTwoPos.getY() + altOffsetTwo.getY(),
+        0,0);
+
+    int altDistance = altStart.distanceTo(altEnd);
+
+    // choose alternative that generates the shortest line
+    if (altDistance < distance)
+    {
       defaults[0] = altOffsetOne;
-  	  defaults[1] = altOffsetTwo;
-  	} 
-  	else
+      defaults[1] = altOffsetTwo;
+    } 
+    else
     {
       defaults[0] = offsetOne;
       defaults[1] = offsetTwo;
-  	}
-    
+    }
+
     return defaults;
   }
-  
+
   private Coordinate[] getDefaultReflexiveAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
     Coordinate position = getUmpleClass(name).getPosition();
-    
+
     // determine which corner the association should be positioned at
     int index = 0;
     for (int i=0; i < numberOfAssociations(); i++)
@@ -318,10 +318,10 @@ class UmpleModel
         }
       }
     }
-    
+
     Coordinate offsetOne = new Coordinate(0,0,0,0);
     Coordinate offsetTwo = new Coordinate(0,0,0,0);
-    
+
     if (index % 4 == 0)
     {
       offsetOne.setX(reflexiveSegmentLength);
@@ -350,12 +350,12 @@ class UmpleModel
       offsetTwo.setX(0);
       offsetTwo.setY(reflexiveSegmentLength);
     }
-    
+
     defaults[0] = offsetOne;
     defaults[1] = offsetTwo;
-    
+
     return defaults;
-   }
+  }
 }
 
 class Key
@@ -390,64 +390,64 @@ class Depend
 
 class Method
 {  
-   public String toString()
+  public String toString()
   {
-	  StringBuffer methodBuffer = new StringBuffer();
-	  methodBuffer.append(" " + this.getType()+ " " + this.getName());
-	  methodBuffer.append("(");
-	  String paramName="";
-	  String paramType="";
-	  String aSingleParameter="";
-	  String isList="";
-	  String parameters = "";
-	  String finalParams= "";
-	  if (this.hasMethodParameters()){
-		  for (MethodParameter aMethodParam : this.getMethodParameters()) 
-		  {
-			  paramName = aMethodParam.getName();
-			  paramType = aMethodParam.getType();
-			  isList = aMethodParam.getIsList() ? " [] " : " ";
-			  aSingleParameter = paramType + isList + paramName;
-			  parameters += aSingleParameter + ",";
-		  }
-		  finalParams = parameters.substring(0, parameters.length()-1);
-		  methodBuffer.append(finalParams);
-	  }
-	  methodBuffer.append(")");
-	  methodBuffer.append("  {");
-	  methodBuffer.append(System.getProperty("line.separator"));
-	  methodBuffer.append(    this.getMethodBody().getExtraCode());
-	  methodBuffer.append(System.getProperty("line.separator"));
-	  methodBuffer.append("  }");
-	  return methodBuffer.toString();
+    StringBuffer methodBuffer = new StringBuffer();
+    methodBuffer.append(" " + this.getType()+ " " + this.getName());
+    methodBuffer.append("(");
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+    if (this.hasMethodParameters()){
+      for (MethodParameter aMethodParam : this.getMethodParameters()) 
+      {
+        paramName = aMethodParam.getName();
+        paramType = aMethodParam.getType();
+        isList = aMethodParam.getIsList() ? " [] " : " ";
+        aSingleParameter = paramType + isList + paramName;
+        parameters += aSingleParameter + ",";
+      }
+      finalParams = parameters.substring(0, parameters.length()-1);
+      methodBuffer.append(finalParams);
+    }
+    methodBuffer.append(")");
+    methodBuffer.append("  {");
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append(    this.getMethodBody().getExtraCode());
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append("  }");
+    return methodBuffer.toString();
   }
 }
 
 class UmpleInterface
 {
- public boolean hasMethod(Method comparedMethod){
-	  boolean isMethod=false;
-	  String methodName = comparedMethod.getName();
-	  int numberOfParams = comparedMethod.getMethodParameters().size();
-	  for (Method aMethod : this.getMethods()){
-		  // Compare method names
-		  if (aMethod.getName().equals(methodName)){	
-			  // Now compare parameters
-			  if (numberOfParams == aMethod.getMethodParameters().size()){
-				  for (MethodParameter param: aMethod.getMethodParameters()){
-					 for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
-					  if (param.getType().equals(paramToCompare.getType())){
-						  isMethod=true;			  
-					  }
-					  else{
-						  return false;
-					  }
-					 }
-				  }
-			  }
-		  }
-	  }
-	  return isMethod;  
+  public boolean hasMethod(Method comparedMethod){
+    boolean isMethod=false;
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){	
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size()){
+          for (MethodParameter param: aMethod.getMethodParameters()){
+            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+              if (param.getType().equals(paramToCompare.getType())){
+                isMethod=true;			  
+              }
+              else{
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return isMethod;  
   }
 
 }
@@ -458,7 +458,7 @@ class UmpleElement
   {
     appendExtraCode(newCode,true);
   }
-  
+
   public void appendExtraCode(String newCode, boolean addNewline)
   {
     if (newCode == null) 
@@ -495,7 +495,7 @@ class UmpleClass
       return all;
     }
     String formattedMethod = StringFormatter.toUnderscore(method);
-    
+
     for (CodeInjection code : getCodeInjections())
     {
       if (code.getOperation() == null || !type.equals(code.getType()))
@@ -506,11 +506,11 @@ class UmpleClass
       boolean isAllExcludes = true;
       TriState isMatch = new TriState(false);
       TriState isMatchOnExclude = new TriState(true);
-      
+
       String[] allOperations = code.getOperation().split(",");
       for (String operation : allOperations)
       {
-        
+
         boolean isNot = false;
         if (operation.startsWith("!"))
         {
@@ -522,7 +522,7 @@ class UmpleClass
           isAllExcludes = false;
         }
         isMatchOnExclude.setIsSet(true);
-        
+
         String regexOperation = StringFormatter.toUnderscore(operation);
         regexOperation = regexOperation.replace("_*", "*");
         regexOperation = regexOperation.replace("*", ".*");
@@ -538,13 +538,13 @@ class UmpleClass
           isMatch.setStatus(true);
         }
       }
-      
+
       if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue()) 
       {
         all.add(code);
       }
     } 
-    
+
     return all;
   }
 
@@ -569,7 +569,7 @@ class UmpleClass
     {
       allEvents.addAll(sm.getEvents());
     }
-    
+
     List<Event> allUniqueEvents = new ArrayList<Event>();
     for (Event e : allEvents)
     {
@@ -587,7 +587,7 @@ class UmpleClass
     {
       return null;
     }
-    
+
     for (StateMachine sm : getStateMachines())
     {
       for (Event aEvent : sm.getAllEvents())
@@ -608,7 +608,7 @@ class UmpleClass
       addNamespace(aNamespace);
     }
   }
-  
+
   public AssociationVariable getAssociationVariable(String name)
   {
     for (AssociationVariable av : associationVariables)
@@ -620,7 +620,7 @@ class UmpleClass
     }
     return null;
   }
-  
+
   public AssociationVariable getAssociationVariableFor(UmpleClass uClass)
   {
     for (AssociationVariable av : associationVariables)
@@ -632,33 +632,33 @@ class UmpleClass
     }
     return null;
   }
-  
-  
- public boolean hasMethod(Method comparedMethod){
-	  boolean isMethod=false;
-	  String methodName = comparedMethod.getName();
-	  int numberOfParams = comparedMethod.getMethodParameters().size();
-	  for (Method aMethod : this.getMethods()){
-		  // Compare method names
-		  if (aMethod.getName().equals(methodName)){	
-			  // Now compare parameters
-			  if (numberOfParams == aMethod.getMethodParameters().size()){
-				  for (MethodParameter param: aMethod.getMethodParameters()){
-					 for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
-					  if (param.getType().equals(paramToCompare.getType())){
-						  isMethod=true;			  
-					  }
-					  else{
-						  return false;
-					  }
-					 }
-				  }
-			  }
-		  }
-	  }
-	  return isMethod;  
+
+
+  public boolean hasMethod(Method comparedMethod){
+    boolean isMethod=false;
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){	
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size()){
+          for (MethodParameter param: aMethod.getMethodParameters()){
+            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+              if (param.getType().equals(paramToCompare.getType())){
+                isMethod=true;			  
+              }
+              else{
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return isMethod;  
   }
-  
+
   public Attribute getAttribute(String name)
   {
     for (Attribute av : attributes)
@@ -670,12 +670,12 @@ class UmpleClass
     }
     return null;
   }
-  
+
   public boolean isRoot()
   {
     return extendsClass == null;
   }
-  
+
   protected GeneratedClass gClass = null;
   public GeneratedClass getGeneratedClass()
   {
@@ -691,14 +691,14 @@ class UmpleClass
     }
     return getGeneratedClass();
   }
-  
-  
-  
+
+
+
   public boolean hasUniqueIdentifier()
   {
     return getUniqueIdentifier() != null;
   }
-  
+
   public boolean isAttributeClass()
   {
     for (AssociationVariable association : getAssociationVariables())
@@ -710,50 +710,50 @@ class UmpleClass
     }
     return true;
   }
-  
+
   private boolean allAssociationsSupportClassImmutabilityRules(boolean isImmutable)
   {
-  	if (this.hasStateMachines()) { return false; }
-  	
-  	for (AssociationVariable av : associationVariables)
-  	{
-  	  if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }
-  	}
-  	return true;
+    if (this.hasStateMachines()) { return false; }
+
+    for (AssociationVariable av : associationVariables)
+    {
+      if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }
+    }
+    return true;
   }
-  
+
   protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, 
-  	AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
+      AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
   {
-  	boolean satisfied = false;
-  	if (!myClassImmutable && !yourClassImmutable)
-  	{
+    boolean satisfied = false;
+    if (!myClassImmutable && !yourClassImmutable)
+    {
       satisfied = true;
-  	}
-  	else if (myAV == null || yourAV == null || myClass == null || yourClass == null)
-  	{
-  	  satisfied = true;
-  	} 
-  	else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
-  	{
-  	  satisfied = true;
-  	}
-  	else if (myClassImmutable && yourClassImmutable && (!myAV.getIsNavigable() || !yourAV.getIsNavigable()))
-  	{
+    }
+    else if (myAV == null || yourAV == null || myClass == null || yourClass == null)
+    {
       satisfied = true;
-  	}
-  	return satisfied;
+    } 
+    else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
+    {
+      satisfied = true;
+    }
+    else if (myClassImmutable && yourClassImmutable && (!myAV.getIsNavigable() || !yourAV.getIsNavigable()))
+    {
+      satisfied = true;
+    }
+    return satisfied;
   }
-  
+
   protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myClassImmutable)
   {
-  	AssociationVariable relatedAV = myAV.getRelatedAssociation();
-  	UmpleClass relatedClass = (relatedAV == null) ? null : relatedAV.getUmpleClass();
-  	boolean relatedClassImmutable = (relatedClass == null) ? false : ((relatedClass == this) ? myClassImmutable : relatedClass.isImmutable());
-  	
-  	return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
+    AssociationVariable relatedAV = myAV.getRelatedAssociation();
+    UmpleClass relatedClass = (relatedAV == null) ? null : relatedAV.getUmpleClass();
+    boolean relatedClassImmutable = (relatedClass == null) ? false : ((relatedClass == this) ? myClassImmutable : relatedClass.isImmutable());
+
+    return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
   }
-  	
+
 }
 
 
@@ -774,12 +774,12 @@ class UmpleVariable
       return name.toUpperCase().charAt(0) + name.substring(1);
     }
   }
-  
+
   public boolean isImmutable()
   {
-  	return "immutable".equals(modifier);
+    return "immutable".equals(modifier);
   }	
-  
+
 }
 
 class Attribute
@@ -788,19 +788,19 @@ class Attribute
   {
     return "const".equals(getModifier());
   }  
-  
+
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
-  
-  
+
+
   public boolean isImmutable()
   {
-  	boolean varIsImmutable = super.isImmutable();
-  	boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
-  	  	
-  	return (varIsImmutable || classIsImmutable);
+    boolean varIsImmutable = super.isImmutable();
+    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
+
+    return (varIsImmutable || classIsImmutable);
   }
 }
 
@@ -811,16 +811,16 @@ class Association
   public void setLeftAndRight()
   {
     String name = this.getName();
-    
+
     int underscore = name.indexOf("__");
     String nameOne = name.substring(0,underscore);
     String nameTwo = name.substring(underscore + "__".length(), name.length());
-    
+
     if (nameOne.compareTo(nameTwo) > 0)
     {
-      
+
     }
-   
+
   }
 
   public int whoIsInvalid()
@@ -829,7 +829,7 @@ class Association
     {
       return -1;
     }
-    
+
     if (getEnd(0).getClassName().equals(getEnd(1).getClassName()))
     {
       if (getEnd(0).getMultiplicity().getLowerBound() != 0)
@@ -843,12 +843,12 @@ class Association
     }
     return -1;
   }
-  
+
   public boolean isValid()
   {
     return whoIsInvalid() == -1;
   }
-  
+
   public String getArrowString()
   {
     String arrow = "--";
@@ -872,7 +872,7 @@ class Association
     String leftSide = getEnd(0).toGenericString();
     String rightSide = getEnd(1).toGenericString();
 
-    
+
     if (leftSide.equals("n") && rightSide.equals("n") && !getEnd(0).toSimpleString().equals(getEnd(1).toSimpleString()))
     {
       return cruise.umple.util.StringFormatter.format("n {0} m",getArrowString());
@@ -882,18 +882,18 @@ class Association
       return cruise.umple.util.StringFormatter.format("{0} {1} {2}",leftSide,getArrowString(),rightSide);
     }
   }
-  
+
   public String deriveName()
   {
     AssociationEnd firstEnd = this.getEnd(0);
     AssociationEnd secondEnd = this.getEnd(1);
-    
+
     String firstClassName = firstEnd.getClassName();
     String secondClassName = secondEnd.getClassName();
-    
+
     String firstRole = firstEnd.getDisplayRoleName().equals("") ? "" : ":" + firstEnd.getDisplayRoleName();
     String secondRole = secondEnd.getDisplayRoleName().equals("") ? "" : ":" + secondEnd.getDisplayRoleName();
-    
+
     if (firstClassName.compareTo(secondClassName) <= 0)
     {
       return firstClassName + firstRole + "__" + secondClassName + secondRole;
@@ -924,12 +924,12 @@ class AssociationEnd
   {
     return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
   }
-  
+
   public String getDisplayRoleName()
   {
     return isDefaultRoleName ? "" : getRoleName();
   }
-  
+
   public String toSimpleString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -949,7 +949,7 @@ class AssociationEnd
       return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
     }
   }
-  
+
   public String toGenericString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -977,7 +977,7 @@ class AssociationEnd
   public String toString()
   {
     String asText = "";
-    
+
     if (!getModifier().equals("internal"))
     {
       asText += getModifier() + " " + asText;
@@ -1001,15 +1001,15 @@ class AssociationEnd
 
     return asText;
   }
-  
+
   private String formatEnd(int aValue)
   {
     return aValue == MULT_MANY ? "*" : aValue + "";
   }
-  
+
   private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
   {
-    
+
     if (aValue == MULT_MANY)
     {
       return "*";
@@ -1023,7 +1023,7 @@ class AssociationEnd
       return defaultIfNotOneOrMany;
     }
   }  
-  
+
 }
 
 
@@ -1033,7 +1033,7 @@ class AssociationVariable
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());
   }
-  
+
   public boolean isSymmetricReflexive()
   {
     return getRelatedAssociation() != null && "symmetricreflexive".equals(getModifier());
@@ -1051,7 +1051,7 @@ class AssociationVariable
       setRelatedAssociation(this);
     }
   }
-    
+
   public static int min(int first, int second)
   {
     return first == -1 ? second : second == -1 ? first : Math.min(first, second);
@@ -1061,12 +1061,12 @@ class AssociationVariable
   {
     return first == -1 ? first : second == -1 ? second : Math.max(first, second);
   }
-  
+
   public boolean isMany()
   {
     return multiplicity.getUpperBound() == -1 || multiplicity.getUpperBound() > 1;
   }
-  
+
   public boolean isOptionalN()
   {
     return multiplicity.getLowerBound() == 0 && multiplicity.getUpperBound() > 1;
@@ -1076,17 +1076,17 @@ class AssociationVariable
   {
     return multiplicity.getUpperBound() == 1;
   }
-  
+
   public boolean isOnlyOne()
   {
     return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 1;
   }
-  
+
   public boolean isOptionalOne()
   {
     return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 0;
   }
-  
+
   public boolean isOptionalMany()
   {
     return multiplicity.getLowerBound() == 0 && isMany();
@@ -1096,110 +1096,110 @@ class AssociationVariable
   {
     return multiplicity.getLowerBound() > 1 && multiplicity.getLowerBound() == multiplicity.getUpperBound();
   }
-  
+
   public boolean isMN()
   {
     return multiplicity.getLowerBound() > 0 && (multiplicity.getUpperBound() > multiplicity.getLowerBound() || multiplicity.getUpperBound() == -1);
   }
-  
+
   public boolean isMStar()
   {
     return multiplicity.getLowerBound() > 0 && multiplicity.getUpperBound() == -1;
   }
-  
+
   public boolean isStar()
   {
     return multiplicity.getUpperBound() == -1;
   }
-  
+
   public boolean isMandatory()
   {
     return multiplicity.getLowerBound() > 0;
   }
-  
+
   public boolean isMandatoryOne()
   {
     return multiplicity.getLowerBound() == 1 && multiplicity.getUpperBound() == 1;
   }
-  
+
   public boolean isMandatoryMany()
   {
     return multiplicity.getLowerBound() > 0 && isMany();
   }
-  
+
   public boolean isImmutable()
   {
-  	AssociationVariable related = getRelatedAssociation();
-  	Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
-  	
-  	Boolean myUmpleClassIsImmutable = 
-  			(getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
-  	Boolean yourUmpleClassIsImmutable = 
-  			(related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
-  	
-  	return (super.isImmutable() || relatedAssocIsImmutable 
-  		|| myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
+    AssociationVariable related = getRelatedAssociation();
+    Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
+
+    Boolean myUmpleClassIsImmutable = 
+      (getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+    Boolean yourUmpleClassIsImmutable = 
+      (related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
+
+    return (super.isImmutable() || relatedAssocIsImmutable 
+        || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
   }
-  
+
   public boolean setImmutable(boolean aImmutable)
   {
-  	boolean wasSet = false;
-  	if (!aImmutable)
-  	{
-  	  setModifier(null);
-  	  wasSet = true;
-  	}
-  	else if (aImmutable && canBeImmutable())
-  	{
-  	  setModifier("immutable");
-  	  wasSet = true;
-  	}
-  	return wasSet;
+    boolean wasSet = false;
+    if (!aImmutable)
+    {
+      setModifier(null);
+      wasSet = true;
+    }
+    else if (aImmutable && canBeImmutable())
+    {
+      setModifier("immutable");
+      wasSet = true;
+    }
+    return wasSet;
   }
-  
+
   public boolean canBeImmutable()
   {
-  	AssociationVariable related = getRelatedAssociation();
-  	
-  	if (getIsNavigable() && related != null && related.getIsNavigable())
-  	{
-  	  return false;
-  	}
+    AssociationVariable related = getRelatedAssociation();
+
+    if (getIsNavigable() && related != null && related.getIsNavigable())
+    {
+      return false;
+    }
     return true;
   }
-  
+
   public boolean canBeNavigable()
   {
-  	AssociationVariable related = getRelatedAssociation();
-  	
+    AssociationVariable related = getRelatedAssociation();
+
     if (umpleClass != null && umpleClass.isImmutable() && related != null && related.getIsNavigable())
     {
       return false;
     }	
     return true;
   }
-  
+
   private boolean canBeRelatedAssociation(AssociationVariable aRelatedAssociation)
   {
-  	if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
-  	{
-  		return true;
-  	}
-  	
-  	return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
-  		aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
+    if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
+    {
+      return true;
+    }
+
+    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
+        aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
   }
 }
 
 class Multiplicity
 {
- 
+
   public void setRange(String lowerBound, String upperBound)
   {
     minimum = lowerBound;
     maximum = upperBound;
   }
-  
+
   public String getRange()
   {
     String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
@@ -1213,29 +1213,29 @@ class Multiplicity
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return new String[] { lowerBound, upperBound };
   }
-  
+
   public boolean isValid()
   {
     if ("*".equals(getMinimum()))
     {
       return false;
     }
-    
+
     if ("-1".equals(getMinimum()) || "-1".equals(getMaximum()) || "-1".equals(getBound()))
     {
       return false;
     }
-    
+
     if (getLowerBound() < -1 || getUpperBound() < -1)
     {
       return false;
     }
-  
+
     if (getLowerBound() > getUpperBound() && !isUpperBoundMany())
     {
       return false;
     }
-  
+
     return true;
   }
 
@@ -1250,7 +1250,7 @@ class Multiplicity
       maximum = compareTo.maximum;
     }
   }
-    
+
   public int getLowerBound()
   {
     if (getBound() != null)
@@ -1262,7 +1262,7 @@ class Multiplicity
       return parseInt(getMinimum(),-1);
     }
   }
-  
+
   public int getUpperBound()
   {
     if (getBound() != null)
@@ -1274,7 +1274,7 @@ class Multiplicity
       return parseInt(getMaximum(),-1);
     }
   }
-  
+
   public boolean isLowerBoundMany()
   {
     return getLowerBound() == -1;
@@ -1284,7 +1284,7 @@ class Multiplicity
   {
     return getUpperBound() == -1;
   }
-  
+
   public boolean isLowerBoundNumeric()
   {
     return getLowerBound() >= -1;
@@ -1294,12 +1294,12 @@ class Multiplicity
   {
     return getUpperBound() >= -1;
   }
-  
+
   public boolean isMany()
   {
     return getUpperBound() > 1 || getUpperBound() == -1;
   }
-  
+
   public boolean isOne()
   {
     return getUpperBound() == 1;
@@ -1335,7 +1335,7 @@ class GeneratedElement
   {
     lookups.put(aKey, aValue);
   }
-  
+
   public String getLookup(String aKey)
   {
     if (aKey == null)
@@ -1347,7 +1347,7 @@ class GeneratedElement
       return lookups.get(aKey);  
     }
   }
-  
+
   public boolean addMultiLookup(String aKey, String aValue)
   {
     List<String> oldList = null;
@@ -1359,17 +1359,17 @@ class GeneratedElement
     {
       oldList = new ArrayList<String>();
     }
-    
+
     if (aValue == null || "".equals(aValue) || oldList.contains(aValue))
     {
       return false;
     }
-    
+
     oldList.add(aValue);
     multiLookups.put(aKey, oldList);
     return true;
   }
-  
+
   public String[] getMultiLookup(String aKey)
   {
     if (aKey == null || !multiLookups.containsKey(aKey))
@@ -1379,11 +1379,11 @@ class GeneratedElement
     else
     {
       List<String> list = multiLookups.get(aKey);
-      
+
       return list.toArray(new String[list.size()]);
     }
   }
-  
+
   public String toString()
   {
     String answer = "<<";
@@ -1411,7 +1411,7 @@ class Point
       return new Point(p, n - (p-1) * p);
     }
   }
-  
+
   public String toString()
   {
     return "(" + getX() + "," + getY() + ")";
@@ -1425,42 +1425,42 @@ class Coordinate
   {
     return new Point(x,y);
   }
-  
+
   public Point getTopRight()
   {
     return new Point(x+width,y);
   }
-  
+
   public Point getBottomLeft()
   {
     return new Point(x,y+height);
   }
-  
+
   public Point getBottomRight()
   {
     return new Point(x+width,y+height);
   }
-  
+
   public Point getTopMiddle()
   {
     return new Point(x+width/2,y);
   }
-  
+
   public Point getBottomMiddle()
   {
     return new Point(x+width/2,y+height);
   }
-  
+
   public Point getRightMiddle()
   {
     return new Point(x+width,y+height/2);
   }
-  
+
   public Point getLeftMiddle()
   {
     return new Point(x,y+height/2);
   }
-  
+
   public String whereIs(Coordinate neighbour)
   {
     int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
@@ -1486,7 +1486,7 @@ class Coordinate
       return "right";
     }
   }
-  
+
   public int distanceTo(Coordinate other)
   {
     int a = other.getX() - getX();
@@ -1494,12 +1494,12 @@ class Coordinate
     int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
     return c; 
   }
-  
+
   public String toString()
   {
     return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
   }
-  
+
   private void updateStatus()
   {
     if (x == -1 && y == -1 && width == -1 && height == -1)
@@ -1515,132 +1515,132 @@ class Coordinate
 
 class Comment
 {
-	public Boolean isInline = true;
+  public Boolean isInline = true;
 
-	/**
-	 * Used to take a comment and process it into a format appropriate for displaying in generated code.
-	 * 
-	 * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).
-	 * 
-	 * @param type Indicates the type of comment which determines how the comments are formatted.  The types are: Hash, Javadoc, Attribute Javadoc, Association Javadoc, Method Javadoc, RubyMultiline, RubyMultiline Internal and Multiline.  Defaults to "//" if not specified.
-	 * @param allComments A list of comments to be processed and formatted all together as one.
-	 * 
-	 * @return The processed/formatted comment appropriate for use in generated code output.
-	 */
-	public static String format(String type,List<Comment> allComments)
-	{
-		//String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
-		
-		String commentDelimiter;
-		
-		// Set the comment delimiter based on the type of the comment. (ex. For Javadoc prepend "*" before every comment line)
-		if (type == "Hash")
-		{
-			commentDelimiter = "# ";
-		}
-		else if (type == "Javadoc")
-		{
-			commentDelimiter = " * ";
-		}
-		else if (type == "Attribute Javadoc")
-		{
-			commentDelimiter = "   * ";
-		}
-		else if (type == "Association Javadoc")
-		{
-			commentDelimiter = "   * ";
-		}
-		else if (type == "Method Javadoc")
-		{
-			commentDelimiter = "   * ";
-		}
-		else if (type == "RubyMultiline")
-		{
-			commentDelimiter = "";
-		}
-		else if (type == "RubyMultiline Internal")
-		{
-			commentDelimiter = "  ";
-		}
-		else if (type == "Multiline")
-		{
-			commentDelimiter = "";
-		}
-		else
-		{
-			commentDelimiter = "// ";
-		}
-		
-		if (allComments.size() == 0)
-		{
-			return null;
-		}
-		
-		String output = "";
-		    
-		for (Comment c : allComments)
-		{
-			if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Association Javadoc" || type == "Method Javadoc" || type == "RubyMultiline" || type == "RubyMultiline Internal")
-			{
-				int startIndex = 0;
-				    		
-				// Go through each letter of the current comment to find start of content.
-				for (int i = 0; i < c.getText().length(); i++)
-				{
-					char letter = c.getText().charAt(i);
-					
-					// Remove these letters until the actual content is found in the line.
-					if (letter == ' ' || letter == '\t' || letter == '*')
-					{
-						startIndex++;
-					}
-					// Comment content found, set comment to start here.
-					else
-					{
-						c.setText(c.getText().substring(startIndex));
-						break;
-					}
-				}
-				
-				// Special case where the comment line had no content (only spaces, tabs or asterisks).
-				if (startIndex == c.getText().length())
-				{
-					c.setText(c.getText().substring(startIndex));
-				}
-			}
-			output += commentDelimiter + c.getText() + "\n"; 
-		}
-		
-		// Finalize the comment based on what type it was. (ex. For Javadoc place the "/**" and "*/" around the comment)
-		if (type == "Javadoc")
-		{
-			output = "/**\n" + output + " */";
-		}
-		else if (type == "Attribute Javadoc")
-		{
-			output = "  /**\n" + output + "   */";
-		}
-		else if (type == "Association Javadoc")
-		{
-			output = "  /**\n" + output + "   */";
-		}
-		else if (type == "Method Javadoc")
-		{
-			output = "  /**\n" + output + "   */";
-		}
-		else if (type == "RubyMultiline")
-		{
-			output = "=begin\n" + output + "=end";
-		}
-		else if (type == "RubyMultiline Internal")
-		{
-			output = "  =begin\n" + output + "  =end";
-		}
-		else if (type == "Multiline")
-		{
-			output = "/*\n" + output + "*/";
-		}
-		
-		return output.trim();
-	}
+  /**
+   * Used to take a comment and process it into a format appropriate for displaying in generated code.
+   * 
+   * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).
+   * 
+   * @param type Indicates the type of comment which determines how the comments are formatted.  The types are: Hash, Javadoc, Attribute Javadoc, Association Javadoc, Method Javadoc, RubyMultiline, RubyMultiline Internal and Multiline.  Defaults to "//" if not specified.
+   * @param allComments A list of comments to be processed and formatted all together as one.
+   * 
+   * @return The processed/formatted comment appropriate for use in generated code output.
+   */
+  public static String format(String type,List<Comment> allComments)
+  {
+    //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
+
+    String commentDelimiter;
+
+    // Set the comment delimiter based on the type of the comment. (ex. For Javadoc prepend "*" before every comment line)
+    if (type == "Hash")
+    {
+      commentDelimiter = "# ";
+    }
+    else if (type == "Javadoc")
+    {
+      commentDelimiter = " * ";
+    }
+    else if (type == "Attribute Javadoc")
+    {
+      commentDelimiter = "   * ";
+    }
+    else if (type == "Association Javadoc")
+    {
+      commentDelimiter = "   * ";
+    }
+    else if (type == "Method Javadoc")
+    {
+      commentDelimiter = "   * ";
+    }
+    else if (type == "RubyMultiline")
+    {
+      commentDelimiter = "";
+    }
+    else if (type == "RubyMultiline Internal")
+    {
+      commentDelimiter = "  ";
+    }
+    else if (type == "Multiline")
+    {
+      commentDelimiter = "";
+    }
+    else
+    {
+      commentDelimiter = "// ";
+    }
+
+    if (allComments.size() == 0)
+    {
+      return null;
+    }
+
+    String output = "";
+
+    for (Comment c : allComments)
+    {
+      if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Association Javadoc" || type == "Method Javadoc" || type == "RubyMultiline" || type == "RubyMultiline Internal")
+      {
+        int startIndex = 0;
+
+        // Go through each letter of the current comment to find start of content.
+        for (int i = 0; i < c.getText().length(); i++)
+        {
+          char letter = c.getText().charAt(i);
+
+          // Remove these letters until the actual content is found in the line.
+          if (letter == ' ' || letter == '\t' || letter == '*')
+          {
+            startIndex++;
+          }
+          // Comment content found, set comment to start here.
+          else
+          {
+            c.setText(c.getText().substring(startIndex));
+            break;
+          }
+        }
+
+        // Special case where the comment line had no content (only spaces, tabs or asterisks).
+        if (startIndex == c.getText().length())
+        {
+          c.setText(c.getText().substring(startIndex));
+        }
+      }
+      output += commentDelimiter + c.getText() + "\n"; 
+    }
+
+    // Finalize the comment based on what type it was. (ex. For Javadoc place the "/**" and "*/" around the comment)
+    if (type == "Javadoc")
+    {
+      output = "/**\n" + output + " */";
+    }
+    else if (type == "Attribute Javadoc")
+    {
+      output = "  /**\n" + output + "   */";
+    }
+    else if (type == "Association Javadoc")
+    {
+      output = "  /**\n" + output + "   */";
+    }
+    else if (type == "Method Javadoc")
+    {
+      output = "  /**\n" + output + "   */";
+    }
+    else if (type == "RubyMultiline")
+    {
+      output = "=begin\n" + output + "=end";
+    }
+    else if (type == "RubyMultiline Internal")
+    {
+      output = "  =begin\n" + output + "  =end";
+    }
+    else if (type == "Multiline")
+    {
+      output = "/*\n" + output + "*/";
+    }
+
+    return output.trim();
+  }
 }

@@ -258,7 +258,7 @@ public class AssociationVariable extends UmpleVariable
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());
   }
-  
+
   public boolean isSymmetricReflexive()
   {
     return getRelatedAssociation() != null && "symmetricreflexive".equals(getModifier());
@@ -276,7 +276,7 @@ public class AssociationVariable extends UmpleVariable
       setRelatedAssociation(this);
     }
   }
-    
+
   public static int min(int first, int second)
   {
     return first == -1 ? second : second == -1 ? first : Math.min(first, second);
@@ -286,12 +286,12 @@ public class AssociationVariable extends UmpleVariable
   {
     return first == -1 ? first : second == -1 ? second : Math.max(first, second);
   }
-  
+
   public boolean isMany()
   {
     return multiplicity.getUpperBound() == -1 || multiplicity.getUpperBound() > 1;
   }
-  
+
   public boolean isOptionalN()
   {
     return multiplicity.getLowerBound() == 0 && multiplicity.getUpperBound() > 1;
@@ -301,17 +301,17 @@ public class AssociationVariable extends UmpleVariable
   {
     return multiplicity.getUpperBound() == 1;
   }
-  
+
   public boolean isOnlyOne()
   {
     return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 1;
   }
-  
+
   public boolean isOptionalOne()
   {
     return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 0;
   }
-  
+
   public boolean isOptionalMany()
   {
     return multiplicity.getLowerBound() == 0 && isMany();
@@ -321,97 +321,97 @@ public class AssociationVariable extends UmpleVariable
   {
     return multiplicity.getLowerBound() > 1 && multiplicity.getLowerBound() == multiplicity.getUpperBound();
   }
-  
+
   public boolean isMN()
   {
     return multiplicity.getLowerBound() > 0 && (multiplicity.getUpperBound() > multiplicity.getLowerBound() || multiplicity.getUpperBound() == -1);
   }
-  
+
   public boolean isMStar()
   {
     return multiplicity.getLowerBound() > 0 && multiplicity.getUpperBound() == -1;
   }
-  
+
   public boolean isStar()
   {
     return multiplicity.getUpperBound() == -1;
   }
-  
+
   public boolean isMandatory()
   {
     return multiplicity.getLowerBound() > 0;
   }
-  
+
   public boolean isMandatoryOne()
   {
     return multiplicity.getLowerBound() == 1 && multiplicity.getUpperBound() == 1;
   }
-  
+
   public boolean isMandatoryMany()
   {
     return multiplicity.getLowerBound() > 0 && isMany();
   }
-  
+
   public boolean isImmutable()
   {
-  	AssociationVariable related = getRelatedAssociation();
-  	Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
-  	
-  	Boolean myUmpleClassIsImmutable = 
-  			(getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
-  	Boolean yourUmpleClassIsImmutable = 
-  			(related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
-  	
-  	return (super.isImmutable() || relatedAssocIsImmutable 
-  		|| myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
+    AssociationVariable related = getRelatedAssociation();
+    Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
+
+    Boolean myUmpleClassIsImmutable = 
+      (getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+    Boolean yourUmpleClassIsImmutable = 
+      (related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
+
+    return (super.isImmutable() || relatedAssocIsImmutable 
+        || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
   }
-  
+
   public boolean setImmutable(boolean aImmutable)
   {
-  	boolean wasSet = false;
-  	if (!aImmutable)
-  	{
-  	  setModifier(null);
-  	  wasSet = true;
-  	}
-  	else if (aImmutable && canBeImmutable())
-  	{
-  	  setModifier("immutable");
-  	  wasSet = true;
-  	}
-  	return wasSet;
+    boolean wasSet = false;
+    if (!aImmutable)
+    {
+      setModifier(null);
+      wasSet = true;
+    }
+    else if (aImmutable && canBeImmutable())
+    {
+      setModifier("immutable");
+      wasSet = true;
+    }
+    return wasSet;
   }
-  
+
   public boolean canBeImmutable()
   {
-  	AssociationVariable related = getRelatedAssociation();
-  	
-  	if (getIsNavigable() && related != null && related.getIsNavigable())
-  	{
-  	  return false;
-  	}
+    AssociationVariable related = getRelatedAssociation();
+
+    if (getIsNavigable() && related != null && related.getIsNavigable())
+    {
+      return false;
+    }
     return true;
   }
-  
+
   public boolean canBeNavigable()
   {
-  	AssociationVariable related = getRelatedAssociation();
-  	
+    AssociationVariable related = getRelatedAssociation();
+
     if (umpleClass != null && umpleClass.isImmutable() && related != null && related.getIsNavigable())
     {
       return false;
     }	
     return true;
   }
-  
+
   private boolean canBeRelatedAssociation(AssociationVariable aRelatedAssociation)
   {
-  	if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
-  	{
-  		return true;
-  	}
-  	
-  	return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
-  		aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
+    if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
+    {
+      return true;
+    }
+
+    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
+        aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
   }
 }

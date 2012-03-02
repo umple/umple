@@ -271,16 +271,16 @@ public class Association
   public void setLeftAndRight()
   {
     String name = this.getName();
-    
+
     int underscore = name.indexOf("__");
     String nameOne = name.substring(0,underscore);
     String nameTwo = name.substring(underscore + "__".length(), name.length());
-    
+
     if (nameOne.compareTo(nameTwo) > 0)
     {
-      
+
     }
-   
+
   }
 
   public int whoIsInvalid()
@@ -289,7 +289,7 @@ public class Association
     {
       return -1;
     }
-    
+
     if (getEnd(0).getClassName().equals(getEnd(1).getClassName()))
     {
       if (getEnd(0).getMultiplicity().getLowerBound() != 0)
@@ -303,12 +303,12 @@ public class Association
     }
     return -1;
   }
-  
+
   public boolean isValid()
   {
     return whoIsInvalid() == -1;
   }
-  
+
   public String getArrowString()
   {
     String arrow = "--";
@@ -332,7 +332,7 @@ public class Association
     String leftSide = getEnd(0).toGenericString();
     String rightSide = getEnd(1).toGenericString();
 
-    
+
     if (leftSide.equals("n") && rightSide.equals("n") && !getEnd(0).toSimpleString().equals(getEnd(1).toSimpleString()))
     {
       return cruise.umple.util.StringFormatter.format("n {0} m",getArrowString());
@@ -342,18 +342,18 @@ public class Association
       return cruise.umple.util.StringFormatter.format("{0} {1} {2}",leftSide,getArrowString(),rightSide);
     }
   }
-  
+
   public String deriveName()
   {
     AssociationEnd firstEnd = this.getEnd(0);
     AssociationEnd secondEnd = this.getEnd(1);
-    
+
     String firstClassName = firstEnd.getClassName();
     String secondClassName = secondEnd.getClassName();
-    
+
     String firstRole = firstEnd.getDisplayRoleName().equals("") ? "" : ":" + firstEnd.getDisplayRoleName();
     String secondRole = secondEnd.getDisplayRoleName().equals("") ? "" : ":" + secondEnd.getDisplayRoleName();
-    
+
     if (firstClassName.compareTo(secondClassName) <= 0)
     {
       return firstClassName + firstRole + "__" + secondClassName + secondRole;
