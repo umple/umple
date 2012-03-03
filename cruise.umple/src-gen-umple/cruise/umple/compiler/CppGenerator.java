@@ -379,7 +379,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     	}
     	else
     	{
-    		return aInterface.getPackageName().length() == 0 ? "" : "namespace " + aInterface.getPackageName() + "{";
+    		return aInterface.getPackageName().length() == 0 ? "" : "namespace " + aInterface.getPackageName() + "{ ";
     	}
     }
     if ("isA".equals(name))
