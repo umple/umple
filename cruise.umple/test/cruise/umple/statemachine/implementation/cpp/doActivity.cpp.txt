@@ -2,15 +2,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Switch.h";
 
-class Switch
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //Switch State Machines
   enum Status { On, Off }
@@ -18,12 +13,10 @@ class Switch
 
   //Switch Do Activity Threads
   Thread doActivityStatusOffThread = null;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Switch::Switch()
   {
     setStatus(Status.On);
@@ -105,7 +98,12 @@ class Switch
     }
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Switch::~Switch()
   {}
 
-};
+}

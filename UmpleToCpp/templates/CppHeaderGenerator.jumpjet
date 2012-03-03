@@ -29,8 +29,8 @@
 %>
 
 <%@ include file="import_packages.jet" %>
-#ifndef _<%=uClass.getName()%>
-#define _<%=uClass.getName()%>
+#ifndef <%=uClass.getName().toUpperCase()%>_H_
+#define <%=uClass.getName().toUpperCase()%>_H_
 
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
 class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
@@ -69,7 +69,10 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 <% } %>
   <%@ include file="state_machine_doActivity_All.jet" %>
   <%@ include file="state_machine_timedEvent_All.jet" %>
-  <%@ include file="delete_All.jet" %>
+  //------------------------
+  // Destructor
+  //------------------------
+  <%@ include file="header_destructor.jet" %>
 <% if (uClass.hasMethods()) { %>
   <%@ include file="header_MethodDeclaration.jet" %>
 <% } %>

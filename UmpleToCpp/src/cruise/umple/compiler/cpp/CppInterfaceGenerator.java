@@ -20,10 +20,10 @@ public class CppInterfaceGenerator implements ILang
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
   protected final String TEXT_2 = NL;
-  protected final String TEXT_3 = NL + NL + "public interface ";
+  protected final String TEXT_3 = NL + NL + "class ";
   protected final String TEXT_4 = NL + "{";
   protected final String TEXT_5 = NL + "  ";
-  protected final String TEXT_6 = NL + "}";
+  protected final String TEXT_6 = NL + "};";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -64,7 +64,7 @@ public class CppInterfaceGenerator implements ILang
   for (Depend depend : uInterface.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",depend.getName());
+    append(stringBuffer, "#include <{0}>;",depend.getName());
   }
   
   // TODO: No test failed from removing this
@@ -87,7 +87,7 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
  for (Constant aConstant : uInterface.getConstants()) 
  {
  	String constantName = aConstant.getName();
- 	String constantModifier = "public static final";
+ 	String constantModifier = "static const";
  	String constantType =  aConstant.getType();
  	String constantValue =  aConstant.getValue();
  
@@ -106,9 +106,11 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
     
 	 appendln(stringBuffer, "");
      appendln(stringBuffer,"  // ABSTRACT METHODS ");
+     appendln(stringBuffer,"  public: ");
+     appendln(stringBuffer, "");
     	for (Method aMethod : uInterface.getMethods()) 
     	{
-    		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+    		String methodModifier = aMethod.getModifier().equals("") ? "" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
     		String paramName="";
@@ -128,13 +130,16 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
     			}
     			String finalParams = parameters.substring(0, parameters.length()-2);
     			appendln(stringBuffer, "");
-    			append(stringBuffer, " {0} {1} {2}({3});", methodModifier, methodType, methodName, finalParams);	
+    			append(stringBuffer, " virtual {0} {1} {2}({3}) = 0;", methodModifier, methodType, methodName, finalParams);	
     		}
     		else{
     			appendln(stringBuffer, "");
-    			append(stringBuffer, " {0} {1} {2}();", methodModifier, methodType, methodName);
+    			append(stringBuffer, " virtual {0} {1} {2}() = 0;", methodModifier, methodType, methodName);
     		}
     	}
+
+    appendln(stringBuffer, "");
+ append(stringBuffer," virtual ~{0}(){}",new Object[] {uInterface.getName()});
 
      } 
     stringBuffer.append(TEXT_6);

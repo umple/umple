@@ -2,25 +2,18 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Course.h";
 
-class Course
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //Course State Machines
   enum Status { Open, Full }
   private Status status;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Course::Course()
   {
     setStatus(Status.Open);
@@ -47,7 +40,12 @@ class Course
     return true;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Course::~Course()
   {}
 
-};
+}

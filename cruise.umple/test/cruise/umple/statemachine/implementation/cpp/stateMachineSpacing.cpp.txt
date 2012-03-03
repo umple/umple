@@ -2,25 +2,18 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Garage.h";
 
-class Garage
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //Garage State Machines
   enum GarageDoor { Closed, Opening }
   private GarageDoor GarageDoor;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Garage::Garage()
   {
     setGarageDoor(GarageDoor.Closed);
@@ -62,7 +55,12 @@ class Garage
     GarageDoor = aGarageDoor;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Garage::~Garage()
   {}
 
-};
+}

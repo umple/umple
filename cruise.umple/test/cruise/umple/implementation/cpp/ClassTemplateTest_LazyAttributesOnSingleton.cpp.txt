@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 
 public class Application
 {
@@ -18,8 +18,8 @@ public class Application
   //------------------------
 
   //Application Attributes
-  private String name;
-  private String version;
+  private string name;
+  private string version;
   private list id;
 
   //------------------------
@@ -46,7 +46,7 @@ public class Application
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setName(string aName)
   {
     boolean wasSet = false;
     name = aName;
@@ -54,7 +54,7 @@ public class Application
     return wasSet;
   }
 
-  public boolean setVersion(String aVersion)
+  public boolean setVersion(string aVersion)
   {
     boolean wasSet = false;
     version = aVersion;
@@ -70,12 +70,12 @@ public class Application
     return wasSet;
   }
 
-  public String getName()
+  public string getName()
   {
     return name;
   }
 
-  public String getVersion()
+  public string getVersion()
   {
     return version;
   }

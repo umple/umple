@@ -2,25 +2,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
-#include <iostream>;
+namespace example{ 
+#include <vector>;
+#include "Token.h";
 
-class Token
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Token Attributes
-  List<Position> positions;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Token::Token()
   {
     positions = new vector<Position*>();
@@ -74,7 +64,12 @@ class Token
     return index;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Token::~Token()
   {}
 
-};
+}

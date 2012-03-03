@@ -2,27 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Application.h";
 
-class Application
-{
-  private:
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  static Application theInstance = null;
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Application::Application()
   {}
 
@@ -39,7 +26,12 @@ class Application
   // INTERFACE
   //------------------------
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Application::~Application()
   {}
 
-};
+}

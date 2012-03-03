@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+nameapace example;
 
 public class Student
 {
@@ -12,14 +12,14 @@ public class Student
   //------------------------
 
   //Student Attributes
-  private String firstName;
-  private String lastName;
+  private string firstName;
+  private string lastName;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aFirstName, String aLastName)
+  public Student(string aFirstName, string aLastName)
   {
     firstName = aFirstName;
     lastName = aLastName;
@@ -29,7 +29,7 @@ public class Student
   // INTERFACE
   //------------------------
 
-  public boolean setFirstName(String aFirstName)
+  public boolean setFirstName(string aFirstName)
   {
     boolean wasSet = false;
     firstName = aFirstName;
@@ -37,7 +37,7 @@ public class Student
     return wasSet;
   }
 
-  public boolean setLastName(String aLastName)
+  public boolean setLastName(string aLastName)
   {
     boolean wasSet = false;
     lastName = aLastName;
@@ -45,13 +45,13 @@ public class Student
     return wasSet;
   }
 
-  public String getFirstName()
+  public string getFirstName()
   {
     print "before";
     return firstName;
   }
 
-  public String getLastName()
+  public string getLastName()
   {
     print "before";
     return lastName;

@@ -2,21 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
+ 
+#include "Token.h";
 
-
-class Token
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Token::Token()
   {}
 
@@ -24,7 +17,12 @@ class Token
   // INTERFACE
   //------------------------
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Token::~Token()
   {}
 
-};
+}

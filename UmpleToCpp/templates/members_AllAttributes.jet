@@ -28,7 +28,7 @@
     if (av.getIsList())
     {
       attribute = gen.translate("attributeMany",av);
-      type = StringFormatter.format("List<{0}>",gen.translate("typeMany",av));
+      type = StringFormatter.format("vector<{0}>",gen.translate("typeMany",av));
     }
 
     appendln(stringBuffer, "");

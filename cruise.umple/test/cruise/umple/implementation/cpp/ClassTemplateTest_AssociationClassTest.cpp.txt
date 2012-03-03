@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 
 public class Registration
 {
@@ -12,7 +12,7 @@ public class Registration
   //------------------------
 
   //Registration Attributes
-  private String grade;
+  private string grade;
 
   //Registration Associations
   private Student student;
@@ -22,7 +22,7 @@ public class Registration
   // CONSTRUCTOR
   //------------------------
 
-  Registration::Registration(String aGrade)
+  Registration::Registration(string aGrade)
   {
     grade = aGrade;
   }
@@ -31,7 +31,7 @@ public class Registration
   // INTERFACE
   //------------------------
 
-  public boolean setGrade(String aGrade)
+  public boolean setGrade(string aGrade)
   {
     boolean wasSet = false;
     grade = aGrade;
@@ -39,7 +39,7 @@ public class Registration
     return wasSet;
   }
 
-  public String getGrade()
+  public string getGrade()
   {
     return grade;
   }

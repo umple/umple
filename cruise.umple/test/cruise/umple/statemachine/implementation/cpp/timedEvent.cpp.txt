@@ -2,33 +2,19 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 #include <java.util.*>;
+#include "Mentor.h";
 
-class Mentor
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor Attributes
-  int howLongUntilOk;
+  
 
   //Mentor State Machines
   enum Status { Ok, NotOkay, NotOk }
   private Status status;
-
-  //Helper Variables
-  TimedEventHandler timeoutOkToNotOkHandler;
-  TimedEventHandler timeoutNotOkayToOkHandler;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Mentor::Mentor()
   {
     howLongUntilOk = 3;
@@ -188,7 +174,12 @@ class Mentor
     }
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Mentor::~Mentor()
   {}
 
-};
+}

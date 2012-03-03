@@ -2,28 +2,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example.one;
-#include <example.two.*>;
+namespace example.one{ 
+using namespace example.two;
+#include "Mentor.h";
 
-class Mentor
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor Attributes
-  String name;
-
-  //Mentor Associations
-  Student student;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Mentor::Mentor(String aName)
   {
     name = aName;
@@ -33,7 +20,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  bool Mentor::setName(String aName)
+  bool Mentor::setName(string aName)
   {
     bool wasSet = false;
     name = aName;
@@ -41,7 +28,7 @@ class Mentor
     return wasSet;
   }
 
-  String Mentor::getName()
+  string Mentor::getName()
   {
     return name;
   }
@@ -51,21 +38,26 @@ class Mentor
     return student;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Mentor::~Mentor()
   {
-    if (student != null)
+    if (student != NULL)
     {
       if (student.numberOfMentors() <= 1)
       {
-        student.delete();
+        delete student;
       }
       else
       {
         Student placeholderStudent = student;
-        this.student = null;
+        this.student = NULL;
         placeholderStudent.removeMentor(this);
       }
     }
   }
 
-};
+}

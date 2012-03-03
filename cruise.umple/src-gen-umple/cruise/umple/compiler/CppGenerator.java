@@ -163,6 +163,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     UmpleToJavaPrimitiveMap.put("Boolean","bool");
     UmpleToJavaPrimitiveMap.put("Double","double");
     UmpleToJavaPrimitiveMap.put("Float","float");
+    UmpleToJavaPrimitiveMap.put("String","string");
     
 
   }
@@ -202,7 +203,18 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
 	if (aElement instanceof UmpleInterface)
     {
-      return new CppInterfaceGenerator();
+      if (callHeader == false)
+      {
+        callHeader = true;
+        return new CppInterfaceGenerator();
+      }
+      
+      else if (callHeader == true)
+      {
+        callHeader = false;
+        return new CppInterfaceHeaderGenerator();
+      }
+      
     }
     else if (aElement instanceof UmpleClass)
     {
@@ -227,7 +239,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     String myType = av.getType();
     if (myType == null || myType.length() == 0)
     {
-      return "String";
+      return "string";
     }
     else if (UmpleToJavaPrimitiveMap.containsKey(myType))
     {
@@ -361,7 +373,14 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
     if ("packageDefinition".equals(name))
     {
-      return aInterface.getPackageName().length() == 0 ? "" : "package " + aInterface.getPackageName() + ";"; 
+    	if (aInterface.getPackageName()==null)
+    	{
+    		return aInterface.getPackageName().length() == 0 ? "" : "namespace " +"{";
+    	}
+    	else
+    	{
+    		return aInterface.getPackageName().length() == 0 ? "" : "namespace " + aInterface.getPackageName() + "{";
+    	}
     }
     if ("isA".equals(name))
     {
@@ -395,7 +414,14 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     }
     else if ("packageDefinition".equals(name))
     {
-      return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";"; 
+    	if (aClass.getPackageName() ==null)
+    	{
+    		return aClass.getPackageName().length() == 0 ? "" : "namespace " + "{";
+    	}
+    else 
+    	{
+    		return aClass.getPackageName().length() == 0 ? "" : "namespace " + aClass.getPackageName() + "{";
+    	}
     }
     else if ("type".equals(name))
     {
@@ -418,10 +444,10 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       else{
           for (UmpleInterface aInterface : uInterface.getExtendsInterface())
           {
-              implementedInterfaces += aInterface.getName() + ", " ; 
+              implementedInterfaces += aInterface.getName() + ", public " ; 
           }
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-2); 
-          return " extends " + implementedInterfaces;
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-9);//-9 to rollback the extra ', public' word 
+          return " : public " + implementedInterfaces;
       }
   }
 
@@ -444,7 +470,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
           return "";
       }
       else{
-          return   " extends " + parent.getName();  
+          return   ": public " + parent.getName();  
       }
   }
 
@@ -458,10 +484,10 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       else{
           for (UmpleInterface uInterface : uClass.getParentInterface())
           {
-              implementedInterfaces += uInterface.getName() + "," ; 
+              implementedInterfaces += uInterface.getName() + ", public " ; 
           }
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
-          return " implements " + implementedInterfaces;
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-9);
+          return ": public " + implementedInterfaces;
       }
   }
 
@@ -900,7 +926,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       {
         if (!aClass.getPackageName().equals(aClass.getExtendsClass().getPackageName()))
         {
-          genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + ".*");  
+          genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + "");  
         }
         addImports(aClass.getExtendsClass(),genClass);
       }
@@ -930,18 +956,21 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
     String timeImport = "time.h";
     String dateImport = "time.h";
-    String utilImport = "iostream";
+    String utilImport = "vector";
     
-    for (Attribute av : aClass.getAttributes()) 
+      for (Attribute av : aClass.getAttributes()) 
     {
       
       if ("Time".equals(av.getType()))
       {
+
         genClass.addMultiLookup("import", timeImport);
+        av.setType("time_t*");
       }
       else if ("Date".equals(av.getType()))
       {
         genClass.addMultiLookup("import", dateImport);
+        av.setType("string");
       }
       
       if (av.getIsList())
@@ -964,7 +993,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       
       if (av.isMany())
       {
-        genClass.addMultiLookup("import", "java.util.*");
+        genClass.addMultiLookup("import", "vector");
       }
     }
     
@@ -972,7 +1001,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     {
       if (!namespace.equals(aClass.getPackageName()))
       {
-        genClass.addMultiLookup("import", namespace + ".*");
+        genClass.addMultiLookup("using", namespace);
       }
     }
   }

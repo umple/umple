@@ -2,24 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Token.h";
 
-class Token
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Token Attributes
-  Position p;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Token::Token(Position aP)
   {
     p = aP;
@@ -42,7 +32,12 @@ class Token
     return p;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Token::~Token()
   {}
 
-};
+}

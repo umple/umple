@@ -2,15 +2,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Lamp.h";
 
-class Lamp
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //Lamp State Machines
   enum Status { On, Off }
@@ -19,12 +14,10 @@ class Lamp
   //Lamp Do Activity Threads
   Thread doActivityStatusOnThread = null;
   Thread doActivityStatusOffThread = null;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Lamp::Lamp()
   {
     setStatus(Status.On);
@@ -129,7 +122,12 @@ class Lamp
     }
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Lamp::~Lamp()
   {}
 
-};
+}

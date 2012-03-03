@@ -27,25 +27,18 @@
 
 %>
 
-<%=gen.translate("packageDefinition",uClass)%>
+<%=gen.translate("packageDefinition",uClass)%> 
 <%@ include file="import_packages.jet" %>
+<%@ include file="import_headerFile.jet"%>
 
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
-class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
-{
-  private:
-  <%@ include file="members_AllStatics.jet" %>
-  <%@ include file="members_AllAttributes.jet" %>
+  
   <%@ include file="members_AllStateMachines.jet" %>
   <%@ include file="members_AllDoActivities.jet" %>
-  <%@ include file="members_AllAssociations.jet" %>
-  <%@ include file="members_AllHelpers.jet" %>
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
   <%@ include file="constructor_Declare_All.jet" %>
 
   //------------------------
@@ -64,7 +57,12 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 <% } %>
   <%@ include file="state_machine_doActivity_All.jet" %>
   <%@ include file="state_machine_timedEvent_All.jet" %>
-  <%@ include file="delete_All.jet" %>
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+  <%@ include file="destructor_All.jet" %>
 <% if (uClass.hasMethods()) { %>
   <%@ include file="class_MethodDeclaration.jet" %>
 <% } %>
@@ -72,7 +70,10 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
+   
   <%=uClass.getExtraCode()%>
 <% } %>
-};
+
+<% if(uClass.getPackageName() != null){
+append(stringBuffer, "}"); }
+%>

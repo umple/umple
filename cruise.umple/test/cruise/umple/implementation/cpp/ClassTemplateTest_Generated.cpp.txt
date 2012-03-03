@@ -2,21 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Mentor.h";
 
-class Mentor
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Mentor::Mentor()
   {}
 
@@ -24,13 +17,18 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Mentor::~Mentor()
   {}
 
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
+   
   public static main()
   {}
-};
+}

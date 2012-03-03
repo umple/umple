@@ -5,7 +5,7 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
  for (Constant aConstant : uInterface.getConstants()) 
  {
  	String constantName = aConstant.getName();
- 	String constantModifier = "public static final";
+ 	String constantModifier = "static const";
  	String constantType =  aConstant.getType();
  	String constantValue =  aConstant.getValue();
  

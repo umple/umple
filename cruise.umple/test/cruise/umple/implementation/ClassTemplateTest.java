@@ -200,7 +200,7 @@ public class ClassTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("MethodCommentWithEmptyLines.ump",languagePath + "/ClassTemplateTest_MethodCommentWithEmptyLines."+languagePath+".txt","Foo");
   }
   
-  @Test
+@Ignore @Test
   public void LazyAttributeOnImmutableClass()
   {
 	  assertUmpleTemplateFor("ClassTemplateTest_LazyAttributeOnImmutableClass.ump",languagePath + "/ClassTemplateTest_LazyAttributeOnImmutableClass."+languagePath+".txt","Student");

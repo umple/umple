@@ -2,28 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
+ 
+#include "Foo.h";
 
-
-class Foo
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Foo Attributes
-
-  /**
-   * I am a multiline comment above an attribute.
-   */
-  String name;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Foo::Foo(String aName)
   {
     name = aName;
@@ -33,7 +19,7 @@ class Foo
   // INTERFACE
   //------------------------
 
-  bool Foo::setName(String aName)
+  bool Foo::setName(string aName)
   {
     bool wasSet = false;
     name = aName;
@@ -41,12 +27,17 @@ class Foo
     return wasSet;
   }
 
-  String Foo::getName()
+  string Foo::getName()
   {
     return name;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
   {}
 
-};
+}

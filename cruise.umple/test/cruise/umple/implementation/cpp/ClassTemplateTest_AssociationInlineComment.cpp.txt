@@ -2,29 +2,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
+ 
+#include <vector>;
+#include "Foo.h";
 
-#include <java.util.*>;
-
-class Foo
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Foo Associations
-
-  /**
-   * I am a inline comment above an association.
-   */
-   vector<Bar*> bars;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Foo::Foo()
   {
     bars = new vector<Bar*>();
@@ -103,12 +89,17 @@ class Foo
     }
     return wasRemoved;
   }
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
   {
-    for(Bar aBar : bars)
+    for( int i =0; sizeof(bars); i++)
     {
-      aBar.delete();
+      delete bars[i];
     }
   }
 
-};
+}

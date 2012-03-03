@@ -7,6 +7,7 @@
   appendln(stringBuffer, "");
 
   String accessibility = uClass.getIsSingleton() ? "private" : "";
+  
   append(stringBuffer," {0}::{0}({1})",new Object[] {uClass.getName(), gClass.getLookup("constructorSignature")});
 
   String extraNote = null;
@@ -19,7 +20,7 @@
   if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "    super({0});", gClass.getParentClass().getLookup("constructorSignature_caller"));
+    append(stringBuffer, "    {1}({0});", gClass.getParentClass().getLookup("constructorSignature_caller"),uClass.getName());
     hasBody = true;
   }
   
@@ -84,7 +85,9 @@
     else
     {
       hasBody = true;
-      %><%@ include file="constructor_AttributeAssign.jet"%><%
+      
+         %><%@ include file="constructor_AttributeAssign.jet"%><%     
+        
     }
   }
 

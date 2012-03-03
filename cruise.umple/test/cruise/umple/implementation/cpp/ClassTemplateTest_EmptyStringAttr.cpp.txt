@@ -2,24 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Student.h";
 
-class Student
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Student Attributes
-  String grade;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Student::Student()
   {
     grade = "";
@@ -29,7 +19,7 @@ class Student
   // INTERFACE
   //------------------------
 
-  bool Student::setGrade(String aGrade)
+  bool Student::setGrade(string aGrade)
   {
     bool wasSet = false;
     grade = aGrade;
@@ -37,12 +27,17 @@ class Student
     return wasSet;
   }
 
-  String Student::getGrade()
+  string Student::getGrade()
   {
     return grade;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
   {}
 
-};
+}

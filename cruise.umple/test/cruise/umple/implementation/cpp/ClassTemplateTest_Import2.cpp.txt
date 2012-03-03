@@ -2,31 +2,17 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example.two;
-#include <java.util.*>;
-#include <example.one.*>;
-#include <example.three.*>;
+namespace example.two{ 
+#include <vector>;
+using namespace example.one;
+using namespace example.three;
+#include "Student.h";
 
-class Student
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Student Attributes
-  String number;
-
-  //Student Associations
-   vector<Mentor*> mentors;
-   vector<Course*> courses;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Student::Student(String aNumber, Mentor... allMentors)
   {
     number = aNumber;
@@ -43,7 +29,7 @@ class Student
   // INTERFACE
   //------------------------
 
-  bool Student::setNumber(String aNumber)
+  bool Student::setNumber(string aNumber)
   {
     bool wasSet = false;
     number = aNumber;
@@ -51,7 +37,7 @@ class Student
     return wasSet;
   }
 
-  String Student::getNumber()
+  string Student::getNumber()
   {
     return number;
   }
@@ -269,19 +255,24 @@ class Student
     return wasRemoved;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
   {
-    for(Mentor aMentor : mentors)
+    for( int i =0; sizeof(mentors); i++)
     {
-      setStudent(aMentor,null);
+      setStudent(aMentor[i],NULL);
     }
     mentors.clear();
-    ArrayList<Course> copyOfCourses = new ArrayList<Course>(courses);
+    vector<Course> copyOfCourses = new vector<Course>(courses);
     courses.clear();
-    for(Course aCourse : copyOfCourses)
+    for(int i=0;sizeof(courses);i++)
     {
-      aCourse.removeStudent(this);
+      courses[i].removeStudent(this);
     }
   }
 
-};
+}

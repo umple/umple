@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 
 public class Student
 {
@@ -15,28 +15,28 @@ public class Student
   private int intId;
   private double doubleId;
   private boolean booleanId;
-  private String stringId;
+  private string stringId;
 
   //Helper Variables
   private int cachedHashCode;
   private boolean canSetIntId;
   private boolean canSetDoubleId;
   private boolean canSetBooleanId;
-  private boolean canSetStringId;
+  private boolean canSetstringId;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Student(double aDoubleId, boolean aBooleanId, String aStringId)
+  public Student(double aDoubleId, boolean aBooleanId, string astringId)
   {
     canSetIntId = true;
     doubleId = aDoubleId;
     canSetDoubleId = false;
     booleanId = aBooleanId;
     canSetBooleanId = false;
-    stringId = aStringId;
-    canSetStringId = false;
+    stringId = astringId;
+    canSetstringId = false;
     cachedHashCode = -1;
   }
 
@@ -69,7 +69,7 @@ public class Student
     return booleanId;
   }
 
-  public String getStringId()
+  public string getstringId()
   {
     return stringId;
   }
@@ -133,7 +133,7 @@ public class Student
     canSetIntId = false;
     canSetDoubleId = false;
     canSetBooleanId = false;
-    canSetStringId = false;
+    canSetstringId = false;
     return cachedHashCode;
   }
 

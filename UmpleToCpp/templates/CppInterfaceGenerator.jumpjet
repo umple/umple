@@ -16,7 +16,7 @@
 <%=gen.translate("packageDefinition",uInterface)%>
 <%@ include file="import_packages_interface.jet" %>
 
-public interface <%=uInterface.getName()%><%= gen.translate("isA",uInterface) %>
+class <%=uInterface.getName()%><%= gen.translate("isA",uInterface) %>
 {
   <%=extraCode%>
 <% if (uInterface.hasConstants()) { %>
@@ -24,5 +24,6 @@ public interface <%=uInterface.getName()%><%= gen.translate("isA",uInterface) %>
 <% } %>
  <% if (uInterface.hasMethods()) { %>
 <%@ include file="interface_AbstractMethodDeclaration.jet" %>
+<%@ include file="interface_virtual_destructor.jet"%>
 <% } %>
-}
+};

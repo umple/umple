@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 
 public class Mentor
 {
@@ -12,7 +12,7 @@ public class Mentor
   //------------------------
 
   //Mentor Attributes
-  private String name;
+  private string name;
 
   //Mentor Associations
   private Mentor superMentor;
@@ -21,7 +21,7 @@ public class Mentor
   // CONSTRUCTOR
   //------------------------
 
-  public Mentor(String aName)
+  public Mentor(string aName)
   {
     name = aName;
   }
@@ -30,7 +30,7 @@ public class Mentor
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setName(string aName)
   {
     boolean wasSet = false;
     name = aName;
@@ -38,7 +38,7 @@ public class Mentor
     return wasSet;
   }
 
-  public String getName()
+  public string getName()
   {
     return name;
   }

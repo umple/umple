@@ -2,25 +2,18 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "LightFixture.h";
 
-class LightFixture
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //LightFixture State Machines
   enum Light { On, Off }
   private Light light;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  LightFixture::LightFixture()
   {
     setLight(Light.On);
@@ -65,7 +58,12 @@ class LightFixture
     light = aLight;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+LightFixture::~LightFixture()
   {}
 
-};
+}

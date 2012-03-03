@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 
 public class MyDriver
 {
@@ -12,7 +12,7 @@ public class MyDriver
   //------------------------
 
   //MyDriver Attributes
-  private String name;
+  private string name;
 
   //MyDriver Associations
   private MySubordinate mySubordinate;
@@ -21,7 +21,7 @@ public class MyDriver
   // CONSTRUCTOR
   //------------------------
 
-  public MyDriver(String aName)
+  public MyDriver(string aName)
   {
     name = aName;
   }
@@ -30,7 +30,7 @@ public class MyDriver
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setName(string aName)
   {
     boolean wasSet = false;
     name = aName;
@@ -38,7 +38,7 @@ public class MyDriver
     return wasSet;
   }
 
-  public String getName()
+  public string getName()
   {
     return name;
   }

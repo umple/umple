@@ -1,4 +1,4 @@
-namespace example;
+namespace example{ 
 
 class CodeTranslator
 {

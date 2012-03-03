@@ -2,46 +2,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
+ 
+#include <vector>;
+#include "Foo.h";
 
-#include <java.util.*>;
-
-class Foo
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Foo Associations
-
-  /**
-   * Inline comment above association.
-   */
-   vector<Bar1*> bar1s;
-
-  /**
-   * Multiple inline comments
-   * above association.
-   */
-   vector<Bar2*> bar2s;
-
-  /**
-   * Multiline comment above association.
-   */
-   vector<Bar3*> bar3s;
-
-  /**
-   * Multiple multiline comments
-   * above association.
-   */
-   vector<Bar4*> bar4s;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Foo::Foo()
   {
     bar1s = new vector<Bar1*>();
@@ -330,24 +299,29 @@ class Foo
     }
     return wasRemoved;
   }
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
   {
-    for(Bar1 aBar1 : bar1s)
+    for( int i =0; sizeof(bar1s); i++)
     {
-      aBar1.delete();
+      delete bar1s[i];
     }
-    for(Bar2 aBar2 : bar2s)
+    for( int i =0; sizeof(bar2s); i++)
     {
-      aBar2.delete();
+      delete bar2s[i];
     }
-    for(Bar3 aBar3 : bar3s)
+    for( int i =0; sizeof(bar3s); i++)
     {
-      aBar3.delete();
+      delete bar3s[i];
     }
-    for(Bar4 aBar4 : bar4s)
+    for( int i =0; sizeof(bar4s); i++)
     {
-      aBar4.delete();
+      delete bar4s[i];
     }
   }
 
-};
+}

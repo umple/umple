@@ -2,61 +2,70 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Student.h";
 
-class Student
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Student Attributes
-  String name;
-  String studentNumber;
-
-  //Helper Variables
-  bool canSetName;
-  bool canSetStudentNumber;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
- Student::Student(String aName)
+  
+ Student::Student(String aImmutable, String aName)
   {
+    immutable = aImmutable;
     name = aName;
-    canSetName = false;
-    canSetStudentNumber = true;
+    studentNumber = aStudentNumber;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  bool Student::setStudentNumber(String aStudentNumber)
+  bool Student::setImmutable(string aImmutable)
   {
     bool wasSet = false;
-    if (!canSetStudentNumber) { return false; }
-    canSetStudentNumber = false;
+    immutable = aImmutable;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Student::setName(string aName)
+  {
+    bool wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Student::setStudentNumber(string aStudentNumber)
+  {
+    bool wasSet = false;
     studentNumber = aStudentNumber;
     wasSet = true;
     return wasSet;
   }
 
-  String Student::getName()
+  string Student::getImmutable()
+  {
+    return immutable;
+  }
+
+  string Student::getName()
   {
     return name;
   }
 
-  String Student::getStudentNumber()
+  string Student::getStudentNumber()
   {
     return studentNumber;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
   {}
 
-};
+}

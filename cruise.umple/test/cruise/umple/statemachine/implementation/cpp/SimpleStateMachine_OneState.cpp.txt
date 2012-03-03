@@ -2,25 +2,18 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Student.h";
 
-class Student
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //Student State Machines
   enum Grade { Pass }
   private Grade grade;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Student::Student()
   {
     setGrade(Grade.Pass);
@@ -47,7 +40,12 @@ class Student
     return true;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
   {}
 
-};
+}

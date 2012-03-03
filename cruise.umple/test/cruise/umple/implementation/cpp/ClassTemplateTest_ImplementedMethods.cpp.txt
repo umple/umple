@@ -2,21 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "CodeTranslator.h";
 
-class CodeTranslator implements ICodeTranslator
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  CodeTranslator::CodeTranslator()
   {}
 
@@ -24,7 +17,12 @@ class CodeTranslator implements ICodeTranslator
   // INTERFACE
   //------------------------
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+CodeTranslator::~CodeTranslator()
   {}
 
   @Override
@@ -37,4 +35,4 @@ class CodeTranslator implements ICodeTranslator
             return "";
   }
 
-};
+}

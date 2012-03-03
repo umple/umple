@@ -11,4 +11,10 @@
     appendln(stringBuffer, "");
     append(stringBuffer, "#include <{0}>;",anImport);
   }
+  
+  for (String anImport : gClass.getMultiLookup("using"))
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "using namespace {0};",anImport);
+  }
 %>

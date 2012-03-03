@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 import java.util.*;
 
 public class Student
@@ -13,7 +13,7 @@ public class Student
   //------------------------
 
   //Student Attributes
-  private String number;
+  private string number;
 
   //Student Associations
   private List<Mentor> mentors;
@@ -22,7 +22,7 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aNumber)
+  public Student(string aNumber)
   {
     number = aNumber;
     mentors = new ArrayList<Mentor>();
@@ -32,7 +32,7 @@ public class Student
   // INTERFACE
   //------------------------
 
-  public boolean setNumber(String aNumber)
+  public boolean setNumber(string aNumber)
   {
     boolean wasSet = false;
     number = aNumber;
@@ -40,7 +40,7 @@ public class Student
     return wasSet;
   }
 
-  public String getNumber()
+  public string getNumber()
   {
     return number;
   }

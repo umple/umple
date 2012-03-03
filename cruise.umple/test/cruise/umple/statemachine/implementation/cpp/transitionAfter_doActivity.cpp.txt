@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+using example;
 
 public class Switch
 {
@@ -33,7 +33,7 @@ public class Switch
   // INTERFACE
   //------------------------
 
-  public String getStatus()
+  public string getStatus()
   {
     switch (status)
     {

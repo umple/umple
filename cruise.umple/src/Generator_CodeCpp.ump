@@ -94,6 +94,7 @@ class CppGenerator
     UmpleToJavaPrimitiveMap.put("Boolean","bool");
     UmpleToJavaPrimitiveMap.put("Double","double");
     UmpleToJavaPrimitiveMap.put("Float","float");
+    UmpleToJavaPrimitiveMap.put("String","string");
     
 
   }
@@ -133,7 +134,18 @@ class CppGenerator
   {
 	if (aElement instanceof UmpleInterface)
     {
-      return new CppInterfaceGenerator();
+      if (callHeader == false)
+      {
+        callHeader = true;
+        return new CppInterfaceGenerator();
+      }
+      
+      else if (callHeader == true)
+      {
+        callHeader = false;
+        return new CppInterfaceHeaderGenerator();
+      }
+      
     }
     else if (aElement instanceof UmpleClass)
     {
@@ -158,7 +170,7 @@ class CppGenerator
     String myType = av.getType();
     if (myType == null || myType.length() == 0)
     {
-      return "String";
+      return "string";
     }
     else if (UmpleToJavaPrimitiveMap.containsKey(myType))
     {
@@ -292,7 +304,14 @@ class CppGenerator
   {
     if ("packageDefinition".equals(name))
     {
-      return aInterface.getPackageName().length() == 0 ? "" : "package " + aInterface.getPackageName() + ";"; 
+    	if (aInterface.getPackageName()==null)
+    	{
+    		return aInterface.getPackageName().length() == 0 ? "" : "namespace " +"{";
+    	}
+    	else
+    	{
+    		return aInterface.getPackageName().length() == 0 ? "" : "namespace " + aInterface.getPackageName() + "{";
+    	}
     }
     if ("isA".equals(name))
     {
@@ -326,7 +345,14 @@ class CppGenerator
     }
     else if ("packageDefinition".equals(name))
     {
-      return aClass.getPackageName().length() == 0 ? "" : "package " + aClass.getPackageName() + ";"; 
+    	if (aClass.getPackageName() ==null)
+    	{
+    		return aClass.getPackageName().length() == 0 ? "" : "namespace " + "{";
+    	}
+    else 
+    	{
+    		return aClass.getPackageName().length() == 0 ? "" : "namespace " + aClass.getPackageName() + "{";
+    	}
     }
     else if ("type".equals(name))
     {
@@ -349,10 +375,10 @@ class CppGenerator
       else{
           for (UmpleInterface aInterface : uInterface.getExtendsInterface())
           {
-              implementedInterfaces += aInterface.getName() + ", " ; 
+              implementedInterfaces += aInterface.getName() + ", public " ; 
           }
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-2); 
-          return " extends " + implementedInterfaces;
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-9);//-9 to rollback the extra ', public' word 
+          return " : public " + implementedInterfaces;
       }
   }
 
@@ -375,7 +401,7 @@ class CppGenerator
           return "";
       }
       else{
-          return   " extends " + parent.getName();  
+          return   ": public " + parent.getName();  
       }
   }
 
@@ -389,10 +415,10 @@ class CppGenerator
       else{
           for (UmpleInterface uInterface : uClass.getParentInterface())
           {
-              implementedInterfaces += uInterface.getName() + "," ; 
+              implementedInterfaces += uInterface.getName() + ", public " ; 
           }
-          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
-          return " implements " + implementedInterfaces;
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-9);
+          return ": public " + implementedInterfaces;
       }
   }
 
@@ -831,7 +857,7 @@ class CppGenerator
       {
         if (!aClass.getPackageName().equals(aClass.getExtendsClass().getPackageName()))
         {
-          genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + ".*");  
+          genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + "");  
         }
         addImports(aClass.getExtendsClass(),genClass);
       }
@@ -861,18 +887,21 @@ class CppGenerator
   {
     String timeImport = "time.h";
     String dateImport = "time.h";
-    String utilImport = "iostream";
+    String utilImport = "vector";
     
-    for (Attribute av : aClass.getAttributes()) 
+      for (Attribute av : aClass.getAttributes()) 
     {
       
       if ("Time".equals(av.getType()))
       {
+
         genClass.addMultiLookup("import", timeImport);
+        av.setType("time_t*");
       }
       else if ("Date".equals(av.getType()))
       {
         genClass.addMultiLookup("import", dateImport);
+        av.setType("string");
       }
       
       if (av.getIsList())
@@ -895,7 +924,7 @@ class CppGenerator
       
       if (av.isMany())
       {
-        genClass.addMultiLookup("import", "java.util.*");
+        genClass.addMultiLookup("import", "vector");
       }
     }
     
@@ -903,7 +932,7 @@ class CppGenerator
     {
       if (!namespace.equals(aClass.getPackageName()))
       {
-        genClass.addMultiLookup("import", namespace + ".*");
+        genClass.addMultiLookup("using", namespace);
       }
     }
   }

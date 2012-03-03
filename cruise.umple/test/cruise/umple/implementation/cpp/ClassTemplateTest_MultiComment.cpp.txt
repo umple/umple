@@ -2,24 +2,17 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Student.h";
 
 // This is a student
 // Multiple comments
 // on several lines
-class Student
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Student::Student()
   {}
 
@@ -27,7 +20,12 @@ class Student
   // INTERFACE
   //------------------------
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
   {}
 
-};
+}

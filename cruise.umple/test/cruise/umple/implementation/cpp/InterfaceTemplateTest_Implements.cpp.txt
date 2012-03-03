@@ -2,21 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "Something.h";
 
-class Something implements ISomething
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Something::Something()
   {}
 
@@ -24,7 +17,12 @@ class Something implements ISomething
   // INTERFACE
   //------------------------
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Something::~Something()
   {}
 
   @Override
@@ -37,4 +35,4 @@ class Something implements ISomething
             return "";
   }
 
-};
+}

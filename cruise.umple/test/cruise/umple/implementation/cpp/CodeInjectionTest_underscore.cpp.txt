@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+nameapace example;
 import java.util.*;
 
 public class Student
@@ -13,10 +13,10 @@ public class Student
   //------------------------
 
   //Student Attributes
-  private String id;
-  private String name;
-  private String type;
-  private List<String> roles;
+  private string id;
+  private string name;
+  private string type;
+  private List<string> roles;
 
   //Helper Variables
   private boolean canSetId;
@@ -25,19 +25,19 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aName)
+  public Student(string aName)
   {
     canSetId = true;
     name = aName;
     resetType();
-    roles = new ArrayList<String>();
+    roles = new ArrayList<string>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setId(String aId)
+  public boolean setId(string aId)
   {
     boolean wasSet = false;
     print "start set_id";
@@ -49,7 +49,7 @@ public class Student
     return wasSet;
   }
 
-  public boolean setName(String aName)
+  public boolean setName(string aName)
   {
     boolean wasSet = false;
     print "start set_name";
@@ -60,7 +60,7 @@ public class Student
     return wasSet;
   }
 
-  public boolean setType(String aType)
+  public boolean setType(string aType)
   {
     boolean wasSet = false;
     print "start set_type";
@@ -80,7 +80,7 @@ public class Student
     return wasReset;
   }
 
-  public boolean addRole(String aRole)
+  public boolean addRole(string aRole)
   {
     boolean wasAdded = false;
     print "start add";
@@ -89,7 +89,7 @@ public class Student
     return wasAdded;
   }
 
-  public boolean removeRole(String aRole)
+  public boolean removeRole(string aRole)
   {
     boolean wasRemoved = false;
     print "start remove";
@@ -98,50 +98,50 @@ public class Student
     return wasRemoved;
   }
 
-  public String getId()
+  public string getId()
   {
     print "start get_id";
-    String aId = id;
+    string aId = id;
     print "end get_id";
     return aId;
   }
 
-  public String getName()
+  public string getName()
   {
     print "start get_name";
-    String aName = name;
+    string aName = name;
     print "end get_name";
     return aName;
   }
 
-  public String getType()
+  public string getType()
   {
     print "start get_type";
-    String aType = type;
+    string aType = type;
     print "end get_type";
     return aType;
   }
 
-  public String getDefaultType()
+  public string getDefaultType()
   {
     print "start getDefault_type";
-    String aType = "None";
+    string aType = "None";
     print "end getDefault_type";
     return aType;
   }
 
-  public String getRole(int index)
+  public string getRole(int index)
   {
     print "start get_role";
-    String aRole = roles.get(index);
+    string aRole = roles.get(index);
     print "end get_role";
     return aRole;
   }
 
-  public String[] getRoles()
+  public string[] getRoles()
   {
     print "start get_roles";
-    String[] newRoles = roles.toArray(new String[roles.size()]);
+    string[] newRoles = roles.toArray(new string[roles.size()]);
     print "end get_roles";
     return newRoles;
   }
@@ -160,7 +160,7 @@ public class Student
     return has;
   }
 
-  public int indexOfRole(String aRole)
+  public int indexOfRole(string aRole)
   {
     print "start indexOf_role";
     int index = roles.indexOf(aRole);

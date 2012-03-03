@@ -2,15 +2,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "LightFixture.h";
 
-class LightFixture
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  
 
   //LightFixture State Machines
   enum Status { Off, On }
@@ -19,12 +14,10 @@ class LightFixture
   private Status status;
   private StatusMotorIdle statusMotorIdle;
   private StatusFanIdle statusFanIdle;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  LightFixture::LightFixture()
   {
     setStatus(Status.Off);
@@ -202,7 +195,12 @@ class LightFixture
     if (status != Status.On && aStatusFanIdle != StatusFanIdle.Null) { setStatus(Status.On); }
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+LightFixture::~LightFixture()
   {}
 
-};
+}

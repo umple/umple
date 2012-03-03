@@ -2,26 +2,16 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example.three;
-#include <java.util.*>;
-#include <example.two.*>;
+namespace example.three{ 
+#include <vector>;
+using namespace example.two;
+#include "Course.h";
 
-class Course
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Course Associations
-   vector<Student*> students;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Course::Course()
   {
     students = new vector<Student*>();
@@ -111,14 +101,19 @@ class Course
     return wasRemoved;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Course::~Course()
   {
-    ArrayList<Student> copyOfStudents = new ArrayList<Student>(students);
+    vector<Student> copyOfStudents = new vector<Student>(students);
     students.clear();
-    for(Student aStudent : copyOfStudents)
+    for(int i=0;sizeof(students);i++)
     {
-      aStudent.removeCourse(this);
+      students[i].removeCourse(this);
     }
   }
 
-};
+}

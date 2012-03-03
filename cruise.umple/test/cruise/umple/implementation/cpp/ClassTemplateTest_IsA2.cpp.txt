@@ -2,27 +2,17 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
+#include "SubMentor2.h";
 
-class SubMentor2 extends Mentor
-{
-  private:
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //SubMentor2 Attributes
-  String subName;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  SubMentor2::SubMentor2(String aName, String aSubName)
   {
-    super(aName);
+    SubMentor2(aName);
     subName = aSubName;
   }
 
@@ -30,7 +20,7 @@ class SubMentor2 extends Mentor
   // INTERFACE
   //------------------------
 
-  bool SubMentor2::setSubName(String aSubName)
+  bool SubMentor2::setSubName(string aSubName)
   {
     bool wasSet = false;
     subName = aSubName;
@@ -38,14 +28,19 @@ class SubMentor2 extends Mentor
     return wasSet;
   }
 
-  String SubMentor2::getSubName()
+  string SubMentor2::getSubName()
   {
     return subName;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+SubMentor2::~SubMentor2()
   {
     super.delete();
   }
 
-};
+}

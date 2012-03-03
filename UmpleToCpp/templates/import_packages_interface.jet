@@ -3,7 +3,7 @@
   for (Depend depend : uInterface.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "import {0};",depend.getName());
+    append(stringBuffer, "#include <{0}>;",depend.getName());
   }
   
   // TODO: No test failed from removing this

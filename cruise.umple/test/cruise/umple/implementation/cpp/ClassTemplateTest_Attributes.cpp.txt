@@ -2,58 +2,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 #include <time.h>;
+#include "Mentor.h";
 
-class Mentor
-{
-  private:
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  const static int MAX = 100;
-  const static int MIN = -99;
-  const static String HELLO = "Hello";
-  static int nextX = 1;
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor Attributes
-  String str;
-  String str2;
-  String someName;
-  double lDoub;
-  bool lBool;
-  String name;
-  Date d;
-  Time t;
-  int i;
-  String p;
-  String q;
-  String r;
-  String s;
-  Date t;
-  Time u;
-  Date v;
-  Time w;
-
-  //Autounique Attributes
-  int x;
-
-  //Helper Variables
-  bool canSetStr;
-  bool canSetStr2;
-  bool canSetS;
-
+  
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public:
-
+  
  Mentor::Mentor(String aStr, Date aD, int aI)
   {
     str = aStr;
@@ -71,8 +28,8 @@ class Mentor
     resetR();
     s = "123";
     canSetS = false;
-    t = Date.valueOf("1978-12-25");
-    u = Time.valueOf("12:13:14");
+    t = "1978-12-25";
+    u = "12:13:14";
     resetV();
     resetW();
     x = nextX++;
@@ -82,7 +39,7 @@ class Mentor
   // INTERFACE
   //------------------------
 
-  bool Mentor::setStr2(String aStr2)
+  bool Mentor::setStr2(string aStr2)
   {
     bool wasSet = false;
     if (!canSetStr2) { return false; }
@@ -92,7 +49,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setSomeName(String aSomeName)
+  bool Mentor::setSomeName(string aSomeName)
   {
     bool wasSet = false;
     someName = aSomeName;
@@ -116,7 +73,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setName(String aName)
+  bool Mentor::setName(string aName)
   {
     bool wasSet = false;
     name = aName;
@@ -124,7 +81,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setD(Date aD)
+  bool Mentor::setD(string aD)
   {
     bool wasSet = false;
     d = aD;
@@ -140,7 +97,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setP(String aP)
+  bool Mentor::setP(string aP)
   {
     bool wasSet = false;
     p = aP;
@@ -156,7 +113,7 @@ class Mentor
     return wasReset;
   }
 
-  bool Mentor::setQ(String aQ)
+  bool Mentor::setQ(string aQ)
   {
     bool wasSet = false;
     q = aQ;
@@ -164,7 +121,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setR(String aR)
+  bool Mentor::setR(string aR)
   {
     bool wasSet = false;
     r = aR;
@@ -180,7 +137,7 @@ class Mentor
     return wasReset;
   }
 
-  bool Mentor::setT(Date aT)
+  bool Mentor::setT(string aT)
   {
     bool wasSet = false;
     t = aT;
@@ -188,7 +145,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setU(Time aU)
+  bool Mentor::setU(time_t* aU)
   {
     bool wasSet = false;
     u = aU;
@@ -196,7 +153,7 @@ class Mentor
     return wasSet;
   }
 
-  bool Mentor::setV(Date aV)
+  bool Mentor::setV(string aV)
   {
     bool wasSet = false;
     v = aV;
@@ -212,7 +169,7 @@ class Mentor
     return wasReset;
   }
 
-  bool Mentor::setW(Time aW)
+  bool Mentor::setW(time_t* aW)
   {
     bool wasSet = false;
     w = aW;
@@ -228,17 +185,17 @@ class Mentor
     return wasReset;
   }
 
-  String Mentor::getStr()
+  string Mentor::getStr()
   {
     return str;
   }
 
-  String Mentor::getStr2()
+  string Mentor::getStr2()
   {
     return str2;
   }
 
-  String Mentor::getSomeName()
+  string Mentor::getSomeName()
   {
     return someName;
   }
@@ -253,12 +210,12 @@ class Mentor
     return lBool;
   }
 
-  String Mentor::getName()
+  string Mentor::getName()
   {
     return name;
   }
 
-  Date Mentor::getD()
+  string Mentor::getD()
   {
     return d;
   }
@@ -273,64 +230,64 @@ class Mentor
     return i*2;
   }
 
-  String Mentor::getP()
+  string Mentor::getP()
   {
     return p;
   }
 
-  String Mentor::getDefaultP()
+  string Mentor::getDefaultP()
   {
     return "robot";
   }
 
-  String Mentor::getQ()
+  string Mentor::getQ()
   {
     return q;
   }
 
-  String Mentor::getR()
+  string Mentor::getR()
   {
     return r;
   }
 
-  String Mentor::getDefaultR()
+  string Mentor::getDefaultR()
   {
     return "";
   }
 
-  String Mentor::getS()
+  string Mentor::getS()
   {
     return s;
   }
 
-  Date Mentor::getT()
+  string Mentor::getT()
   {
     return t;
   }
 
-  Time Mentor::getU()
+  time_t* Mentor::getU()
   {
     return u;
   }
 
-  Date Mentor::getV()
+  string Mentor::getV()
   {
     return v;
   }
 
-  Date Mentor::getDefaultV()
+  string Mentor::getDefaultV()
   {
-    return Date.valueOf("1978-12-26");
+    return "1978-12-26";
   }
 
-  Time Mentor::getW()
+  time_t* Mentor::getW()
   {
     return w;
   }
 
-  Time Mentor::getDefaultW()
+  time_t* Mentor::getDefaultW()
   {
-    return Time.valueOf("12:59:59");
+    return "12:59:59";
   }
 
   int Mentor::getX()
@@ -338,7 +295,12 @@ class Mentor
     return x;
   }
 
-  public void delete()
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Mentor::~Mentor()
   {}
 
-};
+}

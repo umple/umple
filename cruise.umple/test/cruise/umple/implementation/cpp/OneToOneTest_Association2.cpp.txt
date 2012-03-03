@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 
 public class Student
 {
@@ -12,7 +12,7 @@ public class Student
   //------------------------
 
   //Student Attributes
-  private String name;
+  private string name;
   private int number;
 
   //Student Associations
@@ -22,7 +22,7 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aName, int aNumber, Mentor aMentor)
+  public Student(string aName, int aNumber, Mentor aMentor)
   {
     name = aName;
     number = aNumber;
@@ -33,7 +33,7 @@ public class Student
     mentor = aMentor;
   }
 
-  public Student(String aName, int aNumber, String aNameForMentor)
+  public Student(string aName, int aNumber, string aNameForMentor)
   {
     name = aName;
     number = aNumber;
@@ -44,7 +44,7 @@ public class Student
   // INTERFACE
   //------------------------
 
-  public boolean setName(String aName)
+  public boolean setName(string aName)
   {
     boolean wasSet = false;
     name = aName;
@@ -60,7 +60,7 @@ public class Student
     return wasSet;
   }
 
-  public String getName()
+  public string getName()
   {
     return name;
   }

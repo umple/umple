@@ -2,7 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
+namespace example{ 
 import java.util.*;
 
 public class Student
@@ -16,34 +16,34 @@ public class Student
   private int intId;
   private double doubleId;
   private boolean booleanId;
-  private String stringId;
-  private List<String> stringListIds;
+  private string stringId;
+  private List<string> stringListIds;
 
   //Helper Variables
   private int cachedHashCode;
   private boolean canSetIntId;
   private boolean canSetDoubleId;
   private boolean canSetBooleanId;
-  private boolean canSetStringId;
-  private boolean canSetStringListIds;
+  private boolean canSetstringId;
+  private boolean canSetstringListIds;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Student(int aIntId, double aDoubleId, boolean aBooleanId, String aStringId)
+  public Student(int aIntId, double aDoubleId, boolean aBooleanId, string astringId)
   {
     intId = aIntId;
     doubleId = aDoubleId;
     booleanId = aBooleanId;
-    stringId = aStringId;
-    stringListIds = new ArrayList<String>();
+    stringId = astringId;
+    stringListIds = new ArrayList<string>();
     cachedHashCode = -1;
     canSetIntId = true;
     canSetDoubleId = true;
     canSetBooleanId = true;
-    canSetStringId = true;
-    canSetStringListIds = true;
+    canSetstringId = true;
+    canSetstringListIds = true;
   }
 
   //------------------------
@@ -77,28 +77,28 @@ public class Student
     return wasSet;
   }
 
-  public boolean setStringId(String aStringId)
+  public boolean setstringId(string astringId)
   {
     boolean wasSet = false;
-    if (!canSetStringId) { return false; }
-    stringId = aStringId;
+    if (!canSetstringId) { return false; }
+    stringId = astringId;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean addStringListId(String aStringListId)
+  public boolean addstringListId(string astringListId)
   {
     boolean wasAdded = false;
-    if (!canSetStringListIds) { return false; }
-    wasAdded = stringListIds.add(aStringListId);
+    if (!canSetstringListIds) { return false; }
+    wasAdded = stringListIds.add(astringListId);
     return wasAdded;
   }
 
-  public boolean removeStringListId(String aStringListId)
+  public boolean removestringListId(string astringListId)
   {
     boolean wasRemoved = false;
-    if (!canSetStringListIds) { return false; }
-    wasRemoved = stringListIds.remove(aStringListId);
+    if (!canSetstringListIds) { return false; }
+    wasRemoved = stringListIds.remove(astringListId);
     return wasRemoved;
   }
 
@@ -117,38 +117,38 @@ public class Student
     return booleanId;
   }
 
-  public String getStringId()
+  public string getstringId()
   {
     return stringId;
   }
 
-  public String getStringListId(int index)
+  public string getstringListId(int index)
   {
-    String aStringListId = stringListIds.get(index);
-    return aStringListId;
+    string astringListId = stringListIds.get(index);
+    return astringListId;
   }
 
-  public String[] getStringListIds()
+  public string[] getstringListIds()
   {
-    String[] newStringListIds = stringListIds.toArray(new String[stringListIds.size()]);
-    return newStringListIds;
+    string[] newstringListIds = stringListIds.toArray(new string[stringListIds.size()]);
+    return newstringListIds;
   }
 
-  public int numberOfStringListIds()
+  public int numberOfstringListIds()
   {
     int number = stringListIds.size();
     return number;
   }
 
-  public boolean hasStringListIds()
+  public boolean hasstringListIds()
   {
     boolean has = stringListIds.size() > 0;
     return has;
   }
 
-  public int indexOfStringListId(String aStringListId)
+  public int indexOfstringListId(string astringListId)
   {
-    int index = stringListIds.indexOf(aStringListId);
+    int index = stringListIds.indexOf(astringListId);
     return index;
   }
 
@@ -190,8 +190,8 @@ public class Student
 
     for (int i=0; i<stringListIds.size(); i++)
     {
-      String me = stringListIds.get(i);
-      String them = compareTo.stringListIds.get(i);
+      string me = stringListIds.get(i);
+      string them = compareTo.stringListIds.get(i);
       if (me == null && them != null)
       {
        return false;
@@ -239,8 +239,8 @@ public class Student
     canSetIntId = false;
     canSetDoubleId = false;
     canSetBooleanId = false;
-    canSetStringId = false;
-    canSetStringListIds = false;
+    canSetstringId = false;
+    canSetstringListIds = false;
     return cachedHashCode;
   }
 
