@@ -27,7 +27,7 @@
 
 %>
 
-<%=gen.translate("packageDefinition",uClass)%> 
+<%=gen.translate("packageDefinition",uClass)%>
 <%@ include file="import_packages.jet" %>
 <%@ include file="import_headerFile.jet"%>
 
