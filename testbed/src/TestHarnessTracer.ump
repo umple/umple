@@ -6,5 +6,5 @@ tracer String;
 class PersonA
 {
   name;
-  //trace name;
+  trace name;
 }

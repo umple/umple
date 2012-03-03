@@ -111,9 +111,15 @@
     <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.xml">
       <arg value="AllXmlTests.php"/>
     </exec>
-    <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.html">
+    <exec executable="php" dir="testbed_php/test/" output="${test.output.path.php}/index.html" outputproperty="test.output.php">
       <arg value="AllTests.php"/>
     </exec>
+    <!-- check for error --> 
+    <fail message="PHP tests failed ('Fail' found)">
+      <condition> 
+        <contains string="${test.output.php}" substring="Fail" casesensitive="true"/> 
+      </condition> 
+    </fail>    
     <echo message="PHP tests completed!"/> 
   </target>
   
