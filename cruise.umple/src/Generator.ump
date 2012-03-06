@@ -43,6 +43,8 @@ class EcoreGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -55,6 +57,8 @@ class PapyrusGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -67,6 +71,8 @@ class XmiGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -79,6 +85,8 @@ class TextUmlGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -91,6 +99,8 @@ class SimulateGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -101,6 +111,8 @@ class YumlGenerator
   depend java.util.*;
   depend cruise.umple.util.*;
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String outputPath = "";
 }
@@ -110,6 +122,9 @@ class JsonGenerator
 {
   isA CodeGenerator;
   depend cruise.umple.util.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -125,6 +140,8 @@ class JavaGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.java.*;  
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -140,6 +157,8 @@ class CppGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.cpp.*;  
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -156,6 +175,8 @@ class PhpGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.php.*;  
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -171,6 +192,8 @@ class RubyGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.ruby.*;  
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }
@@ -186,6 +209,8 @@ class SQLGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.sql.*;  
 
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
 }

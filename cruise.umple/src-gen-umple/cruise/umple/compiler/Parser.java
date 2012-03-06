@@ -139,11 +139,18 @@ public class Parser
     return index;
   }
 
+  /**
+   * The results of the parsing, and any errors/warning messages will be stored here.
+   */
   public ParseResult getParseResult()
   {
     return parseResult;
   }
 
+  /**
+   * Every parser makes use of "tokens" that are built up based on what is parsed.  In the end it looks almost like a "tree".
+   * This is the starting token for which everything will be built off of (sub-tokens).
+   */
   public Token getRootToken()
   {
     return rootToken;
@@ -155,6 +162,9 @@ public class Parser
     return aRule;
   }
 
+  /**
+   * A parser can have many "rules", likewise each rule can be part of many "parsers"; hence many-to-many.
+   */
   public List<Rule> getRules()
   {
     List<Rule> newRules = Collections.unmodifiableList(rules);

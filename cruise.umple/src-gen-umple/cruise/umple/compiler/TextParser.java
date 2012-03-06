@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
+ * as an Umple file.
+ */
 public class TextParser
 {
 
@@ -53,7 +57,7 @@ public class TextParser
     init(input);
     _filename = filename;
   }
-  
+
   public TextParser(String input)
   {
     init(input);
@@ -64,7 +68,7 @@ public class TextParser
     load(text);
     return text;
   }
-  
+
   // ```````````````````````
   // INTERFACE
   // ```````````````````````
@@ -76,9 +80,14 @@ public class TextParser
 
   public String getFilename()
   {
-  	return _filename == null ? "" : _filename;
+    return _filename == null ? "" : _filename;
   }
 
+  /*
+   * Resets the parsers positional data based on a specified index.
+   * 
+   * @param startIndex The specified index that the position will be reset to in the parser.
+   */
   public void reset(int startIndex)
   {
     _currentName = null;
@@ -88,6 +97,11 @@ public class TextParser
     indexToReplacementOffsetMap = new Hashtable<Integer,Integer>();
   }
 
+  /*
+   * Initializes the textual data in the text file into the parsers character array, for future use in parsing with.
+   * 
+   * @param text The textual input to transform into a character array.
+   */
   public void load(String text)
   {
     _text = text;
@@ -118,7 +132,7 @@ public class TextParser
     _maxCharacterIndex = _maxCharacterIndex + length;
     _textCharacters = _text.toCharArray();   
   }
-  
+
   public void insertAfter(Token t, String insertText)
   {
     int length = insertText.length();
@@ -138,50 +152,50 @@ public class TextParser
       String newText = _text.substring(0,insertIndex);
       newText += insertText;
       newText += _text.substring(insertIndex);
-      
+
       if (_currentCharacterIndex >= insertIndex)
       {
         _currentCharacterIndex += length;
       }
-      
+
       _text = newText;
       _textCharacters = _text.toCharArray();
       _maxCharacterIndex = _text.length() - 1;
     }
   }
-  
+
   public void replace(Token t, String overwriteToken)
   {
     if (t == null)
     {
       return;
     }
-    
+
     int originalStartIndex = t.getPosition().getOffset();
     int oldLength = t.getInnerLength();
     int replaceOffset = overwriteToken.length() - oldLength;
     indexToReplacementOffsetMap.put(originalStartIndex, replaceOffset);
-    
+
     int startIndex = calculateStartIndex(originalStartIndex);
     int endIndex = startIndex + oldLength;
-    
+
     String newText = _text.substring(0,startIndex);
     newText += overwriteToken;
     if (endIndex < _text.length())
     {
       newText += _text.substring(endIndex,_text.length());  
     }
-    
+
     if (_currentCharacterIndex > startIndex)
     {
       _currentCharacterIndex += overwriteToken.length() - oldLength;
     }
-    
+
     _text = newText;
     _textCharacters = _text.toCharArray();
     _maxCharacterIndex = _text.length() - 1;
   }
-  
+
   public void replace(String newText)
   {
     if (name() == null)
@@ -190,16 +204,16 @@ public class TextParser
     }
     else
     {
-      
+
       String beforeText = "";
       String afterText = "";
-      
+
       int nextIndex = _lastCharacterIndex;
-      
+
       if (nextIndex > 0)
       {
         beforeText = _text.substring(0, nextIndex);
-        
+
         while (nextIndex <= _maxCharacterIndex)
         {
           char nextChar = charAt(nextIndex);
@@ -215,12 +229,12 @@ public class TextParser
         }
       }
       nextIndex += name().length();
-      
+
       if (nextIndex <= _maxCharacterIndex)
       {
         afterText = _text.substring(nextIndex);
       }
-      
+
       int newLastIndex = _lastCharacterIndex;
       int newCharacterIndex = _lastCharacterIndex + newText.length();
       _text = beforeText + newText + afterText;
@@ -417,12 +431,12 @@ public class TextParser
 
     return name();
   }
-  
+
   public String nextUntil(boolean stopAtSpace, String... stopBefore)
   {    
     return nextUntil(stopAtSpace, false, stopBefore);
   }
-  
+
   public String nextUntil(boolean stopAtSpace, boolean alphanumeric, String... stopBefore)
   {
     _lastCharacterIndex = _currentCharacterIndex;
@@ -432,8 +446,8 @@ public class TextParser
     }
     return name();
   }
-  
-  
+
+
   public String nextAfter(boolean stopAtSpace, String... stopAfter)
   {
     int savedIndex = _currentCharacterIndex;
@@ -478,18 +492,27 @@ public class TextParser
     return _currentCharacterIndex;
   }
 
+  /*
+   * Used to get positional data on the textual parser.
+   * 
+   * @return A Position object based off the filename the parser is based on, along with the line number and character index its sitting
+   * at.
+   */
   public Position currentPosition()
   {
     skipWhitespace();
     int lineNumber = 1;
     int currentLineOffset = -1;
     int nextLineOffset = 0;
+
+    // Compute the line number that the parser is currently at.
     while ((nextLineOffset = _text.indexOf("\n", nextLineOffset)) != -1 && nextLineOffset < _currentCharacterIndex)
     {
       lineNumber++;
       currentLineOffset = nextLineOffset;
       nextLineOffset++;
     }
+
     int characterOffset = _currentCharacterIndex - currentLineOffset - 1;
     Position p = new Position(_filename, lineNumber, characterOffset, _currentCharacterIndex);
     return p;
@@ -550,12 +573,12 @@ public class TextParser
   // ```````````````````````
 
   private String loadName(boolean stopAtSpace, boolean stopAtMatch, String... lookups) {
-	  return loadName(stopAtSpace, stopAtMatch, false, lookups);
+    return loadName(stopAtSpace, stopAtMatch, false, lookups);
   }
-  
+
   private String loadName(boolean stopAtSpace, boolean stopAtMatch, boolean isAlphanum, String... lookups)
   {
-  
+
     boolean hasLookup = hasLookups(lookups);
     int backupCurrentCharacterIndex = _currentCharacterIndex;
     _currentName = null;
@@ -566,9 +589,9 @@ public class TextParser
     {
       //If the rule is alphanumeric only & we've reached a character that is not alphanumeric or an underscore, we haven't matched anything.
       if(isAlphanum && !(isAlpha(c()) || isNumeric(c())) && !(c() == '_') && name.length() > 0) {
-    	break;
+        break;
       }
-          	
+
       if (isSpace() && (!hasLookup || stopAtMatch || stopAtSpace))
       {
         wasSpace = true;
@@ -668,17 +691,34 @@ public class TextParser
     return null;
   }
 
+  /**
+   * Increments the parsers character index by 1, and then returns the character at that new index.
+   * 
+   * @return The character at the parsers new character index in the textual input data.
+   */
   private char increment()
   {
     return increment(1);
   }
 
+  /**
+   * Increments the parsers character index (where it is in the textual input) and returns the new character it's sitting on.
+   * 
+   * @param howMuch How much to increment the index by.
+   * 
+   * @return The character that the parser is sitting on at its character index (in relation to the textual input data).
+   */
   private char increment(int howMuch)
   {
     _currentCharacterIndex += howMuch;
     return c();
   }
 
+  /**
+   * Typically used in conjunction with increment, where the character that the parser's index is sitting on is returned.
+   * 
+   * @return The character that the parser's character index is at in the textual input data.
+   */
   private char c()
   {
     return charAt(_currentCharacterIndex);
@@ -693,7 +733,7 @@ public class TextParser
   {
     return isSpace(c());  
   }
-  
+
   private boolean isSpace(char c)
   {
     return c == ' ' || c == '\n' || c == '\t' || c == '\r';
@@ -710,7 +750,7 @@ public class TextParser
   }
 
   private int calculateStartIndex(int originalStartIndex)
-  {
+  {                    
     int startIndex = originalStartIndex;
     for (Enumeration<Integer> i = indexToReplacementOffsetMap.keys(); i.hasMoreElements();)
     {

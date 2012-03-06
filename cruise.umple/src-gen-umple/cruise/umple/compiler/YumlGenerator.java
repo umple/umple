@@ -46,6 +46,10 @@ public class YumlGenerator implements CodeGenerator
     return wasSet;
   }
 
+  /**
+   * Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+   * off of what's contained in here.
+   */
   public UmpleModel getModel()
   {
     return model;
