@@ -51,7 +51,7 @@ class User
   first_name;
   last_name;
   password;
-  other_details
+  other_details;
   
   key {id}
 }

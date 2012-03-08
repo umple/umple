@@ -149,5 +149,5 @@ class ElectoralDistrict
   position 104 74 115 59;
   position.association ElectoralDistrict__Voter 109,15 0,30;
   position.association ElectoralDistrict__Position 50,59 112,0;
-  position.association ElectoralDistrict__ElectoralDistrict:subDistrict 2 0,38 15,59;
+  position.association ElectoralDistrict__ElectoralDistrict:subDistrict 0,38 15,59;
 }
