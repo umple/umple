@@ -1,0 +1,97 @@
+Convincing Potential Adopters
+User Manual Basics
+noreferences
+
+@@description
+
+<h2>Convincing yourself, your development team or your management to use Model-Oriented Programming with Umple</h2>
+
+<p>Here are some arguments to make to help convince you, your management and your colleagues to adopt model-oriented programming and Umple in particular:</p>
+
+<ol>
+
+<li><b>Model-code duality:</b> Umple means you no longer have to maintain models separately from the code. Your code and model become the same thing. Your models therefore dont get out of date and your volume of separately-maintained documentation becomes less. Model elements in the Umple code, along with their comments, become the design documentation.</li><br/>
+
+<li><b>Rapid application development:</b> Models containing the essential structure of a system can be developed extremely fast, and modified extremely rapidly. This is because most people can edit Umple text faster than they can use a drawing tool. But the ability to use a drawing tool is not sacrificed  you can still draw an Umple model as a diagram with <a href="UsingUmpleOnline.html">UmpleOnline</a>!</li><br/>
+
+<li><b>Less code to write:</b> Code for UML constructs like <a href="AssociationDefinition.html">associations</a>, <a href="BasicStateMachines.html">state machines</a> and certain <a href="SingletonPattern.html">patterns</a> is generated. Less code means fewer bugs.  Developers can concentrate on the more interesting or critical parts of your code.</li><br/>
+
+<li><b>Fewer bugs:</b> It is extremely difficult to consistently write bug-free code for complex constructs like <a href="BasicStateMachines.html">state machines</a>, or <a href="AssociationDefinition.html">associations</a> that maintain referential integrity and respect <a href="Multiplicity.html">multiplicity</a> constraints. Umple does this for you.</li><br/>
+
+<li><b>The full power of UML features:</b> Unlike Umple, most other code generators do not generate code that enforces multiplicity in class diagrams, or allows unlimited levels of nesting of state machines. Umple has incorporates the research of several PhD and masters thesis to deliver state-of-the-art code generation.</li><br/>
+
+<li><b>Text-diagram duality:</b> Umple allows visualization of key aspects of your code with UmpleOnline. Furthermore the diagram can be edited to change the code, or the code can be edited to change the diagram. Both of these occur in real time.</li><br/>
+
+<li><b>Product-line and feature-oriented development:</b> Umple brings mixin technology to Java and PhP, allowing you to easily build different versions of your software for different customers or hardware platforms. Umple code can also be organized on a feature-by feature basis.</li><br/>
+
+<li><b>Aspect orientation to adapt generated code:</b> You can inject your own code <a href="BeforeandAfterStatements.html">before and after</a> any generated methods to enforce constraints or change semantics.</li><br/>
+
+<li><b>Generation for multiple languages:</b> Umple allows development targeted to several different programming languages at the same time: All the developer has to do is to maintain language-independent files for the models, and link them to language-specific code for algorithms.</li><br/>
+
+<li><b>Incremental adoption:</b> You can start with just one Umple statement in a million lines of code and gradually increase Umple usage. Your software will remain fully compliable and functional as you gradually increase your uptake of Umple.</li><br/>
+
+<li><b>Use just like a pre-processor:</b> Programmers have been confidently using pre-processors for half a century.</li><br/>
+
+<li><b>Fully open source with a liberal license:</b> If you dont like something about Umple you can fix it and contribute to the community. But there are no restrictions on what you do with Umple or its generated code since it uses an <a href="http://umple.org/license">MIT-style license</a>.</li><br/>
+
+<li><b>Commitment to the future:</b> The team at the University of Ottawa developing Umple plan to continue active development for the years to come. This will not become one of those research programs that comes to an end and is then abandoned. We recognize that ideas can take decades to percolate to the community. We plan to be right there supporting Umple as this happens.</li><br/>
+
+</ol>
+
+
+<h1>Countering the counterarguments</h1>
+
+<p>Here are some common arguments against adopting a new software development technology, and how they dont apply in model-oriented programming:</p>
+
+<ol>
+
+<li><b>Complexity:</b> Adding a new technology might add more complexity to our project so might require more learning by our employees and might make our systems harder to understand:<br/>
+<u>Not true for Umple, because:</u>
+<ul>
+  <li>Umple is just a set of small extensions to well-known languages like Java, PhP, Ruby and (coming soon) C++.</li>
+  <li>Umple acts just like a preprocessor:: traditional code is still there either embedded in the umple, or with Umple embedded in the traditional code.</li>
+  <li>Umple can be used incrementally. You can use just a few pieces of it here and there to gain substantial advantages.</li>
+  <li>There is an easy-to-access user manual, with examples for all constructs and messages.</li>
+  <li>Umple will save a lot of coding and maintenance of boilerplate code, code for patterns, and code for constructs such as state machines.</li>
+  <li>Studies have shown that code using Umple is actually easier to understand than traditional code, and people learn to be better modelers when using Umple. <a href="http://code.google.com/p/umple/wiki/Publications">See here for a list of peer-reviewed publications.</a></li>
+  <li>Umple is deliberately simpler than UML and other modeling technologies.</li>
+</ul></li><br/>
+
+<li><b>Confidence:</b> Our company would have no way to be confident about whether it works or not and we do not have the time or resources to do the needed due diligence:<br/>
+<u>Not true for Umple, because:</u>
+<ul>
+  <li>You can adopt Umple in extremely small increments and increase your use of it as you gain confidence.</li>
+  <li>If you encounter a problem with a particular use of Umple you can easily avoid that case since Umple can be blended in any combination with traditional code.</li>
+  <li>When using Umple a large amount of your code will be generated using templates that have been extensively tested; this saves both coding and testing time.</li>
+  <li>Umple is developed using test-driven development at several levels. There are a large number of tests that are run during every build covering all the important use cases. If you encounter a problem we can fix the problem (or you can) and then we can add your case to the test suite to ensure it does not recur.</li>
+  <li>Large systems have been built using Umple, including the Umple compiler itself. Since Umple compiles itself any bugs are rapidly detected.</li>
+  <li>The developers of Umple use Umple in their daily development. This is not typically true of other modelling tools.</li>
+</ul></li><br/>
+
+
+
+<li><b>Support:</b> If the technology stopped being supported, we would not be able to maintain our code base.<br/>
+<u>Not true for Umple, because:</u>
+<ul>
+  <li>You will always have access to the generated code base. Even if Umple vanished, you would have access to the code that had been generated.</li>
+  <li>The generated code is designed to be easily understandable, even though it is not intended to be edited and does not need to be read in normal development situations.</li>
+  <li>Umple is open source, so you would always have access to it.</li>
+</ul></li><br/>
+
+
+<li><b>Process:</b> Our testing and building processes are likely to only work for well-known technologies:<br/>
+<u>Not true for Umple, because:</u>
+<ul>
+  <li>The Umple compiler works just like compilers of other languages can is tested and built in the same manner.</li>
+</ul></li><br/>
+
+
+<li><b>Compatibility:</b> We use a lot of re-used, proprietary or legacy code that might be incompatible with the new technology:<br/>
+<u>Not true for Umple, because:</u>
+<ul>
+  <li>Umple can work with any existing libraries in Java, PHP, Ruby etc. You can subclass existing classes even if you cant see the source; you can write arbitrary code to call APIs of existing libraries, or you can convert existing code to Umple if you wish.</li>
+  <li>Umple is particularly good at helping incrementally re-engineer (i.e. umplifiy) legacy code: You can convert your legacy code little-by-little. But you also have the option to leave it unchanged and just use Umple for extensions or new code.</li>
+</ul></li><br/>
+
+
+</ol>

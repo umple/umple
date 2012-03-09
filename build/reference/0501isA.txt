@@ -9,6 +9,10 @@ noreferences
 
 <p>Note that it is possible to avoid using the isA keyword, by directly embedding a subclass inside a superclass. Note that this does <i>not</i> create an inner class in the Java sense, but instead creates a subclass. The two examples below give identical results.</p>
 
+<p>The following is how a generalization appears in UML. The corresponding Umple is below. Note that in UmpleOnline, the expected layout for generalizations places superclasses above subclasses.</p>
+
+<img src="examples/PersonStudentGeneralization.png" alt="Generalization with Person as superclass and Student as subclass"/>
+
 <br />
 
 @@syntax

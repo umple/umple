@@ -3,8 +3,10 @@ Associations
 noreferences
 
 @@description
-An association represents a relationship between two classes.  Associations can be defined within a class, in a similar manner
-as you would define an attribute.
+<p>An association represents a relationship between two classes.  Associations can be defined within a class, in a similar manner
+as you would define an attribute.</p>
+
+<p>Contrast this with the <a href="IndependentlyDefinedAssociations.html">same model defined using independently defined associations.</a></p>
 
 @@syntax
 (* | [lowerBound] .. [upperBound] | [bound]) [name]? [=arrow:--|->] (* | [lowerBound] .. [upperBound] | [bound]) [type] [name] ;

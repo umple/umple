@@ -1,5 +1,5 @@
 Umple Tools
-User Manual
+User Manual Basics
 noreferences
 
 @@description

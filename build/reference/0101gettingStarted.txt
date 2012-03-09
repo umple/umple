@@ -1,5 +1,5 @@
 Getting Started
-User Manual
+User Manual Basics
 noreferences
 
 @@description
@@ -7,19 +7,19 @@ noreferences
 
 <p>Umple allows you to do the following things: </p>
 
-<ul>
+<ol>
 
-<li><b>1. Create UML models textually</b>. It can often be faster to create UML 
-class diagrams and state machines using Umple's textual format that looks 
+<li><b>Create UML models textually</b>. It can often be faster to create UML 
+<a href="ClassDefinition.html">class</a> diagrams and <a href="BasicStateMachines.html">state machines</a> using Umple's textual format that looks 
 just like programming-language code. Editing, comparing and many other 
-tasks can often be faster using this textual form. Umple has tools that 
+tasks can often be faster using this textual form. Umple has <a href="UmpleTools.html">tools</a> that 
 allow you to edit the model textually (and see changes appear in a UML 
 diagram) or to edit a UML diagram (and see changes appear in the textual 
 code)</li>
 
 <br />
 
-<li><b>2. Add UML modeling constructs directly into your programs, when you 
+<li><b>Add UML modeling constructs directly into your programs, when you 
 are programming in Java, PHP or Ruby</b>. For example, when programming in 
 Java, you can directly add a UML <a href="BasicStateMachines.html">state machine</a> into your code. This can 
 save you a lot of coding. The Umple compiler acts as a pre-processor, 
@@ -29,7 +29,7 @@ into an executable program.</li>
 <br />
 
 
-<li><b>3. Generate high quality code from UML models</b>. The Umple 
+<li><b>Generate high quality code from UML models</b>. The Umple 
 compiler creates code in languages like Java and PHP that is of top 
 quality. It is a goal of the Umple team to create the best open-source 
 code-generation tool available. The generated code never needs to be 
@@ -46,7 +46,7 @@ so you can verify its correctness and learn how it works.</li>
 
 <br />
 
-<li><b>4. Incrementally Umplify a program.</b> A program in a base 
+<li><b>Incrementally Umplify a program.</b> A program in a base 
 language like Java should pass through the Umple compiler unchanged. As a 
 result you can incrementally refactor such a program, stripping off 
 complex code for such things as associations, state machines and patterns, 
@@ -56,7 +56,7 @@ program that should not only be more compact, but also more reliable and
 more maintainable. In addition, you have the benefit of being able to view 
 UML diagrams of your program.</li>
 
-</ul>
+</ol>
 
 <p>The term "Umple" derives from "UML Programming Language", "Simple" 
 and "Ample".</p>
