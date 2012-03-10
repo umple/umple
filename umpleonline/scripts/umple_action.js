@@ -1022,7 +1022,11 @@ Action.updateUmpleTextCallback = function(response)
   Action.freshLoad = true;
 
   Page.setUmpleCode(response.responseText);
-  // Page.catFeedbackMessage("update text callback");
+  // DEBUG
+  // Page.setFeedbackMessage("update text callback -");
+  // Page.catFeedbackMessage(response.responseText);
+  // Page.catFeedbackMessage("-");
+
   
   if (Action.textUpdateQueue.length > 0)
   {

@@ -406,11 +406,7 @@ Page.getRawUmpleCode = function()
 
 Page.getUmpleCode = function()
 {
-  // TODO This had been instrumented with ACE. Needs cleaning up
-  var model = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
-  var regex = new RegExp(/^\d+/); //starts with digit, one or more E.G. 12345class X
-  var lineNumbers = regex.exec(model);
-  var modelCleaned = model.replace(lineNumbers,"");
+  var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var positioning = jQuery("#umpleLayoutEditor").val().replace(Page.modelDelimiter, "");
   
   var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
