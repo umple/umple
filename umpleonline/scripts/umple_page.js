@@ -415,9 +415,11 @@ Page.getUmpleCode = function()
 
 Page.getEncodedURL = function()
 {
-  // TODO See if the server can be grabbed from the current one
-  // TODO Internet explorer limis to about 2000 characters
-    return "http://try.umple.org/?text=" + encodeURIComponent(Page.getUmpleCode());
+  var server=window.location.href.split("?")[0];
+  if(substr(server,0,42)="http://cruise.site.uottawa.ca/umpleonline/") {
+    server = "http://try.umple.org/";
+  }
+  return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
 }
 
 Page.splitUmpleCode = function(umpleCode)
