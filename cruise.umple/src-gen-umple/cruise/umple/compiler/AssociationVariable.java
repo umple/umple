@@ -24,6 +24,9 @@ public class AssociationVariable extends UmpleVariable
   private UmpleClass umpleClass;
   private TraceDirective traceDirective;
 
+  //Helper Variables
+  private boolean canSetIsNavigable;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -33,6 +36,7 @@ public class AssociationVariable extends UmpleVariable
     super(aName, aType, aModifier, aValue);
     multiplicity = aMultiplicity;
     isNavigable = aIsNavigable;
+    canSetIsNavigable = false;
     comments = new ArrayList<Comment>();
   }
 
@@ -44,15 +48,6 @@ public class AssociationVariable extends UmpleVariable
   {
     boolean wasSet = false;
     multiplicity = aMultiplicity;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setIsNavigable(boolean aIsNavigable)
-  {
-    boolean wasSet = false;
-    if (aIsNavigable && !canBeNavigable()) { return false; }
-    isNavigable = aIsNavigable;
     wasSet = true;
     return wasSet;
   }
@@ -366,15 +361,10 @@ public class AssociationVariable extends UmpleVariable
         || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
   }
 
-  public boolean setImmutable(boolean aImmutable)
+  public boolean setImmutable()
   {
     boolean wasSet = false;
-    if (!aImmutable)
-    {
-      setModifier(null);
-      wasSet = true;
-    }
-    else if (aImmutable && canBeImmutable())
+    if (canBeImmutable())
     {
       setModifier("immutable");
       wasSet = true;
@@ -382,36 +372,37 @@ public class AssociationVariable extends UmpleVariable
     return wasSet;
   }
 
-  public boolean canBeImmutable()
+  private boolean canBeImmutable()
   {
     AssociationVariable related = getRelatedAssociation();
+    if (related == null) { return true; }
 
-    if (getIsNavigable() && related != null && related.getIsNavigable())
+    boolean canBe = true;
+    if (getIsNavigable() && related.getIsNavigable())
     {
-      return false;
+      canBe = false;
     }
-    return true;
-  }
-
-  public boolean canBeNavigable()
-  {
-    AssociationVariable related = getRelatedAssociation();
-
-    if (umpleClass != null && umpleClass.isImmutable() && related != null && related.getIsNavigable())
+    else if (related.getIsNavigable() && (umpleClass != null) && !umpleClass.isImmutable())
     {
-      return false;
-    }	
-    return true;
+      canBe = false;
+    }
+    else if (getIsNavigable() && (related.getUmpleClass() != null) && !related.getUmpleClass().isImmutable())
+    {
+      canBe = false;
+    }
+    return canBe;
   }
 
-  private boolean canBeRelatedAssociation(AssociationVariable aRelatedAssociation)
+  private boolean canBeRelatedAssociation(AssociationVariable related)
   {
-    if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
+    if (related == null)
     {
       return true;
     }
+    Boolean myUmpleClassIsImmutable = (getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+    Boolean yourUmpleClassIsImmutable = (related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
 
-    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
-        aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
+    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, myUmpleClassIsImmutable, 
+        related, related.getUmpleClass(), yourUmpleClassIsImmutable);
   }
 }

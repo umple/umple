@@ -1,0 +1,19 @@
+class SuperClass
+{
+	int counter;
+}
+
+class MutableClass
+{
+	isA SuperClass;
+	1 -> * OtherClass;	
+}
+
+class OtherClass
+{
+}
+
+class SuperClass
+{
+	immutable;
+}

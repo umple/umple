@@ -242,12 +242,13 @@ class UmpleClass
   Key key = new Key();
 
   // Specifies whether or not the Umple class is immutable.
-  Boolean immutable = false;
+  internal Boolean iAmImmutable = false;
+  internal Boolean ancestorIsImmutable = false;
 
   1 -> * CodeInjection;
 
   // The Umple Class's super class (if there is one).
-  * -> 0..1 UmpleClass extendsClass;
+  * subclasses -- 0..1 UmpleClass extendsClass;
 
   * -> 0..1 Token extendsToken;
   * -> 0..* UmpleInterface parentInterface;
@@ -272,9 +273,13 @@ class UmpleClass
 
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
 
-  before setImmutable { if (!allAssociationsSupportClassImmutabilityRules(aImmutable)) { return false; } }
+  before setImmutable { if (!canBeImmutable()) { return false; } }
 
   before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
+  
+  before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
+  
+  before addStateMachine { if (isImmutable()) { return false; } }
 }
 
 class Depend
@@ -381,7 +386,7 @@ class AssociationVariable
 {
   isA UmpleVariable;
   Multiplicity multiplicity;
-  Boolean isNavigable;
+  immutable Boolean isNavigable;
 
   0..1 self relatedAssociation;
 
@@ -391,8 +396,6 @@ class AssociationVariable
   before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
 
   before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
-
-  before setIsNavigable { if (aIsNavigable && !canBeNavigable()) { return false; } }
 }
 
 // TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)

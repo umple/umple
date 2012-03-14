@@ -82,18 +82,17 @@ public class AttributeTest
   }
   
   @Test
-  public void isImmutable_basedOnClass()
+  public void isImmutableBasedOnClass()
   {
     UmpleClass c = new UmpleClass("Student");
     c.addAttribute(attr);
-    c.setImmutable(false);
     
     Assert.assertEquals(false, attr.isImmutable());
     
     attr.setModifier("immutable");
     Assert.assertEquals(true, attr.isImmutable());
         
-    c.setImmutable(true);
+    c.setImmutable();
     Assert.assertEquals(true, attr.isImmutable());
     
     attr.setModifier(null);    

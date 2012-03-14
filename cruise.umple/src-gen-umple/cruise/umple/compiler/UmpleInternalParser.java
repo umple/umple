@@ -526,7 +526,11 @@ private void analyzeClassToken(Token t, int analysisStep)
     else if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
-      childClass.setExtendsClass(aClass);
+      boolean wasSet = childClass.setExtendsClass(aClass);
+      if (!wasSet)
+      {
+      	setFailedPosition(token.getPosition(), 16, childClass.getName(), aClass.getName());
+      }
     }
     else if (token.is("attribute"))
     {
@@ -691,7 +695,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
     if (classToken.getValue("immutable") != null)
     {
-      boolean wasSet = aClass.setImmutable(true);
+      boolean wasSet = aClass.setImmutable();
       if (!wasSet)
       {
         // Future-proofing: currently all paths cause wasSet to be true
@@ -971,8 +975,22 @@ private void analyzeClassToken(Token t, int analysisStep)
         String extendName= extendsNames.get(i);
         if (isUmpleClass(extendName))
         {
-          UmpleClass parent = model.getUmpleClass(extendName); 
-          child.setExtendsClass(parent);
+          UmpleClass parent = model.getUmpleClass(extendName);     
+          boolean wasSet = child.setExtendsClass(parent);
+          if (!wasSet)
+          {
+            Position pos;
+            try
+            {
+              pos = extendsToken.get(i).getPosition();
+            }
+            catch(Exception e)
+            {
+              pos = new Position("",0,0,0);
+            }
+            setFailedPosition(pos, 16, child.getName(), parent.getName());
+            return;
+          }
           try
           {
             child.setExtendsToken(extendsToken.get(i));

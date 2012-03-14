@@ -374,10 +374,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSingleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associations" eType="#//Association" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="key" eType="#//Key"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="immutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="iAmImmutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ancestorIsImmutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection" eOpposite="#//CodeInjection/umpleClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/umpleClasses"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subclasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/subclasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/umpleClasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleClasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleClasses"/>

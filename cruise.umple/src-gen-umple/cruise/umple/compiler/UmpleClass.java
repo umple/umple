@@ -19,7 +19,8 @@ public class UmpleClass extends UmpleElement
   private boolean isSingleton;
   private List<Association> associations;
   private Key key;
-  private boolean immutable;
+  private boolean iAmImmutable;
+  private boolean ancestorIsImmutable;
 
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
@@ -36,6 +37,7 @@ public class UmpleClass extends UmpleElement
   private List<TraceDirective> traceDirectives;
   private List<TraceCase> traceCases;
   private List<StateMachine> stateMachines;
+  private List<UmpleClass> subclasses;
 
   //------------------------
   // CONSTRUCTOR
@@ -47,7 +49,8 @@ public class UmpleClass extends UmpleElement
     isSingleton = false;
     associations = new ArrayList<Association>();
     key = new Key();
-    immutable = false;
+    iAmImmutable = false;
+    ancestorIsImmutable = false;
     codeInjections = new ArrayList<CodeInjection>();
     parentInterface = new ArrayList<UmpleInterface>();
     depends = new ArrayList<Depend>();
@@ -59,6 +62,7 @@ public class UmpleClass extends UmpleElement
     traceDirectives = new ArrayList<TraceDirective>();
     traceCases = new ArrayList<TraceCase>();
     stateMachines = new ArrayList<StateMachine>();
+    subclasses = new ArrayList<UmpleClass>();
   }
 
   //------------------------
@@ -91,15 +95,6 @@ public class UmpleClass extends UmpleElement
   {
     boolean wasSet = false;
     key = aKey;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setImmutable(boolean aImmutable)
-  {
-    boolean wasSet = false;
-    if (!allAssociationsSupportClassImmutabilityRules(aImmutable)) { return false; }
-    immutable = aImmutable;
     wasSet = true;
     return wasSet;
   }
@@ -147,22 +142,9 @@ public class UmpleClass extends UmpleElement
     return key;
   }
 
-  /**
-   * Specifies whether or not the Umple class is immutable.
-   */
-  public boolean getImmutable()
-  {
-    return immutable;
-  }
-
   public boolean isIsSingleton()
   {
     return isSingleton;
-  }
-
-  public boolean isImmutable()
-  {
-    return immutable;
   }
 
   public CodeInjection getCodeInjection(int index)
@@ -525,6 +507,36 @@ public class UmpleClass extends UmpleElement
     return index;
   }
 
+  public UmpleClass getSubclass(int index)
+  {
+    UmpleClass aSubclass = subclasses.get(index);
+    return aSubclass;
+  }
+
+  public List<UmpleClass> getSubclasses()
+  {
+    List<UmpleClass> newSubclasses = Collections.unmodifiableList(subclasses);
+    return newSubclasses;
+  }
+
+  public int numberOfSubclasses()
+  {
+    int number = subclasses.size();
+    return number;
+  }
+
+  public boolean hasSubclasses()
+  {
+    boolean has = subclasses.size() > 0;
+    return has;
+  }
+
+  public int indexOfSubclass(UmpleClass aSubclass)
+  {
+    int index = subclasses.indexOf(aSubclass);
+    return index;
+  }
+
   public static int minimumNumberOfCodeInjections()
   {
     return 0;
@@ -550,10 +562,20 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
-  public boolean setExtendsClass(UmpleClass newExtendsClass)
+  public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    extendsClass = newExtendsClass;
+    if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
+    UmpleClass existingExtendsClass = extendsClass;
+    extendsClass = aExtendsClass;
+    if (existingExtendsClass != null && !existingExtendsClass.equals(aExtendsClass))
+    {
+      existingExtendsClass.removeSubclass(this);
+    }
+    if (aExtendsClass != null)
+    {
+      aExtendsClass.addSubclass(this);
+    }
     wasSet = true;
     return wasSet;
   }
@@ -866,6 +888,7 @@ public class UmpleClass extends UmpleElement
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
+    if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
     if (existingUmpleClass == null)
@@ -897,10 +920,54 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public static int minimumNumberOfSubclasses()
+  {
+    return 0;
+  }
+
+  public boolean addSubclass(UmpleClass aSubclass)
+  {
+    boolean wasAdded = false;
+    if (subclasses.contains(aSubclass)) { return false; }
+    UmpleClass existingExtendsClass = aSubclass.getExtendsClass();
+    if (existingExtendsClass == null)
+    {
+      aSubclass.setExtendsClass(this);
+    }
+    else if (!this.equals(existingExtendsClass))
+    {
+      existingExtendsClass.removeSubclass(aSubclass);
+      addSubclass(aSubclass);
+    }
+    else
+    {
+      subclasses.add(aSubclass);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeSubclass(UmpleClass aSubclass)
+  {
+    boolean wasRemoved = false;
+    if (subclasses.contains(aSubclass))
+    {
+      subclasses.remove(aSubclass);
+      aSubclass.setExtendsClass(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public void delete()
   {
     codeInjections.clear();
-    extendsClass = null;
+    if (extendsClass != null)
+    {
+      UmpleClass placeholderExtendsClass = extendsClass;
+      this.extendsClass = null;
+      placeholderExtendsClass.removeSubclass(this);
+    }
     extendsToken = null;
     parentInterface.clear();
     depends.clear();
@@ -928,6 +995,10 @@ public class UmpleClass extends UmpleElement
     for(StateMachine aStateMachine : stateMachines)
     {
       aStateMachine.setUmpleClass(null);
+    }
+    for(UmpleClass aSubclass : subclasses)
+    {
+      aSubclass.setExtendsClass(null);
     }
     super.delete();
   }
@@ -1170,16 +1241,84 @@ public class UmpleClass extends UmpleElement
     }
     return true;
   }
-
-  private boolean allAssociationsSupportClassImmutabilityRules(boolean isImmutable)
+  
+  /* @return true if this class is immutable, either because it has the "immutable" modifier or 
+   * because an ancestor class is immutable; false if this class neither has the "immutable" modifier 
+   * nor an immutable ancestor.
+   */
+  public boolean isImmutable()
+   {
+     return (iAmImmutable || ancestorIsImmutable);
+  }
+    
+  public boolean setImmutable()
   {
-    if (this.hasStateMachines()) { return false; }
-
-    for (AssociationVariable av : associationVariables)
-    {
-      if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }
+    boolean wasSet = false;
+    if (extendsClass != null && !ancestorIsImmutable) { return wasSet; }
+    
+    if (propagateImmutabilityToAllRelationships(true)) 
+    { 
+      iAmImmutable = true;
+      wasSet = true;
     }
-    return true;
+    return wasSet;
+  }
+  
+  private boolean propagateImmutabilityToAllRelationships(boolean isImmutable)
+  {
+    if (isImmutable)
+    {
+      if (this.hasStateMachines()) { return false; }
+
+      for (AssociationVariable av : associationVariables)
+      {
+        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+      }
+    }
+    
+    return notifySubclassesAncestorImmutable(isImmutable);
+  }
+  
+  private boolean notifySubclassesAncestorImmutable(boolean isImmutable)
+  {
+    boolean notified = true;
+    List<UmpleClass> wereSet = new ArrayList<UmpleClass>();
+    for (UmpleClass subclass : getSubclasses())
+    {
+      notified = subclass.setAncestorIsImmutable(isImmutable);
+      if (!notified)
+      {
+        for (UmpleClass wasSet : wereSet)
+        {
+          wasSet.setAncestorIsImmutable(!isImmutable);
+        }
+        return notified;
+      }
+    }
+    return notified;
+  }
+  
+  protected boolean setAncestorIsImmutable(boolean isImmutable)
+  {
+    if (iAmImmutable)
+    {
+      ancestorIsImmutable = isImmutable;
+      return true;
+    }
+    else
+    {
+      boolean success = propagateImmutabilityToAllRelationships(isImmutable);
+      if (success) { ancestorIsImmutable = isImmutable; }
+      return success;
+    }
+  }
+  
+  private boolean enforceImmutabilityInheritanceRules(UmpleClass newSuperClass)
+  {
+    // A subclass may not be immutable if the superclass is not immutable
+    if (iAmImmutable && newSuperClass != null && !newSuperClass.isImmutable()) { return false; }
+    boolean ancestorImmutable = (newSuperClass == null) ? false : newSuperClass.isImmutable();
+    return setAncestorIsImmutable(ancestorImmutable);
   }
 
   protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, 
@@ -1190,15 +1329,23 @@ public class UmpleClass extends UmpleElement
     {
       satisfied = true;
     }
-    else if (myAV == null || yourAV == null || myClass == null || yourClass == null)
+    else if (myAV == null || yourAV == null)
     {
       satisfied = true;
     } 
+    else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
+    {
+      satisfied = false;
+    }
+    else if (myClass == null || yourClass == null)
+    {
+      satisfied = true;
+    }
     else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
     {
       satisfied = true;
     }
-    else if (myClassImmutable && yourClassImmutable && (!myAV.getIsNavigable() || !yourAV.getIsNavigable()))
+    else if (myClassImmutable && yourClassImmutable)
     {
       satisfied = true;
     }

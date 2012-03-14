@@ -710,16 +710,84 @@ class UmpleClass
     }
     return true;
   }
-
-  private boolean allAssociationsSupportClassImmutabilityRules(boolean isImmutable)
+  
+  /* @return true if this class is immutable, either because it has the "immutable" modifier or 
+   * because an ancestor class is immutable; false if this class neither has the "immutable" modifier 
+   * nor an immutable ancestor.
+   */
+  public boolean isImmutable()
+   {
+     return (iAmImmutable || ancestorIsImmutable);
+  }
+    
+  public boolean setImmutable()
   {
-    if (this.hasStateMachines()) { return false; }
-
-    for (AssociationVariable av : associationVariables)
-    {
-      if (!immutabilityAssociationRulesSatisfied(av, isImmutable)) { return false; }
+    boolean wasSet = false;
+    if (extendsClass != null && !ancestorIsImmutable) { return wasSet; }
+    
+    if (propagateImmutabilityToAllRelationships(true)) 
+    { 
+      iAmImmutable = true;
+      wasSet = true;
     }
-    return true;
+    return wasSet;
+  }
+  
+  private boolean propagateImmutabilityToAllRelationships(boolean isImmutable)
+  {
+    if (isImmutable)
+    {
+      if (this.hasStateMachines()) { return false; }
+
+      for (AssociationVariable av : associationVariables)
+      {
+        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+      }
+    }
+    
+    return notifySubclassesAncestorImmutable(isImmutable);
+  }
+  
+  private boolean notifySubclassesAncestorImmutable(boolean isImmutable)
+  {
+    boolean notified = true;
+    List<UmpleClass> wereSet = new ArrayList<UmpleClass>();
+    for (UmpleClass subclass : getSubclasses())
+    {
+      notified = subclass.setAncestorIsImmutable(isImmutable);
+      if (!notified)
+      {
+        for (UmpleClass wasSet : wereSet)
+        {
+          wasSet.setAncestorIsImmutable(!isImmutable);
+        }
+        return notified;
+      }
+    }
+    return notified;
+  }
+  
+  protected boolean setAncestorIsImmutable(boolean isImmutable)
+  {
+    if (iAmImmutable)
+    {
+      ancestorIsImmutable = isImmutable;
+      return true;
+    }
+    else
+    {
+      boolean success = propagateImmutabilityToAllRelationships(isImmutable);
+      if (success) { ancestorIsImmutable = isImmutable; }
+      return success;
+    }
+  }
+  
+  private boolean enforceImmutabilityInheritanceRules(UmpleClass newSuperClass)
+  {
+    // A subclass may not be immutable if the superclass is not immutable
+    if (iAmImmutable && newSuperClass != null && !newSuperClass.isImmutable()) { return false; }
+    boolean ancestorImmutable = (newSuperClass == null) ? false : newSuperClass.isImmutable();
+    return setAncestorIsImmutable(ancestorImmutable);
   }
 
   protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, 
@@ -730,15 +798,23 @@ class UmpleClass
     {
       satisfied = true;
     }
-    else if (myAV == null || yourAV == null || myClass == null || yourClass == null)
+    else if (myAV == null || yourAV == null)
     {
       satisfied = true;
     } 
+    else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
+    {
+      satisfied = false;
+    }
+    else if (myClass == null || yourClass == null)
+    {
+      satisfied = true;
+    }
     else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
     {
       satisfied = true;
     }
-    else if (myClassImmutable && yourClassImmutable && (!myAV.getIsNavigable() || !yourAV.getIsNavigable()))
+    else if (myClassImmutable && yourClassImmutable)
     {
       satisfied = true;
     }
@@ -798,7 +874,7 @@ class Attribute
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
-    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
+    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
 
     return (varIsImmutable || classIsImmutable);
   }
@@ -1141,15 +1217,10 @@ class AssociationVariable
         || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
   }
 
-  public boolean setImmutable(boolean aImmutable)
+  public boolean setImmutable()
   {
     boolean wasSet = false;
-    if (!aImmutable)
-    {
-      setModifier(null);
-      wasSet = true;
-    }
-    else if (aImmutable && canBeImmutable())
+    if (canBeImmutable())
     {
       setModifier("immutable");
       wasSet = true;
@@ -1157,38 +1228,40 @@ class AssociationVariable
     return wasSet;
   }
 
-  public boolean canBeImmutable()
+  private boolean canBeImmutable()
   {
     AssociationVariable related = getRelatedAssociation();
+    if (related == null) { return true; }
 
-    if (getIsNavigable() && related != null && related.getIsNavigable())
+    boolean canBe = true;
+    if (getIsNavigable() && related.getIsNavigable())
     {
-      return false;
+      canBe = false;
     }
-    return true;
-  }
-
-  public boolean canBeNavigable()
-  {
-    AssociationVariable related = getRelatedAssociation();
-
-    if (umpleClass != null && umpleClass.isImmutable() && related != null && related.getIsNavigable())
+    else if (related.getIsNavigable() && (umpleClass != null) && !umpleClass.isImmutable())
     {
-      return false;
-    }	
-    return true;
+      canBe = false;
+    }
+    else if (getIsNavigable() && (related.getUmpleClass() != null) && !related.getUmpleClass().isImmutable())
+    {
+      canBe = false;
+    }
+    return canBe;
   }
 
-  private boolean canBeRelatedAssociation(AssociationVariable aRelatedAssociation)
+  private boolean canBeRelatedAssociation(AssociationVariable related)
   {
-    if (umpleClass == null || aRelatedAssociation == null || aRelatedAssociation.getUmpleClass() == null)
+    if (related == null)
     {
       return true;
     }
+    Boolean myUmpleClassIsImmutable = (getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+    Boolean yourUmpleClassIsImmutable = (related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
 
-    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, umpleClass.isImmutable(), 
-        aRelatedAssociation, aRelatedAssociation.getUmpleClass(), aRelatedAssociation.getUmpleClass().isImmutable());
+    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, myUmpleClassIsImmutable, 
+        related, related.getUmpleClass(), yourUmpleClassIsImmutable);
   }
+  
 }
 
 class Multiplicity

@@ -226,109 +226,115 @@ public class UmpleParserTest
   @Test
   public void validAssociationsForImmutableClass()
   {
-	  assertParse("022_mutableToImmutableAssocRight.ump");
-	  UmpleClass studentClass = model.getUmpleClass("StudentA");
-	  UmpleClass mentorClass = model.getUmpleClass("MentorA");  
-	  Assert.assertFalse(studentClass.isImmutable());
-	  Assert.assertTrue(mentorClass.isImmutable());
-	  Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
-	  
-	  assertParse("022_mutableToImmutableAssocLeft.ump");
-	  studentClass = model.getUmpleClass("StudentB");
-	  mentorClass = model.getUmpleClass("MentorB");	  
-	  Assert.assertTrue(studentClass.isImmutable());
-	  Assert.assertFalse(mentorClass.isImmutable());
-	  Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
-	  
-	  assertParse("022_immutableToImmutableAssocRight.ump");
-	  studentClass = model.getUmpleClass("StudentC");
-	  mentorClass = model.getUmpleClass("MentorC");	  
-	  Assert.assertTrue(studentClass.isImmutable());
-	  Assert.assertTrue(mentorClass.isImmutable());
-	  Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
-	  
-	  assertParse("022_immutableToImmutableAssocLeft.ump");
-	  studentClass = model.getUmpleClass("StudentD");
-	  mentorClass = model.getUmpleClass("MentorD");	  
-	  Assert.assertTrue(studentClass.isImmutable());
-	  Assert.assertTrue(mentorClass.isImmutable());
-	  Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    assertParse("022_mutableToImmutableAssocRight.ump");
+    UmpleClass studentClass = model.getUmpleClass("StudentA");
+    UmpleClass mentorClass = model.getUmpleClass("MentorA");  
+    Assert.assertFalse(studentClass.isImmutable());
+    Assert.assertTrue(mentorClass.isImmutable());
+    Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    
+    assertParse("022_mutableToImmutableAssocLeft.ump");
+    studentClass = model.getUmpleClass("StudentB");
+    mentorClass = model.getUmpleClass("MentorB");    
+    Assert.assertTrue(studentClass.isImmutable());
+    Assert.assertFalse(mentorClass.isImmutable());
+    Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    
+    assertParse("022_immutableToImmutableAssocRight.ump");
+    studentClass = model.getUmpleClass("StudentC");
+    mentorClass = model.getUmpleClass("MentorC");    
+    Assert.assertTrue(studentClass.isImmutable());
+    Assert.assertTrue(mentorClass.isImmutable());
+    Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    
+    assertParse("022_immutableToImmutableAssocLeft.ump");
+    studentClass = model.getUmpleClass("StudentD");
+    mentorClass = model.getUmpleClass("MentorD");    
+    Assert.assertTrue(studentClass.isImmutable());
+    Assert.assertTrue(mentorClass.isImmutable());
+    Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
   }
   
   @Test
   public void validAssociationsForImmutableClass_independentlyDefined()
   {
-	  assertParse("022_mutableToImmutableAssocRightIndependent.ump");
-	  UmpleClass studentClass = model.getUmpleClass("StudentA");
-	  UmpleClass mentorClass = model.getUmpleClass("MentorA");  
-	  Assert.assertFalse(studentClass.isImmutable());
-	  Assert.assertTrue(mentorClass.isImmutable());
-	  Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
-	  
-	  assertParse("022_mutableToImmutableAssocLeftIndependent.ump");
-	  studentClass = model.getUmpleClass("StudentB");
-	  mentorClass = model.getUmpleClass("MentorB");	  
-	  Assert.assertTrue(studentClass.isImmutable());
-	  Assert.assertFalse(mentorClass.isImmutable());
-	  Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable());
-	  
-	  assertParse("022_immutableToImmutableAssocRightIndependent.ump");
-	  studentClass = model.getUmpleClass("StudentC");
-	  mentorClass = model.getUmpleClass("MentorC");	  
-	  Assert.assertTrue(studentClass.isImmutable());
-	  Assert.assertTrue(mentorClass.isImmutable());
-	  Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
-	  
-	  assertParse("022_immutableToImmutableAssocLeftIndependent.ump");
-	  studentClass = model.getUmpleClass("StudentD");
-	  mentorClass = model.getUmpleClass("MentorD");	  
-	  Assert.assertTrue(studentClass.isImmutable());
-	  Assert.assertTrue(mentorClass.isImmutable());
-	  Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
-	  Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    assertParse("022_mutableToImmutableAssocRightIndependent.ump");
+    UmpleClass studentClass = model.getUmpleClass("StudentA");
+    UmpleClass mentorClass = model.getUmpleClass("MentorA");  
+    Assert.assertFalse(studentClass.isImmutable());
+    Assert.assertTrue(mentorClass.isImmutable());
+    Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    
+    assertParse("022_mutableToImmutableAssocLeftIndependent.ump");
+    studentClass = model.getUmpleClass("StudentB");
+    mentorClass = model.getUmpleClass("MentorB");    
+    Assert.assertTrue(studentClass.isImmutable());
+    Assert.assertFalse(mentorClass.isImmutable());
+    Assert.assertFalse(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertFalse(mentorClass.getAssociationVariableFor(studentClass).isImmutable());
+    
+    assertParse("022_immutableToImmutableAssocRightIndependent.ump");
+    studentClass = model.getUmpleClass("StudentC");
+    mentorClass = model.getUmpleClass("MentorC");    
+    Assert.assertTrue(studentClass.isImmutable());
+    Assert.assertTrue(mentorClass.isImmutable());
+    Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
+    
+    assertParse("022_immutableToImmutableAssocLeftIndependent.ump");
+    studentClass = model.getUmpleClass("StudentD");
+    mentorClass = model.getUmpleClass("MentorD");    
+    Assert.assertTrue(studentClass.isImmutable());
+    Assert.assertTrue(mentorClass.isImmutable());
+    Assert.assertTrue(studentClass.getAssociationVariableFor(mentorClass).isImmutable());
+    Assert.assertTrue(mentorClass.getAssociationVariableFor(studentClass).isImmutable()); 
   }
   
   @Test
   public void invalidAssociationsForImmutableClass()
   {
-	  assertFailedParse("022_immutableClassBidirectionalAssoc.ump", new Position("022_immutableClassBidirectionalAssoc.ump",4,1,30));
-	  assertFailedParse("022_immutableToMutableAssocLeft.ump", new Position("022_immutableToMutableAssocLeft.ump",3,1,18));
-	  assertFailedParse("022_immutableToMutableAssocRight.ump", new Position("022_immutableToMutableAssocRight.ump",4,1,30));
-	  
-	  assertFailedParse("022_immutableClassToAssociationClass.ump", new Position("022_immutableClassToAssociationClass.ump",13,1,106));
+    assertFailedParse("022_immutableClassBidirectionalAssoc.ump", new Position("022_immutableClassBidirectionalAssoc.ump",4,1,30));
+    assertFailedParse("022_immutableToMutableAssocLeft.ump", new Position("022_immutableToMutableAssocLeft.ump",3,1,18));
+    assertFailedParse("022_immutableToMutableAssocRight.ump", new Position("022_immutableToMutableAssocRight.ump",4,1,30));
+    
+    assertFailedParse("022_immutableClassToAssociationClass.ump", new Position("022_immutableClassToAssociationClass.ump",13,1,106));
   }
   
   @Test
   public void invalidAssociationsForImmutableClass_independentlyDefined()
   {
-	  assertFailedParse("022_immutableClassBidirectionAssocIndependent.ump", new Position("022_immutableClassBidirectionAssocIndependent.ump",13,1,78));
-	  assertFailedParse("022_immutableToMutableAssocLeftIndependent.ump", new Position("022_immutableToMutableAssocLeftIndependent.ump",12,1,66));
-	  assertFailedParse("022_immutableToMutableAssocRightIndependent.ump", new Position("022_immutableToMutableAssocRightIndependent.ump",12,1,66));
+    assertFailedParse("022_immutableClassBidirectionAssocIndependent.ump", new Position("022_immutableClassBidirectionAssocIndependent.ump",13,1,78));
+    assertFailedParse("022_immutableToMutableAssocLeftIndependent.ump", new Position("022_immutableToMutableAssocLeftIndependent.ump",12,1,66));
+    assertFailedParse("022_immutableToMutableAssocRightIndependent.ump", new Position("022_immutableToMutableAssocRightIndependent.ump",12,1,66));
   }
   
   @Test
   public void associationsForMutableClassesParseSuccessfully()
   {
-	  assertParse("022_mutableClassesValidAssociations.ump");
+    assertParse("022_mutableClassesValidAssociations.ump");
   }
   
   @Test
   public void classCanNotBeChangedToImmutableWithInvalidAssociations()
   {
-	  assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22));
+    assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22));
+  }
+  
+  @Test
+  public void superclassCanNotBeChangedToImmutableWithInvalidAssociationsInSubclass()
+  {
+    assertFailedParse("022_changeSuperclassToImmutable.ump", new Position("022_changeSuperclassToImmutable.ump",8,5,62));
   }
   
   @Test
   public void immutableClassMayNotContainStateMachines()
   {
-	  assertHasWarningsParse("022_stateMachineInImmutableClass.ump", new Position("022_stateMachineInImmutableClass.ump",13,2,128));
+    assertHasWarningsParse("022_stateMachineInImmutableClass.ump", new Position("022_stateMachineInImmutableClass.ump",13,2,128));
   }
   
   @Test

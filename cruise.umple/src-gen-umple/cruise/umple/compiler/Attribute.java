@@ -417,7 +417,7 @@ public class Attribute extends UmpleVariable
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
-    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().getImmutable();
+    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
 
     return (varIsImmutable || classIsImmutable);
   }
