@@ -4,12 +4,6 @@
   {
     $wasSet = false;
     <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
-    <% if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    %>
     $<%=gen.translate("parameterVerifiedMany",av)%> = array();
     foreach ($<%=gen.translate("parameterMany",av)%> as $<%=gen.translate("parameterOne",av)%>)
     {

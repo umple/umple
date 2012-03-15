@@ -1,0 +1,26 @@
+class WidgetImmutableA
+{
+  immutable;
+
+  String name;
+  0..1 -> 0..1 WidgetImmutableB;
+}
+
+class WidgetImmutableB
+{
+  immutable;
+}
+
+class WidgetSubclass
+{
+  isA WidgetImmutableA;
+  String type;
+}
+
+class WidgetC
+{
+  id;
+  key {id}
+}
+
+

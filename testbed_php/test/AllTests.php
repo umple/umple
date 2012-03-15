@@ -9,6 +9,7 @@ $test = &new GroupTest('All Tests');
 loadTestsIn($test,'associations');
 loadTestsIn($test,'statemachine');
 loadTestsIn($test,'attributes');
+loadTestsIn($test,'patterns');
 loadTestsIn($test,'tracer');
 
 $reporter = new HtmlReporter();

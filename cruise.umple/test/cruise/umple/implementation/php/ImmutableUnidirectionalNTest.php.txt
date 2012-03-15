@@ -104,9 +104,8 @@ class Student
   private function setMentors($newMentors)
   {
     $wasSet = false;
-    if (!$this->canSetMentors) { return $wasSet; }
+    if (!$this->canSetMentors) { return false; }
     $this->canSetMentors = false;
-
     $verifiedMentors = array();
     foreach ($newMentors as $aMentor)
     {

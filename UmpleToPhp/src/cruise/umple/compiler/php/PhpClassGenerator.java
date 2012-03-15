@@ -4052,12 +4052,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_446);
      if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_447);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_448);
@@ -4079,12 +4073,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_454);
      if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_455);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_456);
@@ -5573,12 +5561,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1149);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1150);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1151);
@@ -5624,12 +5606,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1169);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1170);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1171);
@@ -5830,12 +5806,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1260);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1261);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1262);
@@ -6040,12 +6010,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1356);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1357);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1358);
@@ -6091,12 +6055,6 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1376);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1377);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1378);

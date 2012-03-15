@@ -4,12 +4,6 @@
   {
     $wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
-    <% if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!${0}->{1}) { return $wasSet; }", instanceIdentifier, gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    ${0}->{1} = false;\n", instanceIdentifier, gen.translate("associationCanSet",av)); 
-    	} 
-    %>
     if ($<%=gen.translate("parameterNew",av)%> != null)
     {
       $this-><%=gen.translate("associationOne",av)%> = $<%=gen.translate("parameterNew",av)%>;

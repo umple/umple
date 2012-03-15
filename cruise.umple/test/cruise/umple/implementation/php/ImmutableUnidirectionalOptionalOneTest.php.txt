@@ -48,9 +48,8 @@ class Student
   private function setMentor($newMentor)
   {
     $wasSet = false;
-    if (!$this->canSetMentor) { return $wasSet; }
+    if (!$this->canSetMentor) { return false; }
     $this->canSetMentor = false;
-
     $this->mentor = $newMentor;
     $wasSet = true;
     return $wasSet;

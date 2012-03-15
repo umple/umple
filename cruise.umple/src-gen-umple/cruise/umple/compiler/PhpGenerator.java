@@ -672,6 +672,15 @@ private String getExtendClassesNames(UmpleClass uClass)
         aClass.addCodeInjection(inject);
       }
       
+      if (av.isImmutable())
+      {
+        String code = StringFormatter.format("if (!$this->{0}) { return false; }\n    $this->{0} = false;",translate("associationCanSet",av));
+        String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
+        CodeInjection set = new CodeInjection("before", methods, code);
+        set.setIsInternal(true);
+        aClass.addCodeInjection(set);
+      }
+      
       if (av.isMany())
       {
         String code = StringFormatter.format("if ($this->{0}(${1}) !== -1) { return false; }",translate("indexOfMethod",av),translate("parameterOne",av));
