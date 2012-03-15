@@ -84,7 +84,9 @@ class Pupil
   def delete
     @deleted = true
     raise "Mandatory relationship with mentor not satisfied" if (@initialized and !@deleted and @mentor.nil?)
-    @mentor.remove_pupil(self)
+    @placeholder_mentor = @mentor
+    @mentor = nil
+    @placeholder_mentor.remove_pupil(self)
   end
 
 end

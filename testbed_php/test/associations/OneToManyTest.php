@@ -125,7 +125,28 @@ class OneToManyTest extends UnitTestCase
     $this->assertEqual($s,$m2->getStudent(0));
     $this->assertEqual(0,$m->numberOfStudents());    
   }  
-  
+
+  public function test_deleteManyEnd()
+  {
+    $m = new MentorJ("blah");
+    $s = new StudentJ(99,$m);
+    $s2 = new StudentJ(98,$m);
+    
+    $this->assertEqual($m,$s->getMentor());
+    $this->assertEqual($m,$s2->getMentor());
+    $this->assertEqual(2,$m->numberOfStudents());
+
+    $s->delete();
+    
+    $this->assertEqual(null,$s->getMentor());
+    $this->assertEqual($m,$s2->getMentor());
+    $this->assertEqual(1,$m->numberOfStudents());
+    
+    $s2->delete();
+    $this->assertEqual(null,$s->getMentor());
+    $this->assertEqual(null,$s2->getMentor());
+    $this->assertEqual(0,$m->numberOfStudents());
+  }
 }
 
 ?>

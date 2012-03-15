@@ -575,7 +575,9 @@ class Student
     unless @m1.nil?
       @m1.remove_one(self)
     end
-    @m2.remove_two(self)
+    @placeholder_m2 = @m2
+    @m2 = nil
+    @placeholder_m2.remove_two(self)
     copy_of_m3s = @m3s.dup
     @m3s.clear
     copy_of_m3s.each do |a_m3|

@@ -130,4 +130,25 @@ public class OneToManyTest
     Assert.assertEquals(0, m.numberOfStudents());    
   }  
   
+  @Test
+  public void deleteManyEnd()
+  {
+    MentorJ m = new MentorJ("blah");
+    StudentJ s1 = new StudentJ(99,m);
+    StudentJ s2 = new StudentJ(98,m);
+    
+    Assert.assertEquals(2, m.numberOfStudents()); 
+    Assert.assertEquals(m,s1.getMentor());
+    Assert.assertEquals(m,s2.getMentor());
+    
+    s1.delete();
+    Assert.assertEquals(1, m.numberOfStudents());
+    Assert.assertEquals(null,s1.getMentor());
+    Assert.assertEquals(m,s2.getMentor());
+    
+    s2.delete();
+    Assert.assertEquals(null,s1.getMentor());
+    Assert.assertEquals(null,s2.getMentor());
+  }
+  
 }

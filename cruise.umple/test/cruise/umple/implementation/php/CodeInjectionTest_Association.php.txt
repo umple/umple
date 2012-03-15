@@ -770,7 +770,9 @@ class Student
     {
       $this->m1->removeOne($this);
     }
-    $this->m2->removeTwo($this);
+    $placeholderM2 = $this->m2;
+    $this->m2 = null;
+    $placeholderM2->removeTwo($this);
     $copyOfM3s = $this->m3s;
     $this->m3s = array();
     foreach ($copyOfM3s as $aM3)

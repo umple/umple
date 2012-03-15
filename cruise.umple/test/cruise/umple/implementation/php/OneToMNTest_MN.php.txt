@@ -89,7 +89,9 @@ class Pupil
 
   public function delete()
   {
-    $this->mentor->removePupil($this);
+    $placeholderMentor = $this->mentor;
+    $this->mentor = null;
+    $placeholderMentor->removePupil($this);
   }
 
 }

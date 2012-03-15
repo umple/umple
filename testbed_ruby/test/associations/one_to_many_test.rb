@@ -112,6 +112,26 @@ class OneToManyTest < Test::Unit::TestCase
     assert_equal(s,m2.get_student(0))
     assert_equal(0,m.number_of_students)    
   end  
+
+  def test_set_deleteManyEnd
+    m = MentorJ.new("blah")
+    s = StudentJ.new(99,m)
+    s2 = StudentJ.new(98,m)
+    
+    assert_equal(m,s.get_mentor)
+    assert_equal(m,s2.get_mentor)
+    assert_equal(2,m.number_of_students)  
+
+    s.delete
+    assert_equal(nil,s.get_mentor)
+    assert_equal(m,s2.get_mentor)
+    assert_equal(1,m.number_of_students)  
+
+    s2.delete
+    assert_equal(nil,s.get_mentor)
+    assert_equal(nil,s2.get_mentor)
+    assert_equal(0,m.number_of_students)
+  end
   
 end
 end

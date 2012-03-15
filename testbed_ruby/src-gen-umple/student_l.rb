@@ -122,7 +122,9 @@ class StudentL
     unless @program.nil?
       @program.set_student(nil)
     end
-    @mentor.remove_student(self)
+    @placeholder_mentor = @mentor
+    @mentor = nil
+    @placeholder_mentor.remove_student(self)
   end
 
 end

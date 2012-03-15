@@ -131,7 +131,9 @@ class StudentM
     {
       $this->program->setStudent(null);
     }
-    $this->mentor->removeStudent($this);
+    $placeholderMentor = $this->mentor;
+    $this->mentor = null;
+    $placeholderMentor->removeStudent($this);
   }
 
 }

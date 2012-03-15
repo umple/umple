@@ -87,6 +87,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
 
     AsIsSingularLookupMap = new HashMap<String, String>();
     AsIsSingularLookupMap.put("parameterOne", "a_{0}");
+    AsIsSingularLookupMap.put("removeParameterOne", "placeholder_{0}");
     AsIsSingularLookupMap.put("parameterNew", "new_{0}");
     AsIsSingularLookupMap.put("parameterNext", "next_{0}");
     AsIsSingularLookupMap.put("addMethod", "add_{0}");
