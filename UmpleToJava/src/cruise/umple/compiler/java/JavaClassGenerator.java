@@ -4517,12 +4517,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_484);
      if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;", gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_485);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_486);
@@ -4546,12 +4540,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_493);
      if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	}
-    
     stringBuffer.append(TEXT_494);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_495);
@@ -6175,12 +6163,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1301);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1302);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1303);
@@ -6239,12 +6221,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1329);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1330);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1331);
@@ -6496,12 +6472,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1453);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1454);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1455);
@@ -6731,12 +6701,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1568);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1569);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1570);
@@ -6795,12 +6759,6 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1596);
      if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
-     if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	} 
-    
     stringBuffer.append(TEXT_1597);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1598);

@@ -4,12 +4,6 @@
   {
     boolean wasSet = false;
     <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
-    <% if (av.isImmutable()) 
-    	{ 
-    		append(stringBuffer, "\n    if (!{0}) { return wasSet; }", gen.translate("associationCanSet",av));
-    		append(stringBuffer, "\n    {0} = false;\n", gen.translate("associationCanSet",av)); 
-    	} 
-    %>
     ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterVerifiedMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
     {

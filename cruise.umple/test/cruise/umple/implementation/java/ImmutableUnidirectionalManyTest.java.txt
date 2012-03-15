@@ -85,9 +85,8 @@ public class Student
   private boolean setMentors(Mentor... newMentors)
   {
     boolean wasSet = false;
-    if (!canSetMentors) { return wasSet; }
+    if (!canSetMentors) { return false; }
     canSetMentors = false;
-
     ArrayList<Mentor> verifiedMentors = new ArrayList<Mentor>();
     for (Mentor aMentor : newMentors)
     {

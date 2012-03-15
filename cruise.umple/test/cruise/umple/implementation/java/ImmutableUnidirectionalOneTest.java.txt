@@ -52,9 +52,8 @@ public class Student
   private boolean setMentor(Mentor newMentor)
   {
     boolean wasSet = false;
-    if (!canSetMentor) { return wasSet; }
+    if (!canSetMentor) { return false; }
     canSetMentor = false;
-
     if (newMentor != null)
     {
       mentor = newMentor;
