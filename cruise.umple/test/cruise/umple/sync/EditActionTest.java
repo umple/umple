@@ -349,4 +349,28 @@ public class EditActionTest extends ActionTest
     assertEditAction("EditTest3_Go");
   }
   
+  @Test
+  public void EditClassWithoutPositionAssociation()
+  {
+    String umple = "class NewClass { * -- * NewClass1; position 68 52 109 42; position.association NewClass_NewClass1 1,2 3,4; } class NewClass1 { position 176 199 109 42; }";
+    String json = "{\"position\" : {\"x\" : \"176\",\"y\" : \"199\",\"width\" : \"109\",\"height\" : \"42\"},\"attributes\" : [],\"id\" : \"umpleClass_1\",\"name\" : \"Mentor\", \"oldname\" : \"NewClass1\"}";
+    EditAction action = new EditAction(json,umple);
+    action.go();
+    
+    String expected = "class NewClass { * -- * Mentor; position 68 52 109 42; position.association NewClass_Mentor 1,2 3,4; } class Mentor { position 176 199 109 42; }";
+    Assert.assertEquals(expected, action.getUmpleCode());
+  }
+  
+  @Test
+  public void EditClassWithPositionAssociation()
+  {
+    String umple = "class NewClass { * -- * NewClass1; position 68 52 109 42; position.association NewClass_NewClass1 1,2 3,4; } class NewClass1 { position 176 199 109 42; }";
+    String json = "{\"position\" : {\"x\" : \"68\",\"y\" : \"52\",\"width\" : \"109\",\"height\" : \"42\"},\"attributes\" : [],\"id\" : \"umpleClass_0\",\"name\" : \"Student\", \"oldname\" : \"NewClass\"}";
+    EditAction action = new EditAction(json,umple);
+    action.go();
+    
+    String expected = "class Student { * -- * NewClass1; position 68 52 109 42; position.association Student_NewClass1 1,2 3,4; } class NewClass1 { position 176 199 109 42; }";
+    Assert.assertEquals(expected, action.getUmpleCode());
+  }
+  
 }

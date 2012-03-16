@@ -425,6 +425,23 @@ class EditAction
               if (!subT.getValue().equals(oldClassName)) { continue; }
               textParser.replace(subT, newClassName);
             }
+            else if (subT.is("associationPosition"))
+            {
+              Token type = subT.getSubToken("name");
+			  String temp = type.getValue();
+			  String[] names = temp.split("_");
+			  String res = "";
+			  for (int i=0; i<names.length; i++)
+			  {
+			  	if (names[i].equals(oldClassName))
+			  		names[i] = newClassName;
+			  	if (i != names.length-1)
+			  		res += names[i] + "_";
+			  	else
+			  		res += names[i];
+			  }
+			  textParser.replace(type,res);
+            }            
           }
         }
         
