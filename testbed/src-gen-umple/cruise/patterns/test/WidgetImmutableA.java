@@ -29,7 +29,10 @@ public class WidgetImmutableA
     name = aName;
     canSetName = false;
     canSetWidgetImmutableB = true;
-    setWidgetImmutableB(aWidgetImmutableB);
+    if (!setWidgetImmutableB(aWidgetImmutableB))
+    {
+      throw new RuntimeException("Unable to create WidgetImmutableA due to aWidgetImmutableB");
+    }
   }
 
   //------------------------
@@ -51,8 +54,11 @@ public class WidgetImmutableA
     boolean wasSet = false;
     if (!canSetWidgetImmutableB) { return false; }
     canSetWidgetImmutableB = false;
-    widgetImmutableB = newWidgetImmutableB;
-    wasSet = true;
+    if (newWidgetImmutableB != null)
+    {
+      widgetImmutableB = newWidgetImmutableB;
+      wasSet = true;
+    }
     return wasSet;
   }
 

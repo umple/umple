@@ -9,77 +9,129 @@ class WidgetC
   // MEMBER VARIABLES
   //------------------------
 
-  //WidgetC Attributes
-  private $id;
-
-  //Helper Variables
-  private $cachedHashCode;
-  private $canSetId;
+  //WidgetC Associations
+  private $widgetImmutableBs;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aId)
+  public function __construct()
   {
-    $this->cachedHashCode = -1;
-    $this->canSetId = true;
-    $this->id = $aId;
+    $this->widgetImmutableBs = array();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function setId($aId)
+  public function getWidgetImmutableB($index)
+  {
+    $aWidgetImmutableB = $this->widgetImmutableBs[$index];
+    return $aWidgetImmutableB;
+  }
+
+  public function getWidgetImmutableBs()
+  {
+    $newWidgetImmutableBs = $this->widgetImmutableBs;
+    return $newWidgetImmutableBs;
+  }
+
+  public function numberOfWidgetImmutableBs()
+  {
+    $number = count($this->widgetImmutableBs);
+    return $number;
+  }
+
+  public function hasWidgetImmutableBs()
+  {
+    $has = $this->numberOfWidgetImmutableBs() > 0;
+    return $has;
+  }
+
+  public function indexOfWidgetImmutableB($aWidgetImmutableB)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->widgetImmutableBs as $widgetImmutableB)
+    {
+      if ($widgetImmutableB->equals($aWidgetImmutableB))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfWidgetImmutableBs()
+  {
+    return 0;
+  }
+
+  public static function maximumNumberOfWidgetImmutableBs()
+  {
+    return 10;
+  }
+
+  public function addWidgetImmutableB($aWidgetImmutableB)
+  {
+    $wasAdded = false;
+    if ($this->indexOfWidgetImmutableB($aWidgetImmutableB) !== -1) { return false; }
+    if ($this->numberOfWidgetImmutableBs() < self::maximumNumberOfWidgetImmutableBs())
+    {
+      $this->widgetImmutableBs[] = $aWidgetImmutableB;
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function removeWidgetImmutableB($aWidgetImmutableB)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfWidgetImmutableB($aWidgetImmutableB) != -1)
+    {
+      unset($this->widgetImmutableBs[$this->indexOfWidgetImmutableB($aWidgetImmutableB)]);
+      $this->widgetImmutableBs = array_values($this->widgetImmutableBs);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function setWidgetImmutableBs($newWidgetImmutableBs)
   {
     $wasSet = false;
-    if (!$this->canSetId) { return false; }
-    $this->id = $aId;
+    $verifiedWidgetImmutableBs = array();
+    foreach ($newWidgetImmutableBs as $aWidgetImmutableB)
+    {
+      if (array_search($aWidgetImmutableB,$verifiedWidgetImmutableBs) !== false)
+      {
+        continue;
+      }
+      $verifiedWidgetImmutableBs[] = $aWidgetImmutableB;
+    }
+
+    if (count($verifiedWidgetImmutableBs) != count($newWidgetImmutableBs) || count($verifiedWidgetImmutableBs) > self::maximumNumberOfWidgetImmutableBs())
+    {
+      return $wasSet;
+    }
+
+    $this->widgetImmutableBs = $verifiedWidgetImmutableBs;
     $wasSet = true;
     return $wasSet;
   }
 
-  public function getId()
-  {
-    return $this->id;
-  }
-
   public function equals($compareTo)
   {
-    if ($compareTo == null) { return false; }
-    if (get_class($this) != get_class($compareTo)) { return false; }
-
-    if ($this->id != $compareTo->id)
-    {
-      return false;
-    }
-
-    return true;
-  }
-
-  public function hashCode()
-  {
-    if ($this->cachedHashCode != -1)
-    {
-      return $this->cachedHashCode;
-    }
-    $this->cachedHashCode = 17;
-    if ($this->id != null)
-    {
-      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->id);
-    }
-    else
-    {
-      $this->cachedHashCode = $this->cachedHashCode * 23;
-    }
-
-    $this->canSetId = false;
-    return $this->cachedHashCode;
+    return $this == $compareTo;
   }
 
   public function delete()
-  {}
+  {
+    $this->widgetImmutableBs = array();
+  }
 
 }
 ?>

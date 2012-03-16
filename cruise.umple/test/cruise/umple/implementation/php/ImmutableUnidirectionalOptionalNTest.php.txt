@@ -32,7 +32,7 @@ class Student
     $didAddMentors = $this->setMentors($allMentors);
     if (!$didAddMentors)
     {
-      throw new Exception("Unable to create Student, must not have duplicate mentors.");
+      throw new Exception("Unable to create Student, must have 3 or fewer mentors, no duplicates.");
     }
   }
 

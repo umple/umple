@@ -3,14 +3,14 @@
 
 package cruise.patterns.test;
 
-public class WidgetImmutableB
+public class ClassOtherclass
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //WidgetImmutableB Attributes
+  //ClassOtherclass Attributes
   private String name;
 
   //Helper Variables
@@ -20,7 +20,7 @@ public class WidgetImmutableB
   // CONSTRUCTOR
   //------------------------
 
-  public WidgetImmutableB(String aName)
+  public ClassOtherclass(String aName)
   {
     name = aName;
     canSetName = false;

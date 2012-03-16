@@ -1,41 +1,46 @@
+<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
-package cruise.patterns.test;
-
-public class WidgetImmutableB
+class ClassOtherclass
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //WidgetImmutableB Attributes
-  private String name;
+  //ClassOtherclass Attributes
+  private $name;
 
   //Helper Variables
-  private boolean canSetName;
+  private $canSetName;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public WidgetImmutableB(String aName)
+  public function __construct($aName)
   {
-    name = aName;
-    canSetName = false;
+    $this->name = $aName;
+    $this->canSetName = false;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public String getName()
+  public function getName()
   {
-    return name;
+    return $this->name;
   }
 
-  public void delete()
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
   {}
 
 }
+?>
