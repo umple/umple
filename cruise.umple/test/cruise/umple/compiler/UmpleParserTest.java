@@ -216,6 +216,14 @@ public class UmpleParserTest
   }
   
   @Test
+  public void abstractClass()
+  {
+	  assertParse("032_abstractClass.ump");
+	  Assert.assertEquals(true, model.getUmpleClass("Foo").getIsAbstract());
+	  Assert.assertEquals(false, model.getUmpleClass("Bar").getIsAbstract());
+  }
+  
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");

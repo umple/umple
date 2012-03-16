@@ -27,7 +27,7 @@ class UmpleModel
   depend cruise.umple.compiler.exceptions.*;
   isA Runnable;
 
-  // The Umple file (.ump) that was used to derive the model.
+  // The Umple file (.ump) that was used to populate the model.
   UmpleFile umpleFile;
 
   defaultPackage = null;
@@ -233,6 +233,9 @@ class UmpleClass
   depend cruise.umple.util.*;
 
   isA UmpleElement;
+
+  // Specifies whether or not the Umple class is an abstract class.
+  Boolean isAbstract = false;
 
   // Specifies whether or not the Umple class is a singleton.
   Boolean isSingleton = false;

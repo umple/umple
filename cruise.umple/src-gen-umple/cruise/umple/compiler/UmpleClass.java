@@ -16,6 +16,7 @@ public class UmpleClass extends UmpleElement
   //------------------------
 
   //UmpleClass Attributes
+  private boolean isAbstract;
   private boolean isSingleton;
   private List<Association> associations;
   private Key key;
@@ -46,6 +47,7 @@ public class UmpleClass extends UmpleElement
   public UmpleClass(String aName)
   {
     super(aName);
+    isAbstract = false;
     isSingleton = false;
     associations = new ArrayList<Association>();
     key = new Key();
@@ -68,6 +70,14 @@ public class UmpleClass extends UmpleElement
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setIsAbstract(boolean aIsAbstract)
+  {
+    boolean wasSet = false;
+    isAbstract = aIsAbstract;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setIsSingleton(boolean aIsSingleton)
   {
@@ -97,6 +107,14 @@ public class UmpleClass extends UmpleElement
     key = aKey;
     wasSet = true;
     return wasSet;
+  }
+
+  /**
+   * Specifies whether or not the Umple class is an abstract class.
+   */
+  public boolean getIsAbstract()
+  {
+    return isAbstract;
   }
 
   /**
@@ -140,6 +158,11 @@ public class UmpleClass extends UmpleElement
   public Key getKey()
   {
     return key;
+  }
+
+  public boolean isIsAbstract()
+  {
+    return isAbstract;
   }
 
   public boolean isIsSingleton()

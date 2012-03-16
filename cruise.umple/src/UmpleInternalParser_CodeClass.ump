@@ -289,7 +289,21 @@ class UmpleInternalParser
       aClass.addComment(c);
     }
 
+	// If the "abstract" keyword is parsed, make the Umple class an abstract class.
+    if (classToken.getValue("abstract") != null)
+    {
+    	boolean wasSet = aClass.setIsAbstract(true);
+    	
+    	// Ensure the value was set.
+    	if (wasSet == false)
+    	{
+    		setFailedPosition(classToken.getPosition(), 0, "Unable to make class abstract!");
+    	}
+    }
+
     addExtendsTo(classToken, aClass);
+    
+    // If the "singleton" keyword is parsed, make the Umple class a singleton.
     if (classToken.getValue("singleton") != null)
     {
       aClass.setIsSingleton(true);

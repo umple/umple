@@ -220,6 +220,9 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("022_mutableClassesValidAssociations.ump", expectedResult);
     
     fileToOutputs.put("030_mixingRegularAndDerivedAttributes_bug201.ump","[namespace:example][classDefinition][name:Student][attribute][name:one][attribute][name:two][attribute][name:three][derivedValue:one + \":\" + two]");
+    
+    fileToOutputs.put("032_abstractClass.ump", "[classDefinition][name:Foo][abstract:abstract][classDefinition][name:Bar]");
+    
     fileToOutputs.put("400_commentsBeforeClasses.ump", "[namespace:example][inlineComment:This is a simple comment][classDefinition][name:Student]");
     fileToOutputs.put("400_commentsBeforeMultipleClasses.ump", "[namespace:example][inlineComment:This is a simple comment][classDefinition][name:Student][classDefinition][name:Mentor][inlineComment:This is a course file][classDefinition][name:Course]");
     fileToOutputs.put("400_commentsWayBeforeClass.ump", "[inlineComment:This is a simple comment][namespace:example][classDefinition][name:Student]");

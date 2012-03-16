@@ -1,8 +1,9 @@
 
-softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]
+softwarePattern- : [[isA]] | [[abstract]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]
 isA- : [[singleIsA]] | [[multipleIsA]]
 singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;
 multipleIsA- : isA [extendsName] ( , [extendsName] )* ;
+abstract- : [=abstract] ;
 singleton- : [=singleton] ;
 immutable- : [=immutable] ;
 keyDefinition- : [[defaultKey]] | [[key]]

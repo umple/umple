@@ -182,7 +182,7 @@ public class UmpleModel
   }
 
   /**
-   * The Umple file (.ump) that was used to derive the model.
+   * The Umple file (.ump) that was used to populate the model.
    */
   public UmpleFile getUmpleFile()
   {

@@ -105,10 +105,11 @@ key : key { [keyId] ( , [keyId] )* }<br />
 depend- : depend [depend] ;<br />
 extraCode- : [**extraCode]<br />
 <br />
-softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]<br />
+softwarePattern- : [[isA]] | [[abstract]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]<br />
 isA- : [[singleIsA]] | [[multipleIsA]]<br />
 singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;<br />
 multipleIsA- : isA [extendsName] ( , [extendsName] )* ;<br />
+abstract- : [=abstract] ;<br />
 singleton- : [=singleton] ;<br />
 immutable- : [=immutable] ;<br />
 keyDefinition- : [[defaultKey]] | [[key]]<br />
