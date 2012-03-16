@@ -60,13 +60,14 @@ inlineComment- : // [*inlineComment]<br />
 multilineComment- : /* [**multilineComment] */<br />
 <br />
 debug- : [=debug] ;<br />
+abstract- : [=abstract] ;<br />
 <br />
 classDefinition : class [name] { [[classContent]]* }<br />
 externalDefinition : external [name] { [[classContent]]* }<br />
 interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }<br />
 associationDefinition : association [name]? { [[association]]* }<br />
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }<br />
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]<br />
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[abstract]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]<br />
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]<br />
 <br />
 <br />
@@ -105,11 +106,10 @@ key : key { [keyId] ( , [keyId] )* }<br />
 depend- : depend [depend] ;<br />
 extraCode- : [**extraCode]<br />
 <br />
-softwarePattern- : [[isA]] | [[abstract]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]<br />
+softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]<br />
 isA- : [[singleIsA]] | [[multipleIsA]]<br />
 singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;<br />
 multipleIsA- : isA [extendsName] ( , [extendsName] )* ;<br />
-abstract- : [=abstract] ;<br />
 singleton- : [=singleton] ;<br />
 immutable- : [=immutable] ;<br />
 keyDefinition- : [[defaultKey]] | [[key]]<br />

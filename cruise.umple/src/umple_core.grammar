@@ -18,3 +18,4 @@ inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
 debug- : [=debug] ;
+abstract- : [=abstract] ;
