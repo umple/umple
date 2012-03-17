@@ -90,7 +90,7 @@ class Student
       verified_mentors << a_mentor
     end
 
-    if verified_mentors.size != new_mentors.size or verified_mentors.size() != required_number_of_mentors
+    if verified_mentors.size != new_mentors.size or verified_mentors.size() != Student.required_number_of_mentors
       return was_set
     end
 

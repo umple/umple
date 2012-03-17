@@ -5,5 +5,6 @@ use TestHarnessAssociations.ump;
 use TestHarnessStateMachine.ump;
 use TestHarnessStateMachineJava.ump;
 use TestHarnessPatterns.ump;
+use TestHarnessPatternsImmutable.ump;
 use TestHarnessTracer.ump;
 use LocalHarness.ump;

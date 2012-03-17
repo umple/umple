@@ -44,7 +44,7 @@ class SubMentor2 < Mentor
 
   def delete
     @deleted = true
-    super.delete
+    super
   end
 
 end

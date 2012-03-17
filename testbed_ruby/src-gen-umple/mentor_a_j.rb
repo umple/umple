@@ -98,7 +98,7 @@ class MentorAJ
       verified_students << a_student
     end
 
-    if verified_students.size != new_students.size or verified_students.size() != required_number_of_students
+    if verified_students.size != new_students.size or verified_students.size() != MentorAJ.required_number_of_students
       return was_set
     end
 

@@ -8,7 +8,7 @@
       <%=gen.translate("parameterVerifiedMany",av)%> << <%=gen.translate("parameterOne",av)%>
     end
 
-    if <%=gen.translate("parameterVerifiedMany",av)%>.size != <%=gen.translate("parameterMany",av)%>.size or <%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=gen.translate("requiredNumberOfMethod",av)%>
+    if <%=gen.translate("parameterVerifiedMany",av)%>.size != <%=gen.translate("parameterMany",av)%>.size or <%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=uClass.getName()%>.<%=gen.translate("requiredNumberOfMethod",av)%>
       <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
       return was_set
     end

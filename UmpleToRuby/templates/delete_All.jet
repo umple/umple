@@ -97,7 +97,7 @@
   if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
   {
     appendln(stringBuffer,"");
-    append(stringBuffer, "    super.delete");
+    append(stringBuffer, "    super");
   }
 
   if (customDeletePostfixCode != null) 

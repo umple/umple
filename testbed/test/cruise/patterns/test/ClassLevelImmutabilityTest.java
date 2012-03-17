@@ -40,7 +40,7 @@ public class ClassLevelImmutabilityTest
   @Test
   public void mutableClassHasSettersRemoversAndAddMethods()
   {
-    WidgetB widget = new WidgetB();
+    WidgetMutableB widget = new WidgetMutableB();
     Assert.assertTrue(objectClassHasSettersAddersOrRemovers(widget));
   }
 

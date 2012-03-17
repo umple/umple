@@ -1,4 +1,3 @@
-
 namespace cruise.patterns.test;
 
 class WidgetA
@@ -16,7 +15,6 @@ class WidgetA
 
 class WidgetB
 {
-  1 -> 0..10 WidgetImmutableB;
 }
 
 class WidgetC
@@ -64,76 +62,3 @@ class WidgetF
   before numberOfIds { addLog("before numberOfIds"); } 
   after numberOfIds { addLog("after numberOfIds"); }
 }
-
-
-class WidgetImmutableA
-{
-  immutable;
-
-  String name;
-  1 -> 1 WidgetImmutableB;
-}
-
-class WidgetImmutableB
-{
-  immutable;
-  String name;
-}
-
-class WidgetSubclass
-{
-  isA WidgetImmutableB;
-  String type;
-  1 -> 0..2 WidgetImmutableB;
-}
-
-
-
-class ClassMany
-{
-  immutable;
-  2 -> * ClassOtherclass;
-}
-
-class ClassMToN
-{
-  immutable;
-  1 -> 2..3 ClassOtherclass;
-}
-
-class ClassMStar
-{
- immutable;
-  1 -> 2..* ClassOtherclass;
-}
-
-class ClassN
-{
-  immutable;
-  2 -> 2 ClassOtherclass;
-}
-
-class ClassOne
-{
-  immutable;
-  0..1 -> 1 ClassOtherclass;
-}
-
-class ClassOptionalN
-{
-  immutable;
-  2 -> 0..2 ClassOtherclass;
-}
-
-class ClassOptionalOne
-{
-  immutable;
-  2 -> 0..1 ClassOtherclass;
-}
-
-class ClassOtherclass
-{
-  immutable;
-  name;
-}
-
