@@ -28,7 +28,10 @@ class WidgetImmutableA
     $this->name = $aName;
     $this->canSetName = false;
     $this->canSetWidgetImmutableB = true;
-    $this->setWidgetImmutableB($aWidgetImmutableB);
+    if (!$this->setWidgetImmutableB($aWidgetImmutableB))
+    {
+      throw new Exception("Unable to create WidgetImmutableA due to aWidgetImmutableB");
+    }
   }
 
   //------------------------
@@ -50,8 +53,11 @@ class WidgetImmutableA
     $wasSet = false;
     if (!$this->canSetWidgetImmutableB) { return false; }
     $this->canSetWidgetImmutableB = false;
-    $this->widgetImmutableB = $newWidgetImmutableB;
-    $wasSet = true;
+    if ($newWidgetImmutableB != null)
+    {
+      $this->widgetImmutableB = $newWidgetImmutableB;
+      $wasSet = true;
+    }
     return $wasSet;
   }
 

@@ -2,14 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
-class WidgetC
+class WidgetMutableB
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //WidgetC Associations
+  //WidgetMutableB Associations
   private $widgetImmutableBs;
 
   //------------------------

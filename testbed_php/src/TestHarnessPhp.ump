@@ -5,5 +5,5 @@ use ../../testbed/src/TestHarnessAttributes.ump;
 use ../../testbed/src/TestHarnessStateMachine.ump;
 use ../../testbed/src/TestHarnessStateMachinePhp.ump;
 use ../../testbed/src/TestHarnessTracer.ump;
+use ../../testbed/src/TestHarnessPatternsImmutable.ump;
 use LocalHarness.ump;
-use LocalHarnessPatterns.ump;

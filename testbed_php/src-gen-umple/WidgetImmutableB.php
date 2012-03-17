@@ -9,16 +9,30 @@ class WidgetImmutableB
   // MEMBER VARIABLES
   //------------------------
 
+  //WidgetImmutableB Attributes
+  private $name;
+
+  //Helper Variables
+  private $canSetName;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct()
-  {}
+  public function __construct($aName)
+  {
+    $this->name = $aName;
+    $this->canSetName = false;
+  }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public function getName()
+  {
+    return $this->name;
+  }
 
   public function equals($compareTo)
   {

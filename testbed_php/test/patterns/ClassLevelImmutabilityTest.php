@@ -5,7 +5,7 @@ class ClassLevelImmutabilityTest extends UnitTestCase
 
   public function test_noDeleteForAssociationsAndAttributesOfImmutableClass()
   {
-    $associated = new WidgetImmutableB();
+    $associated = new WidgetImmutableB("name");
 
     $widget = new WidgetImmutableA("Big Widget", $associated);
     $this->assertEqual($widget->getName(), "Big Widget");
@@ -19,23 +19,23 @@ class ClassLevelImmutabilityTest extends UnitTestCase
   
   public function test_noDeleteForAssociationsAndAttributesOfSubclassOfImmutableClass()
   {
-    $associated = new WidgetImmutableB();
+    $associated = new WidgetImmutableB("name");
 
-    $widget = new WidgetSubclass("Little Widget", $associated, "myType");
+    $widget = new WidgetSubclass("Little Widget", "myType", array($associated));
     $this->assertEqual($widget->getName(), "Little Widget");
     $this->assertEqual($widget->getType(), "myType");
-    $this->assertEqual($widget->getWidgetImmutableB(), $associated);
+    $this->assertEqual($widget->getWidgetImmutableB(0), $associated);
 
     $widget->delete();
     $this->assertEqual($widget->getName(), "Little Widget");
     $this->assertEqual($widget->getType(), "myType");
-    $this->assertEqual($widget->getWidgetImmutableB(), $associated);
+    $this->assertEqual($widget->getWidgetImmutableB(0), $associated);
   }
 
 
   public function test_mutableClassHasSettersRemoversAndAddMethods()
   {
-    $widget = new WidgetC();
+    $widget = new WidgetMutableB();
     $this->assertTrue($this->objectClassHasSettersAddersOrRemovers($widget));
   }
 
