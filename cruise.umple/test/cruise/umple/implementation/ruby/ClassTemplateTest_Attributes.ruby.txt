@@ -38,6 +38,7 @@ class Mentor
     @deleted = false
     @str = a_str
     @can_set_str = false
+    @str2 = nil
     @can_set_str2 = true
     @someName = nil
     @lDoub = 0

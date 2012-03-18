@@ -1,6 +1,7 @@
 require 'test/unit'
 require './src-gen-umple/student_c'
 require './src-gen-umple/mentor_c'
+require './src-gen-umple/mentor_c_sub'
 require './src-gen-umple/program_c'
 
 module CruiseAssociations
@@ -86,7 +87,29 @@ class OptionalOneToManyTest < Test::Unit::TestCase
     
     assert_equal(nil,s.get_mentor)
     assert_equal(0,m.number_of_students)
-  end  
-  
+  end 
+
+  def test_delete 
+    m = MentorC.new("m1")
+    s = StudentC.new(99)
+
+    m.add_student(s)
+
+    m.delete
+    assert_nil(s.get_mentor)
+    assert_equal(false,m.has_students)
+  end
+
+  def test_deleteSubclass
+    m = MentorCSub.new("m1")
+    s = StudentC.new(99)
+
+    m.add_student(s)
+
+    m.delete
+    assert_nil(s.get_mentor)
+    assert_equal(false,m.has_students)
+  end
+
 end
 end

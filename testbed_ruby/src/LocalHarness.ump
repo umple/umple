@@ -15,7 +15,6 @@ class DoorD
   defaulted Time timeId = Time.parse("10:11:15");
 }
 
-
 class DoorE
 {
   Date d4 = Date.parse("1978-12-04");
@@ -24,4 +23,11 @@ class DoorE
 class DoorF
 {
   Time d4 = Time.parse("12:53:54");
+}
+
+class DoorG
+{
+  lazy immutable DoorB doorId;
+  lazy immutable Date dateId;
+  lazy immutable Time timeId;
 }

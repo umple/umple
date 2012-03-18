@@ -64,21 +64,20 @@
     }
     else if (av.isImmutable() && av.getIsLazy())
     {
+      %><%@ include file="constructor_AttributeAssignLazy.jet"
       %><%@ include file="constructor_AttributeUnassignedImmutable.jet"%><%
     }
     else if (av.isImmutable())
     {
       %><%@ include file="constructor_AttributeAssignImmutable.jet"%><% 
     }
+    else if(av.getIsLazy())
+    {
+       %><%@ include file="constructor_AttributeAssignLazy.jet"%><%
+    }
     else
     {
-      if(!av.getIsLazy()){
-         %><%@ include file="constructor_AttributeAssign.jet"%><%
-      }
-      else
-      {
-         %><%@ include file="constructor_AttributeAssignLazy.jet"%><%
-      }
+       %><%@ include file="constructor_AttributeAssign.jet"%><%
     }
   }
 

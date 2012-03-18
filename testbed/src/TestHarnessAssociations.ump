@@ -31,6 +31,11 @@ class MentorC
   0..1 mentor -- 0..1 ProgramC program;
 }
 
+class MentorCSub
+{
+  isA MentorC;
+}
+
 class StudentC
 {
   Integer id;

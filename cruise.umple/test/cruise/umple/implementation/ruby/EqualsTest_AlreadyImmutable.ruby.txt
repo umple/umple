@@ -23,6 +23,7 @@ class Student
     @initialized = false
     @deleted = false
     @cachedHashCode = -1
+    @intId = 0
     @can_set_intId = true
     @doubleId = a_doubleId
     @can_set_doubleId = false

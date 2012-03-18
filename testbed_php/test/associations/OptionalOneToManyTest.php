@@ -98,7 +98,31 @@ class OptionalOneToManyTest extends UnitTestCase
     
   }  
 
+
+  public function test_delete()
+  {
+    $m = new MentorC("m1");
+    $s = new StudentC(99);
+
+    $m->addStudent($s);
+
+    $m->delete();
+    $this->assertNull($s->getMentor());
+    $this->assertFalse($m->hasStudents());
+  }
+
   
+  public function test_deleteSubclass()
+  {
+    $m = new MentorCSub("m1");
+    $s = new StudentC(99);
+
+    $m->addStudent($s);
+
+    $m->delete();
+    $this->assertNull($s->getMentor());
+    $this->assertFalse($m->hasStudents());
+  } 
   
 }
 

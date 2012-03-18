@@ -3,6 +3,7 @@ require 'test/unit'
 require './src-gen-umple/door_a'
 require './src-gen-umple/door_b'
 require './src-gen-umple/door_c'
+require './src-gen-umple/door_g'
 
 module CruiseAttributesTest
 class ImmutableTest < Test::Unit::TestCase
@@ -55,5 +56,26 @@ class ImmutableTest < Test::Unit::TestCase
     assert_equal(5,door.get_doorId.get_id)
     assert_equal false, door.respond_to?("set_doorId")
   end
+
+  def test_LazyImmutable
+    door = DoorG.new
+    #assert_nil(door.get_doorId)
+    assert_nil(door.get_dateId)
+    assert_nil(door.get_timeId)
+
+    doorId = DoorB.new(5)
+    assert_equal(true,door.set_doorId(doorId)) 
+    assert_equal(true,door.set_dateId(Date.parse("1978-12-05")))
+    assert_equal(true,door.set_timeId(Time.parse("10:11:15")))
+
+    assert_equal(door.get_doorId,doorId)
+    assert_equal(door.get_dateId,Date.parse("1978-12-05"))
+    assert_equal(door.get_timeId,Time.parse("10:11:15"))
+
+    assert_equal(false,door.set_doorId(DoorB.new(5))) 
+    assert_equal(false,door.set_dateId(Date.parse("1978-12-05")))
+    assert_equal(false,door.set_timeId(Time.parse("10:11:15")))
+  end
+
 end
 end

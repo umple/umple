@@ -23,6 +23,7 @@ class Student
     @initialized = false
     @deleted = false
     print "before constructor";
+    @id = nil
     @can_set_id = true
     @name = a_name
     reset_type
