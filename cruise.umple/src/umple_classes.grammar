@@ -25,7 +25,7 @@ parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUN
 parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
 
 association : [[associationModifier]] [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
-symmetricReflexiveAssociation : [[associationModifier]] [[multiplicity]] self [roleName] ;
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
 inlineAssociation : [[associationModifier]] [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
 associationModifier : [=modifier:immutable]?
 inlineAssociationEnd : [[multiplicity]] [roleName]?

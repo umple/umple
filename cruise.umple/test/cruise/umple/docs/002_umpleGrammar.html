@@ -88,7 +88,7 @@ parameterList : -( [[parameter]] ( , [[parameter]] )* -)<br />
 parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0])<br />
 <br />
 association : [[associationModifier]] [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
-symmetricReflexiveAssociation : [[associationModifier]] [[multiplicity]] self [roleName] ;<br />
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;<br />
 inlineAssociation : [[associationModifier]] [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
 associationModifier : [=modifier:immutable]?<br />
 inlineAssociationEnd : [[multiplicity]] [roleName]?<br />
