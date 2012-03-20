@@ -1472,13 +1472,13 @@ public class UmpleParserTracerTest
   @Test
   public void traceAssociation()
   {
-	  assertParse("370_traceAssociation.ump","[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
+	  assertParse("370_traceAssociation.ump","[classDefinition][name:Student][inlineAssociation][associationModifier][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
   }
   
   @Test
   public void traceCardinality()
   {
-	  assertParse("371_traceCardinality.ump","[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
+	  assertParse("371_traceCardinality.ump","[classDefinition][name:Student][inlineAssociation][associationModifier][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
   }
   
   //***************************************************

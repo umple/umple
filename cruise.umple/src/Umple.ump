@@ -358,6 +358,7 @@ class Association
   Coordinate[] positions;
   0..1 -- 2 AssociationEnd ends;
   Position tokenPosition = null;
+  internal Boolean immutable = false;
 
   before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }

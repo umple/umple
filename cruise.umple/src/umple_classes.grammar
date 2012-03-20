@@ -24,9 +24,10 @@ methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRAC
 parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
 parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
 
-association : [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
-symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
-inlineAssociation : [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+association : [[associationModifier]] [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+symmetricReflexiveAssociation : [[associationModifier]] [[multiplicity]] self [roleName] ;
+inlineAssociation : [[associationModifier]] [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+associationModifier : [=modifier:immutable]?
 inlineAssociationEnd : [[multiplicity]] [roleName]?
 singleAssociationEnd : [[multiplicity]] [type,roleName] ;
 associationEnd : [[multiplicity]] [type,roleName]

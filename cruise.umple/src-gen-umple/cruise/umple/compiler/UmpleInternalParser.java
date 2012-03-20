@@ -949,7 +949,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
       if (!added)
       {
-        setFailedPosition(assoc.getTokenPosition(),13,aClass.getName(),bClass.getName());
+        setFailedPosition(assoc.getTokenPosition(),13);
         return;
       }
 
@@ -1167,18 +1167,35 @@ private void analyzeClassToken(Token t, int analysisStep)
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       myAs.setRelatedAssociation(yourAs);
-      myClass.addAssociationVariable(yourAs);
-      myClass.addAssociation(association);
-
-      boolean added = yourClass.addAssociationVariable(myAs);
+      
+      if (association.isImmutable())
+      {
+        boolean set = myAs.setImmutable();
+        if (set) { yourAs.setImmutable(); }
+        else
+        {
+      	  setFailedPosition(association.getTokenPosition(),17);
+        }
+      }
+      
+      boolean added = myClass.addAssociationVariable(yourAs);
       if (!added)
       {
-        setFailedPosition(association.getTokenPosition(),13,myClass.getName(),yourClass.getName());
+      	if (myClass.isImmutable()) { setFailedPosition(association.getTokenPosition(),17); }
+      	else { setFailedPosition(association.getTokenPosition(),13); }
         return;
       }
+      myClass.addAssociation(association);
 
+      added = yourClass.addAssociationVariable(myAs);
+      if (!added)
+      {
+        if (myClass == yourClass) { setFailedPosition(association.getTokenPosition(),18); }
+        else { setFailedPosition(association.getTokenPosition(),13); }
+        return;
+      }
+      
       yourClass.addAssociation(association);
-
 
       if (myAs.getIsNavigable())
       {
@@ -1400,10 +1417,10 @@ private void analyzeClassToken(Token t, int analysisStep)
 
   private Association analyzeAssociation(Token associationToken, String defaultMyType)
   {
-    Token myMultToken = associationToken.getSubToken(0);
+    Token myMultToken = associationToken.getSubToken(1);
 
     String navigation = associationToken.getValue("arrow");
-    Token yourMultToken = associationToken.getSubToken(2);
+    Token yourMultToken = associationToken.getSubToken(3);
 
     String myName = myMultToken.getValue("roleName");
     String myType = myMultToken.getValue("type") == null ? defaultMyType : myMultToken.getValue("type");
@@ -1448,6 +1465,12 @@ private void analyzeClassToken(Token t, int analysisStep)
     updateAssociationEnds(firstEnd,secondEnd);
 
     Association association = createAssociation(navigation,firstEnd,secondEnd);
+    
+    Token associationModifier = associationToken.getSubToken("associationModifier");
+    if (associationModifier.hasSubTokens() && "immutable".equals(associationModifier.getSubToken(0).getValue()))
+    {
+      association.setImmutable();
+    }
 
     association.setTokenPosition(associationToken.getPosition());
     if (!association.isValid())
@@ -1505,6 +1528,19 @@ private void analyzeClassToken(Token t, int analysisStep)
     AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
     AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
     myAs.setRelatedAssociation(yourAs);
+    
+    if (association.isImmutable())
+    {
+      boolean set = myAs.setImmutable();
+      if (set)
+      {
+        yourAs.setImmutable();
+      }
+      else
+      {
+        setFailedPosition(inlineAssociationToken.getPosition(),17);
+      }
+    }
 
     // Add comments above the association to the association.
     for (Comment c : lastComments)
@@ -1520,7 +1556,9 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
     else
     {
-      setFailedPosition(inlineAssociationToken.getPosition(),13,myEnd.getClassName(),yourEnd.getClassName());
+      if (aClass.isImmutable()) { setFailedPosition(inlineAssociationToken.getPosition(),17); }
+      
+      else { setFailedPosition(inlineAssociationToken.getPosition(),13); }
     }
   }
 

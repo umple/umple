@@ -411,12 +411,13 @@ public class AssociationVariableTest
     c.addAssociationVariable(assoc1);
     c2.addAssociationVariable(assoc2);  
     Assert.assertFalse(assoc1.setImmutable());
+    c.removeAssociationVariable(assoc1);
     
     assoc1 = new AssociationVariable("x","Mentor","","",createMultiplicity(1,1),false);
     assoc1.setRelatedAssociation(assoc2);
     c.addAssociationVariable(assoc1);
     Assert.assertFalse(assoc1.setImmutable());
-    c.setImmutable();
+    Assert.assertTrue(c.setImmutable());
     Assert.assertTrue(assoc1.setImmutable());
   }
   
@@ -431,7 +432,7 @@ public class AssociationVariableTest
     mult.setRange("0", "10");
     AssociationVariable a = new AssociationVariable("a", "a", "", "", mult, true);
     mult = new Multiplicity();
-    mult.setRange("1", "1");
+    mult.setRange("0", "1");
     AssociationVariable b = new AssociationVariable("b", "b", "", "", mult, true);
     
     aClass.addAssociationVariable(a);

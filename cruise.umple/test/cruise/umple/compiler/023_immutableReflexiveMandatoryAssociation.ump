@@ -1,0 +1,9 @@
+class Student
+{
+  immutable;
+}
+
+association
+{
+  immutable 1 Student me -> 2..* Student them;
+}

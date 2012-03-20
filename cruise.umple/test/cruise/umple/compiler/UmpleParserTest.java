@@ -306,19 +306,19 @@ public class UmpleParserTest
   @Test
   public void invalidAssociationsForImmutableClass()
   {
-    assertFailedParse("022_immutableClassBidirectionalAssoc.ump", new Position("022_immutableClassBidirectionalAssoc.ump",4,1,30));
-    assertFailedParse("022_immutableToMutableAssocLeft.ump", new Position("022_immutableToMutableAssocLeft.ump",3,1,18));
-    assertFailedParse("022_immutableToMutableAssocRight.ump", new Position("022_immutableToMutableAssocRight.ump",4,1,30));
+    assertFailedParse("022_immutableClassBidirectionalAssoc.ump", new Position("022_immutableClassBidirectionalAssoc.ump",4,1,30), 17);
+    assertFailedParse("022_immutableToMutableAssocLeft.ump", new Position("022_immutableToMutableAssocLeft.ump",3,1,18), 13);
+    assertFailedParse("022_immutableToMutableAssocRight.ump", new Position("022_immutableToMutableAssocRight.ump",4,1,30), 13);
     
-    assertFailedParse("022_immutableClassToAssociationClass.ump", new Position("022_immutableClassToAssociationClass.ump",13,1,106));
+    assertFailedParse("022_immutableClassToAssociationClass.ump", new Position("022_immutableClassToAssociationClass.ump",13,1,106), 13);
   }
   
   @Test
   public void invalidAssociationsForImmutableClass_independentlyDefined()
   {
-    assertFailedParse("022_immutableClassBidirectionAssocIndependent.ump", new Position("022_immutableClassBidirectionAssocIndependent.ump",13,1,78));
-    assertFailedParse("022_immutableToMutableAssocLeftIndependent.ump", new Position("022_immutableToMutableAssocLeftIndependent.ump",12,1,66));
-    assertFailedParse("022_immutableToMutableAssocRightIndependent.ump", new Position("022_immutableToMutableAssocRightIndependent.ump",12,1,66));
+    assertFailedParse("022_immutableClassBidirectionAssocIndependent.ump", new Position("022_immutableClassBidirectionAssocIndependent.ump",13,1,78), 17);
+    assertFailedParse("022_immutableToMutableAssocLeftIndependent.ump", new Position("022_immutableToMutableAssocLeftIndependent.ump",12,1,66), 13);
+    assertFailedParse("022_immutableToMutableAssocRightIndependent.ump", new Position("022_immutableToMutableAssocRightIndependent.ump",12,1,66), 13);
   }
   
   @Test
@@ -330,19 +330,19 @@ public class UmpleParserTest
   @Test
   public void classCanNotBeChangedToImmutableWithInvalidAssociations()
   {
-    assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22));
+    assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22), 13);
   }
   
   @Test
   public void superclassCanNotBeChangedToImmutableWithInvalidAssociationsInSubclass()
   {
-    assertFailedParse("022_changeSuperclassToImmutable.ump", new Position("022_changeSuperclassToImmutable.ump",8,5,62));
+    assertFailedParse("022_changeSuperclassToImmutable.ump", new Position("022_changeSuperclassToImmutable.ump",8,5,62), 16);
   }
   
   @Test
   public void immutableClassMayNotContainStateMachines()
   {
-    assertHasWarningsParse("022_stateMachineInImmutableClass.ump", new Position("022_stateMachineInImmutableClass.ump",13,2,128));
+    assertHasWarningsParse("022_stateMachineInImmutableClass.ump", new Position("022_stateMachineInImmutableClass.ump",13,2,128), 15);
   }
   
   @Test
@@ -1467,8 +1467,113 @@ public class UmpleParserTest
     assertParse("021_nestedUse.ump");
     
     UmpleClass student = model.getUmpleClass("Student");
-    Assert.assertEquals(3,student.numberOfAttributes());
+    Assert.assertEquals(3,student.numberOfAttributes()); 
+  }
+  
+  @Test
+  public void immutableOneWayInternalAssociation()
+  {
+    assertParse("023_immutableInternalAssociation.ump");
+    Association as = model.getAssociation(0);
+    Assert.assertTrue(as.isImmutable());
     
+    UmpleClass student = model.getUmpleClass("Student");
+    AssociationVariable av = student.getAssociationVariable("aMentor");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("them");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("me");
+    Assert.assertTrue(av.isImmutable());
+    
+    UmpleClass mentor = model.getUmpleClass("Mentor");
+    av = mentor.getAssociationVariable("student");
+    Assert.assertTrue(av.isImmutable());
+  }
+  
+  @Test
+  public void immutableOtherWayInternalAssociation()
+  {
+    assertParse("023_immutableInternalOtherWayAssociation.ump");
+    Association as = model.getAssociation(0);
+    Assert.assertTrue(as.isImmutable());
+    
+    UmpleClass student = model.getUmpleClass("Student");
+    AssociationVariable av = student.getAssociationVariable("aMentor");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("them");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("me");
+    Assert.assertTrue(av.isImmutable());
+    
+    UmpleClass mentor = model.getUmpleClass("Mentor");
+    av = mentor.getAssociationVariable("student");
+    Assert.assertTrue(av.isImmutable());
+  }
+  
+  @Test
+  public void immutableExternalAssociation()
+  {
+    assertParse("023_immutableExternalAssociation.ump");
+    Association as = model.getAssociation(0);
+    Assert.assertTrue(as.isImmutable());
+    
+    UmpleClass student = model.getUmpleClass("Student");
+    AssociationVariable av = student.getAssociationVariable("myMentor");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("them");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("me");
+    Assert.assertTrue(av.isImmutable());
+    
+    UmpleClass mentor = model.getUmpleClass("Mentor");
+    av = mentor.getAssociationVariable("student");
+    Assert.assertTrue(av.isImmutable());
+  }
+  
+  @Test
+  public void immutableExternalOtherWayAssociation()
+  {
+    assertParse("023_immutableExternalOtherWayAssociation.ump");
+    Association as = model.getAssociation(0);
+    Assert.assertTrue(as.isImmutable());
+    
+    UmpleClass student = model.getUmpleClass("Student");
+    AssociationVariable av = student.getAssociationVariable("myMentor");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("them");
+    Assert.assertTrue(av.isImmutable());
+    av = student.getAssociationVariable("me");
+    Assert.assertTrue(av.isImmutable());
+    
+    UmpleClass mentor = model.getUmpleClass("Mentor");
+    av = mentor.getAssociationVariable("student");
+    Assert.assertTrue(av.isImmutable());
+  }
+  
+  @Test
+  public void immutableTwoWayAssociationsAreNotAllowed()
+  {
+    assertFailedParse("023_immutableInternalTwoWayAssociation.ump", new Position("023_immutableInternalTwoWayAssociation.ump",4,2,19), 17);
+    assertFailedParse("023_immutableExternalTwoWayAssociation.ump", new Position("023_immutableExternalTwoWayAssociation.ump",10,2,52), 17);
+  }
+  
+  @Test
+  public void immutableAssociationMayNotHaveMutableClassAtDirectedEnd()
+  {
+    assertFailedParse("023_immutableExternalAssociationInvalid.ump", new Position("023_immutableExternalAssociationInvalid.ump",9,2,51), 13);
+    assertFailedParse("023_immutableExternalOtherWayAssociationInvalid.ump", new Position("023_immutableExternalOtherWayAssociationInvalid.ump",9,2,51), 13);
+    assertFailedParse("023_immutableExternalReflexiveAssociationInvalid.ump", new Position("023_immutableExternalReflexiveAssociationInvalid.ump",6,2,34), 13);
+    assertFailedParse("023_immutableInternalAssociationInvalid.ump", new Position("023_immutableInternalAssociationInvalid.ump",3,2,18), 13);
+    assertFailedParse("023_immutableInternalOtherWayAssociationInvalid.ump", new Position("023_immutableInternalOtherWayAssociationInvalid.ump",6,2,35), 13);
+    assertFailedParse("023_immutableInternalReflexiveAssociationInvalid.ump", new Position("023_immutableInternalReflexiveAssociationInvalid.ump",3,2,18), 13);
+    assertFailedParse("023_immutableInternalReflexiveOtherWayAssociationInvalid.ump", new Position("023_immutableInternalReflexiveOtherWayAssociationInvalid.ump",3,2,18), 13);
+  }
+  
+  @Test
+  public void reflexiveMandatoryAssociationMayNotBeImmutable()
+  {
+    assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", new Position("023_immutableReflexiveMandatoryAssociation.ump",8,2,48), 18);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation.ump",8,2,48), 18);
   }
   
   @Test
@@ -1594,11 +1699,23 @@ public class UmpleParserTest
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
   
+  public void assertFailedParse(String filename, Position expectedPosition, int expectedError)
+  {
+    assertFailedParse(filename, expectedPosition);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+  
   public void assertHasWarningsParse(String filename, Position expectedPosition)
   {
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
+  }
+  
+  public void assertHasWarningsParse(String filename, Position expectedPosition, int expectedError)
+  {
+    assertHasWarningsParse(filename, expectedPosition);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
 
 }

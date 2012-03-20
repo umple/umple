@@ -688,6 +688,22 @@ public class UmpleClassTest
     Assert.assertEquals(comment, umpleClass.getComment(0));
   }
   
+  @Test
+  public void addAssociationVariableAdheresToRulesForImmutableAssociations()
+  {
+    AssociationVariable a = new AssociationVariable("a","a","immutable",null,createMultiplicity(0, 1),true);
+    AssociationVariable b = new AssociationVariable("b","b","immutable",null,createMultiplicity(0, 0),false);
+    Assert.assertTrue(a.setRelatedAssociation(b));
+    
+    Assert.assertFalse(umpleClass.addAssociationVariable(b));
+    Assert.assertTrue(umpleClass.addAssociationVariable(a));
+    
+    UmpleClass otherClass = new UmpleClass("other");
+    Assert.assertFalse(otherClass.addAssociationVariable(b));
+    otherClass.setImmutable();
+    Assert.assertTrue(otherClass.addAssociationVariable(b));
+  }
+  
   private Multiplicity createMultiplicity(int lower, int upper)
   {
     Multiplicity m = new Multiplicity();

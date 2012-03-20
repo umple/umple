@@ -427,6 +427,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRightNavigable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" eType="#//Coordinate" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tokenPosition" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="immutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ends" lowerBound="2" upperBound="2" eType="#//AssociationEnd" eOpposite="#//AssociationEnd/association"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/associations"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationClass" lowerBound="1" upperBound="1" eType="#//AssociationClass" eOpposite="#//AssociationClass/associatedTo"/>

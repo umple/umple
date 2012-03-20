@@ -20,6 +20,7 @@ public class Association
   private boolean isRightNavigable;
   private List<Coordinate> positions;
   private Position tokenPosition;
+  private boolean immutable;
 
   //Association Associations
   private List<AssociationEnd> ends;
@@ -35,6 +36,7 @@ public class Association
     isRightNavigable = aIsRightNavigable;
     positions = new ArrayList<Coordinate>();
     tokenPosition = null;
+    immutable = false;
     ends = new ArrayList<AssociationEnd>();
     boolean didAddEnds = setEnds(allEnds);
     if (!didAddEnds)
@@ -362,5 +364,15 @@ public class Association
     {
       return secondClassName + secondRole + "__" + firstClassName + firstRole;
     }
+  }
+  
+  public void setImmutable()
+  {
+    this.immutable = true;
+  }
+  
+  public boolean isImmutable()
+  {
+    return this.immutable;
   }
 }

@@ -25,6 +25,14 @@ public class AssociationTest
     map.put("C2",new UmpleClass("C2"));    
   }
   
+  @Test
+  public void isImmutable()
+  {
+    Association as = new Association(true,true,new AssociationEnd("R2","C1","M1","C2",createMultiplicity(3,4)), new AssociationEnd("R1","C2","M2","C1",createMultiplicity(1,2)));
+    Assert.assertFalse(as.isImmutable());
+    as.setImmutable();
+    Assert.assertTrue(as.isImmutable());
+  }
   
   @Test
   public void CheckAssociations()

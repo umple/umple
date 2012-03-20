@@ -1348,29 +1348,45 @@ public class UmpleClass extends UmpleElement
       AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
   {
     boolean satisfied = false;
-    if (!myClassImmutable && !yourClassImmutable)
+    if (myAV == null || yourAV == null)
     {
       satisfied = true;
     }
-    else if (myAV == null || yourAV == null)
+    else if (!myClassImmutable && !yourClassImmutable && !myAV.isImmutable())
     {
       satisfied = true;
     } 
     else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
     {
-      satisfied = false;
+      //satisfied = false;
     }
-    else if (myClass == null || yourClass == null)
+    else if (myClass == null && yourClass == null)
     {
       satisfied = true;
     }
-    else if ((myClassImmutable && !myAV.getIsNavigable()) || (yourClassImmutable && !yourAV.getIsNavigable()))
+    else if (!yourAV.getIsNavigable() && (yourClass == null || yourClassImmutable))
     {
-      satisfied = true;
+      if (yourClass != null && yourClass == myClass && myAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
     }
-    else if (myClassImmutable && yourClassImmutable)
+    else if (!myAV.getIsNavigable() && (myClass == null || myClassImmutable))
     {
-      satisfied = true;
+      if (myClass != null && yourClass == myClass && yourAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
     }
     return satisfied;
   }
