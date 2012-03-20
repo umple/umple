@@ -1417,10 +1417,19 @@ private void analyzeClassToken(Token t, int analysisStep)
 
   private Association analyzeAssociation(Token associationToken, String defaultMyType)
   {
-    Token myMultToken = associationToken.getSubToken(1);
+    int myMultOffset = 0;
+    int yourMultOffset = 2;
+    Token associationModifier = associationToken.getSubToken("modifier");
+    if (associationModifier != null)
+    {
+      myMultOffset++;
+      yourMultOffset++;
+    }
+  	
+    Token myMultToken = associationToken.getSubToken(myMultOffset);
 
     String navigation = associationToken.getValue("arrow");
-    Token yourMultToken = associationToken.getSubToken(3);
+    Token yourMultToken = associationToken.getSubToken(yourMultOffset);
 
     String myName = myMultToken.getValue("roleName");
     String myType = myMultToken.getValue("type") == null ? defaultMyType : myMultToken.getValue("type");
@@ -1466,8 +1475,7 @@ private void analyzeClassToken(Token t, int analysisStep)
 
     Association association = createAssociation(navigation,firstEnd,secondEnd);
     
-    Token associationModifier = associationToken.getSubToken("associationModifier");
-    if (associationModifier.hasSubTokens() && "immutable".equals(associationModifier.getSubToken(0).getValue()))
+    if (associationModifier != null && "immutable".equals(associationModifier.getValue()))
     {
       association.setImmutable();
     }

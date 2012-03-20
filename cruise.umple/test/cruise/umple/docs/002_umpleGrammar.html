@@ -87,10 +87,9 @@ methodDeclarator : [methodName] [[parameterList]] | [methodName] -( -)<br />
 parameterList : -( [[parameter]] ( , [[parameter]] )* -)<br />
 parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0])<br />
 <br />
-association : [[associationModifier]] [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
+association : [=modifier:immutable]? [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
 symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;<br />
-inlineAssociation : [[associationModifier]] [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
-associationModifier : [=modifier:immutable]?<br />
+inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
 inlineAssociationEnd : [[multiplicity]] [roleName]?<br />
 singleAssociationEnd : [[multiplicity]] [type,roleName] ;<br />
 associationEnd : [[multiplicity]] [type,roleName]<br />
