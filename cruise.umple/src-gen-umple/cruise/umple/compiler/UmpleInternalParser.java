@@ -949,7 +949,11 @@ private void analyzeClassToken(Token t, int analysisStep)
       boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
       if (!added)
       {
-        setFailedPosition(assoc.getTokenPosition(),13);
+        if ((!aClass.isImmutable() && !av.getRelatedAssociation().getIsNavigable()) || (!bClass.isImmutable() && !av.getIsNavigable())) 
+        { 
+          setFailedPosition(assoc.getTokenPosition(),13);
+        }
+        else { setFailedPosition(assoc.getTokenPosition(),18); }
         return;
       }
 

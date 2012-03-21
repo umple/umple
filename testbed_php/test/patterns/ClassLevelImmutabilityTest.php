@@ -223,3 +223,5 @@ class ClassLevelImmutabilityTest extends UnitTestCase
     return $hasMethods;
   }
 }
+
+?>

@@ -589,3 +589,44 @@ class StudentAM
 {
   Integer id;
 }
+
+class ClassManyAssociation
+{
+  immutable 1 -> * Otherclass;
+}
+
+class ClassMToNAssociation
+{
+  immutable 1 -> 2..3 Otherclass;
+}
+
+class ClassMStarAssociation
+{
+  immutable 1 -> 2..* Otherclass;
+}
+
+class ClassNAssociation
+{
+  immutable 2 -> 2 Otherclass;
+}
+
+class ClassOneAssociation
+{
+  immutable 0..1 -> 1 Otherclass;
+}
+
+class ClassOptionalNAssociation
+{
+  immutable 2 -> 0..2 Otherclass;
+}
+
+class ClassOptionalOneAssociation
+{
+  immutable 2 -> 0..1 Otherclass;
+}
+
+class Otherclass
+{
+  immutable;
+  name;
+}

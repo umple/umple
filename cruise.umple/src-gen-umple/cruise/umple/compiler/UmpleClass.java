@@ -1352,7 +1352,7 @@ public class UmpleClass extends UmpleElement
     {
       satisfied = true;
     }
-    else if (!myClassImmutable && !yourClassImmutable && !myAV.isImmutable())
+    else if (!myClassImmutable && !yourClassImmutable && !"immutable".equals(myAV.getModifier()) && !"immutable".equals(yourAV.getModifier()))
     {
       satisfied = true;
     } 

@@ -2,7 +2,6 @@ package cruise.patterns.test;
 
 import org.junit.*;
 import java.lang.reflect.*;
-import java.io.Console;
 
 public class ClassLevelImmutabilityTest
 {

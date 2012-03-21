@@ -1573,7 +1573,10 @@ public class UmpleParserTest
   public void reflexiveMandatoryAssociationMayNotBeImmutable()
   {
     assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", new Position("023_immutableReflexiveMandatoryAssociation.ump",8,2,48), 18);
+    assertFailedParse("023_immutableReflexiveMandatoryAssociation2.ump", new Position("023_immutableReflexiveMandatoryAssociation2.ump",4,2,31), 18);
+    
     assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation.ump",8,2,48), 18);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation2.ump",4,2,31), 18);
   }
   
   @Test

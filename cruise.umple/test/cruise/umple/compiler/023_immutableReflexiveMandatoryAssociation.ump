@@ -5,5 +5,5 @@ class Student
 
 association
 {
-  immutable 1 Student me -> 2..* Student them;
+  1 Student me -> 2..* Student them;
 }
