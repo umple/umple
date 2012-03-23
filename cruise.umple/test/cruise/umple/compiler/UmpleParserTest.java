@@ -219,6 +219,14 @@ public class UmpleParserTest
   public void abstractClass()
   {
 	  assertParse("032_abstractClass.ump");
+	  
+	  /*
+	  model.generate();
+	  Collection<String> c = model.getGeneratedCode().values();
+	  String generatedCode = (String)c.iterator().next();
+	  System.out.println("GENERATED CODE: [" + generatedCode + "]");
+	  */
+	  
 	  Assert.assertEquals(true, model.getUmpleClass("Foo").getIsAbstract());
 	  Assert.assertEquals(false, model.getUmpleClass("Bar").getIsAbstract());
   }

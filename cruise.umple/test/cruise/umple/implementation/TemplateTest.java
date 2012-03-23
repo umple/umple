@@ -133,7 +133,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/java/java_code");
     SampleFileWriter.destroy(pathToInput + "/php/php_code");
     
+    //
     // Tear down missing comment detection tests.
+    //
+    
     SampleFileWriter.destroy(pathToInput + "/Foo.java");
     
     SampleFileWriter.destroy(pathToInput + "/Bar.java");
@@ -172,7 +175,13 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Bar4.php");
     SampleFileWriter.destroy(pathToInput + "/Foo.php");
 
+    //
+    // Tear down abstract class tests.
+    //
     
+    SampleFileWriter.destroy(pathToInput + "/Person.java");
+    SampleFileWriter.destroy(pathToInput + "/Student.java");
+    SampleFileWriter.destroy(pathToInput + "/Teacher.java");
   }
 
   @Test
