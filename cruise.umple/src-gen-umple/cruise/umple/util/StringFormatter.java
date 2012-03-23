@@ -69,26 +69,54 @@ public class StringFormatter
       return input;
     }
     String answer = "";
+    String lastToken = "";
+    String lastTokenType = "underscore";
     for (char c : input.toCharArray())
     {
       String asIs = c + "";
       String upperCase = asIs.toUpperCase();
       String lowerCase = asIs.toLowerCase();
       
-      if (asIs.equals(upperCase) && !"_".equals(asIs))
+      if ("_".equals(asIs))
       {
-        if (answer.length() > 0)
-        {
-          answer += "_";
-        }
-        answer += lowerCase;
+        answer += lastToken + asIs;
+        lastToken = "";
+        lastTokenType = "underscore";
       }
-      else
+      else if (asIs.equals(upperCase)) //Is upperCase or a number
       {
-        answer += asIs;  
+        if (lastTokenType.equals("lower") || (lastTokenType.equals("upper") && Character.isDigit(c)) || (lastTokenType.equals("number") && !Character.isDigit(c)))
+        {
+          answer += lastToken + "_";
+          lastToken = "";
+        }
+        lastToken += lowerCase;
+        lastTokenType = Character.isDigit(c) ? "number" : "upper";
+      }
+      else //Must be lowerCase
+      {
+        if (lastTokenType.equals("upper"))
+        {
+          if (lastToken.length() > 1)
+          {
+            answer += lastToken.substring(0,lastToken.length()-1) + "_" + lastToken.charAt(lastToken.length()-1);
+          }
+          else
+          {
+            answer += lastToken;
+          }
+          lastToken = "";
+        }
+        else if (lastTokenType.equals("number"))
+        {
+          answer += lastToken + "_";
+          lastToken = "";
+        }
+        lastToken += asIs;
+        lastTokenType = "lower";
       }
     }
-    return answer; 
+    return answer + lastToken;
   }
 
   public static String toPascalCase(String input)
