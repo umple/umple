@@ -430,6 +430,193 @@ public class JavaGeneratorTest
     assertIgnoreMany(4,4,0,3);
   }
   
+  @Test
+  public void associationConstructor_MultipleToManyAssociationsInConstructor()
+  {
+    UmpleClass c = model.addUmpleClass("Someclass");
+    UmpleClass other = model.addUmpleClass("Otherclass");
+
+    AssociationVariable av = new AssociationVariable("otherOne","Otherclass",null,null,createMultiplicity(1,5),true);
+    AssociationVariable relatedAv = new AssociationVariable("someclass","Someclass",null,null,createMultiplicity(1,5),false);
+    av.setRelatedAssociation(relatedAv);   
+    c.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    av = new AssociationVariable("otherTwo","Otherclass",null,null,createMultiplicity(4,-1),true);
+    relatedAv = new AssociationVariable("someclass","Someclass",null,null,createMultiplicity(3,-1),false);
+    av.setRelatedAssociation(relatedAv);
+    c.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);    
+    attr = new Attribute("name","String",null,null,false,c);
+    
+    generator.prepare();
+    GeneratedClass g = c.getGeneratedClass();
+    Assert.assertEquals("int aId, String aName, Otherclass[] allOtherOne, Otherclass[] allOtherTwo",g.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, aName, allOtherOne, allOtherTwo",g.getLookup("constructorSignature_caller"));
+  }
+  
+  @Test
+  public void associationConstructor_SuperclassAndSubclassesAllHaveToManyAssociations()
+  {
+    UmpleClass c = model.addUmpleClass("Superclass");
+    UmpleClass c2 = model.addUmpleClass("Subclass");
+    UmpleClass c3 = model.addUmpleClass("SubSubclass");
+    UmpleClass other = model.addUmpleClass("Otherclass");
+    
+    c2.setExtendsClass(c);
+    c3.setExtendsClass(c2);
+
+    AssociationVariable av = new AssociationVariable("superOther","Otherclass",null,null,createMultiplicity(1,5),true);
+    AssociationVariable relatedAv = new AssociationVariable("superclass","Superclass",null,null,createMultiplicity(1,5),false);
+    av.setRelatedAssociation(relatedAv);   
+    c.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
+    
+    av = new AssociationVariable("subOther","Otherclass",null,null,createMultiplicity(4,-1),true);
+    relatedAv = new AssociationVariable("subclass","Subclass",null,null,createMultiplicity(3,-1),false);
+    av.setRelatedAssociation(relatedAv);
+    c2.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    attr = new Attribute("name","String",null,null,false,c2);
+    
+    av = new AssociationVariable("subSubOther","Otherclass",null,null,createMultiplicity(4,-1),true);
+    relatedAv = new AssociationVariable("subSubclass","SubSubclass",null,null,createMultiplicity(3,-1),false);
+    av.setRelatedAssociation(relatedAv);
+    c3.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    generator.prepare();
+    GeneratedClass g = c.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass... allSuperOther",g.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allSuperOther",g.getLookup("constructorSignature_caller"));
+
+    GeneratedClass g2 = c2.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass[] allSuperOther, String aName, Otherclass[] allSubOther",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allSuperOther, aName, allSubOther",g2.getLookup("constructorSignature_caller"));
+    
+    GeneratedClass g3 = c3.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass[] allSuperOther, String aName, Otherclass[] allSubOther, Otherclass[] allSubSubOther",g3.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allSuperOther, aName, allSubOther, allSubSubOther",g3.getLookup("constructorSignature_caller"));
+  }
+  
+  @Test
+  public void associationConstructor_SubclassAddsNoNewToManyAssociationsToSuperclassConstructorWithVariableArgs()
+  {
+    UmpleClass c = model.addUmpleClass("Superclass");
+    UmpleClass c2 = model.addUmpleClass("Subclass");
+    UmpleClass c3 = model.addUmpleClass("SubSubclass");
+    UmpleClass other = model.addUmpleClass("Otherclass");
+    
+    c2.setExtendsClass(c);
+    c3.setExtendsClass(c2);
+
+    AssociationVariable av = new AssociationVariable("other","Otherclass",null,null,createMultiplicity(1,5),true);
+    AssociationVariable relatedAv = new AssociationVariable("superclass","Superclass",null,null,createMultiplicity(1,5),false);
+    av.setRelatedAssociation(relatedAv);   
+    c.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    Attribute attr = new Attribute("id","Integer",null,null,false,c2);
+    
+    attr = new Attribute("name","String",null,null,false,c3);
+    
+    generator.prepare();
+    GeneratedClass g = c.getGeneratedClass();
+    Assert.assertEquals("Otherclass... allOther",g.getLookup("constructorSignature"));
+    Assert.assertEquals("allOther",g.getLookup("constructorSignature_caller"));
+    
+    GeneratedClass g2 = c2.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass... allOther",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allOther",g2.getLookup("constructorSignature_caller"));
+
+    GeneratedClass g3 = c3.getGeneratedClass();
+    Assert.assertEquals("int aId, String aName, Otherclass... allOther",g3.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, aName, allOther",g3.getLookup("constructorSignature_caller"));
+  }
+  
+  @Test
+  public void associationConstructor_SubclassConstructorAddsNothingToSuperclassConstructorWithVariableArgs()
+  {
+    UmpleClass c = model.addUmpleClass("Superclass");
+    UmpleClass c2 = model.addUmpleClass("Subclass");
+    UmpleClass other = model.addUmpleClass("Otherclass");
+    
+    c2.setExtendsClass(c);
+
+    AssociationVariable av = new AssociationVariable("other","Otherclass",null,null,createMultiplicity(1,5),true);
+    AssociationVariable relatedAv = new AssociationVariable("superclass","Superclass",null,null,createMultiplicity(1,5),false);
+    av.setRelatedAssociation(relatedAv);   
+    c.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
+    
+    generator.prepare();
+    GeneratedClass g = c.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass... allOther",g.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allOther",g.getLookup("constructorSignature_caller"));
+
+    GeneratedClass g2 = c2.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass... allOther",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allOther",g2.getLookup("constructorSignature_caller"));
+  }
+  
+  @Test
+  public void associationConstructor_SubclassConstructorAddsFirstToManyAssociationToSuperclassConstructor()
+  {
+    UmpleClass c = model.addUmpleClass("Superclass");
+    UmpleClass c2 = model.addUmpleClass("Subclass");
+    UmpleClass other = model.addUmpleClass("Otherclass");
+    
+    c2.setExtendsClass(c);
+    
+    Attribute attr = new Attribute("id","Integer",null,null,false,c);
+    
+    AssociationVariable av = new AssociationVariable("subOther","Otherclass",null,null,createMultiplicity(4,-1),true);
+    AssociationVariable relatedAv = new AssociationVariable("subclass","Subclass",null,null,createMultiplicity(3,-1),false);
+    av.setRelatedAssociation(relatedAv);
+    c2.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    generator.prepare();
+    GeneratedClass g = c.getGeneratedClass();
+    Assert.assertEquals("int aId",g.getLookup("constructorSignature"));
+    Assert.assertEquals("aId",g.getLookup("constructorSignature_caller"));
+
+    GeneratedClass g2 = c2.getGeneratedClass();
+    Assert.assertEquals("int aId, Otherclass... allSubOther",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("aId, allSubOther",g2.getLookup("constructorSignature_caller"));
+  }
+  
+  @Test
+  public void associationConstructor_SubclassConstructorAddsFirstToManyAssociationToEmptySuperclassConstructor()
+  {
+    UmpleClass c = model.addUmpleClass("Superclass");
+    UmpleClass c2 = model.addUmpleClass("Subclass");
+    UmpleClass other = model.addUmpleClass("Otherclass");
+    
+    c2.setExtendsClass(c);
+    
+    AssociationVariable av = new AssociationVariable("subOther","Otherclass",null,null,createMultiplicity(4,-1),true);
+    AssociationVariable relatedAv = new AssociationVariable("subclass","Subclass",null,null,createMultiplicity(3,-1),false);
+    av.setRelatedAssociation(relatedAv);
+    c2.addAssociationVariable(av);
+    other.addAssociationVariable(relatedAv);
+    
+    generator.prepare();
+    GeneratedClass g = c.getGeneratedClass();
+    Assert.assertEquals("",g.getLookup("constructorSignature"));
+    Assert.assertEquals("",g.getLookup("constructorSignature_caller"));
+
+    GeneratedClass g2 = c2.getGeneratedClass();
+    Assert.assertEquals("Otherclass... allSubOther",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("allSubOther",g2.getLookup("constructorSignature_caller"));
+  }
   
   @Test
   public void imports_Time()

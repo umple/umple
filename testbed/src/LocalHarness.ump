@@ -24,3 +24,13 @@ class DoorF
 {
   Time d4 = Time.valueOf("12:54:54");
 }
+
+
+
+namespace cruise.associations;
+
+class ConstructorManyClass
+{
+  * -> 3..5 Otherclass othersOne;
+  * -> 1..3 Otherclass othersTwo;
+}

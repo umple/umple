@@ -23,7 +23,7 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(Mentor aM2, Mentor... allM3s, Mentor... allM4s, Mentor... allM5s)
+  public Student(Mentor aM2, Mentor[] allM3s, Mentor[] allM4s, Mentor[] allM5s)
   {
     boolean didAddM2 = setM2(aM2);
     if (!didAddM2)

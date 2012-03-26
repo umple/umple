@@ -941,13 +941,6 @@ class JavaGenerator
     
     UmpleClass uClass = genClass.getUClass();
     
-    if (uClass.getExtendsClass() != null) 
-    {
-      GeneratedClass parent = genClass.getParentClass();
-      signature.append(parent.getLookup("constructorSignature"));
-      signatureCaller.append(parent.getLookup("constructorSignature_caller"));
-    }    
-    
     for (Attribute av : uClass.getAttributes()) 
     {
       if (av.getIsAutounique() || av.getIsList() || "defaulted".equals(av.getModifier()) || av.getIsLazy() || av.getValue() != null)
@@ -965,26 +958,19 @@ class JavaGenerator
       signatureCaller.append(nameOf(av));      
     }
 
+    // This is the list of association variables that might use variable arguments in the constructor
+    List<AssociationVariable> manyConstructorAVs = new ArrayList<AssociationVariable>();
+    
     for (AssociationVariable av : uClass.getAssociationVariables()) 
     {
-      AssociationVariable relatedAv = av.getRelatedAssociation();
-
-      if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable()) || !av.getIsNavigable())
+      if (!associationShouldAppearInConstructor(av))
       {
         continue;
       }
-      
-      if (relatedAv.getIsNavigable())
+      if (av.isMany())
       {
-        if (av.isMandatoryMany() && relatedAv.isMandatory())
-        {
-          continue;
-        }
-        
-        if ((av.isMN() || av.isN()) && relatedAv.isOptionalN())
-        {
-          continue;
-        }
+        manyConstructorAVs.add(av);
+        continue;
       }
       
       if (signature.length() > 0) 
@@ -993,13 +979,126 @@ class JavaGenerator
         signatureCaller.append(", ");
       }
       
-      String typeModifier = av.isMany() ? "..." : "";
-      signature.append(StringFormatter.format("{0}{1} {2}",typeOf(av),typeModifier,nameOf(av)));
+      signature.append(StringFormatter.format("{0} {1}",typeOf(av),nameOf(av)));
       signatureCaller.append(nameOf(av));      
+    }
+    
+    // Insert the parent class's contructor signature, with attention given to special
+    // cases where the signature is modified if variable arguments are present.
+    
+    boolean parentConstructorContainsMany = false;   
+    if (uClass.getExtendsClass() != null) 
+    {
+      GeneratedClass parent = genClass.getParentClass();
+      String parentSignature = parent.getLookup("constructorSignature");
+      String parentSignatureCaller = parent.getLookup("constructorSignature_caller");
+      
+      String parentSignatureToPrepend = "";
+      String parentSignatureCallerToPrepend = "";
+    
+      if ((signature.length() == 0) && (manyConstructorAVs.size() == 0))
+      {
+      	// if the child class will add nothing to the signature
+        signature.append(parentSignature);
+        signatureCaller.append(parentSignatureCaller);
+      }
+      else if (parentSignature.contains("..."))
+      {
+      	if (manyConstructorAVs.size() > 0)
+      	{
+      	  // if multiple associations in the constructor could use variable arguments, switch to using arrays.
+      	  parentConstructorContainsMany = true;
+          parentSignatureToPrepend = parentSignature.replace("...", "[]");
+          parentSignatureCallerToPrepend = parentSignatureCaller;
+      	}
+      	else
+      	{
+      	  //else push the variable argument parameter to the end of the constructor. 
+      	       
+          int idx = Math.max(parentSignature.lastIndexOf(","),0);
+          if ((signature.length() > 0) && (idx == 0))
+          {
+          	// if there was no comma in the parent signature, compensate.
+            signature.append(", ");
+            signatureCaller.append(", ");
+          }   
+          signature.append(parentSignature.substring(idx));
+          parentSignatureToPrepend = parentSignature.substring(0, idx);
+          
+          idx = Math.max(parentSignatureCaller.lastIndexOf(","),0);
+          signatureCaller.append(parentSignatureCaller.substring(idx));
+          parentSignatureCallerToPrepend = parentSignatureCaller.substring(0, idx);
+        }
+      }
+      else 
+      {
+      	// else simply prepend the parent signature, as-is, to the child signature.
+      	parentSignatureToPrepend = parentSignature;
+        parentSignatureCallerToPrepend = parentSignatureCaller;
+        
+      	// also, check if the presence of arrays in the parent signature signals that the child
+      	// signature should use arrays for arguments that could otherwise use variable arguments.
+        if (parentSignature.contains("[]"))
+        {
+          parentConstructorContainsMany = true;
+        }
+      }
+      
+      // prepend the parent signature to the child signature
+      if (parentSignatureToPrepend.length() > 0)
+      {
+      	if (signature.length() > 0)
+      	{
+      	  signature.insert(0, parentSignatureToPrepend + ", ");
+          signatureCaller.insert(0, parentSignatureCallerToPrepend + ", ");
+      	}
+        else
+        {
+          signature.append(parentSignatureToPrepend);
+          signatureCaller.append(parentSignatureCallerToPrepend);
+        }
+      }
+    }
+    
+    // finally, append constructor parameter(s) that could be variable arguments or arrays depending on circumstances
+    for (AssociationVariable manyAV : manyConstructorAVs)
+    {
+      if (signature.length() > 0) 
+      {
+        signature.append(", ");
+        signatureCaller.append(", ");
+      }
+      String typeModifier = ((manyConstructorAVs.size() > 1) || (parentConstructorContainsMany)) ? "[]" : "...";
+      signature.append(StringFormatter.format("{0}{1} {2}",typeOf(manyAV),typeModifier,nameOf(manyAV)));
+      signatureCaller.append(nameOf(manyAV));     
     }
 
     genClass.setLookup("constructorSignature", signature.toString());
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
+  }
+  
+  
+  private boolean associationShouldAppearInConstructor(AssociationVariable av)
+  {
+  	boolean shouldAppear = true;
+  	AssociationVariable relatedAv = av.getRelatedAssociation();
+  	
+    if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable()) || !av.getIsNavigable())
+    {
+      shouldAppear = false;
+    }   
+    else if (relatedAv.getIsNavigable())
+    {
+      if (av.isMandatoryMany() && relatedAv.isMandatory())
+      {
+        shouldAppear = false;
+      }
+      else if ((av.isMN() || av.isN()) && relatedAv.isOptionalN())
+      {
+        shouldAppear = false;
+      }
+    }
+    return shouldAppear;
   }
   
   private void generateSecondaryConstructorSignatures(GeneratedClass genClass)
