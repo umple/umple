@@ -1,7 +1,7 @@
 require 'test/unit'
-require './src-gen-umple/student_a_k'
-require './src-gen-umple/mentor_a_k'
-require './src-gen-umple/program_a_k'
+require './src-gen-umple/student_ak'
+require './src-gen-umple/mentor_ak'
+require './src-gen-umple/program_ak'
 
 module CruiseAssociations
 class UnidirectionalNTest < Test::Unit::TestCase

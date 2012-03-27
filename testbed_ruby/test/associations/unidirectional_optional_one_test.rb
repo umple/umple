@@ -1,7 +1,7 @@
 require 'test/unit'
-require './src-gen-umple/student_a_i'
-require './src-gen-umple/mentor_a_i'
-require './src-gen-umple/program_a_i'
+require './src-gen-umple/student_ai'
+require './src-gen-umple/mentor_ai'
+require './src-gen-umple/program_ai'
 
 module CruiseAssociations
 class UnidirectionalOptionalOneTest < Test::Unit::TestCase

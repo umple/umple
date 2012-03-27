@@ -1,5 +1,5 @@
 require 'test/unit'
-require './src-gen-umple/mentor_a_f'
+require './src-gen-umple/mentor_af'
 
 module CruiseAssociations
 class ReflexiveOneTest < Test::Unit::TestCase

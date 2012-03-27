@@ -1,7 +1,7 @@
 require 'test/unit'
-require './src-gen-umple/student_a_a'
-require './src-gen-umple/mentor_a_a'
-require './src-gen-umple/program_a_a'
+require './src-gen-umple/student_aa'
+require './src-gen-umple/mentor_aa'
+require './src-gen-umple/program_aa'
 
 module CruiseAssociations
 class ManyToOptionalNTest < Test::Unit::TestCase
