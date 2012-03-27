@@ -3,16 +3,16 @@ Tracing
 noreferences
 
 @@description
-<p>Umple has a subsystem for injecting trace directive into generated code.
-When complete this will be able to work with a variety of tracing toolkits such as LTTNG</p>
+<p>
+Tracing is a technique used to understand the behaviour of a targeted system in order to debug or monitor it. Umple language is developing a tracing subsystem that allows developers to inject traces at the model level. 
+</p>
 
 @@example
 
 class Student
 {
-   Integer id;
-   trace id;
-
+  Integer id;
+  trace id;
 }
 
 @@endexample
