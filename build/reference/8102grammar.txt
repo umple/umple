@@ -3,9 +3,22 @@ Grammar To Define Umple
 noreferences
 
 @@description
-Below is the complete grammar for the Umple Language.  Refer to our <a href="GrammarNotation.html">Grammar Notation section</a> for an explanation of our
-EBNF syntax.
-<br />
-<pre>
+<p>Below is the complete grammar for the Umple Language.</p>
+<p><ul>
+<li><font color="blue">Rules are in blue</font>. You may click on a usage of a rule (underlined and in [[ ]]) anywhere in this manual in order to see the definition.
+<li><font color="red">Terminal symbols are in red</font>. These keywords and symbols that are key to Umple's syntax.
+<li><font color="green">Identifiers are in green</font> and are surrounded by [ ]. These are places where you can supply a sequence of alphanumeric characters to name a class, attribute or some other entity.
+<li><font color="#AAAA22">Arbitrary input is in yellowish green</font> and surrounded by [** ]. Umple ignores everything until it finds the symbol that terminates the input. This is used for comments and to embed code in a language like Java or PhP. Umple will pass this text to the parser of the underlying language.
+<li><font color="brown">Comments about the grammar itself are in brown</font> and preceded by //
+<li>symbols controlling how the grammar is parsed are in black.
+ <ul
+ <li>* means zero or more
+ <li>| means 'or'
+ <li>? means one or more
+ <li>Other black items are of interest only to experts
+ </ul>
+</ul></p>
+
+<p>Refer to the <a href="GrammarNotation.html">Grammar Notation section</a> for more explanation of the EBNF syntax used here.</p>
+
 @@UMPLE_GRAMMAR@@
-</pre>
