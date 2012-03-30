@@ -3,7 +3,7 @@ Grammar To Define Umple
 noreferences
 
 @@description
-<p>Below is the complete grammar for the Umple Language.</p>
+<p>Below is the complete grammar for Umple . This page is generated automatically from the grammar used to parse Umple code.</p>
 <p><ul>
 <li><font color="blue">Rules are in blue</font>. You may click on a usage of a rule (underlined and in [[ ]]) anywhere in this manual in order to see the definition.
 <li><font color="red">Terminal symbols are in red</font>. These keywords and symbols that are key to Umple's syntax.
@@ -14,7 +14,7 @@ noreferences
  <ul
  <li>* means zero or more
  <li>| means 'or'
- <li>? means one or more
+ <li>? means optional
  <li>Other black items are of interest only to experts
  </ul>
 </ul></p>
