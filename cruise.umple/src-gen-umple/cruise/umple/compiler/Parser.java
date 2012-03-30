@@ -377,7 +377,7 @@ public Token reset()
             String cleanedUpRule = splitRule[1];
             
             // Replace all references to rules using [[ ]] with links to the rules 
-            cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"umpleGrammar.html#$1\">$1</a>]]");
+            cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"UmpleGrammar.html#$1\">$1</a>]]");
             
             // Colour all named identifiers such as [name] green
             cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
