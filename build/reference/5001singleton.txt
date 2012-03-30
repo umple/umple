@@ -10,7 +10,7 @@ noreferences
 <br />
 
 @@syntax
-singleton;
+[[singleton]] [[softwarePattern]]
 
 @@example
 

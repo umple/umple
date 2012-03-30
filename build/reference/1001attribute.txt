@@ -24,11 +24,9 @@ techniques.</a></p>
 
 <p>The example below shows the basic properties of attributes.<p>
 
-
 @@syntax
-autounique [name] ; | 
-unique? [immutable|settable|internal|defaulted|const]? 
-([type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+[[attribute]] [[simpleAttribute]]  [[autouniqueAttribute]]  [[derivedAttribute]]  [[complexAttribute]]
+
 
 @@example
 
@@ -86,3 +84,4 @@ class Group
   defaulted r = "";
 }
 @@endexample
+

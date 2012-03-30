@@ -8,6 +8,10 @@ noreferences
 <p>We encourage the use of association notation in this context, however
 the attribute notation can be useful sometimes</p>
 
+@@syntax
+
+[[complexAttribute]]
+
 @@example
 class Office {
    Integer number;

@@ -4,5 +4,5 @@ noreferences
 
 @@description
 <p>
-Model Oriented Tracing Language (MOTL) allows developers to specify tracing at the model level.  You can request tracing of state machines and other UML constructs; you can also control whether tracing directives are active or not depending on the state of model element instances. 
+Model Oriented Tracing Language (MOTL) is a sublanguage of Umple that allows developers to specify tracing at the model level.  You can request tracing of state machines and other UML constructs; you can also control whether tracing directives are active or not depending on the state of model element instances. 
 </p>

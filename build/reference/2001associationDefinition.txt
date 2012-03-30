@@ -57,8 +57,6 @@ There are several special kinds of associations in Umple.
 
 <p><a href="E005UndefinedClassinAssociation.html">Umple will report an error if the an association refers to a non-existent class.</a></p>
 
-
-
 @@example
 // Example code illustrating various
 // kinds of associations

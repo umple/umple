@@ -11,6 +11,9 @@ with arbitrary methods written the natively compiled language (e.g. Java, Php or
 
 <p>A standard Umple method will specify the return type, then the name, then the argument list and finally the method body in curly brackets. The generated output for the method will use correct format for the generated language and will be public.
 
+@@syntax
+[[concreteMethodDeclaration]] [[methodDeclarator]] [[parameterList]] [[parameter]]
+
 @@example
 generate Java;
 

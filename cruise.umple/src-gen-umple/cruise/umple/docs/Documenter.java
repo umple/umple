@@ -334,7 +334,7 @@ public class Documenter
     }
     else
     {
-      String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",selectedContent.getSyntax());
+      String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",(new UmpleInternalParser()).toGrammarParts(selectedContent.getSyntax()));
       htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
     }
     

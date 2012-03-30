@@ -28,23 +28,4 @@ Directives appear as the 'main' entries in an Umple file.</p>
 </ul>
 
 @@syntax
-
-directive- : [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]]&nbsp;<br/>
-
-&nbsp;<br/>
-generate- : <font color="purple">generate</font> [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] ;&nbsp;<br/>
-
-&nbsp;<br/>
-generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] " [**output] " [=override:<font color="purple">--override</font>|<<font color="purple">--override-all</font>]? ;&nbsp;<br/>
-
-&nbsp;<br/>
-useStatement- : <font color="purple">use</font> [use] ;&nbsp;<br/>
-
-&nbsp;<br/>
-namespace- : <font color="purple">namespace</font> [namespace] ;&nbsp;<br/>
-
-&nbsp;<br/>
-entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]&nbsp;<br/>
-
-&nbsp;<br/>
-traceType- : <font color="purple">tracer</font> [traceType] ;
+[[directive]] [[generate]] [[generate_path]] [[useStatement]] [[namespace]] [[traceType]] [[entity]]

@@ -14,7 +14,7 @@ noreferences
 <br />
 
 @@syntax
-immutable;
+[[association]] [[inlineAssociation]] [[derivedAttribute]] [[complexAttribute]] [[immutable]] [[softwarePattern]]
 
 @@example
 

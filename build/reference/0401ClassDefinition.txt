@@ -17,9 +17,7 @@ A class definition defines an object-oriented  class available for use as a type
 
 
 @@syntax
-class [name] { [[classContent]]* } <br/>&nbsp;<br/>
-
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]
+[[classDefinition]] [[classContent]]
 
 @@example
 

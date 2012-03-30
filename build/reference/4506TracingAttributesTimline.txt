@@ -8,11 +8,7 @@ MOTL allows the manipulation of attributes tracing timeline. "until" keyword tri
 </p>
 
 @@syntax
-traceDirective- : trace [[AttributeTraceItem]] [[traceUntil]]? [[traceAfter]]? ;
-traceUntil :  until  [[traceCondition]] 
-traceAfter :  after  [[traceCondition]]
-traceCondition- : [LHS] [[conditionRHS]]
-conditionRHS- : [comparison_operator] [RHS]
+[[traceUntil]] [[traceAfter]]
 
 @@example
 

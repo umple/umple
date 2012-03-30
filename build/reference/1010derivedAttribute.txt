@@ -15,7 +15,7 @@ API (rather than directly accessing variales) and avoid having any side-effects 
 
 @@syntax
 
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+[[derivedAttribute]]
 
 @@example
 class Point 

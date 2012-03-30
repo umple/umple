@@ -8,9 +8,7 @@ Use multiline comments starting with slash-star and ending with star-slash to do
 <p>This syntax is the same as in Java and C++.</p>
 
 @@syntax
-/*
-  [comment-text]
-*/
+[[multilineComment]]
 
 @@example
 /* 

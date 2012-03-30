@@ -7,7 +7,7 @@ Namespaces allow you to group similar entities to promote cohesion,
 as well as reduce the possibility of name collision.
 
 @@syntax
-namespace- : namespace [namespace] ;
+[[namespace]]
 
 @@example
 namespace school.admin;

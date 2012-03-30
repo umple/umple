@@ -12,6 +12,10 @@ noreferences
    -- Dtrace <br>
 </p>
 
+@@syntax
+
+[[traceType]]
+
 @@example
 
 // this example injects traces using File tracer

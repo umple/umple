@@ -6,6 +6,9 @@ noreferences
 <p>An association can be defined separately from the any class. Contrast
 this with the <a href="InlineAssociations.html">Umple code showing the same model with inline associations.</a></p>
 
+@@syntax
+[[associationDefinition]] [[association]] [[associationEnd]]
+
 @@example
 
 class Group { }

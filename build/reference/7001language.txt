@@ -13,3 +13,7 @@ Umple code can result in generation of various  languages. Code from these langu
 <li>Ruby</li>
 <li>C++ is under development</li>
 </ul>
+
+@@syntax
+
+[[generate]] [[generate_path]]

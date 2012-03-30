@@ -17,11 +17,7 @@ An interface defines a list of <a href="MethodDefinition.html">methods</a> that 
 <p>To implement an interface in a class, or to create subinterfaces, use an <a href="isAclause.html">isA clause</a>.</p<
 
 @@syntax
-interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] } <br/>&nbsp;<br/>
-
-interfaceBody- : [[interfaceMemberDeclaration]]*<br/>&nbsp;<br/>
-
-interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[isA]] | [[extraCode]]
+[[interfaceDefinition]] [[interfaceBody]] [[interfaceMemberDeclaration]]
 
 @@example
 interface RegisterCapable

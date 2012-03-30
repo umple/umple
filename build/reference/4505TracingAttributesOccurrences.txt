@@ -8,8 +8,7 @@ MOTL provides the functionality of tracing an attribute for a certain number of 
 </p>
 
 @@syntax
-traceDirective- : trace [[AttributeTraceItem]] [[traceFor]]? ;
-traceFor- : for [trace_for]
+[[traceFor]]
 
 @@example
 

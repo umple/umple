@@ -18,7 +18,18 @@ Code in the examples will be rendered using syntaxHighlighter. This is found in 
 
 A link will be generated from each code example to ensure that it can be displayed in UmpleOnline. Always test and comment code samples.
 
-Instructions for deploying the user manual can be found here: https://code.google.com/p/umple/wiki/Deploying
+Instructions for building deploying the user manual can be found here: https://code.google.com/p/umple/wiki/Deploying
+In short: to build on your local environment
+cd trunk/build
+ant -Dmyenv=local -f build.umple.xml packageDocs
+then
+open <yourumpledir>/dist/cruise.umple/reference/GettingStarted.html
 
 Diagrams can be embedded in selected pages. These are stored in umplewww/examples
 Diagrams must be deployed on the server when they are created or changed. This is not done automatically.
+
+The program that generates the user manual is called umpledocs.jar
+Code for this can be found in:
+cruise.umple/src/Documenter.ump
+and
+cruise.umple/src/Documenter_Code.ump

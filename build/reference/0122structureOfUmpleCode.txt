@@ -83,3 +83,8 @@ mechanisms allow for a form of product-line development. Umple does,
 however, have an extra feature, called <a 
 href="http://cruise.site.uottawa.ca/umpleonline/vml.php">VML</a> that should assist with this when complete.</p>
 
+@@syntax
+
+[[program]] [[comment]] [[directive]]  [[useStatement]] 
+     [[namespace]] [[entity]]
+

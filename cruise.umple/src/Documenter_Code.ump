@@ -254,7 +254,7 @@ class Documenter
     }
     else
     {
-      String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",selectedContent.getSyntax());
+      String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",(new UmpleInternalParser()).toGrammarParts(selectedContent.getSyntax()));
       htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
     }
     
@@ -446,9 +446,9 @@ class Template
   {
     String template = "" + 
       "      <h3>Syntax</h3>" + "\n" +
-      "      <pre class=\"syntax\">" + "\n" +
+      "      \n" +
       "@@SYNTAX_CODE@@" + "\n" +
-       "      </pre>" + "\n" +
+       "     <br/>\n" +
         "" + "\n";
     return template;
   }
@@ -500,8 +500,8 @@ class Template
         "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +
-        "@@SYNTAX@@" + "\n" +
         "@@EXAMPLE@@" + "\n" +
+        "@@SYNTAX@@" + "\n" +
         "      </td>" + "\n" +
         "    </tr>" + "\n" +
         "  </tbody></table>" + 

@@ -313,7 +313,7 @@ public Token reset()
     return answer.toString();
   }
 
-  public String toGrammar()
+  public String toGrammarNoStyle()
   {
     StringBuilder answer = new StringBuilder();
     for(String rule : grammarRules)
@@ -328,6 +328,110 @@ public Token reset()
       cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", "-)");
       cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "-||");
       answer.append(cleanedUpRule);
+    }
+    return answer.toString();
+  }
+
+  // Used to generate a nice html representation for the user manual
+  public String toGrammar()
+  {
+    return toGrammarParts("");
+  }
+  
+  public String toGrammarParts(String rulesToOutput)
+  {
+    StringBuilder answer = new StringBuilder();
+    for(String rule : grammarRules)
+    {
+      // There are three possible 'rule' types
+      if (rule.length() == 0) {
+        // Blank line, do nothing
+        if (rulesToOutput.length() == 0) answer.append("<br />\n");
+      }
+      else if (rule.length() >= 2 && rule.charAt(0) == '/' &&  rule.charAt(1) == '/')
+      {
+        // Comment - render it nicely and output
+        if(rulesToOutput.length() == 0)
+        {
+          answer.append("<br />\n<font color=\"brown\">");
+          answer.append(rule);
+          answer.append("</font>");
+        }
+      }
+      else
+      {
+        // Should be a rule name, find it then format
+        String[] splitRule = rule.split(":",2);
+        if(splitRule[0].length() != 0) {
+          // We seem to have a valid rule
+          int ruleLength = splitRule[1].length();
+
+          // Determine if there is a minus sign indicating a rule
+          // whose name will not appear in the parse tree
+          int hasMinus = (splitRule[0]).charAt(splitRule[0].length()-2) == '-'? 1 : 0;
+          String ruleName = 
+            (splitRule[0]).substring(0,(splitRule[0]).length()-1-hasMinus);
+          
+          if(rulesToOutput.length() == 0 || rulesToOutput.contains("[["+ruleName+"]]"))
+          {
+            String cleanedUpRule = splitRule[1];
+            
+            // Replace all references to rules using [[ ]] with links to the rules 
+            cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"umpleGrammar.html#$1\">$1</a>]]");
+            
+            // Colour all named identifiers such as [name] green
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
+            
+            // Colour pairs of identifiers green (where one or both may be supplied
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E)([a-zA-Z_]+),([a-zA-Z_]+)", "$1<font color=\"green\">$2</font>,<font color=\"green\">$3</font>");
+            
+            
+            // Colour constant strings (i.e. keywords) and explicit special characters red
+            cleanedUpRule = cleanedUpRule.replaceAll("([(]|\\s)([a-zA-Z_{}.,:;\\-\\\"<>]+|/|//|/\\*|\\*/|\\[|\\])(\\s|$|[)])", "$1<font color=\"red\">$2</font>$3");
+
+            // There are a couple of places with parens that need making red
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\s)([{}]|OPEN_ROUND_BRACKET)(\\s)", "$1<font color=\"red\">$2</font>$3");
+
+            
+            // Colour constant strings sets such as [=modifier:immutable|settable] red
+            cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:|[|])([A-Za-z\\-+<>*]+)", "$1<font color=\"red\">$2</font>");
+                        
+            // Colour special case [=list:[]] red
+            cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:)\\Q[]\\E", "$1<font color=\"red\">[]</font>");
+                        
+            // Colour special constants such as [=debug] red 
+            cleanedUpRule = cleanedUpRule.replaceAll("[\\[]=([a-zA-Z_]*)[\\]]", "[=<font color=\"red\">$1</font>]");
+            
+            // Colour arbitrary text blocks dirty yellow
+            cleanedUpRule = cleanedUpRule.replaceAll("[\\[][*][*]?([a-zA-Z_]*)[\\]]", "[**<font color=\"#AAAA22\">$1</font>]");
+
+            // Revert changes made during rule parsing
+            cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "(");
+            cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", ")");
+            cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "||");
+            
+            // If long rule, then indent on any 'or'
+            if(ruleLength > 80) {
+              cleanedUpRule = cleanedUpRule.replaceAll("\\s[|]\\s", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp| ");
+            }
+          
+            // Output the rule nicely
+            answer.append("<br />\n<a name=\"");
+            answer.append(ruleName);  // anchor to link to
+            answer.append("\" ></a>"); 
+          
+            answer.append("<b><font color=\"#2E64FE\">");
+            answer.append(ruleName);  // displayed name
+            answer.append("</font></b>");
+
+            if(hasMinus == 1) answer.append("-");
+            answer.append(" :");
+            
+            answer.append(cleanedUpRule);
+            answer.append("<br />\n");
+          }
+        }
+      }
     }
     return answer.toString();
   }

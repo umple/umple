@@ -16,7 +16,7 @@ noreferences
 <br />
 
 @@syntax
-isA [extendsName] ;
+[[isA]] [[singleIsA]] [[multipleIsA]]
 
 @@example
 // A superclass-subclass relationship defined using the isA keyword

@@ -16,8 +16,7 @@ When "set,get" keyword is specified before traced attribute, tracing code in inj
 </p>
 
 @@syntax
-traceDirective- : trace [[AttributeTraceItem]] ;
-AttributeTraceItem- : ( set,get | set | get )? [trace_entity] ( , [trace_entity] )*
+[[traceDirective]] [[traceItem]] [[executeClause]] [[traceWhere]] [[traceEntity]]
 
 @@example
 

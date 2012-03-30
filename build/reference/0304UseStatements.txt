@@ -19,7 +19,7 @@ of use statements.</p>
 <p>Use statements work in a manner similar to 'include' directives in other languages.</p>
 
 @@syntax
-useStatement- : use [use] ;
+[[useStatement]]
 
 @@example
 use Core.ump;

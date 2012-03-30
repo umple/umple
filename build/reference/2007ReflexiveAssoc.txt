@@ -38,6 +38,9 @@ itself does not appear in UmpleOnline; this will be fixed.</p>
 
 &nbsp;<br/>
 
+@@syntax
+
+[[symmetricReflexiveAssociation]] 
 
 @@example
 // Example asymmetric association with role names on both ends

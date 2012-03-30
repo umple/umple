@@ -18,11 +18,7 @@ after the constructor.</p>
 
 @@syntax
 
-codeInjection- : [[beforeCode]] | [[afterCode]]<br/>&nbsp;<br/>
-
-beforeCode : before [operationName] { [**code] }<br/>&nbsp;<br/>
-
-afterCode : after [operationName] { [**code] }
+[[codeInjection]] [[beforeCode]] [[afterCode]]
 
 @@example
 

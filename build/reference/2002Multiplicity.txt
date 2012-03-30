@@ -23,7 +23,7 @@ lower bound.</p>
 &nbsp; <br/>
 
 @@syntax
-[=bound:*] | [lowerBound] .. [upperBound] | [bound]
+[[multiplicity]]
 
 @@example
 // When multiplicity is given as *, which is the same as 0..*

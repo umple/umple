@@ -15,11 +15,7 @@ when looking up an object in a set.</p>
 
 @@syntax
 
-keyDefinition- : [[defaultKey]] | [[key]]<br/>&nbsp;<br/>
-
-defaultKey : key { }<br/>&nbsp;<br/>
-
-key : key { [keyId] ( , [keyId] )* }
+[[keyDefinition]] [[defaultKey]] [[key]] [[softwarePattern]]
 
 @@example
 class Sport {

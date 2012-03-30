@@ -73,9 +73,9 @@ public class Template
   {
     String template = "" + 
       "      <h3>Syntax</h3>" + "\n" +
-      "      <pre class=\"syntax\">" + "\n" +
+      "      \n" +
       "@@SYNTAX_CODE@@" + "\n" +
-       "      </pre>" + "\n" +
+       "     <br/>\n" +
         "" + "\n";
     return template;
   }
@@ -127,8 +127,8 @@ public class Template
         "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +
-        "@@SYNTAX@@" + "\n" +
         "@@EXAMPLE@@" + "\n" +
+        "@@SYNTAX@@" + "\n" +
         "      </td>" + "\n" +
         "    </tr>" + "\n" +
         "  </tbody></table>" + 

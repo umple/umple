@@ -20,9 +20,7 @@ Please note that an association class must define both star "*" ends; otherwise 
 </p>
 
 @@syntax
-associationClassDefinition : associationClass [name] { [[associationClassContent]]* }<br/>&nbsp;<br/>
-
-associationClassContent- : [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]
+[[associationClassDefinition]] [[associationClassContent]] [[singleAssociationEnd]]
 
 @@example
 

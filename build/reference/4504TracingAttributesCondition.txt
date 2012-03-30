@@ -13,12 +13,9 @@ Using "giving" keyword, tracing code is injected with a postcondition.
 </p>
 
 @@syntax
-traceDirective- : trace [[AttributeTraceItem]] [[PreOrPostCondition]]? ;
-PreOrPostCondition- : [[traceWhere]] | [[traceGiving]]
-traceWhere :  where  [[traceCondition]]
-traceGiving : giving [[traceCondition]]
-traceCondition- : [LHS] [[conditionRHS]]
-conditionRHS- : [comparison_operator] [RHS]
+
+[[PreOrPostCondition]] [[traceWhere]] | [[traceGiving]]  [[traceCondition]]
+[[conditionRHS]]
 
 @@example
 
