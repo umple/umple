@@ -1,11 +1,27 @@
+// The master of this second part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_patterns.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
 
 softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]
+
+// Generalization and inheritance [*isAclause*]
 isA- : [[singleIsA]] | [[multipleIsA]]
 singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;
 multipleIsA- : isA [extendsName] ( , [extendsName] )* ;
+
+// A class that can have only one instance [*SingletonPattern*]
 singleton- : [=singleton] ;
+
+// A class that can't be modified when created [*ImmutablePattern*]
 immutable- : [=immutable] ;
+
+// For equality and hashing [*KeysforEqualityandHashing*]
 keyDefinition- : [[defaultKey]] | [[key]]
+
+// Aspect oriented code injection: [*BeforeandAfterStatements*]
 codeInjection- : [[beforeCode]] | [[afterCode]]
 
 beforeCode : before [operationName] { [**code] }

@@ -1,21 +1,52 @@
 
+// The master source of this first part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_core.grammar *]
+// The html rendering is generated from the master and appears in the Umple User manual
+// at page [*http://grammar.umple.org*]
 
-// The core of umple is a "program"
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// The core of umple is a "program". This is the grammar's 'start symbol'
 program- : ( [[comment]] | [[directive]] )*
 
-// A directive is either configurations, or model elements
-directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]]
+// Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
+// A directive is either used to configure the system or else is
+// an actual entity of the system to be modelled or generated
+directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]] | [[strictness]]
+
+// A glossary item is used to fine tune pluralization during code generation
 glossary : glossary { [[word]]* }
 word : [singular] : [plural] ;
+
+// A high level of strictness will cause warnings to be issued when base language code
+// is found, where it might not have been intended. Strictness can also be used
+// To either suppress certain messages, or to declare that they should be present.
+// NOTE: This is currently under development
+strictness- : strictness ( [=strictness:modelOnly|noExtraCode|none] | [=message:allow|expect] [messageNumber] ) ;
+
+// The generate clause can be used to generate multiple outputs
+// The --override is used to say that subsequent generate statements will be ignored
 generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] ; 
 generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] " [**output] " [=override:--override|--override-all]? ;
+
+// Use statements allow incorporation of other Umple files. See [*UseStatements*]
 useStatement- : use [use] ;
+
+// Namespaces divide the code into logical groups. See [*NamespaceDirectives*] 
 namespace- : namespace [namespace] ;
+
+// The main top level elements to be found in an Umple file
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]
 
+// Comments follow the same conventions as C-family languages. [*UmpleComments*]
 comment- : [[inlineComment]] | [[multilineComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
+// The Debug statement turns on debugging in code generation. For developer use only
 debug- : [=debug] ;
+
+// Instructs a class or method to be abstract
 abstract- : [=abstract] ;

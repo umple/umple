@@ -341,26 +341,38 @@ public Token reset()
   public String toGrammarParts(String rulesToOutput)
   {
     StringBuilder answer = new StringBuilder();
+    StringBuilder queuedComments = new StringBuilder();
     for(String rule : grammarRules)
     {
       // There are three possible 'rule' types
-      if (rule.length() == 0) {
-        // Blank line, do nothing
-        if (rulesToOutput.length() == 0) answer.append("<br />\n");
+
+      // Blank line, do nothing except output any queued comments
+      if (rule.length() == 0)
+      {
+        if (rulesToOutput.length() == 0) {  // only output for complete grammar
+          answer.append(queuedComments.toString());
+          answer.append("<br />\n");
+        }
+        queuedComments = new StringBuilder();  // throw away comments so far
       }
       else if (rule.length() >= 2 && rule.charAt(0) == '/' &&  rule.charAt(1) == '/')
       {
-        // Comment - render it nicely and output
-        if(rulesToOutput.length() == 0)
+        // Comment - queue it for possible outputting when a space or non-comment is found
+        // Skip items in the grammar marked 'TODO'
+        if(!rule.matches("\\Q//TODO\\E.*"))
         {
-          answer.append("<br />\n<font color=\"brown\">");
-          answer.append(rule);
-          answer.append("</font>");
+          queuedComments.append("<br />\n<font color=\"brown\">");
+          // Replace URLs in [* *] by links to them
+          String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
+          // Replace user manual refs by links to the local copy of the UM
+          commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
+          queuedComments.append(commentInterior);
+          queuedComments.append("</font>");
         }
       }
       else
       {
-        // Should be a rule name, find it then format
+        // Should be a rule name, find name of it then format
         String[] splitRule = rule.split(":",2);
         if(splitRule[0].length() != 0) {
           // We seem to have a valid rule
@@ -374,6 +386,8 @@ public Token reset()
           
           if(rulesToOutput.length() == 0 || rulesToOutput.contains("[["+ruleName+"]]"))
           {
+            // We are to output the rule since we are outputting all
+            // or it was listed in rulesToOutput
             String cleanedUpRule = splitRule[1];
             
             // Replace all references to rules using [[ ]] with links to the rules 
@@ -416,6 +430,10 @@ public Token reset()
             }
           
             // Output the rule nicely
+
+            // Start by outputting any queued comments (if there are any)
+            answer.append(queuedComments.toString());                 
+            
             answer.append("<br />\n<a name=\"");
             answer.append(ruleName);  // anchor to link to
             answer.append("\" ></a>"); 
@@ -429,10 +447,12 @@ public Token reset()
             
             answer.append(cleanedUpRule);
             answer.append("<br />\n");
-          }
+            
+          } // End outputting rule
+          queuedComments = new StringBuilder(); // clear them whether or not output
         }
       }
-    }
+    } // end for loop of every line in the rule file
     return answer.toString();
   }
 
