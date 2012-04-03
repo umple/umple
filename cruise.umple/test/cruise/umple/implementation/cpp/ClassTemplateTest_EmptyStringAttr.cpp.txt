@@ -19,7 +19,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Student::setGrade(string aGrade)
+  bool Student::setGrade(string const& aGrade)
   {
     bool wasSet = false;
     grade = aGrade;

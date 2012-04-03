@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  <%=gen.translate("type",av)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",av)%>(int index)
+  <%=gen.translate("type",av)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",av)%>(int index) const
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
     <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>.get(index);
@@ -7,10 +7,10 @@
     return <%=gen.translate("parameterOne",av)%>;
   }
 
-  vector<<%=gen.translate("type",av)%>*> <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>()
+  vector<<%=gen.translate("type",av)%>*> <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>() const
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
-    vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterMany",av)%> = Collections.unmodifiableList(<%=gen.translate("associationMany",av)%>);
+    vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterMany",av)%> = <%=gen.translate("associationMany",av)%>;
     <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } %>
     return <%=gen.translate("parameterMany",av)%>;
   }
@@ -34,7 +34,7 @@
   int <%=gen.translate("type",uClass)%>::<%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } %>
-    int index = <%=gen.translate("associationMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);
+    int index = std::find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
     <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } %>
     return index;
   }

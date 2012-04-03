@@ -11,7 +11,7 @@ using namespace example.two;
   // CONSTRUCTOR
   //------------------------
   
- Mentor::Mentor(String aName)
+ Mentor::Mentor(const string& aName)
   {
     name = aName;
   }
@@ -20,7 +20,7 @@ using namespace example.two;
   // INTERFACE
   //------------------------
 
-  bool Mentor::setName(string aName)
+  bool Mentor::setName(string const& aName)
   {
     bool wasSet = false;
     name = aName;
@@ -33,7 +33,7 @@ using namespace example.two;
     return name;
   }
 
-  Student Mentor::getStudent()
+  Student* Mentor::getStudent() const
   {
     return student;
   }

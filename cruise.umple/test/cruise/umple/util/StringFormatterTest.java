@@ -69,6 +69,18 @@ public class StringFormatterTest
     Assert.assertEquals("What  up? one",answer);
   }    
   
+  //tag: vector
+  @Test
+  public void ComplexVector_ManyConstructorFomatting()
+  {
+    String var1 = "vector<";
+    String var2 = "Mentor";
+    String var3 = "*>";
+    String var4 = "mentors";
+    String answer = StringFormatter.format("const {0}{1}{2}& {3}",var1,var2,var3,var4);
+    Assert.assertEquals("const vector<Mentor*>& mentors",answer);
+  } 
+  
   @Test
   public void replaceParameter_EmptyString()
   {
@@ -303,5 +315,7 @@ public class StringFormatterTest
     Assert.assertEquals("filename.ump",StringFormatter.stripLeadingPath("yo" + File.separator + "filename.ump"));
     Assert.assertEquals("filename.ump",StringFormatter.stripLeadingPath("filename.ump"));
   }
+  
+  
   
 }

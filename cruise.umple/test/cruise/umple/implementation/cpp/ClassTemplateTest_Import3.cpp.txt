@@ -21,15 +21,15 @@ using namespace example.two;
   // INTERFACE
   //------------------------
 
-  Student Course::getStudent(int index)
+  Student Course::getStudent(int index) const
   {
     Student aStudent = students.get(index);
     return aStudent;
   }
 
-  vector<Student*> Course::getStudents()
+  vector<Student*> Course::getStudents() const
   {
-    vector<Student*> newStudents = Collections.unmodifiableList(students);
+    vector<Student*> newStudents = students;
     return newStudents;
   }
 
@@ -47,7 +47,7 @@ using namespace example.two;
   
   int Course::indexOfStudent(Student aStudent)
   {
-    int index = students.indexOf(aStudent);
+    int index = std::find(students.begin(), students.end(), aStudent) - students.begin();
     return index;
   }
   

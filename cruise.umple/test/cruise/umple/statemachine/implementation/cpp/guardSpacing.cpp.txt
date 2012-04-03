@@ -14,7 +14,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- Garage::Garage(bool aEntranceClear)
+ Garage::Garage(const bool& aEntranceClear)
   {
     entranceClear = aEntranceClear;
     setGarageDoor(GarageDoor.Open);
@@ -24,7 +24,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Garage::setEntranceClear(bool aEntranceClear)
+  bool Garage::setEntranceClear(bool& aEntranceClear)
   {
     bool wasSet = false;
     entranceClear = aEntranceClear;

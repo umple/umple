@@ -20,15 +20,15 @@
   // INTERFACE
   //------------------------
 
-  Bar Foo::getBar(int index)
+  Bar Foo::getBar(int index) const
   {
     Bar aBar = bars.get(index);
     return aBar;
   }
 
-  vector<Bar*> Foo::getBars()
+  vector<Bar*> Foo::getBars() const
   {
-    vector<Bar*> newBars = Collections.unmodifiableList(bars);
+    vector<Bar*> newBars = bars;
     return newBars;
   }
 
@@ -46,7 +46,7 @@
   
   int Foo::indexOfBar(Bar aBar)
   {
-    int index = bars.indexOf(aBar);
+    int index = std::find(bars.begin(), bars.end(), aBar) - bars.begin();
     return index;
   }
   

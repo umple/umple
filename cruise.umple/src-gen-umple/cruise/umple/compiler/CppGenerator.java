@@ -207,17 +207,9 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   {
 	if (aElement instanceof UmpleInterface)
     {
-      if (callHeader == false)
-      {
-        callHeader = true;
-        return new CppInterfaceGenerator();
-      }
       
-      else if (callHeader == true)
-      {
-        callHeader = false;
-        return new CppInterfaceHeaderGenerator();
-      }
+        return new CppInterfaceGenerator();
+        
       
     }
     else if (aElement instanceof UmpleClass)
@@ -841,8 +833,9 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
         signatureCaller.append(", ");
       }
         
-      signature.append(StringFormatter.format("{0} {1}",typeOf(av),nameOf(av)));
-      signatureCaller.append(nameOf(av));      
+
+      signature.append(StringFormatter.format("const {0}& {1}",typeOf(av),nameOf(av))); 
+      signatureCaller.append(nameOf(av));   
     }
 
     for (AssociationVariable av : uClass.getAssociationVariables()) 
@@ -872,9 +865,11 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
         signature.append(", ");
         signatureCaller.append(", ");
       }
-      
-      String typeModifier = av.isMany() ? "..." : "";
-      signature.append(StringFormatter.format("{0}{1} {2}",typeOf(av),typeModifier,nameOf(av)));
+      //String typeModifier = av.isMany() ? "..." : "";
+      String typeModifier = av.isMany() ? "vector<" : "";
+      String typeModifier2 = av.isMany() ? "*>" : "";
+      //if( !typeModifier.equals("") )
+       signature.append(StringFormatter.format("{0}{1}{3} {2}",typeModifier,typeOf(av),nameOf(av),typeModifier2));      
       signatureCaller.append(nameOf(av));      
     }
 
@@ -896,13 +891,13 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
         UmpleClass relatedClass = model.getUmpleClass(av.getType());
         GeneratedClass relatedGen = relatedClass.getGeneratedClass();
         
-        String selfParameter = StringFormatter.format("{0} {1}",typeOf(relatedAv),nameOf(relatedAv));
+        String selfParameter = StringFormatter.format("const {0}& {1}",typeOf(relatedAv),nameOf(relatedAv));
         String selfFor = StringFormatter.format("For{0}",av.getUpperCaseName());
         String newParameters = relatedGen.getLookup("constructorSignature");
         newParameters = StringFormatter.replaceParameter(newParameters, selfParameter, null);
         newParameters = StringFormatter.appendParameter(newParameters, selfFor);
 
-        String relatedParameter = StringFormatter.format("{0} {1}",typeOf(av),nameOf(av));
+        String relatedParameter = StringFormatter.format("const {0}& {1}",typeOf(av),nameOf(av));
         
         mandatorySignature = StringFormatter.replaceParameter(mandatorySignature, relatedParameter, newParameters);
         genClass.setLookup("constructorSignature_mandatory", mandatorySignature);
@@ -1024,6 +1019,10 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   private static String typeOf(UmpleVariable var)
   {
     String aType = var.getType();
+    if (aType =="String")
+    {
+    	return "string";
+    }
     return typeOf(aType);
   }
   
@@ -1036,23 +1035,21 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     						  model.getUmpleFile().getPath(), 
         	                  getOutput()) + 
         	                  aClass.getPackageName().replace(".", File.separator);
-        	                  
-  String filename = path + File.separator + aClass.getName() + ".cpp";
-    File file = new File(path);
+   File file = new File(path);
     file.mkdirs();
-
+  
+    String filename = (aClass instanceof UmpleClass) ? (path + File.separator + aClass.getName() + ".cpp"):(path + File.separator + aClass.getName() + ".h");
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-        
+    String contents = language.getCode(model, aClass);
+    model.getGeneratedCode().put(aClass.getName(),contents);
+  
+    
+    
     //Creating a header file for each class created.
     String hfilename = path + File.separator + aClass.getName() + ".h";
     BufferedWriter hbw = new BufferedWriter(new FileWriter(hfilename));
-
-    
     String headerContent = headerlanguage.getCode(model, aClass);
-    model.getGeneratedCode().put(aClass.getName(),headerContent);
-    String contents = language.getCode(model, aClass);
-    model.getGeneratedCode().put(aClass.getName(),contents);
-    
+    model.getGeneratedCode().put(aClass.getName()+"_header",headerContent);
     
     try
     {

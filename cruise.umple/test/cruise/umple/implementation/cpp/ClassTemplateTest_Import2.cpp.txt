@@ -13,7 +13,7 @@ using namespace example.three;
   // CONSTRUCTOR
   //------------------------
   
- Student::Student(String aNumber, Mentor... allMentors)
+ Student::Student(const string& aNumber, vector<Mentor*> allMentors)
   {
     number = aNumber;
     mentors = new vector<Mentor*>();
@@ -29,7 +29,7 @@ using namespace example.three;
   // INTERFACE
   //------------------------
 
-  bool Student::setNumber(string aNumber)
+  bool Student::setNumber(string const& aNumber)
   {
     bool wasSet = false;
     number = aNumber;
@@ -42,15 +42,15 @@ using namespace example.three;
     return number;
   }
 
-  Mentor Student::getMentor(int index)
+  Mentor Student::getMentor(int index) const
   {
     Mentor aMentor = mentors.get(index);
     return aMentor;
   }
 
-  vector<Mentor*> Student::getMentors()
+  vector<Mentor*> Student::getMentors() const
   {
-    vector<Mentor*> newMentors = Collections.unmodifiableList(mentors);
+    vector<Mentor*> newMentors = mentors;
     return newMentors;
   }
 
@@ -68,19 +68,19 @@ using namespace example.three;
   
   int Student::indexOfMentor(Mentor aMentor)
   {
-    int index = mentors.indexOf(aMentor);
+    int index = std::find(mentors.begin(), mentors.end(), aMentor) - mentors.begin();
     return index;
   }
   
-  Course Student::getCourse(int index)
+  Course Student::getCourse(int index) const
   {
     Course aCourse = courses.get(index);
     return aCourse;
   }
 
-  vector<Course*> Student::getCourses()
+  vector<Course*> Student::getCourses() const
   {
-    vector<Course*> newCourses = Collections.unmodifiableList(courses);
+    vector<Course*> newCourses = courses;
     return newCourses;
   }
 
@@ -98,7 +98,7 @@ using namespace example.three;
   
   int Student::indexOfCourse(Course aCourse)
   {
-    int index = courses.indexOf(aCourse);
+    int index = std::find(courses.begin(), courses.end(), aCourse) - courses.begin();
     return index;
   }
   

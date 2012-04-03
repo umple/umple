@@ -20,14 +20,14 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Token::addPosition(Position aPosition)
+  bool Token::addPosition(Position& aPosition)
   {
     bool wasAdded = false;
     wasAdded = positions.add(aPosition);
     return wasAdded;
   }
 
-  bool Token::removePosition(Position aPosition)
+  bool Token::removePosition(Position& aPosition)
   {
     bool wasRemoved = false;
     wasRemoved = positions.remove(aPosition);

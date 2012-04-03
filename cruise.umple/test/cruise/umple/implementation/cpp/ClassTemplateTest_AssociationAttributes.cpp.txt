@@ -10,7 +10,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- Token::Token(Position aP)
+ Token::Token(const Position& aP)
   {
     p = aP;
   }
@@ -19,7 +19,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Token::setP(Position aP)
+  bool Token::setP(Position& aP)
   {
     bool wasSet = false;
     p = aP;

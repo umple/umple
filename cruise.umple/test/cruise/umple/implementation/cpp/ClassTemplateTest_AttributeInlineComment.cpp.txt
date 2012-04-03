@@ -10,7 +10,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Foo::Foo(String aBar)
+ Foo::Foo(const string& aBar)
   {
     bar = aBar;
   }
@@ -19,7 +19,7 @@
   // INTERFACE
   //------------------------
 
-  bool Foo::setBar(string aBar)
+  bool Foo::setBar(string const& aBar)
   {
     bool wasSet = false;
     bar = aBar;

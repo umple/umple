@@ -10,7 +10,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- SubMentor2::SubMentor2(String aName, String aSubName)
+ SubMentor2::SubMentor2(const string& aName, const string& aSubName)
   {
     SubMentor2(aName);
     subName = aSubName;
@@ -20,7 +20,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool SubMentor2::setSubName(string aSubName)
+  bool SubMentor2::setSubName(string const& aSubName)
   {
     bool wasSet = false;
     subName = aSubName;

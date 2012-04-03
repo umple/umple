@@ -10,7 +10,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Foo::Foo(String aName)
+ Foo::Foo(const string& aName)
   {
     name = aName;
   }
@@ -19,7 +19,7 @@
   // INTERFACE
   //------------------------
 
-  bool Foo::setName(string aName)
+  bool Foo::setName(string const& aName)
   {
     bool wasSet = false;
     name = aName;

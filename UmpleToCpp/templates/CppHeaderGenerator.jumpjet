@@ -28,9 +28,10 @@
  	
 %>
 
-<%@ include file="import_packages.jet" %>
 #ifndef <%=uClass.getName().toUpperCase()%>_H_
 #define <%=uClass.getName().toUpperCase()%>_H_
+<%@ include file="import_packages.jet" %>
+<%@ include file="header_import_relatedHeaders.jet"%>
 
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
 class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
@@ -65,7 +66,7 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   <%@ include file="header_association_Get_All.jet" %>
   <%@ include file="header_association_SetAll.jet" %>
 <% if (uClass.getKey().isProvided()) { %>
-  <%@ include file="equals.jet" %>
+  <%@ include file="header_equals.jet" %>
 <% } %>
   <%@ include file="state_machine_doActivity_All.jet" %>
   <%@ include file="state_machine_timedEvent_All.jet" %>

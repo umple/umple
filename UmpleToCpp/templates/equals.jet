@@ -132,19 +132,17 @@
   }
 
 %>
-  public boolean equals(Object obj)
+  bool equals(Object obj)
   {
-    if (obj == null) { return false; }
-    if (!getClass().equals(obj.getClass())) { return false; }
+    if (obj == NULL) { return false; }
+    if (getClass() != obj.getClass()) { return false; }
 
-    <%= uClass.getName() %> compareTo = (<%= uClass.getName() %>)obj;
+    <%= uClass.getName() %> == (<%= uClass.getName() %>)obj;
   
-    <%= checks.toString().trim() %>
-
     return true;
   }
 
-  public int hashCode()
+ int hashCode()
   {
     if (cachedHashCode != -1)
     {

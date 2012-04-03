@@ -25,7 +25,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Mentor::setHowLongUntilOk(int aHowLongUntilOk)
+  bool Mentor::setHowLongUntilOk(int& aHowLongUntilOk)
   {
     bool wasSet = false;
     howLongUntilOk = aHowLongUntilOk;

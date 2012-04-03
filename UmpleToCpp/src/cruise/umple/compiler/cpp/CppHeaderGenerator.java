@@ -19,10 +19,10 @@ public class CppHeaderGenerator implements ILang
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
-  protected final String TEXT_2 = NL;
-  protected final String TEXT_3 = NL + "#ifndef ";
-  protected final String TEXT_4 = "_H_" + NL + "#define ";
-  protected final String TEXT_5 = "_H_" + NL;
+  protected final String TEXT_2 = NL + NL + "#ifndef ";
+  protected final String TEXT_3 = "_H_" + NL + "#define ";
+  protected final String TEXT_4 = "_H_";
+  protected final String TEXT_5 = NL;
   protected final String TEXT_6 = NL + "class ";
   protected final String TEXT_7 = NL + "{" + NL + "   //------------------------" + NL + "  // Attributes for header file" + NL + "  //------------------------" + NL + "  private:";
   protected final String TEXT_8 = NL + NL + "  //------------------------" + NL + "  // Constructor" + NL + "  //------------------------" + NL + "  public:" + NL;
@@ -138,11 +138,11 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_118 = NL + "    }";
   protected final String TEXT_119 = NL + "  }" + NL;
   protected final String TEXT_120 = NL + "  ";
-  protected final String TEXT_121 = " ";
-  protected final String TEXT_122 = "();";
+  protected final String TEXT_121 = "* ";
+  protected final String TEXT_122 = "() const;";
   protected final String TEXT_123 = NL + "  ";
   protected final String TEXT_124 = " ";
-  protected final String TEXT_125 = "(int index);" + NL + "  vector<";
+  protected final String TEXT_125 = "(int index) const;" + NL + "  vector<";
   protected final String TEXT_126 = "> ";
   protected final String TEXT_127 = "();" + NL + "  int ";
   protected final String TEXT_128 = "();" + NL + "  bool ";
@@ -171,19 +171,19 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_151 = ");";
   protected final String TEXT_152 = NL + "  bool ";
   protected final String TEXT_153 = "(";
-  protected final String TEXT_154 = " ";
+  protected final String TEXT_154 = "* ";
   protected final String TEXT_155 = ");";
   protected final String TEXT_156 = NL + "  bool ";
   protected final String TEXT_157 = "(";
-  protected final String TEXT_158 = " ";
+  protected final String TEXT_158 = "* ";
   protected final String TEXT_159 = ");";
   protected final String TEXT_160 = NL + "  bool ";
   protected final String TEXT_161 = "(";
-  protected final String TEXT_162 = " ";
+  protected final String TEXT_162 = "* ";
   protected final String TEXT_163 = ");";
   protected final String TEXT_164 = NL + "  bool ";
   protected final String TEXT_165 = "(";
-  protected final String TEXT_166 = " ";
+  protected final String TEXT_166 = "* ";
   protected final String TEXT_167 = ");";
   protected final String TEXT_168 = NL + "  bool ";
   protected final String TEXT_169 = "(";
@@ -210,8 +210,8 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_190 = " ";
   protected final String TEXT_191 = ");";
   protected final String TEXT_192 = NL + "  bool ";
-  protected final String TEXT_193 = "(";
-  protected final String TEXT_194 = "... ";
+  protected final String TEXT_193 = "(const vector<";
+  protected final String TEXT_194 = "*>& ";
   protected final String TEXT_195 = ");";
   protected final String TEXT_196 = NL + "  ";
   protected final String TEXT_197 = " ";
@@ -225,7 +225,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_205 = ");";
   protected final String TEXT_206 = NL + "  bool ";
   protected final String TEXT_207 = "(";
-  protected final String TEXT_208 = " ";
+  protected final String TEXT_208 = "* ";
   protected final String TEXT_209 = ");";
   protected final String TEXT_210 = NL + "  bool ";
   protected final String TEXT_211 = "(";
@@ -236,8 +236,8 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_216 = " ";
   protected final String TEXT_217 = ");";
   protected final String TEXT_218 = NL + "  bool ";
-  protected final String TEXT_219 = "(";
-  protected final String TEXT_220 = "... ";
+  protected final String TEXT_219 = "(const vector<";
+  protected final String TEXT_220 = "*>& ";
   protected final String TEXT_221 = ");";
   protected final String TEXT_222 = NL + "  void ";
   protected final String TEXT_223 = "::";
@@ -254,15 +254,15 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_234 = "\", e);" + NL + "    }" + NL + "  }" + NL;
   protected final String TEXT_235 = NL + "  bool ";
   protected final String TEXT_236 = "(";
-  protected final String TEXT_237 = " ";
+  protected final String TEXT_237 = "* ";
   protected final String TEXT_238 = ");";
   protected final String TEXT_239 = NL + "  bool ";
   protected final String TEXT_240 = "(";
-  protected final String TEXT_241 = " ";
+  protected final String TEXT_241 = "* ";
   protected final String TEXT_242 = ");";
   protected final String TEXT_243 = NL + "  bool ";
   protected final String TEXT_244 = "(";
-  protected final String TEXT_245 = " ";
+  protected final String TEXT_245 = "* ";
   protected final String TEXT_246 = ");";
   protected final String TEXT_247 = NL + "  bool ";
   protected final String TEXT_248 = "(";
@@ -273,7 +273,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_253 = ");";
   protected final String TEXT_254 = NL + "  bool ";
   protected final String TEXT_255 = "(";
-  protected final String TEXT_256 = " ";
+  protected final String TEXT_256 = "* ";
   protected final String TEXT_257 = ");";
   protected final String TEXT_258 = NL + "  bool ";
   protected final String TEXT_259 = "(";
@@ -297,8 +297,8 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_277 = " ";
   protected final String TEXT_278 = ");";
   protected final String TEXT_279 = NL + "  bool ";
-  protected final String TEXT_280 = "(";
-  protected final String TEXT_281 = "... ";
+  protected final String TEXT_280 = "(const vector<";
+  protected final String TEXT_281 = "*>& ";
   protected final String TEXT_282 = ");";
   protected final String TEXT_283 = NL + "  void ";
   protected final String TEXT_284 = "::";
@@ -335,74 +335,67 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_315 = " ";
   protected final String TEXT_316 = ");";
   protected final String TEXT_317 = NL + "  bool ";
-  protected final String TEXT_318 = "(";
-  protected final String TEXT_319 = "... ";
+  protected final String TEXT_318 = "(const vector<";
+  protected final String TEXT_319 = "*>& ";
   protected final String TEXT_320 = ");";
   protected final String TEXT_321 = NL + "  bool ";
-  protected final String TEXT_322 = "(";
-  protected final String TEXT_323 = "... ";
+  protected final String TEXT_322 = "(const vector<";
+  protected final String TEXT_323 = "*>& ";
   protected final String TEXT_324 = ");";
   protected final String TEXT_325 = NL + "  bool ";
-  protected final String TEXT_326 = "(";
-  protected final String TEXT_327 = "... ";
+  protected final String TEXT_326 = "(const vector<";
+  protected final String TEXT_327 = "*>& ";
   protected final String TEXT_328 = ");";
   protected final String TEXT_329 = NL + "  bool ";
-  protected final String TEXT_330 = "(";
-  protected final String TEXT_331 = "... ";
+  protected final String TEXT_330 = "(const vector<";
+  protected final String TEXT_331 = "*>& ";
   protected final String TEXT_332 = ");";
   protected final String TEXT_333 = NL + "  bool ";
-  protected final String TEXT_334 = "(";
-  protected final String TEXT_335 = "... ";
+  protected final String TEXT_334 = "(const vector<";
+  protected final String TEXT_335 = "*>& ";
   protected final String TEXT_336 = ");";
   protected final String TEXT_337 = NL + "  bool ";
-  protected final String TEXT_338 = "(";
-  protected final String TEXT_339 = "... ";
+  protected final String TEXT_338 = "(const vector<";
+  protected final String TEXT_339 = "*>&  ";
   protected final String TEXT_340 = ");";
   protected final String TEXT_341 = NL + "  bool ";
-  protected final String TEXT_342 = "(";
-  protected final String TEXT_343 = "... ";
+  protected final String TEXT_342 = "(const vector<";
+  protected final String TEXT_343 = "*>& ";
   protected final String TEXT_344 = ");";
-  protected final String TEXT_345 = NL + "  public boolean equals(Object obj)" + NL + "  {" + NL + "    if (obj == null) { return false; }" + NL + "    if (!getClass().equals(obj.getClass())) { return false; }" + NL;
-  protected final String TEXT_346 = NL + "    ";
-  protected final String TEXT_347 = " compareTo = (";
-  protected final String TEXT_348 = ")obj;" + NL + "  ";
-  protected final String TEXT_349 = NL + "    ";
-  protected final String TEXT_350 = NL + NL + "    return true;" + NL + "  }" + NL + "" + NL + "  public int hashCode()" + NL + "  {" + NL + "    if (cachedHashCode != -1)" + NL + "    {" + NL + "      return cachedHashCode;" + NL + "    }" + NL + "    cachedHashCode = 17;";
-  protected final String TEXT_351 = NL + "    ";
-  protected final String TEXT_352 = NL;
+  protected final String TEXT_345 = NL + "  ";
+  protected final String TEXT_346 = " ";
+  protected final String TEXT_347 = NL + " bool equals(Object obj);" + NL + " int hashCode();" + NL + " %>";
+  protected final String TEXT_348 = NL + "  private void ";
+  protected final String TEXT_349 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
+  protected final String TEXT_350 = NL + "       ";
+  protected final String TEXT_351 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
+  protected final String TEXT_352 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
   protected final String TEXT_353 = NL + "    ";
-  protected final String TEXT_354 = NL + "    return cachedHashCode;" + NL + "  }" + NL;
-  protected final String TEXT_355 = NL + "  private void ";
-  protected final String TEXT_356 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
-  protected final String TEXT_357 = NL + "       ";
-  protected final String TEXT_358 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
-  protected final String TEXT_359 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
+  protected final String TEXT_354 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
+  protected final String TEXT_355 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
+  protected final String TEXT_356 = NL + "      ";
+  protected final String TEXT_357 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_358 = NL + "  private void ";
+  protected final String TEXT_359 = "()" + NL + "  {";
   protected final String TEXT_360 = NL + "    ";
-  protected final String TEXT_361 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_362 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
-  protected final String TEXT_363 = NL + "      ";
-  protected final String TEXT_364 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_365 = NL + "  private void ";
-  protected final String TEXT_366 = "()" + NL + "  {";
-  protected final String TEXT_367 = NL + "    ";
-  protected final String TEXT_368 = " = new TimedEventHandler(this,\"";
-  protected final String TEXT_369 = "\",";
-  protected final String TEXT_370 = ");" + NL + "  }" + NL + "" + NL + "  private void ";
-  protected final String TEXT_371 = "()" + NL + "  {";
-  protected final String TEXT_372 = NL + "    ";
-  protected final String TEXT_373 = ".stop();" + NL + "  }" + NL;
-  protected final String TEXT_374 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
-  protected final String TEXT_375 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
-  protected final String TEXT_376 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    public void stop()" + NL + "    {" + NL + "      timer.cancel();" + NL + "    }" + NL + "    " + NL + "    public void run ()" + NL + "    {";
-  protected final String TEXT_377 = NL + "      if (\"";
-  protected final String TEXT_378 = "\".equals(timeoutMethodName))" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
-  protected final String TEXT_379 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
-  protected final String TEXT_380 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
-  protected final String TEXT_381 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_382 = NL + "  //------------------------" + NL + "  // Destructor" + NL + "  //------------------------";
-  protected final String TEXT_383 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_384 = NL + "  ";
-  protected final String TEXT_385 = NL + "};" + NL + "" + NL + "#endif";
+  protected final String TEXT_361 = " = new TimedEventHandler(this,\"";
+  protected final String TEXT_362 = "\",";
+  protected final String TEXT_363 = ");" + NL + "  }" + NL + "" + NL + "  private void ";
+  protected final String TEXT_364 = "()" + NL + "  {";
+  protected final String TEXT_365 = NL + "    ";
+  protected final String TEXT_366 = ".stop();" + NL + "  }" + NL;
+  protected final String TEXT_367 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
+  protected final String TEXT_368 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
+  protected final String TEXT_369 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    public void stop()" + NL + "    {" + NL + "      timer.cancel();" + NL + "    }" + NL + "    " + NL + "    public void run ()" + NL + "    {";
+  protected final String TEXT_370 = NL + "      if (\"";
+  protected final String TEXT_371 = "\".equals(timeoutMethodName))" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
+  protected final String TEXT_372 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
+  protected final String TEXT_373 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
+  protected final String TEXT_374 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_375 = NL + "  //------------------------" + NL + "  // Destructor" + NL + "  //------------------------";
+  protected final String TEXT_376 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_377 = NL + "  ";
+  protected final String TEXT_378 = NL + "};" + NL + "" + NL + "#endif";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -452,6 +445,10 @@ public class CppHeaderGenerator implements ILang
  	
 
     stringBuffer.append(TEXT_2);
+    stringBuffer.append(uClass.getName().toUpperCase());
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(uClass.getName().toUpperCase());
+    stringBuffer.append(TEXT_4);
     
   for (Depend depend : uClass.getDepends())
   {
@@ -471,10 +468,16 @@ public class CppHeaderGenerator implements ILang
     append(stringBuffer, "using namespace {0};",anImport);
   }
 
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append(uClass.getName().toUpperCase());
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append(uClass.getName().toUpperCase());
+    
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+
+   
+    appendln(stringBuffer, "");
+    append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName());
+    }
+  
+
     stringBuffer.append(TEXT_5);
      if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
     stringBuffer.append(TEXT_6);
@@ -670,7 +673,7 @@ public class CppHeaderGenerator implements ILang
     
     if (av.isOne())
     {
-      append(stringBuffer, "  {0} {1};", gen.translate("type",av), gen.translate("attributeOne",av));
+      append(stringBuffer, "  {0}* {1};", gen.translate("type",av), gen.translate("attributeOne",av));
     }
     else
     {
@@ -2284,154 +2287,9 @@ public class CppHeaderGenerator implements ILang
   }
 
      if (uClass.getKey().isProvided()) { 
-    
-
-  StringBuilder checks = new StringBuilder();
-  StringBuilder hash = new StringBuilder();
-  StringBuilder canSet = new StringBuilder();
-  
-  for(String memberId : uClass.getKey().getMembers())
-  {
-    Attribute av = uClass.getAttribute(memberId);
-    AssociationVariable as = uClass.getAssociationVariable(memberId);
-    if (av != null)
-    {
-      canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
-      if (av.getIsList())
-      {
-        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("attributeMany",av)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n\n"));
-        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",gen.translate("attributeMany",av)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",av),gen.translate("attributeMany",av)));
-        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",av),gen.translate("attributeMany",av)));
-        checks.append(StringFormatter.format("      if (me == null && them != null)\n"));
-        checks.append(StringFormatter.format("      {\n"));
-        checks.append(StringFormatter.format("       return false;\n"));
-        checks.append(StringFormatter.format("      }\n"));
-        checks.append(StringFormatter.format("      else if (me != null && !me.equals(them))\n"));
-        checks.append(StringFormatter.format("      {\n"));
-        checks.append(StringFormatter.format("        return false;\n"));
-        checks.append(StringFormatter.format("      }\n"));
-        checks.append(StringFormatter.format("    }\n"));
-      }
-      else if ("Integer".equals(av.getType()) || "Boolean".equals(av.getType()) || "Double".equals(av.getType()))
-      {
-        checks.append(StringFormatter.format("    if ({0} != compareTo.{0})\n",gen.translate("attributeOne",av)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n"));
-      }
-      else
-      {
-        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",av)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n"));
-        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",av)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n"));
-      }
-      checks.append("\n");
-    }
-    else if (as != null)
-    {
-      canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("associationCanSet",as)));
-      if (as.isMany())
-      {
-        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("associationMany",as)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n\n"));
-        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",gen.translate("attributeMany",as)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",as),gen.translate("associationMany",as)));
-        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",as),gen.translate("associationMany",as)));
-        checks.append(StringFormatter.format("      if (me == null && them != null)\n"));
-        checks.append(StringFormatter.format("      {\n"));
-        checks.append(StringFormatter.format("       return false;\n"));
-        checks.append(StringFormatter.format("      }\n"));
-        checks.append(StringFormatter.format("      else if (me != null && !me.equals(them))\n"));
-        checks.append(StringFormatter.format("      {\n"));
-        checks.append(StringFormatter.format("        return false;\n"));
-        checks.append(StringFormatter.format("      }\n"));
-        checks.append(StringFormatter.format("    }\n"));
-      }
-      else
-      {
-        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",as)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n"));
-        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",as)));
-        checks.append(StringFormatter.format("    {\n"));
-        checks.append(StringFormatter.format("      return false;\n"));
-        checks.append(StringFormatter.format("    }\n"));
-      }
-      checks.append("\n");
-    }
-    
-    if (av != null)
-    {
-      if ("Integer".equals(av.getType()) && !av.getIsList())
-      {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",gen.translate("attributeOne",av)));
-      }
-      else if ("Double".equals(av.getType()) && !av.getIsList())
-      {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + (new Double({0})).hashCode();\n",gen.translate("attributeOne",av)));
-      }
-      else if ("Boolean".equals(av.getType()) && !av.getIsList())
-      {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + ({0} ? 1 : 0);\n",gen.translate("attributeOne",av)));
-      }
-      else
-      {
-        String attributeType = av.getIsList() ? "attributeMany" : "attributeOne";
-        hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,av)));
-        hash.append(StringFormatter.format("    {\n"));
-        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,av)));
-        hash.append(StringFormatter.format("    }\n"));
-        hash.append(StringFormatter.format("    else\n"));
-        hash.append(StringFormatter.format("    {\n"));
-        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23;\n"));
-        hash.append(StringFormatter.format("    }\n"));
-      }
-      hash.append("\n");
-    }
-    else if (as != null)
-    {
-      String attributeType = as.isOne() ? "attributeOne" : "attributeMany";
-      hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,as)));
-      hash.append(StringFormatter.format("    {\n"));
-      hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,as)));
-      hash.append(StringFormatter.format("    }\n"));
-      hash.append(StringFormatter.format("    else\n"));
-      hash.append(StringFormatter.format("    {\n"));
-      hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23;\n"));
-      hash.append(StringFormatter.format("    }\n"));
-    }
-  }
-
-
     stringBuffer.append(TEXT_345);
     stringBuffer.append(TEXT_346);
-    stringBuffer.append( uClass.getName() );
     stringBuffer.append(TEXT_347);
-    stringBuffer.append( uClass.getName() );
-    stringBuffer.append(TEXT_348);
-    stringBuffer.append(TEXT_349);
-    stringBuffer.append( checks.toString().trim() );
-    stringBuffer.append(TEXT_350);
-    stringBuffer.append(TEXT_351);
-    stringBuffer.append( hash.toString().trim() );
-    stringBuffer.append(TEXT_352);
-    stringBuffer.append(TEXT_353);
-    stringBuffer.append( canSet.toString().trim() );
-    stringBuffer.append(TEXT_354);
      } 
     
 { 
@@ -2444,12 +2302,12 @@ public class CppHeaderGenerator implements ILang
       {
         hasActivities = true;
         
-    stringBuffer.append(TEXT_355);
+    stringBuffer.append(TEXT_348);
     stringBuffer.append( gen.translate("doActivityMethod",state));
-    stringBuffer.append(TEXT_356);
-    stringBuffer.append(TEXT_357);
+    stringBuffer.append(TEXT_349);
+    stringBuffer.append(TEXT_350);
     stringBuffer.append( state.getActivity().getActivityCode() );
-    stringBuffer.append(TEXT_358);
+    stringBuffer.append(TEXT_351);
     
       }
     }
@@ -2484,15 +2342,15 @@ public class CppHeaderGenerator implements ILang
     }
   }
 
-    stringBuffer.append(TEXT_359);
-    stringBuffer.append(TEXT_360);
+    stringBuffer.append(TEXT_352);
+    stringBuffer.append(TEXT_353);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_361);
+    stringBuffer.append(TEXT_354);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_362);
-    stringBuffer.append(TEXT_363);
+    stringBuffer.append(TEXT_355);
+    stringBuffer.append(TEXT_356);
     stringBuffer.append( output );
-    stringBuffer.append(TEXT_364);
+    stringBuffer.append(TEXT_357);
     
   }
 }
@@ -2508,21 +2366,21 @@ public class CppHeaderGenerator implements ILang
       {
         hasTimedEvents = true;
         
-    stringBuffer.append(TEXT_365);
+    stringBuffer.append(TEXT_358);
     stringBuffer.append(gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_366);
-    stringBuffer.append(TEXT_367);
+    stringBuffer.append(TEXT_359);
+    stringBuffer.append(TEXT_360);
     stringBuffer.append( gen.translate("eventHandler",e) );
-    stringBuffer.append(TEXT_368);
+    stringBuffer.append(TEXT_361);
     stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_369);
+    stringBuffer.append(TEXT_362);
     stringBuffer.append( e.getTimerInSeconds() );
-    stringBuffer.append(TEXT_370);
+    stringBuffer.append(TEXT_363);
     stringBuffer.append(gen.translate("eventStopMethod",e) );
-    stringBuffer.append(TEXT_371);
-    stringBuffer.append(TEXT_372);
+    stringBuffer.append(TEXT_364);
+    stringBuffer.append(TEXT_365);
     stringBuffer.append( gen.translate("eventHandler",e) );
-    stringBuffer.append(TEXT_373);
+    stringBuffer.append(TEXT_366);
     
       }
     }
@@ -2534,11 +2392,11 @@ public class CppHeaderGenerator implements ILang
  
 
 
-    stringBuffer.append(TEXT_374);
+    stringBuffer.append(TEXT_367);
     stringBuffer.append( gen.translate("type",uClass) );
-    stringBuffer.append(TEXT_375);
+    stringBuffer.append(TEXT_368);
     stringBuffer.append( gen.translate("type",uClass) );
-    stringBuffer.append(TEXT_376);
+    stringBuffer.append(TEXT_369);
     
   for(StateMachine sm : uClass.getStateMachines())
   {
@@ -2547,28 +2405,28 @@ public class CppHeaderGenerator implements ILang
       if (e.getIsTimer())
       {
         
-    stringBuffer.append(TEXT_377);
+    stringBuffer.append(TEXT_370);
     stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_378);
+    stringBuffer.append(TEXT_371);
     stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_379);
+    stringBuffer.append(TEXT_372);
     stringBuffer.append( gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_380);
+    stringBuffer.append(TEXT_373);
     
       }
     }
   }
 
-    stringBuffer.append(TEXT_381);
+    stringBuffer.append(TEXT_374);
     
   }
 }
 
-    stringBuffer.append(TEXT_382);
+    stringBuffer.append(TEXT_375);
     
 
   appendln(stringBuffer,"");
-  appendln(stringBuffer,"~{0}()",uClass.getName());
+  appendln(stringBuffer,"virtual ~{0}()",uClass.getName());
   append(stringBuffer,"");
 
   boolean hasSomethingToDelete = false;
@@ -2628,11 +2486,11 @@ public class CppHeaderGenerator implements ILang
 
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_383);
-    stringBuffer.append(TEXT_384);
+    stringBuffer.append(TEXT_376);
+    stringBuffer.append(TEXT_377);
     stringBuffer.append(uClass.getExtraCode());
      } 
-    stringBuffer.append(TEXT_385);
+    stringBuffer.append(TEXT_378);
     return stringBuffer.toString();
   }
 }

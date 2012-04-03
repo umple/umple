@@ -14,9 +14,9 @@
       <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } %>
       return wasRemoved;
     }
-
-    int oldIndex = <%=gen.translate("associationMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);
-    <%=gen.translate("associationMany",av)%>.remove(oldIndex);
+	
+    int oldIndex = std::find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
+    <%=gen.translate("associationMany",av)%>.erase(oldIndex);
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) == -1)
     {
       wasRemoved = true;

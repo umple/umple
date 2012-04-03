@@ -23,15 +23,15 @@
   // INTERFACE
   //------------------------
 
-  Bar1 Foo::getBar1(int index)
+  Bar1 Foo::getBar1(int index) const
   {
     Bar1 aBar1 = bar1s.get(index);
     return aBar1;
   }
 
-  vector<Bar1*> Foo::getBar1s()
+  vector<Bar1*> Foo::getBar1s() const
   {
-    vector<Bar1*> newBar1s = Collections.unmodifiableList(bar1s);
+    vector<Bar1*> newBar1s = bar1s;
     return newBar1s;
   }
 
@@ -49,19 +49,19 @@
   
   int Foo::indexOfBar1(Bar1 aBar1)
   {
-    int index = bar1s.indexOf(aBar1);
+    int index = std::find(bar1s.begin(), bar1s.end(), aBar1) - bar1s.begin();
     return index;
   }
   
-  Bar2 Foo::getBar2(int index)
+  Bar2 Foo::getBar2(int index) const
   {
     Bar2 aBar2 = bar2s.get(index);
     return aBar2;
   }
 
-  vector<Bar2*> Foo::getBar2s()
+  vector<Bar2*> Foo::getBar2s() const
   {
-    vector<Bar2*> newBar2s = Collections.unmodifiableList(bar2s);
+    vector<Bar2*> newBar2s = bar2s;
     return newBar2s;
   }
 
@@ -79,19 +79,19 @@
   
   int Foo::indexOfBar2(Bar2 aBar2)
   {
-    int index = bar2s.indexOf(aBar2);
+    int index = std::find(bar2s.begin(), bar2s.end(), aBar2) - bar2s.begin();
     return index;
   }
   
-  Bar3 Foo::getBar3(int index)
+  Bar3 Foo::getBar3(int index) const
   {
     Bar3 aBar3 = bar3s.get(index);
     return aBar3;
   }
 
-  vector<Bar3*> Foo::getBar3s()
+  vector<Bar3*> Foo::getBar3s() const
   {
-    vector<Bar3*> newBar3s = Collections.unmodifiableList(bar3s);
+    vector<Bar3*> newBar3s = bar3s;
     return newBar3s;
   }
 
@@ -109,19 +109,19 @@
   
   int Foo::indexOfBar3(Bar3 aBar3)
   {
-    int index = bar3s.indexOf(aBar3);
+    int index = std::find(bar3s.begin(), bar3s.end(), aBar3) - bar3s.begin();
     return index;
   }
   
-  Bar4 Foo::getBar4(int index)
+  Bar4 Foo::getBar4(int index) const
   {
     Bar4 aBar4 = bar4s.get(index);
     return aBar4;
   }
 
-  vector<Bar4*> Foo::getBar4s()
+  vector<Bar4*> Foo::getBar4s() const
   {
-    vector<Bar4*> newBar4s = Collections.unmodifiableList(bar4s);
+    vector<Bar4*> newBar4s = bar4s;
     return newBar4s;
   }
 
@@ -139,7 +139,7 @@
   
   int Foo::indexOfBar4(Bar4 aBar4)
   {
-    int index = bar4s.indexOf(aBar4);
+    int index = std::find(bar4s.begin(), bar4s.end(), aBar4) - bar4s.begin();
     return index;
   }
   
