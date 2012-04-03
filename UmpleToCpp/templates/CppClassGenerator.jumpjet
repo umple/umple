@@ -5,6 +5,8 @@
   GeneratedClass gClass = uClass.getGeneratedClass();
   CppGenerator gen = new CppGenerator();
   gen.setModel(model);
+   
+   String curlyBracket = (gen.translate("packageDefinition",uClass) == "")? "" : "}" ; 
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
   for (CodeInjection inject : uClass.getCodeInjections())
@@ -74,6 +76,4 @@
   <%=uClass.getExtraCode()%>
 <% } %>
 
-<% if(uClass.getPackageName() != null){
-append(stringBuffer, "}"); }
-%>
+<% append(stringBuffer,"{0}",curlyBracket); %>

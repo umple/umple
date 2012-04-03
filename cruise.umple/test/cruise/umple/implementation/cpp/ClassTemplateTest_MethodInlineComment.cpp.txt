@@ -33,4 +33,3 @@ Foo::~Foo()
       // I am a comment inside a method.
   }
 
-}

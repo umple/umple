@@ -44,4 +44,3 @@ Foo::~Foo()
       // I am a test method.
   }
 
-}

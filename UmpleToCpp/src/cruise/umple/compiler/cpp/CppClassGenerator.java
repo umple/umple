@@ -1820,6 +1820,8 @@ public class CppClassGenerator implements ILang
   GeneratedClass gClass = uClass.getGeneratedClass();
   CppGenerator gen = new CppGenerator();
   gen.setModel(model);
+   
+   String curlyBracket = (gen.translate("packageDefinition",uClass) == "")? "" : "}" ; 
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
   for (CodeInjection inject : uClass.getCodeInjections())
@@ -6909,9 +6911,7 @@ public class CppClassGenerator implements ILang
     stringBuffer.append(uClass.getExtraCode());
      } 
     stringBuffer.append(TEXT_1776);
-     if(uClass.getPackageName() != null){
-append(stringBuffer, "}"); }
-
+     append(stringBuffer,"{0}",curlyBracket); 
     return stringBuffer.toString();
   }
 }
