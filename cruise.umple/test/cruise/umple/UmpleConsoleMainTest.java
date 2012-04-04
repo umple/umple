@@ -10,9 +10,7 @@
 package cruise.umple;
 
 import java.io.*;
-
 import org.junit.*;
-
 import cruise.umple.util.SampleFileWriter;
 
 public class UmpleConsoleMainTest

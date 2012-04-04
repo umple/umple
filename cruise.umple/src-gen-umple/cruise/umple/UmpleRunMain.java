@@ -35,103 +35,103 @@ public class UmpleRunMain
   //------------------------
   
   public static String console;
-  public static boolean displayOutput = true;
+    public static boolean displayOutput = true;
 
-  public static void main(String[] args) 
-  {
-    console = "";
-
-    if (args.length < 2)
+    public static void main(String[] args) 
     {
-      println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
-      return;
-    }
+        console = "";
 
-    String filename = args[0];
-    String cmdFilename = args[1];
-    UmpleFile umpleFile = new UmpleFile(filename);
-    UmpleModel model = new UmpleModel(umpleFile);
-    boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
-    boolean shouldCompile = !shouldDebug;
-
-    try
-    {
-      if (shouldCompile)
-      {
-        print("Compiling "+ filename +"... ");
-        model.run();
-        println("success.");
-      }
-      else
-      {
-        print("Skipping compilation, entering debug mode");
-      }
-
-      print("Building model... ");
-      Builder b = new Builder();
-      URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
-
-      if (jarfile == null)
-      {
-        println("failed");
-        return;
-      }
-      println("success.");
-
-      print("Loading model into memory... ");
-      URL urls [] = { jarfile };
-      URLClassLoader cl = new URLClassLoader(urls);
-      println("success.");
-
-      Command cmd = new Command(cl);
-
-      println("Running commands:");
-      boolean isFirst = true;
-      for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
-      {
-        if (isFirst)
+        if (args.length < 2)
         {
-          cmd.addAttributes(input);
-          isFirst = false;
-          continue;
+            println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
+            return;
         }
-        cmd.exec(input);
-        for(String message : cmd.popMessages())
+
+        String filename = args[0];
+        String cmdFilename = args[1];
+        UmpleFile umpleFile = new UmpleFile(filename);
+        UmpleModel model = new UmpleModel(umpleFile);
+        boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
+        boolean shouldCompile = !shouldDebug;
+
+        try
         {
-          println("  " + message);
+            if (shouldCompile)
+            {
+                print("Compiling "+ filename +"... ");
+                model.run();
+                println("success.");
+            }
+            else
+            {
+                print("Skipping compilation, entering debug mode");
+            }
+
+            print("Building model... ");
+            Builder b = new Builder();
+            URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
+
+            if (jarfile == null)
+            {
+                println("failed");
+                return;
+            }
+            println("success.");
+
+            print("Loading model into memory... ");
+            URL urls [] = { jarfile };
+            URLClassLoader cl = new URLClassLoader(urls);
+            println("success.");
+
+            Command cmd = new Command(cl);
+
+            println("Running commands:");
+            boolean isFirst = true;
+            for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
+            {
+                if (isFirst)
+                {
+                    cmd.addAttributes(input);
+                    isFirst = false;
+                    continue;
+                }
+                cmd.exec(input);
+                for(String message : cmd.popMessages())
+                {
+                    println("  " + message);
+                }
+            }
+
+            println("Done.");
         }
-      }
-
-      println("Done.");
+        catch(Exception e)
+        {
+            println("failed.");
+            printerr(e.getMessage());
+        }
     }
-    catch(Exception e)
+
+    private static void print(String output)
     {
-      println("failed.");
-      printerr(e.getMessage());
-    }
-  }
+        console += output;
+        if (displayOutput)
+        {
+            System.out.print(output);  
+        }
 
-  private static void print(String output)
-  {
-    console += output;
-    if (displayOutput)
+    }
+
+    private static void println(String output)
     {
-      System.out.print(output);  
+        print(output + "\n");
     }
 
-  }
-
-  private static void println(String output)
-  {
-    print(output + "\n");
-  }
-
-  private static void printerr(String err)
-  {
-    console += err;
-    if (displayOutput)
+    private static void printerr(String err)
     {
-      System.err.print(err);
+        console += err;
+        if (displayOutput)
+        {
+            System.err.print(err);
+        }
     }
-  }
 }

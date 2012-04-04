@@ -675,6 +675,9 @@ private void analyzeClassToken(Token t, int analysisStep)
   {
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
 
+	// Set the original .ump file
+	aClass.setUmpFile(classToken.getPosition().getFilename());
+
     // Add all the comments in the comment list to the Umple class.
     for (Comment c : lastComments)
     {

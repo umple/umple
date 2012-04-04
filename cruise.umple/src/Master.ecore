@@ -297,6 +297,7 @@
   <eClassifiers xsi:type="ecore:EDataType" name="int"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpFile" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespaces" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -765,5 +766,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="TraceItem">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeCompiler">
   </eClassifiers>
 </ecore:EPackage>

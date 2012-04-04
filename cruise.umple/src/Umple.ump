@@ -72,6 +72,9 @@ class UmpleElement
   // The name of the Umple element.
   name;
 
+  // The original ump file
+  umpFile = "";
+
   // The modifier associated with the Umple element.
   modifier = null;
 

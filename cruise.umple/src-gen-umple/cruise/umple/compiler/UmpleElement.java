@@ -16,6 +16,7 @@ public class UmpleElement
 
   //UmpleElement Attributes
   private String name;
+  private String umpFile;
   private String modifier;
   private List<String> namespaces;
   private String packageName;
@@ -30,6 +31,7 @@ public class UmpleElement
   public UmpleElement(String aName)
   {
     name = aName;
+    umpFile = "";
     modifier = null;
     namespaces = new ArrayList<String>();
     packageName = "";
@@ -46,6 +48,14 @@ public class UmpleElement
   {
     boolean wasSet = false;
     name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setUmpFile(String aUmpFile)
+  {
+    boolean wasSet = false;
+    umpFile = aUmpFile;
     wasSet = true;
     return wasSet;
   }
@@ -111,6 +121,14 @@ public class UmpleElement
   public String getName()
   {
     return name;
+  }
+
+  /**
+   * The original ump file
+   */
+  public String getUmpFile()
+  {
+    return umpFile;
   }
 
   /**
