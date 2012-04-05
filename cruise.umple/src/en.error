@@ -18,3 +18,10 @@
 16: 1, http://manual.umple.org, Immutability rules prevent class '{0}' from subclassing '{1}' ;
 17: 2, http://umple.org/E013NonImmutableAssociation.html, Two-way associations may not be immutable ;
 18: 2, http://manual.umple.org, Reflexive immutable associations may not be mandatory ;
+1002: 5, http://manual.umple.org, Embedded method with code or unparsed code found when strictness is ModelOnly ;
+1003: 5, http://manual.umple.org, Unparsed 'extra code' found when strictness is NoExtraCode ;
+1004: 6, http://manual.umple.org, Expected message {0} found ;
+1005: 5, http://manual.umple.org, Expected message {0} not found ;
+2001: 4, http://manual.umple.org, Error in Java embedded in Umple: {0} ;
+2002: 4, http://manual.umple.org, Error in C++ embedded in Umple: {0} ;
+9999: 5, http://manual.umple.org, Feature under development. {0} found and ignored; processed as: {1} ;
