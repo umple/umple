@@ -24,4 +24,4 @@
 1005: 5, http://manual.umple.org, Expected message '{0}' not found ;
 2001: 4, http://manual.umple.org, Error in Java embedded in Umple: '{0}' ;
 2002: 4, http://manual.umple.org, Error in C++ embedded in Umple: '{0}' ;
-9999: 5, http://manual.umple.org, Feature under development. '{0}' found and ignored; processed as: '{1}' ;
+9999: 5, http://manual.umple.org, Feature under development. '{0}' found and ignored. processed as: '{1}' ;
