@@ -1,0 +1,34 @@
+// The master of this part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_constraints.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Constraints in Umple.
+// This is currently under development. Constraint capability is being
+// developed in agile increments. The first step, described below,
+// allows limiting the values of attributes. Code generation is not currently enabled.
+// Constraints may appear in classes (including association classes) 
+// as well as in states.
+precondition : [ ([name]? pre:) ([[constraint]]) ]
+postcondition : [ ([name]? post:) ([[constraint]]) ]
+invariant : [ ([name] :)? ([[constraint]]) ]
+
+// A constraint is an expression optionally be surrounded in round brackets or negated
+constraint- : [[constraintBody]] | OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET | ! ([[constraintBody]]) | ! OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET
+
+// A constraint body is a Boolean constraint value or a constraint expression
+constraintBody- : [[constraintVal]] | [[constraintExpr]]
+
+// A constraint value is an attribute (for now) or built-in function
+// (currently 'length' or 'match') operating on a string attribute
+constraintVal- : [attributeOrConst] | [attributeName] . [methodCall]
+
+methodCall : [methodName] [[concreteArgs]] || [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
+
+concreteArgs | OPEN_ROUND_BRACKET [**functionArg] CLOSE_ROUND_BRACKET
+
+// A constraint expression can be a boolean operation or a disjunction or 
+// conjunction of constraints
+constraintExpr : [[constraintVal]] [=boolop:>=|>|!=|==|<=|<] [[constraintVal]] | [[constraint]] [=||] [[constraint]] | [[constraint]] [=&&] [[constraint]]
