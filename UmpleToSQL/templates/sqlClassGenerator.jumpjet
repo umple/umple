@@ -1,12 +1,6 @@
 <%@ jet package="cruise.umple.compiler.sql" class="SQLClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
-/*
-A brief outline of what needs to be done:
-
-Associations, Auto-unique variables
-
-*/
 
   UmpleClass uClass = (UmpleClass) uElement;
   GeneratedClass gClass = uClass.getGeneratedClass();
@@ -37,11 +31,10 @@ Associations, Auto-unique variables
 <%=gen.translate("packageDefinition",uClass)%>
 
 <% if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } %>
-CREATE TABLE `<% if (uClass.getPackageName() != "") { append(stringBuffer, "{0}`.`", gen.translate("packageName", uClass));} %><%=gen.translate("type", uClass) %>`<%= gen.translate("isA",uClass) /* a bit of work needs to be done here, if we inherit, do we just add those attributes to the table?*/ %> (
-
+CREATE TABLE IF NOT EXISTS `<% if (uClass.getPackageName() != "") { append(stringBuffer, "{0}`.`", gen.translate("packageName", uClass));} %><%=gen.translate("type", uClass) %>`
+(
+  <%@ include file="members_AllAssociations.jet" %>  
   <%@ include file="members_AllStatics.jet" %>
   <%@ include file="members_AllAttributes.jet" %>
-  <%@ include file="members_AllAssociations.jet" %>
-  
 );
 <%=gen.translate("packageDefinitionEnd",uClass)%>

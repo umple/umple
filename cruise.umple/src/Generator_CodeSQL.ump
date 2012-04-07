@@ -18,6 +18,7 @@ class SQLGenerator
   private static Map<String,String> AsIsPluralLookupMap;
   private static Map<String,String> UmpleToSQLPrimitiveMap;
   private static List<String> OneOrManyLookup;
+  private static List<String> SQLPrimitives;
 
   static
   {
@@ -38,9 +39,60 @@ class SQLGenerator
     
     UmpleToSQLPrimitiveMap = new HashMap<String, String>();
     UmpleToSQLPrimitiveMap.put("Integer","INT");
-    UmpleToSQLPrimitiveMap.put("Boolean","BIT");
+    UmpleToSQLPrimitiveMap.put("Float","FLOAT");
+    UmpleToSQLPrimitiveMap.put("Double","DOUBLE");
     UmpleToSQLPrimitiveMap.put("String","VARCHAR(255)");
-    // There are easily more primitives that could be added here
+    UmpleToSQLPrimitiveMap.put("Boolean","BIT");
+    UmpleToSQLPrimitiveMap.put("Date","DATE");
+    UmpleToSQLPrimitiveMap.put("Time","TIME");
+    
+    SQLPrimitives = new ArrayList<String>();
+    //MySQL types
+    SQLPrimitives.add("CHAR");
+    SQLPrimitives.add("VARCHAR");
+    SQLPrimitives.add("TINYTEXT");
+    SQLPrimitives.add("TEXT");
+    SQLPrimitives.add("BLOB");
+    SQLPrimitives.add("MEDIUMTEXT");
+    SQLPrimitives.add("MEDIUMBLOB");
+    SQLPrimitives.add("LONGTEXT");
+    SQLPrimitives.add("LONGBLOB");
+    SQLPrimitives.add("ENUM");
+    SQLPrimitives.add("SET");
+    SQLPrimitives.add("TINYINT");
+    SQLPrimitives.add("SMALLINT");
+    SQLPrimitives.add("MEDIUMINT");
+    SQLPrimitives.add("INT");
+    SQLPrimitives.add("BIGINT");
+    SQLPrimitives.add("FLOAT");
+    SQLPrimitives.add("DOUBLE");
+    SQLPrimitives.add("DECIMAL");
+    SQLPrimitives.add("DATE");
+    SQLPrimitives.add("DATETIME");
+    SQLPrimitives.add("TIMESTAMP");
+    SQLPrimitives.add("TIME");
+    SQLPrimitives.add("YEAR");
+    //Additional SQL Server types
+    SQLPrimitives.add("NCHAR");
+    SQLPrimitives.add("NVARCHAR");
+    SQLPrimitives.add("NTEXT");
+    SQLPrimitives.add("BIT");
+    SQLPrimitives.add("BINARY");
+    SQLPrimitives.add("VARBINARY");
+    SQLPrimitives.add("IMAGE");
+    SQLPrimitives.add("NUMERIC");
+    SQLPrimitives.add("SMALLMONEY");
+    SQLPrimitives.add("MONEY");
+    SQLPrimitives.add("REAL");
+    SQLPrimitives.add("DATETIME2");
+    SQLPrimitives.add("SMALLDATETIME");
+    SQLPrimitives.add("DATETIMEOFFSET");
+    //Other types
+    SQLPrimitives.add("SQL_VARIANT");
+    SQLPrimitives.add("UNIQUEIDENTIFIER");
+    SQLPrimitives.add("XML");
+    SQLPrimitives.add("CURSOR");
+    SQLPrimitives.add("TABLE");
   }
   
   public void prepare()
@@ -62,22 +114,136 @@ class SQLGenerator
     addRelatedImports();
   }
   
+  
+  public List<Attribute> resolvePrimaryKey(UmpleClass aClass)
+  {
+    List<Attribute> result = new ArrayList<Attribute>();
+    
+    //Check for Primary Key
+    String[] keyMembers = aClass.getKey().getMembers();
+    if (keyMembers.length > 0)
+    {
+      for (String m : keyMembers)
+      {
+        Attribute attr = aClass.getAttribute(m);
+        AssociationVariable av = aClass.getAssociationVariable(m);
+        
+        if (attr != null)
+        {
+          UmpleClass foreignClass = model.getUmpleClass(attr.getType());
+          if (foreignClass != null)
+          {
+            for (Attribute FK : resolvePrimaryKey(foreignClass))
+            {
+              result.add(attributePsudoCopy(FK, m + "_", ""));
+            }
+          }
+          else
+          {
+            result.add(attr);
+          }
+        }
+        else if (av != null && av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
+        {
+          UmpleClass foreignClass = av.getRelatedAssociation().getUmpleClass();
+          if (foreignClass != null)
+          {
+            int maxMultiplicity = av.getMultiplicity().getUpperBound();
+            List<Attribute> FK = resolvePrimaryKey(foreignClass);
+            for (int i = 1; i <= maxMultiplicity; i++)
+            {
+              for (Attribute fk : FK)
+              {
+                result.add(attributePsudoCopy(fk, m + "_", ((maxMultiplicity > 1) ? "_"+ i : "")));
+              }
+            }
+          }
+        }
+        else
+        {
+          //Error: Key name does not refer to anything.
+        }
+      }
+    }
+
+    if (result.isEmpty())
+    {
+      if (aClass.numberOfAttributes() > 0)
+      {
+        result.add(aClass.getAttribute(0));
+      }
+      else if (aClass.numberOfAssociations() > 0)
+      {
+        int maxAssoc = aClass.numberOfAssociations();
+        int i = 0;
+        while (result.isEmpty() && i < maxAssoc)
+        {
+          AssociationVariable av = aClass.getAssociationVariable(i);
+          if (av != null && av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
+          {
+            UmpleClass foreignClass = av.getRelatedAssociation().getUmpleClass();
+            if (foreignClass != null)
+            {
+              int maxMultiplicity = av.getMultiplicity().getUpperBound();
+              List<Attribute> FK = resolvePrimaryKey(foreignClass);
+              for (int p = 1; p <= maxMultiplicity; p++)
+              {
+                for (Attribute fk : FK)
+                {
+                  result.add(attributePsudoCopy(fk, foreignClass.getName() + "_", ((maxMultiplicity > 1) ? "_"+ p : "")));
+                }
+              }
+            }
+          }
+          i++;
+        }
+      }
+    }
+    
+    if (result.isEmpty())
+    {
+      //Error: Class is empty
+    }
+    return result;
+  }
+  
+  private Attribute attributePsudoCopy(Attribute a, String prefix, String suffix)
+  {
+    Attribute aCopy = new Attribute(prefix + a.getName() + suffix, a.getType(), a.getModifier(), a.getValue(), a.getIsAutounique(), a.getUmpleClass());
+    aCopy.setIsList(a.getIsList());
+    aCopy.setIsDerived(a.getIsDerived());
+    aCopy.setIsLazy(a.getIsLazy());
+    return aCopy;
+  }
+  
   public String getType(UmpleVariable av)
   {
     String myType = av.getType();
     
-    if (myType == null || myType.length() == 0)
+    if (myType == null || myType.length() == 0) //No type specified.
     {
       return "BLOB";
     }
-    else if (UmpleToSQLPrimitiveMap.containsKey(myType))
+    else if (UmpleToSQLPrimitiveMap.containsKey(myType)) //Type is an Umple Primitive.
     {
       return UmpleToSQLPrimitiveMap.get(myType);
     }
-    else
+    //Check if type is an SQL primitive
+    for (String primitiveType : SQLPrimitives)
     {
-      return myType.toUpperCase();
-    }  
+      if (myType.toUpperCase().equals(primitiveType) || (myType.toUpperCase().startsWith(primitiveType + "(") && myType.endsWith(")")))
+      {
+        return primitiveType + myType.substring(primitiveType.length());
+      }
+    }
+    //Check if type is that of another class.
+    if (av instanceof AssociationVariable)
+    {
+      //What to do in this case?
+    }
+    
+    //Unknown type
+    return "BLOB";
   }
   
   public boolean isNullable(UmpleVariable av)
@@ -108,12 +274,15 @@ class SQLGenerator
   
   public String translate(String name, UmpleInterface aInterface)
   {
-    if ("packageDefinition".equals(name))
+    String result = "";
+    if ("packageDefinition".equals(name) && aInterface.getPackageName().length() > 0)
     {
       String moduleName = StringFormatter.toUnderscore(aInterface.getPackageName());
-      return aInterface.getPackageName().length() == 0 ? "" : "CREATE DATABASE `" + moduleName +"`;"; 
-      }
-    return "";
+      result += "CREATE DATABASE IF NOT EXISTS `" + moduleName +"`;\n";
+      result += "USE `" + moduleName +"`;";
+      return result;
+    }
+    return result;
   }
   
   public String translate(String name, UmpleClass aClass)
@@ -130,11 +299,11 @@ class SQLGenerator
     else if ("packageDefinition".equals(name))
     {
       String moduleName = StringFormatter.toUnderscore(aClass.getPackageName());
-      return aClass.getPackageName().length() == 0 ? "" : "CREATE DATABASE `" + moduleName +"`;"; 
+      return aClass.getPackageName().length() == 0 ? "" : "CREATE DATABASE IF NOT EXISTS `" + moduleName +"`;\nUSE `" + moduleName +"`;";
     }
     else if ("packageDefinitionEnd".equals(name))
     {
-      return "";
+      return "\n";
     }
     else if ("type".equals(name))
     {
@@ -393,14 +562,7 @@ class SQLGenerator
   public void generate()
   {
     prepare();
-    for (UmpleElement currentElement : model.getUmpleElements())
-    {
-      if ("external".equals(currentElement.getModifier()))
-      {
-        continue;
-      }
-      writeFile(currentElement);
-    }
+    writeFile();
     GeneratorHelper.postpare(model);
   }
 
@@ -446,12 +608,10 @@ class SQLGenerator
     }
   }
   
-  private void writeFile(UmpleElement aElement)
+  private void writeFile()
   {
-    try
+    try //Output all elements in a single file
     {
-      ILang language = getLanguageFor(aElement);
-      
       String path = StringFormatter.addPathOrAbsolute( 
     						  model.getUmpleFile().getPath(), 
         	                  getOutput());
@@ -459,11 +619,28 @@ class SQLGenerator
       File file = new File(path);
       file.mkdirs();
 
-      String rubyName = StringFormatter.toUnderscore(aElement.getName()) + ".sql";
-      String filename = path + File.separator + rubyName;
+      String sqlName = model.getUmpleFile().getFileName();
+      if (sqlName.endsWith(".ump"))
+      {
+        sqlName = sqlName.substring(0, sqlName.length() - 4);
+      }
+      String filename = path + File.separator + sqlName + ".sql";
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-      String contents = language.getCode(model, aElement);
-      model.getGeneratedCode().put(aElement.getName(),contents);
+      String contents = "";
+      
+      for (UmpleElement currentElement : model.getUmpleElements())
+      {
+        ILang language = getLanguageFor(currentElement);
+        
+        if ("external".equals(currentElement.getModifier()))
+        {
+          continue;
+        }
+        String elementContents = language.getCode(model, currentElement);
+        model.getGeneratedCode().put(currentElement.getName(),elementContents);
+        contents += elementContents;
+      }
+      
       bw.write(contents);
       bw.flush();
       bw.close();

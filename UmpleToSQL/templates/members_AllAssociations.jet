@@ -1,16 +1,18 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-  /*
-   This class needs a lot of work, for every possible association type,
-   a relationship between the different tables must be established.
-   
-   You may want to break these into separate files as the other projects do, 
-   I.e:
-    association_ManyToOne.jet
-    association_MNToMany.jet 
-    etc...
-  */
+
+/*
+This file creates the necessary attributes that the class will need for a successful foreign key to another class (association)
+It creates local copies of the foreign class' private key attributes. 
+Note: The foreign key constraint is not defined here, as the associated class may not be defined yet. See the members_AllForeignKeys.jet file for those.
+*/
+  appendln(stringBuffer, "");
+  appendln(stringBuffer, "  /*------------------------*/");
+  appendln(stringBuffer, "  /* MEMBER VARIABLES       */");
+  appendln(stringBuffer, "  /*------------------------*/");
+  
   isFirst = true;
+  
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
     if (!av.getIsNavigable())
@@ -20,36 +22,27 @@
     
     String attribute = av.isOne() ? gen.translate("attributeOne",av) : gen.translate("attributeMany",av);
  
-    if (isFirst)
-    {
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      appendln(stringBuffer,"  /*{0} Associations*/", gen.translate("type", uClass));
-      isFirst = false;
-    }
-    
-    if (av.isN() || av.isMandatoryOne())
+    if (av.isOptionalOne() || av.isOnlyOne() || av.isN())
     { 
+      if (isFirst)
+      {
+        appendln(stringBuffer, "");
+        appendln(stringBuffer,"  /*{0} Associations*/", gen.translate("type", uClass));
+        isFirst = false;
+      }
       UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
-      for(int i = 0; i < av.getMultiplicity().getUpperBound(); i += 1)
+      List<Attribute> foreignPKList = gen.resolvePrimaryKey(associatedUClass);
+      for(int i = 1; i <= av.getMultiplicity().getUpperBound(); i += 1)
       { 
-	    for(String foreignPrimaryKeyName : associatedUClass.getKey().getMembers())
+	    for(Attribute foreignPK : foreignPKList)
 	    {
-	      Attribute foreignPK = associatedUClass.getAttribute(foreignPrimaryKeyName);
-	      if (foreignPK == null) //Check if the given key is a constant.
-  	      {
-  	        append(stringBuffer, "/*Warning: Constant attribute in associated class' Primary Key*/ ");
-  	      }
-  	      else
-  	      {
-	        appendln(stringBuffer, "  {0}_{1}{2} {3},", gen.translate("type", associatedUClass),
-	                                                    gen.translate("attributeOne", foreignPK), 
-	                                                    av.isN() ? "_" + i : "", 
-	                                                    gen.translate("type", foreignPK));
-	      }
+	      appendln(stringBuffer, "  {0}_{1}{2} {3}{4},", gen.translate("type", associatedUClass),
+	                                                       gen.translate("attributeOne", foreignPK), 
+	                                                       av.isN() ? "_" + i : "", 
+	                                                       gen.translate("type", foreignPK),
+	                                                       av.isN() ? " NOT NULL" : "");
 	    }
       }
     }
-    
   }
 %>

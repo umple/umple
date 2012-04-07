@@ -1,15 +1,11 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
   
-  // SQL doesn't have a notion of a static 'member' or variable,
-  // however, it may be useful to document static members in the code
-  // so this template has been left as is.
+  /*
+  This file declares constant attributes for tables. 
+  The "constant" requirement is enforced with a check statement.
+  */
   
-  if (uClass.getIsSingleton())
-  {
-    append(stringBuffer, "  include Singleton");
-  }
-
   isFirst = true;
   for(Attribute av : uClass.getAttributes())
   {
@@ -22,14 +18,10 @@
     if (isFirst)
     {
       appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "  /*-----------------------*/");
-      appendln(stringBuffer, "  /* STATIC VARIABLES      */");
-      appendln(stringBuffer, "  /*-----------------------*/");
+      appendln(stringBuffer,"  /*{0} Constants*/", gen.translate("type", uClass));      
       isFirst = false;
     }
   
-    appendln(stringBuffer, "");
     appendln(stringBuffer, "  {0} {1} DEFAULT '{2}' CHECK ({1} = '{2}'),", gen.translate("attributeConstant",av), gen.translate("type",av), gen.translate("parameterValue",av));
   }
   
