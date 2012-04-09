@@ -66,7 +66,7 @@ autouniqueAttribute- : [=autounique] [name] ;
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
 
-// Keys are used to define quality and hash codes, plus SQL keys.
+// Keys are used to define quality and hash codes, plus Sql keys.
 // See user manual page [*KeysforEqualityandHashing*]
 defaultKey : key { }
 key : key { [keyId] ( , [keyId] )* }

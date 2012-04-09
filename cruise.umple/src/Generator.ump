@@ -198,7 +198,7 @@ class RubyGenerator
   String output = "";
 }
 
-class SQLGenerator
+class SqlGenerator
 {
   isA CodeGenerator;
   isA CodeTranslator;
@@ -223,4 +223,4 @@ use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodePhp.ump;
 use Generator_CodeCpp.ump;
-use Generator_CodeSQL.ump;
+use Generator_CodeSql.ump;

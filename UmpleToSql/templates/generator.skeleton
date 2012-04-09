@@ -1,0 +1,26 @@
+@SuppressWarnings("unused")
+public class CLASS implements ILang 
+{
+
+  // Add a newline to the end of the input
+  private void appendln(StringBuffer buffer, String input, Object... variables)
+  {
+    append(buffer, input + "\n", variables);
+  }  
+
+  // This method will be used to append formatted strings
+  // i.e. format("Hello {0} {1}", "andrew","forward");
+  private void append(StringBuffer buffer, String input, Object... variables)
+  {
+    buffer.append(StringFormatter.format(input,variables));
+  }
+
+  /* 
+  * This method will return the generated code.
+  */
+  public String getCode(UmpleModel model, UmpleElement uElement)
+  {
+    return "";
+  }
+
+}

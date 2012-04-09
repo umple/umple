@@ -1155,6 +1155,18 @@ public class UmpleClass extends UmpleElement
     return new Event(aName);
   }
 
+  public StateMachine getStateMachine(String name)
+  {
+    for (StateMachine sm : stateMachines)
+    {
+      if (sm.getName().equals(name))
+      {
+        return sm;
+      }
+    }
+    return null;
+  }
+
   public void addReferencedPackage(String aNamespace)
   {
     if (indexOfNamespace(aNamespace) == -1 && !aNamespace.equals(getPackageName()))

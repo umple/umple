@@ -1,0 +1,23 @@
+-- PLEASE DO NOT EDIT THIS CODE
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+CREATE DATABASE IF NOT EXISTS `example`;
+USE `example`;
+
+CREATE TABLE IF NOT EXISTS `example`.`my_driver`
+(
+  /*------------------------*/
+  /* MEMBER VARIABLES       */
+  /*------------------------*/
+
+  /*my_driver Associations*/
+  my_subordinate_number VARCHAR(255),
+  
+  /*my_driver Attributes*/
+  name VARCHAR(255),
+  PRIMARY KEY(name)
+
+);
+
+
+ALTER TABLE `example`.`my_driver` ADD CONSTRAINT `fk_my_subordinate_number` FOREIGN KEY (`my_subordinate_number`) REFERENCES `example`.`my_subordinate`(`number`);
