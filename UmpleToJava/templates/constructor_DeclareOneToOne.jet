@@ -63,6 +63,11 @@
       hasBody = true;
       %><%@ include file="constructor_AssociationCreateOneToOne.jet"%><%
     }
+    else if ((av.isMN() || av.isN()) && (relatedAssociation.isMandatory() || relatedAssociation.isOptionalN()))
+    {
+      hasBody = true;
+      %><%@ include file="constructor_AssociationAssignOptionalMany.jet"%><%
+    }
     else
     {
       hasBody = true;

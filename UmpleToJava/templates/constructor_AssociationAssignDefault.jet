@@ -5,7 +5,11 @@
     continue;
   }
 
-  if (av.isOptionalMany())
+  if (av.isOnlyOne())
+  {
+    %><%@ include file="constructor_AssociationAssignOne.jet" %><%
+  }
+  else if (av.isOptionalMany())
   {
     appendln(stringBuffer,"");
     append(stringBuffer, "    {0} = new ArrayList<{1}>();", gen.translate("associationMany",av), gen.getType(av));

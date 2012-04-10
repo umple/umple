@@ -166,11 +166,6 @@
       hasBody = true;
       %><%@ include file="constructor_AssociationAssignOptionalMany.jet"%><%
     }
-    else if (av.isOnlyOne())
-    {
-      hasBody = true;
-      %><%@ include file="constructor_AssociationAssignOne.jet"%><%
-    }
     else
     {
       %><%@ include file="constructor_AssociationAssignDefault.jet"%><%

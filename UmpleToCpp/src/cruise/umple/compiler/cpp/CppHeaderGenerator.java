@@ -364,7 +364,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_344 = ");";
   protected final String TEXT_345 = NL + "  ";
   protected final String TEXT_346 = " ";
-  protected final String TEXT_347 = NL + " bool equals(Object obj);" + NL + " int hashCode();" + NL + " %>";
+  protected final String TEXT_347 = NL + " bool equals(Object obj);" + NL + " int hashCode();" + NL;
   protected final String TEXT_348 = NL + "  private void ";
   protected final String TEXT_349 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
   protected final String TEXT_350 = NL + "       ";
