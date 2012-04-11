@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `example`.`my_subordinate`
   /*------------------------*/
 
   /*my_subordinate Associations*/
-  my_driver_name VARCHAR(255) NOT NULL,
+  my_driver_name VARCHAR(255),
   
   /*my_subordinate Attributes*/
   number VARCHAR(255),

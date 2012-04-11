@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS `example`.`mentor`
   /*------------------------*/
 
   /*mentor Associations*/
-  student_number_1 VARCHAR(255) NOT NULL,
-  student_number_2 VARCHAR(255) NOT NULL,
-  student_number_3 VARCHAR(255) NOT NULL,
+  student_number_1 VARCHAR(255),
+  student_number_2 VARCHAR(255),
+  student_number_3 VARCHAR(255),
   
   /*mentor Attributes*/
   name VARCHAR(255),

@@ -116,11 +116,10 @@ Note: The foreign key constraint is not defined here, as the associated class ma
       { 
 	    for(Attribute foreignPK : foreignPKList)
 	    {
-	      appendln(stringBuffer, "  {0}_{1}{2} {3}{4},", gen.translate("type", associatedUClass),
+	      appendln(stringBuffer, "  {0}_{1}{2} {3},", gen.translate("type", associatedUClass),
 	                                                     gen.translate("attributeOne", foreignPK), 
 	                                                     av.isN() ? "_" + i : "", 
-	                                                     gen.translate("type", foreignPK),
-	                                                     av.isOptionalOne() ? "" : " NOT NULL");
+	                                                     gen.translate("type", foreignPK));
 	    }
       }
     }
