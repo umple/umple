@@ -1,0 +1,8 @@
+class MentorA {}
+
+class MentorB {}
+
+class Student {
+  * -- 1 MentorA mentor;
+  2 -- * MentorB mentor;
+}

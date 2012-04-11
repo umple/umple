@@ -80,9 +80,9 @@ public class Mentor
       Course existingMain = main;
       main = null;
       
-      if (existingMain != null && existingMain.getMentor() != null)
+      if (existingMain != null && existingMain.getMentorMain() != null)
       {
-        existingMain.setMentor(null);
+        existingMain.setMentorMain(null);
       }
       wasSet = true;
       return wasSet;
@@ -91,15 +91,15 @@ public class Mentor
     Course currentMain = getMain();
     if (currentMain != null && !currentMain.equals(newMain))
     {
-      currentMain.setMentor(null);
+      currentMain.setMentorMain(null);
     }
 
     main = newMain;
-    Mentor existingMentor = newMain.getMentor();
+    Mentor existingMentorMain = newMain.getMentorMain();
 
-    if (!equals(existingMentor))
+    if (!equals(existingMentorMain))
     {
-      newMain.setMentor(this);
+      newMain.setMentorMain(this);
     }
     wasSet = true;
     return wasSet;
@@ -115,14 +115,14 @@ public class Mentor
     boolean wasAdded = false;
     if (!canSetSecondaries) { return false; }
     if (secondaries.contains(aSecondary)) { return false; }
-    Mentor existingMentor = aSecondary.getMentor();
-    if (existingMentor == null)
+    Mentor existingMentorSecondary = aSecondary.getMentorSecondary();
+    if (existingMentorSecondary == null)
     {
-      aSecondary.setMentor(this);
+      aSecondary.setMentorSecondary(this);
     }
-    else if (!this.equals(existingMentor))
+    else if (!this.equals(existingMentorSecondary))
     {
-      existingMentor.removeSecondary(aSecondary);
+      existingMentorSecondary.removeSecondary(aSecondary);
       addSecondary(aSecondary);
     }
     else
@@ -140,7 +140,7 @@ public class Mentor
     if (secondaries.contains(aSecondary))
     {
       secondaries.remove(aSecondary);
-      aSecondary.setMentor(null);
+      aSecondary.setMentorSecondary(null);
       wasRemoved = true;
     }
     return wasRemoved;
@@ -217,11 +217,11 @@ public class Mentor
   {
     if (main != null)
     {
-      main.setMentor(null);
+      main.setMentorMain(null);
     }
     for(Course aSecondary : secondaries)
     {
-      aSecondary.setMentor(null);
+      aSecondary.setMentorSecondary(null);
     }
   }
 

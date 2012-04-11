@@ -6,7 +6,7 @@ class Central
   * -- * D;
   * -- * E;
   * -- * F f1;
-  * -- * F f2;
+  * ct -- * F f2;
   * -- * G;
   * -- * H;
 }
@@ -14,9 +14,9 @@ class Central
 class A
 {
   * -- * A ref1;
-  * -- * A ref2;
-  * -- * A ref3;
-  * -- * A ref4;
+  * a2 -- * A ref2;
+  * a3 -- * A ref3;
+  * a4 -- * A ref4;
 }
 
 class B

@@ -1588,6 +1588,15 @@ public class UmpleParserTest
   }
   
   @Test
+  public void duplicateAssociationNames()
+  {
+    assertFailedParse("024_multipleUnnamedAssociationsToSameClass.ump", new Position("024_multipleUnnamedAssociationsToSameClass.ump",7,0,97), 19);
+    assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",9,0,104), 19);
+    
+    assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
+  }
+  
+  @Test
   public void commentsBeforeClasses()
   {
     assertParse("400_commentsBeforeClasses.ump");

@@ -1,0 +1,8 @@
+class TestClass
+{
+  * -> 3..5 OtherClass othersOne;
+  * -> 1..3 OtherClass othersTwo;
+}
+
+class OtherClass
+{}

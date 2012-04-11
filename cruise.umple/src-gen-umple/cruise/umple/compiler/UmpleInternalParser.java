@@ -625,6 +625,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       addUnlinkedAssociationVariables();
       addUnlinkedAssociations();
       addUnlinkedExtends();
+      checkDuplicateAssociationNames();
       checkExtendsForCycles();
     }
   }
@@ -1120,6 +1121,59 @@ private void analyzeClassToken(Token t, int analysisStep)
             getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
           else
             getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),C.getName()));
+        }
+      }
+    }
+  }
+  
+  private void checkDuplicateAssociationNames()
+  {
+    for(UmpleClass C : model.getUmpleClasses())
+    {
+      List<String> existingNames = new ArrayList<String>();
+      List<Association> visitedAssociations = new ArrayList<Association>();
+      for(Association assoc : C.getAssociations())
+      {
+        if (visitedAssociations.contains(assoc))
+        {
+          continue;
+        }
+        
+      	AssociationEnd firstEnd = assoc.getEnd(0);
+      	AssociationEnd secondEnd = assoc.getEnd(1);
+      	
+      	Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
+      	Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
+      	Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
+      	
+      	// check names on other-class end of associations to other classes
+        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
+        {
+          if (existingNames.contains(firstEnd.getRoleName()))
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+          }
+          else
+          {
+            existingNames.add(firstEnd.getRoleName());
+          }
+        }
+        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
+        {
+          if (existingNames.contains(secondEnd.getRoleName()))
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+          }
+          else
+          {
+            existingNames.add(secondEnd.getRoleName());
+          }
+        }
+        
+        if (associationIsReflexive)
+        { 
+          // The UmpleClass is only expected to have duplicate references to reflexive associations
+          visitedAssociations.add(assoc);
         }
       }
     }

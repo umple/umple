@@ -18,6 +18,7 @@
 16: 1, http://manual.umple.org, Immutability rules prevent class '{0}' from subclassing '{1}' ;
 17: 2, http://umple.org/E013NonImmutableAssociation.html, Two-way associations may not be immutable ;
 18: 2, http://manual.umple.org, Reflexive immutable associations may not be mandatory ;
+19: 2, http://manual.umple.org, Class '{0}' may not have multiple associations with the same name '{1}' ;
 1002: 5, http://manual.umple.org, Embedded method with code or unparsed code found when strictness is ModelOnly '{0}' ;
 1003: 5, http://manual.umple.org, Unparsed extra code found when strictness is NoExtraCode '{0}' ;
 1004: 5, http://manual.umple.org, Expected message '{0}' found ;

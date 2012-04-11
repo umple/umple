@@ -89,9 +89,9 @@ class Mentor
       $existingMain = $this->main;
       $this->main = null;
       
-      if ($existingMain != null && $existingMain->getMentor() != null)
+      if ($existingMain != null && $existingMain->getMentorMain() != null)
       {
-        $existingMain->setMentor(null);
+        $existingMain->setMentorMain(null);
       }
       $wasSet = true;
       return $wasSet;
@@ -100,15 +100,15 @@ class Mentor
     $currentMain = $this->getMain();
     if ($currentMain != null && $currentMain != $newMain)
     {
-      $currentMain->setMentor(null);
+      $currentMain->setMentorMain(null);
     }
     
     $this->main = $newMain;
-    $existingMentor = $newMain->getMentor();
+    $existingMentorMain = $newMain->getMentorMain();
     
-    if ($this != $existingMentor)
+    if ($this != $existingMentorMain)
     {
-      $newMain->setMentor($this);
+      $newMain->setMentorMain($this);
     }
     $wasSet = true;
     return $wasSet;
@@ -124,14 +124,14 @@ class Mentor
     $wasAdded = false;
     if (!$this->canSetSecondaries) { return false; }
     if ($this->indexOfSecondary($aSecondary) !== -1) { return false; }
-    $existingMentor = $aSecondary->getMentor();
-    if ($existingMentor == null)
+    $existingMentorSecondary = $aSecondary->getMentorSecondary();
+    if ($existingMentorSecondary == null)
     {
-      $aSecondary->setMentor($this);
+      $aSecondary->setMentorSecondary($this);
     }
-    elseif ($this !== $existingMentor)
+    elseif ($this !== $existingMentorSecondary)
     {
-      $existingMentor->removeSecondary($aSecondary);
+      $existingMentorSecondary->removeSecondary($aSecondary);
       $this->addSecondary($aSecondary);
     }
     else
@@ -150,9 +150,9 @@ class Mentor
     {
       unset($this->secondaries[$this->indexOfSecondary($aSecondary)]);
       $this->secondaries = array_values($this->secondaries);
-      if ($this === $aSecondary->getMentor())
+      if ($this === $aSecondary->getMentorSecondary())
       {
-        $aSecondary->setMentor(null);
+        $aSecondary->setMentorSecondary(null);
       }
       $wasRemoved = true;
     }
@@ -210,11 +210,11 @@ class Mentor
   {
     if ($this->main != null)
     {
-      $this->main->setMentor(null);
+      $this->main->setMentorMain(null);
     }
     foreach ($this->secondaries as $aSecondary)
     {
-      $aSecondary->setMentor(null);
+      $aSecondary->setMentorSecondary(null);
     }
   }
 

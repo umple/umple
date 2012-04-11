@@ -14,8 +14,8 @@ class Student
 
 class Mentor
 {
-  0..1 -- 0..1 Course main;
-  0..1 -- * Course secondaries;
+  0..1 mentorMain -- 0..1 Course main;
+  0..1 mentorSecondary -- * Course secondaries;
   
   key { main, secondaries }
 }
