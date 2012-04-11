@@ -34,3 +34,51 @@ class ConstructorManyClass
   * -> 3..5 Otherclass othersOne;
   * -> 1..3 Otherclass othersTwo;
 }
+
+class GradStudentAN
+{
+}
+
+class MentorAN
+{
+  name;
+  1 -- 1 GradStudentAN gradStudent;
+}
+
+class StudentAN
+{
+  int number;
+  * students -- 1 MentorAN mentor;
+}
+
+class GradStudentAO
+{
+}
+
+class MentorAO
+{
+  name;
+  1 -- 1 GradStudentAO gradStudent;
+}
+
+class StudentAO
+{
+  int number;
+  2 students -- 1 MentorAO mentor;
+}
+
+class GradStudentAP
+{
+}
+
+class MentorAP
+{
+  name;
+  1 -- 1 GradStudentAP gradStudent;
+}
+
+class StudentAP
+{
+  int number;
+  1 student -- 1 MentorAP mentor;
+}
