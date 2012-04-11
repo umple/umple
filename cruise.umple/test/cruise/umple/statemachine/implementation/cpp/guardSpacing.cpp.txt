@@ -37,18 +37,18 @@ namespace example{
     return entranceClear;
   }
 
-  public String getGarageDoorFullName()
+  String Garage::getGarageDoorFullName()
   {
     String answer = GarageDoor.toString();
     return answer;
   }
 
-  public GarageDoor getGarageDoor()
+  GarageDoor Garage::getGarageDoor()
   {
     return GarageDoor;
   }
 
-  public boolean pressButton()
+  bool Garage::pressButton()
   {
     boolean wasEventProcessed = false;
 
@@ -67,7 +67,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void setGarageDoor(GarageDoor aGarageDoor)
+  private void Garage::setGarageDoor(GarageDoor aGarageDoor)
   {
     GarageDoor = aGarageDoor;
   }

@@ -76,7 +76,7 @@
 
   String outputCases = allCases.toString().trim();
 %>
-  public boolean <%=gen.translate("eventMethod",e)%>()
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("eventMethod",e)%>()
   {
     boolean wasEventProcessed = false;
 

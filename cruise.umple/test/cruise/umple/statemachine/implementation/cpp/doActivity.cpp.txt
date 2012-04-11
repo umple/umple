@@ -26,18 +26,18 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getStatusFullName()
+  String Switch::getStatusFullName()
   {
     String answer = status.toString();
     return answer;
   }
 
-  public Status getStatus()
+  Status Switch::getStatus()
   {
     return status;
   }
 
-  public boolean press()
+  bool Switch::press()
   {
     boolean wasEventProcessed = false;
 
@@ -52,7 +52,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void setStatus(Status aStatus)
+  private void Switch::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -65,7 +65,7 @@ namespace example{
     }
   }
 
-  private void doActivityStatusOff()
+   void Switch::doActivityStatusOff()
   {
      try
      {

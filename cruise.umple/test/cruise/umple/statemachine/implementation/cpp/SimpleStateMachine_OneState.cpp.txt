@@ -23,18 +23,18 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getGradeFullName()
+  String Student::getGradeFullName()
   {
     String answer = grade.toString();
     return answer;
   }
 
-  public Grade getGrade()
+  Grade Student::getGrade()
   {
     return grade;
   }
 
-  public boolean setGrade(Grade aGrade)
+  bool Student::setGrade(Grade aGrade)
   {
     grade = aGrade;
     return true;

@@ -29,7 +29,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getStatusFullName()
+  String LightFixture::getStatusFullName()
   {
     String answer = status.toString();
     if (statusMotorIdle != StatusMotorIdle.Null) { answer += "." + statusMotorIdle.toString(); }
@@ -37,22 +37,22 @@ namespace example{
     return answer;
   }
 
-  public Status getStatus()
+  Status LightFixture::getStatus()
   {
     return status;
   }
 
-  public StatusMotorIdle getStatusMotorIdle()
+  StatusMotorIdle LightFixture::getStatusMotorIdle()
   {
     return statusMotorIdle;
   }
 
-  public StatusFanIdle getStatusFanIdle()
+  StatusFanIdle LightFixture::getStatusFanIdle()
   {
     return statusFanIdle;
   }
 
-  public boolean turnOn()
+  bool LightFixture::turnOn()
   {
     boolean wasEventProcessed = false;
 
@@ -67,7 +67,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  bool LightFixture::enterOn()
   {
     boolean wasEventProcessed = false;
 
@@ -90,7 +90,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean exitOn()
+  bool LightFixture::exitOn()
   {
     boolean wasEventProcessed = false;
 
@@ -121,7 +121,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean flip()
+  bool LightFixture::flip()
   {
     boolean wasEventProcessed = false;
 
@@ -140,7 +140,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean flop()
+  bool LightFixture::flop()
   {
     boolean wasEventProcessed = false;
 
@@ -159,7 +159,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void exitStatus()
+  private void LightFixture::exitStatus()
   {
     switch(status)
     {
@@ -169,7 +169,7 @@ namespace example{
     }
   }
 
-  private void setStatus(Status aStatus)
+  private void LightFixture::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -183,13 +183,13 @@ namespace example{
     }
   }
 
-  private void setStatusMotorIdle(StatusMotorIdle aStatusMotorIdle)
+  private void LightFixture::setStatusMotorIdle(StatusMotorIdle aStatusMotorIdle)
   {
     statusMotorIdle = aStatusMotorIdle;
     if (status != Status.On && aStatusMotorIdle != StatusMotorIdle.Null) { setStatus(Status.On); }
   }
 
-  private void setStatusFanIdle(StatusFanIdle aStatusFanIdle)
+  private void LightFixture::setStatusFanIdle(StatusFanIdle aStatusFanIdle)
   {
     statusFanIdle = aStatusFanIdle;
     if (status != Status.On && aStatusFanIdle != StatusFanIdle.Null) { setStatus(Status.On); }

@@ -21,13 +21,13 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getStatusFullName()
+  String Mentor::getStatusFullName()
   {
     String answer = status.toString();
     return answer;
   }
 
-  public Status getStatus()
+  Status Mentor::getStatus()
   {
     return status;
   }

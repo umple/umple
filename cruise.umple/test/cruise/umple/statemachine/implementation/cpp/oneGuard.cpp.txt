@@ -37,18 +37,18 @@ namespace example{
     return brightness;
   }
 
-  public String getBulbFullName()
+  String LightFixture::getBulbFullName()
   {
     String answer = bulb.toString();
     return answer;
   }
 
-  public Bulb getBulb()
+  Bulb LightFixture::getBulb()
   {
     return bulb;
   }
 
-  public boolean push()
+  bool LightFixture::push()
   {
     boolean wasEventProcessed = false;
 
@@ -67,7 +67,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void setBulb(Bulb aBulb)
+  private void LightFixture::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
   }

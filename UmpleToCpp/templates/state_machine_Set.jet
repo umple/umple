@@ -77,7 +77,7 @@
   }
 %>
 <% if (hasExit) { %>
-  private void <%=gen.translate("exitMethod",sm)%>()
+  private void <%=gen.translate("type",uClass)%>::<%=gen.translate("exitMethod",sm)%>()
   {
     switch(<%= gen.translate("stateMachineOne",sm) %>)
     {
@@ -86,7 +86,7 @@
   }
 
 <% } %>
-  private void <%=gen.translate("setMethod",sm)%>(<%= gen.translate("type",sm) %> <%= gen.translate("parameterOne",sm) %>)
+  private void <%=gen.translate("type",uClass)%>::<%=gen.translate("setMethod",sm)%>(<%= gen.translate("type",sm) %> <%= gen.translate("parameterOne",sm) %>)
   {
     <%= gen.translate("stateMachineOne",sm) %> = <%= gen.translate("parameterOne",sm) %>;
 <% if (parentState != null) { %>

@@ -38,18 +38,18 @@ namespace example{
     return howLongUntilOk;
   }
 
-  public String getStatusFullName()
+  String Mentor::getStatusFullName()
   {
     String answer = status.toString();
     return answer;
   }
 
-  public Status getStatus()
+  Status Mentor::getStatus()
   {
     return status;
   }
 
-  public boolean timeoutOkToNotOk()
+  bool Mentor::timeoutOkToNotOk()
   {
     boolean wasEventProcessed = false;
 
@@ -65,7 +65,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean timeoutNotOkayToOk()
+  bool Mentor::timeoutNotOkayToOk()
   {
     boolean wasEventProcessed = false;
 
@@ -81,7 +81,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void exitStatus()
+  private void Mentor::exitStatus()
   {
     switch(status)
     {
@@ -94,7 +94,7 @@ namespace example{
     }
   }
 
-  private void setStatus(Status aStatus)
+  private void Mentor::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -110,22 +110,22 @@ namespace example{
     }
   }
 
-  private void startTimeoutOkToNotOkHandler()
+  void Mentor::startTimeoutOkToNotOkHandler()
   {
     timeoutOkToNotOkHandler = new TimedEventHandler(this,"timeoutOkToNotOk",4);
   }
 
-  private void stopTimeoutOkToNotOkHandler()
+  void Mentor::stopTimeoutOkToNotOkHandler()
   {
     timeoutOkToNotOkHandler.stop();
   }
 
-  private void startTimeoutNotOkayToOkHandler()
+  void Mentor::startTimeoutNotOkayToOkHandler()
   {
     timeoutNotOkayToOkHandler = new TimedEventHandler(this,"timeoutNotOkayToOk",howLongUntilOk);
   }
 
-  private void stopTimeoutNotOkayToOkHandler()
+  void Mentor::stopTimeoutNotOkayToOkHandler()
   {
     timeoutNotOkayToOkHandler.stop();
   }
@@ -146,14 +146,14 @@ namespace example{
       timer.schedule(this, (long)howLongInSeconds*1000);
     }
     
-    public void stop()
+    public void Mentor::stop()
     {
       timer.cancel();
     }
     
-    public void run ()
+    public void Mentor::run ()
     {
-      if ("timeoutOkToNotOk".equals(timeoutMethodName))
+      if ("timeoutOkToNotOk" == timeoutMethodName)
       {
         boolean shouldRestart = !controller.timeoutOkToNotOk();
         if (shouldRestart)
@@ -162,7 +162,7 @@ namespace example{
         }
         return;
       }
-      if ("timeoutNotOkayToOk".equals(timeoutMethodName))
+      if ("timeoutNotOkayToOk" == timeoutMethodName)
       {
         boolean shouldRestart = !controller.timeoutNotOkayToOk();
         if (shouldRestart)

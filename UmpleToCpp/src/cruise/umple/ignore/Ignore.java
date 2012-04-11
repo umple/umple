@@ -13,7 +13,7 @@ public class Ignore
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "      if (\"";
-  protected final String TEXT_2 = "\".equals(timeoutMethodName))" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
+  protected final String TEXT_2 = "\" == timeoutMethodName)" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
   protected final String TEXT_3 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
   protected final String TEXT_4 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
 

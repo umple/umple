@@ -26,24 +26,24 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getBulbFullName()
+  String LightFixture::getBulbFullName()
   {
     String answer = bulb.toString();
     if (bulbOn != BulbOn.Null) { answer += "." + bulbOn.toString(); }
     return answer;
   }
 
-  public Bulb getBulb()
+  Bulb LightFixture::getBulb()
   {
     return bulb;
   }
 
-  public BulbOn getBulbOn()
+  BulbOn LightFixture::getBulbOn()
   {
     return bulbOn;
   }
 
-  public boolean flip()
+  bool LightFixture::flip()
   {
     boolean wasEventProcessed = false;
 
@@ -63,7 +63,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean enterOn()
+  bool LightFixture::enterOn()
   {
     boolean wasEventProcessed = false;
 
@@ -78,7 +78,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean exitOn()
+  bool LightFixture::exitOn()
   {
     boolean wasEventProcessed = false;
 
@@ -97,7 +97,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  public boolean touch()
+  bool LightFixture::touch()
   {
     boolean wasEventProcessed = false;
 
@@ -116,7 +116,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void exitBulb()
+  private void LightFixture::exitBulb()
   {
     switch(bulb)
     {
@@ -126,7 +126,7 @@ namespace example{
     }
   }
 
-  private void setBulb(Bulb aBulb)
+  private void LightFixture::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
 
@@ -139,7 +139,7 @@ namespace example{
     }
   }
 
-  private void setBulbOn(BulbOn aBulbOn)
+  private void LightFixture::setBulbOn(BulbOn aBulbOn)
   {
     bulbOn = aBulbOn;
     if (bulb != Bulb.On && aBulbOn != BulbOn.Null) { setBulb(Bulb.On); }

@@ -23,18 +23,18 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getLightFullName()
+  String LightFixture::getLightFullName()
   {
     String answer = light.toString();
     return answer;
   }
 
-  public Light getLight()
+  Light LightFixture::getLight()
   {
     return light;
   }
 
-  public boolean flip()
+  bool LightFixture::flip()
   {
     boolean wasEventProcessed = false;
 
@@ -53,7 +53,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void setLight(Light aLight)
+  private void LightFixture::setLight(Light aLight)
   {
     light = aLight;
   }

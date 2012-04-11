@@ -23,18 +23,18 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getBulbFullName()
+  String LightFixture::getBulbFullName()
   {
     String answer = bulb.toString();
     return answer;
   }
 
-  public Bulb getBulb()
+  Bulb LightFixture::getBulb()
   {
     return bulb;
   }
 
-  public boolean push()
+  bool LightFixture::push()
   {
     boolean wasEventProcessed = false;
 
@@ -50,7 +50,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void exitBulb()
+  private void LightFixture::exitBulb()
   {
     switch(bulb)
     {
@@ -60,7 +60,7 @@ namespace example{
     }
   }
 
-  private void setBulb(Bulb aBulb)
+  private void LightFixture::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
   }

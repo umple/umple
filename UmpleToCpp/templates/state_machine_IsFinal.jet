@@ -13,7 +13,7 @@
   }
   String outputAsString = output.toString();
 %>
-  private boolean <%=gen.translate("isFinalMethod",sm)%>()
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("isFinalMethod",sm)%>()
   {
     return <%= outputAsString %>;
   }

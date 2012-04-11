@@ -23,18 +23,18 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  public String getBulbFullName()
+  String Light::getBulbFullName()
   {
     String answer = bulb.toString();
     return answer;
   }
 
-  public Bulb getBulb()
+  Bulb Light::getBulb()
   {
     return bulb;
   }
 
-  public boolean flip()
+  bool Light::flip()
   {
     boolean wasEventProcessed = false;
 
@@ -53,7 +53,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  private void setBulb(Bulb aBulb)
+  private void Light::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
   }

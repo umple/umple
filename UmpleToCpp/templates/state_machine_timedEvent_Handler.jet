@@ -19,12 +19,12 @@
       timer.schedule(this, (long)howLongInSeconds*1000);
     }
     
-    public void stop()
+    public void <%=gen.translate("type",uClass)%>::stop()
     {
       timer.cancel();
     }
     
-    public void run ()
+    public void <%=gen.translate("type",uClass)%>::run ()
     {
 <%
   for(StateMachine sm : uClass.getStateMachines())

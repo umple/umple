@@ -15,7 +15,7 @@
   }
   String outputAsString = output.toString();
 %>
-  public <%=gen.translate("typeFull",sm)%> <%=gen.translate("getFullMethod",sm)%>()
+  <%=gen.translate("typeFull",sm)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getFullMethod",sm)%>()
   {
     String answer = <%=gen.translate("stateMachineOne",sm)%>.toString();
     <% if (outputAsString.length() > 0) { append(stringBuffer, "{0}",outputAsString); } %>
