@@ -26,8 +26,8 @@ associationDefinition : association [name]? { [[association]]* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[abstract]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]
-associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[abstract]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]
 
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not

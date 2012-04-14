@@ -455,27 +455,11 @@ public Token reset()
     } // end for loop of every line in the rule file
     return answer.toString();
   }
-
+  
+  // Output the parse tree. The code originally here has been refactored to Token class
   public StringBuffer toString(StringBuffer stringSoFar, Token currentToken)
   {
-    if ("START_TOKEN".equals(currentToken.getValue()))
-    {
-      stringSoFar.append("[" + currentToken.getName() + "]");
-    }
-    else if ("STATIC".equals(currentToken.getValue()))
-    {
-      //ignore
-    }
-    else if (!currentToken.equals(rootToken))
-    {
-      stringSoFar.append("[" + currentToken.getName() + ":" + currentToken.getValue() + "]");
-    }
-
-    for(Token subToken : currentToken.getSubTokens())
-    {
-      toString(stringSoFar,subToken);
-    }
-    return stringSoFar;
+    return currentToken.toString(stringSoFar,rootToken);
   }
 
   public int addRulesInFile(String filenameOrResourcePath)
@@ -880,11 +864,19 @@ public Token reset()
         }
         else if (inputParser.peek() != null && level == 0)
         {
+          String badWord = inputParser.peek();
+          int messageNumber = 1500;
           // Back up the textual parser to the saved index since something went wrong.
           restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
 
           // Since there was a critical error, store an error message in the parsing result.
-          parseResult.addErrorMessage(new ErrorMessage(0, _curParsePos, "ParserError"));
+          if("generate".equals(badWord) || "use".equals(badWord) || "strictness".equals(badWord) || "traceType".equals(badWord)) {
+            messageNumber=1501;
+          }
+          else if("class".equals(badWord) || "association".equals(badWord) || "interface".equals(badWord) || "external".equals(badWord) || "associationClass".equals(badWord) || "stateMachine".equals(badWord)) {
+            messageNumber=1502;
+          }
+          parseResult.addErrorMessage(new ErrorMessage(messageNumber, _curParsePos, badWord));
 
           return false;
         }

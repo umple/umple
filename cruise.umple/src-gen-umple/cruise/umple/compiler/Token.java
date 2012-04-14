@@ -388,4 +388,34 @@ public void addSubToken(int index, Token aSubToken)
     }
     subTokens.remove(index);
   }
+
+  public String toString()
+  {
+    StringBuffer answer = new StringBuffer();
+    toString(answer,null);
+    return answer.toString();
+  }
+
+  // Code refactored from Parser class to Token class
+  public StringBuffer toString(StringBuffer stringSoFar, Token parserRoot)
+  {
+    if ("START_TOKEN".equals(getValue()))
+    {
+      stringSoFar.append("[" + getName() + "]");
+    }
+    else if ("STATIC".equals(getValue()))
+    {
+      //ignore
+    }
+    else if (parserRoot == null || !this.equals(parserRoot))
+    {
+      stringSoFar.append("[" + getName() + ":" + getValue() + "]");
+    }
+
+    for(Token subToken : getSubTokens())
+    {
+      subToken.toString(stringSoFar,null);
+    }
+    return stringSoFar;
+  }
 }

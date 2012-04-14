@@ -13,22 +13,17 @@
 // as well as in states.
 precondition : [ ([name]? pre:) ([[constraint]]) ]
 postcondition : [ ([name]? post:) ([[constraint]]) ]
+
 invariant : [ ([name] :)? ([[constraint]]) ]
 
 // A constraint is an expression optionally be surrounded in round brackets or negated
-constraint- : [[constraintBody]] | OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET | ! ([[constraintBody]]) | ! OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET
+constraint- :  [[negativeConstraint]] | OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[constraintBody]]
+
+negativeConstraint : ! OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET | ! [[constraintBody]]
 
 // A constraint body is a Boolean constraint value or a constraint expression
-constraintBody- : [[constraintVal]] | [[constraintExpr]]
+// constraintBody : [[constraintVal]] | [[constraintExpr]]
+constraintBody : [constraintVal]
 
-// A constraint value is an attribute (for now) or built-in function
-// (currently 'length' or 'match') operating on a string attribute
-constraintVal- : [attributeOrConst] | [attributeName] . [methodCall]
 
-methodCall : [methodName] [[concreteArgs]] || [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
-
-concreteArgs | OPEN_ROUND_BRACKET [**functionArg] CLOSE_ROUND_BRACKET
-
-// A constraint expression can be a boolean operation or a disjunction or 
-// conjunction of constraints
-constraintExpr : [[constraintVal]] [=boolop:>=|>|!=|==|<=|<] [[constraintVal]] | [[constraint]] [=||] [[constraint]] | [[constraint]] [=&&] [[constraint]]
+// NOTE: Additional grammar parts deleted while testing is ongoing.

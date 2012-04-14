@@ -65,6 +65,7 @@ class UmpleInternalParser
     addRulesInFile("/umple_patterns.grammar");
     addRulesInFile("/umple_state_machines.grammar");
     addRulesInFile("/umple_traces.grammar");
+    addRulesInFile("/umple_constraints.grammar");  // TODO Under development
     addRulesInFile("/umple_layout.grammar");
   }
 

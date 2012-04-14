@@ -48,6 +48,14 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private StateMachine placeholderStateMachine;
   private Map<String,Token> stateMachineNameToToken;
 
+  //UmpleInternalParser State Machines
+  enum Strictness { none, modelOnly, noExtraCode }
+  private Strictness strictness;
+
+  //UmpleInternalParser Associations
+  private List<ErrorType> messagesToExpect;
+  private List<ErrorType> warningsToIgnore;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -70,6 +78,9 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     lastComments = new ArrayList<Comment>();
     placeholderStateMachine = null;
     stateMachineNameToToken = new HashMap<String, Token>();
+    messagesToExpect = new ArrayList<ErrorType>();
+    warningsToIgnore = new ArrayList<ErrorType>();
+    setStrictness(Strictness.none);
     init();
   }
 
@@ -107,8 +118,145 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return model;
   }
 
+  public String getStrictnessFullName()
+  {
+    String answer = strictness.toString();
+    return answer;
+  }
+
+  public Strictness getStrictness()
+  {
+    return strictness;
+  }
+
+  public boolean setStrictness(Strictness aStrictness)
+  {
+    strictness = aStrictness;
+    return true;
+  }
+
+  public ErrorType getMessagesToExpect(int index)
+  {
+    ErrorType aMessagesToExpect = messagesToExpect.get(index);
+    return aMessagesToExpect;
+  }
+
+  /**
+   * List of errors or warnings to expect. It is an error if they do not occur.
+   * This is used to set up test cases for the presence of certain messages
+   */
+  public List<ErrorType> getMessagesToExpect()
+  {
+    List<ErrorType> newMessagesToExpect = Collections.unmodifiableList(messagesToExpect);
+    return newMessagesToExpect;
+  }
+
+  public int numberOfMessagesToExpect()
+  {
+    int number = messagesToExpect.size();
+    return number;
+  }
+
+  public boolean hasMessagesToExpect()
+  {
+    boolean has = messagesToExpect.size() > 0;
+    return has;
+  }
+
+  public int indexOfMessagesToExpect(ErrorType aMessagesToExpect)
+  {
+    int index = messagesToExpect.indexOf(aMessagesToExpect);
+    return index;
+  }
+
+  public ErrorType getWarningsToIgnore(int index)
+  {
+    ErrorType aWarningsToIgnore = warningsToIgnore.get(index);
+    return aWarningsToIgnore;
+  }
+
+  /**
+   * List of warnings to allow and ignore
+   * Used to suppress warnings that we do not care about
+   */
+  public List<ErrorType> getWarningsToIgnore()
+  {
+    List<ErrorType> newWarningsToIgnore = Collections.unmodifiableList(warningsToIgnore);
+    return newWarningsToIgnore;
+  }
+
+  public int numberOfWarningsToIgnore()
+  {
+    int number = warningsToIgnore.size();
+    return number;
+  }
+
+  public boolean hasWarningsToIgnore()
+  {
+    boolean has = warningsToIgnore.size() > 0;
+    return has;
+  }
+
+  public int indexOfWarningsToIgnore(ErrorType aWarningsToIgnore)
+  {
+    int index = warningsToIgnore.indexOf(aWarningsToIgnore);
+    return index;
+  }
+
+  public static int minimumNumberOfMessagesToExpect()
+  {
+    return 0;
+  }
+
+  public boolean addMessagesToExpect(ErrorType aMessagesToExpect)
+  {
+    boolean wasAdded = false;
+    if (messagesToExpect.contains(aMessagesToExpect)) { return false; }
+    messagesToExpect.add(aMessagesToExpect);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeMessagesToExpect(ErrorType aMessagesToExpect)
+  {
+    boolean wasRemoved = false;
+    if (messagesToExpect.contains(aMessagesToExpect))
+    {
+      messagesToExpect.remove(aMessagesToExpect);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public static int minimumNumberOfWarningsToIgnore()
+  {
+    return 0;
+  }
+
+  public boolean addWarningsToIgnore(ErrorType aWarningsToIgnore)
+  {
+    boolean wasAdded = false;
+    if (warningsToIgnore.contains(aWarningsToIgnore)) { return false; }
+    warningsToIgnore.add(aWarningsToIgnore);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeWarningsToIgnore(ErrorType aWarningsToIgnore)
+  {
+    boolean wasRemoved = false;
+    if (warningsToIgnore.contains(aWarningsToIgnore))
+    {
+      warningsToIgnore.remove(aWarningsToIgnore);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public void delete()
   {
+    messagesToExpect.clear();
+    warningsToIgnore.clear();
     super.delete();
   }
   
@@ -137,6 +285,7 @@ private void init()
     addRulesInFile("/umple_patterns.grammar");
     addRulesInFile("/umple_state_machines.grammar");
     addRulesInFile("/umple_traces.grammar");
+    addRulesInFile("/umple_constraints.grammar");  // TODO Under development
     addRulesInFile("/umple_layout.grammar");
   }
 
@@ -441,6 +590,11 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
       shouldConsumeComment = false;
     }
+    else if (t.is("strictness") || t.is("message"))
+    {
+      // unimplemented feature. Issue a warning that it is currently not fully implemented
+      setFailedPosition(t.getPosition(), 9999, t.getName(), t.toString());
+    }      
     else if (t.is("namespace"))
     {
       currentPackageName = t.getValue();
@@ -507,6 +661,8 @@ private void analyzeClassToken(Token t, int analysisStep)
 
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
+    
+
 
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
@@ -523,6 +679,12 @@ private void analyzeClassToken(Token t, int analysisStep)
       analyzeMultilineComment(token);
       shouldConsumeComment = false;
     }
+    // TODO Under development
+    else if (token.is("invariant"))
+    {
+      // unimplemented feature. Issue a warning that it is currently not fully implemented
+      setFailedPosition(token.getPosition(), 9999, token.getName(), token.toString());
+    }     
     else if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);

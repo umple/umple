@@ -24,7 +24,7 @@ word : [singular] : [plural] ;
 // is found, where it might not have been intended. Strictness can also be used
 // To either suppress certain messages, or to declare that they should be present.
 // NOTE: This is currently under development
-strictness- : strictness ( [=strictness:modelOnly|noExtraCode|none] | [=message:allow|expect] [messageNumber] ) ;
+strictness : strictness ( [=strictnessLevel:modelOnly|noExtraCode|none] | [=message:allow|expect] [messageNumber] ) ;
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
