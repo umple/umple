@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<h2>Umple semantic error reported when an immutable class is defined as having an association to a non-immutable class, or a two-way association.</h2>
+<h2>Umple semantic error reported when an immutable class is defined as having an association to a non-immutable class.</h2>
 
 <p>By definition, an immutable class can't change state, so it can't have an association that can change state or an association to a class that can change state.
 

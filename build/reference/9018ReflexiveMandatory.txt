@@ -1,0 +1,20 @@
+E018 Reflexive Immutable
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an immutable reflexive association is declared as having 1 at the other end</h2>
+
+<p>This is a special case of the general rule that reflexive associations must have upper bounds greater than zero.
+
+</p>
+
+
+@@example
+// The following example generates the error message
+class X {
+    immutable;
+    0..1 -> 1 X;
+}
+@@endexample

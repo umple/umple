@@ -1,0 +1,37 @@
+E017 Non Immutable Bidirectionality
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a non-directed association is declared to be immutable, or appears in an immutable class.</h2>
+
+<p>Allowing two-way associations to be immutable would be impossible since it would require change to one object when it is linked to the other, and that would break the concept of immutability.
+
+</p>
+
+
+@@example
+// The following example generates the error message
+// Change the -- to -> to solve the problem
+class Y {
+  immutable;
+  1 -- * Z;
+  isA X;
+}
+
+class Z {
+  immutable;
+  y
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}
+@@endexample

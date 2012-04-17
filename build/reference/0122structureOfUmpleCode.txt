@@ -38,13 +38,15 @@ system.</li>
 <p><b>Methods in classes</b></p>
 
 <p>Much of the code in an Umple file is processed by the Umple 
-compiler, and used to generate code (in Java, PHP or Ruby) for the final 
-system. However <i>methods</i> are treated differently: They are passed 
+compiler, and used to generate code in a 'base' or 'native' language (e.g, Java, PHP or Ruby) for the final 
+system. However <a href="MethodDefinition.html">methods</a> are treated differently: They are passed 
 through essentially unchanged to the resulting system.</p>
 
 <p>If you include methods in Umple code, you therefore have to ensure that 
 any given Umple file has methods of just one chosen target language (Java, 
-PHP, Ruby).</p>
+PHP, Ruby. etc.).</p>
+
+<p>Anything that Umple can't parse itself may be interpreted to be a method; this can result in unintended results: What you intend to be some Umple code such as an attribute or association may end up being treated as 'extra code', i.e. a method, and passed through unchanged without warning, with the result that expected functionality in the generated system is missing. You can use the <a href="StrictnessDirective.html">strictness</a> directive to force Umple to warn when this occurs; this can be particularly useful in early development, when the Umple is intended to be only a model</p>
 
 <p>The resulting system will contain many more methods than those that you 
 explicitly include. This is because one of the key points about Umple is 
