@@ -150,7 +150,7 @@ public class UmpleConsoleMain
         optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,Yuml").withRequiredArg().ofType(String.class);
         optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, ouptut will only generate language <lang>");
         optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-        optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to compile output source").withRequiredArg().ofType(String.class);
+        optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
 
         OptionSet optSet = null;
 
