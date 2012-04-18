@@ -22,7 +22,7 @@ class Y {
 
 class Z {
   immutable;
-  y
+  y;
 }//$?[End_of_model]$?
 
 class Y

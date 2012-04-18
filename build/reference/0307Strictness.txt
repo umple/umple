@@ -28,7 +28,7 @@ strictness modelOnly;
 
 // Tell the compiler that the only base language code could be in method bodies
 // Any other unparsable 'extra code' in classes will be rejected.
-strictness noExtraCode
+strictness noExtraCode;
 
 // Tell the compiler that error 25 will appear (and fail if it does not)
 strictness expect 25;
