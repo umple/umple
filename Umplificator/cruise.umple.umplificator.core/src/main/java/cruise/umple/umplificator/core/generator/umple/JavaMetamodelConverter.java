@@ -33,6 +33,7 @@ public class JavaMetamodelConverter {
 			extraCode.append(addJavaFields(unit));
 			extraCode.append(addJavaMethods(unit));
 			uClass.setExtraCode(extraCode.toString());
+			// Fix constructor and destructor
 		}
 		if (level == 1 ) {
 			setNamespace(unit);
@@ -92,26 +93,34 @@ public class JavaMetamodelConverter {
 		}
 		return content.toString();
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			logger.error("Error adding java Fields");
 		}
 		return null;
 	}
 	
 	public void addExtendedClasses(ICompilationUnit unit)
 	{
-		String superclass;
+		String superclassName= new String();
 		try {
 			IType [] types = unit.getAllTypes();
-			superclass = types[0].getSuperclassName();
-			if (superclass != null){
-				UmpleClass uParent = new  UmpleClass(superclass);
-				uClass.setExtendsClass(uParent);
+			if (types.length > 0){
+				IType type  = types[0];
+				if (type != null){
+					if (type.getSuperclassName() !=null){
+						superclassName = type.getSuperclassName();
+					}
+				}
+
+				if (superclassName.length() > 0){
+					UmpleClass uParent = new  UmpleClass(superclassName);
+					uClass.setExtendsClass(uParent);
+				}
 			}
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			logger.error("Error when resolving super class of " +unit.getElementName());
 		}
 	}
-	
+
 	
 	public void setNamespace(ICompilationUnit unit)
 	{
@@ -157,7 +166,7 @@ public class JavaMetamodelConverter {
 			String type = FieldAnalyzer.getUmpleType(field);
 			String value = FieldAnalyzer.getValue(field);
 			boolean isAutonique = false;
-			Attribute uAttribute  = new Attribute(name, type, "", value, isAutonique);
+			Attribute uAttribute  = new Attribute(name, type, "", value, isAutonique, null);
 			return uAttribute;
 		}
 		else{

@@ -1,12 +1,6 @@
 package cruise.umple.umplificator.core.generator.umple;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IImportDeclaration;
@@ -15,7 +9,6 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
@@ -114,33 +107,17 @@ public class UmpleGenerator {
 		writeFile(unit, generator.getCode(null, uClass));
 	}
 	
-/*	contents = new StringBuilder();
-	contents.append(translatePackageName(unit)+ "\n");
-	contents.append("\n");
-	contents.append("class " + className +"{" + "\n");
-	contents.append(translateImports(unit)+ "\n");
-	contents.append(translateFields(unit)+ "\n");
-	contents.append(translateMethods(unit)+ "\n");
-	contents.append("}"+ "\n");*/
-	
 	
 	public static void writeFile(ICompilationUnit unit, String contents){
-		String className= unit.getElementName().substring(0, unit.getElementName().length()-5);
-		String fileName= className + ".ump";
-		try {
-			String subFolderNames = unit.getType(unit.getElementName()).getPackageFragment().getElementName().replace(".", File.separator);
-			String pathForUmpleFile = File.separator + "src/main/java" +  File.separator + subFolderNames +   File.separator + fileName; 
-			IFile outputFile = unit.getJavaProject().getProject().getFile(pathForUmpleFile);
-			InputStream source = new ByteArrayInputStream(contents.toString().getBytes());
-			
-			if (outputFile.exists()) {
-				outputFile.setContents(source, false, false, null);
-			} else {
-				outputFile.create(source, true, null);
-			}
-
-		} catch (CoreException e) {
-			logger.error(e);
+		boolean result = false;
+		result = FileGenerator.writeFile(unit, contents);
+		
+		if (result){
+			logger.info("Umple File created successfully");
 		}
+		else {
+			logger.error("Error when creating Umple File");
+		}
+	
 	}
 }
