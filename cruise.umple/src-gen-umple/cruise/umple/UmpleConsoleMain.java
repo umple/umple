@@ -67,7 +67,6 @@ public class UmpleConsoleMain
         try
         {
             model.run();
-            println("Success! Processed "+ filename +".");
         }
         catch(UmpleCompilerException e)
         {
@@ -76,10 +75,16 @@ public class UmpleConsoleMain
                 System.exit(-1);
         }
 
+		boolean compileSuccess = true;
+
         if (optset.has("c")) {
             CodeCompiler compiler = new CodeCompiler();
-            compiler.compile(model);
+            compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
         }
+
+		if (compileSuccess) {
+			println("Success! Processed "+ filename +".");
+		}
     }
 
     private static void println(String output)
@@ -142,10 +147,10 @@ public class UmpleConsoleMain
         optparser = new OptionParser();
         optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
         optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-        optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,Php,Ruby,Sql,Ruby,Json,Ecore,TextUml,Yuml").withRequiredArg().ofType(String.class);
+        optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,Yuml").withRequiredArg().ofType(String.class);
         optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, ouptut will only generate language <lang>");
         optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-        optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to compile output source");
+        optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to compile output source").withRequiredArg().ofType(String.class);
 
         OptionSet optSet = null;
 

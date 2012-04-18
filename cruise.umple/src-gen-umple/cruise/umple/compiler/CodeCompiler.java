@@ -35,36 +35,42 @@ public class CodeCompiler
   
   public static String console;
 
-    public static boolean compile(UmpleModel model) {
-      for (UmpleElement currentElement : model.getUmpleElements())
-      {
-        if ("external".equals(currentElement.getModifier()))
-        {
-          continue;
-        }
-        compileJava(currentElement, model);
-      }
-      return true;
-    }
+	public static boolean compile(UmpleModel model, String entryClass) {
+		boolean error_flag = true;
+		for (UmpleElement currentElement : model.getUmpleElements())
+		{
+			if ("external".equals(currentElement.getModifier()))
+			{
+				continue;
+			}
+			if (entryClass.equals("-") || entryClass.equals(currentElement.getName())) {
+				error_flag = error_flag && compileJava(currentElement, model);
+			}
+		}
+		return error_flag;
+	}
 
-    private static void compileJava(UmpleElement aClass, UmpleModel model) {
-        String path = StringFormatter.addPathOrAbsolute( 
-                model.getUmpleFile().getPath(), 
-                "") + 
-            aClass.getPackageName().replace(".", File.separator);
-        String filename = path + File.separator + aClass.getName() + ".java";
-        try {
-            Process p = Runtime.getRuntime().exec("javac "+filename);
-            BufferedReader reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
-            String line=reader.readLine(); 
-            while (line!=null) {
+	private static boolean compileJava(UmpleElement aClass, UmpleModel model) {
+		String path = StringFormatter.addPathOrAbsolute( 
+				model.getUmpleFile().getPath(), 
+				"") + 
+			aClass.getPackageName().replace(".", File.separator);
+		String filename = path + File.separator + aClass.getName() + ".java";
+		boolean error_exist = true;
+		try {
+			Process p = Runtime.getRuntime().exec("javac "+filename);
+			BufferedReader reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
+			String line=reader.readLine(); 
+			while (line!=null) {
 				get_original_line(line, reader, model, aClass);
 				line = reader.readLine();
-            }
-        } catch (IOException e) {
-            println(e.getMessage());
-        }
-    }
+				error_exist = false;
+			}
+		} catch (IOException e) {
+			println(e.getMessage());
+		}
+		return error_exist;
+	}
 
 	private static void get_original_line(String file, BufferedReader reader, UmpleModel model, UmpleElement aClass) {
 		StringTokenizer st = new StringTokenizer(file, ":"); 
@@ -76,6 +82,18 @@ public class CodeCompiler
 		String error_type = st.nextToken(); // Error type
 		String umpFile_name = aClass.getUmpFile();
 
+		String class_name = code_file.substring(code_file.lastIndexOf('/')+1, code_file.lastIndexOf('.'));
+
+		if (!class_name.equals(aClass.getName())) {
+			for (UmpleElement currentElement : model.getUmpleElements())
+			{
+				if (currentElement.getName().equals(class_name)) {
+					get_original_line(file, reader, model, currentElement);
+					return;
+				}
+			}
+		}
+
 		int line_num;
 
 		// Here to find the actually java code to match with
@@ -83,9 +101,13 @@ public class CodeCompiler
 			// Find the ^ symbol in error message to know where the current error message end
 			String error_msg="";
 			String java_code = reader.readLine();
+			String java_code_trim = java_code.trim();
 			String pos_locator;
 			while(true) {
 				pos_locator = reader.readLine();
+				if (pos_locator == null) {
+					return;
+				}
 				if (pos_locator.trim().equals("^")) {
 					break;
 				}
@@ -93,7 +115,7 @@ public class CodeCompiler
 				java_code = pos_locator;
 			}
 
-			BufferedReader umpFile = new BufferedReader(new FileReader(model.getUmpleFile().getFileName()));
+			BufferedReader umpFile = new BufferedReader(new FileReader(umpFile_name));
 			String line;
 			line_num=0;
 			while(true) {
@@ -102,36 +124,36 @@ public class CodeCompiler
 					break;
 				}
 				line_num++;
-				if (line.equals(java_code)) {
+				if (line.trim().equals(java_code_trim)) {
 					break;
 				}
 			}
 
-			println(getSimpleFileName(umpFile_name)+":"+line_num+":"+error_type);
-			println(error_msg+java_code+"\n"+pos_locator);
+			println(getSimpleFileName(umpFile_name)+":"+line_num+": Generic Java Error"+error_type);
+			//println(error_msg+java_code+"\n"+pos_locator);
 
 			umpFile.close();
 		} catch (IOException e) {
 		}
 	}
-	
+
 	private static void println(String output)
-    {
-        console += output + "\n";
-        System.out.println(output);
-    }
+	{
+		console += output + "\n";
+		System.out.println(output);
+	}
 
-  public static String getSimpleFileName(String fileName)
-  {
+	public static String getSimpleFileName(String fileName)
+	{
 
-    int lastIndex = fileName.lastIndexOf("/");
-    if (lastIndex == -1)
-    {
-      return fileName;
-    }
-    else
-    {
-      return fileName.substring(lastIndex+1, fileName.length());
-    }
-  }
+		int lastIndex = fileName.lastIndexOf("/");
+		if (lastIndex == -1)
+		{
+			return fileName;
+		}
+		else
+		{
+			return fileName.substring(lastIndex+1, fileName.length());
+		}
+	}
 }
