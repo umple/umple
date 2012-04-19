@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -92,7 +93,11 @@ public class UmplifyElementAction implements IObjectActionDelegate {
 		return false;
 	}
 	private boolean umplifyProject(IJavaProject project){
-		UmpleGenerator.translateJavaClassesInProject(project,getLevelOfUmplification());
+		try {
+			UmpleGenerator.translateJavaClassesInProject(project,getLevelOfUmplification());
+		} catch (JavaModelException e) {
+			logger.error(e);
+		}
 		return false;
 	}
 	
