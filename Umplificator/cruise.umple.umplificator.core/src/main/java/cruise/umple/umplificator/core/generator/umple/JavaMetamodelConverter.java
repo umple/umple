@@ -34,6 +34,7 @@ public class JavaMetamodelConverter {
 			extraCode.append(addJavaMethods(unit));
 			uClass.setExtraCode(extraCode.toString());
 			// Fix constructor and destructor
+			logger.info("Umplification Level 0 successfully completed for class:" + className);
 		}
 		if (level == 1 ) {
 			setNamespace(unit);
@@ -62,16 +63,21 @@ public class JavaMetamodelConverter {
 	{
 		try 
 		{
+		String fileName = unit.getElementName();
+		String javaClassName= fileName.substring(0,fileName.length()-5);
 		StringBuffer methodContent = new StringBuffer();
 		IType[] allTypes = unit.getAllTypes();
 		for (IType type : allTypes) {
 			IMethod[] methods = type.getMethods();
 			for (IMethod method : methods) {
-				Method uMethod= new Method("",method.getElementName(), method.getReturnType(),false);
-				MethodBody body = new MethodBody(method.getSource());
-				uMethod.setMethodBody(body);
-				uClass.addMethod(uMethod);
-				methodContent.append(method.getSource()+ "\n");
+				// Don't add the method if it is a constructor or destructor
+				if (!((method.getElementName().equals(javaClassName)) || (method.getElementName().equals("delete")))){
+					Method uMethod= new Method("",method.getElementName(), method.getReturnType(),false);
+					MethodBody body = new MethodBody(method.getSource());
+					uMethod.setMethodBody(body);
+					uClass.addMethod(uMethod);
+					methodContent.append(method.getSource()+ "\n");
+				}
 			}
 		}
 		return methodContent.toString();

@@ -1,20 +1,19 @@
 package cruise.umple.umplificator.core.generator.umple;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+
 import cruise.umple.compiler.UmpleClass;
-import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
 import cruise.umple.umplificator.core.inventory.JavaProjectInventory;
 import cruise.umple.umplificator.UmpleClassGenerator;
-
 
 /**
  * Class used to umplify the components of a Java Class
@@ -24,81 +23,51 @@ import cruise.umple.umplificator.UmpleClassGenerator;
  *
  */
 public class UmpleGenerator {
-	
-	private static Logger logger = Logger.getLogger(UmpleGenerator.class);
-	
-	public static String translatePackageName(ICompilationUnit unit) throws JavaModelException {
-		IType type = unit.getType(unit.getElementName());
-		return "namespace " + type.getPackageFragment().getElementName() + ";";
-	}
-	
-	public static String translateImports(ICompilationUnit unit) throws JavaModelException {
-		IImportDeclaration[] imports = unit.getImports();
-		StringBuffer importsBuffer = new StringBuffer();
-		for (int i=0; i < imports.length ; i ++){
-			importsBuffer.append("depend " + imports[i].getElementName() + ";" + "\n");
-		}
-		return importsBuffer.toString();
-	} 
-	
 
-	public static String translateFields(ICompilationUnit unit) throws JavaModelException {
-		IType[] allTypes = unit.getAllTypes();
-		StringBuffer fieldsContent = new StringBuffer();
-		for (IType type : allTypes) {
-			IField[] fields = type.getFields();
-			for (IField field : fields) {
-				fieldsContent.append(translateFieldsToUmpleAttribute(field));
-			}
-		}
-		return fieldsContent.toString();
-	}
-	
-	public static String translateFieldsToUmpleAttribute(IField field) {
-		String name ="";
-		String type ="";	
-		String value= "";
-		if (FieldAnalyzer.isPrimitiveType(field))
-		{
-			name = field.getElementName();
-			type = FieldAnalyzer.getUmpleType(field);
-			if (FieldAnalyzer.hasValue(field)){
-				value = " =";
-				value += FieldAnalyzer.getValue(field);
-			}
-			return type + " " + name + value + ";" +  "\n";			
-		}
-		else{
-			return "";
-		}
-	}
-	
-	public static String translateMethods(ICompilationUnit unit) throws JavaModelException {
-		IType[] allTypes = unit.getAllTypes();
-		StringBuffer methodContent = new StringBuffer();
-		for (IType type : allTypes) {
-			IMethod[] methods = type.getMethods();
-			for (IMethod method : methods) {
-				methodContent.append(method.getSource()+ "\n");
-			}
-		}
-		return methodContent.toString();
-	}
+	private static Logger logger = Logger.getLogger(UmpleGenerator.class);
 	
 	public static void translateJavaClassesInPackage(IPackageFragment aPackage,int level) {
 		ICompilationUnit [] units= JavaPackageInventory.getUnitsFromPackage(aPackage);
+		List<String> processedJavaFiles = new ArrayList<String>();
 		for (ICompilationUnit unit: units){
 			translateJavaClass(unit,level);
+			processedJavaFiles.add(FileGenerator.getGeneratedFileName(unit.getElementName()));
 		}
-		
+			generateMasterUmpleFileForPackage(aPackage,processedJavaFiles);	
 	}
 	
-	public static void translateJavaClassesInProject(IJavaProject project, int level) {
+	public static void translateJavaClassesInProject(IJavaProject project, int level) throws JavaModelException {
 		IPackageFragment [] packages = JavaProjectInventory.getPackagesFromProject(project);
+		List<String> processedJavaPackages = new ArrayList<String>();
 		for (IPackageFragment aPackage: packages){
-			translateJavaClassesInPackage(aPackage,level);
+			if (aPackage.getCompilationUnits().length > 0){
+				translateJavaClassesInPackage(aPackage,level);
+				processedJavaPackages.add("Master_" + aPackage.getElementName() + ".ump");
+			}
 		}
+		generateMasterUmpleFileForProject(project.getProject(),processedJavaPackages);	
 	}
+	
+	public static void 	generateMasterUmpleFileForProject(IProject project,List<String> processedJavaPackages ){
+		String masterFileName = "Master_" + project.getName() + ".ump";
+		FileGenerator.writeMasterFile(getUseStatements(processedJavaPackages),project,masterFileName);
+	} 
+	
+	public static void 	generateMasterUmpleFileForPackage(IPackageFragment aPackage,List<String> processedJavaFiles){
+		String masterFileName = "Master_" + aPackage.getElementName() + ".ump";
+		FileGenerator.writeMasterFile(getUseStatements(processedJavaFiles),aPackage.getJavaProject().getProject(),masterFileName);	
+	} 
+	
+	public static String getUseStatements(List<String> processedElements ){
+		StringBuffer sb =  new StringBuffer();
+		for (String s: processedElements)
+		{
+			sb.append("use " + s + ";" );
+			sb.append(System.getProperty("line.separator"));
+		}
+		return sb.toString();
+	}
+	
 	
 	public static void translateJavaClass(ICompilationUnit unit, int level){
 	    JavaMetamodelConverter converter = new JavaMetamodelConverter();
@@ -118,6 +87,5 @@ public class UmpleGenerator {
 		else {
 			logger.error("Error when creating Umple File");
 		}
-	
 	}
 }

@@ -37,7 +37,27 @@ public  class FileGenerator {
 			//String pathForUmpleFile = getPathForUmpleFile(javaFileName, unit) ;
 			IProject project  = unit.getJavaProject().getProject();
 			IFolder umpleFolder = createSubFolder(project, UMPLE_SRC_FOLDER);
+			
 			IFile outputFile = umpleFolder.getFile(getGeneratedFileName(javaFileName));
+			InputStream source = new ByteArrayInputStream(contents.toString().getBytes());
+			
+			if (outputFile.exists()) {
+				outputFile.setContents(source, false, false, null);
+			} else {
+				outputFile.create(source, true, null);
+			}
+			
+			return true;
+		} catch (CoreException e) {
+			return false;
+		}
+	}
+	
+	public static boolean writeMasterFile(String contents, IProject project, String fileName){
+		try {
+			IFolder umpleFolder = createSubFolder(project, UMPLE_SRC_FOLDER);
+			
+			IFile outputFile = umpleFolder.getFile(fileName);
 			InputStream source = new ByteArrayInputStream(contents.toString().getBytes());
 			
 			if (outputFile.exists()) {
@@ -91,7 +111,7 @@ public  class FileGenerator {
         return paths;
     }
 	
-    private static String getGeneratedFileName(String javaFileName) {
+    public static String getGeneratedFileName(String javaFileName) {
         //Get Folders of Java File 
         javaFileName = javaFileName.substring(0,javaFileName.length()-5);
         return javaFileName + ".ump";
