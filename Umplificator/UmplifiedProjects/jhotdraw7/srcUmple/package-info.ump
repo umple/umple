@@ -1,0 +1,12 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.xml.css ;
+
+class package-info 
+{
+depend edu.umd.cs.findbugs.annotations.DefaultAnnotation;
+depend edu.umd.cs.findbugs.annotations.NonNull;
+
+  
+}

@@ -1,0 +1,33 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.plaf.palette ;
+
+class PaletteColorSliderUI 
+{
+depend javax.swing.Icon;
+depend javax.swing.JComponent;
+depend javax.swing.JSlider;
+depend javax.swing.plaf.ComponentUI;
+depend org.jhotdraw.color.ColorSliderUI;
+  isA ColorSliderUI;
+
+  public static ComponentUI createUI(JComponent b) {
+        return new PaletteColorSliderUI((JSlider) b);
+    }
+@Override
+    protected Icon getThumbIcon() {
+        String key;
+        if (slider.getOrientation() == JSlider.HORIZONTAL) {
+            key="Slider.northThumb.small";
+        } else {
+            key="Slider.westThumb.small";
+        }
+            Icon icon = PaletteLookAndFeel.getInstance().getIcon(key);
+            if (icon==null) {
+                throw new InternalError(key+" missing in PaletteLookAndFeel");
+            }
+            return icon;
+    }
+
+}

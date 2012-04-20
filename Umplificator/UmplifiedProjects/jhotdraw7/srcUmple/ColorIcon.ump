@@ -1,0 +1,66 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.plaf.palette.colorchooser ;
+
+class ColorIcon 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.image.BufferedImage;
+depend org.jhotdraw.util.Images;
+depend org.jhotdraw.util.ResourceBundleUtil;
+
+  @Nullable private Color fillColor;
+private static BufferedImage noColorImage;
+private int width;
+private int height;
+private String name;
+public Color getColor() {
+        return fillColor;
+    }
+public String getName() {
+        return name;
+    }
+@Override
+    public int getIconWidth() {
+        return width;
+    }
+@Override
+    public int getIconHeight() {
+        return height;
+    }
+@Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+        //Graphics2D g = (Graphics2D) gr;
+        if (fillColor == null||fillColor.getAlpha()==0) {
+            if (width == noColorImage.getWidth() && height == noColorImage.getHeight()) {
+                g.drawImage(noColorImage, x, y, c);
+            } else {
+                g.setColor(Color.WHITE);
+                g.fillRect(x + 1, y + 1, width - 2, height - 2);
+                g.setColor(Color.red);
+                int[] xpoints = new int[]{x + 2, x + width - 5, x + width - 3, x + width - 3, x + 4, x + 2};
+                int[] ypoints = new int[]{y + height - 5, y + 2, y + 2, y + 4, y + height - 3, y + height - 3};
+                g.fillPolygon(xpoints, ypoints, xpoints.length);
+            }
+        } else {
+ //           g.setColor(Color.WHITE);
+ //           g.fillRect(x + 1, y + 1, width - 2, height - 2);
+            g.setColor(fillColor);
+//            g.fillRect(x + 2, y + 2, width - 4, height - 4);
+            g.fillRect(x + 1, y + 1, width - 2, height - 2);
+        }
+        g.setColor(new Color(0x666666));
+
+        // Draw the rectangle using drawLine to work around a drawing bug in
+        // Apples MRJ for Java 1.5
+        // g.drawRect(x, y, getIconWidth() - 1, getIconHeight() - 1);
+        g.drawLine(x, y, x + width - 1, y);
+        g.drawLine(x + width - 1, y, x + width - 1, y + width - 1);
+        g.drawLine(x + width - 1, y + height - 1, x, y + height - 1);
+        g.drawLine(x, y + height - 1, x, y);
+
+    }
+
+}

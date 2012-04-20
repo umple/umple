@@ -1,0 +1,18 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui ;
+
+class Arrangeable 
+{
+depend java.beans.*;
+
+  VERTICAL
+HORIZONTAL
+CASCADE
+public void setArrangement(Arrangement newValue);
+public Arrangement getArrangement();
+public void addPropertyChangeListener(PropertyChangeListener l);
+public void removePropertyChangeListener(PropertyChangeListener l);
+
+}

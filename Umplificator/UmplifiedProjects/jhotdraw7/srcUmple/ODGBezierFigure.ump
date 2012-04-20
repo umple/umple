@@ -1,0 +1,116 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.odg.figures ;
+
+class ODGBezierFigure 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.handle.TransformHandleKit;
+depend org.jhotdraw.draw.handle.Handle;
+depend org.jhotdraw.draw.handle.BezierNodeHandle;
+depend java.awt.event.*;
+depend java.awt.geom.*;
+depend java.util.*;
+depend javax.swing.undo.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.geom.*;
+depend org.jhotdraw.samples.odg.ODGAttributeKeys.*;
+  isA BezierFigure;
+
+  @Nullable private transient Rectangle2D.Double cachedDrawingArea;
+public Collection<Handle> createHandles(ODGPathFigure pathFigure, int detailLevel) {
+        LinkedList<Handle> handles = new LinkedList<Handle>();
+        switch (detailLevel % 2) {
+            case 0:
+                for (int i = 0, n = path.size(); i < n; i++) {
+                    handles.add(new BezierNodeHandle(this, i, pathFigure));
+                }
+                break;
+            case 1:
+                TransformHandleKit.addTransformHandles(this, handles);
+                break;
+            default:
+                break;
+        }
+        return handles;
+    }
+@Override
+    public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view) {
+        if (evt.getClickCount() == 2/* && view.getHandleDetailLevel() == 0*/) {
+            willChange();
+            final int index = splitSegment(p, (float) (5f / view.getScaleFactor()));
+            if (index != -1) {
+                final BezierPath.Node newNode = getNode(index);
+                fireUndoableEditHappened(new AbstractUndoableEdit() {
+
+                    @Override
+                    public void redo() throws CannotRedoException {
+                        super.redo();
+                        willChange();
+                        addNode(index, newNode);
+                        changed();
+                    }
+
+                    @Override
+                    public void undo() throws CannotUndoException {
+                        super.undo();
+                        willChange();
+                        removeNode(index);
+                        changed();
+                    }
+                });
+                changed();
+                evt.consume();
+                return true;
+            }
+        }
+        return false;
+    }
+@Override
+    public void transform(AffineTransform tx) {
+        if (get(TRANSFORM) != null
+                || (tx.getType() & (AffineTransform.TYPE_TRANSLATION)) != tx.getType()) {
+            if (get(TRANSFORM) == null) {
+                TRANSFORM.setClone(this, tx);
+            } else {
+                AffineTransform t = TRANSFORM.getClone(this);
+                t.preConcatenate(tx);
+                set(TRANSFORM, t);
+            }
+        } else {
+            super.transform(tx);
+        }
+    }
+@Override
+    public Rectangle2D.Double getDrawingArea() {
+        if (cachedDrawingArea == null) {
+
+            if (get(TRANSFORM) == null) {
+                cachedDrawingArea = path.getBounds2D();
+            } else {
+                BezierPath p2 = (BezierPath) path.clone();
+                p2.transform(get(TRANSFORM));
+                cachedDrawingArea = p2.getBounds2D();
+            }
+        }
+        return (Rectangle2D.Double) cachedDrawingArea.clone();
+    }
+/**
+     * Transforms all coords of the figure by the current TRANSFORM attribute
+     * and then sets the TRANSFORM attribute to null.
+     */
+    public void flattenTransform() {
+        if (get(TRANSFORM) != null) {
+            path.transform(get(TRANSFORM));
+            set(TRANSFORM, null);
+        }
+        invalidate();
+    }
+@Override
+    public void invalidate() {
+        super.invalidate();
+        cachedDrawingArea = null;
+    }
+
+}

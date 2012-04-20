@@ -1,0 +1,60 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.connector ;
+
+class LocatorConnector 
+{
+depend org.jhotdraw.draw.locator.Locator;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.ConnectionFigure;
+depend java.awt.geom.*;
+depend java.io.IOException;
+depend org.jhotdraw.xml.*;
+  isA AbstractConnector;
+
+  /**
+     * The standard size of the connector. The display box
+     * is centered around the located point.
+     * <p>
+     * FIXME - Why do we need a standard size?
+     */
+    public static final int SIZE = 2;
+private Locator  locator;
+public Locator getLocator() {
+        return locator;
+    }
+protected Point2D.Double locate(ConnectionFigure connection) {
+        return locator.locate(getOwner());
+    }
+/**
+     * Tests if a point is contained in the connector.
+     */
+    @Override public boolean contains(Point2D.Double p) {
+        return getBounds().contains(p);
+    }
+/**
+     * Gets the display box of the connector.
+     */
+   @Override public Rectangle2D.Double getBounds() {
+        Point2D.Double p = locator.locate(getOwner());
+        return new Rectangle2D.Double(
+        p.x - SIZE / 2,
+        p.y - SIZE / 2,
+        SIZE,
+        SIZE);
+    }
+@Override public void read(DOMInput in) throws IOException {
+        super.read(in);
+        in.openElement("locator");
+        this.locator = (Locator) in.readObject(0);
+        in.closeElement();
+    }
+@Override public void write(DOMOutput out) throws IOException {
+        super.write(out);
+        out.openElement("locator");
+        out.writeObject(locator);
+        out.closeElement();
+    }
+
+}

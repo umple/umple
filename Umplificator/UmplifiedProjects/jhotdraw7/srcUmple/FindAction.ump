@@ -1,0 +1,38 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.teddy.action ;
+
+class FindAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.samples.teddy.*;
+depend java.awt.event.*;
+depend org.jhotdraw.app.action.edit.AbstractFindAction;
+  isA AbstractFindAction;
+
+  public final static String ID = AbstractFindAction.ID;
+private FindDialog findDialog;
+@Override
+    public void actionPerformed(ActionEvent e) {
+        if (findDialog == null) {
+            findDialog = new FindDialog(getApplication());
+            if (getApplication() instanceof OSXApplication) {
+                findDialog.addWindowListener(new WindowAdapter() {
+                    @Override public void windowClosing(WindowEvent evt) {
+                        if (findDialog != null) {
+                            ((OSXApplication) getApplication()).removePalette(findDialog);
+                            findDialog.setVisible(false);
+                        }
+                    }
+                });
+            }
+        }
+        findDialog.setVisible(true);
+        if (getApplication() instanceof OSXApplication) {
+            ((OSXApplication) getApplication()).addPalette(findDialog);
+        }
+    }
+
+}

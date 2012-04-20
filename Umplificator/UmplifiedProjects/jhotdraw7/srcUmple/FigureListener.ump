@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class FigureListener 
+{
+depend java.util.*;
+
+  /**
+     * Sent when the drawing area used by the figure needs to be repainted.
+     */
+    public void areaInvalidated(FigureEvent e);
+/**
+     * Sent when an attribute of the figure has changed.
+     */
+    public void attributeChanged(FigureEvent e);
+/**
+     * Sent when handles of a Figure have been added, removed or replaced.
+     * <p>
+     * DrawingViews listen to this event to repopulate the Handles.
+     * <p>
+     * A Figure should not fire this event, if just the state or the location
+     * of Handle has changed.
+     */
+    public void figureHandlesChanged(FigureEvent e);
+/**
+     * Sent when the geometry (for example the bounds) of the figure has changed.
+     */
+    public void figureChanged(FigureEvent e);
+/**
+     * Sent when a figure was added to a drawing.
+     */
+    public void figureAdded(FigureEvent e);
+/**
+     * Sent when a figure was removed from a drawing.
+     */
+    public void figureRemoved(FigureEvent e);
+/**
+     * Sent when the figure requests to be removed from a drawing.
+     */
+    public void figureRequestRemove(FigureEvent e);
+
+}

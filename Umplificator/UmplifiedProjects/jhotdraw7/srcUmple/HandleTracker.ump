@@ -1,0 +1,13 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.tool ;
+
+class HandleTracker 
+{
+depend org.jhotdraw.draw.handle.Handle;
+depend java.util.Collection;
+
+  public void setHandles(Handle handle, Collection<Handle> compatibleHandles);
+
+}

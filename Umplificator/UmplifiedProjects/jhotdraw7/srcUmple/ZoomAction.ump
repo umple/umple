@@ -1,0 +1,43 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class ZoomAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.Rectangle;
+depend javax.swing.*;
+depend org.jhotdraw.draw.*;
+  isA AbstractDrawingViewAction;
+
+  private double scaleFactor;
+@Nullable private AbstractButton button;
+private String label;
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        if (button != null) {
+            button.setText(label);
+        }
+        final Rectangle vRect = getView().getComponent().getVisibleRect();
+        final double oldFactor = getView().getScaleFactor();
+        getView().setScaleFactor(scaleFactor);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (vRect != null) {
+                    vRect.x = (int) (vRect.x / oldFactor * scaleFactor);
+                    vRect.y = (int) (vRect.y / oldFactor * scaleFactor);
+                    vRect.width = (int) (vRect.width / oldFactor * scaleFactor);
+                    vRect.height = (int) (vRect.height / oldFactor * scaleFactor);
+                    vRect.x += vRect.width / 3;
+                    vRect.y += vRect.height / 3;
+                    vRect.width /= 3;
+                    vRect.height /= 3;
+                    getView().getComponent().scrollRectToVisible(vRect);
+                }
+            }
+        });
+    }
+
+}

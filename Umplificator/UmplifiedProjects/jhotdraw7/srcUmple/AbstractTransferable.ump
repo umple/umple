@@ -1,0 +1,25 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.datatransfer ;
+
+class AbstractTransferable 
+{
+depend java.awt.datatransfer.*;
+
+  private DataFlavor[] flavors;
+@Override
+    public DataFlavor[] getTransferDataFlavors() {
+        return flavors.clone();
+    }
+@Override
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+        for (DataFlavor f : flavors) {
+            if (f.equals(flavor)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}

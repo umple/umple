@@ -1,0 +1,21 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.datatransfer ;
+
+class InputStreamTransferable 
+{
+depend java.awt.datatransfer.*;
+depend java.io.*;
+  isA AbstractTransferable;
+
+  private byte[] data;
+@Override
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+        if (! isDataFlavorSupported(flavor)) {
+            throw new UnsupportedFlavorException(flavor);
+        }
+        return new ByteArrayInputStream(data);
+    }
+
+}

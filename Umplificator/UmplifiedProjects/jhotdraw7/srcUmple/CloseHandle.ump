@@ -1,0 +1,54 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class CloseHandle 
+{
+depend org.jhotdraw.draw.locator.RelativeLocator;
+depend org.jhotdraw.draw.locator.Locator;
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+  isA LocatorHandle;
+
+  private boolean pressed;
+@Override
+    protected int getHandlesize() {
+        return 9;
+    }
+/**
+     * Draws this handle.
+     */
+    @Override
+    public void draw(Graphics2D g) {
+        drawRectangle(g, (pressed) ? Color.orange : Color.white, Color.black);
+        Rectangle r = getBounds();
+        g.drawLine(r.x, r.y, r.x+r.width, r.y+r.height);
+        g.drawLine(r.x+r.width, r.y, r.x, r.y+r.height);
+    }
+/**
+     * Returns a cursor for the handle.
+     */
+    @Override
+    public Cursor getCursor() {
+        return Cursor.getDefaultCursor();
+    }
+@Override
+    public void trackEnd(Point anchor, Point lead, int modifiersEx) {
+        pressed = basicGetBounds().contains(lead);
+        if (pressed) getOwner().requestRemove();
+        fireAreaInvalidated(getDrawingArea());
+    }
+@Override
+    public void trackStart(Point anchor, int modifiersEx) {
+        pressed = true;
+        fireAreaInvalidated(getDrawingArea());
+    }
+@Override
+    public void trackStep(Point anchor, Point lead, int modifiersEx) {
+        boolean oldValue = pressed;
+        pressed = basicGetBounds().contains(lead);
+        if (oldValue != pressed) fireAreaInvalidated(getDrawingArea());
+    }
+
+}

@@ -1,0 +1,32 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class ClearFileAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.gui.Worker;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractSaveUnsavedChangesAction;
+  isA AbstractSaveUnsavedChangesAction;
+
+  public final static String ID = "file.clear";
+@Override public void doIt(final View view) {
+        view.setEnabled(false);
+        view.execute(new Worker() {
+            @Override
+            public Object construct() {
+                view.clear();
+                return null;
+            }
+            @Override
+            public void finished() {
+                view.setEnabled(true);
+            }
+        });
+    }
+
+}

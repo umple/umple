@@ -1,0 +1,57 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.plaf.palette ;
+
+class PaletteButtonUI 
+{
+depend java.awt.Graphics;
+depend javax.swing.*;
+depend javax.swing.plaf.*;
+depend javax.swing.plaf.basic.*;
+  isA BasicButtonUI;
+
+  // Shared UI object
+    private final static PaletteButtonUI buttonUI = new PaletteButtonUI();
+// ********************************
+    //          Create PLAF
+    // ********************************
+    public static ComponentUI createUI(JComponent c) {
+        return buttonUI;
+    }
+@Override
+    protected void installDefaults(AbstractButton b) {
+        super.installDefaults(b);
+
+        // load shared instance defaults
+        String pp = getPropertyPrefix();
+
+        LookAndFeel.installProperty(b, "opaque", Boolean.FALSE);
+
+
+        if (b.getMargin() == null || (b.getMargin() instanceof UIResource)) {
+            b.setMargin(new InsetsUIResource(0, 0, 0, 0));
+        }
+
+        PaletteLookAndFeel.installColorsAndFont(b, pp + "background",
+                pp + "foreground", pp + "font");
+        PaletteLookAndFeel.installBorder(b, pp + "border");
+
+        Object rollover = UIManager.get(pp + "rollover");
+        if (rollover != null) {
+            LookAndFeel.installProperty(b, "rolloverEnabled", rollover);
+        }
+        
+        b.setFocusable(false);
+    }
+@Override
+    public void paint(Graphics g, JComponent c) {
+        AbstractButton button = (AbstractButton) c;
+        if (button.isBorderPainted() && (c.getBorder() instanceof BackdropBorder)) {
+            BackdropBorder bb = (BackdropBorder) c.getBorder();
+            bb.getBackdropBorder().paintBorder(c, g, 0, 0, c.getWidth(), c.getHeight());
+        }
+        super.paint(g, c);
+    }
+
+}

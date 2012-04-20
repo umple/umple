@@ -1,0 +1,39 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.odg.action ;
+
+class TogglePropertiesPanelAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.app.action.*;
+depend org.jhotdraw.samples.odg.*;
+depend org.jhotdraw.util.*;
+  isA AbstractViewAction;
+
+  /**
+     * This method is invoked, when the property changed and when
+     * the view changed.
+     */
+    @Override
+    protected void updateView() {
+        putValue(ActionUtil.SELECTED_KEY,
+                getActiveView() != null &&
+                ! getActiveView().isPropertiesPanelVisible()
+                );
+    }
+@Override
+    public ODGView getActiveView() {
+        return (ODGView) super.getActiveView();
+    }
+@Override
+    public void actionPerformed(ActionEvent e) {
+        getActiveView().setPropertiesPanelVisible(
+                ! getActiveView().isPropertiesPanelVisible()
+                );
+    }
+
+}

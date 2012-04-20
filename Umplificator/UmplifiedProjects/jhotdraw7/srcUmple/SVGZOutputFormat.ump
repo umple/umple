@@ -1,0 +1,29 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg.io ;
+
+class SVGZOutputFormat 
+{
+depend org.jhotdraw.gui.filechooser.ExtensionFileFilter;
+depend java.io.*;
+depend java.util.zip.*;
+depend org.jhotdraw.draw.*;
+  isA SVGOutputFormat;
+
+  @Override
+    public String getFileExtension() {
+        return "svgz";
+    }
+@Override
+    public javax.swing.filechooser.FileFilter getFileFilter() {
+        return new ExtensionFileFilter("Compressed Scalable Vector Graphics (SVGZ)", "svgz");
+    }
+@Override public void write(OutputStream out, Drawing drawing) throws IOException {
+        GZIPOutputStream gout = new GZIPOutputStream(out);
+        super.write(gout, drawing, drawing.getChildren());
+        gout.finish();
+        
+    }
+
+}

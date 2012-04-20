@@ -1,0 +1,29 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.layouter ;
+
+class Layouter 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+
+  /**
+     * Calculate the layout for the figure and all its subelements. The
+     * layout is not actually performed but just its dimensions are calculated.
+     *
+     * @param anchor start point for the layout
+     * @param lead minimum lead point for the layout
+     */
+    public Rectangle2D.Double calculateLayout(CompositeFigure compositeFigure, Point2D.Double anchor, Point2D.Double lead);
+/**
+     * Method which lays out a figure. It is called by the figure
+     * if a layout task is to be performed. Implementing classes
+     * specify a certain layout algorithm in this method.
+     *
+     * @param anchor start point for the layout
+     * @param lead minimum lead point for the layout
+     */
+    public Rectangle2D.Double layout(CompositeFigure compositeFigure, Point2D.Double anchor, Point2D.Double lead);
+
+}

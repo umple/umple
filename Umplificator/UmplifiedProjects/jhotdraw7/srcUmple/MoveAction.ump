@@ -1,0 +1,62 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class MoveAction 
+{
+depend org.jhotdraw.draw.DrawingEditor;
+depend org.jhotdraw.draw.Figure;
+depend org.jhotdraw.draw.event.TransformEdit;
+depend org.jhotdraw.undo.CompositeEdit;
+depend java.awt.geom.*;
+depend java.util.HashSet;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  private int dx, dy;
+private int dx, dy;
+public final static String ID = "edit.moveEast";
+public final static String ID = "edit.moveWest";
+public final static String ID = "edit.moveNorth";
+public final static String ID = "edit.moveSouth";
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        CompositeEdit edit;
+        AffineTransform tx = new AffineTransform();
+        tx.translate(dx, dy);
+
+        HashSet<Figure> transformedFigures = new HashSet<Figure>();
+        for (Figure f : getView().getSelectedFigures()) {
+            if (f.isTransformable()) {
+                transformedFigures.add(f);
+                f.willChange();
+                f.transform(tx);
+                f.changed();
+            }
+        }
+        fireUndoableEditHappened(new TransformEdit(transformedFigures, tx));
+
+    }
+public East(DrawingEditor editor) {
+            super(editor, 1, 0);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+public West(DrawingEditor editor) {
+            super(editor, -1, 0);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+public North(DrawingEditor editor) {
+            super(editor, 0, -1);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+public South(DrawingEditor editor) {
+            super(editor, 0, 1);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+
+}

@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class UngroupAction 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA GroupAction;
+
+  public final static String ID = "edit.ungroupSelection";
+/** Creates a new instance. */
+    private CompositeFigure prototype;
+
+}

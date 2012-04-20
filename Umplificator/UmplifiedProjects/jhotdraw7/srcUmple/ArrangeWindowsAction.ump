@@ -1,0 +1,24 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.window ;
+
+class ArrangeWindowsAction 
+{
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.gui.*;
+depend java.awt.event.ActionEvent;
+depend javax.swing.*;
+  isA AbstractAction;
+
+  public final static String VERTICAL_ID = "window.arrangeVertical";
+public final static String HORIZONTAL_ID = "window.arrangeHorizontal";
+public final static String CASCADE_ID = "window.arrangeCascade";
+private Arrangeable arrangeable;
+private Arrangeable.Arrangement arrangement;
+@Override
+    public void actionPerformed(ActionEvent e) {
+            arrangeable.setArrangement(arrangement);
+    }
+
+}

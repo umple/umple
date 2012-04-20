@@ -1,0 +1,30 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class SelectionColorChooserAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.util.*;
+depend java.awt.*;
+depend javax.swing.*;
+depend org.jhotdraw.draw.*;
+  isA EditorColorChooserAction;
+
+  @Override
+    protected Color getInitialColor() {
+        Color initialColor = null;
+        
+        DrawingView v = getEditor().getActiveView();
+        if (v != null && v.getSelectedFigures().size() == 1) {
+            Figure f = v.getSelectedFigures().iterator().next();
+            initialColor = f.get(key);
+        }
+        if (initialColor == null) {
+            initialColor = super.getInitialColor();
+        }
+        return initialColor;
+    }
+
+}

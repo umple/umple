@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class FigureAttributeEditorHandler 
+{
+depend org.jhotdraw.gui.*;
+depend java.util.Collections;
+depend java.util.Map;
+depend java.util.Set;
+depend org.jhotdraw.draw.AttributeKey;
+depend org.jhotdraw.draw.DrawingEditor;
+depend org.jhotdraw.draw.Figure;
+  isA AbstractAttributeEditorHandler<T>;
+
+  @Override
+    @SuppressWarnings("unchecked")
+    protected Set<Figure> getEditedFigures() {
+        return (Set<Figure>) ((activeView == null) ? Collections.emptySet() : activeView.getSelectedFigures());
+    }
+
+}

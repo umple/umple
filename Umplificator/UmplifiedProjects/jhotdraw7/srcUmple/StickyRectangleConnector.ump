@@ -1,0 +1,55 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.connector ;
+
+class StickyRectangleConnector 
+{
+depend org.jhotdraw.draw.*;
+depend java.io.IOException;
+depend org.jhotdraw.geom.Geom;
+depend java.awt.*;
+depend java.awt.geom.*;
+depend org.jhotdraw.xml.DOMInput;
+depend org.jhotdraw.xml.DOMOutput;
+  isA ChopRectangleConnector;
+
+  private float angle;
+@Override
+    public void draw(Graphics2D g) {
+        g.setColor(Color.blue);
+        g.setStroke(new BasicStroke());
+        g.draw(getBounds());
+    }
+public void setAngle(float angle) {
+        this.angle = angle;
+    }
+public double getAngle() {
+        return angle;
+    }
+@Override
+    public void updateAnchor(Point2D.Double p) {
+        this.angle = (float) Geom.pointToAngle(getOwner().getBounds(), p);
+    }
+@Override
+    public Point2D.Double getAnchor() {
+        return Geom.angleToPoint(getOwner().getBounds(), angle);
+    }
+@Override protected Point2D.Double chop(Figure target, Point2D.Double from) {
+            return Geom.angleToPoint(target.getBounds(), angle);
+    }
+public String getParameters() {
+        return Float.toString((float) (angle / Math.PI * 180));
+    }
+@Override
+    public void read(DOMInput in) throws IOException {
+        super.read(in);
+        angle = (float) in.getAttribute("angle", 0.0);
+    }
+@Override
+    public void write(DOMOutput out) throws IOException {
+        super.write(out);
+        out.addAttribute("angle", angle);
+    }
+
+}

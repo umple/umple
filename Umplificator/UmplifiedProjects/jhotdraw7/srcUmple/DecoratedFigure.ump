@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class DecoratedFigure 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+
+  /**
+     * Sets a decorator Figure, for example a visual adornment to this Figure.
+     * Set this to null, if no decorator is desired.
+     * The decorator uses the same logical bounds as this Figure plus 
+     * AttributeKeys.DECORATOR_INSETS. The decorator does not handle events.
+     * The decorator is drawn when the figure is drawn.
+     */
+    public void setDecorator(@Nullable Figure newValue);
+/**
+     * Gets the decorator for this figure.
+     */
+    @Nullable public Figure getDecorator();
+
+}

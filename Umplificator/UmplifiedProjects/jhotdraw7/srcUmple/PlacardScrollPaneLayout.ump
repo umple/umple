@@ -1,0 +1,25 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui ;
+
+class PlacardScrollPaneLayout 
+{
+depend java.awt.*;
+depend javax.swing.*;
+  isA ScrollPaneLayout;
+
+  @Override
+    public void layoutContainer(Container parent) {
+        super.layoutContainer(parent);
+
+        if (lowerLeft != null && hsb != null) {
+            Dimension llp = lowerLeft.getPreferredSize();
+//Insets insets = parent.getInsets();
+            lowerLeft.setBounds(hsb.getX(), hsb.getY(), llp.width, hsb.getHeight());
+            hsb.setBounds(hsb.getX() + llp.width, hsb.getY(), hsb.getWidth() - llp.width, hsb.getHeight());
+
+        }
+    }
+
+}

@@ -1,0 +1,64 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.plaf.palette ;
+
+class MultiIcon 
+{
+depend java.awt.*;
+depend javax.swing.*;
+depend org.jhotdraw.util.Images;
+
+  /**
+     * The icons from which we choose from.
+     * This variable is null, if we are using a tiled image as our base.
+     */
+    protected Icon[] icons;
+/** Holds the icon pictures in a single image. This variable is used only
+     *until we create the icons array. Then it is set to null.
+     */
+    private Image tiledImage;
+/**
+     * The number of icons in the tiledImage.
+     */
+    private int tileCount;
+/**
+     * Whether the tiledImage needs to be tiled horizontaly or vertically
+     * to get the icons out of it.
+     */
+    private boolean isTiledHorizontaly;
+@Override
+    public int getIconHeight() {
+        generateIconsFromTiledImage();
+        return icons[0].getIconHeight();
+    }
+@Override
+    public int getIconWidth() {
+        generateIconsFromTiledImage();
+        return icons[0].getIconWidth();
+    }
+@Override
+    public void paintIcon(java.awt.Component c, java.awt.Graphics g, int x, int y) {
+        generateIconsFromTiledImage();
+        Icon icon = getIcon(c);
+        if (icon != null) {
+            icon.paintIcon(c, g, x, y);
+        }
+    }
+private void generateIconsFromTiledImage() {
+        if (icons == null) {
+            icons = new Icon[tileCount];
+            Image[] images = Images.split(tiledImage, tileCount, isTiledHorizontaly);
+            for (int i=0, n = Math.min(images.length, icons.length); i < n; i++) {
+                if (images[i] != null) {
+                    icons[i] = new ImageIcon(images[i]);
+                }
+            }
+            generateMissingIcons();
+            tiledImage = null;
+        }
+    }
+protected abstract Icon getIcon(Component c);
+protected abstract void generateMissingIcons();
+
+}

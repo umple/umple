@@ -1,0 +1,13 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class NewWindowAction 
+{
+depend org.jhotdraw.app.Application;
+  isA NewFileAction;
+
+  public final static String ID = "file.newWindow";
+
+}

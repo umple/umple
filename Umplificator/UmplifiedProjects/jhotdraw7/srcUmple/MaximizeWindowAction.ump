@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.window ;
+
+class MaximizeWindowAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.util.*;
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractViewAction;
+  isA AbstractViewAction;
+
+  public final static String ID = "window.maximize";
+private JFrame getFrame() {
+        return (JFrame) SwingUtilities.getWindowAncestor(
+                getActiveView().getComponent()
+                );
+    }
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        JFrame frame = getFrame();
+        if (frame != null) {
+            frame.setExtendedState(frame.getExtendedState() ^ Frame.MAXIMIZED_BOTH);
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+        }
+    }
+
+}

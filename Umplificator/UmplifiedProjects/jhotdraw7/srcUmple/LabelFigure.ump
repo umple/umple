@@ -1,0 +1,77 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class LabelFigure 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.tool.Tool;
+depend org.jhotdraw.draw.event.FigureListener;
+depend org.jhotdraw.draw.event.FigureEvent;
+depend org.jhotdraw.draw.tool.TextEditingTool;
+depend java.awt.geom.*;
+depend java.util.*;
+  isA TextFigure;
+
+  @Nullable private TextHolderFigure target;
+public void setLabelFor(TextHolderFigure target) {
+        if (this.target != null) {
+            this.target.removeFigureListener(this);
+        }
+        this.target = target;
+        if (this.target != null) {
+            this.target.addFigureListener(this);
+        }
+    }
+@Override
+    public TextHolderFigure getLabelFor() {
+        return (target == null) ? this : target;
+    }
+/**
+     * Returns a specialized tool for the given coordinate.
+     * <p>Returns null, if no specialized tool is available.
+     */
+    @Override
+    public Tool getTool(Point2D.Double p) {
+        return (target != null && contains(p)) ? new TextEditingTool(target) : null;
+    }
+@Override
+    public void areaInvalidated(FigureEvent e) {
+    }
+@Override
+    public void attributeChanged(FigureEvent e) {
+    }
+@Override
+    public void figureAdded(FigureEvent e) {
+    }
+@Override
+    public void figureChanged(FigureEvent e) {
+    }
+@Override
+    public void figureRemoved(FigureEvent e) {
+        if (e.getFigure() == target) {
+            target.removeFigureListener(this);
+            target = null;
+        }
+    }
+@Override
+    public void figureRequestRemove(FigureEvent e) {
+    }
+@Override
+    public void remap(Map<Figure,Figure> oldToNew, boolean disconnectIfNotInMap) {
+        super.remap(oldToNew, disconnectIfNotInMap);
+        if (target != null) {
+            Figure newTarget = (Figure) oldToNew.get(target);
+            if (newTarget != null) {
+                target.removeFigureListener(this);
+                target = (TextHolderFigure) newTarget;
+                newTarget.addFigureListener(this);
+            }
+        }
+    }
+@Override
+    public void figureHandlesChanged(FigureEvent e) {
+    }
+
+}

@@ -1,0 +1,20 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.fontchooser ;
+
+class FontChooserModel 
+{
+depend javax.swing.tree.MutableTreeNode;
+depend javax.swing.tree.TreeModel;
+
+  /**
+     * Returns <code>true</code> if <code>node</code> is editable by the user.
+     * This method returns true, if the node and all its parents are editable.
+     *
+     * @param   node  a node in the tree, obtained from this data source
+     * @return  true if <code>node</code> is editable
+     */
+    public boolean isEditable(MutableTreeNode node);
+
+}

@@ -1,0 +1,113 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class SelectionColorChooserHandler 
+{
+depend javax.swing.event.ChangeEvent;
+depend javax.swing.undo.*;
+depend javax.swing.*;
+depend java.util.*;
+depend java.awt.*;
+depend javax.swing.event.ChangeListener;
+depend org.jhotdraw.draw.*;
+  isA AbstractSelectedAction;
+
+  protected AttributeKey<Color> key;
+protected JColorChooser colorChooser;
+protected JPopupMenu popupMenu;
+protected int isUpdating;
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        /*
+        if (evt.getActionCommand() == JColorChooser.APPROVE_SELECTION) {
+            applySelectedColorToFigures();
+        } else if (evt.getActionCommand() == JColorChooser.CANCEL_SELECTION) {
+        }*/
+        popupMenu.setVisible(false);
+    }
+protected void applySelectedColorToFigures() {
+        final ArrayList<Figure> selectedFigures = new ArrayList<Figure>(getView().getSelectedFigures());
+        final ArrayList<Object> restoreData = new ArrayList<Object>(selectedFigures.size());
+
+        Color selectedColor = colorChooser.getColor();
+        if (selectedColor!=null&&selectedColor.getAlpha()==0) {
+            selectedColor=null;
+        }
+
+        for (Figure figure : selectedFigures) {
+            restoreData.add(figure.getAttributesRestoreData());
+            figure.willChange();
+            figure.set(key, selectedColor);
+            figure.changed();
+        }
+        getEditor().setDefaultAttribute(key, selectedColor);
+        final Color undoValue = selectedColor;
+        UndoableEdit edit = new AbstractUndoableEdit() {
+
+            @Override
+            public String getPresentationName() {
+                return AttributeKeys.FONT_FACE.getPresentationName();
+            /*
+            String name = (String) getValue(Actions.UNDO_PRESENTATION_NAME_KEY);
+            if (name == null) {
+            name = (String) getValue(AbstractAction.NAME);
+            }
+            if (name == null) {
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            name = labels.getString("attribute.text");
+            }
+            return name;*/
+            }
+
+            @Override
+            public void undo() {
+                super.undo();
+                Iterator<Object> iRestore = restoreData.iterator();
+                for (Figure figure : selectedFigures) {
+                    figure.willChange();
+                    figure.restoreAttributesTo(iRestore.next());
+                    figure.changed();
+                }
+            }
+
+            @Override
+            public void redo() {
+                super.redo();
+                for (Figure figure : selectedFigures) {
+                    //restoreData.add(figure.getAttributesRestoreData());
+                    figure.willChange();
+                    figure.set(key, undoValue);
+                    figure.changed();
+                }
+            }
+        };
+        fireUndoableEditHappened(edit);
+    }
+@Override
+    protected void updateEnabledState() {
+        setEnabled(getEditor().isEnabled());
+        if (getView() != null && colorChooser != null && popupMenu != null) {
+            colorChooser.setEnabled(getView().getSelectionCount() > 0);
+            popupMenu.setEnabled(getView().getSelectionCount() > 0);
+            isUpdating++;
+            if (getView().getSelectionCount() > 0 /*&& colorChooser.isShowing()*/) {
+                for (Figure f : getView().getSelectedFigures()) {
+                        Color figureColor = f.get(key);
+                        colorChooser.setColor(figureColor==null?new Color(0,true):figureColor);
+                        break;
+                }
+            }
+            isUpdating--;
+        }
+    }
+@Override
+    public void stateChanged(ChangeEvent e) {
+        if (isUpdating++ == 0) {
+                applySelectedColorToFigures();
+        }
+        isUpdating--;
+    }
+
+}

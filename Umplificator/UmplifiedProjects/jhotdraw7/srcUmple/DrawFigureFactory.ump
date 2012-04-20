@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.draw ;
+
+class DrawFigureFactory 
+{
+depend org.jhotdraw.draw.liner.ElbowLiner;
+depend org.jhotdraw.draw.liner.CurvedLiner;
+depend org.jhotdraw.draw.connector.ChopTriangleConnector;
+depend org.jhotdraw.draw.connector.ChopRoundRectangleConnector;
+depend org.jhotdraw.draw.connector.ChopRectangleConnector;
+depend org.jhotdraw.draw.connector.ChopEllipseConnector;
+depend org.jhotdraw.draw.connector.ChopDiamondConnector;
+depend org.jhotdraw.draw.connector.ChopBezierConnector;
+depend org.jhotdraw.draw.decoration.ArrowTip;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.xml.DefaultDOMFactory;
+  isA DefaultDOMFactory;
+
+  private final static Object[][] classTagArray = {
+        { DefaultDrawing.class, "drawing" },
+        { QuadTreeDrawing.class, "drawing" },
+        { DiamondFigure.class, "diamond" },
+        { TriangleFigure.class, "triangle" },
+        { BezierFigure.class, "bezier" },
+        { RectangleFigure.class, "r" },
+        { RoundRectangleFigure.class, "rr" },
+        { LineFigure.class, "l" },
+        { BezierFigure.class, "b" },
+        { LineConnectionFigure.class, "lnk" },
+        { EllipseFigure.class, "e" },
+        { TextFigure.class, "t" },
+        { TextAreaFigure.class, "ta" },
+        { ImageFigure.class, "image" },
+        { GroupFigure.class, "g" },
+        
+        { ArrowTip.class, "arrowTip" },
+        { ChopRectangleConnector.class, "rConnector" },
+        { ChopEllipseConnector.class, "ellipseConnector" },
+        { ChopRoundRectangleConnector.class, "rrConnector" },
+        { ChopTriangleConnector.class, "triangleConnector" },
+        { ChopDiamondConnector.class, "diamondConnector" },
+        { ChopBezierConnector.class, "bezierConnector" },
+        
+        { ElbowLiner.class, "elbowLiner" },
+        { CurvedLiner.class, "curvedLiner" },
+    };
+private final static Object[][] enumTagArray = {
+        { AttributeKeys.StrokePlacement.class, "strokePlacement" },
+        { AttributeKeys.StrokeType.class, "strokeType" },
+        { AttributeKeys.Underfill.class, "underfill" },
+        { AttributeKeys.Orientation.class, "orientation" },
+    };
+
+}

@@ -1,0 +1,18 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.connector ;
+
+class ChopBezierConnector 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+  isA ChopRectangleConnector;
+
+  @Override
+    protected Point2D.Double chop(Figure target, Point2D.Double from) {
+        BezierFigure bf = (BezierFigure) getConnectorTarget(target);
+        return bf.chop(from);
+    }
+
+}

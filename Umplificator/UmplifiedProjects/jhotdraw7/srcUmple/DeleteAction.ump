@@ -1,0 +1,71 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class DeleteAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.event.*;
+depend java.beans.PropertyChangeEvent;
+depend java.beans.PropertyChangeListener;
+depend javax.swing.JComponent;
+depend javax.swing.text.*;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.gui.EditableComponent;
+depend org.jhotdraw.beans.WeakPropertyChangeListener;
+  isA TextAction;
+
+  /** The ID for this action. */
+    public final static String ID = "edit.delete";
+/** The target of the action or null if the action acts on the currently
+     * focused component.
+     */
+    @Nullable private JComponent target;
+/** This variable keeps a strong reference on the property change listener. */
+    private PropertyChangeListener propertyHandler;
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        JComponent c = target;
+        if (c == null && (KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                getPermanentFocusOwner() instanceof JComponent)) {
+            c = (JComponent) KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                    getPermanentFocusOwner();
+        }
+        if (c != null && c.isEnabled()) {
+            if (c instanceof EditableComponent) {
+                ((EditableComponent) c).delete();
+            } else {
+                deleteNextChar(evt);
+            }
+        }
+    }
+/** This method was copied from
+     * DefaultEditorKit.DeleteNextCharAction.actionPerformed(ActionEvent).
+     */
+    public void deleteNextChar(ActionEvent e) {
+        JTextComponent c = getTextComponent(e);
+        boolean beep = true;
+        if ((c != null) && (c.isEditable())) {
+            try {
+                javax.swing.text.Document doc = c.getDocument();
+                Caret caret = c.getCaret();
+                int dot = caret.getDot();
+                int mark = caret.getMark();
+                if (dot != mark) {
+                    doc.remove(Math.min(dot, mark), Math.abs(dot - mark));
+                    beep = false;
+                } else if (dot < doc.getLength()) {
+                    doc.remove(dot, 1);
+                    beep = false;
+                }
+            } catch (BadLocationException bl) {
+            }
+        }
+        if (beep) {
+            Toolkit.getDefaultToolkit().beep();
+        }
+    }
+
+}

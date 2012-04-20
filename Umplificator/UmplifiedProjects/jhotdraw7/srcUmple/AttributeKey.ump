@@ -1,0 +1,242 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class AttributeKey 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.io.Serializable;
+depend java.util.*;
+depend javax.swing.undo.*;
+depend org.jhotdraw.util.*;
+
+  /**
+     * Holds a String representation of the attribute key.
+     */
+    private String key;
+/**
+     * Holds the default value.
+     */
+    @Nullable private T defaultValue;
+/**
+     * Specifies whether null values are allowed.
+     */
+    private boolean isNullValueAllowed;
+/**
+     * Holds labels for the localization of the attribute.
+     */
+    private ResourceBundleUtil labels;
+/** This variable is used as a "type token" so that we can check for
+     * assignability of attribute values at runtime.
+     */
+    private Class<T> clazz;
+/**
+     * Returns the key string.
+     * @return key string.
+     */
+    public String getKey() {
+        return key;
+    }
+/**
+     * Returns a localized human friendly presentation of the key.
+     * @return the presentation name of the key.
+     */
+    public String getPresentationName() {
+        return (labels == null) ? key : labels.getString("attribute." + key + ".text");
+    }
+/**
+     * Returns the default value of the attribute.
+     *
+     * @return the default value.
+     */
+    @Nullable
+    public T getDefaultValue() {
+        return defaultValue;
+    }
+/**
+     * Gets a clone of the value from the Figure.
+     */
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public T getClone(Figure f) {
+        T value = f.get(this);
+        try {
+            return value == null ? null : clazz.cast(Methods.invoke(value, "clone"));
+        } catch (NoSuchMethodException ex) {
+            InternalError e = new InternalError();
+            e.initCause(ex);
+            throw e;
+        }
+    }
+/**
+     * Gets the value of the attribute denoted by this AttributeKey from
+     * a Figure.
+     * 
+     * @param f A figure.
+     * @return The value of the attribute.
+     */
+    @Nullable
+    public T get(Figure f) {
+        return f.get(this);
+    }
+/**
+     * Gets the value of the attribute denoted by this AttributeKey from
+     * a Map.
+     * 
+     * @param a A Map.
+     * @return The value of the attribute.
+     */
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public T get(Map<AttributeKey, Object> a) {
+        return a.containsKey(this) ? (T) a.get(this) : defaultValue;
+    }
+/**
+     * Convenience method for setting a value on a Figure.
+     * <p>
+     * Note: Unlike in previous versions of JHotDraw 7, this method does
+     * not call {@code f.willChange()} before setting the value, and
+     * {@code f.changed()} afterwards.
+     *
+     * @param f the Figure
+     * @param value the attribute value
+     */
+    public void set(Figure f, @Nullable T value) {
+        if (value == null && !isNullValueAllowed) {
+            throw new NullPointerException("Null value not allowed for AttributeKey " + key);
+        }
+        f.set(this, value);
+    }
+/**
+     * Sets the attribute and returns an UndoableEditEvent which can be used
+     * to undo it.
+     * <p>
+     * Note: Unlike in previous versions of JHotDraw 7, this method does
+     * not call {@code f.willChange()} before setting the value, and
+     * {@code f.changed()} afterwards.
+     */
+    public UndoableEdit setUndoable(final Figure f, @Nullable final T value) {
+        if (value == null && !isNullValueAllowed) {
+            throw new NullPointerException("Null value not allowed for AttributeKey " + key);
+        }
+
+        final Object restoreData = f.getAttributesRestoreData();
+        f.set(this, value);
+
+        UndoableEdit edit = new AbstractUndoableEdit() {
+
+            @Override
+            public String getPresentationName() {
+                return AttributeKey.this.getPresentationName();
+            }
+
+            @Override
+            public void undo() {
+                super.undo();
+                f.willChange();
+                f.restoreAttributesTo(restoreData);
+                f.changed();
+            }
+
+            @Override
+            public void redo() {
+                super.redo();
+                f.willChange();
+                f.set(AttributeKey.this, value);
+                f.changed();
+            }
+        };
+        return edit;
+
+    }
+/**
+     * Convenience method for setting a clone of a value on a figure.
+     * <p>
+     * Note: Unlike in previous versions of JHotDraw 7, this method does
+     * not call {@code f.willChange()} before setting the value, and
+     * {@code f.changed()} afterwards.
+     *
+     * @param f the Figure
+     * @param value the attribute value
+     */
+    public void setClone(Figure f, @Nullable T value) {
+        try {
+            f.set(this, value == null ? null : clazz.cast(Methods.invoke(value, "clone")));
+
+        } catch (NoSuchMethodException ex) {
+            InternalError e = new InternalError();
+            e.initCause(ex);
+            throw e;
+        }
+    }
+/**
+     * Convenience method for putting a clone of a value on a map.
+     *
+     * @param a the map
+     * @param value the attribute value
+     */
+    public void putClone(Map<AttributeKey, Object> a, @Nullable T value) {
+        try {
+            put(a, value == null ? null : clazz.cast(Methods.invoke(value, "clone")));
+
+        } catch (NoSuchMethodException ex) {
+            InternalError e = new InternalError();
+            e.initCause(ex);
+            throw e;
+        }
+    }
+/**
+     * Use this method to perform a type-safe put operation of an attribute
+     * into a Map.
+     *
+     * @param a An attribute map.
+     * @param value The new value.
+     * @return The old value.
+     */
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public T put(Map<AttributeKey, Object> a, @Nullable T value) {
+        if (value == null && !isNullValueAllowed) {
+            throw new NullPointerException("Null value not allowed for AttributeKey " + key);
+        }
+        return (T) a.put(this, value);
+    }
+/**
+     * Returns true if null values are allowed.
+     * @return true if null values are allowed.
+     */
+    public boolean isNullValueAllowed() {
+        return isNullValueAllowed;
+    }
+/**
+     * Returns true if the specified value is assignable with this key.
+     *
+     * @param value
+     * @return True if assignable.
+     */
+    public boolean isAssignable(@Nullable Object value) {
+        if (value == null) {
+            return isNullValueAllowed();
+        }
+
+        return clazz.isInstance(value);
+    }
+/** Returns the key string. */
+    @Override
+    public String toString() {
+        return key;
+    }
+@Override
+    public int hashCode() {
+        return key.hashCode();
+    }
+@Override
+    public boolean equals(Object that) {
+        if (that instanceof AttributeKey) {
+            return ((AttributeKey) that).key.equals(this.key);
+        }
+        return false;
+    }
+
+}

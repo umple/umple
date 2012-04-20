@@ -1,0 +1,30 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.odg ;
+
+class ODGDrawing 
+{
+depend org.jhotdraw.draw.*;
+  isA QuadTreeDrawing;
+
+  private String title;
+private String description;
+public void setTitle(String newValue) {
+        String oldValue = title;
+        title = newValue;
+        firePropertyChange("title", oldValue, newValue);
+    }
+public String getTitle() {
+        return title;
+    }
+public void setDescription(String newValue) {
+        String oldValue = description;
+        description = newValue;
+        firePropertyChange("description", oldValue, newValue);
+    }
+public String getDescription() {
+        return description;
+    }
+
+}

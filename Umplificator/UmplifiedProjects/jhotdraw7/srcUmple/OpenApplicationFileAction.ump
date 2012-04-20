@@ -1,0 +1,145 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.app ;
+
+class OpenApplicationFileAction 
+{
+depend java.awt.Frame;
+depend org.jhotdraw.gui.Worker;
+depend org.jhotdraw.util.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend java.io.*;
+depend java.net.URI;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractApplicationAction;
+depend org.jhotdraw.gui.JSheet;
+depend org.jhotdraw.gui.event.SheetEvent;
+depend org.jhotdraw.gui.event.SheetListener;
+depend org.jhotdraw.net.URIUtil;
+  isA AbstractApplicationAction;
+
+  public final static String ID = "application.openFile";
+private JFileChooser fileChooser;
+private int entries;
+/**
+     * Opens a new view.
+     * <p>
+     * The file name is passed in the action command of the action event.
+     *
+     */
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        final Application app = getApplication();
+        final String filename = evt.getActionCommand();
+
+        if (app.isEnabled()) {
+            URI uri = new File(filename).toURI();
+
+            // Prevent same URI from being opened more than once
+            if (!app.getModel().isAllowMultipleViewsPerURI()) {
+                for (View v : app.getViews()) {
+                    if (v.getURI() != null && v.getURI().equals(uri)) {
+                        v.getComponent().requestFocus();
+                        return;
+                    }
+                }
+            }
+
+
+            app.setEnabled(false);
+            // Search for an empty view
+            View emptyView = app.getActiveView();
+            if (emptyView == null
+                    || emptyView.getURI() != null
+                    || emptyView.hasUnsavedChanges()) {
+                emptyView = null;
+            }
+
+            final View p;
+            if (emptyView == null) {
+                p = app.createView();
+                app.add(p);
+                app.show(p);
+            } else {
+                p = emptyView;
+            }
+            openView(p, uri);
+        }
+    }
+protected void openView(final View view, final URI uri) {
+        final Application app = getApplication();
+        app.setEnabled(true);
+
+
+        // If there is another view with the same URI we set the multiple open
+        // id of our view to max(multiple open id) + 1.
+        int multipleOpenId = 1;
+        for (View aView : app.views()) {
+            if (aView != view
+                    && aView.getURI() != null
+                    && aView.getURI().equals(uri)) {
+                multipleOpenId = Math.max(multipleOpenId, aView.getMultipleOpenId() + 1);
+            }
+        }
+        view.setMultipleOpenId(multipleOpenId);
+        view.setEnabled(false);
+
+        // Open the file
+        view.execute(new Worker() {
+
+            @Override
+            protected Object construct() throws IOException {
+                boolean exists = true;
+                try {
+                    File f = new File(uri);
+                    exists = f.exists();
+                } catch (IllegalArgumentException e) {
+                    // The URI does not denote a file, thus we can not check whether the file exists.
+                }
+                if (exists) {
+                    view.read(uri, null);
+                    return null;
+                } else {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+                    throw new IOException(labels.getFormatted("file.open.fileDoesNotExist.message", URIUtil.getName(uri)));
+                }
+            }
+
+            @Override
+            protected void done(Object value) {
+                view.setURI(uri);
+                app.addRecentURI(uri);
+                Frame w = (Frame) SwingUtilities.getWindowAncestor(view.getComponent());
+                if (w != null) {
+                    w.setExtendedState(w.getExtendedState() & ~Frame.ICONIFIED);
+                    w.toFront();
+                }
+                view.setEnabled(true);
+                view.getComponent().requestFocus();
+            }
+
+            @Override
+            protected void failed(Throwable value) {
+                value.printStackTrace();
+                String message = value.getMessage() != null ? value.getMessage() : value.toString();
+
+                ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+                JSheet.showMessageSheet(view.getComponent(),
+                        "<html>" + UIManager.getString("OptionPane.css")
+                        + "<b>" + labels.getFormatted("file.open.couldntOpen.message", URIUtil.getName(uri)) + "</b><p>"
+                        + (message == null ? "" : message),
+                        JOptionPane.ERROR_MESSAGE, new SheetListener() {
+
+                    @Override
+                    public void optionSelected(SheetEvent evt) {
+                        view.setEnabled(true);
+                    }
+                });
+            }
+        });
+    }
+
+}

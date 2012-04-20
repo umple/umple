@@ -1,0 +1,15 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class RemoveAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend javax.swing.JComponent;
+  isA DeleteAction;
+
+  /** The ID for this action. */
+    public final static String ID = "edit.remove";
+
+}

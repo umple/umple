@@ -1,0 +1,96 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.decoration ;
+
+class CompositeLineDecoration 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.Graphics2D;
+depend java.awt.geom.Point2D;
+depend java.awt.geom.Rectangle2D;
+depend java.io.IOException;
+depend java.util.ArrayList;
+depend java.util.List;
+depend org.jhotdraw.xml.DOMInput;
+depend org.jhotdraw.xml.DOMOutput;
+depend org.jhotdraw.xml.DOMStorable;
+
+  private List<LineDecoration> decorations = new ArrayList<LineDecoration>();
+/**
+     * Add another line decoration into the composite line decoration.
+     * The new decoration will be appended to the existing decorations
+     * and is also the last drawn.
+     */
+    public void addDecoration(LineDecoration decoration) {
+    	if (decoration != null) {
+    		decorations.add(decoration);
+    	}
+    }
+/**
+     * Draws the arrow tip in the direction specified by the given two
+     * Points.. (template method)
+     */
+    @Override
+    public void draw(Graphics2D g, Figure f, Point2D.Double p1, Point2D.Double p2) {
+    	for (LineDecoration decoration : decorations) {
+    		decoration.draw(g, f, p1, p2);
+    	}
+    }
+/**
+     * Returns the drawing area of the decorator.
+     */
+    @Override
+    public Rectangle2D.Double getDrawingArea(Figure f, Point2D.Double p1, Point2D.Double p2) {
+    	Rectangle2D.Double r = null;
+    	
+    	for (LineDecoration decoration : decorations) {
+    		Rectangle2D.Double aR = decoration.getDrawingArea(f, p1, p2);
+    		if (r == null)
+    			r = aR;
+    		else
+    			r.add(aR);
+    	}
+    	
+    	return r;
+    }
+/**
+     * Returns the radius of the decorator.
+     * This is used to crop the end of the line, to prevent it from being
+     * drawn it over the decorator.
+     */
+    @Override
+    public double getDecorationRadius(Figure f) {
+    	double radius = 0;
+    	
+    	for (LineDecoration decoration : decorations) {
+    		radius = Math.max(radius, decoration.getDecorationRadius(f));
+    	}
+    	
+    	return radius;
+    }
+@Override
+    public void read(DOMInput in) throws IOException {
+        for (int i = in.getElementCount("decoration") - 1; i >= 0; i--) {
+    		in.openElement("decoration", i);
+    		
+            Object value = in.readObject();
+            
+            if (value instanceof LineDecoration)
+            	addDecoration((LineDecoration)value);
+    		
+    		in.closeElement();
+    	}
+    }
+@Override
+    public void write(DOMOutput out) throws IOException {
+    	for (LineDecoration decoration : decorations) {
+        	out.openElement("decoration");
+        	
+            out.writeObject(decoration);
+            
+            out.closeElement();
+    	}
+    }
+
+}

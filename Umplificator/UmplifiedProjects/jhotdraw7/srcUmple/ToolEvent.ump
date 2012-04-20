@@ -1,0 +1,35 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class ToolEvent 
+{
+depend org.jhotdraw.draw.tool.Tool;
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.util.*;
+  isA EventObject;
+
+  private Rectangle invalidatedArea;
+private DrawingView view;
+/**
+     * Gets the tool which is the source of the event.
+     */
+    public Tool getTool() {
+        return (Tool) getSource();
+    }
+/**
+     * Gets the drawing view of the tool.
+     */
+    public DrawingView getView() {
+        return view;
+    }
+/**
+     *  Gets the bounds of the invalidated area on the drawing view.
+     */
+    public Rectangle getInvalidatedArea() {
+        return invalidatedArea;
+    }
+
+}

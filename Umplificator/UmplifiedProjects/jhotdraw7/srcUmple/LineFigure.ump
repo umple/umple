@@ -1,0 +1,77 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class LineFigure 
+{
+depend org.jhotdraw.draw.handle.BezierOutlineHandle;
+depend org.jhotdraw.draw.handle.BezierNodeHandle;
+depend javax.swing.undo.*;
+depend java.awt.event.*;
+depend java.awt.geom.*;
+depend java.util.*;
+depend org.jhotdraw.draw.handle.Handle;
+depend org.jhotdraw.geom.*;
+  isA BezierFigure;
+
+  // DRAWING
+    // SHAPE AND BOUNDS
+    // ATTRIBUTES
+    // EDITING
+    @Override
+    public Collection<Handle> createHandles(int detailLevel) {
+        LinkedList<Handle> handles = new LinkedList<Handle>();
+        switch (detailLevel) {
+            case -1 : // Mouse hover handles
+                handles.add(new BezierOutlineHandle(this, true));
+                break;
+            case 0 :
+                handles.add(new BezierOutlineHandle(this));
+                for (int i=0, n = path.size(); i < n; i++) {
+                    handles.add(new BezierNodeHandle(this, i));
+                }
+                break;
+        }
+        return handles;
+    }
+// CONNECTING
+    // COMPOSITE FIGURES
+    // CLONING
+    // EVENT HANDLING
+    /**
+     * Handles a mouse click.
+     */
+    @Override
+    public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view) {
+        if (evt.getClickCount() == 2 && view.getHandleDetailLevel() == 0) {
+            willChange();
+            final int index = splitSegment(p, (float) (5f / view.getScaleFactor()));
+            if (index != -1) {
+                final BezierPath.Node newNode = getNode(index);
+                fireUndoableEditHappened(new AbstractUndoableEdit() {
+                    @Override
+                    public void redo() throws CannotRedoException {
+                        super.redo();
+                        willChange();
+                        addNode(index, newNode);
+                        changed();
+                    }
+
+                    @Override
+                    public void undo() throws CannotUndoException {
+                        super.undo();
+                        willChange();
+                        removeNode(index);
+                        changed();
+                    }
+                    
+                });
+                changed();
+                return true;
+            }
+        }
+        return false;
+    }
+
+}

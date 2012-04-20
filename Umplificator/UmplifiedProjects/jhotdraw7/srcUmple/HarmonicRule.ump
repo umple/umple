@@ -1,0 +1,17 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class HarmonicRule 
+{
+depend java.awt.Color;
+
+  public void setBaseIndex();
+public int getBaseIndex();
+public void setDerivedIndices(int... indices);
+public int[] getDerivedIndices();
+public void apply(HarmonicColorModel model);
+public void colorChanged(HarmonicColorModel model, int index, Color oldValue, Color newValue);
+
+}

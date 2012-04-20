@@ -1,0 +1,63 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.event ;
+
+class SheetEvent 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.util.*;
+depend javax.swing.*;
+depend org.jhotdraw.gui.URIChooser;
+depend org.jhotdraw.gui.JSheet;
+  isA EventObject;
+
+  private Object pane;
+private int option;
+@Nullable private Object value;
+@Nullable private Object inputValue;
+/**
+     * Returns the pane on the sheet. This is either a JFileChooser, a URIChooser or a
+     * JOptionPane.
+     */
+    public Object getPane() {
+        return pane;
+    }
+/**
+     * Returns the JFileChooser pane on the sheet.
+     */
+    public JFileChooser getFileChooser() {
+        return (JFileChooser) pane;
+    }
+/**
+     * Returns the URIChooser pane on the sheet.
+     */
+    public URIChooser getChooser() {
+        return (URIChooser) pane;
+    }
+/**
+     * Returns the JOptionPane pane on the sheet.
+     */
+    public JOptionPane getOptionPane() {
+        return (JOptionPane) pane;
+    }
+/**
+     * Returns the option that the JFileChooser or JOptionPane returned.
+     */
+    public int getOption() {
+        return option;
+    }
+/**
+     * Returns the value that the JFileChooser or JOptionPane returned.
+     */
+    public Object getValue() {
+        return value;
+    }
+/**
+     * Returns the input value that the JOptionPane returned, if it wants input.
+     */
+    public Object getInputValue() {
+        return inputValue;
+    }
+
+}

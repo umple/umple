@@ -1,0 +1,29 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class AbstractHarmonicRule 
+{
+depend edu.umd.cs.findbugs.annotations.NonNull;
+
+  protected int baseIndex;
+protected int[] derivedIndices;
+@Override
+    public void setBaseIndex() {
+       // this.baseIndex = baseIndex;
+    }
+@Override
+    public int getBaseIndex() {
+        return baseIndex;
+    }
+@Override
+    public void setDerivedIndices(int... indices) {
+        this.derivedIndices = indices;
+    }
+@Override
+    public int[] getDerivedIndices() {
+        return derivedIndices;
+    }
+
+}

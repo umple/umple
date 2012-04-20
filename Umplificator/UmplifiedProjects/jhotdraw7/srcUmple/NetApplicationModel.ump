@@ -1,0 +1,163 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.net ;
+
+class NetApplicationModel 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.app.action.view.ViewPropertyAction;
+depend org.jhotdraw.app.action.view.ToggleViewPropertyAction;
+depend org.jhotdraw.app.action.file.ExportFileAction;
+depend org.jhotdraw.draw.tool.Tool;
+depend org.jhotdraw.draw.tool.TextCreationTool;
+depend org.jhotdraw.draw.tool.ConnectionTool;
+depend java.awt.*;
+depend java.awt.event.*;
+depend java.util.*;
+depend javax.swing.*;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.app.action.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.action.*;
+depend org.jhotdraw.gui.JFileURIChooser;
+depend org.jhotdraw.gui.URIChooser;
+depend org.jhotdraw.gui.filechooser.ExtensionFileFilter;
+depend org.jhotdraw.samples.net.figures.*;
+depend org.jhotdraw.util.*;
+  isA DefaultApplicationModel;
+
+  private final static double[] scaleFactors = {5, 4, 3, 2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 0.10};
+/**
+     * This editor is shared by all views.
+     */
+    private DefaultDrawingEditor sharedEditor;
+private HashMap<String, Action> actions;
+private Tool tool;
+private DrawingEditor editor;
+@Override
+    public ActionMap createActionMap(Application a, @Nullable View v) {
+        ActionMap m = super.createActionMap(a, v);
+        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        AbstractAction aa;
+
+        m.put(ExportFileAction.ID, new ExportFileAction(a, v));
+        m.put("view.toggleGrid", aa = new ToggleViewPropertyAction(a, v, NetView.GRID_VISIBLE_PROPERTY));
+        drawLabels.configureAction(aa, "view.toggleGrid");
+        for (double sf : scaleFactors) {
+            m.put((int) (sf * 100) + "%",
+                    aa = new ViewPropertyAction(a, v, DrawingView.SCALE_FACTOR_PROPERTY, Double.TYPE, new Double(sf)));
+            aa.putValue(Action.NAME, (int) (sf * 100) + " %");
+
+        }
+        return m;
+    }
+public DefaultDrawingEditor getSharedEditor() {
+        if (sharedEditor == null) {
+            sharedEditor = new DefaultDrawingEditor();
+        }
+        return sharedEditor;
+    }
+@Override
+    public void initView(Application a, View p) {
+        if (a.isSharingToolsAmongViews()) {
+            ((NetView) p).setEditor(getSharedEditor());
+        }
+    }
+private void addCreationButtonsTo(JToolBar tb, final DrawingEditor editor) {
+        // AttributeKeys for the entitie sets
+        HashMap<AttributeKey, Object> attributes;
+
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.net.Labels");
+
+        ButtonFactory.addSelectionToolTo(tb, editor);
+        tb.addSeparator();
+
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
+        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
+        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
+        ButtonFactory.addToolTo(tb, editor, new TextCreationTool(new NodeFigure(), attributes), "edit.createNode", labels);
+
+        attributes = new HashMap<AttributeKey, Object>();
+        attributes.put(AttributeKeys.STROKE_COLOR, new Color(0x000099));
+        ButtonFactory.addToolTo(tb, editor, new ConnectionTool(new LineConnectionFigure(), attributes), "edit.createLink", labels);
+    }
+/**
+     * Creates toolbars for the application.
+     */
+    @Override
+    public java.util.List<JToolBar> createToolBars(Application a, @Nullable View pr) {
+        ResourceBundleUtil drawLabels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        NetView p = (NetView) pr;
+
+        DrawingEditor editor;
+        if (p == null) {
+            editor = getSharedEditor();
+        } else {
+            editor = p.getEditor();
+        }
+
+        LinkedList<JToolBar> list = new LinkedList<JToolBar>();
+        JToolBar tb;
+        tb = new JToolBar();
+        addCreationButtonsTo(tb, editor);
+        tb.setName(drawLabels.getString("window.drawToolBar.title"));
+        list.add(tb);
+        tb = new JToolBar();
+        ButtonFactory.addAttributesButtonsTo(tb, editor);
+        tb.setName(drawLabels.getString("window.attributesToolBar.title"));
+        list.add(tb);
+        tb = new JToolBar();
+        ButtonFactory.addAlignmentButtonsTo(tb, editor);
+        tb.setName(drawLabels.getString("window.alignmentToolBar.title"));
+        list.add(tb);
+        return list;
+    }
+/** Creates the MenuBuilder. */
+    @Override
+    protected MenuBuilder createMenuBuilder() {
+        return new DefaultMenuBuilder() {
+
+            @Override
+            public void addOtherViewItems(JMenu m, Application app, @Nullable View v) {
+                ActionMap am = app.getActionMap(v);
+                JCheckBoxMenuItem cbmi;
+                cbmi = new JCheckBoxMenuItem(am.get("view.toggleGrid"));
+                ActionUtil.configureJCheckBoxMenuItem(cbmi, am.get("view.toggleGrid"));
+                m.add(cbmi);
+                JMenu m2 = new JMenu("Zoom");
+                for (double sf : scaleFactors) {
+                    String id = (int) (sf * 100) + "%";
+            cbmi = new JCheckBoxMenuItem(am.get(id));
+            ActionUtil.configureJCheckBoxMenuItem(cbmi, am.get(id));
+            m2.add(cbmi);
+                }
+                m.add(m2);
+            }
+        };
+    }
+@Override
+    public URIChooser createOpenChooser(Application a, @Nullable View v) {
+        JFileURIChooser c = new JFileURIChooser();
+        c.addChoosableFileFilter(new ExtensionFileFilter("Net Diagram .xml", "xml"));
+        return c;
+    }
+@Override
+    public URIChooser createSaveChooser(Application a, @Nullable View v) {
+        JFileURIChooser c = new JFileURIChooser();
+        c.addChoosableFileFilter(new ExtensionFileFilter("Net Diagram .xml", "xml"));
+        return c;
+    }
+public ToolButtonListener(Tool t, DrawingEditor editor) {
+            this.tool = t;
+            this.editor = editor;
+        }
+@Override
+        public void itemStateChanged(ItemEvent evt) {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                editor.setTool(tool);
+            }
+        }
+
+}

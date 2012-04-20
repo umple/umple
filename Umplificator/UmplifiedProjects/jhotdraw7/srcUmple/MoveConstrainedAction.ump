@@ -1,0 +1,92 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class MoveConstrainedAction 
+{
+depend org.jhotdraw.draw.event.TransformEdit;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.undo.CompositeEdit;
+depend java.awt.geom.*;
+depend java.util.HashSet;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  private TranslationDirection dir;
+public final static String ID = "edit.moveConstrainedEast";
+public final static String ID = "edit.moveConstrainedWest";
+public final static String ID = "edit.moveConstrainedNorth";
+public final static String ID = "edit.moveConstrainedSouth";
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        if (getView().getSelectionCount() > 0) {
+
+            Rectangle2D.Double r = null;
+            HashSet<Figure> transformedFigures = new HashSet<Figure>();
+            for (Figure f : getView().getSelectedFigures()) {
+                if (f.isTransformable()) {
+                    transformedFigures.add(f);
+                    if (r == null) {
+                        r = f.getBounds();
+                    } else {
+                        r.add(f.getBounds());
+                    }
+                }
+            }
+            if (transformedFigures.isEmpty()) {
+                return;
+            }
+            Point2D.Double p0 = new Point2D.Double(r.x, r.y);
+            if (getView().getConstrainer() != null) {
+                getView().getConstrainer().translateRectangle(r, dir);
+            } else {
+                switch (dir) {
+                    case NORTH:
+                        r.y -= 1;
+                        break;
+                    case SOUTH:
+                        r.y += 1;
+                        break;
+                    case WEST:
+                        r.x -= 1;
+                        break;
+                    case EAST:
+                        r.x += 1;
+                        break;
+                }
+            }
+
+            AffineTransform tx = new AffineTransform();
+            tx.translate(r.x - p0.x, r.y - p0.y);
+            for (Figure f : transformedFigures) {
+                f.willChange();
+                f.transform(tx);
+                f.changed();
+            }
+            CompositeEdit edit;
+            fireUndoableEditHappened(new TransformEdit(transformedFigures, tx));
+        }
+    }
+public East(DrawingEditor editor) {
+            super(editor, TranslationDirection.EAST);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+public West(DrawingEditor editor) {
+            super(editor, TranslationDirection.WEST);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+public North(DrawingEditor editor) {
+            super(editor, TranslationDirection.NORTH);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+public South(DrawingEditor editor) {
+            super(editor, TranslationDirection.SOUTH);
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            labels.configureAction(this, ID);
+        }
+
+}

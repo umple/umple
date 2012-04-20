@@ -1,0 +1,19 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.net ;
+
+class URIUtil 
+{
+depend java.io.File;
+depend java.net.URI;
+
+  /** Returns the name of an URI for display in the title bar of a window. */
+    public static String getName(URI uri) {
+        if (uri.getScheme()!=null&&uri.getScheme().equals("file")) {
+            return new File(uri).getName();
+        }
+        return uri.toString();
+    }
+
+}

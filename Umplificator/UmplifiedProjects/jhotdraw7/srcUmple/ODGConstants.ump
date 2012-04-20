@@ -1,0 +1,26 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.odg ;
+
+class ODGConstants 
+{
+depend java.util.*;
+
+  public final static String OFFICE_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
+public final static String DRAWING_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
+public final static String SVG_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
+public final static String STYLE_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
+public final static String TEXT_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+public final static Map<String,StrokeStyle> STROKE_STYLES;
+public final static Map<String,FillStyle> FILL_STYLES;
+NONE
+DASH
+SOLID
+NONE
+SOLID
+BITMAP
+GRADIENT
+HATCH
+
+}

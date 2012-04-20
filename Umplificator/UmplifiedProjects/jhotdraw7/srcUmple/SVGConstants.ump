@@ -1,0 +1,24 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg ;
+
+class SVGConstants 
+{
+depend java.awt.*;
+depend java.util.*;
+depend javax.swing.*;
+depend org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+
+  public final static String SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+public final static String SVG_MIMETYPE = "image/svg+xml";
+public final static Map<String,Color> SVG_COLORS;
+public final static Map<String,WindingRule> SVG_FILL_RULES;
+public final static Map<String,Integer> SVG_STROKE_LINECAPS;
+public final static Map<String,Integer> SVG_STROKE_LINEJOINS;
+public final static Map<String,Double> SVG_ABSOLUTE_FONT_SIZES;
+public final static Map<String,Double> SVG_RELATIVE_FONT_SIZES;
+public final static Map<String,TextAnchor> SVG_TEXT_ANCHORS;
+public final static Map<String,TextAlign> SVG_TEXT_ALIGNS;
+
+}

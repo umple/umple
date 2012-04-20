@@ -1,0 +1,53 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class NullHandle 
+{
+depend org.jhotdraw.draw.locator.Locator;
+depend org.jhotdraw.draw.locator.RelativeLocator;
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.util.*;
+  isA LocatorHandle;
+
+  @Override
+    public Cursor getCursor() {
+        return Cursor.getDefaultCursor();
+    }
+@Override
+    public void trackStart(Point anchor, int modifiersEx) {
+        
+    }
+@Override
+    public void trackStep(Point anchor, Point lead, int modifiersEx) {
+        
+    }
+@Override
+    public void trackEnd(Point anchor, Point lead, int modifiersEx) {
+        
+    }
+/**
+     * Creates handles for each lead of a
+     * figure and adds them to the provided collection.
+     */
+    static public void addLeadHandles(Figure f, Collection<Handle> handles) {
+        handles.add(new NullHandle(f, new RelativeLocator(0f,0f)));
+        handles.add(new NullHandle(f, new RelativeLocator(0f,1f)));
+        handles.add(new NullHandle(f, new RelativeLocator(1f,0f)));
+        handles.add(new NullHandle(f, new RelativeLocator(1f,1f)));
+    }
+/**
+     * Draws this handle.
+     * Null Handles are drawn as unfilled rectangles.
+     */
+    @Override
+    public void draw(Graphics2D g) {
+        drawRectangle(g, 
+                (Color) getEditor().getHandleAttribute(HandleAttributeKeys.NULL_HANDLE_FILL_COLOR),
+                (Color) getEditor().getHandleAttribute(HandleAttributeKeys.NULL_HANDLE_STROKE_COLOR)
+                );
+    }
+
+}

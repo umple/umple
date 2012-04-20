@@ -1,0 +1,46 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.decoration ;
+
+class PerpendicularBar 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.Path2D;
+depend org.jhotdraw.xml.DOMInput;
+depend org.jhotdraw.xml.DOMOutput;
+depend org.jhotdraw.xml.DOMStorable;
+  isA AbstractLineDecoration;
+
+  private double height;
+/**
+     * Calculates the path of the decorator...a simple line
+     * perpendicular to the figure.
+     */
+    @Override
+    protected Path2D.Double getDecoratorPath(Figure f) {
+        Path2D.Double path = new Path2D.Double();
+        double halfHeight = height / 2;
+
+        path.moveTo(+halfHeight, 0);
+        path.lineTo(-halfHeight, 0);
+
+        return path;
+    }
+/**
+     * Calculates the radius of the decorator path.
+     */
+    @Override
+    protected double getDecoratorPathRadius(Figure f) {
+        return 0.5;
+    }
+@Override
+    public void read(DOMInput in) {
+        height = in.getAttribute("height", 10);
+    }
+@Override
+    public void write(DOMOutput out) {
+        out.addAttribute("height", height);
+    }
+
+}

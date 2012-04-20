@@ -1,0 +1,22 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg.figures ;
+
+class SVGFigure 
+{
+depend org.jhotdraw.draw.*;
+
+  /**
+     * Returns true, if this figure is empty for one of the following
+     * reasons:
+     * <ul>
+     * <li>A group has no children</li>
+     * <li>A path has less than two points</li>
+     * <li>An ellipse or a rectangle has a width or a height of 0</li>
+     * <li>A text has no characters</li>
+     * </ul>
+     */
+    public boolean isEmpty();
+
+}

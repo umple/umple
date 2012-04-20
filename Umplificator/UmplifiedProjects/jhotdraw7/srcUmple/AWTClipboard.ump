@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.datatransfer ;
+
+class AWTClipboard 
+{
+depend java.awt.datatransfer.Clipboard;
+depend java.awt.datatransfer.ClipboardOwner;
+depend java.awt.datatransfer.Transferable;
+  isA AbstractClipboard;
+
+  /** The proxy target. */
+    private Clipboard target;
+/** Returns the proxy target. */
+    public Clipboard getTarget() {
+        return target;
+    }
+@Override
+    public Transferable getContents(Object requestor) {
+        return target.getContents(requestor);
+    }
+/** Sets the current contents of the clipboard to the specified
+     * {@code Transferable} object.
+     *
+     * @param contents The {@code Transferable} object representing clipboard
+     * content.
+     */
+    @Override
+    public void setContents(Transferable contents, ClipboardOwner owner) {
+        target.setContents(contents, owner);
+    }
+
+}

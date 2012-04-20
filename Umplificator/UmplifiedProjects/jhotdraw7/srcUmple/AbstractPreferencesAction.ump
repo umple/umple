@@ -1,0 +1,15 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.app ;
+
+class AbstractPreferencesAction 
+{
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.action.AbstractApplicationAction;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractApplicationAction;
+
+  public final static String ID = "application.preferences";
+
+}

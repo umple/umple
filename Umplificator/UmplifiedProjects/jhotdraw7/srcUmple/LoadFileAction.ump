@@ -1,0 +1,111 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class LoadFileAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.Component;
+depend java.awt.Window;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.gui.*;
+depend org.jhotdraw.gui.event.*;
+depend javax.swing.*;
+depend java.io.*;
+depend java.net.URI;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractSaveUnsavedChangesAction;
+depend org.jhotdraw.gui.URIChooser;
+depend org.jhotdraw.gui.filechooser.ExtensionFileFilter;
+depend org.jhotdraw.net.URIUtil;
+  isA AbstractSaveUnsavedChangesAction;
+
+  public final static String ID = "file.load";
+@Override
+    protected URIChooser getChooser(View view) {
+        URIChooser chsr = (URIChooser) (view.getComponent()).getClientProperty("loadChooser");
+        if (chsr == null) {
+            chsr = getApplication().getModel().createOpenChooser(getApplication(), view);
+            view.getComponent().putClientProperty("loadChooser", chsr);
+        }
+        return chsr;
+    }
+@Override
+    public void doIt(final View view) {
+        URIChooser fileChooser = getChooser(view);
+        Window wAncestor = SwingUtilities.getWindowAncestor(view.getComponent());
+        final Component oldFocusOwner = (wAncestor == null) ? null : wAncestor.getFocusOwner();
+
+        JSheet.showOpenSheet(fileChooser, view.getComponent(), new SheetListener() {
+
+            @Override
+            public void optionSelected(final SheetEvent evt) {
+                if (evt.getOption() == JFileChooser.APPROVE_OPTION) {
+                    final URI uri;
+                    if ((evt.getChooser() instanceof JFileURIChooser) && evt.getFileChooser().getFileFilter() instanceof ExtensionFileFilter) {
+                        uri = ((ExtensionFileFilter) evt.getFileChooser().getFileFilter()).makeAcceptable(evt.getFileChooser().getSelectedFile()).toURI();
+                    } else {
+                        uri = evt.getChooser().getSelectedURI();
+                    }
+
+                    // Prevent same URI from being opened more than once
+                    if (!getApplication().getModel().isAllowMultipleViewsPerURI()) {
+                        for (View v : getApplication().getViews()) {
+                            if (v != view && v.getURI() != null && v.getURI().equals(uri)) {
+                                v.getComponent().requestFocus();
+                                return;
+                            }
+                        }
+                    }
+
+                    loadViewFromURI(view, uri, evt.getChooser());
+                } else {
+                    view.setEnabled(true);
+                    if (oldFocusOwner != null) {
+                        oldFocusOwner.requestFocus();
+                    }
+                }
+            }
+        });
+    }
+public void loadViewFromURI(final View view, final URI uri, final URIChooser chooser) {
+        view.setEnabled(false);
+
+        // Open the file
+        view.execute(new Worker() {
+
+            @Override
+            protected Object construct() throws IOException {
+                view.read(uri, chooser);
+                return null;
+            }
+
+            @Override
+            protected void done(Object value) {
+                view.setURI(uri);
+                view.setEnabled(true);
+                getApplication().addRecentURI(uri);
+            }
+
+            @Override
+            protected void failed(Throwable value) {
+                ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+                JSheet.showMessageSheet(view.getComponent(),
+                        "<html>" + UIManager.getString("OptionPane.css")
+                        + "<b>" + labels.getFormatted("file.load.couldntLoad.message", URIUtil.getName(uri)) + "</b><p>"
+                        + ((value == null) ? "" : value),
+                        JOptionPane.ERROR_MESSAGE, new SheetListener() {
+
+                    @Override
+                    public void optionSelected(SheetEvent evt) {
+                        view.clear();
+                        view.setEnabled(true);
+                    }
+                });
+            }
+        });
+    }
+
+}

@@ -1,0 +1,52 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class ApplyAttributesAction 
+{
+depend org.jhotdraw.draw.event.FigureSelectionEvent;
+depend org.jhotdraw.undo.*;
+depend java.util.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+depend org.jhotdraw.draw.AttributeKeys.*;
+  isA AbstractSelectedAction;
+
+  private Set<AttributeKey> excludedAttributes = new HashSet<AttributeKey>(
+            Arrays.asList(new AttributeKey[]{TRANSFORM, TEXT}));
+/**
+     * Set of attributes that is excluded when applying default attributes.
+     */
+    public void setExcludedAttributes(Set<AttributeKey> a) {
+        this.excludedAttributes = a;
+    }
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        applyAttributes();
+    }
+@SuppressWarnings("unchecked")
+    public void applyAttributes() {
+        DrawingEditor editor = getEditor();
+
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        CompositeEdit edit = new CompositeEdit(labels.getString("edit.applyAttributes.text"));
+        DrawingView view = getView();
+        view.getDrawing().fireUndoableEditHappened(edit);
+
+        for (Figure figure : view.getSelectedFigures()) {
+            figure.willChange();
+            for (Map.Entry<AttributeKey, Object> entry : editor.getDefaultAttributes().entrySet()) {
+                if (!excludedAttributes.contains(entry.getKey())) {
+                    figure.set(entry.getKey(), entry.getValue());
+                }
+            }
+            figure.changed();
+        }
+        view.getDrawing().fireUndoableEditHappened(edit);
+    }
+public void selectionChanged(FigureSelectionEvent evt) {
+        setEnabled(getView().getSelectionCount() == 1);
+    }
+
+}

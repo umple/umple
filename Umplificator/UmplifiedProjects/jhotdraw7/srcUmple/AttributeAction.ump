@@ -1,0 +1,93 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class AttributeAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend javax.swing.undo.*;
+depend org.jhotdraw.app.action.ActionUtil;
+depend javax.swing.*;
+depend java.util.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  protected Map<AttributeKey, Object> attributes;
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        applyAttributesTo(attributes, getView().getSelectedFigures());
+    }
+/**
+     * Applies the specified attributes to the currently selected figures
+     * of the drawing.
+     *
+     * @param a The attributes.
+     * @param figures The figures to which the attributes are applied.
+     */
+    @SuppressWarnings("unchecked")
+    public void applyAttributesTo(final Map<AttributeKey, Object> a, Set<Figure> figures) {
+        for (Map.Entry<AttributeKey, Object> entry : a.entrySet()) {
+            getEditor().setDefaultAttribute(entry.getKey(), entry.getValue());
+        }
+
+        final ArrayList<Figure> selectedFigures = new ArrayList<Figure>(figures);
+        final ArrayList<Object> restoreData = new ArrayList<Object>(selectedFigures.size());
+        for (Figure figure : selectedFigures) {
+            restoreData.add(figure.getAttributesRestoreData());
+            figure.willChange();
+            for (Map.Entry<AttributeKey, Object> entry : a.entrySet()) {
+                figure.set(entry.getKey(), entry.getValue());
+            }
+            figure.changed();
+        }
+        UndoableEdit edit = new AbstractUndoableEdit() {
+
+            @Override
+            public String getPresentationName() {
+                String name = (String) getValue(ActionUtil.UNDO_PRESENTATION_NAME_KEY);
+                if (name == null) {
+                    name = (String) getValue(AbstractAction.NAME);
+                }
+                if (name == null) {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+                    name = labels.getString("attribute.text");
+                }
+                return name;
+            }
+
+            @Override
+            public void undo() {
+                super.undo();
+                Iterator<Object> iRestore = restoreData.iterator();
+                for (Figure figure : selectedFigures) {
+                    figure.willChange();
+                    figure.restoreAttributesTo(iRestore.next());
+                    figure.changed();
+                }
+            }
+
+            @Override
+            public void redo() {
+                super.redo();
+                for (Figure figure : selectedFigures) {
+                    //restoreData.add(figure.getAttributesRestoreData());
+                    figure.willChange();
+                    for (Map.Entry<AttributeKey, Object> entry : a.entrySet()) {
+                        figure.set(entry.getKey(), entry.getValue());
+                    }
+                    figure.changed();
+                }
+            }
+        };
+        getDrawing().fireUndoableEditHappened(edit);
+    }
+@Override
+    protected void updateEnabledState() {
+        if (getEditor() != null) {
+            setEnabled(getEditor().isEnabled());
+        }
+    }
+
+}

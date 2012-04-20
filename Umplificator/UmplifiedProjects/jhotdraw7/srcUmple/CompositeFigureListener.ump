@@ -1,0 +1,19 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class CompositeFigureListener 
+{
+depend java.util.*;
+
+  /**
+     * Sent when a figure was added.
+     */
+    public void figureAdded(CompositeFigureEvent e);
+/**
+     * Sent when a figure was removed.
+     */
+    public void figureRemoved(CompositeFigureEvent e);
+
+}

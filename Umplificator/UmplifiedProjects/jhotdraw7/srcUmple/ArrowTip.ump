@@ -1,0 +1,74 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.decoration ;
+
+class ArrowTip 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+depend org.jhotdraw.xml.DOMInput;
+depend org.jhotdraw.xml.DOMOutput;
+depend org.jhotdraw.xml.DOMStorable;
+  isA AbstractLineDecoration;
+
+  /**
+     * Pointiness of arrow.
+     */
+    private double angle;
+private double outerRadius;
+private double innerRadius;
+@Override
+    protected Path2D.Double getDecoratorPath(Figure f) {
+        // FIXME - This should take the stroke join an the outer radius into
+        // account to compute the offset properly.
+        double offset = (isStroked()) ? 1 : 0;
+
+
+
+        Path2D.Double path = new Path2D.Double();
+        path.moveTo((outerRadius * Math.sin(-angle)), (offset + outerRadius * Math.cos(-angle)));
+        path.lineTo(0, offset);
+        path.lineTo((outerRadius * Math.sin(angle)), (offset + outerRadius * Math.cos(angle)));
+        if (innerRadius != 0) {
+            path.lineTo(0, (innerRadius + offset));
+            path.closePath();
+        }
+
+        return path;
+    }
+@Override
+    protected double getDecoratorPathRadius(Figure f) {
+        double offset = (isStroked()) ? 0.5 : -0.1;
+
+        return innerRadius + offset;
+    }
+public double getAngle() {
+        return angle;
+    }
+public double getInnerRadius() {
+        return innerRadius;
+    }
+public double getOuterRadius() {
+        return outerRadius;
+    }
+@Override
+    public void read(DOMInput in) {
+        angle = in.getAttribute("angle", 0.35f);
+        innerRadius = in.getAttribute("innerRadius", 12f);
+        outerRadius = in.getAttribute("outerRadius", 12f);
+        setFilled(in.getAttribute("isFilled", false));
+        setStroked(in.getAttribute("isStroked", false));
+        setSolid(in.getAttribute("isSolid", false));
+    }
+@Override
+    public void write(DOMOutput out) {
+        out.addAttribute("angle", angle);
+        out.addAttribute("innerRadius", innerRadius);
+        out.addAttribute("outerRadius", outerRadius);
+        out.addAttribute("isFilled", isFilled());
+        out.addAttribute("isStroked", isStroked());
+        out.addAttribute("isSolid", isSolid());
+    }
+
+}

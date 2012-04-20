@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class LocatorHandle 
+{
+depend org.jhotdraw.draw.locator.Locator;
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.awt.geom.*;
+  isA AbstractHandle;
+
+  private Locator locator;
+public Point2D.Double getLocationOnDrawing() {
+        return locator.locate(getOwner());
+    }
+public Point getLocation() {
+        return view.drawingToView(locator.locate(getOwner()));
+    }
+@Override
+    protected Rectangle basicGetBounds() {
+        Rectangle r = new Rectangle(getLocation());
+        int h = getHandlesize();
+        r.x -= h / 2;
+        r.y -= h / 2;
+        r.width = r.height = h;
+        return r;
+    }
+
+}

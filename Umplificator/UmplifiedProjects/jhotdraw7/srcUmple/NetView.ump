@@ -1,0 +1,193 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.net ;
+
+class NetView 
+{
+depend org.jhotdraw.app.action.edit.RedoAction;
+depend org.jhotdraw.app.action.edit.UndoAction;
+depend org.jhotdraw.draw.io.TextInputFormat;
+depend org.jhotdraw.draw.io.OutputFormat;
+depend org.jhotdraw.draw.io.InputFormat;
+depend org.jhotdraw.draw.io.ImageOutputFormat;
+depend org.jhotdraw.draw.print.DrawingPageable;
+depend org.jhotdraw.draw.io.DOMStorableInputOutputFormat;
+depend java.awt.print.Pageable;
+depend org.jhotdraw.gui.*;
+depend org.jhotdraw.samples.net.figures.*;
+depend org.jhotdraw.undo.*;
+depend org.jhotdraw.util.*;
+depend java.awt.*;
+depend java.beans.*;
+depend java.io.*;
+depend java.lang.reflect.*;
+depend java.net.URI;
+depend javax.swing.*;
+depend javax.swing.border.*;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.action.*;
+depend org.jhotdraw.gui.URIChooser;
+  isA AbstractView;
+
+  public final static String GRID_VISIBLE_PROPERTY = "gridVisible";
+/**
+     * Each NetView uses its own undo redo manager.
+     * This allows for undoing and redoing actions per view.
+     */
+    private UndoRedoManager undo;
+/**
+     * Depending on the type of an application, there may be one editor per
+     * view, or a single shared editor for all views.
+     */
+    private DrawingEditor editor;
+private AbstractButton toggleGridButton;
+// Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane scrollPane;
+private org.jhotdraw.draw.DefaultDrawingView view;
+public boolean isGridVisible() {
+        return view.isConstrainerVisible();
+    }
+public void setGridVisible(boolean newValue) {
+        boolean oldValue = isGridVisible();
+        view.setConstrainerVisible(newValue);
+        firePropertyChange(GRID_VISIBLE_PROPERTY, oldValue, newValue);
+    }
+/**
+     * Creates a new Drawing for this view.
+     */
+    protected Drawing createDrawing() {
+        DefaultDrawing drawing = new DefaultDrawing();
+        DOMStorableInputOutputFormat ioFormat =
+                new DOMStorableInputOutputFormat(new NetFactory());
+        drawing.addInputFormat(ioFormat);
+        drawing.addInputFormat(new TextInputFormat(new NodeFigure()));
+        drawing.addOutputFormat(ioFormat);
+        drawing.addOutputFormat(new ImageOutputFormat());
+        return drawing;
+    }
+/**
+     * Creates a Pageable object for printing the view.
+     */
+    public Pageable createPageable() {
+        return new DrawingPageable(view.getDrawing());
+
+    }
+public DrawingEditor getEditor() {
+        return editor;
+    }
+public void setEditor(DrawingEditor newValue) {
+        DrawingEditor oldValue = editor;
+        if (oldValue != null) {
+            oldValue.remove(view);
+        }
+        editor = newValue;
+        if (newValue != null) {
+            newValue.add(view);
+        }
+    }
+public double getScaleFactor() {
+        return view.getScaleFactor();
+    }
+public void setScaleFactor(double newValue) {
+        view.setScaleFactor(newValue);
+    }
+/**
+     * Initializes view specific actions.
+     */
+    private void initActions() {
+        getActionMap().put(UndoAction.ID, undo.getUndoAction());
+        getActionMap().put(RedoAction.ID, undo.getRedoAction());
+    }
+@Override
+    protected void setHasUnsavedChanges(boolean newValue) {
+        super.setHasUnsavedChanges(newValue);
+        undo.setHasSignificantEdits(newValue);
+    }
+/**
+     * Writes the view to the specified uri.
+     */
+    @Override
+    public void write(URI f, URIChooser chooser) throws IOException {
+        Drawing drawing = view.getDrawing();
+        OutputFormat outputFormat = drawing.getOutputFormats().get(0);
+        outputFormat.write(f, drawing);
+    }
+/**
+     * Reads the view from the specified uri.
+     */
+    @Override
+    public void read(URI f, URIChooser chooser) throws IOException {
+        try {
+            final Drawing drawing = createDrawing();
+            InputFormat inputFormat = drawing.getInputFormats().get(0);
+            inputFormat.read(f, drawing, true);
+            SwingUtilities.invokeAndWait(new Runnable() {
+
+                @Override
+                public void run() {
+                    view.getDrawing().removeUndoableEditListener(undo);
+                    view.setDrawing(drawing);
+                    view.getDrawing().addUndoableEditListener(undo);
+                    undo.discardAllEdits();
+                }
+            });
+        } catch (InterruptedException e) {
+            InternalError error = new InternalError();
+            e.initCause(e);
+            throw error;
+        } catch (InvocationTargetException e) {
+            InternalError error = new InternalError();
+            e.initCause(e);
+            throw error;
+        }
+    }
+/**
+     * Clears the view.
+     */
+    @Override
+    public void clear() {
+        final Drawing newDrawing = createDrawing();
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+
+                @Override
+                public void run() {
+                    view.getDrawing().removeUndoableEditListener(undo);
+                    view.setDrawing(newDrawing);
+                    view.getDrawing().addUndoableEditListener(undo);
+                    undo.discardAllEdits();
+                }
+            });
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+@Override
+    public boolean canSaveTo(URI file) {
+        return new File(file).getName().endsWith(".xml");
+    }
+/** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        scrollPane = new javax.swing.JScrollPane();
+        view = new org.jhotdraw.draw.DefaultDrawingView();
+
+        setLayout(new java.awt.BorderLayout());
+
+        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setViewportView(view);
+
+        add(scrollPane, java.awt.BorderLayout.CENTER);
+    }// </editor-fold>//GEN-END:initComponents
+
+}

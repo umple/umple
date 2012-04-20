@@ -1,0 +1,9 @@
+use DrawApplet.ump;
+use Main.ump;
+use DrawingPanel.ump;
+use DrawingPanelBeanInfo.ump;
+use DrawView.ump;
+use package-info.ump;
+use DrawLiveConnectApplet.ump;
+use DrawFigureFactory.ump;
+use DrawApplicationModel.ump;

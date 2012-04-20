@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class ToolAdapter 
+{
+depend edu.umd.cs.findbugs.annotations.NonNull;
+
+  @Override
+    public void toolStarted(ToolEvent event) {
+    }
+@Override
+    public void toolDone(ToolEvent event) {
+    }
+@Override
+    public void areaInvalidated(ToolEvent e) {
+    }
+@Override
+    public void boundsInvalidated(ToolEvent e) {
+    }
+
+}

@@ -1,0 +1,132 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.xml.css ;
+
+class CSSParser 
+{
+depend java.io.*;
+depend java.util.*;
+
+  public void parse(String css, StyleManager rm) throws IOException {
+        parse(new StringReader(css), rm);
+    }
+public void parse(Reader css, StyleManager rm) throws IOException {
+        StreamTokenizer tt = new StreamTokenizer(css);
+        tt.resetSyntax();
+        tt.wordChars('a', 'z');
+        tt.wordChars('A', 'Z');
+        tt.wordChars('0', '9');
+        tt.wordChars(128 + 32, 255);
+        tt.whitespaceChars(0, ' ');
+        tt.commentChar('/');
+        tt.slashStarComments(true);
+        parseStylesheet(tt, rm);
+    }
+private void parseStylesheet(StreamTokenizer tt, StyleManager rm) throws IOException {
+        while (tt.nextToken() != StreamTokenizer.TT_EOF) {
+            tt.pushBack();
+            parseRuleset(tt, rm);
+        }
+    }
+private void parseRuleset(StreamTokenizer tt, StyleManager rm) throws IOException {
+        // parse selector list
+        List<String> selectors = parseSelectorList(tt);
+        if (tt.nextToken() != '{') throw new IOException("Ruleset '{' missing for "+selectors);
+        Map<String,String> declarations = parseDeclarationMap(tt);
+        if (tt.nextToken() != '}') throw new IOException("Ruleset '}' missing for "+selectors);
+        
+        for (String selector : selectors) {
+            rm.add(new CSSRule(selector, declarations));
+            
+           // System.out.println("CSSParser.add("+selector+","+declarations);
+            
+            /*
+            for (Map.Entry<String,String> entry : declarations.entrySet()) {
+                   rm.add(new CSSRule(selector, entry.getKey(), entry.getValue()));
+            }*/
+        }
+    }
+private List<String> parseSelectorList(StreamTokenizer tt) throws IOException {
+        LinkedList<String> list = new LinkedList<String>();
+        
+        StringBuilder selector = new StringBuilder();
+        boolean needsWhitespace = false;
+        while (tt.nextToken() != StreamTokenizer.TT_EOF &&
+                tt.ttype != '{') {
+            
+            switch (tt.ttype) {
+                case StreamTokenizer.TT_WORD :
+                    if (needsWhitespace) selector.append(' ');
+                    selector.append(tt.sval);
+                    needsWhitespace = true;
+                    break;
+                case ',' :
+                    list.add(selector.toString());
+                    selector.setLength(0);
+                    needsWhitespace = false;
+                    break;
+                default :
+                    if (needsWhitespace) selector.append(' ');
+                    selector.append((char) tt.ttype);
+                    needsWhitespace = false;
+                    break;
+            }
+        }
+        if (selector.length() != 0) {
+            list.add(selector.toString());
+        }
+        
+        tt.pushBack();
+        //System.out.println("selectors:"+list);
+        return list;
+    }
+private Map<String,String> parseDeclarationMap(StreamTokenizer tt) throws IOException {
+        HashMap<String,String> map = new HashMap<String, String>();
+        
+        do {
+            // Parse key
+            StringBuilder key = new StringBuilder();
+            while (tt.nextToken() != StreamTokenizer.TT_EOF &&
+                    tt.ttype != '}' && tt.ttype != ':' && tt.ttype != ';') {
+                
+                switch (tt.ttype) {
+                    case StreamTokenizer.TT_WORD :
+                        key.append(tt.sval);
+                        break;
+                    default :
+                        key.append((char) tt.ttype);
+                        break;
+                }
+            }
+            if (tt.ttype == '}' && key.length() == 0) { break; }
+            if (tt.ttype != ':') throw new IOException("Declaration ':' missing for "+key);
+            
+            // Parse value
+            StringBuilder value = new StringBuilder();
+            boolean needsWhitespace = false;
+            while (tt.nextToken() != StreamTokenizer.TT_EOF &&
+                    tt.ttype != ';' && tt.ttype != '}') {
+                
+                switch (tt.ttype) {
+                    case StreamTokenizer.TT_WORD :
+                        if (needsWhitespace) value.append(' ');
+                        value.append(tt.sval);
+                        needsWhitespace = true;
+                        break;
+                    default :
+                        value.append((char) tt.ttype);
+                        needsWhitespace = false;
+                        break;
+                }
+            }
+            
+            map.put(key.toString(), value.toString());
+            //System.out.println("  declaration: "+key+":"+value);
+        } while (tt.ttype != '}' && tt.ttype != StreamTokenizer.TT_EOF);
+        
+        tt.pushBack();
+        return map;
+    }
+
+}

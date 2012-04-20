@@ -1,0 +1,33 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.datatransfer ;
+
+class OSXClipboard 
+{
+depend java.awt.datatransfer.Clipboard;
+depend java.awt.datatransfer.Transferable;
+  isA AWTClipboard;
+
+  @Override
+    public Transferable getContents(Object requestor) {
+        Transferable t = super.getContents(requestor);
+
+            try {
+                Class c = Class.forName("ch.randelshofer.quaqua.osx.OSXClipboardTransferable");
+                @SuppressWarnings("unchecked")
+                boolean isAvailable = (Boolean) c.getMethod("isNativeCodeAvailable").invoke(null);
+                if (isAvailable) {
+                   CompositeTransferable ct = new CompositeTransferable();
+                   ct.add(t);
+                   ct.add((Transferable) c.newInstance());
+                   t = ct;
+                }
+            } catch (Throwable ex) {
+                // silently suppress
+            }
+
+        return t;
+    }
+
+}

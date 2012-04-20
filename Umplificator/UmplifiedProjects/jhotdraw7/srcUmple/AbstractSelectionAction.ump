@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class AbstractSelectionAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.beans.PropertyChangeEvent;
+depend java.beans.PropertyChangeListener;
+depend javax.swing.AbstractAction;
+depend javax.swing.JComponent;
+depend org.jhotdraw.gui.EditableComponent;
+depend org.jhotdraw.beans.WeakPropertyChangeListener;
+  isA AbstractAction;
+
+  /** The target of the action or null if the action acts on the currently
+     * focused component.
+     */
+    @Nullable protected JComponent target;
+/** This variable keeps a strong reference on the property change listener. */
+    private PropertyChangeListener propertyHandler;
+protected void updateEnabled() {
+        if (target instanceof EditableComponent) {
+            setEnabled(target.isEnabled() && !((EditableComponent) target).isSelectionEmpty());
+        } else if (target != null) {
+            setEnabled(target.isEnabled());
+        }
+    }
+
+}

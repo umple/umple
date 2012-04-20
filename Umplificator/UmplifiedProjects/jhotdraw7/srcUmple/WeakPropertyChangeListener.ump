@@ -1,0 +1,52 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.beans ;
+
+class WeakPropertyChangeListener 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.beans.*;
+depend java.lang.ref.*;
+
+  private WeakReference<PropertyChangeListener> weakRef;
+/**
+     *  Method that can be subclassed to provide additional remove
+     *  support.  Default implementation only supports StandardBeans.
+     */
+    protected void removeFromSource(PropertyChangeEvent event) {
+        // Remove ourselves from the source
+        Object src = event.getSource();
+        try {
+            src.getClass().getMethod("removePropertyChangeListener", new Class[] {PropertyChangeListener.class}).invoke(src, this);
+        } catch (Exception ex) {
+            InternalError ie = new InternalError("Could not remove WeakPropertyChangeListener from "+src+".");
+            ie.initCause(ex);
+            throw ie;
+        }
+    }
+@Override
+    public void propertyChange(PropertyChangeEvent event) {
+        PropertyChangeListener listener = (PropertyChangeListener) weakRef.get();
+        if (listener == null) {
+            removeFromSource(event);
+            return;
+        }
+        listener.propertyChange(event);
+    }
+/**
+     * Returns the target of this proxy. Returns null if the target has been
+     * garbage collected.
+     *
+     * @return The target or null.
+     */
+    @Nullable
+    public PropertyChangeListener getTarget() {
+        return weakRef.get();
+    }
+@Override
+    public String toString() {
+        return super.toString()+"["+weakRef.get()+"]";
+    }
+
+}

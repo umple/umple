@@ -1,0 +1,115 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+
+package net.n3.nanoxml;
+
+public class XMLValidationException extends XMLException
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public XMLValidationException()
+  {
+    super();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {
+    super.delete();
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public static final int MISSING_ELEMENT = 1;
+/**
+    * An unexpected element was encountered.
+    */
+   public static final int UNEXPECTED_ELEMENT = 2;
+/**
+    * An attribute was missing.
+    */
+   public static final int MISSING_ATTRIBUTE = 3;
+/**
+    * An unexpected attribute was encountered.
+    */
+   public static final int UNEXPECTED_ATTRIBUTE = 4;
+/**
+    * An attribute has an invalid value.
+    */
+   public static final int ATTRIBUTE_WITH_INVALID_VALUE = 5;
+/**
+    * A PCDATA element was missing.
+    */
+   public static final int MISSING_PCDATA = 6;
+/**
+    * An unexpected PCDATA element was encountered.
+    */
+   public static final int UNEXPECTED_PCDATA = 7;
+/**
+    * Another error than those specified in this class was encountered.
+    */
+   public static final int MISC_ERROR = 0;
+/**
+    * Which error occurred.
+    */
+   private int errorType;
+/**
+    * The name of the element where the exception occurred.
+    */
+   private String elementName;
+/**
+    * The name of the attribute where the exception occurred.
+    */
+   private String attributeName;
+/**
+    * The value of the attribute where the exception occurred.
+    */
+   private String attributeValue;
+/**
+    * Cleans up the object when it's destroyed.
+    */
+   protected void finalize()
+      throws Throwable
+   {
+      this.elementName = null;
+      this.attributeName = null;
+      this.attributeValue = null;
+      super.finalize();
+   }
+/**
+    * Returns the name of the element in which the validation is violated.
+    * If there is no current element, null is returned.
+    */
+   public String getElementName()
+   {
+      return this.elementName;
+   }
+/**
+    * Returns the name of the attribute in which the validation is violated.
+    * If there is no current attribute, null is returned.
+    */
+   public String getAttributeName()
+   {
+      return this.attributeName;
+   }
+/**
+    * Returns the value of the attribute in which the validation is violated.
+    * If there is no current attribute, null is returned.
+    */
+   public String getAttributeValue()
+   {
+      return this.attributeValue;
+   }
+}

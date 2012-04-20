@@ -1,0 +1,20 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.app ;
+
+class OpenApplicationAction 
+{
+depend java.awt.event.ActionEvent;
+depend javax.swing.Action;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.action.AbstractApplicationAction;
+  isA AbstractApplicationAction;
+
+  public final static String ID = "application.openApplication";
+@Override
+    public void actionPerformed(ActionEvent e) {
+        
+    }
+
+}

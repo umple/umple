@@ -1,0 +1,161 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class ExportFileAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.net.URISyntaxException;
+depend java.util.logging.Level;
+depend java.util.logging.Logger;
+depend org.jhotdraw.gui.*;
+depend org.jhotdraw.gui.event.*;
+depend org.jhotdraw.util.*;
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend java.io.*;
+depend java.net.URI;
+depend java.util.prefs.Preferences;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.app.action.AbstractViewAction;
+depend org.jhotdraw.gui.JFileURIChooser;
+depend org.jhotdraw.gui.URIChooser;
+depend org.jhotdraw.gui.filechooser.ExtensionFileFilter;
+depend org.jhotdraw.net.URIUtil;
+  isA AbstractViewAction;
+
+  public final static String ID = "file.export";
+private Component oldFocusOwner;
+private boolean proposeFileName;
+/** Whether the export file action shall propose a file name or shall
+     * leave the filename empty.
+     * @return True if filename is proposed.
+     */
+    public boolean isProposeFileName() {
+        return proposeFileName;
+    }
+/** Whether the export file action shall propose a file name or shall
+     * leave the filename empty.
+     * 
+     * @param newValue True if filename shall be proposed.
+     */
+    public void setProposeFileName(boolean newValue) {
+        this.proposeFileName = newValue;
+    }
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        final View view = (View) getActiveView();
+        if (view.isEnabled()) {
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+
+            oldFocusOwner = SwingUtilities.getWindowAncestor(view.getComponent()).getFocusOwner();
+            view.setEnabled(false);
+            try {
+                URIChooser fileChooser = getApplication().getExportChooser(view);
+                if (proposeFileName) {
+                    // => try to propose file name without extension
+                    URI proposedURI = view.getURI();
+                    if (proposedURI != null) {
+                        try {
+                            URI selectedURI = fileChooser.getSelectedURI();
+
+                            File selectedFolder;
+                            if (selectedURI == null) {
+                                Preferences prefs = Preferences.userNodeForPackage(getApplication().getModel().getClass());
+                                try {
+                                    selectedURI = new URI(//
+                                            prefs.get("recentExportFile", new File(proposedURI).getParentFile().toURI().toString())//
+                                            );
+                                    selectedFolder = new File(selectedURI).getParentFile();
+                                } catch (URISyntaxException ex) {
+                                    // selectedURI is null
+                                    selectedFolder = new File(proposedURI).getParentFile();
+                                }
+                            } else {
+                                selectedFolder = new File(selectedURI).getParentFile();
+                            }
+
+                            File file = new File(selectedFolder,new File(proposedURI).getName());
+                            
+                            String name = file.getName();
+                            int p = name.lastIndexOf('.');
+                            if (p != -1) {
+                                name = name.substring(0, p);
+                                file = new File(selectedFolder, name);
+                                proposedURI = file.toURI();
+                            }
+                        } catch (IllegalArgumentException e) {
+                        }
+                    }
+                    fileChooser.setSelectedURI(proposedURI);
+                }
+                JSheet.showSheet(fileChooser, view.getComponent(), labels.getString("filechooser.export"), new SheetListener() {
+
+                    @Override
+                    public void optionSelected(final SheetEvent evt) {
+                        if (evt.getOption() == JFileChooser.APPROVE_OPTION) {
+                            URI uri = evt.getChooser().getSelectedURI();
+                            if ((evt.getChooser() instanceof JFileURIChooser) && evt.getFileChooser().getFileFilter() instanceof ExtensionFileFilter) {
+                                uri = ((ExtensionFileFilter) evt.getFileChooser().getFileFilter()).makeAcceptable(evt.getFileChooser().getSelectedFile()).toURI();
+                            } else {
+                                uri = evt.getChooser().getSelectedURI();
+                            }
+                            Preferences prefs = Preferences.userNodeForPackage(getApplication().getModel().getClass());
+                            prefs.put("recentExportFile", uri.toString());
+
+
+                            if (evt.getChooser() instanceof JFileURIChooser) {
+                                exportView(view, uri, evt.getChooser());
+                            } else {
+                                exportView(view, uri, null);
+                            }
+                        } else {
+                            view.setEnabled(true);
+                            if (oldFocusOwner != null) {
+                                oldFocusOwner.requestFocus();
+                            }
+                        }
+                    }
+                });
+            } catch (Error err) {
+                view.setEnabled(true);
+                throw err;
+            }
+        }
+    }
+protected void exportView(final View view, final URI uri,
+            @Nullable final URIChooser chooser) {
+        view.execute(new Worker() {
+
+            @Override
+            protected Object construct() throws IOException {
+                view.write(uri, chooser);
+                return null;
+            }
+
+            @Override
+            protected void failed(Throwable value) {
+                System.out.flush();
+                ((Throwable) value).printStackTrace();
+                // FIXME localize this error messsage
+                JSheet.showMessageSheet(view.getComponent(),
+                        "<html>" + UIManager.getString("OptionPane.css")
+                        + "<b>Couldn't export to the file \"" + URIUtil.getName(uri) + "\".<p>"
+                        + "Reason: " + value,
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            @Override
+            protected void finished() {
+                view.setEnabled(true);
+                SwingUtilities.getWindowAncestor(view.getComponent()).toFront();
+                if (oldFocusOwner != null) {
+                    oldFocusOwner.requestFocus();
+                }
+            }
+        });
+    }
+
+}

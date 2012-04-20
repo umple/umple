@@ -1,0 +1,484 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg ;
+
+class SVGDrawingPanel 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.Color;
+depend java.awt.Component;
+depend java.awt.event.ContainerEvent;
+depend java.awt.event.ContainerListener;
+depend java.awt.event.ItemEvent;
+depend java.awt.event.ItemListener;
+depend org.jhotdraw.draw.io.TextInputFormat;
+depend org.jhotdraw.draw.io.OutputFormat;
+depend org.jhotdraw.draw.io.InputFormat;
+depend org.jhotdraw.draw.io.ImageOutputFormat;
+depend org.jhotdraw.draw.io.ImageInputFormat;
+depend java.lang.reflect.InvocationTargetException;
+depend java.util.prefs.*;
+depend org.jhotdraw.undo.*;
+depend org.jhotdraw.util.*;
+depend java.awt.image.BufferedImage;
+depend java.beans.PropertyChangeListener;
+depend java.io.File;
+depend java.io.IOException;
+depend java.net.URI;
+depend java.util.ArrayList;
+depend java.util.Collections;
+depend java.util.Comparator;
+depend java.util.LinkedList;
+depend java.util.List;
+depend javax.swing.Action;
+depend javax.swing.JComponent;
+depend javax.swing.JPanel;
+depend javax.swing.JToolBar;
+depend javax.swing.SwingUtilities;
+depend javax.swing.TransferHandler;
+depend org.jhotdraw.app.Disposable;
+depend org.jhotdraw.gui.ToolBarLayout;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.gui.plaf.palette.PaletteLookAndFeel;
+depend org.jhotdraw.samples.svg.figures.SVGImageFigure;
+depend org.jhotdraw.samples.svg.figures.SVGTextFigure;
+depend org.jhotdraw.samples.svg.io.ImageMapOutputFormat;
+depend org.jhotdraw.samples.svg.io.SVGOutputFormat;
+depend org.jhotdraw.samples.svg.io.SVGZInputFormat;
+depend org.jhotdraw.samples.svg.io.SVGZOutputFormat;
+depend org.jhotdraw.util.prefs.PreferencesUtil;
+depend org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+  isA JPanel;
+
+  private UndoRedoManager undoManager;
+@Nullable private DrawingEditor editor;
+private ResourceBundleUtil labels;
+private Preferences prefs;
+@Nullable private ContainerListener containerHandler;
+// Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.jhotdraw.samples.svg.gui.ActionsToolBar actionToolBar;
+private org.jhotdraw.samples.svg.gui.AlignToolBar alignToolBar;
+private org.jhotdraw.samples.svg.gui.ArrangeToolBar arrangeToolBar;
+private org.jhotdraw.samples.svg.gui.CanvasToolBar canvasToolBar;
+private org.jhotdraw.samples.svg.gui.ToolsToolBar creationToolBar;
+private org.jhotdraw.samples.svg.gui.FigureToolBar figureToolBar;
+private org.jhotdraw.samples.svg.gui.FillToolBar fillToolBar;
+private org.jhotdraw.samples.svg.gui.FontToolBar fontToolBar;
+private org.jhotdraw.samples.svg.gui.LinkToolBar linkToolBar;
+private javax.swing.JScrollPane scrollPane;
+private org.jhotdraw.samples.svg.gui.StrokeToolBar strokeToolBar;
+private javax.swing.ButtonGroup toolButtonGroup;
+private javax.swing.JPanel toolsPane;
+private javax.swing.JPanel toolsPanel;
+private javax.swing.JScrollPane toolsScrollPane;
+private org.jhotdraw.draw.DefaultDrawingView view;
+private org.jhotdraw.samples.svg.gui.ViewToolBar viewToolBar;
+private JToolBar toolbar;
+private String prefkey;
+public UndoRedoManager getUndoRedoManager() {
+        return undoManager;
+    }
+public void setUndoRedoManager(UndoRedoManager undo) {
+        if (undoManager != null && getView().getDrawing() != null) {
+            getView().getDrawing().removeUndoableEditListener(undoManager);
+        }
+        undoManager = undo;
+        if (undoManager != null && getView().getDrawing() != null) {
+            getView().getDrawing().addUndoableEditListener(undoManager);
+        }
+    }
+@Override
+    public void dispose() {
+        toolsPane.removeContainerListener(containerHandler);
+        containerHandler = null;
+        setEditor(null);
+        for (PropertyChangeListener pcl : view.getListeners(PropertyChangeListener.class)) {
+            view.removePropertyChangeListener(pcl);
+        }
+        view.setDrawing(null);
+        actionToolBar.dispose();
+        alignToolBar.dispose();
+        arrangeToolBar.dispose();
+        canvasToolBar.dispose();
+        creationToolBar.dispose();
+        figureToolBar.dispose();
+        fillToolBar.dispose();
+        fontToolBar.dispose();
+        linkToolBar.dispose();
+        strokeToolBar.dispose();
+        viewToolBar.dispose();
+        removeAll();
+    }
+/**
+     * Creates a new Drawing object which can be used with this
+     * {@code SVGDrawingPanel}.
+     */
+    public Drawing createDrawing() {
+        Drawing drawing = new QuadTreeDrawing();
+        LinkedList<InputFormat> inputFormats = new LinkedList<InputFormat>();
+        inputFormats.add(new SVGZInputFormat());
+        inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "PNG", "Portable Network Graphics (PNG)", "png", "image/png"));
+        inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "JPG", "Joint Photographics Experts Group (JPEG)", "jpg","image/jpg"));
+        inputFormats.add(new ImageInputFormat(new SVGImageFigure(), "GIF", "Graphics Interchange Format (GIF)", "gif", "image/gif"));
+        inputFormats.add(new TextInputFormat(new SVGTextFigure()));
+        drawing.setInputFormats(inputFormats);
+        LinkedList<OutputFormat> outputFormats = new LinkedList<OutputFormat>();
+        outputFormats.add(new SVGOutputFormat());
+        outputFormats.add(new SVGZOutputFormat());
+        outputFormats.add(new ImageOutputFormat());
+        outputFormats.add(new ImageOutputFormat("JPG", "Joint Photographics Experts Group (JPEG)", "jpg", BufferedImage.TYPE_INT_RGB));
+        outputFormats.add(new ImageOutputFormat("BMP", "Windows Bitmap (BMP)", "bmp", BufferedImage.TYPE_BYTE_INDEXED));
+        outputFormats.add(new ImageMapOutputFormat());
+        drawing.setOutputFormats(outputFormats);
+
+        return drawing;
+    }
+public void setDrawing(Drawing d) {
+        undoManager.discardAllEdits();
+        if (view.getDrawing() != null) {
+            view.getDrawing().removeUndoableEditListener(undoManager);
+        }
+        view.setDrawing(d);
+        d.addUndoableEditListener(undoManager);
+    }
+public Drawing getDrawing() {
+        return view.getDrawing();
+    }
+public DrawingView getView() {
+        return view;
+    }
+@Nullable public DrawingEditor getEditor() {
+        return editor;
+    }
+public void setEditor(@Nullable DrawingEditor newValue) {
+        DrawingEditor oldValue = editor;
+        if (oldValue != null) {
+            oldValue.remove(view);
+        }
+        editor = newValue;
+        if (newValue != null) {
+            newValue.add(view);
+        }
+        creationToolBar.setEditor(editor);
+        fillToolBar.setEditor(editor);
+        strokeToolBar.setEditor(editor);
+        actionToolBar.setUndoManager(undoManager);
+        actionToolBar.setEditor(editor);
+        alignToolBar.setEditor(editor);
+        arrangeToolBar.setEditor(editor);
+        fontToolBar.setEditor(editor);
+        figureToolBar.setEditor(editor);
+        linkToolBar.setEditor(editor);
+        DrawingView temp = (editor == null) ? null : editor.getActiveView();
+        if (editor != null) {
+            editor.setActiveView(view);
+        }
+        canvasToolBar.setEditor(editor);
+        viewToolBar.setEditor(editor);
+        if (editor != null) {
+            editor.setActiveView(temp);
+        }
+    }
+/**
+     * Reads a drawing from the specified file into the SVGDrawingPanel.
+     * <p>
+     * This method should be called from a worker thread.
+     * Calling it from the Event Dispatcher Thread will block the user
+     * interface, until the drawing is read.
+     */
+    public void read(URI f) throws IOException {
+        // Create a new drawing object
+        Drawing newDrawing = createDrawing();
+        if (newDrawing.getInputFormats().size() == 0) {
+            throw new InternalError("Drawing object has no input formats.");
+        }
+
+        // Try out all input formats until we succeed
+        IOException firstIOException = null;
+        for (InputFormat format : newDrawing.getInputFormats()) {
+            try {
+                format.read(f, newDrawing);
+                final Drawing loadedDrawing = newDrawing;
+                Runnable r = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // Set the drawing on the Event Dispatcher Thread
+                        setDrawing(loadedDrawing);
+                    }
+                };
+                if (SwingUtilities.isEventDispatchThread()) {
+                    r.run();
+                } else {
+                    try {
+                        SwingUtilities.invokeAndWait(r);
+                    } catch (InterruptedException ex) {
+                        // suppress silently
+                    } catch (InvocationTargetException ex) {
+                        InternalError ie = new InternalError("Error setting drawing.");
+                        ie.initCause(ex);
+                        throw ie;
+                    }
+                }
+                // We get here if reading was successful.
+                // We can return since we are done.
+                return;
+                //
+            } catch (IOException e) {
+                // We get here if reading failed.
+                // We only preserve the exception of the first input format,
+                // because that's the one which is best suited for this drawing.
+                if (firstIOException == null) {
+                    firstIOException = e;
+                }
+            }
+        }
+        throw firstIOException;
+    }
+/**
+     * Reads a drawing from the specified file into the SVGDrawingPanel using
+     * the specified input format.
+     * <p>
+     * This method should be called from a worker thread.
+     * Calling it from the Event Dispatcher Thread will block the user
+     * interface, until the drawing is read.
+     */
+    public void read(URI f, InputFormat format) throws IOException {
+        if (format == null) {
+            read(f);
+            return;
+        }
+
+        // Create a new drawing object
+        Drawing newDrawing = createDrawing();
+        if (newDrawing.getInputFormats().size() == 0) {
+            throw new InternalError("Drawing object has no input formats.");
+        }
+
+        format.read(f, newDrawing);
+        final Drawing loadedDrawing = newDrawing;
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                // Set the drawing on the Event Dispatcher Thread
+                setDrawing(loadedDrawing);
+            }
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(r);
+            } catch (InterruptedException ex) {
+                // suppress silently
+            } catch (InvocationTargetException ex) {
+                InternalError ie = new InternalError("Error setting drawing.");
+                ie.initCause(ex);
+                throw ie;
+            }
+        }
+    }
+/**
+     * Writes the drawing from the SVGDrawingPanel into a file.
+     * <p>
+     * This method should be called from a worker thread.
+     * Calling it from the Event Dispatcher Thread will block the user
+     * interface, until the drawing is written.
+     */
+    public void write(URI uri) throws IOException {
+        // Defensively clone the drawing object, so that we are not
+        // affected by changes of the drawing while we write it into the file.
+        final Drawing[] helper = new Drawing[1];
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                helper[0] = (Drawing) getDrawing().clone();
+            }
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(r);
+            } catch (InterruptedException ex) {
+                // suppress silently
+            } catch (InvocationTargetException ex) {
+                InternalError ie = new InternalError("Error getting drawing.");
+                ie.initCause(ex);
+                throw ie;
+            }
+
+        }
+
+        Drawing saveDrawing = helper[0];
+        if (saveDrawing.getOutputFormats().size() == 0) {
+            throw new InternalError("Drawing object has no output formats.");
+        }
+
+        // Try out all output formats until we find one which accepts the
+        // filename entered by the user.
+        File f = new File(uri);
+        for (OutputFormat format : saveDrawing.getOutputFormats()) {
+            if (format.getFileFilter().accept(f)) {
+                format.write(uri, saveDrawing);
+                // We get here if writing was successful.
+                // We can return since we are done.
+                return;
+
+            }
+
+
+        }
+        throw new IOException("No output format for " + f.getName());
+    }
+/**
+     * Writes the drawing from the SVGDrawingPanel into a file using the
+     * specified output format.
+     * <p>
+     * This method should be called from a worker thread.
+     * Calling it from the Event Dispatcher Thread will block the user
+     * interface, until the drawing is written.
+     */
+    public void write(URI f, OutputFormat format) throws IOException {
+        if (format == null) {
+            write(f);
+            return;
+        }
+
+        // Defensively clone the drawing object, so that we are not
+        // affected by changes of the drawing while we write it into the file.
+        final Drawing[] helper = new Drawing[1];
+        Runnable r = new Runnable() {
+
+            @Override
+            public void run() {
+                helper[0] = (Drawing) getDrawing().clone();
+            }
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(r);
+            } catch (InterruptedException ex) {
+                // suppress silently
+            } catch (InvocationTargetException ex) {
+                InternalError ie = new InternalError("Error getting drawing.");
+                ie.initCause(ex);
+                throw ie;
+            }
+
+        }
+
+        // Write drawing to file
+        Drawing saveDrawing = helper[0];
+        format.write(f, saveDrawing);
+    }
+/** Sets the actions for the "Action" popup menu in the toolbar.
+     * <p>
+     * This list may contain null items which are used to denote a
+     * separator in the popup menu.
+     * <p>
+     * Set this to null to set the drop down menus to the default actions.
+     */
+    public void setPopupActions(List<Action> actions) {
+        actionToolBar.setPopupActions(actions);
+    }
+/** Gets the actions of the "Action" popup menu in the toolbar.
+     * This list may contain null items which are used to denote a
+     * separator in the popup menu.
+     *
+     * @return An unmodifiable list with actions.
+     */
+    public List<Action> getPopupActions() {
+        return actionToolBar.getPopupActions();
+    }
+public JComponent getComponent() {
+        return this;
+    }
+/** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        toolButtonGroup = new javax.swing.ButtonGroup();
+        scrollPane = new javax.swing.JScrollPane();
+        view = new org.jhotdraw.draw.DefaultDrawingView();
+        toolsPanel = new javax.swing.JPanel();
+        toolsScrollPane = new javax.swing.JScrollPane();
+        toolsPane = new javax.swing.JPanel();
+        creationToolBar = new org.jhotdraw.samples.svg.gui.ToolsToolBar();
+        actionToolBar = new org.jhotdraw.samples.svg.gui.ActionsToolBar();
+        fillToolBar = new org.jhotdraw.samples.svg.gui.FillToolBar();
+        strokeToolBar = new org.jhotdraw.samples.svg.gui.StrokeToolBar();
+        fontToolBar = new org.jhotdraw.samples.svg.gui.FontToolBar();
+        arrangeToolBar = new org.jhotdraw.samples.svg.gui.ArrangeToolBar();
+        alignToolBar = new org.jhotdraw.samples.svg.gui.AlignToolBar();
+        figureToolBar = new org.jhotdraw.samples.svg.gui.FigureToolBar();
+        linkToolBar = new org.jhotdraw.samples.svg.gui.LinkToolBar();
+        canvasToolBar = new org.jhotdraw.samples.svg.gui.CanvasToolBar();
+        viewToolBar = new org.jhotdraw.samples.svg.gui.ViewToolBar();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+        setLayout(new java.awt.BorderLayout());
+
+        scrollPane.setBorder(null);
+        scrollPane.setViewportView(view);
+
+        add(scrollPane, java.awt.BorderLayout.CENTER);
+
+        toolsPanel.setBackground(new java.awt.Color(255, 255, 255));
+        toolsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        toolsPanel.setOpaque(true);
+        toolsPanel.setLayout(new java.awt.GridBagLayout());
+
+        toolsScrollPane.setBorder(PaletteLookAndFeel.getInstance().getBorder("Ribbon.border"));
+        toolsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        toolsScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        toolsScrollPane.setMinimumSize(new java.awt.Dimension(0, 0));
+
+        toolsPane.setForeground(new java.awt.Color(153, 153, 153));
+        toolsPane.add(creationToolBar);
+        toolsPane.add(actionToolBar);
+        toolsPane.add(fillToolBar);
+
+        strokeToolBar.setMargin(new java.awt.Insets(0, 10, 0, 0));
+        toolsPane.add(strokeToolBar);
+        toolsPane.add(fontToolBar);
+        toolsPane.add(arrangeToolBar);
+        toolsPane.add(alignToolBar);
+        toolsPane.add(figureToolBar);
+        toolsPane.add(linkToolBar);
+        toolsPane.add(canvasToolBar);
+        toolsPane.add(viewToolBar);
+
+        toolsScrollPane.setViewportView(toolsPane);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        toolsPanel.add(toolsScrollPane, gridBagConstraints);
+
+        add(toolsPanel, java.awt.BorderLayout.SOUTH);
+    }// </editor-fold>//GEN-END:initComponents
+public ItemChangeHandler(JToolBar toolbar, String prefkey) {
+            this.toolbar = toolbar;
+            this.prefkey = prefkey;
+        }
+@Override
+        public void itemStateChanged(ItemEvent e) {
+            boolean b = e.getStateChange() == ItemEvent.SELECTED;
+            toolbar.setVisible(b);
+            prefs.putBoolean(prefkey, b);
+            validate();
+        }
+
+}

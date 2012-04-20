@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class CompositeFigureEdit 
+{
+depend org.jhotdraw.draw.*;
+depend javax.swing.undo.CannotRedoException;
+depend javax.swing.undo.CannotUndoException;
+depend org.jhotdraw.undo.CompositeEdit;
+  isA CompositeEdit;
+
+  private Figure figure;
+@Override
+    public void undo() {
+        if (!canUndo()) {
+            throw new CannotUndoException();
+        }
+        figure.willChange();
+        super.undo();
+        figure.changed();
+    }
+@Override
+    public void redo() {
+        if (!canRedo()) {
+            throw new CannotRedoException();
+        }
+        figure.willChange();
+        super.redo();
+        figure.changed();
+    }
+
+}

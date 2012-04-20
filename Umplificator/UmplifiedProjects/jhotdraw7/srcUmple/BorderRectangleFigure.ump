@@ -1,0 +1,21 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.mini ;
+
+class BorderRectangleFigure 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend javax.swing.*;
+depend javax.swing.border.*;
+  isA RectangleFigure;
+
+  protected Border border;
+protected final static JComponent borderComponent = new JPanel();
+public void drawFigure(Graphics2D g) {
+        Rectangle bounds = getBounds().getBounds();
+        border.paintBorder(borderComponent, g, bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+
+}

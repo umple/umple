@@ -1,0 +1,37 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class DrawingAttributeEditorHandler 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.gui.*;
+depend java.util.HashSet;
+depend java.util.Set;
+depend org.jhotdraw.draw.AttributeKey;
+depend org.jhotdraw.draw.Drawing;
+depend org.jhotdraw.draw.DrawingEditor;
+depend org.jhotdraw.draw.Figure;
+  isA AbstractAttributeEditorHandler<T>;
+
+  private Drawing drawing;
+public void setDrawing(Drawing newValue) {
+        drawing = newValue;
+        updateAttributeEditor();
+    }
+public Drawing getDrawing() {
+        return drawing;
+    }
+@Override
+    protected Set<Figure> getEditedFigures() {
+        HashSet<Figure> s = new HashSet<Figure>();
+        if (drawing != null) {
+            s.add(drawing);
+        } else if (activeView != null) {
+            s.add(activeView.getDrawing());
+        }
+        return s;
+    }
+
+}

@@ -1,0 +1,108 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.tool ;
+
+class DnDTracker 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.*;
+depend java.awt.Container;
+depend java.awt.dnd.DnDConstants;
+depend java.awt.event.MouseEvent;
+depend java.awt.geom.Point2D;
+depend java.awt.geom.Rectangle2D;
+  isA AbstractTool;
+
+  @Nullable protected Figure anchorFigure;
+/**
+     * The drag rectangle encompasses the bounds of all dragged figures.
+     */
+    @Nullable protected Rectangle2D.Double dragRect;
+/**
+     * The previousOrigin holds the origin of all dragged figures of the
+     * previous mouseDragged event. This coordinate is constrained using
+     * the Constrainer of the DrawingView.
+     */
+    protected Point2D.Double previousOrigin;
+/**
+     * The anchorOrigin holds the origin of all dragged figures of the
+     * mousePressed event.
+     */
+    protected Point2D.Double anchorOrigin;
+/**
+     * The previousPoint holds the location of the mouse of the previous
+     * mouseDragged event. This coordinate is not constrained using
+     * the Constrainer of the DrawingView.
+     */
+    protected Point2D.Double previousPoint;
+/**
+     * The anchorPoint holds the location of the mouse of the
+     * mousePressed event. This coordinate is not constrained using
+     * the Constrainer of the DrawingView.
+     */
+    protected Point2D.Double anchorPoint;
+private boolean isDragging;
+@Override
+    public void mouseMoved(MouseEvent evt) {
+        updateCursor(editor.findView((Container) evt.getSource()), evt.getPoint());
+    }
+@Override
+    public void mousePressed(MouseEvent evt) {
+        super.mousePressed(evt);
+        DrawingView view = getView();
+
+        if (evt.isShiftDown()) {
+            view.setHandleDetailLevel(0);
+            view.toggleSelection(anchorFigure);
+            if (!view.isFigureSelected(anchorFigure)) {
+                anchorFigure = null;
+            }
+        } else if (!view.isFigureSelected(anchorFigure)) {
+            view.setHandleDetailLevel(0);
+            view.clearSelection();
+            view.addToSelection(anchorFigure);
+        }
+
+        if (!view.getSelectedFigures().isEmpty()) {
+
+            dragRect = null;
+            for (Figure f : view.getSelectedFigures()) {
+                if (dragRect == null) {
+                    dragRect = f.getBounds();
+                } else {
+                    dragRect.add(f.getBounds());
+                }
+            }
+
+
+            anchorPoint = previousPoint = view.viewToDrawing(anchor);
+            anchorOrigin = previousOrigin = new Point2D.Double(dragRect.x, dragRect.y);
+        }
+    }
+@Override
+    public void mouseDragged(MouseEvent e) {
+        DrawingView v = getView();
+
+        Figure f = v.findFigure(e.getPoint());
+        if (f != null) {
+            if (!v.getSelectedFigures().contains(f)) {
+                v.clearSelection();
+                v.addToSelection(f);
+            }
+
+            v.getComponent().getTransferHandler().exportAsDrag(v.getComponent(), e, DnDConstants.ACTION_MOVE);
+        }
+        fireToolDone();
+    }
+@Override
+    public void mouseReleased(MouseEvent evt) {
+            updateCursor(editor.findView((Container) evt.getSource()), evt.getPoint());
+        fireToolDone();
+    }
+@Override
+    public void setDraggedFigure(Figure f) {
+        anchorFigure = f;
+    }
+
+}

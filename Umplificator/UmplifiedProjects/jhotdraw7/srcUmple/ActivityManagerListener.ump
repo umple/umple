@@ -1,0 +1,13 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.event ;
+
+class ActivityManagerListener 
+{
+depend java.util.EventListener;
+
+  public void activityModelAdded(ActivityManagerEvent evt);
+public void activityModelRemoved(ActivityManagerEvent evt);
+
+}

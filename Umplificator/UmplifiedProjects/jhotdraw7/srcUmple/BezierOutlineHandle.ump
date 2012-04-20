@@ -1,0 +1,81 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class BezierOutlineHandle 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend org.jhotdraw.draw.AttributeKeys.*;
+  isA AbstractHandle;
+
+  /**
+     * Set this to true, if the handle is used for marking a figure over
+     * which the mouse pointer is hovering.
+     */
+    private boolean isHoverHandle = false;
+@Override
+    public BezierFigure getOwner() {
+        return (BezierFigure) super.getOwner();
+    }
+@Override
+    protected Rectangle basicGetBounds() {
+        return view.drawingToView(getOwner().getDrawingArea());
+    }
+@Override
+    public boolean contains(Point p) {
+        return false;
+    }
+@Override
+    public void trackStart(Point anchor, int modifiersEx) {
+    }
+@Override
+    public void trackStep(Point anchor, Point lead, int modifiersEx) {
+    }
+@Override
+    public void trackEnd(Point anchor, Point lead, int modifiersEx) {
+    }
+@Override
+    public void draw(Graphics2D g) {
+        BezierFigure owner = getOwner();
+        Shape bounds = owner.getBezierPath();
+        if (owner.get(TRANSFORM) != null) {
+            bounds = owner.get(TRANSFORM).createTransformedShape(bounds);
+        }
+        bounds = view.getDrawingToViewTransform().createTransformedShape(bounds);
+        Stroke stroke1;
+        Color strokeColor1;
+        Stroke stroke2;
+        Color strokeColor2;
+        if (getEditor().getTool().supportsHandleInteraction()) {
+            if (isHoverHandle) {
+                stroke1 = (Stroke) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_STROKE_1_HOVER);
+                strokeColor1 = (Color) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_COLOR_1_HOVER);
+                stroke2 = (Stroke) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_STROKE_2_HOVER);
+                strokeColor2 = (Color) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_COLOR_2_HOVER);
+            } else {
+                stroke1 = (Stroke) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_STROKE_1);
+                strokeColor1 = (Color) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_COLOR_1);
+                stroke2 = (Stroke) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_STROKE_2);
+                strokeColor2 = (Color) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_COLOR_2);
+            }
+        } else {
+            stroke1 = (Stroke) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_STROKE_1_DISABLED);
+            strokeColor1 = (Color) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_COLOR_1_DISABLED);
+            stroke2 = (Stroke) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_STROKE_2_DISABLED);
+            strokeColor2 = (Color) getEditor().getHandleAttribute(HandleAttributeKeys.BEZIER_PATH_COLOR_2_DISABLED);
+        }
+        if (stroke1 != null && strokeColor1 != null) {
+            g.setStroke(stroke1);
+            g.setColor(strokeColor1);
+            g.draw(bounds);
+        }
+        if (stroke2 != null && strokeColor2 != null) {
+            g.setStroke(stroke2);
+            g.setColor(strokeColor2);
+            g.draw(bounds);
+        }
+    }
+
+}

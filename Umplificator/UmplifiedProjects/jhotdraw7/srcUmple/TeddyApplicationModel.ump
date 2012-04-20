@@ -1,0 +1,76 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.teddy ;
+
+class TeddyApplicationModel 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.app.action.file.PrintFileAction;
+depend javax.swing.*;
+depend org.jhotdraw.app.*;
+depend java.util.*;
+depend org.jhotdraw.app.action.*;
+depend org.jhotdraw.gui.JFileURIChooser;
+depend org.jhotdraw.samples.teddy.action.*;
+  isA DefaultApplicationModel;
+
+  @Override
+    public ActionMap createActionMap(Application a, @Nullable View v) {
+        ActionMap m = super.createActionMap(a, v);
+        AbstractAction aa;
+
+        m.put(FindAction.ID, new FindAction(a, v));
+        m.put(ToggleLineWrapAction.ID, new ToggleLineWrapAction(a, v));
+        m.put(ToggleStatusBarAction.ID, new ToggleStatusBarAction(a, v));
+        m.put(ToggleLineNumbersAction.ID, new ToggleLineNumbersAction(a, v));
+        m.put(PrintFileAction.ID, null);
+
+        return m;
+    }
+@Override
+    public void initView(Application a, @Nullable View v) {
+    }
+/** Creates the MenuBuilder. */
+    @Override
+    protected MenuBuilder createMenuBuilder() {
+        return new DefaultMenuBuilder() {
+
+            @Override
+            public void addOtherViewItems(JMenu m, Application app, @Nullable View v) {
+                ActionMap am = app.getActionMap(v);
+                JCheckBoxMenuItem cbmi;
+                cbmi = new JCheckBoxMenuItem(am.get(ToggleLineWrapAction.ID));
+                ActionUtil.configureJCheckBoxMenuItem(cbmi, am.get(ToggleLineWrapAction.ID));
+                m.add(cbmi);
+                cbmi = new JCheckBoxMenuItem(am.get(ToggleLineNumbersAction.ID));
+                ActionUtil.configureJCheckBoxMenuItem(cbmi, am.get(ToggleLineNumbersAction.ID));
+                m.add(cbmi);
+                cbmi = new JCheckBoxMenuItem(am.get(ToggleStatusBarAction.ID));
+                ActionUtil.configureJCheckBoxMenuItem(cbmi, am.get(ToggleStatusBarAction.ID));
+                m.add(cbmi);
+            }
+        };
+    }
+/**
+     * Creates toolbars for the application.
+     * This class returns an empty list - we don't want toolbars in a text editor.
+     */
+    @Override
+    public List<JToolBar> createToolBars(Application app, @Nullable View p) {
+        return Collections.emptyList();
+    }
+@Override
+    public JFileURIChooser createOpenChooser(Application app, @Nullable View p) {
+        JFileURIChooser chooser = new JFileURIChooser();
+        chooser.setAccessory(new CharacterSetAccessory());
+        return chooser;
+    }
+@Override
+    public JFileURIChooser createSaveChooser(Application app, @Nullable View p) {
+        JFileURIChooser chooser = new JFileURIChooser();
+        chooser.setAccessory(new CharacterSetAccessory());
+        return chooser;
+    }
+
+}

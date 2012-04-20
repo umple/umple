@@ -1,0 +1,24 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class FigureSelectionEvent 
+{
+depend org.jhotdraw.draw.*;
+depend java.util.*;
+  isA java.util.EventObject;
+
+  private Set<Figure> oldValue;
+private Set<Figure> newValue;
+public DrawingView getView() {
+        return (DrawingView) source;
+    }
+public Set<Figure> getOldSelection() {
+        return oldValue;
+    }
+public Set<Figure> getNewSelection() {
+        return newValue;
+    }
+
+}

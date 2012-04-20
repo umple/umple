@@ -1,0 +1,69 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class TextOverflowHandle 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.awt.geom.*;
+depend org.jhotdraw.draw.AttributeKeys.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractHandle;
+
+  @Override
+    public TextHolderFigure getOwner() {
+        return (TextHolderFigure) super.getOwner();
+    }
+@Override
+    public boolean contains(Point p) {
+        return false;
+    }
+/**
+     * Draws this handle.
+     */
+    @Override public void draw(Graphics2D g) {
+        if (getOwner().isTextOverflow()) {
+        drawRectangle(g, 
+                (Color) getEditor().getHandleAttribute(HandleAttributeKeys.OVERFLOW_HANDLE_FILL_COLOR),
+                (Color) getEditor().getHandleAttribute(HandleAttributeKeys.OVERFLOW_HANDLE_STROKE_COLOR)
+                );
+            g.setColor((Color) getEditor().getHandleAttribute(HandleAttributeKeys.OVERFLOW_HANDLE_STROKE_COLOR));
+            Rectangle r = basicGetBounds();
+            g.drawLine(r.x+1, r.y+1, r.x+r.width-2, r.y+r.height-2);
+            g.drawLine(r.x+r.width-2, r.y+1, r.x+1, r.y+r.height-2);
+        }
+    }
+@Override protected Rectangle basicGetBounds() {
+        Rectangle2D.Double b = getOwner().getBounds();
+        Point2D.Double p = new Point2D.Double(b.x + b.width, b.y  + b.height);
+        Figure o = getOwner();
+        if (o.get(TRANSFORM) != null) {
+            o.get(TRANSFORM).transform(p, p);
+        }
+        Rectangle r = new Rectangle(view.drawingToView(p));
+        int h = getHandlesize();
+        r.x -= h;
+        r.y -= h;
+        r.width = r.height = h;
+        return r;
+    }
+@Override
+    public void trackStart(Point anchor, int modifiersEx) {
+    }
+@Override
+    public void trackStep(Point anchor, Point lead, int modifiersEx) {
+    }
+@Override
+    public void trackEnd(Point anchor, Point lead, int modifiersEx) {
+    }
+@Override public String getToolTipText(Point p) {
+        
+        return (getOwner().isTextOverflow()) ?
+            ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels").//
+            getString("handle.textOverflow.toolTipText") :
+            null;
+    }
+
+}

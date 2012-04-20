@@ -1,0 +1,13 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.teddy.regex ;
+
+class MatchType 
+{
+
+  public static final MatchType CONTAINS = new MatchType();
+public static final MatchType STARTS_WITH = new MatchType();
+public static final MatchType FULL_WORD = new MatchType();
+
+}

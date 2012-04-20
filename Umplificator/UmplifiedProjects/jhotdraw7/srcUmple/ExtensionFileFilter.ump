@@ -1,0 +1,51 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.filechooser ;
+
+class ExtensionFileFilter 
+{
+depend java.io.*;
+depend java.util.*;
+  isA javax.swing.filechooser.FileFilter;
+
+  private String description;
+private HashSet<String> extensions;
+private String defaultExtension;
+/**
+     * Returns an unmodifiable set with the filename extensions.
+     * All extensions are lower case.
+     */
+    public Set<String> getExtensions() {
+        return Collections.unmodifiableSet(extensions);
+    }
+@Override
+    public boolean accept(File pathname) {
+        if (pathname.isDirectory()) {
+            return true;
+        } else {
+            String name = pathname.getName();
+            int p = name.lastIndexOf('.');
+            if (p == -1 || p == name.length() - 1) {
+                return extensions.contains("");
+            } else {
+                return extensions.contains(name.substring(p + 1).toLowerCase());
+            }
+        }
+    }
+/**
+     * Appends the extension to the filename, in case it is missing.
+     */
+    public File makeAcceptable(File pathname) {
+        if (accept(pathname)) {
+            return pathname;
+        } else {
+            return new File(pathname.getPath()+'.'+defaultExtension);
+        }
+    }
+@Override
+    public String getDescription() {
+        return description;
+    }
+
+}

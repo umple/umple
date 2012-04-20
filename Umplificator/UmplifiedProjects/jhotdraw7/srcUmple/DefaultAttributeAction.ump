@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class DefaultAttributeAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.event.FigureSelectionEvent;
+depend org.jhotdraw.undo.*;
+depend javax.swing.*;
+depend java.beans.*;
+depend java.util.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  private AttributeKey[] keys;
+@Nullable
+    private Map<AttributeKey, Object> fixedAttributes;
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        if (getView() != null && getView().getSelectionCount() > 0) {
+            ResourceBundleUtil labels =
+                    ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            CompositeEdit edit = new CompositeEdit(labels.getString("drawAttributeChange"));
+            fireUndoableEditHappened(edit);
+            changeAttribute();
+            fireUndoableEditHappened(edit);
+        }
+    }
+@SuppressWarnings("unchecked")
+    public void changeAttribute() {
+        CompositeEdit edit = new CompositeEdit("attributes");
+        fireUndoableEditHappened(edit);
+        DrawingEditor editor = getEditor();
+        Iterator i = getView().getSelectedFigures().iterator();
+        while (i.hasNext()) {
+            Figure figure = (Figure) i.next();
+            figure.willChange();
+            for (int j = 0; j < keys.length; j++) {
+                figure.set(keys[j], editor.getDefaultAttribute(keys[j]));
+            }
+            for (Map.Entry<AttributeKey, Object> entry : fixedAttributes.entrySet()) {
+                figure.set(entry.getKey(), entry.getValue());
+
+            }
+            figure.changed();
+        }
+        fireUndoableEditHappened(edit);
+    }
+public void selectionChanged(FigureSelectionEvent evt) {
+        //setEnabled(getView().getSelectionCount() > 0);
+    }
+
+}

@@ -1,0 +1,20 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.undo ;
+
+class NonUndoableEdit 
+{
+depend javax.swing.undo.*;
+  isA AbstractUndoableEdit;
+
+  @Override
+    public boolean canUndo() {
+        return false;
+    }
+@Override
+    public boolean canRedo() {
+        return false;
+    }
+
+}
