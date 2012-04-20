@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<workflow:workflow xmlns:workflow="cruise.umple.umplificator.model.workflow.workflow">
+  <refactoringTask description="True" name="Class Refactoring" status="true"/>
+  <refactoringTask description="True" name="Attribute Refactoring" status="false"/>
+  <refactoringTask description="True" name="Association Refactoring" status="false"/>
+</workflow:workflow>
