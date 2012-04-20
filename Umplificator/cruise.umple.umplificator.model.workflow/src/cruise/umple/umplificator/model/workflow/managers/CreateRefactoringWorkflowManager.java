@@ -1,10 +1,7 @@
 package cruise.umple.umplificator.model.workflow.managers;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.query.conditions.eobjects.structuralfeatures.EObjectAttributeValueCondition;
 import org.eclipse.emf.query.conditions.strings.StringValue;

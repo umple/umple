@@ -1,11 +1,9 @@
 package cruise.umple.umplificator.core.generator.umple;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -14,7 +12,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
 public  class FileGenerator {
@@ -72,15 +69,16 @@ public  class FileGenerator {
 		}
 	}
 	
-	
 	// USED IF WE WANT TO HAVE UMPLE FILES IN THE SAME FOLDERS AS JAVA FILES
-    private static String getPathForUmpleFile(String javaFileName, ICompilationUnit unit) {
+	/*    
+ 	private static String getPathForUmpleFile(String javaFileName, ICompilationUnit unit) {
         //Remove Extension
     	IType sourceType = unit.getType(javaFileName);
     	String sourceFolderNames = getSourceFolderNames(unit);
     	String subFolderNames = sourceType.getPackageFragment().getElementName().replace(".", File.separator);
     	return sourceFolderNames +  File.separator + subFolderNames +   File.separator + getGeneratedFileName(javaFileName);
     }
+   
 
     private static String getSourceFolderNames(ICompilationUnit unit)
     {
@@ -95,6 +93,7 @@ public  class FileGenerator {
     	
     	return sourceFolders;
     }
+     */
     
     public static List<IPath> getSourceFolders(IJavaProject project)  {
         List<IPath> paths = new ArrayList<IPath>();
@@ -117,6 +116,4 @@ public  class FileGenerator {
         return javaFileName + ".ump";
     }
 
-    
-    
 }
