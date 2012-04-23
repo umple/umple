@@ -7,10 +7,10 @@ Bundle-Activator: cruise.umple.umplificator.core.ui.Activator
 Bundle-Vendor: CRUISE
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- cruise.umple.umplificator.model.workflow;bundle-version="1.0.0",
- cruise.umple.umplificator.model.workflow.edit;bundle-version="1.0.0",
+ org.eclipse.jdt.launching,
  cruise.umple.umplificator.core;bundle-version="1.0.0",
- org.eclipse.jdt.launching;bundle-version="3.5.200"
+ cruise.umple.umplificator.model.workflow;bundle-version="1.0.0",
+ cruise.umple.umplificator.model.workflow.edit;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.log4j,

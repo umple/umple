@@ -1,7 +1,11 @@
 <%@ jet package="cruise.umple.umplificator.umple" class="UmpleClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
-
-namespace <%=uClass.getNamespace(0) %> ;
+<%
+  	 if (uClass.hasNamespaces()) {
+   	    appendln(stringBuffer, "");
+    	append(stringBuffer, "namespace {0};",uClass.getNamespace(0));
+    }
+%>
 
 class <%=uClass.getName()%> 
 {
@@ -10,5 +14,6 @@ class <%=uClass.getName()%>
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllAssociations.jet" %>
   <%@ include file="members_AllMethods.jet" %>
+  <%@ include file="code_injections.jet" %>
   <%=uClass.getExtraCode()%>
 }

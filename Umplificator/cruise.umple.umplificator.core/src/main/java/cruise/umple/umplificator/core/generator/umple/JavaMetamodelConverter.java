@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 
 import cruise.umple.compiler.*;
+import cruise.umple.umplificator.core.analyzer.ContructorAnalyzer;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 
 
@@ -71,7 +72,7 @@ public class JavaMetamodelConverter {
 			IMethod[] methods = type.getMethods();
 			for (IMethod method : methods) {
 				// Don't add the method if it is a constructor or destructor
-				if (!((method.getElementName().equals(javaClassName)) || (method.getElementName().equals("delete")))){
+				if (!(isAConstructorOrDestructor(method, javaClassName))){
 					Method uMethod= new Method("",method.getElementName(), method.getReturnType(),false);
 					MethodBody body = new MethodBody(method.getSource());
 					uMethod.setMethodBody(body);
@@ -82,10 +83,11 @@ public class JavaMetamodelConverter {
 		}
 		return methodContent.toString();
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			logger.error("Error adding java Methods " + e);
 		}
 		return null;
 	}
+	
 	public String addJavaFields(ICompilationUnit unit)  {
 		try 
 		{
@@ -99,11 +101,30 @@ public class JavaMetamodelConverter {
 		}
 		return content.toString();
 		} catch (JavaModelException e) {
-			logger.error("Error adding java Fields");
+			logger.error("Error adding java Fields " +e);
 		}
 		return null;
 	}
 	
+	public boolean isAConstructorOrDestructor(IMethod method, String javaClassName) 
+	{
+		int nb = method.getNumberOfParameters();
+		if (method.getElementName().equals(javaClassName)) 
+		{
+			if (nb == 0 ){
+				ContructorAnalyzer.handleEmptyConstructor(method, uClass);
+				return true;
+			}
+			return false;
+		}
+		else if (method.getElementName().equals("delete"))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+
 	public void addExtendedClasses(ICompilationUnit unit)
 	{
 		String superclassName= new String();
@@ -116,7 +137,6 @@ public class JavaMetamodelConverter {
 						superclassName = type.getSuperclassName();
 					}
 				}
-
 				if (superclassName.length() > 0){
 					UmpleClass uParent = new  UmpleClass(superclassName);
 					uClass.setExtendsClass(uParent);
@@ -132,7 +152,7 @@ public class JavaMetamodelConverter {
 	{
 		IType type = unit.getType(unit.getElementName());
 		if (type != null && type.getPackageFragment() != null){
-			if (type.getPackageFragment().getElementName() != null){
+			if (!(type.getPackageFragment().getElementName().isEmpty())){
 			String namespace = type.getPackageFragment().getElementName();
 			uClass.addNamespace(namespace);
 			}
@@ -153,7 +173,7 @@ public class JavaMetamodelConverter {
 				}
 			}	
 		} catch (JavaModelException e) {
-			logger.error(e);
+			logger.error("Error adding Java Attributes" + e);
 		}
 	}
 
@@ -185,16 +205,5 @@ public class JavaMetamodelConverter {
 	public AssociationVariable getAssociationFromJavaField(IField field){
 		return null;		
 	}
-/*    isSingleton = false;
-    associations = new ArrayList<Association>();
-    key = new Key();
-    codeInjections = new ArrayList<CodeInjection>();
-    parentInterface = new ArrayList<UmpleInterface>();
-    depends = new ArrayList<Depend>();
-    methods = new ArrayList<Method>();
-    constants = new ArrayList<Constant>();
-    attributes = new ArrayList<Attribute>();
-    associationVariables = new ArrayList<AssociationVariable>();
-    traceItems = new ArrayList<TraceItem>();
-    stateMachines = new ArrayList<StateMachine>();*/
+
 }

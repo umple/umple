@@ -1,4 +1,8 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-<%if (uClass.getExtendsClass() != null){%>
-  isA <%=uClass.getExtendsClass().getName() %>;
-<%}%>
+<%
+if (uClass.getExtendsClass() != null)
+{
+	appendln(stringBuffer, "");
+	append(stringBuffer, "isA {0};",uClass.getExtendsClass().getName());
+}
+%>
