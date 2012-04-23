@@ -51,11 +51,16 @@ public class CodeCompiler
 	}
 
 	private static boolean compileJava(UmpleElement aClass, UmpleModel model) {
-		String path = StringFormatter.addPathOrAbsolute( 
-				model.getUmpleFile().getPath(), 
-				"") + 
-			aClass.getPackageName().replace(".", File.separator);
+		String path="";
+		for (GenerateTarget gt : model.getGenerates()) {
+			if (gt.getLanguage().equals("Java")) {
+				path = StringFormatter.addPathOrAbsolute( 
+						model.getUmpleFile().getPath() +"/"+ gt.getPath(), "") + 
+					aClass.getPackageName().replace(".", File.separator);
+			}
+		}
 		String filename = path + File.separator + aClass.getName() + ".java";
+		//System.out.println("filename: "+filename);
 		boolean error_exist = true;
 		try {
 			Process p = Runtime.getRuntime().exec("javac "+filename);
@@ -73,6 +78,7 @@ public class CodeCompiler
 	}
 
 	private static void get_original_line(String file, BufferedReader reader, UmpleModel model, UmpleElement aClass) {
+		//System.out.println("file:  "+file);
 		StringTokenizer st = new StringTokenizer(file, ":"); 
 		if (st.countTokens()<3) {
 			return;
@@ -82,7 +88,14 @@ public class CodeCompiler
 		String error_type = st.nextToken(); // Error type
 		String umpFile_name = aClass.getUmpFile();
 
-		String class_name = code_file.substring(code_file.lastIndexOf('/')+1, code_file.lastIndexOf('.'));
+		String class_name = "";
+		try {
+			class_name = code_file.substring(code_file.lastIndexOf('/')+1, code_file.lastIndexOf('.'));
+		} catch (Exception e) {
+			// Unexpected error message
+			println("Unexpected error message: "+ file);
+			return;
+		}
 
 		if (!class_name.equals(aClass.getName())) {
 			for (UmpleElement currentElement : model.getUmpleElements())
