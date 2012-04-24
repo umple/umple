@@ -1,0 +1,15 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+
+/* CODE INJECTIONS */
+<%
+  if (uClass.hasCodeInjections()){
+	  for (CodeInjection ci : uClass.getCodeInjections())
+	  {
+		  if (ci != null) {
+			  appendln(stringBuffer, "");
+			  append(stringBuffer, "{0} constructor { {1}", ci.getType(), ci.getCode() );
+			  appendln(stringBuffer, "}");
+		  }
+	  }
+  }
+%>

@@ -1,6 +1,7 @@
 <%@ jet package="cruise.umple.umplificator.umple" class="UmpleClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
+    UmpleClass uClass = (UmpleClass) uElement;
   	 if (uClass.hasNamespaces()) {
    	    appendln(stringBuffer, "");
     	append(stringBuffer, "namespace {0};",uClass.getNamespace(0));

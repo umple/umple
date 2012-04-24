@@ -41,11 +41,12 @@ public class UmpleClassGenerator
   /* 
   * This method will return the generated code.
   */
-  public String getCode(UmpleModel model, UmpleClass uClass)
+  public String getCode(UmpleModel model, UmpleElement uElement)
   {
     final StringBuffer stringBuffer = new StringBuffer();
     stringBuffer.append(TEXT_1);
     
+    UmpleClass uClass = (UmpleClass) uElement;
   	 if (uClass.hasNamespaces()) {
    	    appendln(stringBuffer, "");
     	append(stringBuffer, "namespace {0};",uClass.getNamespace(0));
@@ -64,11 +65,35 @@ public class UmpleClassGenerator
   }
 
     
-if (uClass.getExtendsClass() != null)
-{
-	appendln(stringBuffer, "");
-	append(stringBuffer, "isA {0};",uClass.getExtendsClass().getName());
-}
+  String isAExtendsAndImplements="";
+  String implementedInterfaces = "";
+  String extendedClass = "";
+  UmpleClass parent = uClass.getExtendsClass();
+  if (parent == null)
+  {
+	  extendedClass =  "";
+  }
+  else{
+	  extendedClass = uClass.getExtendsClass().getName() + "," ;
+  }
+
+  // Interfaces 
+  if (uClass.hasParentInterface() == false){
+	  implementedInterfaces =  "";
+  }
+  else{
+	  for (UmpleInterface uInterface : uClass.getParentInterface())
+	  {
+		  implementedInterfaces += uInterface.getName() + "," ; 
+	  }
+	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+  }
+  isAExtendsAndImplements = extendedClass + implementedInterfaces;
+  if (isAExtendsAndImplements.length() > 0 ){
+	  isAExtendsAndImplements = isAExtendsAndImplements.substring(0, isAExtendsAndImplements.length()-1);  
+	  appendln(stringBuffer, "");
+	  append(stringBuffer, "isA {0};",isAExtendsAndImplements);
+  }
 
     
   for (Attribute av : uClass.getAttributes()) 
