@@ -85,16 +85,16 @@ public class UmplifyElementAction implements IObjectActionDelegate {
 	}
 
 	private boolean umplifyUnit(ICompilationUnit unit){
-		UmpleGenerator.translateJavaClass(unit, getLevelOfUmplification());
+		UmpleGenerator.translateJavaElement(unit, getLevelOfUmplification());
 		return false;
 	}
 	private boolean umplifyPackage(IPackageFragment aPackage){
-		UmpleGenerator.translateJavaClassesInPackage(aPackage, getLevelOfUmplification());
+		UmpleGenerator.translateJavaElementsInPackage(aPackage, getLevelOfUmplification());
 		return false;
 	}
 	private boolean umplifyProject(IJavaProject project){
 		try {
-			UmpleGenerator.translateJavaClassesInProject(project,getLevelOfUmplification());
+			UmpleGenerator.translateJavaElementsInProject(project,getLevelOfUmplification());
 		} catch (JavaModelException e) {
 			logger.error(e);
 		}

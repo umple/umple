@@ -11,9 +11,11 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 
 import cruise.umple.compiler.UmpleClass;
+import cruise.umple.compiler.UmpleInterface;
 import cruise.umple.umplificator.core.inventory.JavaPackageInventory;
 import cruise.umple.umplificator.core.inventory.JavaProjectInventory;
 import cruise.umple.umplificator.UmpleClassGenerator;
+import cruise.umple.umplificator.UmpleInterfaceGenerator;
 
 /**
  * Class used to umplify the components of a Java Class
@@ -26,22 +28,22 @@ public class UmpleGenerator {
 
 	private static Logger logger = Logger.getLogger(UmpleGenerator.class);
 	
-	public static void translateJavaClassesInPackage(IPackageFragment aPackage,int level) {
+	public static void translateJavaElementsInPackage(IPackageFragment aPackage,int level) {
 		ICompilationUnit [] units= JavaPackageInventory.getUnitsFromPackage(aPackage);
 		List<String> processedJavaFiles = new ArrayList<String>();
 		for (ICompilationUnit unit: units){
-			translateJavaClass(unit,level);
+			translateJavaElement(unit,level);
 			processedJavaFiles.add(FileGenerator.getGeneratedFileName(unit.getElementName()));
 		}
 			generateMasterUmpleFileForPackage(aPackage,processedJavaFiles);	
 	}
 	
-	public static void translateJavaClassesInProject(IJavaProject project, int level) throws JavaModelException {
+	public static void translateJavaElementsInProject(IJavaProject project, int level) throws JavaModelException {
 		IPackageFragment [] packages = JavaProjectInventory.getPackagesFromProject(project);
 		List<String> processedJavaPackages = new ArrayList<String>();
 		for (IPackageFragment aPackage: packages){
 			if (aPackage.getCompilationUnits().length > 0){
-				translateJavaClassesInPackage(aPackage,level);
+				translateJavaElementsInPackage(aPackage,level);
 				processedJavaPackages.add("Master_" + aPackage.getElementName() + ".ump");
 			}
 		}
@@ -68,11 +70,33 @@ public class UmpleGenerator {
 		return sb.toString();
 	}
 	
+	public static void translateJavaElement(ICompilationUnit unit, int level){
+		try {
+			String type = unit.getSource();
+			boolean isInterface= type.contains("public interface") || type.contains("interface");
+			if (isInterface){
+				translateJavaInterface(unit, level);
+			}
+			else
+			{
+				translateJavaClass(unit, level);
+			}
+		} catch (JavaModelException e) {
+			logger.error("Error determining whether compilation unit is a class or interface");
+		}
+	}
+
+	public static void translateJavaInterface(ICompilationUnit unit, int level){
+	    JavaMetamodelConverter converter = new JavaMetamodelConverter();
+	    UmpleInterface uInterface = converter.getUmpleInterfaceFromJavaInterface(unit, level);
+	    UmpleInterfaceGenerator generator = new UmpleInterfaceGenerator();
+		writeFile(unit, generator.getCode(null, uInterface));
+	}
 	
 	public static void translateJavaClass(ICompilationUnit unit, int level){
-	    JavaMetamodelConverter converter = new JavaMetamodelConverter();
-	    UmpleClass uClass = converter.getUmpleClassFromJavaClass(unit, level);
-	    UmpleClassGenerator generator = new UmpleClassGenerator();
+		JavaMetamodelConverter converter = new JavaMetamodelConverter();
+		UmpleClass uClass = converter.getUmpleClassFromJavaClass(unit, level);
+		UmpleClassGenerator generator = new UmpleClassGenerator();
 		writeFile(unit, generator.getCode(null, uClass));
 	}
 	

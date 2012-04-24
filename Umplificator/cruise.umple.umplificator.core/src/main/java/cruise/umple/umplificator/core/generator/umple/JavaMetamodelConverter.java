@@ -21,6 +21,7 @@ public class JavaMetamodelConverter {
 	private static Logger logger = Logger.getLogger(JavaMetamodelConverter.class);
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 	public UmpleClass uClass;
+	public UmpleInterface uInterface;
 	public StringBuffer extraCode = new StringBuffer();
 	
 	public UmpleClass getUmpleClassFromJavaClass(ICompilationUnit unit, int level){
@@ -28,9 +29,9 @@ public class JavaMetamodelConverter {
 		uClass = new UmpleClass(className);	
 		StringBuffer extraCode = new StringBuffer();
 		if (level == 0 ) {
-			setNamespace(unit);
-			addDepends(unit);
-			addExtendedClasses(unit);
+			uClass.addNamespace(getNamespace(unit));
+			addDepends(unit, false);
+			addSuperClassesAndInterfaces(unit);
 			extraCode.append(addJavaFields(unit));
 			extraCode.append(addJavaMethods(unit));
 			uClass.setExtraCode(extraCode.toString());
@@ -38,25 +39,54 @@ public class JavaMetamodelConverter {
 			logger.info("Umplification Level 0 successfully completed for class:" + className);
 		}
 		if (level == 1 ) {
-			setNamespace(unit);
-			addDepends(unit);
-			addExtendedClasses(unit);
+			uClass.addNamespace(getNamespace(unit));
+			addDepends(unit, false);
+			addSuperClassesAndInterfaces(unit);
 			addUmpleAttributes(unit);
 		}
 		return uClass;
 	}
+	
+	public UmpleInterface getUmpleInterfaceFromJavaInterface(ICompilationUnit unit, int level){
+		String interfaceName= unit.getElementName().substring(0, unit.getElementName().length()-5);
+		uInterface = new UmpleInterface(interfaceName);	
+		StringBuffer extraCode = new StringBuffer();
+		if (level == 0 ) {
+			uInterface.addNamespace(getNamespace(unit));
+			addDepends(unit, true);
+			addImplementedInterfaces(unit);
+			extraCode.append(addJavaFields(unit));
+			extraCode.append(addJavaMethods(unit));
+			uInterface.setExtraCode(extraCode.toString());
+			// Fix constructor and destructor
+			logger.info("Umplification Level 0 successfully completed for class:" + interfaceName);
+		}
+		if (level == 1 ) {
+			uInterface.addNamespace(getNamespace(unit));
+			addDepends(unit, true);
+			addImplementedInterfaces(unit);
+			addUmpleAttributes(unit);
+		}
+		return uInterface;
+	}
+	
 
-	public void addDepends(ICompilationUnit unit)
+	public void addDepends(ICompilationUnit unit, boolean isInterface)
 	{
 		try 
 		{
 			IImportDeclaration[] imports = unit.getImports();
 			for (int i=0; i < imports.length ; i ++){
 				Depend aDepend=  new Depend(imports[i].getElementName());
-				uClass.addDepend(aDepend);
+				if (isInterface){
+					uInterface.addDepend(aDepend);
+				}
+				else {
+					uClass.addDepend(aDepend);
+				}
 			}
-		} catch (JavaModelException e) {
-			e.printStackTrace();
+			} catch (JavaModelException e) {
+			logger.error("Error adding Imports to UmpleElement");
 		}
 	}
 	
@@ -124,17 +154,48 @@ public class JavaMetamodelConverter {
 		return false;
 	}
 	
-
-	public void addExtendedClasses(ICompilationUnit unit)
+	public void addImplementedInterfaces(ICompilationUnit unit)
 	{
-		String superclassName= new String();
 		try {
 			IType [] types = unit.getAllTypes();
 			if (types.length > 0){
 				IType type  = types[0];
 				if (type != null){
+					if (type.getSuperInterfaceNames().length > 0 ) {
+						for (String superInterface : type.getSuperInterfaceNames())
+						{
+							UmpleInterface uInterface = new  UmpleInterface(superInterface);
+							uInterface.addExtendsInterface(uInterface);
+						}
+					}
+				}
+			}
+		} catch (JavaModelException e) {
+			logger.error("Error when resolving super class of " +unit.getElementName());
+		}
+	}
+
+	
+	public void addSuperClassesAndInterfaces(ICompilationUnit unit)
+	{
+		String superclassName= "";
+		
+		try {
+			IType [] types = unit.getAllTypes();
+			if (types.length > 0){
+				IType type  = types[0];
+				
+				if (type != null){
 					if (type.getSuperclassName() !=null){
 						superclassName = type.getSuperclassName();
+					}
+					if (type.getSuperInterfaceNames().length > 0 ) {
+						for (String superInterface : type.getSuperInterfaceNames())
+						{
+							UmpleInterface uInterface = new  UmpleInterface(superInterface);
+							uClass.addParentInterface(uInterface);
+							
+						}
 					}
 				}
 				if (superclassName.length() > 0){
@@ -148,15 +209,16 @@ public class JavaMetamodelConverter {
 	}
 
 	
-	public void setNamespace(ICompilationUnit unit)
+	public String getNamespace(ICompilationUnit unit)
 	{
 		IType type = unit.getType(unit.getElementName());
 		if (type != null && type.getPackageFragment() != null){
 			if (!(type.getPackageFragment().getElementName().isEmpty())){
 			String namespace = type.getPackageFragment().getElementName();
-			uClass.addNamespace(namespace);
+			return namespace;
 			}
 		}
+		return "";
 	}
 	
 	
