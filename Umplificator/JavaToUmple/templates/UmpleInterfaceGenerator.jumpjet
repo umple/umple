@@ -16,7 +16,7 @@
 
 interface <%=uInterface.getName()%> 
 {
-  <%@ include file="depends_interface.jet" %>
-  <%@ include file="inheritance_interface.jet" %>
-  <%=extraCode%>
+<%@ include file="depends_interface.jet" %>
+<%@ include file="inheritance_interface.jet" %>
+<%=extraCode%>
 }

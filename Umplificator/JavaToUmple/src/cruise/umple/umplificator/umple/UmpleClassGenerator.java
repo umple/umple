@@ -21,9 +21,10 @@ public class UmpleClassGenerator
   protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the Java Umplificator 1.0.0!*/";
   protected final String TEXT_2 = NL + NL + "class ";
   protected final String TEXT_3 = " " + NL + "{";
-  protected final String TEXT_4 = NL + NL + "/* CODE INJECTIONS */";
-  protected final String TEXT_5 = NL + "  ";
-  protected final String TEXT_6 = NL + "}";
+  protected final String TEXT_4 = "\t";
+  protected final String TEXT_5 = NL + NL + "/* CODE INJECTIONS */";
+  protected final String TEXT_6 = NL;
+  protected final String TEXT_7 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -55,6 +56,13 @@ public class UmpleClassGenerator
     stringBuffer.append(TEXT_2);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_3);
+    
+  	 if (uClass.isIsAbstract()) {
+  	 	appendln(stringBuffer, "");
+   	    append(stringBuffer, "abstract;");
+    }
+
+    stringBuffer.append(TEXT_4);
     
   for (Depend depend : uClass.getDepends())
   {
@@ -110,7 +118,7 @@ public class UmpleClassGenerator
 
     
 
-    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_5);
     
   if (uClass.hasCodeInjections()){
 	  for (CodeInjection ci : uClass.getCodeInjections())
@@ -123,9 +131,9 @@ public class UmpleClassGenerator
 	  }
   }
 
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append(uClass.getExtraCode());
     stringBuffer.append(TEXT_6);
+    stringBuffer.append( uClass.getExtraCode());
+    stringBuffer.append(TEXT_7);
     return stringBuffer.toString();
   }
 }

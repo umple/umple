@@ -29,17 +29,18 @@ public class JavaMetamodelConverter {
 		uClass = new UmpleClass(className);	
 		StringBuffer extraCode = new StringBuffer();
 		if (level == 0 ) {
-			uClass.addNamespace(getNamespace(unit));
+			addNamespace(unit, false);
 			addDepends(unit, false);
 			addSuperClassesAndInterfaces(unit);
+			addIsAbstract(unit);
 			extraCode.append(addJavaFields(unit));
 			extraCode.append(addJavaMethods(unit));
 			uClass.setExtraCode(extraCode.toString());
-			// Fix constructor and destructor
 			logger.info("Umplification Level 0 successfully completed for class:" + className);
 		}
 		if (level == 1 ) {
-			uClass.addNamespace(getNamespace(unit));
+			addIsAbstract(unit);
+			addNamespace(unit, false);
 			addDepends(unit, false);
 			addSuperClassesAndInterfaces(unit);
 			addUmpleAttributes(unit);
@@ -52,17 +53,16 @@ public class JavaMetamodelConverter {
 		uInterface = new UmpleInterface(interfaceName);	
 		StringBuffer extraCode = new StringBuffer();
 		if (level == 0 ) {
-			uInterface.addNamespace(getNamespace(unit));
+			addNamespace(unit, true);
 			addDepends(unit, true);
 			addImplementedInterfaces(unit);
 			extraCode.append(addJavaFields(unit));
 			extraCode.append(addJavaMethods(unit));
 			uInterface.setExtraCode(extraCode.toString());
-			// Fix constructor and destructor
 			logger.info("Umplification Level 0 successfully completed for class:" + interfaceName);
 		}
 		if (level == 1 ) {
-			uInterface.addNamespace(getNamespace(unit));
+			addNamespace(unit, true);
 			addDepends(unit, true);
 			addImplementedInterfaces(unit);
 			addUmpleAttributes(unit);
@@ -70,6 +70,15 @@ public class JavaMetamodelConverter {
 		return uInterface;
 	}
 	
+	public void addIsAbstract(ICompilationUnit unit){
+		try {
+			String type = unit.getSource();
+			boolean isAbstract= type.contains("public abstract class") || type.contains("abstract class");
+			uClass.setIsAbstract(isAbstract);
+		} catch (JavaModelException e) {
+			logger.error("Error determining whether this is an Abstract class");
+		}
+	}
 
 	public void addDepends(ICompilationUnit unit, boolean isInterface)
 	{
@@ -102,11 +111,12 @@ public class JavaMetamodelConverter {
 			IMethod[] methods = type.getMethods();
 			for (IMethod method : methods) {
 				// Don't add the method if it is a constructor or destructor
+				// Refactoring Step 1. Case dealing with code generation of Empty constructors.s
 				if (!(isAConstructorOrDestructor(method, javaClassName))){
 					Method uMethod= new Method("",method.getElementName(), method.getReturnType(),false);
 					MethodBody body = new MethodBody(method.getSource());
 					uMethod.setMethodBody(body);
-					uClass.addMethod(uMethod);
+					//uClass.addMethod(uMethod);
 					methodContent.append(method.getSource()+ "\n");
 				}
 			}
@@ -209,18 +219,22 @@ public class JavaMetamodelConverter {
 	}
 
 	
-	public String getNamespace(ICompilationUnit unit)
+	public void addNamespace(ICompilationUnit unit, boolean isInterface)
 	{
 		IType type = unit.getType(unit.getElementName());
 		if (type != null && type.getPackageFragment() != null){
 			if (!(type.getPackageFragment().getElementName().isEmpty())){
-			String namespace = type.getPackageFragment().getElementName();
-			return namespace;
+				String namespace = type.getPackageFragment().getElementName();
+				if (isInterface) {
+					uInterface.addNamespace(namespace);
+				}
+				else {
+					uClass.addNamespace(namespace);
+				}
 			}
 		}
-		return "";
 	}
-	
+
 	
 	public void addUmpleAttributes(ICompilationUnit unit){
 		try {
