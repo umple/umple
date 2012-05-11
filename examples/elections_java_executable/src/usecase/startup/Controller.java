@@ -5,6 +5,7 @@ package usecase.startup;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 public class Controller
 {
@@ -19,6 +20,7 @@ public class Controller
   private String username;
   private String password;
   private boolean isConnected;
+  private int option;
 
   //Controller State Machines
   enum Status { Initial, Connecting, Connected, Failed, Closed }
@@ -35,6 +37,7 @@ public class Controller
     username = aUsername;
     password = aPassword;
     isConnected = false;
+    option = JOptionPane.NO_OPTION;
     setStatus(Status.Initial);
   }
 
@@ -82,6 +85,14 @@ public class Controller
     return wasSet;
   }
 
+  public boolean setOption(int aOption)
+  {
+    boolean wasSet = false;
+    option = aOption;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Connection getTheConnection()
   {
     return theConnection;
@@ -105,6 +116,11 @@ public class Controller
   public boolean getIsConnected()
   {
     return isConnected;
+  }
+
+  public int getOption()
+  {
+    return option;
   }
 
   public String getStatusFullName()
@@ -178,8 +194,12 @@ public class Controller
     switch (status)
     {
       case Failed:
-        setStatus(Status.Initial);
-        wasEventProcessed = true;
+        if (option==JOptionPane.YES_OPTION)
+        {
+          setStatus(Status.Initial);
+          wasEventProcessed = true;
+          break;
+        }
         break;
     }
 
@@ -193,8 +213,12 @@ public class Controller
     switch (status)
     {
       case Failed:
-        setStatus(Status.Closed);
-        wasEventProcessed = true;
+        if (option==JOptionPane.NO_OPTION)
+        {
+          setStatus(Status.Closed);
+          wasEventProcessed = true;
+          break;
+        }
         break;
     }
 
@@ -216,10 +240,14 @@ public class Controller
         new DoActivityThread(this,"doActivityStatusConnecting");
         break;
       case Connected:
-        System.out.println("Connected");
+        JOptionPane.showMessageDialog(null, "Connected");
         break;
       case Failed:
-        System.out.println("Failed");
+        option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
+        new DoActivityThread(this,"doActivityStatusFailed");
+        break;
+      case Closed:
+        JOptionPane.showMessageDialog(null, "Bye!");
         break;
     }
   }
@@ -233,6 +261,12 @@ public class Controller
   {
     connected();
       	  	notConnected();
+  }
+
+  private void doActivityStatusFailed() throws InterruptedException
+  {
+    retry();
+			cancel();
   }
 
   private static class DoActivityThread extends Thread
@@ -258,6 +292,10 @@ public class Controller
         else if ("doActivityStatusConnecting".equals(doActivityMethodName))
         {
           controller.doActivityStatusConnecting();
+        }
+        else if ("doActivityStatusFailed".equals(doActivityMethodName))
+        {
+          controller.doActivityStatusFailed();
         }
       }
       catch (InterruptedException e)

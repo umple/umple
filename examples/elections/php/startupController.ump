@@ -13,7 +13,7 @@ class Controller
     status {
       Initial {
       	connect -> Connecting;
-      	do {$this->connect();}
+      	do {echo "<link type='text/css' rel='stylesheet' href='elections_styles.css'>"; $this->connect();}
       }
       Connecting {
       	  entry / {$this->isConnected = mysql_connect($this->server,$this->username,$this->password);}
@@ -29,12 +29,7 @@ class Controller
       	entry / {echo "Connected";}
       }
       Failed {
-      	entry / {echo "Failed";}
-      	retry -> Initial;
-      	cancel -> Closed;
-      }
-      Closed {
-      	
+      	entry / {echo "<p  class='ErrorMessage'> Connection Failed! <a href='index.php'>Retry?</a></p>";}
       }
   }
 }

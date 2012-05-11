@@ -30,7 +30,7 @@ public class Runner
   
   public static void main(String[] args)
 	{
-		Controller controller = new Controller("jdbc:mysql://localhost:3306/elections", "umple", "ems");
+		Controller controller = new Controller("jdbc:mysql://localhost:3306/elections", "umple", "");
 		//controller.connect();
 	}
 }

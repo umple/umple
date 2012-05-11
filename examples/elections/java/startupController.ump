@@ -5,6 +5,7 @@ class Controller
 	depend java.sql.Connection;
 	depend java.sql.DriverManager;
     depend java.sql.SQLException;
+    depend javax.swing.JOptionPane;
     
     Connection theConnection=null;
     
@@ -13,6 +14,7 @@ class Controller
     String password;
     
     boolean isConnected=false;
+    int option=JOptionPane.NO_OPTION;
 
     boolean tryToConnect()
     {
@@ -51,15 +53,20 @@ class Controller
           }
       }
       Connected {
-      	entry / {System.out.println("Connected");}
+      	entry / {JOptionPane.showMessageDialog(null, "Connected");}
       }
       Failed {
-      	entry / {System.out.println("Failed");}
-      	retry -> Initial;
-      	cancel -> Closed;
+      	entry / {option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
+      	[option==JOptionPane.YES_OPTION] retry -> Initial;
+      	[option==JOptionPane.NO_OPTION] cancel -> Closed;
+		do
+		{
+			retry();
+			cancel();
+		}
       }
       Closed {
-      	
+      	entry / {JOptionPane.showMessageDialog(null, "Bye!");}
       }
   }
 }

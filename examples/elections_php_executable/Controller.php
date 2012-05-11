@@ -20,7 +20,6 @@ class Controller
   private static $StatusConnecting = 2;
   private static $StatusConnected = 3;
   private static $StatusFailed = 4;
-  private static $StatusClosed = 5;
   private $status;
 
   //------------------------
@@ -98,7 +97,6 @@ class Controller
     elseif ($this->status == self::$StatusConnecting) { return "StatusConnecting"; }
     elseif ($this->status == self::$StatusConnected) { return "StatusConnected"; }
     elseif ($this->status == self::$StatusFailed) { return "StatusFailed"; }
-    elseif ($this->status == self::$StatusClosed) { return "StatusClosed"; }
     return null;
   }
 
@@ -147,32 +145,6 @@ class Controller
     return $wasEventProcessed;
   }
 
-  public function retry()
-  {
-    $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusFailed)
-    {
-      $this->setStatus(self::$StatusInitial);
-      $wasEventProcessed = true;
-    }
-
-    return $wasEventProcessed;
-  }
-
-  public function cancel()
-  {
-    $wasEventProcessed = false;
-
-    if ($this->status == self::$StatusFailed)
-    {
-      $this->setStatus(self::$StatusClosed);
-      $wasEventProcessed = true;
-    }
-
-    return $wasEventProcessed;
-  }
-
   private function setStatus($aStatus)
   {
     $this->status = $aStatus;
@@ -180,7 +152,7 @@ class Controller
     // entry actions and do activities
     if ($this->status == self::$StatusInitial)
     {
-      $this->connect();
+      echo "<link type='text/css' rel='stylesheet' href='elections_styles.css'>"; $this->connect();
     }
     elseif ($this->status == self::$StatusConnecting)
     {
@@ -194,7 +166,7 @@ class Controller
     }
     elseif ($this->status == self::$StatusFailed)
     {
-      echo "Failed";
+      echo "<p  class='ErrorMessage'> Connection Failed! <a href='index.php'>Retry?</a></p>";
     }
   }
 
