@@ -1,0 +1,40 @@
+generate Php;
+
+namespace usecase.startup;
+
+class Controller
+{
+    server;
+    username;
+    password;
+    
+    isConnected=false;
+    
+    status {
+      Initial {
+      	connect -> Connecting;
+      	do {$this->connect();}
+      }
+      Connecting {
+      	  entry / {$this->isConnected = mysql_connect($this->server,$this->username,$this->password);}
+          [$this->isConnected] connected -> Connected;
+          [!$this->isConnected] notConnected -> Failed;
+      	  do
+      	  {
+      	  	$this->connected();
+      	  	$this->notConnected();
+          }
+      }
+      Connected {
+      	entry / {echo "Connected";}
+      }
+      Failed {
+      	entry / {echo "Failed";}
+      	retry -> Initial;
+      	cancel -> Closed;
+      }
+      Closed {
+      	
+      }
+  }
+}

@@ -1,0 +1,4 @@
+generate Java;
+
+use java/startupRunner.ump;
+use java/startupController.ump;

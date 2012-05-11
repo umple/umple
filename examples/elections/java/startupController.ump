@@ -1,0 +1,65 @@
+namespace usecase.startup;
+
+class Controller
+{
+	depend java.sql.Connection;
+	depend java.sql.DriverManager;
+    depend java.sql.SQLException;
+    
+    Connection theConnection=null;
+    
+    String server;
+    String username;
+    String password;
+    
+    boolean isConnected=false;
+
+    boolean tryToConnect()
+    {
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			theConnection = DriverManager.getConnection(server, username, password);
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			return false;
+		} finally {
+			try {
+				if(theConnection != null)
+					theConnection.close();
+			} catch(SQLException e) {
+				System.err.println("Exception: " + e.getMessage());
+				return false;
+			}
+		}
+		
+		return true;
+    }
+    
+    status {
+      Initial {
+      	connect -> Connecting;
+      	do {connect();}
+      }
+      Connecting {
+      	  entry / {isConnected=tryToConnect();}
+          [isConnected] connected -> Connected;
+          [!isConnected] notConnected -> Failed;
+      	  do
+      	  {
+      	  	connected();
+      	  	notConnected();
+          }
+      }
+      Connected {
+      	entry / {System.out.println("Connected");}
+      }
+      Failed {
+      	entry / {System.out.println("Failed");}
+      	retry -> Initial;
+      	cancel -> Closed;
+      }
+      Closed {
+      	
+      }
+  }
+}
