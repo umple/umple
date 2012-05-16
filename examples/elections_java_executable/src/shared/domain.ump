@@ -1,0 +1,7 @@
+namespace domain;
+
+class Election {
+	int idElection;
+	String name;
+	String description;
+}

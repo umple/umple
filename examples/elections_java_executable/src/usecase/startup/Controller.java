@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import usecase.openPoll.OpenPollController;
 
 public class Controller
 {
@@ -21,9 +22,10 @@ public class Controller
   private String password;
   private boolean isConnected;
   private int option;
+  private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Initial, Connecting, Connected, Failed, Closed }
+  enum Status { Initial, Connecting, Connected, Failed, PollOpening, Closed }
   private Status status;
 
   //------------------------
@@ -38,6 +40,7 @@ public class Controller
     password = aPassword;
     isConnected = false;
     option = JOptionPane.NO_OPTION;
+    mainMenuOption = "Quit";
     setStatus(Status.Initial);
   }
 
@@ -93,6 +96,14 @@ public class Controller
     return wasSet;
   }
 
+  public boolean setMainMenuOption(Object aMainMenuOption)
+  {
+    boolean wasSet = false;
+    mainMenuOption = aMainMenuOption;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Connection getTheConnection()
   {
     return theConnection;
@@ -121,6 +132,11 @@ public class Controller
   public int getOption()
   {
     return option;
+  }
+
+  public Object getMainMenuOption()
+  {
+    return mainMenuOption;
   }
 
   public String getStatusFullName()
@@ -187,6 +203,25 @@ public class Controller
     return wasEventProcessed;
   }
 
+  public boolean openPoll()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (status)
+    {
+      case Connected:
+        if (mainMenuOption.equals("Open Poll"))
+        {
+          setStatus(Status.PollOpening);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   public boolean retry()
   {
     boolean wasEventProcessed = false;
@@ -240,14 +275,15 @@ public class Controller
         new DoActivityThread(this,"doActivityStatusConnecting");
         break;
       case Connected:
-        JOptionPane.showMessageDialog(null, "Connected");
+        showMainMenu();
+        new DoActivityThread(this,"doActivityStatusConnected");
         break;
       case Failed:
         option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
         new DoActivityThread(this,"doActivityStatusFailed");
         break;
-      case Closed:
-        JOptionPane.showMessageDialog(null, "Bye!");
+      case PollOpening:
+        OpenPollController.getInstance().openPoll(theConnection);
         break;
     }
   }
@@ -261,6 +297,11 @@ public class Controller
   {
     connected();
       	  	notConnected();
+  }
+
+  private void doActivityStatusConnected() throws InterruptedException
+  {
+    openPoll();
   }
 
   private void doActivityStatusFailed() throws InterruptedException
@@ -293,6 +334,10 @@ public class Controller
         {
           controller.doActivityStatusConnecting();
         }
+        else if ("doActivityStatusConnected".equals(doActivityMethodName))
+        {
+          controller.doActivityStatusConnected();
+        }
         else if ("doActivityStatusFailed".equals(doActivityMethodName))
         {
           controller.doActivityStatusFailed();
@@ -316,17 +361,16 @@ public class Controller
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 			return false;
-		} finally {
-			try {
-				if(theConnection != null)
-					theConnection.close();
-			} catch(SQLException e) {
-				System.err.println("Exception: " + e.getMessage());
-				return false;
-			}
 		}
 		
 		return true;
+  }
+
+
+  public void showMainMenu(){
+      String[] selectionValues={"Open Poll", "Quit"};
+		String defaultSelection = "Open Poll";
+		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
   }
 
 }
