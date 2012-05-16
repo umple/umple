@@ -1,0 +1,32 @@
+namespace service;
+
+class ElectionService {
+	depend java.util.List;
+	depend java.util.ArrayList;
+	depend shared.domain.Election;
+	depend java.sql.Connection;
+	depend java.sql.ResultSet;
+    depend java.sql.Statement;
+	
+	singleton;
+	
+	List<Election> getAllElections(Connection theConnection) {
+		List<Election> elections=new ArrayList<Election>();
+		
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM election");
+			while (rs.next()) {
+				String name = rs.getString("name");
+				String description = rs.getString("description");
+				int id=Integer.parseInt(rs.getString("idElection"));
+				Election election=new Election(id, name, description);
+				elections.add(election);
+			}
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+		}
+		
+		return elections;
+	}
+}

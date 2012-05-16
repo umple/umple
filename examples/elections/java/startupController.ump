@@ -7,6 +7,8 @@ class Controller
     depend java.sql.SQLException;
     depend javax.swing.JOptionPane;
     
+    depend usecase.openPoll.OpenPollController;
+    
     Connection theConnection=null;
     
     String server;
@@ -15,6 +17,7 @@ class Controller
     
     boolean isConnected=false;
     int option=JOptionPane.NO_OPTION;
+    Object mainMenuOption="Quit";
 
     boolean tryToConnect()
     {
@@ -24,17 +27,16 @@ class Controller
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 			return false;
-		} finally {
-			try {
-				if(theConnection != null)
-					theConnection.close();
-			} catch(SQLException e) {
-				System.err.println("Exception: " + e.getMessage());
-				return false;
-			}
 		}
 		
 		return true;
+    }
+    
+    void showMainMenu()
+    {
+    	String[] selectionValues={"Open Poll", "Quit"};
+		String defaultSelection = "Open Poll";
+		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
     }
     
     status {
@@ -53,7 +55,12 @@ class Controller
           }
       }
       Connected {
-      	entry / {JOptionPane.showMessageDialog(null, "Connected");}
+      	entry / {showMainMenu();}
+      	[mainMenuOption.equals("Open Poll")] openPoll -> PollOpening;
+      	do
+      	{
+      		openPoll();
+      	}
       }
       Failed {
       	entry / {option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
@@ -65,8 +72,8 @@ class Controller
 			cancel();
 		}
       }
-      Closed {
-      	entry / {JOptionPane.showMessageDialog(null, "Bye!");}
+      PollOpening {
+      	entry / {OpenPollController.getInstance().openPoll(theConnection);}
       }
   }
 }
