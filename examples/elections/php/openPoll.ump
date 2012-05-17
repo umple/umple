@@ -1,9 +1,10 @@
 generate Php;
 
-namespace usecase.startup;
+namespace usecase.openPoll;
+
+class OpenPoll {
+	depend shared.domain.Election;
 	
-class Controller
-{
 	db_hostname;
 	db_username;
 	db_password;
@@ -26,7 +27,20 @@ class Controller
           }
       }
       Connected {
-      	entry / {echo "<a href='openPoll.php'>Open Poll</a>";}
+      	entry / {echo "Connected!";}
+      	do {
+      		$result = mysql_query("SELECT * FROM elections.election");
+
+			require_once("Election.php");
+			
+			while($row = mysql_fetch_array($result)) {
+				$anElection=new Election($row['idElection'],$row['name'],$row['description']);
+				print_r($anElection);
+				echo "<br/><a href=OpenPoll.php?id=".$anElection->getIdElection().">Open ".$anElection->getName()."</a><br/>";
+			}
+
+			mysql_close($this->isConnected);
+      	}
       }
       Failed {
       	entry / {echo "<p  class='ErrorMessage'> Connection Failed! <a href='index.php'>Retry?</a></p>";}

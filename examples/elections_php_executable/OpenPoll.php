@@ -2,22 +2,24 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
 
-class Controller
+class OpenPoll
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Controller Attributes
+  //OpenPoll Attributes
   private $db_hostname;
   private $db_username;
   private $db_password;
   private $isConnected;
 
-  //Controller State Machines
+  //OpenPoll State Machines
   private static $StatusInitial = 1;
-  private static $StatusWriting = 2;
+  private static $StatusConnecting = 2;
+  private static $StatusConnected = 3;
+  private static $StatusFailed = 4;
   private $status;
 
   //------------------------
@@ -92,18 +94,52 @@ class Controller
   public function getStatus()
   {
     if ($this->status == self::$StatusInitial) { return "StatusInitial"; }
-    elseif ($this->status == self::$StatusWriting) { return "StatusWriting"; }
+    elseif ($this->status == self::$StatusConnecting) { return "StatusConnecting"; }
+    elseif ($this->status == self::$StatusConnected) { return "StatusConnected"; }
+    elseif ($this->status == self::$StatusFailed) { return "StatusFailed"; }
     return null;
   }
 
-  public function write()
+  public function connect()
   {
     $wasEventProcessed = false;
 
     if ($this->status == self::$StatusInitial)
     {
-      $this->setStatus(self::$StatusWriting);
+      $this->setStatus(self::$StatusConnecting);
       $wasEventProcessed = true;
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function connected()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->status == self::$StatusConnecting)
+    {
+      if ($this->isConnected)
+      {
+        $this->setStatus(self::$StatusConnected);
+        $wasEventProcessed = true;
+      }
+    }
+
+    return $wasEventProcessed;
+  }
+
+  public function notConnected()
+  {
+    $wasEventProcessed = false;
+
+    if ($this->status == self::$StatusConnecting)
+    {
+      if (!$this->isConnected)
+      {
+        $this->setStatus(self::$StatusFailed);
+        $wasEventProcessed = true;
+      }
     }
 
     return $wasEventProcessed;
@@ -118,9 +154,30 @@ class Controller
     {
       echo "<link type='text/css' rel='stylesheet' href='elections_styles.css'>"; $this->connect();
     }
-    elseif ($this->status == self::$StatusWriting)
+    elseif ($this->status == self::$StatusConnecting)
     {
-      echo "<a href='openPoll.php'>Open Poll</a>";
+      $this->isConnected = mysql_connect($this->db_hostname,$this->db_username,$this->db_password);
+      $this->connected();
+      	  	$this->notConnected();
+    }
+    elseif ($this->status == self::$StatusConnected)
+    {
+      echo "Connected!";
+      $result = mysql_query("SELECT * FROM elections.election");
+
+			require_once("Election.php");
+			
+			while($row = mysql_fetch_array($result)) {
+				$anElection=new Election($row['idElection'],$row['name'],$row['description']);
+				print_r($anElection);
+				echo "<br/><a href=OpenPoll.php?id=".$anElection->getIdElection().">Open ".$anElection->getName()."</a><br/>";
+			}
+
+			mysql_close($this->isConnected);
+    }
+    elseif ($this->status == self::$StatusFailed)
+    {
+      echo "<p  class='ErrorMessage'> Connection Failed! <a href='index.php'>Retry?</a></p>";
     }
   }
 

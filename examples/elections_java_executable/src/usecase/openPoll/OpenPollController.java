@@ -50,8 +50,11 @@ public class OpenPollController
 
   public void openPoll(Connection theConnection){
       List<Election> elections=ElectionService.getInstance().getAllElections(theConnection);
+		String[] electionNames=new String[elections.size()];
+		int i=0;
 		for (Election election:elections)
-			System.out.println(election.getName());
+			electionNames[i++]=election.getName();
+		Object selectedElections = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
   }
 
 }
