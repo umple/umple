@@ -733,21 +733,21 @@ public class UmpleParserStateMachineTest
   }
 
   
-  @Test @Ignore //Deploy New Version
+  @Test
   public void autoTransition_simple()
   {
-//    assertParse("104_autoTransition.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][autoTransition][stateName:Off][state][stateName:Off]");
-//    UmpleClass c = model.getUmpleClass("LightFixture");
-//    Assert.assertEquals(1, c.numberOfStateMachines());
-//    StateMachine sm = c.getStateMachine(0);
-//    
-//    State s = sm.getState(0);
-//    Assert.assertEquals("On", s.getName());
-//    Transition t = s.getTransition(0);
-//    Assert.assertEquals(true,t.isAutoTransition());
-//    
-//    Event autoEvent = t.getEvent();
-//    Assert.assertEquals(true, autoEvent.isAutoTransition());
+    assertParse("104_autoTransition.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][autoTransition][stateName:Off][state][stateName:Off]");
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    
+    State s = sm.getState(0);
+    Assert.assertEquals("On", s.getName());
+    Transition t = s.getTransition(0);
+    Assert.assertEquals(true,t.isAutoTransition());
+    
+    Event autoEvent = t.getEvent();
+    Assert.assertEquals(true, autoEvent.isAutoTransition());
   }
   
   @Test

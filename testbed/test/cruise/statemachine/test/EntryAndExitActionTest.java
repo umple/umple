@@ -46,7 +46,6 @@ public class EntryAndExitActionTest
     course.flip();
     Assert.assertEquals("Exit Off 1", course.getLog(2));
     Assert.assertEquals("Exit Off 2", course.getLog(3));
-    
   }
 
 }

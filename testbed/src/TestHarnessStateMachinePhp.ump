@@ -124,3 +124,38 @@ class CourseL
   after delete {  $this->addLog("deleted"); }
   
 }
+
+class CourseR
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { $this->addLog("Enter Off"); }
+     exit / { $this->addLog("Exit Off"); }
+     -> On;
+    }
+    On { 
+      entry / { $this->addLog("Enter On"); }
+      exit / { $this->addLog("Exit On"); }
+    }  
+  }
+}
+
+class CourseS
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { $this->addLog("Enter Off 1"); }
+     entry / { $this->addLog("Enter Off 2"); }
+     exit / { $this->addLog("Exit Off 1"); }
+     exit / { $this->addLog("Exit Off 2"); }
+     flip -> On;
+    }
+    On { 
+    }  
+  }
+
+}

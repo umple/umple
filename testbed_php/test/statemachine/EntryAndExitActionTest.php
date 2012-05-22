@@ -29,5 +29,17 @@ class EntryAndExitActionTest extends UnitTestCase
     $this->assertEqual("StatusOpen", $course->getStatus());
     $this->assertEqual("entry called", $course->getLog());
   }
+  
+  function test_CallMultipleEntryExit()
+  {
+    $course = new CourseS();
+    
+    $this->assertEqual("Enter Off 1", $course->getLog(0));
+    $this->assertEqual("Enter Off 2", $course->getLog(1));
+    
+    $course->flip();
+    $this->assertEqual("Exit Off 1", $course->getLog(2));
+    $this->assertEqual("Exit Off 2", $course->getLog(3));
+  }  
 
 }

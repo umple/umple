@@ -120,6 +120,11 @@
         <contains string="${test.output.php}" substring="Fail" casesensitive="true"/> 
       </condition> 
     </fail>    
+    <fail message="PHP tests failed ('PHP Fatal error' found)">
+      <condition> 
+        <contains string="${test.output.php}" substring="PHP Fatal error" casesensitive="true"/> 
+      </condition> 
+    </fail>    
     <echo message="PHP tests completed!"/> 
   </target>
   

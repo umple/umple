@@ -103,7 +103,11 @@
   </target>
   
   <target name="template.resetVersion">
-    <echo message="Resetting Version: ${umple.version}" />
+
+    <echo message="Resetting To Last Version: ${umple.version} -> ${last.version}" />
+    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${umple.version}" value="${last.version}" />
+
+    <echo message="Resetting To Test Version: ${umple.version} -> @UMPLE_VERSION@" />
     <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
     </replace>
@@ -113,7 +117,6 @@
     <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
-    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
     <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
