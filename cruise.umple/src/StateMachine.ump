@@ -53,6 +53,7 @@ class Transition
 {
     
   Boolean isInternal = false;
+  Boolean autoTransition = false;
 
   * -> 0..1 Event; 
   * -- 1 State fromState;  
@@ -77,6 +78,7 @@ class Event
 {
   name;
   Boolean isTimer = false;
+  Boolean autoTransition = false;
   timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
 
   Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state

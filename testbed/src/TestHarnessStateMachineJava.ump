@@ -124,3 +124,38 @@ class CourseL
   after delete {  addLog("deleted"); }
   
 }
+
+class CourseR
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { addLog("Enter Off"); }
+     exit / { addLog("Exit Off"); }
+     -> On;
+    }
+    On { 
+      entry / { addLog("Enter On"); }
+      exit / { addLog("Exit On"); }
+    }  
+  }
+}
+
+class CourseS
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { addLog("Enter Off 1"); }
+     entry / { addLog("Enter Off 2"); }
+     exit / { addLog("Exit Off 1"); }
+     exit / { addLog("Exit Off 2"); }
+     flip -> On;
+    }
+    On { 
+    }  
+  }
+
+}

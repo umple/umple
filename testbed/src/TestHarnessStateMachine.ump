@@ -238,3 +238,14 @@ class CourseP
     } 
   }
 }
+
+class CourseQ
+{
+  one
+  {
+    Off {
+     -> On;
+    }
+    On { }  
+  }
+}

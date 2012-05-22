@@ -26,6 +26,7 @@ interface CodeTranslator
 {
   String translate(String id, Attribute attribute);
   String translate(String id, StateMachine stm);
+  String translate(String id, Event e);
   // TODO: LH#171
   //String translate(String id, AssociationVariable associationVariable);
 }

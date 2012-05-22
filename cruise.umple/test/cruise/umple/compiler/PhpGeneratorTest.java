@@ -1,5 +1,6 @@
 /*
 
+
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
@@ -33,6 +34,34 @@ public class PhpGeneratorTest
     generator.prepare();
     
   }
+  
+  @Test
+  public void addAutoTransitionEntryAction()
+  {
+    UmpleClass c = model.addUmpleClass("Student");
+    StateMachine sm = new StateMachine("bulb");
+    sm.setUmpleClass(c);
+    State s1 = new State("s1",sm);
+    State s2 = new State("s2",sm);
+    
+    s1.addAction(new Action("blah"));
+    
+    Transition t = new Transition(s1,s2);
+    t.setAutoTransition(true);
+    
+    Event e = new Event("__myauto__");
+    e.setAutoTransition(true);
+    t.setEvent(e);
+    
+    generator.prepare();
+    
+    Assert.assertEquals(2, s1.numberOfActions());
+    Action entryAction = s1.getAction(1);
+    
+    Assert.assertEquals("$this->__myauto__();",entryAction.getActionCode());
+    Assert.assertEquals("entry",entryAction.getActionType());
+    Assert.assertEquals(true, entryAction.getIsInternal());
+  }   
   
   @Test
   public void addFinalState()

@@ -412,3 +412,16 @@ class Transition
     return new Transition(nullState, nextState);
   }
 }
+
+class Event
+{
+  private static int nextAutoTransitionId = 1;
+
+  public static Event createAutoTransition()
+  {
+    Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
+    e.setAutoTransition(true);
+    Event.nextAutoTransitionId += 1;
+    return e;
+  }
+}

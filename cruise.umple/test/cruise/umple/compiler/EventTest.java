@@ -9,6 +9,8 @@
 
 package cruise.umple.compiler;
 
+import java.lang.reflect.Field;
+
 import org.junit.*;
 
 public class EventTest
@@ -32,6 +34,33 @@ public class EventTest
     Assert.assertEquals(false, e.equals(e2));
   }
   
+  @Test
+  public void IsAutoTransition()
+  {
+    Event e = new Event("x");
+    Assert.assertEquals(false, e.isAutoTransition());
+    e.setAutoTransition(true);
+    Assert.assertEquals(true, e.isAutoTransition());
+  }
+  
+  @Test
+  public void createAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    
+    Event e = Event.createAutoTransition();
+    Assert.assertEquals(true, e.isAutoTransition());
+    Assert.assertEquals("__autotransition1__",e.getName());
+
+    e = Event.createAutoTransition();
+    Assert.assertEquals(true, e.isAutoTransition());
+    Assert.assertEquals("__autotransition2__",e.getName());
+
+  
+  }
+
   
   
 }

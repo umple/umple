@@ -932,6 +932,10 @@ class JavaGenerator
         nestedSmIndex += 1;
       }
     }
+    
+    Map<String,String> lookups = new HashMap<String,String>();
+    lookups.put("callEvent","{0}();");
+    GeneratorHelper.prepareAutoTransitions(sm,this,lookups);
   }
   
   private void generateConstructorSignature(GeneratedClass genClass)

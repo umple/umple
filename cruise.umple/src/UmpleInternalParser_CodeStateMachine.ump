@@ -220,7 +220,11 @@ class UmpleInternalParser
       }
       else if (subToken.is("transition"))
       {
-        analyzeTransition(subToken, fromState, changeType); 
+        analyzeTransition(false,subToken, fromState, changeType); 
+      }
+      else if (subToken.is("autoTransition"))
+      {
+        analyzeTransition(true,subToken, fromState, changeType);
       }
       else if (subToken.is("activity"))
       {
@@ -277,7 +281,7 @@ class UmpleInternalParser
   }
 
 
-  private void analyzeTransition(Token transitionToken, State fromState, String changeType)
+  private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
   {
     State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
     
@@ -290,6 +294,8 @@ class UmpleInternalParser
     {
       t = new Transition(fromState, nextState);
     }
+    
+    t.setAutoTransition(isAutoTransition);
 
     String eventName = transitionToken.getValue("event");
     String eventTimerAmount = transitionToken.getValue("timer");
@@ -311,11 +317,11 @@ class UmpleInternalParser
       t.setAction(new Action(actionToken.getValue("actionCode")));
     }
 
-    if (eventName != null)
+    if (eventName != null || isAutoTransition)
     {
       StateMachine sm = fromState.getStateMachine();
       UmpleClass uClass = sm.getUmpleClass();
-      Event event = uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
       if (eventTimerAmount != null)
       {
         event.setIsTimer(true);
@@ -327,6 +333,7 @@ class UmpleInternalParser
       {
         fromState.removeTransition(t);      
       }
+    
     }
 
   }  

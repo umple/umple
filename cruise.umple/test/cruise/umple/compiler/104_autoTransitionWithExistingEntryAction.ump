@@ -1,0 +1,15 @@
+class LightFixture
+{ 
+  bulb 
+  {
+    On 
+    {
+      entry / { doSomething(); }
+      -> Off;
+    }
+    Off
+    {
+    
+    } 
+  }
+}

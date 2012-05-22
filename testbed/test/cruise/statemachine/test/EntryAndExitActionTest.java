@@ -34,5 +34,19 @@ public class EntryAndExitActionTest
     Assert.assertEquals(CourseB.Status.Open, course.getStatus());
     Assert.assertEquals("entry called", course.getLog());
   }
+  
+  @Test
+  public void CallMultipleEntryExit()
+  {
+    CourseS course = new CourseS();
+    
+    Assert.assertEquals("Enter Off 1", course.getLog(0));
+    Assert.assertEquals("Enter Off 2", course.getLog(1));
+
+    course.flip();
+    Assert.assertEquals("Exit Off 1", course.getLog(2));
+    Assert.assertEquals("Exit Off 2", course.getLog(3));
+    
+  }
 
 }
