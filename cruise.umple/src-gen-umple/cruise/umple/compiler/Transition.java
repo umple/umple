@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
 
@@ -12,6 +12,7 @@ public class Transition
 
   //Transition Attributes
   private boolean isInternal;
+  private boolean autoTransition;
 
   //Transition Associations
   private Event event;
@@ -39,6 +40,7 @@ public class Transition
     canSetGuard = true;
     canSetAction = true;
     isInternal = false;
+    autoTransition = false;
     boolean didAddFromState = setFromState(aFromState);
     if (!didAddFromState)
     {
@@ -63,14 +65,32 @@ public class Transition
     return wasSet;
   }
 
+  public boolean setAutoTransition(boolean aAutoTransition)
+  {
+    boolean wasSet = false;
+    autoTransition = aAutoTransition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean getIsInternal()
   {
     return isInternal;
   }
 
+  public boolean getAutoTransition()
+  {
+    return autoTransition;
+  }
+
   public boolean isIsInternal()
   {
     return isInternal;
+  }
+
+  public boolean isAutoTransition()
+  {
+    return autoTransition;
   }
 
   public Event getEvent()

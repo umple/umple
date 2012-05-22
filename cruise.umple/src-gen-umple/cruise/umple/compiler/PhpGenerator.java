@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
 import java.util.*;
@@ -260,7 +260,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
   
- private String getExtendAndImplements(UmpleClass uClass)
+  private String getExtendAndImplements(UmpleClass uClass)
   {
 	  String extendsString = "";
 	  String implementsString = "";
@@ -271,7 +271,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
 	  return extendsString + implementsString; 
   }
 
-private String getExtendClassesNames(UmpleClass uClass)
+  private String getExtendClassesNames(UmpleClass uClass)
   {
 	  UmpleClass parent = uClass.getExtendsClass();
 	  if (parent == null)
@@ -935,6 +935,10 @@ private String getExtendClassesNames(UmpleClass uClass)
         nestedSmIndex += 1;
       }
     }
+    
+    Map<String,String> lookups = new HashMap<String,String>();
+    lookups.put("callEvent","$this->{0}();");
+    GeneratorHelper.prepareAutoTransitions(sm,this,lookups);    
   }  
   
   private void generateConstructorSignature(GeneratedClass genClass)

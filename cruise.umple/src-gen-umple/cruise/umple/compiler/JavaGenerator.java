@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
 import java.util.*;
@@ -990,6 +990,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
         nestedSmIndex += 1;
       }
     }
+    
+    Map<String,String> lookups = new HashMap<String,String>();
+    lookups.put("callEvent","{0}();");
+    GeneratorHelper.prepareAutoTransitions(sm,this,lookups);
   }
   
   private void generateConstructorSignature(GeneratedClass genClass)

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
 
@@ -13,6 +13,7 @@ public class Event
   //Event Attributes
   private String name;
   private boolean isTimer;
+  private boolean autoTransition;
   private String timerInSeconds;
   private boolean isInternal;
 
@@ -30,6 +31,7 @@ public class Event
     canSetName = true;
     name = aName;
     isTimer = false;
+    autoTransition = false;
     timerInSeconds = "0";
     isInternal = false;
   }
@@ -51,6 +53,14 @@ public class Event
   {
     boolean wasSet = false;
     isTimer = aIsTimer;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setAutoTransition(boolean aAutoTransition)
+  {
+    boolean wasSet = false;
+    autoTransition = aAutoTransition;
     wasSet = true;
     return wasSet;
   }
@@ -81,6 +91,11 @@ public class Event
     return isTimer;
   }
 
+  public boolean getAutoTransition()
+  {
+    return autoTransition;
+  }
+
   public String getTimerInSeconds()
   {
     return timerInSeconds;
@@ -97,6 +112,11 @@ public class Event
   public boolean isIsTimer()
   {
     return isTimer;
+  }
+
+  public boolean isAutoTransition()
+  {
+    return autoTransition;
   }
 
   public boolean isIsInternal()
@@ -145,5 +165,18 @@ public class Event
 
   public void delete()
   {}
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  private static int nextAutoTransitionId = 1;
 
+  public static Event createAutoTransition()
+  {
+    Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
+    e.setAutoTransition(true);
+    Event.nextAutoTransitionId += 1;
+    return e;
+  }
 }

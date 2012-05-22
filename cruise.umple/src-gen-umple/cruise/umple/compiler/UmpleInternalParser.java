@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
 import java.io.*;
@@ -2067,7 +2067,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
       }
       else if (subToken.is("transition"))
       {
-        analyzeTransition(subToken, fromState, changeType); 
+        analyzeTransition(false,subToken, fromState, changeType); 
+      }
+      else if (subToken.is("autoTransition"))
+      {
+        analyzeTransition(true,subToken, fromState, changeType);
       }
       else if (subToken.is("activity"))
       {
@@ -2124,7 +2128,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   }
 
 
-  private void analyzeTransition(Token transitionToken, State fromState, String changeType)
+  private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
   {
     State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
     
@@ -2137,6 +2141,8 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     {
       t = new Transition(fromState, nextState);
     }
+    
+    t.setAutoTransition(isAutoTransition);
 
     String eventName = transitionToken.getValue("event");
     String eventTimerAmount = transitionToken.getValue("timer");
@@ -2158,11 +2164,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
       t.setAction(new Action(actionToken.getValue("actionCode")));
     }
 
-    if (eventName != null)
+    if (eventName != null || isAutoTransition)
     {
       StateMachine sm = fromState.getStateMachine();
       UmpleClass uClass = sm.getUmpleClass();
-      Event event = uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
       if (eventTimerAmount != null)
       {
         event.setIsTimer(true);
@@ -2174,6 +2180,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
       {
         fromState.removeTransition(t);      
       }
+    
     }
 
   }

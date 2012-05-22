@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -151,6 +151,24 @@ private static void postpareStateMachine(UmpleModel aModel)
     }
   }  
 
+  public static void prepareAutoTransitions(StateMachine sm, CodeTranslator codeTranslate, Map<String,String> lookups)
+  {
+    for (State s : sm.getStates())
+    {
+      for (Transition t : s.getTransitions())
+      {
+        if (t.isAutoTransition())
+        {
+          String eventName = codeTranslate.translate("eventMethod",t.getEvent());
+          Action entryAction = new Action(StringFormatter.format(lookups.get("callEvent"),eventName));
+          entryAction.setIsInternal(true);
+          entryAction.setActionType("entry");
+          s.addAction(entryAction);
+        }
+      }
+    }
+  } 
+  
   // Add the necessary entry action to delete the object once the final state is reached
   public static void prepareFinalState(StateMachine sm, Map<String,String> lookups)
   {
