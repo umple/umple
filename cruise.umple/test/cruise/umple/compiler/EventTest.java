@@ -34,13 +34,13 @@ public class EventTest
     Assert.assertEquals(false, e.equals(e2));
   }
   
-  @Test
+  @Test @Ignore
   public void IsAutoTransition()
   {
-    Event e = new Event("x");
-    Assert.assertEquals(false, e.isAutoTransition());
-    e.setAutoTransition(true);
-    Assert.assertEquals(true, e.isAutoTransition());
+//    Event e = new Event("x");
+//    Assert.assertEquals(false, e.isAutoTransition());
+//    e.setAutoTransition(true);
+//    Assert.assertEquals(true, e.isAutoTransition());
   }
   
   @Test
