@@ -127,6 +127,11 @@
     -->
   </target>
   
+  <target name="template.localVersion">
+    <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.java"/>
+    </replace>
+  </target>
 
   <!-- ```````````````````````````
     Test the application
