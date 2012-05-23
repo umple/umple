@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.statemachine.test;
 import java.util.*;
@@ -87,7 +87,7 @@ public class CourseR
     return one;
   }
 
-  public boolean __autotransition2__()
+  private boolean __autotransition2__()
   {
     boolean wasEventProcessed = false;
     

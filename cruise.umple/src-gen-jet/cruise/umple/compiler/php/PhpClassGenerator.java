@@ -19,7 +19,7 @@ public class PhpClassGenerator implements ILang
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "<?php";
-  protected final String TEXT_2 = NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/" + NL;
+  protected final String TEXT_2 = NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/" + NL;
   protected final String TEXT_3 = NL + "class ";
   protected final String TEXT_4 = NL + "{";
   protected final String TEXT_5 = NL + NL + "  //------------------------" + NL + "  // CONSTRUCTOR" + NL + "  //------------------------" + NL;
@@ -3203,7 +3203,7 @@ public class PhpClassGenerator implements ILang
     }
     firstStateMachine = false;
   }
-  String scope = e.getIsInternal() ? "private" : "public";
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 
     stringBuffer.append(TEXT_301);

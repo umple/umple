@@ -1,0 +1,65 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+#include "Light.h";
+
+  
+
+  //Light State Machines
+  enum Bulb { Off, On }
+  private Bulb bulb;
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Light::Light()
+  {
+    setBulb(Bulb.Off);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  String Light::getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  Bulb Light::getBulb()
+  {
+    return bulb;
+  }
+
+  private bool Light::__autotransition1__()
+  {
+    boolean wasEventProcessed = false;
+
+    switch (bulb)
+    {
+      case Off:
+        setBulb(Bulb.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void Light::setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Light::~Light()
+  {}
+
+}

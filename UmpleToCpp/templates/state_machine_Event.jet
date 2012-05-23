@@ -73,10 +73,10 @@
     allCases.append(StringFormatter.format("    }\n\n"));
   }
   
-
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private " : "";
   String outputCases = allCases.toString().trim();
 %>
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("eventMethod",e)%>()
+  <%=scope%>bool <%=gen.translate("type",uClass)%>::<%=gen.translate("eventMethod",e)%>()
   {
     boolean wasEventProcessed = false;
 

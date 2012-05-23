@@ -86,7 +86,7 @@
     }
     firstStateMachine = false;
   }
-  String scope = e.getIsInternal() ? "private" : "public";
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 %>
   <%= scope %> function <%=gen.translate("eventMethod",e)%>()

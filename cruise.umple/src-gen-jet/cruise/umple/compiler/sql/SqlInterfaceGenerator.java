@@ -18,7 +18,7 @@ public class SqlInterfaceGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "-- PLEASE DO NOT EDIT THIS CODE" + NL + "-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!";
+  protected final String TEXT_1 = "-- PLEASE DO NOT EDIT THIS CODE" + NL + "-- This code was generated using the UMPLE 1.15.0.1751 modeling language!";
   protected final String TEXT_2 = NL;
 
   // Add a newline to the end of the input

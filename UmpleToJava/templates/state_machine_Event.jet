@@ -85,7 +85,7 @@
     allCases.append(StringFormatter.format("    }\n"));
   }
   
-  String scope = e.getIsInternal() ? "private" : "public";
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 %>
   <%= scope %> boolean <%=gen.translate("eventMethod",e)%>()

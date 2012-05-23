@@ -67,7 +67,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  bool LightFixture::enterOn()
+  private bool LightFixture::enterOn()
   {
     boolean wasEventProcessed = false;
 
@@ -90,7 +90,7 @@ namespace example{
     return wasEventProcessed;
   }
 
-  bool LightFixture::exitOn()
+  private bool LightFixture::exitOn()
   {
     boolean wasEventProcessed = false;
 

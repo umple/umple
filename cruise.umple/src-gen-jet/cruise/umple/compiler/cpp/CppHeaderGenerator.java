@@ -18,7 +18,7 @@ public class CppHeaderGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/";
   protected final String TEXT_2 = NL + NL + "#ifndef ";
   protected final String TEXT_3 = "_H_" + NL + "#define ";
   protected final String TEXT_4 = "_H_";
@@ -101,312 +101,313 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_81 = "::";
   protected final String TEXT_82 = "()" + NL + "  {" + NL + "    return ";
   protected final String TEXT_83 = ";" + NL + "  }" + NL;
-  protected final String TEXT_84 = NL + "  bool ";
-  protected final String TEXT_85 = "::";
-  protected final String TEXT_86 = "()" + NL + "  {" + NL + "    boolean wasEventProcessed = false;" + NL;
-  protected final String TEXT_87 = NL + "    ";
-  protected final String TEXT_88 = NL + NL + "    return wasEventProcessed;" + NL + "  }" + NL;
-  protected final String TEXT_89 = NL + "  bool ";
-  protected final String TEXT_90 = "::";
-  protected final String TEXT_91 = "(";
-  protected final String TEXT_92 = " ";
-  protected final String TEXT_93 = ")" + NL + "  {";
-  protected final String TEXT_94 = NL + "    ";
-  protected final String TEXT_95 = " = ";
-  protected final String TEXT_96 = ";" + NL + "    return true;" + NL + "  }" + NL;
-  protected final String TEXT_97 = NL + "  private void ";
-  protected final String TEXT_98 = "::";
-  protected final String TEXT_99 = "()" + NL + "  {" + NL + "    switch(";
-  protected final String TEXT_100 = ")" + NL + "    {";
-  protected final String TEXT_101 = NL + "      ";
-  protected final String TEXT_102 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_103 = NL + "  private void ";
-  protected final String TEXT_104 = "::";
-  protected final String TEXT_105 = "(";
-  protected final String TEXT_106 = " ";
-  protected final String TEXT_107 = ")" + NL + "  {";
-  protected final String TEXT_108 = NL + "    ";
-  protected final String TEXT_109 = " = ";
-  protected final String TEXT_110 = ";";
-  protected final String TEXT_111 = NL + "    if (";
-  protected final String TEXT_112 = " != ";
-  protected final String TEXT_113 = ".";
-  protected final String TEXT_114 = " && ";
-  protected final String TEXT_115 = " != ";
-  protected final String TEXT_116 = ".";
-  protected final String TEXT_117 = ") { ";
-  protected final String TEXT_118 = "(";
-  protected final String TEXT_119 = ".";
-  protected final String TEXT_120 = "); }";
-  protected final String TEXT_121 = NL + NL + "    // entry actions and do activities" + NL + "    switch(";
-  protected final String TEXT_122 = ")" + NL + "    {";
-  protected final String TEXT_123 = NL + "      ";
-  protected final String TEXT_124 = NL + "    }";
-  protected final String TEXT_125 = NL + "  }" + NL;
-  protected final String TEXT_126 = NL + "  ";
-  protected final String TEXT_127 = "* ";
-  protected final String TEXT_128 = "() const;";
-  protected final String TEXT_129 = NL + "  ";
-  protected final String TEXT_130 = " ";
-  protected final String TEXT_131 = "(int index) const;" + NL + "  vector<";
-  protected final String TEXT_132 = "> ";
-  protected final String TEXT_133 = "();" + NL + "  int ";
-  protected final String TEXT_134 = "();" + NL + "  bool ";
-  protected final String TEXT_135 = "();" + NL + "  int ";
-  protected final String TEXT_136 = "(";
-  protected final String TEXT_137 = " ";
-  protected final String TEXT_138 = ");";
-  protected final String TEXT_139 = "UNABLE TO UNDERSAND association variable (see header_association_Get_All.jet)";
-  protected final String TEXT_140 = "//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP ";
-  protected final String TEXT_141 = " : ";
-  protected final String TEXT_142 = NL + "  bool ";
-  protected final String TEXT_143 = "();";
-  protected final String TEXT_144 = NL + "  static int ";
-  protected final String TEXT_145 = "();";
-  protected final String TEXT_146 = NL + "  static int ";
-  protected final String TEXT_147 = "();";
-  protected final String TEXT_148 = NL + "static int ";
-  protected final String TEXT_149 = "();";
-  protected final String TEXT_150 = NL + "  bool ";
-  protected final String TEXT_151 = "(";
-  protected final String TEXT_152 = " ";
-  protected final String TEXT_153 = ");";
-  protected final String TEXT_154 = NL + "  bool ";
-  protected final String TEXT_155 = "(";
-  protected final String TEXT_156 = " ";
-  protected final String TEXT_157 = ");";
-  protected final String TEXT_158 = NL + "  bool ";
-  protected final String TEXT_159 = "(";
-  protected final String TEXT_160 = "* ";
-  protected final String TEXT_161 = ");";
-  protected final String TEXT_162 = NL + "  bool ";
-  protected final String TEXT_163 = "(";
-  protected final String TEXT_164 = "* ";
-  protected final String TEXT_165 = ");";
-  protected final String TEXT_166 = NL + "  bool ";
-  protected final String TEXT_167 = "(";
-  protected final String TEXT_168 = "* ";
-  protected final String TEXT_169 = ");";
-  protected final String TEXT_170 = NL + "  bool ";
-  protected final String TEXT_171 = "(";
-  protected final String TEXT_172 = "* ";
-  protected final String TEXT_173 = ");";
-  protected final String TEXT_174 = NL + "  bool ";
-  protected final String TEXT_175 = "(";
-  protected final String TEXT_176 = " ";
-  protected final String TEXT_177 = ");";
-  protected final String TEXT_178 = NL + "  ";
-  protected final String TEXT_179 = " ";
-  protected final String TEXT_180 = "(";
-  protected final String TEXT_181 = ");" + NL + "  bool ";
-  protected final String TEXT_182 = "(";
-  protected final String TEXT_183 = " ";
-  protected final String TEXT_184 = ");" + NL + "  bool ";
-  protected final String TEXT_185 = "(";
-  protected final String TEXT_186 = " ";
-  protected final String TEXT_187 = "); ";
-  protected final String TEXT_188 = NL + "  ";
-  protected final String TEXT_189 = " ";
-  protected final String TEXT_190 = "(";
-  protected final String TEXT_191 = ");" + NL + "  bool ";
-  protected final String TEXT_192 = "(";
-  protected final String TEXT_193 = " ";
-  protected final String TEXT_194 = ");" + NL + "  bool ";
-  protected final String TEXT_195 = "(";
-  protected final String TEXT_196 = " ";
-  protected final String TEXT_197 = ");";
-  protected final String TEXT_198 = NL + "  bool ";
-  protected final String TEXT_199 = "(const vector<";
-  protected final String TEXT_200 = "*>& ";
-  protected final String TEXT_201 = ");";
-  protected final String TEXT_202 = NL + "  ";
-  protected final String TEXT_203 = " ";
-  protected final String TEXT_204 = "(";
-  protected final String TEXT_205 = ");" + NL + "  bool ";
-  protected final String TEXT_206 = "(";
-  protected final String TEXT_207 = " ";
-  protected final String TEXT_208 = ");" + NL + "  bool ";
-  protected final String TEXT_209 = "(";
-  protected final String TEXT_210 = " ";
-  protected final String TEXT_211 = ");";
-  protected final String TEXT_212 = NL + "  bool ";
-  protected final String TEXT_213 = "(";
-  protected final String TEXT_214 = "* ";
-  protected final String TEXT_215 = ");";
-  protected final String TEXT_216 = NL + "  bool ";
-  protected final String TEXT_217 = "(";
-  protected final String TEXT_218 = " ";
-  protected final String TEXT_219 = "); ";
-  protected final String TEXT_220 = NL + "  bool ";
-  protected final String TEXT_221 = "(";
-  protected final String TEXT_222 = " ";
-  protected final String TEXT_223 = ");";
-  protected final String TEXT_224 = NL + "  bool ";
-  protected final String TEXT_225 = "(const vector<";
-  protected final String TEXT_226 = "*>& ";
-  protected final String TEXT_227 = ");";
-  protected final String TEXT_228 = NL + "  void ";
-  protected final String TEXT_229 = "::";
-  protected final String TEXT_230 = "(";
-  protected final String TEXT_231 = " ";
-  protected final String TEXT_232 = ", ";
-  protected final String TEXT_233 = " ";
-  protected final String TEXT_234 = ")" + NL + "  {" + NL + "    try" + NL + "    {" + NL + "      java.lang.reflect.Field mentorField = ";
-  protected final String TEXT_235 = ".getClass().getDeclaredField(\"";
-  protected final String TEXT_236 = "\");" + NL + "      mentorField.setAccessible(true);" + NL + "      mentorField.set(";
-  protected final String TEXT_237 = ", ";
-  protected final String TEXT_238 = ");" + NL + "    }" + NL + "    catch (Exception e)" + NL + "    {" + NL + "      throw new RuntimeException(\"Issue internally setting ";
-  protected final String TEXT_239 = " to ";
-  protected final String TEXT_240 = "\", e);" + NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_241 = NL + "  bool ";
-  protected final String TEXT_242 = "(";
-  protected final String TEXT_243 = "* ";
-  protected final String TEXT_244 = ");";
-  protected final String TEXT_245 = NL + "  bool ";
-  protected final String TEXT_246 = "(";
-  protected final String TEXT_247 = "* ";
-  protected final String TEXT_248 = ");";
-  protected final String TEXT_249 = NL + "  bool ";
-  protected final String TEXT_250 = "(";
-  protected final String TEXT_251 = "* ";
-  protected final String TEXT_252 = ");";
-  protected final String TEXT_253 = NL + "  bool ";
-  protected final String TEXT_254 = "(";
-  protected final String TEXT_255 = " ";
-  protected final String TEXT_256 = ");" + NL + "  bool ";
-  protected final String TEXT_257 = "(";
-  protected final String TEXT_258 = " ";
-  protected final String TEXT_259 = ");";
-  protected final String TEXT_260 = NL + "  bool ";
-  protected final String TEXT_261 = "(";
-  protected final String TEXT_262 = "* ";
-  protected final String TEXT_263 = ");";
-  protected final String TEXT_264 = NL + "  bool ";
-  protected final String TEXT_265 = "(";
-  protected final String TEXT_266 = " ";
-  protected final String TEXT_267 = ");" + NL + "  bool ";
-  protected final String TEXT_268 = "(";
-  protected final String TEXT_269 = " ";
-  protected final String TEXT_270 = ");";
-  protected final String TEXT_271 = NL + "  bool ";
-  protected final String TEXT_272 = "(";
-  protected final String TEXT_273 = " ";
-  protected final String TEXT_274 = ");" + NL + "  bool ";
-  protected final String TEXT_275 = "(";
-  protected final String TEXT_276 = " ";
-  protected final String TEXT_277 = ");";
-  protected final String TEXT_278 = NL + "  bool ";
-  protected final String TEXT_279 = "(";
-  protected final String TEXT_280 = " ";
-  protected final String TEXT_281 = ");" + NL + "  bool ";
-  protected final String TEXT_282 = "(";
-  protected final String TEXT_283 = " ";
-  protected final String TEXT_284 = ");";
-  protected final String TEXT_285 = NL + "  bool ";
-  protected final String TEXT_286 = "(const vector<";
-  protected final String TEXT_287 = "*>& ";
-  protected final String TEXT_288 = ");";
-  protected final String TEXT_289 = NL + "  void ";
-  protected final String TEXT_290 = "::";
-  protected final String TEXT_291 = "(";
-  protected final String TEXT_292 = " ";
-  protected final String TEXT_293 = ", ";
-  protected final String TEXT_294 = " ";
-  protected final String TEXT_295 = ")" + NL + "  {" + NL + "    try" + NL + "    {" + NL + "      java.lang.reflect.Field mentorField = ";
-  protected final String TEXT_296 = ".getClass().getDeclaredField(\"";
-  protected final String TEXT_297 = "\");" + NL + "      mentorField.setAccessible(true);" + NL + "      mentorField.set(";
-  protected final String TEXT_298 = ", ";
-  protected final String TEXT_299 = ");" + NL + "    }" + NL + "    catch (Exception e)" + NL + "    {" + NL + "      throw new RuntimeException(\"Issue internally setting ";
-  protected final String TEXT_300 = " to ";
-  protected final String TEXT_301 = "\", e);" + NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_302 = NL + "  bool ";
-  protected final String TEXT_303 = "(";
-  protected final String TEXT_304 = " ";
-  protected final String TEXT_305 = ");" + NL + "  bool ";
-  protected final String TEXT_306 = "(";
-  protected final String TEXT_307 = " ";
-  protected final String TEXT_308 = ");";
-  protected final String TEXT_309 = NL + "  bool ";
-  protected final String TEXT_310 = "(";
-  protected final String TEXT_311 = " ";
-  protected final String TEXT_312 = ");" + NL + "  bool ";
-  protected final String TEXT_313 = "(";
-  protected final String TEXT_314 = " ";
-  protected final String TEXT_315 = ");";
-  protected final String TEXT_316 = NL + "  bool ";
-  protected final String TEXT_317 = "(";
-  protected final String TEXT_318 = " ";
-  protected final String TEXT_319 = ");" + NL + "  bool ";
-  protected final String TEXT_320 = "(";
-  protected final String TEXT_321 = " ";
-  protected final String TEXT_322 = ");";
-  protected final String TEXT_323 = NL + "  bool ";
-  protected final String TEXT_324 = "(const vector<";
-  protected final String TEXT_325 = "*>& ";
-  protected final String TEXT_326 = ");";
-  protected final String TEXT_327 = NL + "  bool ";
-  protected final String TEXT_328 = "(const vector<";
-  protected final String TEXT_329 = "*>& ";
-  protected final String TEXT_330 = ");";
-  protected final String TEXT_331 = NL + "  bool ";
-  protected final String TEXT_332 = "(const vector<";
-  protected final String TEXT_333 = "*>& ";
-  protected final String TEXT_334 = ");";
-  protected final String TEXT_335 = NL + "  bool ";
-  protected final String TEXT_336 = "(const vector<";
-  protected final String TEXT_337 = "*>& ";
-  protected final String TEXT_338 = ");";
-  protected final String TEXT_339 = NL + "  bool ";
-  protected final String TEXT_340 = "(const vector<";
-  protected final String TEXT_341 = "*>& ";
-  protected final String TEXT_342 = ");";
-  protected final String TEXT_343 = NL + "  bool ";
-  protected final String TEXT_344 = "(const vector<";
-  protected final String TEXT_345 = "*>&  ";
-  protected final String TEXT_346 = ");";
-  protected final String TEXT_347 = NL + "  bool ";
-  protected final String TEXT_348 = "(const vector<";
-  protected final String TEXT_349 = "*>& ";
-  protected final String TEXT_350 = ");";
-  protected final String TEXT_351 = NL + "  ";
-  protected final String TEXT_352 = " ";
-  protected final String TEXT_353 = NL + " bool equals(Object obj);" + NL + " int hashCode();" + NL;
-  protected final String TEXT_354 = NL + "   void ";
-  protected final String TEXT_355 = "::";
-  protected final String TEXT_356 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
-  protected final String TEXT_357 = NL + "       ";
-  protected final String TEXT_358 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
-  protected final String TEXT_359 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
-  protected final String TEXT_360 = NL + "    ";
-  protected final String TEXT_361 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_362 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
-  protected final String TEXT_363 = NL + "      ";
-  protected final String TEXT_364 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_365 = NL + "  void ";
-  protected final String TEXT_366 = "::";
-  protected final String TEXT_367 = "()" + NL + "  {";
-  protected final String TEXT_368 = NL + "    ";
-  protected final String TEXT_369 = " = new TimedEventHandler(this,\"";
-  protected final String TEXT_370 = "\",";
-  protected final String TEXT_371 = ");" + NL + "  }" + NL + "" + NL + "  void ";
-  protected final String TEXT_372 = "::";
-  protected final String TEXT_373 = "()" + NL + "  {";
-  protected final String TEXT_374 = NL + "    ";
-  protected final String TEXT_375 = ".stop();" + NL + "  }" + NL;
-  protected final String TEXT_376 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
-  protected final String TEXT_377 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
-  protected final String TEXT_378 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    public void ";
-  protected final String TEXT_379 = "::stop()" + NL + "    {" + NL + "      timer.cancel();" + NL + "    }" + NL + "    " + NL + "    public void ";
-  protected final String TEXT_380 = "::run ()" + NL + "    {";
-  protected final String TEXT_381 = NL + "      if (\"";
-  protected final String TEXT_382 = "\" == timeoutMethodName)" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
-  protected final String TEXT_383 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
-  protected final String TEXT_384 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
-  protected final String TEXT_385 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_386 = NL + "  //------------------------" + NL + "  // Destructor" + NL + "  //------------------------";
-  protected final String TEXT_387 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_388 = NL + "  ";
-  protected final String TEXT_389 = NL + "};" + NL + "" + NL + "#endif";
+  protected final String TEXT_84 = NL + "  ";
+  protected final String TEXT_85 = "bool ";
+  protected final String TEXT_86 = "::";
+  protected final String TEXT_87 = "()" + NL + "  {" + NL + "    boolean wasEventProcessed = false;" + NL;
+  protected final String TEXT_88 = NL + "    ";
+  protected final String TEXT_89 = NL + NL + "    return wasEventProcessed;" + NL + "  }" + NL;
+  protected final String TEXT_90 = NL + "  bool ";
+  protected final String TEXT_91 = "::";
+  protected final String TEXT_92 = "(";
+  protected final String TEXT_93 = " ";
+  protected final String TEXT_94 = ")" + NL + "  {";
+  protected final String TEXT_95 = NL + "    ";
+  protected final String TEXT_96 = " = ";
+  protected final String TEXT_97 = ";" + NL + "    return true;" + NL + "  }" + NL;
+  protected final String TEXT_98 = NL + "  private void ";
+  protected final String TEXT_99 = "::";
+  protected final String TEXT_100 = "()" + NL + "  {" + NL + "    switch(";
+  protected final String TEXT_101 = ")" + NL + "    {";
+  protected final String TEXT_102 = NL + "      ";
+  protected final String TEXT_103 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_104 = NL + "  private void ";
+  protected final String TEXT_105 = "::";
+  protected final String TEXT_106 = "(";
+  protected final String TEXT_107 = " ";
+  protected final String TEXT_108 = ")" + NL + "  {";
+  protected final String TEXT_109 = NL + "    ";
+  protected final String TEXT_110 = " = ";
+  protected final String TEXT_111 = ";";
+  protected final String TEXT_112 = NL + "    if (";
+  protected final String TEXT_113 = " != ";
+  protected final String TEXT_114 = ".";
+  protected final String TEXT_115 = " && ";
+  protected final String TEXT_116 = " != ";
+  protected final String TEXT_117 = ".";
+  protected final String TEXT_118 = ") { ";
+  protected final String TEXT_119 = "(";
+  protected final String TEXT_120 = ".";
+  protected final String TEXT_121 = "); }";
+  protected final String TEXT_122 = NL + NL + "    // entry actions and do activities" + NL + "    switch(";
+  protected final String TEXT_123 = ")" + NL + "    {";
+  protected final String TEXT_124 = NL + "      ";
+  protected final String TEXT_125 = NL + "    }";
+  protected final String TEXT_126 = NL + "  }" + NL;
+  protected final String TEXT_127 = NL + "  ";
+  protected final String TEXT_128 = "* ";
+  protected final String TEXT_129 = "() const;";
+  protected final String TEXT_130 = NL + "  ";
+  protected final String TEXT_131 = " ";
+  protected final String TEXT_132 = "(int index) const;" + NL + "  vector<";
+  protected final String TEXT_133 = "> ";
+  protected final String TEXT_134 = "();" + NL + "  int ";
+  protected final String TEXT_135 = "();" + NL + "  bool ";
+  protected final String TEXT_136 = "();" + NL + "  int ";
+  protected final String TEXT_137 = "(";
+  protected final String TEXT_138 = " ";
+  protected final String TEXT_139 = ");";
+  protected final String TEXT_140 = "UNABLE TO UNDERSAND association variable (see header_association_Get_All.jet)";
+  protected final String TEXT_141 = "//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP ";
+  protected final String TEXT_142 = " : ";
+  protected final String TEXT_143 = NL + "  bool ";
+  protected final String TEXT_144 = "();";
+  protected final String TEXT_145 = NL + "  static int ";
+  protected final String TEXT_146 = "();";
+  protected final String TEXT_147 = NL + "  static int ";
+  protected final String TEXT_148 = "();";
+  protected final String TEXT_149 = NL + "static int ";
+  protected final String TEXT_150 = "();";
+  protected final String TEXT_151 = NL + "  bool ";
+  protected final String TEXT_152 = "(";
+  protected final String TEXT_153 = " ";
+  protected final String TEXT_154 = ");";
+  protected final String TEXT_155 = NL + "  bool ";
+  protected final String TEXT_156 = "(";
+  protected final String TEXT_157 = " ";
+  protected final String TEXT_158 = ");";
+  protected final String TEXT_159 = NL + "  bool ";
+  protected final String TEXT_160 = "(";
+  protected final String TEXT_161 = "* ";
+  protected final String TEXT_162 = ");";
+  protected final String TEXT_163 = NL + "  bool ";
+  protected final String TEXT_164 = "(";
+  protected final String TEXT_165 = "* ";
+  protected final String TEXT_166 = ");";
+  protected final String TEXT_167 = NL + "  bool ";
+  protected final String TEXT_168 = "(";
+  protected final String TEXT_169 = "* ";
+  protected final String TEXT_170 = ");";
+  protected final String TEXT_171 = NL + "  bool ";
+  protected final String TEXT_172 = "(";
+  protected final String TEXT_173 = "* ";
+  protected final String TEXT_174 = ");";
+  protected final String TEXT_175 = NL + "  bool ";
+  protected final String TEXT_176 = "(";
+  protected final String TEXT_177 = " ";
+  protected final String TEXT_178 = ");";
+  protected final String TEXT_179 = NL + "  ";
+  protected final String TEXT_180 = " ";
+  protected final String TEXT_181 = "(";
+  protected final String TEXT_182 = ");" + NL + "  bool ";
+  protected final String TEXT_183 = "(";
+  protected final String TEXT_184 = " ";
+  protected final String TEXT_185 = ");" + NL + "  bool ";
+  protected final String TEXT_186 = "(";
+  protected final String TEXT_187 = " ";
+  protected final String TEXT_188 = "); ";
+  protected final String TEXT_189 = NL + "  ";
+  protected final String TEXT_190 = " ";
+  protected final String TEXT_191 = "(";
+  protected final String TEXT_192 = ");" + NL + "  bool ";
+  protected final String TEXT_193 = "(";
+  protected final String TEXT_194 = " ";
+  protected final String TEXT_195 = ");" + NL + "  bool ";
+  protected final String TEXT_196 = "(";
+  protected final String TEXT_197 = " ";
+  protected final String TEXT_198 = ");";
+  protected final String TEXT_199 = NL + "  bool ";
+  protected final String TEXT_200 = "(const vector<";
+  protected final String TEXT_201 = "*>& ";
+  protected final String TEXT_202 = ");";
+  protected final String TEXT_203 = NL + "  ";
+  protected final String TEXT_204 = " ";
+  protected final String TEXT_205 = "(";
+  protected final String TEXT_206 = ");" + NL + "  bool ";
+  protected final String TEXT_207 = "(";
+  protected final String TEXT_208 = " ";
+  protected final String TEXT_209 = ");" + NL + "  bool ";
+  protected final String TEXT_210 = "(";
+  protected final String TEXT_211 = " ";
+  protected final String TEXT_212 = ");";
+  protected final String TEXT_213 = NL + "  bool ";
+  protected final String TEXT_214 = "(";
+  protected final String TEXT_215 = "* ";
+  protected final String TEXT_216 = ");";
+  protected final String TEXT_217 = NL + "  bool ";
+  protected final String TEXT_218 = "(";
+  protected final String TEXT_219 = " ";
+  protected final String TEXT_220 = "); ";
+  protected final String TEXT_221 = NL + "  bool ";
+  protected final String TEXT_222 = "(";
+  protected final String TEXT_223 = " ";
+  protected final String TEXT_224 = ");";
+  protected final String TEXT_225 = NL + "  bool ";
+  protected final String TEXT_226 = "(const vector<";
+  protected final String TEXT_227 = "*>& ";
+  protected final String TEXT_228 = ");";
+  protected final String TEXT_229 = NL + "  void ";
+  protected final String TEXT_230 = "::";
+  protected final String TEXT_231 = "(";
+  protected final String TEXT_232 = " ";
+  protected final String TEXT_233 = ", ";
+  protected final String TEXT_234 = " ";
+  protected final String TEXT_235 = ")" + NL + "  {" + NL + "    try" + NL + "    {" + NL + "      java.lang.reflect.Field mentorField = ";
+  protected final String TEXT_236 = ".getClass().getDeclaredField(\"";
+  protected final String TEXT_237 = "\");" + NL + "      mentorField.setAccessible(true);" + NL + "      mentorField.set(";
+  protected final String TEXT_238 = ", ";
+  protected final String TEXT_239 = ");" + NL + "    }" + NL + "    catch (Exception e)" + NL + "    {" + NL + "      throw new RuntimeException(\"Issue internally setting ";
+  protected final String TEXT_240 = " to ";
+  protected final String TEXT_241 = "\", e);" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_242 = NL + "  bool ";
+  protected final String TEXT_243 = "(";
+  protected final String TEXT_244 = "* ";
+  protected final String TEXT_245 = ");";
+  protected final String TEXT_246 = NL + "  bool ";
+  protected final String TEXT_247 = "(";
+  protected final String TEXT_248 = "* ";
+  protected final String TEXT_249 = ");";
+  protected final String TEXT_250 = NL + "  bool ";
+  protected final String TEXT_251 = "(";
+  protected final String TEXT_252 = "* ";
+  protected final String TEXT_253 = ");";
+  protected final String TEXT_254 = NL + "  bool ";
+  protected final String TEXT_255 = "(";
+  protected final String TEXT_256 = " ";
+  protected final String TEXT_257 = ");" + NL + "  bool ";
+  protected final String TEXT_258 = "(";
+  protected final String TEXT_259 = " ";
+  protected final String TEXT_260 = ");";
+  protected final String TEXT_261 = NL + "  bool ";
+  protected final String TEXT_262 = "(";
+  protected final String TEXT_263 = "* ";
+  protected final String TEXT_264 = ");";
+  protected final String TEXT_265 = NL + "  bool ";
+  protected final String TEXT_266 = "(";
+  protected final String TEXT_267 = " ";
+  protected final String TEXT_268 = ");" + NL + "  bool ";
+  protected final String TEXT_269 = "(";
+  protected final String TEXT_270 = " ";
+  protected final String TEXT_271 = ");";
+  protected final String TEXT_272 = NL + "  bool ";
+  protected final String TEXT_273 = "(";
+  protected final String TEXT_274 = " ";
+  protected final String TEXT_275 = ");" + NL + "  bool ";
+  protected final String TEXT_276 = "(";
+  protected final String TEXT_277 = " ";
+  protected final String TEXT_278 = ");";
+  protected final String TEXT_279 = NL + "  bool ";
+  protected final String TEXT_280 = "(";
+  protected final String TEXT_281 = " ";
+  protected final String TEXT_282 = ");" + NL + "  bool ";
+  protected final String TEXT_283 = "(";
+  protected final String TEXT_284 = " ";
+  protected final String TEXT_285 = ");";
+  protected final String TEXT_286 = NL + "  bool ";
+  protected final String TEXT_287 = "(const vector<";
+  protected final String TEXT_288 = "*>& ";
+  protected final String TEXT_289 = ");";
+  protected final String TEXT_290 = NL + "  void ";
+  protected final String TEXT_291 = "::";
+  protected final String TEXT_292 = "(";
+  protected final String TEXT_293 = " ";
+  protected final String TEXT_294 = ", ";
+  protected final String TEXT_295 = " ";
+  protected final String TEXT_296 = ")" + NL + "  {" + NL + "    try" + NL + "    {" + NL + "      java.lang.reflect.Field mentorField = ";
+  protected final String TEXT_297 = ".getClass().getDeclaredField(\"";
+  protected final String TEXT_298 = "\");" + NL + "      mentorField.setAccessible(true);" + NL + "      mentorField.set(";
+  protected final String TEXT_299 = ", ";
+  protected final String TEXT_300 = ");" + NL + "    }" + NL + "    catch (Exception e)" + NL + "    {" + NL + "      throw new RuntimeException(\"Issue internally setting ";
+  protected final String TEXT_301 = " to ";
+  protected final String TEXT_302 = "\", e);" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_303 = NL + "  bool ";
+  protected final String TEXT_304 = "(";
+  protected final String TEXT_305 = " ";
+  protected final String TEXT_306 = ");" + NL + "  bool ";
+  protected final String TEXT_307 = "(";
+  protected final String TEXT_308 = " ";
+  protected final String TEXT_309 = ");";
+  protected final String TEXT_310 = NL + "  bool ";
+  protected final String TEXT_311 = "(";
+  protected final String TEXT_312 = " ";
+  protected final String TEXT_313 = ");" + NL + "  bool ";
+  protected final String TEXT_314 = "(";
+  protected final String TEXT_315 = " ";
+  protected final String TEXT_316 = ");";
+  protected final String TEXT_317 = NL + "  bool ";
+  protected final String TEXT_318 = "(";
+  protected final String TEXT_319 = " ";
+  protected final String TEXT_320 = ");" + NL + "  bool ";
+  protected final String TEXT_321 = "(";
+  protected final String TEXT_322 = " ";
+  protected final String TEXT_323 = ");";
+  protected final String TEXT_324 = NL + "  bool ";
+  protected final String TEXT_325 = "(const vector<";
+  protected final String TEXT_326 = "*>& ";
+  protected final String TEXT_327 = ");";
+  protected final String TEXT_328 = NL + "  bool ";
+  protected final String TEXT_329 = "(const vector<";
+  protected final String TEXT_330 = "*>& ";
+  protected final String TEXT_331 = ");";
+  protected final String TEXT_332 = NL + "  bool ";
+  protected final String TEXT_333 = "(const vector<";
+  protected final String TEXT_334 = "*>& ";
+  protected final String TEXT_335 = ");";
+  protected final String TEXT_336 = NL + "  bool ";
+  protected final String TEXT_337 = "(const vector<";
+  protected final String TEXT_338 = "*>& ";
+  protected final String TEXT_339 = ");";
+  protected final String TEXT_340 = NL + "  bool ";
+  protected final String TEXT_341 = "(const vector<";
+  protected final String TEXT_342 = "*>& ";
+  protected final String TEXT_343 = ");";
+  protected final String TEXT_344 = NL + "  bool ";
+  protected final String TEXT_345 = "(const vector<";
+  protected final String TEXT_346 = "*>&  ";
+  protected final String TEXT_347 = ");";
+  protected final String TEXT_348 = NL + "  bool ";
+  protected final String TEXT_349 = "(const vector<";
+  protected final String TEXT_350 = "*>& ";
+  protected final String TEXT_351 = ");";
+  protected final String TEXT_352 = NL + "  ";
+  protected final String TEXT_353 = " ";
+  protected final String TEXT_354 = NL + " bool equals(Object obj);" + NL + " int hashCode();" + NL;
+  protected final String TEXT_355 = NL + "   void ";
+  protected final String TEXT_356 = "::";
+  protected final String TEXT_357 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
+  protected final String TEXT_358 = NL + "       ";
+  protected final String TEXT_359 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
+  protected final String TEXT_360 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
+  protected final String TEXT_361 = NL + "    ";
+  protected final String TEXT_362 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
+  protected final String TEXT_363 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
+  protected final String TEXT_364 = NL + "      ";
+  protected final String TEXT_365 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_366 = NL + "  void ";
+  protected final String TEXT_367 = "::";
+  protected final String TEXT_368 = "()" + NL + "  {";
+  protected final String TEXT_369 = NL + "    ";
+  protected final String TEXT_370 = " = new TimedEventHandler(this,\"";
+  protected final String TEXT_371 = "\",";
+  protected final String TEXT_372 = ");" + NL + "  }" + NL + "" + NL + "  void ";
+  protected final String TEXT_373 = "::";
+  protected final String TEXT_374 = "()" + NL + "  {";
+  protected final String TEXT_375 = NL + "    ";
+  protected final String TEXT_376 = ".stop();" + NL + "  }" + NL;
+  protected final String TEXT_377 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
+  protected final String TEXT_378 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
+  protected final String TEXT_379 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    public void ";
+  protected final String TEXT_380 = "::stop()" + NL + "    {" + NL + "      timer.cancel();" + NL + "    }" + NL + "    " + NL + "    public void ";
+  protected final String TEXT_381 = "::run ()" + NL + "    {";
+  protected final String TEXT_382 = NL + "      if (\"";
+  protected final String TEXT_383 = "\" == timeoutMethodName)" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
+  protected final String TEXT_384 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
+  protected final String TEXT_385 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
+  protected final String TEXT_386 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_387 = NL + "  //------------------------" + NL + "  // Destructor" + NL + "  //------------------------";
+  protected final String TEXT_388 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_389 = NL + "  ";
+  protected final String TEXT_390 = NL + "};" + NL + "" + NL + "#endif";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -1229,17 +1230,19 @@ public class CppHeaderGenerator implements ILang
     allCases.append(StringFormatter.format("    }\n\n"));
   }
   
-
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private " : "";
   String outputCases = allCases.toString().trim();
 
     stringBuffer.append(TEXT_84);
-    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(scope);
     stringBuffer.append(TEXT_85);
-    stringBuffer.append(gen.translate("eventMethod",e));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_86);
+    stringBuffer.append(gen.translate("eventMethod",e));
     stringBuffer.append(TEXT_87);
-    stringBuffer.append( outputCases );
     stringBuffer.append(TEXT_88);
+    stringBuffer.append( outputCases );
+    stringBuffer.append(TEXT_89);
     
   }
 }
@@ -1253,20 +1256,20 @@ public class CppHeaderGenerator implements ILang
     if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
     {
       
-    stringBuffer.append(TEXT_89);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_90);
-    stringBuffer.append(gen.translate("setMethod",sm));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_91);
-    stringBuffer.append( gen.translate("type",sm) );
+    stringBuffer.append(gen.translate("setMethod",sm));
     stringBuffer.append(TEXT_92);
-    stringBuffer.append( gen.translate("parameterOne",sm) );
+    stringBuffer.append( gen.translate("type",sm) );
     stringBuffer.append(TEXT_93);
-    stringBuffer.append(TEXT_94);
-    stringBuffer.append( gen.translate("stateMachineOne",sm) );
-    stringBuffer.append(TEXT_95);
     stringBuffer.append( gen.translate("parameterOne",sm) );
+    stringBuffer.append(TEXT_94);
+    stringBuffer.append(TEXT_95);
+    stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_96);
+    stringBuffer.append( gen.translate("parameterOne",sm) );
+    stringBuffer.append(TEXT_97);
     
     }
     else if (sm.numberOfStates() > 0)
@@ -1350,61 +1353,61 @@ public class CppHeaderGenerator implements ILang
   }
 
      if (hasExit) { 
-    stringBuffer.append(TEXT_97);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_98);
-    stringBuffer.append(gen.translate("exitMethod",sm));
-    stringBuffer.append(TEXT_99);
-    stringBuffer.append( gen.translate("stateMachineOne",sm) );
-    stringBuffer.append(TEXT_100);
-    stringBuffer.append(TEXT_101);
-    stringBuffer.append( exitActions );
-    stringBuffer.append(TEXT_102);
-     } 
-    stringBuffer.append(TEXT_103);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_104);
-    stringBuffer.append(gen.translate("setMethod",sm));
-    stringBuffer.append(TEXT_105);
-    stringBuffer.append( gen.translate("type",sm) );
-    stringBuffer.append(TEXT_106);
-    stringBuffer.append( gen.translate("parameterOne",sm) );
-    stringBuffer.append(TEXT_107);
-    stringBuffer.append(TEXT_108);
+    stringBuffer.append(TEXT_99);
+    stringBuffer.append(gen.translate("exitMethod",sm));
+    stringBuffer.append(TEXT_100);
     stringBuffer.append( gen.translate("stateMachineOne",sm) );
-    stringBuffer.append(TEXT_109);
-    stringBuffer.append( gen.translate("parameterOne",sm) );
-    stringBuffer.append(TEXT_110);
-     if (parentState != null) { 
-    stringBuffer.append(TEXT_111);
-    stringBuffer.append( gen.translate("stateMachineOne",parentSm) );
-    stringBuffer.append(TEXT_112);
-    stringBuffer.append( gen.translate("type",parentSm) );
-    stringBuffer.append(TEXT_113);
-    stringBuffer.append( gen.translate("stateOne",parentState) );
-    stringBuffer.append(TEXT_114);
-    stringBuffer.append( gen.translate("parameterOne",sm) );
-    stringBuffer.append(TEXT_115);
+    stringBuffer.append(TEXT_101);
+    stringBuffer.append(TEXT_102);
+    stringBuffer.append( exitActions );
+    stringBuffer.append(TEXT_103);
+     } 
+    stringBuffer.append(TEXT_104);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_105);
+    stringBuffer.append(gen.translate("setMethod",sm));
+    stringBuffer.append(TEXT_106);
     stringBuffer.append( gen.translate("type",sm) );
-    stringBuffer.append(TEXT_116);
-    stringBuffer.append( gen.translate("stateNull",sm) );
-    stringBuffer.append(TEXT_117);
-    stringBuffer.append(gen.translate("setMethod",parentSm));
-    stringBuffer.append(TEXT_118);
+    stringBuffer.append(TEXT_107);
+    stringBuffer.append( gen.translate("parameterOne",sm) );
+    stringBuffer.append(TEXT_108);
+    stringBuffer.append(TEXT_109);
+    stringBuffer.append( gen.translate("stateMachineOne",sm) );
+    stringBuffer.append(TEXT_110);
+    stringBuffer.append( gen.translate("parameterOne",sm) );
+    stringBuffer.append(TEXT_111);
+     if (parentState != null) { 
+    stringBuffer.append(TEXT_112);
+    stringBuffer.append( gen.translate("stateMachineOne",parentSm) );
+    stringBuffer.append(TEXT_113);
     stringBuffer.append( gen.translate("type",parentSm) );
-    stringBuffer.append(TEXT_119);
+    stringBuffer.append(TEXT_114);
     stringBuffer.append( gen.translate("stateOne",parentState) );
+    stringBuffer.append(TEXT_115);
+    stringBuffer.append( gen.translate("parameterOne",sm) );
+    stringBuffer.append(TEXT_116);
+    stringBuffer.append( gen.translate("type",sm) );
+    stringBuffer.append(TEXT_117);
+    stringBuffer.append( gen.translate("stateNull",sm) );
+    stringBuffer.append(TEXT_118);
+    stringBuffer.append(gen.translate("setMethod",parentSm));
+    stringBuffer.append(TEXT_119);
+    stringBuffer.append( gen.translate("type",parentSm) );
     stringBuffer.append(TEXT_120);
+    stringBuffer.append( gen.translate("stateOne",parentState) );
+    stringBuffer.append(TEXT_121);
      } 
      if (hasEntry) { 
-    stringBuffer.append(TEXT_121);
-    stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_122);
+    stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_123);
-    stringBuffer.append( entryActions );
     stringBuffer.append(TEXT_124);
-     } 
+    stringBuffer.append( entryActions );
     stringBuffer.append(TEXT_125);
+     } 
+    stringBuffer.append(TEXT_126);
     
     }
   }
@@ -1443,41 +1446,41 @@ public class CppHeaderGenerator implements ILang
     if (av.isOne())
     {
       
-    stringBuffer.append(TEXT_126);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_127);
-    stringBuffer.append(gen.translate("getMethod",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_128);
+    stringBuffer.append(gen.translate("getMethod",av));
+    stringBuffer.append(TEXT_129);
     
     }
     else if (av.isMany())
     {
       
-    stringBuffer.append(TEXT_129);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_130);
-    stringBuffer.append(gen.translate("getMethod",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_131);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_132);
-    stringBuffer.append(gen.translate("getManyMethod",av));
-    stringBuffer.append(TEXT_133);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
-    stringBuffer.append(TEXT_134);
-    stringBuffer.append(gen.translate("hasManyMethod",av));
-    stringBuffer.append(TEXT_135);
-    stringBuffer.append(gen.translate("indexOfMethod",av));
-    stringBuffer.append(TEXT_136);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_133);
+    stringBuffer.append(gen.translate("getManyMethod",av));
+    stringBuffer.append(TEXT_134);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_135);
+    stringBuffer.append(gen.translate("hasManyMethod",av));
+    stringBuffer.append(TEXT_136);
+    stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_137);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_138);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_139);
     
     }
     else
     {
       
-    stringBuffer.append(TEXT_139);
+    stringBuffer.append(TEXT_140);
     
     }
  }
@@ -1688,9 +1691,9 @@ public class CppHeaderGenerator implements ILang
     else
     {
       
-    stringBuffer.append(TEXT_140);
-    stringBuffer.append(av);
     stringBuffer.append(TEXT_141);
+    stringBuffer.append(av);
+    stringBuffer.append(TEXT_142);
     stringBuffer.append(relatedAssociation);
     
     }
@@ -1701,9 +1704,9 @@ public class CppHeaderGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_142);
-    stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
     stringBuffer.append(TEXT_143);
+    stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
+    stringBuffer.append(TEXT_144);
     
     }
     
@@ -1716,9 +1719,9 @@ public class CppHeaderGenerator implements ILang
     String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
     String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
 
-    stringBuffer.append(TEXT_144);
-    stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_145);
+    stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
+    stringBuffer.append(TEXT_146);
     
     }
 
@@ -1727,9 +1730,9 @@ public class CppHeaderGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_146);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_147);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_148);
     
     }
     
@@ -1738,9 +1741,9 @@ public class CppHeaderGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_148);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_149);
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(TEXT_150);
     
     }
     
@@ -1749,13 +1752,13 @@ public class CppHeaderGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_150);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_151);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_152);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_153);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_154);
     
     }
     
@@ -1764,13 +1767,13 @@ public class CppHeaderGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
-    stringBuffer.append(TEXT_154);
-    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_155);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_156);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_157);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_158);
     
     }
 
@@ -1781,181 +1784,181 @@ public class CppHeaderGenerator implements ILang
     if (includeFile == "header_association_SetUnidirectionalOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_158);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_159);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_160);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_161);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_162);
     
     }
     else if (includeFile == "header_association_SetUnidirectionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_162);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_163);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_164);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_165);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_166);
     
     }
     else if (includeFile == "header_association_SetOptionalOneToOne.jet")
     {
       
-    stringBuffer.append(TEXT_166);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_167);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_168);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_169);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_170);
     
     }
     else if (includeFile == "header_association_SetOneToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_170);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_171);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_172);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_173);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_174);
     
     }
     else if (includeFile == "header_association_AddMandatoryManyToOne.jet")
     {
       
-    stringBuffer.append(TEXT_174);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_175);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_176);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_177);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_178);
     
     }
     else if (includeFile == "header_association_AddMNToOnlyOne.jet")
     {
       
-    stringBuffer.append(TEXT_178);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_179);
-    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_180);
-    stringBuffer.append(gen.translate("methodArgumentsExcept",relatedAssociation));
-    stringBuffer.append(TEXT_181);
     stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_181);
+    stringBuffer.append(gen.translate("methodArgumentsExcept",relatedAssociation));
     stringBuffer.append(TEXT_182);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_183);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_184);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_185);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_186);
+    stringBuffer.append(TEXT_184);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_185);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_186);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_187);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_188);
     
     }
     else if (includeFile == "header_association_AddOptionalNToOne.jet")
     {
       
-    stringBuffer.append(TEXT_188);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_189);
-    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_190);
-    stringBuffer.append(gen.translate("methodArgumentsExcept",relatedAssociation));
-    stringBuffer.append(TEXT_191);
     stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_191);
+    stringBuffer.append(gen.translate("methodArgumentsExcept",relatedAssociation));
     stringBuffer.append(TEXT_192);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_193);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_194);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_195);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_196);
+    stringBuffer.append(TEXT_194);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_195);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_196);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_197);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_198);
     
     }
     else if (includeFile == "header_association_SetOptionalNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_198);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_199);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_200);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_201);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_202);
     
     }
     else if (includeFile == "header_association_AddManyToOne.jet")
     {
       
-    stringBuffer.append(TEXT_202);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_203);
-    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_204);
-    stringBuffer.append(gen.translate("methodArgumentsExcept",relatedAssociation));
-    stringBuffer.append(TEXT_205);
     stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_205);
+    stringBuffer.append(gen.translate("methodArgumentsExcept",relatedAssociation));
     stringBuffer.append(TEXT_206);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_207);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_208);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_209);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_210);
+    stringBuffer.append(TEXT_208);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_209);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_210);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_211);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_212);
     
     }
     else if (includeFile == "header_association_SetOptionalOneToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_212);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_213);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_214);
-    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_215);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_216);
     
     }
     else if (includeFile == "header_association_AddMNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_216);
-    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_217);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_218);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_219);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_220);
     
     }
     else if (includeFile == "header_association_AddMStarToMany.jet")
     {
       
-    stringBuffer.append(TEXT_220);
-    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_221);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_222);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_223);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_224);
     
     }
     else if (includeFile == "header_association_SetOptionalOneToOptionalN.jet")
@@ -1965,261 +1968,261 @@ public class CppHeaderGenerator implements ILang
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av));
 
-    stringBuffer.append(TEXT_224);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_225);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_226);
-    stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_227);
-    stringBuffer.append(TEXT_228);
-    stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_229);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_230);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_227);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_228);
+    stringBuffer.append(TEXT_229);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_230);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_231);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_232);
-    stringBuffer.append(gen.relatedTranslate("type",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_233);
-    stringBuffer.append(gen.relatedTranslate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("type",av));
     stringBuffer.append(TEXT_234);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_235);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_236);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_237);
     stringBuffer.append(gen.relatedTranslate("parameterOne",av));
+    stringBuffer.append(TEXT_235);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_236);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_237);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_238);
     stringBuffer.append(gen.relatedTranslate("parameterOne",av));
     stringBuffer.append(TEXT_239);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterOne",av));
     stringBuffer.append(TEXT_240);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_241);
     
     }
     else if (includeFile == "header_association_SetOneToMany.jet")
     {
       
-    stringBuffer.append(TEXT_241);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_242);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_243);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_244);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_245);
     
     }
     else if (includeFile == "header_association_SetOneToAtMostN.jet")
     {
       
-    stringBuffer.append(TEXT_245);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_246);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_247);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_248);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_249);
     
     }
     else if (includeFile == "header_association_SetOneToMandatoryMany.jet")
     {
       
-    stringBuffer.append(TEXT_249);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_250);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_251);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_252);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_253);
     
     }
     else if (includeFile == "header_association_AddManyToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_253);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_254);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_255);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_256);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_257);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_258);
+    stringBuffer.append(TEXT_256);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_257);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_258);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_259);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_260);
     
     }
     else if (includeFile == "header_association_SetOptionalOneToMany.jet")
     {
       
-    stringBuffer.append(TEXT_260);
-    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_261);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_262);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_263);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_264);
     
     }
     else if (includeFile == "header_association_AddOptionalNToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_264);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_265);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_266);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_267);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_268);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_269);
+    stringBuffer.append(TEXT_267);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_268);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_269);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_270);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_271);
     
     }
     else if (includeFile == "header_association_AddUnidirectionalMN.jet")
     {
       
-    stringBuffer.append(TEXT_271);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_272);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_273);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_274);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_275);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_276);
+    stringBuffer.append(TEXT_274);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_275);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_276);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_277);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_278);
     
     }
     else if (includeFile == "header_association_AddMNToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_278);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_279);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_280);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_281);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_282);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_283);
+    stringBuffer.append(TEXT_281);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_282);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_283);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_284);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_285);
     
     }
     else if (includeFile == "header_association_SetNToOptionalOne.jet")
     {
       
-    stringBuffer.append(TEXT_285);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_286);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_287);
-    stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_288);
-    stringBuffer.append(TEXT_289);
-    stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_290);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_291);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_288);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_289);
+    stringBuffer.append(TEXT_290);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_291);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_292);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_293);
-    stringBuffer.append(gen.relatedTranslate("type",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_294);
-    stringBuffer.append(gen.relatedTranslate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("type",av));
     stringBuffer.append(TEXT_295);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_296);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_297);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_298);
     stringBuffer.append(gen.relatedTranslate("parameterOne",av));
+    stringBuffer.append(TEXT_296);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_297);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_298);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_299);
     stringBuffer.append(gen.relatedTranslate("parameterOne",av));
     stringBuffer.append(TEXT_300);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterOne",av));
     stringBuffer.append(TEXT_301);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_302);
     
     }
     else if (includeFile == "header_association_AddUnidirectionalMany.jet")
     {
       
-    stringBuffer.append(TEXT_302);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_303);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_304);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_305);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_306);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_307);
+    stringBuffer.append(TEXT_305);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_306);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_307);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_308);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_309);
     
     }
     else if (includeFile == "header_association_AddUnidirectionalOptionalN.jet")
     {
       
-    stringBuffer.append(TEXT_309);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_310);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_311);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_312);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_313);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_314);
+    stringBuffer.append(TEXT_312);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_313);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_314);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_315);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_316);
     
     }
     else if (includeFile == "header_association_AddUnidirectionalMStar.jet")
     {
       
-    stringBuffer.append(TEXT_316);
-    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_317);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_318);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_319);
-    stringBuffer.append(gen.translate("removeMethod",av));
-    stringBuffer.append(TEXT_320);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_321);
+    stringBuffer.append(TEXT_319);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_320);
+    stringBuffer.append(gen.translate("removeMethod",av));
+    stringBuffer.append(TEXT_321);
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_322);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_323);
     
     }
     else if (includeFile == "header_association_SetUnidirectionalN.jet")
     {
       
-    stringBuffer.append(TEXT_323);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_324);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_325);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_326);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_327);
     
     }
     else if (includeFile != null)
@@ -2230,37 +2233,37 @@ public class CppHeaderGenerator implements ILang
     if (includeFile2 == "header_association_SetMNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_327);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_328);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_329);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_330);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_331);
     
     }
     else if (includeFile2 == "header_association_SetMStarToMany.jet")
     {
       
-    stringBuffer.append(TEXT_331);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_332);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_333);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_334);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_335);
     
     }
     else if (includeFile2 == "header_association_SetUnidirectionalMN.jet")
     {
       
-    stringBuffer.append(TEXT_335);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_336);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_337);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_338);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_339);
     
     }
     else if (includeFile2 == "header_association_SetMNToOptionalOne.jet")
@@ -2270,37 +2273,37 @@ public class CppHeaderGenerator implements ILang
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av));
 
-    stringBuffer.append(TEXT_339);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_340);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_341);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_342);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_343);
     
     }
     else if (includeFile2 == "header_association_SetUnidirectionalOptionalN.jet")
     {
       
-    stringBuffer.append(TEXT_343);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_344);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_345);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_346);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_347);
     
     }
     else if (includeFile2 == "header_association_SetUnidirectionalMStar.jet")
     {
       
-    stringBuffer.append(TEXT_347);
-    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_348);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_349);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_350);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_351);
     
     }
     else if (includeFile2 != null)
@@ -2310,9 +2313,9 @@ public class CppHeaderGenerator implements ILang
   }
 
      if (uClass.getKey().isProvided()) { 
-    stringBuffer.append(TEXT_351);
     stringBuffer.append(TEXT_352);
     stringBuffer.append(TEXT_353);
+    stringBuffer.append(TEXT_354);
      } 
     
 { 
@@ -2325,14 +2328,14 @@ public class CppHeaderGenerator implements ILang
       {
         hasActivities = true;
         
-    stringBuffer.append(TEXT_354);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_355);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_356);
+    stringBuffer.append( gen.translate("doActivityMethod",state));
     stringBuffer.append(TEXT_357);
-    stringBuffer.append( state.getActivity().getActivityCode() );
     stringBuffer.append(TEXT_358);
+    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append(TEXT_359);
     
       }
     }
@@ -2367,15 +2370,15 @@ public class CppHeaderGenerator implements ILang
     }
   }
 
-    stringBuffer.append(TEXT_359);
     stringBuffer.append(TEXT_360);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_361);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_362);
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_363);
-    stringBuffer.append( output );
     stringBuffer.append(TEXT_364);
+    stringBuffer.append( output );
+    stringBuffer.append(TEXT_365);
     
   }
 }
@@ -2391,25 +2394,25 @@ public class CppHeaderGenerator implements ILang
       {
         hasTimedEvents = true;
         
-    stringBuffer.append(TEXT_365);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_366);
-    stringBuffer.append(gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_367);
-    stringBuffer.append(TEXT_368);
-    stringBuffer.append( gen.translate("eventHandler",e) );
-    stringBuffer.append(TEXT_369);
-    stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_370);
-    stringBuffer.append( e.getTimerInSeconds() );
-    stringBuffer.append(TEXT_371);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_372);
-    stringBuffer.append(gen.translate("eventStopMethod",e) );
-    stringBuffer.append(TEXT_373);
-    stringBuffer.append(TEXT_374);
+    stringBuffer.append(TEXT_367);
+    stringBuffer.append(gen.translate("eventStartMethod",e) );
+    stringBuffer.append(TEXT_368);
+    stringBuffer.append(TEXT_369);
     stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(TEXT_370);
+    stringBuffer.append( gen.translate("eventMethod",e) );
+    stringBuffer.append(TEXT_371);
+    stringBuffer.append( e.getTimerInSeconds() );
+    stringBuffer.append(TEXT_372);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_373);
+    stringBuffer.append(gen.translate("eventStopMethod",e) );
+    stringBuffer.append(TEXT_374);
     stringBuffer.append(TEXT_375);
+    stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(TEXT_376);
     
       }
     }
@@ -2421,15 +2424,15 @@ public class CppHeaderGenerator implements ILang
  
 
 
-    stringBuffer.append(TEXT_376);
-    stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_377);
     stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_378);
-    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_379);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_380);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_381);
     
   for(StateMachine sm : uClass.getStateMachines())
   {
@@ -2438,24 +2441,24 @@ public class CppHeaderGenerator implements ILang
       if (e.getIsTimer())
       {
         
-    stringBuffer.append(TEXT_381);
-    stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_382);
     stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_383);
-    stringBuffer.append( gen.translate("eventStartMethod",e) );
+    stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_384);
+    stringBuffer.append( gen.translate("eventStartMethod",e) );
+    stringBuffer.append(TEXT_385);
     
       }
     }
   }
 
-    stringBuffer.append(TEXT_385);
+    stringBuffer.append(TEXT_386);
     
   }
 }
 
-    stringBuffer.append(TEXT_386);
+    stringBuffer.append(TEXT_387);
     
 
   appendln(stringBuffer,"");
@@ -2519,11 +2522,11 @@ public class CppHeaderGenerator implements ILang
 
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_387);
     stringBuffer.append(TEXT_388);
+    stringBuffer.append(TEXT_389);
     stringBuffer.append(uClass.getExtraCode());
      } 
-    stringBuffer.append(TEXT_389);
+    stringBuffer.append(TEXT_390);
     return stringBuffer.toString();
   }
 }

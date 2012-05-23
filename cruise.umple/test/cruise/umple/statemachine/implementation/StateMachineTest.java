@@ -11,7 +11,11 @@ Test class for code generation for state machines
 
 package cruise.umple.statemachine.implementation;
 
+import java.lang.reflect.Field;
+
 import org.junit.*;
+
+import cruise.umple.compiler.Event;
 
 public class StateMachineTest extends StateMachineTemplateTest
 {
@@ -171,6 +175,16 @@ public class StateMachineTest extends StateMachineTemplateTest
   public void finalState()
   {
     assertUmpleTemplateFor("FinalState.ump",languagePath + "/FinalState."+ languagePath +".txt","Mentor");
+  }
+
+  @Test
+  public void autoEventTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    
+    assertUmpleTemplateFor("AutoEventTransition.ump",languagePath + "/AutoEventTransition."+ languagePath +".txt","Light");
   }
 
 }

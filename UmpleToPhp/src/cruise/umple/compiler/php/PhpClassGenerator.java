@@ -3203,7 +3203,7 @@ public class PhpClassGenerator implements ILang
     }
     firstStateMachine = false;
   }
-  String scope = e.getIsInternal() ? "private" : "public";
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 
     stringBuffer.append(TEXT_301);

@@ -3663,7 +3663,7 @@ public class JavaClassGenerator implements ILang
     allCases.append(StringFormatter.format("    }\n"));
   }
   
-  String scope = e.getIsInternal() ? "private" : "public";
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 
     stringBuffer.append(TEXT_328);
