@@ -1,0 +1,8 @@
+namespace shared.domain;
+
+class Poll {
+	int idElection;
+	String name;
+	String description;
+	* -> 1 Election theElection;
+}

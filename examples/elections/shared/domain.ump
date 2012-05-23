@@ -1,7 +1,4 @@
 namespace shared.domain;
 
-class Election {
-	int idElection;
-	String name;
-	String description;
-}
+use shared/Election.ump;
+use shared/Poll.ump;
