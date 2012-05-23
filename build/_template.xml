@@ -103,16 +103,15 @@
   </target>
   
   <target name="template.resetVersion">
-
     <echo message="Resetting To Last Version: ${umple.version} -> ${last.version}" />
-    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${umple.version}" value="${last.version}" />
-
-    <echo message="Resetting To Test Version: ${umple.version} -> @UMPLE_VERSION@" />
-    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+    <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="${last.version}">
       <include name="**/*.java"/>
     </replace>
-    <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
-      <include name="**/*.txt"/>
+
+    <echo message="Resetting To Test Version: ${umple.version} -> @UMPLE_VERSION@" />
+    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${last.version}" value="@UMPLE_VERSION@" />
+    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="${last.version}">
+      <include name="**/*.java"/>
     </replace>
     <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
