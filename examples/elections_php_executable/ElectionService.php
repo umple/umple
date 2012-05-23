@@ -57,8 +57,6 @@ class ElectionService
 		$first=true;
 		while($row = mysql_fetch_array($result)) {
 			$anElection=new Election($row['idElection'],$row['name'],$row['description']);
-			//print_r($anElection);
-			//echo "<br/><a href=OpenPollController.php?election_id=".$anElection->getIdElection().">Open ".$anElection->getName()."</a><br/>";
 			if ($first) {
 				$allElections=$allElections.$this->jsonSerialize($anElection);
 				$first=false;
@@ -74,36 +72,6 @@ class ElectionService
 	
 	private function jsonSerialize($anElection) {
 		return '{"idElection":"'.$anElection->getIdElection().'","name":"'.$anElection->getName().'","description":"'.$anElection->getDescription().'"}';
-		
 	}
-	/*db_hostname;
-	db_username;
-	db_password;*/
- 
-      	  /*entry / {$this->isConnected = mysql_connect($this->db_hostname,$this->db_username,$this->db_password);}
-          [$this->isConnected] connected -> Connected;
-          [!$this->isConnected] notConnected -> Failed;
-      	  do
-      	  {
-      	  	$this->connected();
-      	  	$this->notConnected();
-          }*/
-      
-      /*Connected {
-      	entry / {echo "Connected!";}
-      	do {
-      		$result = mysql_query("SELECT * FROM elections.election");
-
-			require_once("Election.php");
-			
-			while($row = mysql_fetch_array($result)) {
-				$anElection=new Election($row['idElection'],$row['name'],$row['description']);
-				print_r($anElection);
-				echo "<br/><a href=OpenPollController.php?election_id=".$anElection->getIdElection().">Open ".$anElection->getName()."</a><br/>";
-			}
-
-			mysql_close($this->isConnected);
-      	}
-      }*/
 }
 ?>
