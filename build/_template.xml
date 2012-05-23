@@ -131,6 +131,9 @@
     <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
       <include name="**/*.java"/>
     </replace>
+    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.java"/>
+    </replace>
   </target>
 
   <!-- ```````````````````````````
