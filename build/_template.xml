@@ -113,6 +113,9 @@
     <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="${last.version}">
       <include name="**/*.java"/>
     </replace>
+    <replace dir="cruise.umple/test/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.txt"/>
+    </replace>
     <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
