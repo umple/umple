@@ -44,7 +44,7 @@ Action.clicked = function(event)
   }
   else if (action == "SQLCode")
   {
-    Action.generateCode("sql","SQL");
+    Action.generateCode("sql","Sql");
   }
   else if (action == "JavaAPIDoc")
   {
@@ -851,7 +851,7 @@ Action.generateCode = function(languageStyle,languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
   var actualLanguage = languageName;
-  if (Page.getAdvancedMode() == 0 && (languageName == "Cpp" || languageName == "SQL"))
+  if (Page.getAdvancedMode() == 0 && (languageName == "Cpp" || languageName == "Sql"))
   {
     actualLanguage = "Experimental-"+languageName;
   }

@@ -68,12 +68,12 @@ else if (isset($_REQUEST["umpleCode"]))
     echo $modelId;
     return;
   }
-  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","SQL")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql")))
   {  
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";
     
-    if ($language == "Experimental-Cpp" || $language == "Experimental-SQL") {
+    if ($language == "Experimental-Cpp" || $language == "Experimental-Sql") {
       $sourceCode = executeCommand("echo \"{$language} is under development. Output is currently only available to developers of Umple\" 2> {$errorFilename}");
     }
     else {
@@ -93,7 +93,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
-  // Generate the Java, PHP, Ruby, Cpp or SQL and put it into the right directory
+  // Generate the Java, PHP, Ruby, Cpp or Sql and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   
   $outputFilename = "{$filename}.output";

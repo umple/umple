@@ -37,7 +37,7 @@ function generateMenu($buttonSuffix)
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"java:Yuml\">Yuml</option>
             <option value=\"java:Json\">Json</option>
-            <option value=\"sql:SQL\">SQL (under development)</option>
+            <option value=\"sql:Sql\">Sql (under development)</option>
             <option value=\"cpp:Cpp\">C++ (under development)</option>
           </select>
         </li>
