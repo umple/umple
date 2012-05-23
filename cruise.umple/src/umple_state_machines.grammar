@@ -14,10 +14,10 @@ extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 enum : [name] { } | [name] { [stateName] (, [stateName])* }
 state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
-stateEntity- : [=-||] | [[entryOrExitAction]] | [[transition]] | [[autoTransition]] | [[activity]] | [[state]]
+stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]]
 
-transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]  
 autoTransition : [[guard]] -> [[action]]? [stateName] ; | [[action]] -> [stateName] ; | [[guard]]? -> [[action]]? [stateName] ; | -> [stateName]
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]  
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]
 afterEveryEvent- : afterEvery -( [timer] -)

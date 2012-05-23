@@ -15,13 +15,23 @@ public class AutoTransitionEvents
   @Test
   public void combinedWithOtherEntryActions()
   {
-    CourseR r = new CourseR();
-    Assert.assertEquals(CourseR.One.On,r.getOne());
+    CourseR course = new CourseR();
+    Assert.assertEquals(CourseR.One.On,course.getOne());
     
-    Assert.assertEquals(3, r.numberOfLogs());
-    Assert.assertEquals("Enter Off",r.getLog(0));
-    Assert.assertEquals("Exit Off",r.getLog(1));
-    Assert.assertEquals("Enter On",r.getLog(2));
+    Assert.assertEquals(3, course.numberOfLogs());
+    Assert.assertEquals("Enter Off",course.getLog(0));
+    Assert.assertEquals("Exit Off",course.getLog(1));
+    Assert.assertEquals("Enter On",course.getLog(2));
+  }
+  
+  @Test
+  public void autoTransitionWithGuards()
+  {
+    CourseT course = new CourseT(9);
+    Assert.assertEquals(CourseT.One.Wait, course.getOne());
+  
+    course = new CourseT(11);
+    Assert.assertEquals(CourseT.One.On, course.getOne());
   }
   
 }

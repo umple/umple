@@ -159,3 +159,19 @@ class CourseS
   }
 
 }
+
+class CourseT
+{
+  Integer count;
+  one
+  {
+    Off {
+     [count > 10] -> On;
+     [count <= 10] -> Wait;
+    }
+    On { 
+    }  
+    Wait { 
+    }  
+  }
+}

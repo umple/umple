@@ -159,3 +159,20 @@ class CourseS
   }
 
 }
+
+
+class CourseT
+{
+  Integer count;
+  one
+  {
+    Off {
+     [$this->count > 10] -> On;
+     [$this->count <= 10] -> Wait;
+    }
+    On { 
+    }  
+    Wait { 
+    }  
+  }
+}
