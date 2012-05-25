@@ -19,7 +19,7 @@ class ElectionService {
 			while (rs.next()) {
 				String name = rs.getString("name");
 				String description = rs.getString("description");
-				int id=Integer.parseInt(rs.getString("idElection"));
+				int id=Integer.parseInt(rs.getString("id_election"));
 				Election election=new Election(id, name, description);
 				elections.add(election);
 			}

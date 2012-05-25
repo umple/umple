@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package usecase.startup;
 import java.sql.Connection;
@@ -25,7 +25,7 @@ public class Controller
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Initial, Connecting, Connected, Failed, PollOpening, Closed }
+  enum Status { Connecting, Connected, Failed, PollOpening }
   private Status status;
 
   //------------------------
@@ -41,7 +41,7 @@ public class Controller
     isConnected = false;
     option = JOptionPane.NO_OPTION;
     mainMenuOption = "Quit";
-    setStatus(Status.Initial);
+    setStatus(Status.Connecting);
   }
 
   //------------------------
@@ -150,26 +150,12 @@ public class Controller
     return status;
   }
 
-  public boolean connect()
+  private boolean __autotransition13__()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
-    {
-      case Initial:
-        setStatus(Status.Connecting);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean connected()
-  {
-    boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Connecting:
         if (isConnected)
@@ -184,11 +170,12 @@ public class Controller
     return wasEventProcessed;
   }
 
-  public boolean notConnected()
+  private boolean __autotransition14__()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Connecting:
         if (!isConnected)
@@ -203,11 +190,12 @@ public class Controller
     return wasEventProcessed;
   }
 
-  public boolean openPoll()
+  private boolean __autotransition15__()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Connected:
         if (mainMenuOption.equals("Open Poll"))
@@ -222,35 +210,17 @@ public class Controller
     return wasEventProcessed;
   }
 
-  public boolean retry()
+  private boolean __autotransition16__()
   {
     boolean wasEventProcessed = false;
-
-    switch (status)
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
       case Failed:
         if (option==JOptionPane.YES_OPTION)
         {
-          setStatus(Status.Initial);
-          wasEventProcessed = true;
-          break;
-        }
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean cancel()
-  {
-    boolean wasEventProcessed = false;
-
-    switch (status)
-    {
-      case Failed:
-        if (option==JOptionPane.NO_OPTION)
-        {
-          setStatus(Status.Closed);
+          setStatus(Status.Connecting);
           wasEventProcessed = true;
           break;
         }
@@ -267,86 +237,22 @@ public class Controller
     // entry actions and do activities
     switch(status)
     {
-      case Initial:
-        new DoActivityThread(this,"doActivityStatusInitial");
-        break;
       case Connecting:
-        isConnected=tryToConnect();
-        new DoActivityThread(this,"doActivityStatusConnecting");
+        tryToConnect();
+        __autotransition13__();
+        __autotransition14__();
         break;
       case Connected:
         showMainMenu();
-        new DoActivityThread(this,"doActivityStatusConnected");
+        __autotransition15__();
         break;
       case Failed:
         option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
-        new DoActivityThread(this,"doActivityStatusFailed");
+        __autotransition16__();
         break;
       case PollOpening:
-        OpenPollController.getInstance().openPoll(theConnection);
+        OpenPollController.getInstance().setTheConnection(theConnection);OpenPollController.getInstance().openPoll();
         break;
-    }
-  }
-
-  private void doActivityStatusInitial() throws InterruptedException
-  {
-    connect();
-  }
-
-  private void doActivityStatusConnecting() throws InterruptedException
-  {
-    connected();
-      	  	notConnected();
-  }
-
-  private void doActivityStatusConnected() throws InterruptedException
-  {
-    openPoll();
-  }
-
-  private void doActivityStatusFailed() throws InterruptedException
-  {
-    retry();
-			cancel();
-  }
-
-  private static class DoActivityThread extends Thread
-  {
-    Controller controller;
-    String doActivityMethodName;
-    
-    public DoActivityThread(Controller aController,String aDoActivityMethodName)
-    {
-      controller = aController;
-      doActivityMethodName = aDoActivityMethodName;
-      start();
-    }
-    
-    public void run()
-    {
-      try
-      {
-        if ("doActivityStatusInitial".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusInitial();
-        }
-        else if ("doActivityStatusConnecting".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusConnecting();
-        }
-        else if ("doActivityStatusConnected".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusConnected();
-        }
-        else if ("doActivityStatusFailed".equals(doActivityMethodName))
-        {
-          controller.doActivityStatusFailed();
-        }
-      }
-      catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      }
     }
   }
 
@@ -354,16 +260,16 @@ public class Controller
   {}
 
 
-  public boolean tryToConnect(){
+  public void tryToConnect(){
       try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			theConnection = DriverManager.getConnection(server, username, password);
+			
+			isConnected=true;;
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
-			return false;
+			isConnected=false;
 		}
-		
-		return true;
   }
 
 

@@ -1,8 +1,9 @@
 namespace shared.domain;
 
 class Poll {
-	int idElection;
+	Integer idPoll;
 	String name;
 	String description;
-	* -> 1 Election theElection;
+	* -> 1 Election election;
+	key {idPoll, election}
 }

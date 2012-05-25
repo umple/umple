@@ -5,30 +5,88 @@ class OpenPollController
 	singleton;
 	
 	depend java.util.List;
+	depend java.util.Iterator;
 	depend java.util.ArrayList;
 	depend shared.domain.Election;
+	depend shared.domain.Poll;
 	depend java.sql.Connection;
 	depend java.sql.DriverManager;
     depend java.sql.SQLException;
     depend javax.swing.JOptionPane;
     depend service.ElectionService;
+    depend service.PollService;
 
-	/*status {
- 		Initial {
- 			loadAllElections -> ElectionsLoading;
- 			do {loadAllElections();}
- 		}
- 		ElectionsLoading {
- 			entry / {selectAllElections();}
- 		}
- 	}*/
+	lazy Connection theConnection;
+	lazy Election selectedElection;
+	lazy Poll selectedPoll;
+	lazy boolean pollOpened=false;
+    lazy int option=JOptionPane.NO_OPTION;
+    
+	PollOpeningSteps {
+		Initial
+		{
+			openPoll -> ElectionsListProvided;
+		}
+		ElectionsListProvided
+		{
+			entry / {selectAnElection();}
+			-> PollsListProvided;
+		}
+		PollsListProvided
+		{
+			entry / {selectAPoll();}
+			-> OpeningPoll;
+		}
+		OpeningPoll
+		{
+			entry / {pollOpened=PollService.getInstance().openPoll(theConnection, selectedPoll);}
+			[pollOpened] -> PollOpened;
+			[!pollOpened] -> Failed;
+		}
+	    PollOpened {
+	      	entry / {JOptionPane.showMessageDialog(null, "Poll is now open");}
+	    }
+	    Failed {
+	      	entry / {option=JOptionPane.showConfirmDialog(null, "Poll Opening Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
+	      	[option==JOptionPane.YES_OPTION] -> ElectionsListProvided;
+	    }
+	}
  	
- 	void openPoll(Connection theConnection) {
+ 	void selectAnElection() {
 		List<Election> elections=ElectionService.getInstance().getAllElections(theConnection);
 		String[] electionNames=new String[elections.size()];
 		int i=0;
 		for (Election election:elections)
 			electionNames[i++]=election.getName();
-		Object selectedElections = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
+		Object selectedElectionName = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
+		i=0;
+		selectedElection=null;
+		Iterator<Election> iterator=elections.iterator();
+		while (iterator.hasNext() && selectedElection==null) {
+			Election election=iterator.next();
+			if (election.getName().equals(selectedElectionName))
+				selectedElection=election;
+		}
+		
+		//electionSelected();
+	}
+ 	
+ 	void selectAPoll() {
+		List<Poll> polls=PollService.getInstance().getElectionPolls(theConnection, selectedElection);
+		String[] pollNames=new String[polls.size()];
+		int i=0;
+		for (Poll poll:polls)
+			pollNames[i++]=poll.getName();
+		Object selectedPollName = JOptionPane.showInputDialog(null, "Select a poll", "List of Polls", JOptionPane.QUESTION_MESSAGE, null, pollNames, pollNames[0]);
+		
+		selectedPoll=null;
+		Iterator<Poll> iterator=polls.iterator();
+		while (iterator.hasNext() && selectedPoll==null) {
+			Poll poll=iterator.next();
+			if (poll.getName().equals(selectedPollName))
+				selectedPoll=poll;
+		}
+		
+		//pollSelected();
 	}
 }

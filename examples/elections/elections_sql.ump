@@ -1,0 +1,19 @@
+generate Sql;
+
+namespace elections;
+
+class Election {
+	int idElection;
+	String name;
+	String description;
+	key {idElection}
+}
+
+class Poll {
+	int idPoll;
+	String name;
+	String description;
+	String status="planned";
+	* -> 1 Election election;
+	key {idPoll, election}
+}

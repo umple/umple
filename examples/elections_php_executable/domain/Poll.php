@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class Poll
 {
@@ -10,25 +10,33 @@ class Poll
   //------------------------
 
   //Poll Attributes
-  private $idElection;
+  private $idPoll;
   private $name;
   private $description;
 
   //Poll Associations
-  private $theElection;
+  private $election;
+
+  //Helper Variables
+  private $cachedHashCode;
+  private $canSetIdPoll;
+  private $canSetElection;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aIdElection, $aName, $aDescription, $aTheElection)
+  public function __construct($aIdPoll, $aName, $aDescription, $aElection)
   {
-    $this->idElection = $aIdElection;
+    $this->cachedHashCode = -1;
+    $this->canSetIdPoll = true;
+    $this->canSetElection = true;
+    $this->idPoll = $aIdPoll;
     $this->name = $aName;
     $this->description = $aDescription;
-    if (!$this->setTheElection($aTheElection))
+    if (!$this->setElection($aElection))
     {
-      throw new Exception("Unable to create Poll due to aTheElection");
+      throw new Exception("Unable to create Poll due to aElection");
     }
   }
 
@@ -36,10 +44,10 @@ class Poll
   // INTERFACE
   //------------------------
 
-  public function setIdElection($aIdElection)
+  public function setIdPoll($aIdPoll)
   {
     $wasSet = false;
-    $this->idElection = $aIdElection;
+    $this->idPoll = $aIdPoll;
     $wasSet = true;
     return $wasSet;
   }
@@ -60,9 +68,9 @@ class Poll
     return $wasSet;
   }
 
-  public function getIdElection()
+  public function getIdPoll()
   {
-    return $this->idElection;
+    return $this->idPoll;
   }
 
   public function getName()
@@ -75,17 +83,17 @@ class Poll
     return $this->description;
   }
 
-  public function getTheElection()
+  public function getElection()
   {
-    return $this->theElection;
+    return $this->election;
   }
 
-  public function setTheElection($newTheElection)
+  public function setElection($newElection)
   {
     $wasSet = false;
-    if ($newTheElection != null)
+    if ($newElection != null)
     {
-      $this->theElection = $newTheElection;
+      $this->election = $newElection;
       $wasSet = true;
     }
     return $wasSet;
@@ -93,12 +101,55 @@ class Poll
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    if ($compareTo == null) { return false; }
+    if (get_class($this) != get_class($compareTo)) { return false; }
+
+    if ($this->idPoll != $compareTo->idPoll)
+    {
+      return false;
+    }
+
+    if ($this->election != $compareTo->election)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public function hashCode()
+  {
+    if ($this->cachedHashCode != -1)
+    {
+      return $this->cachedHashCode;
+    }
+    $this->cachedHashCode = 17;
+    if ($this->idPoll != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->idPoll);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+
+    if ($this->election != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->election);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+
+    $this->canSetIdPoll = false;
+    $this->canSetElection = false;
+    return $this->cachedHashCode;
   }
 
   public function delete()
   {
-    $this->theElection = null;
+    $this->election = null;
   }
 
 }

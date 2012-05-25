@@ -1,7 +1,8 @@
 namespace shared.domain;
 
 class Election {
-	int idElection;
+	Integer idElection;
 	String name;
 	String description;
+	key {idElection}
 }

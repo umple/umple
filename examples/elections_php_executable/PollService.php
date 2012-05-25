@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class PollService
 {
@@ -50,23 +50,23 @@ class PollService
   public function getElectionPolls($db_hostname,$db_username,$db_password,$idElection) {
 		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
 		
-		$result = mysql_query("SELECT * FROM elections.election where idElection=$idElection");
+		$result = mysql_query("SELECT * FROM elections.election where id_election=$idElection");
 
 		require_once("./domain/Election.php");
 		$anElection=null;
 		
 		while($row = mysql_fetch_array($result)) {
-			$anElection=new Election($row['idElection'],$row['name'],$row['description']);
+			$anElection=new Election($row['id_election'],$row['name'],$row['description']);
 		}
 		
-  		$result = mysql_query("SELECT * FROM elections.poll where theElection=$idElection");
+  		$result = mysql_query("SELECT * FROM elections.poll where election_id_election=$idElection");
 
 		require_once("./domain/Poll.php");
 		
 		$allPolls='{"polls" : [';
 		$first=true;
 		while($row = mysql_fetch_array($result)) {
-			$aPoll=new Poll($row['idpoll'],$row['name'],$row['description'],$anElection);
+			$aPoll=new Poll($row['id_poll'],$row['name'],$row['description'],$anElection);
 			if ($first) {
 				$allPolls=$allPolls.$this->jsonSerialize($aPoll);
 				$first=false;
@@ -85,7 +85,7 @@ class PollService
 		
 		$wasUpdated=false;
 		if ($isConnected) {
-			$wasUpdated = mysql_query("update elections.poll set status='open' where idpoll=$idpoll");
+			$wasUpdated = mysql_query("update elections.poll set status='open' where id_poll=$idpoll");
 		}
 		
 		if ($isConnected && $wasUpdated)
@@ -95,7 +95,7 @@ class PollService
 	}
 	
 	private function jsonSerialize($aPoll) {
-		return '{"idpoll":"'.$aPoll->getIdElection().'","name":"'.$aPoll->getName().'","description":"'.$aPoll->getDescription().'","theElection":"'.$aPoll->getTheElection()->getIdElection().'"}';
+		return '{"idpoll":"'.$aPoll->getIdPoll().'","name":"'.$aPoll->getName().'","description":"'.$aPoll->getDescription().'","theElection":"'.$aPoll->getElection()->getIdElection().'"}';
 	}
 }
 ?>

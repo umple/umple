@@ -19,17 +19,17 @@ class Controller
     int option=JOptionPane.NO_OPTION;
     Object mainMenuOption="Quit";
 
-    boolean tryToConnect()
+    void tryToConnect()
     {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			theConnection = DriverManager.getConnection(server, username, password);
+			
+			isConnected=true;;
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
-			return false;
+			isConnected=false;
 		}
-		
-		return true;
     }
     
     void showMainMenu()
@@ -40,40 +40,21 @@ class Controller
     }
     
     status {
-      Initial {
-      	connect -> Connecting;
-      	do {connect();}
-      }
       Connecting {
-      	  entry / {isConnected=tryToConnect();}
-          [isConnected] connected -> Connected;
-          [!isConnected] notConnected -> Failed;
-      	  do
-      	  {
-      	  	connected();
-      	  	notConnected();
-          }
+      	  entry / {tryToConnect();}
+          [isConnected] -> Connected;
+          [!isConnected] -> Failed;
       }
       Connected {
       	entry / {showMainMenu();}
-      	[mainMenuOption.equals("Open Poll")] openPoll -> PollOpening;
-      	do
-      	{
-      		openPoll();
-      	}
+      	[mainMenuOption.equals("Open Poll")] -> PollOpening;
       }
       Failed {
       	entry / {option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
-      	[option==JOptionPane.YES_OPTION] retry -> Initial;
-      	[option==JOptionPane.NO_OPTION] cancel -> Closed;
-		do
-		{
-			retry();
-			cancel();
-		}
+      	[option==JOptionPane.YES_OPTION] -> Connecting;
       }
       PollOpening {
-      	entry / {OpenPollController.getInstance().openPoll(theConnection);}
+      	entry / {OpenPollController.getInstance().setTheConnection(theConnection);OpenPollController.getInstance().openPoll();}
       }
   }
 }

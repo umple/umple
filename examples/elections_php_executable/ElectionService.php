@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class ElectionService
 {
@@ -56,7 +56,7 @@ class ElectionService
 		$allElections='{"elections" : [';
 		$first=true;
 		while($row = mysql_fetch_array($result)) {
-			$anElection=new Election($row['idElection'],$row['name'],$row['description']);
+			$anElection=new Election($row['id_election'],$row['name'],$row['description']);
 			if ($first) {
 				$allElections=$allElections.$this->jsonSerialize($anElection);
 				$first=false;

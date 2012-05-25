@@ -5,18 +5,19 @@ package service;
 import java.util.List;
 import java.util.ArrayList;
 import shared.domain.Election;
+import shared.domain.Poll;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class ElectionService
+public class PollService
 {
 
   //------------------------
   // STATIC VARIABLES
   //------------------------
 
-  private static ElectionService theInstance = null;
+  private static PollService theInstance = null;
 
   //------------------------
   // MEMBER VARIABLES
@@ -26,14 +27,14 @@ public class ElectionService
   // CONSTRUCTOR
   //------------------------
 
-  private ElectionService()
+  private PollService()
   {}
 
-  public static ElectionService getInstance()
+  public static PollService getInstance()
   {
     if(theInstance == null)
     {
-      theInstance = new ElectionService();
+      theInstance = new PollService();
     }
     return theInstance;
   }
@@ -46,24 +47,36 @@ public class ElectionService
   {}
 
 
-  public List<Election> getAllElections(Connection theConnection){
-      List<Election> elections=new ArrayList<Election>();
+  public List<Poll> getElectionPolls(Connection theConnection, Election election){
+      List<Poll> polls=new ArrayList<Poll>();
 		
 		try {
 			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM election");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+election.getIdElection());
 			while (rs.next()) {
 				String name = rs.getString("name");
 				String description = rs.getString("description");
-				int id=Integer.parseInt(rs.getString("id_election"));
-				Election election=new Election(id, name, description);
-				elections.add(election);
+				int id=Integer.parseInt(rs.getString("id_poll"));
+				Poll poll=new Poll(id, name, description, election);
+				polls.add(poll);
 			}
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
 		
-		return elections;
+		return polls;
+  }
+
+
+  public boolean openPoll(Connection theConnection, Poll poll){
+      try {
+			Statement stmt = theConnection.createStatement();
+			stmt.executeUpdate("update elections.poll set status='open' where id_poll="+poll.getIdPoll());
+			return true;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			return false;
+		}
   }
 
 }
