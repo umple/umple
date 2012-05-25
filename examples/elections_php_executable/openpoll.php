@@ -3,21 +3,12 @@ if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'loadAllElections':
 			require_once("ElectionService.php");
-			require_once("Credentials.php");
-			require_once("Credentials.php");
-			ElectionService::getInstance()->setDb_hostname(Credentials::$db_hostname);
-			ElectionService::getInstance()->setDb_username(Credentials::$db_username);
-			ElectionService::getInstance()->setDb_password(Credentials::$db_password);
 			ElectionService::getInstance()->getAllElections();
 			$allElections=ElectionService::getInstance()->getElections();
 			echo $allElections;
 		break;
 		case 'loadElectionPolls':
 			require_once("PollService.php");
-			require_once("Credentials.php");
-			PollService::getInstance()->setDb_hostname(Credentials::$db_hostname);
-			PollService::getInstance()->setDb_username(Credentials::$db_username);
-			PollService::getInstance()->setDb_password(Credentials::$db_password);
 			PollService::getInstance()->setIdElection($_POST['idElection']);
 			PollService::getInstance()->getElectionPolls();
 			$allPolls=PollService::getInstance()->getAllPolls();
@@ -25,10 +16,6 @@ if (isset($_POST['action'])) {
 		break;
 		case 'openPoll':
 			require_once("PollService.php");
-			require_once("Credentials.php");
-			PollService::getInstance()->setDb_hostname(Credentials::$db_hostname);
-			PollService::getInstance()->setDb_username(Credentials::$db_username);
-			PollService::getInstance()->setDb_password(Credentials::$db_password);
 			PollService::getInstance()->setIdElection($_POST['idpoll']);
 			PollService::getInstance()->openPoll();
 			$result=PollService::getInstance()->getLatestResult();

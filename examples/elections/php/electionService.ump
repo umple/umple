@@ -5,9 +5,7 @@ namespace services;
 class ElectionService {
 	singleton;
 
-	lazy String db_hostname;
-	lazy String db_username;
-	lazy String db_password;
+	lazy isConnected;
 	lazy String elections;
 	
 	ServiceProvidingCycle {
@@ -15,12 +13,16 @@ class ElectionService {
 			getAllElections -> AllElectionsLoaded;
 		}
 		AllElectionsLoaded {
-			entry / {$this->loadAllElections($this->db_hostname,$this->db_username,$this->db_password);}
+			entry / {$this->loadAllElections();}
 		}
 	}
-	
-	private function loadAllElections($db_hostname,$db_username,$db_password) {
-		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
+
+	before setServiceProvidingCycle {
+		require_once("Credentials.php");
+		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+	}
+		
+	private function loadAllElections() {
   		$result = mysql_query("SELECT * FROM elections.election");
 
 		require_once("./domain/Election.php");
@@ -37,7 +39,7 @@ class ElectionService {
 		}
 		$this->elections=$this->elections.']}';
 
-		mysql_close($isConnected);
+		mysql_close($this->isConnected);
 	}
 	
 	private function jsonSerialize($anElection) {

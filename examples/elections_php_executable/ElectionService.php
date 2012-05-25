@@ -16,9 +16,7 @@ class ElectionService
   //------------------------
 
   //ElectionService Attributes
-  private $db_hostname;
-  private $db_username;
-  private $db_password;
+  private $isConnected;
   private $elections;
 
   //ElectionService State Machines
@@ -32,9 +30,7 @@ class ElectionService
 
   private function __construct()
   {
-    $this->db_hostname = NULL;
-    $this->db_username = NULL;
-    $this->db_password = NULL;
+    $this->isConnected = NULL;
     $this->elections = NULL;
     $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
   }
@@ -52,26 +48,10 @@ class ElectionService
   // INTERFACE
   //------------------------
 
-  public function setDb_hostname($aDb_hostname)
+  public function setIsConnected($aIsConnected)
   {
     $wasSet = false;
-    $this->db_hostname = $aDb_hostname;
-    $wasSet = true;
-    return $wasSet;
-  }
-
-  public function setDb_username($aDb_username)
-  {
-    $wasSet = false;
-    $this->db_username = $aDb_username;
-    $wasSet = true;
-    return $wasSet;
-  }
-
-  public function setDb_password($aDb_password)
-  {
-    $wasSet = false;
-    $this->db_password = $aDb_password;
+    $this->isConnected = $aIsConnected;
     $wasSet = true;
     return $wasSet;
   }
@@ -84,19 +64,9 @@ class ElectionService
     return $wasSet;
   }
 
-  public function getDb_hostname()
+  public function getIsConnected()
   {
-    return $this->db_hostname;
-  }
-
-  public function getDb_username()
-  {
-    return $this->db_username;
-  }
-
-  public function getDb_password()
-  {
-    return $this->db_password;
+    return $this->isConnected;
   }
 
   public function getElections()
@@ -132,12 +102,14 @@ class ElectionService
 
   private function setServiceProvidingCycle($aServiceProvidingCycle)
   {
+    require_once("Credentials.php");
+		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleAllElectionsLoaded)
     {
-      $this->loadAllElections($this->db_hostname,$this->db_username,$this->db_password);
+      $this->loadAllElections();
     }
   }
 
@@ -153,8 +125,7 @@ class ElectionService
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  private function loadAllElections($db_hostname,$db_username,$db_password) {
-		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
+  private function loadAllElections() {
   		$result = mysql_query("SELECT * FROM elections.election");
 
 		require_once("./domain/Election.php");
@@ -171,7 +142,7 @@ class ElectionService
 		}
 		$this->elections=$this->elections.']}';
 
-		mysql_close($isConnected);
+		mysql_close($this->isConnected);
 	}
 	
 	private function jsonSerialize($anElection) {

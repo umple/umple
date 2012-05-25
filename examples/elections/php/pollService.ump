@@ -5,13 +5,11 @@ namespace services;
 class PollService {
 	singleton;
 
-	lazy String db_hostname;
-	lazy String db_username;
-	lazy String db_password;
 	lazy Integer idElection;
 	lazy Integer idpoll;
 	lazy String allPolls;
 	lazy String latestResult;
+	lazy isConnected;
 
 	ServiceProvidingCycle {
 		Idle {
@@ -19,16 +17,23 @@ class PollService {
 			openPoll -> PollOpened;
 		}
 		ElectionPollsLoaded {
-			entry / {$this->loadElectionPolls($this->db_hostname,$this->db_username,$this->db_password,$this->idElection);}
+			entry / {$this->loadElectionPolls($this->idElection);}
 		}
 		PollOpened {
-			entry / {$this->tryToOpenPoll($this->db_hostname,$this->db_username,$this->db_password,$this->idpoll);}
+			entry / {$this->tryToOpenPoll($this->idpoll);}
 		}
 	}
 
-	public function loadElectionPolls($db_hostname,$db_username,$db_password,$idElection) {
-		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
-		
+	before setServiceProvidingCycle {
+		require_once("Credentials.php");
+		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+	}
+	
+/*	after setServiceProvidingCycle {
+		mysql_close($this->isConnected);
+	}*/
+
+	private function loadElectionPolls($idElection) {
 		$result = mysql_query("SELECT * FROM elections.election where id_election=$idElection");
 
 		require_once("./domain/Election.php");
@@ -53,19 +58,15 @@ class PollService {
 				$this->allPolls=$this->allPolls.",".$this->jsonSerialize($aPoll);
 		}
 		$this->allPolls=$this->allPolls.']}';
-
-		mysql_close($isConnected);
 	}
 	
-	public function tryToOpenPoll($db_hostname,$db_username,$db_password,$idpoll) {
-		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
-		
+	private function tryToOpenPoll($idpoll) {
 		$wasUpdated=false;
-		if ($isConnected) {
+		if ($this->isConnected) {
 			$wasUpdated = mysql_query("update elections.poll set status='open' where id_poll=$idpoll");
 		}
 		
-		if ($isConnected && $wasUpdated)
+		if ($this->isConnected && $wasUpdated)
 			$this->latestResult='Poll open!';
 		else
 			$this->latestResult='An error occured!';

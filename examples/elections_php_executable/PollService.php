@@ -16,13 +16,11 @@ class PollService
   //------------------------
 
   //PollService Attributes
-  private $db_hostname;
-  private $db_username;
-  private $db_password;
   private $idElection;
   private $idpoll;
   private $allPolls;
   private $latestResult;
+  private $isConnected;
 
   //PollService State Machines
   private static $ServiceProvidingCycleIdle = 1;
@@ -36,13 +34,11 @@ class PollService
 
   private function __construct()
   {
-    $this->db_hostname = NULL;
-    $this->db_username = NULL;
-    $this->db_password = NULL;
     $this->idElection = 0;
     $this->idpoll = 0;
     $this->allPolls = NULL;
     $this->latestResult = NULL;
+    $this->isConnected = NULL;
     $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
   }
 
@@ -58,30 +54,6 @@ class PollService
   //------------------------
   // INTERFACE
   //------------------------
-
-  public function setDb_hostname($aDb_hostname)
-  {
-    $wasSet = false;
-    $this->db_hostname = $aDb_hostname;
-    $wasSet = true;
-    return $wasSet;
-  }
-
-  public function setDb_username($aDb_username)
-  {
-    $wasSet = false;
-    $this->db_username = $aDb_username;
-    $wasSet = true;
-    return $wasSet;
-  }
-
-  public function setDb_password($aDb_password)
-  {
-    $wasSet = false;
-    $this->db_password = $aDb_password;
-    $wasSet = true;
-    return $wasSet;
-  }
 
   public function setIdElection($aIdElection)
   {
@@ -115,19 +87,12 @@ class PollService
     return $wasSet;
   }
 
-  public function getDb_hostname()
+  public function setIsConnected($aIsConnected)
   {
-    return $this->db_hostname;
-  }
-
-  public function getDb_username()
-  {
-    return $this->db_username;
-  }
-
-  public function getDb_password()
-  {
-    return $this->db_password;
+    $wasSet = false;
+    $this->isConnected = $aIsConnected;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function getIdElection()
@@ -148,6 +113,11 @@ class PollService
   public function getLatestResult()
   {
     return $this->latestResult;
+  }
+
+  public function getIsConnected()
+  {
+    return $this->isConnected;
   }
 
   public function getServiceProvidingCycleFullName()
@@ -192,16 +162,18 @@ class PollService
 
   private function setServiceProvidingCycle($aServiceProvidingCycle)
   {
+    require_once("Credentials.php");
+		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleElectionPollsLoaded)
     {
-      $this->loadElectionPolls($this->db_hostname,$this->db_username,$this->db_password,$this->idElection);
+      $this->loadElectionPolls($this->idElection);
     }
     elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCyclePollOpened)
     {
-      $this->tryToOpenPoll($this->db_hostname,$this->db_username,$this->db_password,$this->idpoll);
+      $this->tryToOpenPoll($this->idpoll);
     }
   }
 
@@ -217,9 +189,7 @@ class PollService
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public function loadElectionPolls($db_hostname,$db_username,$db_password,$idElection) {
-		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
-		
+  private function loadElectionPolls($idElection) {
 		$result = mysql_query("SELECT * FROM elections.election where id_election=$idElection");
 
 		require_once("./domain/Election.php");
@@ -244,19 +214,15 @@ class PollService
 				$this->allPolls=$this->allPolls.",".$this->jsonSerialize($aPoll);
 		}
 		$this->allPolls=$this->allPolls.']}';
-
-		mysql_close($isConnected);
 	}
 	
-	public function tryToOpenPoll($db_hostname,$db_username,$db_password,$idpoll) {
-		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
-		
+	private function tryToOpenPoll($idpoll) {
 		$wasUpdated=false;
-		if ($isConnected) {
+		if ($this->isConnected) {
 			$wasUpdated = mysql_query("update elections.poll set status='open' where id_poll=$idpoll");
 		}
 		
-		if ($isConnected && $wasUpdated)
+		if ($this->isConnected && $wasUpdated)
 			$this->latestResult='Poll open!';
 		else
 			$this->latestResult='An error occured!';
