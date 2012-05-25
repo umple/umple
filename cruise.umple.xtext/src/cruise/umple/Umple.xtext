@@ -1,179 +1,155 @@
-grammar cruise.umple.Umple with org.eclipse.xtext.common.Terminals
+grammar org.xtext.example.mydsl.Umple with org.eclipse.xtext.common.Terminals
 
 generate umple "http://www.umple.cruise/Umple"
 
+/*Current restrictions:
+	namespace followed by classes followed by statemachines (classes can contain states in any order)
 
-UmpleModel:
-	elements+=AbstractElement*;
+*/
 
-AbstractElement:
-	Namespace | Glossary  | Generate  | UseStatement | Entity;
+Model :
+	(entities+=entity |glosseries+=glossary | generates+=generate_ | uses+=useStatement | namespaces+=namespace )*;
+
+glossary:
+	"glossary" "{" (word )* "}";
 	
+word:
+	ID ":" ID ";";
 	
-/* -------------------------------------------------------------------------------------------
- * Part similar to umple_core.grammar
- */ 
-Glossary:
-	{Glossary}"glossary" "{" (words+=Word)* "}";
+generate_:	//generate is a key word in xtext so generate_ is used instead
+	"generate" ("Java")";" | "generate" "Cpp" | "generate" "Php" | "generate" ID ;
 	
-Word:
-	singular=STRING ":" plural=STRING ";" ;	
+useStatement:
+	"use" (fileID)";";
+
+namespace:
+	"namespace" (fileID) ";";
 	
-Generate:	
-	'generate' (java?='Java' | Php?='Php'| Ruby?='Ruby') (path=STRING (override?="--override-all")?)? ";";
+entity:
+	(classes+=classDefinition) | (association+=associationDefinition) | (interfaces+=interfaceDefinition) |(externals+=externalDefinition) |
+	(associationClasses+=associationClassDefinition) | (statemachines+=stateMachineDefinition);
+
+
+classDefinition: "class" (name=ID) "{" (contents+=classContent)* "}";
+
+externalDefinition: "external" (name=ID) "{" (classContents+=classContent)* "}";
+
+//Interface can not have native code right now
+interfaceDefinition: "interface" name=ID "{" (depends+=depend)* (nativeCode=functionDeclaration ";")* "}";
+
+associationDefinition: "association" (name=ID)? "{" (associations+=association)* "}";	
+
+associationClassDefinition: "associationClass" name=ID "{" (associationClassContents+=associationClassContent)* "}";
+
+//CONTENT SECTION
+classContent: 
+	functionDefinition | classDefinition | position | attribute | softwarePattern | depend | 
+	symmetricReflexiveAssociation | stateMachine | 
+	inlineAssociation;
+
+associationClassContent: 
+	functionDefinition | classDefinition| softwarePattern | depend | (singleAssociationEnd) |
+	stateMachine | attribute | inlineAssociation;
 	
-UseStatement:
-	"use" (file=ID)";";
+//ASSOCIATIONS/
+association:  multiplicity (type1=ID) (rolename1=ID)?  ("->"|"--"|"<-"|"><") multiplicity (type2=ID) (rolename2=ID)? ";";
+symmetricReflexiveAssociation: multiplicity "self" (rolename=ID) ";";
+inlineAssociation: multiplicity (rolename1=ID)? ("->"|"--"|"<-"|"><") (multiplicity) (type=ID) (rolename2=ID)? ";";
+singleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
+multiplicity: bound | (bound ".." bound);
+bound: INT | "*";
 
-Namespace:
-	"namespace" (value=ID) ";";
+//ATTRIBUTES AND SMALLER BITS
+softwarePattern:
+	isA | singleton | keyDefinition | codeInjection;
 
+isA: "isA" (super=extendedID) ";" | "IsA" ID | "Isa" ID","ID;
+singleton: "singleton" ";";
+codeInjection: beforeCode | afterCode;
 
-Entity:  ClassDefinition | InterfaceDefinition | ExternalDefinition | AssociationDefinition | AssociationClassDefinition | StateMachineDefinition;
-/* End of part similar to umple_core.grammar */ 
-
-
-/* -------------------------------------------------------------------------------------------
- * Part similar to umple_classes.grammar
- */ 
-ClassDefinition: "class" (name=ID) "{"  
-	classContent+=ClassContent*
-	"}";
-
-ExternalDefinition : 'external' name=ID '{' classContent+=ClassContent* '}';
-
-InterfaceDefinition: 'interface' name=ID '{' depend+=Depend* '}';
-
-AssociationDefinition: 'association' name=ID '{' association+=Association* '}' ;
-
-ClassContent:
-	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation | StateMachine;
-
-AssociationClassContent:
-	Attribute | Position | SoftwarePattern | Depend | SymmetricReflexiveAssociation | InlineAssociation | StateMachine;
-
-Depend: 'depend' name = extendedID (".*")? ";";
-
-Association:  multiplicity (type1=ID) (rolename1=ID)?  ("->"|"--"|"<-"|"><") multiplicity (type2=ID) (rolename2=ID)? ";";
-
-SymmetricReflexiveAssociation: multiplicity "self" (rolename=ID) ";";
-
-InlineAssociation: multiplicity (rolename1=ID)? ("->"|"--"|"<-"|"><") (multiplicity) (type=ID) (rolename2=ID)? ";";
-
-SingleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
-
-AssociationClassDefinition: 'associationClass' name=ID '{' associationClassContent+=AssociationClassContent* '}';
-/* End of part similar to umple_classes.grammar */ 
-
-/* -------------------------------------------------------------------------------------------
- * Part similar to umple_patterns.grammar
- */ 
-SoftwarePattern:
-	isA | Singleton | KeyDefinition | CodeInjection;
-
-isA: 'isA' (extendsClass+=[UmpleElement]) ("," extendsClass+=[UmpleElement])* ";";
-
-Singleton: singleton?="singleton" ";" ;
-
-KeyDefinition: "key" {Key} "{" (keys+=ID ("," keys+=ID)*)? "}";
-
-CodeInjection:"before" (name=extendedID) code=STRING | "after" (name=extendedID) code=STRING; 
-
-Attribute:
-	autounique?="autounique" name=extendedID ";" |
-	(unique?="unique")? modifier=Modifier? ((type=UmpleAttributeType (list?="[]")?) |
-	(object=[ClassDefinition] (list?="[]")?))?  name=extendedID ( '=' value=UmplePrimitiveType)? ";";
-/* End of umple_patterns.grammar */ 
-
-
-/* -------------------------------------------------------------------------------------------
- * Part similar to umple_state_machines.grammar
- */ 
-
-StateMachineDefinition: "statemachine" name=extendedID '{' states+=State '}';
-
-StateMachine: Enum| InlineStateMachine | ReferencedStateMachine ;
-
-InlineStateMachine: name=extendedID '{' states+=State'}' ;
-
-ReferencedStateMachine: name=extendedID 'as' machine=[StateMachineDefinition];
-
-Enum: name=extendedID "{" states+=extendedID ("," states+=extendedID)* "}";
-
-State: name=extendedID '{' (("*")? states+=StateEntity)*  '}'; 
-
-StateEntity: Transition | EntryOrExitAction | (Activity ("->" extendedID ";")?) | State | (expression ";");	
-//This covers just activities and activities that cause a state transition
-
+attribute:
+	"autounique" name=extendedID ";"|
+	("unique")? modifier? ((type=attributeType (isList="[]")?)|(object=[classDefinition] (isList="[]")?))?  name=extendedID (it=initialization)? ";";
 	
-Transition: 
-	(Guard events+=EventDefinition "->" a=Action? stateName=extendedID ";") |
-	(EventDefinition g=Guard? "->" a=Action? stateName=extendedID ";");
-	
-EventDefinition: AfterEveryEvent | AfterEvent | Event;
+modifier: ("immutable"|"settable"|"internal"|"defaulted"|"const");
 
-Event: name=extendedID ;
+//condictionalExpression covers all expressions except "="
+//See Expression section for details
 
-AfterEveryEvent: "afterEvery" "(" name=extendedID ")";
+initialization:  "=" conditionalExpression;
 
-AfterEvent: "wait" "(" name=extendedID ")";
-
-Action: "/" code=block;
-
-EntryOrExitAction: (type="entry" |type="exit") "/" actionCode=block;
-
-Activity: "do" '{' code=block '}' ;
-
-Guard: "[" GuardCode "]";
-
-GuardCode: expression;
-
-/* End of umple_state_machines.grammar */ 
-
-/* -------------------------------------------------------------------------------------------
- * Part similar to umple_layout.grammar
- */ 
-Position: AssociationPosition |  ElementPosition;
-
-ElementPosition: 'position' (x=INT) (y=INT) (width=INT) (height=INT) ";"; 
-
-AssociationPosition: "position.association" name=ID (c1=Coordinate) (c2=Coordinate) ";";
-
-Coordinate: (x=INT) "," (y=INT);
-/* End of umple_layout.grammar */ 
-
-
-/* -------------------------------------------------------------------------------------------
- * Complement Rules
- */ 
-UmpleAttributeType
+attributeType
 	: 	"Date"
 	|	"Time"
-	|	"Double" | "double"
+	|	"double"
 	|	"Integer"|"integer"|"int"
+	|	"Constant"|"constant"
 	|	"Boolean"|"boolean"
 	|	"String"|"string"
 	;
 
-UmplePrimitiveType:
-  INT | STRING ;
+//This section can contain native Java code
+beforeCode: "before" (name=extendedID) code=block;
 
-enum Modifier: IMMUTABLE="immutable"|SETTABLE="settable"|INTERNAL="internal"|DEFAULTED="defaulted"|CONST="const";  
+afterCode: "after" (name=extendedID) code=block;
 
-multiplicity: bound | (bound ".." bound);
+keyDefinition: "key" "{" (firstKey=key ("," keys+=key)*)? "}";
+key: name=ID;
 
-bound: INT | "*";
-
-UmpleElement:  ClassDefinition | InterfaceDefinition ;
-/* End of Complement Rules */ 
-
-block 
-    :   {block} '{' blocks+=blockStatement* '}'
-    ;
+depend: "depend" name = extendedID (".*")? ";";
 
 
-parExpression:	
-	'(' expression ')';
+//STATEMACHINES
+
+stateMachineDefinition: "statemachine" name=extendedID "{" (states+=state)* "}";
+stateMachine: ENUM | inlineStateMachine | referencedStateMachine;
+inlineStateMachine: name=extendedID "{" (states+=state)* "}";
+referencedStateMachine: name = extendedID "as" (machine=[stateMachineDefinition]) ";";
+ENUM: name=extendedID "{" state1=extendedID ("," states+=extendedID)* "}";
+
+state: ("conc")? ("concurrent")? ("|")? stateName=extendedID  "{" (("*")? states+=stateEntity)* "}";
+
+stateEntity: transition | entryOrExitAction | (activity ("->" extendedID ";")?) | state | (expression ";");	
+//This covers just activities and activities that cause a state transition
+
+	
+transition: 
+	(guard (events+=eventDefinition)? "->" a=action? stateName=extendedID ";") |
+	(eventDefinition g=guard? "->" a=action? stateName=extendedID ";") |
+	("->" a=action? stateName=extendedID ";") ;
+	
+eventDefinition: timedEvent | waitEvent | eventID=ID;
+timedEvent: "afterEvery" "(" (INT|ID) ")";
+waitEvent: "wait" "(" (INT|ID) ")";
+action: "/" code=block;
+entryOrExitAction: (type="entry" |type="exit") "/" code=block;
+activity: "do" code=block ";";
+guard: "[" guardCode "]";
+
+//This does allow for additions and modifications as well as boolean expressions
+//but it is the most comprehensive
+guardCode: expression;
+
+position: (a=associationPosition | c=classPosition);
+classPosition: "position" (x=INT) (y=INT) (width=INT) (height=INT) ";";
+associationPosition: "position.association" (index=INT) (c1=coordinate) (c2=coordinate) ";"; //ERROR: UNSURE AS TO WHAT INDEX IS
+coordinate: (x=INT) "," (y=INT);
+extendedID: ID ("." ID)*;
+fileID: CHARS CHARS*;
+CHARS: (extendedID|INT);
+DOUBLE: INT "." INT;
+
+
+
+/** EXPRESSIONS (JAVA and UMPLE)
+ *	START
+ *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
+ *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
+ *	have no left-side recursion.
+ **/
+ parExpression
+	:	'(' expression ')'
+	;
 
 assignmentOperator
 	:	'='
@@ -181,12 +157,13 @@ assignmentOperator
 	|	'-='
 	;
 
+
 expressionList
 	:	expressions+=expression (',' expressions+=expression)*
 	;
 
  
- expression 
+ expression
 	: 	expression1=conditionalExpression (assignmentOperator expression2=expression)?
 	;
 	
@@ -245,28 +222,28 @@ primary
 	;
 
 literal
-	:	 {literal}INT
-	|	 {literal}DOUBLE
-	|	 {literal}STRING
-	|	 {literal}extendedID
+	:	INT
+	|	DOUBLE
+	|	STRING
+	|	extendedID
 	|	javaFunctionCall
-	|	 {literal}TRUE
-	|	 {literal}FALSE
+	|	"true"	| "TRUE"
+	|	"false"	| "FALSE"
 	;
-	
 	
 /** EXPRESSIONS
  *	END
  **/
 
 //LANGUAGE DEPENDENT
-functionCall : javaFunctionCall;	//Expand list with more options
+functionCall: javaFunctionCall;	//Expand list with more options
 
-functionDeclaration 
-	: java=javaFunctionDeclaration;
+functionDeclaration: java=javaFunctionDeclaration;
 
-functionDefinition : java=javaFunctionDefinition;
+functionDefinition: java=javaFunctionDefinition;
 
+//This handles bare code
+block:	javaBlock;
 
 /** JAVA NATIVE CODE
  *	START
@@ -277,15 +254,20 @@ functionDefinition : java=javaFunctionDefinition;
 
 //Methods
 javaFunctionDeclaration:
-("static")? ("public"|"private"|"protected") (returnType=attributeType|"void"|referenceType=ID) name=ID ( "(" (argList+=attributeType argListID+=extendedID ("," argList+=attributeType argListID+=extendedID)*)? ")" | '()');
+("static")? ("public"|"private"|"protected") (returnType=attributeType|"void") name=ID "(" (argList+=attributeType argListID+=extendedID ("," argList+=attributeType argListID+=extendedID)*)? ")";
 
 javaFunctionDefinition: 
-decl=javaFunctionDeclaration code=block
+decl=javaFunctionDeclaration code=javaBlock
 ;
 
-javaFunctionCall: name=extendedID (("(" args=expressionList? ")")|("()"));
+javaFunctionCall: name=extendedID "(" args=expressionList? ")";
 
 
+
+javaBlock
+    :   '{' blocks+=blockStatement* '}'
+    ;
+    
 blockStatement
     :	statement
     |	localVariableDeclarationStatement
@@ -308,36 +290,18 @@ variableDeclarator
     ;
 
 statement
-	:	block
-	|	ifstatement
-	|	forstatement
-	|	whilestatement
-	|   returnstatement
-	|	endstatement
-	|	breakstatement
-	|	expressionstatement
-	|   trystatement
+	:	javaBlock
+	|	'if' condition=parExpression state1=statement ('else' state2=statement)?
+	|	'for' '(' control=forControl ')' state=statement
+	|	 'while' condition=parExpression state=statement
+	|   'return' retVal=expression? ';'
+	|	';'
+	|	"break" ";"
+	|	expression ';'
 	;
-
-endstatement: {endstatement}';' ;
-
-breakstatement: {breakstatement} "break" ";" ;
-
-ifstatement: {ifstatement}'if' condition=parExpression state1=statement ('else' state2=statement)? ;
-
-forstatement: {forstatement}'for' '(' control=forControl ')' state=statement ;
-
-whilestatement: {whilestatement}'while' condition=parExpression state=statement;
-
-returnstatement: {returnstatement}'return' retVal=expression? ';';
-
-expressionstatement: expression ';';
-
-trystatement: {trystatement}'try' tryBlock=block 'catch' catchBlock= block;
-
-
+	
 forControl
-	:	{forControl} init=forInit? ';' condition=expression? ';' update=forUpdate?
+	:	init=forInit? ';' condition=expression? ';' update=forUpdate?
 	;
 
 forInit
@@ -348,44 +312,8 @@ forInit
 forUpdate
 	:	expressionList;
 
-	
-
-//condictionalExpression covers all expressions except "="
-//See Expression section for details
-
-attributeType
-	: 	"Date"
-	|	"Time"
-	|	"Double" | "double"
-	|	"Integer"|"integer"|"int"
-	|	"Boolean"|"boolean"
-	|	"String"|"string"
-	;
-
 
 /** JAVA NATIVE CODE
  *	END
 **/
-
-// PHP CODE
-phpFunction: 'public' 'function' name=ID codeblock=[phpBlock];
-
-phpBlock: '{' code=STRING'}';
-
-// Ruby Code
-
-rubyFunction: RUBY_FUNCTION;
-
-
-/* -------------------------------------------------------------------------------------------
- * TERMINALS AND DATA TYPES
- */
-terminal TRUE: 'true';
-terminal FALSE: 'false';
-terminal RUBY_FUNCTION: DEF -> END;
-terminal DEF: 'def';
-terminal END: 'end';
-extendedID: ID ("." ID)*;
-DOUBLE: INT "." INT;
-fileID: CHARS CHARS*;
-CHARS: (extendedID|INT);
+	
