@@ -5,27 +5,39 @@ namespace services;
 class ElectionService {
 	singleton;
 
-	public function getAllElections($db_hostname,$db_username,$db_password) {
+	lazy String db_hostname;
+	lazy String db_username;
+	lazy String db_password;
+	lazy String elections;
+	
+	ServiceProvidingCycle {
+		Idle {
+			getAllElections -> AllElectionsLoaded;
+		}
+		AllElectionsLoaded {
+			entry / {$this->loadAllElections($this->db_hostname,$this->db_username,$this->db_password);}
+		}
+	}
+	
+	private function loadAllElections($db_hostname,$db_username,$db_password) {
 		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
   		$result = mysql_query("SELECT * FROM elections.election");
 
 		require_once("./domain/Election.php");
 		
-		$allElections='{"elections" : [';
+		$this->elections='{"elections" : [';
 		$first=true;
 		while($row = mysql_fetch_array($result)) {
 			$anElection=new Election($row['id_election'],$row['name'],$row['description']);
 			if ($first) {
-				$allElections=$allElections.$this->jsonSerialize($anElection);
+				$this->elections=$this->elections.$this->jsonSerialize($anElection);
 				$first=false;
 			} else
-				$allElections=$allElections.",".$this->jsonSerialize($anElection);
+				$this->elections=$this->elections.",".$this->jsonSerialize($anElection);
 		}
-		$allElections=$allElections.']}';
+		$this->elections=$this->elections.']}';
 
 		mysql_close($isConnected);
-		
-		return $allElections;
 	}
 	
 	private function jsonSerialize($anElection) {

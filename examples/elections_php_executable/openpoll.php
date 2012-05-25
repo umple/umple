@@ -4,19 +4,34 @@ if (isset($_POST['action'])) {
 		case 'loadAllElections':
 			require_once("ElectionService.php");
 			require_once("Credentials.php");
-			$allElections=ElectionService::getInstance()->getAllElections(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+			require_once("Credentials.php");
+			ElectionService::getInstance()->setDb_hostname(Credentials::$db_hostname);
+			ElectionService::getInstance()->setDb_username(Credentials::$db_username);
+			ElectionService::getInstance()->setDb_password(Credentials::$db_password);
+			ElectionService::getInstance()->getAllElections();
+			$allElections=ElectionService::getInstance()->getElections();
 			echo $allElections;
 		break;
 		case 'loadElectionPolls':
 			require_once("PollService.php");
 			require_once("Credentials.php");
-			$allPolls=PollService::getInstance()->getElectionPolls(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password,$_POST['idElection']);
+			PollService::getInstance()->setDb_hostname(Credentials::$db_hostname);
+			PollService::getInstance()->setDb_username(Credentials::$db_username);
+			PollService::getInstance()->setDb_password(Credentials::$db_password);
+			PollService::getInstance()->setIdElection($_POST['idElection']);
+			PollService::getInstance()->getElectionPolls();
+			$allPolls=PollService::getInstance()->getAllPolls();
 			echo $allPolls;
 		break;
 		case 'openPoll':
 			require_once("PollService.php");
 			require_once("Credentials.php");
-			$result=PollService::getInstance()->openPoll(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password,$_POST['idpoll']);
+			PollService::getInstance()->setDb_hostname(Credentials::$db_hostname);
+			PollService::getInstance()->setDb_username(Credentials::$db_username);
+			PollService::getInstance()->setDb_password(Credentials::$db_password);
+			PollService::getInstance()->setIdElection($_POST['idpoll']);
+			PollService::getInstance()->openPoll();
+			$result=PollService::getInstance()->getLatestResult();
 			echo $result;
 		break;
 	}

@@ -5,7 +5,28 @@ namespace services;
 class PollService {
 	singleton;
 
-	public function getElectionPolls($db_hostname,$db_username,$db_password,$idElection) {
+	lazy String db_hostname;
+	lazy String db_username;
+	lazy String db_password;
+	lazy Integer idElection;
+	lazy Integer idpoll;
+	lazy String allPolls;
+	lazy String latestResult;
+
+	ServiceProvidingCycle {
+		Idle {
+			getElectionPolls -> ElectionPollsLoaded;
+			openPoll -> PollOpened;
+		}
+		ElectionPollsLoaded {
+			entry / {$this->loadElectionPolls($this->db_hostname,$this->db_username,$this->db_password,$this->idElection);}
+		}
+		PollOpened {
+			entry / {$this->tryToOpenPoll($this->db_hostname,$this->db_username,$this->db_password,$this->idpoll);}
+		}
+	}
+
+	public function loadElectionPolls($db_hostname,$db_username,$db_password,$idElection) {
 		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
 		
 		$result = mysql_query("SELECT * FROM elections.election where id_election=$idElection");
@@ -21,24 +42,22 @@ class PollService {
 
 		require_once("./domain/Poll.php");
 		
-		$allPolls='{"polls" : [';
+		$this->allPolls='{"polls" : [';
 		$first=true;
 		while($row = mysql_fetch_array($result)) {
 			$aPoll=new Poll($row['id_poll'],$row['name'],$row['description'],$anElection);
 			if ($first) {
-				$allPolls=$allPolls.$this->jsonSerialize($aPoll);
+				$this->allPolls=$this->allPolls.$this->jsonSerialize($aPoll);
 				$first=false;
 			} else
-				$allPolls=$allPolls.",".$this->jsonSerialize($aPoll);
+				$this->allPolls=$this->allPolls.",".$this->jsonSerialize($aPoll);
 		}
-		$allPolls=$allPolls.']}';
+		$this->allPolls=$this->allPolls.']}';
 
 		mysql_close($isConnected);
-		
-		return $allPolls;
 	}
 	
-	public function openPoll($db_hostname,$db_username,$db_password,$idpoll) {
+	public function tryToOpenPoll($db_hostname,$db_username,$db_password,$idpoll) {
 		$isConnected = mysql_connect($db_hostname,$db_username,$db_password);
 		
 		$wasUpdated=false;
@@ -47,9 +66,9 @@ class PollService {
 		}
 		
 		if ($isConnected && $wasUpdated)
-			return "Poll open!";
+			$this->latestResult='Poll open!';
 		else
-			return "An error occured!";
+			$this->latestResult='An error occured!';
 	}
 	
 	private function jsonSerialize($aPoll) {

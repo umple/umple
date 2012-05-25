@@ -33,7 +33,7 @@ function loadElectionPolls(elections) {
 	request.onreadystatechange = function() {
 	if(request.readyState == 4 && request.status == 200) {
 			var txt=request.responseText;
-			var obj = JSON.parse(txt); 
+			var obj = JSON.parse(txt);
 			var options="";
 			for (i=0;i<obj.polls.length;i++) {
 				options+='<option value="'+obj.polls[i].idpoll+'">'
@@ -58,7 +58,7 @@ function openPoll() {
 		request.onreadystatechange = function() {
 		if(request.readyState == 4 && request.status == 200) {
 				var txt=request.responseText;
-
+				
 				document.getElementById('result').innerHTML=txt;
 			}
 		}
