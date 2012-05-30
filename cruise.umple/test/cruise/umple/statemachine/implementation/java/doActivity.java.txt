@@ -85,6 +85,7 @@ public class Switch
     try
     {
       keepDoing();
+      wait(1);
     }
     catch (InterruptedException e)
     {

@@ -1661,7 +1661,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1641 = NL + "  private void ";
   protected final String TEXT_1642 = "()" + NL + "  {" + NL + "    try" + NL + "    {";
   protected final String TEXT_1643 = NL + "      ";
-  protected final String TEXT_1644 = NL + "    }" + NL + "    catch (InterruptedException e)" + NL + "    {" + NL + "" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1644 = NL + "      wait(1);" + NL + "    }" + NL + "    catch (InterruptedException e)" + NL + "    {" + NL + "" + NL + "    }" + NL + "  }" + NL;
   protected final String TEXT_1645 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
   protected final String TEXT_1646 = NL + "    ";
   protected final String TEXT_1647 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";

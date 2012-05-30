@@ -104,9 +104,10 @@
   
   <target name="template.resetVersion">
     <echo message="Resetting To Last Version: ${umple.version} -> ${last.version}" />
-    <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="${last.version}">
-      <include name="**/*.java"/>
-    </replace>
+    <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="${last.version}"><include name="**/*.java"/></replace>
+    <replace dir="testbed/src-gen-umple" token="${umple.version}" value="${last.version}"><include name="**/*.java"/></replace>
+    <replace dir="testbed_php/src-gen-umple" token="${umple.version}" value="${last.version}"><include name="**/*.php"/></replace>
+    <replace dir="testbed_ruby/src-gen-umple" token="${umple.version}" value="${last.version}"><include name="**/*.rb"/></replace>
 
     <echo message="Resetting To Test Version: ${umple.version} -> @UMPLE_VERSION@" />
     <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${last.version}" value="@UMPLE_VERSION@" />

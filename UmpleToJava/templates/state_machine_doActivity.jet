@@ -4,6 +4,7 @@
     try
     {
       <%= state.getActivity().getActivityCode() %>
+      wait(1);
     }
     catch (InterruptedException e)
     {
