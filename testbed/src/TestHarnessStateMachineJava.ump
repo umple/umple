@@ -175,3 +175,23 @@ class CourseT
     }  
   }
 }
+
+class CourseU {
+
+  Integer count;
+
+  status {
+    Off {
+      flip -> On;
+      do {incr();}
+    }
+    On { }
+  }
+
+  public void incr() 
+  { 
+    count += 1;
+  }
+
+}
+
