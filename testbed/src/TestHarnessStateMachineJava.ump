@@ -195,3 +195,18 @@ class CourseU {
 
 }
 
+class CourseV {
+
+  Integer count;
+
+  status {
+    Off {
+      do {doX();} -> On;
+    }
+    On { }
+  }
+
+  public void doX() { } 
+
+}
+

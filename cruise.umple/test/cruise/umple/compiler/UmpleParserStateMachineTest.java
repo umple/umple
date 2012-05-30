@@ -141,13 +141,23 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
-  
-  public void transitionAfterDo() // Omar sept 22nd..
+  public void transitionAfterDo()
   {
-	  assertParse("100_transition_after_do.ump","[classDefinition][name:Switch][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:press][stateName:Off][state][stateName:Off][transition][activity][activityCode:keepDoing][stateName:On;]");
-   
+    assertParse("100_transition_after_do.ump","[classDefinition][name:Switch][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:press][stateName:Off][state][stateName:Off][autoTransition][activity][activityCode:keepDoing;][stateName:On]");
 	  
-	  
+    UmpleClass c = model.getUmpleClass("Switch");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    State state = sm.getState(1);
+
+    // TODO: wait for next release with model changes  
+    // Transition t = state.getTransition(0);
+    // Activity act = state.getActivity();
+    // Assert.assertNotNull(act);
+    // Assert.assertEquals("keepDoing;", act.getActivityCode());
+    // Assert.assertEquals(t.getEvent(), act.getOnCompletionEvent());
+    // Assert.assertEquals(false,t.isAutoTransition());
+    // Assert.assertEquals(true, t.getEvent().isAutoTransition());
   }
   
   @Test

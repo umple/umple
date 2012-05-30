@@ -14,6 +14,7 @@ public class Activity
   private String activityCode;
 
   //Activity Associations
+  private Event onCompletionEvent;
   private State state;
 
   //------------------------
@@ -47,9 +48,22 @@ public class Activity
     return activityCode;
   }
 
+  public Event getOnCompletionEvent()
+  {
+    return onCompletionEvent;
+  }
+
   public State getState()
   {
     return state;
+  }
+
+  public boolean setOnCompletionEvent(Event newOnCompletionEvent)
+  {
+    boolean wasSet = false;
+    onCompletionEvent = newOnCompletionEvent;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setState(State newState)
@@ -82,6 +96,7 @@ public class Activity
 
   public void delete()
   {
+    onCompletionEvent = null;
     State existingState = state;
     state = null;
     if (existingState != null)

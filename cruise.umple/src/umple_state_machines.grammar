@@ -16,13 +16,15 @@ state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[sta
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]]
 
-autoTransition : [[guard]] -> [[action]]? [stateName] ; | [[action]] -> [stateName] ; | [[guard]]? -> [[action]]? [stateName] ; | -> [stateName]
-transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]  
+autoTransition : [[autoTransitionBlock]] | [[activity]] [[autoTransitionBlock]]
+autoTransitionBlock- : [[guard]] -> [[action]]? [stateName] ; | [[action]] -> [stateName] ; | [[guard]]? -> [[action]]? [stateName] ; | -> [stateName] ;
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ;  
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]
 afterEveryEvent- : afterEvery -( [timer] -)
 afterEvent- : after -( [timer] -)
 action : / { [**actionCode] } 
 entryOrExitAction : [=type:entry|exit] / { [**actionCode] }
-activity : do { [**activityCode] }
+activity : do { [**activityCode] } 
+
 guard : [ [**guardCode] ] 

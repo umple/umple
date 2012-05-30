@@ -2122,11 +2122,10 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     }
   }
 
-  private void analyzeActivity(Token activityToken, State fromState)
+  private Activity analyzeActivity(Token activityToken, State fromState)
   {
-    new Activity(activityToken.getValue("activityCode"),fromState);
+    return new Activity(activityToken.getValue("activityCode"),fromState);
   }
-
 
   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
   {
@@ -2141,7 +2140,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     {
       t = new Transition(fromState, nextState);
     }
-    
+
     t.setAutoTransition(isAutoTransition);
 
     String eventName = transitionToken.getValue("event");
@@ -2180,6 +2179,16 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
       {
         fromState.removeTransition(t);      
       }
+      
+      for(Token subToken : transitionToken.getSubTokens())
+      {
+        if (subToken.is("activity"))
+        {
+          t.setAutoTransition(false);
+          Activity act = analyzeActivity(subToken, fromState);
+          act.setOnCompletionEvent(event);
+        }
+    }      
     
     }
 

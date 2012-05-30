@@ -214,6 +214,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Activity">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="activityCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="onCompletionEvent" lowerBound="0" upperBound="1" eType="#//Event" eOpposite="#//Event/activities"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="state" lowerBound="1" upperBound="1" eType="#//State" eOpposite="#//State/activity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Transition">
@@ -238,6 +239,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoTransition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timerInSecond" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activities" lowerBound="0" upperBound="-1" eType="#//Activity" eOpposite="#//Activity/onCompletionEvent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/event"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guard">
