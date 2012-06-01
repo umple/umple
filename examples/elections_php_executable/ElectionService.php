@@ -18,10 +18,12 @@ class ElectionService
   //ElectionService Attributes
   private $isConnected;
   private $elections;
+  private $electionJSON;
 
   //ElectionService State Machines
   private static $ServiceProvidingCycleIdle = 1;
   private static $ServiceProvidingCycleAllElectionsLoaded = 2;
+  private static $ServiceProvidingCycleCreatingElection = 3;
   private $ServiceProvidingCycle;
 
   //------------------------
@@ -32,7 +34,9 @@ class ElectionService
   {
     $this->isConnected = NULL;
     $this->elections = NULL;
+    $this->electionJSON = NULL;
     $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
+    $this->newElection=NULL;
   }
 
   public static function getInstance()
@@ -64,6 +68,15 @@ class ElectionService
     return $wasSet;
   }
 
+  public function setElectionJSON($aElectionJSON)
+  {
+    $wasSet = false;
+    $this->electionJSON = $aElectionJSON;
+    $wasSet = true;
+    $this->createElection();
+    return $wasSet;
+  }
+
   public function getIsConnected()
   {
     return $this->isConnected;
@@ -72,6 +85,11 @@ class ElectionService
   public function getElections()
   {
     return $this->elections;
+  }
+
+  public function getElectionJSON()
+  {
+    return $this->electionJSON;
   }
 
   public function getServiceProvidingCycleFullName()
@@ -84,6 +102,7 @@ class ElectionService
   {
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleIdle) { return "ServiceProvidingCycleIdle"; }
     elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleAllElectionsLoaded) { return "ServiceProvidingCycleAllElectionsLoaded"; }
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleCreatingElection) { return "ServiceProvidingCycleCreatingElection"; }
     return null;
   }
 
@@ -100,6 +119,19 @@ class ElectionService
     return $wasEventProcessed;
   }
 
+  public function createElection()
+  {
+    $wasEventProcessed = false;
+    
+    $aServiceProvidingCycle = $this->ServiceProvidingCycle;
+    if ($aServiceProvidingCycle == self::$ServiceProvidingCycleIdle)
+    {
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleCreatingElection);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
   private function setServiceProvidingCycle($aServiceProvidingCycle)
   {
     require_once("Credentials.php");
@@ -110,6 +142,10 @@ class ElectionService
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleAllElectionsLoaded)
     {
       $this->loadAllElections();
+    }
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleCreatingElection)
+    {
+      $this->addElection();
     }
   }
 
@@ -143,6 +179,14 @@ class ElectionService
 		$this->elections=$this->elections.']}';
 
 		mysql_close($this->isConnected);
+	}
+	
+	private function addElection() {
+		$electionData=json_decode($this->electionJSON);
+		if (mysql_query("insert into elections.election (name, description) values ('$electionData->name', '$electionData->description')"))
+			echo 'Successfully added!';
+		else
+			echo mysql_error();
 	}
 	
 	private function jsonSerialize($anElection) {

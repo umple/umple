@@ -21,25 +21,37 @@ class OpenPollController
 	lazy Poll selectedPoll;
 	lazy boolean pollOpened=false;
     lazy int option=JOptionPane.NO_OPTION;
+    lazy internal List<Election> elections;
+    lazy internal List<Poll> polls;
     
 	PollOpeningSteps {
 		Initial
 		{
-			openPoll -> ElectionsListProvided;
+			openPoll -> ProvidingElectionsList;
+		}
+		ProvidingElectionsList
+		{
+			entry / {ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();}
+			-> ElectionsListProvided;
 		}
 		ElectionsListProvided
 		{
 			entry / {selectAnElection();}
+			-> ProvidingPollsList;
+		}
+		ProvidingPollsList
+		{
+			entry / {PollService.getInstance().setSelectedElection(selectedElection);polls=PollService.getInstance().getPolls();}
 			-> PollsListProvided;
 		}
 		PollsListProvided
 		{
-			entry / {selectAPoll();}
+			entry / {selectAPoll();PollService.getInstance().setSelectedPoll(selectedPoll);}
 			-> OpeningPoll;
 		}
 		OpeningPoll
 		{
-			entry / {pollOpened=PollService.getInstance().openPoll(theConnection, selectedPoll);}
+			entry / {PollService.getInstance().openPoll();pollOpened=PollService.getInstance().getPollOpenned();}
 			[pollOpened] -> PollOpened;
 			[!pollOpened] -> Failed;
 		}
@@ -53,7 +65,6 @@ class OpenPollController
 	}
  	
  	void selectAnElection() {
-		List<Election> elections=ElectionService.getInstance().getAllElections(theConnection);
 		String[] electionNames=new String[elections.size()];
 		int i=0;
 		for (Election election:elections)
@@ -67,12 +78,9 @@ class OpenPollController
 			if (election.getName().equals(selectedElectionName))
 				selectedElection=election;
 		}
-		
-		//electionSelected();
 	}
  	
  	void selectAPoll() {
-		List<Poll> polls=PollService.getInstance().getElectionPolls(theConnection, selectedElection);
 		String[] pollNames=new String[polls.size()];
 		int i=0;
 		for (Poll poll:polls)
@@ -86,7 +94,5 @@ class OpenPollController
 			if (poll.getName().equals(selectedPollName))
 				selectedPoll=poll;
 		}
-		
-		//pollSelected();
 	}
 }

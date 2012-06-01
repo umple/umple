@@ -7,11 +7,46 @@ class ElectionService {
 	depend java.sql.Connection;
 	depend java.sql.ResultSet;
     depend java.sql.Statement;
+    depend java.sql.DriverManager;
+    depend shared.Credentials;
 	
 	singleton;
 	
-	List<Election> getAllElections(Connection theConnection) {
-		List<Election> elections=new ArrayList<Election>();
+	lazy Election newElection;
+	lazy List<Election> elections;
+	lazy internal Connection theConnection;
+	lazy boolean electionAdded;
+
+	after setNewElection {
+		createElection();
+	}
+
+	ElectionServiceCycle {
+		Idle {
+			getAllElections -> LoadingAllElections;
+			createElection -> CreatingElection;
+		}
+		LoadingAllElections {
+			entry / {loadAllElections();}
+			-> Idle;
+		}
+		CreatingElection {
+			entry / {addElection();}
+			-> Idle;
+		}
+	}
+
+	before setElectionServiceCycle {
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+		}
+	}
+			
+	void loadAllElections() {
+		elections=new ArrayList<Election>();
 		
 		try {
 			Statement stmt = theConnection.createStatement();
@@ -26,7 +61,16 @@ class ElectionService {
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
-		
-		return elections;
+	}
+	
+	void addElection() {
+		try {
+			Statement stmt = theConnection.createStatement();
+			stmt.executeUpdate("insert into elections.election (name, description) values ('"+newElection.getName()+"', '"+newElection.getDescription()+"')");
+			electionAdded=true;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			electionAdded=false;
+		}
 	}
 }

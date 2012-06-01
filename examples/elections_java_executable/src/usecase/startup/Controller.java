@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import usecase.openPoll.OpenPollController;
+import usecase.addElection.AddElectionController;
 
 public class Controller
 {
@@ -25,7 +26,7 @@ public class Controller
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Connecting, Connected, Failed, PollOpening }
+  enum Status { Connecting, Connected, Failed, PollOpening, ElectionAdding }
   private Status status;
 
   //------------------------
@@ -150,7 +151,7 @@ public class Controller
     return status;
   }
 
-  private boolean __autotransition13__()
+  private boolean __autotransition211__()
   {
     boolean wasEventProcessed = false;
     
@@ -170,7 +171,7 @@ public class Controller
     return wasEventProcessed;
   }
 
-  private boolean __autotransition14__()
+  private boolean __autotransition212__()
   {
     boolean wasEventProcessed = false;
     
@@ -190,7 +191,7 @@ public class Controller
     return wasEventProcessed;
   }
 
-  private boolean __autotransition15__()
+  private boolean __autotransition213__()
   {
     boolean wasEventProcessed = false;
     
@@ -210,7 +211,27 @@ public class Controller
     return wasEventProcessed;
   }
 
-  private boolean __autotransition16__()
+  private boolean __autotransition214__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case Connected:
+        if (mainMenuOption.equals("Add Election"))
+        {
+          setStatus(Status.ElectionAdding);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition215__()
   {
     boolean wasEventProcessed = false;
     
@@ -239,19 +260,23 @@ public class Controller
     {
       case Connecting:
         tryToConnect();
-        __autotransition13__();
-        __autotransition14__();
+        __autotransition211__();
+        __autotransition212__();
         break;
       case Connected:
         showMainMenu();
-        __autotransition15__();
+        __autotransition213__();
+        __autotransition214__();
         break;
       case Failed:
         option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
-        __autotransition16__();
+        __autotransition215__();
         break;
       case PollOpening:
         OpenPollController.getInstance().setTheConnection(theConnection);OpenPollController.getInstance().openPoll();
+        break;
+      case ElectionAdding:
+        /*AddElectionController.getInstance().setTheConnection(theConnection);*/AddElectionController.getInstance().addElection();
         break;
     }
   }
@@ -274,7 +299,7 @@ public class Controller
 
 
   public void showMainMenu(){
-      String[] selectionValues={"Open Poll", "Quit"};
+      String[] selectionValues={"Open Poll", "Add Election", "Quit"};
 		String defaultSelection = "Open Poll";
 		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
   }

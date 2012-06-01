@@ -4,10 +4,10 @@ class Controller
 {
 	depend java.sql.Connection;
 	depend java.sql.DriverManager;
-    depend java.sql.SQLException;
     depend javax.swing.JOptionPane;
     
     depend usecase.openPoll.OpenPollController;
+    depend usecase.addElection.AddElectionController;
     
     Connection theConnection=null;
     
@@ -34,7 +34,7 @@ class Controller
     
     void showMainMenu()
     {
-    	String[] selectionValues={"Open Poll", "Quit"};
+    	String[] selectionValues={"Open Poll", "Add Election", "Quit"};
 		String defaultSelection = "Open Poll";
 		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
     }
@@ -48,6 +48,7 @@ class Controller
       Connected {
       	entry / {showMainMenu();}
       	[mainMenuOption.equals("Open Poll")] -> PollOpening;
+      	[mainMenuOption.equals("Add Election")] -> ElectionAdding;
       }
       Failed {
       	entry / {option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
@@ -56,5 +57,8 @@ class Controller
       PollOpening {
       	entry / {OpenPollController.getInstance().setTheConnection(theConnection);OpenPollController.getInstance().openPoll();}
       }
-  }
+      ElectionAdding {
+      	entry / {/*AddElectionController.getInstance().setTheConnection(theConnection);*/AddElectionController.getInstance().addElection();}
+      }
+}
 }

@@ -33,9 +33,11 @@ public class OpenPollController
   private Poll selectedPoll;
   private boolean pollOpened;
   private int option;
+  private List<Election> elections;
+  private List<Poll> polls;
 
   //OpenPollController State Machines
-  enum PollOpeningSteps { Initial, ElectionsListProvided, PollsListProvided, OpeningPoll, PollOpened, Failed }
+  enum PollOpeningSteps { Initial, ProvidingElectionsList, ElectionsListProvided, ProvidingPollsList, PollsListProvided, OpeningPoll, PollOpened, Failed }
   private PollOpeningSteps PollOpeningSteps;
 
   //------------------------
@@ -146,6 +148,22 @@ public class OpenPollController
     switch (aPollOpeningSteps)
     {
       case Initial:
+        setPollOpeningSteps(PollOpeningSteps.ProvidingElectionsList);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition370__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollOpeningSteps aPollOpeningSteps = PollOpeningSteps;
+    switch (aPollOpeningSteps)
+    {
+      case ProvidingElectionsList:
         setPollOpeningSteps(PollOpeningSteps.ElectionsListProvided);
         wasEventProcessed = true;
         break;
@@ -154,7 +172,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition17__()
+  private boolean __autotransition371__()
   {
     boolean wasEventProcessed = false;
     
@@ -162,6 +180,22 @@ public class OpenPollController
     switch (aPollOpeningSteps)
     {
       case ElectionsListProvided:
+        setPollOpeningSteps(PollOpeningSteps.ProvidingPollsList);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition372__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollOpeningSteps aPollOpeningSteps = PollOpeningSteps;
+    switch (aPollOpeningSteps)
+    {
+      case ProvidingPollsList:
         setPollOpeningSteps(PollOpeningSteps.PollsListProvided);
         wasEventProcessed = true;
         break;
@@ -170,7 +204,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition18__()
+  private boolean __autotransition373__()
   {
     boolean wasEventProcessed = false;
     
@@ -186,7 +220,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition19__()
+  private boolean __autotransition374__()
   {
     boolean wasEventProcessed = false;
     
@@ -206,7 +240,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition20__()
+  private boolean __autotransition375__()
   {
     boolean wasEventProcessed = false;
     
@@ -226,7 +260,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition21__()
+  private boolean __autotransition376__()
   {
     boolean wasEventProcessed = false;
     
@@ -253,25 +287,33 @@ public class OpenPollController
     // entry actions and do activities
     switch(PollOpeningSteps)
     {
+      case ProvidingElectionsList:
+        ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();
+        __autotransition370__();
+        break;
       case ElectionsListProvided:
         selectAnElection();
-        __autotransition17__();
+        __autotransition371__();
+        break;
+      case ProvidingPollsList:
+        PollService.getInstance().setSelectedElection(selectedElection);polls=PollService.getInstance().getPolls();
+        __autotransition372__();
         break;
       case PollsListProvided:
-        selectAPoll();
-        __autotransition18__();
+        selectAPoll();PollService.getInstance().setSelectedPoll(selectedPoll);
+        __autotransition373__();
         break;
       case OpeningPoll:
-        pollOpened=PollService.getInstance().openPoll(theConnection, selectedPoll);
-        __autotransition19__();
-        __autotransition20__();
+        PollService.getInstance().openPoll();pollOpened=PollService.getInstance().getPollOpenned();
+        __autotransition374__();
+        __autotransition375__();
         break;
       case PollOpened:
         JOptionPane.showMessageDialog(null, "Poll is now open");
         break;
       case Failed:
         option=JOptionPane.showConfirmDialog(null, "Poll Opening Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
-        __autotransition21__();
+        __autotransition376__();
         break;
     }
   }
@@ -281,8 +323,7 @@ public class OpenPollController
 
 
   public void selectAnElection(){
-      List<Election> elections=ElectionService.getInstance().getAllElections(theConnection);
-		String[] electionNames=new String[elections.size()];
+      String[] electionNames=new String[elections.size()];
 		int i=0;
 		for (Election election:elections)
 			electionNames[i++]=election.getName();
@@ -295,14 +336,11 @@ public class OpenPollController
 			if (election.getName().equals(selectedElectionName))
 				selectedElection=election;
 		}
-		
-		//electionSelected();
   }
 
 
   public void selectAPoll(){
-      List<Poll> polls=PollService.getInstance().getElectionPolls(theConnection, selectedElection);
-		String[] pollNames=new String[polls.size()];
+      String[] pollNames=new String[polls.size()];
 		int i=0;
 		for (Poll poll:polls)
 			pollNames[i++]=poll.getName();
@@ -315,8 +353,6 @@ public class OpenPollController
 			if (poll.getName().equals(selectedPollName))
 				selectedPoll=poll;
 		}
-		
-		//pollSelected();
   }
 
 }

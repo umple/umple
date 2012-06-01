@@ -1,8 +1,8 @@
 generate Java;
 
-use java/startupRunner.ump;
-use java/startupController.ump;
-use java/openPollController.ump;
+use java/misc.ump;
+use java/usecases.ump;
 use shared/domain.ump;
 use java/electionService.ump;
 use java/pollService.ump;
+use java/view.ump;

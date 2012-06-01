@@ -1,6 +1,5 @@
 generate Php;
 
-use php/electionService.ump;
-use php/pollService.ump;
+use php/services.ump;
 use shared/domain.ump;
 use shared/login.ump;

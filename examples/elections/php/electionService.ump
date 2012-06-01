@@ -6,22 +6,35 @@ class ElectionService {
 	singleton;
 
 	lazy isConnected;
-	lazy String elections;
+	lazy elections;
+	lazy electionJSON;
 	
+	after setElectionJSON {
+		$this->createElection();
+	}
+		
 	ServiceProvidingCycle {
 		Idle {
 			getAllElections -> AllElectionsLoaded;
+			createElection -> CreatingElection;
 		}
 		AllElectionsLoaded {
 			entry / {$this->loadAllElections();}
 		}
+		CreatingElection {
+			entry / {$this->addElection();}
+		}
+	}
+
+	after constructor {
+		$this->newElection=NULL;
 	}
 
 	before setServiceProvidingCycle {
 		require_once("Credentials.php");
 		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
 	}
-		
+	
 	private function loadAllElections() {
   		$result = mysql_query("SELECT * FROM elections.election");
 
@@ -40,6 +53,14 @@ class ElectionService {
 		$this->elections=$this->elections.']}';
 
 		mysql_close($this->isConnected);
+	}
+	
+	private function addElection() {
+		$electionData=json_decode($this->electionJSON);
+		if (mysql_query("insert into elections.election (name, description) values ('$electionData->name', '$electionData->description')"))
+			echo 'Successfully added!';
+		else
+			echo mysql_error();
 	}
 	
 	private function jsonSerialize($anElection) {

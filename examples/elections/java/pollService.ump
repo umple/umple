@@ -8,37 +8,76 @@ class PollService {
 	depend java.sql.Connection;
 	depend java.sql.ResultSet;
     depend java.sql.Statement;
+    depend java.sql.DriverManager;
+    depend shared.Credentials;
 	
 	singleton;
 	
-	List<Poll> getElectionPolls(Connection theConnection, Election election) {
-		List<Poll> polls=new ArrayList<Poll>();
-		
+	lazy Poll selectedPoll;
+	lazy Election selectedElection;
+	lazy List<Poll> polls;
+	lazy Connection theConnection;
+	lazy Boolean pollOpenned;
+
+	after setSelectedElection
+	{
+		getElectionPolls();
+	}
+	
+	after setSelectedPoll
+	{
+		openPoll();
+	}
+
+	PollServiceCycle {
+		Idle {
+			getElectionPolls -> LoadingElectionPolls;
+		}
+		LoadingElectionPolls {
+			entry / {loadElectionPolls();}
+			openPoll -> OpenningPoll;
+		}
+		OpenningPoll {
+			entry / {tryToOpenPoll();}
+			-> Idle;
+		}
+	}
+	
+	before setPollServiceCycle
+	{
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+		}
+	}
+	
+	void loadElectionPolls() {
+		polls=new ArrayList<Poll>();
 		try {
 			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+election.getIdElection());
+			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+selectedElection.getIdElection());
 			while (rs.next()) {
 				String name = rs.getString("name");
 				String description = rs.getString("description");
 				int id=Integer.parseInt(rs.getString("id_poll"));
-				Poll poll=new Poll(id, name, description, election);
+				Poll poll=new Poll(id, name, description, selectedElection);
 				polls.add(poll);
 			}
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
-		
-		return polls;
 	}
 	
-	boolean openPoll(Connection theConnection, Poll poll) {
+	void tryToOpenPoll() {
 		try {
 			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("update elections.poll set status='open' where id_poll="+poll.getIdPoll());
-			return true;
+			stmt.executeUpdate("update elections.poll set status='open' where id_poll="+selectedPoll.getIdPoll());
+			pollOpenned=true;
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
-			return false;
+			pollOpenned=false;
 		}
 	}
 }

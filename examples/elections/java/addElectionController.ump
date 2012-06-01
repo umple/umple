@@ -1,0 +1,42 @@
+namespace usecase.addElection;
+
+class AddElectionController
+{
+	singleton;
+	
+	depend view.addElection.AddElectionView;
+    depend javax.swing.JOptionPane;
+    depend service.ElectionService;
+	depend shared.domain.Election;
+    
+    lazy internal AddElectionView addElectionView;
+    
+	ElectionAddingSteps {
+		Initial
+		{
+			addElection -> AddElectionViewShown;
+		}
+		AddElectionViewShown
+		{
+			entry / {showAddElectionView();}
+			addButtonClicked -> AddingElection;
+		}
+		AddingElection
+		{
+			entry / {tryToAddElection();}
+		}
+	}
+ 	
+ 	void showAddElectionView() {
+ 		addElectionView=new AddElectionView();
+ 		addElectionView.setVisible(true);
+	}
+	
+	void tryToAddElection() {
+		String electionName=addElectionView.getElectionName();
+		String electionDescription=addElectionView.getElectionDescription();
+		Election election=new Election(-1, electionName, electionDescription);
+		ElectionService.getInstance().setNewElection(election);
+		addElectionView.dispose();
+	}
+}
