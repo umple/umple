@@ -43,7 +43,9 @@ public class DocumenterTest
     parser = null;
     documenter = null;
   }
-  
+
+/*
+DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL 
   @Test
   public void NoSyntax()
   {
@@ -55,8 +57,6 @@ public class DocumenterTest
     SampleFileWriter.assertFileContent(expected,actual);
   }
 
-/*
-DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL
   
   @Test
   public void UmpleGrammar()
@@ -210,7 +210,7 @@ DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL
     System.out.println(actual2);
     SampleFileWriter.assertFileContent(expected2,actual2);
   }
-*/
+
   
   @Test
   public void generate_noSyntaxIsOkay()
@@ -225,7 +225,7 @@ DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL
     // System.out.println(actual);
     SampleFileWriter.assertFileContent(expected,actual);
   }
-
+*/
   
   private void assertParse(String filename)
   {
