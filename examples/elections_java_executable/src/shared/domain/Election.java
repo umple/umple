@@ -106,5 +106,12 @@ public class Election
 
   public void delete()
   {}
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String toString() {
+		return name;
+	}
 }

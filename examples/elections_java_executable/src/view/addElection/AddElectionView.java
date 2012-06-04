@@ -8,6 +8,9 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import shared.listeners.GenericMouseListener;
+import shared.listeners.GenericWindowListener;
+import view.ViewUtils;
+import view.addPoll.*;
 
 public class AddElectionView extends JFrame
 {
@@ -22,6 +25,8 @@ public class AddElectionView extends JFrame
   private JTextField electionNameTextField;
   private JTextArea electionDescriptionTextArea;
   private JButton addElectionButton;
+  private String electionName;
+  private String electionDescription;
 
   //------------------------
   // CONSTRUCTOR
@@ -30,6 +35,8 @@ public class AddElectionView extends JFrame
   public AddElectionView()
   {
     super();
+    electionName = null;
+    electionDescription = null;
     getContentPane().setLayout(null);
 	
 		electionNameLabel=new JLabel("Election Name:");
@@ -53,27 +60,45 @@ public class AddElectionView extends JFrame
 		addElectionButton.addMouseListener(GenericMouseListener.AddElectionViewMouseListener);
 		add(addElectionButton);
 		
-		setLocationRelativeTo(null);
-		
 		pack();
 		setSize(250, 200);
+		ViewUtils.getInstance().setToBeCenteredFrame(this);
+		addWindowListener(GenericWindowListener.AddElectionViewWindowListener);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
+  public boolean setElectionName(String aElectionName)
+  {
+    boolean wasSet = false;
+    electionName = aElectionName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setElectionDescription(String aElectionDescription)
+  {
+    boolean wasSet = false;
+    electionDescription = aElectionDescription;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getElectionName()
+  {
+    electionName=electionNameTextField.getText();
+    return electionName;
+  }
+
+  public String getElectionDescription()
+  {
+    electionDescription=electionDescriptionTextArea.getText();
+    return electionDescription;
+  }
+
   public void delete()
   {}
-
-
-  public String getElectionName(){
-      return electionNameTextField.getText();
-  }
-
-
-  public String getElectionDescription(){
-      return electionDescriptionTextArea.getText();
-  }
 
 }

@@ -19,6 +19,7 @@ class ElectionService
   private $isConnected;
   private $elections;
   private $electionJSON;
+  private $latestResult;
 
   //ElectionService State Machines
   private static $ServiceProvidingCycleIdle = 1;
@@ -35,6 +36,7 @@ class ElectionService
     $this->isConnected = NULL;
     $this->elections = NULL;
     $this->electionJSON = NULL;
+    $this->latestResult = NULL;
     $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
     $this->newElection=NULL;
   }
@@ -77,6 +79,14 @@ class ElectionService
     return $wasSet;
   }
 
+  public function setLatestResult($aLatestResult)
+  {
+    $wasSet = false;
+    $this->latestResult = $aLatestResult;
+    $wasSet = true;
+    return $wasSet;
+  }
+
   public function getIsConnected()
   {
     return $this->isConnected;
@@ -84,12 +94,18 @@ class ElectionService
 
   public function getElections()
   {
+    $this->getAllElections();
     return $this->elections;
   }
 
   public function getElectionJSON()
   {
     return $this->electionJSON;
+  }
+
+  public function getLatestResult()
+  {
+    return $this->latestResult;
   }
 
   public function getServiceProvidingCycleFullName()
@@ -184,9 +200,9 @@ class ElectionService
 	private function addElection() {
 		$electionData=json_decode($this->electionJSON);
 		if (mysql_query("insert into elections.election (name, description) values ('$electionData->name', '$electionData->description')"))
-			echo 'Successfully added!';
+			$this->latestResult='Successfully added!';
 		else
-			echo mysql_error();
+			$this->latestResult=mysql_error();
 	}
 	
 	private function jsonSerialize($anElection) {

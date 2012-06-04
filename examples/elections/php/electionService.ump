@@ -8,11 +8,16 @@ class ElectionService {
 	lazy isConnected;
 	lazy elections;
 	lazy electionJSON;
+	lazy latestResult;
 	
 	after setElectionJSON {
 		$this->createElection();
 	}
-		
+	
+	before getElections {
+		$this->getAllElections();
+	}
+	
 	ServiceProvidingCycle {
 		Idle {
 			getAllElections -> AllElectionsLoaded;
@@ -58,9 +63,9 @@ class ElectionService {
 	private function addElection() {
 		$electionData=json_decode($this->electionJSON);
 		if (mysql_query("insert into elections.election (name, description) values ('$electionData->name', '$electionData->description')"))
-			echo 'Successfully added!';
+			$this->latestResult='Successfully added!';
 		else
-			echo mysql_error();
+			$this->latestResult=mysql_error();
 	}
 	
 	private function jsonSerialize($anElection) {

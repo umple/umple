@@ -15,16 +15,23 @@ class ElectionService {
 	lazy Election newElection;
 	lazy List<Election> elections;
 	lazy internal Connection theConnection;
-	lazy boolean electionAdded;
+	lazy Boolean electionAdded;
+	lazy String electionNameToSearch;
+	lazy Boolean electionFound;
 
 	after setNewElection {
 		createElection();
+	}
+
+	after setElectionNameToSearch {
+		findElectionByName();
 	}
 
 	ElectionServiceCycle {
 		Idle {
 			getAllElections -> LoadingAllElections;
 			createElection -> CreatingElection;
+			findElectionByName -> FindingElectionByName;
 		}
 		LoadingAllElections {
 			entry / {loadAllElections();}
@@ -32,6 +39,10 @@ class ElectionService {
 		}
 		CreatingElection {
 			entry / {addElection();}
+			-> Idle;
+		}
+		FindingElectionByName {
+			entry / {tryFindingElectionByName();}
 			-> Idle;
 		}
 	}
@@ -71,6 +82,19 @@ class ElectionService {
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 			electionAdded=false;
+		}
+	}
+	
+	private void tryFindingElectionByName() {
+		electionFound=true;
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM election where name='"+electionNameToSearch+"'");
+			if (!rs.next())
+				electionFound=false;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			electionFound=false;
 		}
 	}
 }

@@ -15,6 +15,7 @@ class OpenPollController
     depend javax.swing.JOptionPane;
     depend service.ElectionService;
     depend service.PollService;
+	depend usecase.startup.Controller;
 
 	lazy Connection theConnection;
 	lazy Election selectedElection;
@@ -56,11 +57,17 @@ class OpenPollController
 			[!pollOpened] -> Failed;
 		}
 	    PollOpened {
-	      	entry / {JOptionPane.showMessageDialog(null, "Poll is now open");}
+	      	entry / {JOptionPane.showMessageDialog(null, "Poll is now open"); Controller.getInstance().start();}
 	    }
 	    Failed {
 	      	entry / {option=JOptionPane.showConfirmDialog(null, "Poll Opening Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
 	      	[option==JOptionPane.YES_OPTION] -> ElectionsListProvided;
+	      	[option==JOptionPane.NO_OPTION] -> Done;
+	    }
+	    Done 
+	    {
+	    	entry / {Controller.getInstance().start();}
+	    	-> Initial
 	    }
 	}
  	

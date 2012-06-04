@@ -31,9 +31,11 @@ public class PollService
   private List<Poll> polls;
   private Connection theConnection;
   private boolean pollOpenned;
+  private Poll newPoll;
+  private boolean pollAdded;
 
   //PollService State Machines
-  enum PollServiceCycle { Idle, LoadingElectionPolls, OpenningPoll }
+  enum PollServiceCycle { Idle, LoadingElectionPolls, OpenningPoll, CreatingPoll }
   private PollServiceCycle PollServiceCycle;
 
   //------------------------
@@ -43,6 +45,7 @@ public class PollService
   private PollService()
   {
     pollOpenned = false;
+    pollAdded = false;
     setPollServiceCycle(PollServiceCycle.Idle);
   }
 
@@ -101,6 +104,23 @@ public class PollService
     return wasSet;
   }
 
+  public boolean setNewPoll(Poll aNewPoll)
+  {
+    boolean wasSet = false;
+    newPoll = aNewPoll;
+    wasSet = true;
+    createPoll();
+    return wasSet;
+  }
+
+  public boolean setPollAdded(boolean aPollAdded)
+  {
+    boolean wasSet = false;
+    pollAdded = aPollAdded;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Poll getSelectedPoll()
   {
     return selectedPoll;
@@ -126,9 +146,24 @@ public class PollService
     return pollOpenned;
   }
 
+  public Poll getNewPoll()
+  {
+    return newPoll;
+  }
+
+  public boolean getPollAdded()
+  {
+    return pollAdded;
+  }
+
   public boolean isPollOpenned()
   {
     return pollOpenned;
+  }
+
+  public boolean isPollAdded()
+  {
+    return pollAdded;
   }
 
   public String getPollServiceCycleFullName()
@@ -158,6 +193,22 @@ public class PollService
     return wasEventProcessed;
   }
 
+  public boolean createPoll()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollServiceCycle aPollServiceCycle = PollServiceCycle;
+    switch (aPollServiceCycle)
+    {
+      case Idle:
+        setPollServiceCycle(PollServiceCycle.CreatingPoll);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   public boolean openPoll()
   {
     boolean wasEventProcessed = false;
@@ -167,6 +218,38 @@ public class PollService
     {
       case LoadingElectionPolls:
         setPollServiceCycle(PollServiceCycle.OpenningPoll);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition185__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollServiceCycle aPollServiceCycle = PollServiceCycle;
+    switch (aPollServiceCycle)
+    {
+      case OpenningPoll:
+        setPollServiceCycle(PollServiceCycle.Idle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition186__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollServiceCycle aPollServiceCycle = PollServiceCycle;
+    switch (aPollServiceCycle)
+    {
+      case CreatingPoll:
+        setPollServiceCycle(PollServiceCycle.Idle);
         wasEventProcessed = true;
         break;
     }
@@ -192,6 +275,11 @@ public class PollService
         break;
       case OpenningPoll:
         tryToOpenPoll();
+        __autotransition185__();
+        break;
+      case CreatingPoll:
+        addPoll();
+        __autotransition186__();
         break;
     }
   }
@@ -226,6 +314,18 @@ public class PollService
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 			pollOpenned=false;
+		}
+  }
+
+
+  public void addPoll(){
+      try {
+			Statement stmt = theConnection.createStatement();
+			stmt.executeUpdate("insert into elections.poll (election_id_election, name, description) values ('"+newPoll.getElection().getIdElection()+"', '"+newPoll.getName()+"', '"+newPoll.getDescription()+"')");
+			pollAdded=true;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			pollAdded=false;
 		}
   }
 

@@ -6,6 +6,7 @@ import view.addElection.AddElectionView;
 import javax.swing.JOptionPane;
 import service.ElectionService;
 import shared.domain.Election;
+import usecase.startup.Controller;
 
 public class AddElectionController
 {
@@ -22,9 +23,11 @@ public class AddElectionController
 
   //AddElectionController Attributes
   private AddElectionView addElectionView;
+  private String electionName;
+  private boolean electionFound;
 
   //AddElectionController State Machines
-  enum ElectionAddingSteps { Initial, AddElectionViewShown, AddingElection }
+  enum ElectionAddingSteps { Initial, AddElectionViewShown, CheckingElectionName, CheckingExistingElection, AddingElection, ElectionAdded, ElectionNotAdded, ElectionExists, ElectionNameEmpty, ClosingView }
   private ElectionAddingSteps ElectionAddingSteps;
 
   //------------------------
@@ -33,6 +36,8 @@ public class AddElectionController
 
   private AddElectionController()
   {
+    electionName = null;
+    electionFound = false;
     setElectionAddingSteps(ElectionAddingSteps.Initial);
   }
 
@@ -84,7 +89,215 @@ public class AddElectionController
     switch (aElectionAddingSteps)
     {
       case AddElectionViewShown:
-        setElectionAddingSteps(ElectionAddingSteps.AddingElection);
+        setElectionAddingSteps(ElectionAddingSteps.CheckingElectionName);
+        wasEventProcessed = true;
+        break;
+      case ElectionNameEmpty:
+        setElectionAddingSteps(ElectionAddingSteps.CheckingElectionName);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean closeView()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case AddElectionViewShown:
+        setElectionAddingSteps(ElectionAddingSteps.ClosingView);
+        wasEventProcessed = true;
+        break;
+      case ElectionNameEmpty:
+        setElectionAddingSteps(ElectionAddingSteps.ClosingView);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition997__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case CheckingElectionName:
+        if (electionName.trim().isEmpty())
+        {
+          setElectionAddingSteps(ElectionAddingSteps.ElectionNameEmpty);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition998__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case CheckingElectionName:
+        if (!electionName.trim().isEmpty())
+        {
+          setElectionAddingSteps(ElectionAddingSteps.CheckingExistingElection);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition999__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case CheckingExistingElection:
+        if (!electionFound)
+        {
+          setElectionAddingSteps(ElectionAddingSteps.AddingElection);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1000__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case CheckingExistingElection:
+        if (electionFound)
+        {
+          setElectionAddingSteps(ElectionAddingSteps.ElectionExists);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1001__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case AddingElection:
+        if (ElectionService.getInstance().getElectionAdded())
+        {
+          setElectionAddingSteps(ElectionAddingSteps.ElectionAdded);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1002__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case AddingElection:
+        if (ElectionService.getInstance().getElectionAdded())
+        {
+          setElectionAddingSteps(ElectionAddingSteps.ElectionNotAdded);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1003__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case ElectionAdded:
+        setElectionAddingSteps(ElectionAddingSteps.Initial);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1004__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case ElectionNotAdded:
+        setElectionAddingSteps(ElectionAddingSteps.Initial);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1005__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case ElectionExists:
+        setElectionAddingSteps(ElectionAddingSteps.Initial);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1006__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionAddingSteps aElectionAddingSteps = ElectionAddingSteps;
+    switch (aElectionAddingSteps)
+    {
+      case ClosingView:
+        setElectionAddingSteps(ElectionAddingSteps.Initial);
         wasEventProcessed = true;
         break;
     }
@@ -102,8 +315,42 @@ public class AddElectionController
       case AddElectionViewShown:
         showAddElectionView();
         break;
+      case CheckingElectionName:
+        electionName=addElectionView.getElectionName();
+        __autotransition997__();
+        __autotransition998__();
+        break;
+      case CheckingExistingElection:
+        ElectionService.getInstance().setElectionNameToSearch(electionName);
+					electionFound=ElectionService.getInstance().getElectionFound();
+        __autotransition999__();
+        __autotransition1000__();
+        break;
       case AddingElection:
         tryToAddElection();
+        __autotransition1001__();
+        __autotransition1002__();
+        break;
+      case ElectionAdded:
+        JOptionPane.showMessageDialog(null, "Election Added Successfully!"); Controller.getInstance().start();
+        __autotransition1003__();
+        break;
+      case ElectionNotAdded:
+        JOptionPane.showMessageDialog(null, "Adding Election Failed!"); Controller.getInstance().start();
+        __autotransition1004__();
+        break;
+      case ElectionExists:
+        JOptionPane.showMessageDialog(null, "Election Exists!");
+					addElectionView.dispose();
+					Controller.getInstance().start();
+        __autotransition1005__();
+        break;
+      case ElectionNameEmpty:
+        JOptionPane.showMessageDialog(null, "Election name cannot be empty!");
+        break;
+      case ClosingView:
+        addElectionView.dispose();
+        __autotransition1006__();
         break;
     }
   }
@@ -119,7 +366,7 @@ public class AddElectionController
 
 
   public void tryToAddElection(){
-      String electionName=addElectionView.getElectionName();
+      electionName=addElectionView.getElectionName();
 		String electionDescription=addElectionView.getElectionDescription();
 		Election election=new Election(-1, electionName, electionDescription);
 		ElectionService.getInstance().setNewElection(election);

@@ -2,63 +2,47 @@ namespace usecase.startup;
 
 class Controller
 {
+	singleton;
+	
 	depend java.sql.Connection;
 	depend java.sql.DriverManager;
     depend javax.swing.JOptionPane;
-    
+    depend usecase.addPoll.AddPollController;
     depend usecase.openPoll.OpenPollController;
     depend usecase.addElection.AddElectionController;
-    
-    Connection theConnection=null;
-    
-    String server;
-    String username;
-    String password;
-    
-    boolean isConnected=false;
-    int option=JOptionPane.NO_OPTION;
-    Object mainMenuOption="Quit";
 
-    void tryToConnect()
-    {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection(server, username, password);
-			
-			isConnected=true;;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			isConnected=false;
-		}
-    }
+    lazy internal int option=JOptionPane.NO_OPTION;
+    lazy internal Object mainMenuOption="Quit";
     
     void showMainMenu()
     {
-    	String[] selectionValues={"Open Poll", "Add Election", "Quit"};
+    	String[] selectionValues={"Open Poll", "Add Election", "Add Poll", "Quit"};
 		String defaultSelection = "Open Poll";
 		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
     }
     
     status {
-      Connecting {
-      	  entry / {tryToConnect();}
-          [isConnected] -> Connected;
-          [!isConnected] -> Failed;
+      Initial
+      {
+      	start -> ProvidingMainMenu;
       }
-      Connected {
+      ProvidingMainMenu {
       	entry / {showMainMenu();}
-      	[mainMenuOption.equals("Open Poll")] -> PollOpening;
-      	[mainMenuOption.equals("Add Election")] -> ElectionAdding;
-      }
-      Failed {
-      	entry / {option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
-      	[option==JOptionPane.YES_OPTION] -> Connecting;
+      	[mainMenuOption!=null && mainMenuOption.equals("Open Poll")] -> PollOpening;
+      	[mainMenuOption!=null && mainMenuOption.equals("Add Election")] -> ElectionAdding;
+      	[mainMenuOption!=null && mainMenuOption.equals("Add Poll")] -> PollAdding;
       }
       PollOpening {
-      	entry / {OpenPollController.getInstance().setTheConnection(theConnection);OpenPollController.getInstance().openPoll();}
+      	entry / {OpenPollController.getInstance().openPoll();}
+      	start -> ProvidingMainMenu;
       }
       ElectionAdding {
-      	entry / {/*AddElectionController.getInstance().setTheConnection(theConnection);*/AddElectionController.getInstance().addElection();}
+      	entry / {AddElectionController.getInstance().addElection();}
+      	start -> ProvidingMainMenu;
       }
-}
+      PollAdding {
+      	entry / {AddPollController.getInstance().addPoll();}
+      	start -> ProvidingMainMenu;
+      }
+	}
 }

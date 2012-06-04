@@ -11,12 +11,25 @@ class AddElectionView {
 	depend javax.swing.JTextArea;
 	depend javax.swing.JButton;
 	depend shared.listeners.GenericMouseListener;
+	depend shared.listeners.GenericWindowListener;
+	depend view.ViewUtils;
 
 	lazy internal JLabel electionNameLabel;
 	lazy internal JLabel electionDescriptionLabel;
 	lazy internal JTextField electionNameTextField;
 	lazy internal JTextArea electionDescriptionTextArea;
 	lazy internal JButton addElectionButton;
+	
+	lazy String electionName;
+	lazy String electionDescription;
+	
+	before getElectionName {
+		electionName=electionNameTextField.getText();
+	}
+	
+	before getElectionDescription {
+		electionDescription=electionDescriptionTextArea.getText();
+	}
 	
 	after constructor {
 		getContentPane().setLayout(null);
@@ -42,19 +55,9 @@ class AddElectionView {
 		addElectionButton.addMouseListener(GenericMouseListener.AddElectionViewMouseListener);
 		add(addElectionButton);
 		
-		setLocationRelativeTo(null);
-		
 		pack();
 		setSize(250, 200);
-	}
-	
-	String getElectionName()
-	{
-		return electionNameTextField.getText();
-	}
-	
-	String getElectionDescription()
-	{
-		return electionDescriptionTextArea.getText();
+		ViewUtils.getInstance().setToBeCenteredFrame(this);
+		addWindowListener(GenericWindowListener.AddElectionViewWindowListener);
 	}
 }

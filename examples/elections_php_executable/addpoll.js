@@ -22,48 +22,26 @@ function loadAllElections() {
 	request.send(params)
 }
 
-function loadElectionPolls(elections) {
-	idElection=elections.options[elections.selectedIndex].value;
-	request = new ajaxRequest()
-	var params = "action=loadElectionPolls&idElection="+idElection;
-	request.open("POST", "openpoll.php", false);
+function addPoll() {
+	request = new ajaxRequest();
+	
+	var pollName=document.getElementById('pollName').value;
+	var pollDescription=document.getElementById('pollDescription').value;
+	var electionId=document.getElementById('elections').value;
+	var pollJSON=JSON.stringify({'election': electionId, 'name': pollName, 'description': pollDescription});
+	var params = "action=addPoll&pollJSON="+pollJSON;
+	request.open("POST", "addpoll.php", false);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	request.setRequestHeader("Content-length", params.length);
 	request.setRequestHeader("Connection", "close");
 	request.onreadystatechange = function() {
 	if(request.readyState == 4 && request.status == 200) {
 			var txt=request.responseText;
-			var obj = JSON.parse(txt);
-			var options="";
-			for (i=0;i<obj.polls.length;i++) {
-				options+='<option value="'+obj.polls[i].idpoll+'">'
-						+obj.polls[i].name+' ('+obj.polls[i].description+' '+obj.polls[i].theElection+')</option>';
-			}
-			document.getElementById('polls').innerHTML=options;
+			alert(txt);
+			document.getElementById('result').innerHTML=txt;
 		}
 	}
 	request.send(params)
-}
-
-function openPoll() {
-	polls=document.getElementById('polls');
-	if (polls.selectedIndex!=-1) {
-		idPoll=polls.options[polls.selectedIndex].value;
-		request = new ajaxRequest()
-		var params = "action=openPoll&idpoll="+idPoll;
-		request.open("POST", "openpoll.php", false);
-		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		request.setRequestHeader("Content-length", params.length);
-		request.setRequestHeader("Connection", "close");
-		request.onreadystatechange = function() {
-		if(request.readyState == 4 && request.status == 200) {
-				var txt=request.responseText;
-				
-				document.getElementById('result').innerHTML=txt;
-			}
-		}
-		request.send(params)
-	}
 }
 
 function ajaxRequest() {

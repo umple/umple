@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import service.ElectionService;
 import service.PollService;
+import usecase.startup.Controller;
 
 public class OpenPollController
 {
@@ -37,7 +38,7 @@ public class OpenPollController
   private List<Poll> polls;
 
   //OpenPollController State Machines
-  enum PollOpeningSteps { Initial, ProvidingElectionsList, ElectionsListProvided, ProvidingPollsList, PollsListProvided, OpeningPoll, PollOpened, Failed }
+  enum PollOpeningSteps { Initial, ProvidingElectionsList, ElectionsListProvided, ProvidingPollsList, PollsListProvided, OpeningPoll, PollOpened, Failed, Done }
   private PollOpeningSteps PollOpeningSteps;
 
   //------------------------
@@ -156,7 +157,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition370__()
+  private boolean __autotransition803__()
   {
     boolean wasEventProcessed = false;
     
@@ -172,7 +173,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition371__()
+  private boolean __autotransition804__()
   {
     boolean wasEventProcessed = false;
     
@@ -188,7 +189,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition372__()
+  private boolean __autotransition805__()
   {
     boolean wasEventProcessed = false;
     
@@ -204,7 +205,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition373__()
+  private boolean __autotransition806__()
   {
     boolean wasEventProcessed = false;
     
@@ -220,7 +221,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition374__()
+  private boolean __autotransition807__()
   {
     boolean wasEventProcessed = false;
     
@@ -240,7 +241,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition375__()
+  private boolean __autotransition808__()
   {
     boolean wasEventProcessed = false;
     
@@ -260,7 +261,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition376__()
+  private boolean __autotransition809__()
   {
     boolean wasEventProcessed = false;
     
@@ -280,6 +281,42 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
+  private boolean __autotransition810__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollOpeningSteps aPollOpeningSteps = PollOpeningSteps;
+    switch (aPollOpeningSteps)
+    {
+      case Failed:
+        if (option==JOptionPane.NO_OPTION)
+        {
+          setPollOpeningSteps(PollOpeningSteps.Done);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition811__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollOpeningSteps aPollOpeningSteps = PollOpeningSteps;
+    switch (aPollOpeningSteps)
+    {
+      case Done:
+        setPollOpeningSteps(PollOpeningSteps.Initial);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   private void setPollOpeningSteps(PollOpeningSteps aPollOpeningSteps)
   {
     PollOpeningSteps = aPollOpeningSteps;
@@ -289,31 +326,36 @@ public class OpenPollController
     {
       case ProvidingElectionsList:
         ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();
-        __autotransition370__();
+        __autotransition803__();
         break;
       case ElectionsListProvided:
         selectAnElection();
-        __autotransition371__();
+        __autotransition804__();
         break;
       case ProvidingPollsList:
         PollService.getInstance().setSelectedElection(selectedElection);polls=PollService.getInstance().getPolls();
-        __autotransition372__();
+        __autotransition805__();
         break;
       case PollsListProvided:
         selectAPoll();PollService.getInstance().setSelectedPoll(selectedPoll);
-        __autotransition373__();
+        __autotransition806__();
         break;
       case OpeningPoll:
         PollService.getInstance().openPoll();pollOpened=PollService.getInstance().getPollOpenned();
-        __autotransition374__();
-        __autotransition375__();
+        __autotransition807__();
+        __autotransition808__();
         break;
       case PollOpened:
-        JOptionPane.showMessageDialog(null, "Poll is now open");
+        JOptionPane.showMessageDialog(null, "Poll is now open"); Controller.getInstance().start();
         break;
       case Failed:
         option=JOptionPane.showConfirmDialog(null, "Poll Opening Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
-        __autotransition376__();
+        __autotransition809__();
+        __autotransition810__();
+        break;
+      case Done:
+        Controller.getInstance().start();
+        __autotransition811__();
         break;
     }
   }

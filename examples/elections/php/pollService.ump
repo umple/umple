@@ -10,17 +10,29 @@ class PollService {
 	lazy String allPolls;
 	lazy String latestResult;
 	lazy isConnected;
+	lazy pollJSON;
+	
+	after setPollJSON {
+		$this->createPoll();
+	}
 
 	ServiceProvidingCycle {
 		Idle {
-			getElectionPolls -> ElectionPollsLoaded;
-			openPoll -> PollOpened;
+			getElectionPolls -> LoadingElectionPolls;
+			openPoll -> OpeningPoll;
+			createPoll -> CreatingPoll;
 		}
-		ElectionPollsLoaded {
+		LoadingElectionPolls {
 			entry / {$this->loadElectionPolls($this->idElection);}
+			-> Idle;
 		}
-		PollOpened {
+		OpeningPoll {
 			entry / {$this->tryToOpenPoll($this->idpoll);}
+			-> Idle;
+		}
+		CreatingPoll {
+			entry / {$this->tryToCreatePoll();}
+			-> Idle;
 		}
 	}
 
@@ -28,10 +40,6 @@ class PollService {
 		require_once("Credentials.php");
 		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
 	}
-	
-/*	after setServiceProvidingCycle {
-		mysql_close($this->isConnected);
-	}*/
 
 	private function loadElectionPolls($idElection) {
 		$result = mysql_query("SELECT * FROM elections.election where id_election=$idElection");
@@ -70,6 +78,15 @@ class PollService {
 			$this->latestResult='Poll open!';
 		else
 			$this->latestResult='An error occured!';
+	}
+	
+		
+	private function tryToCreatePoll() {
+		$pollData=json_decode($this->pollJSON);
+		if (mysql_query("insert into elections.poll (election_id_election, name, description) values ('$pollData->election', '$pollData->name', '$pollData->description')"))
+			$this->latestResult='Successfully added!';
+		else
+			$this->latestResult=mysql_error();
 	}
 	
 	private function jsonSerialize($aPoll) {

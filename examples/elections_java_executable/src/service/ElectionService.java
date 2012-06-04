@@ -29,9 +29,11 @@ public class ElectionService
   private List<Election> elections;
   private Connection theConnection;
   private boolean electionAdded;
+  private String electionNameToSearch;
+  private boolean electionFound;
 
   //ElectionService State Machines
-  enum ElectionServiceCycle { Idle, LoadingAllElections, CreatingElection }
+  enum ElectionServiceCycle { Idle, LoadingAllElections, CreatingElection, FindingElectionByName }
   private ElectionServiceCycle ElectionServiceCycle;
 
   //------------------------
@@ -40,6 +42,9 @@ public class ElectionService
 
   private ElectionService()
   {
+    electionAdded = false;
+    electionNameToSearch = null;
+    electionFound = false;
     setElectionServiceCycle(ElectionServiceCycle.Idle);
   }
 
@@ -81,6 +86,23 @@ public class ElectionService
     return wasSet;
   }
 
+  public boolean setElectionNameToSearch(String aElectionNameToSearch)
+  {
+    boolean wasSet = false;
+    electionNameToSearch = aElectionNameToSearch;
+    wasSet = true;
+    findElectionByName();
+    return wasSet;
+  }
+
+  public boolean setElectionFound(boolean aElectionFound)
+  {
+    boolean wasSet = false;
+    electionFound = aElectionFound;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Election getNewElection()
   {
     return newElection;
@@ -94,6 +116,26 @@ public class ElectionService
   public boolean getElectionAdded()
   {
     return electionAdded;
+  }
+
+  public String getElectionNameToSearch()
+  {
+    return electionNameToSearch;
+  }
+
+  public boolean getElectionFound()
+  {
+    return electionFound;
+  }
+
+  public boolean isElectionAdded()
+  {
+    return electionAdded;
+  }
+
+  public boolean isElectionFound()
+  {
+    return electionFound;
   }
 
   public String getElectionServiceCycleFullName()
@@ -139,7 +181,23 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition46__()
+  public boolean findElectionByName()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionServiceCycle aElectionServiceCycle = ElectionServiceCycle;
+    switch (aElectionServiceCycle)
+    {
+      case Idle:
+        setElectionServiceCycle(ElectionServiceCycle.FindingElectionByName);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition858__()
   {
     boolean wasEventProcessed = false;
     
@@ -155,7 +213,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition47__()
+  private boolean __autotransition859__()
   {
     boolean wasEventProcessed = false;
     
@@ -163,6 +221,22 @@ public class ElectionService
     switch (aElectionServiceCycle)
     {
       case CreatingElection:
+        setElectionServiceCycle(ElectionServiceCycle.Idle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition860__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionServiceCycle aElectionServiceCycle = ElectionServiceCycle;
+    switch (aElectionServiceCycle)
+    {
+      case FindingElectionByName:
         setElectionServiceCycle(ElectionServiceCycle.Idle);
         wasEventProcessed = true;
         break;
@@ -186,11 +260,15 @@ public class ElectionService
     {
       case LoadingAllElections:
         loadAllElections();
-        __autotransition46__();
+        __autotransition858__();
         break;
       case CreatingElection:
         addElection();
-        __autotransition47__();
+        __autotransition859__();
+        break;
+      case FindingElectionByName:
+        tryFindingElectionByName();
+        __autotransition860__();
         break;
     }
   }
@@ -228,5 +306,21 @@ public class ElectionService
 			electionAdded=false;
 		}
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  private void tryFindingElectionByName() {
+		electionFound=true;
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM election where name='"+electionNameToSearch+"'");
+			if (!rs.next())
+				electionFound=false;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			electionFound=false;
+		}
+	}
 }

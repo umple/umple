@@ -18,6 +18,8 @@ class PollService {
 	lazy List<Poll> polls;
 	lazy Connection theConnection;
 	lazy Boolean pollOpenned;
+	lazy Poll newPoll;
+	lazy Boolean pollAdded;
 
 	after setSelectedElection
 	{
@@ -28,10 +30,16 @@ class PollService {
 	{
 		openPoll();
 	}
+	
+	after setNewPoll
+	{
+		createPoll();
+	}
 
 	PollServiceCycle {
 		Idle {
 			getElectionPolls -> LoadingElectionPolls;
+			createPoll -> CreatingPoll;
 		}
 		LoadingElectionPolls {
 			entry / {loadElectionPolls();}
@@ -39,6 +47,11 @@ class PollService {
 		}
 		OpenningPoll {
 			entry / {tryToOpenPoll();}
+			-> Idle;
+		}
+		CreatingPoll
+		{
+			entry / {addPoll();}
 			-> Idle;
 		}
 	}
@@ -78,6 +91,18 @@ class PollService {
 		} catch(Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 			pollOpenned=false;
+		}
+	}
+	
+		
+	void addPoll() {
+		try {
+			Statement stmt = theConnection.createStatement();
+			stmt.executeUpdate("insert into elections.poll (election_id_election, name, description) values ('"+newPoll.getElection().getIdElection()+"', '"+newPoll.getName()+"', '"+newPoll.getDescription()+"')");
+			pollAdded=true;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			pollAdded=false;
 		}
 	}
 }

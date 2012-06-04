@@ -21,11 +21,13 @@ class PollService
   private $allPolls;
   private $latestResult;
   private $isConnected;
+  private $pollJSON;
 
   //PollService State Machines
   private static $ServiceProvidingCycleIdle = 1;
-  private static $ServiceProvidingCycleElectionPollsLoaded = 2;
-  private static $ServiceProvidingCyclePollOpened = 3;
+  private static $ServiceProvidingCycleLoadingElectionPolls = 2;
+  private static $ServiceProvidingCycleOpeningPoll = 3;
+  private static $ServiceProvidingCycleCreatingPoll = 4;
   private $ServiceProvidingCycle;
 
   //------------------------
@@ -39,6 +41,7 @@ class PollService
     $this->allPolls = NULL;
     $this->latestResult = NULL;
     $this->isConnected = NULL;
+    $this->pollJSON = NULL;
     $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
   }
 
@@ -95,6 +98,15 @@ class PollService
     return $wasSet;
   }
 
+  public function setPollJSON($aPollJSON)
+  {
+    $wasSet = false;
+    $this->pollJSON = $aPollJSON;
+    $wasSet = true;
+    $this->createPoll();
+    return $wasSet;
+  }
+
   public function getIdElection()
   {
     return $this->idElection;
@@ -120,6 +132,11 @@ class PollService
     return $this->isConnected;
   }
 
+  public function getPollJSON()
+  {
+    return $this->pollJSON;
+  }
+
   public function getServiceProvidingCycleFullName()
   {
     $answer = $this->getServiceProvidingCycle();
@@ -129,8 +146,9 @@ class PollService
   public function getServiceProvidingCycle()
   {
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleIdle) { return "ServiceProvidingCycleIdle"; }
-    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleElectionPollsLoaded) { return "ServiceProvidingCycleElectionPollsLoaded"; }
-    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCyclePollOpened) { return "ServiceProvidingCyclePollOpened"; }
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleLoadingElectionPolls) { return "ServiceProvidingCycleLoadingElectionPolls"; }
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleOpeningPoll) { return "ServiceProvidingCycleOpeningPoll"; }
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleCreatingPoll) { return "ServiceProvidingCycleCreatingPoll"; }
     return null;
   }
 
@@ -141,7 +159,7 @@ class PollService
     $aServiceProvidingCycle = $this->ServiceProvidingCycle;
     if ($aServiceProvidingCycle == self::$ServiceProvidingCycleIdle)
     {
-      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleElectionPollsLoaded);
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleLoadingElectionPolls);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -154,7 +172,59 @@ class PollService
     $aServiceProvidingCycle = $this->ServiceProvidingCycle;
     if ($aServiceProvidingCycle == self::$ServiceProvidingCycleIdle)
     {
-      $this->setServiceProvidingCycle(self::$ServiceProvidingCyclePollOpened);
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleOpeningPoll);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function createPoll()
+  {
+    $wasEventProcessed = false;
+    
+    $aServiceProvidingCycle = $this->ServiceProvidingCycle;
+    if ($aServiceProvidingCycle == self::$ServiceProvidingCycleIdle)
+    {
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleCreatingPoll);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition244__()
+  {
+    $wasEventProcessed = false;
+    
+    $aServiceProvidingCycle = $this->ServiceProvidingCycle;
+    if ($aServiceProvidingCycle == self::$ServiceProvidingCycleLoadingElectionPolls)
+    {
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition245__()
+  {
+    $wasEventProcessed = false;
+    
+    $aServiceProvidingCycle = $this->ServiceProvidingCycle;
+    if ($aServiceProvidingCycle == self::$ServiceProvidingCycleOpeningPoll)
+    {
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition246__()
+  {
+    $wasEventProcessed = false;
+    
+    $aServiceProvidingCycle = $this->ServiceProvidingCycle;
+    if ($aServiceProvidingCycle == self::$ServiceProvidingCycleCreatingPoll)
+    {
+      $this->setServiceProvidingCycle(self::$ServiceProvidingCycleIdle);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
@@ -167,13 +237,17 @@ class PollService
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
-    if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleElectionPollsLoaded)
+    if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleLoadingElectionPolls)
     {
       $this->loadElectionPolls($this->idElection);
     }
-    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCyclePollOpened)
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleOpeningPoll)
     {
       $this->tryToOpenPoll($this->idpoll);
+    }
+    elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleCreatingPoll)
+    {
+      $this->tryToCreatePoll();
     }
   }
 
@@ -226,6 +300,15 @@ class PollService
 			$this->latestResult='Poll open!';
 		else
 			$this->latestResult='An error occured!';
+	}
+	
+		
+	private function tryToCreatePoll() {
+		$pollData=json_decode($this->pollJSON);
+		if (mysql_query("insert into elections.poll (election_id_election, name, description) values ('$pollData->election', '$pollData->name', '$pollData->description')"))
+			$this->latestResult='Successfully added!';
+		else
+			$this->latestResult=mysql_error();
 	}
 	
 	private function jsonSerialize($aPoll) {

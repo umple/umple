@@ -5,4 +5,8 @@ class Election {
 	String name;
 	String description;
 	key {idElection}
+	
+	public String toString() {
+		return name;
+	}
 }

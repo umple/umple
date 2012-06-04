@@ -4,8 +4,8 @@
 package usecase.startup;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import usecase.addPoll.AddPollController;
 import usecase.openPoll.OpenPollController;
 import usecase.addElection.AddElectionController;
 
@@ -13,132 +13,46 @@ public class Controller
 {
 
   //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Controller theInstance = null;
+
+  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Controller Attributes
-  private Connection theConnection;
-  private String server;
-  private String username;
-  private String password;
-  private boolean isConnected;
   private int option;
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Connecting, Connected, Failed, PollOpening, ElectionAdding }
+  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding }
   private Status status;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Controller(String aServer, String aUsername, String aPassword)
+  private Controller()
   {
-    theConnection = null;
-    server = aServer;
-    username = aUsername;
-    password = aPassword;
-    isConnected = false;
     option = JOptionPane.NO_OPTION;
     mainMenuOption = "Quit";
-    setStatus(Status.Connecting);
+    setStatus(Status.Initial);
+  }
+
+  public static Controller getInstance()
+  {
+    if(theInstance == null)
+    {
+      theInstance = new Controller();
+    }
+    return theInstance;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setTheConnection(Connection aTheConnection)
-  {
-    boolean wasSet = false;
-    theConnection = aTheConnection;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setServer(String aServer)
-  {
-    boolean wasSet = false;
-    server = aServer;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setUsername(String aUsername)
-  {
-    boolean wasSet = false;
-    username = aUsername;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setPassword(String aPassword)
-  {
-    boolean wasSet = false;
-    password = aPassword;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setIsConnected(boolean aIsConnected)
-  {
-    boolean wasSet = false;
-    isConnected = aIsConnected;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setOption(int aOption)
-  {
-    boolean wasSet = false;
-    option = aOption;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setMainMenuOption(Object aMainMenuOption)
-  {
-    boolean wasSet = false;
-    mainMenuOption = aMainMenuOption;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public Connection getTheConnection()
-  {
-    return theConnection;
-  }
-
-  public String getServer()
-  {
-    return server;
-  }
-
-  public String getUsername()
-  {
-    return username;
-  }
-
-  public String getPassword()
-  {
-    return password;
-  }
-
-  public boolean getIsConnected()
-  {
-    return isConnected;
-  }
-
-  public int getOption()
-  {
-    return option;
-  }
-
-  public Object getMainMenuOption()
-  {
-    return mainMenuOption;
-  }
 
   public String getStatusFullName()
   {
@@ -151,55 +65,43 @@ public class Controller
     return status;
   }
 
-  private boolean __autotransition211__()
+  public boolean start()
   {
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
     switch (aStatus)
     {
-      case Connecting:
-        if (isConnected)
-        {
-          setStatus(Status.Connected);
-          wasEventProcessed = true;
-          break;
-        }
+      case Initial:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case PollOpening:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case ElectionAdding:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case PollAdding:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
         break;
     }
 
     return wasEventProcessed;
   }
 
-  private boolean __autotransition212__()
+  private boolean __autotransition277__()
   {
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
     switch (aStatus)
     {
-      case Connecting:
-        if (!isConnected)
-        {
-          setStatus(Status.Failed);
-          wasEventProcessed = true;
-          break;
-        }
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean __autotransition213__()
-  {
-    boolean wasEventProcessed = false;
-    
-    Status aStatus = status;
-    switch (aStatus)
-    {
-      case Connected:
-        if (mainMenuOption.equals("Open Poll"))
+      case ProvidingMainMenu:
+        if (mainMenuOption!=null && mainMenuOption.equals("Open Poll"))
         {
           setStatus(Status.PollOpening);
           wasEventProcessed = true;
@@ -211,15 +113,15 @@ public class Controller
     return wasEventProcessed;
   }
 
-  private boolean __autotransition214__()
+  private boolean __autotransition278__()
   {
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
     switch (aStatus)
     {
-      case Connected:
-        if (mainMenuOption.equals("Add Election"))
+      case ProvidingMainMenu:
+        if (mainMenuOption!=null && mainMenuOption.equals("Add Election"))
         {
           setStatus(Status.ElectionAdding);
           wasEventProcessed = true;
@@ -231,17 +133,17 @@ public class Controller
     return wasEventProcessed;
   }
 
-  private boolean __autotransition215__()
+  private boolean __autotransition279__()
   {
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
     switch (aStatus)
     {
-      case Failed:
-        if (option==JOptionPane.YES_OPTION)
+      case ProvidingMainMenu:
+        if (mainMenuOption!=null && mainMenuOption.equals("Add Poll"))
         {
-          setStatus(Status.Connecting);
+          setStatus(Status.PollAdding);
           wasEventProcessed = true;
           break;
         }
@@ -258,25 +160,20 @@ public class Controller
     // entry actions and do activities
     switch(status)
     {
-      case Connecting:
-        tryToConnect();
-        __autotransition211__();
-        __autotransition212__();
-        break;
-      case Connected:
+      case ProvidingMainMenu:
         showMainMenu();
-        __autotransition213__();
-        __autotransition214__();
-        break;
-      case Failed:
-        option=JOptionPane.showConfirmDialog(null, "Connection Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
-        __autotransition215__();
+        __autotransition277__();
+        __autotransition278__();
+        __autotransition279__();
         break;
       case PollOpening:
-        OpenPollController.getInstance().setTheConnection(theConnection);OpenPollController.getInstance().openPoll();
+        OpenPollController.getInstance().openPoll();
         break;
       case ElectionAdding:
-        /*AddElectionController.getInstance().setTheConnection(theConnection);*/AddElectionController.getInstance().addElection();
+        AddElectionController.getInstance().addElection();
+        break;
+      case PollAdding:
+        AddPollController.getInstance().addPoll();
         break;
     }
   }
@@ -285,21 +182,8 @@ public class Controller
   {}
 
 
-  public void tryToConnect(){
-      try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection(server, username, password);
-			
-			isConnected=true;;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			isConnected=false;
-		}
-  }
-
-
   public void showMainMenu(){
-      String[] selectionValues={"Open Poll", "Add Election", "Quit"};
+      String[] selectionValues={"Open Poll", "Add Election", "Add Poll", "Quit"};
 		String defaultSelection = "Open Poll";
 		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
   }

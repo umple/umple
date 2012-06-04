@@ -6,17 +6,9 @@ if (isset($_POST['action'])) {
 			$allElections=ElectionService::getInstance()->getElections();
 			echo $allElections;
 		break;
-		case 'loadElectionPolls':
+		case 'addPoll':
 			require_once("PollService.php");
-			PollService::getInstance()->setIdElection($_POST['idElection']);
-			PollService::getInstance()->getElectionPolls();
-			$allPolls=PollService::getInstance()->getAllPolls();
-			echo $allPolls;
-		break;
-		case 'openPoll':
-			require_once("PollService.php");
-			PollService::getInstance()->setIdElection($_POST['idpoll']);
-			PollService::getInstance()->openPoll();
+			PollService::getInstance()->setPollJSON($_POST['pollJSON']);
 			$result=PollService::getInstance()->getLatestResult();
 			echo $result;
 		break;
@@ -26,16 +18,19 @@ echo <<< _OUT
 		<!DOCTYPE html>
         <html>
                 <head>
-                	<script type="text/javascript" src="openpoll.js"></script>
+					<script type="text/javascript" src="addpoll.js">
+					</script>
 					<link rel="stylesheet" href="usecase.css" />
                 </head>
                 <body onload="loadAllElections()">
                     <div class="mainForm">
+                        <label for="pollName">Enter a poll name:</label>
+                                <input type="text" id="pollName"></input>
+                        <label for="pollDescriptiom">Enter a poll description:</label>
+                                <input type="text" id="pollDescription"></input>
                         <label for="elections">Select an election:</label>
-                                <select id="elections"  onchange="loadElectionPolls(this)"></select>
-                        <label for="polls">Select a poll:</label>
-                                <select id="polls"></select>
-                        <button id="openPoll" onclick="openPoll()">Open</button>
+                                <select id="elections"></select>
+                        <button id="addPoll" onclick="addPoll()">add</button>
                         <p id="result"></p>
                     </div>
                 </body>

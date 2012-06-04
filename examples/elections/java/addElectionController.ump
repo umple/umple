@@ -8,8 +8,11 @@ class AddElectionController
     depend javax.swing.JOptionPane;
     depend service.ElectionService;
 	depend shared.domain.Election;
+	depend usecase.startup.Controller;
     
     lazy internal AddElectionView addElectionView;
+    lazy internal String electionName;
+    lazy internal Boolean electionFound;
     
 	ElectionAddingSteps {
 		Initial
@@ -19,11 +22,55 @@ class AddElectionController
 		AddElectionViewShown
 		{
 			entry / {showAddElectionView();}
-			addButtonClicked -> AddingElection;
+			addButtonClicked -> CheckingElectionName;
+			closeView -> ClosingView;
+		}
+		CheckingElectionName
+		{
+			entry / {electionName=addElectionView.getElectionName();}
+			[electionName.trim().isEmpty()] -> ElectionNameEmpty;
+			[!electionName.trim().isEmpty()] -> CheckingExistingElection;
+		}
+		CheckingExistingElection
+		{
+			entry / {ElectionService.getInstance().setElectionNameToSearch(electionName);
+					electionFound=ElectionService.getInstance().getElectionFound();}
+			[!electionFound] -> AddingElection;
+			[electionFound] -> ElectionExists;
 		}
 		AddingElection
 		{
 			entry / {tryToAddElection();}
+			[ElectionService.getInstance().getElectionAdded()] -> ElectionAdded;
+			[ElectionService.getInstance().getElectionAdded()] -> ElectionNotAdded;
+		}
+		ElectionAdded
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Election Added Successfully!"); Controller.getInstance().start();}
+			-> Initial;
+		}
+		ElectionNotAdded
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Adding Election Failed!"); Controller.getInstance().start();}
+			-> Initial;
+		}
+		ElectionExists
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Election Exists!");
+					addElectionView.dispose();
+					Controller.getInstance().start();}
+			-> Initial;
+		}
+		ElectionNameEmpty
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Election name cannot be empty!");}
+			addButtonClicked -> CheckingElectionName;
+			closeView -> ClosingView;
+		}
+		ClosingView
+		{
+			entry / {addElectionView.dispose();}
+			-> Initial;
 		}
 	}
  	
@@ -33,7 +80,7 @@ class AddElectionController
 	}
 	
 	void tryToAddElection() {
-		String electionName=addElectionView.getElectionName();
+		electionName=addElectionView.getElectionName();
 		String electionDescription=addElectionView.getElectionDescription();
 		Election election=new Election(-1, electionName, electionDescription);
 		ElectionService.getInstance().setNewElection(election);

@@ -1,0 +1,72 @@
+namespace usecase.addPoll;
+
+class AddPollController
+{
+	singleton;
+	
+	depend view.addPoll.AddPollView;
+    depend javax.swing.JOptionPane;
+    depend service.ElectionService;
+    depend service.PollService;
+	depend shared.domain.Election;
+	depend shared.domain.Poll;
+	depend java.util.List;
+	depend usecase.startup.Controller;
+    
+    lazy internal AddPollView addPollView;
+    lazy internal List<Election> elections;
+    lazy internal Boolean pollAdded;
+    
+	PollAddingSteps {
+		Initial
+		{
+			addPoll -> ProvidingElectionsList;
+		}
+		ProvidingElectionsList
+		{
+			entry / {ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();}
+			-> ElectionsListProvided;
+		}
+		ElectionsListProvided
+		{
+			entry / {showAddPollView();}
+			addButtonClicked -> AddingPoll;
+			closeView -> ClosingView;
+		}
+		AddingPoll
+		{
+			entry / {tryToAddPoll();pollAdded=PollService.getInstance().getPollAdded();}
+			[pollAdded] -> PollAdded;
+			[!pollAdded] -> PollNotAdded;
+		}
+		PollAdded
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Poll Added Successfully!"); Controller.getInstance().start();}
+			-> Initial;
+		}
+		PollNotAdded
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Adding Poll Failed!"); Controller.getInstance().start();}
+			-> Initial;
+		}
+		ClosingView
+		{
+			entry / {addPollView.dispose();}
+			-> Initial;
+		}
+	}
+ 	
+ 	void showAddPollView() {
+ 		addPollView=new AddPollView(elections);
+ 		addPollView.setVisible(true);
+	}
+	
+	void tryToAddPoll() {
+		String pollName=addPollView.getPollName();
+		String pollDescription=addPollView.getPollDescription();
+		Election selectedElection=addPollView.getSelectedElection();
+		Poll poll=new Poll(-1, pollName, pollDescription, selectedElection);
+		PollService.getInstance().setNewPoll(poll);
+		addPollView.dispose();
+	}
+}

@@ -1,0 +1,32 @@
+body {
+	text-align:center;
+	width:80em;
+}
+
+.mainForm {
+	margin-left:32em;
+	margin-right:32em;
+	border: .1em solid #999999;
+	font: normal 1em helvetica;
+	color:#444444;
+	background-color:#eeeeee;
+	float:left;
+	width:16em;
+}
+
+.mainForm input, label, select {
+	float:left;
+	margin:.3em;
+	width:15em;
+	text-align:left;
+}
+
+.mainForm button {
+	float:right;
+	margin:.3em;
+}
+
+.mainForm p {
+	font: normal .8em helvetica;
+	color:#F00;
+}
