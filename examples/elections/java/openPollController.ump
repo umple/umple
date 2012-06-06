@@ -32,8 +32,10 @@ class OpenPollController
 		}
 		ProvidingElectionsList
 		{
-			entry / {ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();}
-			-> ElectionsListProvided;
+			entry / {ElectionService.getInstance().getAllElections();
+					elections=ElectionService.getInstance().getElections();}
+			[!elections.isEmpty()] -> ElectionsListProvided;
+			[elections.isEmpty()] -> NoElectionsFound;
 		}
 		ElectionsListProvided
 		{
@@ -43,7 +45,8 @@ class OpenPollController
 		ProvidingPollsList
 		{
 			entry / {PollService.getInstance().setSelectedElection(selectedElection);polls=PollService.getInstance().getPolls();}
-			-> PollsListProvided;
+			[!polls.isEmpty()] -> PollsListProvided;
+			[polls.isEmpty()] -> NoPollsFound;
 		}
 		PollsListProvided
 		{
@@ -69,6 +72,18 @@ class OpenPollController
 	    	entry / {Controller.getInstance().start();}
 	    	-> Initial
 	    }
+		NoPollsFound
+		{
+			entry / {JOptionPane.showMessageDialog(null, "No polls found, add a poll first!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();}
+			-> Initial;
+		}
+		NoElectionsFound
+		{
+			entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();}
+			-> Initial;
+		}
 	}
  	
  	void selectAnElection() {

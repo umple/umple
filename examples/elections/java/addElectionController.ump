@@ -46,24 +46,25 @@ class AddElectionController
 		}
 		ElectionAdded
 		{
-			entry / {JOptionPane.showMessageDialog(null, "Election Added Successfully!"); Controller.getInstance().start();}
+			entry / {JOptionPane.showMessageDialog(null, "Election Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					Controller.getInstance().start();}
 			-> Initial;
 		}
 		ElectionNotAdded
 		{
-			entry / {JOptionPane.showMessageDialog(null, "Adding Election Failed!"); Controller.getInstance().start();}
+			entry / {JOptionPane.showMessageDialog(null, "Adding Election Failed!", "Error!", JOptionPane.ERROR_MESSAGE); Controller.getInstance().start();}
 			-> Initial;
 		}
 		ElectionExists
 		{
-			entry / {JOptionPane.showMessageDialog(null, "Election Exists!");
-					addElectionView.dispose();
-					Controller.getInstance().start();}
+			entry / {JOptionPane.showMessageDialog(null, "Election Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();
+					addElectionView.dispose();}
 			-> Initial;
 		}
 		ElectionNameEmpty
 		{
-			entry / {JOptionPane.showMessageDialog(null, "Election name cannot be empty!");}
+			entry / {JOptionPane.showMessageDialog(null, "Election name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);}
 			addButtonClicked -> CheckingElectionName;
 			closeView -> ClosingView;
 		}

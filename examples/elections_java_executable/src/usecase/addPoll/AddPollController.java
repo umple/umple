@@ -28,9 +28,13 @@ public class AddPollController
   private AddPollView addPollView;
   private List<Election> elections;
   private boolean pollAdded;
+  private String pollName;
+  private Election selectedElection;
+  private Poll newPoll;
+  private boolean pollFound;
 
   //AddPollController State Machines
-  enum PollAddingSteps { Initial, ProvidingElectionsList, ElectionsListProvided, AddingPoll, PollAdded, PollNotAdded, ClosingView }
+  enum PollAddingSteps { Initial, ProvidingElectionsList, ElectionsListProvided, CheckingPollName, CheckingExistingPoll, PollNameEmpty, PollExists, AddingPoll, PollAdded, PollNotAdded, ClosingView, NoElectionsFound }
   private PollAddingSteps PollAddingSteps;
 
   //------------------------
@@ -40,6 +44,8 @@ public class AddPollController
   private AddPollController()
   {
     pollAdded = false;
+    pollName = null;
+    pollFound = false;
     setPollAddingSteps(PollAddingSteps.Initial);
   }
 
@@ -83,7 +89,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition426__()
+  private boolean __autotransition551__()
   {
     boolean wasEventProcessed = false;
     
@@ -91,8 +97,32 @@ public class AddPollController
     switch (aPollAddingSteps)
     {
       case ProvidingElectionsList:
-        setPollAddingSteps(PollAddingSteps.ElectionsListProvided);
-        wasEventProcessed = true;
+        if (!elections.isEmpty())
+        {
+          setPollAddingSteps(PollAddingSteps.ElectionsListProvided);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition552__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case ProvidingElectionsList:
+        if (elections.isEmpty())
+        {
+          setPollAddingSteps(PollAddingSteps.NoElectionsFound);
+          wasEventProcessed = true;
+          break;
+        }
         break;
     }
 
@@ -107,7 +137,11 @@ public class AddPollController
     switch (aPollAddingSteps)
     {
       case ElectionsListProvided:
-        setPollAddingSteps(PollAddingSteps.AddingPoll);
+        setPollAddingSteps(PollAddingSteps.CheckingPollName);
+        wasEventProcessed = true;
+        break;
+      case PollNameEmpty:
+        setPollAddingSteps(PollAddingSteps.CheckingPollName);
         wasEventProcessed = true;
         break;
     }
@@ -126,12 +160,112 @@ public class AddPollController
         setPollAddingSteps(PollAddingSteps.ClosingView);
         wasEventProcessed = true;
         break;
+      case PollNameEmpty:
+        setPollAddingSteps(PollAddingSteps.ClosingView);
+        wasEventProcessed = true;
+        break;
     }
 
     return wasEventProcessed;
   }
 
-  private boolean __autotransition427__()
+  private boolean __autotransition553__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case CheckingPollName:
+        if (pollName.trim().isEmpty())
+        {
+          setPollAddingSteps(PollAddingSteps.PollNameEmpty);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition554__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case CheckingPollName:
+        if (!pollName.trim().isEmpty())
+        {
+          setPollAddingSteps(PollAddingSteps.CheckingExistingPoll);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition555__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case CheckingExistingPoll:
+        if (!pollFound)
+        {
+          setPollAddingSteps(PollAddingSteps.AddingPoll);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition556__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case CheckingExistingPoll:
+        if (pollFound)
+        {
+          setPollAddingSteps(PollAddingSteps.PollExists);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition557__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case PollExists:
+        setPollAddingSteps(PollAddingSteps.Initial);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition558__()
   {
     boolean wasEventProcessed = false;
     
@@ -151,7 +285,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition428__()
+  private boolean __autotransition559__()
   {
     boolean wasEventProcessed = false;
     
@@ -171,7 +305,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition429__()
+  private boolean __autotransition560__()
   {
     boolean wasEventProcessed = false;
     
@@ -187,7 +321,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition430__()
+  private boolean __autotransition561__()
   {
     boolean wasEventProcessed = false;
     
@@ -203,7 +337,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition431__()
+  private boolean __autotransition562__()
   {
     boolean wasEventProcessed = false;
     
@@ -211,6 +345,22 @@ public class AddPollController
     switch (aPollAddingSteps)
     {
       case ClosingView:
+        setPollAddingSteps(PollAddingSteps.Initial);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition563__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PollAddingSteps aPollAddingSteps = PollAddingSteps;
+    switch (aPollAddingSteps)
+    {
+      case NoElectionsFound:
         setPollAddingSteps(PollAddingSteps.Initial);
         wasEventProcessed = true;
         break;
@@ -227,28 +377,59 @@ public class AddPollController
     switch(PollAddingSteps)
     {
       case ProvidingElectionsList:
-        ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();
-        __autotransition426__();
+        ElectionService.getInstance().getAllElections();
+					elections=ElectionService.getInstance().getElections();
+        __autotransition551__();
+        __autotransition552__();
         break;
       case ElectionsListProvided:
         showAddPollView();
         break;
+      case CheckingPollName:
+        pollName=addPollView.getPollName();
+        __autotransition553__();
+        __autotransition554__();
+        break;
+      case CheckingExistingPoll:
+        selectedElection=addPollView.getSelectedElection();
+					newPoll=new Poll(-1, pollName, "", selectedElection);
+					PollService.getInstance().setPollToSearch(newPoll);
+					pollFound=PollService.getInstance().getPollFound();
+        __autotransition555__();
+        __autotransition556__();
+        break;
+      case PollNameEmpty:
+        JOptionPane.showMessageDialog(null, "Poll name cannot be empty!");
+        break;
+      case PollExists:
+        JOptionPane.showMessageDialog(null, "Poll Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();
+					addPollView.dispose();
+        __autotransition557__();
+        break;
       case AddingPoll:
         tryToAddPoll();pollAdded=PollService.getInstance().getPollAdded();
-        __autotransition427__();
-        __autotransition428__();
+        __autotransition558__();
+        __autotransition559__();
         break;
       case PollAdded:
-        JOptionPane.showMessageDialog(null, "Poll Added Successfully!"); Controller.getInstance().start();
-        __autotransition429__();
+        JOptionPane.showMessageDialog(null, "Poll Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					Controller.getInstance().start();
+        __autotransition560__();
         break;
       case PollNotAdded:
-        JOptionPane.showMessageDialog(null, "Adding Poll Failed!"); Controller.getInstance().start();
-        __autotransition430__();
+        JOptionPane.showMessageDialog(null, "Adding Poll Failed!");
+					Controller.getInstance().start();
+        __autotransition561__();
         break;
       case ClosingView:
         addPollView.dispose();
-        __autotransition431__();
+        __autotransition562__();
+        break;
+      case NoElectionsFound:
+        JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();
+        __autotransition563__();
         break;
     }
   }
@@ -264,11 +445,9 @@ public class AddPollController
 
 
   public void tryToAddPoll(){
-      String pollName=addPollView.getPollName();
-		String pollDescription=addPollView.getPollDescription();
-		Election selectedElection=addPollView.getSelectedElection();
-		Poll poll=new Poll(-1, pollName, pollDescription, selectedElection);
-		PollService.getInstance().setNewPoll(poll);
+      String pollDescription=addPollView.getPollDescription();
+		newPoll.setDescription(pollDescription);
+		PollService.getInstance().setNewPoll(newPoll);
 		addPollView.dispose();
   }
 

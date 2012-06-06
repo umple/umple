@@ -16,6 +16,10 @@ class AddPollController
     lazy internal AddPollView addPollView;
     lazy internal List<Election> elections;
     lazy internal Boolean pollAdded;
+    lazy internal String pollName;
+    lazy internal Election selectedElection;
+    lazy internal Poll newPoll;
+    lazy internal Boolean pollFound;
     
 	PollAddingSteps {
 		Initial
@@ -24,14 +28,44 @@ class AddPollController
 		}
 		ProvidingElectionsList
 		{
-			entry / {ElectionService.getInstance().getAllElections();elections=ElectionService.getInstance().getElections();}
-			-> ElectionsListProvided;
+			entry / {ElectionService.getInstance().getAllElections();
+					elections=ElectionService.getInstance().getElections();}
+			[!elections.isEmpty()] -> ElectionsListProvided;
+			[elections.isEmpty()] -> NoElectionsFound;
 		}
 		ElectionsListProvided
 		{
 			entry / {showAddPollView();}
-			addButtonClicked -> AddingPoll;
+			addButtonClicked -> CheckingPollName;
 			closeView -> ClosingView;
+		}
+		CheckingPollName
+		{
+			entry / {pollName=addPollView.getPollName();}
+			[pollName.trim().isEmpty()] -> PollNameEmpty;
+			[!pollName.trim().isEmpty()] -> CheckingExistingPoll;
+		}
+		CheckingExistingPoll
+		{
+			entry / {selectedElection=addPollView.getSelectedElection();
+					newPoll=new Poll(-1, pollName, "", selectedElection);
+					PollService.getInstance().setPollToSearch(newPoll);
+					pollFound=PollService.getInstance().getPollFound();}
+			[!pollFound] -> AddingPoll;
+			[pollFound] -> PollExists;
+		}
+		PollNameEmpty
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Poll name cannot be empty!");}
+			addButtonClicked -> CheckingPollName;
+			closeView -> ClosingView;
+		}
+		PollExists
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Poll Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();
+					addPollView.dispose();}
+			-> Initial;
 		}
 		AddingPoll
 		{
@@ -41,17 +75,25 @@ class AddPollController
 		}
 		PollAdded
 		{
-			entry / {JOptionPane.showMessageDialog(null, "Poll Added Successfully!"); Controller.getInstance().start();}
+			entry / {JOptionPane.showMessageDialog(null, "Poll Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					Controller.getInstance().start();}
 			-> Initial;
 		}
 		PollNotAdded
 		{
-			entry / {JOptionPane.showMessageDialog(null, "Adding Poll Failed!"); Controller.getInstance().start();}
+			entry / {JOptionPane.showMessageDialog(null, "Adding Poll Failed!");
+					Controller.getInstance().start();}
 			-> Initial;
 		}
 		ClosingView
 		{
 			entry / {addPollView.dispose();}
+			-> Initial;
+		}
+		NoElectionsFound
+		{
+			entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();}
 			-> Initial;
 		}
 	}
@@ -62,11 +104,9 @@ class AddPollController
 	}
 	
 	void tryToAddPoll() {
-		String pollName=addPollView.getPollName();
 		String pollDescription=addPollView.getPollDescription();
-		Election selectedElection=addPollView.getSelectedElection();
-		Poll poll=new Poll(-1, pollName, pollDescription, selectedElection);
-		PollService.getInstance().setNewPoll(poll);
+		newPoll.setDescription(pollDescription);
+		PollService.getInstance().setNewPoll(newPoll);
 		addPollView.dispose();
 	}
 }

@@ -52,11 +52,7 @@ class AddPollView {
 		electionsLabel=new JLabel("Select an election:");
 		electionsLabel.setBounds(10, 135, 200, 20);
 		add(electionsLabel);
-		
-		/*String[] electionNames=new String[elections.size()];
-		int i=0;
-		for (Election election:elections)
-			electionNames[i++]=election.getName();*/
+
 		electionsComboBox=new JComboBox(elections.toArray());
 		electionsComboBox.setBounds(10, 155, 200, 20);
 		add(electionsComboBox);

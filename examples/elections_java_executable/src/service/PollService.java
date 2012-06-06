@@ -33,6 +33,8 @@ public class PollService
   private boolean pollOpenned;
   private Poll newPoll;
   private boolean pollAdded;
+  private Poll pollToSearch;
+  private boolean pollFound;
 
   //PollService State Machines
   enum PollServiceCycle { Idle, LoadingElectionPolls, OpenningPoll, CreatingPoll }
@@ -46,6 +48,7 @@ public class PollService
   {
     pollOpenned = false;
     pollAdded = false;
+    pollFound = false;
     setPollServiceCycle(PollServiceCycle.Idle);
   }
 
@@ -121,6 +124,32 @@ public class PollService
     return wasSet;
   }
 
+  public boolean setPollToSearch(Poll aPollToSearch)
+  {
+    boolean wasSet = false;
+    pollToSearch = aPollToSearch;
+    wasSet = true;
+    pollFound=true;
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where name='"+pollToSearch.getName()+"' and election_id_election="+pollToSearch.getElection().getIdElection());
+			if (!rs.next())
+				pollFound=false;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			pollFound=false;
+		}
+    return wasSet;
+  }
+
+  public boolean setPollFound(boolean aPollFound)
+  {
+    boolean wasSet = false;
+    pollFound = aPollFound;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Poll getSelectedPoll()
   {
     return selectedPoll;
@@ -156,6 +185,16 @@ public class PollService
     return pollAdded;
   }
 
+  public Poll getPollToSearch()
+  {
+    return pollToSearch;
+  }
+
+  public boolean getPollFound()
+  {
+    return pollFound;
+  }
+
   public boolean isPollOpenned()
   {
     return pollOpenned;
@@ -164,6 +203,11 @@ public class PollService
   public boolean isPollAdded()
   {
     return pollAdded;
+  }
+
+  public boolean isPollFound()
+  {
+    return pollFound;
   }
 
   public String getPollServiceCycleFullName()
@@ -225,7 +269,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition185__()
+  private boolean __autotransition215__()
   {
     boolean wasEventProcessed = false;
     
@@ -241,7 +285,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition186__()
+  private boolean __autotransition216__()
   {
     boolean wasEventProcessed = false;
     
@@ -275,11 +319,11 @@ public class PollService
         break;
       case OpenningPoll:
         tryToOpenPoll();
-        __autotransition185__();
+        __autotransition215__();
         break;
       case CreatingPoll:
         addPoll();
-        __autotransition186__();
+        __autotransition216__();
         break;
     }
   }

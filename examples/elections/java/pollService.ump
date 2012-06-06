@@ -20,6 +20,8 @@ class PollService {
 	lazy Boolean pollOpenned;
 	lazy Poll newPoll;
 	lazy Boolean pollAdded;
+	lazy Poll pollToSearch;
+	lazy Boolean pollFound;
 
 	after setSelectedElection
 	{
@@ -36,6 +38,19 @@ class PollService {
 		createPoll();
 	}
 
+	after setPollToSearch {
+		pollFound=true;
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where name='"+pollToSearch.getName()+"' and election_id_election="+pollToSearch.getElection().getIdElection());
+			if (!rs.next())
+				pollFound=false;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			pollFound=false;
+		}
+	}
+	
 	PollServiceCycle {
 		Idle {
 			getElectionPolls -> LoadingElectionPolls;

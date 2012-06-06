@@ -121,7 +121,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition997__()
+  private boolean __autotransition463__()
   {
     boolean wasEventProcessed = false;
     
@@ -141,7 +141,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition998__()
+  private boolean __autotransition464__()
   {
     boolean wasEventProcessed = false;
     
@@ -161,7 +161,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition999__()
+  private boolean __autotransition465__()
   {
     boolean wasEventProcessed = false;
     
@@ -181,7 +181,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1000__()
+  private boolean __autotransition466__()
   {
     boolean wasEventProcessed = false;
     
@@ -201,7 +201,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1001__()
+  private boolean __autotransition467__()
   {
     boolean wasEventProcessed = false;
     
@@ -221,7 +221,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1002__()
+  private boolean __autotransition468__()
   {
     boolean wasEventProcessed = false;
     
@@ -241,7 +241,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1003__()
+  private boolean __autotransition469__()
   {
     boolean wasEventProcessed = false;
     
@@ -257,7 +257,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1004__()
+  private boolean __autotransition470__()
   {
     boolean wasEventProcessed = false;
     
@@ -273,7 +273,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1005__()
+  private boolean __autotransition471__()
   {
     boolean wasEventProcessed = false;
     
@@ -289,7 +289,7 @@ public class AddElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1006__()
+  private boolean __autotransition472__()
   {
     boolean wasEventProcessed = false;
     
@@ -317,40 +317,41 @@ public class AddElectionController
         break;
       case CheckingElectionName:
         electionName=addElectionView.getElectionName();
-        __autotransition997__();
-        __autotransition998__();
+        __autotransition463__();
+        __autotransition464__();
         break;
       case CheckingExistingElection:
         ElectionService.getInstance().setElectionNameToSearch(electionName);
 					electionFound=ElectionService.getInstance().getElectionFound();
-        __autotransition999__();
-        __autotransition1000__();
+        __autotransition465__();
+        __autotransition466__();
         break;
       case AddingElection:
         tryToAddElection();
-        __autotransition1001__();
-        __autotransition1002__();
+        __autotransition467__();
+        __autotransition468__();
         break;
       case ElectionAdded:
-        JOptionPane.showMessageDialog(null, "Election Added Successfully!"); Controller.getInstance().start();
-        __autotransition1003__();
+        JOptionPane.showMessageDialog(null, "Election Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					Controller.getInstance().start();
+        __autotransition469__();
         break;
       case ElectionNotAdded:
-        JOptionPane.showMessageDialog(null, "Adding Election Failed!"); Controller.getInstance().start();
-        __autotransition1004__();
+        JOptionPane.showMessageDialog(null, "Adding Election Failed!", "Error!", JOptionPane.ERROR_MESSAGE); Controller.getInstance().start();
+        __autotransition470__();
         break;
       case ElectionExists:
-        JOptionPane.showMessageDialog(null, "Election Exists!");
-					addElectionView.dispose();
+        JOptionPane.showMessageDialog(null, "Election Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
 					Controller.getInstance().start();
-        __autotransition1005__();
+					addElectionView.dispose();
+        __autotransition471__();
         break;
       case ElectionNameEmpty:
-        JOptionPane.showMessageDialog(null, "Election name cannot be empty!");
+        JOptionPane.showMessageDialog(null, "Election name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);
         break;
       case ClosingView:
         addElectionView.dispose();
-        __autotransition1006__();
+        __autotransition472__();
         break;
     }
   }
