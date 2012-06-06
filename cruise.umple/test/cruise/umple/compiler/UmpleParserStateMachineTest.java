@@ -151,13 +151,13 @@ public class UmpleParserStateMachineTest
     State state = sm.getState(1);
 
     // TODO: wait for next release with model changes  
-    // Transition t = state.getTransition(0);
-    // Activity act = state.getActivity();
-    // Assert.assertNotNull(act);
-    // Assert.assertEquals("keepDoing;", act.getActivityCode());
-    // Assert.assertEquals(t.getEvent(), act.getOnCompletionEvent());
-    // Assert.assertEquals(false,t.isAutoTransition());
-    // Assert.assertEquals(true, t.getEvent().isAutoTransition());
+    Transition t = state.getTransition(0);
+    Activity act = state.getActivity();
+    Assert.assertNotNull(act);
+    Assert.assertEquals("keepDoing;", act.getActivityCode());
+    Assert.assertEquals(t.getEvent(), act.getOnCompletionEvent());
+    Assert.assertEquals(false,t.isAutoTransition());
+    Assert.assertEquals(true, t.getEvent().isAutoTransition());
   }
   
   @Test
