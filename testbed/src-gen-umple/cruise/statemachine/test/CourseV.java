@@ -3,30 +3,30 @@
 
 package cruise.statemachine.test;
 
-public class CourseU
+public class CourseV
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //CourseU Attributes
+  //CourseV Attributes
   private int count;
 
-  //CourseU State Machines
+  //CourseV State Machines
   enum Status { Off, On }
   private Status status;
 
-  //CourseU Do Activity Threads
+  //CourseV Do Activity Threads
   Thread doActivityStatusOffThread = null;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public CourseU(int aCount)
+  public CourseV()
   {
-    count = aCount;
+    count = 0;
     setStatus(Status.Off);
   }
 
@@ -58,7 +58,7 @@ public class CourseU
     return status;
   }
 
-  public boolean flip()
+  private boolean __autotransition5__()
   {
     boolean wasEventProcessed = false;
     
@@ -102,8 +102,9 @@ public class CourseU
   {
     try
     {
-      incr();
+      doX();
       Thread.sleep(1);
+      __autotransition5__();
     }
     catch (InterruptedException e)
     {
@@ -113,10 +114,10 @@ public class CourseU
 
   private static class DoActivityThread extends Thread
   {
-    CourseU controller;
+    CourseV controller;
     String doActivityMethodName;
     
-    public DoActivityThread(CourseU aController,String aDoActivityMethodName)
+    public DoActivityThread(CourseV aController,String aDoActivityMethodName)
     {
       controller = aController;
       doActivityMethodName = aDoActivityMethodName;
@@ -139,8 +140,7 @@ public class CourseU
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public void incr() 
-  { 
+  public void doX() { 
     count += 1;
   }
 }

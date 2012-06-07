@@ -124,6 +124,25 @@ public class Template
         "      <td class=\"content\">" + "\n" +
         "" + "\n" +
         "      <h2><i>Umple User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
+        
+// Code from Google
+
+"<div style=\"border:1px solid black\" id=\"cse\" style=\"width: 100%;\">Loading</div>" + "\n" +
+"<script src=\"http://www.google.com/jsapi\" type=\"text/javascript\"></script>" + "\n" +
+"<script type=\"text/javascript\"> " + "\n" +
+"  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});" + "\n" +
+"  google.setOnLoadCallback(function() {" + "\n" +
+"    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(" + "\n" +
+"      '014719661006816508785:azyvserhylq', customSearchOptions);" + "\n" +
+"    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);" + "\n" +
+"    var options = new google.search.DrawOptions();" + "\n" +
+"    options.setAutoComplete(true);" + "\n" +
+"    customSearchControl.draw('cse', options);" + "\n" +
+"  }, true);" + "\n" +
+"</script>" + "\n" +
+        
+        
+/// End code from Google
         "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +

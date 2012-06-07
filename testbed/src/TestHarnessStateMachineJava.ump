@@ -197,7 +197,7 @@ class CourseU {
 
 class CourseV {
 
-  Integer count;
+  Integer count = 0;
 
   status {
     Off {
@@ -206,7 +206,9 @@ class CourseV {
     On { }
   }
 
-  public void doX() { } 
+  public void doX() { 
+    count += 1;
+  } 
 
 }
 

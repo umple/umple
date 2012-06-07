@@ -150,7 +150,6 @@ public class UmpleParserStateMachineTest
     StateMachine sm = c.getStateMachine(0);
     State state = sm.getState(1);
 
-    // TODO: wait for next release with model changes  
     Transition t = state.getTransition(0);
     Activity act = state.getActivity();
     Assert.assertNotNull(act);

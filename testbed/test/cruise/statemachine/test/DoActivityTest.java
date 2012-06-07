@@ -30,7 +30,15 @@ public class DoActivityTest
     Assert.assertEquals("Open Entry", course.getLog(0));
     Assert.assertEquals("Closed Entry", course.getLog(1));
     Assert.assertEquals("Open Entry",course.getLog(2));
-    
   }
-    
+
+//  @Test
+//  public void transitionAfterDoActivity() throws InterruptedException
+//  {
+//    CourseV course = new CourseV();
+//    Thread.sleep(5000);
+//    Assert.assertEquals(1, course.getCount());
+//    Assert.assertEquals(CourseV.Status.On, course.getStatus());
+//    
+//  }
 }

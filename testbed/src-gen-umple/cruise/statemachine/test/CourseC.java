@@ -144,6 +144,7 @@ public class CourseC
     {
       Thread.sleep(400);
         addLog("Do Activity On Closed");
+      Thread.sleep(1);
     }
     catch (InterruptedException e)
     {
