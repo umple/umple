@@ -1,0 +1,15 @@
+This directory contains Umple files for the Elections system case study in Java.
+
+files:
+----------------------------------------------------------------
+domainCodes.ump: master file used to generate complementary Java-specific code for domain objects
+services.ump: master file used to generate service classes
+usecases.ump: master file used to generate use case controllers
+view.ump: master file used to generate view classes
+
+directories:
+----------------------------------------------------------------
+domain_codes: contains Umple files defining Java-specific code to be added to domain objects
+services: contains Umple files defining service classes
+usecase_controllers: contains Umple files defining use case controllers
+views: contains Umple files defining view classes

@@ -2,38 +2,36 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
-class Election
+class Position
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Election Attributes
-  private $idElection;
+  //Position Attributes
+  private $idPosition;
   private $name;
   private $description;
 
-  //Election Associations
-  private $polls;
+  //Position Associations
   private $electionForPositions;
 
   //Helper Variables
   private $cachedHashCode;
-  private $canSetIdElection;
+  private $canSetIdPosition;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aIdElection, $aName, $aDescription)
+  public function __construct($aIdPosition, $aName, $aDescription)
   {
     $this->cachedHashCode = -1;
-    $this->canSetIdElection = true;
-    $this->idElection = $aIdElection;
+    $this->canSetIdPosition = true;
+    $this->idPosition = $aIdPosition;
     $this->name = $aName;
     $this->description = $aDescription;
-    $this->polls = array();
     $this->electionForPositions = array();
   }
 
@@ -41,10 +39,10 @@ class Election
   // INTERFACE
   //------------------------
 
-  public function setIdElection($aIdElection)
+  public function setIdPosition($aIdPosition)
   {
     $wasSet = false;
-    $this->idElection = $aIdElection;
+    $this->idPosition = $aIdPosition;
     $wasSet = true;
     return $wasSet;
   }
@@ -65,9 +63,9 @@ class Election
     return $wasSet;
   }
 
-  public function getIdElection()
+  public function getIdPosition()
   {
-    return $this->idElection;
+    return $this->idPosition;
   }
 
   public function getName()
@@ -78,47 +76,6 @@ class Election
   public function getDescription()
   {
     return $this->description;
-  }
-
-  public function getPoll($index)
-  {
-    $aPoll = $this->polls[$index];
-    return $aPoll;
-  }
-
-  public function getPolls()
-  {
-    $newPolls = $this->polls;
-    return $newPolls;
-  }
-
-  public function numberOfPolls()
-  {
-    $number = count($this->polls);
-    return $number;
-  }
-
-  public function hasPolls()
-  {
-    $has = $this->numberOfPolls() > 0;
-    return $has;
-  }
-
-  public function indexOfPoll($aPoll)
-  {
-    $wasFound = false;
-    $index = 0;
-    foreach($this->polls as $poll)
-    {
-      if ($poll->equals($aPoll))
-      {
-        $wasFound = true;
-        break;
-      }
-      $index += 1;
-    }
-    $index = $wasFound ? $index : -1;
-    return $index;
   }
 
   public function getElectionForPosition($index)
@@ -162,64 +119,24 @@ class Election
     return $index;
   }
 
-  public static function minimumNumberOfPolls()
-  {
-    return 0;
-  }
-
-  public function addPollVia($aIdPoll, $aName, $aDescription)
-  {
-    return new Poll($aIdPoll, $aName, $aDescription, $this);
-  }
-
-  public function addPoll($aPoll)
-  {
-    $wasAdded = false;
-    $existingElection = $aPoll->getElection();
-    $isNewElection = $existingElection != null && $this !== $existingElection;
-    if ($isNewElection)
-    {
-      $aPoll->setElection($this);
-    }
-    else
-    {
-      $this->polls[] = $aPoll;
-    }
-    $wasAdded = true;
-    return $wasAdded;
-  }
-
-  public function removePoll($aPoll)
-  {
-    $wasRemoved = false;
-    //Unable to remove aPoll, as it must always have a election
-    if ($this !== $aPoll->getElection())
-    {
-      unset($this->polls[$this->indexOfPoll($aPoll)]);
-      $this->polls = array_values($this->polls);
-      $wasRemoved = true;
-    }
-    return $wasRemoved;
-  }
-
   public static function minimumNumberOfElectionForPositions()
   {
     return 0;
   }
 
-  public function addElectionForPositionVia($aIdElectionForPosition, $aPosition)
+  public function addElectionForPositionVia($aIdElectionForPosition, $aElection)
   {
-    return new ElectionForPosition($aIdElectionForPosition, $this, $aPosition);
+    return new ElectionForPosition($aIdElectionForPosition, $aElection, $this);
   }
 
   public function addElectionForPosition($aElectionForPosition)
   {
     $wasAdded = false;
-    $existingElection = $aElectionForPosition->getElection();
-    $isNewElection = $existingElection != null && $this !== $existingElection;
-    if ($isNewElection)
+    $existingPosition = $aElectionForPosition->getPosition();
+    $isNewPosition = $existingPosition != null && $this !== $existingPosition;
+    if ($isNewPosition)
     {
-      $aElectionForPosition->setElection($this);
+      $aElectionForPosition->setPosition($this);
     }
     else
     {
@@ -232,8 +149,8 @@ class Election
   public function removeElectionForPosition($aElectionForPosition)
   {
     $wasRemoved = false;
-    //Unable to remove aElectionForPosition, as it must always have a election
-    if ($this !== $aElectionForPosition->getElection())
+    //Unable to remove aElectionForPosition, as it must always have a position
+    if ($this !== $aElectionForPosition->getPosition())
     {
       unset($this->electionForPositions[$this->indexOfElectionForPosition($aElectionForPosition)]);
       $this->electionForPositions = array_values($this->electionForPositions);
@@ -247,7 +164,7 @@ class Election
     if ($compareTo == null) { return false; }
     if (get_class($this) != get_class($compareTo)) { return false; }
 
-    if ($this->idElection != $compareTo->idElection)
+    if ($this->idPosition != $compareTo->idPosition)
     {
       return false;
     }
@@ -262,18 +179,14 @@ class Election
       return $this->cachedHashCode;
     }
     $this->cachedHashCode = 17;
-    $this->cachedHashCode = $this->cachedHashCode * 23 + $this->idElection;
+    $this->cachedHashCode = $this->cachedHashCode * 23 + $this->idPosition;
 
-    $this->canSetIdElection = false;
+    $this->canSetIdPosition = false;
     return $this->cachedHashCode;
   }
 
   public function delete()
   {
-    foreach ($this->polls as $aPoll)
-    {
-      $aPoll->delete();
-    }
     foreach ($this->electionForPositions as $aElectionForPosition)
     {
       $aElectionForPosition->delete();

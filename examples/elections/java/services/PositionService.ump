@@ -1,0 +1,102 @@
+namespace service;
+
+class PositionService {
+	depend java.util.List;
+	depend java.util.ArrayList;
+	depend shared.domain.Election;
+	depend shared.domain.Position;
+	depend java.sql.Connection;
+	depend java.sql.ResultSet;
+    depend java.sql.Statement;
+    depend java.sql.DriverManager;
+    depend shared.Credentials;
+	
+	singleton;
+	
+	lazy Position selectedPosition;
+	lazy Election selectedElection;
+	lazy List<Position> positions;
+	lazy Connection theConnection;
+	lazy Boolean positionOpenned;
+	lazy Position newPosition;
+	lazy Boolean positionAdded;
+	lazy Position positionToSearch;
+	lazy Boolean positionFound;
+	
+	after setNewPosition
+	{
+		createPosition();
+	}
+
+	after setPositionToSearch {
+	  findPosition();
+	}
+	
+	PositionServiceCycle {
+		Idle {
+			createPosition -> CreatingPosition;
+			findPosition -> FindingPosition;
+		}
+		CreatingPosition
+		{
+			entry / {addPosition();}
+			-> Idle;
+		}
+		FindingPosition
+		{
+		  entry / {searchForPosition();}
+		  -> Idle;
+		}
+	}
+	
+	before setPositionServiceCycle
+	{
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+		}
+	}
+	
+	void loadElectionPositions() {
+		/*positions=new ArrayList<Position>();
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM position where election_id_election="+selectedElection.getIdElection());
+			while (rs.next()) {
+				String name = rs.getString("name");
+				String description = rs.getString("description");
+				int id=Integer.parseInt(rs.getString("id_position"));
+				Position position=new Position(id, name, description, selectedElection);
+				positions.add(position);
+			}
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+		}*/
+	}
+		
+	void addPosition() {
+		try {
+			Statement stmt = theConnection.createStatement();
+			stmt.executeUpdate("insert into elections.position (name, description) values ('"+newPosition.getName()+"', '"+newPosition.getDescription()+"')");
+			positionAdded=true;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			positionAdded=false;
+		}
+	}
+
+  private void searchForPosition() {
+		positionFound=true;
+		try {
+			Statement stmt = theConnection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM position where name='"+positionToSearch.getName()+"'");
+			if (!rs.next())
+				positionFound=false;
+		} catch(Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			positionFound=false;
+		}
+  }
+}

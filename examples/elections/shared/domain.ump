@@ -2,3 +2,5 @@ namespace shared.domain;
 
 use shared/Election.ump;
 use shared/Poll.ump;
+use shared/Position.ump;
+use shared/ElectionForPosition.ump;

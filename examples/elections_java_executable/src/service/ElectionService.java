@@ -197,7 +197,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition858__()
+  private boolean __autotransition460__()
   {
     boolean wasEventProcessed = false;
     
@@ -213,7 +213,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition859__()
+  private boolean __autotransition461__()
   {
     boolean wasEventProcessed = false;
     
@@ -229,7 +229,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition860__()
+  private boolean __autotransition462__()
   {
     boolean wasEventProcessed = false;
     
@@ -260,15 +260,15 @@ public class ElectionService
     {
       case LoadingAllElections:
         loadAllElections();
-        __autotransition858__();
+        __autotransition460__();
         break;
       case CreatingElection:
         addElection();
-        __autotransition859__();
+        __autotransition461__();
         break;
       case FindingElectionByName:
         tryFindingElectionByName();
-        __autotransition860__();
+        __autotransition462__();
         break;
     }
   }

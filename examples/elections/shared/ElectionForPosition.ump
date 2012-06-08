@@ -1,0 +1,8 @@
+namespace shared.domain;
+
+class ElectionForPosition {
+  Integer idElectionForPosition;
+  * -- 1 Election;
+  * -- 1 Position;
+  key {idElectionForPosition}
+}

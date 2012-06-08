@@ -1,8 +1,8 @@
 namespace shared.domain;
 
-class Election {
-  Integer idElection;
+class Position {
+  Integer idPosition;
   String name;
   String description;
-  key {idElection}
+  key {idPosition}
 }

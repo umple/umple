@@ -13,6 +13,7 @@ class Poll
   private $idPoll;
   private $name;
   private $description;
+  private $status;
 
   //Poll Associations
   private $election;
@@ -20,7 +21,6 @@ class Poll
   //Helper Variables
   private $cachedHashCode;
   private $canSetIdPoll;
-  private $canSetElection;
 
   //------------------------
   // CONSTRUCTOR
@@ -30,13 +30,14 @@ class Poll
   {
     $this->cachedHashCode = -1;
     $this->canSetIdPoll = true;
-    $this->canSetElection = true;
     $this->idPoll = $aIdPoll;
     $this->name = $aName;
     $this->description = $aDescription;
-    if (!$this->setElection($aElection))
+    $this->status = "planned";
+    $didAddElection = $this->setElection($aElection);
+    if (!$didAddElection)
     {
-      throw new Exception("Unable to create Poll due to aElection");
+      throw new Exception("Unable to create poll due to election");
     }
   }
 
@@ -68,6 +69,14 @@ class Poll
     return $wasSet;
   }
 
+  public function setStatus($aStatus)
+  {
+    $wasSet = false;
+    $this->status = $aStatus;
+    $wasSet = true;
+    return $wasSet;
+  }
+
   public function getIdPoll()
   {
     return $this->idPoll;
@@ -83,19 +92,32 @@ class Poll
     return $this->description;
   }
 
+  public function getStatus()
+  {
+    return $this->status;
+  }
+
   public function getElection()
   {
     return $this->election;
   }
 
-  public function setElection($newElection)
+  public function setElection($aElection)
   {
     $wasSet = false;
-    if ($newElection != null)
+    if ($aElection == null)
     {
-      $this->election = $newElection;
-      $wasSet = true;
+      return $wasSet;
     }
+    
+    $existingElection = $this->election;
+    $this->election = $aElection;
+    if ($existingElection != null && $existingElection != $aElection)
+    {
+      $existingElection->removePoll($this);
+    }
+    $this->election->addPoll($this);
+    $wasSet = true;
     return $wasSet;
   }
 
@@ -105,11 +127,6 @@ class Poll
     if (get_class($this) != get_class($compareTo)) { return false; }
 
     if ($this->idPoll != $compareTo->idPoll)
-    {
-      return false;
-    }
-
-    if ($this->election != $compareTo->election)
     {
       return false;
     }
@@ -124,32 +141,17 @@ class Poll
       return $this->cachedHashCode;
     }
     $this->cachedHashCode = 17;
-    if ($this->idPoll != null)
-    {
-      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->idPoll);
-    }
-    else
-    {
-      $this->cachedHashCode = $this->cachedHashCode * 23;
-    }
-
-    if ($this->election != null)
-    {
-      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->election);
-    }
-    else
-    {
-      $this->cachedHashCode = $this->cachedHashCode * 23;
-    }
+    $this->cachedHashCode = $this->cachedHashCode * 23 + $this->idPoll;
 
     $this->canSetIdPoll = false;
-    $this->canSetElection = false;
     return $this->cachedHashCode;
   }
 
   public function delete()
   {
+    $placeholderElection = $this->election;
     $this->election = null;
+    $placeholderElection->removePoll($this);
   }
 
 }

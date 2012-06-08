@@ -1,8 +1,7 @@
 generate Java;
 
-use java/misc.ump;
 use java/usecases.ump;
 use shared/domain.ump;
-use java/electionService.ump;
-use java/pollService.ump;
+use java/services.ump;
 use java/view.ump;
+use java/domainCodes.ump;

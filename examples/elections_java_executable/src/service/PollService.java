@@ -269,7 +269,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition215__()
+  private boolean __autotransition463__()
   {
     boolean wasEventProcessed = false;
     
@@ -285,7 +285,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition216__()
+  private boolean __autotransition464__()
   {
     boolean wasEventProcessed = false;
     
@@ -319,11 +319,11 @@ public class PollService
         break;
       case OpenningPoll:
         tryToOpenPoll();
-        __autotransition215__();
+        __autotransition463__();
         break;
       case CreatingPoll:
         addPoll();
-        __autotransition216__();
+        __autotransition464__();
         break;
     }
   }

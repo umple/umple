@@ -12,7 +12,9 @@ import usecase.addElection.AddElectionController;
 
 public enum GenericWindowListener implements WindowListener {
 	AddElectionViewWindowListener,
-	AddPollViewWindowListener;
+	AddPollViewWindowListener,
+	AddPositionViewWindowListener,
+	MainViewWindowListener;
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {

@@ -14,6 +14,7 @@ public class Poll
   private int idPoll;
   private String name;
   private String description;
+  private String status;
 
   //Poll Associations
   private Election election;
@@ -21,7 +22,6 @@ public class Poll
   //Helper Variables
   private int cachedHashCode;
   private boolean canSetIdPoll;
-  private boolean canSetElection;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,13 +31,14 @@ public class Poll
   {
     cachedHashCode = -1;
     canSetIdPoll = true;
-    canSetElection = true;
     idPoll = aIdPoll;
     name = aName;
     description = aDescription;
-    if (!setElection(aElection))
+    status = "planned";
+    boolean didAddElection = setElection(aElection);
+    if (!didAddElection)
     {
-      throw new RuntimeException("Unable to create Poll due to aElection");
+      throw new RuntimeException("Unable to create poll due to election");
     }
   }
 
@@ -70,6 +71,14 @@ public class Poll
     return wasSet;
   }
 
+  public boolean setStatus(String aStatus)
+  {
+    boolean wasSet = false;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getIdPoll()
   {
     return idPoll;
@@ -85,20 +94,32 @@ public class Poll
     return description;
   }
 
+  public String getStatus()
+  {
+    return status;
+  }
+
   public Election getElection()
   {
     return election;
   }
 
-  public boolean setElection(Election newElection)
+  public boolean setElection(Election aElection)
   {
     boolean wasSet = false;
-    if (!canSetElection) { return false; }
-    if (newElection != null)
+    if (aElection == null)
     {
-      election = newElection;
-      wasSet = true;
+      return wasSet;
     }
+
+    Election existingElection = election;
+    election = aElection;
+    if (existingElection != null && !existingElection.equals(aElection))
+    {
+      existingElection.removePoll(this);
+    }
+    election.addPoll(this);
+    wasSet = true;
     return wasSet;
   }
 
@@ -110,15 +131,6 @@ public class Poll
     Poll compareTo = (Poll)obj;
   
     if (idPoll != compareTo.idPoll)
-    {
-      return false;
-    }
-
-    if (election == null && compareTo.election != null)
-    {
-      return false;
-    }
-    else if (election != null && !election.equals(compareTo.election))
     {
       return false;
     }
@@ -135,23 +147,15 @@ public class Poll
     cachedHashCode = 17;
     cachedHashCode = cachedHashCode * 23 + idPoll;
 
-    if (election != null)
-    {
-      cachedHashCode = cachedHashCode * 23 + election.hashCode();
-    }
-    else
-    {
-      cachedHashCode = cachedHashCode * 23;
-    }
-
     canSetIdPoll = false;
-    canSetElection = false;
     return cachedHashCode;
   }
 
   public void delete()
   {
-    election = null;
+    Election placeholderElection = election;
+    this.election = null;
+    placeholderElection.removePoll(this);
   }
 
 }

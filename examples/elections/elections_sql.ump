@@ -3,17 +3,33 @@ generate Sql;
 namespace elections;
 
 class Election {
-	int idElection;
-	String name;
-	String description;
-	key {idElection}
+  autounique idElection;
+  String name;
+  String description;
+  key {idElection}
+}
+
+class Position {
+  autounique idPosition;
+  String name;
+  String description;
+  key {idPosition}
+}
+
+class ElectionForPosition {
+  autounique idElectionForPosition;
+  * -- 1 Election;
+  * -- 1 Position;
+  key {idElectionForPosition}
 }
 
 class Poll {
-	int idPoll;
-	String name;
-	String description;
-	String status="planned";
-	* -> 1 Election election;
-	key {idPoll, election}
+  autounique idPoll;
+  String name;
+  String description;
+  String status="planned";
+  * -- 1 Election;
+  
+  key {idPoll}
 }
+

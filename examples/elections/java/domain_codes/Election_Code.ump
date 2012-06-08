@@ -1,0 +1,7 @@
+namespace shared.domain;
+
+class Election {
+	public String toString() {
+		return name;
+	}
+}

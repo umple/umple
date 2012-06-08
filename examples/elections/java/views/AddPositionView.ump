@@ -1,0 +1,67 @@
+namespace view.addPosition;
+
+external JFrame{}
+
+class AddPositionView {
+	isA JFrame;
+
+	depend java.util.List;
+	depend javax.swing.JFrame;
+	depend javax.swing.JLabel;
+	depend javax.swing.JTextField;
+	depend javax.swing.JTextArea;
+	depend javax.swing.JButton;
+	depend javax.swing.JComboBox;
+	depend shared.listeners.GenericMouseListener;
+	depend shared.listeners.GenericWindowListener;
+	depend shared.domain.Election;
+	depend view.ViewUtils;
+
+	lazy internal JLabel positionNameLabel;
+	lazy internal JLabel positionDescriptionLabel;
+	lazy internal JTextField positionNameTextField;
+	lazy internal JTextArea positionDescriptionTextArea;
+	lazy internal JButton addPositionButton;
+
+	lazy String positionName;
+	lazy String positionDescription;
+		
+	after constructor {
+		getContentPane().setLayout(null);
+	
+		positionNameLabel=new JLabel("Position Name:");
+		positionNameLabel.setBounds(10, 10, 200, 20);
+		add(positionNameLabel);
+		
+		positionNameTextField=new JTextField();
+		positionNameTextField.setBounds(10, 30, 200, 20);
+		add(positionNameTextField);
+		
+		positionDescriptionLabel=new JLabel("Add a description:");
+		positionDescriptionLabel.setBounds(10, 50, 200, 20);
+		add(positionDescriptionLabel);
+		
+		positionDescriptionTextArea=new JTextArea();
+		positionDescriptionTextArea.setBounds(10, 70, 200, 60);
+		add(positionDescriptionTextArea);
+		
+		addPositionButton=new JButton("add");
+		addPositionButton.setBounds(75, 180, 75, 20);
+		addPositionButton.addMouseListener(GenericMouseListener.AddPositionViewMouseListener);
+		add(addPositionButton);
+		
+		pack();
+		setSize(250, 250);
+		
+		ViewUtils.getInstance().setToBeCenteredFrame(this);
+		addWindowListener(GenericWindowListener.AddPositionViewWindowListener);
+	}
+	
+	before getPositionName {
+		positionName=positionNameTextField.getText();
+	}
+	
+	before getPositionDescription {
+		positionDescription=positionDescriptionTextArea.getText();
+	}
+}

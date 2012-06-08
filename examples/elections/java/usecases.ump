@@ -1,5 +1,6 @@
-use java/startupRunner.ump;
-use java/startupController.ump;
-use java/openPollController.ump;
-use java/addElectionController.ump;
-use java/addPollController.ump;
+use java/usecase_controllers/Runner.ump;
+use java/usecase_controllers/Controller.ump;
+use java/usecase_controllers/OpenPollController.ump;
+use java/usecase_controllers/AddElectionController.ump;
+use java/usecase_controllers/AddPollController.ump;
+use java/usecase_controllers/AddPositionController.ump;

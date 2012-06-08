@@ -1,0 +1,90 @@
+namespace usecase.addElection;
+
+class AddElectionController
+{
+	singleton;
+	
+	depend view.addElection.AddElectionView;
+    depend javax.swing.JOptionPane;
+    depend service.ElectionService;
+	depend shared.domain.Election;
+	depend usecase.startup.Controller;
+    
+    lazy internal AddElectionView addElectionView;
+    lazy internal String electionName;
+    lazy internal Boolean electionFound;
+    
+	ElectionAddingSteps {
+		Initial
+		{
+			addElection -> AddElectionViewShown;
+		}
+		AddElectionViewShown
+		{
+			entry / {showAddElectionView();}
+			addButtonClicked -> CheckingElectionName;
+			closeView -> ClosingView;
+		}
+		CheckingElectionName
+		{
+			entry / {electionName=addElectionView.getElectionName();}
+			[electionName.trim().isEmpty()] -> ElectionNameEmpty;
+			[!electionName.trim().isEmpty()] -> CheckingExistingElection;
+		}
+		CheckingExistingElection
+		{
+			entry / {ElectionService.getInstance().setElectionNameToSearch(electionName);
+					electionFound=ElectionService.getInstance().getElectionFound();}
+			[!electionFound] -> AddingElection;
+			[electionFound] -> ElectionExists;
+		}
+		AddingElection
+		{
+			entry / {tryToAddElection();}
+			[ElectionService.getInstance().getElectionAdded()] -> ElectionAdded;
+			[ElectionService.getInstance().getElectionAdded()] -> ElectionNotAdded;
+		}
+		ElectionAdded
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Election Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					Controller.getInstance().start();}
+			-> Initial;
+		}
+		ElectionNotAdded
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Adding Election Failed!", "Error!", JOptionPane.ERROR_MESSAGE); Controller.getInstance().start();}
+			-> Initial;
+		}
+		ElectionExists
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Election Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+					Controller.getInstance().start();
+					addElectionView.dispose();}
+			-> Initial;
+		}
+		ElectionNameEmpty
+		{
+			entry / {JOptionPane.showMessageDialog(null, "Election name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);}
+			addButtonClicked -> CheckingElectionName;
+			closeView -> ClosingView;
+		}
+		ClosingView
+		{
+			entry / {addElectionView.dispose();}
+			-> Initial;
+		}
+	}
+ 	
+ 	void showAddElectionView() {
+ 		addElectionView=new AddElectionView();
+ 		addElectionView.setVisible(true);
+	}
+	
+	void tryToAddElection() {
+		electionName=addElectionView.getElectionName();
+		String electionDescription=addElectionView.getElectionDescription();
+		Election election=new Election(-1, electionName, electionDescription);
+		ElectionService.getInstance().setNewElection(election);
+		addElectionView.dispose();
+	}
+}

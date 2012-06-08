@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 import usecase.addPoll.AddPollController;
 import usecase.openPoll.OpenPollController;
 import usecase.addElection.AddElectionController;
+import usecase.addPosition.AddPositionController;
+import view.main.MainView;
 
 public class Controller
 {
@@ -27,7 +29,7 @@ public class Controller
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding }
+  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, Closign, Closing }
   private Status status;
 
   //------------------------
@@ -88,32 +90,16 @@ public class Controller
         setStatus(Status.ProvidingMainMenu);
         wasEventProcessed = true;
         break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean __autotransition277__()
-  {
-    boolean wasEventProcessed = false;
-    
-    Status aStatus = status;
-    switch (aStatus)
-    {
-      case ProvidingMainMenu:
-        if (mainMenuOption!=null && mainMenuOption.equals("Open Poll"))
-        {
-          setStatus(Status.PollOpening);
-          wasEventProcessed = true;
-          break;
-        }
+      case PositionAdding:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
         break;
     }
 
     return wasEventProcessed;
   }
 
-  private boolean __autotransition278__()
+  public boolean openPoll()
   {
     boolean wasEventProcessed = false;
     
@@ -121,19 +107,15 @@ public class Controller
     switch (aStatus)
     {
       case ProvidingMainMenu:
-        if (mainMenuOption!=null && mainMenuOption.equals("Add Election"))
-        {
-          setStatus(Status.ElectionAdding);
-          wasEventProcessed = true;
-          break;
-        }
+        setStatus(Status.PollOpening);
+        wasEventProcessed = true;
         break;
     }
 
     return wasEventProcessed;
   }
 
-  private boolean __autotransition279__()
+  public boolean addElection()
   {
     boolean wasEventProcessed = false;
     
@@ -141,12 +123,56 @@ public class Controller
     switch (aStatus)
     {
       case ProvidingMainMenu:
-        if (mainMenuOption!=null && mainMenuOption.equals("Add Poll"))
-        {
-          setStatus(Status.PollAdding);
-          wasEventProcessed = true;
-          break;
-        }
+        setStatus(Status.ElectionAdding);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean addPoll()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.PollAdding);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean addPosition()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.PositionAdding);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean quit()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.Closing);
+        wasEventProcessed = true;
         break;
     }
 
@@ -162,18 +188,26 @@ public class Controller
     {
       case ProvidingMainMenu:
         showMainMenu();
-        __autotransition277__();
-        __autotransition278__();
-        __autotransition279__();
         break;
       case PollOpening:
-        OpenPollController.getInstance().openPoll();
+        MainView.getInstance().setVisible(false);
+      			OpenPollController.getInstance().openPoll();
         break;
       case ElectionAdding:
-        AddElectionController.getInstance().addElection();
+        MainView.getInstance().setVisible(false);
+      			AddElectionController.getInstance().addElection();
         break;
       case PollAdding:
-        AddPollController.getInstance().addPoll();
+        MainView.getInstance().setVisible(false);
+				AddPollController.getInstance().addPoll();
+        break;
+      case PositionAdding:
+        MainView.getInstance().setVisible(false);
+				AddPositionController.getInstance().addPosition();
+        break;
+      case Closign:
+        MainView.getInstance().setVisible(false);
+      			MainView.getInstance().dispose();
         break;
     }
   }
@@ -183,9 +217,7 @@ public class Controller
 
 
   public void showMainMenu(){
-      String[] selectionValues={"Open Poll", "Add Election", "Add Poll", "Quit"};
-		String defaultSelection = "Open Poll";
-		mainMenuOption = JOptionPane.showInputDialog(null, "Select a task", "Main Menu", JOptionPane.QUESTION_MESSAGE, null, selectionValues, defaultSelection);
+      MainView.getInstance().setVisible(true);
   }
 
 }

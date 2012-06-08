@@ -1,0 +1,62 @@
+namespace usecase.startup;
+
+class Controller
+{
+	singleton;
+	
+	depend java.sql.Connection;
+	depend java.sql.DriverManager;
+    depend javax.swing.JOptionPane;
+    depend usecase.addPoll.AddPollController;
+    depend usecase.openPoll.OpenPollController;
+    depend usecase.addElection.AddElectionController;
+    depend usecase.addPosition.AddPositionController;
+    depend view.main.MainView;
+
+    lazy internal int option=JOptionPane.NO_OPTION;
+    lazy internal Object mainMenuOption="Quit";
+    
+    void showMainMenu()
+    {
+		MainView.getInstance().setVisible(true);
+    }
+    
+    status {
+      Initial
+      {
+      	start -> ProvidingMainMenu;
+      }
+      ProvidingMainMenu {
+      	entry / {showMainMenu();}
+      	openPoll -> PollOpening;
+      	addElection -> ElectionAdding;
+      	addPoll -> PollAdding;
+      	addPosition -> PositionAdding;
+      	quit -> Closing;
+      }
+      PollOpening {
+      	entry / {MainView.getInstance().setVisible(false);
+      			OpenPollController.getInstance().openPoll();}
+      	start -> ProvidingMainMenu;
+      }
+      ElectionAdding {
+      	entry / {MainView.getInstance().setVisible(false);
+      			AddElectionController.getInstance().addElection();}
+      	start -> ProvidingMainMenu;
+      }
+      PollAdding {
+      	entry / {MainView.getInstance().setVisible(false);
+				AddPollController.getInstance().addPoll();}
+      	start -> ProvidingMainMenu;
+      }
+      PositionAdding {
+      	entry / {MainView.getInstance().setVisible(false);
+				AddPositionController.getInstance().addPosition();}
+      	start -> ProvidingMainMenu;
+      }
+      Closign {
+      	entry / {MainView.getInstance().setVisible(false);
+      			MainView.getInstance().dispose();}
+      }
+	}
+}

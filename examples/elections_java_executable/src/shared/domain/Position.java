@@ -4,38 +4,36 @@
 package shared.domain;
 import java.util.*;
 
-public class Election
+public class Position
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Election Attributes
-  private int idElection;
+  //Position Attributes
+  private int idPosition;
   private String name;
   private String description;
 
-  //Election Associations
-  private List<Poll> polls;
+  //Position Associations
   private List<ElectionForPosition> electionForPositions;
 
   //Helper Variables
   private int cachedHashCode;
-  private boolean canSetIdElection;
+  private boolean canSetIdPosition;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Election(int aIdElection, String aName, String aDescription)
+  public Position(int aIdPosition, String aName, String aDescription)
   {
     cachedHashCode = -1;
-    canSetIdElection = true;
-    idElection = aIdElection;
+    canSetIdPosition = true;
+    idPosition = aIdPosition;
     name = aName;
     description = aDescription;
-    polls = new ArrayList<Poll>();
     electionForPositions = new ArrayList<ElectionForPosition>();
   }
 
@@ -43,11 +41,11 @@ public class Election
   // INTERFACE
   //------------------------
 
-  public boolean setIdElection(int aIdElection)
+  public boolean setIdPosition(int aIdPosition)
   {
     boolean wasSet = false;
-    if (!canSetIdElection) { return false; }
-    idElection = aIdElection;
+    if (!canSetIdPosition) { return false; }
+    idPosition = aIdPosition;
     wasSet = true;
     return wasSet;
   }
@@ -68,9 +66,9 @@ public class Election
     return wasSet;
   }
 
-  public int getIdElection()
+  public int getIdPosition()
   {
-    return idElection;
+    return idPosition;
   }
 
   public String getName()
@@ -81,36 +79,6 @@ public class Election
   public String getDescription()
   {
     return description;
-  }
-
-  public Poll getPoll(int index)
-  {
-    Poll aPoll = polls.get(index);
-    return aPoll;
-  }
-
-  public List<Poll> getPolls()
-  {
-    List<Poll> newPolls = Collections.unmodifiableList(polls);
-    return newPolls;
-  }
-
-  public int numberOfPolls()
-  {
-    int number = polls.size();
-    return number;
-  }
-
-  public boolean hasPolls()
-  {
-    boolean has = polls.size() > 0;
-    return has;
-  }
-
-  public int indexOfPoll(Poll aPoll)
-  {
-    int index = polls.indexOf(aPoll);
-    return index;
   }
 
   public ElectionForPosition getElectionForPosition(int index)
@@ -143,65 +111,25 @@ public class Election
     return index;
   }
 
-  public static int minimumNumberOfPolls()
-  {
-    return 0;
-  }
-
-  public Poll addPoll(int aIdPoll, String aName, String aDescription)
-  {
-    return new Poll(aIdPoll, aName, aDescription, this);
-  }
-
-  public boolean addPoll(Poll aPoll)
-  {
-    boolean wasAdded = false;
-    if (polls.contains(aPoll)) { return false; }
-    Election existingElection = aPoll.getElection();
-    boolean isNewElection = existingElection != null && !this.equals(existingElection);
-    if (isNewElection)
-    {
-      aPoll.setElection(this);
-    }
-    else
-    {
-      polls.add(aPoll);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removePoll(Poll aPoll)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aPoll, as it must always have a election
-    if (!this.equals(aPoll.getElection()))
-    {
-      polls.remove(aPoll);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
   public static int minimumNumberOfElectionForPositions()
   {
     return 0;
   }
 
-  public ElectionForPosition addElectionForPosition(int aIdElectionForPosition, Position aPosition)
+  public ElectionForPosition addElectionForPosition(int aIdElectionForPosition, Election aElection)
   {
-    return new ElectionForPosition(aIdElectionForPosition, this, aPosition);
+    return new ElectionForPosition(aIdElectionForPosition, aElection, this);
   }
 
   public boolean addElectionForPosition(ElectionForPosition aElectionForPosition)
   {
     boolean wasAdded = false;
     if (electionForPositions.contains(aElectionForPosition)) { return false; }
-    Election existingElection = aElectionForPosition.getElection();
-    boolean isNewElection = existingElection != null && !this.equals(existingElection);
-    if (isNewElection)
+    Position existingPosition = aElectionForPosition.getPosition();
+    boolean isNewPosition = existingPosition != null && !this.equals(existingPosition);
+    if (isNewPosition)
     {
-      aElectionForPosition.setElection(this);
+      aElectionForPosition.setPosition(this);
     }
     else
     {
@@ -214,8 +142,8 @@ public class Election
   public boolean removeElectionForPosition(ElectionForPosition aElectionForPosition)
   {
     boolean wasRemoved = false;
-    //Unable to remove aElectionForPosition, as it must always have a election
-    if (!this.equals(aElectionForPosition.getElection()))
+    //Unable to remove aElectionForPosition, as it must always have a position
+    if (!this.equals(aElectionForPosition.getPosition()))
     {
       electionForPositions.remove(aElectionForPosition);
       wasRemoved = true;
@@ -228,9 +156,9 @@ public class Election
     if (obj == null) { return false; }
     if (!getClass().equals(obj.getClass())) { return false; }
 
-    Election compareTo = (Election)obj;
+    Position compareTo = (Position)obj;
   
-    if (idElection != compareTo.idElection)
+    if (idPosition != compareTo.idPosition)
     {
       return false;
     }
@@ -245,31 +173,19 @@ public class Election
       return cachedHashCode;
     }
     cachedHashCode = 17;
-    cachedHashCode = cachedHashCode * 23 + idElection;
+    cachedHashCode = cachedHashCode * 23 + idPosition;
 
-    canSetIdElection = false;
+    canSetIdPosition = false;
     return cachedHashCode;
   }
 
   public void delete()
   {
-    for(int i=polls.size(); i > 0; i--)
-    {
-      Poll aPoll = polls.get(i - 1);
-      aPoll.delete();
-    }
     for(int i=electionForPositions.size(); i > 0; i--)
     {
       ElectionForPosition aElectionForPosition = electionForPositions.get(i - 1);
       aElectionForPosition.delete();
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  public String toString() {
-		return name;
-	}
+
 }

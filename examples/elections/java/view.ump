@@ -1,3 +1,5 @@
-use java/addElectionView.ump;
-use java/addPollView.ump;
-use java/viewUtils.ump;
+use java/views/AddElectionView.ump;
+use java/views/AddPollView.ump;
+use java/views/AddPositionView.ump;
+use java/views/MainView.ump;
+use java/views/ViewUtils.ump;

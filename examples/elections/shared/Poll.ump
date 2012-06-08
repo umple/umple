@@ -1,9 +1,11 @@
 namespace shared.domain;
 
 class Poll {
-	Integer idPoll;
-	String name;
-	String description;
-	* -> 1 Election election;
-	key {idPoll, election}
+  Integer idPoll;
+  String name;
+  String description;
+  String status="planned";
+  * -- 1 Election;
+  
+  key {idPoll}
 }
