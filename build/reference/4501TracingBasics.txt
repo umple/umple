@@ -4,15 +4,60 @@ noreferences
 
 @@description
 <p>
-Tracing is a technique used to understand the behaviour of a targeted system in order to debug or monitor it. Umple language is developing a tracing subsystem that allows developers to inject traces at the model level. 
+Simple tracing is specified using trace directives, which all start with the word 'trace'. This is normally followed by the UML entity to trace (attribute, association, state, etc.).
 </p>
+
+<p>
+Beyond, this, other clauses can be added to limit tracing to certain conditions, to switch on or off tracing in certain situations, and to specify data that will be output.
+</p>
+
+<p>
+Each 'trace' statement emits exactly one trace record when something occurs to a matching UML entity; by default it is only <i>changes</i> in value that trigger emission of a trace record, but later pages describe how accesses to the value can also be traced. The format of the trace record will depend on the <a href="Tracers.html">tracer</a> being used but by default will contain the name of the entity and the new value of that entity.
+
+<p>
+The following are extremely simple example of tracing using MOTL on a UML Integer attribute. The default console tracer is used, so output will be sent to standard error.
+</p>
+
+&nbsp; <br/>
 
 @@example
 
 class Student
 {
   Integer id;
+  
+  // Whenever the id attribute is changed, emit a trace record
+  // The record will have the format id=value
   trace id;
+  
+  // The following Java main program can be used to demonstrate this in operation
+  // This will output a record when id is set to 9.
+  public static void main(String [ ] args) {
+    Student s = new Student(6);
+    s.setId(9); 
+  }
 }
+@@endexample
 
+@@example
+
+class Student
+{
+  lazy Integer id;
+  lazy name;
+  
+  // It is possible to specify multiple UML entities to trace as follows
+  // It is also possible to indicate interesting information to record
+  // in addition to the value of the element being traced
+  trace id, name record "interesting behavior";
+  trace id record "Even more interesting";
+
+  // Traces will be triggered for each call to a 'set' method
+  // and twice for id, since there are two trace statements for id  
+  public static void main(String [ ] args) {
+    Student s = new Student();
+    s.setId(9); 
+    s.setName("Tim");
+  }
+}
 @@endexample

@@ -3,13 +3,22 @@ Tracing
 noreferences
 
 @@description
-<p>Data collected while tracing ranges from a simple logging mechanism into a more sophisticated tracing mechanism that involves the record of lower level events triggered in user and kernel spaces. Umple provides tracing using different tracers. Tracers can be categorized into two main categories: <br>
-<b>- Primitive: </b> <br>
-  -- Console <br>
-  -- File <br>
-<b>- Advanced: </b> <br>
-   -- LTTNG <br>
-   -- Dtrace <br>
+<p>Data collected while tracing ranges from a simple logging mechanism into a more sophisticated tracing mechanism that involves the record of lower level events triggered in user and kernel spaces. Umple provides tracing using different tracers. Tracers can be categorized into two main categories: </p>
+
+<p>
+<ol>
+<li>Primitive:</li>
+  <ul>
+  <li>Console</li>
+  <li>File</li>
+  </ul>
+&nbsp;<br />
+<li>Advanced (under development):</li>
+   <ul>
+   <li>LTTNG </li>
+   <li>Dtrace </li>
+   </ul>
+</ol>
 </p>
 
 @@syntax
@@ -18,7 +27,7 @@ noreferences
 
 @@example
 
-// this example injects traces using File tracer
+// this example generates traces using the File tracer
 tracer File;
 
 class Student

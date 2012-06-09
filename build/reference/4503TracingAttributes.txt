@@ -4,24 +4,20 @@ noreferences
 
 @@description
 <p>
-MOTL allows the tracing of attributes at the model level. Attributes tracing can be done whenever an attribute value is changed (i.e. setter is called) or/and value is accessed (i.e. getter is called). Thus, attribute tracing falls in either one of these cases: <br>
-<b> Default case </b> <br>
-When no keyword is specified before traced attribute, tracing code is injected in attribute setter. <br>
-<b> set </b> <br>
-When "set" keyword is specified before traced attribute, tracing code is injected in attribute setter. <br>
-<b> get </b> <br>
-When "get" keyword is specified before traced attribute, tracing code in injected in attribute getter. <br>
-<b> set,get </b> <br>
-When "set,get" keyword is specified before traced attribute, tracing code in injected in attribute setter and getter. <br>
+MOTL allows the tracing of attributes at the model level. Attribute tracing can occur whenever an attribute value is changed (i.e. setter is called) or/and when the value is accessed (i.e. the getter method is called). Thus, attribute tracing can be made to occur any of the following modes: </p>
+
+<ul>
+<li><b>set</b>: When the "set" keyword is specified before the traced attribute, tracing occurs when the attribute setter method is executed. This is also the default when no keyword is specified before the attribute</li>
+<li><b>get</b>: When the "get" keyword is specified before the traced attribute, tracing occurs when the attribute setter method is executed</li>
+<li><b>set,get</b>: When "set,get"  is specified tracing occurs when both the getter and setter method are executed.</li>
+</ul>
 </p>
 
 @@syntax
 [[traceDirective]] [[traceItem]] [[executeClause]] [[traceWhere]] [[traceEntity]]
 
 @@example
-
-// this example injects trace code in attribute setter
-
+// This traces setId() and setName()
 class Student
 {
   Integer id;
@@ -29,29 +25,22 @@ class Student
   trace id;
   trace set name;
 }
-
 @@endexample
 
 @@example
-
-// this example injects trace code in attribute getter
-
+// This traces  getId() method
 class Student
 {
   Integer id;
   trace get id;
 }
-
 @@endexample
 
 @@example
-
-// this example injects trace code in attribute setter and getter
-
+// This example traces getId() and setId()
 class Student
 {
   Integer id;
   trace set,get id;
 }
-
 @@endexample
