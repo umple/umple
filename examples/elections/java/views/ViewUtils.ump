@@ -1,40 +1,49 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
 namespace view;
 
 class ViewUtils
 {
-	singleton;
+  singleton;
 
-	depend javax.swing.JFrame;
-	depend java.awt.Dimension;
-	depend java.awt.Toolkit;
-	
-	lazy JFrame toBeCenteredFrame;
-	lazy internal Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
- 	
-	after setToBeCenteredFrame {
-		center();
-	}
-	
-	ServiceProvidingCycle
-	{
-		Idle
-		{
-			center -> FrameCentering;
-		}
-		FrameCentering
-		{
-			entry / {performCentering();}
-			-> Idle
-		}
-	}
-	
-	private void performCentering()
-	{
-		int w = toBeCenteredFrame.getSize().width;
-		int h = toBeCenteredFrame.getSize().height;
-		int x = (dim.width-w)/2;
-		int y = (dim.height-h)/2;
-		 
-		toBeCenteredFrame.setLocation(x, y);
-	}
+  depend javax.swing.JFrame;
+  depend java.awt.Dimension;
+  depend java.awt.Toolkit;
+  
+  lazy JFrame toBeCenteredFrame;
+  lazy internal Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+   
+  after setToBeCenteredFrame {
+    center();
+  }
+  
+  ServiceProvidingCycle
+  {
+    Idle
+    {
+      center -> FrameCentering;
+    }
+    FrameCentering
+    {
+      entry / {performCentering();}
+      -> Idle
+    }
+  }
+  
+  private void performCentering()
+  {
+    int w = toBeCenteredFrame.getSize().width;
+    int h = toBeCenteredFrame.getSize().height;
+    int x = (dim.width-w)/2;
+    int y = (dim.height-h)/2;
+     
+    toBeCenteredFrame.setLocation(x, y);
+  }
 }

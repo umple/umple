@@ -37,7 +37,7 @@ public class PositionService
   private boolean positionFound;
 
   //PositionService State Machines
-  enum PositionServiceCycle { Idle, CreatingPosition, FindingPosition }
+  enum PositionServiceCycle { Idle, CreatingPosition, FindingPosition, LoadingAllPositions }
   private PositionServiceCycle PositionServiceCycle;
 
   //------------------------
@@ -151,6 +151,7 @@ public class PositionService
 
   public List<Position> getPositions()
   {
+    getAllPositions();
     return positions;
   }
 
@@ -242,7 +243,23 @@ public class PositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1737__()
+  public boolean getAllPositions()
+  {
+    boolean wasEventProcessed = false;
+    
+    PositionServiceCycle aPositionServiceCycle = PositionServiceCycle;
+    switch (aPositionServiceCycle)
+    {
+      case Idle:
+        setPositionServiceCycle(PositionServiceCycle.LoadingAllPositions);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1093__()
   {
     boolean wasEventProcessed = false;
     
@@ -258,7 +275,7 @@ public class PositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1738__()
+  private boolean __autotransition1094__()
   {
     boolean wasEventProcessed = false;
     
@@ -266,6 +283,22 @@ public class PositionService
     switch (aPositionServiceCycle)
     {
       case FindingPosition:
+        setPositionServiceCycle(PositionServiceCycle.Idle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1095__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PositionServiceCycle aPositionServiceCycle = PositionServiceCycle;
+    switch (aPositionServiceCycle)
+    {
+      case LoadingAllPositions:
         setPositionServiceCycle(PositionServiceCycle.Idle);
         wasEventProcessed = true;
         break;
@@ -277,11 +310,11 @@ public class PositionService
   private void setPositionServiceCycle(PositionServiceCycle aPositionServiceCycle)
   {
     try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
     PositionServiceCycle = aPositionServiceCycle;
 
     // entry actions and do activities
@@ -289,11 +322,15 @@ public class PositionService
     {
       case CreatingPosition:
         addPosition();
-        __autotransition1737__();
+        __autotransition1093__();
         break;
       case FindingPosition:
         searchForPosition();
-        __autotransition1738__();
+        __autotransition1094__();
+        break;
+      case LoadingAllPositions:
+        loadAllPositions();
+        __autotransition1095__();
         break;
     }
   }
@@ -302,33 +339,33 @@ public class PositionService
   {}
 
 
-  public void loadElectionPositions(){
-      /*positions=new ArrayList<Position>();
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM position where election_id_election="+selectedElection.getIdElection());
-			while (rs.next()) {
-				String name = rs.getString("name");
-				String description = rs.getString("description");
-				int id=Integer.parseInt(rs.getString("id_position"));
-				Position position=new Position(id, name, description, selectedElection);
-				positions.add(position);
-			}
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}*/
+  public void loadAllPositions(){
+      positions=new ArrayList<Position>();
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM position");
+      while (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        int id=Integer.parseInt(rs.getString("id_position"));
+        Position position=new Position(id, name, description);
+        positions.add(position);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
   }
 
 
   public void addPosition(){
       try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("insert into elections.position (name, description) values ('"+newPosition.getName()+"', '"+newPosition.getDescription()+"')");
-			positionAdded=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			positionAdded=false;
-		}
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.position (name, description) values ('"+newPosition.getName()+"', '"+newPosition.getDescription()+"')");
+      positionAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      positionAdded=false;
+    }
   }
   
   //------------------------
@@ -336,15 +373,15 @@ public class PositionService
   //------------------------
   
   private void searchForPosition() {
-		positionFound=true;
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM position where name='"+positionToSearch.getName()+"'");
-			if (!rs.next())
-				positionFound=false;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			positionFound=false;
-		}
+    positionFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM position where name='"+positionToSearch.getName()+"'");
+      if (!rs.next())
+        positionFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      positionFound=false;
+    }
   }
 }

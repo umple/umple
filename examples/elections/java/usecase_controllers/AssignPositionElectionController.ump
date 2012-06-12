@@ -1,0 +1,106 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.assignPositionElection;
+
+class AssignPositionElectionController
+{
+  singleton;
+  
+  depend view.assignPositionElection.AssignPositionElectionView;
+  depend javax.swing.JOptionPane;
+  depend service.ElectionService;
+  depend service.PositionService;
+  depend service.ElectionForPositionService;
+  depend shared.domain.Election;
+  depend shared.domain.Position;
+  depend shared.domain.ElectionForPosition;
+  depend java.util.List;
+  depend usecase.startup.Controller;
+    
+  lazy internal AssignPositionElectionView assignPositionElectionView;
+  lazy internal List<Election> elections;
+  lazy internal List<Position> positions;
+  lazy internal Boolean updated;
+    
+  AssigningPositionElectionSteps {
+    Initial
+    {
+      assignPositionElection -> ProvidingElectionsList;
+    }
+    ProvidingElectionsList
+    {
+      entry / {ElectionService.getInstance().getAllElections();
+          elections=ElectionService.getInstance().getElections();}
+      [!elections.isEmpty()] -> ProvidingPositionsList;
+      [elections.isEmpty()] -> NoElectionsFound;
+    }
+    ProvidingPositionsList
+    {
+      entry / {positions=PositionService.getInstance().getPositions();}
+      [!positions.isEmpty()] -> PositionsListProvided;
+      [positions.isEmpty()] -> NoPositionsFound;
+    }
+    PositionsListProvided
+    {
+      entry / {showAddElectionForPositionView();}
+      addButtonClicked -> Updating;
+      closeView -> ClosingView;
+    }
+    Updating
+    {
+      entry / {updated=tryToAddElectionForPosition();}
+      [updated] -> Updated;
+      [!updated] -> NotUpdated;
+    }
+    Updated
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Election for positions Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    NotUpdated
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Adding election for positions Failed!");
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    ClosingView
+    {
+      entry / {assignPositionElectionView.dispose();}
+      -> Initial;
+    }
+    NoElectionsFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    NoPositionsFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+  }
+   
+   void showAddElectionForPositionView() {
+     assignPositionElectionView=new AssignPositionElectionView(elections, positions);
+     assignPositionElectionView.setVisible(true);
+  }
+  
+  boolean tryToAddElectionForPosition() {
+    List<ElectionForPosition> efps=assignPositionElectionView.getElectionForPositions();
+    for (ElectionForPosition efp:efps) {
+      ElectionForPositionService.getInstance().setNewElectionForPosition(efp);
+    }
+    assignPositionElectionView.dispose();
+    return ElectionForPositionService.getInstance().getElectionForPositionAdded();
+  }
+}

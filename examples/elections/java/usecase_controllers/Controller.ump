@@ -1,62 +1,78 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
 namespace usecase.startup;
 
 class Controller
 {
-	singleton;
-	
-	depend java.sql.Connection;
-	depend java.sql.DriverManager;
-    depend javax.swing.JOptionPane;
-    depend usecase.addPoll.AddPollController;
-    depend usecase.openPoll.OpenPollController;
-    depend usecase.addElection.AddElectionController;
-    depend usecase.addPosition.AddPositionController;
-    depend view.main.MainView;
+  singleton;
+  
+  depend java.sql.Connection;
+  depend java.sql.DriverManager;
+  depend javax.swing.JOptionPane;
+  depend usecase.addPoll.AddPollController;
+  depend usecase.openPoll.OpenPollController;
+  depend usecase.addElection.AddElectionController;
+  depend usecase.addPosition.AddPositionController;
+  depend usecase.assignPositionElection.AssignPositionElectionController;
+  depend view.main.MainView;
 
-    lazy internal int option=JOptionPane.NO_OPTION;
-    lazy internal Object mainMenuOption="Quit";
-    
-    void showMainMenu()
+  lazy internal int option=JOptionPane.NO_OPTION;
+  lazy internal Object mainMenuOption="Quit";
+  
+  void showMainMenu()
+  {
+    MainView.getInstance().setVisible(true);
+  }
+  
+  status {
+    Initial
     {
-		MainView.getInstance().setVisible(true);
+    start -> ProvidingMainMenu;
     }
-    
-    status {
-      Initial
-      {
-      	start -> ProvidingMainMenu;
-      }
-      ProvidingMainMenu {
-      	entry / {showMainMenu();}
-      	openPoll -> PollOpening;
-      	addElection -> ElectionAdding;
-      	addPoll -> PollAdding;
-      	addPosition -> PositionAdding;
-      	quit -> Closing;
-      }
-      PollOpening {
-      	entry / {MainView.getInstance().setVisible(false);
-      			OpenPollController.getInstance().openPoll();}
-      	start -> ProvidingMainMenu;
-      }
-      ElectionAdding {
-      	entry / {MainView.getInstance().setVisible(false);
-      			AddElectionController.getInstance().addElection();}
-      	start -> ProvidingMainMenu;
-      }
-      PollAdding {
-      	entry / {MainView.getInstance().setVisible(false);
-				AddPollController.getInstance().addPoll();}
-      	start -> ProvidingMainMenu;
-      }
-      PositionAdding {
-      	entry / {MainView.getInstance().setVisible(false);
-				AddPositionController.getInstance().addPosition();}
-      	start -> ProvidingMainMenu;
-      }
-      Closign {
-      	entry / {MainView.getInstance().setVisible(false);
-      			MainView.getInstance().dispose();}
-      }
-	}
+    ProvidingMainMenu {
+    entry / {showMainMenu();}
+    openPoll -> PollOpening;
+    addElection -> ElectionAdding;
+    addPoll -> PollAdding;
+    addPosition -> PositionAdding;
+    assignPositionElection -> AssigningPositionElection;
+    quit -> Closing;
+    }
+    PollOpening {
+    entry / {MainView.getInstance().setVisible(false);
+      OpenPollController.getInstance().openPoll();}
+    start -> ProvidingMainMenu;
+    }
+    ElectionAdding {
+    entry / {MainView.getInstance().setVisible(false);
+      AddElectionController.getInstance().addElection();}
+    start -> ProvidingMainMenu;
+    }
+    PollAdding {
+    entry / {MainView.getInstance().setVisible(false);
+    AddPollController.getInstance().addPoll();}
+    start -> ProvidingMainMenu;
+    }
+    PositionAdding {
+    entry / {MainView.getInstance().setVisible(false);
+    AddPositionController.getInstance().addPosition();}
+    start -> ProvidingMainMenu;
+    }
+    AssigningPositionElection {
+    entry / {MainView.getInstance().setVisible(false);
+    AssignPositionElectionController.getInstance().assignPositionElection();}
+    start -> ProvidingMainMenu;
+    }
+    Closign {
+    entry / {MainView.getInstance().setVisible(false);
+      MainView.getInstance().dispose();}
+    }
+  }
 }

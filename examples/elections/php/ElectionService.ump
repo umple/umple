@@ -1,0 +1,83 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Php;
+
+namespace services;
+
+class ElectionService {
+  singleton;
+
+  lazy isConnected;
+  lazy elections;
+  lazy electionJSON;
+  lazy latestResult;
+  
+  after setElectionJSON {
+    $this->createElection();
+  }
+  
+  before getElections {
+    $this->getAllElections();
+  }
+  
+  ServiceProvidingCycle {
+    Idle {
+      getAllElections -> AllElectionsLoaded;
+      createElection -> CreatingElection;
+    }
+    AllElectionsLoaded {
+      entry / {$this->loadAllElections();}
+    }
+    CreatingElection {
+      entry / {$this->addElection();}
+    }
+  }
+
+  after constructor {
+    $this->newElection=NULL;
+  }
+
+  before setServiceProvidingCycle {
+    require_once("Credentials.php");
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+  }
+  
+  private function loadAllElections() {
+    $result = mysql_query("SELECT * FROM elections.election");
+
+    require_once("./domain/Election.php");
+    
+    $this->elections='{"elections" : [';
+    $first=true;
+    while($row = mysql_fetch_array($result)) {
+      $anElection=new Election($row['id_election'],$row['name'],$row['description']);
+      if ($first) {
+        $this->elections=$this->elections.$this->jsonSerialize($anElection);
+        $first=false;
+      } else
+        $this->elections=$this->elections.",".$this->jsonSerialize($anElection);
+    }
+    $this->elections=$this->elections.']}';
+
+    mysql_close($this->isConnected);
+  }
+  
+  private function addElection() {
+    $electionData=json_decode($this->electionJSON);
+    if (mysql_query("insert into elections.election (name, description) values ('$electionData->name', '$electionData->description')"))
+      $this->latestResult='Successfully added!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
+  private function jsonSerialize($anElection) {
+    return '{"idElection":"'.$anElection->getIdElection().'","name":"'.$anElection->getName().'","description":"'.$anElection->getDescription().'"}';
+  }
+}

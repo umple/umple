@@ -187,5 +187,12 @@ public class Position
       aElectionForPosition.delete();
     }
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String toString() {
+    return name;
+  }
 }

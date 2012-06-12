@@ -9,6 +9,7 @@ import usecase.addPoll.AddPollController;
 import usecase.openPoll.OpenPollController;
 import usecase.addElection.AddElectionController;
 import usecase.addPosition.AddPositionController;
+import usecase.assignPositionElection.AssignPositionElectionController;
 import view.main.MainView;
 
 public class Controller
@@ -29,7 +30,7 @@ public class Controller
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, Closign, Closing }
+  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, AssigningPositionElection, Closign, Closing }
   private Status status;
 
   //------------------------
@@ -91,6 +92,10 @@ public class Controller
         wasEventProcessed = true;
         break;
       case PositionAdding:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case AssigningPositionElection:
         setStatus(Status.ProvidingMainMenu);
         wasEventProcessed = true;
         break;
@@ -163,6 +168,22 @@ public class Controller
     return wasEventProcessed;
   }
 
+  public boolean assignPositionElection()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.AssigningPositionElection);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   public boolean quit()
   {
     boolean wasEventProcessed = false;
@@ -191,23 +212,27 @@ public class Controller
         break;
       case PollOpening:
         MainView.getInstance().setVisible(false);
-      			OpenPollController.getInstance().openPoll();
+      OpenPollController.getInstance().openPoll();
         break;
       case ElectionAdding:
         MainView.getInstance().setVisible(false);
-      			AddElectionController.getInstance().addElection();
+      AddElectionController.getInstance().addElection();
         break;
       case PollAdding:
         MainView.getInstance().setVisible(false);
-				AddPollController.getInstance().addPoll();
+    AddPollController.getInstance().addPoll();
         break;
       case PositionAdding:
         MainView.getInstance().setVisible(false);
-				AddPositionController.getInstance().addPosition();
+    AddPositionController.getInstance().addPosition();
+        break;
+      case AssigningPositionElection:
+        MainView.getInstance().setVisible(false);
+    AssignPositionElectionController.getInstance().assignPositionElection();
         break;
       case Closign:
         MainView.getInstance().setVisible(false);
-      			MainView.getInstance().dispose();
+      MainView.getInstance().dispose();
         break;
     }
   }

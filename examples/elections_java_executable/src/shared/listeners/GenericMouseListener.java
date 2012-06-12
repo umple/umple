@@ -1,3 +1,12 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
 package shared.listeners;
 
 import java.awt.event.MouseEvent;
@@ -5,6 +14,7 @@ import java.awt.event.MouseListener;
 import usecase.addPoll.AddPollController;
 import usecase.addPosition.AddPositionController;
 import usecase.addElection.AddElectionController;
+import usecase.assignPositionElection.AssignPositionElectionController;
 import usecase.startup.Controller;
 import view.main.MainView;
 
@@ -12,6 +22,7 @@ public enum GenericMouseListener implements MouseListener {
 	AddElectionViewMouseListener,
 	AddPollViewMouseListener,
 	AddPositionViewMouseListener,
+	AssignPositionElectionViewMouseListener,
 	MainViewMouseListener;
 
 	@Override
@@ -22,6 +33,8 @@ public enum GenericMouseListener implements MouseListener {
 			AddPollController.getInstance().addButtonClicked();
 		} else if (name().compareTo("AddPositionViewMouseListener")==0) {
 			AddPositionController.getInstance().addButtonClicked();
+		} else if (name().compareTo("AssignPositionElectionViewMouseListener")==0) {
+			AssignPositionElectionController.getInstance().addButtonClicked();
 		} else if (name().compareTo("MainViewMouseListener")==0) {
 			String task=MainView.getInstance().getSelectedTask();
 			if (task.compareTo("Open Poll")==0)
@@ -32,6 +45,8 @@ public enum GenericMouseListener implements MouseListener {
 				Controller.getInstance().addPoll();
 			else if (task.compareTo("Add Position")==0)
 				Controller.getInstance().addPosition();
+			else if (task.compareTo("Assign Positions to Election")==0)
+				Controller.getInstance().assignPositionElection();
 			else
 				Controller.getInstance().quit();
 		} 

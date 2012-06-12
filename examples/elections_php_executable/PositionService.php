@@ -151,7 +151,7 @@ class PositionService
   private function setServiceProvidingCycle($aServiceProvidingCycle)
   {
     require_once("Credentials.php");
-		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
@@ -177,36 +177,36 @@ class PositionService
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  private function addPosition() {
+    $positionData=json_decode($this->positionJSON);
+    if (mysql_query("insert into elections.position (name, description) values ('$positionData->name', '$positionData->description')"))
+      $this->latestResult='Successfully added!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
   private function loadAllPositions() {
-  		$result = mysql_query("SELECT * FROM positions.position");
+      $result = mysql_query("SELECT * FROM elections.position");
 
-		require_once("./domain/Position.php");
-		
-		$this->positions='{"positions" : [';
-		$first=true;
-		while($row = mysql_fetch_array($result)) {
-			$anPosition=new Position($row['id_position'],$row['name'],$row['description']);
-			if ($first) {
-				$this->positions=$this->positions.$this->jsonSerialize($anPosition);
-				$first=false;
-			} else
-				$this->positions=$this->positions.",".$this->jsonSerialize($anPosition);
-		}
-		$this->positions=$this->positions.']}';
+    require_once("./domain/Position.php");
+    
+    $this->positions='{"positions" : [';
+    $first=true;
+    while($row = mysql_fetch_array($result)) {
+      $anPosition=new Position($row['id_position'],$row['name'],$row['description']);
+      if ($first) {
+        $this->positions=$this->positions.$this->jsonSerialize($anPosition);
+        $first=false;
+      } else
+        $this->positions=$this->positions.",".$this->jsonSerialize($anPosition);
+    }
+    $this->positions=$this->positions.']}';
 
-		mysql_close($this->isConnected);
-	}
-	
-	private function addPosition() {
-		$positionData=json_decode($this->positionJSON);
-		if (mysql_query("insert into elections.position (name, description) values ('$positionData->name', '$positionData->description')"))
-			$this->latestResult='Successfully added!';
-		else
-			$this->latestResult=mysql_error();
-	}
-	
-	private function jsonSerialize($anPosition) {
-		return '{"idPosition":"'.$anPosition->getIdPosition().'","name":"'.$anPosition->getName().'","description":"'.$anPosition->getDescription().'"}';
-	}
+    mysql_close($this->isConnected);
+  }
+    
+  private function jsonSerialize($anPosition) {
+    return '{"idPosition":"'.$anPosition->getIdPosition().'","name":"'.$anPosition->getName().'","description":"'.$anPosition->getDescription().'"}';
+  }
 }
 ?>

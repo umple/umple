@@ -12,6 +12,9 @@ import java.sql.Statement;
 import java.sql.DriverManager;
 import shared.Credentials;
 
+/**
+ * handles all database-related tasks regarding ElectionForPosition objects
+ */
 public class ElectionForPositionService
 {
 
@@ -31,9 +34,10 @@ public class ElectionForPositionService
   private boolean electionForPositionFound;
   private boolean electionForPositionAdded;
   private Connection theConnection;
+  private boolean efpFound;
 
   //ElectionForPositionService State Machines
-  enum ElectionForPositionServiceCycle { Idle, CreatingElectionForPosition }
+  enum ElectionForPositionServiceCycle { Idle, CreatingElectionForPosition, FindingElectionForPosition }
   private ElectionForPositionServiceCycle ElectionForPositionServiceCycle;
 
   //------------------------
@@ -44,6 +48,7 @@ public class ElectionForPositionService
   {
     electionForPositionFound = false;
     electionForPositionAdded = false;
+    efpFound = false;
     setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.Idle);
   }
 
@@ -93,37 +98,52 @@ public class ElectionForPositionService
     return wasSet;
   }
 
-  public boolean setTheConnection(Connection aTheConnection)
+  public boolean setEfpFound(boolean aEfpFound)
   {
     boolean wasSet = false;
-    theConnection = aTheConnection;
+    efpFound = aEfpFound;
     wasSet = true;
     return wasSet;
   }
 
+  /**
+   * Returns the ElectionForPosition object that was set to search in the database.
+   * The electionForPositionToSearch attribute, once set, triggers a search in the database.
+   */
   public ElectionForPosition getElectionForPositionToSearch()
   {
     return electionForPositionToSearch;
   }
 
+  /**
+   * Returns the new ElectionForPosition object to be inserted in the database.
+   * The newElectionForPosition attribute, once set, triggers an insertion search in the database.
+   */
   public ElectionForPosition getNewElectionForPosition()
   {
     return newElectionForPosition;
   }
 
+  /**
+   * Returns the result of the latest search for an ElectionForPosition Object.
+   */
   public boolean getElectionForPositionFound()
   {
     return electionForPositionFound;
   }
 
+  /**
+   * Returns the ElectionForPosition object that was set to search in the database.
+   * The electionForPositionToSearch attribute, once set, triggers a search in the database.
+   */
   public boolean getElectionForPositionAdded()
   {
     return electionForPositionAdded;
   }
 
-  public Connection getTheConnection()
+  public boolean getEfpFound()
   {
-    return theConnection;
+    return efpFound;
   }
 
   public boolean isElectionForPositionFound()
@@ -134,6 +154,11 @@ public class ElectionForPositionService
   public boolean isElectionForPositionAdded()
   {
     return electionForPositionAdded;
+  }
+
+  public boolean isEfpFound()
+  {
+    return efpFound;
   }
 
   public String getElectionForPositionServiceCycleFullName()
@@ -155,7 +180,7 @@ public class ElectionForPositionService
     switch (aElectionForPositionServiceCycle)
     {
       case Idle:
-        setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.CreatingElectionForPosition);
+        setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.FindingElectionForPosition);
         wasEventProcessed = true;
         break;
     }
@@ -163,7 +188,7 @@ public class ElectionForPositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1402__()
+  private boolean __autotransition353__()
   {
     boolean wasEventProcessed = false;
     
@@ -179,8 +204,54 @@ public class ElectionForPositionService
     return wasEventProcessed;
   }
 
+  private boolean __autotransition354__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionForPositionServiceCycle aElectionForPositionServiceCycle = ElectionForPositionServiceCycle;
+    switch (aElectionForPositionServiceCycle)
+    {
+      case FindingElectionForPosition:
+        if (efpFound)
+        {
+          setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.Idle);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition355__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionForPositionServiceCycle aElectionForPositionServiceCycle = ElectionForPositionServiceCycle;
+    switch (aElectionForPositionServiceCycle)
+    {
+      case FindingElectionForPosition:
+        if (!efpFound)
+        {
+          setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.CreatingElectionForPosition);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   private void setElectionForPositionServiceCycle(ElectionForPositionServiceCycle aElectionForPositionServiceCycle)
   {
+    try {
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
     ElectionForPositionServiceCycle = aElectionForPositionServiceCycle;
 
     // entry actions and do activities
@@ -188,7 +259,12 @@ public class ElectionForPositionService
     {
       case CreatingElectionForPosition:
         addElectionForPosition();
-        __autotransition1402__();
+        __autotransition353__();
+        break;
+      case FindingElectionForPosition:
+        tryFindingElectionForPosition();
+        __autotransition354__();
+        __autotransition355__();
         break;
     }
   }
@@ -197,44 +273,31 @@ public class ElectionForPositionService
   {}
 
 
-  /**
-   * void loadElectionPolls() {
-   * polls=new ArrayList<Poll>();
-   * try {
-   * Statement stmt = theConnection.createStatement();
-   * ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+selectedElection.getIdElection());
-   * while (rs.next()) {
-   * String name = rs.getString("name");
-   * String description = rs.getString("description");
-   * int id=Integer.parseInt(rs.getString("id_poll"));
-   * Poll poll=new Poll(id, name, description, selectedElection);
-   * polls.add(poll);
-   * }
-   * } catch(Exception e) {
-   * System.err.println("Exception: " + e.getMessage());
-   * }
-   * 
-   * 
-   * void tryToOpenPoll() {
-   * try {
-   * Statement stmt = theConnection.createStatement();
-   * stmt.executeUpdate("update elections.poll set status='open' where id_poll="+selectedPoll.getIdPoll());
-   * pollOpenned=true;
-   * } catch(Exception e) {
-   * System.err.println("Exception: " + e.getMessage());
-   * pollOpenned=false;
-   * }
-   * 
-   */
   public void addElectionForPosition(){
       try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("insert into elections.election_for_position (election_id_election, position_id_position) values ('"+newElectionForPosition.getElection().getIdElection()+"', '"+newElectionForPosition.getPosition().getIdPosition()+"')");
-			electionForPositionAdded=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			electionForPositionAdded=false;
-		}
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.election_for_position (election_id_election, position_id_position) values ('"+newElectionForPosition.getElection().getIdElection()+"', '"+newElectionForPosition.getPosition().getIdPosition()+"')");
+      electionForPositionAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionForPositionAdded=false;
+    }
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  private void tryFindingElectionForPosition() {
+    efpFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election_for_position where election_id_election='"+newElectionForPosition.getElection().getIdElection()+"' and position_id_position='"+newElectionForPosition.getPosition().getIdPosition()+"'");
+      if (!rs.next())
+        efpFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      efpFound=false;
+    }
+  }
 }

@@ -9,9 +9,9 @@ http://umple.org/license
 
 namespace shared.domain;
 
-// represents an election
-class Election {
-  /* Returns the string value of this object. Used when adding election objects directly to combo boxes, so that the item is the actual election
+// represents a position such as chairman
+class Position {
+  /* Returns the string value of this object. Used when adding position objects directly to list boxes, so that the item is the actual position
   object and the presented text is whatever this method returns. */
   public String toString() {
     return name;

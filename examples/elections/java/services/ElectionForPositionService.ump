@@ -1,111 +1,131 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
 namespace service;
 
+// handles all database-related tasks regarding ElectionForPosition objects
 class ElectionForPositionService {
-	depend java.util.List;
-	depend java.util.ArrayList;
-	depend shared.domain.Election;
-	depend shared.domain.ElectionForPosition;
-	depend java.sql.Connection;
-	depend java.sql.ResultSet;
-    depend java.sql.Statement;
-    depend java.sql.DriverManager;
-    depend shared.Credentials;
-	
-	singleton;
-	
-	lazy ElectionForPosition electionForPositionToSearch;
-	lazy ElectionForPosition newElectionForPosition;
-	lazy Boolean electionForPositionFound;
-	lazy Boolean electionForPositionAdded;
-	lazy Connection theConnection;
-
-	
+  // java utilities
+  depend java.util.List;
+  depend java.util.ArrayList;
+  
+  // domain objects 
+  depend shared.domain.Election;
+  depend shared.domain.ElectionForPosition;
+  
+  // java classes required to work with SQL JDBC database 
+  depend java.sql.Connection;
+  depend java.sql.ResultSet;
+  depend java.sql.Statement;
+  depend java.sql.DriverManager;
+  depend shared.Credentials;
+  
+  // only one instance of this service will exist  
+  singleton;
+  
+  /* Returns the ElectionForPosition object that was set to search in the database.
+  The electionForPositionToSearch attribute, once set, triggers a search in the database. */
+  lazy ElectionForPosition electionForPositionToSearch;
+  
+  /* Returns the new ElectionForPosition object to be inserted in the database.
+  The newElectionForPosition attribute, once set, triggers an insertion search in the database. */
+  lazy ElectionForPosition newElectionForPosition;
+  
+  /* Returns the result of the latest search for an ElectionForPosition Object. */
+  lazy Boolean electionForPositionFound;
+  
+  /* Returns the ElectionForPosition object that was set to search in the database.
+  The electionForPositionToSearch attribute, once set, triggers a search in the database. */
+  lazy Boolean electionForPositionAdded;
+  
+  // holds the connection to database
+  lazy internal Connection theConnection;
+  
+  lazy Boolean efpFound;
+  
+  // now that the newElectionForPosition is set, it's time to insert it in database
   after setNewElectionForPosition
   {
     createElectionForPosition();
   }
-	
-	after setPositionForElectionToSearch {
-		positionForElectionFound=true;
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
-			Statement stmt = theConnection.createStatement();
-			
-			String name=positionForElectionToSearch.getPosition().getName();
-			ResultSet rs1=stmt.executeQuery("SELECT * FROM position where name='" + name +"'");
-			
-			while (rs1.next()) {
-			  Integer idPosition=Integer.parseInt(rs1.getString("id_position"));
-			  Integer idElection=positionForElectionToSearch.getElection().getIdElection();
-			  ResultSet rs2 = stmt.executeQuery("SELECT * FROM elction_for_position where election_id_election="+idElection+" and position_id_position="+idPosition);
-			  if (!rs2.next())
-  				electionForPositionFound=false;
-			}
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			electionForPositionFound=false;
-		}
-	}
-	
+  
+  // now that positionForElectionToSearch is set, it's time to look for it in database
+  after setPositionForElectionToSearch {
+    positionForElectionFound=true;
+    try {
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+      Statement stmt = theConnection.createStatement();
+      
+      String name=positionForElectionToSearch.getPosition().getName();
+      ResultSet rs1=stmt.executeQuery("SELECT * FROM position where name='" + name +"'");
+      
+      while (rs1.next()) {
+        Integer idPosition=Integer.parseInt(rs1.getString("id_position"));
+        Integer idElection=positionForElectionToSearch.getElection().getIdElection();
+        ResultSet rs2 = stmt.executeQuery("SELECT * FROM elction_for_position where election_id_election="+idElection+" and position_id_position="+idPosition);
+        if (!rs2.next())
+          electionForPositionFound=false;
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionForPositionFound=false;
+    }
+  }
+  
   ElectionForPositionServiceCycle {
     Idle {
-      createElectionForPosition -> CreatingElectionForPosition;
+      createElectionForPosition -> FindingElectionForPosition;
     }
     CreatingElectionForPosition
     {
       entry / {addElectionForPosition();}
       -> Idle;
     }
+    FindingElectionForPosition {
+      entry / {tryFindingElectionForPosition();}
+      [efpFound] -> Idle;
+      [!efpFound] -> CreatingElectionForPosition;
+    }
    }
-	
-	before ElectionForPositionServiceCycle
-	{
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
-	}
-	
-/*	void loadElectionPolls() {
-		polls=new ArrayList<Poll>();
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+selectedElection.getIdElection());
-			while (rs.next()) {
-				String name = rs.getString("name");
-				String description = rs.getString("description");
-				int id=Integer.parseInt(rs.getString("id_poll"));
-				Poll poll=new Poll(id, name, description, selectedElection);
-				polls.add(poll);
-			}
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
-	}
-	
-	void tryToOpenPoll() {
-		try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("update elections.poll set status='open' where id_poll="+selectedPoll.getIdPoll());
-			pollOpenned=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			pollOpenned=false;
-		}
-	}*/
-	
-		
-	void addElectionForPosition() {
-		try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("insert into elections.election_for_position (election_id_election, position_id_position) values ('"+newElectionForPosition.getElection().getIdElection()+"', '"+newElectionForPosition.getPosition().getIdPosition()+"')");
-			electionForPositionAdded=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			electionForPositionAdded=false;
-		}
-	}
+  
+  before setElectionForPositionServiceCycle
+  {
+    try {
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+      
+  void addElectionForPosition() {
+    try {
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.election_for_position (election_id_election, position_id_position) values ('"+newElectionForPosition.getElection().getIdElection()+"', '"+newElectionForPosition.getPosition().getIdPosition()+"')");
+      electionForPositionAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionForPositionAdded=false;
+    }
+  }
+  
+  private void tryFindingElectionForPosition() {
+    efpFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election_for_position where election_id_election='"+newElectionForPosition.getElection().getIdElection()+"' and position_id_position='"+newElectionForPosition.getPosition().getIdPosition()+"'");
+      if (!rs.next())
+        efpFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      efpFound=false;
+    }
+  }
 }
