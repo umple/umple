@@ -17,6 +17,7 @@ class ElectionForPositionService {
   
   // domain objects 
   depend shared.domain.Election;
+  depend shared.domain.Position;
   depend shared.domain.ElectionForPosition;
   
   // java classes required to work with SQL JDBC database 
@@ -44,10 +45,19 @@ class ElectionForPositionService {
   The electionForPositionToSearch attribute, once set, triggers a search in the database. */
   lazy Boolean electionForPositionAdded;
   
+  lazy Election selectedElection;
+  
+  // all election_for_position objects with the election id equal to the one of the selectedElection
+  lazy List<ElectionForPosition> foundEFPs;
+  
   // holds the connection to database
   lazy internal Connection theConnection;
   
   lazy Boolean efpFound;
+  
+  after setSelectedElection {
+  	findElectionForPositions();
+  }
   
   // now that the newElectionForPosition is set, it's time to insert it in database
   after setNewElectionForPosition
@@ -82,6 +92,7 @@ class ElectionForPositionService {
   ElectionForPositionServiceCycle {
     Idle {
       createElectionForPosition -> FindingElectionForPosition;
+      findElectionForPositions -> FindingElctionForPositionsList;
     }
     CreatingElectionForPosition
     {
@@ -92,6 +103,10 @@ class ElectionForPositionService {
       entry / {tryFindingElectionForPosition();}
       [efpFound] -> Idle;
       [!efpFound] -> CreatingElectionForPosition;
+    }
+    FindingElctionForPositionsList {
+      entry / {tryFindingElectionForPositionsList();}
+      -> Idle;
     }
    }
   
@@ -126,6 +141,23 @@ class ElectionForPositionService {
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
       efpFound=false;
+    }
+  }
+  
+  private void tryFindingElectionForPositionsList() {
+    foundEFPs=new ArrayList<ElectionForPosition>();
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election_for_position where election_id_election='"+selectedElection.getIdElection()+"'");
+      while (rs.next()) {
+        Integer idPosition=Integer.parseInt(rs.getString("id_position"));
+        Position position=new Position(idPosition, "", "");
+        Integer idEFP=Integer.parseInt(rs.getString("id_election_for_position"));
+        ElectionForPosition efp=new ElectionForPosition(idEFP, selectedElection, position);
+        foundEFPs.add(efp);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
     }
   }
 }

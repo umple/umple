@@ -113,7 +113,7 @@ class AssignCandidatureController
   
   private void tryLoadingPositions() {
     ElectionForPositionService.getInstance().setSelectedElection(selectedElection);
-    List<ElectionForPosition> electionForPositions=ElectionForPositionService.getInstance().getElectionForPositions();
+    List<ElectionForPosition> electionForPositions=ElectionForPositionService.getInstance().getFoundEfps();
     PositionService.getInstance().setSelectedElectionForPositions(electionForPositions);
   }
 }
