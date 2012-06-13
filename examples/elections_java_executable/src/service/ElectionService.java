@@ -197,7 +197,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition460__()
+  private boolean __autotransition281__()
   {
     boolean wasEventProcessed = false;
     
@@ -213,7 +213,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition461__()
+  private boolean __autotransition282__()
   {
     boolean wasEventProcessed = false;
     
@@ -229,7 +229,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition462__()
+  private boolean __autotransition283__()
   {
     boolean wasEventProcessed = false;
     
@@ -248,11 +248,11 @@ public class ElectionService
   private void setElectionServiceCycle(ElectionServiceCycle aElectionServiceCycle)
   {
     try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
     ElectionServiceCycle = aElectionServiceCycle;
 
     // entry actions and do activities
@@ -260,15 +260,15 @@ public class ElectionService
     {
       case LoadingAllElections:
         loadAllElections();
-        __autotransition460__();
+        __autotransition281__();
         break;
       case CreatingElection:
         addElection();
-        __autotransition461__();
+        __autotransition282__();
         break;
       case FindingElectionByName:
         tryFindingElectionByName();
-        __autotransition462__();
+        __autotransition283__();
         break;
     }
   }
@@ -279,32 +279,32 @@ public class ElectionService
 
   public void loadAllElections(){
       elections=new ArrayList<Election>();
-		
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM election");
-			while (rs.next()) {
-				String name = rs.getString("name");
-				String description = rs.getString("description");
-				int id=Integer.parseInt(rs.getString("id_election"));
-				Election election=new Election(id, name, description);
-				elections.add(election);
-			}
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
+    
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election");
+      while (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        int id=Integer.parseInt(rs.getString("id_election"));
+        Election election=new Election(id, name, description, null);
+        elections.add(election);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
   }
 
 
   public void addElection(){
       try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("insert into elections.election (name, description) values ('"+newElection.getName()+"', '"+newElection.getDescription()+"')");
-			electionAdded=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			electionAdded=false;
-		}
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.election (name, description) values ('"+newElection.getName()+"', '"+newElection.getDescription()+"')");
+      electionAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionAdded=false;
+    }
   }
   
   //------------------------
@@ -312,15 +312,15 @@ public class ElectionService
   //------------------------
   
   private void tryFindingElectionByName() {
-		electionFound=true;
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM election where name='"+electionNameToSearch+"'");
-			if (!rs.next())
-				electionFound=false;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			electionFound=false;
-		}
-	}
+    electionFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election where name='"+electionNameToSearch+"'");
+      if (!rs.next())
+        electionFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionFound=false;
+    }
+  }
 }

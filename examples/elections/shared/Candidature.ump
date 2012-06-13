@@ -9,13 +9,9 @@ http://umple.org/license
 
 namespace shared.domain;
 
-class Poll {
-  Integer idPoll;
-  Integer number;
-  String name;
-  String description;
-  String status="planned";
-  * -- 1 Election;
-  
-  key {idPoll}
+class Candidature {
+  Integer idCandidature;
+  * -- 1 Candidate;
+  * -- 1 ElectionForPosition;
+  key {idCandidature}
 }

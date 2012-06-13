@@ -75,7 +75,7 @@ class ElectionService {
         String name = rs.getString("name");
         String description = rs.getString("description");
         int id=Integer.parseInt(rs.getString("id_election"));
-        Election election=new Election(id, name, description);
+        Election election=new Election(id, name, description, null);
         elections.add(election);
       }
     } catch(Exception e) {

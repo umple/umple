@@ -130,15 +130,15 @@ public class PollService
     pollToSearch = aPollToSearch;
     wasSet = true;
     pollFound=true;
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where name='"+pollToSearch.getName()+"' and election_id_election="+pollToSearch.getElection().getIdElection());
-			if (!rs.next())
-				pollFound=false;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			pollFound=false;
-		}
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM poll where name='"+pollToSearch.getName()+"' and election_id_election="+pollToSearch.getElection().getIdElection());
+      if (!rs.next())
+        pollFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      pollFound=false;
+    }
     return wasSet;
   }
 
@@ -269,7 +269,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition463__()
+  private boolean __autotransition284__()
   {
     boolean wasEventProcessed = false;
     
@@ -285,7 +285,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition464__()
+  private boolean __autotransition285__()
   {
     boolean wasEventProcessed = false;
     
@@ -304,11 +304,11 @@ public class PollService
   private void setPollServiceCycle(PollServiceCycle aPollServiceCycle)
   {
     try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
     PollServiceCycle = aPollServiceCycle;
 
     // entry actions and do activities
@@ -319,11 +319,11 @@ public class PollService
         break;
       case OpenningPoll:
         tryToOpenPoll();
-        __autotransition463__();
+        __autotransition284__();
         break;
       case CreatingPoll:
         addPoll();
-        __autotransition464__();
+        __autotransition285__();
         break;
     }
   }
@@ -334,43 +334,43 @@ public class PollService
 
   public void loadElectionPolls(){
       polls=new ArrayList<Poll>();
-		try {
-			Statement stmt = theConnection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+selectedElection.getIdElection());
-			while (rs.next()) {
-				String name = rs.getString("name");
-				String description = rs.getString("description");
-				int id=Integer.parseInt(rs.getString("id_poll"));
-				Poll poll=new Poll(id, name, description, selectedElection);
-				polls.add(poll);
-			}
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-		}
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM poll where election_id_election="+selectedElection.getIdElection());
+      while (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        int id=Integer.parseInt(rs.getString("id_poll"));
+        Poll poll=new Poll(id, -1, name, description, selectedElection);
+        polls.add(poll);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
   }
 
 
   public void tryToOpenPoll(){
       try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("update elections.poll set status='open' where id_poll="+selectedPoll.getIdPoll());
-			pollOpenned=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			pollOpenned=false;
-		}
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("update elections.poll set status='open' where id_poll="+selectedPoll.getIdPoll());
+      pollOpenned=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      pollOpenned=false;
+    }
   }
 
 
   public void addPoll(){
       try {
-			Statement stmt = theConnection.createStatement();
-			stmt.executeUpdate("insert into elections.poll (election_id_election, name, description) values ('"+newPoll.getElection().getIdElection()+"', '"+newPoll.getName()+"', '"+newPoll.getDescription()+"')");
-			pollAdded=true;
-		} catch(Exception e) {
-			System.err.println("Exception: " + e.getMessage());
-			pollAdded=false;
-		}
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.poll (election_id_election, name, description) values ('"+newPoll.getElection().getIdElection()+"', '"+newPoll.getName()+"', '"+newPoll.getDescription()+"')");
+      pollAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      pollAdded=false;
+    }
   }
 
 }

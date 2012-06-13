@@ -13,3 +13,5 @@ use shared/Election.ump;
 use shared/Poll.ump;
 use shared/Position.ump;
 use shared/ElectionForPosition.ump;
+use shared/Candidate.ump;
+use shared/Candidature.ump;

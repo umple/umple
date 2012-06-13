@@ -1,0 +1,83 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Php;
+
+namespace services;
+
+class CandidateService {
+  singleton;
+
+  lazy isConnected;
+  lazy candidates;
+  lazy candidateJSON;
+  lazy latestResult;
+  
+  after setCandidateJSON {
+    $this->createCandidate();
+  }
+  
+  before getCandidates {
+    $this->getAllCandidates();
+  }
+  
+  ServiceProvidingCycle {
+    Idle {
+      getAllCandidates -> AllCandidatesLoaded;
+      createCandidate -> CreatingCandidate;
+    }
+    AllCandidatesLoaded {
+      entry / {$this->loadAllCandidates();}
+    }
+    CreatingCandidate {
+      entry / {$this->addCandidate();}
+    }
+  }
+
+  after constructor {
+    $this->newCandidate=NULL;
+  }
+
+  before setServiceProvidingCycle {
+    require_once("Credentials.php");
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+  }
+  
+  private function loadAllCandidates() {
+    $result = mysql_query("SELECT * FROM elections.candidate");
+
+    require_once("./domain/Candidate.php");
+    
+    $this->candidates='{"candidates" : [';
+    $first=true;
+    while($row = mysql_fetch_array($result)) {
+      $aCandidate=new Candidate($row['id_candidate'],$row['name'],$row['address'],$row['telephone']);
+      if ($first) {
+        $this->candidates=$this->candidates.$this->jsonSerialize($aCandidate);
+        $first=false;
+      } else
+        $this->candidates=$this->candidates.",".$this->jsonSerialize($aCandidate);
+    }
+    $this->candidates=$this->candidates.']}';
+
+    mysql_close($this->isConnected);
+  }
+  
+  private function addCandidate() {
+    $candidateData=json_decode($this->candidateJSON);
+    if (mysql_query("insert into elections.candidate (name, address, telephone) values ('$candidateData->name', '$candidateData->address', '$candidateData->telephone')"))
+      $this->latestResult='Candidate Successfully Registered!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
+  private function jsonSerialize($aCandidate) {
+    return '{"idCandidate":"'.$aCandidate->getIdCandidate().'","name":"'.$aCandidate->getName().'","description":"'.$aCandidate->getDescription().'"}';
+  }
+}

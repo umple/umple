@@ -1,0 +1,16 @@
+This directory contains Umple code defining domain objects and other features shared by both the Java and Php versions of the Elections system.
+
+files:
+----------------------------------------------------------------
+login.ump: contains the definition of the class Credentials, which has constants for connecting the database.
+domain.ump: this is the master file of all domain objects.
+Candidate.ump: the Candidate object, a candidate registers to compete for a position in an election.
+Candidature.ump: the Candidature object, a candidature relates a candidate to an election for a position.
+Election.ump: the Election object.
+ElectionForPosition.ump: the ElectionForPosition object, which specifies which positions is an election about.
+Poll.ump: the Poll object, a polling in an election.
+Position.ump: the Position object.
+
+directories:
+----------------------------------------------------------------
+N/A

@@ -1,3 +1,4 @@
+<?php
 /*
 
 Copyright: All contributers to the Umple Project
@@ -7,7 +8,6 @@ http://umple.org/license
 
 */
 
-<?php
 if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'addPosition':

@@ -4,6 +4,9 @@
 package shared.domain;
 import java.util.*;
 
+/**
+ * represents a position such as chairman
+ */
 public class Position
 {
 

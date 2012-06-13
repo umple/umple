@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package shared.domain;
+import java.util.*;
 
 public class ElectionForPosition
 {
@@ -16,6 +17,7 @@ public class ElectionForPosition
   //ElectionForPosition Associations
   private Election election;
   private Position position;
+  private List<Candidature> candidatures;
 
   //Helper Variables
   private int cachedHashCode;
@@ -40,6 +42,7 @@ public class ElectionForPosition
     {
       throw new RuntimeException("Unable to create electionForPosition due to position");
     }
+    candidatures = new ArrayList<Candidature>();
   }
 
   //------------------------
@@ -68,6 +71,36 @@ public class ElectionForPosition
   public Position getPosition()
   {
     return position;
+  }
+
+  public Candidature getCandidature(int index)
+  {
+    Candidature aCandidature = candidatures.get(index);
+    return aCandidature;
+  }
+
+  public List<Candidature> getCandidatures()
+  {
+    List<Candidature> newCandidatures = Collections.unmodifiableList(candidatures);
+    return newCandidatures;
+  }
+
+  public int numberOfCandidatures()
+  {
+    int number = candidatures.size();
+    return number;
+  }
+
+  public boolean hasCandidatures()
+  {
+    boolean has = candidatures.size() > 0;
+    return has;
+  }
+
+  public int indexOfCandidature(Candidature aCandidature)
+  {
+    int index = candidatures.indexOf(aCandidature);
+    return index;
   }
 
   public boolean setElection(Election aElection)
@@ -108,6 +141,46 @@ public class ElectionForPosition
     return wasSet;
   }
 
+  public static int minimumNumberOfCandidatures()
+  {
+    return 0;
+  }
+
+  public Candidature addCandidature(int aIdCandidature, Candidate aCandidate)
+  {
+    return new Candidature(aIdCandidature, aCandidate, this);
+  }
+
+  public boolean addCandidature(Candidature aCandidature)
+  {
+    boolean wasAdded = false;
+    if (candidatures.contains(aCandidature)) { return false; }
+    ElectionForPosition existingElectionForPosition = aCandidature.getElectionForPosition();
+    boolean isNewElectionForPosition = existingElectionForPosition != null && !this.equals(existingElectionForPosition);
+    if (isNewElectionForPosition)
+    {
+      aCandidature.setElectionForPosition(this);
+    }
+    else
+    {
+      candidatures.add(aCandidature);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeCandidature(Candidature aCandidature)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aCandidature, as it must always have a electionForPosition
+    if (!this.equals(aCandidature.getElectionForPosition()))
+    {
+      candidatures.remove(aCandidature);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
   public boolean equals(Object obj)
   {
     if (obj == null) { return false; }
@@ -144,6 +217,11 @@ public class ElectionForPosition
     Position placeholderPosition = position;
     this.position = null;
     placeholderPosition.removeElectionForPosition(this);
+    for(int i=candidatures.size(); i > 0; i--)
+    {
+      Candidature aCandidature = candidatures.get(i - 1);
+      aCandidature.delete();
+    }
   }
 
 }

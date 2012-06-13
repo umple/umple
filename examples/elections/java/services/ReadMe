@@ -4,6 +4,9 @@ files:
 ----------------------------------------------------------------
 ElectionService.ump: handles all data requests containing the Election object
 PollService.ump: handles all data requests regarding the Poll object
+CandidateService.ump: handles all data requests containing the Candidate object
+Position.ump: handles all data requests regarding the Position object
+ElectionForPositionService.ump: handles all data requests containing the ElectionForPosition object
 
 directories:
 ----------------------------------------------------------------

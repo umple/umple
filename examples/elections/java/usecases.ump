@@ -14,3 +14,5 @@ use java/usecase_controllers/AddElectionController.ump;
 use java/usecase_controllers/AddPollController.ump;
 use java/usecase_controllers/AddPositionController.ump;
 use java/usecase_controllers/AssignPositionElectionController.ump;
+use java/usecase_controllers/RegisterCandidateController.ump;
+use java/usecase_controllers/AssignCandidatureController.ump;

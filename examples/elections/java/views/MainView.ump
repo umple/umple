@@ -43,7 +43,8 @@ class MainView {
     add(taskLabel);
 
     String[] selectionValues={"Open Poll", "Add Election", "Add Poll"
-                            , "Add Position", "Assign Positions to Election", "Quit"};
+                            , "Add Position", "Assign Positions to Election"
+                            , "Register Candidate", "Declare a Candidature", "Quit"};
     
     tasksComboBox=new JComboBox(selectionValues);
     tasksComboBox.setBounds(10, 35, 200, 20);

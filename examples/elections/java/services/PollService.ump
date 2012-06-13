@@ -99,7 +99,7 @@ class PollService {
         String name = rs.getString("name");
         String description = rs.getString("description");
         int id=Integer.parseInt(rs.getString("id_poll"));
-        Poll poll=new Poll(id, name, description, selectedElection);
+        Poll poll=new Poll(id, -1, name, description, selectedElection);
         polls.add(poll);
       }
     } catch(Exception e) {

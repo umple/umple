@@ -10,6 +10,8 @@ import usecase.openPoll.OpenPollController;
 import usecase.addElection.AddElectionController;
 import usecase.addPosition.AddPositionController;
 import usecase.assignPositionElection.AssignPositionElectionController;
+import usecase.registerCandidate.RegisterCandidateController;
+import usecase.assignCandidature.AssignCandidatureController;
 import view.main.MainView;
 
 public class Controller
@@ -30,7 +32,7 @@ public class Controller
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, AssigningPositionElection, Closign, Closing }
+  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, AssigningPositionElection, CandidateRegisteration, CandidatureDeclaration, Closign, Closing }
   private Status status;
 
   //------------------------
@@ -96,6 +98,14 @@ public class Controller
         wasEventProcessed = true;
         break;
       case AssigningPositionElection:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case CandidateRegisteration:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case CandidatureDeclaration:
         setStatus(Status.ProvidingMainMenu);
         wasEventProcessed = true;
         break;
@@ -184,6 +194,38 @@ public class Controller
     return wasEventProcessed;
   }
 
+  public boolean registerCandidate()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.CandidateRegisteration);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean declareCandidature()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.CandidatureDeclaration);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   public boolean quit()
   {
     boolean wasEventProcessed = false;
@@ -229,6 +271,14 @@ public class Controller
       case AssigningPositionElection:
         MainView.getInstance().setVisible(false);
     AssignPositionElectionController.getInstance().assignPositionElection();
+        break;
+      case CandidateRegisteration:
+        MainView.getInstance().setVisible(false);
+    RegisterCandidateController.getInstance().registerCandidate();
+        break;
+      case CandidatureDeclaration:
+        MainView.getInstance().setVisible(false);
+    AssignCandidatureController.getInstance().assignCandidate();
         break;
       case Closign:
         MainView.getInstance().setVisible(false);

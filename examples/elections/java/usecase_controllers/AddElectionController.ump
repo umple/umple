@@ -92,7 +92,7 @@ class AddElectionController
   void tryToAddElection() {
     electionName=addElectionView.getElectionName();
     String electionDescription=addElectionView.getElectionDescription();
-    Election election=new Election(-1, electionName, electionDescription);
+    Election election=new Election(-1, electionName, electionDescription, null);
     ElectionService.getInstance().setNewElection(election);
     addElectionView.dispose();
   }

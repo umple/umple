@@ -12,6 +12,7 @@ public class Poll
 
   //Poll Attributes
   private int idPoll;
+  private int number;
   private String name;
   private String description;
   private String status;
@@ -27,11 +28,12 @@ public class Poll
   // CONSTRUCTOR
   //------------------------
 
-  public Poll(int aIdPoll, String aName, String aDescription, Election aElection)
+  public Poll(int aIdPoll, int aNumber, String aName, String aDescription, Election aElection)
   {
     cachedHashCode = -1;
     canSetIdPoll = true;
     idPoll = aIdPoll;
+    number = aNumber;
     name = aName;
     description = aDescription;
     status = "planned";
@@ -51,6 +53,14 @@ public class Poll
     boolean wasSet = false;
     if (!canSetIdPoll) { return false; }
     idPoll = aIdPoll;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setNumber(int aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
     wasSet = true;
     return wasSet;
   }
@@ -82,6 +92,11 @@ public class Poll
   public int getIdPoll()
   {
     return idPoll;
+  }
+
+  public int getNumber()
+  {
+    return number;
   }
 
   public String getName()

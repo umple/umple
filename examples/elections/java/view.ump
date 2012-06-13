@@ -11,5 +11,6 @@ use java/views/AddElectionView.ump;
 use java/views/AddPollView.ump;
 use java/views/AddPositionView.ump;
 use java/views/AssignPositionElectionView.ump;
+use java/views/RegisterCandidateView.ump;
 use java/views/MainView.ump;
 use java/views/ViewUtils.ump;

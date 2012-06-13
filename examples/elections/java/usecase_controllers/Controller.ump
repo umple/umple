@@ -21,6 +21,8 @@ class Controller
   depend usecase.addElection.AddElectionController;
   depend usecase.addPosition.AddPositionController;
   depend usecase.assignPositionElection.AssignPositionElectionController;
+  depend usecase.registerCandidate.RegisterCandidateController;
+  depend usecase.assignCandidature.AssignCandidatureController;
   depend view.main.MainView;
 
   lazy internal int option=JOptionPane.NO_OPTION;
@@ -43,6 +45,8 @@ class Controller
     addPoll -> PollAdding;
     addPosition -> PositionAdding;
     assignPositionElection -> AssigningPositionElection;
+    registerCandidate -> CandidateRegisteration;
+    declareCandidature -> CandidatureDeclaration;
     quit -> Closing;
     }
     PollOpening {
@@ -68,6 +72,16 @@ class Controller
     AssigningPositionElection {
     entry / {MainView.getInstance().setVisible(false);
     AssignPositionElectionController.getInstance().assignPositionElection();}
+    start -> ProvidingMainMenu;
+    }
+    CandidateRegisteration {
+    entry / {MainView.getInstance().setVisible(false);
+    RegisterCandidateController.getInstance().registerCandidate();}
+    start -> ProvidingMainMenu;
+    }
+    CandidatureDeclaration {
+    entry / {MainView.getInstance().setVisible(false);
+    AssignCandidatureController.getInstance().assignCandidate();}
     start -> ProvidingMainMenu;
     }
     Closign {

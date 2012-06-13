@@ -15,6 +15,7 @@ import usecase.addPoll.AddPollController;
 import usecase.addPosition.AddPositionController;
 import usecase.addElection.AddElectionController;
 import usecase.assignPositionElection.AssignPositionElectionController;
+import usecase.registerCandidate.RegisterCandidateController;
 import usecase.startup.Controller;
 import view.main.MainView;
 
@@ -23,6 +24,7 @@ public enum GenericMouseListener implements MouseListener {
 	AddPollViewMouseListener,
 	AddPositionViewMouseListener,
 	AssignPositionElectionViewMouseListener,
+	RegisterCandidateViewMouseListener,
 	MainViewMouseListener;
 
 	@Override
@@ -35,6 +37,8 @@ public enum GenericMouseListener implements MouseListener {
 			AddPositionController.getInstance().addButtonClicked();
 		} else if (name().compareTo("AssignPositionElectionViewMouseListener")==0) {
 			AssignPositionElectionController.getInstance().addButtonClicked();
+		} else if (name().compareTo("RegisterCandidateViewMouseListener")==0) {
+			RegisterCandidateController.getInstance().addButtonClicked();
 		} else if (name().compareTo("MainViewMouseListener")==0) {
 			String task=MainView.getInstance().getSelectedTask();
 			if (task.compareTo("Open Poll")==0)
@@ -47,6 +51,10 @@ public enum GenericMouseListener implements MouseListener {
 				Controller.getInstance().addPosition();
 			else if (task.compareTo("Assign Positions to Election")==0)
 				Controller.getInstance().assignPositionElection();
+			else if (task.compareTo("Register Candidate")==0)
+				Controller.getInstance().registerCandidate();
+			if (task.compareTo("Declare a Candidature")==0)
+				Controller.getInstance().declareCandidature();
 			else
 				Controller.getInstance().quit();
 		} 

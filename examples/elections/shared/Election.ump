@@ -13,5 +13,6 @@ class Election {
   Integer idElection;
   String name;
   String description;
+  Date date;
   key {idElection}
 }

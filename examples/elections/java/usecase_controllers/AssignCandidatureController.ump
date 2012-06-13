@@ -1,0 +1,119 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.assignCandidature;
+
+class AssignCandidatureController
+{
+  singleton;
+  
+  depend java.util.List;
+  depend java.util.Iterator;
+  depend java.util.ArrayList;
+  depend shared.domain.Election;
+  depend shared.domain.Candidate;
+  depend shared.domain.Position;
+  depend java.sql.Connection;
+  depend java.sql.DriverManager;
+  depend java.sql.SQLException;
+  depend javax.swing.JOptionPane;
+  depend service.ElectionService;
+  depend service.PositionService;
+  depend service.CandidateService;
+  depend service.ElectionForPositionService;
+  depend usecase.startup.Controller;
+
+  lazy Connection theConnection;
+  lazy Election selectedElection;
+  lazy int option=JOptionPane.NO_OPTION;
+  lazy internal List<Election> elections;
+    
+  CandidateAssignationSteps {
+    Initial
+    {
+      assignCandidate -> ProvidingElectionsList;
+    }
+    ProvidingElectionsList
+    {
+      entry / {ElectionService.getInstance().getAllElections();
+          elections=ElectionService.getInstance().getElections();}
+      [!elections.isEmpty()] -> ElectionsListProvided;
+      [elections.isEmpty()] -> NoElectionsFound;
+    }
+    ElectionsListProvided
+    {
+      entry / {selectAnElection();}
+      -> Done;
+    }
+    ProvidingPositionsList
+    {
+      entry / {tryLoadingPositions();}
+      [!polls.isEmpty()] -> PollsListProvided;
+      [polls.isEmpty()] -> NoPollsFound;
+    }
+    PollsListProvided
+    {
+      entry / {selectAPoll();PollService.getInstance().setSelectedPoll(selectedPoll);}
+      -> OpeningPoll;
+    }
+    OpeningPoll
+    {
+      entry / {PollService.getInstance().openPoll();pollOpened=PollService.getInstance().getPollOpenned();}
+      [pollOpened] -> PollOpened;
+      [!pollOpened] -> Failed;
+    }
+      PollOpened {
+          entry / {JOptionPane.showMessageDialog(null, "Poll is now open"); Controller.getInstance().start();}
+      }
+      Failed {
+          entry / {option=JOptionPane.showConfirmDialog(null, "Poll Opening Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);}
+          [option==JOptionPane.YES_OPTION] -> ElectionsListProvided;
+          [option==JOptionPane.NO_OPTION] -> Done;
+      }
+    NoPollsFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No polls found, add a poll first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }*/
+    NoElectionsFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    Done 
+    {
+      entry / {Controller.getInstance().start();}
+      -> Initial
+    }
+  }
+   
+  private void selectAnElection() {
+    String[] electionNames=new String[elections.size()];
+    int i=0;
+    for (Election election:elections)
+      electionNames[i++]=election.getName();
+    Object selectedElectionName = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
+    i=0;
+    selectedElection=null;
+    Iterator<Election> iterator=elections.iterator();
+    while (iterator.hasNext() && selectedElection==null) {
+      Election election=iterator.next();
+      if (election.getName().equals(selectedElectionName))
+        selectedElection=election;
+    }
+  }
+  
+  private void tryLoadingPositions() {
+    ElectionForPositionService.getInstance().setSelectedElection(selectedElection);
+    List<ElectionForPosition> electionForPositions=ElectionForPositionService.getInstance().getElectionForPositions();
+    PositionService.getInstance().setSelectedElectionForPositions(electionForPositions);
+  }
+}

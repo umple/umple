@@ -11,3 +11,4 @@ use java/services/ElectionService.ump;
 use java/services/PollService.ump;
 use java/services/PositionService.ump;
 use java/services/ElectionForPositionService.ump;
+use java/services/CandidateService.ump;

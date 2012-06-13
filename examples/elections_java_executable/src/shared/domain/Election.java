@@ -2,8 +2,12 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package shared.domain;
+import java.sql.Date;
 import java.util.*;
 
+/**
+ * represents an election
+ */
 public class Election
 {
 
@@ -15,6 +19,7 @@ public class Election
   private int idElection;
   private String name;
   private String description;
+  private Date date;
 
   //Election Associations
   private List<Poll> polls;
@@ -28,13 +33,14 @@ public class Election
   // CONSTRUCTOR
   //------------------------
 
-  public Election(int aIdElection, String aName, String aDescription)
+  public Election(int aIdElection, String aName, String aDescription, Date aDate)
   {
     cachedHashCode = -1;
     canSetIdElection = true;
     idElection = aIdElection;
     name = aName;
     description = aDescription;
+    date = aDate;
     polls = new ArrayList<Poll>();
     electionForPositions = new ArrayList<ElectionForPosition>();
   }
@@ -68,6 +74,14 @@ public class Election
     return wasSet;
   }
 
+  public boolean setDate(Date aDate)
+  {
+    boolean wasSet = false;
+    date = aDate;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getIdElection()
   {
     return idElection;
@@ -81,6 +95,11 @@ public class Election
   public String getDescription()
   {
     return description;
+  }
+
+  public Date getDate()
+  {
+    return date;
   }
 
   public Poll getPoll(int index)
@@ -148,9 +167,9 @@ public class Election
     return 0;
   }
 
-  public Poll addPoll(int aIdPoll, String aName, String aDescription)
+  public Poll addPoll(int aIdPoll, int aNumber, String aName, String aDescription)
   {
-    return new Poll(aIdPoll, aName, aDescription, this);
+    return new Poll(aIdPoll, aNumber, aName, aDescription, this);
   }
 
   public boolean addPoll(Poll aPoll)
@@ -270,6 +289,6 @@ public class Election
   //------------------------
   
   public String toString() {
-		return name;
-	}
+    return name;
+  }
 }

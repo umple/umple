@@ -57,7 +57,7 @@ class AddPollController
     CheckingExistingPoll
     {
       entry / {selectedElection=addPollView.getSelectedElection();
-          newPoll=new Poll(-1, pollName, "", selectedElection);
+          newPoll=new Poll(-1, -1, pollName, "", selectedElection);
           PollService.getInstance().setPollToSearch(newPoll);
           pollFound=PollService.getInstance().getPollFound();}
       [!pollFound] -> AddingPoll;

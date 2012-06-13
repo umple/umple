@@ -7,19 +7,26 @@ http://umple.org/license
 
 */
 
-function addElection() {
+function registerCandidate() {
 	request = new ajaxRequest();
 	
-	var electionName=document.getElementById('electionName').value;
+	var candidateName=document.getElementById('candidateName').value;
+	var candidateAddress=document.getElementById('candidateAddress').value;
+	var candidateTelephone=document.getElementById('candidateTelephone').value;
 	
-	if (electionName=='')
-		document.getElementById('result').innerHTML='Election name cannot be empty!';
+	if (candidateName=='')
+		document.getElementById('result').innerHTML='Candidate name cannot be empty!';
+	else if (candidateAddress=='')
+		document.getElementById('result').innerHTML='Candidate address cannot be empty!';
+	else if (candidateTelephone=='')
+		document.getElementById('result').innerHTML='Candidate telephone cannot be empty!';
 	else {
-		var electionDescription=document.getElementById('electionDescription').value;
-		var electionJSON=JSON.stringify({'name': electionName, 'description': electionDescription});
+		var candidateJSON=JSON.stringify({'name': candidateName
+										, 'address': candidateAddress
+										, 'telephone': candidateTelephone});
 		
-		var params = "action=addElection&electionJSON="+electionJSON;
-		request.open("POST", "addelection.php", false);
+		var params = "action=registerCandidate&candidateJSON="+candidateJSON;
+		request.open("POST", "registercandidate.php", false);
 		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		request.setRequestHeader("Content-length", params.length);
 		request.setRequestHeader("Connection", "close");
