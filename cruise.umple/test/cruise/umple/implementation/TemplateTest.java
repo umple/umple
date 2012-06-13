@@ -215,7 +215,16 @@ public class TemplateTest
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className)
   {
-	  //System.out.println("Umplefile: [" + umpleFile + "]");
+    assertUmpleTemplateFor(umpleFile, codeFile, className, true);
+  }
+
+  public void assertUmplePartialTemplateFor(String umpleFile, String codeFile, String className)
+  {
+    assertUmpleTemplateFor(umpleFile, codeFile, className, false);
+  }
+
+  public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch)
+  {
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
 
     String actual = null;
@@ -238,13 +247,18 @@ public class TemplateTest
       actual = model.getGeneratedCode().get(className);
     }
 
-    //System.out.println("Looking for codefile in: [" + pathToInput + "] filename: [" + codeFile + "]");
-    
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
-    System.out.println("Expected: " + expected.toString());
     
-    SampleFileWriter.assertFileContent(expected, actual);
+    if (isFullMatch)
+    {
+      SampleFileWriter.assertFileContent(expected, actual);  
+    }
+    else
+    {
+      // SampleFileWriter.assertPartialFileContent(expected, actual);
+    }
+    
   }
 
   public UmpleModel createUmpleSystem(String path, String filename)

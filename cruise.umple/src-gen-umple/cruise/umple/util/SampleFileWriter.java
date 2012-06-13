@@ -83,6 +83,57 @@ public class SampleFileWriter
     }
   }
   
+  public static void assertPartialFileContent(File partial, String actual)
+  {
+    BufferedReader expectedReader = null;
+    BufferedReader actualReader = null;
+    boolean foundMatch = false;
+    
+    try
+    {
+      expectedReader = new BufferedReader(new FileReader(partial));
+      actualReader = new BufferedReader(new StringReader(actual));
+
+      String expectedLine = null;
+      String actualLine = null;
+      
+      int line = 0;
+      do 
+      {
+        if (expectedLine == null || foundMatch)
+        {
+          expectedLine = expectedReader.readLine();
+        }
+        actualLine = actualReader.readLine();
+        line++;
+        
+        if (expectedLine == null) 
+        {
+          break; 
+        }
+        else if (foundMatch)
+        {
+          Assert.assertEquals("Failed at:" + line,expectedLine,actualLine);
+        }
+        else if (expectedLine.equals(actualLine))
+        {
+          foundMatch = true;
+        }
+      } 
+      while (expectedLine != null);
+    }
+    catch (Exception e)
+    {
+      Assert.fail(e.getMessage());
+    }
+    finally
+    {
+      closeAsRequired(expectedReader);
+      closeAsRequired(actualReader);
+    }
+    if (!foundMatch) { Assert.fail("Did not find expected lines"); }
+  }
+  
   public static void assertFileContent(File expected, String actual)
   {
     

@@ -51,7 +51,6 @@ public class PhpClassTemplateTest extends ClassTemplateTest
 	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/php_code/Student.php"));
 	  System.out.print(actual);
 	  
-	  String expected = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"));
-	  Assert.assertEquals(expected, actual);
+    SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
 }

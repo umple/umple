@@ -63,7 +63,6 @@ public class RubyClassTemplateTest extends ClassTemplateTest
 	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ruby_code/student.rb"));
 	  System.out.print(actual);
 	  
-	  String expected = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"));
-	  Assert.assertEquals(expected, actual);
+	  SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
 }

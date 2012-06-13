@@ -36,7 +36,6 @@ public class JavaExternalClassTemplateTest extends ExternalClassTemplateTest
 	  String actual = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/java_code/example/Student.java"));
 	  System.out.print(actual);
 	  
-	  String expected = SampleFileWriter.readContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"));
-	  Assert.assertEquals(expected, actual);
+	  SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
 }
