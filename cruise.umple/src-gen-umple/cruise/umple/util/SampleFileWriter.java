@@ -103,7 +103,12 @@ public class SampleFileWriter
         expectedLine = expectedReader.readLine();
         actualLine = actualReader.readLine();
         line++;
-        Assert.assertEquals("Failed at:" + line,expectedLine,actualLine);
+        
+        // HACK: To deal with umple version issues
+        if (expectedLine != null && expectedLine.indexOf("This code was generated using the UMPLE") == -1)
+        {
+          Assert.assertEquals("Failed at:" + line,expectedLine,actualLine);  
+        }
       } 
       while (expectedLine != null && actualLine != null);
     }
