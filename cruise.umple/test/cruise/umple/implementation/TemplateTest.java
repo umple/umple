@@ -256,7 +256,7 @@ public class TemplateTest
     }
     else
     {
-      // SampleFileWriter.assertPartialFileContent(expected, actual);
+      SampleFileWriter.assertPartialFileContent(expected, actual);
     }
     
   }

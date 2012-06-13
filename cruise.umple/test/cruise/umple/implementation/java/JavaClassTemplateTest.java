@@ -38,11 +38,11 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_Methods.ump",languagePath + "/ClassTemplateTest_Methods."+ languagePath +".txt","CodeTranslator");
   }
   
-  // @Test
-  // public void ClassMethods_TestingPartialFile()
-  // {
-  //   assertUmplePartialTemplateFor("ClassTemplateTest_Methods.ump",languagePath + "/ClassTemplateTest_Methods.partial."+ languagePath +".txt","Student");
-  // }
+  @Test
+  public void ClassMethods_TestingPartialFile()
+  {
+    assertUmplePartialTemplateFor("ClassTemplateTest_Methods.ump",languagePath + "/ClassTemplateTest_Methods.partial."+ languagePath +".txt","CodeTranslator");
+  }
   
   @Test
   public void ClassImplementedMethods()
