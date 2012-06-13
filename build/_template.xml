@@ -130,7 +130,6 @@
 
   <target name="template.test">
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}" >
-      <jvmarg value="-d32"/>
       <!-- <jmvarg value="-XstartOnFirstThread"/> -->
       <formatter type="xml" unless="${showJunitOutput}"/>
       <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
