@@ -56,7 +56,7 @@ target language. In other words, when you compile Umple constructs such as
 assocations, attributes and state machines, you are generating many 
 methods that you can call; the set of methods you can call is the 
 generated API. You can find out the API by using Javadoc, or a similar 
-tool, on the generated code. One of the options in <a href="UsingUmpleOnline.html">UmpleOnline</a> is to generate Javadoc output.</p>
+tool, on the generated code, or you can look at the <a href="APISummary.html"> quick reference manual page.</a> One of the options in <a href="UsingUmpleOnline.html">UmpleOnline</a> is to generate Javadoc output.</p>
 
 &nbsp;<br />
 
