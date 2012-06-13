@@ -3,7 +3,7 @@ Generated API
 noreferences
 @@description
 
-<p>The following table describes the API generated from various Umple features.</p>
+<p>The following table describes the API generated from various Umple features. This is designed as a quick reference. To find the exact API for any system that would be generated in Java, use UmpleOnline and request to generate JavaDoc output.</p>
 
 
 <style>
@@ -14,6 +14,35 @@ noreferences
 	{margin:1.0in .75in 1.0in .75in;
 	mso-header-margin:.5in;
 	mso-footer-margin:.5in;}
+.style163
+	{color:blue;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:Calibri, sans-serif;
+	mso-font-charset:0;
+	mso-style-name:Hyperlink;
+	mso-style-id:8;}
+a:link
+	{color:blue;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:Calibri, sans-serif;
+	mso-font-charset:0;}
+a:visited
+	{color:purple;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:Calibri, sans-serif;
+	mso-font-charset:0;}
 .style0
 	{mso-number-format:General;
 	text-align:general;
@@ -57,673 +86,861 @@ td
 	mso-rotate:0;}
 .xl65
 	{mso-style-parent:style0;
-	background:yellow;
+	background:#CCFFCC;
 	mso-pattern:black none;}
 .xl66
 	{mso-style-parent:style0;
-	background:#CCFFCC;
-	mso-pattern:black none;}
-.xl67
-	{mso-style-parent:style0;
 	font-weight:700;}
-.xl68
-	{mso-style-parent:style0;
-	background:#95B3D7;
-	mso-pattern:black none;}
-.xl69
-	{mso-style-parent:style0;
-	background:#C4D79B;
-	mso-pattern:black none;}
-.xl70
-	{mso-style-parent:style0;
-	background:#BFBFBF;
-	mso-pattern:black none;}
-.xl71
+.xl67
 	{mso-style-parent:style0;
 	font-weight:700;
 	background:#FF6600;
 	mso-pattern:black none;}
-.xl72
+.xl68
 	{mso-style-parent:style0;
 	background:#FF6600;
 	mso-pattern:black none;}
+.xl69
+	{mso-style-parent:style0;
+	background:#95B3D7;
+	mso-pattern:black none;}
+.xl70
+	{mso-style-parent:style0;
+	background:yellow;
+	mso-pattern:black none;}
+.xl71
+	{mso-style-parent:style0;
+	background:#BFBFBF;
+	mso-pattern:black none;}
+.xl72
+	{mso-style-parent:style0;
+	color:black;
+	background:#BFBFBF;
+	mso-pattern:black none;}
 .xl73
 	{mso-style-parent:style0;
-	border:.5pt solid windowtext;
-	background:#95B3D7;
+	background:#FABF8F;
 	mso-pattern:black none;}
 .xl74
 	{mso-style-parent:style0;
-	border:.5pt solid windowtext;
-	background:yellow;
+	color:windowtext;
+	font-family:Calibri;
+	mso-generic-font-family:auto;
+	mso-font-charset:0;
+	background:#FABF8F;
 	mso-pattern:black none;}
 .xl75
 	{mso-style-parent:style0;
-	border:.5pt solid windowtext;}
+	background:#FCD5B4;
+	mso-pattern:black none;}
 .xl76
-	{mso-style-parent:style0;
-	border:.5pt solid windowtext;
-	background:#C4D79B;
-	mso-pattern:black none;}
-.xl77
-	{mso-style-parent:style0;
-	border:.5pt solid windowtext;
-	background:#BFBFBF;
-	mso-pattern:black none;}
-.xl78
-	{mso-style-parent:style0;
-	color:black;
-	border:.5pt solid windowtext;
-	background:#BFBFBF;
+	{mso-style-parent:style163;
+	color:blue;
+	text-decoration:underline;
+	text-underline-style:single;
+	background:#FF6600;
 	mso-pattern:black none;}
 -->
 </style>
 
-
-<table border=0 cellpadding=0 cellspacing=0 width=1407 style='border-collapse:
- collapse;table-layout:fixed;width:1407pt'>
- <col width=179 style='mso-width-source:userset;mso-width-alt:7637;width:179pt'>
+<table border=0 cellpadding=0 cellspacing=0 width=1470 style='border-collapse:
+ collapse;table-layout:fixed;width:1470pt'>
+ <col width=194 style='mso-width-source:userset;mso-width-alt:8277;width:194pt'>
  <col width=222 style='mso-width-source:userset;mso-width-alt:9472;width:222pt'>
- <col width=65 style='width:65pt'>
+ <col width=86 style='mso-width-source:userset;mso-width-alt:3669;width:86pt'>
  <col width=112 style='mso-width-source:userset;mso-width-alt:4778;width:112pt'>
  <col width=79 style='mso-width-source:userset;mso-width-alt:3370;width:79pt'>
- <col width=99 style='mso-width-source:userset;mso-width-alt:4224;width:99pt'>
- <col width=104 style='mso-width-source:userset;mso-width-alt:4437;width:104pt'>
- <col width=118 style='mso-width-source:userset;mso-width-alt:5034;width:118pt'>
- <col width=112 style='mso-width-source:userset;mso-width-alt:4778;width:112pt'>
- <col width=124 style='mso-width-source:userset;mso-width-alt:5290;width:124pt'>
+ <col width=108 style='mso-width-source:userset;mso-width-alt:4608;width:108pt'>
+ <col width=113 style='mso-width-source:userset;mso-width-alt:4821;width:113pt'>
+ <col width=118 span=2 style='mso-width-source:userset;mso-width-alt:5034;
+ width:118pt'>
+ <col width=127 style='mso-width-source:userset;mso-width-alt:5418;width:127pt'>
  <col width=70 style='mso-width-source:userset;mso-width-alt:2986;width:70pt'>
  <col width=123 style='mso-width-source:userset;mso-width-alt:5248;width:123pt'>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=5 width=657 style='height:15.0pt;mso-ignore:colspan;
-  width:657pt'>Summary of the API generated by Umple attribuites, associations
+  <td height=15 colspan=5 width=693 style='height:15.0pt;mso-ignore:colspan;
+  width:693pt'>Summary of the API generated by Umple attribuites, associations
   and state machines</td>
-  <td width=99 style='width:99pt'></td>
-  <td width=104 style='width:104pt'></td>
+  <td width=108 style='width:108pt'></td>
+  <td width=113 style='width:113pt'></td>
   <td width=118 style='width:118pt'></td>
-  <td width=112 style='width:112pt'></td>
-  <td width=124 style='width:124pt'></td>
+  <td width=118 style='width:118pt'></td>
+  <td width=127 style='width:127pt'></td>
   <td width=70 style='width:70pt'></td>
   <td width=123 style='width:123pt'></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
- <tr class=xl72 height=15 style='height:15.0pt'>
-  <td height=15 class=xl71 style='height:15.0pt'>API GENERATED IN ALL CASES</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
+ <tr class=xl68 height=15 style='height:15.0pt'>
+  <td height=15 class=xl67 style='height:15.0pt'>API GENERATED IN ALL CASES</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 style='height:15.0pt'>void delete()</td>
+  <td height=15 class=xl66 style='height:15.0pt'>void delete()</td>
   <td>removes object</td>
-  <td colspan=10 style='mso-ignore:colspan'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=3 style='height:15.0pt;mso-ignore:colspan'>any methods
-  in the code are emitted as-is; they are made public if this is not declared</td>
-  <td colspan=9 style='mso-ignore:colspan'></td>
+  <td height=15 class=xl66 colspan=3 style='height:15.0pt;mso-ignore:colspan'>any
+  methods in the code are emitted as-is; they are made public if this is not
+  declared</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
- <tr class=xl72 height=15 style='height:15.0pt'>
-  <td height=15 class=xl71 colspan=2 style='height:15.0pt;mso-ignore:colspan'>API
-  GENERATED FROM ATTRIBUTES</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
+ <tr class=xl68 height=15 style='height:15.0pt'>
+  <td height=15 class=xl76 style='height:15.0pt'><a
+  href="http://attributes.umple.org">API GENERATED FROM ATTRIBUTES</a></td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
   <td height=15 colspan=5 style='height:15.0pt;mso-ignore:colspan'>T is the
   type of the attribute (String if omitted); note that Umple builting types
   such as Integer become native types such as int</td>
-  <td colspan=7 style='mso-ignore:colspan'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
   <td height=15 style='height:15.0pt'>z is the attribute name</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr class=xl68 height=15 style='height:15.0pt'>
-  <td height=15 class=xl68 style='height:15.0pt'>Umple concept</td>
-  <td class=xl68>&nbsp;</td>
-  <td class=xl73>basic</td>
-  <td class=xl73 style='border-left:none'>initialized</td>
-  <td class=xl73 style='border-left:none'>lazy</td>
-  <td class=xl73 style='border-left:none'>defaulted</td>
-  <td class=xl73 style='border-left:none'>lazy immutable</td>
-  <td class=xl73 style='border-left:none'>immutable</td>
-  <td class=xl73 style='border-left:none'>autounique</td>
-  <td class=xl73 style='border-left:none'>constant</td>
-  <td class=xl73 style='border-left:none'>internal</td>
-  <td class=xl73 style='border-left:none'>key</td>
- </tr>
- <tr class=xl65 height=15 style='height:15.0pt'>
-  <td height=15 class=xl65 style='height:15.0pt'>Umple notation</td>
-  <td class=xl65>&nbsp;</td>
-  <td class=xl74 style='border-top:none'>T z;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>T z = val;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>lazy T z;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>defaulted T z = val;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>lazy immutable T z;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>immutable z;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>autounique z</td>
-  <td class=xl74 style='border-top:none;border-left:none'>const T z=val</td>
-  <td class=xl74 style='border-top:none;border-left:none'>internal T z;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>with key { z }</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl66 style='height:15.0pt'>Querying value</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>T getZ()</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes; T always int</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean isZ()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T Boolean</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T Boolean</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T Boolean</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T Boolean</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T Boolean</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T Boolean</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>if T boolean</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  equals(Object)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>is equal to another?</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl66 style='height:15.0pt'>Mutating</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>boolean setZ(T)</td>
-  <td class=xl75 style='border-left:none'>mutates the attribute</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes; true only once</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes; true at most once</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  resetZ()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>restores original
-  default</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl66 style='height:15.0pt'>Other</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>T getDefaultZ()</td>
-  <td class=xl75 style='border-left:none'>returns original default</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>int hashCode()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>Likely unique value</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr class=xl69 height=15 style='height:15.0pt'>
-  <td height=15 class=xl76 style='height:15.0pt;border-top:none'>constructor
-  args</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>T</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>T</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td height=15 class=xl69 style='height:15.0pt'>Umple concept</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>basic</td>
+  <td class=xl69>initialized</td>
+  <td class=xl69>lazy</td>
+  <td class=xl69>defaulted</td>
+  <td class=xl69>lazy immutable</td>
+  <td class=xl69>immutable</td>
+  <td class=xl69>autounique</td>
+  <td class=xl69>constant</td>
+  <td class=xl69>internal</td>
+  <td class=xl69>key</td>
  </tr>
  <tr class=xl70 height=15 style='height:15.0pt'>
-  <td height=15 class=xl77 style='height:15.0pt;border-top:none'>initial value</td>
-  <td class=xl77 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl77 style='border-top:none;border-left:none'>constructor <span
-  style='display:none'>val</span></td>
-  <td class=xl77 style='border-top:none;border-left:none'>val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>null/0/false</td>
-  <td class=xl77 style='border-top:none;border-left:none'>val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>null/0/false</td>
-  <td class=xl77 style='border-top:none;border-left:none'>constructor val or
-  val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>next int</td>
-  <td class=xl77 style='border-top:none;border-left:none'>static val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>construtor val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td height=15 class=xl70 style='height:15.0pt'>Umple notation</td>
+  <td class=xl70>&nbsp;</td>
+  <td class=xl70>T z;</td>
+  <td class=xl70>T z = val;</td>
+  <td class=xl70>lazy T z;</td>
+  <td class=xl70>defaulted T z = val;</td>
+  <td class=xl70>lazy immutable T z;</td>
+  <td class=xl70>immutable z;</td>
+  <td class=xl70>autounique z</td>
+  <td class=xl70>const T z=val</td>
+  <td class=xl70>internal T z;</td>
+  <td class=xl70>with key { z }</td>
  </tr>
- <tr height=30 style='height:30.0pt;mso-xlrowspan:2'>
-  <td height=30 colspan=12 style='height:30.0pt;mso-ignore:colspan'></td>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
- <tr class=xl72 height=15 style='height:15.0pt'>
-  <td height=15 class=xl71 colspan=2 style='height:15.0pt;mso-ignore:colspan'>API
-  GENERATED FROM ASSOCIATIONS</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
+ <tr class=xl65 height=15 style='height:15.0pt'>
+  <td height=15 class=xl65 style='height:15.0pt'>Querying value</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>T getZ()</td>
+  <td>return the value</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl75>yes; T always int</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean isZ()</td>
+  <td>return true if value is true</td>
+  <td class=xl73>if T Boolean</td>
+  <td class=xl73>if T Boolean</td>
+  <td class=xl73>if T Boolean</td>
+  <td class=xl73>if T Boolean</td>
+  <td class=xl73>if T Boolean</td>
+  <td class=xl73>if T Boolean</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>if T boolean</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean equals(Object)</td>
+  <td>is equal to another?</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl65 height=15 style='height:15.0pt'>
+  <td height=15 class=xl65 style='height:15.0pt'>Mutating</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean setZ(T)</td>
+  <td>mutates the attribute</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes</td>
+  <td class=xl73>yes; true only once</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes; true at most once</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean resetZ()</td>
+  <td>restores original default</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl74>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl65 height=15 style='height:15.0pt'>
+  <td height=15 class=xl65 style='height:15.0pt'>Other</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>T getDefaultZ()</td>
+  <td>returns original default</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl73>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>int hashCode()</td>
+  <td>Likely unique value</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'>constructor args</td>
+  <td></td>
+  <td class=xl75>T</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>T</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl71 height=15 style='height:15.0pt'>
+  <td height=15 class=xl71 style='height:15.0pt'>initial value</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>constructor val</td>
+  <td class=xl71>val</td>
+  <td class=xl71>null/0/false</td>
+  <td class=xl71>val</td>
+  <td class=xl71>null/0/false</td>
+  <td class=xl71>constructor val or val</td>
+  <td class=xl71>next int</td>
+  <td class=xl71>static val</td>
+  <td class=xl71 colspan=2 style='mso-ignore:colspan'>construtor val</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl68 height=15 style='height:15.0pt'>
+  <td height=15 class=xl76 colspan=2 style='height:15.0pt;mso-ignore:colspan'><a
+  href="http://associations.umple.org">API GENERATED FROM ASSOCIATIONS</a></td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
   <td height=15 style='height:15.0pt'>X is the name of current class</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
   <td height=15 colspan=4 style='height:15.0pt;mso-ignore:colspan'>W is the
   name of the class at the other end of the association; used in method names
   unless a role name is present</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=3 style='height:15.0pt;mso-ignore:colspan'>r is a role
+  <td height=15 colspan=2 style='height:15.0pt;mso-ignore:colspan'>r is a role
   name used when referring to W (optional, except in reflexive assocations</td>
-  <td colspan=9 style='mso-ignore:colspan'></td>
- </tr>
- <tr class=xl68 height=15 style='height:15.0pt'>
-  <td height=15 class=xl68 style='height:15.0pt'>Umple concept</td>
-  <td class=xl68>&nbsp;</td>
-  <td class=xl73>? To many</td>
-  <td class=xl73 style='border-left:none'>? To many with role</td>
-  <td class=xl73 style='border-left:none'>optional</td>
-  <td class=xl73 style='border-left:none'>? To one</td>
-  <td class=xl73 style='border-left:none'>required many</td>
-  <td class=xl73 style='border-left:none'>directional</td>
-  <td class=xl73 style='border-left:none'>immutable</td>
-  <td class=xl73 style='border-left:none'>immutable optional</td>
-  <td class=xl73 style='border-left:none'>reflexive</td>
-  <td class=xl73 style='border-left:none'>symmetric reflexive</td>
- </tr>
- <tr class=xl65 height=15 style='height:15.0pt'>
-  <td height=15 class=xl65 style='height:15.0pt'>Umple notation</td>
-  <td class=xl65>&nbsp;</td>
-  <td class=xl74 style='border-top:none'><span
-  style="mso-spacerun:yes">&nbsp;</span>-- * W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'><span
-  style="mso-spacerun:yes">&nbsp;</span>-- * W r;</td>
-  <td class=xl74 style='border-top:none;border-left:none'><span
-  style="mso-spacerun:yes">&nbsp;</span>-- 0..1 W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'><span
-  style="mso-spacerun:yes">&nbsp;</span>-- 1 W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'><span
-  style="mso-spacerun:yes">&nbsp;</span>-- 1..* W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'><span
-  style="mso-spacerun:yes">&nbsp;</span>-&gt; 1--* W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>immutable 1 -&gt; *
-  W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>immutable 1 -&gt;
-  0..1 W;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>* -- * X r;</td>
-  <td class=xl74 style='border-top:none;border-left:none'>* self r;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl66 style='height:15.0pt'>Querying link(s)</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>W getW()</td>
-  <td class=xl75 style='border-left:none'>returns the W</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes; W or null</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>W or null</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>W getW(index)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>picks a specific
-  linked W</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and X</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>List&lt;W&gt;
-  getWs()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>gets immutable list
-  of links</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and Xs</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  hasWs()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>is cardinality &gt;
-  0?</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and Xs</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>int
-  indexOfW(W)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>looks up specific W
-  -1 if none</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and X</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>int numberOfWs</td>
-  <td class=xl75 style='border-top:none;border-left:none'>cardinality</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and Xs</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='page-break-before:always;height:15.0pt'>
-  <td height=15 class=xl66 style='height:15.0pt'>Mutating</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>boolean setW(W)</td>
-  <td class=xl75 style='border-left:none'>adds a link to existing W</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>W addW()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>constructs a new W
-  and addslink</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  addW(W)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>adds a link to
-  existing W</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and X</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  setWs(W…)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>Add a set of links</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  removeW(W)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>Remove link to W if
-  possible</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R and Xs</td>
-  <td class=xl75 style='border-top:none;border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl66 style='height:15.0pt'>Other</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>static int minimumNumberOFWs</td>
-  <td class=xl75 style='border-left:none'>multiplicity lower bound</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>R</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>yes</td>
-  <td class=xl75 style='border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-left:none'>R and Xs</td>
-  <td class=xl75 style='border-left:none'>R</td>
- </tr>
- <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  isNumberOfWsValid()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>false if breaching
-  constraints</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes; true initially</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr class=xl69 height=15 style='height:15.0pt'>
-  <td height=15 class=xl76 style='height:15.0pt;border-top:none'>constructor
-  args</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>for addW() o<span
-  style='display:none'>nly</span></td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>W</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>W …</td>
-  <td class=xl76 style='border-top:none;border-left:none'>W</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl76 style='border-top:none;border-left:none'>&nbsp;</td>
+  <td height=15 class=xl69 style='height:15.0pt'>Umple concept</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>? To many</td>
+  <td class=xl69>? To many with role</td>
+  <td class=xl69>optional</td>
+  <td class=xl69>? To one</td>
+  <td class=xl69>required many</td>
+  <td class=xl69>directional</td>
+  <td class=xl69>immutable</td>
+  <td class=xl69>immutable optional</td>
+  <td class=xl69>reflexive</td>
+  <td class=xl69>symmetric reflexive</td>
  </tr>
  <tr class=xl70 height=15 style='height:15.0pt'>
-  <td height=15 class=xl77 style='height:15.0pt;border-top:none'>initial value</td>
-  <td class=xl77 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl77 style='border-top:none;border-left:none'>empty</td>
-  <td class=xl77 style='border-top:none;border-left:none'>empty</td>
-  <td class=xl77 style='border-top:none;border-left:none'>empty</td>
-  <td class=xl77 style='border-top:none;border-left:none'>constructor val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>empty</td>
-  <td class=xl77 style='border-top:none;border-left:none'>empty</td>
-  <td class=xl77 style='border-top:none;border-left:none'>constructor val</td>
-  <td class=xl77 style='border-top:none;border-left:none'>constructor val</td>
-  <td class=xl78 style='border-top:none;border-left:none'>empty</td>
-  <td class=xl78 style='border-top:none;border-left:none'>empty</td>
+  <td height=15 class=xl70 style='height:15.0pt'>Umple notation</td>
+  <td class=xl70>&nbsp;</td>
+  <td class=xl70><span style="mso-spacerun:yes">&nbsp;</span>-- * W;</td>
+  <td class=xl70><span style="mso-spacerun:yes">&nbsp;</span>-- * W r;</td>
+  <td class=xl70><span style="mso-spacerun:yes">&nbsp;</span>-- 0..1 W;</td>
+  <td class=xl70><span style="mso-spacerun:yes">&nbsp;</span>-- 1 W;</td>
+  <td class=xl70><span style="mso-spacerun:yes">&nbsp;</span>-- 1..* W;</td>
+  <td class=xl70><span style="mso-spacerun:yes">&nbsp;</span>-&gt; 1--* W;</td>
+  <td class=xl70>immutable 1 -&gt; * W;</td>
+  <td class=xl70>immutable 1 -&gt; 0..1 W;</td>
+  <td class=xl70>* -- * X r;</td>
+  <td class=xl70>* self r;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
- <tr class=xl72 height=15 style='height:15.0pt'>
-  <td height=15 class=xl71 colspan=2 style='height:15.0pt;mso-ignore:colspan'>API
-  GENGERATED FROM STATE MACHINES</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
+ <tr class=xl65 height=15 style='height:15.0pt'>
+  <td height=15 class=xl65 style='height:15.0pt'>Querying link(s)</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl67 colspan=2 style='height:15.0pt;mso-ignore:colspan'>sm
-  is the name of the state machine</td>
-  <td colspan=10 style='mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>W getW()</td>
+  <td>returns the W</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes; W or null</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>W or null</td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>W getW(index)</td>
+  <td>picks a specific linked W</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td class=xl75>R and X</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>List&lt;W&gt; getWs()</td>
+  <td>gets immutable list of links</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td class=xl75>R and Xs</td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean hasWs()</td>
+  <td>is cardinality &gt; 0?</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td class=xl75>R and Xs</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>int indexOfW(W)</td>
+  <td>looks up specific W -1 if none</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td class=xl75>R and X</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>int numberOfWs</td>
+  <td>cardinality</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td class=xl75>R and Xs</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='page-break-before:always;height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl65 height=15 style='height:15.0pt'>
+  <td height=15 class=xl65 style='height:15.0pt'>Mutating</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean setW(W)</td>
+  <td>adds a link to existing W</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>W addW()</td>
+  <td>constructs a new W and addslink</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean addW(W)</td>
+  <td>adds a link to existing W</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>R and X</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean setWs(W…)</td>
+  <td>Add a set of links</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean removeW(W)</td>
+  <td>Remove link to W if possible</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>R and Xs</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl65 height=15 style='height:15.0pt'>
+  <td height=15 class=xl65 style='height:15.0pt'>Other</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+  <td class=xl65>&nbsp;</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>static int minimumNumberOFWs</td>
+  <td>multiplicity lower bound</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>R</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td class=xl75>R and Xs</td>
+  <td class=xl75>R</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean isNumberOfWsValid()</td>
+  <td>false if breaching constraints</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td class=xl75>yes; true initially</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>constructor args</td>
+  <td></td>
+  <td class=xl75>for addW() only</td>
+  <td></td>
+  <td></td>
+  <td class=xl75>W</td>
+  <td></td>
+  <td></td>
+  <td>W …</td>
+  <td>W</td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl71 height=15 style='height:15.0pt'>
+  <td height=15 class=xl71 style='height:15.0pt'>initial value</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>empty</td>
+  <td class=xl71>empty</td>
+  <td class=xl71>empty</td>
+  <td class=xl71>constructor val</td>
+  <td class=xl71>empty</td>
+  <td class=xl71>empty</td>
+  <td class=xl71>constructor val</td>
+  <td class=xl71>constructor val</td>
+  <td class=xl72>empty</td>
+  <td class=xl72>empty</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr class=xl68 height=15 style='height:15.0pt'>
-  <td height=15 class=xl68 style='height:15.0pt'>Umple concept</td>
+  <td height=15 class=xl76 colspan=2 style='height:15.0pt;mso-ignore:colspan'><a
+  href="http://statemachines.umple.org">API GENGERATED FROM STATE MACHINES</a></td>
   <td class=xl68>&nbsp;</td>
-  <td class=xl68>Sm with eve<span style='display:none'>nts</span></td>
-  <td class=xl68>Enum with no events</td>
+  <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
   <td class=xl68>&nbsp;</td>
@@ -734,93 +951,217 @@ td
   <td class=xl68>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>sm is the name of the state
+  machine</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl69 height=15 style='height:15.0pt'>
+  <td height=15 class=xl69 style='height:15.0pt'>Umple concept</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>Sm with events</td>
+  <td class=xl69>Enum with no events</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
+  <td class=xl69>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt'>enum getSm()</td>
-  <td class=xl75 style='border-left:none'>Current state for statemachine sm</td>
-  <td class=xl75 style='border-left:none'>x</td>
-  <td class=xl75 style='border-left:none'>x</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>String
-  getSmFullName()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>Current state for
-  statemachine sm</td>
-  <td class=xl75 style='border-top:none;border-left:none'>x</td>
-  <td class=xl75 style='border-top:none;border-left:none'>x</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>enum getSm()</td>
+  <td>Current state for statemachine sm</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>enum getSmS2()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>State of substate s2</td>
-  <td class=xl75 style='border-top:none;border-left:none'>x</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>String getSmFullName()</td>
+  <td>Current state for statemachine sm</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean e()</td>
-  <td class=xl75 style='border-top:none;border-left:none'>Event method e (for
-  all events)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>x</td>
-  <td class=xl75 style='border-top:none;border-left:none'>x</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>enum getSmS2()</td>
+  <td>State of substate s2</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>boolean
-  setSm(enum)</td>
-  <td class=xl75 style='border-top:none;border-left:none'>If no events, then
-  can set directly</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>x</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean e()</td>
+  <td>Event method e (for all events)</td>
+  <td class=xl75>yes</td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 class=xl75 style='height:15.0pt;border-top:none'>Substates
-  allowed</td>
-  <td class=xl75 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl75 style='border-top:none;border-left:none'>yes</td>
-  <td class=xl75 style='border-top:none;border-left:none'>no</td>
-  <td colspan=8 style='mso-ignore:colspan'></td>
- </tr>
- <tr class=xl70 height=15 style='height:15.0pt'>
-  <td height=15 class=xl77 style='height:15.0pt;border-top:none'>initial value</td>
-  <td class=xl77 style='border-top:none;border-left:none'>first state listed</td>
-  <td class=xl77 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl77 style='border-top:none;border-left:none'>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
-  <td class=xl70>&nbsp;</td>
- </tr>
- <tr height=30 style='height:30.0pt;mso-xlrowspan:2'>
-  <td height=30 colspan=12 style='height:30.0pt;mso-ignore:colspan'></td>
- </tr>
- <tr class=xl72 height=15 style='height:15.0pt'>
-  <td height=15 class=xl71 colspan=2 style='height:15.0pt;mso-ignore:colspan'>API
-  GENERATED FROM SINGLETON</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
-  <td class=xl72>&nbsp;</td>
+  <td height=15 class=xl66 style='height:15.0pt'>boolean setSm(enum)</td>
+  <td>If no events, then can set directly</td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 colspan=12 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td height=15 class=xl66 style='height:15.0pt'>Substates allowed</td>
+  <td></td>
+  <td class=xl75>yes</td>
+  <td>no</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl71 height=15 style='height:15.0pt'>
+  <td height=15 class=xl71 style='height:15.0pt'>initial value</td>
+  <td class=xl71>first state listed</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
+  <td class=xl71>&nbsp;</td>
  </tr>
  <tr height=15 style='height:15.0pt'>
-  <td height=15 style='height:15.0pt'>static X getInstance()</td>
-  <td colspan=11 style='mso-ignore:colspan'></td>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr class=xl68 height=15 style='height:15.0pt'>
+  <td height=15 class=xl67 style='height:15.0pt'>API GENERATED FROM SINGLETON</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+  <td class=xl68>&nbsp;</td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+ </tr>
+ <tr height=15 style='height:15.0pt'>
+  <td height=15 class=xl66 style='height:15.0pt'>static X getInstance()</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
  </tr>
 </table>
+
+
 
