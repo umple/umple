@@ -252,3 +252,7 @@ from the 'OPTIONS' menu.</li>
 Multiple files of generated code are concatenated when they appear on the web page. A link is also provided to download a zip file with the code so you can easily compile and execute it.</li>
 
 </ul>
+
+<hr />
+
+<p><a href="PrivacyandRisks.html">See here for the statement regarding <b>privacy and other risks when using UmpleOnline</b>.</a></p>
