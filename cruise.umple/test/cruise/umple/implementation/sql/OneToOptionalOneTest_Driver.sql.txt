@@ -20,4 +20,4 @@ CREATE TABLE IF NOT EXISTS `example`.`my_driver`
 );
 
 
-ALTER TABLE `example`.`my_driver` ADD CONSTRAINT `fk_my_subordinate_number` FOREIGN KEY (`my_subordinate_number`) REFERENCES `example`.`my_subordinate`(`number`);
+ALTER TABLE `example`.`my_driver` ADD CONSTRAINT `fk_mydriver_my_subordinate_number` FOREIGN KEY (`my_subordinate_number`) REFERENCES `example`.`my_subordinate`(`number`);

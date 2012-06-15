@@ -22,6 +22,6 @@ CREATE TABLE IF NOT EXISTS `example`.`student`
 );
 
 
-ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_mentor_name_1` FOREIGN KEY (`mentor_name_1`) REFERENCES `example`.`mentor`(`name`);
-ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_mentor_name_2` FOREIGN KEY (`mentor_name_2`) REFERENCES `example`.`mentor`(`name`);
-ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_mentor_name_3` FOREIGN KEY (`mentor_name_3`) REFERENCES `example`.`mentor`(`name`);
+ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_student_mentor_name_1` FOREIGN KEY (`mentor_name_1`) REFERENCES `example`.`mentor`(`name`);
+ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_student_mentor_name_2` FOREIGN KEY (`mentor_name_2`) REFERENCES `example`.`mentor`(`name`);
+ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_student_mentor_name_3` FOREIGN KEY (`mentor_name_3`) REFERENCES `example`.`mentor`(`name`);

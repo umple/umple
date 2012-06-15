@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `example`.`mentor`
 );
 
 
-ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_student_number_1` FOREIGN KEY (`student_number_1`) REFERENCES `example`.`student`(`number`);
-ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_student_number_2` FOREIGN KEY (`student_number_2`) REFERENCES `example`.`student`(`number`);
-ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_student_number_3` FOREIGN KEY (`student_number_3`) REFERENCES `example`.`student`(`number`);
-ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_student_number_4` FOREIGN KEY (`student_number_4`) REFERENCES `example`.`student`(`number`);
+ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_mentor_student_number_1` FOREIGN KEY (`student_number_1`) REFERENCES `example`.`student`(`number`);
+ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_mentor_student_number_2` FOREIGN KEY (`student_number_2`) REFERENCES `example`.`student`(`number`);
+ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_mentor_student_number_3` FOREIGN KEY (`student_number_3`) REFERENCES `example`.`student`(`number`);
+ALTER TABLE `example`.`mentor` ADD CONSTRAINT `fk_mentor_student_number_4` FOREIGN KEY (`student_number_4`) REFERENCES `example`.`student`(`number`);

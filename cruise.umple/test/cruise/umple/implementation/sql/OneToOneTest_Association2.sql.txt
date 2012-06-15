@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS `example`.`student`
 );
 
 
-ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_mentor_name` FOREIGN KEY (`mentor_name`) REFERENCES `example`.`mentor`(`name`);
+ALTER TABLE `example`.`student` ADD CONSTRAINT `fk_student_mentor_name` FOREIGN KEY (`mentor_name`) REFERENCES `example`.`mentor`(`name`);
