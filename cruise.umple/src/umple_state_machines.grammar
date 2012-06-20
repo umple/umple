@@ -14,7 +14,7 @@ extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 enum : [name] { } | [name] { [stateName] (, [stateName])* }
 state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
-stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]]
+stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]]
 
 autoTransition : [[autoTransitionBlock]] | [[activity]] [[autoTransitionBlock]]
 autoTransitionBlock- : [[guard]] -> [[action]]? [stateName] ; | [[action]] -> [stateName] ; | [[guard]]? -> [[action]]? [stateName] ; | -> [stateName] ;
