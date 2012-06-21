@@ -18,11 +18,11 @@ public class CppHeaderGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
   protected final String TEXT_2 = NL + NL + "#ifndef ";
   protected final String TEXT_3 = "_H_" + NL + "#define ";
   protected final String TEXT_4 = "_H_";
-  protected final String TEXT_5 = NL;
+  protected final String TEXT_5 = NL + "#include <string>" + NL + "using namespace std;" + NL;
   protected final String TEXT_6 = NL + "class ";
   protected final String TEXT_7 = NL + "{" + NL + "   //------------------------" + NL + "  // Attributes for header file" + NL + "  //------------------------" + NL + "  private:";
   protected final String TEXT_8 = NL + NL + "  //------------------------" + NL + "  // Constructor" + NL + "  //------------------------" + NL + "  public:" + NL;
@@ -2462,7 +2462,7 @@ public class CppHeaderGenerator implements ILang
     
 
   appendln(stringBuffer,"");
-  appendln(stringBuffer,"virtual ~{0}()",uClass.getName());
+  appendln(stringBuffer,"virtual ~{0}();",uClass.getName());
   append(stringBuffer,"");
 
   boolean hasSomethingToDelete = false;

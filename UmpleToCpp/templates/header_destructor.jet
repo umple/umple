@@ -2,7 +2,7 @@
 <%
 
   appendln(stringBuffer,"");
-  appendln(stringBuffer,"virtual ~{0}()",uClass.getName());
+  appendln(stringBuffer,"virtual ~{0}();",uClass.getName());
   append(stringBuffer,"");
 
   boolean hasSomethingToDelete = false;

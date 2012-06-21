@@ -32,6 +32,8 @@
 #define <%=uClass.getName().toUpperCase()%>_H_
 <%@ include file="import_packages.jet" %>
 <%@ include file="header_import_relatedHeaders.jet"%>
+#include <string>
+using namespace std;
 
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
 class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
