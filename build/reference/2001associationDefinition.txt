@@ -20,7 +20,7 @@ An association can specify the following information:
   <li>The classes involved (i.e. one or two classes)</li>
   <li>Navigability: -- means both ways (i.e. each class can access the linked objects of the other class) and -> means one way.</li>
   <li>The restrictions on the number of objects allowed in the relationship (<a href="Multiplicity.html">multiplicity</a>)</li>
-  <li><a href="RoleNames.html">Role names</a> on association ends (to clarify the relationship and avoid collision if two classes are associated in multiple ways</li>
+  <li><a href="RoleNames.html">Role names</a> on association ends (to clarify the relationship and avoid collision if two classes are associated in multiple ways)</li>
 </ul>
 </p>
 

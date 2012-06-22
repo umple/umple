@@ -20,7 +20,8 @@ class Group
   * -- * Item item;
   
   // An item has an optional description
-  // The association is directed, so descriptions do not know which items link to them
+  // The association is directed, so descriptions do not know
+  // which groups link to them
   1 -> 0..1 Description;
 }
 

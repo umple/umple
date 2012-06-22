@@ -3,13 +3,15 @@ Attributes
 noreferences
 
 @@description
-<p>You can declare a class as a data type of an attribute.</p>
+<p>You can declare a class as a data type of an attribute. This allows for
+declaration of a 'containment' relationship.</p>
 
-<p>Note that if you get the object stored in such an attribute
-it is currently possible to modify it, hence affecting the 
+<p>If you use the methods in the <a href="APISummary.html">Umple-generated API</a> to access
+the object stored in such an attribute, and pass this contained object
+to some remote subsystem, then that remote subsystem will be able to affect the 
 containing object in a backhanded sort of way. This is considered
-content coupling in software engineering, and should be 
-carefully controlled or avoided. We may in future add a keyword
+<i>content coupling</i> in software engineering, and should be 
+carefully controlled or avoided. We may in future add a capability
 to Umple to ensure this cannot happen.</p>
 
 <p>In the examples below, we show how using attribute notation
@@ -20,7 +22,13 @@ with attribute notation, you can set the value to null</p>
 @@example
 // This first example uses attribute notation
 // The address is required on the constructor, but can be null
-
+// An instance of Address can be considered to be contained
+// within the Person class.
+//
+// Although there is nothing currently preventing the same address
+// from being re-used in multiple classes, it is strongly suggested
+// to avoid that. If you want to reuse the same Address, then use
+// association notation instead.
 class Person {
   name;
   

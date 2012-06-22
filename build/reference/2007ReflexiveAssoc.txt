@@ -9,7 +9,9 @@ There are two main types: Symmetric and Asymmetric.</p>
 
 <p><b>Asymmetric Reflexive Associations:</b> The ends of the association 
 are semantically different from each other, even though the associated 
-class is the same. Examples include parent-child, superclass-subclass. The 
+class is the same. Examples include parent-child, supervisor-subordinate and predecessor-successor.</p>
+
+<p>The 
 first and second example below shows courses having prerequisites that are 
 other courses. It is necessary to specify a <a href="RoleNames.html">role 
 name</a> at one or both ends of the association to distinguish the ends. 
@@ -28,7 +30,7 @@ if the lower bound on a multiplicity is one or higher.</a></p>
 
 
 <p><b>Symmetric Reflexive Associations:</b> There is no logical difference 
-in the semantics of each assocaition end. The fourth example shows one of 
+in the semantics of each association end. The fourth example shows one of 
 these: A set of courses that are mutually exclusive with each other 
 essentially make up a set. If course A is mutually exclusive with B, then 
 course B is mutually exclusive with A. In other words, students who have 

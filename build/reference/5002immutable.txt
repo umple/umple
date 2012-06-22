@@ -3,7 +3,7 @@ Patterns
 noreferences
 
 @@description
-<p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and then cannot be set.</p>
+<p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and cannot be modified again subsequently.</p>
 
 <p>The only associations allowed to be immutable are directed associations to other immutable classes</p>
 

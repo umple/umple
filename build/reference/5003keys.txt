@@ -6,7 +6,7 @@ noreferences
 <p>In any class you can specify a set of attributes and associations as
 keys. The associations must have a multiplicity of 1 at the other end.
 This allows Umple to generate code that defines what objects of the
-class are equal (they have the same values for they key).</p>
+class are equal (they have the same values for the key).</p>
 
 <p>Umple will also generate a hashCode method in any class that has a defined key. This helps
 when looking up an object in a set.</p>

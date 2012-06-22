@@ -4,13 +4,13 @@ noreferences
 
 @@description
 <p>      
-When an transition is taken, and action can occur. This is indicated
+When an transition is taken, an action can occur. This is indicated
 using a slash "/" followed by arbitrary code in braces.
 </p>
 
 <p>
 Similarly,
-when entering or exiting a state, an action can be occur. This is indicated
+when entering or exiting a state, an action can occur. This is indicated
 using the keywords entry or exit, followed by a slash, followed by code.
 </p>
 
