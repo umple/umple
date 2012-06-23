@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<f:subview>
+	<h:form>
+		<rich:panel style="width:450px" id="PositionMainPanel#{uniqueId}">
+			<f:facet name="header">
+			#{aPositionBundle.PositionClassName} 
+			</f:facet>
+			<h:panelGrid columns="1" >
+				<h:panelGrid columns="3"  columnClasses="colStyle1"  rendered="#{!aPositionBean.editing}" >
+				
+						<h:outputText value="#{aPositionBundle.IdPosition}" />
+	<h:inputText value="#{aPositionBean.idPosition}" >
+		<f:converter converterId="javax.faces.Integer" />
+	</h:inputText>
+					<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				
+				
+				<h:outputText value="#{aPositionBundle.Description}" />
+<h:inputText value="#{aPositionBean.description}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+				<h:outputText value="#{aPositionBundle.Name}" />
+<h:inputText value="#{aPositionBean.name}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+				
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="colStyle1"  rendered="#{aPositionBean.editing}">
+				
+				<h:outputText value="#{aPositionBundle.IdPosition}" />
+<h:outputText value="#{aPositionBean.editedPositionVO.idPosition}" >
+<f:converter converterId="javax.faces.Integer" />
+</h:outputText>
+
+						<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				
+				
+					<h:outputText value="#{aPositionBundle.Description}" />
+<h:inputText value="#{aPositionBean.description}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+					<h:outputText value="#{aPositionBundle.Name}" />
+<h:inputText value="#{aPositionBean.name}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+				</h:panelGrid>
+				<h:panelGrid columns="2" columnClasses="colStyle1"  >
+			
+					
+		
+
+			</h:panelGrid>
+				
+		
+		<h:panelGrid columns="2" rendered="#{aPositionBean.editing}"	 >
+<rich:simpleTogglePanel switchType="client"  label="" style="width:350px; text-align:center;" >	
+			<f:facet name="openMarker">
+				<h:outputText value="Show #{aPositionBundle.ElectionForPosition}s +" style="font-weight:bold;color:black;"/>
+			</f:facet>
+			<f:facet name="closeMarker">
+				<h:outputText value="Hide #{aPositionBundle.ElectionForPosition}s -" style="font-weight:bold;color:black;"/>
+			</f:facet>				
+	<rich:dataTable value="#{aPositionBean.electionForPositionList}" var="reg"
+		onRowMouseOver="this.style.backgroundColor='#F1F1F1'" style="align:center;"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'" rows="10" rowKeyVar="row"	>
+		<f:facet name="header">
+			<h:outputText value="#{aPositionBundle.ElectionForPosition}" />
+		</f:facet>
+
+		
+		
+			
+		<rich:column>	
+						<f:facet name="header"><h:outputText value="#{aElectionForPositionBundle.IdElectionForPosition}"/></f:facet>
+			<h:outputText value="#{reg.idElectionForPosition}" >
+			<f:converter converterId="javax.faces.Integer" />
+			</h:outputText>
+
+		</rich:column>				
+			
+		
+							
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+
+		</rich:column>			
+		<f:facet name="footer">
+			<rich:datascroller renderIfSinglePage="false" />
+
+		</f:facet>
+	</rich:dataTable>
+	</rich:simpleTogglePanel>
+		<a4j:commandLink value="" reRender="ElectionForPositionPanelRichPanel#{uniqueId}"
+			immediate="true" 
+			action="#{aPositionBean.toElectionForPositions}"
+			oncomplete="Richfaces.showModalPanel('ElectionForPositionGridPanel#{uniqueId}');">
+			<h:outputText value="Manage" />
+		</a4j:commandLink>
+					</h:panelGrid>				
+			
+			
+		
+
+			<h:panelGrid columns="2" style="width:100%; text-align:right;">
+					<a4j:commandButton action="#{aPositionBean.createOrEdit}"
+						value="#{aPositionBean.editing?'Update':'Add'}"
+						reRender="PositionGridContainer#{uniqueId}, PositionMainPanel#{uniqueId}" />
+					<a4j:commandButton action="#{aPositionBean.cancel}"  
+						value="Cancel" reRender="PositionMainPanel#{uniqueId}" />
+			</h:panelGrid>
+			</h:panelGrid>
+		</rich:panel>
+	</h:form>
+</f:subview>
+<f:subview>
+	<rich:spacer height="3" />
+		<rich:panel style="border-style:none; background-color:transparent" id="PositionGridContainer#{uniqueId}">
+		<rich:spacer height="3" />
+		 <ui:include src="grid.xhtml">
+			<ui:param name="mainPanel" value="PositionMainPanel#{uniqueId}"/>
+			<ui:param name="parentId" value="#{uniqueId}"/>
+			<ui:param name="uniqueId" value="19" />
+		</ui:include>
+	</rich:panel>
+</f:subview>
+		
+	
+	
+<rich:modalPanel id="ElectionForPositionGridPanel#{uniqueId}" autosized="true">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="#{aPositionBundle.ElectionForPosition}"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+
+			<f:subview>
+				<h:form>
+					<a4j:commandLink
+						action="#{aPositionBean.toElectionForPositionsDone}" value=""
+						reRender="PositionMainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('ElectionForPositionGridPanel#{uniqueId}');">
+						<h:graphicImage value="/images/icons/close.png"
+							styleClass="hidelink"  />
+					</a4j:commandLink>
+				</h:form>
+			</f:subview>
+		</h:panelGroup>
+	</f:facet>
+
+	<rich:panel id="ElectionForPositionPanelRichPanel#{uniqueId}">
+
+		<ui:include src="/pages/elections/ElectionForPosition/ElectionForPositionInsertable.xhtml">
+			<ui:param name="mainPanel" value="PositionMainPanel#{uniqueId}"/>
+			<ui:param name="uniqueId" value="20"/>
+		</ui:include>
+		<f:subview>
+			<h:form>
+				<h:panelGrid columns="2">
+					<a4j:commandButton
+						action="#{aPositionBean.toElectionForPositionsDone}" value="Close"
+						reRender="PositionMainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('ElectionForPositionGridPanel#{uniqueId}');" />
+				</h:panelGrid>
+			</h:form>
+		</f:subview>
+	</rich:panel>
+</rich:modalPanel>	
+</html>

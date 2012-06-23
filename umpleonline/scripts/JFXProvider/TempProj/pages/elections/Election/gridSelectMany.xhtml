@@ -1,0 +1,143 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<h:form>
+	<rich:panel header="Current Selection"
+		id="ElectionSelectionPanel#{uniqueId}" style="width:600px;">
+		<rich:simpleTogglePanel switchType="client"  label=""  >	
+		<f:facet name="openMarker">
+				<h:outputText value="Show +" style="font-weight:bold;color:black;"/>
+		</f:facet>
+		<f:facet name="closeMarker">
+				<h:outputText value="Hide -" style="font-weight:bold;color:black;"/>
+		</f:facet>	
+		<h:panelGrid columns="1"  style="width:550px;height:220px; vertical-align:top;">
+		<rich:dataTable value="#{aElectionBean.editedElectionVOList}" var="reg"
+		onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+		rows="4" rowKeyVar="row" id="ElectionGridList#{uniqueId}" 		>
+ 		<f:facet name="header">
+			<h:outputText value="#{aElectionBundle.ElectionClassName}" />
+		</f:facet>
+
+		
+		
+			
+		<rich:column>	
+						<f:facet name="header"><h:outputText value="#{aElectionBundle.IdElection}"/></f:facet>
+			<h:outputText value="#{reg.idElection}" >
+			<f:converter converterId="javax.faces.Integer" />
+			</h:outputText>
+
+		</rich:column>				
+			
+		
+							
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+
+		</rich:column>	
+		<rich:column>	
+		<a4j:commandLink
+				action="#{aElectionBean.removeFromLinker}"
+				reRender="ElectionSelectionPanel#{uniqueId}"  >
+				<h:graphicImage value="/images/icons/delete.gif" style="border:0" />
+				<f:setPropertyActionListener value="#{reg}"
+					target="#{aElectionBean.selectedElectionVO}" />
+		</a4j:commandLink>
+		</rich:column>		
+		<f:facet name="footer">
+			<rich:datascroller renderIfSinglePage="false" />
+
+		</f:facet>
+	</rich:dataTable>
+		
+		</h:panelGrid>
+	
+		</rich:simpleTogglePanel>
+
+	</rich:panel>
+	<rich:spacer height="3" />
+	
+	<rich:dataTable value="#{aElectionBean.elections}" var="reg"
+		onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+		rows="6" rowKeyVar="row" id="ElectionGrid#{uniqueId}"
+		style="align:center; width:400px;">
+ 		<f:facet name="header">
+		
+			<h:outputText value="#{aElectionBundle.ElectionClassName}" />
+		
+		</f:facet>
+		
+		
+			
+		<rich:column>	
+						<f:facet name="header"><h:outputText value="#{aElectionBundle.IdElection}"/></f:facet>
+			<h:outputText value="#{reg.idElection}" >
+			<f:converter converterId="javax.faces.Integer" />
+			</h:outputText>
+
+		</rich:column>				
+			
+		
+		
+		
+			
+		<rich:column>	
+							<f:facet name="header"><h:outputText value="#{aElectionBundle.Description}"/></f:facet>
+			<h:outputText value="#{reg.description}" >
+			</h:outputText>
+
+		</rich:column>				
+							
+		
+		
+			
+		<rich:column>	
+							<f:facet name="header"><h:outputText value="#{aElectionBundle.Name}"/></f:facet>
+			<h:outputText value="#{reg.name}" >
+			</h:outputText>
+
+		</rich:column>				
+							
+		
+		
+			
+		<rich:column>	
+							<f:facet name="header"><h:outputText value="#{aElectionBundle.Date}"/></f:facet>
+			<h:outputText value="#{reg.date}" >
+			<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+			</h:outputText>
+
+		</rich:column>				
+							
+		
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+		</rich:column>	
+				
+		<rich:column>
+			<a4j:commandLink value="" 
+				action="#{aElectionBean.bindCollection}"
+				reRender="ElectionSelectionPanel#{uniqueId}">
+				<h:outputText value="Select" />
+				<f:setPropertyActionListener value="#{reg}"
+					target="#{aElectionBean.selectedElectionVO}" />
+			</a4j:commandLink>			
+		</rich:column>
+					
+		<f:facet name="footer">
+			<rich:datascroller renderIfSinglePage="false" />
+
+		</f:facet>
+	</rich:dataTable>
+</h:form>
+</html>
