@@ -18,7 +18,7 @@ stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transitio
 
 autoTransition : [[autoTransitionBlock]] | [[activity]] [[autoTransitionBlock]]
 autoTransitionBlock- : [[guard]] -> [[action]]? [stateName] ; | [[action]] -> [stateName] ; | [[guard]]? -> [[action]]? [stateName] ; | -> [stateName] ;
-transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ;  
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? [[action]]? -> [stateName] ; 
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]
 afterEveryEvent- : afterEvery -( [timer] -)

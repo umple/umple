@@ -785,6 +785,30 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true,t.isAutoTransition());
     Assert.assertEquals("count > 10", t.getGuard().getCondition());
   }  
+
+  @Test
+  public void transitionWithGuardAndAction()
+  {
+                            
+    assertParse("100_transitionWithGuardAndAction.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][guard][guardCode:brightness < 1][action][actionCode:blabla][stateName:Off][state][stateName:Off]");
+    
+    UmpleClass c = model.getUmpleClass("LightFixture");
+    
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("bulb", sm.getName());
+    
+    State on = sm.getState(0);
+    Assert.assertEquals("On",on.getName());
+    
+    Transition t = on.getTransition(0);
+    Assert.assertEquals("push", t.getEvent().getName());
+    Assert.assertEquals("brightness < 1", t.getGuard().getCondition());
+
+    Action a1= t.getAction();
+    
+    Assert.assertNotNull(a1);
+    Assert.assertEquals("blabla", a1.getActionCode());
+  }
   
   private void assertParse(String filename, String expectedOutput)
   {

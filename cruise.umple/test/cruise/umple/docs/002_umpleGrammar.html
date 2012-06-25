@@ -127,7 +127,9 @@ enum : [name] { } | [name] { [stateName] (, [stateName])* }<br />
 state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* }<br />
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]<br />
 stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br />
-transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[activity]] -> [stateName]<br />
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? [[action]]? -> [stateName] ; 
+
+| [[activity]] -> [stateName]<br />
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]<br />
 afterEveryEvent- : afterEvery -( [timer] -)<br />
 afterEvent- : after -( [timer] -)<br />

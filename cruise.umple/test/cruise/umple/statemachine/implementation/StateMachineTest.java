@@ -85,12 +85,12 @@ public class StateMachineTest extends StateMachineTemplateTest
 	  assertUmpleTemplateFor("stateMachineSpacing2.ump",languagePath + "/stateMachineSpacing."+ languagePath +".txt","Garage");
   }
   
-  
   @Test
   public void transitionAction()
   {
     assertUmpleTemplateFor("transitionAction.ump",languagePath + "/transitionAction."+ languagePath +".txt","Course");
   }
+ 
   
   @Test 
   public void entryAction()
