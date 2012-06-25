@@ -11,6 +11,7 @@ import usecase.addElection.AddElectionController;
 import usecase.addPosition.AddPositionController;
 import usecase.assignPositionElection.AssignPositionElectionController;
 import usecase.registerCandidate.RegisterCandidateController;
+import usecase.registerVoter.RegisterVoterController;
 import usecase.assignCandidature.AssignCandidatureController;
 import view.main.MainView;
 
@@ -32,7 +33,7 @@ public class Controller
   private Object mainMenuOption;
 
   //Controller State Machines
-  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, AssigningPositionElection, CandidateRegisteration, CandidatureDeclaration, Closign, Closing }
+  enum Status { Initial, ProvidingMainMenu, PollOpening, ElectionAdding, PollAdding, PositionAdding, AssigningPositionElection, CandidateRegisteration, VoterRegisteration, CandidatureDeclaration, Closign, Closing }
   private Status status;
 
   //------------------------
@@ -102,6 +103,10 @@ public class Controller
         wasEventProcessed = true;
         break;
       case CandidateRegisteration:
+        setStatus(Status.ProvidingMainMenu);
+        wasEventProcessed = true;
+        break;
+      case VoterRegisteration:
         setStatus(Status.ProvidingMainMenu);
         wasEventProcessed = true;
         break;
@@ -210,6 +215,22 @@ public class Controller
     return wasEventProcessed;
   }
 
+  public boolean registerVoter()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case ProvidingMainMenu:
+        setStatus(Status.VoterRegisteration);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   public boolean declareCandidature()
   {
     boolean wasEventProcessed = false;
@@ -275,6 +296,10 @@ public class Controller
       case CandidateRegisteration:
         MainView.getInstance().setVisible(false);
     RegisterCandidateController.getInstance().registerCandidate();
+        break;
+      case VoterRegisteration:
+        MainView.getInstance().setVisible(false);
+    RegisterVoterController.getInstance().registerVoter();
         break;
       case CandidatureDeclaration:
         MainView.getInstance().setVisible(false);

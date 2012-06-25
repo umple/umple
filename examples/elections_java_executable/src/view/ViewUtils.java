@@ -91,7 +91,7 @@ public class ViewUtils
     return wasEventProcessed;
   }
 
-  private boolean __autotransition544__()
+  private boolean __autotransition650__()
   {
     boolean wasEventProcessed = false;
     
@@ -116,7 +116,7 @@ public class ViewUtils
     {
       case FrameCentering:
         performCentering();
-        __autotransition544__();
+        __autotransition650__();
         break;
     }
   }
@@ -129,12 +129,12 @@ public class ViewUtils
   //------------------------
   
   private void performCentering()
-	{
-		int w = toBeCenteredFrame.getSize().width;
-		int h = toBeCenteredFrame.getSize().height;
-		int x = (dim.width-w)/2;
-		int y = (dim.height-h)/2;
-		 
-		toBeCenteredFrame.setLocation(x, y);
-	}
+  {
+    int w = toBeCenteredFrame.getSize().width;
+    int h = toBeCenteredFrame.getSize().height;
+    int x = (dim.width-w)/2;
+    int y = (dim.height-h)/2;
+     
+    toBeCenteredFrame.setLocation(x, y);
+  }
 }

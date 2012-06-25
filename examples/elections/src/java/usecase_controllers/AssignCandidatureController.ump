@@ -1,0 +1,177 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.assignCandidature;
+
+class AssignCandidatureController
+{
+  singleton;
+  
+  depend java.util.List;
+  depend java.util.Iterator;
+  depend java.util.ArrayList;
+  
+  depend shared.domain.Election;
+  depend shared.domain.Candidate;
+  depend shared.domain.Candidature;
+  depend shared.domain.Position;
+  depend shared.domain.ElectionForPosition;
+  
+  depend java.sql.Connection;
+  depend java.sql.DriverManager;
+  depend java.sql.SQLException;
+  
+  depend javax.swing.JOptionPane;
+  
+  depend service.ElectionService;
+  depend service.PositionService;
+  depend service.CandidateService;
+  depend service.CandidatureService;
+  depend service.ElectionForPositionService;
+  
+  depend usecase.startup.Controller;
+  
+  depend view.assignPositionCandidate.AssignPositionCandidateView;
+
+  lazy Connection theConnection;
+  lazy Election selectedElection;
+  lazy int option=JOptionPane.NO_OPTION;
+  lazy internal List<Election> elections;
+  lazy internal List<Candidate> candidates;
+  lazy internal List<ElectionForPosition> electionForPositions;
+  lazy internal AssignPositionCandidateView assignPositionCandidateView;
+  lazy boolean updated;
+    
+  CandidateAssignationSteps {
+    Initial
+    {
+      assignCandidate -> ProvidingElectionsList;
+    }
+    ProvidingElectionsList
+    {
+      entry / {ElectionService.getInstance().getAllElections();
+          elections=ElectionService.getInstance().getElections();}
+      [!elections.isEmpty()] -> ElectionsListProvided;
+      [elections.isEmpty()] -> NoElectionsFound;
+    }
+    ElectionsListProvided
+    {
+      entry / {selectAnElection();}
+      -> ProvidingElectionForPositionsList;
+    }
+    ProvidingElectionForPositionsList
+    {
+      entry / {tryLoadingElectionForPositions();}
+      [!electionForPositions.isEmpty()] -> ProvidingPositionsList;
+      [electionForPositions.isEmpty()] -> NoElectionForPositionsFound;
+    }
+    ProvidingPositionsList
+    {
+      entry / {tryLoadingPositions();}
+      -> ProvidingCandidatesList;
+    }
+    ProvidingCandidatesList
+    {
+      entry / {CandidateService.getInstance().getAllCandidates();
+          candidates=CandidateService.getInstance().getCandidates();}
+      [!candidates.isEmpty()] -> CandidatesListProvided;
+      [candidates.isEmpty()] -> NoCandidatesFound;
+    }
+    CandidatesListProvided
+    {
+      entry / {showAssignCandidatureView();}
+      updateButtonClicked -> UpdatingCandidature;
+    }
+    UpdatingCandidature
+    {
+      entry / {updated=tryToUpdateCandidature();}
+      [updated] -> Updated;
+      [!updated] -> NotUpdated;
+    }
+    NoElectionsFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    NoCandidatesFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No candidates found, add some candidates first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    NoElectionForPositionsFound
+    {
+      entry / {JOptionPane.showMessageDialog(null, "No election for positions found, assign some positions to election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    Updated
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Candidature Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    NotUpdated
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Adding Candidature Failed!");
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    Done 
+    {
+      entry / {Controller.getInstance().start();}
+      -> Initial;
+    }
+  }
+       
+  void showAssignCandidatureView() {
+     assignPositionCandidateView=new AssignPositionCandidateView(candidates, electionForPositions);
+     assignPositionCandidateView.setVisible(true);
+  }
+  
+  private void selectAnElection() {
+    String[] electionNames=new String[elections.size()];
+    int i=0;
+    for (Election election:elections)
+      electionNames[i++]=election.getName();
+    Object selectedElectionName = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
+    i=0;
+    selectedElection=null;
+    Iterator<Election> iterator=elections.iterator();
+    while (iterator.hasNext() && selectedElection==null) {
+      Election election=iterator.next();
+      if (election.getName().equals(selectedElectionName))
+        selectedElection=election;
+    }
+  }
+  
+  private void tryLoadingElectionForPositions() {
+    ElectionForPositionService.getInstance().setSelectedElection(selectedElection);
+    electionForPositions=ElectionForPositionService.getInstance().getFoundEFPs();
+  }
+  
+  private void tryLoadingPositions() {
+    for (ElectionForPosition efp:electionForPositions) {
+      Position p=new Position(efp.getPosition().getIdPosition(), "", "");
+      PositionService.getInstance().setPositionById(p);
+      p=PositionService.getInstance().getPositionById();
+      efp.setPosition(p);
+    }
+  }
+
+  boolean tryToUpdateCandidature() {
+    List<Candidature> candidatures=assignPositionCandidateView.getCandidatures();
+    for (Candidature candidature:candidatures) {
+      CandidatureService.getInstance().setNewCandidature(candidature);
+    }
+    assignPositionCandidateView.dispose();
+    return CandidatureService.getInstance().getCandidatureAdded();
+  }
+}

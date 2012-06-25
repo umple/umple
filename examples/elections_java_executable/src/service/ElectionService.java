@@ -197,7 +197,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition281__()
+  private boolean __autotransition628__()
   {
     boolean wasEventProcessed = false;
     
@@ -213,7 +213,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition282__()
+  private boolean __autotransition629__()
   {
     boolean wasEventProcessed = false;
     
@@ -229,7 +229,7 @@ public class ElectionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition283__()
+  private boolean __autotransition630__()
   {
     boolean wasEventProcessed = false;
     
@@ -249,7 +249,7 @@ public class ElectionService
   {
     try {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
-      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
     }
@@ -260,15 +260,15 @@ public class ElectionService
     {
       case LoadingAllElections:
         loadAllElections();
-        __autotransition281__();
+        __autotransition628__();
         break;
       case CreatingElection:
         addElection();
-        __autotransition282__();
+        __autotransition629__();
         break;
       case FindingElectionByName:
         tryFindingElectionByName();
-        __autotransition283__();
+        __autotransition630__();
         break;
     }
   }

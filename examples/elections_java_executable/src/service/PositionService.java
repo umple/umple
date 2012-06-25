@@ -27,17 +27,18 @@ public class PositionService
 
   //PositionService Attributes
   private Position selectedPosition;
+  private Position newPosition;
+  private Position positionById;
   private Election selectedElection;
   private List<Position> positions;
   private Connection theConnection;
   private boolean positionOpenned;
-  private Position newPosition;
   private boolean positionAdded;
   private Position positionToSearch;
   private boolean positionFound;
 
   //PositionService State Machines
-  enum PositionServiceCycle { Idle, CreatingPosition, FindingPosition, LoadingAllPositions }
+  enum PositionServiceCycle { Idle, CreatingPosition, FindingPosition, FindingPositionById, LoadingAllPositions }
   private PositionServiceCycle PositionServiceCycle;
 
   //------------------------
@@ -69,6 +70,23 @@ public class PositionService
   {
     boolean wasSet = false;
     selectedPosition = aSelectedPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setNewPosition(Position aNewPosition)
+  {
+    boolean wasSet = false;
+    newPosition = aNewPosition;
+    wasSet = true;
+    createPosition();
+    return wasSet;
+  }
+
+  public boolean setPositionById(Position aPositionById)
+  {
+    boolean wasSet = false;
+    positionById = aPositionById;
     wasSet = true;
     return wasSet;
   }
@@ -105,15 +123,6 @@ public class PositionService
     return wasSet;
   }
 
-  public boolean setNewPosition(Position aNewPosition)
-  {
-    boolean wasSet = false;
-    newPosition = aNewPosition;
-    wasSet = true;
-    createPosition();
-    return wasSet;
-  }
-
   public boolean setPositionAdded(boolean aPositionAdded)
   {
     boolean wasSet = false;
@@ -144,6 +153,17 @@ public class PositionService
     return selectedPosition;
   }
 
+  public Position getNewPosition()
+  {
+    return newPosition;
+  }
+
+  public Position getPositionById()
+  {
+    findPositionById();
+    return positionById;
+  }
+
   public Election getSelectedElection()
   {
     return selectedElection;
@@ -163,11 +183,6 @@ public class PositionService
   public boolean getPositionOpenned()
   {
     return positionOpenned;
-  }
-
-  public Position getNewPosition()
-  {
-    return newPosition;
   }
 
   public boolean getPositionAdded()
@@ -259,7 +274,23 @@ public class PositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1093__()
+  public boolean findPositionById()
+  {
+    boolean wasEventProcessed = false;
+    
+    PositionServiceCycle aPositionServiceCycle = PositionServiceCycle;
+    switch (aPositionServiceCycle)
+    {
+      case Idle:
+        setPositionServiceCycle(PositionServiceCycle.FindingPositionById);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition633__()
   {
     boolean wasEventProcessed = false;
     
@@ -275,7 +306,7 @@ public class PositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1094__()
+  private boolean __autotransition634__()
   {
     boolean wasEventProcessed = false;
     
@@ -291,7 +322,23 @@ public class PositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1095__()
+  private boolean __autotransition635__()
+  {
+    boolean wasEventProcessed = false;
+    
+    PositionServiceCycle aPositionServiceCycle = PositionServiceCycle;
+    switch (aPositionServiceCycle)
+    {
+      case FindingPositionById:
+        setPositionServiceCycle(PositionServiceCycle.Idle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition636__()
   {
     boolean wasEventProcessed = false;
     
@@ -311,7 +358,7 @@ public class PositionService
   {
     try {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
-      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
     }
@@ -322,15 +369,19 @@ public class PositionService
     {
       case CreatingPosition:
         addPosition();
-        __autotransition1093__();
+        __autotransition633__();
         break;
       case FindingPosition:
         searchForPosition();
-        __autotransition1094__();
+        __autotransition634__();
+        break;
+      case FindingPositionById:
+        searchForPositionById();
+        __autotransition635__();
         break;
       case LoadingAllPositions:
         loadAllPositions();
-        __autotransition1095__();
+        __autotransition636__();
         break;
     }
   }
@@ -376,12 +427,28 @@ public class PositionService
     positionFound=true;
     try {
       Statement stmt = theConnection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM position where name='"+positionToSearch.getName()+"'");
+      ResultSet rs = stmt.executeQuery("SELECT * FROM elections.position where name='"+positionToSearch.getName()+"'");
       if (!rs.next())
         positionFound=false;
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
       positionFound=false;
+    }
+  }
+
+  private void searchForPositionById() {
+    positionFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM elections.position where id_position='"+positionById.getIdPosition()+"'");
+      if (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        positionById.setName(name);
+        positionById.setDescription(description);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
     }
   }
 }

@@ -36,7 +36,7 @@ public class AddPositionController
   private ElectionForPosition efp;
 
   //AddPositionController State Machines
-  enum PositionAddingSteps { Initial, PreparingView, CheckingPositionName, CheckingExistingPosition, PositionNameEmpty, PositionExists, AddingPosition, PositionAdded, PositionNotAdded, ClosingView, NoElectionsFound, CheckingpositionName }
+  enum PositionAddingSteps { Initial, PreparingView, CheckingPositionName, CheckingExistingPosition, PositionNameEmpty, PositionExists, AddingPosition, PositionAdded, PositionNotAdded, ClosingView, CheckingpositionName }
   private PositionAddingSteps PositionAddingSteps;
 
   //------------------------
@@ -132,7 +132,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1721__()
+  private boolean __autotransition567__()
   {
     boolean wasEventProcessed = false;
     
@@ -152,7 +152,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1722__()
+  private boolean __autotransition568__()
   {
     boolean wasEventProcessed = false;
     
@@ -172,7 +172,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1723__()
+  private boolean __autotransition569__()
   {
     boolean wasEventProcessed = false;
     
@@ -192,7 +192,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1724__()
+  private boolean __autotransition570__()
   {
     boolean wasEventProcessed = false;
     
@@ -212,7 +212,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1725__()
+  private boolean __autotransition571__()
   {
     boolean wasEventProcessed = false;
     
@@ -228,7 +228,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1726__()
+  private boolean __autotransition572__()
   {
     boolean wasEventProcessed = false;
     
@@ -248,7 +248,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1727__()
+  private boolean __autotransition573__()
   {
     boolean wasEventProcessed = false;
     
@@ -268,7 +268,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1728__()
+  private boolean __autotransition574__()
   {
     boolean wasEventProcessed = false;
     
@@ -284,7 +284,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1729__()
+  private boolean __autotransition575__()
   {
     boolean wasEventProcessed = false;
     
@@ -300,7 +300,7 @@ public class AddPositionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1730__()
+  private boolean __autotransition576__()
   {
     boolean wasEventProcessed = false;
     
@@ -308,22 +308,6 @@ public class AddPositionController
     switch (aPositionAddingSteps)
     {
       case ClosingView:
-        setPositionAddingSteps(PositionAddingSteps.Initial);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  private boolean __autotransition1731__()
-  {
-    boolean wasEventProcessed = false;
-    
-    PositionAddingSteps aPositionAddingSteps = PositionAddingSteps;
-    switch (aPositionAddingSteps)
-    {
-      case NoElectionsFound:
         setPositionAddingSteps(PositionAddingSteps.Initial);
         wasEventProcessed = true;
         break;
@@ -344,48 +328,43 @@ public class AddPositionController
         break;
       case CheckingPositionName:
         positionName=addPositionView.getPositionName();
-        __autotransition1721__();
-        __autotransition1722__();
+        __autotransition567__();
+        __autotransition568__();
         break;
       case CheckingExistingPosition:
         positionFound=positionExists();
-        __autotransition1723__();
-        __autotransition1724__();
+        __autotransition569__();
+        __autotransition570__();
         break;
       case PositionNameEmpty:
         JOptionPane.showMessageDialog(null, "position name cannot be empty!");
         break;
       case PositionExists:
         JOptionPane.showMessageDialog(null, "position Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
-					Controller.getInstance().start();
-					addPositionView.dispose();
-        __autotransition1725__();
+          Controller.getInstance().start();
+          addPositionView.dispose();
+        __autotransition571__();
         break;
       case AddingPosition:
         tryToAddPosition();
-					positionAdded=PositionService.getInstance().getPositionAdded();
-					//efpAdded=ElectionForPositionService.getInstance().getElectionForPositionAdded();
-        __autotransition1726__();
-        __autotransition1727__();
+          positionAdded=PositionService.getInstance().getPositionAdded();
+          //efpAdded=ElectionForPositionService.getInstance().getElectionForPositionAdded();
+        __autotransition572__();
+        __autotransition573__();
         break;
       case PositionAdded:
         JOptionPane.showMessageDialog(null, "Position Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
-					Controller.getInstance().start();
-        __autotransition1728__();
+          Controller.getInstance().start();
+        __autotransition574__();
         break;
       case PositionNotAdded:
         JOptionPane.showMessageDialog(null, "Adding Position Failed!");
-					Controller.getInstance().start();
-        __autotransition1729__();
+          Controller.getInstance().start();
+        __autotransition575__();
         break;
       case ClosingView:
         addPositionView.dispose();
-        __autotransition1730__();
-        break;
-      case NoElectionsFound:
-        JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
-					Controller.getInstance().start();
-        __autotransition1731__();
+        __autotransition576__();
         break;
     }
   }
@@ -396,7 +375,7 @@ public class AddPositionController
 
   public void showAddPositionView(){
       addPositionView=new AddPositionView();
- 		addPositionView.setVisible(true);
+     addPositionView.setVisible(true);
   }
   
   //------------------------
@@ -406,25 +385,16 @@ public class AddPositionController
   private boolean positionExists() {
     //selectedElection=addPositionView.getSelectedElection();
     newPosition=new Position(-1, positionName, "");
-  	//efp=new ElectionForPosition(-1, selectedElection, newPosition);
+    //efp=new ElectionForPosition(-1, selectedElection, newPosition);
     PositionService.getInstance().setPositionToSearch(newPosition);
     return PositionService.getInstance().getPositionFound();
   }
-	
+  
   void tryToAddPosition() {
     String positionDescription=addPositionView.getPositionDescription();
     newPosition.setDescription(positionDescription);
     PositionService.getInstance().setNewPosition(newPosition);
     //ElectionForPositionService.getInstance().setNewElectionForPosition(efp);
     addPositionView.dispose();
-  }
-  
-  	
-  void tryToAddElectionForPosition() {
-   /* String positionDescription=addPositionView.getpositionDescription();
-    newPosition.setDescription(positionDescription);
-    PositionService.getInstance().setNewPosition(newPosition);
-    ElectionForPositionService.getInstance().setNewElectionForPosition(efp);
-    addPositionView.dispose();*/
   }
 }

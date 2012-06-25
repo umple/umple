@@ -1,0 +1,101 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace service;
+
+// handles all database-related tasks regarding Candidature objects
+class CandidatureService {
+  // java utilities
+  depend java.util.List;
+  depend java.util.ArrayList;
+  
+  // domain objects 
+  depend shared.domain.Election;
+  depend shared.domain.Position;
+  depend shared.domain.Candidature;
+  
+  // java classes required to work with SQL JDBC database 
+  depend java.sql.Connection;
+  depend java.sql.ResultSet;
+  depend java.sql.Statement;
+  depend java.sql.DriverManager;
+  depend shared.Credentials;
+  
+  // only one instance of this service will exist  
+  singleton;
+  
+  /* Returns the new Candidature object to be inserted in the database.
+  The newCandidature attribute, once set, triggers an insertion search in the database. */
+  lazy Candidature newCandidature;
+  lazy Boolean candidatureAdded;
+  lazy internal Boolean candidatureFound;
+  
+  // holds the connection to database
+  lazy internal Connection theConnection;
+  
+  // now that the newElectionForPosition is set, it's time to insert it in database
+  after setNewCandidature
+  {
+    createCandidature();
+  }
+  
+  CandidatureServiceCycle {
+    Idle {
+      createCandidature -> FindingCandidature;
+    }
+    CreatingCandidature
+    {
+      entry / {addCandidature();}
+      -> Idle;
+    }
+    FindingCandidature {
+      entry / {tryFindingCandidature();}
+      [candidatureFound] -> Idle;
+      [!candidatureFound] -> CreatingCandidature;
+    }
+   }
+  
+  before setCandidatureServiceCycle
+  {
+    try {
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+      
+  void addCandidature() {
+    try {
+      Statement stmt = theConnection.createStatement();
+      int idCandidate=newCandidature.getCandidate().getIdCandidate();
+      int idEFP=newCandidature.getElectionForPosition().getIdElectionForPosition();
+      stmt.executeUpdate("insert into elections.candidature (candidate_id_candidate, election_for_position_id_election_for_position) values ('"+idCandidate+"', '"+idEFP+"')");
+      candidatureAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      candidatureAdded=false;
+    }
+  }
+  
+  private void tryFindingCandidature() {
+    candidatureFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      int idCandidate=newCandidature.getCandidate().getIdCandidate();
+      int idEFP=newCandidature.getElectionForPosition().getIdElectionForPosition();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM elections.candidature where candidate_id_candidate='"+idCandidate+"' and election_for_position_id_election_for_position='"+idEFP+"'");
+      if (!rs.next())
+        candidatureFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      candidatureFound=false;
+    }
+  }
+}

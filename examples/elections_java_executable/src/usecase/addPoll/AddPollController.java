@@ -89,7 +89,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition319__()
+  private boolean __autotransition554__()
   {
     boolean wasEventProcessed = false;
     
@@ -109,7 +109,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition320__()
+  private boolean __autotransition555__()
   {
     boolean wasEventProcessed = false;
     
@@ -169,7 +169,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition321__()
+  private boolean __autotransition556__()
   {
     boolean wasEventProcessed = false;
     
@@ -189,7 +189,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition322__()
+  private boolean __autotransition557__()
   {
     boolean wasEventProcessed = false;
     
@@ -209,7 +209,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition323__()
+  private boolean __autotransition558__()
   {
     boolean wasEventProcessed = false;
     
@@ -229,7 +229,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition324__()
+  private boolean __autotransition559__()
   {
     boolean wasEventProcessed = false;
     
@@ -249,7 +249,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition325__()
+  private boolean __autotransition560__()
   {
     boolean wasEventProcessed = false;
     
@@ -265,7 +265,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition326__()
+  private boolean __autotransition561__()
   {
     boolean wasEventProcessed = false;
     
@@ -285,7 +285,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition327__()
+  private boolean __autotransition562__()
   {
     boolean wasEventProcessed = false;
     
@@ -305,7 +305,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition328__()
+  private boolean __autotransition563__()
   {
     boolean wasEventProcessed = false;
     
@@ -321,7 +321,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition329__()
+  private boolean __autotransition564__()
   {
     boolean wasEventProcessed = false;
     
@@ -337,7 +337,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition330__()
+  private boolean __autotransition565__()
   {
     boolean wasEventProcessed = false;
     
@@ -353,7 +353,7 @@ public class AddPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition331__()
+  private boolean __autotransition566__()
   {
     boolean wasEventProcessed = false;
     
@@ -379,24 +379,24 @@ public class AddPollController
       case ProvidingElectionsList:
         ElectionService.getInstance().getAllElections();
           elections=ElectionService.getInstance().getElections();
-        __autotransition319__();
-        __autotransition320__();
+        __autotransition554__();
+        __autotransition555__();
         break;
       case ElectionsListProvided:
         showAddPollView();
         break;
       case CheckingPollName:
         pollName=addPollView.getPollName();
-        __autotransition321__();
-        __autotransition322__();
+        __autotransition556__();
+        __autotransition557__();
         break;
       case CheckingExistingPoll:
         selectedElection=addPollView.getSelectedElection();
           newPoll=new Poll(-1, -1, pollName, "", selectedElection);
           PollService.getInstance().setPollToSearch(newPoll);
           pollFound=PollService.getInstance().getPollFound();
-        __autotransition323__();
-        __autotransition324__();
+        __autotransition558__();
+        __autotransition559__();
         break;
       case PollNameEmpty:
         JOptionPane.showMessageDialog(null, "Poll name cannot be empty!");
@@ -405,31 +405,31 @@ public class AddPollController
         JOptionPane.showMessageDialog(null, "Poll Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
           Controller.getInstance().start();
           addPollView.dispose();
-        __autotransition325__();
+        __autotransition560__();
         break;
       case AddingPoll:
         tryToAddPoll();pollAdded=PollService.getInstance().getPollAdded();
-        __autotransition326__();
-        __autotransition327__();
+        __autotransition561__();
+        __autotransition562__();
         break;
       case PollAdded:
         JOptionPane.showMessageDialog(null, "Poll Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
           Controller.getInstance().start();
-        __autotransition328__();
+        __autotransition563__();
         break;
       case PollNotAdded:
         JOptionPane.showMessageDialog(null, "Adding Poll Failed!");
           Controller.getInstance().start();
-        __autotransition329__();
+        __autotransition564__();
         break;
       case ClosingView:
         addPollView.dispose();
-        __autotransition330__();
+        __autotransition565__();
         break;
       case NoElectionsFound:
         JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
           Controller.getInstance().start();
-        __autotransition331__();
+        __autotransition566__();
         break;
     }
   }

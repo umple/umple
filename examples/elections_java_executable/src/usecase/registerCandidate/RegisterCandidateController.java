@@ -141,7 +141,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1278__()
+  private boolean __autotransition588__()
   {
     boolean wasEventProcessed = false;
     
@@ -161,7 +161,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1279__()
+  private boolean __autotransition589__()
   {
     boolean wasEventProcessed = false;
     
@@ -181,7 +181,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1280__()
+  private boolean __autotransition590__()
   {
     boolean wasEventProcessed = false;
     
@@ -201,7 +201,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1281__()
+  private boolean __autotransition591__()
   {
     boolean wasEventProcessed = false;
     
@@ -217,7 +217,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1282__()
+  private boolean __autotransition592__()
   {
     boolean wasEventProcessed = false;
     
@@ -237,7 +237,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1283__()
+  private boolean __autotransition593__()
   {
     boolean wasEventProcessed = false;
     
@@ -257,7 +257,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1284__()
+  private boolean __autotransition594__()
   {
     boolean wasEventProcessed = false;
     
@@ -277,7 +277,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1285__()
+  private boolean __autotransition595__()
   {
     boolean wasEventProcessed = false;
     
@@ -297,7 +297,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1286__()
+  private boolean __autotransition596__()
   {
     boolean wasEventProcessed = false;
     
@@ -313,7 +313,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1287__()
+  private boolean __autotransition597__()
   {
     boolean wasEventProcessed = false;
     
@@ -329,7 +329,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1288__()
+  private boolean __autotransition598__()
   {
     boolean wasEventProcessed = false;
     
@@ -345,7 +345,7 @@ public class RegisterCandidateController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1289__()
+  private boolean __autotransition599__()
   {
     boolean wasEventProcessed = false;
     
@@ -373,36 +373,36 @@ public class RegisterCandidateController
         break;
       case CheckingCandidateData:
         checkCandidateData();
-        __autotransition1278__();
-        __autotransition1279__();
-        __autotransition1280__();
-        __autotransition1281__();
+        __autotransition588__();
+        __autotransition589__();
+        __autotransition590__();
+        __autotransition591__();
         break;
       case CheckingExistingCandidate:
         CandidateService.getInstance().setCandidateNameToSearch(candidateName);
           candidateFound=CandidateService.getInstance().getCandidateFound();
-        __autotransition1282__();
-        __autotransition1283__();
+        __autotransition592__();
+        __autotransition593__();
         break;
       case AddingCandidate:
         tryToAddCandidate();
-        __autotransition1284__();
-        __autotransition1285__();
+        __autotransition594__();
+        __autotransition595__();
         break;
       case CandidateAdded:
         JOptionPane.showMessageDialog(null, "Candidate Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
           Controller.getInstance().start();
-        __autotransition1286__();
+        __autotransition596__();
         break;
       case CandidateNotAdded:
         JOptionPane.showMessageDialog(null, "Adding Candidate Failed!", "Error!", JOptionPane.ERROR_MESSAGE); Controller.getInstance().start();
-        __autotransition1287__();
+        __autotransition597__();
         break;
       case CandidateExists:
         JOptionPane.showMessageDialog(null, "Candidate Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
           Controller.getInstance().start();
           registerCandidateView.dispose();
-        __autotransition1288__();
+        __autotransition598__();
         break;
       case CandidateNameEmpty:
         JOptionPane.showMessageDialog(null, "Candidate name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);
@@ -415,7 +415,7 @@ public class RegisterCandidateController
         break;
       case ClosingView:
         registerCandidateView.dispose();
-        __autotransition1289__();
+        __autotransition599__();
         break;
     }
   }

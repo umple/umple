@@ -1,0 +1,14 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Php "../elections_php_executable" --override;
+
+use php/services.ump;
+use shared/domain.ump;
+use shared/login.ump;

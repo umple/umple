@@ -1,0 +1,11 @@
+This directory contains Umple files that complete domain objects by more Java-specific code.
+
+files:
+----------------------------------------------------------------
+Election_Code.ump: provides complementary code for the Election class defined in shared/Election.ump
+Position_Code.ump: provides complementary code for the Position class defined in shared/Position.ump
+Candidate_Code.ump: provides complementary code for the Candidate class defined in shared/Candidate.ump
+
+directories:
+----------------------------------------------------------------
+N/A

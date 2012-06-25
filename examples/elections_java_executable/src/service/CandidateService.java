@@ -197,7 +197,7 @@ public class CandidateService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1386__()
+  private boolean __autotransition641__()
   {
     boolean wasEventProcessed = false;
     
@@ -213,7 +213,7 @@ public class CandidateService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1387__()
+  private boolean __autotransition642__()
   {
     boolean wasEventProcessed = false;
     
@@ -229,7 +229,7 @@ public class CandidateService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1388__()
+  private boolean __autotransition643__()
   {
     boolean wasEventProcessed = false;
     
@@ -249,7 +249,7 @@ public class CandidateService
   {
     try {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
-      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
     }
@@ -260,15 +260,15 @@ public class CandidateService
     {
       case LoadingAllCandidates:
         loadAllCandidates();
-        __autotransition1386__();
+        __autotransition641__();
         break;
       case CreatingCandidate:
         addCandidate();
-        __autotransition1387__();
+        __autotransition642__();
         break;
       case FindingCandidateByName:
         tryFindingCandidateByName();
-        __autotransition1388__();
+        __autotransition643__();
         break;
     }
   }

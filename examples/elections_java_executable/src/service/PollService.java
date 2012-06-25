@@ -269,7 +269,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition284__()
+  private boolean __autotransition631__()
   {
     boolean wasEventProcessed = false;
     
@@ -285,7 +285,7 @@ public class PollService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition285__()
+  private boolean __autotransition632__()
   {
     boolean wasEventProcessed = false;
     
@@ -305,7 +305,7 @@ public class PollService
   {
     try {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
-      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
     }
@@ -319,11 +319,11 @@ public class PollService
         break;
       case OpenningPoll:
         tryToOpenPoll();
-        __autotransition284__();
+        __autotransition631__();
         break;
       case CreatingPoll:
         addPoll();
-        __autotransition285__();
+        __autotransition632__();
         break;
     }
   }

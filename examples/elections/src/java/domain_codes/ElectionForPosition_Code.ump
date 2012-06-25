@@ -1,0 +1,18 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace shared.domain;
+
+class ElectionForPosition {
+  /* Returns the string value of this object. Used when adding election_for_position objects directly to list boxes, so that the item is the actual position
+  object and the presented text is whatever this method returns. */
+  public String toString() {
+    return position.getName();
+  }
+}

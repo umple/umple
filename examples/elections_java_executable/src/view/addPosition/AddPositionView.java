@@ -41,33 +41,33 @@ public class AddPositionView extends JFrame
     positionName = null;
     positionDescription = null;
     getContentPane().setLayout(null);
-	
-		positionNameLabel=new JLabel("Position Name:");
-		positionNameLabel.setBounds(10, 10, 200, 20);
-		add(positionNameLabel);
-		
-		positionNameTextField=new JTextField();
-		positionNameTextField.setBounds(10, 30, 200, 20);
-		add(positionNameTextField);
-		
-		positionDescriptionLabel=new JLabel("Add a description:");
-		positionDescriptionLabel.setBounds(10, 50, 200, 20);
-		add(positionDescriptionLabel);
-		
-		positionDescriptionTextArea=new JTextArea();
-		positionDescriptionTextArea.setBounds(10, 70, 200, 60);
-		add(positionDescriptionTextArea);
-		
-		addPositionButton=new JButton("add");
-		addPositionButton.setBounds(75, 180, 75, 20);
-		addPositionButton.addMouseListener(GenericMouseListener.AddPositionViewMouseListener);
-		add(addPositionButton);
-		
-		pack();
-		setSize(250, 250);
-		
-		ViewUtils.getInstance().setToBeCenteredFrame(this);
-		addWindowListener(GenericWindowListener.AddPositionViewWindowListener);
+  
+    positionNameLabel=new JLabel("Position Name:");
+    positionNameLabel.setBounds(10, 10, 200, 20);
+    add(positionNameLabel);
+    
+    positionNameTextField=new JTextField();
+    positionNameTextField.setBounds(10, 30, 200, 20);
+    add(positionNameTextField);
+    
+    positionDescriptionLabel=new JLabel("Add a description:");
+    positionDescriptionLabel.setBounds(10, 50, 200, 20);
+    add(positionDescriptionLabel);
+    
+    positionDescriptionTextArea=new JTextArea();
+    positionDescriptionTextArea.setBounds(10, 70, 200, 60);
+    add(positionDescriptionTextArea);
+    
+    addPositionButton=new JButton("add");
+    addPositionButton.setBounds(75, 180, 75, 20);
+    addPositionButton.addMouseListener(GenericMouseListener.AddPositionViewMouseListener);
+    add(addPositionButton);
+    
+    pack();
+    setSize(250, 250);
+    
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.AddPositionViewWindowListener);
   }
 
   //------------------------

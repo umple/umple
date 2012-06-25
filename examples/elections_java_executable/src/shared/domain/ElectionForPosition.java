@@ -223,5 +223,12 @@ public class ElectionForPosition
       aCandidature.delete();
     }
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String toString() {
+    return position.getName();
+  }
 }

@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.963 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class Credentials
 {
@@ -12,6 +12,7 @@ class Credentials
   public static $db_hostname = "localhost:3306";
   public static $db_username = "umple";
   public static $db_password = "ems";
+  public static $db_database = "elections";
 
   //------------------------
   // MEMBER VARIABLES

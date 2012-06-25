@@ -191,7 +191,7 @@ class PollService
     return $wasEventProcessed;
   }
 
-  private function __autotransition244__()
+  private function __autotransition657__()
   {
     $wasEventProcessed = false;
     
@@ -204,7 +204,7 @@ class PollService
     return $wasEventProcessed;
   }
 
-  private function __autotransition245__()
+  private function __autotransition658__()
   {
     $wasEventProcessed = false;
     
@@ -217,7 +217,7 @@ class PollService
     return $wasEventProcessed;
   }
 
-  private function __autotransition246__()
+  private function __autotransition659__()
   {
     $wasEventProcessed = false;
     
@@ -233,21 +233,25 @@ class PollService
   private function setServiceProvidingCycle($aServiceProvidingCycle)
   {
     require_once("Credentials.php");
-		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    mysql_select_db(Credentials::$db_database);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleLoadingElectionPolls)
     {
       $this->loadElectionPolls($this->idElection);
+      $this->__autotransition657__();
     }
     elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleOpeningPoll)
     {
       $this->tryToOpenPoll($this->idpoll);
+      $this->__autotransition658__();
     }
     elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleCreatingPoll)
     {
       $this->tryToCreatePoll();
+      $this->__autotransition659__();
     }
   }
 
@@ -264,55 +268,55 @@ class PollService
   //------------------------
   
   private function loadElectionPolls($idElection) {
-		$result = mysql_query("SELECT * FROM elections.election where id_election=$idElection");
+    $result = mysql_query("SELECT * FROM election where id_election=$idElection");
 
-		require_once("./domain/Election.php");
-		$anElection=null;
-		
-		while($row = mysql_fetch_array($result)) {
-			$anElection=new Election($row['id_election'],$row['name'],$row['description']);
-		}
-		
-  		$result = mysql_query("SELECT * FROM elections.poll where election_id_election=$idElection");
+    require_once("./domain/Election.php");
+    $anElection=null;
+    
+    while($row = mysql_fetch_array($result)) {
+      $anElection=new Election($row['id_election'],$row['name'],$row['description']);
+    }
+    
+      $result = mysql_query("SELECT * FROM poll where election_id_election=$idElection");
 
-		require_once("./domain/Poll.php");
-		
-		$this->allPolls='{"polls" : [';
-		$first=true;
-		while($row = mysql_fetch_array($result)) {
-			$aPoll=new Poll($row['id_poll'],$row['name'],$row['description'],$anElection);
-			if ($first) {
-				$this->allPolls=$this->allPolls.$this->jsonSerialize($aPoll);
-				$first=false;
-			} else
-				$this->allPolls=$this->allPolls.",".$this->jsonSerialize($aPoll);
-		}
-		$this->allPolls=$this->allPolls.']}';
-	}
-	
-	private function tryToOpenPoll($idpoll) {
-		$wasUpdated=false;
-		if ($this->isConnected) {
-			$wasUpdated = mysql_query("update elections.poll set status='open' where id_poll=$idpoll");
-		}
-		
-		if ($this->isConnected && $wasUpdated)
-			$this->latestResult='Poll open!';
-		else
-			$this->latestResult='An error occured!';
-	}
-	
-		
-	private function tryToCreatePoll() {
-		$pollData=json_decode($this->pollJSON);
-		if (mysql_query("insert into elections.poll (election_id_election, name, description) values ('$pollData->election', '$pollData->name', '$pollData->description')"))
-			$this->latestResult='Successfully added!';
-		else
-			$this->latestResult=mysql_error();
-	}
-	
-	private function jsonSerialize($aPoll) {
-		return '{"idpoll":"'.$aPoll->getIdPoll().'","name":"'.$aPoll->getName().'","description":"'.$aPoll->getDescription().'","theElection":"'.$aPoll->getElection()->getIdElection().'"}';
-	}
+    require_once("./domain/Poll.php");
+    
+    $this->allPolls='{"polls" : [';
+    $first=true;
+    while($row = mysql_fetch_array($result)) {
+      $aPoll=new Poll($row['id_poll'],$row['name'],$row['description'],$anElection);
+      if ($first) {
+        $this->allPolls=$this->allPolls.$this->jsonSerialize($aPoll);
+        $first=false;
+      } else
+        $this->allPolls=$this->allPolls.",".$this->jsonSerialize($aPoll);
+    }
+    $this->allPolls=$this->allPolls.']}';
+  }
+  
+  private function tryToOpenPoll($idpoll) {
+    $wasUpdated=false;
+    if ($this->isConnected) {
+      $wasUpdated = mysql_query("update poll set status='open' where id_poll=$idpoll");
+    }
+    
+    if ($this->isConnected && $wasUpdated)
+      $this->latestResult='Poll open!';
+    else
+      $this->latestResult='An error occured!';
+  }
+  
+    
+  private function tryToCreatePoll() {
+    $pollData=json_decode($this->pollJSON);
+    if (mysql_query("insert into poll (election_id_election, name, description) values ('$pollData->election', '$pollData->name', '$pollData->description')"))
+      $this->latestResult='Successfully added!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
+  private function jsonSerialize($aPoll) {
+    return '{"idpoll":"'.$aPoll->getIdPoll().'","name":"'.$aPoll->getName().'","description":"'.$aPoll->getDescription().'","theElection":"'.$aPoll->getElection()->getIdElection().'"}';
+  }
 }
 ?>

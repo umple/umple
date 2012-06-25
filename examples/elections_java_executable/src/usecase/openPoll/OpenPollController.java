@@ -157,7 +157,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition616__()
+  private boolean __autotransition531__()
   {
     boolean wasEventProcessed = false;
     
@@ -177,7 +177,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition617__()
+  private boolean __autotransition532__()
   {
     boolean wasEventProcessed = false;
     
@@ -197,7 +197,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition618__()
+  private boolean __autotransition533__()
   {
     boolean wasEventProcessed = false;
     
@@ -213,7 +213,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition619__()
+  private boolean __autotransition534__()
   {
     boolean wasEventProcessed = false;
     
@@ -233,7 +233,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition620__()
+  private boolean __autotransition535__()
   {
     boolean wasEventProcessed = false;
     
@@ -253,7 +253,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition621__()
+  private boolean __autotransition536__()
   {
     boolean wasEventProcessed = false;
     
@@ -269,7 +269,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition622__()
+  private boolean __autotransition537__()
   {
     boolean wasEventProcessed = false;
     
@@ -289,7 +289,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition623__()
+  private boolean __autotransition538__()
   {
     boolean wasEventProcessed = false;
     
@@ -309,7 +309,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition624__()
+  private boolean __autotransition539__()
   {
     boolean wasEventProcessed = false;
     
@@ -329,7 +329,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition625__()
+  private boolean __autotransition540__()
   {
     boolean wasEventProcessed = false;
     
@@ -349,7 +349,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition626__()
+  private boolean __autotransition541__()
   {
     boolean wasEventProcessed = false;
     
@@ -365,7 +365,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition627__()
+  private boolean __autotransition542__()
   {
     boolean wasEventProcessed = false;
     
@@ -381,7 +381,7 @@ public class OpenPollController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition628__()
+  private boolean __autotransition543__()
   {
     boolean wasEventProcessed = false;
     
@@ -406,49 +406,52 @@ public class OpenPollController
     {
       case ProvidingElectionsList:
         ElectionService.getInstance().getAllElections();
-					elections=ElectionService.getInstance().getElections();
-        __autotransition616__();
-        __autotransition617__();
+          elections=ElectionService.getInstance().getElections();
+        __autotransition531__();
+        __autotransition532__();
         break;
       case ElectionsListProvided:
         selectAnElection();
-        __autotransition618__();
+        __autotransition533__();
         break;
       case ProvidingPollsList:
-        PollService.getInstance().setSelectedElection(selectedElection);polls=PollService.getInstance().getPolls();
-        __autotransition619__();
-        __autotransition620__();
+        PollService.getInstance().setSelectedElection(selectedElection);
+               polls=PollService.getInstance().getPolls();
+        __autotransition534__();
+        __autotransition535__();
         break;
       case PollsListProvided:
-        selectAPoll();PollService.getInstance().setSelectedPoll(selectedPoll);
-        __autotransition621__();
+        selectAPoll();
+               PollService.getInstance().setSelectedPoll(selectedPoll);
+        __autotransition536__();
         break;
       case OpeningPoll:
         PollService.getInstance().openPoll();pollOpened=PollService.getInstance().getPollOpenned();
-        __autotransition622__();
-        __autotransition623__();
+        __autotransition537__();
+        __autotransition538__();
         break;
       case PollOpened:
-        JOptionPane.showMessageDialog(null, "Poll is now open"); Controller.getInstance().start();
+        JOptionPane.showMessageDialog(null, "Poll is now open");
+                   Controller.getInstance().start();
         break;
       case Failed:
         option=JOptionPane.showConfirmDialog(null, "Poll Opening Failed! Retry?", "Error!", JOptionPane.YES_NO_OPTION);
-        __autotransition624__();
-        __autotransition625__();
+        __autotransition539__();
+        __autotransition540__();
         break;
       case Done:
         Controller.getInstance().start();
-        __autotransition626__();
+        __autotransition541__();
         break;
       case NoPollsFound:
         JOptionPane.showMessageDialog(null, "No polls found, add a poll first!", "Error!", JOptionPane.ERROR_MESSAGE);
-					Controller.getInstance().start();
-        __autotransition627__();
+          Controller.getInstance().start();
+        __autotransition542__();
         break;
       case NoElectionsFound:
         JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
-					Controller.getInstance().start();
-        __autotransition628__();
+          Controller.getInstance().start();
+        __autotransition543__();
         break;
     }
   }
@@ -459,35 +462,35 @@ public class OpenPollController
 
   public void selectAnElection(){
       String[] electionNames=new String[elections.size()];
-		int i=0;
-		for (Election election:elections)
-			electionNames[i++]=election.getName();
-		Object selectedElectionName = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
-		i=0;
-		selectedElection=null;
-		Iterator<Election> iterator=elections.iterator();
-		while (iterator.hasNext() && selectedElection==null) {
-			Election election=iterator.next();
-			if (election.getName().equals(selectedElectionName))
-				selectedElection=election;
-		}
+    int i=0;
+    for (Election election:elections)
+      electionNames[i++]=election.getName();
+    Object selectedElectionName = JOptionPane.showInputDialog(null, "Select an Election", "List of Elections", JOptionPane.QUESTION_MESSAGE, null, electionNames, electionNames[0]);
+    i=0;
+    selectedElection=null;
+    Iterator<Election> iterator=elections.iterator();
+    while (iterator.hasNext() && selectedElection==null) {
+      Election election=iterator.next();
+      if (election.getName().equals(selectedElectionName))
+        selectedElection=election;
+    }
   }
 
 
   public void selectAPoll(){
       String[] pollNames=new String[polls.size()];
-		int i=0;
-		for (Poll poll:polls)
-			pollNames[i++]=poll.getName();
-		Object selectedPollName = JOptionPane.showInputDialog(null, "Select a poll", "List of Polls", JOptionPane.QUESTION_MESSAGE, null, pollNames, pollNames[0]);
-		
-		selectedPoll=null;
-		Iterator<Poll> iterator=polls.iterator();
-		while (iterator.hasNext() && selectedPoll==null) {
-			Poll poll=iterator.next();
-			if (poll.getName().equals(selectedPollName))
-				selectedPoll=poll;
-		}
+    int i=0;
+    for (Poll poll:polls)
+      pollNames[i++]=poll.getName();
+    Object selectedPollName = JOptionPane.showInputDialog(null, "Select a poll", "List of Polls", JOptionPane.QUESTION_MESSAGE, null, pollNames, pollNames[0]);
+    
+    selectedPoll=null;
+    Iterator<Poll> iterator=polls.iterator();
+    while (iterator.hasNext() && selectedPoll==null) {
+      Poll poll=iterator.next();
+      if (poll.getName().equals(selectedPollName))
+        selectedPoll=poll;
+    }
   }
 
 }

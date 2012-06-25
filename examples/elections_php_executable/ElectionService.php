@@ -151,7 +151,8 @@ class ElectionService
   private function setServiceProvidingCycle($aServiceProvidingCycle)
   {
     require_once("Credentials.php");
-		$this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    mysql_select_db(Credentials::$db_database);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
@@ -178,35 +179,35 @@ class ElectionService
   //------------------------
   
   private function loadAllElections() {
-  		$result = mysql_query("SELECT * FROM elections.election");
+    $result = mysql_query("SELECT * FROM election");
 
-		require_once("./domain/Election.php");
-		
-		$this->elections='{"elections" : [';
-		$first=true;
-		while($row = mysql_fetch_array($result)) {
-			$anElection=new Election($row['id_election'],$row['name'],$row['description']);
-			if ($first) {
-				$this->elections=$this->elections.$this->jsonSerialize($anElection);
-				$first=false;
-			} else
-				$this->elections=$this->elections.",".$this->jsonSerialize($anElection);
-		}
-		$this->elections=$this->elections.']}';
+    require_once("./domain/Election.php");
+    
+    $this->elections='{"elections" : [';
+    $first=true;
+    while($row = mysql_fetch_array($result)) {
+      $anElection=new Election($row['id_election'],$row['name'],$row['description']);
+      if ($first) {
+        $this->elections=$this->elections.$this->jsonSerialize($anElection);
+        $first=false;
+      } else
+        $this->elections=$this->elections.",".$this->jsonSerialize($anElection);
+    }
+    $this->elections=$this->elections.']}';
 
-		mysql_close($this->isConnected);
-	}
-	
-	private function addElection() {
-		$electionData=json_decode($this->electionJSON);
-		if (mysql_query("insert into elections.election (name, description) values ('$electionData->name', '$electionData->description')"))
-			$this->latestResult='Successfully added!';
-		else
-			$this->latestResult=mysql_error();
-	}
-	
-	private function jsonSerialize($anElection) {
-		return '{"idElection":"'.$anElection->getIdElection().'","name":"'.$anElection->getName().'","description":"'.$anElection->getDescription().'"}';
-	}
+    mysql_close($this->isConnected);
+  }
+  
+  private function addElection() {
+    $electionData=json_decode($this->electionJSON);
+    if (mysql_query("insert into election (name, description) values ('$electionData->name', '$electionData->description')"))
+      $this->latestResult='Successfully added!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
+  private function jsonSerialize($anElection) {
+    return '{"idElection":"'.$anElection->getIdElection().'","name":"'.$anElection->getName().'","description":"'.$anElection->getDescription().'"}';
+  }
 }
 ?>

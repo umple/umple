@@ -152,6 +152,7 @@ class PositionService
   {
     require_once("Credentials.php");
     $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    mysql_select_db(Credentials::$db_database);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
@@ -179,14 +180,14 @@ class PositionService
   
   private function addPosition() {
     $positionData=json_decode($this->positionJSON);
-    if (mysql_query("insert into elections.position (name, description) values ('$positionData->name', '$positionData->description')"))
+    if (mysql_query("insert into position (name, description) values ('$positionData->name', '$positionData->description')"))
       $this->latestResult='Successfully added!';
     else
       $this->latestResult=mysql_error();
   }
   
   private function loadAllPositions() {
-      $result = mysql_query("SELECT * FROM elections.position");
+      $result = mysql_query("SELECT * FROM position");
 
     require_once("./domain/Position.php");
     

@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1834 modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class ElectionForPositionService
 {
@@ -150,7 +150,7 @@ class ElectionForPositionService
     return $wasEventProcessed;
   }
 
-  private function __autotransition1__()
+  private function __autotransition660__()
   {
     $wasEventProcessed = false;
     
@@ -163,7 +163,7 @@ class ElectionForPositionService
     return $wasEventProcessed;
   }
 
-  private function __autotransition2__()
+  private function __autotransition661__()
   {
     $wasEventProcessed = false;
     
@@ -179,7 +179,7 @@ class ElectionForPositionService
     return $wasEventProcessed;
   }
 
-  private function __autotransition3__()
+  private function __autotransition662__()
   {
     $wasEventProcessed = false;
     
@@ -199,19 +199,20 @@ class ElectionForPositionService
   {
     require_once("Credentials.php");
     $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    mysql_select_db(Credentials::$db_database);
     $this->ServiceProvidingCycle = $aServiceProvidingCycle;
 
     // entry actions and do activities
     if ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleCreatingElectionForPosition)
     {
       $this->tryToCreateElectionForPosition();
-      $this->__autotransition1__();
+      $this->__autotransition660__();
     }
     elseif ($this->ServiceProvidingCycle == self::$ServiceProvidingCycleFindingElectionForPosition)
     {
       $this->tryFindingElectionForPosition();
-      $this->__autotransition2__();
-      $this->__autotransition3__();
+      $this->__autotransition661__();
+      $this->__autotransition662__();
     }
   }
 
@@ -229,7 +230,7 @@ class ElectionForPositionService
   
   private function tryToCreateElectionForPosition() {
     $efpData=json_decode($this->efpJSON);
-    if (mysql_query("insert into elections.election_for_position (election_id_election, position_id_position) values ('$efpData->election', '$efpData->position')"))
+    if (mysql_query("insert into election_for_position (election_id_election, position_id_position) values ('$efpData->election', '$efpData->position')"))
       $this->latestResult='Successfully added!';
     else
       $this->latestResult=mysql_error();
@@ -238,7 +239,7 @@ class ElectionForPositionService
   private function tryFindingElectionForPosition() {
     $efpData=json_decode($this->efpJSON);
     $this->efpFound=true;
-    $result = mysql_query("SELECT * FROM elections.election_for_position where election_id_election='$efpData->election' and position_id_position='$efpData->position'");
+    $result = mysql_query("SELECT * FROM election_for_position where election_id_election='$efpData->election' and position_id_position='$efpData->position'");
     if (mysql_num_rows($result)==0)
       $this->efpFound=false;
   }

@@ -202,5 +202,12 @@ public class Candidate
       aCandidature.delete();
     }
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  public String toString() {
+    return name;
+  }
 }

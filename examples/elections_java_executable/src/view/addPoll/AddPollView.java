@@ -13,6 +13,7 @@ import shared.listeners.GenericMouseListener;
 import shared.listeners.GenericWindowListener;
 import shared.domain.Election;
 import view.ViewUtils;
+import view.main.*;
 
 public class AddPollView extends JFrame
 {
@@ -45,45 +46,41 @@ public class AddPollView extends JFrame
     pollDescription = null;
     elections = aElections;
     getContentPane().setLayout(null);
-	
-		pollNameLabel=new JLabel("poll Name:");
-		pollNameLabel.setBounds(10, 10, 200, 20);
-		add(pollNameLabel);
-		
-		pollNameTextField=new JTextField();
-		pollNameTextField.setBounds(10, 30, 200, 20);
-		add(pollNameTextField);
-		
-		pollDescriptionLabel=new JLabel("Add a description:");
-		pollDescriptionLabel.setBounds(10, 50, 200, 20);
-		add(pollDescriptionLabel);
-		
-		pollDescriptionTextArea=new JTextArea();
-		pollDescriptionTextArea.setBounds(10, 70, 200, 60);
-		add(pollDescriptionTextArea);
-		
-		electionsLabel=new JLabel("Select an election:");
-		electionsLabel.setBounds(10, 135, 200, 20);
-		add(electionsLabel);
-		
-		/*String[] electionNames=new String[elections.size()];
-		int i=0;
-		for (Election election:elections)
-			electionNames[i++]=election.getName();*/
-		electionsComboBox=new JComboBox(elections.toArray());
-		electionsComboBox.setBounds(10, 155, 200, 20);
-		add(electionsComboBox);
-		
-		addPollButton=new JButton("add");
-		addPollButton.setBounds(75, 180, 75, 20);
-		addPollButton.addMouseListener(GenericMouseListener.AddPollViewMouseListener);
-		add(addPollButton);
-		
-		pack();
-		setSize(250, 250);
-		
-		ViewUtils.getInstance().setToBeCenteredFrame(this);
-		addWindowListener(GenericWindowListener.AddPollViewWindowListener);
+  
+    pollNameLabel=new JLabel("poll Name:");
+    pollNameLabel.setBounds(10, 10, 200, 20);
+    add(pollNameLabel);
+    
+    pollNameTextField=new JTextField();
+    pollNameTextField.setBounds(10, 30, 200, 20);
+    add(pollNameTextField);
+    
+    pollDescriptionLabel=new JLabel("Add a description:");
+    pollDescriptionLabel.setBounds(10, 50, 200, 20);
+    add(pollDescriptionLabel);
+    
+    pollDescriptionTextArea=new JTextArea();
+    pollDescriptionTextArea.setBounds(10, 70, 200, 60);
+    add(pollDescriptionTextArea);
+    
+    electionsLabel=new JLabel("Select an election:");
+    electionsLabel.setBounds(10, 135, 200, 20);
+    add(electionsLabel);
+
+    electionsComboBox=new JComboBox(elections.toArray());
+    electionsComboBox.setBounds(10, 155, 200, 20);
+    add(electionsComboBox);
+    
+    addPollButton=new JButton("add");
+    addPollButton.setBounds(75, 180, 75, 20);
+    addPollButton.addMouseListener(GenericMouseListener.AddPollViewMouseListener);
+    add(addPollButton);
+    
+    pack();
+    setSize(250, 250);
+    
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.AddPollViewWindowListener);
   }
 
   //------------------------

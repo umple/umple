@@ -86,7 +86,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1613__()
+  private boolean __autotransition577__()
   {
     boolean wasEventProcessed = false;
     
@@ -106,7 +106,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1614__()
+  private boolean __autotransition578__()
   {
     boolean wasEventProcessed = false;
     
@@ -126,7 +126,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1615__()
+  private boolean __autotransition579__()
   {
     boolean wasEventProcessed = false;
     
@@ -146,7 +146,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1616__()
+  private boolean __autotransition580__()
   {
     boolean wasEventProcessed = false;
     
@@ -198,7 +198,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1617__()
+  private boolean __autotransition581__()
   {
     boolean wasEventProcessed = false;
     
@@ -218,7 +218,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1618__()
+  private boolean __autotransition582__()
   {
     boolean wasEventProcessed = false;
     
@@ -238,7 +238,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1619__()
+  private boolean __autotransition583__()
   {
     boolean wasEventProcessed = false;
     
@@ -254,7 +254,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1620__()
+  private boolean __autotransition584__()
   {
     boolean wasEventProcessed = false;
     
@@ -270,7 +270,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1621__()
+  private boolean __autotransition585__()
   {
     boolean wasEventProcessed = false;
     
@@ -286,7 +286,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1622__()
+  private boolean __autotransition586__()
   {
     boolean wasEventProcessed = false;
     
@@ -302,7 +302,7 @@ public class AssignPositionElectionController
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1623__()
+  private boolean __autotransition587__()
   {
     boolean wasEventProcessed = false;
     
@@ -328,45 +328,45 @@ public class AssignPositionElectionController
       case ProvidingElectionsList:
         ElectionService.getInstance().getAllElections();
           elections=ElectionService.getInstance().getElections();
-        __autotransition1613__();
-        __autotransition1614__();
+        __autotransition577__();
+        __autotransition578__();
         break;
       case ProvidingPositionsList:
         positions=PositionService.getInstance().getPositions();
-        __autotransition1615__();
-        __autotransition1616__();
+        __autotransition579__();
+        __autotransition580__();
         break;
       case PositionsListProvided:
         showAddElectionForPositionView();
         break;
       case Updating:
         updated=tryToAddElectionForPosition();
-        __autotransition1617__();
-        __autotransition1618__();
+        __autotransition581__();
+        __autotransition582__();
         break;
       case Updated:
         JOptionPane.showMessageDialog(null, "Election for positions Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
           Controller.getInstance().start();
-        __autotransition1619__();
+        __autotransition583__();
         break;
       case NotUpdated:
         JOptionPane.showMessageDialog(null, "Adding election for positions Failed!");
           Controller.getInstance().start();
-        __autotransition1620__();
+        __autotransition584__();
         break;
       case ClosingView:
         assignPositionElectionView.dispose();
-        __autotransition1621__();
+        __autotransition585__();
         break;
       case NoElectionsFound:
         JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
           Controller.getInstance().start();
-        __autotransition1622__();
+        __autotransition586__();
         break;
       case NoPositionsFound:
         JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
           Controller.getInstance().start();
-        __autotransition1623__();
+        __autotransition587__();
         break;
     }
   }

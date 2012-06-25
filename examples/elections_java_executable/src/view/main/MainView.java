@@ -45,7 +45,7 @@ public class MainView extends JFrame
     taskLabel.setBounds(10, 10, 200, 20);
     add(taskLabel);
 
-    String[] selectionValues={"Open Poll", "Add Election", "Add Poll"
+    String[] selectionValues={"Open Poll", "Add Election", "Add Poll", "Register Voter"
                             , "Add Position", "Assign Positions to Election"
                             , "Register Candidate", "Declare a Candidature", "Quit"};
     

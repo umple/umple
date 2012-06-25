@@ -5,6 +5,7 @@ package service;
 import java.util.List;
 import java.util.ArrayList;
 import shared.domain.Election;
+import shared.domain.Position;
 import shared.domain.ElectionForPosition;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,11 +34,13 @@ public class ElectionForPositionService
   private ElectionForPosition newElectionForPosition;
   private boolean electionForPositionFound;
   private boolean electionForPositionAdded;
+  private Election selectedElection;
+  private List<ElectionForPosition> foundEFPs;
   private Connection theConnection;
   private boolean efpFound;
 
   //ElectionForPositionService State Machines
-  enum ElectionForPositionServiceCycle { Idle, CreatingElectionForPosition, FindingElectionForPosition }
+  enum ElectionForPositionServiceCycle { Idle, CreatingElectionForPosition, FindingElectionForPosition, FindingElctionForPositionsList }
   private ElectionForPositionServiceCycle ElectionForPositionServiceCycle;
 
   //------------------------
@@ -98,6 +101,23 @@ public class ElectionForPositionService
     return wasSet;
   }
 
+  public boolean setSelectedElection(Election aSelectedElection)
+  {
+    boolean wasSet = false;
+    selectedElection = aSelectedElection;
+    wasSet = true;
+    findElectionForPositions();
+    return wasSet;
+  }
+
+  public boolean setFoundEFPs(List<ElectionForPosition> aFoundEFPs)
+  {
+    boolean wasSet = false;
+    foundEFPs = aFoundEFPs;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setEfpFound(boolean aEfpFound)
   {
     boolean wasSet = false;
@@ -139,6 +159,19 @@ public class ElectionForPositionService
   public boolean getElectionForPositionAdded()
   {
     return electionForPositionAdded;
+  }
+
+  public Election getSelectedElection()
+  {
+    return selectedElection;
+  }
+
+  /**
+   * all election_for_position objects with the election id equal to the one of the selectedElection
+   */
+  public List<ElectionForPosition> getFoundEFPs()
+  {
+    return foundEFPs;
   }
 
   public boolean getEfpFound()
@@ -188,7 +221,23 @@ public class ElectionForPositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition353__()
+  public boolean findElectionForPositions()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionForPositionServiceCycle aElectionForPositionServiceCycle = ElectionForPositionServiceCycle;
+    switch (aElectionForPositionServiceCycle)
+    {
+      case Idle:
+        setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.FindingElctionForPositionsList);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition637__()
   {
     boolean wasEventProcessed = false;
     
@@ -204,7 +253,7 @@ public class ElectionForPositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition354__()
+  private boolean __autotransition638__()
   {
     boolean wasEventProcessed = false;
     
@@ -224,7 +273,7 @@ public class ElectionForPositionService
     return wasEventProcessed;
   }
 
-  private boolean __autotransition355__()
+  private boolean __autotransition639__()
   {
     boolean wasEventProcessed = false;
     
@@ -244,11 +293,27 @@ public class ElectionForPositionService
     return wasEventProcessed;
   }
 
+  private boolean __autotransition640__()
+  {
+    boolean wasEventProcessed = false;
+    
+    ElectionForPositionServiceCycle aElectionForPositionServiceCycle = ElectionForPositionServiceCycle;
+    switch (aElectionForPositionServiceCycle)
+    {
+      case FindingElctionForPositionsList:
+        setElectionForPositionServiceCycle(ElectionForPositionServiceCycle.Idle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
   private void setElectionForPositionServiceCycle(ElectionForPositionServiceCycle aElectionForPositionServiceCycle)
   {
     try {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
-      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.getInstance().getDb_hostname()+"/elections", Credentials.getInstance().getDb_username(), Credentials.getInstance().getDb_password());
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
     }
@@ -259,12 +324,16 @@ public class ElectionForPositionService
     {
       case CreatingElectionForPosition:
         addElectionForPosition();
-        __autotransition353__();
+        __autotransition637__();
         break;
       case FindingElectionForPosition:
         tryFindingElectionForPosition();
-        __autotransition354__();
-        __autotransition355__();
+        __autotransition638__();
+        __autotransition639__();
+        break;
+      case FindingElctionForPositionsList:
+        tryFindingElectionForPositionsList();
+        __autotransition640__();
         break;
     }
   }
@@ -298,6 +367,23 @@ public class ElectionForPositionService
     } catch(Exception e) {
       System.err.println("Exception: " + e.getMessage());
       efpFound=false;
+    }
+  }
+  
+  private void tryFindingElectionForPositionsList() {
+    foundEFPs=new ArrayList<ElectionForPosition>();
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election_for_position where election_id_election='"+selectedElection.getIdElection()+"'");
+      while (rs.next()) {
+        Integer idPosition=Integer.parseInt(rs.getString("position_id_position"));
+        Position position=new Position(idPosition, "", "");
+        Integer idEFP=Integer.parseInt(rs.getString("id_election_for_position"));
+        ElectionForPosition efp=new ElectionForPosition(idEFP, selectedElection, position);
+        foundEFPs.add(efp);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
     }
   }
 }

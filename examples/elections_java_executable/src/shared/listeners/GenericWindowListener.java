@@ -24,7 +24,9 @@ public enum GenericWindowListener implements WindowListener {
 	AddPollViewWindowListener,
 	AddPositionViewWindowListener,
 	AssignPositionElectionViewWindowListener,
+	AssignPositionCandidateViewWindowListener,
 	RegisterCandidateViewWindowListener,
+	RegisterVoterViewWindowListener,
 	MainViewWindowListener;
 
 	@Override
