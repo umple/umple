@@ -8,23 +8,40 @@
 // State machine elements in Umple. See user manual page: [*BasicStateMachines*]
 stateMachineDefinition : statemachine [name] { [[state]]* }
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]  
+
 inlineStateMachine : [name] { ( [[comment]] | [[state]] )* }
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }
+
 extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
+
+// An enum is a state machine that has no events
 enum : [name] { } | [name] { [stateName] (, [stateName])* }
+
 state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]]
 
 autoTransition : [[autoTransitionBlock]] | [[activity]] [[autoTransitionBlock]]
-autoTransitionBlock- : [[guard]] -> [[action]]? [stateName] ; | [[action]] -> [stateName] ; | [[guard]]? -> [[action]]? [stateName] ; | -> [stateName] ;
-transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? [[action]]? -> [stateName] ; 
+
+
+// Autotransitions have no event. The transition is immediately taken
+// or taken after the do activity ends
+// The action can come before or after the arrow
+autoTransitionBlock- : [[guard]]? -> [[action]]? [stateName] ; |  [[guard]]? [[action]]? -> [stateName] ;
+
+// A transition guard can come before or after the arrow
+// The order of guard and event definition can also be interchanged
+transition : [[guard]]? [[eventDefinition]]? -> [[action]]? [stateName] ; | [[guard]]? [[eventDefinition]]? [[action]]? -> [stateName] ; | [[eventDefinition]]? [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]]? [[guard]]? [[action]]? -> [stateName] ; 
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]
 afterEveryEvent- : afterEvery -( [timer] -)
 afterEvent- : after -( [timer] -)
+
+// An action can be executed on a transition, or on entry or exit
 action : / { [**actionCode] } 
 entryOrExitAction : [=type:entry|exit] / { [**actionCode] }
+
+// A do activity is long-lasting and can be interrupted
 activity : do { [**activityCode] } 
 
 guard : [ [**guardCode] ] 
