@@ -9,14 +9,3 @@ class LightFixture
     Off {}
   }
 }
-class LightFixture
-{
-  Integer brightness = 0;
-  bulb
-  {
-    On {
-      push [brightness < 1] / {blabla} -> Off;
-    }
-    Off {}
-  }
-}
