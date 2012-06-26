@@ -1,0 +1,83 @@
+Interfacing to External Code
+Examples
+noreferences
+
+@@description
+<p>This example shows some of the techniques that can be used when writing Umple code that will be connected to code written separately, such as code in a GUI library. Use of the:</o>
+
+<ul>
+
+<li><a href="AttributeDefinition.html">internal keyword to specify an attribute</a> for which getters and setters will not be generated (i.e. treated as a standard instance variable)
+
+<li><a href="AssociationDefinition.html">external keyword to indicate a class that has been compiled separately</a>.
+
+<li><a href="interfaceDefinition.html">isA keyword to have a class implement an interface</a>
+
+<li><a href="BeforeandAfterStatements.html">before and after keywords</a> to inject code to link two attributes
+
+<li>'after constructor' to inject additional constructor code
+
+<ul>
+
+
+@@example
+/*
+This example demonstrates an example of using the internal,
+depends, external, before and after keywords to interface
+umple code to code in another system.
+
+The internal keyword is suitable for situations where the
+developer doesn't want setter/getters to be generated.
+GUI windows are an example of such a case. A GUI window/unit
+contains several components but the rest of the program
+may only need the value stored within those components.
+So it's a good practice to hide UI components from classes
+other than the containing one. 
+
+*/
+
+// required to make HelloInternals class a JFrame
+external JFrame{}
+
+class HelloInternals {
+  // HelloInternals extends JFrame
+  isA JFrame;
+
+  // importing required classes
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+
+  /* messageLabel is a component of the frame; often we don't want sub-components
+  of a GUI unit to be settable/gettable. By making them internal Umple will avoid
+  generating setter/getter for messageLabel. Using lazy Umple will avoid adding a
+  constructor parameter for this component */
+  lazy internal JLabel messageLabel;
+  
+  // the contents of messageLabel 
+  String message;
+  
+  /* before getting the message, this code updates the message attribute using the
+  text from messageLabel */  
+  before getMessage {
+    message=messageLabel.getText();
+  }
+  
+  /* after setting the messae, this code updates messageLabel to contain the newly
+  updated message */
+  after setMessage {
+    messageLabel.setText(message);
+  }
+  
+  // using after constructor is a good way of initiating a GUI unit
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    messageLabel=new JLabel(message);
+    messageLabel.setBounds(10, 10, 200, 20);
+    add(messageLabel);
+    
+    pack();
+    setSize(250, 200);
+  }
+}
+@@endexample
