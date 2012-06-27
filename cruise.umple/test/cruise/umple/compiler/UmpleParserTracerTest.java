@@ -1587,6 +1587,21 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceState2()
+  {
+	  assertParse("375_traceState2.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][trace_entity:status.Closing]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("GarageDoor");
+	  StateMachine_TraceItem traceState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
+	  Assert.assertEquals(traceState.getEntry(), true);
+	  Assert.assertEquals(traceState.getExit(), true);
+	  StateMachine stm = traceState.getStateMachine();
+	  Assert.assertEquals(stm.numberOfStates(),1);
+	  State state = stm.getState(0);
+	  Assert.assertEquals(state,clazz.getStateMachine(0).getState(1));
+  }
+  
+  @Test
   public void traceEmptyAndNonEmptyState()
   {
 	  assertParse("375_traceEmptyAndNonEmptyStates.ump","[namespace:example][classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][trace][trace_entity:status]");

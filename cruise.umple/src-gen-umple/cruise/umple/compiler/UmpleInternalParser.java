@@ -2328,32 +2328,11 @@ private void analyzeTraceToken(Token token, int analysisStep)
   private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, Attribute_TraceItem traceAttr)
   {
 	  Attribute attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
-	  List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
-	  StateMachine stm = null;
-	  State state = null;
 	  String methodName = traceToken.getValue("trace_entity");
 	  
 	  // here, i faced a problem of finding traced state machine because
 	  // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
-	  for( int i = 0 ; i < stms.size() ; ++i )
-	  {
-		  for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
-		  {
-			  State nestedState = stms.get(i).getState(j);
-			  if( nestedState.getName().equals(traceToken.getValue("trace_entity")))
-			  {
-				  stm = new StateMachine(stms.get(i).getName());
-				  stm.addState(nestedState);
-				  state = nestedState;
-				  break;
-			  }  
-		  }
-		  if( stms.get(i).getFullName().equals(traceToken.getValue("trace_entity")))
-		  {
-			  stm = stms.get(i);
-			  break;
-		  }
-	  }
+	  analyzeStateMachineTraceItem(traceToken,traceDirective);
   
 	  if( traceToken.getName().equals("entry") )
 	  {
@@ -2394,40 +2373,75 @@ private void analyzeTraceToken(Token token, int analysisStep)
 			  traceAttr.setTraceGet(true);
 		  }
 	  }
-	  // if trace entity is a state machine
-	  else if( stm != null && state == null )
+  }
+  
+  private void analyzeStateMachineTraceItem( Token traceToken, TraceDirective traceDirective)
+  {
+	  List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+	  StateMachine stm = null;
+	  State state = null;
+	  String stmTraceItem = traceToken.getValue("trace_entity");
+	  
+	  if(stmTraceItem != null && stmTraceItem.contains("."))
 	  {
-		  StateMachine_TraceItem traced_stm = new StateMachine_TraceItem(stm);
+		  String delimiter = "\\.";
+		  String[] temp = stmTraceItem.split(delimiter);
+		  stmTraceItem = temp[temp.length-1];
+	  }
+	  
+	  for( int i = 0 ; i < stms.size() ; ++i )
+	  {
+		  for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+		  {
+			  State nestedState = stms.get(i).getState(j);
+			  if( nestedState.getName().equals(stmTraceItem))
+			  {
+				  stm = new StateMachine(stms.get(i).getName());
+				  stm.addState(nestedState);
+				  state = nestedState;
+				  break;
+			  }  
+		  }
+		  if( stms.get(i).getFullName().equals(stmTraceItem))
+		  {
+			  stm = stms.get(i);
+			  break;
+		  }
+	  }
+	  
+	  // if trace entity is a state machine  
+	  if( stm != null && state == null )
+	  {	  
+		  StateMachine_TraceItem traced_stm = new StateMachine_TraceItem(stm);	
 		  traced_stm.setEntry(true);
 		  traced_stm.setExit(true);
 		  traced_stm.setTraceStateMachineFlag(true);
 		  traceDirective.addStateMachineTraceItem(traced_stm);
-	  }
-	  // if trace entity is a state
-	  else if( state != null )
-	  {
+	  }  
+	  // if trace entity is a state 
+	  else if( state != null )  
+	  {  
 		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem(stm);
-		  if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )
+		  if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )  
 		  {
-			  tracedStm.setEntry(true);
-			  tracedStm.setExit(false);
-		  }
+			  tracedStm.setEntry(true); 
+			  tracedStm.setExit(false);  
+		  } 
 		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("exit") )
 		  {
 			  tracedStm.setEntry(false);
-			  tracedStm.setExit(true);
-		  }
+			  tracedStm.setExit(true);  
+		  }  
 		  else
 		  {
 			  tracedStm.setEntry(true);
-			  tracedStm.setExit(true);
+			  tracedStm.setExit(true);  
 		  }
-		  traceDirective.addStateMachineTraceItem(tracedStm);
+		  traceDirective.addStateMachineTraceItem(tracedStm); 
 	  }
-	  
   }
 
-// Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
+  // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
   // Returns a trace condition filled with left and right hands operands, with comparison operator used
   private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType )
   {
