@@ -12,6 +12,7 @@ class GarageDoor
           reachTop -> Open;
       }
       HalfOpen { buttonOrObstacle -> Opening; }
+      trace Closing;
   }
-  trace Closing;
+  
 }

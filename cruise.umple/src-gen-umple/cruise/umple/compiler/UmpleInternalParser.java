@@ -1939,11 +1939,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
     }
     
-    populateStateMachine(stateMachineDefinitionToken,sm);
+    populateStateMachine(stateMachineDefinitionToken,sm, aClass);
     Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
     if (extendedStateMachineTokens != null)
     {
-      populateStateMachine(extendedStateMachineTokens, sm);
+      populateStateMachine(extendedStateMachineTokens, sm, aClass);
     }
 
   }
@@ -1962,7 +1962,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
     }
     
-    populateStateMachine(stateMachineToken, sm);
+    populateStateMachine(stateMachineToken, sm, aClass);
 
     while (placeholderStateMachine.numberOfStates() > 0)
     {
@@ -2013,7 +2013,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     return s;
   }
 
-  private void populateStateMachine(Token stateMachineToken, StateMachine sm)
+  private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClass aClass)
   {
     boolean isFirst = true;
     boolean isFinalState = false;
@@ -2021,6 +2021,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
+      if(stateToken.is("trace"))
+      {
+    	analyzeTraceStatement(aClass,stateToken);
+      }
+      
       if (!stateToken.is("state") && !stateToken.is("stateName"))
       {
         if (stateToken.is("changeType")) { changeType = stateToken.getValue(); }      
