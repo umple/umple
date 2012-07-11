@@ -44,16 +44,22 @@ else if (isset($_REQUEST["umpleCode"]))
   $input = $_REQUEST["umpleCode"];
   $language = $_REQUEST["language"];
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
- 
+  $uigu = False;
   
   if ($language == "javadoc")
   {
      $language = "Java";
      $javadoc = True;
   }
+  else if ($language == "uigu")
+  {
+     $language = "Uigu";
+     $uigu = True;
+  }
   else
   {
     $javadoc = False;
+    $uigu = False;
   }
   
   if ($language == "Simulate")
@@ -67,6 +73,16 @@ else if (isset($_REQUEST["umpleCode"]))
     $modelId = getFilenameId($filename);
     echo $modelId;
     return;
+  }
+  elseif ($uigu)
+  {
+  $filename = saveFile($input);
+  showUserInterface($filename);
+/*	chdir("JSFProvider");
+	if (file_exists("JSFProvider/model.ump"))
+	  unlink("JSFProvider/model.ump");
+    copy("$filename", "JSFProvider/model.ump");
+	executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
   }
   elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql")))
   {  
@@ -93,6 +109,8 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
+  if (!$uigu)
+  {
   // Generate the Java, PHP, Ruby, Cpp or Sql and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   
@@ -182,6 +200,20 @@ else if (isset($_REQUEST["umpleCode"]))
 	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
     }
+  }
+  } // UIGU
+  else
+  {
+	$thedir = dirname($filename);
+	$theurldir = "ump/" . basename($thedir);
+	$errorFilename = "{$filename}.erroroutput";
+	$errhtml = getErrorHtml($errorFilename);
+	$rnd=substr(basename($thedir), 3);
+	$uiguDir=file_get_contents("uigudir.txt");
+	$html = "<a href=\"$theurldir/umpleUIGU.war\">Download the generated application as web archive (WAR) file.</a>&nbsp;{$errhtml}
+	  <iframe width=100% height=300 src='$theurldir/'></iframe>
+	 ";
+	 echo $html;
   }
 }
 else if (isset($_REQUEST["exampleCode"]))

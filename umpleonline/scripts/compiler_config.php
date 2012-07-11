@@ -9,14 +9,20 @@
 // based on your home computer settings
 
 // Windows installations of UmpleOnline Server
-// $GLOBALS["JAVA_HOME"] = "C:\Program Files\Java\jdk1.6.0_17";
-// $GLOBALS["ANT_EXEC"] = "C:\Ant\apache-ant-1.8.1\bin\ant";
-// $GLOBALS["OS"] = "Windows";
+//$GLOBALS["JAVA_HOME"] = "C:\Program Files\Java\jdk1.6.0_17";
+//$GLOBALS["ANT_EXEC"] = "C:\Ant\apache-ant-1.8.1\bin\ant";
+//$GLOBALS["OS"] = "Windows";
  
 // CRUISE SERVER and MAC OS installations
 $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
+
+$uiguDir="";
+
+function getUIGUDir() {
+	return $uiguDir;
+}
 
 if (php_uname('s') == "Darwin") {
   $GLOBALS["OS"] = "Mac";
@@ -37,6 +43,7 @@ function generateMenu($buttonSuffix)
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"java:Yuml\">Yuml</option>
             <option value=\"java:Json\">Json</option>
+            <option value=\"uigu:uigu\">JSF GUI</option>
             <option value=\"sql:Sql\">Sql (under development)</option>
             <option value=\"cpp:Cpp\">C++ (under development)</option>
           </select>
@@ -253,47 +260,96 @@ function showUserInterface($filename)
   </head>
   </html>
   <?php
-  
-  $umpleFile = "../{$filename}";
-  $umpleDir = dirname($filename);
+    // adding a default namespace if namespace doesn't exist
+	$content = file_get_contents($filename);
+	$namespace_location=strpos($content, 'namespace');
+	if ($namespace_location===false) {
+		file_put_contents($filename,"namespace uigu;\n" . $content);
+	}
+	
+	$tempDir=dirname($filename);
+	$umpDir=dirname($tempDir);
+	rcopy("JSFProvider",$tempDir);
 
-  $uiguDirectory = "../{$umpleDir}/uigu";
-  // Above directory isn't made by default .. TODO Add code to make it
-  $uiguProjectName = "../{$umpleDir}/model";
-  $buildFile = "../../scripts/JFXProvider/build.xml";
-  $urlPath = "{$umpleDir}/model.jnlp";
-  
-  chdir($umpleDir);
-  
-  $buildProjectCommand = "#! /bin/sh\n";
-  $buildProjectCommand .= "set JAVA_HOME={$GLOBALS['JAVA_HOME']}\n";
-  $buildProjectCommand .= "{$GLOBALS['ANT_EXEC']} -f {$buildFile} -DxmlFile=UmpleProject.xml -DumpleFile={$umpleFile} -DoutputFolder={$uiguDirectory} -DprojectName={$uiguProjectName}";
-  saveFile("{$buildProjectCommand}\n","runAnt.bat");
-  
-  //Fix the permissions so the runAnt.bat will work
-  chmod("runAnt.bat",0755); 
+    chdir($tempDir);
+	
+	$output = executeCommand("ant -DxmlFile=UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
+	
+	$didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
+    if ($didCompile){
+		if (!file_exists("TempProj"))
+			mkdir("TempProj");
+		copy("umpleUIGU.war", "TempProj/umpleUIGU.war");
+		chdir("TempProj");
+		executeCommand("jar xf umpleUIGU.war");
+		unlink('umpleUIGU.war');
+		//echo getcwd();
+		$umpDir=dirname($tempDir);
+		$tmp=basename($tempDir);
+		chdir("../../uigu");
+		$uiguDir=getAvailableUIGUDirectory();
+		//echo $uiguDir;
+		emptyDir($uiguDir);
+		//echo "$tempDir/TempProj";
+		chdir("..");
+		rcopy($tmp."/TempProj", $umpDir."/uigu/".$uiguDir);
+		
+		chdir($tmp);
+		
+		$gh=fopen("uigudir.txt", 'w');
+		fwrite($gh, $uiguDir);
+		fclose($gh);
+		
+		$fh=fopen("index.html", 'w') or die("Failed to create/open file!");
+	
+		$before = <<< _BEFORE
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="refresh" content="0;url='http://
+_BEFORE;
+fwrite($fh, $before);
+fwrite($fh, $_SERVER['HTTP_HOST']."/".$uiguDir);
+$after = <<< _AFTER
+'">
+</head>
+<body>
+</body>
+</html>
+_AFTER;
+		fwrite($fh, $after);
+		fclose($fh);
+    }
+    else{
+	  $errorFilename = "{$filename}.erroroutput";
+	  $fh = fopen($errorFilename, 'w') or die("can't open file");
+      $stringData = "<h2> An error occurred while interpreting your Umple code. Please review it and try again. </h2>";
+      fwrite($fh, $stringData);
+      $stringData = "<pre>{$output}</pre>";
+      fwrite($fh, $stringData);
+      fclose($fh);
+    }
+}
 
-  $output = executeCommand("./runAnt.bat");
-  $didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
-  
+function getAvailableUIGUDirectory()
+{
+	$files = array();
+	if ($handle = opendir(".")) {
+		while (false !== ($file = readdir($handle))) {
+			if (strstr($file, "uigu")) {
+				$files[filemtime($file)] = $file;
+			}
+		}
+		closedir($handle);
 
-  if ($didCompile){
-    ?> 
-    <script> 
-      location.href="<?php echo $urlPath ?>";
-      setTimeout("closePopup()",2000);
-
-      function closePopup()
-      {
-        parent.parent.GB_hide();
-      }
-    </script> 
-    <?php
-  }
-  else{
-    print "<h2> An error occurred while interpreting your Umple code. Please review it and try again. </h2>"; 
-    print "<pre>{$output}</pre>";
-  }
+		// sort
+		ksort($files);
+		// find the oldest modification
+		$reallyOldModified = reset($files);
+	 	return $reallyOldModified;
+	}
+	return '';
 }
 
 function showUmlImage($json)
@@ -390,4 +446,49 @@ function cleanupOldFiles()
   // delete empty directories older than 2 days - typically produced when Javascript not on
   executeCommand("find ump -depth 1 -type d -empty -mtime +1 | grep -v .svn |  xargs rm -rf");
   }
+}
+
+function rrmdir($dir) {
+    foreach(glob($dir . '/*') as $file) {
+        if(is_dir($file))
+			rrmdir($file);
+        else
+            unlink($file);
+    }
+    rmdir($dir);
+}
+
+function rcopy($src, $dst) {
+  //if (file_exists($dst)) rrmdir($dst);
+  if (is_dir($src)) {
+	if (!file_exists($dst))
+    	mkdir($dst);
+    $files = scandir($src);
+    foreach ($files as $file)
+    if ($file != "." && $file != "..") rcopy("$src/$file", "$dst/$file");
+  }
+  else if (file_exists($src)) copy($src, $dst);
+}
+
+function emptyDir($dir) {
+	$handle=opendir($dir);
+
+	while (($fl = readdir($handle))!==false) {
+		$file="$dir/$fl";
+		if (!is_dir($file))
+			unlink($file);
+		else {
+			if ($fl != "." && $fl != "..") {
+				$files = scandir($file);
+				if (count($files) <= 2)
+					rmdir($file);
+				else {
+					emptyDir($file);
+					rmdir($file);
+				}
+			}
+		}
+	}
+
+	closedir($handle);
 }

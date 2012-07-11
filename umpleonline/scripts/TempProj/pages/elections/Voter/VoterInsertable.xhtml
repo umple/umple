@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<f:subview>
+	<h:form>
+		<rich:panel style="width:450px" id="VoterMainPanel#{uniqueId}">
+			<f:facet name="header">
+			#{aVoterBundle.VoterClassName} 
+			</f:facet>
+			<h:panelGrid columns="1" >
+				<h:panelGrid columns="3"  columnClasses="colStyle1"  rendered="#{!aVoterBean.editing}" >
+				
+						<h:outputText value="#{aVoterBundle.IdVoter}" />
+	<h:inputText value="#{aVoterBean.idVoter}" >
+		<f:converter converterId="javax.faces.Integer" />
+	</h:inputText>
+					<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				
+				
+				<h:outputText value="#{aVoterBundle.Address}" />
+<h:inputText value="#{aVoterBean.address}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+				<h:outputText value="#{aVoterBundle.Name}" />
+<h:inputText value="#{aVoterBean.name}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+				<h:outputText value="#{aVoterBundle.Telephone}" />
+<h:inputText value="#{aVoterBean.telephone}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+				
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="colStyle1"  rendered="#{aVoterBean.editing}">
+				
+				<h:outputText value="#{aVoterBundle.IdVoter}" />
+<h:outputText value="#{aVoterBean.editedVoterVO.idVoter}" >
+<f:converter converterId="javax.faces.Integer" />
+</h:outputText>
+
+						<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				
+				
+					<h:outputText value="#{aVoterBundle.Address}" />
+<h:inputText value="#{aVoterBean.address}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+					<h:outputText value="#{aVoterBundle.Name}" />
+<h:inputText value="#{aVoterBean.name}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+					<h:outputText value="#{aVoterBundle.Telephone}" />
+<h:inputText value="#{aVoterBean.telephone}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+				</h:panelGrid>
+				<h:panelGrid columns="2" columnClasses="colStyle1"  >
+			
+					
+		
+
+			</h:panelGrid>
+			
+			
+		
+
+			<h:panelGrid columns="2" style="width:100%; text-align:right;">
+					<a4j:commandButton action="#{aVoterBean.createOrEdit}"
+						value="#{aVoterBean.editing?'Update':'Add'}"
+						reRender="VoterGridContainer#{uniqueId}, VoterMainPanel#{uniqueId}" />
+					<a4j:commandButton action="#{aVoterBean.cancel}"  
+						value="Cancel" reRender="VoterMainPanel#{uniqueId}" />
+			</h:panelGrid>
+			</h:panelGrid>
+		</rich:panel>
+	</h:form>
+</f:subview>
+<f:subview>
+	<rich:spacer height="3" />
+		<rich:panel style="border-style:none; background-color:transparent" id="VoterGridContainer#{uniqueId}">
+		<rich:spacer height="3" />
+		 <ui:include src="grid.xhtml">
+			<ui:param name="mainPanel" value="VoterMainPanel#{uniqueId}"/>
+			<ui:param name="parentId" value="#{uniqueId}"/>
+			<ui:param name="uniqueId" value="0" />
+		</ui:include>
+	</rich:panel>
+</f:subview>
+		
+	
+	
+	
+</html>

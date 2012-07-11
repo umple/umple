@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<f:loadBundle basename="bundles.elections.Voter" var="aVoterBundle"/>									
+<f:loadBundle basename="bundles.elections.Candidate" var="aCandidateBundle"/>									
+<f:loadBundle basename="bundles.elections.Election" var="aElectionBundle"/>									
+<f:loadBundle basename="bundles.elections.Poll" var="aPollBundle"/>									
+<f:loadBundle basename="bundles.elections.ElectionForPosition" var="aElectionForPositionBundle"/>									
+<f:loadBundle basename="bundles.elections.Candidature" var="aCandidatureBundle"/>									
+<f:loadBundle basename="bundles.elections.Position" var="aPositionBundle"/>										
+
+<head>
+<title>umpleUIGU</title>
+</head>
+<body bgcolor="#ffffff">
+<f:view>
+<style type="text/css">
+  .rich-stglpanel {
+  	 border-style: grooved;
+  	 background-color:transparent;
+	padding-top:2px;
+  	 
+	}
+	.rich-stglpanel-header {
+  	 border-style: none;
+  	background-color:transparent;
+  	background-image:none;
+  	font-weight:bold;
+	}
+	
+	.rich-stglpanel-body{
+	padding-top:2px;
+  	 border-style: none;
+  	 background-color:transparent; 
+  	 text-align:center;
+  	 vertical-align:text-top;
+	}
+	.rich-stglpnl-marker{
+  	 border-style: none;
+  	 background-color:transparent;
+  	 font-weight:bold;
+	}
+	
+	.colStyle1 { 
+    width: 150px;
+    text-align:right;
+    font-weight:bold;
+	}
+	
+	.label1 { 
+    	font-style: italic; 
+	}
+
+</style>
+	<table align="center" cellpadding="0" cellspacing="0" border="0"
+		width="100%">
+		<tbody>
+
+			<tr>
+				<td><f:subview>
+					<h:form>
+						<div style="padding: none;">
+						<div>
+						<div align="right"><h:outputText
+							style="color:#000000;font-size:40px;font-family:Arial,Verdana,sans-serif;"
+							value="umpleUIGU" /></div>
+						</div>
+						<div><rich:toolBar width="100%">
+							<rich:toolBarGroup itemSeparator="line" location="left">
+								<rich:dropDownMenu>
+									<f:facet name="label">
+										<h:outputText value="OPTIONS" />
+									</f:facet>
+									<rich:menuItem value="Home" action="home">
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aVoterBundle.VoterClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toVoterMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aCandidateBundle.CandidateClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toCandidateMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aElectionBundle.ElectionClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toElectionMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aPollBundle.PollClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toPollMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aElectionForPositionBundle.ElectionForPositionClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toElectionForPositionMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aCandidatureBundle.CandidatureClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toCandidatureMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+									<rich:menuItem value="#{aPositionBundle.PositionClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="toPositionMain"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 
+								</rich:dropDownMenu>
+							</rich:toolBarGroup>
+								<rich:toolBarGroup itemSeparator="line" location="right">
+							<h:panelGrid columns="2">
+								<h:outputText
+								value="Skin" />
+							   <h:selectOneMenu id="select" value="#{skinBean.skin}" onchange="document.forms[0].submit(); document.forms[1].submit();" >
+								<f:selectItem itemLabel="plain" itemValue="plain" />
+								<f:selectItem itemLabel="emeraldTown" itemValue="emeraldTown" />
+								<f:selectItem itemLabel="blueSky" itemValue="blueSky" />
+								<f:selectItem itemLabel="wine" itemValue="wine" />
+								<f:selectItem itemLabel="japanCherry" itemValue="japanCherry" />
+								<f:selectItem itemLabel="ruby" itemValue="ruby" />
+								<f:selectItem itemLabel="classic" itemValue="classic" />
+								<f:selectItem itemLabel="deepMarine" itemValue="deepMarine" />
+							   	</h:selectOneMenu>
+        					</h:panelGrid>
+							
+	
+								<h:commandButton action="#{mainBean.invalidateSession}"
+									value="Invalidate Session" />
+									
+							</rich:toolBarGroup>
+						</rich:toolBar></div>
+						</div>
+					</h:form>
+				</f:subview> <rich:spacer height="3" /></td>
+			</tr>
+
+			<tr>
+				<td><rich:messages passedLabel="" layout="list">
+					<f:facet name="errorMarker">
+						<h:graphicImage value="/images/icons/error.gif" />
+					</f:facet>
+				</rich:messages></td>
+			</tr>
+
+			<tr>
+
+				<td><ui:insert name="body">Page Body</ui:insert></td>
+			</tr>
+
+		</tbody>
+
+	</table>
+
+</f:view>
+</body>
+
+</html>
