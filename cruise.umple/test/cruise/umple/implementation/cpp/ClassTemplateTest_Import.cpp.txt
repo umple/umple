@@ -33,7 +33,7 @@ using namespace example.two;
     return name;
   }
 
-  Student* Mentor::getStudent() const
+  Student* Mentor::getStudent() 
   {
     return student;
   }

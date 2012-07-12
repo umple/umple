@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  <%=gen.translate("type",av)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",av)%>(int index) const
+  <%=gen.translate("type",av)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",av)%>(int index) 
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
     <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>.get(index);
@@ -7,7 +7,7 @@
     return <%=gen.translate("parameterOne",av)%>;
   }
 
-  vector<<%=gen.translate("type",av)%>*> <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>() const
+  vector<<%=gen.translate("type",av)%>*> <%=gen.translate("type",uClass)%>::<%=gen.translate("getManyMethod",av)%>() 
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
     vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterMany",av)%> = <%=gen.translate("associationMany",av)%>;

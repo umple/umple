@@ -42,13 +42,13 @@ using namespace example.three;
     return number;
   }
 
-  Mentor Student::getMentor(int index) const
+  Mentor Student::getMentor(int index) 
   {
     Mentor aMentor = mentors.get(index);
     return aMentor;
   }
 
-  vector<Mentor*> Student::getMentors() const
+  vector<Mentor*> Student::getMentors() 
   {
     vector<Mentor*> newMentors = mentors;
     return newMentors;
@@ -72,13 +72,13 @@ using namespace example.three;
     return index;
   }
   
-  Course Student::getCourse(int index) const
+  Course Student::getCourse(int index) 
   {
     Course aCourse = courses.get(index);
     return aCourse;
   }
 
-  vector<Course*> Student::getCourses() const
+  vector<Course*> Student::getCourses() 
   {
     vector<Course*> newCourses = courses;
     return newCourses;

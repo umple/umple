@@ -21,13 +21,13 @@ using namespace example.two;
   // INTERFACE
   //------------------------
 
-  Student Course::getStudent(int index) const
+  Student Course::getStudent(int index) 
   {
     Student aStudent = students.get(index);
     return aStudent;
   }
 
-  vector<Student*> Course::getStudents() const
+  vector<Student*> Course::getStudents() 
   {
     vector<Student*> newStudents = students;
     return newStudents;

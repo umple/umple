@@ -20,13 +20,13 @@
   // INTERFACE
   //------------------------
 
-  Bar Foo::getBar(int index) const
+  Bar Foo::getBar(int index) 
   {
     Bar aBar = bars.get(index);
     return aBar;
   }
 
-  vector<Bar*> Foo::getBars() const
+  vector<Bar*> Foo::getBars() 
   {
     vector<Bar*> newBars = bars;
     return newBars;

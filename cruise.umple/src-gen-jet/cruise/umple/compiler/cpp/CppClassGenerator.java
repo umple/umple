@@ -371,7 +371,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_351 = NL + "  ";
   protected final String TEXT_352 = "* ";
   protected final String TEXT_353 = "::";
-  protected final String TEXT_354 = "() const" + NL + "  {";
+  protected final String TEXT_354 = "() " + NL + "  {";
   protected final String TEXT_355 = NL + "    return ";
   protected final String TEXT_356 = ";";
   protected final String TEXT_357 = NL + "    ";
@@ -384,7 +384,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_364 = NL + "  ";
   protected final String TEXT_365 = " ";
   protected final String TEXT_366 = "::";
-  protected final String TEXT_367 = "(int index) const" + NL + "  {";
+  protected final String TEXT_367 = "(int index) " + NL + "  {";
   protected final String TEXT_368 = NL + "    ";
   protected final String TEXT_369 = " ";
   protected final String TEXT_370 = " = ";
@@ -393,7 +393,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_373 = ";" + NL + "  }" + NL + "" + NL + "  vector<";
   protected final String TEXT_374 = "*> ";
   protected final String TEXT_375 = "::";
-  protected final String TEXT_376 = "() const" + NL + "  {";
+  protected final String TEXT_376 = "() " + NL + "  {";
   protected final String TEXT_377 = NL + "    vector<";
   protected final String TEXT_378 = "*> ";
   protected final String TEXT_379 = " = ";
