@@ -441,10 +441,11 @@ function executeCommand($command)
 function cleanupOldFiles()
 {
   if(rand(1,100) == 50) {
-  // 1 percent of the time delete old temp directories older than 3 days ago
-    executeCommand("find ump -depth 1 -type d -mtime +3 | grep -v .svn | grep /tmp | xargs rm -rf");
-  // delete empty directories older than 2 days - typically produced when Javascript not on
-  executeCommand("find ump -depth 1 -type d -empty -mtime +1 | grep -v .svn |  xargs rm -rf");
+  // 1 percent of the time delete old temp directories older than 30 days ago
+    executeCommand("find ./ump -maxdepth 1 -type d -mtime +30 | grep -v .svn | grep /tmp | xargs rm -rf");
+  // The following commented out because it takes too long - use ralph script cleanump
+  // delete empty directories older than 2 days - typically produced when Javascript off 
+  //executeCommand("find ./ump -maxdepth 1 -type d -empty -mtime +2 | grep -v .svn |  xargs rm -rf");
   }
 }
 
