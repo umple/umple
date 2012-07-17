@@ -3,7 +3,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 namespace example{
-#include <java.util.Map>;
+#include <java.util.Map.h>;
 #include "Mentor.h";
 
   

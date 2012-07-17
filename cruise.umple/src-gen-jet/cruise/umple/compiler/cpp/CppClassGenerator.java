@@ -1879,7 +1879,7 @@ public class CppClassGenerator implements ILang
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include <{0}>;",depend.getName());
+    append(stringBuffer, "#include <{0}.h>;",depend.getName());
   }
   
   for (String anImport : gClass.getMultiLookup("import"))
