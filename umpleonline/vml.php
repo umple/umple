@@ -68,6 +68,7 @@ $output = readTemporaryFile($filename);
           <option name="optionExample" value="invoke_klok_with_product_line.vml">Klok</option>
           <option name="optionExample" value="invoke_leia_with_product_line.vml">Lei</option>
           <option name="optionExample" value="invoke_timetrex_with_product_line.vml">Timetrex</option>
+          <option name="optionExample" value="bCMS.vml">bCMS</option>
         </select> <br />
         <input id="buttonExample" type="button" class="button" value="Load Example" />
       </div>

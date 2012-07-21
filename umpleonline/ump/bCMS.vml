@@ -1,0 +1,53 @@
+Concern Main
+{
+  VariationPoint core {
+    Kind: Optional;
+    use RoutesAndLocations.ump;
+    use CoordinationStateMachine.ump;
+    use BcmsCore.ump;
+  }
+}
+
+Concern Multiplicity
+{
+  VariationPoint numCrises {
+    Kind: Alternative;
+    Variant single {
+      class CrisisManagementSystem {
+        1 -> 0..1 Crisis;
+      }
+    }
+
+    Variant multiple {
+      class CrisisManagementSystem {
+        1 -> * Crisis;
+      }
+    }
+  }
+
+  VariationPoint numStationCoordinators {
+    Kind: Alternative;
+    Variant pair {
+      class CrisisManagementSystem {
+        1 -> 2 StationCoordinator;
+      }
+    }
+
+    Variant multiple {
+      class CrisisManagementSystem {
+        1 -> * StationCoordinator;
+      }
+      class StationCoordinator {
+        Boolean lead;
+      }
+    }
+  } 
+}
+
+// Invoke central system
+invoke(Main,core);
+
+// To invoke base case leave the following as single and pair
+// To change variants, change single and/or pair to multiple
+invoke(Multiplicity,numCrises,single);
+invoke(Multiplicity,numStationCoordinators,pair);

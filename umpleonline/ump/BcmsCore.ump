@@ -1,0 +1,89 @@
+/* BcmsCore.ump
+ *
+ * Core Umple model file for the Crisis 
+ * management system
+ * Source document: http://cserg0.site.uottawa.ca/cma2012/CaseStudy.pdf
+ *
+ * Author: Timothy C. Lethbridge
+ *
+ * To use this, a master file must be created
+ * with use statements that link in
+ * RoutesAndLocations.ump
+ * and CoordinationStateMachine.ump
+ * Plus provide multiplicities as described.
+ */
+
+/*
+ * The singleton that will link to the various 
+  * system elements
+ * Note that variants with different 
+ * multiplicities will associate this with 
+ * crises and coordinators 
+ */
+class CrisisManagementSystem
+{
+  // There is a single crisis management system 
+  singleton;
+}
+
+
+/*
+ * A crisis is what is being managed by the
+ * Crisis Management System
+ * 
+ */
+class Crisis
+{
+  identifier;
+  Location gpsLocation;
+  Time initialReportedTime;
+  status {active {} closed {}}
+  description;
+  
+  0..1 -> * Vehicle assignedFireVehicles;
+  0..1 -> * Vehicle assignedPoliceVehicles;
+  
+  0..1 -> 0..1 Route proposedFireRoute; 
+  0..1 -> 0..1 Route proposedPoliceRoute;
+  0..1 -> * Route disagreedRoutes;
+  0..1 -> * RoadSegment 
+    blockedOrCongestedSegments;
+}
+
+
+// Police or fire vehicle
+// From Requirements section 8 Data Dictionary
+class Vehicle
+{
+  vehicleID;
+  Location currentLocation;
+  
+  Time eta;
+  Location intendedLocation;
+  locationStatus {
+    station {}
+    enRouteToCrisis {}
+    atCrisis {}
+    enrouteReturn {}
+  }
+
+  0..1 -- 0..1 Route routePlan;
+  Boolean brokenDown;
+  Boolean inTrafficCongestion;
+}
+
+/*
+ * The station coordinator is the automated
+ * agent of the Human coordinator in
+ * either the fire service (FSC) or police 
+ * service (PSC).
+ * Any running version of this program will 
+ * just have one of these active as the
+ * current coordinator and one or more active 
+ * as remote coordinators to communicate with
+ */
+class StationCoordinator
+{
+  identification;
+  Boolean police; // false for fire
+}
