@@ -75,7 +75,7 @@ Action.clicked = function(event)
   {
     Action.yumlImage();
   }
-  else if (action == "Uigu")
+  else if (action == "Jsf")
   {
     Action.uigu();
   }

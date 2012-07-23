@@ -269,11 +269,13 @@ function showUserInterface($filename)
 	
 	$tempDir=dirname($filename);
 	$umpDir=dirname($tempDir);
-	rcopy("JSFProvider",$tempDir);
+	mkdir("$tempDir/files");
+	rcopy("JSFProvider/files", "$tempDir/files");
+	copy("JSFProvider/build.xml", "$tempDir/build.xml");
 
     chdir($tempDir);
 	
-	$output = executeCommand("ant -DxmlFile=UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
+	$output = executeCommand("ant -DxmlFile=../../scripts/JSFProvider/UmpleProject.xml -DumpleFile=model.ump -DoutputFolder=TempApp -DprojectName=umpleUIGU");
 	
 	$didCompile = strpos($output,"BUILD SUCCESSFUL") > 0;
     if ($didCompile){

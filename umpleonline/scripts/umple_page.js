@@ -598,7 +598,7 @@ Page.showGeneratedCode = function(code,language)
 {
   jQuery("#generatedCodeRow").show();
 
-  if(language!="javadoc" && language !="diagramUpdate") {
+  if(language!="javadoc" && language !="diagramUpdate" && language != "uigu") {
     var codeparts = code.split('URL_SPLIT');
     var zipurl = "";
     var bodycode = "";

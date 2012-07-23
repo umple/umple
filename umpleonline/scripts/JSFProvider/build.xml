@@ -19,10 +19,10 @@
 			<arg value="${outputFolder}" />
 			<arg value="${projectName}" />
 			<classpath>
-				<pathelement location="GUIGenerator.jar" />
-				<pathelement location="JSFProvider.jar" />
-				<pathelement location="GUIModel.jar" />
-				<pathelement location="Umple.jar" />
+				<pathelement location="../../scripts/JSFProvider/GUIGenerator.jar" />
+				<pathelement location="../../scripts/JSFProvider/JSFProvider.jar" />
+				<pathelement location="../../scripts/JSFProvider/GUIModel.jar" />
+				<pathelement location="../../scripts/JSFProvider/Umple.jar" />
 			</classpath>
 		</java>
 	</target>
