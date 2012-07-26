@@ -3,7 +3,7 @@
 
 package usecase.addPosition;
 import view.addPosition.AddPositionView;
-import javax.swing.JOptionPane;
+import shared.Result;
 import service.ElectionService;
 import service.PositionService;
 import service.ElectionForPositionService;
@@ -337,10 +337,10 @@ public class AddPositionController
         __autotransition40__();
         break;
       case PositionNameEmpty:
-        JOptionPane.showMessageDialog(null, "position name cannot be empty!");
+        Result.getInstance().setMessage("position name cannot be empty!");
         break;
       case PositionExists:
-        JOptionPane.showMessageDialog(null, "position Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("position Exists!");
           Controller.getInstance().start();
           addPositionView.dispose();
         __autotransition41__();
@@ -353,12 +353,12 @@ public class AddPositionController
         __autotransition43__();
         break;
       case PositionAdded:
-        JOptionPane.showMessageDialog(null, "Position Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+        Result.getInstance().setMessage("Position Added Successfully!");
           Controller.getInstance().start();
         __autotransition44__();
         break;
       case PositionNotAdded:
-        JOptionPane.showMessageDialog(null, "Adding Position Failed!");
+        Result.getInstance().setMessage("Adding Position Failed!");
           Controller.getInstance().start();
         __autotransition45__();
         break;

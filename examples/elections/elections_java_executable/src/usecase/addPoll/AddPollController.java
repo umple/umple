@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package usecase.addPoll;
+import shared.Result;
 import view.addPoll.AddPollView;
 import javax.swing.JOptionPane;
 import service.ElectionService;
@@ -399,10 +400,10 @@ public class AddPollController
         __autotransition29__();
         break;
       case PollNameEmpty:
-        JOptionPane.showMessageDialog(null, "Poll name cannot be empty!");
+        Result.getInstance().setMessage("Poll name cannot be empty!");
         break;
       case PollExists:
-        JOptionPane.showMessageDialog(null, "Poll Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("Poll Exists!");
           Controller.getInstance().start();
           addPollView.dispose();
         __autotransition30__();
@@ -413,12 +414,12 @@ public class AddPollController
         __autotransition32__();
         break;
       case PollAdded:
-        JOptionPane.showMessageDialog(null, "Poll Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+        Result.getInstance().setMessage("Poll Added Successfully!");
           Controller.getInstance().start();
         __autotransition33__();
         break;
       case PollNotAdded:
-        JOptionPane.showMessageDialog(null, "Adding Poll Failed!");
+        Result.getInstance().setMessage("Adding Poll Failed!");
           Controller.getInstance().start();
         __autotransition34__();
         break;
@@ -427,7 +428,7 @@ public class AddPollController
         __autotransition35__();
         break;
       case NoElectionsFound:
-        JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("No elections found, add an election first!");
           Controller.getInstance().start();
         __autotransition36__();
         break;

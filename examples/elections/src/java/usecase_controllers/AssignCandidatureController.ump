@@ -27,7 +27,7 @@ class AssignCandidatureController
   depend java.sql.DriverManager;
   depend java.sql.SQLException;
   
-  depend javax.swing.JOptionPane;
+  depend shared.Result;
   
   depend service.ElectionService;
   depend service.PositionService;
@@ -96,31 +96,31 @@ class AssignCandidatureController
     }
     NoElectionsFound
     {
-      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("No elections found, add an election first!");
           Controller.getInstance().start();}
       -> Initial;
     }
     NoCandidatesFound
     {
-      entry / {JOptionPane.showMessageDialog(null, "No candidates found, add some candidates first!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("No candidates found, add some candidates first!");
           Controller.getInstance().start();}
       -> Initial;
     }
     NoElectionForPositionsFound
     {
-      entry / {JOptionPane.showMessageDialog(null, "No election for positions found, assign some positions to election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("No election for positions found, assign some positions to election first!");
           Controller.getInstance().start();}
       -> Initial;
     }
     Updated
     {
-      entry / {JOptionPane.showMessageDialog(null, "Candidature Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+      entry / {Result.getInstance().setMessage("Candidature Added Successfully!");
           Controller.getInstance().start();}
       -> Initial;
     }
     NotUpdated
     {
-      entry / {JOptionPane.showMessageDialog(null, "Adding Candidature Failed!");
+      entry / {Result.getInstance().setMessage("Adding Candidature Failed!");
           Controller.getInstance().start();}
       -> Initial;
     }

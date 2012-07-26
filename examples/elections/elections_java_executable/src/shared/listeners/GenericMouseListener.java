@@ -38,14 +38,18 @@ public enum GenericMouseListener implements MouseListener {
 	public void mouseClicked(MouseEvent arg0) {
 		if (name().compareTo("AddElectionViewMouseListener")==0) {
 			AddElectionController.getInstance().addButtonClicked();
+			JOptionPane.showMessageDialog(null, Result.getInstance().getMessage());
 		} else if (name().compareTo("AddPollViewMouseListener")==0) {
 			AddPollController.getInstance().addButtonClicked();
+			JOptionPane.showMessageDialog(null, Result.getInstance().getMessage());
 		} else if (name().compareTo("AddPositionViewMouseListener")==0) {
 			AddPositionController.getInstance().addButtonClicked();
+			JOptionPane.showMessageDialog(null, Result.getInstance().getMessage());
 		} else if (name().compareTo("AssignPositionElectionViewMouseListener")==0) {
 			AssignPositionElectionController.getInstance().addButtonClicked();
 		} else if (name().compareTo("AssignPositionCandidateViewMouseListener")==0) {
 			AssignCandidatureController.getInstance().updateButtonClicked();
+			JOptionPane.showMessageDialog(null, Result.getInstance().getMessage());
 		} else if (name().compareTo("RegisterCandidateViewMouseListener")==0) {
 			RegisterCandidateController.getInstance().addButtonClicked();
 		} else if (name().compareTo("RegisterVoterViewMouseListener")==0) {

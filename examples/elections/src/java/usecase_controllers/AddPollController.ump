@@ -13,22 +13,23 @@ class AddPollController
 {
   singleton;
   
+  depend shared.Result;
   depend view.addPoll.AddPollView;
-    depend javax.swing.JOptionPane;
-    depend service.ElectionService;
-    depend service.PollService;
+  depend javax.swing.JOptionPane;
+  depend service.ElectionService;
+  depend service.PollService;
   depend shared.domain.Election;
   depend shared.domain.Poll;
   depend java.util.List;
   depend usecase.startup.Controller;
     
-    lazy internal AddPollView addPollView;
-    lazy internal List<Election> elections;
-    lazy internal Boolean pollAdded;
-    lazy internal String pollName;
-    lazy internal Election selectedElection;
-    lazy internal Poll newPoll;
-    lazy internal Boolean pollFound;
+  lazy internal AddPollView addPollView;
+  lazy internal List<Election> elections;
+  lazy internal Boolean pollAdded;
+  lazy internal String pollName;
+  lazy internal Election selectedElection;
+  lazy internal Poll newPoll;
+  lazy internal Boolean pollFound;
     
   PollAddingSteps {
     Initial
@@ -65,13 +66,13 @@ class AddPollController
     }
     PollNameEmpty
     {
-      entry / {JOptionPane.showMessageDialog(null, "Poll name cannot be empty!");}
+      entry / {Result.getInstance().setMessage("Poll name cannot be empty!");}
       addButtonClicked -> CheckingPollName;
       closeView -> ClosingView;
     }
     PollExists
     {
-      entry / {JOptionPane.showMessageDialog(null, "Poll Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("Poll Exists!");
           Controller.getInstance().start();
           addPollView.dispose();}
       -> Initial;
@@ -84,13 +85,13 @@ class AddPollController
     }
     PollAdded
     {
-      entry / {JOptionPane.showMessageDialog(null, "Poll Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+      entry / {Result.getInstance().setMessage("Poll Added Successfully!");
           Controller.getInstance().start();}
       -> Initial;
     }
     PollNotAdded
     {
-      entry / {JOptionPane.showMessageDialog(null, "Adding Poll Failed!");
+      entry / {Result.getInstance().setMessage("Adding Poll Failed!");
           Controller.getInstance().start();}
       -> Initial;
     }
@@ -101,7 +102,7 @@ class AddPollController
     }
     NoElectionsFound
     {
-      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("No elections found, add an election first!");
           Controller.getInstance().start();}
       -> Initial;
     }

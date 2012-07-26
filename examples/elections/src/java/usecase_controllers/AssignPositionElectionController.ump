@@ -14,7 +14,7 @@ class AssignPositionElectionController
   singleton;
   
   depend view.assignPositionElection.AssignPositionElectionView;
-  depend javax.swing.JOptionPane;
+  depend shared.Result;
   depend service.ElectionService;
   depend service.PositionService;
   depend service.ElectionForPositionService;
@@ -61,13 +61,13 @@ class AssignPositionElectionController
     }
     Updated
     {
-      entry / {JOptionPane.showMessageDialog(null, "Election for positions Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+      entry / {Result.getInstance().setMessage("Election for positions Added Successfully!");
           Controller.getInstance().start();}
       -> Initial;
     }
     NotUpdated
     {
-      entry / {JOptionPane.showMessageDialog(null, "Adding election for positions Failed!");
+      entry / {Result.getInstance().setMessage("Adding election for positions Failed!");
           Controller.getInstance().start();}
       -> Initial;
     }
@@ -78,13 +78,13 @@ class AssignPositionElectionController
     }
     NoElectionsFound
     {
-      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("No elections found, add an election first!");
           Controller.getInstance().start();}
       -> Initial;
     }
     NoPositionsFound
     {
-      entry / {JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("No elections found, add an election first!");
           Controller.getInstance().start();}
       -> Initial;
     }

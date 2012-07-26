@@ -3,7 +3,7 @@
 
 package usecase.addElection;
 import view.addElection.AddElectionView;
-import javax.swing.JOptionPane;
+import shared.Result;
 import service.ElectionService;
 import shared.domain.Election;
 import usecase.startup.Controller;
@@ -332,22 +332,22 @@ public class AddElectionController
         __autotransition19__();
         break;
       case ElectionAdded:
-        JOptionPane.showMessageDialog(null, "Election Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+        Result.getInstance().setMessage("Election Added Successfully!");
           Controller.getInstance().start();
         __autotransition20__();
         break;
       case ElectionNotAdded:
-        JOptionPane.showMessageDialog(null, "Adding Election Failed!", "Error!", JOptionPane.ERROR_MESSAGE); Controller.getInstance().start();
+        Result.getInstance().setMessage("Adding Election Failed!"); Controller.getInstance().start();
         __autotransition21__();
         break;
       case ElectionExists:
-        JOptionPane.showMessageDialog(null, "Election Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("Election Exists!");
           Controller.getInstance().start();
           addElectionView.dispose();
         __autotransition22__();
         break;
       case ElectionNameEmpty:
-        JOptionPane.showMessageDialog(null, "Election name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("Election name cannot be empty!");
         break;
       case ClosingView:
         addElectionView.dispose();

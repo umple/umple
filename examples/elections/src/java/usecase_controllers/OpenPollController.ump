@@ -21,7 +21,7 @@ class OpenPollController
   depend java.sql.Connection;
   depend java.sql.DriverManager;
   depend java.sql.SQLException;
-  depend javax.swing.JOptionPane;
+  depend shared.Result;
   depend service.ElectionService;
   depend service.PollService;
   depend usecase.startup.Controller;
@@ -71,7 +71,7 @@ class OpenPollController
       [!pollOpened] -> Failed;
     }
       PollOpened {
-          entry / {JOptionPane.showMessageDialog(null, "Poll is now open");
+          entry / {Result.getInstance().setMessage("Poll is now open");
                    Controller.getInstance().start();}
       }
       Failed {

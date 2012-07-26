@@ -13,7 +13,7 @@ import shared.domain.ElectionForPosition;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import shared.Result;
 import service.ElectionService;
 import service.PositionService;
 import service.CandidateService;
@@ -496,27 +496,27 @@ public class AssignCandidatureController
         __autotransition79__();
         break;
       case NoElectionsFound:
-        JOptionPane.showMessageDialog(null, "No elections found, add an election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("No elections found, add an election first!");
           Controller.getInstance().start();
         __autotransition80__();
         break;
       case NoCandidatesFound:
-        JOptionPane.showMessageDialog(null, "No candidates found, add some candidates first!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("No candidates found, add some candidates first!");
           Controller.getInstance().start();
         __autotransition81__();
         break;
       case NoElectionForPositionsFound:
-        JOptionPane.showMessageDialog(null, "No election for positions found, assign some positions to election first!", "Error!", JOptionPane.ERROR_MESSAGE);
+        Result.getInstance().setMessage("No election for positions found, assign some positions to election first!");
           Controller.getInstance().start();
         __autotransition82__();
         break;
       case Updated:
-        JOptionPane.showMessageDialog(null, "Candidature Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+        Result.getInstance().setMessage("Candidature Added Successfully!");
           Controller.getInstance().start();
         __autotransition83__();
         break;
       case NotUpdated:
-        JOptionPane.showMessageDialog(null, "Adding Candidature Failed!");
+        Result.getInstance().setMessage("Adding Candidature Failed!");
           Controller.getInstance().start();
         __autotransition84__();
         break;

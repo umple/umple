@@ -14,23 +14,23 @@ class AddPositionController
   singleton;
   
   depend view.addPosition.AddPositionView;
-    depend javax.swing.JOptionPane;
-    depend service.ElectionService;
-    depend service.PositionService;
-    depend service.ElectionForPositionService;
+  depend shared.Result;
+  depend service.ElectionService;
+  depend service.PositionService;
+  depend service.ElectionForPositionService;
   depend shared.domain.Election;
   depend shared.domain.Position;
   depend shared.domain.ElectionForPosition;
   depend java.util.List;
   depend usecase.startup.Controller;
     
-    lazy internal AddPositionView addPositionView;
-    lazy internal Boolean positionAdded;
-    lazy internal Boolean efpAdded;
-    lazy internal String positionName;
-    lazy internal Position newPosition;
-    lazy internal Boolean positionFound;
-    lazy internal ElectionForPosition efp;
+  lazy internal AddPositionView addPositionView;
+  lazy internal Boolean positionAdded;
+  lazy internal Boolean efpAdded;
+  lazy internal String positionName;
+  lazy internal Position newPosition;
+  lazy internal Boolean positionFound;
+  lazy internal ElectionForPosition efp;
     
   PositionAddingSteps {
     Initial
@@ -57,13 +57,13 @@ class AddPositionController
     }
     PositionNameEmpty
     {
-      entry / {JOptionPane.showMessageDialog(null, "position name cannot be empty!");}
+      entry / {Result.getInstance().setMessage("position name cannot be empty!");}
       addButtonClicked -> CheckingpositionName;
       closeView -> ClosingView;
     }
     PositionExists
     {
-      entry / {JOptionPane.showMessageDialog(null, "position Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+      entry / {Result.getInstance().setMessage("position Exists!");
           Controller.getInstance().start();
           addPositionView.dispose();}
       -> Initial;
@@ -79,13 +79,13 @@ class AddPositionController
     }
     PositionAdded
     {
-      entry / {JOptionPane.showMessageDialog(null, "Position Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+      entry / {Result.getInstance().setMessage("Position Added Successfully!");
           Controller.getInstance().start();}
       -> Initial;
     }
     PositionNotAdded
     {
-      entry / {JOptionPane.showMessageDialog(null, "Adding Position Failed!");
+      entry / {Result.getInstance().setMessage("Adding Position Failed!");
           Controller.getInstance().start();}
       -> Initial;
     }
