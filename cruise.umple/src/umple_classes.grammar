@@ -12,7 +12,7 @@ classDefinition : class [name] { [[classContent]]* }
 
 //The external keyword declares a class that is defined in a different
 // compilation unit
-externalDefinition : external [name] { [[classContent]]* }
+externalDefinition : external [=interface]? [name] { [[classContent]]* }
 
 // An Interface can only contain method. See [*interfaceDefinition*]
 interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }

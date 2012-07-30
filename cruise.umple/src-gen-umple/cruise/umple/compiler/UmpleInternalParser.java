@@ -619,7 +619,10 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
     else if (t.is("externalDefinition"))
     {
-      analyzeExternal(t);
+      if (t.getValue("interface")!=null)
+        analyzeExternalInterface(t);
+      else
+        analyzeExternal(t);
     }
     else if (t.is("interfaceDefinition"))
     {
@@ -939,12 +942,20 @@ private void analyzeClassToken(Token t, int analysisStep)
     return aClass;
   }
 
-  private void analyzeInterface(Token t)
+  private UmpleInterface analyzeExternalInterface(Token externalToken)
+  {
+    UmpleInterface anInterface = analyzeInterface(externalToken);
+    anInterface.setModifier("external");
+    return anInterface;
+  }
+
+  private UmpleInterface analyzeInterface(Token t)
   {
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
     model.addUmpleInterface(newInterface);
     newInterface.setPackageName(currentPackageName);
-    analyzeInterface(t,newInterface);  
+    analyzeInterface(t,newInterface);
+    return newInterface;
   }
 
   private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface)
