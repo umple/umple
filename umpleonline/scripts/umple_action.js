@@ -1059,7 +1059,7 @@ Action.loadExample = function loadExample()
   
   Page.resetCanvasSize();
   var sel = Page.getSelectedExample();
-  if (sel=="Accommodations.ump"){Page.setUmpleCanvasSize(680,500);}
+  if (sel=="Accommodations.ump"){Page.setUmpleCanvasSize(780,500);}
   else if (sel=="2DShapes.ump"){Page.setUmpleCanvasSize(620,500);}
   else if (sel=="AirlineExample.ump"){Page.setUmpleCanvasSize(490,500);}
   else if (sel=="AfghanRainDesign.ump"){Page.setUmpleCanvasSize(920,600);}
@@ -1067,7 +1067,7 @@ Action.loadExample = function loadExample()
   else if (sel=="BankingSystemB.ump"){Page.setUmpleCanvasSize(820,550);}
   else if (sel=="DMMOverview.ump"){Page.setUmpleCanvasSize(610,500);}
   else if (sel=="DMMModelElementHierarchy.ump"){Page.setUmpleCanvasSize(935,600);}
-  else if (sel=="DMMSourceObjectHierarchy.ump"){Page.setUmpleCanvasSize(720,500);}
+  else if (sel=="DMMSourceObjectHierarchy.ump"){Page.setUmpleCanvasSize(740,520);}
   else if (sel=="DMMRelationshipHierarchy.ump"){Page.setUmpleCanvasSize(935,570);}
   else if (sel=="DMMExtensionCTF.ump"){Page.setUmpleCanvasSize(815,620);}
   else if (sel=="ElectionSystem.ump"){Page.setUmpleCanvasSize(680,530);}
@@ -1076,6 +1076,7 @@ Action.loadExample = function loadExample()
   else if (sel=="Insurance.ump"){Page.setUmpleCanvasSize(650,575);}
   else if (sel=="MailOrderSystemClientOrder.ump"){Page.setUmpleCanvasSize(780,535);}
   else if (sel=="ManufactoringPlantController.ump"){Page.setUmpleCanvasSize(620,505);}
+    else if (sel=="ManufacturingPlantController.ump"){Page.setUmpleCanvasSize(620,505);}
   else if (sel=="InventoryManagement.ump"){Page.setUmpleCanvasSize(625,570);}
   else if (sel=="Hospital.ump"){Page.setUmpleCanvasSize(650,400);}
   else if (sel=="Hotel.ump"){Page.setUmpleCanvasSize(820,550);}
@@ -1083,7 +1084,18 @@ Action.loadExample = function loadExample()
   else if (sel=="PoliceSystem.ump"){Page.setUmpleCanvasSize(725,570);} 
   else if (sel=="realestate.ump"){Page.setUmpleCanvasSize(730,530);}
   else if (sel=="WarehouseSystem.ump"){Page.setUmpleCanvasSize(700,550);}
+
+  else if (sel=="UniversitySystem.ump"){Page.setUmpleCanvasSize(600,500);}  
+  else if (sel=="CoOpSystem.ump"){Page.setUmpleCanvasSize(700,550);}
+  else if (sel=="CommunityAssociation.ump"){Page.setUmpleCanvasSize(720,590);}
+  else if (sel=="Pizza.ump"){Page.setUmpleCanvasSize(700,570);}
+  else if (sel=="VendingMachineClassDiagram.ump"){Page.setUmpleCanvasSize(540,650);}
+  else if (sel=="OhHellWhist.ump"){Page.setUmpleCanvasSize(700,550);}
+  else if (sel=="CanalLockStateMachine.ump"){Page.setUmpleCanvasSize(700,550);}
+  else if (sel=="CanalSystem.ump"){Page.setUmpleCanvasSize(790,600);}  
+  else if (sel=="RoutesAndLocations.ump"){Page.setUmpleCanvasSize(700,680);}
   
+          
   jQuery("#inputExample").blur();
 }
 
