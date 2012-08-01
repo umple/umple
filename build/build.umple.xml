@@ -204,8 +204,17 @@
 	  <antcall target="packageDocs" />
   </target>
 
-  <!-- Move Umpleonline files back into the test data -->
+  <!-- Move Umpleonline files back into the test data - Add new moves to the beginning-->
 	<target name="umpleonlineToTest">
+    <copy tofile="cruise.umple/test/data/Co-OpSystem/CoOpSystem.ump" file="umpleonline/ump/CoOpSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/CommunityAssociation/CommunityAssociation.ump" file="umpleonline/ump/CommunityAssociation.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/PizzaDelivery/Pizza.ump" file="umpleonline/ump/Pizza.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/VendingMachine/VendingMachineClassDiagram.ump" file="umpleonline/ump/VendingMachineClassDiagram.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/CardGames/OhHellWhist.ump" file="umpleonline/ump/OhHellWhist.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Canal/CanalLockStateMachine.ump" file="umpleonline/ump/CanalLockStateMachine.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Canal/CanalSystem.ump" file="umpleonline/ump/CanalSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/bCMS/RoutesAndLocations.ump" file="umpleonline/ump/RoutesAndLocations.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/bCMS/CoordinationStateMachine.ump" file="umpleonline/ump/CoordinationStateMachine.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/2DShapes/2DShapes.ump" file="umpleonline/ump/2DShapes.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/AccessControl/AccessControl.ump" file="umpleonline/ump/AccessControl.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Accidents/Accidents.ump" file="umpleonline/ump/Accidents.ump" overwrite="true" />
