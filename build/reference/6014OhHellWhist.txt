@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<p>This system will allow players to play card games such as "Whist" and "Oh Hell" online.
+<p>This system will allow players to play card games such as <a href="http://en.wikipedia.org/wiki/Whist">Whist</a> and <a href="http://en.wikipedia.org/wiki/Oh,_hell">Oh Hell</a> online.
 
 <p>The system should manage the cards in a deck of cards, the players (including who is dealer), the hands of cards each player has, the tricks, the pile of cards on the table. It should also manage the matches between players. Use some background research to improve these simple requirements.
 
