@@ -1,0 +1,160 @@
+Canal Lock State Machine
+Examples
+noreferences
+
+@@description
+
+<p>Canal Lock State Machine
+
+<p>See also the <a href="CanalLock.html"> class diagram and requirements for the canal system.</a>
+
+
+@@example
+class CanalNetwork {
+  name;
+  0..1 -- * CanalNetwork subNetwork;
+  0..1 -- * Craft activeVessels;
+  * -- * SegEnd;
+}
+
+class SegEnd {
+  name;
+  GPSCoord location;
+}
+
+class Segment {
+  Float waterLevel; // m above sea level 
+  1..* -- 2 SegEnd;
+}
+
+class Lock {
+  isA Segment;
+  Float maxLevel;
+  Float minLevel;
+}
+
+class Bend {
+  isA SegEnd;
+}
+
+class EntryAndExitPoint {
+  isA SegEnd;
+}
+
+class MooringPoint {
+  isA SegEnd;
+}
+
+class Obstacle {
+  isA SegEnd;
+  0..1 downstreamObstacle -- * Craft upStreamQueue;
+  0..1 upstreamObstacle -- * Craft downStreamQueue;  
+}
+
+class LowBridge {
+  isA Obstacle;
+}
+
+class LockGate {
+  isA Obstacle;
+}
+
+class Craft {
+  lazy GPSCoord location;
+}
+
+class Trip {
+  1 -> 1..* SegEnd;
+  0..1 -- 1 Craft;
+}
+
+class Transponder {
+  id;
+  0..1 -- 0..1 Craft;
+}
+
+class GPSCoord {
+   Float lattitide;
+   Float longitude;
+}//$?[End_of_model]$?
+
+class CanalNetwork
+{
+  position 501 32 113 63;
+  position.association CanalNetwork__Craft:activeVessels 107,63 119,0;
+  position.association CanalNetwork__SegEnd 0,18 84,0;
+}
+
+class SegEnd
+{
+  position 45 88 154 80;
+}
+
+class Segment
+{
+  position 307 184 141 63;
+  position.association SegEnd__Segment 0,6 155,80;
+}
+
+class Lock
+{
+  position 378 267 132 80;
+}
+
+class Bend
+{
+  position 76 326 109 45;
+}
+
+class EntryAndExitPoint
+{
+  position 6 407 130 45;
+}
+
+class MooringPoint
+{
+  position 142 264 109 45;
+}
+
+class Obstacle
+{
+  position 218 353 109 45;
+  position.association Craft:upStreamQueue__Obstacle 110,10 0,10;
+  position.association Craft:downStreamQueue__Obstacle 110,30 0,30;
+  position.association Craft:upStreamQueue__Obstacle:downstreamObstacle 110,10 0,10;
+  position.association Craft:downStreamQueue__Obstacle:upstreamObstacle 110,30 0,30;
+}
+
+class LowBridge
+{
+  position 314 491 109 45;
+}
+
+class LockGate
+{
+  position 182 487 109 45;
+}
+
+class Craft
+{
+  position 582 400 154 63;
+}
+
+class Trip
+{
+  position 451 130 109 45;
+  position.association SegEnd__Trip 0,10 155,16;
+  position.association Craft__Trip 43,46 33,0;
+}
+
+class Transponder
+{
+  position 622 528 109 63;
+  position.association Craft__Transponder 27,0 53,63;
+}
+
+class GPSCoord
+{
+  position 23 499 129 80;
+}
+@@endexample
