@@ -309,6 +309,7 @@ Action.showHideCanvas = function(doShow)
   {
   	canvas.show();
   	Action.manualSync = jQuery("#buttonManualSync").attr('checked');
+  	jQuery("#buttonShowHideCanvas").attr('checked',true);
   	
   	if (!Action.manualSync) 
   	{
@@ -337,6 +338,7 @@ Action.showHideCanvas = function(doShow)
   {
   	canvas.hide();
   	Action.manualSync = true;
+  	jQuery("#buttonShowHideCanvas").attr('checked',false);
 
 	Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
   	Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);

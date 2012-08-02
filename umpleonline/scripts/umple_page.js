@@ -140,8 +140,8 @@ Page.initPaletteArea = function()
 Page.initOptions = function()
 {
   jQuery("#buttonShowHideLayoutEditor").attr('checked', false);
-  jQuery("#buttonShowHideTextEditor").attr('checked', true);
-  jQuery("#buttonShowHideCanvas").attr('checked', true);
+  jQuery("#buttonShowHideTextEditor").attr('checked', Page.showText);
+  jQuery("#buttonShowHideCanvas").attr('checked', Page.showDiagram);
   jQuery("#buttonPhotoReady").attr('checked', false);
   jQuery("#buttonManualSync").attr('checked', false);
   
