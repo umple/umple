@@ -116,20 +116,21 @@ UmpleSystem.addClass = function(umpleClass)
     classObj.mouseout(function(event) { Action.classHover(event,false);} );
     classObj.mousedown(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
     classObj.mouseup(function(event){ Action.classMouseUp(event); });
-    classObj.draggable
-    ({
-        containment:'parent', 
-        stop:function(event,ui){Action.classMoved(event.target)}
-    });
-    classObj.resizable
-    ({
-        minHeight:UmpleClassFactory.defaultSize.height, 
-        minWidth:UmpleClassFactory.defaultSize.width, 
-        autoHide:true,
-        containment:'parent',
-        resize:function(event,ui){Action.classResizing(event,ui);},
-        stop:function(event,ui){Action.classResized(event,ui);}
-    });
+     if (!Page.readOnly) {classObj.draggable
+      ({
+          containment:'parent', 
+          stop:function(event,ui){Action.classMoved(event.target)}
+      });
+      classObj.resizable
+      ({
+          minHeight:UmpleClassFactory.defaultSize.height, 
+          minWidth:UmpleClassFactory.defaultSize.width, 
+          autoHide:true,
+          containment:'parent',
+          resize:function(event,ui){Action.classResizing(event,ui);},
+          stop:function(event,ui){Action.classResized(event,ui);}
+      });
+    }
     
     // remove the jquery resizable handle
     jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
@@ -434,6 +435,8 @@ UmpleSystem.updateAnchor = function(umpleClass,index)
 
 UmpleSystem.setDragableAssociationAnchor = function(umpleAssociation,anchorNbr)
 {
+  if (Page.readOnly) {return}
+  
   if (umpleAssociation.isReflexive())
   {
     var anchorSel = "#" + umpleAssociation.id + "_anchor" + anchorNbr;

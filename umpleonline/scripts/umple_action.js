@@ -1444,6 +1444,10 @@ Action.updateUmpleDiagramCallback = function(response)
     }
     var newSystem = Json.toObject(umpleJson);
     UmpleSystem.merge(newSystem);
+    if (Page.readOnly) {
+  	  jQuery("span.editable").addClass("uneditable");
+  	  // jQuery("div.umpleClass").addClass("unselectable");
+    }
   }
   
   Page.hideLoading();

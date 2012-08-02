@@ -186,10 +186,9 @@ function UmpleClass()
       }
     }
     
+    attributesInnerHtml += format('<div class="umpleAttributeNew"><span id="{0}_newAttribute" name="attributeNew" class="editable editableSingleClick">{1}</span></div>',this.id,Page.isPhotoReady() ? '&nbsp;' : '-- Add More --');
     if (!Page.isPhotoReady())
     {
-      attributesInnerHtml += format('<div class="umpleAttributeNew"><span id="{0}_newAttribute" name="attributeNew" class="editable editableSingleClick">-- Add More --</span></div>',this.id);
-
       classInnerHtml +=
       this.anchorDivHtml("anchor",0) +
       this.anchorDivHtml("anchor",1) +
@@ -209,6 +208,7 @@ function UmpleClass()
       this.anchorDivHtml("hover",6) +
       this.anchorDivHtml("hover",7);
     }
+
 	    
     classInnerHtml +=
       format(

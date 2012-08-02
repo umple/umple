@@ -20,16 +20,29 @@ Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
 Page.hLine = null;
 
+// Global options
+Page.showDiagram = true; // initially show the diagram
+Page.showText = true; // initially show the text
+Page.showMenu = true; // initially show the menu
+Page.readOnly = false; // initially allow editing
 
-Page.init = function()
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly)
 { 
+  Page.showDiagram = doShowDiagram;  
+  Page.showText = doShowText;  
+  Page.showMenu = doShowMenu;  
+  Page.readOnly = doReadOnly;  
+
   jQuery.noConflict();
   jQuery(document).keydown(function(event){Action.keyboardShortcut(event);});
-  
+
   Page.initPaletteArea();
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
+  
+  if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
+
   Action.loadFile();
 }
 
@@ -99,6 +112,29 @@ Page.initPaletteArea = function()
   
   Page.initExamples();
   Page.initOptions();
+  if(Page.readOnly) {
+    jQuery("#mainDrawMenu").hide();
+    jQuery("#layoutListItem").hide();
+    jQuery("#preferencesTitle").hide();
+    jQuery("#photoReadyListItem").hide();
+    jQuery("#manualSyncListItem").hide();
+    jQuery("#canvasSizeTitle").hide();
+    jQuery("#buttonSmaller").hide();
+    jQuery("#buttonLarger").hide();
+    jQuery("#menuBookmarkable").hide();
+  }
+  if(Page.readOnly || !Page.showMenu) {  
+    jQuery("#topBookmarkable").hide();
+  }
+  if(!Page.showMenu) {jQuery("#paletteColumn").hide();}
+  if(!Page.showText) {
+    if(Page.readOnly) {
+      jQuery("#topLine").hide(); 
+    }
+    else {
+      jQuery("#linetext").hide();
+    }
+  }
 }
 
 Page.initOptions = function()
@@ -216,6 +252,7 @@ jQuery("#umpleModelEditor").mousedown(function(){setTimeout("jQuery(\"#linenum\"
   // require the user to type cm1 to turn code mirror on
   Page.initCodeMirrorEditor();
   Page.resizeCodeMirrorEditor( jQuery("#umpleModelEditor").height());
+  if (Page.showText==false) {Action.showHideTextEditor(false);}
 }
 
 Page.initCodeMirrorEditor = function() {
@@ -224,6 +261,7 @@ Page.initCodeMirrorEditor = function() {
      document.getElementById('umpleModelEditor'),{
         lineNumbers: true,
         matchBrackets: true,
+        readOnly: Page.readOnly,
         mode: "text/x-umple",
         lineWrapping: true,
         onGutterClick: foldFunc,
@@ -246,8 +284,13 @@ Page.resizeCodeMirrorEditor = function(newHeight) {
 
 Page.isPhotoReady = function()
 {
-  var selector = "#buttonPhotoReady";
-  return jQuery(selector).attr('checked');
+  if(Page.readOnly) {
+    return(true)
+  }
+  else {
+    var selector = "#buttonPhotoReady";
+    return jQuery(selector).attr('checked');
+  }
 }
 
 Page.initSourceCodeArea = function()
@@ -265,6 +308,7 @@ Page.hideGeneratedCode = function()
 Page.initCanvasArea = function()
 {
   var canvas = jQuery("#" + Page.umpleCanvasId());
+  if (Page.showDiagram==false) {Action.showHideCanvas(false);}
   
   var offsetTop = Math.round(canvas.position().top);
   var offsetLeft = Math.round(canvas.position().left);
