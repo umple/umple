@@ -7,7 +7,33 @@
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
 $filename = extractFilename();
-$readOnly = false;
+
+// Core options after ? and between &. One of the first four is allowed
+
+// example=xxx means load the .ump file named xxx
+
+// filename=xxx means load the URL named xxx (but without the leading http://
+
+// model=nnnn means load the saved bookmark
+
+// text=zzzzz means load the URLencoded text for short examples (as in the user manual)
+
+// nochrome means hide the banner at the top to save real estate
+if (isset($_REQUEST["nochrome"])) {$showChrome=false;} else {$showChrome=true;}
+
+// nodiagram means suppress creation of the diagram - passed to JavaScript
+if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true;}
+
+// notext means suppress creation of the text pane - passed to JavaScript
+// ignored if nodiagram is also set
+if ($showDiagram && isset($_REQUEST["notext"])) {$showText=false;} else {$showText=true;}
+
+// nomenu means suppress display of menu. Can only happen if diagram OR text hidden
+if ((!$showDiagram || !$showText) && isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
+
+// readOnly means suppress ability to edit - passed to JavaScript
+$readOnly = isset($_REQUEST["readOnly"]);
+
 $output = readTemporaryFile("ump/" . $filename);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -19,7 +45,11 @@ $output = readTemporaryFile("ump/" . $filename);
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
+<?php if ($showChrome) { ?>
   <table class="pagetitle">
+<?php } else { ?>
+  <table class="pagetitle" style="display:none;">
+<?php } ?>
     <tr>
       <td>
         <img src="scripts/umpleonline_title.jpg" title="UmpleOnline - Draw and Type your next model" />
@@ -31,28 +61,30 @@ $output = readTemporaryFile("ump/" . $filename);
         &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
         &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
 
-        <noscript>
-        <br/><font color="red">Since you have JavaScript disabled this page will not work. To use Umple, download the command line compiler or use Eclipse.</font>
-        <pre>
-<?php echo $output ?>
-        </pre>
-        </noscript> 
+
         </p>
       </td>
     </tr>
   </table>
-  
+
+  <noscript>
+    <br/><font color="red">Since you have JavaScript disabled this page will not work. To use Umple, download the command line compiler or use Eclipse.</font>
+    <pre>
+<?php echo $output ?>
+    </pre>
+  </noscript> 
+          
 <input id="filename" type="hidden" value="<?php echo $filename ?>" />
 <input id="advancedMode" type="hidden" value="0" />
 
-<div class="bookmarkableUrl">
+<div id="topLine" class="bookmarkableUrl">
 
 <span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
 
 <?php if (isBookmark($filename)) { ?>
-  <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Changes at this URL are saved</a>
+  <a id="topBookmarkable" href="umple.php?model=<?php echo extractModelId($filename) ?>">Changes at this URL are saved</a>
 <?php } else { ?>
-  <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Create Bookmarkable URL</a>
+  <a id="topBookmarkable" href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Create Bookmarkable URL</a>
 <?php } ?>
 
 &nbsp; &nbsp;<span id=feedbackMessage></span>
@@ -85,9 +117,9 @@ $output = readTemporaryFile("ump/" . $filename);
         <ul class="first">
           <li class="subtitle">SAVE</li>
 <?php if (isBookmark($filename)) { ?>
-            <div class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark this Link for Future Use</a></div>
+            <div id="menuBookmarkable" class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark this Link for Future Use</a></div>
 <?php } else { ?>
-            <div class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
+            <div id="menuBookmarkable" class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
 <?php } ?>
           <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
           <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
@@ -106,7 +138,7 @@ $output = readTemporaryFile("ump/" . $filename);
       <h3><a href="#tools">TOOLS</a></h3>
       <div class="section">
 
-      <ul class="first">
+      <ul id="mainLoadMenu" class="first">
         <li class="subtitle"> Load </li>
         <li id="itemLoadExamples">
           <select id="inputExample" name="inputExample" class="button" size = "1">
@@ -159,7 +191,7 @@ $output = readTemporaryFile("ump/" . $filename);
         </li>
         </ul>
       
-      <ul class = "second toggle">
+      <ul id="mainDrawMenu" class = "second toggle">
         <li class="subtitle"> Draw </li>
         <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class."><img id="buttonAddClass" src="scripts/class.png" title="Add Class" /> Class</li>
         <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association."><img id="buttonAddAssociation" src="scripts/assoc.png" title="Add Assocation" /> Association</li>
@@ -191,12 +223,12 @@ $output = readTemporaryFile("ump/" . $filename);
           <li id="layoutListItem"> <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" title="Show/hide the layout editor" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> Layout Editor </li>          
         </ul>
         <ul>
-          <li class="subtitle"> Preferences </li>
+          <li id="preferencesTitle" class="subtitle"> Preferences </li>
           <li id="photoReadyListItem"> <input id="buttonPhotoReady" class="checkbox" type="checkbox" title="Remove editing handles from diagram" name="photoReady" value="photoReady"/> Photo Ready </li>
           <li id="manualSyncListItem"> <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> Manual Sync </li>          
         </ul>
         <ul>
-          <li class="subtitle"> Canvas Size </li>
+          <li id="canvasSizeTitle" class="subtitle"> Canvas Size </li>
           <li id="buttonSmaller" name="paletteItem"><img id="buttonSmaller" src="scripts/smaller.png" title="Reduce the size of the canvas" /> Smaller</li>
           <li id="buttonLarger" name="paletteItem"><img id="buttonLarger" src="scripts/larger.png" title="Increase the size of the canvas" /> Larger</li>
         </ul>
@@ -205,7 +237,6 @@ $output = readTemporaryFile("ump/" . $filename);
           <!--<li id="buttonPngImage" class="png"><img src="scripts/png.png" title="Generate PNG Image" /> PNG View</li>-->
           <li id="buttonYumlImage" class="yuml"><img src="scripts/yuml.png" title="Generate Yuml Image" /> Yuml View</li>
           <li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li>
-          <!--<li id="buttonUigu" class="uigu"><img src="scripts/uigu.png" title="Generate UI" /> Generate UI</li>-->
 
         </ul>
       </div>
@@ -222,8 +253,11 @@ $output = readTemporaryFile("ump/" . $filename);
 <div id="generatedCodeRow" colspan="3"></div>
 
 <script language="JavaScript">
-  Page.init();
-  // Page.setUmpleCode("<?php $output ?>");
+  Page.init(
+    <?php if($showDiagram) { ?> true  <?php } else { ?> false <?php } ?>,
+    <?php if($showText) { ?> true  <?php } else { ?> false <?php } ?>,
+    <?php if($showMenu) { ?> true  <?php } else { ?> false <?php } ?>,
+    <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>);
 </script>
 
 
