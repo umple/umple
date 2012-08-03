@@ -460,7 +460,7 @@ Page.getUmpleCode = function()
 Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
-  if(substr(server,0,42)="http://cruise.site.uottawa.ca/umpleonline/") {
+  if(server.substr(0,42)=="http://cruise.site.uottawa.ca/umpleonline/") {
     server = "http://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
