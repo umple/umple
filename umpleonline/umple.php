@@ -1,11 +1,21 @@
 <?php
-// Copyright: All contributers to the Umple Project
+// Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
 //
 // Main program that generates UmpleOnline
 require_once ("scripts/compiler_config.php");
 cleanupOldFiles();
+
+if (isset($_REQUEST["model"])) {
+  if (!is_file("ump/".$_REQUEST["model"]."/model.ump")) {
+  
+  
+    header('HTTP/1.0 404 Not Found');
+    readfile('../404.shtml');
+    exit();
+  }
+}
 $filename = extractFilename();
 
 // Core options after ? and between &. One of the first four is allowed

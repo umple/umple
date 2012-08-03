@@ -110,11 +110,25 @@ function extractModelId($filename)
   else
   {
     $index = strpos($filename,"/model.ump");
-    $length = $index - strlen($filename);
-    $modelId = substr($filename,7,$length);
-    return $modelId;
+    $prefix = substr($filename,0,$index);
+    if(!strpos($prefix,"/")) return $prefix;
+    return substr(strrchr($prefix,"/"),1);
   }
 }
+
+// delete everything stored in a directory
+function recursiveDelete($str){
+        if(is_file($str)){
+            return @unlink($str);
+        }
+        elseif(is_dir($str)){
+            $scan = glob(rtrim($str,'/').'/*');
+            foreach($scan as $index=>$path){
+                recursiveDelete($path);
+            }
+            return @rmdir($str);
+        }
+    }
 
 function extractFilename()
 {
