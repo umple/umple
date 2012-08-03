@@ -48,7 +48,8 @@ function generateMenu($buttonSuffix)
             <option value=\"cpp:Cpp\">C++ (under development)</option>
           </select>
         </li>
-        <li><div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div></li>      
+        <li><div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div></li>
+        <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
 
    echo $generatemenu;

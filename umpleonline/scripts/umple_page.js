@@ -107,7 +107,7 @@ Page.initPaletteArea = function()
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
-  jQuery("#buttonCodeComplete").hide();
+  jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
   
   Page.initExamples();
@@ -626,9 +626,9 @@ Page.getSelectedExample = function()
 
 Page.showCodeDone = function()
 {
-  var selector = "#buttonCodeComplete";
-  jQuery(selector).dialog({closeOnEscape:true, hide:'puff', height:100, width:250});
-  setTimeout(function() {jQuery(selector).dialog("close");}, 2000);
+  var gcselector = "#genstatus";
+  jQuery(gcselector).show();
+  setTimeout(function() {jQuery(gcselector).hide();}, 2000);
 }
 
 Page.showViewDone = function()
