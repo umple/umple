@@ -289,6 +289,13 @@ Action.showHideTextEditor = function(doShow)
   	layoutBox.attr('disabled', false);
   	layoutBox.css('cursor', 'pointer');
   	layoutListItem.css('color', 'Black');
+    if(Page.readOnly) {
+      jQuery("#topLine").show(); 
+    }
+    else {
+      jQuery("#linetext").show();
+    }
+    Page.setUmpleCode(Page.getUmpleCode()); // force reset
   }
   else
   {
@@ -297,6 +304,12 @@ Action.showHideTextEditor = function(doShow)
 	layoutBox.attr('disabled', true);
 	layoutBox.css('cursor', 'not-allowed');
 	layoutListItem.css('color', 'DimGray');
+	if(Page.readOnly) {
+      jQuery("#topLine").hide(); 
+    }
+    else {
+      jQuery("#linetext").hide();
+    }
   }
 }
 
