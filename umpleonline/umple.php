@@ -212,8 +212,6 @@ $output = readTemporaryFile("ump/" . $filename);
         <li id="buttonRedo" name="paletteItem"><img src="scripts/redo.png" title="Redo"> Redo </li>
         <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.png" title="Manually sync the diagram" /> Sync Diagram </li>        
       </ul>
-      
-      <div id="buttonCodeComplete" title="Code Generation Complete">See below.</div>
 
       <?php generateMenu("") ?>
       
