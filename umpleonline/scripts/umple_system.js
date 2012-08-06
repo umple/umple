@@ -263,7 +263,6 @@ UmpleSystem.updateClass = function(umpleClass)
     umpleClass.position.height = classObj.height();
     isDirty = true;
   }
-
   if (isDirty)
   {
     UmpleSystem.redraw(umpleClass);    

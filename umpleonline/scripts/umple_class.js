@@ -113,6 +113,7 @@ function UmpleClass()
   	this.extendsClass = null;
   }
   
+  // Used by triOverlap to enable associations to line up properly
   this.borderLines = function()
   {
   	var classObj = jQuery("#" + this.id);
@@ -172,6 +173,7 @@ function UmpleClass()
 
     if (this.attributes.length > 0)
     {
+      // For each attribute, output the html
       for (var i=0; i<this.attributes.length; i++)
       { 
         var attr = this.attributes[i];
@@ -184,11 +186,14 @@ function UmpleClass()
           attributesInnerHtml += format('<div class="umpleAttribute"><span id="{2}_attribute_{3}" name="attributeEdit" class="editable editableDoubleClick">{0} : {1}</span> <img src="scripts/delete2.jpg" onclick="Action.attributeDelete({4}{2}{4},{4}{3}{4})" /></div>',attr.name,attr.type,this.id,i,"'");
         }
       }
-    }
+    } // End of loop adding attributes
     
     attributesInnerHtml += format('<div class="umpleAttributeNew"><span id="{0}_newAttribute" name="attributeNew" class="editable editableSingleClick">{1}</span></div>',this.id,Page.isPhotoReady() ? '&nbsp;' : '-- Add More --');
     if (!Page.isPhotoReady())
     {
+// The following commented out to remove unneeded hovers that are not selectable anyway
+// Similar code removed from UmpleClass.drawClass
+/*
       classInnerHtml +=
       this.anchorDivHtml("anchor",0) +
       this.anchorDivHtml("anchor",1) +
@@ -207,6 +212,7 @@ function UmpleClass()
       this.anchorDivHtml("hover",5) +
       this.anchorDivHtml("hover",6) +
       this.anchorDivHtml("hover",7);
+*/
     }
 
 	    

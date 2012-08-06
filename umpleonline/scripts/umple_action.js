@@ -1854,7 +1854,7 @@ Action.attributeNew = function(diagramId,attributeInput)
 )+"&gt is not valid.");},2000);
     setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
   }
-  else
+  else // new attribute is valid
   {
     var umpleClass = UmpleSystem.find(diagramId);
     var attributeIndex = umpleClass.addAttribute(attributeInput);

@@ -128,19 +128,21 @@ function UmpleGeneralization()
     generalizationDiv.append(triangleBase.drawable());
     generalizationDiv.append(triangleRight.drawable());
     generalizationDiv.append(triangleLeft.drawable());
-    
-    var hoverOffset = new UmplePosition(3,3,0,0);
+
+    var hoverHtml = "";
+// The following commented out to remove unneeded hovers that are not selectable anyway
+// Similar code removed from UmpleClass.drawClass 
+/*    var hoverOffset = new UmplePosition(3,3,0,0);
     var hoverPoint1 = lineStart.subtract(hoverOffset);
     var hoverPoint2 = tipEnd.subtract(hoverOffset);
     var hoverPoint3 = tipStart.subtract(hoverOffset);
-    var hoverHtml = "";
     hoverHtml += this.anchorDivHtml("hover",0,hoverPoint1.x,hoverPoint1.y);
     hoverHtml += this.anchorDivHtml("anchor",0,hoverPoint1.x,hoverPoint1.y); 
     hoverHtml += this.anchorDivHtml("hover",1,hoverPoint2.x,hoverPoint2.y);
     hoverHtml += this.anchorDivHtml("anchor",1,hoverPoint2.x,hoverPoint2.y);
     hoverHtml += this.anchorDivHtml("hover",2,hoverPoint3.x,hoverPoint3.y);
     hoverHtml += this.anchorDivHtml("anchor",2,hoverPoint3.x,hoverPoint3.y);
-    
+*/    
     var currentHtml = generalizationDiv.html();
     generalizationDiv.html(hoverHtml + currentHtml);
     
