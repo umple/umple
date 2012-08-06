@@ -860,8 +860,6 @@ Action.generalizationSelected = function(obj)
   }
 }
 
-Page.isAdvancedMode =
-
 Action.generateCode = function(languageStyle,languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
@@ -1343,16 +1341,18 @@ Action.updateLineNumberDisplay = function()
 
 Action.umpleTyped = function(eventObject)
 {
+  // This function is not called by CodeMirror
+  // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
   // debug - output key code
-  // if (Page.getAdvancedMode() == 2) { // debug
-  //   Page.catFeedbackMessage("["+eventObject.keyCode+"] ")
-  // }
+  if (Page.getAdvancedMode() == "2") { // debug
+     Page.catFeedbackMessage("["+eventObject.keyCode+"] ");
+  }
   Action.updateLineNumberDisplay();
 
   var eventCode = eventObject.keyCode;
   
   // Ignore 33=pgup 34=pgdn 35=end 36=hom 37=lef 38=up 39=rt 40=dn
-  if(eventCode>=33 && eventCode <=40) return
+  if(eventCode>=33 && eventCode <=40) return;
 
   var target = eventObject.target.id;
   Action.umpleTypingActivity(target);
