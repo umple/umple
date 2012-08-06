@@ -18,6 +18,7 @@ Action.manualSync = false;
 Action.diagramInSync = true;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
+Action.savedCanonical = "";
 
 Action.clicked = function(event)
 {
@@ -413,12 +414,14 @@ Action.showCodeInSeparateWindow = function()
 {
   codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+  codeWindow.document.close();
 }
 
 Action.showEncodedURLCodeInSeparateWindow = function()
 {
   codeWindow = window.open("","UmpleCode","height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
   codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
+  codeWindow.document.close();
 }
 
 Action.simulateCode = function()
@@ -1373,6 +1376,62 @@ Action.umpleCodeMirrorTypingActivity = function() {
   }
 }
 
+Action.trimMultipleNonPrintingAndComments = function(text) {
+  text = Action.removeComments(text);
+  text = text.replace(/[^\x21-\x7E]+/g, ' '); // change non-printing chars to spaces
+  text= text.replace(/^\s+|\s+$/g, '');      // remove leading/trailing spaces
+  return text;
+}
+
+Action.removeComments = function(str) {
+   // From http://james.padolsey.com/javascript/javascript-comment-removal-revisted/
+ 
+    var uid = '_' + +new Date(),
+        primatives = [],
+        primIndex = 0;
+ 
+    return (
+        str
+        /* Remove strings */
+        .replace(/(['"])(\\\1|.)+?\1/g, function(match){
+            primatives[primIndex] = match;
+            return (uid + '') + primIndex++;
+        })
+ 
+        /* Remove Regexes */
+        .replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g, function(match, $1, $2){
+            primatives[primIndex] = $2;
+            return $1 + (uid + '') + primIndex++;
+        })
+ 
+        /*
+        - Remove single-line comments that contain would-be multi-line delimiters
+            E.g. // Comment /* <--
+        - Remove multi-line comments that contain would be single-line delimiters
+            E.g. /* // <-- 
+       */
+        .replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, ' ')
+ 
+        /*
+        Remove single and multi-line comments,
+        no consideration of inner-contents
+       */
+        .replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, ' ')
+ 
+        /*
+        Remove multi-line comments that have a replaced ending (string/regex)
+        Greedy, so no inner strings/regexes will stop it.
+       */
+        .replace(RegExp('\\/\\*[\\s\\S]+' + uid + '\\d+', 'g'), ' ')
+ 
+        /* Bring back strings & regexes */
+        .replace(RegExp(uid + '(\\d+)', 'g'), function(match, n){
+            return primatives[n];
+        })
+    );
+ 
+}
+
 Action.umpleTypingActivity = function(target) {
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -1390,13 +1449,14 @@ Action.umpleTypingActivity = function(target) {
 
 Action.processTyping = function(target, manuallySynchronized)
 {
+  // Save in history after a pause in typing
   History.save(Page.getUmpleCode(), "processTyping");
   if (!Action.manualSync || manuallySynchronized)
   {
     if (target == "umpleModelEditor" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
     }
-    else Action.updateUmpleDiagram();
+    else Action.updateUmpleDiagramForce(false);
     Action.diagramInSync = true;
     Page.enablePaletteItem("buttonSyncDiagram", false);
     Page.enableDiagram(true);
@@ -1424,11 +1484,25 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagram();
+  Action.updateUmpleDiagramForce(false);
 }
 
-Action.updateUmpleDiagram = function()
+Action.updateUmpleDiagram = function() {
+ return Action.updateUmpleDiagramForce(true)
+}
+
+Action.updateUmpleDiagramForce = function(forceUpdate)
 {
+  var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
+  if(!forceUpdate) {
+    if(canonical == Action.savedCanonical)   
+    {
+      // The umple code is as we last sent to the diagram, except for comment
+      // changes, spaces, tabs and newlines, so we return without doing anything
+      return;
+    }
+  }
+  Action.savedCanonical=canonical;
   Page.showCanvasLoading();
   Action.ajax(Action.updateUmpleDiagramCallback,"language=Json");
 }
