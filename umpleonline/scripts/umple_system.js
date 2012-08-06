@@ -121,7 +121,7 @@ UmpleSystem.addClass = function(umpleClass)
           containment:'parent', 
           stop:function(event,ui){Action.classMoved(event.target)}
       });
-      classObj.resizable
+ /*     classObj.resizable
       ({
           minHeight:UmpleClassFactory.defaultSize.height, 
           minWidth:UmpleClassFactory.defaultSize.width, 
@@ -129,7 +129,7 @@ UmpleSystem.addClass = function(umpleClass)
           containment:'parent',
           resize:function(event,ui){Action.classResizing(event,ui);},
           stop:function(event,ui){Action.classResized(event,ui);}
-      });
+      }); */
     }
     
     // remove the jquery resizable handle
@@ -268,7 +268,7 @@ UmpleSystem.updateClass = function(umpleClass)
     UmpleSystem.redraw(umpleClass);    
   }  
   
-  classObj.resizable("destroy");
+/*  classObj.resizable("destroy");
   classObj.resizable
   ({
     minHeight:UmpleClassFactory.defaultSize.height, 
@@ -277,7 +277,7 @@ UmpleSystem.updateClass = function(umpleClass)
     containment:'parent',
     resize:function(event,ui){Action.classResizing(event,ui);},
     stop:function(event,ui){Action.classResized(event,ui);}
-  });
+  }); */
   
   //remove the jquery resizable handle
   jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
