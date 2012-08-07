@@ -1611,6 +1611,7 @@ Action.classMoved = function(targetClass)
   UmpleSystem.trimOverlappingAssociations(umpleClassMoved);
 }
 
+// This function is no longer being called as its caller has been commented out
 Action.classResizing = function(event, ui)
 {
   var classId = event.target.id;
@@ -1623,6 +1624,7 @@ Action.classResizing = function(event, ui)
   UmpleSystem.updatingSize(umpleClass,newWidth,newHeight);
 }
 
+// This function is no longer being called as its caller has been commented out
 Action.classResized = function(event, ui)
 {
   var classDiv = event.target;
@@ -1805,6 +1807,8 @@ Action.classNameChanged = function(diagramId,oldName,newName)
   else
   {
     var umpleClass = UmpleSystem.renameClass(diagramId,oldName,newName);
+    // Reset height and width to minimum - TRYING
+    umpleClass.position.width = UmpleClassFactory.defaultSize.width;
 
     var editClass = Json.toString(umpleClass);
     delete umpleClass.oldname;
@@ -1874,6 +1878,18 @@ Action.attributeDelete = function(diagramId,index)
 {
   var umpleClass = UmpleSystem.find(diagramId);
   umpleClass.removeAttribute(index);
+  // Reset height and width to sensible values
+  var classObj = jQuery("#" + umpleClass.id);
+//  umpleClass.position.height = Math.round(classObj.height());
+//  umpleClass.position.width = Math.round(classObj.width());
+
+  umpleClass.position.height = 28+17*umpleClass.attributes.size();
+// This needs fixing so it picks up the correct width
+// Look trimOverlap, which seems to know the correct width
+  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
+
+//  umpleClass.position.height = UmpleClassFactory.defaultSize.height;
+//  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
@@ -1881,6 +1897,8 @@ Action.attributeDelete = function(diagramId,index)
 
   umpleClass.resetAttribute(index);
   UmpleSystem.updateClass(umpleClass);
+  UmpleSystem.redrawGeneralizationsTo(umpleClass);    
+  UmpleSystem.trimOverlappingAssociations(umpleClass);
 }
 
 InlineEditor.elementChanged = function(obj, oldVal, newVal)

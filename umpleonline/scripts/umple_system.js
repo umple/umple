@@ -249,9 +249,11 @@ UmpleSystem.updateClass = function(umpleClass)
   canvas.append(generalizationDiv);
   
   UmpleSystem.redraw(umpleClass);
+
   
   var buffer = 2;
   var isDirty = false;
+  
   if (classObj.width() > umpleClass.position.width + buffer)
   {
     umpleClass.position.width = classObj.width();
@@ -348,7 +350,8 @@ UmpleSystem.redraw = function(umpleClass)
   
   if (!Page.isPhotoReady())
   {
-    UmpleSystem.updateAnchor(umpleClass,0);
+    // The following can be deleted
+/*    UmpleSystem.updateAnchor(umpleClass,0);
     UmpleSystem.updateAnchor(umpleClass,1);
     UmpleSystem.updateAnchor(umpleClass,2);
     UmpleSystem.updateAnchor(umpleClass,3);
@@ -356,7 +359,7 @@ UmpleSystem.redraw = function(umpleClass)
     UmpleSystem.updateAnchor(umpleClass,5);
     UmpleSystem.updateAnchor(umpleClass,6);
     UmpleSystem.updateAnchor(umpleClass,7);
-    
+*/    
     var generalizationDiv = jQuery(generalizationSel).get();
     if(generalizationDiv != undefined)
     {
@@ -404,6 +407,7 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
   }
 }
 
+// The following can be deleted
 UmpleSystem.updateAnchor = function(umpleClass,index)
 {
   var classSel = "#" + umpleClass.id;
