@@ -1,0 +1,120 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.registerVoter;
+
+class RegisterVoterController
+{
+  singleton;
+  
+  depend view.registerVoter.RegisterVoterView;
+  depend service.VoterService;
+  depend shared.domain.Voter;
+  depend usecase.startup.Controller;
+  depend shared.Result;
+    
+  lazy internal RegisterVoterView registerVoterView;
+  lazy internal String voterName;
+  lazy internal String voterAddress;
+  lazy internal String voterTelephone;
+  lazy internal Boolean voterFound;
+    
+  VoterRegistrationSteps {
+    Initial
+    {
+      registerVoter -> RegisterVoterViewShown;
+    }
+    RegisterVoterViewShown
+    {
+      entry / {showRegisterVoterView();}
+      addButtonClicked -> CheckingVoterData;
+      closeView -> ClosingView;
+    }
+    CheckingVoterData
+    {
+      entry / {checkVoterData();}
+      [voterName.trim().isEmpty()] -> VoterNameEmpty;
+      [voterAddress.trim().isEmpty()] -> VoterAddressEmpty;
+      [voterTelephone.trim().isEmpty()] -> VoterTelephoneEmpty;
+      -> CheckingExistingVoter;
+    }
+    CheckingExistingVoter
+    {
+      entry / {VoterService.getInstance().setVoterNameToSearch(voterName);
+          voterFound=VoterService.getInstance().getVoterFound();}
+      [!voterFound] -> AddingVoter;
+      [voterFound] -> VoterExists;
+    }
+    AddingVoter
+    {
+      entry / {tryToAddVoter();}
+      [VoterService.getInstance().getVoterAdded()] -> VoterAdded;
+      [VoterService.getInstance().getVoterAdded()] -> VoterNotAdded;
+    }
+    VoterAdded
+    {
+      entry / {Result.getInstance().setMessage("Voter Added Successfully!");/*JOptionPane.showMessageDialog(null, "Voter Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE)*/;
+               Controller.getInstance().start();}
+      -> Initial;
+    }
+    VoterNotAdded
+    {
+      entry / {Result.getInstance().setMessage("Adding Voter Failed!");/*JOptionPane.showMessageDialog(null, "Adding Voter Failed!", "Error!", JOptionPane.ERROR_MESSAGE);*/
+               Controller.getInstance().start();}
+      -> Initial;
+    }
+    VoterExists
+    {
+      entry / {Result.getInstance().setMessage("Voter Exists!");/*JOptionPane.showMessageDialog(null, "Voter Exists!", "Error!", JOptionPane.ERROR_MESSAGE);*/
+          Controller.getInstance().start();
+          registerVoterView.dispose();}
+      -> Initial;
+    }
+    VoterNameEmpty
+    {
+      entry / {Result.getInstance().setMessage("Voter name cannot be empty!");/*JOptionPane.showMessageDialog(null, "Voter name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);*/}
+      addButtonClicked -> CheckingVoterData;
+      closeView -> ClosingView;
+    }
+    VoterAddressEmpty
+    {
+      entry / {Result.getInstance().setMessage("Voter address cannot be empty!");/*JOptionPane.showMessageDialog(null, "Voter address cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);*/}
+      addButtonClicked -> CheckingVoterData;
+      closeView -> ClosingView;
+    }
+    VoterTelephoneEmpty
+    {
+      entry / {Result.getInstance().setMessage("Voter tel cannot be empty!");/*JOptionPane.showMessageDialog(null, "Voter telephone cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);*/}
+      addButtonClicked -> CheckingVoterData;
+      closeView -> ClosingView;
+    }
+    ClosingView
+    {
+      entry / {registerVoterView.dispose();}
+      -> Initial;
+    }
+  }
+   
+  private void showRegisterVoterView() {
+    registerVoterView=new RegisterVoterView();
+    registerVoterView.setVisible(true);
+  }
+  
+  private void checkVoterData() {
+    voterName=registerVoterView.getVoterName();
+    voterAddress=registerVoterView.getVoterAddress();
+    voterTelephone=registerVoterView.getVoterTelephone();
+  }
+  
+  private void tryToAddVoter() {
+    Voter voter=new Voter(-1, voterName, voterAddress, voterTelephone);
+    VoterService.getInstance().setNewVoter(voter);
+    registerVoterView.dispose();
+  }
+}

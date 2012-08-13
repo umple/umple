@@ -1,0 +1,68 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Sql;
+
+namespace elections;
+
+class Election {
+  autounique idElection;
+  String name;
+  String description;
+  Date date;
+  key {idElection}
+}
+
+class Position {
+  autounique idPosition;
+  String name;
+  String description;
+  key {idPosition}
+}
+
+class Candidate {
+  autounique idCandidate;
+  String name;
+  String address;
+  String telephone;
+  key {idCandidate}
+}
+
+class ElectionForPosition {
+  autounique idElectionForPosition;
+  * -- 1 Election;
+  * -- 1 Position;
+  key {idElectionForPosition}
+}
+
+class Candidature {
+  autounique idCandidature;
+  * -- 1 Candidate;
+  * -- 1 ElectionForPosition;
+  key {idCandidature}
+}
+
+class Poll {
+  autounique idPoll;
+  Integer number;
+  String name;
+  String description;
+  String status="planned";
+  * -- 1 Election;
+  
+  key {idPoll}
+}
+
+class Voter {
+  autounique idVoter;
+  String name;
+  String address;
+  String telephone;
+  key {idVoter}
+}

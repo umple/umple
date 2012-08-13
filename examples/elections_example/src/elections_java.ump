@@ -1,0 +1,17 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Java "../elections_java_executable/src" --override;
+
+use java/usecases.ump;
+use shared/domain.ump;
+use java/services.ump;
+use java/view.ump;
+use shared/shared.ump;
+use java/domainCodes.ump;

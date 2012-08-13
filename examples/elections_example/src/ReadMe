@@ -1,0 +1,13 @@
+This directory contains Umple files for the Elections system case study.
+
+files:
+----------------------------------------------------------------
+elections_java.ump: is the master file to create the Java version
+elections_php.ump: is the master file to create the Php version
+elections_sql.ump: contains the definition of the domain objects; this generates the SQL query to create the required database
+
+directories:
+----------------------------------------------------------------
+java: contains the Umple files needed to create the Java version of the Elections system
+php: contains the Umple files needed to create the Php version of the Elctions system
+shared: contains the Umple files used to create shared classes of both version. These are domain objects and a special class containing constants required to connect to database.

@@ -1,0 +1,87 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace view.registerVoter;
+
+external JFrame{}
+
+class RegisterVoterView {
+  isA JFrame;
+
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+  depend javax.swing.JTextField;
+  depend javax.swing.JTextArea;
+  depend javax.swing.JButton;
+  depend shared.listeners.GenericMouseListener;
+  depend shared.listeners.GenericWindowListener;
+  depend view.ViewUtils;
+
+  lazy internal JLabel voterNameLabel;
+  lazy internal JLabel voterAddressLabel;
+  lazy internal JLabel voterTelephoneLabel;
+  lazy internal JTextField voterNameTextField;
+  lazy internal JTextField voterTelephoneTextField;
+  lazy internal JTextArea voterAddressTextArea;
+  lazy internal JButton registerVoterButton;
+  
+  lazy String voterName;
+  lazy String voterAddress;
+  lazy String voterTelephone;
+  
+  before getVoterName {
+    voterName=voterNameTextField.getText();
+  }
+  
+  before getVoterTelephone {
+    voterTelephone=voterTelephoneTextField.getText();
+  }
+  
+  before getVoterAddress {
+    voterAddress=voterAddressTextArea.getText();
+  }
+  
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    voterNameLabel=new JLabel("Voter Name:");
+    voterNameLabel.setBounds(10, 10, 200, 20);
+    add(voterNameLabel);
+    
+    voterNameTextField=new JTextField();
+    voterNameTextField.setBounds(10, 30, 200, 20);
+    add(voterNameTextField);
+    
+    voterTelephoneLabel=new JLabel("Voter Telephone:");
+    voterTelephoneLabel.setBounds(10, 50, 200, 20);
+    add(voterTelephoneLabel);
+    
+    voterTelephoneTextField=new JTextField();
+    voterTelephoneTextField.setBounds(10, 70, 200, 20);
+    add(voterTelephoneTextField);
+    
+    voterAddressLabel=new JLabel("Add an address:");
+    voterAddressLabel.setBounds(10, 90, 200, 20);
+    add(voterAddressLabel);
+    
+    voterAddressTextArea=new JTextArea();
+    voterAddressTextArea.setBounds(10, 110, 200, 60);
+    add(voterAddressTextArea);
+    
+    registerVoterButton=new JButton("register");
+    registerVoterButton.setBounds(50, 175, 125, 20);
+    registerVoterButton.addMouseListener(GenericMouseListener.RegisterVoterViewMouseListener);
+    add(registerVoterButton);
+    
+    pack();
+    setSize(250, 250);
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.RegisterVoterViewWindowListener);
+  }
+}

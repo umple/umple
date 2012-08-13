@@ -1,0 +1,72 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace view.addElection;
+
+external JFrame{}
+
+class AddElectionView {
+  isA JFrame;
+
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+  depend javax.swing.JTextField;
+  depend javax.swing.JTextArea;
+  depend javax.swing.JButton;
+  depend shared.listeners.GenericMouseListener;
+  depend shared.listeners.GenericWindowListener;
+  depend view.ViewUtils;
+
+  lazy internal JLabel electionNameLabel;
+  lazy internal JLabel electionDescriptionLabel;
+  lazy internal JTextField electionNameTextField;
+  lazy internal JTextArea electionDescriptionTextArea;
+  lazy internal JButton addElectionButton;
+  
+  lazy String electionName;
+  lazy String electionDescription;
+  
+  before getElectionName {
+    electionName=electionNameTextField.getText();
+  }
+  
+  before getElectionDescription {
+    electionDescription=electionDescriptionTextArea.getText();
+  }
+  
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    electionNameLabel=new JLabel("Election Name:");
+    electionNameLabel.setBounds(10, 10, 200, 20);
+    add(electionNameLabel);
+    
+    electionNameTextField=new JTextField();
+    electionNameTextField.setBounds(10, 30, 200, 20);
+    add(electionNameTextField);
+    
+    electionDescriptionLabel=new JLabel("Add a description:");
+    electionDescriptionLabel.setBounds(10, 50, 200, 20);
+    add(electionDescriptionLabel);
+    
+    electionDescriptionTextArea=new JTextArea();
+    electionDescriptionTextArea.setBounds(10, 70, 200, 60);
+    add(electionDescriptionTextArea);
+    
+    addElectionButton=new JButton("add");
+    addElectionButton.setBounds(75, 135, 75, 20);
+    addElectionButton.addMouseListener(GenericMouseListener.AddElectionViewMouseListener);
+    add(addElectionButton);
+    
+    pack();
+    setSize(250, 200);
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.AddElectionViewWindowListener);
+  }
+}
