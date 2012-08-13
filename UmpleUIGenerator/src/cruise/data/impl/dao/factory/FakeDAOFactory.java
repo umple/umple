@@ -52,7 +52,7 @@ public class FakeDAOFactory implements IGenerator {
   protected final String TEXT_31 = "s=((";
   protected final String TEXT_32 = ")a";
   protected final String TEXT_33 = ").get";
-  protected final String TEXT_34 = "s();" + NL + "\t\tfor(";
+  protected final String TEXT_34 = "();" + NL + "\t\tfor(";
   protected final String TEXT_35 = "  a";
   protected final String TEXT_36 = " : ";
   protected final String TEXT_37 = "s)" + NL + "    \t{   " + NL + "\t\t\tDAOUtils.getDAOByInstance(a";
@@ -75,14 +75,14 @@ public class FakeDAOFactory implements IGenerator {
   protected final String TEXT_54 = "s=((";
   protected final String TEXT_55 = ")a";
   protected final String TEXT_56 = ").get";
-  protected final String TEXT_57 = "s();" + NL + "\t\tfor(";
+  protected final String TEXT_57 = "();" + NL + "\t\tfor(";
   protected final String TEXT_58 = "  a";
   protected final String TEXT_59 = " : ";
   protected final String TEXT_60 = "s)" + NL + "    \t{  " + NL + "    \tif (a";
   protected final String TEXT_61 = ".numberOf";
-  protected final String TEXT_62 = "s()-1 < ";
+  protected final String TEXT_62 = "()-1 < ";
   protected final String TEXT_63 = ".minimumNumberOf";
-  protected final String TEXT_64 = "s())" + NL + "    \t\tDAOUtils.getDAOByInstance(a";
+  protected final String TEXT_64 = "())" + NL + "    \t\tDAOUtils.getDAOByInstance(a";
   protected final String TEXT_65 = ").cascadeDelete(a";
   protected final String TEXT_66 = ");" + NL + "    \t}";
   protected final String TEXT_67 = NL + "\t   \t";

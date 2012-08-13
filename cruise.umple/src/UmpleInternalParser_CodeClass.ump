@@ -405,6 +405,10 @@ class UmpleInternalParser
   {
     UmpleInterface anInterface = analyzeInterface(externalToken);
     anInterface.setModifier("external");
+    
+    ErrorType et=new ErrorType();
+    getParseResult().addErrorMessage();
+    
     return anInterface;
   }
 
