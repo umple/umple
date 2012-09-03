@@ -87,3 +87,47 @@ class StationCoordinator
   identification;
   Boolean police; // false for fire
 }
+
+// Classes defined elsewhere
+
+class RoadSegment {}
+class Route{}
+
+//$?[End_of_model]$?
+
+class RoadSegment
+{
+  position 375 126 109 45;
+}
+
+class StationCoordinator
+{
+  position 328 16 152 78;
+}
+
+class Crisis
+{
+  position 371 411 191 111;
+  position.association Crisis__Route:proposedFireRoute 40,0 90,45;
+  position.association Crisis__RoadSegment:blockedOrCongestedSegments 186,0 103,39;
+  position.association Crisis__Vehicle:assignedPoliceVehicles 84,123 217,112;
+  position.association Crisis__Vehicle:assignedFireVehicles 0,107 217,53;
+  position.association Crisis__Route:disagreedRoutes 175,0 110,8;
+  position.association Crisis__Route:proposedPoliceRoute 134,0 110,43;
+}
+
+class CrisisManagementSystem
+{
+  position 11 15 161 45;
+}
+
+class Vehicle
+{
+  position 16 497 209 145;
+  position.association Route:routePlan__Vehicle 14,0 0,18;
+}
+
+class Route
+{
+  position 98 211 109 45;
+}
