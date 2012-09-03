@@ -27,6 +27,7 @@
 1500 : 1, http://umple.org/E15xxParsingError.html, Parsing error: '{0}' not understood; 
 1501 : 1, http://umple.org/E15xxParsingError.html, Parsing error: Arguments to '{0}' not understood; 
 1502 : 1, http://umple.org/E15xxParsingError.html, Parsing error: Structure of '{0}' invalid; 
+1510 : 1, http://umple.org/E1510UseFileMissing.html, File '{0}' referred to in use statement was not found; 
 2001: 4, http://umple.org/W20xxErrorinEmbeddedCode.html, Error in Java embedded in Umple: '{0}' ;
 2002: 4, http://umple.org/W20xxErrorinEmbeddedCode.html, Error in C++ embedded in Umple: '{0}' ;
 9999: 5, http://umple.org/W9999FeatureUnderDevelopment.html, Feature under development. '{0}' found and ignored. processed as: '{1}' ;
