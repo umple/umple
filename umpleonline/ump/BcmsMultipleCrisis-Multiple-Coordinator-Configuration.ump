@@ -1,0 +1,22 @@
+/* BcmsMultiCrisisMultiCoordConfiguration.ump
+ *
+ * Master file to build a version of
+ * bCMS that has just many crises and
+ * coordinators 
+ * This file requires the referenced
+ * files to be present in the same directory.
+ */
+use RoutesAndLocations.ump;
+use CoordinationStateMachine.ump
+use BcmsCore.ump;
+
+class CrisisManagementSystem {
+  1 -> * Crisis;
+  1 -> 2..* StationCoordinator;
+}
+
+class StationCoordinator {
+  // Mixin to allow specification that one
+  // is the lead
+  Boolean lead;
+}

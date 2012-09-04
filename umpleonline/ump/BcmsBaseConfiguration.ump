@@ -1,0 +1,19 @@
+/* BcmsBaseConfiguration.ump
+ *
+ *
+ * Master file to build the base version of
+ * bCMS that has just one crisis and one
+ * police coordinator and one fire coordinator. 
+ * This file requires the referenced
+ * files to be present in the same directory.
+ */
+use RoutesAndLocations.ump;
+
+namespace bcms;
+use CoordinationStateMachine.ump;
+use BcmsCore.ump;
+
+class CrisisManagementSystem {
+  1 -> 0..1 Crisis;
+  1 -> 2 StationCoordinator;
+}
