@@ -131,6 +131,45 @@
 				fragmentAsignation="InternalAsignation"
 	 />	
 	
+		<Fragment   modifier="*" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="SetteableFloatGet" 
+				fragmentDeclaration="SetteableFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation"
+				fragmentCopy="FloatCopy"
+				fragmentReverseCopy="FloatReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="SetteableFloatGet" 
+				fragmentDeclaration="SetteableFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="SetteableFloatGet" 
+				fragmentDeclaration="SetteableFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation" />	
+				
+	<Fragment   modifier="defaulted" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="DefaultedFloatGet" 
+				fragmentDeclaration="DefaultedFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation"
+				fragmentCopy="FloatCopy"
+				fragmentReverseCopy="FloatReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Float" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />	
 	
 		<Fragment   modifier="*" 
 				type="Boolean" 
@@ -257,4 +296,44 @@
 				fragmentAsignation="InternalTimeAsignation"
 	 />
 																	
+		<Fragment   modifier="*" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="SetteableCharacterGet" 
+				fragmentDeclaration="SetteableCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation"
+				fragmentCopy="CharacterCopy"
+				fragmentReverseCopy="CharacterReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="SetteableCharacterGet" 
+				fragmentDeclaration="SetteableCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="SetteableCharacterGet" 
+				fragmentDeclaration="SetteableCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation" />	
+				
+	<Fragment   modifier="defaulted" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="DefaultedCharacterGet" 
+				fragmentDeclaration="DefaultedCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation"
+				fragmentCopy="CharacterCopy"
+				fragmentReverseCopy="CharacterReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Character" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />
+	 	
 </FragmentProvider>

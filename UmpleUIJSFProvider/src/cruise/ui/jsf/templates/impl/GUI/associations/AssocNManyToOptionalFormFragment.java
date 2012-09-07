@@ -34,7 +34,7 @@ public class AssocNManyToOptionalFormFragment
   protected final String TEXT_15 = NL + "\t\t\t\t\t\t\t" + NL + "\t\t<rich:column>\t" + NL + "\t\t\t<f:facet name=\"header\">Type</f:facet>" + NL + "\t\t\t<h:outputText value=\"#{reg.class.name}\" >" + NL + "\t\t\t</h:outputText>" + NL + "" + NL + "\t\t</rich:column>\t\t\t" + NL + "\t\t<f:facet name=\"footer\">" + NL + "\t\t\t<rich:datascroller renderIfSinglePage=\"false\" />" + NL + "" + NL + "\t\t</f:facet>" + NL + "\t</rich:dataTable>" + NL + "\t</rich:simpleTogglePanel>" + NL + "\t\t<a4j:commandLink value=\"\" reRender=\"";
   protected final String TEXT_16 = "PanelRichPanel#{uniqueId}\"" + NL + "\t\t\timmediate=\"true\" " + NL + "\t\t\taction=\"#{";
   protected final String TEXT_17 = "Bean.to";
-  protected final String TEXT_18 = "s}\"" + NL + "\t\t\toncomplete=\"Richfaces.showModalPanel('";
+  protected final String TEXT_18 = "}\"" + NL + "\t\t\toncomplete=\"Richfaces.showModalPanel('";
   protected final String TEXT_19 = "GridPanel#{uniqueId}');\">" + NL + "\t\t\t<h:outputText value=\"Manage\" />" + NL + "\t\t</a4j:commandLink>" + NL + "\t\t\t\t\t</h:panelGrid>\t\t\t\t" + NL + "\t\t\t";
 
   public String generate(Object argument)

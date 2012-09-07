@@ -50,6 +50,7 @@
 	<Fragment modifier="defaulted" type="Double" fragmentCreate="DefaultedDoubleCreate"
 		fragmentEdit="DefaultedDoubleEdit" fragmentGrid="GridSetteableDouble" />
 
+
 	<Fragment modifier="immutable" type="Boolean" fragmentCreate="SetteableBooleanCreate"
 		fragmentEdit="ImmutableEditBoolean" fragmentGrid="GridSetteableBoolean" />
 
@@ -64,6 +65,23 @@
 
 	<Fragment modifier="defaulted" type="Boolean" fragmentCreate="DefaultedBooleanCreate"
 		fragmentEdit="DefaultedBooleanEdit" fragmentGrid="GridSetteableBoolean" />
+
+	<Fragment modifier="immutable" type="Float" fragmentCreate="SetteableFloatCreate"
+		fragmentEdit="ImmutableEditFloat" fragmentGrid="GridSetteableFloat" />
+
+
+	<Fragment modifier="key" type="Float" fragmentCreate="SetteableFloatCreate"
+		fragmentEdit="ImmutableEditFloat" fragmentGrid="GridSetteableFloat" />
+
+
+	<Fragment modifier="*" type="Float" fragmentCreate="SetteableFloatCreate"
+		fragmentEdit="SetteableFloat" fragmentGrid="GridSetteableFloat" />
+
+	<Fragment modifier="internal" type="Float" fragmentCreate="InternalFloatCreate"
+		fragmentEdit="InternalString" fragmentGrid="InternalString" />
+
+	<Fragment modifier="defaulted" type="Float" fragmentCreate="DefaultedFloatCreate"
+		fragmentEdit="DefaultedFloatEdit" fragmentGrid="GridSetteableFloat" />
 
 	<Fragment modifier="immutable" type="Date" fragmentCreate="SetteableDateCreate"
 		fragmentEdit="ImmutableEditDate" fragmentGrid="GridSetteableDate" />
@@ -96,5 +114,21 @@
 		fragmentEdit="DefaultedTimeEdit" fragmentGrid="GridSetteableTime" />
 
 
+	<Fragment modifier="immutable" type="Character" fragmentCreate="SetteableCharacterCreate"
+		fragmentEdit="ImmutableEditCharacter" fragmentGrid="GridSetteableCharacter" />
+
+
+	<Fragment modifier="key" type="Character" fragmentCreate="SetteableCharacterCreate"
+		fragmentEdit="ImmutableEditCharacter" fragmentGrid="GridSetteableCharacter" />
+
+
+	<Fragment modifier="*" type="Character" fragmentCreate="SetteableCharacterCreate"
+		fragmentEdit="SetteableCharacter" fragmentGrid="GridSetteableCharacter" />
+
+	<Fragment modifier="internal" type="Character" fragmentCreate="InternalCharacterCreate"
+		fragmentEdit="InternalString" fragmentGrid="InternalString" />
+
+	<Fragment modifier="defaulted" type="Character" fragmentCreate="DefaultedCharacterCreate"
+		fragmentEdit="DefaultedCharacterEdit" fragmentGrid="GridSetteableCharacter" />
 
 </GUIFragmentProvider>

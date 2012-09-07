@@ -33,7 +33,7 @@ public class AssocZeroOrOneFormFragment
   protected final String TEXT_14 = "Bean.from";
   protected final String TEXT_15 = "}\" immediate=\"true\" " + NL + "\t\t\t\t\t\t\taction=\"#{";
   protected final String TEXT_16 = "Bean.to";
-  protected final String TEXT_17 = "s}\"" + NL + "\t\t\t\t\t\t\toncomplete=\"Richfaces.showModalPanel('";
+  protected final String TEXT_17 = "}\"" + NL + "\t\t\t\t\t\t\toncomplete=\"Richfaces.showModalPanel('";
   protected final String TEXT_18 = "GridPanel#{uniqueId}');\">" + NL + "\t\t\t\t\t\t\t<h:outputText value=\"Select\" />" + NL + "\t\t\t\t\t\t</a4j:commandLink>" + NL + "\t\t\t\t\t</h:panelGrid>\t\t\t\t" + NL + "\t\t\t";
 
   public String generate(Object argument)

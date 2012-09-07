@@ -117,7 +117,7 @@ public class KeyClass implements IGenerator {
     stringBuffer.append(TEXT_19);
      for (Attribute att: keyClasses) { 
     stringBuffer.append(TEXT_20);
-     if ("int".equals(att.getType())|| "double".equals(att.getType()) || "boolean".equals(att.getType()) ) { 
+     if ("int".equals(att.getType())|| "double".equals(att.getType()) || "float".equals(att.getType()) || "boolean".equals(att.getType()) ) { 
     stringBuffer.append(TEXT_21);
     stringBuffer.append("a"+ att.getUpperCaseName());
     stringBuffer.append(TEXT_22);
@@ -141,7 +141,7 @@ public class KeyClass implements IGenerator {
     stringBuffer.append(TEXT_31);
      for (Attribute att: keyClasses) { 
     stringBuffer.append(TEXT_32);
-     if ("int".equals(att.getType())|| "double".equals(att.getType()) || "boolean".equals(att.getType()) ) { 
+     if ("int".equals(att.getType())|| "double".equals(att.getType()) || "float".equals(att.getType()) || "boolean".equals(att.getType()) ) { 
     stringBuffer.append(TEXT_33);
     stringBuffer.append("a"+ att.getUpperCaseName());
     stringBuffer.append(TEXT_34);

@@ -284,7 +284,10 @@ function showUserInterface($filename)
 	
 	$tempDir=dirname($filename);
 	$umpDir=dirname($tempDir);
-	mkdir("$tempDir/files");
+	if (file_exists("$tempDir/files"))
+      emptyDir("$tempDir/files");
+	else
+	  mkdir("$tempDir/files");
 	rcopy("JSFProvider/files", "$tempDir/files");
 	copy("JSFProvider/build.xml", "$tempDir/build.xml");
 

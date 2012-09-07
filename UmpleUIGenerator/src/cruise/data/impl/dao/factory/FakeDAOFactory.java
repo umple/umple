@@ -180,7 +180,7 @@ ArrayList<BackingObject> clazzez =(ArrayList<BackingObject>)argument;
     stringBuffer.append(TEXT_27);
      for (AssociationVariable assocVar: uClazz.getAssociationVariables()) { 
     stringBuffer.append(TEXT_28);
-     if (assocVar.getRelatedAssociation().isOnlyOne() && assocVar.isMany()) {		
+     if (assocVar.getRelatedAssociation().isOnlyOne() && assocVar.isIsNavigable() && assocVar.isMany()) {		
     stringBuffer.append(TEXT_29);
     stringBuffer.append(assocVar.getType());
     stringBuffer.append(TEXT_30);
@@ -204,7 +204,7 @@ ArrayList<BackingObject> clazzez =(ArrayList<BackingObject>)argument;
     stringBuffer.append(TEXT_39);
     }
     stringBuffer.append(TEXT_40);
-     if (assocVar.getRelatedAssociation().isOnlyOne() && assocVar.isOne()) {		
+     if (assocVar.getRelatedAssociation().isOnlyOne() && assocVar.isIsNavigable() && assocVar.isOne()) {		
     stringBuffer.append(TEXT_41);
     stringBuffer.append(clazz.getClassName());
     stringBuffer.append(TEXT_42);
@@ -226,7 +226,7 @@ ArrayList<BackingObject> clazzez =(ArrayList<BackingObject>)argument;
     stringBuffer.append(TEXT_50);
     }
     stringBuffer.append(TEXT_51);
-     if ((assocVar.getRelatedAssociation().isN() || assocVar.getRelatedAssociation().isMN()) && assocVar.isMany()) {		
+     if ((assocVar.getRelatedAssociation().isN() || assocVar.getRelatedAssociation().isMN()) && assocVar.isIsNavigable() && assocVar.isMany()) {		
     stringBuffer.append(TEXT_52);
     stringBuffer.append(assocVar.getType());
     stringBuffer.append(TEXT_53);
