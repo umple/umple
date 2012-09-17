@@ -24,6 +24,16 @@ using namespace example.three;
     }
     courses = new vector<Course*>();
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Student::Student(const Student & student)
+  {
+    this->number = student.number
+  }
+
 
   //------------------------
   // INTERFACE

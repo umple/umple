@@ -20,6 +20,16 @@ namespace example{
     howLongUntilOk = 3;
     setStatus(Status.Ok);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Mentor::Mentor(const Mentor & mentor)
+  {
+    this->howLongUntilOk = mentor.howLongUntilOk
+  }
+
 
   //------------------------
   // INTERFACE

@@ -18,6 +18,14 @@ namespace example{
   {
     setGrade(Grade.Pass);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Student::Student(const Student & student)
+  {  }
+
 
   //------------------------
   // INTERFACE

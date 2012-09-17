@@ -12,6 +12,14 @@ namespace example{
   
  Something::Something()
   {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Something::Something(const Something & something)
+  {  }
+
 
   //------------------------
   // INTERFACE

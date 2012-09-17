@@ -18,6 +18,14 @@ namespace example{
   {
     setStatus(Status.Ok);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Mentor::Mentor(const Mentor & mentor)
+  {  }
+
 
   //------------------------
   // INTERFACE

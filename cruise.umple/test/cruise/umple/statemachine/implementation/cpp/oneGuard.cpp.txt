@@ -19,6 +19,16 @@ namespace example{
     brightness = 0;
     setBulb(Bulb.On);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {
+    this->brightness = lightfixture.brightness
+  }
+
 
   //------------------------
   // INTERFACE

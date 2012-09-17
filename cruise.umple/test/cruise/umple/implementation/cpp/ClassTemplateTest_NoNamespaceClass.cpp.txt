@@ -12,6 +12,14 @@
   
  Token::Token()
   {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Token::Token(const Token & token)
+  {  }
+
 
   //------------------------
   // INTERFACE

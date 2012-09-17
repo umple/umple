@@ -18,6 +18,14 @@ namespace example{
   {
     setStatus(Status.On);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Light::Light(const Light & light)
+  {  }
+
 
   //------------------------
   // INTERFACE

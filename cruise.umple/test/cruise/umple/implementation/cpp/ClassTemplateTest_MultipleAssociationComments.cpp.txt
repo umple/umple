@@ -18,6 +18,14 @@
     bar3s = new vector<Bar3*>();
     bar4s = new vector<Bar4*>();
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Foo::Foo(const Foo & foo)
+  {  }
+
 
   //------------------------
   // INTERFACE

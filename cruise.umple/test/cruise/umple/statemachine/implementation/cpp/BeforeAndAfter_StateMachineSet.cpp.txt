@@ -18,6 +18,14 @@ namespace example{
   {
     setLight(Light.On);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {  }
+
 
   //------------------------
   // INTERFACE

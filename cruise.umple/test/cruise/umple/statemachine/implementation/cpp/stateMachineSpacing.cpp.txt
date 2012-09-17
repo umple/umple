@@ -18,6 +18,14 @@ namespace example{
   {
     setGarageDoor(GarageDoor.Closed);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Garage::Garage(const Garage & garage)
+  {  }
+
 
   //------------------------
   // INTERFACE

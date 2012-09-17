@@ -5,7 +5,7 @@
 
    
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName());
+    append(stringBuffer, "class {0};",av.getRelatedAssociation().getUmpleClass().getName());
     }
   
 %>

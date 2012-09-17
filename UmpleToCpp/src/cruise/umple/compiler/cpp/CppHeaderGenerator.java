@@ -465,7 +465,7 @@ public class CppHeaderGenerator implements ILang
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include <{0}>;",depend.getName());
+    append(stringBuffer, "#include <{0}.h>;",depend.getName());
   }
   
   for (String anImport : gClass.getMultiLookup("import"))
@@ -486,7 +486,7 @@ public class CppHeaderGenerator implements ILang
 
    
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName());
+    append(stringBuffer, "class {0};",av.getRelatedAssociation().getUmpleClass().getName());
     }
   
 

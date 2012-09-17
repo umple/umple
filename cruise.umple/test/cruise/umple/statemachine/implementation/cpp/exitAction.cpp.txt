@@ -18,6 +18,14 @@ namespace example{
   {
     setBulb(Bulb.On);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {  }
+
 
   //------------------------
   // INTERFACE

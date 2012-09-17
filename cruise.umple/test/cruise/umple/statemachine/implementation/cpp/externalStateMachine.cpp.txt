@@ -18,6 +18,14 @@ namespace example{
   {
     setStatus(Status.Open);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Course::Course(const Course & course)
+  {  }
+
 
   //------------------------
   // INTERFACE

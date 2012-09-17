@@ -21,6 +21,14 @@ namespace example{
   {
     setStatus(Status.On);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Switch::Switch(const Switch & switch)
+  {  }
+
 
   //------------------------
   // INTERFACE

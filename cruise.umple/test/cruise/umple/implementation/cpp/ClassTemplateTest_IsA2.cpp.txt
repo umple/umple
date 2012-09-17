@@ -15,6 +15,16 @@ namespace example{
     SubMentor2(aName);
     subName = aSubName;
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ SubMentor2::SubMentor2(const SubMentor2 & submentor2)
+  {
+    this->subName = submentor2.subName
+  }
+
 
   //------------------------
   // INTERFACE

@@ -12,6 +12,14 @@ namespace example{
   
  CodeTranslator::CodeTranslator()
   {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ CodeTranslator::CodeTranslator(const CodeTranslator & codetranslator)
+  {  }
+
 
   //------------------------
   // INTERFACE

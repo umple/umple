@@ -17,6 +17,14 @@ on several lines
   
  Student::Student()
   {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Student::Student(const Student & student)
+  {  }
+
 
   //------------------------
   // INTERFACE

@@ -21,6 +21,14 @@ namespace example{
     }
     return theInstance;
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Application::Application(const Application & application)
+  {  }
+
 
   //------------------------
   // INTERFACE

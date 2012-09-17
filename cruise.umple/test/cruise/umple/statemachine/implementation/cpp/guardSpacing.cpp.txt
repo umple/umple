@@ -19,6 +19,16 @@ namespace example{
     entranceClear = aEntranceClear;
     setGarageDoor(GarageDoor.Open);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Garage::Garage(const Garage & garage)
+  {
+    this->entranceClear = garage.entranceClear
+  }
+
 
   //------------------------
   // INTERFACE

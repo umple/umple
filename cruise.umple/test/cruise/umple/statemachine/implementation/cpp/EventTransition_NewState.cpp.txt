@@ -18,6 +18,14 @@ namespace example{
   {
     setBulb(Bulb.Off);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Light::Light(const Light & light)
+  {  }
+
 
   //------------------------
   // INTERFACE

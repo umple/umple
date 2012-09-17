@@ -21,6 +21,14 @@ namespace example{
     setBulb(Bulb.Off);
     if (bulbOn == null) { setBulbOn(BulbOn.Null); }
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {  }
+
 
   //------------------------
   // INTERFACE

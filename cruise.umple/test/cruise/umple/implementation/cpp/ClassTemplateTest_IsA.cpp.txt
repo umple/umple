@@ -14,6 +14,14 @@ namespace example{
   {
     SubMentor(aName);
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ SubMentor::SubMentor(const SubMentor & submentor)
+  {  }
+
 
   //------------------------
   // INTERFACE

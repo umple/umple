@@ -16,6 +16,14 @@ using namespace example.two;
   {
     students = new vector<Student*>();
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Course::Course(const Course & course)
+  {  }
+
 
   //------------------------
   // INTERFACE

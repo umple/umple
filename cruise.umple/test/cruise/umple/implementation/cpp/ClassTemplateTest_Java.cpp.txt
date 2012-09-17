@@ -12,6 +12,14 @@ namespace example{
   
  Mentor::Mentor()
   {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Mentor::Mentor(const Mentor & mentor)
+  {  }
+
 
   //------------------------
   // INTERFACE

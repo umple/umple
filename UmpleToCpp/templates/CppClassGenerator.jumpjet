@@ -42,6 +42,12 @@
   //------------------------
   
   <%@ include file="constructor_Declare_All.jet" %>
+  
+ <% if (uClass.getAttributes() != null)
+	{
+		
+  		%><%@ include file="constructor_CopyConstructor.jet"%><%
+  	}%>
 
   //------------------------
   // INTERFACE

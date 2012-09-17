@@ -15,6 +15,14 @@
   {
     bars = new vector<Bar*>();
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Foo::Foo(const Foo & foo)
+  {  }
+
 
   //------------------------
   // INTERFACE

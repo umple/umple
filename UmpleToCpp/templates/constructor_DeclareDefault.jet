@@ -91,6 +91,8 @@
     }
   }
 
+	
+   
   for (Attribute av : uClass.getAttributes())
   {
     if (av.getIsAutounique())

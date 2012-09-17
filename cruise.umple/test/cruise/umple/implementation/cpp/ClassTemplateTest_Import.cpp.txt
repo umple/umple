@@ -15,6 +15,16 @@ using namespace example.two;
   {
     name = aName;
   }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Mentor::Mentor(const Mentor & mentor)
+  {
+    this->name = mentor.name
+  }
+
 
   //------------------------
   // INTERFACE
