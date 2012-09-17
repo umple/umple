@@ -22,7 +22,7 @@ using namespace example.two;
 
  Mentor::Mentor(const Mentor & mentor)
   {
-    this->name = mentor.name
+    this->name = mentor.name;
   }
 
 

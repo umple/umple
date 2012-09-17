@@ -21,7 +21,7 @@ namespace example{
 
  Token::Token(const Token & token)
   {
-    this->p = token.p
+    this->p = token.p;
   }
 
 

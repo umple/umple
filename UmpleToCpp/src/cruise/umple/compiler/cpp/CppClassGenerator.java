@@ -2659,7 +2659,7 @@ public class CppClassGenerator implements ILang
   for (Attribute av : uClass.getAttributes())
   {
   	 appendln(stringBuffer, "");
-     append(stringBuffer, "    this->{0} = {1}.{0}",av.getName(),uClass.getName().toLowerCase());  
+     append(stringBuffer, "    this->{0} = {1}.{0};",av.getName(),uClass.getName().toLowerCase());  
      appendln(stringBuffer, "");
   }
   

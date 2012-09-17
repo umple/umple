@@ -22,7 +22,7 @@ namespace example{
 
  Token::Token(const Token & token)
   {
-    this->positions = token.positions
+    this->positions = token.positions;
   }
 
 

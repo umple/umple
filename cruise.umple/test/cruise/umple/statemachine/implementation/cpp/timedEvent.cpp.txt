@@ -27,7 +27,7 @@ namespace example{
 
  Mentor::Mentor(const Mentor & mentor)
   {
-    this->howLongUntilOk = mentor.howLongUntilOk
+    this->howLongUntilOk = mentor.howLongUntilOk;
   }
 
 

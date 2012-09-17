@@ -21,7 +21,7 @@
 
  Foo::Foo(const Foo & foo)
   {
-    this->name = foo.name
+    this->name = foo.name;
   }
 
 

@@ -31,7 +31,7 @@ using namespace example.three;
 
  Student::Student(const Student & student)
   {
-    this->number = student.number
+    this->number = student.number;
   }
 
 

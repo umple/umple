@@ -22,7 +22,7 @@ namespace example{
 
  SubMentor2::SubMentor2(const SubMentor2 & submentor2)
   {
-    this->subName = submentor2.subName
+    this->subName = submentor2.subName;
   }
 
 

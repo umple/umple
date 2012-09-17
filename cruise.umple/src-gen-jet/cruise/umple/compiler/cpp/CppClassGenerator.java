@@ -18,7 +18,7 @@ public class CppClassGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL;
@@ -2659,7 +2659,7 @@ public class CppClassGenerator implements ILang
   for (Attribute av : uClass.getAttributes())
   {
   	 appendln(stringBuffer, "");
-     append(stringBuffer, "    this->{0} = {1}.{0}",av.getName(),uClass.getName().toLowerCase());  
+     append(stringBuffer, "    this->{0} = {1}.{0};",av.getName(),uClass.getName().toLowerCase());  
      appendln(stringBuffer, "");
   }
   

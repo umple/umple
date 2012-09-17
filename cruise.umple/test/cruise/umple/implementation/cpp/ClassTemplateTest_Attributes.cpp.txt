@@ -41,49 +41,49 @@ namespace example{
 
  Mentor::Mentor(const Mentor & mentor)
   {
-    this->MAX = mentor.MAX
+    this->MAX = mentor.MAX;
 
-    this->MIN = mentor.MIN
+    this->MIN = mentor.MIN;
 
-    this->HELLO = mentor.HELLO
+    this->HELLO = mentor.HELLO;
 
-    this->str = mentor.str
+    this->str = mentor.str;
 
-    this->str2 = mentor.str2
+    this->str2 = mentor.str2;
 
-    this->someName = mentor.someName
+    this->someName = mentor.someName;
 
-    this->lDoub = mentor.lDoub
+    this->lDoub = mentor.lDoub;
 
-    this->lBool = mentor.lBool
+    this->lBool = mentor.lBool;
 
-    this->name = mentor.name
+    this->name = mentor.name;
 
-    this->d = mentor.d
+    this->d = mentor.d;
 
-    this->t = mentor.t
+    this->t = mentor.t;
 
-    this->i = mentor.i
+    this->i = mentor.i;
 
-    this->derivedTwiceI = mentor.derivedTwiceI
+    this->derivedTwiceI = mentor.derivedTwiceI;
 
-    this->x = mentor.x
+    this->x = mentor.x;
 
-    this->p = mentor.p
+    this->p = mentor.p;
 
-    this->q = mentor.q
+    this->q = mentor.q;
 
-    this->r = mentor.r
+    this->r = mentor.r;
 
-    this->s = mentor.s
+    this->s = mentor.s;
 
-    this->t = mentor.t
+    this->t = mentor.t;
 
-    this->u = mentor.u
+    this->u = mentor.u;
 
-    this->v = mentor.v
+    this->v = mentor.v;
 
-    this->w = mentor.w
+    this->w = mentor.w;
   }
 
 

@@ -21,7 +21,7 @@ namespace example{
 
  Student::Student(const Student & student)
   {
-    this->grade = student.grade
+    this->grade = student.grade;
   }
 
 
