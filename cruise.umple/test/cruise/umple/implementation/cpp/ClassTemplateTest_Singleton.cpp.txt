@@ -28,7 +28,13 @@ namespace example{
 
  Application::Application(const Application & application)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Application Application::operator=(const Application & application)
+  {  }
 
   //------------------------
   // INTERFACE

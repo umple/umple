@@ -23,7 +23,13 @@ namespace example{
 
  Mentor::Mentor(const Mentor & mentor)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Mentor Mentor::operator=(const Mentor & mentor)
+  {  }
 
   //------------------------
   // INTERFACE

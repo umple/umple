@@ -48,6 +48,11 @@
 		
   		%><%@ include file="constructor_CopyConstructor.jet"%><%
   	}%>
+  	<% if (uClass.getAttributes() != null)
+	{
+		
+  		%><%@ include file="equal_operator.jet"%><%
+  	}%>
 
   //------------------------
   // INTERFACE

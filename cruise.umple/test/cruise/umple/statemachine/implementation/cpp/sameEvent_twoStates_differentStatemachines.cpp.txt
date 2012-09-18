@@ -28,7 +28,13 @@ namespace example{
 
  LightFixture::LightFixture(const LightFixture & lightfixture)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ LightFixture LightFixture::operator=(const LightFixture & lightfixture)
+  {  }
 
   //------------------------
   // INTERFACE

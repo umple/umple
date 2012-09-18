@@ -29,7 +29,13 @@ namespace example{
 
  Lamp::Lamp(const Lamp & lamp)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Lamp Lamp::operator=(const Lamp & lamp)
+  {  }
 
   //------------------------
   // INTERFACE

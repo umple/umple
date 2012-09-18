@@ -29,7 +29,15 @@ namespace example{
   {
     this->howLongUntilOk = mentor.howLongUntilOk;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Mentor Mentor::operator=(const Mentor & mentor)
+  {
+    this->howLongUntilOk = mentor.howLongUntilOk;
+  }
 
   //------------------------
   // INTERFACE

@@ -33,7 +33,15 @@ using namespace example.three;
   {
     this->number = student.number;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Student Student::operator=(const Student & student)
+  {
+    this->number = student.number;
+  }
 
   //------------------------
   // INTERFACE

@@ -24,7 +24,15 @@ namespace example{
   {
     this->subName = submentor2.subName;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ SubMentor2 SubMentor2::operator=(const SubMentor2 & submentor2)
+  {
+    this->subName = submentor2.subName;
+  }
 
   //------------------------
   // INTERFACE

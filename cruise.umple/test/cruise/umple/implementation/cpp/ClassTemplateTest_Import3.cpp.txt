@@ -23,7 +23,13 @@ using namespace example.two;
 
  Course::Course(const Course & course)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Course Course::operator=(const Course & course)
+  {  }
 
   //------------------------
   // INTERFACE

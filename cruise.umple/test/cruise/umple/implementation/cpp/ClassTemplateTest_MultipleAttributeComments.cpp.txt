@@ -32,7 +32,18 @@
 
     this->testAttribute4 = foo.testAttribute4;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Foo Foo::operator=(const Foo & foo)
+  {
+    this->testAttribute1 = foo.testAttribute1;
+    this->testAttribute2 = foo.testAttribute2;
+    this->testAttribute3 = foo.testAttribute3;
+    this->testAttribute4 = foo.testAttribute4;
+  }
 
   //------------------------
   // INTERFACE

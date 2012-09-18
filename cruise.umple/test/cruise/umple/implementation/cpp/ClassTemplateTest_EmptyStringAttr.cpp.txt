@@ -23,7 +23,15 @@ namespace example{
   {
     this->grade = student.grade;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Student Student::operator=(const Student & student)
+  {
+    this->grade = student.grade;
+  }
 
   //------------------------
   // INTERFACE

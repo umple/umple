@@ -19,7 +19,13 @@ namespace example{
 
  Something::Something(const Something & something)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Something Something::operator=(const Something & something)
+  {  }
 
   //------------------------
   // INTERFACE

@@ -85,7 +85,36 @@ namespace example{
 
     this->w = mentor.w;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Mentor Mentor::operator=(const Mentor & mentor)
+  {
+    this->MAX = mentor.MAX;
+    this->MIN = mentor.MIN;
+    this->HELLO = mentor.HELLO;
+    this->str = mentor.str;
+    this->str2 = mentor.str2;
+    this->someName = mentor.someName;
+    this->lDoub = mentor.lDoub;
+    this->lBool = mentor.lBool;
+    this->name = mentor.name;
+    this->d = mentor.d;
+    this->t = mentor.t;
+    this->i = mentor.i;
+    this->derivedTwiceI = mentor.derivedTwiceI;
+    this->x = mentor.x;
+    this->p = mentor.p;
+    this->q = mentor.q;
+    this->r = mentor.r;
+    this->s = mentor.s;
+    this->t = mentor.t;
+    this->u = mentor.u;
+    this->v = mentor.v;
+    this->w = mentor.w;
+  }
 
   //------------------------
   // INTERFACE

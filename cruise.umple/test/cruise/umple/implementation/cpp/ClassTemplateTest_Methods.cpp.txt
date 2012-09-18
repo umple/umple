@@ -19,7 +19,13 @@ namespace example{
 
  CodeTranslator::CodeTranslator(const CodeTranslator & codetranslator)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ CodeTranslator CodeTranslator::operator=(const CodeTranslator & codetranslator)
+  {  }
 
   //------------------------
   // INTERFACE

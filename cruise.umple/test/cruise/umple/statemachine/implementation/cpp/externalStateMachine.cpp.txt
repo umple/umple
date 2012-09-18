@@ -25,7 +25,13 @@ namespace example{
 
  Course::Course(const Course & course)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Course Course::operator=(const Course & course)
+  {  }
 
   //------------------------
   // INTERFACE

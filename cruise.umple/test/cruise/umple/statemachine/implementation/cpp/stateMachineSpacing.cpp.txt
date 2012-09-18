@@ -25,7 +25,13 @@ namespace example{
 
  Garage::Garage(const Garage & garage)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Garage Garage::operator=(const Garage & garage)
+  {  }
 
   //------------------------
   // INTERFACE

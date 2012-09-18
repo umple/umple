@@ -21,7 +21,13 @@ namespace example{
 
  SubMentor::SubMentor(const SubMentor & submentor)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ SubMentor SubMentor::operator=(const SubMentor & submentor)
+  {  }
 
   //------------------------
   // INTERFACE

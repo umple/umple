@@ -28,7 +28,13 @@ namespace example{
 
  Switch::Switch(const Switch & switch)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Switch Switch::operator=(const Switch & switch)
+  {  }
 
   //------------------------
   // INTERFACE

@@ -25,7 +25,13 @@
 
  Foo::Foo(const Foo & foo)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Foo Foo::operator=(const Foo & foo)
+  {  }
 
   //------------------------
   // INTERFACE

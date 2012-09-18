@@ -24,7 +24,15 @@ using namespace example.two;
   {
     this->name = mentor.name;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Mentor Mentor::operator=(const Mentor & mentor)
+  {
+    this->name = mentor.name;
+  }
 
   //------------------------
   // INTERFACE

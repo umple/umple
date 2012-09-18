@@ -23,7 +23,15 @@ namespace example{
   {
     this->p = token.p;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Token Token::operator=(const Token & token)
+  {
+    this->p = token.p;
+  }
 
   //------------------------
   // INTERFACE

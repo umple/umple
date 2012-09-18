@@ -25,7 +25,13 @@ namespace example{
 
  Student::Student(const Student & student)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Student Student::operator=(const Student & student)
+  {  }
 
   //------------------------
   // INTERFACE

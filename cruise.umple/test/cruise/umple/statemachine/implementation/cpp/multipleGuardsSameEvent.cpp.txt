@@ -28,7 +28,15 @@ namespace example{
   {
     this->brightness = lightfixture.brightness;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ LightFixture LightFixture::operator=(const LightFixture & lightfixture)
+  {
+    this->brightness = lightfixture.brightness;
+  }
 
   //------------------------
   // INTERFACE

@@ -28,7 +28,15 @@ namespace example{
   {
     this->entranceClear = garage.entranceClear;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Garage Garage::operator=(const Garage & garage)
+  {
+    this->entranceClear = garage.entranceClear;
+  }
 
   //------------------------
   // INTERFACE

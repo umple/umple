@@ -19,7 +19,13 @@
 
  Token::Token(const Token & token)
   {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Token Token::operator=(const Token & token)
+  {  }
 
   //------------------------
   // INTERFACE

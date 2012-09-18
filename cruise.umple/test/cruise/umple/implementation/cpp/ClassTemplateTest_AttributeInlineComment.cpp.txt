@@ -23,7 +23,15 @@
   {
     this->bar = foo.bar;
   }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
 
+ Foo Foo::operator=(const Foo & foo)
+  {
+    this->bar = foo.bar;
+  }
 
   //------------------------
   // INTERFACE
