@@ -869,14 +869,9 @@ public class CppHeaderGenerator implements ILang
   		
     
 
-  String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
-  String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
-
   appendln(stringBuffer, "");
 
   append(stringBuffer," {0}::{0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
-
-  String extraNote = null;
   
 
     
