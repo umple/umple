@@ -55,7 +55,13 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   public:
 
   <%@ include file="header_constructor_Declare_All.jet" %>
-
+  
+  <% if (uClass.getAttributes() != null)
+	{
+		
+  		%><%@ include file="header_constructor_CopyConstructor.jet"%><%
+  	}%>
+  	  	
   //------------------------
   // INTERFACE
   //------------------------
