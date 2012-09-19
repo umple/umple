@@ -61,6 +61,11 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 		
   		%><%@ include file="header_constructor_CopyConstructor.jet"%><%
   	}%>
+  	<% if (uClass.getAttributes() != null)
+	{
+		
+  		%><%@ include file="header_equal_operator.jet"%><%
+  	}%>
   	  	
   //------------------------
   // INTERFACE
