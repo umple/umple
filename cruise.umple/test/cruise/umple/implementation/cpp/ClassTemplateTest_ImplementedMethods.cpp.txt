@@ -5,7 +5,10 @@
 namespace example{
 #include "CodeTranslator.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
   //------------------------
   // CONSTRUCTOR
   //------------------------

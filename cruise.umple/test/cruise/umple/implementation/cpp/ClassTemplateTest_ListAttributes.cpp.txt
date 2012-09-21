@@ -6,7 +6,13 @@ namespace example{
 #include <vector>;
 #include "Token.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Token Attributes
+  vector<Position> positions;
   //------------------------
   // CONSTRUCTOR
   //------------------------

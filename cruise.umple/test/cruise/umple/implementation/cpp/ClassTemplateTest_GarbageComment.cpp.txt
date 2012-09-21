@@ -6,7 +6,10 @@ namespace example{
 #include "Student.h";
 
 // This is a student
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
   //------------------------
   // CONSTRUCTOR
   //------------------------

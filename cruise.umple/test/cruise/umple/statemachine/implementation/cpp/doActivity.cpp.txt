@@ -5,7 +5,10 @@
 namespace example{
 #include "Switch.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //Switch State Machines
   enum Status { On, Off }

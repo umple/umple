@@ -5,7 +5,13 @@
 namespace example{
 #include "Student.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  string grade;
   //------------------------
   // CONSTRUCTOR
   //------------------------

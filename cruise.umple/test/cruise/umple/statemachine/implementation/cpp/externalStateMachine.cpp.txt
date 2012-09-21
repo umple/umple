@@ -5,7 +5,10 @@
 namespace example{
 #include "Course.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //Course State Machines
   enum Status { Open, Closed }

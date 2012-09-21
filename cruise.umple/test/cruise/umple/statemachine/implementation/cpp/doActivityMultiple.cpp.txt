@@ -5,7 +5,10 @@
 namespace example{
 #include "Lamp.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //Lamp State Machines
   enum Status { On, Off }

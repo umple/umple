@@ -5,7 +5,10 @@
 namespace example{
 #include "LightFixture.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //LightFixture State Machines
   enum Bulb { Off, On }
@@ -18,8 +21,8 @@ namespace example{
   
  LightFixture::LightFixture()
   {
-    setBulb(Bulb.Off);
     if (bulbOn == null) { setBulbOn(BulbOn.Null); }
+    setBulb(Bulb.Off);
   }
   
   //------------------------

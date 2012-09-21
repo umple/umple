@@ -5,7 +5,10 @@
 namespace example{
 #include "Garage.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //Garage State Machines
   enum GarageDoor { Closed, Opening }

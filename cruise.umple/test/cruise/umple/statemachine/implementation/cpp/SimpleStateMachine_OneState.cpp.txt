@@ -5,7 +5,10 @@
 namespace example{
 #include "Student.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //Student State Machines
   enum Grade { Pass }

@@ -7,7 +7,10 @@ namespace example.three{
 using namespace example.two;
 #include "Course.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
   //------------------------
   // CONSTRUCTOR
   //------------------------

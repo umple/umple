@@ -5,7 +5,17 @@
 
 #include "Foo.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * I am a inline comment above an attribute.
+   */
+  string bar;
   //------------------------
   // CONSTRUCTOR
   //------------------------

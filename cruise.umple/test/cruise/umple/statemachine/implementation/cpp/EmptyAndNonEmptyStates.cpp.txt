@@ -5,7 +5,10 @@
 namespace example{
 #include "Light.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
 
   //Light State Machines
   enum Status { On, Off }

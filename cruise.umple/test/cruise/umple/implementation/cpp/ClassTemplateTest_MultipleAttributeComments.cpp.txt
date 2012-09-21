@@ -5,7 +5,34 @@
 
 #include "Foo.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * Inline comment above attribute.
+   */
+  string testAttribute1;
+
+  /**
+   * Multiple inline comments
+   * above attribute.
+   */
+  string testAttribute2;
+
+  /**
+   * Multiline comment above attribute.
+   */
+  string testAttribute3;
+
+  /**
+   * Multiple multiline comments
+   * above attribute.
+   */
+  string testAttribute4;
   //------------------------
   // CONSTRUCTOR
   //------------------------

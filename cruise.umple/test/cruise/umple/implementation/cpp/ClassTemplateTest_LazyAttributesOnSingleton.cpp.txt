@@ -7,6 +7,10 @@ namespace example{
 public class Application
 {
 
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
   //------------------------
   // STATIC VARIABLES
   //------------------------

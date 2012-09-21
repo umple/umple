@@ -7,7 +7,6 @@
   appendln(stringBuffer, "");
 
   String accessibility = uClass.getIsSingleton() ? "private" : "";
-  
   append(stringBuffer," {0}::{0}({1})",new Object[] {uClass.getName(), gClass.getLookup("constructorSignature")});
 
   String extraNote = null;
@@ -85,14 +84,16 @@
     else
     {
       hasBody = true;
-      
-         %><%@ include file="constructor_AttributeAssign.jet"%><%     
-        
+      if(!av.getIsLazy()){
+         %><%@ include file="constructor_AttributeAssign.jet"%><%
+      }
+      else
+      {
+         %><%@ include file="constructor_AttributeAssignLazy.jet"%><%
+      }
     }
   }
 
-	
-   
   for (Attribute av : uClass.getAttributes())
   {
     if (av.getIsAutounique())
@@ -100,6 +101,15 @@
       hasBody = true;
       %><%@ include file="constructor_AttributeAssignAutounique.jet"%><%
     }
+  }
+  
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+  	if (!av.getIsNavigable() || !av.isImmutable())
+  	{
+  	  continue;
+  	}
+    append(stringBuffer, "\n    {0} = true;", gen.translate("associationCanSet",av));
   }
   
   for (AssociationVariable av : uClass.getAssociationVariables()) 
@@ -118,10 +128,25 @@
         hasBody = true;
         %><%@ include file="constructor_AssociationAssignUndirectionalOne.jet"%><%
       }
+      else if (av.isOptionalOne() && av.isImmutable())
+      {
+        hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalOne.jet"%><%
+      }
       else if (av.isMandatoryMany())
       {
         hasBody = true;
         %><%@ include file="constructor_AssociationAssignMandatoryMany.jet"%><%
+      }
+      else if (av.isOptionalN() && av.isImmutable())
+      {
+        hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalN.jet"%><%
+      }
+      else if (av.isMany() && av.isImmutable())
+      {
+      	hasBody = true;
+        %><%@ include file="constructor_AssociationAssignImmutableOptionalMany.jet"%><%
       }
       else if (av.isMany())
       {
@@ -141,11 +166,6 @@
       hasBody = true;
       %><%@ include file="constructor_AssociationAssignOptionalMany.jet"%><%
     }
-    else if (av.isOnlyOne())
-    {
-      hasBody = true;
-      %><%@ include file="constructor_AssociationAssignOne.jet"%><%
-    }
     else
     {
       %><%@ include file="constructor_AssociationAssignDefault.jet"%><%
@@ -160,11 +180,11 @@
       continue;
     }
     hasBody = true;
-    %><%@ include file="constructor_StateMachineAssignDefault.jet"%><%
     for (StateMachine nestedSm : sm.getNestedStateMachines())
     {
       %><%@ include file="constructor_NestedStateMachineAssignDefault.jet"%><%
     }
+    %><%@ include file="constructor_StateMachineAssignDefault.jet"%><%
   }
   
   if (customConstructorPostfixCode != null)

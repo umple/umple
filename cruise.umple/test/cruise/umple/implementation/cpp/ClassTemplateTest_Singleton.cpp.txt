@@ -5,7 +5,16 @@
 namespace example{
 #include "Application.h";
 
-  
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  static Application theInstance = null;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
   //------------------------
   // CONSTRUCTOR
   //------------------------

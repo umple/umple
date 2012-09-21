@@ -6,7 +6,10 @@ namespace example{
 #include <java.util.Map.h>;
 #include "Mentor.h";
 
-  
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
   //------------------------
   // CONSTRUCTOR
   //------------------------

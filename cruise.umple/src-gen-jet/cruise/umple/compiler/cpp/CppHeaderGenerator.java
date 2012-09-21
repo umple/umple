@@ -583,7 +583,7 @@ public class CppHeaderGenerator implements ILang
     appendln(stringBuffer, "");
     
     if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
-   
+    
     append(stringBuffer, "  {0} {1};", type, attribute);
   }
   
