@@ -1895,13 +1895,13 @@ public class CppClassGenerator implements ILang
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include <{0}.h>;",depend.getName());
+    append(stringBuffer, "#include <{0}.h>",depend.getName());
   }
   
   for (String anImport : gClass.getMultiLookup("import"))
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include <{0}>;",anImport);
+    append(stringBuffer, "#include <{0}>",anImport);
   }
   
   for (String anImport : gClass.getMultiLookup("using"))
@@ -1912,7 +1912,7 @@ public class CppClassGenerator implements ILang
 
     
 	appendln(stringBuffer, "");
-	append(stringBuffer, "#include \"{0}.h\";",uClass.getName()); 
+	append(stringBuffer, "#include \"{0}.h\"",uClass.getName()); 
 
     stringBuffer.append(TEXT_4);
      if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 

@@ -3,8 +3,8 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 namespace example{
-#include <java.util.*.h>;
-#include "Mentor.h";
+#include <java.util.*.h>
+#include "Mentor.h"
 
 
   //------------------------

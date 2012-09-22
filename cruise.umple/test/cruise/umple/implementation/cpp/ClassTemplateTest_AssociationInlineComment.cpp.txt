@@ -3,8 +3,8 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
-#include <vector>;
-#include "Foo.h";
+#include <vector>
+#include "Foo.h"
 
 
   //------------------------

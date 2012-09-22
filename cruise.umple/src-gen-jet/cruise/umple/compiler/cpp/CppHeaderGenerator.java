@@ -467,13 +467,13 @@ public class CppHeaderGenerator implements ILang
   for (Depend depend : uClass.getDepends())
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include <{0}.h>;",depend.getName());
+    append(stringBuffer, "#include <{0}.h>",depend.getName());
   }
   
   for (String anImport : gClass.getMultiLookup("import"))
   {
     appendln(stringBuffer, "");
-    append(stringBuffer, "#include <{0}>;",anImport);
+    append(stringBuffer, "#include <{0}>",anImport);
   }
   
   for (String anImport : gClass.getMultiLookup("using"))

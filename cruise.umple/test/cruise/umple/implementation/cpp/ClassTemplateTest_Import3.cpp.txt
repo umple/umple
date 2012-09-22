@@ -3,9 +3,9 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 namespace example.three{
-#include <vector>;
+#include <vector>
 using namespace example.two;
-#include "Course.h";
+#include "Course.h"
 
 
   //------------------------

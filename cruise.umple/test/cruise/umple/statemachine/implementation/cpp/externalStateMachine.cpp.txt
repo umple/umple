@@ -3,7 +3,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 namespace example{
-#include "Course.h";
+#include "Course.h"
 
 
   //------------------------

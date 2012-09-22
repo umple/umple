@@ -3,10 +3,10 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 namespace example.two{
-#include <vector>;
+#include <vector>
 using namespace example.one;
 using namespace example.three;
-#include "Student.h";
+#include "Student.h"
 
 
   //------------------------
