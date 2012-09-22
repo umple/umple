@@ -3,6 +3,6 @@
 
   appendln(stringBuffer, "");
 
-  append(stringBuffer," {0}::{0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
+  append(stringBuffer," {0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
   
 %>

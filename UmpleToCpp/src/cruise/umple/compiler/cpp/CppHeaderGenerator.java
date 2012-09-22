@@ -871,7 +871,7 @@ public class CppHeaderGenerator implements ILang
 
   appendln(stringBuffer, "");
 
-  append(stringBuffer," {0}::{0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
+  append(stringBuffer," {0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
   
 
     
@@ -888,7 +888,7 @@ public class CppHeaderGenerator implements ILang
   appendln(stringBuffer, "  // Operator =");
   appendln(stringBuffer, "  //------------------------");
   appendln(stringBuffer, "");
-  appendln(stringBuffer," {0} {0}::operator=(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
+  appendln(stringBuffer," {0} operator=(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
   
   
 
