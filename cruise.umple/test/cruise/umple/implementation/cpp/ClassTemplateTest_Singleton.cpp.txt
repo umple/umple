@@ -22,11 +22,11 @@ namespace example{
  Application::Application()
   {}
 
-  static Application getInstance()
+  Application* Application::getInstance()
   {
-    if(theInstance == null)
+    if(!theInstance)
     {
-      theInstance = new Application();
+      theInstance = new Application;
     }
     return theInstance;
   }
