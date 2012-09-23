@@ -5,17 +5,7 @@
 namespace example{
 #include "Switch.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Switch State Machines
-  enum Status { On, Off }
-  private Status status;
-
-  //Switch Do Activity Threads
-  Thread doActivityStatusOffThread = null;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

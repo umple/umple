@@ -6,17 +6,7 @@ namespace example{
 #include <java.util.*.h>
 #include "Mentor.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor Attributes
-  int howLongUntilOk;
-
-  //Mentor State Machines
-  enum Status { Ok, NotOkay, NotOk }
-  private Status status;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

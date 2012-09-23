@@ -7,17 +7,7 @@ namespace example{
 public class Registration
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Registration Attributes
-  private string grade;
-
-  //Registration Associations
-  private Student student;
-  private CourseSection courseSection;
-
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

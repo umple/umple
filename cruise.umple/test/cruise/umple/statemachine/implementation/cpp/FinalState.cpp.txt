@@ -5,14 +5,7 @@
 namespace example{
 #include "Mentor.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor State Machines
-  enum Status { Ok, Final }
-  private Status status;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

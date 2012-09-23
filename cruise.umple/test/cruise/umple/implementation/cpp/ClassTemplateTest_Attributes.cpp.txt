@@ -6,41 +6,7 @@ namespace example{
 #include <time.h>
 #include "Mentor.h"
 
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  const static int MAX = 100;
-  const static int MIN = -99;
-  const static string HELLO = "Hello";
-  static int nextX = 1;
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor Attributes
-  string str;
-  string str2;
-  string someName;
-  double lDoub;
-  bool lBool;
-  string name;
-  string d;
-  time_t* t;
-  int i;
-  string p;
-  string q;
-  string r;
-  string s;
-  string t;
-  time_t* u;
-  string v;
-  time_t* w;
-
-  //Autounique Attributes
-  int x;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

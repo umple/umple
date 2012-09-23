@@ -5,17 +5,7 @@
 
 #include "Foo.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Foo Attributes
-
-  /**
-   * I am a multiline comment above an attribute.
-   */
-  string name;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

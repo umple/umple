@@ -5,18 +5,7 @@
 namespace example{
 #include "LightFixture.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //LightFixture State Machines
-  enum Status { Off, On }
-  enum StatusMotorIdle { Null, MotorIdle, MotorRunning }
-  enum StatusFanIdle { Null, FanIdle, FanRunning }
-  private Status status;
-  private StatusMotorIdle statusMotorIdle;
-  private StatusFanIdle statusFanIdle;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

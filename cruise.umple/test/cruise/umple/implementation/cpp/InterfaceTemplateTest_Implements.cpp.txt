@@ -5,10 +5,7 @@
 namespace example{
 #include "Something.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

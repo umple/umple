@@ -6,13 +6,7 @@ namespace example.one{
 using namespace example.two;
 #include "Mentor.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Mentor Attributes
-  string name;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

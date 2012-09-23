@@ -5,18 +5,7 @@
 namespace example{
 #include "Lamp.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Lamp State Machines
-  enum Status { On, Off }
-  private Status status;
-
-  //Lamp Do Activity Threads
-  Thread doActivityStatusOnThread = null;
-  Thread doActivityStatusOffThread = null;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

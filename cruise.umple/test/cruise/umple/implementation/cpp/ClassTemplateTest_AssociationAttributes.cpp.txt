@@ -5,13 +5,7 @@
 namespace example{
 #include "Token.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Token Attributes
-  Position p;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

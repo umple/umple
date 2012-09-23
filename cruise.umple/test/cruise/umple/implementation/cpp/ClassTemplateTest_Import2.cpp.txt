@@ -8,13 +8,7 @@ using namespace example.one;
 using namespace example.three;
 #include "Student.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Student Attributes
-  string number;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

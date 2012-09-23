@@ -5,16 +5,8 @@
 namespace example{
 #include "Application.h"
 
+	  Application* Application::theInstance = NULL //singleton;
 
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  static Application theInstance = null;
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
   //------------------------
   // CONSTRUCTOR
   //------------------------

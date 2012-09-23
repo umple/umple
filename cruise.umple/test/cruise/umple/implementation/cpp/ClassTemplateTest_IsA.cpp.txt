@@ -5,10 +5,7 @@
 namespace example{
 #include "SubMentor.h"
 
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

@@ -19,10 +19,7 @@
  * These lines should come out as we see here.
  * Comments such as these are often used to improve readability through whitespace clarity.
 */
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------

@@ -545,7 +545,7 @@ public class CppHeaderGenerator implements ILang
       appendln(stringBuffer, "");
       isFirst = false;
     }
-    append(stringBuffer, "  static {0} theInstance = null;", uClass.getName());
+    append(stringBuffer, "  static {0}* theInstance;", uClass.getName());
   }
 }
 
