@@ -1,0 +1,4 @@
+// Should be OK  no error X - symmetric case
+class X {
+    * self right;
+}

@@ -1,0 +1,4 @@
+// Should generate error 21 reflexive association should use self or 1+ role names.
+class X {
+    * -- * X;
+}
