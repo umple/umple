@@ -20,6 +20,7 @@
 18: 2, http://umple.org/E018ReflexiveImmutable.html, Reflexive immutable associations may not be mandatory ;
 19: 2, http://umple.org/E019DuplicateAssociation.html, Class '{0}' may not have multiple associations with the same name '{1}' ;
 20: 2, http://umple.org/E020DuplicateAttribute.html, Class '{0}' may not have multiple attributes with the same name '{1}' ;
+21: 3, http://umple.org/E021InvalidReflexiveAssociation.html, Reflexive association to class '{0}' must use a role name or else self ;
 1002: 5, http://umple.org/W1002-3UnexpectedEmbeddedCode.html, Embedded method with code or unparsed code found when strictness is 'modelOnly' ;
 1003: 5, http://umple.org/W1002-3UnexpectedEmbeddedCode.html, Unparsed extra code found when strictness is 'noExtraCode'  ;
 1004: 2, http://umple.org/E1004-5MessagesnotasExpected.html, Expected message '{0}' not found ;
