@@ -1,5 +1,5 @@
 This project contains the JET for generating java code using the cruise.umple 
-tool. The only package within the /src directory which sould compile is the 
+tool. The only package within the /src directory which should compile is the 
 cruise.umple.compiler.java which contains the working top level generating files.
 the rest of the folders are simply there because JET requires that each template
 be given a name and a package to put it into. Therefore, in essence, some of the

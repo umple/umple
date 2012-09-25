@@ -75,16 +75,19 @@ public class UmpleConsoleMain
                 System.exit(-1);
         }
 
-		boolean compileSuccess = true;
+        // Compile success means the output was generated
+		boolean compileSuccess = model.getLastResult().getWasSuccess();
 
-        if (optset.has("c")) {
+        // The "c" option causes an attempt to compile the resulting base language
+        // code. Not completely tested at current time.
+        if (compileSuccess && optset.has("c")) {
             CodeCompiler compiler = new CodeCompiler();
             compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
         }
 
-		if (compileSuccess) {
-			println("Success! Processed "+ filename +".");
-		}
+        String successWord = compileSuccess ? "Success! " : "";
+        println(successWord + "Processed "+ filename +".");
+
     }
 
     private static void println(String output)

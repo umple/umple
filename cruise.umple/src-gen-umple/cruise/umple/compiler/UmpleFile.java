@@ -129,6 +129,11 @@ private StringBuilder init()
   {
     return path;
   }
+  
+  public String getParent()
+  {
+    return ((new File(path)).getParent().toString());
+  }
 
   public void append(String aFilename)
   {
