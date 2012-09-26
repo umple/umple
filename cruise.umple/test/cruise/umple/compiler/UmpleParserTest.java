@@ -1070,6 +1070,38 @@ public class UmpleParserTest
   }
 
   @Test
+  public void reflexiveCasesNoError21()
+  {
+    assertSimpleParse("009_ReflexiveDirectedManyRightRole.ump");
+    assertSimpleParse("009_ReflexiveDirectedZeroOneRightRole.ump");
+    assertSimpleParse("009_ReflexiveDirectedZeroOneSeparateAssocRightRole.ump");
+    assertSimpleParse("009_ReflexiveNonDirectedManyRightRole.ump");
+    assertSimpleParse("009_ReflexiveNonDirectedManySymmetricRightRole.ump");
+    assertSimpleParse("009_ReflexiveNonDirectedZeroOneRightRole.ump");
+    assertSimpleParse("009_ReflexiveNonDirectedZeroOneSeparateAssocRightRole.ump");
+    assertSimpleParse("009_ReflexiveNonDirectedZeroOneSymmetricRightRole.ump");
+  }
+
+  @Test @Ignore
+  public void reflexiveAndError21CasesDirected()
+  {
+    assertFailedParse("009_ReflexiveDirectedManyError21.ump",21);
+    assertFailedParse("009_ReflexiveDirectedZeroOneError21.ump",21);
+    assertFailedParse("009_ReflexiveDirectedZeroOneReverseError21.ump",21);
+    assertFailedParse("009_ReflexiveDirectedZeroOneSeparateAssocError21.ump",21);
+  }
+
+  @Test @Ignore
+  public void reflexiveAndError21CasesNonDirected()
+  {
+    assertFailedParse("009_ReflexiveNonDirectedManyError21.ump",21);
+    assertFailedParse("009_ReflexiveNonDirectedManySeparateAssocError21.ump",21);
+    assertFailedParse("009_ReflexiveNonDirectedZeroOneError21.ump",21);
+    assertFailedParse("009_ReflexiveNonDirectedZeroOneSeparateAssocError21.ump",21);
+  }
+  
+  
+  @Test
   public void associationClass2()
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, "010_associationClass2.ump"));
@@ -1707,36 +1739,63 @@ public class UmpleParserTest
     return answer;
   }
   
+  // Assertion case where we expect the parse to succeed - may be overridden
   public void assertParse(String filename)
   {
     Assert.assertEquals(true,parse(filename));
   }
+  
+  // Assertion case where we expect the parse to succeed 
+  public void assertSimpleParse(String filename)
+  {
+    Assert.assertEquals(true,parse(filename));
+  }
 
+  // Assertion for case where we expect parse to fail, and care about the position
   public void assertFailedParse(String filename, Position expectedPosition)
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
-  
+
+  // Assertion for case where we expect parse to fail and care about the position and the error
   public void assertFailedParse(String filename, Position expectedPosition, int expectedError)
   {
     assertFailedParse(filename, expectedPosition);
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
+
+  // Assertion for case where we expect parse to fail care about the error number but not the position
+  public void assertFailedParse(String filename, int expectedError)
+  {
+    boolean answer = parse(filename);
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
   
+  // Assertion case where we expect warnings at certain positions but don't care about the warning number
   public void assertHasWarningsParse(String filename, Position expectedPosition)
   {
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
-  
+
+  // Assertion case where we expect warnings and care about the position and the warning number
   public void assertHasWarningsParse(String filename, Position expectedPosition, int expectedError)
   {
     assertHasWarningsParse(filename, expectedPosition);
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
 
+  // Assertion case where we expect warnings and care about the  warning number but not the position
+  public void assertHasWarningsParse(String filename, int expectedError)
+  {
+    boolean answer = parseWarnings(filename);
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+  
 }
  
