@@ -1082,7 +1082,7 @@ public class UmpleParserTest
     assertSimpleParse("009_ReflexiveNonDirectedZeroOneSymmetricRightRole.ump");
   }
 
-  @Test @Ignore
+  @Test 
   public void reflexiveAndError21CasesDirected()
   {
     assertFailedParse("009_ReflexiveDirectedManyError21.ump",21);
@@ -1091,7 +1091,7 @@ public class UmpleParserTest
     assertFailedParse("009_ReflexiveDirectedZeroOneSeparateAssocError21.ump",21);
   }
 
-  @Test @Ignore
+  @Test
   public void reflexiveAndError21CasesNonDirected()
   {
     assertFailedParse("009_ReflexiveNonDirectedManyError21.ump",21);

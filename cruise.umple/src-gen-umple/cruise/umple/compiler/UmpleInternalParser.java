@@ -848,13 +848,13 @@ private void analyzeClassToken(Token t, int analysisStep)
       {
         // Analyze the individual association.
         Association association = analyzeAssociation(token, "");
-        association.setName(name);
-        unlinkedAssociations.add(association);
-
         if (!getParseResult().getWasSuccess()) 
         {
           return;
         }
+        
+        association.setName(name);
+        unlinkedAssociations.add(association);
       }
     }
   }  
@@ -1733,6 +1733,17 @@ private void analyzeClassToken(Token t, int analysisStep)
       setFailedPosition(yourMultToken.getPosition(), 4, invalidBound);
       return null;
     }
+
+    // Trap cases where both ends are the same class (reflexive) and 
+    // there is no or same role name and same multiplicity. Fixes issue 295
+    if(myType.equals(yourType) && ((myName == null && yourName == null) || (myName != null && yourName != null && myName.equals(yourName))) && myMult.toString().equals(yourMult.toString())) {
+      setFailedPosition(associationToken.getPosition(), 21, myType);
+      return null;
+    }    
+    /* DEBUG block
+    if(true) {
+      setFailedPosition(associationToken.getPosition(), 8005, "1"+myType+" 2"+yourType+" 3"+myName+" 4"+yourName+" 5"+myMult+"  6"+yourMult);
+    } */
 
     AssociationEnd firstEnd = new AssociationEnd(myName,myType,myModifier,yourType,myMult);
     AssociationEnd secondEnd = new AssociationEnd(yourName,yourType,yourModifier,myType,yourMult);
