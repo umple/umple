@@ -209,6 +209,13 @@ public class Multiplicity
     {
       return false;
     }
+    
+    // Fix for issue 292
+    if (getUpperBound() == 0)
+    {
+      return false;
+    }
+
 
     if (getLowerBound() > getUpperBound() && !isUpperBoundMany())
     {

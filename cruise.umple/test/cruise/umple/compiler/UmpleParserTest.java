@@ -909,6 +909,13 @@ public class UmpleParserTest
   {
     assertFailedParse("009_association_multiplicityOutOfOrder.ump", new Position("009_association_multiplicityOutOfOrder.ump",4,2,19));
   }  
+  
+  @Test
+  public void invalidMultiplicity()
+  {
+    assertFailedParse("009_zeroMultiplicity.ump", 4);
+  }  
+
 
   @Test
   public void association_external()
