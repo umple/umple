@@ -1,0 +1,12 @@
+Page Being Developed
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2The user manual page for the message you received has not yet been created</h2>
+
+<p>You most likely encountered an error or warning in UmpleOnline, and clicking on the message displayed this page. The web page explaining that message has not yet been created. In the meantime, you can search the manual or browse the links on the left.
+
+</p>
+
