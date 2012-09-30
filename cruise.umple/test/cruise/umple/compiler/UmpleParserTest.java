@@ -30,7 +30,7 @@ public class UmpleParserTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
-
+  
   @Test
   public void empty()
   {
@@ -527,6 +527,47 @@ public class UmpleParserTest
     UmpleClass mentorClass = model.getUmpleClass("Mentor");
     Assert.assertEquals("cruise.core",mentorClass.getPackageName());
 
+  }
+  
+  @Test
+  public void validClassName()
+  {
+    //Test to ensure that the parser will compile Classes with valid Class names.
+
+    assertSimpleParse("042_validClassNameLowerCase.ump");//all lower case name
+    assertSimpleParse("042_validClassNameUpperCase.ump");//all upper case name
+    assertSimpleParse("042_validClassNameMixedCase.ump");//mixed case name
+    assertSimpleParse("042_validClassNameNumber.ump");//name with numbers
+    assertSimpleParse("042_validClassNameUnderscore.ump");//name with underscore
+    assertSimpleParse("042_validClassNameUnderNum.ump");//name with underscore and numbers
+  }
+  
+  @Test
+  public void invalidClassNameStart()
+  {
+    //Test to ensure that the parser will not compile Classes with an invalid Class name.
+    //Specifically these tests target invalid starting characters.
+  
+    assertFailedParse("042_invalidClassNameStartNum.ump", 100);//name starts with a number
+    assertFailedParse("042_invalidClassNameStartUnder.ump", 100);//name starts with an underscore
+    assertFailedParse("042_invalidClassNameStartExclaim.ump", 100);//name starts with an exclamation mark
+    assertFailedParse("042_invalidClassNameStartAmper.ump", 100);//name starts with an ampersand
+    assertFailedParse("042_invalidClassNameStartDollar.ump", 100);//name starts with a dollar sign
+    assertFailedParse("042_invalidClassNameStartHash.ump", 100);//name starts with a hash sign
+  }
+  
+  @Test
+  public void invalidClassNamePart()
+  {
+    //Test to ensure that the parser will not compile Classes with an invalid Class name.
+    //Specifically these tests target invalid starting characters.
+  
+    assertFailedParse("042_invalidClassNamePartQuest.ump", 100);//name contains a question mark
+    assertFailedParse("042_invalidClassNamePartExclaim.ump", 100);//name contains an exclamation mark
+    assertFailedParse("042_invalidClassNamePartAmper.ump", 100);//name contains an ampersand
+    assertFailedParse("042_invalidClassNamePartDollar.ump", 100);//name contains a dollar sign
+    assertFailedParse("042_invalidClassNamePartDot.ump", 100);//name contains a period
+    assertFailedParse("042_invalidClassNamePartQuote.ump", 100);//name contains quotation marks
   }
   
   @Test

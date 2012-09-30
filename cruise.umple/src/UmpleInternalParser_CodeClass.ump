@@ -298,6 +298,10 @@ class UmpleInternalParser
    */
   private UmpleClass analyzeClass(Token classToken)
   {
+    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
+    if (UmpleClass.validName(classToken.getValue("name")) != true) {
+      setFailedPosition(classToken.getPosition(), 100, classToken.getValue("name"));
+    }
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
 
 	// Set the original .ump file
