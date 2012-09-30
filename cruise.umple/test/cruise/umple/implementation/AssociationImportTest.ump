@@ -1,0 +1,15 @@
+namespace example;
+
+namespace example.student;
+
+class Student
+{}
+
+namespace example.mentor;
+
+class Mentor 
+{}
+
+association {
+  1 Mentor -> 1 Student;
+}

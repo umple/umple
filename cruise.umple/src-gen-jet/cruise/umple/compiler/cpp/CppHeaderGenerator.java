@@ -24,7 +24,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_4 = "_H_";
   protected final String TEXT_5 = NL + "#include <string>" + NL + "using namespace std;" + NL;
   protected final String TEXT_6 = NL + "class ";
-  protected final String TEXT_7 = NL + "{" + NL + "   //------------------------" + NL + "  // Attributes for header file" + NL + "  //------------------------" + NL + "  private:";
+  protected final String TEXT_7 = NL + "{" + NL + "   //------------------------" + NL + "  // Attributes for header file" + NL + "  //------------------------" + NL + "  private:" + NL + "" + NL + "  // FILE MISSING: include file=\"header_members_AllStatics.jet\"";
   protected final String TEXT_8 = NL + NL + "  //------------------------" + NL + "  // Constructor" + NL + "  //------------------------" + NL + "  public:" + NL;
   protected final String TEXT_9 = NL + "  ";
   protected final String TEXT_10 = "* ";
@@ -499,56 +499,6 @@ public class CppHeaderGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append( gen.translate("isA",uClass) );
     stringBuffer.append(TEXT_7);
-    
-{
-  isFirst = true;
-  for(Attribute av : uClass.getAttributes())
-  {
-  
-    if (!av.isConstant() && !av.getIsAutounique())
-    {
-      continue;
-    }
-
-    if (isFirst)
-    {
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "  //------------------------");
-      appendln(stringBuffer, "  // STATIC VARIABLES");
-      appendln(stringBuffer, "  //------------------------");
-      isFirst = false;
-    }
-  
-    if (av.isConstant())
-    {
-      appendln(stringBuffer, "");
-      append(stringBuffer, "  const static {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
-    }
-    else if (av.getIsAutounique())
-    {
-      String defaultValue = av.getValue() == null ? "1" : av.getValue();
-      appendln(stringBuffer, "");
-      append(stringBuffer, "  static int next{0} = {1};", av.getUpperCaseName(), defaultValue);
-    }
-  }
-  
-  if (uClass.getIsSingleton())
-  {
-    if (isFirst)
-    {
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "");
-      appendln(stringBuffer, "  //------------------------");
-      appendln(stringBuffer, "  // STATIC VARIABLES");
-      appendln(stringBuffer, "  //------------------------");
-      appendln(stringBuffer, "");
-      isFirst = false;
-    }
-    append(stringBuffer, "  static {0}* theInstance;", uClass.getName());
-  }
-}
-
     
 {
 

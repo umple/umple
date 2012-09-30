@@ -1411,436 +1411,437 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1391 = ".addAll(";
   protected final String TEXT_1392 = ");" + NL + "    wasSet = true;";
   protected final String TEXT_1393 = NL + "    return wasSet;" + NL + "  }";
-  protected final String TEXT_1394 = NL + "  bool ";
-  protected final String TEXT_1395 = "::";
-  protected final String TEXT_1396 = "(";
-  protected final String TEXT_1397 = "... ";
-  protected final String TEXT_1398 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1399 = NL + "    vector<";
-  protected final String TEXT_1400 = "*> ";
-  protected final String TEXT_1401 = " = new vector<";
-  protected final String TEXT_1402 = "*>();" + NL + "    for (";
-  protected final String TEXT_1403 = " ";
-  protected final String TEXT_1404 = " : ";
-  protected final String TEXT_1405 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1406 = ".contains(";
-  protected final String TEXT_1407 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
-  protected final String TEXT_1408 = NL + "      ";
-  protected final String TEXT_1409 = ".add(";
-  protected final String TEXT_1410 = ");" + NL + "    }" + NL + "" + NL + "    if (";
-  protected final String TEXT_1411 = ".size() != ";
-  protected final String TEXT_1412 = ".length || ";
-  protected final String TEXT_1413 = ".size() < ";
-  protected final String TEXT_1414 = "() || ";
-  protected final String TEXT_1415 = ".size() > ";
-  protected final String TEXT_1416 = "())" + NL + "    {";
-  protected final String TEXT_1417 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
-  protected final String TEXT_1418 = "*> ";
-  protected final String TEXT_1419 = " = new vector<";
-  protected final String TEXT_1420 = "*>(";
-  protected final String TEXT_1421 = ");";
-  protected final String TEXT_1422 = NL + "    ";
-  protected final String TEXT_1423 = ".clear();" + NL + "    for (";
-  protected final String TEXT_1424 = " ";
-  protected final String TEXT_1425 = " : ";
-  protected final String TEXT_1426 = ")" + NL + "    {";
-  protected final String TEXT_1427 = NL + "      ";
-  protected final String TEXT_1428 = ".add(";
-  protected final String TEXT_1429 = ");" + NL + "      if (";
-  protected final String TEXT_1430 = ".contains(";
-  protected final String TEXT_1431 = "))" + NL + "      {";
-  protected final String TEXT_1432 = NL + "        ";
-  protected final String TEXT_1433 = ".remove(";
-  protected final String TEXT_1434 = ");" + NL + "      }" + NL + "      else" + NL + "      {";
-  protected final String TEXT_1435 = NL + "        ";
-  protected final String TEXT_1436 = ".";
-  protected final String TEXT_1437 = "(this);" + NL + "      }" + NL + "    }" + NL + "" + NL + "    for (";
-  protected final String TEXT_1438 = " ";
-  protected final String TEXT_1439 = " : ";
-  protected final String TEXT_1440 = ")" + NL + "    {";
-  protected final String TEXT_1441 = NL + "      ";
-  protected final String TEXT_1442 = ".";
-  protected final String TEXT_1443 = "(this);" + NL + "    }" + NL + "    wasSet = true;";
-  protected final String TEXT_1444 = NL + "    return wasSet;" + NL + "  }";
-  protected final String TEXT_1445 = NL + "  bool ";
-  protected final String TEXT_1446 = "::";
-  protected final String TEXT_1447 = "(";
-  protected final String TEXT_1448 = "... ";
-  protected final String TEXT_1449 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1450 = NL + "    vector<";
-  protected final String TEXT_1451 = "*> ";
-  protected final String TEXT_1452 = " = new vector<";
-  protected final String TEXT_1453 = "*>();" + NL + "    for (";
-  protected final String TEXT_1454 = " ";
-  protected final String TEXT_1455 = " : ";
-  protected final String TEXT_1456 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1457 = ".contains(";
-  protected final String TEXT_1458 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
-  protected final String TEXT_1459 = NL + "      ";
-  protected final String TEXT_1460 = ".add(";
-  protected final String TEXT_1461 = ");" + NL + "    }" + NL + "" + NL + "    if (";
-  protected final String TEXT_1462 = ".size() != ";
-  protected final String TEXT_1463 = ".length || ";
-  protected final String TEXT_1464 = ".size() < ";
-  protected final String TEXT_1465 = "())" + NL + "    {";
-  protected final String TEXT_1466 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
-  protected final String TEXT_1467 = "*> ";
-  protected final String TEXT_1468 = " = new vector<";
-  protected final String TEXT_1469 = "*>(";
-  protected final String TEXT_1470 = ");";
-  protected final String TEXT_1471 = NL + "    ";
-  protected final String TEXT_1472 = ".clear();" + NL + "    for (";
-  protected final String TEXT_1473 = " ";
-  protected final String TEXT_1474 = " : ";
-  protected final String TEXT_1475 = ")" + NL + "    {";
-  protected final String TEXT_1476 = NL + "      ";
-  protected final String TEXT_1477 = ".add(";
-  protected final String TEXT_1478 = ");" + NL + "      if (";
-  protected final String TEXT_1479 = ".contains(";
-  protected final String TEXT_1480 = "))" + NL + "      {";
-  protected final String TEXT_1481 = NL + "        ";
-  protected final String TEXT_1482 = ".remove(";
-  protected final String TEXT_1483 = ");" + NL + "      }" + NL + "      else" + NL + "      {";
-  protected final String TEXT_1484 = NL + "        ";
-  protected final String TEXT_1485 = ".";
-  protected final String TEXT_1486 = "(this);" + NL + "      }" + NL + "    }" + NL + "" + NL + "    for (";
-  protected final String TEXT_1487 = " ";
-  protected final String TEXT_1488 = " : ";
-  protected final String TEXT_1489 = ")" + NL + "    {";
-  protected final String TEXT_1490 = NL + "      ";
-  protected final String TEXT_1491 = ".";
-  protected final String TEXT_1492 = "(this);" + NL + "    }" + NL + "    wasSet = true;";
-  protected final String TEXT_1493 = NL + "    return wasSet;" + NL + "  }";
-  protected final String TEXT_1494 = NL + "  bool ";
-  protected final String TEXT_1495 = "::";
-  protected final String TEXT_1496 = "(";
-  protected final String TEXT_1497 = "... ";
-  protected final String TEXT_1498 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1499 = NL + "    vector<";
-  protected final String TEXT_1500 = "*> ";
-  protected final String TEXT_1501 = " = new vector<";
-  protected final String TEXT_1502 = "*>();" + NL + "    for (";
-  protected final String TEXT_1503 = " ";
-  protected final String TEXT_1504 = " : ";
-  protected final String TEXT_1505 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1506 = ".contains(";
-  protected final String TEXT_1507 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
-  protected final String TEXT_1508 = NL + "      ";
-  protected final String TEXT_1509 = ".add(";
-  protected final String TEXT_1510 = ");" + NL + "    }" + NL + "" + NL + "    if (";
-  protected final String TEXT_1511 = ".size() != ";
-  protected final String TEXT_1512 = ".length || ";
-  protected final String TEXT_1513 = ".size() < ";
-  protected final String TEXT_1514 = "() || ";
-  protected final String TEXT_1515 = ".size() > ";
-  protected final String TEXT_1516 = "())" + NL + "    {";
-  protected final String TEXT_1517 = NL + "      return wasSet;" + NL + "    }" + NL;
-  protected final String TEXT_1518 = NL + "    ";
-  protected final String TEXT_1519 = ".clear();";
-  protected final String TEXT_1520 = NL + "    ";
-  protected final String TEXT_1521 = ".addAll(";
-  protected final String TEXT_1522 = ");" + NL + "    wasSet = true;";
-  protected final String TEXT_1523 = NL + "    return wasSet;" + NL + "  }";
-  protected final String TEXT_1524 = NL + "  bool ";
-  protected final String TEXT_1525 = "::";
-  protected final String TEXT_1526 = "(";
-  protected final String TEXT_1527 = "... ";
-  protected final String TEXT_1528 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1529 = NL + "    if (";
-  protected final String TEXT_1530 = ".length < ";
-  protected final String TEXT_1531 = "()";
-  protected final String TEXT_1532 = ")" + NL + "    {";
-  protected final String TEXT_1533 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
-  protected final String TEXT_1534 = "*> ";
-  protected final String TEXT_1535 = " = new vector<";
-  protected final String TEXT_1536 = "*>();" + NL + "    HashMap<";
-  protected final String TEXT_1537 = ",Integer> ";
-  protected final String TEXT_1538 = " = new HashMap<";
-  protected final String TEXT_1539 = ",Integer>();" + NL + "    for (";
-  protected final String TEXT_1540 = " ";
-  protected final String TEXT_1541 = " : ";
-  protected final String TEXT_1542 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1543 = ".contains(";
-  protected final String TEXT_1544 = "))" + NL + "      {";
-  protected final String TEXT_1545 = NL + "        return wasSet;" + NL + "      }" + NL + "      else if (";
-  protected final String TEXT_1546 = ".";
-  protected final String TEXT_1547 = "() != null && !this.equals(";
-  protected final String TEXT_1548 = ".";
-  protected final String TEXT_1549 = "()))" + NL + "      {";
-  protected final String TEXT_1550 = NL + "        ";
-  protected final String TEXT_1551 = " ";
-  protected final String TEXT_1552 = " = ";
-  protected final String TEXT_1553 = ".";
-  protected final String TEXT_1554 = "();" + NL + "        if (!";
-  protected final String TEXT_1555 = ".containsKey(";
-  protected final String TEXT_1556 = "))" + NL + "        {";
-  protected final String TEXT_1557 = NL + "          ";
-  protected final String TEXT_1558 = ".put(";
-  protected final String TEXT_1559 = ", new Integer(";
-  protected final String TEXT_1560 = ".";
-  protected final String TEXT_1561 = "()));" + NL + "        }" + NL + "        Integer currentCount = ";
-  protected final String TEXT_1562 = ".get(";
-  protected final String TEXT_1563 = ");" + NL + "        int nextCount = currentCount - 1;" + NL + "        if (nextCount < ";
-  protected final String TEXT_1564 = ")" + NL + "        {";
-  protected final String TEXT_1565 = NL + "          return wasSet;" + NL + "        }";
-  protected final String TEXT_1566 = NL + "        ";
-  protected final String TEXT_1567 = ".put(";
-  protected final String TEXT_1568 = ", new Integer(nextCount));" + NL + "      }";
-  protected final String TEXT_1569 = NL + "      ";
-  protected final String TEXT_1570 = ".add(";
-  protected final String TEXT_1571 = ");" + NL + "    }" + NL;
-  protected final String TEXT_1572 = NL + "    ";
-  protected final String TEXT_1573 = ".removeAll(";
-  protected final String TEXT_1574 = ");" + NL + "" + NL + "    for (";
-  protected final String TEXT_1575 = " orphan : ";
-  protected final String TEXT_1576 = ")" + NL + "    {";
-  protected final String TEXT_1577 = NL + "      ";
-  protected final String TEXT_1578 = "(orphan, null);" + NL + "    }";
-  protected final String TEXT_1579 = NL + "    ";
-  protected final String TEXT_1580 = ".clear();" + NL + "    for (";
-  protected final String TEXT_1581 = " ";
-  protected final String TEXT_1582 = " : ";
-  protected final String TEXT_1583 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1584 = ".";
-  protected final String TEXT_1585 = "() != null)" + NL + "      {";
-  protected final String TEXT_1586 = NL + "        ";
-  protected final String TEXT_1587 = ".";
-  protected final String TEXT_1588 = "().";
-  protected final String TEXT_1589 = ".remove(";
-  protected final String TEXT_1590 = ");" + NL + "      }";
-  protected final String TEXT_1591 = NL + "      ";
-  protected final String TEXT_1592 = "(";
-  protected final String TEXT_1593 = ", this);";
-  protected final String TEXT_1594 = NL + "      ";
-  protected final String TEXT_1595 = ".add(";
-  protected final String TEXT_1596 = ");" + NL + "    }" + NL + "    wasSet = true;";
-  protected final String TEXT_1597 = NL + "    return wasSet;" + NL + "  }" + NL;
-  protected final String TEXT_1598 = NL + "  void ";
-  protected final String TEXT_1599 = "::";
-  protected final String TEXT_1600 = "(";
-  protected final String TEXT_1601 = " ";
-  protected final String TEXT_1602 = ", ";
-  protected final String TEXT_1603 = " ";
-  protected final String TEXT_1604 = ")" + NL + "  {" + NL + "    try" + NL + "    {" + NL + "      java.lang.reflect.Field mentorField = ";
-  protected final String TEXT_1605 = ".getClass().getDeclaredField(\"";
-  protected final String TEXT_1606 = "\");" + NL + "      mentorField.setAccessible(true);" + NL + "      mentorField.set(";
-  protected final String TEXT_1607 = ", ";
-  protected final String TEXT_1608 = ");" + NL + "    }" + NL + "    catch (Exception e)" + NL + "    {" + NL + "      throw new RuntimeException(\"Issue internally setting ";
-  protected final String TEXT_1609 = " to ";
-  protected final String TEXT_1610 = "\", e);" + NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_1611 = NL + "  bool ";
-  protected final String TEXT_1612 = "::";
-  protected final String TEXT_1613 = "(";
-  protected final String TEXT_1614 = "... ";
-  protected final String TEXT_1615 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1616 = NL + "    vector<";
-  protected final String TEXT_1617 = "*> ";
-  protected final String TEXT_1618 = " = new vector<";
-  protected final String TEXT_1619 = "*>();" + NL + "    for (";
-  protected final String TEXT_1620 = " ";
-  protected final String TEXT_1621 = " : ";
-  protected final String TEXT_1622 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1623 = ".contains(";
-  protected final String TEXT_1624 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
-  protected final String TEXT_1625 = NL + "      ";
-  protected final String TEXT_1626 = ".add(";
-  protected final String TEXT_1627 = ");" + NL + "    }" + NL + "" + NL + "    if (";
-  protected final String TEXT_1628 = ".size() != ";
-  protected final String TEXT_1629 = ".length || ";
-  protected final String TEXT_1630 = ".size() > ";
-  protected final String TEXT_1631 = "())" + NL + "    {";
-  protected final String TEXT_1632 = NL + "      return wasSet;" + NL + "    }" + NL;
-  protected final String TEXT_1633 = NL + "    ";
-  protected final String TEXT_1634 = ".clear();";
-  protected final String TEXT_1635 = NL + "    ";
-  protected final String TEXT_1636 = ".addAll(";
-  protected final String TEXT_1637 = ");" + NL + "    wasSet = true;";
-  protected final String TEXT_1638 = NL + "    return wasSet;" + NL + "  }";
-  protected final String TEXT_1639 = NL + "  bool ";
-  protected final String TEXT_1640 = "::";
-  protected final String TEXT_1641 = "(";
-  protected final String TEXT_1642 = "... ";
-  protected final String TEXT_1643 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
-  protected final String TEXT_1644 = NL + "    vector<";
-  protected final String TEXT_1645 = "*> ";
-  protected final String TEXT_1646 = " = new vector<";
-  protected final String TEXT_1647 = "*>();" + NL + "    for (";
-  protected final String TEXT_1648 = " ";
-  protected final String TEXT_1649 = " : ";
-  protected final String TEXT_1650 = ")" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1651 = ".contains(";
-  protected final String TEXT_1652 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
-  protected final String TEXT_1653 = NL + "      ";
-  protected final String TEXT_1654 = ".add(";
-  protected final String TEXT_1655 = ");" + NL + "    }" + NL + "" + NL + "    if (";
-  protected final String TEXT_1656 = ".size() != ";
-  protected final String TEXT_1657 = ".length || ";
-  protected final String TEXT_1658 = ".size() < ";
-  protected final String TEXT_1659 = "())" + NL + "    {";
-  protected final String TEXT_1660 = NL + "      return wasSet;" + NL + "    }" + NL;
-  protected final String TEXT_1661 = NL + "    ";
-  protected final String TEXT_1662 = ".clear();";
-  protected final String TEXT_1663 = NL + "    ";
-  protected final String TEXT_1664 = ".addAll(";
-  protected final String TEXT_1665 = ");" + NL + "    wasSet = true;";
-  protected final String TEXT_1666 = NL + "    return wasSet;" + NL + "  }";
-  protected final String TEXT_1667 = NL + "  bool equals(Object obj)" + NL + "  {" + NL + "    if (obj == NULL) { return false; }" + NL + "    if (getClass() != obj.getClass()) { return false; }" + NL;
-  protected final String TEXT_1668 = NL + "    ";
-  protected final String TEXT_1669 = " == (";
-  protected final String TEXT_1670 = ")obj;" + NL + "  " + NL + "    return true;" + NL + "  }" + NL + "" + NL + " int hashCode()" + NL + "  {" + NL + "    if (cachedHashCode != -1)" + NL + "    {" + NL + "      return cachedHashCode;" + NL + "    }" + NL + "    cachedHashCode = 17;";
-  protected final String TEXT_1671 = NL + "    ";
-  protected final String TEXT_1672 = NL;
-  protected final String TEXT_1673 = NL + "    ";
-  protected final String TEXT_1674 = NL + "    return cachedHashCode;" + NL + "  }" + NL;
-  protected final String TEXT_1675 = NL + "   void ";
-  protected final String TEXT_1676 = "::";
-  protected final String TEXT_1677 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
-  protected final String TEXT_1678 = NL + "       ";
-  protected final String TEXT_1679 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
-  protected final String TEXT_1680 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
-  protected final String TEXT_1681 = NL + "    ";
-  protected final String TEXT_1682 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_1683 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
-  protected final String TEXT_1684 = NL + "      ";
-  protected final String TEXT_1685 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_1686 = NL + "  void ";
-  protected final String TEXT_1687 = "::";
-  protected final String TEXT_1688 = "()" + NL + "  {";
-  protected final String TEXT_1689 = NL + "    ";
-  protected final String TEXT_1690 = " = new TimedEventHandler(this,\"";
-  protected final String TEXT_1691 = "\",";
-  protected final String TEXT_1692 = ");" + NL + "  }" + NL + "" + NL + "  void ";
-  protected final String TEXT_1693 = "::";
-  protected final String TEXT_1694 = "()" + NL + "  {";
-  protected final String TEXT_1695 = NL + "    ";
-  protected final String TEXT_1696 = ".stop();" + NL + "  }" + NL;
-  protected final String TEXT_1697 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
-  protected final String TEXT_1698 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
-  protected final String TEXT_1699 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    public void ";
-  protected final String TEXT_1700 = "::stop()" + NL + "    {" + NL + "      timer.cancel();" + NL + "    }" + NL + "    " + NL + "    public void ";
-  protected final String TEXT_1701 = "::run ()" + NL + "    {";
-  protected final String TEXT_1702 = NL + "      if (\"";
-  protected final String TEXT_1703 = "\" == timeoutMethodName)" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
-  protected final String TEXT_1704 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
-  protected final String TEXT_1705 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
-  protected final String TEXT_1706 = NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_1707 = NL + "  " + NL + "  //------------------------" + NL + "  // DESTRUCTOR" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_1708 = NL + "    ";
-  protected final String TEXT_1709 = " = NULL;" + NL + "    delete ";
-  protected final String TEXT_1710 = ";";
-  protected final String TEXT_1711 = NL + "    ";
-  protected final String TEXT_1712 = ".clear();";
-  protected final String TEXT_1713 = NL + "    ";
-  protected final String TEXT_1714 = " ";
-  protected final String TEXT_1715 = " = ";
-  protected final String TEXT_1716 = ";";
-  protected final String TEXT_1717 = NL + "    ";
-  protected final String TEXT_1718 = " = NULL;" + NL + "    if (";
-  protected final String TEXT_1719 = " != NULL)" + NL + "    {" + NL + "      delete ";
-  protected final String TEXT_1720 = ";" + NL + "    }";
-  protected final String TEXT_1721 = NL + "    if (";
-  protected final String TEXT_1722 = " != NULL)" + NL + "    {";
-  protected final String TEXT_1723 = NL + "      ";
-  protected final String TEXT_1724 = ".";
-  protected final String TEXT_1725 = "(NULL);" + NL + "    }";
-  protected final String TEXT_1726 = NL + "    ";
-  protected final String TEXT_1727 = " ";
-  protected final String TEXT_1728 = " = ";
-  protected final String TEXT_1729 = ";";
-  protected final String TEXT_1730 = NL + "    ";
-  protected final String TEXT_1731 = " = NULL;" + NL + "    if (";
-  protected final String TEXT_1732 = " != NULL)" + NL + "    {";
-  protected final String TEXT_1733 = NL + "      ";
-  protected final String TEXT_1734 = ".";
-  protected final String TEXT_1735 = "(NULL);" + NL + "    }";
-  protected final String TEXT_1736 = NL + "    ";
-  protected final String TEXT_1737 = " ";
-  protected final String TEXT_1738 = " = ";
-  protected final String TEXT_1739 = ";";
-  protected final String TEXT_1740 = NL + "    ";
-  protected final String TEXT_1741 = " = NULL;" + NL + "    if (";
-  protected final String TEXT_1742 = " != NULL)" + NL + "    {" + NL + "      delete ";
-  protected final String TEXT_1743 = ";" + NL + "    }";
-  protected final String TEXT_1744 = NL + "    if (";
-  protected final String TEXT_1745 = " != null)" + NL + "    {";
-  protected final String TEXT_1746 = NL + "      ";
-  protected final String TEXT_1747 = " ";
-  protected final String TEXT_1748 = " = ";
-  protected final String TEXT_1749 = ";" + NL + "      this.";
-  protected final String TEXT_1750 = " = NULL;";
-  protected final String TEXT_1751 = NL + "      ";
-  protected final String TEXT_1752 = ".";
-  protected final String TEXT_1753 = "(this);" + NL + "    }";
-  protected final String TEXT_1754 = NL + "    if (";
-  protected final String TEXT_1755 = " != NULL)" + NL + "    {" + NL + "      delete ";
-  protected final String TEXT_1756 = ";" + NL + "    }";
-  protected final String TEXT_1757 = NL + "    if (";
-  protected final String TEXT_1758 = " != NULL)" + NL + "    {" + NL + "      if (";
-  protected final String TEXT_1759 = ".";
-  protected final String TEXT_1760 = "() <= ";
-  protected final String TEXT_1761 = ")" + NL + "      {" + NL + "        delete ";
-  protected final String TEXT_1762 = ";" + NL + "      }" + NL + "      else" + NL + "      {";
-  protected final String TEXT_1763 = NL + "        ";
-  protected final String TEXT_1764 = " ";
-  protected final String TEXT_1765 = " = ";
-  protected final String TEXT_1766 = ";" + NL + "        this.";
-  protected final String TEXT_1767 = " = NULL;";
-  protected final String TEXT_1768 = NL + "        ";
-  protected final String TEXT_1769 = ".";
-  protected final String TEXT_1770 = "(this);" + NL + "      }" + NL + "    }";
-  protected final String TEXT_1771 = NL + "    ";
-  protected final String TEXT_1772 = " ";
-  protected final String TEXT_1773 = " = ";
-  protected final String TEXT_1774 = ";" + NL + "    this.";
-  protected final String TEXT_1775 = " = NULL;";
-  protected final String TEXT_1776 = NL + "    ";
-  protected final String TEXT_1777 = ".";
-  protected final String TEXT_1778 = "(this);";
-  protected final String TEXT_1779 = NL + "    for( int i =0; sizeof(";
-  protected final String TEXT_1780 = "); i++)" + NL + "    {";
-  protected final String TEXT_1781 = NL + "      ";
-  protected final String TEXT_1782 = "(";
-  protected final String TEXT_1783 = "[i],NULL);" + NL + "    }";
-  protected final String TEXT_1784 = NL + "    ";
-  protected final String TEXT_1785 = ".clear();";
-  protected final String TEXT_1786 = NL + "    vector<";
-  protected final String TEXT_1787 = "> ";
-  protected final String TEXT_1788 = " = vector<";
-  protected final String TEXT_1789 = ">(";
-  protected final String TEXT_1790 = ");";
-  protected final String TEXT_1791 = NL + "    ";
-  protected final String TEXT_1792 = ".clear();" + NL + "    for( int i =0; sizeof(";
-  protected final String TEXT_1793 = "); i++)" + NL + "     {" + NL + "      if (";
-  protected final String TEXT_1794 = ".";
-  protected final String TEXT_1795 = "() <= ";
-  protected final String TEXT_1796 = ".";
-  protected final String TEXT_1797 = "())" + NL + "      {" + NL + "        delete ";
-  protected final String TEXT_1798 = "[i];" + NL + "      }" + NL + "      else" + NL + "      {";
-  protected final String TEXT_1799 = NL + "        ";
-  protected final String TEXT_1800 = ".";
-  protected final String TEXT_1801 = "(this);" + NL + "      }" + NL + "    }";
-  protected final String TEXT_1802 = NL + "    vector<";
-  protected final String TEXT_1803 = "> ";
-  protected final String TEXT_1804 = " = new vector<";
-  protected final String TEXT_1805 = ">(";
-  protected final String TEXT_1806 = ");";
-  protected final String TEXT_1807 = NL + "    ";
-  protected final String TEXT_1808 = ".clear();" + NL + "    for(int i=0;sizeof(";
-  protected final String TEXT_1809 = ");i++)" + NL + "    {";
-  protected final String TEXT_1810 = NL + "      ";
-  protected final String TEXT_1811 = "[i].";
-  protected final String TEXT_1812 = "(this);" + NL + "    }";
-  protected final String TEXT_1813 = NL + "    for( int i =0; sizeof(";
-  protected final String TEXT_1814 = "); i++)" + NL + "    {" + NL + "      delete ";
-  protected final String TEXT_1815 = "[i];" + NL + "    }";
-  protected final String TEXT_1816 = NL + "    for( int i =0; sizeof(";
-  protected final String TEXT_1817 = "); i++)" + NL + "    {";
-  protected final String TEXT_1818 = NL + "      ";
-  protected final String TEXT_1819 = "[i].";
-  protected final String TEXT_1820 = "(NULL);" + NL + "    }";
-  protected final String TEXT_1821 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "   ";
-  protected final String TEXT_1822 = NL + "  ";
-  protected final String TEXT_1823 = NL;
+  protected final String TEXT_1394 = NL + "// association_SetUnidirectionalMany.jet HAS NOT BEEN PORTED TO C++";
+  protected final String TEXT_1395 = NL + "  bool ";
+  protected final String TEXT_1396 = "::";
+  protected final String TEXT_1397 = "(";
+  protected final String TEXT_1398 = "... ";
+  protected final String TEXT_1399 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
+  protected final String TEXT_1400 = NL + "    vector<";
+  protected final String TEXT_1401 = "*> ";
+  protected final String TEXT_1402 = " = new vector<";
+  protected final String TEXT_1403 = "*>();" + NL + "    for (";
+  protected final String TEXT_1404 = " ";
+  protected final String TEXT_1405 = " : ";
+  protected final String TEXT_1406 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1407 = ".contains(";
+  protected final String TEXT_1408 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
+  protected final String TEXT_1409 = NL + "      ";
+  protected final String TEXT_1410 = ".add(";
+  protected final String TEXT_1411 = ");" + NL + "    }" + NL + "" + NL + "    if (";
+  protected final String TEXT_1412 = ".size() != ";
+  protected final String TEXT_1413 = ".length || ";
+  protected final String TEXT_1414 = ".size() < ";
+  protected final String TEXT_1415 = "() || ";
+  protected final String TEXT_1416 = ".size() > ";
+  protected final String TEXT_1417 = "())" + NL + "    {";
+  protected final String TEXT_1418 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_1419 = "*> ";
+  protected final String TEXT_1420 = " = new vector<";
+  protected final String TEXT_1421 = "*>(";
+  protected final String TEXT_1422 = ");";
+  protected final String TEXT_1423 = NL + "    ";
+  protected final String TEXT_1424 = ".clear();" + NL + "    for (";
+  protected final String TEXT_1425 = " ";
+  protected final String TEXT_1426 = " : ";
+  protected final String TEXT_1427 = ")" + NL + "    {";
+  protected final String TEXT_1428 = NL + "      ";
+  protected final String TEXT_1429 = ".add(";
+  protected final String TEXT_1430 = ");" + NL + "      if (";
+  protected final String TEXT_1431 = ".contains(";
+  protected final String TEXT_1432 = "))" + NL + "      {";
+  protected final String TEXT_1433 = NL + "        ";
+  protected final String TEXT_1434 = ".remove(";
+  protected final String TEXT_1435 = ");" + NL + "      }" + NL + "      else" + NL + "      {";
+  protected final String TEXT_1436 = NL + "        ";
+  protected final String TEXT_1437 = ".";
+  protected final String TEXT_1438 = "(this);" + NL + "      }" + NL + "    }" + NL + "" + NL + "    for (";
+  protected final String TEXT_1439 = " ";
+  protected final String TEXT_1440 = " : ";
+  protected final String TEXT_1441 = ")" + NL + "    {";
+  protected final String TEXT_1442 = NL + "      ";
+  protected final String TEXT_1443 = ".";
+  protected final String TEXT_1444 = "(this);" + NL + "    }" + NL + "    wasSet = true;";
+  protected final String TEXT_1445 = NL + "    return wasSet;" + NL + "  }";
+  protected final String TEXT_1446 = NL + "  bool ";
+  protected final String TEXT_1447 = "::";
+  protected final String TEXT_1448 = "(";
+  protected final String TEXT_1449 = "... ";
+  protected final String TEXT_1450 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
+  protected final String TEXT_1451 = NL + "    vector<";
+  protected final String TEXT_1452 = "*> ";
+  protected final String TEXT_1453 = " = new vector<";
+  protected final String TEXT_1454 = "*>();" + NL + "    for (";
+  protected final String TEXT_1455 = " ";
+  protected final String TEXT_1456 = " : ";
+  protected final String TEXT_1457 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1458 = ".contains(";
+  protected final String TEXT_1459 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
+  protected final String TEXT_1460 = NL + "      ";
+  protected final String TEXT_1461 = ".add(";
+  protected final String TEXT_1462 = ");" + NL + "    }" + NL + "" + NL + "    if (";
+  protected final String TEXT_1463 = ".size() != ";
+  protected final String TEXT_1464 = ".length || ";
+  protected final String TEXT_1465 = ".size() < ";
+  protected final String TEXT_1466 = "())" + NL + "    {";
+  protected final String TEXT_1467 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_1468 = "*> ";
+  protected final String TEXT_1469 = " = new vector<";
+  protected final String TEXT_1470 = "*>(";
+  protected final String TEXT_1471 = ");";
+  protected final String TEXT_1472 = NL + "    ";
+  protected final String TEXT_1473 = ".clear();" + NL + "    for (";
+  protected final String TEXT_1474 = " ";
+  protected final String TEXT_1475 = " : ";
+  protected final String TEXT_1476 = ")" + NL + "    {";
+  protected final String TEXT_1477 = NL + "      ";
+  protected final String TEXT_1478 = ".add(";
+  protected final String TEXT_1479 = ");" + NL + "      if (";
+  protected final String TEXT_1480 = ".contains(";
+  protected final String TEXT_1481 = "))" + NL + "      {";
+  protected final String TEXT_1482 = NL + "        ";
+  protected final String TEXT_1483 = ".remove(";
+  protected final String TEXT_1484 = ");" + NL + "      }" + NL + "      else" + NL + "      {";
+  protected final String TEXT_1485 = NL + "        ";
+  protected final String TEXT_1486 = ".";
+  protected final String TEXT_1487 = "(this);" + NL + "      }" + NL + "    }" + NL + "" + NL + "    for (";
+  protected final String TEXT_1488 = " ";
+  protected final String TEXT_1489 = " : ";
+  protected final String TEXT_1490 = ")" + NL + "    {";
+  protected final String TEXT_1491 = NL + "      ";
+  protected final String TEXT_1492 = ".";
+  protected final String TEXT_1493 = "(this);" + NL + "    }" + NL + "    wasSet = true;";
+  protected final String TEXT_1494 = NL + "    return wasSet;" + NL + "  }";
+  protected final String TEXT_1495 = NL + "  bool ";
+  protected final String TEXT_1496 = "::";
+  protected final String TEXT_1497 = "(";
+  protected final String TEXT_1498 = "... ";
+  protected final String TEXT_1499 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
+  protected final String TEXT_1500 = NL + "    vector<";
+  protected final String TEXT_1501 = "*> ";
+  protected final String TEXT_1502 = " = new vector<";
+  protected final String TEXT_1503 = "*>();" + NL + "    for (";
+  protected final String TEXT_1504 = " ";
+  protected final String TEXT_1505 = " : ";
+  protected final String TEXT_1506 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1507 = ".contains(";
+  protected final String TEXT_1508 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
+  protected final String TEXT_1509 = NL + "      ";
+  protected final String TEXT_1510 = ".add(";
+  protected final String TEXT_1511 = ");" + NL + "    }" + NL + "" + NL + "    if (";
+  protected final String TEXT_1512 = ".size() != ";
+  protected final String TEXT_1513 = ".length || ";
+  protected final String TEXT_1514 = ".size() < ";
+  protected final String TEXT_1515 = "() || ";
+  protected final String TEXT_1516 = ".size() > ";
+  protected final String TEXT_1517 = "())" + NL + "    {";
+  protected final String TEXT_1518 = NL + "      return wasSet;" + NL + "    }" + NL;
+  protected final String TEXT_1519 = NL + "    ";
+  protected final String TEXT_1520 = ".clear();";
+  protected final String TEXT_1521 = NL + "    ";
+  protected final String TEXT_1522 = ".addAll(";
+  protected final String TEXT_1523 = ");" + NL + "    wasSet = true;";
+  protected final String TEXT_1524 = NL + "    return wasSet;" + NL + "  }";
+  protected final String TEXT_1525 = NL + "  bool ";
+  protected final String TEXT_1526 = "::";
+  protected final String TEXT_1527 = "(";
+  protected final String TEXT_1528 = "... ";
+  protected final String TEXT_1529 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
+  protected final String TEXT_1530 = NL + "    if (";
+  protected final String TEXT_1531 = ".length < ";
+  protected final String TEXT_1532 = "()";
+  protected final String TEXT_1533 = ")" + NL + "    {";
+  protected final String TEXT_1534 = NL + "      return wasSet;" + NL + "    }" + NL + "" + NL + "    vector<";
+  protected final String TEXT_1535 = "*> ";
+  protected final String TEXT_1536 = " = new vector<";
+  protected final String TEXT_1537 = "*>();" + NL + "    HashMap<";
+  protected final String TEXT_1538 = ",Integer> ";
+  protected final String TEXT_1539 = " = new HashMap<";
+  protected final String TEXT_1540 = ",Integer>();" + NL + "    for (";
+  protected final String TEXT_1541 = " ";
+  protected final String TEXT_1542 = " : ";
+  protected final String TEXT_1543 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1544 = ".contains(";
+  protected final String TEXT_1545 = "))" + NL + "      {";
+  protected final String TEXT_1546 = NL + "        return wasSet;" + NL + "      }" + NL + "      else if (";
+  protected final String TEXT_1547 = ".";
+  protected final String TEXT_1548 = "() != null && !this.equals(";
+  protected final String TEXT_1549 = ".";
+  protected final String TEXT_1550 = "()))" + NL + "      {";
+  protected final String TEXT_1551 = NL + "        ";
+  protected final String TEXT_1552 = " ";
+  protected final String TEXT_1553 = " = ";
+  protected final String TEXT_1554 = ".";
+  protected final String TEXT_1555 = "();" + NL + "        if (!";
+  protected final String TEXT_1556 = ".containsKey(";
+  protected final String TEXT_1557 = "))" + NL + "        {";
+  protected final String TEXT_1558 = NL + "          ";
+  protected final String TEXT_1559 = ".put(";
+  protected final String TEXT_1560 = ", new Integer(";
+  protected final String TEXT_1561 = ".";
+  protected final String TEXT_1562 = "()));" + NL + "        }" + NL + "        Integer currentCount = ";
+  protected final String TEXT_1563 = ".get(";
+  protected final String TEXT_1564 = ");" + NL + "        int nextCount = currentCount - 1;" + NL + "        if (nextCount < ";
+  protected final String TEXT_1565 = ")" + NL + "        {";
+  protected final String TEXT_1566 = NL + "          return wasSet;" + NL + "        }";
+  protected final String TEXT_1567 = NL + "        ";
+  protected final String TEXT_1568 = ".put(";
+  protected final String TEXT_1569 = ", new Integer(nextCount));" + NL + "      }";
+  protected final String TEXT_1570 = NL + "      ";
+  protected final String TEXT_1571 = ".add(";
+  protected final String TEXT_1572 = ");" + NL + "    }" + NL;
+  protected final String TEXT_1573 = NL + "    ";
+  protected final String TEXT_1574 = ".removeAll(";
+  protected final String TEXT_1575 = ");" + NL + "" + NL + "    for (";
+  protected final String TEXT_1576 = " orphan : ";
+  protected final String TEXT_1577 = ")" + NL + "    {";
+  protected final String TEXT_1578 = NL + "      ";
+  protected final String TEXT_1579 = "(orphan, null);" + NL + "    }";
+  protected final String TEXT_1580 = NL + "    ";
+  protected final String TEXT_1581 = ".clear();" + NL + "    for (";
+  protected final String TEXT_1582 = " ";
+  protected final String TEXT_1583 = " : ";
+  protected final String TEXT_1584 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1585 = ".";
+  protected final String TEXT_1586 = "() != null)" + NL + "      {";
+  protected final String TEXT_1587 = NL + "        ";
+  protected final String TEXT_1588 = ".";
+  protected final String TEXT_1589 = "().";
+  protected final String TEXT_1590 = ".remove(";
+  protected final String TEXT_1591 = ");" + NL + "      }";
+  protected final String TEXT_1592 = NL + "      ";
+  protected final String TEXT_1593 = "(";
+  protected final String TEXT_1594 = ", this);";
+  protected final String TEXT_1595 = NL + "      ";
+  protected final String TEXT_1596 = ".add(";
+  protected final String TEXT_1597 = ");" + NL + "    }" + NL + "    wasSet = true;";
+  protected final String TEXT_1598 = NL + "    return wasSet;" + NL + "  }" + NL;
+  protected final String TEXT_1599 = NL + "  void ";
+  protected final String TEXT_1600 = "::";
+  protected final String TEXT_1601 = "(";
+  protected final String TEXT_1602 = " ";
+  protected final String TEXT_1603 = ", ";
+  protected final String TEXT_1604 = " ";
+  protected final String TEXT_1605 = ")" + NL + "  {" + NL + "    try" + NL + "    {" + NL + "      java.lang.reflect.Field mentorField = ";
+  protected final String TEXT_1606 = ".getClass().getDeclaredField(\"";
+  protected final String TEXT_1607 = "\");" + NL + "      mentorField.setAccessible(true);" + NL + "      mentorField.set(";
+  protected final String TEXT_1608 = ", ";
+  protected final String TEXT_1609 = ");" + NL + "    }" + NL + "    catch (Exception e)" + NL + "    {" + NL + "      throw new RuntimeException(\"Issue internally setting ";
+  protected final String TEXT_1610 = " to ";
+  protected final String TEXT_1611 = "\", e);" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1612 = NL + "  bool ";
+  protected final String TEXT_1613 = "::";
+  protected final String TEXT_1614 = "(";
+  protected final String TEXT_1615 = "... ";
+  protected final String TEXT_1616 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
+  protected final String TEXT_1617 = NL + "    vector<";
+  protected final String TEXT_1618 = "*> ";
+  protected final String TEXT_1619 = " = new vector<";
+  protected final String TEXT_1620 = "*>();" + NL + "    for (";
+  protected final String TEXT_1621 = " ";
+  protected final String TEXT_1622 = " : ";
+  protected final String TEXT_1623 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1624 = ".contains(";
+  protected final String TEXT_1625 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
+  protected final String TEXT_1626 = NL + "      ";
+  protected final String TEXT_1627 = ".add(";
+  protected final String TEXT_1628 = ");" + NL + "    }" + NL + "" + NL + "    if (";
+  protected final String TEXT_1629 = ".size() != ";
+  protected final String TEXT_1630 = ".length || ";
+  protected final String TEXT_1631 = ".size() > ";
+  protected final String TEXT_1632 = "())" + NL + "    {";
+  protected final String TEXT_1633 = NL + "      return wasSet;" + NL + "    }" + NL;
+  protected final String TEXT_1634 = NL + "    ";
+  protected final String TEXT_1635 = ".clear();";
+  protected final String TEXT_1636 = NL + "    ";
+  protected final String TEXT_1637 = ".addAll(";
+  protected final String TEXT_1638 = ");" + NL + "    wasSet = true;";
+  protected final String TEXT_1639 = NL + "    return wasSet;" + NL + "  }";
+  protected final String TEXT_1640 = NL + "  bool ";
+  protected final String TEXT_1641 = "::";
+  protected final String TEXT_1642 = "(";
+  protected final String TEXT_1643 = "... ";
+  protected final String TEXT_1644 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
+  protected final String TEXT_1645 = NL + "    vector<";
+  protected final String TEXT_1646 = "*> ";
+  protected final String TEXT_1647 = " = new vector<";
+  protected final String TEXT_1648 = "*>();" + NL + "    for (";
+  protected final String TEXT_1649 = " ";
+  protected final String TEXT_1650 = " : ";
+  protected final String TEXT_1651 = ")" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1652 = ".contains(";
+  protected final String TEXT_1653 = "))" + NL + "      {" + NL + "        continue;" + NL + "      }";
+  protected final String TEXT_1654 = NL + "      ";
+  protected final String TEXT_1655 = ".add(";
+  protected final String TEXT_1656 = ");" + NL + "    }" + NL + "" + NL + "    if (";
+  protected final String TEXT_1657 = ".size() != ";
+  protected final String TEXT_1658 = ".length || ";
+  protected final String TEXT_1659 = ".size() < ";
+  protected final String TEXT_1660 = "())" + NL + "    {";
+  protected final String TEXT_1661 = NL + "      return wasSet;" + NL + "    }" + NL;
+  protected final String TEXT_1662 = NL + "    ";
+  protected final String TEXT_1663 = ".clear();";
+  protected final String TEXT_1664 = NL + "    ";
+  protected final String TEXT_1665 = ".addAll(";
+  protected final String TEXT_1666 = ");" + NL + "    wasSet = true;";
+  protected final String TEXT_1667 = NL + "    return wasSet;" + NL + "  }";
+  protected final String TEXT_1668 = NL + "  bool equals(Object obj)" + NL + "  {" + NL + "    if (obj == NULL) { return false; }" + NL + "    if (getClass() != obj.getClass()) { return false; }" + NL;
+  protected final String TEXT_1669 = NL + "    ";
+  protected final String TEXT_1670 = " == (";
+  protected final String TEXT_1671 = ")obj;" + NL + "  " + NL + "    return true;" + NL + "  }" + NL + "" + NL + " int hashCode()" + NL + "  {" + NL + "    if (cachedHashCode != -1)" + NL + "    {" + NL + "      return cachedHashCode;" + NL + "    }" + NL + "    cachedHashCode = 17;";
+  protected final String TEXT_1672 = NL + "    ";
+  protected final String TEXT_1673 = NL;
+  protected final String TEXT_1674 = NL + "    ";
+  protected final String TEXT_1675 = NL + "    return cachedHashCode;" + NL + "  }" + NL;
+  protected final String TEXT_1676 = NL + "   void ";
+  protected final String TEXT_1677 = "::";
+  protected final String TEXT_1678 = "()" + NL + "  {" + NL + "     try" + NL + "     {";
+  protected final String TEXT_1679 = NL + "       ";
+  protected final String TEXT_1680 = NL + "     }" + NL + "     catch (InterruptedException e)" + NL + "     {" + NL + " " + NL + "     }" + NL + "  }" + NL;
+  protected final String TEXT_1681 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
+  protected final String TEXT_1682 = NL + "    ";
+  protected final String TEXT_1683 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
+  protected final String TEXT_1684 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    public void run()" + NL + "    {";
+  protected final String TEXT_1685 = NL + "      ";
+  protected final String TEXT_1686 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1687 = NL + "  void ";
+  protected final String TEXT_1688 = "::";
+  protected final String TEXT_1689 = "()" + NL + "  {";
+  protected final String TEXT_1690 = NL + "    ";
+  protected final String TEXT_1691 = " = new TimedEventHandler(this,\"";
+  protected final String TEXT_1692 = "\",";
+  protected final String TEXT_1693 = ");" + NL + "  }" + NL + "" + NL + "  void ";
+  protected final String TEXT_1694 = "::";
+  protected final String TEXT_1695 = "()" + NL + "  {";
+  protected final String TEXT_1696 = NL + "    ";
+  protected final String TEXT_1697 = ".stop();" + NL + "  }" + NL;
+  protected final String TEXT_1698 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
+  protected final String TEXT_1699 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
+  protected final String TEXT_1700 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    public void ";
+  protected final String TEXT_1701 = "::stop()" + NL + "    {" + NL + "      timer.cancel();" + NL + "    }" + NL + "    " + NL + "    public void ";
+  protected final String TEXT_1702 = "::run ()" + NL + "    {";
+  protected final String TEXT_1703 = NL + "      if (\"";
+  protected final String TEXT_1704 = "\" == timeoutMethodName)" + NL + "      {" + NL + "        boolean shouldRestart = !controller.";
+  protected final String TEXT_1705 = "();" + NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
+  protected final String TEXT_1706 = "();" + NL + "        }" + NL + "        return;" + NL + "      }";
+  protected final String TEXT_1707 = NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1708 = NL + "  " + NL + "  //------------------------" + NL + "  // DESTRUCTOR" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_1709 = NL + "    ";
+  protected final String TEXT_1710 = " = NULL;" + NL + "    delete ";
+  protected final String TEXT_1711 = ";";
+  protected final String TEXT_1712 = NL + "    ";
+  protected final String TEXT_1713 = ".clear();";
+  protected final String TEXT_1714 = NL + "    ";
+  protected final String TEXT_1715 = " ";
+  protected final String TEXT_1716 = " = ";
+  protected final String TEXT_1717 = ";";
+  protected final String TEXT_1718 = NL + "    ";
+  protected final String TEXT_1719 = " = NULL;" + NL + "    if (";
+  protected final String TEXT_1720 = " != NULL)" + NL + "    {" + NL + "      delete ";
+  protected final String TEXT_1721 = ";" + NL + "    }";
+  protected final String TEXT_1722 = NL + "    if (";
+  protected final String TEXT_1723 = " != NULL)" + NL + "    {";
+  protected final String TEXT_1724 = NL + "      ";
+  protected final String TEXT_1725 = ".";
+  protected final String TEXT_1726 = "(NULL);" + NL + "    }";
+  protected final String TEXT_1727 = NL + "    ";
+  protected final String TEXT_1728 = " ";
+  protected final String TEXT_1729 = " = ";
+  protected final String TEXT_1730 = ";";
+  protected final String TEXT_1731 = NL + "    ";
+  protected final String TEXT_1732 = " = NULL;" + NL + "    if (";
+  protected final String TEXT_1733 = " != NULL)" + NL + "    {";
+  protected final String TEXT_1734 = NL + "      ";
+  protected final String TEXT_1735 = ".";
+  protected final String TEXT_1736 = "(NULL);" + NL + "    }";
+  protected final String TEXT_1737 = NL + "    ";
+  protected final String TEXT_1738 = " ";
+  protected final String TEXT_1739 = " = ";
+  protected final String TEXT_1740 = ";";
+  protected final String TEXT_1741 = NL + "    ";
+  protected final String TEXT_1742 = " = NULL;" + NL + "    if (";
+  protected final String TEXT_1743 = " != NULL)" + NL + "    {" + NL + "      delete ";
+  protected final String TEXT_1744 = ";" + NL + "    }";
+  protected final String TEXT_1745 = NL + "    if (";
+  protected final String TEXT_1746 = " != null)" + NL + "    {";
+  protected final String TEXT_1747 = NL + "      ";
+  protected final String TEXT_1748 = " ";
+  protected final String TEXT_1749 = " = ";
+  protected final String TEXT_1750 = ";" + NL + "      this.";
+  protected final String TEXT_1751 = " = NULL;";
+  protected final String TEXT_1752 = NL + "      ";
+  protected final String TEXT_1753 = ".";
+  protected final String TEXT_1754 = "(this);" + NL + "    }";
+  protected final String TEXT_1755 = NL + "    if (";
+  protected final String TEXT_1756 = " != NULL)" + NL + "    {" + NL + "      delete ";
+  protected final String TEXT_1757 = ";" + NL + "    }";
+  protected final String TEXT_1758 = NL + "    if (";
+  protected final String TEXT_1759 = " != NULL)" + NL + "    {" + NL + "      if (";
+  protected final String TEXT_1760 = ".";
+  protected final String TEXT_1761 = "() <= ";
+  protected final String TEXT_1762 = ")" + NL + "      {" + NL + "        delete ";
+  protected final String TEXT_1763 = ";" + NL + "      }" + NL + "      else" + NL + "      {";
+  protected final String TEXT_1764 = NL + "        ";
+  protected final String TEXT_1765 = " ";
+  protected final String TEXT_1766 = " = ";
+  protected final String TEXT_1767 = ";" + NL + "        this.";
+  protected final String TEXT_1768 = " = NULL;";
+  protected final String TEXT_1769 = NL + "        ";
+  protected final String TEXT_1770 = ".";
+  protected final String TEXT_1771 = "(this);" + NL + "      }" + NL + "    }";
+  protected final String TEXT_1772 = NL + "    ";
+  protected final String TEXT_1773 = " ";
+  protected final String TEXT_1774 = " = ";
+  protected final String TEXT_1775 = ";" + NL + "    this.";
+  protected final String TEXT_1776 = " = NULL;";
+  protected final String TEXT_1777 = NL + "    ";
+  protected final String TEXT_1778 = ".";
+  protected final String TEXT_1779 = "(this);";
+  protected final String TEXT_1780 = NL + "    for( int i =0; sizeof(";
+  protected final String TEXT_1781 = "); i++)" + NL + "    {";
+  protected final String TEXT_1782 = NL + "      ";
+  protected final String TEXT_1783 = "(";
+  protected final String TEXT_1784 = "[i],NULL);" + NL + "    }";
+  protected final String TEXT_1785 = NL + "    ";
+  protected final String TEXT_1786 = ".clear();";
+  protected final String TEXT_1787 = NL + "    vector<";
+  protected final String TEXT_1788 = "> ";
+  protected final String TEXT_1789 = " = vector<";
+  protected final String TEXT_1790 = ">(";
+  protected final String TEXT_1791 = ");";
+  protected final String TEXT_1792 = NL + "    ";
+  protected final String TEXT_1793 = ".clear();" + NL + "    for( int i =0; sizeof(";
+  protected final String TEXT_1794 = "); i++)" + NL + "     {" + NL + "      if (";
+  protected final String TEXT_1795 = ".";
+  protected final String TEXT_1796 = "() <= ";
+  protected final String TEXT_1797 = ".";
+  protected final String TEXT_1798 = "())" + NL + "      {" + NL + "        delete ";
+  protected final String TEXT_1799 = "[i];" + NL + "      }" + NL + "      else" + NL + "      {";
+  protected final String TEXT_1800 = NL + "        ";
+  protected final String TEXT_1801 = ".";
+  protected final String TEXT_1802 = "(this);" + NL + "      }" + NL + "    }";
+  protected final String TEXT_1803 = NL + "    vector<";
+  protected final String TEXT_1804 = "> ";
+  protected final String TEXT_1805 = " = new vector<";
+  protected final String TEXT_1806 = ">(";
+  protected final String TEXT_1807 = ");";
+  protected final String TEXT_1808 = NL + "    ";
+  protected final String TEXT_1809 = ".clear();" + NL + "    for(int i=0;sizeof(";
+  protected final String TEXT_1810 = ");i++)" + NL + "    {";
+  protected final String TEXT_1811 = NL + "      ";
+  protected final String TEXT_1812 = "[i].";
+  protected final String TEXT_1813 = "(this);" + NL + "    }";
+  protected final String TEXT_1814 = NL + "    for( int i =0; sizeof(";
+  protected final String TEXT_1815 = "); i++)" + NL + "    {" + NL + "      delete ";
+  protected final String TEXT_1816 = "[i];" + NL + "    }";
+  protected final String TEXT_1817 = NL + "    for( int i =0; sizeof(";
+  protected final String TEXT_1818 = "); i++)" + NL + "    {";
+  protected final String TEXT_1819 = NL + "      ";
+  protected final String TEXT_1820 = "[i].";
+  protected final String TEXT_1821 = "(NULL);" + NL + "    }";
+  protected final String TEXT_1822 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "   ";
+  protected final String TEXT_1823 = NL + "  ";
+  protected final String TEXT_1824 = NL;
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -1921,11 +1922,8 @@ public class CppClassGenerator implements ILang
     stringBuffer.append(TEXT_5);
       if (uClass.getIsSingleton())
   {
-	
-    
-appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.getName());
-
-    
+    // This file does not exist -- was commented out
+    // include file="members_Singleton.jet
   }
     stringBuffer.append(TEXT_6);
     
@@ -3730,12 +3728,18 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       }
       else if (av.isMStar())
       {
-        includeFile = "association_AddUnidirectionalMStar.jet";
+        if (!av.isImmutable())
+        {
+          includeFile = "association_AddUnidirectionalMStar.jet";
+        }
         includeFile2 = "association_SetUnidirectionalMStar.jet";
       }
       else if (av.isMN())
       {
-        includeFile = "association_AddUnidirectionalMN.jet";
+      	if (!av.isImmutable())
+      	{
+          includeFile = "association_AddUnidirectionalMN.jet";
+        }
         includeFile2 = "association_SetUnidirectionalMN.jet";
       }
       else if (av.isN())
@@ -3744,8 +3748,15 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       }
       else if (av.isOptionalN())
       {
-        includeFile = "association_AddUnidirectionalOptionalN.jet";
+        if (!av.isImmutable())
+      	{
+          includeFile = "association_AddUnidirectionalOptionalN.jet";
+        }
         includeFile2 = "association_SetUnidirectionalOptionalN.jet";
+      }
+      else if (av.isImmutable() && av.isMany())
+      {
+      	includeFile = "association_SetUnidirectionalMany.jet";
       }
       else if (av.isMany())
       {
@@ -3823,12 +3834,18 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isOptionalN()))
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
       includeFile = "association_SetOptionalNToMany.jet";
     }
     else if (av.isMany() && relatedAssociation.isOnlyOne())
@@ -3838,12 +3855,18 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isN()))
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
     {
       hasAddManyToManyTemplateMethod = true;
-      hasRemoveManyTemplateMethod = true;
+      if (!av.isImmutable())
+      {
+      	hasRemoveManyTemplateMethod = true;
+      }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
     {
@@ -5909,6 +5932,12 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(TEXT_1393);
     
     }
+    else if (includeFile == "association_SetUnidirectionalMany.jet")
+    {
+    	
+    stringBuffer.append(TEXT_1394);
+    
+    }
     else if (includeFile != null)
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile);
@@ -5917,258 +5946,258 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     if (includeFile2 == "association_SetMNToMany.jet")
     {
       
-    stringBuffer.append(TEXT_1394);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1395);
-    stringBuffer.append(gen.translate("setManyMethod",av));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1396);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1397);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1398);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1399);
-    stringBuffer.append(gen.translate("type",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1400);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1401);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1401);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1402);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1403);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1404);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1405);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1406);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1407);
-    stringBuffer.append(TEXT_1408);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1409);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1410);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1411);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1406);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1407);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1408);
+    stringBuffer.append(TEXT_1409);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1410);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1411);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1412);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1413);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1414);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1415);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1416);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1417);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1418);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1419);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1420);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1421);
-    stringBuffer.append(TEXT_1422);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1423);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1424);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1425);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1426);
-    stringBuffer.append(TEXT_1427);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1428);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1429);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1430);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1431);
-    stringBuffer.append(TEXT_1432);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1433);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1434);
-    stringBuffer.append(TEXT_1435);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1436);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
-    stringBuffer.append(TEXT_1437);
+    stringBuffer.append(TEXT_1416);
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1417);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1418);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1438);
-    stringBuffer.append(gen.translate("parameterOld",av));
-    stringBuffer.append(TEXT_1439);
+    stringBuffer.append(TEXT_1419);
     stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1440);
-    stringBuffer.append(TEXT_1441);
+    stringBuffer.append(TEXT_1420);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1421);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1422);
+    stringBuffer.append(TEXT_1423);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1424);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1425);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1426);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1427);
+    stringBuffer.append(TEXT_1428);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1429);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1430);
+    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1431);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1432);
+    stringBuffer.append(TEXT_1433);
+    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1434);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1435);
+    stringBuffer.append(TEXT_1436);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1437);
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(TEXT_1438);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1439);
     stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(TEXT_1440);
+    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1441);
     stringBuffer.append(TEXT_1442);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_1443);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1444);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1445);
     
     }
     else if (includeFile2 == "association_SetMStarToMany.jet")
     {
       
-    stringBuffer.append(TEXT_1445);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1446);
-    stringBuffer.append(gen.translate("setManyMethod",av));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1447);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1448);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1449);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1450);
-    stringBuffer.append(gen.translate("type",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1451);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1452);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1452);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1453);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1454);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1455);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1456);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1457);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1458);
-    stringBuffer.append(TEXT_1459);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1460);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1461);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1462);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1457);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1458);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1459);
+    stringBuffer.append(TEXT_1460);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1461);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1462);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1463);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1464);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1465);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1466);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1467);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1468);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1469);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1470);
-    stringBuffer.append(TEXT_1471);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1472);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1473);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1474);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1475);
-    stringBuffer.append(TEXT_1476);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1477);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1478);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1479);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1480);
-    stringBuffer.append(TEXT_1481);
-    stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1482);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1483);
-    stringBuffer.append(TEXT_1484);
-    stringBuffer.append(gen.translate("parameterNew",av));
-    stringBuffer.append(TEXT_1485);
-    stringBuffer.append(gen.relatedTranslate("addMethod",av));
-    stringBuffer.append(TEXT_1486);
+    stringBuffer.append(TEXT_1465);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1466);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1467);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1487);
-    stringBuffer.append(gen.translate("parameterOld",av));
-    stringBuffer.append(TEXT_1488);
+    stringBuffer.append(TEXT_1468);
     stringBuffer.append(gen.translate("parameterOldMany",av));
-    stringBuffer.append(TEXT_1489);
-    stringBuffer.append(TEXT_1490);
+    stringBuffer.append(TEXT_1469);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1470);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1471);
+    stringBuffer.append(TEXT_1472);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1473);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1474);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1475);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1476);
+    stringBuffer.append(TEXT_1477);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1478);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1479);
+    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1480);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1481);
+    stringBuffer.append(TEXT_1482);
+    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1483);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1484);
+    stringBuffer.append(TEXT_1485);
+    stringBuffer.append(gen.translate("parameterNew",av));
+    stringBuffer.append(TEXT_1486);
+    stringBuffer.append(gen.relatedTranslate("addMethod",av));
+    stringBuffer.append(TEXT_1487);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1488);
     stringBuffer.append(gen.translate("parameterOld",av));
+    stringBuffer.append(TEXT_1489);
+    stringBuffer.append(gen.translate("parameterOldMany",av));
+    stringBuffer.append(TEXT_1490);
     stringBuffer.append(TEXT_1491);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_1492);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1493);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1494);
     
     }
     else if (includeFile2 == "association_SetUnidirectionalMN.jet")
     {
       
-    stringBuffer.append(TEXT_1494);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1495);
-    stringBuffer.append(gen.translate("setManyMethod",av));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1496);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1497);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1498);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1499);
-    stringBuffer.append(gen.translate("type",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1500);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1501);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1501);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1502);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1503);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1504);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1505);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1506);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1507);
-    stringBuffer.append(TEXT_1508);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1509);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1510);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1511);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1506);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1507);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1508);
+    stringBuffer.append(TEXT_1509);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1510);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1511);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1512);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1513);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1514);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1515);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1516);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1517);
-    stringBuffer.append(TEXT_1518);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1519);
-    stringBuffer.append(TEXT_1520);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1521);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1516);
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1517);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1518);
+    stringBuffer.append(TEXT_1519);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1520);
+    stringBuffer.append(TEXT_1521);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1522);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1523);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1524);
     
     }
     else if (includeFile2 == "association_SetMNToOptionalOne.jet")
@@ -6178,282 +6207,282 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av));
 
-    stringBuffer.append(TEXT_1524);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1525);
-    stringBuffer.append(gen.translate("setManyMethod",av));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1526);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1527);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1528);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1529);
-    stringBuffer.append(gen.translate("parameterMany",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1530);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1531);
-    stringBuffer.append(orCheckMaxBound);
-    stringBuffer.append(TEXT_1532);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1533);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1534);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
-    stringBuffer.append(TEXT_1535);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1536);
-    stringBuffer.append(gen.relatedTranslate("type",av));
-    stringBuffer.append(TEXT_1537);
-    stringBuffer.append(existingToNewMap);
-    stringBuffer.append(TEXT_1538);
-    stringBuffer.append(gen.relatedTranslate("type",av));
-    stringBuffer.append(TEXT_1539);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1540);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1541);
     stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1542);
+    stringBuffer.append(TEXT_1531);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1532);
+    stringBuffer.append(orCheckMaxBound);
+    stringBuffer.append(TEXT_1533);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1534);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1535);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
-    stringBuffer.append(TEXT_1543);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1544);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1545);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1546);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_1547);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1548);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_1549);
-    stringBuffer.append(TEXT_1550);
+    stringBuffer.append(TEXT_1536);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1537);
     stringBuffer.append(gen.relatedTranslate("type",av));
-    stringBuffer.append(TEXT_1551);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_1552);
+    stringBuffer.append(TEXT_1538);
+    stringBuffer.append(existingToNewMap);
+    stringBuffer.append(TEXT_1539);
+    stringBuffer.append(gen.relatedTranslate("type",av));
+    stringBuffer.append(TEXT_1540);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1541);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1553);
+    stringBuffer.append(TEXT_1542);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1543);
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(TEXT_1544);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1545);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1546);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1547);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_1548);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1549);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_1550);
+    stringBuffer.append(TEXT_1551);
+    stringBuffer.append(gen.relatedTranslate("type",av));
+    stringBuffer.append(TEXT_1552);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1553);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1554);
-    stringBuffer.append(existingToNewMap);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1555);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_1556);
-    stringBuffer.append(TEXT_1557);
     stringBuffer.append(existingToNewMap);
-    stringBuffer.append(TEXT_1558);
+    stringBuffer.append(TEXT_1556);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1557);
+    stringBuffer.append(TEXT_1558);
+    stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1559);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1560);
-    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1561);
-    stringBuffer.append(existingToNewMap);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1562);
-    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
-    stringBuffer.append(TEXT_1563);
-    stringBuffer.append(av.getMultiplicity().getLowerBound());
-    stringBuffer.append(TEXT_1564);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1565);
-    stringBuffer.append(TEXT_1566);
     stringBuffer.append(existingToNewMap);
-    stringBuffer.append(TEXT_1567);
+    stringBuffer.append(TEXT_1563);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
+    stringBuffer.append(TEXT_1564);
+    stringBuffer.append(av.getMultiplicity().getLowerBound());
+    stringBuffer.append(TEXT_1565);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1566);
+    stringBuffer.append(TEXT_1567);
+    stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1568);
+    stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1569);
-    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1570);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1571);
-    stringBuffer.append(TEXT_1572);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1573);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
+    stringBuffer.append(TEXT_1571);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1572);
+    stringBuffer.append(TEXT_1573);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1574);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1575);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1576);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1577);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1578);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1579);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1580);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1581);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1582);
-    stringBuffer.append(gen.translate("parameterMany",av));
-    stringBuffer.append(TEXT_1583);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1584);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_1585);
-    stringBuffer.append(TEXT_1586);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1587);
-    stringBuffer.append(gen.relatedTranslate("getMethod",av));
-    stringBuffer.append(TEXT_1588);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1589);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1590);
-    stringBuffer.append(TEXT_1591);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1592);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1593);
-    stringBuffer.append(TEXT_1594);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1595);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1596);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1597);
-    stringBuffer.append(TEXT_1598);
-    stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_1599);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1600);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1582);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1583);
+    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1584);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1585);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_1586);
+    stringBuffer.append(TEXT_1587);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1588);
+    stringBuffer.append(gen.relatedTranslate("getMethod",av));
+    stringBuffer.append(TEXT_1589);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1590);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1591);
+    stringBuffer.append(TEXT_1592);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1593);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1594);
+    stringBuffer.append(TEXT_1595);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1596);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1597);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1598);
+    stringBuffer.append(TEXT_1599);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_1600);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1601);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1602);
-    stringBuffer.append(gen.relatedTranslate("type",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1603);
-    stringBuffer.append(gen.relatedTranslate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("type",av));
     stringBuffer.append(TEXT_1604);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1605);
-    stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_1606);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1607);
     stringBuffer.append(gen.relatedTranslate("parameterOne",av));
+    stringBuffer.append(TEXT_1605);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1606);
+    stringBuffer.append(gen.relatedTranslate("associationOne",av));
+    stringBuffer.append(TEXT_1607);
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1608);
     stringBuffer.append(gen.relatedTranslate("parameterOne",av));
     stringBuffer.append(TEXT_1609);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.relatedTranslate("parameterOne",av));
     stringBuffer.append(TEXT_1610);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1611);
     
     }
     else if (includeFile2 == "association_SetUnidirectionalOptionalN.jet")
     {
       
-    stringBuffer.append(TEXT_1611);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1612);
-    stringBuffer.append(gen.translate("setManyMethod",av));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1613);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1614);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1615);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1616);
-    stringBuffer.append(gen.translate("type",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1617);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1618);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1618);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1619);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1620);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1621);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1622);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1623);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1624);
-    stringBuffer.append(TEXT_1625);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1626);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1627);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1628);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1623);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1624);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1625);
+    stringBuffer.append(TEXT_1626);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1627);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1628);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1629);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1630);
-    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1631);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1632);
-    stringBuffer.append(TEXT_1633);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1634);
-    stringBuffer.append(TEXT_1635);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1636);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1631);
+    stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1632);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1633);
+    stringBuffer.append(TEXT_1634);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1635);
+    stringBuffer.append(TEXT_1636);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1637);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1638);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1639);
     
     }
     else if (includeFile2 == "association_SetUnidirectionalMStar.jet")
     {
       
-    stringBuffer.append(TEXT_1639);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1640);
-    stringBuffer.append(gen.translate("setManyMethod",av));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1641);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1642);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1643);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1644);
-    stringBuffer.append(gen.translate("type",av));
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
     stringBuffer.append(TEXT_1645);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1646);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1646);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1647);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1648);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1649);
-    stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1650);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1651);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1652);
-    stringBuffer.append(TEXT_1653);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1654);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1655);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
-    stringBuffer.append(TEXT_1656);
     stringBuffer.append(gen.translate("parameterMany",av));
+    stringBuffer.append(TEXT_1651);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1652);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1653);
+    stringBuffer.append(TEXT_1654);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1655);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1656);
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1657);
-    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1658);
-    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1659);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
-    stringBuffer.append(TEXT_1660);
-    stringBuffer.append(TEXT_1661);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1662);
-    stringBuffer.append(TEXT_1663);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1664);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
+    stringBuffer.append(TEXT_1659);
+    stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1660);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1661);
+    stringBuffer.append(TEXT_1662);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1663);
+    stringBuffer.append(TEXT_1664);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1665);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1666);
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+    stringBuffer.append(TEXT_1667);
     
     }
     else if (includeFile2 != null)
@@ -6596,18 +6625,18 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
   }
 
 
-    stringBuffer.append(TEXT_1667);
     stringBuffer.append(TEXT_1668);
-    stringBuffer.append( uClass.getName() );
     stringBuffer.append(TEXT_1669);
     stringBuffer.append( uClass.getName() );
     stringBuffer.append(TEXT_1670);
+    stringBuffer.append( uClass.getName() );
     stringBuffer.append(TEXT_1671);
-    stringBuffer.append( hash.toString().trim() );
     stringBuffer.append(TEXT_1672);
+    stringBuffer.append( hash.toString().trim() );
     stringBuffer.append(TEXT_1673);
-    stringBuffer.append( canSet.toString().trim() );
     stringBuffer.append(TEXT_1674);
+    stringBuffer.append( canSet.toString().trim() );
+    stringBuffer.append(TEXT_1675);
      } 
     
 { 
@@ -6620,14 +6649,14 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       {
         hasActivities = true;
         
-    stringBuffer.append(TEXT_1675);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1676);
-    stringBuffer.append( gen.translate("doActivityMethod",state));
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1677);
+    stringBuffer.append( gen.translate("doActivityMethod",state));
     stringBuffer.append(TEXT_1678);
-    stringBuffer.append( state.getActivity().getActivityCode() );
     stringBuffer.append(TEXT_1679);
+    stringBuffer.append( state.getActivity().getActivityCode() );
+    stringBuffer.append(TEXT_1680);
     
       }
     }
@@ -6662,15 +6691,15 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     }
   }
 
-    stringBuffer.append(TEXT_1680);
     stringBuffer.append(TEXT_1681);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1682);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1683);
+    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1684);
-    stringBuffer.append( output );
     stringBuffer.append(TEXT_1685);
+    stringBuffer.append( output );
+    stringBuffer.append(TEXT_1686);
     
   }
 }
@@ -6686,25 +6715,25 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       {
         hasTimedEvents = true;
         
-    stringBuffer.append(TEXT_1686);
-    stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1687);
-    stringBuffer.append(gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_1688);
-    stringBuffer.append(TEXT_1689);
-    stringBuffer.append( gen.translate("eventHandler",e) );
-    stringBuffer.append(TEXT_1690);
-    stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_1691);
-    stringBuffer.append( e.getTimerInSeconds() );
-    stringBuffer.append(TEXT_1692);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_1693);
-    stringBuffer.append(gen.translate("eventStopMethod",e) );
-    stringBuffer.append(TEXT_1694);
-    stringBuffer.append(TEXT_1695);
+    stringBuffer.append(TEXT_1688);
+    stringBuffer.append(gen.translate("eventStartMethod",e) );
+    stringBuffer.append(TEXT_1689);
+    stringBuffer.append(TEXT_1690);
     stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(TEXT_1691);
+    stringBuffer.append( gen.translate("eventMethod",e) );
+    stringBuffer.append(TEXT_1692);
+    stringBuffer.append( e.getTimerInSeconds() );
+    stringBuffer.append(TEXT_1693);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_1694);
+    stringBuffer.append(gen.translate("eventStopMethod",e) );
+    stringBuffer.append(TEXT_1695);
     stringBuffer.append(TEXT_1696);
+    stringBuffer.append( gen.translate("eventHandler",e) );
+    stringBuffer.append(TEXT_1697);
     
       }
     }
@@ -6716,15 +6745,15 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
  
 
 
-    stringBuffer.append(TEXT_1697);
-    stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_1698);
     stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_1699);
-    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append( gen.translate("type",uClass) );
     stringBuffer.append(TEXT_1700);
     stringBuffer.append(gen.translate("type",uClass));
     stringBuffer.append(TEXT_1701);
+    stringBuffer.append(gen.translate("type",uClass));
+    stringBuffer.append(TEXT_1702);
     
   for(StateMachine sm : uClass.getStateMachines())
   {
@@ -6733,24 +6762,24 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       if (e.getIsTimer())
       {
         
-    stringBuffer.append(TEXT_1702);
-    stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_1703);
     stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_1704);
-    stringBuffer.append( gen.translate("eventStartMethod",e) );
+    stringBuffer.append( gen.translate("eventMethod",e) );
     stringBuffer.append(TEXT_1705);
+    stringBuffer.append( gen.translate("eventStartMethod",e) );
+    stringBuffer.append(TEXT_1706);
     
       }
     }
   }
 
-    stringBuffer.append(TEXT_1706);
+    stringBuffer.append(TEXT_1707);
     
   }
 }
 
-    stringBuffer.append(TEXT_1707);
+    stringBuffer.append(TEXT_1708);
     
 
   appendln(stringBuffer,"");
@@ -6783,20 +6812,20 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       {
         hasSomethingToDelete = true;
         
-    stringBuffer.append(TEXT_1708);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1709);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1710);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1711);
     
       }
       else if (av.isMany())
       {
         hasSomethingToDelete = true;
         
-    stringBuffer.append(TEXT_1711);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1712);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1713);
     
       }
       continue;
@@ -6805,252 +6834,252 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1713);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1714);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1715);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1716);
-    stringBuffer.append(TEXT_1717);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1718);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1716);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1717);
+    stringBuffer.append(TEXT_1718);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1719);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1720);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1721);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1721);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1722);
-    stringBuffer.append(TEXT_1723);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1723);
     stringBuffer.append(TEXT_1724);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1725);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1726);
     
     }
     else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1726);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1727);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1728);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1729);
-    stringBuffer.append(TEXT_1730);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1730);
     stringBuffer.append(TEXT_1731);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1732);
-    stringBuffer.append(TEXT_1733);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1733);
     stringBuffer.append(TEXT_1734);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1735);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1736);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1736);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1737);
-    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1738);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1739);
-    stringBuffer.append(TEXT_1740);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1741);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1739);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1740);
+    stringBuffer.append(TEXT_1741);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1742);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1743);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1744);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
     {
       
-    stringBuffer.append(TEXT_1744);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1745);
-    stringBuffer.append(TEXT_1746);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1747);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1748);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1746);
+    stringBuffer.append(TEXT_1747);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1748);
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1749);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1750);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1751);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1752);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1753);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1754);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isN())
     {
       
-    stringBuffer.append(TEXT_1754);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1755);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1756);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1757);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isMN())
     {
       
-    stringBuffer.append(TEXT_1757);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1758);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1759);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1760);
-    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_1761);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_1762);
-    stringBuffer.append(TEXT_1763);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1764);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1765);
     stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1763);
+    stringBuffer.append(TEXT_1764);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1765);
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1766);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1767);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1768);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1769);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1770);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1771);
     
     }
     else if (av.isOne() && relatedAssociation.isMany())
     {
       
-    stringBuffer.append(TEXT_1771);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1772);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1773);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1774);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1775);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1776);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1777);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1778);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1779);
     
     }
     else if (av.isMandatory() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1779);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1780);
-    stringBuffer.append(TEXT_1781);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1782);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1783);
-    stringBuffer.append(TEXT_1784);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1781);
+    stringBuffer.append(TEXT_1782);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1783);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1784);
     stringBuffer.append(TEXT_1785);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1786);
     
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
     {
       
-    stringBuffer.append(TEXT_1786);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1787);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1788);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1788);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1789);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1790);
-    stringBuffer.append(TEXT_1791);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1791);
     stringBuffer.append(TEXT_1792);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1793);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1794);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
-    stringBuffer.append(TEXT_1795);
-    stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1796);
-    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1797);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1798);
-    stringBuffer.append(TEXT_1799);
+    stringBuffer.append(TEXT_1794);
     stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1795);
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1796);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1797);
+    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1798);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1799);
     stringBuffer.append(TEXT_1800);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1801);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1802);
     
     }
     else if (av.isMany() && relatedAssociation.isMany())
     {
       
-    stringBuffer.append(TEXT_1802);
-    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1803);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1804);
     stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1804);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
     stringBuffer.append(TEXT_1805);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1806);
-    stringBuffer.append(TEXT_1807);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1807);
     stringBuffer.append(TEXT_1808);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1809);
-    stringBuffer.append(TEXT_1810);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1810);
     stringBuffer.append(TEXT_1811);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1812);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1813);
     
     }
     else if (av.isMany() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1813);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1814);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1815);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1816);
     
     }
     else if (av.isMany() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1816);
-    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1817);
-    stringBuffer.append(TEXT_1818);
     stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1818);
     stringBuffer.append(TEXT_1819);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1820);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1821);
     
     }
     else
@@ -7139,11 +7168,11 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
 
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_1821);
     stringBuffer.append(TEXT_1822);
+    stringBuffer.append(TEXT_1823);
     stringBuffer.append(uClass.getExtraCode());
      } 
-    stringBuffer.append(TEXT_1823);
+    stringBuffer.append(TEXT_1824);
      append(stringBuffer,"{0}",curlyBracket); 
     return stringBuffer.toString();
   }

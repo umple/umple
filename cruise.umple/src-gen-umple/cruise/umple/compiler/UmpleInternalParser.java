@@ -1464,12 +1464,12 @@ private void analyzeClassToken(Token t, int analysisStep)
 
       if (myAs.getIsNavigable())
       {
-        myClass.addReferencedPackage(yourClass.getPackageName());
+        yourClass.addReferencedPackage(myClass.getPackageName());
       }
 
       if (yourAs.getIsNavigable())
       {
-        yourClass.addReferencedPackage(myClass.getPackageName());
+        myClass.addReferencedPackage(yourClass.getPackageName());
       }      
 
     }
