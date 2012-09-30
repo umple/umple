@@ -42,7 +42,8 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   // Attributes for header file
   //------------------------
   private:
-  <%@ include file="header_members_AllStatics.jet" %>
+
+  // FILE MISSING: include file="header_members_AllStatics.jet"
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllStateMachines.jet" %>
   <%@ include file="members_AllDoActivities.jet" %>

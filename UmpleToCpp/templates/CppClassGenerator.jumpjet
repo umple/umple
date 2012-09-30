@@ -36,7 +36,8 @@
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
 	<%  if (uClass.getIsSingleton())
   {
-	%><%@ include file="members_Singleton.jet"%><%
+    // This file does not exist -- was commented out
+    // include file="members_Singleton.jet
   }%>
   //------------------------
   // CONSTRUCTOR
