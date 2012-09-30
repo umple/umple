@@ -1,5 +1,4 @@
 0: 1, http://umple.org/PageBeingDeveloped.html, Generic Umple Error '{0}' ; 
-100: 1, http://umple.org/PageBeingDeveloped.html, Expected one of '{0}', but found '{1}' ; 
 1: 5, http://umple.org/W001SingletonWithNon-LazyAttribute.html, Lazy keyword missing from singleton class attribute '{0}' ; 
 2: 5, http://umple.org/W002SingletonWithRequiredObject.html, Association is referencing a singleton class with multiplicity 1 '{0}' ; 
 3: 5, http://umple.org/PageBeingDeveloped.html, Duplicate namespace declaration '{0}' ; 

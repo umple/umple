@@ -560,7 +560,7 @@ public class UmpleParserTest
   public void invalidClassNamePart()
   {
     //Test to ensure that the parser will not compile Classes with an invalid Class name.
-    //Specifically these tests target invalid starting characters.
+    //Specifically these tests target invalid characters in part of the name.
   
     assertFailedParse("042_invalidClassNamePartQuest.ump", 100);//name contains a question mark
     assertFailedParse("042_invalidClassNamePartExclaim.ump", 100);//name contains an exclamation mark
