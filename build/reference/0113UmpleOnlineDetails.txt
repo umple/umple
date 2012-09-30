@@ -1,0 +1,42 @@
+Umple in Presentations and Documents
+User Manual Basics
+noreferences
+
+@@description
+
+<p>It is possible to control how <a 
+href="http://try.umple.org">UmpleOnline </a> looks with various options specified in the URL.</p>
+
+<h2>Limiting the panes displayed</h2>
+
+The following options can be added to any UmpleOnline URL to limit what is displayed. These can be used when making presentations if you want to focus on just the diagram or the text. They can also be used when embedding an UmpleOnline page in another page.
+
+<ul>
+
+<li><b>&amp;nochrome</b> to hide the top part of the web page (sometimes called the
+chrome) so only the model is visible.
+
+<li><b>&amp;nodiagram</b> to hide the diagram and show text only
+
+<li><b>&amp;notext</b> to hide the text and show the diagram only (you cannot have both of &amp;nodiagram and  &amp;notext)
+
+<li><b>&amp;nomenu</b> to hide the menu. (you cannot hide the menu unless you also hide either the diagram or the text )
+
+</ul>
+
+<h2>Making the display read only</h2>
+
+<ul>
+
+<li><b>&amp;readOnly</b> to ensure that any model which appears is read only. It prevents text editing and switches off certain menu items (but not code generation).
+
+</ul>
+
+<h2>Embedding a pure diagram in a web page</h2>
+
+<p>Using <b>&amp;nochrome&amp;notext&amp;nomenu&amp;readOnly</b> allows you to embed a pure diagram  in a web page. Using <b>&amp;nochrome&amp;nodiagram&amp;nomenu&amp;readOnly</b> allows textual listings in any other web page. Using <b>&amp;nochrome&amp;notext</b> allows a UML diagram editor to be embedded.</p>
+
+<p>For example, <a href="http://try.umple.org/iframeexample.html">Click here to see a document with an embedded iFrame containing an editor opening on the RoutesAndLocations example</a>. The chrome and text is hidden.</p>
+
+<p>For a read-only version, with ability to generate code, use
+<a href="http://try.umple.org/?example=RoutesAndLocations&notext&nochrome&readOnly">http://try.umple.org/?example=RoutesAndLocations&amp;notext&amp;nochrome&amp;readOnly</a></p>
