@@ -1922,8 +1922,11 @@ public class CppClassGenerator implements ILang
     stringBuffer.append(TEXT_5);
       if (uClass.getIsSingleton())
   {
-    // This file does not exist -- was commented out
-    // include file="members_Singleton.jet
+    
+    
+appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.getName());
+
+    
   }
     stringBuffer.append(TEXT_6);
     
