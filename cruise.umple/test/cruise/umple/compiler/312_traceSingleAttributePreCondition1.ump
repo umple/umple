@@ -2,6 +2,7 @@ namespace example;
 
 class Tracer
 {
-	Integer a,b;
+	Integer a;
+	Integer b;
 	trace where a < b;
 }

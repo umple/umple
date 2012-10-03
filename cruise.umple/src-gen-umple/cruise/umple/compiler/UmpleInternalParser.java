@@ -4,6 +4,7 @@
 package cruise.umple.compiler;
 import java.io.*;
 import cruise.umple.util.*;
+import java.util.regex.*;
 import java.util.*;
 
 /**
@@ -1861,6 +1862,14 @@ private void analyzeClassToken(Token t, int analysisStep)
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
+    boolean validName = Pattern.matches("(\\d|\\w)*", attributeToken.getValue("name"));
+    
+    if(!validName)
+    {
+    	setFailedPosition(attributeToken.getPosition(), 130, attributeToken.getValue("name"));
+    	return;	
+    }
+    
     if (aClass.getIsSingleton() && !isLazy) 
     {
       isLazy = true;

@@ -211,7 +211,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributePreCondition1()
   {
-	  assertParse("312_traceSingleAttributePreCondition1.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a,b][trace][LHS:a][comparison_operator:<][RHS:b]");
+	  assertParse("312_traceSingleAttributePreCondition1.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][trace][LHS:a][comparison_operator:<][RHS:b]");
   }
   
   @Test
