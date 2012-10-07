@@ -836,7 +836,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  TraceCondition tc = traceDirective.getCondition(0);
 	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n    ";  
 	  attrCode += "{\n  ";  	  
-	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(t.translate("attribute",attr),t.translate("parameter",attr))) + "\n    ";
+	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(t.translate("attribute",attr),t.translate("parameter",attr),tc.getLhs(),tc.getLhs(),tc.getRhs().getRhs(),tc.getRhs().getRhs())) +"\n    ";
 	  attrCode += "}";
 	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);	  
   }

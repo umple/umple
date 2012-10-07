@@ -324,10 +324,32 @@ private static void postpareTrace(UmpleModel aModel)
     aClass.createGeneratedClass(model);
   }
   
-  static String prepareConsistentOutput(String param1, String param2) 
+  // Process output to force consistency 
+  // this method deals with what is inside the System.err.println();
+  static String prepareConsistentOutput(Object... params) 
   {
-	  String output = StringFormatter.format("\"{0}=\" + {1}",param1,param2);
+	  String output = StringFormatter.format("\"{0}=\" + {1}",params[0],params[1]);
+	  
+	  for( int i = 2 ; i < params.length ; i += 2 )
+	  {
+		  if( ! outputRedundant( i, params[i] , params ) )
+			  output += StringFormatter.format(" + \",{0}=\" + {1}",params[i],params[i+1]);
+	  }
 	  return output;
+  }
+  
+  // purpose of this method is make sure that output is not redundant
+  static boolean outputRedundant( int index, Object target, Object... params)
+  {
+	  boolean flag = false;
+	  
+	  for( int i =  0 ; i < index ; i += 2 )
+	  {
+		  if( target.equals(params[i]) )
+			  flag = true;
+	  }
+	  
+	  return flag;
   }
 }
 
