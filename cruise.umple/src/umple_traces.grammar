@@ -17,7 +17,7 @@ traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[trace
 
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
 traceEntity- : [[traceOptions]]? [trace_entity] ( , [trace_entity] )* 
-traceOptions- : set,get | set | get | entry | exit | cardinality
+traceOptions- : set,get | set | get | entry | exit | cardinality | transition
 PreOrPostCondition- : (giving | where)? [[traceCondition]]
 
 executeClause- : execute { [**trace_execute] }

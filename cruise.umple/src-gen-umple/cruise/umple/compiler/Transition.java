@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 public class Transition
 {
@@ -20,6 +21,7 @@ public class Transition
   private State nextState;
   private Guard guard;
   private Action action;
+  private List<StateMachine_TraceItem> stateMachineTraceItems;
 
   //Helper Variables
   private int cachedHashCode;
@@ -51,6 +53,7 @@ public class Transition
     {
       throw new RuntimeException("Unable to create nextTransition due to nextState");
     }
+    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
   }
 
   //------------------------
@@ -118,6 +121,36 @@ public class Transition
     return action;
   }
 
+  public StateMachine_TraceItem getStateMachineTraceItem(int index)
+  {
+    StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
+    return aStateMachineTraceItem;
+  }
+
+  public List<StateMachine_TraceItem> getStateMachineTraceItems()
+  {
+    List<StateMachine_TraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
+    return newStateMachineTraceItems;
+  }
+
+  public int numberOfStateMachineTraceItems()
+  {
+    int number = stateMachineTraceItems.size();
+    return number;
+  }
+
+  public boolean hasStateMachineTraceItems()
+  {
+    boolean has = stateMachineTraceItems.size() > 0;
+    return has;
+  }
+
+  public int indexOfStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  {
+    int index = stateMachineTraceItems.indexOf(aStateMachineTraceItem);
+    return index;
+  }
+
   public boolean setEvent(Event newEvent)
   {
     boolean wasSet = false;
@@ -182,6 +215,45 @@ public class Transition
     action = newAction;
     wasSet = true;
     return wasSet;
+  }
+
+  public static int minimumNumberOfStateMachineTraceItems()
+  {
+    return 0;
+  }
+
+  public boolean addStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  {
+    boolean wasAdded = false;
+    if (stateMachineTraceItems.contains(aStateMachineTraceItem)) { return false; }
+    Transition existingTransition = aStateMachineTraceItem.getTransition();
+    if (existingTransition == null)
+    {
+      aStateMachineTraceItem.setTransition(this);
+    }
+    else if (!this.equals(existingTransition))
+    {
+      existingTransition.removeStateMachineTraceItem(aStateMachineTraceItem);
+      addStateMachineTraceItem(aStateMachineTraceItem);
+    }
+    else
+    {
+      stateMachineTraceItems.add(aStateMachineTraceItem);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  {
+    boolean wasRemoved = false;
+    if (stateMachineTraceItems.contains(aStateMachineTraceItem))
+    {
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
+      aStateMachineTraceItem.setTransition(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
   }
 
   public boolean equals(Object obj)
@@ -288,6 +360,10 @@ public class Transition
     placeholderNextState.removeNextTransition(this);
     guard = null;
     action = null;
+    for(StateMachine_TraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    {
+      aStateMachineTraceItem.setTransition(null);
+    }
   }
   
   //------------------------

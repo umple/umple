@@ -18,6 +18,7 @@ public class StateMachine_TraceItem
 
   //StateMachine_TraceItem Associations
   private StateMachine stateMachine;
+  private Transition transition;
   private List<TraceDirective> traceDirectives;
 
   //------------------------
@@ -85,6 +86,11 @@ public class StateMachine_TraceItem
     return stateMachine;
   }
 
+  public Transition getTransition()
+  {
+    return transition;
+  }
+
   public TraceDirective getTraceDirective(int index)
   {
     TraceDirective aTraceDirective = traceDirectives.get(index);
@@ -130,6 +136,23 @@ public class StateMachine_TraceItem
       existingStateMachine.removeStateMachineTraceItem(this);
     }
     stateMachine.addStateMachineTraceItem(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTransition(Transition aTransition)
+  {
+    boolean wasSet = false;
+    Transition existingTransition = transition;
+    transition = aTransition;
+    if (existingTransition != null && !existingTransition.equals(aTransition))
+    {
+      existingTransition.removeStateMachineTraceItem(this);
+    }
+    if (aTransition != null)
+    {
+      aTransition.addStateMachineTraceItem(this);
+    }
     wasSet = true;
     return wasSet;
   }
@@ -189,6 +212,12 @@ public class StateMachine_TraceItem
     StateMachine placeholderStateMachine = stateMachine;
     this.stateMachine = null;
     placeholderStateMachine.removeStateMachineTraceItem(this);
+    if (transition != null)
+    {
+      Transition placeholderTransition = transition;
+      this.transition = null;
+      placeholderTransition.removeStateMachineTraceItem(this);
+    }
     ArrayList<TraceDirective> copyOfTraceDirectives = new ArrayList<TraceDirective>(traceDirectives);
     traceDirectives.clear();
     for(TraceDirective aTraceDirective : copyOfTraceDirectives)

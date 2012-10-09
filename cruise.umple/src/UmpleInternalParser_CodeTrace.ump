@@ -65,6 +65,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
       
       for( Token traceToken : token.getSubTokens() )
       {
+
     	  if( traceToken.is("trace_entity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
     	  {
     		  analyzeTraceItem( traceToken , traceDirective , mte, traceAttr);
@@ -161,7 +162,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  // here, i faced a problem of finding traced state machine because
 	  // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
 	  analyzeStateMachineTraceItem(traceToken,traceDirective);
-  
+	  
 	  if( traceToken.getName().equals("entry") )
 	  {
 		  mte.setEntry(true);
@@ -209,8 +210,14 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  StateMachine stm = null;
 	  State state = null;
 	  String stmTraceItem = traceToken.getValue("trace_entity");
-	  
-	  if(stmTraceItem != null && stmTraceItem.contains("."))
+	  	  
+	  if( traceToken.getParentToken().getSubToken(1).getName().equals("transition"))
+	  {
+		  System.out.println("inside = "+traceToken.getParentToken().getSubToken(1).getName());
+
+	  }
+		  
+	  if( stmTraceItem != null && stmTraceItem.contains("."))
 	  {
 		  String delimiter = "\\.";
 		  String[] temp = stmTraceItem.split(delimiter);
