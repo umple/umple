@@ -31,7 +31,7 @@ class Truck{
  1 -- * DeliverOrShipmentBom;
 }
 class Rwbm{
- Integer ID;
+ Integer id;
 }
 
 class Item{

@@ -28,7 +28,7 @@ class FinancialInstrument{
 class ReusableFinancialInstrument{
  isA FinancialInstrument;
  number;
- PIN;
+ pin;
  * -> 1 Currency;
 }
 

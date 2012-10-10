@@ -225,6 +225,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="nextState" lowerBound="1" upperBound="1" eType="#//State" eOpposite="#//State/nextTransition"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="0" upperBound="1" eType="#//Guard" eOpposite="#//Guard/transitions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="0" upperBound="1" eType="#//Action" eOpposite="#//Action/transition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachine_TraceItem" eOpposite="#//StateMachine_TraceItem/transition"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Action">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -550,6 +551,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exit" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceStateMachineFlag" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="1" upperBound="1" eType="#//StateMachine" eOpposite="#//StateMachine/stateMachineTraceItems"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transition" lowerBound="0" upperBound="1" eType="#//Transition" eOpposite="#//Transition/stateMachineTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirectives" lowerBound="0" upperBound="-1" eType="#//TraceDirective" eOpposite="#//TraceDirective/stateMachineTraceItems"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraceCase">
