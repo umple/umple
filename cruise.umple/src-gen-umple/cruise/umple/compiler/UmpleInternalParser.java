@@ -1862,17 +1862,12 @@ private void analyzeClassToken(Token t, int analysisStep)
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-    boolean validName = Pattern.matches("([a-z]|[A-Z])(\\d|\\w)*", attributeToken.getValue("name"));
-    boolean properName = Pattern.matches("([a-z])(\\d|\\w)*", attributeToken.getValue("name"));
+    boolean validName = Pattern.matches("(\\d|\\w)*", attributeToken.getValue("name"));
     
     if(!validName)
     {
     	setFailedPosition(attributeToken.getPosition(), 130, attributeToken.getValue("name"));
     	return;	
-    }
-    
-    if(!properName){
-    	setFailedPosition(attributeToken.getPosition(), 131, attributeToken.getValue("name"));
     }
     
     if (aClass.getIsSingleton() && !isLazy) 

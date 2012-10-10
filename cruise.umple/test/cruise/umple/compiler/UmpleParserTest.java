@@ -860,12 +860,6 @@ public class UmpleParserTest
   @Test
   public void attributeInvalidName(){
 	  assertFailedParse("008_invalidAttributeName.ump", 130);
-	  assertFailedParse("008_attributeNumericalFirstCharacter.ump", 130);
-  }
-  
-  @Test
-  public void attributeProperNamingStyle(){
-	  assertHasWarningsParse("008_attributeUpperFirstChar.ump", 131);
   }
   
   @Test
