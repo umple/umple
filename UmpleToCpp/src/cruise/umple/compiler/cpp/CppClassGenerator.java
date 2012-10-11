@@ -179,8 +179,8 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_159 = NL + NL + "  //------------------------" + NL + "  // INTERFACE" + NL + "  //------------------------" + NL;
   protected final String TEXT_160 = NL + "  bool ";
   protected final String TEXT_161 = "::";
-  protected final String TEXT_162 = "(";
-  protected final String TEXT_163 = "& ";
+  protected final String TEXT_162 = "(const ";
+  protected final String TEXT_163 = " & ";
   protected final String TEXT_164 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
   protected final String TEXT_165 = NL + "    ";
   protected final String TEXT_166 = " = false;";
@@ -190,8 +190,8 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_170 = NL + "    return wasSet;" + NL + "  }" + NL;
   protected final String TEXT_171 = NL + "  bool ";
   protected final String TEXT_172 = "::";
-  protected final String TEXT_173 = "(";
-  protected final String TEXT_174 = "& ";
+  protected final String TEXT_173 = "(const ";
+  protected final String TEXT_174 = " & ";
   protected final String TEXT_175 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
   protected final String TEXT_176 = NL + "    ";
   protected final String TEXT_177 = " = ";
@@ -205,8 +205,8 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_185 = NL + "    return wasReset;" + NL + "  }" + NL;
   protected final String TEXT_186 = NL + "  bool ";
   protected final String TEXT_187 = "::";
-  protected final String TEXT_188 = "(";
-  protected final String TEXT_189 = "& ";
+  protected final String TEXT_188 = "(const ";
+  protected final String TEXT_189 = " & ";
   protected final String TEXT_190 = ")" + NL + "  {" + NL + "    bool wasAdded = false;";
   protected final String TEXT_191 = NL + "    wasAdded = ";
   protected final String TEXT_192 = ".add(";
@@ -214,7 +214,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_194 = NL + "    return wasAdded;" + NL + "  }" + NL + "" + NL + "  bool ";
   protected final String TEXT_195 = "::";
   protected final String TEXT_196 = "(";
-  protected final String TEXT_197 = "& ";
+  protected final String TEXT_197 = " & ";
   protected final String TEXT_198 = ")" + NL + "  {" + NL + "    bool wasRemoved = false;";
   protected final String TEXT_199 = NL + "    wasRemoved = ";
   protected final String TEXT_200 = ".remove(";
@@ -222,8 +222,8 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_202 = NL + "    return wasRemoved;" + NL + "  }" + NL;
   protected final String TEXT_203 = NL + "  bool ";
   protected final String TEXT_204 = "::";
-  protected final String TEXT_205 = "(";
-  protected final String TEXT_206 = "& ";
+  protected final String TEXT_205 = "(const ";
+  protected final String TEXT_206 = " & ";
   protected final String TEXT_207 = ")" + NL + "  {" + NL + "    bool wasSet = false;";
   protected final String TEXT_208 = NL + "    ";
   protected final String TEXT_209 = " = ";
@@ -2805,7 +2805,6 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_162);
     stringBuffer.append(gen.translate("type",av));
-    if(gen.translate("type",av).equals("string")){append(stringBuffer," const");}
     stringBuffer.append(TEXT_163);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_164);
@@ -2832,7 +2831,6 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(gen.translate("setMethod",av));
     stringBuffer.append(TEXT_173);
     stringBuffer.append(gen.translate("type",av));
-    if(gen.translate("type",av).equals("string")){append(stringBuffer," const");}
     stringBuffer.append(TEXT_174);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_175);
@@ -2867,7 +2865,6 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(gen.translate("addMethod",av));
     stringBuffer.append(TEXT_188);
     stringBuffer.append(gen.translate("type",av));
-    if(gen.translate("type",av).equals("string")){append(stringBuffer," const");}
     stringBuffer.append(TEXT_189);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_190);
@@ -2884,7 +2881,6 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_196);
     stringBuffer.append(gen.translate("type",av));
-    if(gen.translate("type",av).equals("string")){append(stringBuffer," const");}
     stringBuffer.append(TEXT_197);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_198);
@@ -2907,7 +2903,6 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append( gen.translate("setMethod",av) );
     stringBuffer.append(TEXT_205);
     stringBuffer.append(gen.translate("type",av));
-    if(gen.translate("type",av).equals("string")){append(stringBuffer," const");}
     stringBuffer.append(TEXT_206);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_207);

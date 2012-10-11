@@ -38,7 +38,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool SubMentor2::setSubName(string const& aSubName)
+  bool SubMentor2::setSubName(const string & aSubName)
   {
     bool wasSet = false;
     subName = aSubName;

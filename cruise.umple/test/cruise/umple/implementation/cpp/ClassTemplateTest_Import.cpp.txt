@@ -38,7 +38,7 @@ using namespace example.two;
   // INTERFACE
   //------------------------
 
-  bool Mentor::setName(string const& aName)
+  bool Mentor::setName(const string & aName)
   {
     bool wasSet = false;
     name = aName;

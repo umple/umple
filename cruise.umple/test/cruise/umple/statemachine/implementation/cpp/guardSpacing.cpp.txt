@@ -38,7 +38,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Garage::setEntranceClear(bool& aEntranceClear)
+  bool Garage::setEntranceClear(const bool & aEntranceClear)
   {
     bool wasSet = false;
     entranceClear = aEntranceClear;

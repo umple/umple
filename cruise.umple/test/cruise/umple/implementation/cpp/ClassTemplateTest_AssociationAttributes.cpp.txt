@@ -37,7 +37,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Token::setP(Position& aP)
+  bool Token::setP(const Position & aP)
   {
     bool wasSet = false;
     p = aP;

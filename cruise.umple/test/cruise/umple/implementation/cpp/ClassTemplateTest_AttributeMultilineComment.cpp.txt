@@ -37,7 +37,7 @@
   // INTERFACE
   //------------------------
 
-  bool Foo::setName(string const& aName)
+  bool Foo::setName(const string & aName)
   {
     bool wasSet = false;
     name = aName;

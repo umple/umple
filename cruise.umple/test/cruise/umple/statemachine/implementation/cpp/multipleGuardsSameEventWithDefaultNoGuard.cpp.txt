@@ -38,7 +38,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool LightFixture::setBrightness(int& aBrightness)
+  bool LightFixture::setBrightness(const int & aBrightness)
   {
     bool wasSet = false;
     brightness = aBrightness;

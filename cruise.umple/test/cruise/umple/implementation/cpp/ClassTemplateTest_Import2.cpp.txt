@@ -47,7 +47,7 @@ using namespace example.three;
   // INTERFACE
   //------------------------
 
-  bool Student::setNumber(string const& aNumber)
+  bool Student::setNumber(const string & aNumber)
   {
     bool wasSet = false;
     number = aNumber;

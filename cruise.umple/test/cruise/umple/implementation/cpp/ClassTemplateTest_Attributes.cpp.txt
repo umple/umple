@@ -98,7 +98,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Mentor::setStr2(string const& aStr2)
+  bool Mentor::setStr2(const string & aStr2)
   {
     bool wasSet = false;
     if (!canSetStr2) { return false; }
@@ -108,7 +108,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setSomeName(string const& aSomeName)
+  bool Mentor::setSomeName(const string & aSomeName)
   {
     bool wasSet = false;
     someName = aSomeName;
@@ -116,7 +116,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setLDoub(double& aLDoub)
+  bool Mentor::setLDoub(const double & aLDoub)
   {
     bool wasSet = false;
     lDoub = aLDoub;
@@ -124,7 +124,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setLBool(bool& aLBool)
+  bool Mentor::setLBool(const bool & aLBool)
   {
     bool wasSet = false;
     lBool = aLBool;
@@ -132,7 +132,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setName(string const& aName)
+  bool Mentor::setName(const string & aName)
   {
     bool wasSet = false;
     name = aName;
@@ -140,7 +140,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setD(string const& aD)
+  bool Mentor::setD(const string & aD)
   {
     bool wasSet = false;
     d = aD;
@@ -148,7 +148,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setI(int& aI)
+  bool Mentor::setI(const int & aI)
   {
     bool wasSet = false;
     i = aI;
@@ -156,7 +156,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setP(string const& aP)
+  bool Mentor::setP(const string & aP)
   {
     bool wasSet = false;
     p = aP;
@@ -172,7 +172,7 @@ namespace example{
     return wasReset;
   }
 
-  bool Mentor::setQ(string const& aQ)
+  bool Mentor::setQ(const string & aQ)
   {
     bool wasSet = false;
     q = aQ;
@@ -180,7 +180,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setR(string const& aR)
+  bool Mentor::setR(const string & aR)
   {
     bool wasSet = false;
     r = aR;
@@ -196,7 +196,7 @@ namespace example{
     return wasReset;
   }
 
-  bool Mentor::setT(string const& aT)
+  bool Mentor::setT(const string & aT)
   {
     bool wasSet = false;
     t = aT;
@@ -204,7 +204,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setU(time_t*& aU)
+  bool Mentor::setU(const time_t* & aU)
   {
     bool wasSet = false;
     u = aU;
@@ -212,7 +212,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Mentor::setV(string const& aV)
+  bool Mentor::setV(const string & aV)
   {
     bool wasSet = false;
     v = aV;
@@ -228,7 +228,7 @@ namespace example{
     return wasReset;
   }
 
-  bool Mentor::setW(time_t*& aW)
+  bool Mentor::setW(const time_t* & aW)
   {
     bool wasSet = false;
     w = aW;

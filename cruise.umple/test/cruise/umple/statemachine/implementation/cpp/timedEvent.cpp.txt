@@ -39,7 +39,7 @@ namespace example{
   // INTERFACE
   //------------------------
 
-  bool Mentor::setHowLongUntilOk(int& aHowLongUntilOk)
+  bool Mentor::setHowLongUntilOk(const int & aHowLongUntilOk)
   {
     bool wasSet = false;
     howLongUntilOk = aHowLongUntilOk;

@@ -37,7 +37,7 @@
   // INTERFACE
   //------------------------
 
-  bool Foo::setBar(string const& aBar)
+  bool Foo::setBar(const string & aBar)
   {
     bool wasSet = false;
     bar = aBar;
