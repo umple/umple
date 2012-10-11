@@ -10,7 +10,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- Token::Token(const Position& aP)
+ Token::Token(const Position & aP)
   {
     p = aP;
   }

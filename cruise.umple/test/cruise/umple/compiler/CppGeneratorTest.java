@@ -86,7 +86,7 @@ public class CppGeneratorTest
     Attribute attr = new Attribute("name","Integer",null,null,false,c);
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aName",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aName",g.getLookup("constructorSignature"));
     Assert.assertEquals("aName",g.getLookup("constructorSignature_caller"));
   }  
 
@@ -111,7 +111,7 @@ public class CppGeneratorTest
     attr = new Attribute("lname","Integer",null,null,false,c);
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aFname, const int& aLname",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aFname, const int & aLname",g.getLookup("constructorSignature"));
     Assert.assertEquals("aFname, aLname",g.getLookup("constructorSignature_caller"));
   }  
   
@@ -222,11 +222,11 @@ public class CppGeneratorTest
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aId, Mentor aMentor",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aId, Mentor aMentor",g.getLookup("constructorSignature"));
     Assert.assertEquals("aId, aMentor",g.getLookup("constructorSignature_caller"));
 
     GeneratedClass g2 = c2.getGeneratedClass();
-    Assert.assertEquals("const string& aName",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("const string & aName",g2.getLookup("constructorSignature"));
     Assert.assertEquals("aName",g2.getLookup("constructorSignature_caller"));
 
     Assert.assertEquals(null,g.getLookup("constructorSignature_mandatory"));
@@ -269,11 +269,11 @@ public class CppGeneratorTest
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aId",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aId",g.getLookup("constructorSignature"));
     Assert.assertEquals("aId",g.getLookup("constructorSignature_caller"));
 
     GeneratedClass g2 = c2.getGeneratedClass();
-    Assert.assertEquals("const string& aName, vector<Student*> allStudents",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("const string & aName, vector<Student*> allStudents",g2.getLookup("constructorSignature"));
     Assert.assertEquals("aName, allStudents",g2.getLookup("constructorSignature_caller"));
     
   }   
@@ -296,11 +296,11 @@ public class CppGeneratorTest
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aId, vector<Student*> allStudents",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aId, vector<Student*> allStudents",g.getLookup("constructorSignature"));
     Assert.assertEquals("aId, allStudents",g.getLookup("constructorSignature_caller"));
 
     GeneratedClass g2 = c2.getGeneratedClass();
-    Assert.assertEquals("const string& aName",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("const string & aName",g2.getLookup("constructorSignature"));
     Assert.assertEquals("aName",g2.getLookup("constructorSignature_caller"));
     
   }   
@@ -324,11 +324,11 @@ public class CppGeneratorTest
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aId, Mentor aMentor",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aId, Mentor aMentor",g.getLookup("constructorSignature"));
     Assert.assertEquals("aId, aMentor",g.getLookup("constructorSignature_caller"));
 
     GeneratedClass g2 = c2.getGeneratedClass();
-    Assert.assertEquals("const string& aName",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("const string & aName",g2.getLookup("constructorSignature"));
     Assert.assertEquals("aName",g2.getLookup("constructorSignature_caller"));
     
   }   
@@ -829,7 +829,7 @@ public class CppGeneratorTest
     String methodArgs = generator.translate("methodArgumentsExcept", av);
 
     Assert.assertEquals("aNumber, this", callerArgs);
-    Assert.assertEquals("const int& aNumber", methodArgs);
+    Assert.assertEquals("const int & aNumber", methodArgs);
     
   }
   
@@ -1220,11 +1220,11 @@ public class CppGeneratorTest
     
     generator.prepare();
     GeneratedClass g = c.getGeneratedClass();
-    Assert.assertEquals("const int& aId",g.getLookup("constructorSignature"));
+    Assert.assertEquals("const int & aId",g.getLookup("constructorSignature"));
     Assert.assertEquals("aId",g.getLookup("constructorSignature_caller"));
 
     GeneratedClass g2 = c2.getGeneratedClass();
-    Assert.assertEquals("const string& aName",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("const string & aName",g2.getLookup("constructorSignature"));
     Assert.assertEquals("aName",g2.getLookup("constructorSignature_caller"));  
     }
 

@@ -10,7 +10,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- SubMentor2::SubMentor2(const string& aName, const string& aSubName)
+ SubMentor2::SubMentor2(const string & aName, const string & aSubName)
   {
     SubMentor2(aName);
     subName = aSubName;

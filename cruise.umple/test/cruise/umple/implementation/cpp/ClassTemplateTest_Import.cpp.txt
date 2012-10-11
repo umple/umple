@@ -11,7 +11,7 @@ using namespace example.two;
   // CONSTRUCTOR
   //------------------------
   
- Mentor::Mentor(const string& aName)
+ Mentor::Mentor(const string & aName)
   {
     name = aName;
   }

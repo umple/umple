@@ -10,7 +10,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Foo::Foo(const string& aName)
+ Foo::Foo(const string & aName)
   {
     name = aName;
   }

@@ -11,7 +11,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- Mentor::Mentor(const String& aStr, const Date& aD, const int& aI)
+ Mentor::Mentor(const String & aStr, const Date & aD, const int & aI)
   {
     str = aStr;
     canSetStr = false;

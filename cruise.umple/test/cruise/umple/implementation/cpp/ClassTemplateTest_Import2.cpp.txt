@@ -13,7 +13,7 @@ using namespace example.three;
   // CONSTRUCTOR
   //------------------------
   
- Student::Student(const string& aNumber, vector<Mentor*> allMentors)
+ Student::Student(const string & aNumber, vector<Mentor*> allMentors)
   {
     number = aNumber;
     mentors = new vector<Mentor*>();

@@ -10,7 +10,7 @@ namespace example{
   // CONSTRUCTOR
   //------------------------
   
- Garage::Garage(const bool& aEntranceClear)
+ Garage::Garage(const bool & aEntranceClear)
   {
     entranceClear = aEntranceClear;
     setGarageDoor(GarageDoor.Open);

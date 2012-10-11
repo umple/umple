@@ -10,7 +10,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Foo::Foo(const string& aTestAttribute1, const string& aTestAttribute2, const string& aTestAttribute3, const string& aTestAttribute4)
+ Foo::Foo(const string & aTestAttribute1, const string & aTestAttribute2, const string & aTestAttribute3, const string & aTestAttribute4)
   {
     testAttribute1 = aTestAttribute1;
     testAttribute2 = aTestAttribute2;
