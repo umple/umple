@@ -31,6 +31,7 @@
 121: 4, http://umple.org/PageBeingDeveloped.html, Association role name '{0}' should start with a lower-case letter ;
 130: 2, http://umple.org/PageBeingDeveloped.html, Attribute name '{0}' must be alphanumeric, starting with an alpha character ;
 131: 4, http://umple.org/PageBeingDeveloped.html, Attribute name '{0}' should start with a lower-case letter ;
+132: 1, http://umple.org/PageBeingDeveloped.html, Attribute name '{0}' contains special characters association declaration must be separated by spaces ;
 140: 2, http://umple.org/PageBeingDeveloped.html, Attribute type name '{0}' must be alphanumeric, starting with an alpha character ;
 150: 2, http://umple.org/PageBeingDeveloped.html, State machine name '{0}' must be alphanumeric, starting with an alpha character ;
 152: 2, http://umple.org/PageBeingDeveloped.html, State name '{0}' must be alphanumeric, starting with an alpha character ;

@@ -46,7 +46,7 @@ public class Language
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  private static final boolean DEFAULT_STRICTNESS = false;
+  private static final boolean default_strictness = false;
   private Hashtable<String, String> _allEnglish;
 
   private void init()
@@ -67,7 +67,7 @@ public class Language
   
   public String lookup(String id)
   {
-    return lookup(id,DEFAULT_STRICTNESS);
+    return lookup(id,default_strictness);
   }
   
   public String lookup(String id, boolean isStrict)

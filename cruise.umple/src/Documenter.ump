@@ -48,12 +48,12 @@ class ContentParser
 
 class Template
 {
-  const HtmlTemplate = htmlTemplate();
-  const ExampleTemplate = exampleTemplate();
-  const SyntaxTemplate = syntaxTemplate();
-  const NavigationHeaderTemplate = navigationHeaderTemplate();
-  const NavigationItemTemplate = navigationItemTemplate();
-  const NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
+  const htmlTemplate = htmlTemplate();
+  const exampleTemplate = exampleTemplate();
+  const syntaxTemplate = syntaxTemplate();
+  const navigationHeaderTemplate = navigationHeaderTemplate();
+  const navigationItemTemplate = navigationItemTemplate();
+  const navigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
 }
 
 use Parser.ump;

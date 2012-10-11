@@ -851,15 +851,32 @@ public class UmpleParserTest
   public void attributeComplexAssigned()
   {
     assertParse("008_complexAssignedAttribute.ump");
-
+    
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable = aClass.getAttribute("t");
     Assert.assertEquals("new Time(\"now\")",variable.getValue());
   }
   
   @Test
-  public void attributeInvalidName(){
+  public void attributeInvalidName()
+  {
 	  assertFailedParse("008_invalidAttributeName.ump", 130);
+	  assertFailedParse("008_attributeNumericalFirstCharacter.ump", 130);
+	  assertSimpleParse("008_attributeUnderscoreFirstChar.ump");
+  }
+  @Test
+  public void attributeProperNamingStyle()
+  {
+	  assertHasWarningsParse("008_attributeUpperFirstChar.ump", 131);
+  }
+  
+  @Test
+  public void attributeLooksLikeAssociation()
+  {
+	  assertFailedParse("008_attributeContainsDoubleDash.ump", 132);
+	  assertFailedParse("008_attributeContainsDoublePeriod.ump", 132);
+	  assertFailedParse("008_attributeContainsStar.ump", 132);
+	  assertFailedParse("008_attributeContainsArrow.ump", 132);
   }
   
   @Test

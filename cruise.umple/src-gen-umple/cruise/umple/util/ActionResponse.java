@@ -11,7 +11,7 @@ public class ActionResponse
   // STATIC VARIABLES
   //------------------------
 
-  public static final String DEFAULT_SUCCESS_MESSAGE_ID = "Success!";
+  public static final String default_success_message_id = "Success!";
 
   //------------------------
   // MEMBER VARIABLES
@@ -27,7 +27,7 @@ public class ActionResponse
 
   public ActionResponse()
   {
-    successMessage = DEFAULT_SUCCESS_MESSAGE_ID;
+    successMessage = default_success_message_id;
     errors = new ArrayList<ErrorItem>();
   }
 

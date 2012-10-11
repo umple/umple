@@ -28,7 +28,7 @@ class Language
   
   before constructor { init(); }
   
-  private static final boolean DEFAULT_STRICTNESS = false;
+  private static final boolean default_strictness = false;
   private Hashtable<String, String> _allEnglish;
 
   private void init()
@@ -49,7 +49,7 @@ class Language
   
   public String lookup(String id)
   {
-    return lookup(id,DEFAULT_STRICTNESS);
+    return lookup(id,default_strictness);
   }
   
   public String lookup(String id, boolean isStrict)
@@ -205,8 +205,8 @@ class FileManager
 
 class ActionResponse
 {
-  const DEFAULT_SUCCESS_MESSAGE_ID = "Success!";
-  successMessage = DEFAULT_SUCCESS_MESSAGE_ID;
+  const default_success_message_id = "Success!";
+  successMessage = default_success_message_id;
   ErrorItem[] errors;
   
  

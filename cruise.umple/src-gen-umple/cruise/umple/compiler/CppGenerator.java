@@ -834,7 +834,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       }
         
 
-      signature.append(StringFormatter.format("const {0}& {1}",typeOf(av),nameOf(av))); 
+      signature.append(StringFormatter.format("const {0} & {1}",typeOf(av),nameOf(av))); 
       signatureCaller.append(nameOf(av));   
     }
 

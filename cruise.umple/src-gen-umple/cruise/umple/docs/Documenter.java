@@ -320,7 +320,7 @@ public class Documenter
       return "";
     }
     
-    String htmlOutput = Template.HtmlTemplate;
+    String htmlOutput = Template.htmlTemplate;
     htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
     htmlOutput = htmlOutput.replace("@@PREVNEXT@@", prevNextOutput);
     htmlOutput = htmlOutput.replace("@@NAVIGATION@@", navigationOutput);
@@ -334,14 +334,14 @@ public class Documenter
     }
     else
     {
-      String syntaxHtml = Template.SyntaxTemplate.replace("@@SYNTAX_CODE@@",(new UmpleInternalParser()).toGrammarParts(selectedContent.getSyntax()));
+      String syntaxHtml = Template.syntaxTemplate.replace("@@SYNTAX_CODE@@",(new UmpleInternalParser()).toGrammarParts(selectedContent.getSyntax()));
       htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
     }
     
     String exampleOutput = "";
     for (String example : selectedContent.getExamples())
     {
-      String nextExample = Template.ExampleTemplate;
+      String nextExample = Template.exampleTemplate;
       String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
       nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
       
@@ -368,7 +368,7 @@ public class Documenter
     String nextGroupItem = "";
     for (Group group : getParser().getGroups())
     {
-      String nextGroupHeader = Template.NavigationHeaderTemplate;
+      String nextGroupHeader = Template.navigationHeaderTemplate;
       nextGroupHeader = nextGroupHeader
         .replace("@@NAVIGATION_HEADER_NAME@@",group.getName())
         .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName())
@@ -378,10 +378,10 @@ public class Documenter
       for (Content content : group.getContents())
       {
         if(content == contentToNotHighlight) {
-          nextGroupItem = Template.NavigationItemTemplateNoAnchor;
+          nextGroupItem = Template.navigationItemTemplateNoAnchor;
         }
         else {
-          nextGroupItem = Template.NavigationItemTemplate;
+          nextGroupItem = Template.navigationItemTemplate;
         }
         nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle());
         if(content != contentToNotHighlight) {
