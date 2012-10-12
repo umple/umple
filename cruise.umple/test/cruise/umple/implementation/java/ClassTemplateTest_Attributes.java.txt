@@ -35,7 +35,7 @@ public class Mentor
   private String q;
   private String r;
   private String s;
-  private Date t;
+  private Date tt;
   private Time u;
   private Date v;
   private Time w;
@@ -69,7 +69,7 @@ public class Mentor
     resetR();
     s = "123";
     canSetS = false;
-    t = Date.valueOf("1978-12-25");
+    tt = Date.valueOf("1978-12-25");
     u = Time.valueOf("12:13:14");
     resetV();
     resetW();
@@ -178,10 +178,10 @@ public class Mentor
     return wasReset;
   }
 
-  public boolean setT(Date aT)
+  public boolean setTt(Date aTt)
   {
     boolean wasSet = false;
-    t = aT;
+    tt = aTt;
     wasSet = true;
     return wasSet;
   }
@@ -301,9 +301,9 @@ public class Mentor
     return s;
   }
 
-  public Date getT()
+  public Date getTt()
   {
-    return t;
+    return tt;
   }
 
   public Time getU()

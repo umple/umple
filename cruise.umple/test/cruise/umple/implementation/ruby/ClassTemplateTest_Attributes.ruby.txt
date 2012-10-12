@@ -24,7 +24,7 @@ class Mentor
   #------------------------
 
   #Mentor Attributes - for documentation purposes
-  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :name, :d, :t, :i, :p, :q, :r, :s, :t, :u, :v, :w
+  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :name, :d, :t, :i, :p, :q, :r, :s, :tt, :u, :v, :w
 
   #Autounique Attributes - for documentation purposes
   #attr_reader x;
@@ -52,7 +52,7 @@ class Mentor
     reset_r
     @s = "123"
     @can_set_s = false
-    @t = Date.parse("1978-12-25")
+    @tt = Date.parse("1978-12-25")
     @u = Time.parse("12:13:14")
     reset_v
     reset_w
@@ -151,9 +151,9 @@ class Mentor
     wasReset
   end
 
-  def set_t(a_t)
+  def set_tt(a_tt)
     was_set = false
-    @t = a_t
+    @tt = a_tt
     was_set = true
     was_set
   end
@@ -253,8 +253,8 @@ class Mentor
     @s
   end
 
-  def get_t
-    @t
+  def get_tt
+    @tt
   end
 
   def get_u

@@ -1895,6 +1895,12 @@ private void analyzeClassToken(Token t, int analysisStep)
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("derivedValue");
 
+    for(Attribute aAttribute : aClass.getAttributes()){
+      if (aAttribute.getName().equals(name)){
+        setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
+      }
+	}
+
     if (derivedValue != null)
     {
       value = derivedValue;

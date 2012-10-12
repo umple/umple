@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `example`.`mentor`
   q VARCHAR(255) DEFAULT 'chicken',
   r VARCHAR(255) DEFAULT '',
   s VARCHAR(255) DEFAULT '123',
-  t DATE DEFAULT 'Date.parse("1978-12-25")',
+  tt DATE DEFAULT 'Date.parse("1978-12-25")',
   u TIME DEFAULT 'Time.parse("12:13:14")',
   v DATE DEFAULT 'Date.parse("1978-12-26")',
   w TIME DEFAULT 'Time.parse("12:59:59")',

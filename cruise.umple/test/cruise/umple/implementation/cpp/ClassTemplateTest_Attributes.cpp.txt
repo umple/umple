@@ -27,7 +27,7 @@ namespace example{
     resetR();
     s = "123";
     canSetS = false;
-    t = "1978-12-25";
+    tt = "1978-12-25";
     u = "12:13:14";
     resetV();
     resetW();
@@ -58,7 +58,7 @@ namespace example{
     this->q = mentor.q;
     this->r = mentor.r;
     this->s = mentor.s;
-    this->t = mentor.t;
+    this->tt = mentor.tt;
     this->u = mentor.u;
     this->v = mentor.v;
     this->w = mentor.w;
@@ -88,7 +88,7 @@ namespace example{
     this->q = mentor.q;
     this->r = mentor.r;
     this->s = mentor.s;
-    this->t = mentor.t;
+    this->tt = mentor.tt;
     this->u = mentor.u;
     this->v = mentor.v;
     this->w = mentor.w;
@@ -196,10 +196,10 @@ namespace example{
     return wasReset;
   }
 
-  bool Mentor::setT(const string & aT)
+  bool Mentor::setTt(const string & aTt)
   {
     bool wasSet = false;
-    t = aT;
+    tt = aTt;
     wasSet = true;
     return wasSet;
   }
@@ -319,9 +319,9 @@ namespace example{
     return s;
   }
 
-  string Mentor::getT()
+  string Mentor::getTt()
   {
-    return t;
+    return tt;
   }
 
   time_t* Mentor::getU()

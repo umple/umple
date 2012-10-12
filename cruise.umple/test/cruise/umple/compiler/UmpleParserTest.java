@@ -1699,6 +1699,12 @@ public class UmpleParserTest
   }
   
   @Test
+  public void duplicateAttributesNames(){
+    assertFailedParse("025_multipleAttributesWithSameName.ump", new Position("025_multipleAttributesWithSameName.ump",3,2,16),22);
+  
+  } 
+  
+  @Test
   public void commentsBeforeClasses()
   {
     assertParse("400_commentsBeforeClasses.ump");

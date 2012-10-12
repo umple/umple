@@ -32,7 +32,7 @@ class Mentor
   private $q;
   private $r;
   private $s;
-  private $t;
+  private $tt;
   private $u;
   private $v;
   private $w;
@@ -66,7 +66,7 @@ class Mentor
     $this->resetR();
     $this->s = "123";
     $this->canSetS = false;
-    $this->t = date("y-m-d", strtotime("1978-12-25"));
+    $this->tt = date("y-m-d", strtotime("1978-12-25"));
     $this->u = date("h:i:s", strtotime("12:13:14"));
     $this->resetV();
     $this->resetW();
@@ -175,10 +175,10 @@ class Mentor
     return $wasReset;
   }
 
-  public function setT($aT)
+  public function setTt($aTt)
   {
     $wasSet = false;
-    $this->t = $aT;
+    $this->tt = $aTt;
     $wasSet = true;
     return $wasSet;
   }
@@ -298,9 +298,9 @@ class Mentor
     return $this->s;
   }
 
-  public function getT()
+  public function getTt()
   {
-    return $this->t;
+    return $this->tt;
   }
 
   public function getU()
