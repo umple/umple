@@ -244,42 +244,42 @@ namespace example{
     return wasReset;
   }
 
-  string Mentor::getStr()
+  string Mentor::getStr() const
   {
     return str;
   }
 
-  string Mentor::getStr2()
+  string Mentor::getStr2() const
   {
     return str2;
   }
 
-  string Mentor::getSomeName()
+  string Mentor::getSomeName() const
   {
     return someName;
   }
 
-  double Mentor::getLDoub()
+  double Mentor::getLDoub() const
   {
     return lDoub;
   }
 
-  bool Mentor::getLBool()
+  bool Mentor::getLBool() const
   {
     return lBool;
   }
 
-  string Mentor::getName()
+  string Mentor::getName() const
   {
     return name;
   }
 
-  string Mentor::getD()
+  string Mentor::getD() const
   {
     return d;
   }
 
-  int Mentor::getI()
+  int Mentor::getI() const
   {
     return i;
   }
@@ -289,67 +289,67 @@ namespace example{
     return i*2;
   }
 
-  string Mentor::getP()
+  string Mentor::getP() const
   {
     return p;
   }
 
-  string Mentor::getDefaultP()
+  string Mentor::getDefaultP() const
   {
     return "robot";
   }
 
-  string Mentor::getQ()
+  string Mentor::getQ() const
   {
     return q;
   }
 
-  string Mentor::getR()
+  string Mentor::getR() const
   {
     return r;
   }
 
-  string Mentor::getDefaultR()
+  string Mentor::getDefaultR() const
   {
     return "";
   }
 
-  string Mentor::getS()
+  string Mentor::getS() const
   {
     return s;
   }
 
-  string Mentor::getTt()
+  string Mentor::getTt() const
   {
     return tt;
   }
 
-  time_t* Mentor::getU()
+  time_t* Mentor::getU() const
   {
     return u;
   }
 
-  string Mentor::getV()
+  string Mentor::getV() const
   {
     return v;
   }
 
-  string Mentor::getDefaultV()
+  string Mentor::getDefaultV() const
   {
     return "1978-12-26";
   }
 
-  time_t* Mentor::getW()
+  time_t* Mentor::getW() const
   {
     return w;
   }
 
-  time_t* Mentor::getDefaultW()
+  time_t* Mentor::getDefaultW() const
   {
     return "12:59:59";
   }
 
-  int Mentor::getX()
+  int Mentor::getX() const
   {
     return x;
   }

@@ -45,7 +45,7 @@
     return wasSet;
   }
 
-  string Foo::getBar()
+  string Foo::getBar() const
   {
     return bar;
   }

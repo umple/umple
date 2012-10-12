@@ -45,7 +45,7 @@ namespace example{
     return wasSet;
   }
 
-  string Student::getGrade()
+  string Student::getGrade() const
   {
     return grade;
   }

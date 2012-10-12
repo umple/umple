@@ -46,7 +46,7 @@ using namespace example.two;
     return wasSet;
   }
 
-  string Mentor::getName()
+  string Mentor::getName() const
   {
     return name;
   }

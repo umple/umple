@@ -45,7 +45,7 @@ namespace example{
     return wasSet;
   }
 
-  Position Token::getP()
+  Position Token::getP() const
   {
     return p;
   }

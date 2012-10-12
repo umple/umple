@@ -47,7 +47,7 @@ namespace example{
     return wasSet;
   }
 
-  int Mentor::getHowLongUntilOk()
+  int Mentor::getHowLongUntilOk() const
   {
     return howLongUntilOk;
   }

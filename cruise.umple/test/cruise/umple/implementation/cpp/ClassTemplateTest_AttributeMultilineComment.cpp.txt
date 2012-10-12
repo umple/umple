@@ -45,7 +45,7 @@
     return wasSet;
   }
 
-  string Foo::getName()
+  string Foo::getName() const
   {
     return name;
   }

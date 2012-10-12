@@ -46,7 +46,7 @@ namespace example{
     return wasSet;
   }
 
-  int LightFixture::getBrightness()
+  int LightFixture::getBrightness() const
   {
     return brightness;
   }

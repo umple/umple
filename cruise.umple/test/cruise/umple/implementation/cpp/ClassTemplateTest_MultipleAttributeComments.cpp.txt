@@ -78,22 +78,22 @@
     return wasSet;
   }
 
-  string Foo::getTestAttribute1()
+  string Foo::getTestAttribute1() const
   {
     return testAttribute1;
   }
 
-  string Foo::getTestAttribute2()
+  string Foo::getTestAttribute2() const
   {
     return testAttribute2;
   }
 
-  string Foo::getTestAttribute3()
+  string Foo::getTestAttribute3() const
   {
     return testAttribute3;
   }
 
-  string Foo::getTestAttribute4()
+  string Foo::getTestAttribute4() const
   {
     return testAttribute4;
   }

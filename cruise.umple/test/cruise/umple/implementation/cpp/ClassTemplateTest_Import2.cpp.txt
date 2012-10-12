@@ -55,7 +55,7 @@ using namespace example.three;
     return wasSet;
   }
 
-  string Student::getNumber()
+  string Student::getNumber() const
   {
     return number;
   }

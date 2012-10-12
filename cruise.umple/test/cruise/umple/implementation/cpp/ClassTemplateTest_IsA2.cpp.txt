@@ -46,7 +46,7 @@ namespace example{
     return wasSet;
   }
 
-  string SubMentor2::getSubName()
+  string SubMentor2::getSubName() const
   {
     return subName;
   }

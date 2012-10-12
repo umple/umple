@@ -46,7 +46,7 @@ namespace example{
     return wasSet;
   }
 
-  bool Garage::getEntranceClear()
+  bool Garage::getEntranceClear() const
   {
     return entranceClear;
   }
