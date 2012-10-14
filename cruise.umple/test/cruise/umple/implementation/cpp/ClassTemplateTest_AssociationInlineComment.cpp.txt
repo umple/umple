@@ -2,8 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-
-#include <vector>
 #include "Foo.h"
 
 	
@@ -34,9 +32,9 @@
   // INTERFACE
   //------------------------
 
-  Bar Foo::getBar(int index) 
+  Bar* Foo::getBar(int index) 
   {
-    Bar aBar = bars.get(index);
+    Bar aBar = bars[index];
     return aBar;
   }
 
@@ -58,9 +56,9 @@
     return has;
   }
   
-  int Foo::indexOfBar(Bar aBar)
+  int Foo::indexOfBar(Bar* aBar)
   {
-    int index = std::find(bars.begin(), bars.end(), aBar) - bars.begin();
+    int index = find(bars.begin(), bars.end(), aBar) - bars.begin();
     return index;
   }
   
@@ -115,4 +113,3 @@ Foo::~Foo()
       delete bars[i];
     }
   }
-

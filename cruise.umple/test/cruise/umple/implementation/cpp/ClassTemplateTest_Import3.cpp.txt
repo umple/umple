@@ -2,9 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example.three{
-#include <vector>
-using namespace example.two;
 #include "Course.h"
 
 	
@@ -35,9 +32,9 @@ using namespace example.two;
   // INTERFACE
   //------------------------
 
-  Student Course::getStudent(int index) 
+  Student* Course::getStudent(int index) 
   {
-    Student aStudent = students.get(index);
+    Student aStudent = students[index];
     return aStudent;
   }
 
@@ -59,9 +56,9 @@ using namespace example.two;
     return has;
   }
   
-  int Course::indexOfStudent(Student aStudent)
+  int Course::indexOfStudent(Student* aStudent)
   {
-    int index = std::find(students.begin(), students.end(), aStudent) - students.begin();
+    int index = find(students.begin(), students.end(), aStudent) - students.begin();
     return index;
   }
   
@@ -129,5 +126,3 @@ Course::~Course()
       students[i].removeCourse(this);
     }
   }
-
-}

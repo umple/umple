@@ -2,7 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example{
 #include "CodeTranslator.h"
 
 	
@@ -48,5 +47,3 @@ CodeTranslator::~CodeTranslator()
    String CodeTranslator::translate(String id, AssociationVariable associationVariable){
       return "1";
   }
-
-}

@@ -2,8 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example{
-#include <time.h>
 #include "Mentor.h"
 
 	
@@ -361,5 +359,3 @@ namespace example{
   
 Mentor::~Mentor()
   {}
-
-}

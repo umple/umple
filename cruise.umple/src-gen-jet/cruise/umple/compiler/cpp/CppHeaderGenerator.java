@@ -18,7 +18,7 @@ public class CppHeaderGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/";
   protected final String TEXT_2 = NL + NL + "#ifndef ";
   protected final String TEXT_3 = "_H_" + NL + "#define ";
   protected final String TEXT_4 = "_H_";
@@ -59,7 +59,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_39 = " & ";
   protected final String TEXT_40 = ");";
   protected final String TEXT_41 = NL + "  ";
-  protected final String TEXT_42 = " ";
+  protected final String TEXT_42 = "* ";
   protected final String TEXT_43 = "(int index);";
   protected final String TEXT_44 = NL + "  ";
   protected final String TEXT_45 = "[] ";
@@ -67,7 +67,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_47 = "();" + NL + "  bool ";
   protected final String TEXT_48 = "();" + NL + "  int ";
   protected final String TEXT_49 = "(";
-  protected final String TEXT_50 = " ";
+  protected final String TEXT_50 = "* ";
   protected final String TEXT_51 = ");";
   protected final String TEXT_52 = NL + "  ";
   protected final String TEXT_53 = " ";
@@ -153,7 +153,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_133 = NL + "  ";
   protected final String TEXT_134 = " ";
   protected final String TEXT_135 = "(int index);" + NL + "  vector<";
-  protected final String TEXT_136 = "> ";
+  protected final String TEXT_136 = "*> ";
   protected final String TEXT_137 = "();" + NL + "  int ";
   protected final String TEXT_138 = "();" + NL + "  bool ";
   protected final String TEXT_139 = "();" + NL + "  int ";
@@ -481,6 +481,12 @@ public class CppHeaderGenerator implements ILang
   {
     appendln(stringBuffer, "");
     append(stringBuffer, "using namespace {0};",anImport);
+  }
+  
+  if (uClass.hasAssociationVariables())
+  {
+  	appendln(stringBuffer, "");
+    append(stringBuffer, "#include<algorithm>");  	
   }
 
     

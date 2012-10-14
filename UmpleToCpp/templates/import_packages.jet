@@ -17,4 +17,10 @@
     appendln(stringBuffer, "");
     append(stringBuffer, "using namespace {0};",anImport);
   }
+  
+  if (uClass.hasAssociationVariables())
+  {
+  	appendln(stringBuffer, "");
+    append(stringBuffer, "#include<algorithm>");  	
+  }
 %>

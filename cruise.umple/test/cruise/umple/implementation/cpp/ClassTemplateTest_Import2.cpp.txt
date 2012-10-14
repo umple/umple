@@ -2,10 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example.two{
-#include <vector>
-using namespace example.one;
-using namespace example.three;
 #include "Student.h"
 
 	
@@ -60,9 +56,9 @@ using namespace example.three;
     return number;
   }
 
-  Mentor Student::getMentor(int index) 
+  Mentor* Student::getMentor(int index) 
   {
-    Mentor aMentor = mentors.get(index);
+    Mentor aMentor = mentors[index];
     return aMentor;
   }
 
@@ -84,15 +80,15 @@ using namespace example.three;
     return has;
   }
   
-  int Student::indexOfMentor(Mentor aMentor)
+  int Student::indexOfMentor(Mentor* aMentor)
   {
-    int index = std::find(mentors.begin(), mentors.end(), aMentor) - mentors.begin();
+    int index = find(mentors.begin(), mentors.end(), aMentor) - mentors.begin();
     return index;
   }
   
-  Course Student::getCourse(int index) 
+  Course* Student::getCourse(int index) 
   {
-    Course aCourse = courses.get(index);
+    Course aCourse = courses[index];
     return aCourse;
   }
 
@@ -114,9 +110,9 @@ using namespace example.three;
     return has;
   }
   
-  int Student::indexOfCourse(Course aCourse)
+  int Student::indexOfCourse(Course* aCourse)
   {
-    int index = std::find(courses.begin(), courses.end(), aCourse) - courses.begin();
+    int index = find(courses.begin(), courses.end(), aCourse) - courses.begin();
     return index;
   }
   
@@ -292,5 +288,3 @@ Student::~Student()
       courses[i].removeStudent(this);
     }
   }
-
-}

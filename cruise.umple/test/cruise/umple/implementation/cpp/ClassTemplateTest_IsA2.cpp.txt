@@ -2,7 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example{
 #include "SubMentor2.h"
 
 	
@@ -60,5 +59,3 @@ SubMentor2::~SubMentor2()
   {
     super.delete();
   }
-
-}

@@ -2,8 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-
-#include <vector>
 #include "Foo.h"
 
 	
@@ -37,9 +35,9 @@
   // INTERFACE
   //------------------------
 
-  Bar1 Foo::getBar1(int index) 
+  Bar1* Foo::getBar1(int index) 
   {
-    Bar1 aBar1 = bar1s.get(index);
+    Bar1 aBar1 = bar1s[index];
     return aBar1;
   }
 
@@ -61,15 +59,15 @@
     return has;
   }
   
-  int Foo::indexOfBar1(Bar1 aBar1)
+  int Foo::indexOfBar1(Bar1* aBar1)
   {
-    int index = std::find(bar1s.begin(), bar1s.end(), aBar1) - bar1s.begin();
+    int index = find(bar1s.begin(), bar1s.end(), aBar1) - bar1s.begin();
     return index;
   }
   
-  Bar2 Foo::getBar2(int index) 
+  Bar2* Foo::getBar2(int index) 
   {
-    Bar2 aBar2 = bar2s.get(index);
+    Bar2 aBar2 = bar2s[index];
     return aBar2;
   }
 
@@ -91,15 +89,15 @@
     return has;
   }
   
-  int Foo::indexOfBar2(Bar2 aBar2)
+  int Foo::indexOfBar2(Bar2* aBar2)
   {
-    int index = std::find(bar2s.begin(), bar2s.end(), aBar2) - bar2s.begin();
+    int index = find(bar2s.begin(), bar2s.end(), aBar2) - bar2s.begin();
     return index;
   }
   
-  Bar3 Foo::getBar3(int index) 
+  Bar3* Foo::getBar3(int index) 
   {
-    Bar3 aBar3 = bar3s.get(index);
+    Bar3 aBar3 = bar3s[index];
     return aBar3;
   }
 
@@ -121,15 +119,15 @@
     return has;
   }
   
-  int Foo::indexOfBar3(Bar3 aBar3)
+  int Foo::indexOfBar3(Bar3* aBar3)
   {
-    int index = std::find(bar3s.begin(), bar3s.end(), aBar3) - bar3s.begin();
+    int index = find(bar3s.begin(), bar3s.end(), aBar3) - bar3s.begin();
     return index;
   }
   
-  Bar4 Foo::getBar4(int index) 
+  Bar4* Foo::getBar4(int index) 
   {
-    Bar4 aBar4 = bar4s.get(index);
+    Bar4 aBar4 = bar4s[index];
     return aBar4;
   }
 
@@ -151,9 +149,9 @@
     return has;
   }
   
-  int Foo::indexOfBar4(Bar4 aBar4)
+  int Foo::indexOfBar4(Bar4* aBar4)
   {
-    int index = std::find(bar4s.begin(), bar4s.end(), aBar4) - bar4s.begin();
+    int index = find(bar4s.begin(), bar4s.end(), aBar4) - bar4s.begin();
     return index;
   }
   
@@ -337,4 +335,3 @@ Foo::~Foo()
       delete bar4s[i];
     }
   }
-

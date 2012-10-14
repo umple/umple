@@ -2,7 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example{
 #include "Mentor.h"
 
 	
@@ -45,4 +44,3 @@ Mentor::~Mentor()
    
   public static main()
   {}
-}

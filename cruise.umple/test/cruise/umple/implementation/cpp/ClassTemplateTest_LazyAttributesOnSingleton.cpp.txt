@@ -2,7 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-namespace example{
 
 public class Application
 {
@@ -91,5 +90,3 @@ public class Application
 
   public void delete()
   {}
-
-}

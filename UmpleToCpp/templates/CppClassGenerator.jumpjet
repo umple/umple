@@ -29,8 +29,6 @@
 
 %>
 
-<%=gen.translate("packageDefinition",uClass)%>
-<%@ include file="import_packages.jet" %>
 <%@ include file="import_headerFile.jet"%>
 
 <% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
@@ -87,5 +85,3 @@
    
   <%=uClass.getExtraCode()%>
 <% } %>
-
-<% append(stringBuffer,"{0}",curlyBracket); %>
