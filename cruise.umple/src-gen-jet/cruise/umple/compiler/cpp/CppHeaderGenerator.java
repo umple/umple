@@ -18,7 +18,7 @@ public class CppHeaderGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
   protected final String TEXT_2 = NL + NL + "#ifndef ";
   protected final String TEXT_3 = "_H_" + NL + "#define ";
   protected final String TEXT_4 = "_H_";
@@ -151,7 +151,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_131 = "* ";
   protected final String TEXT_132 = "();";
   protected final String TEXT_133 = NL + "  ";
-  protected final String TEXT_134 = " ";
+  protected final String TEXT_134 = "* ";
   protected final String TEXT_135 = "(int index);" + NL + "  vector<";
   protected final String TEXT_136 = "*> ";
   protected final String TEXT_137 = "();" + NL + "  int ";

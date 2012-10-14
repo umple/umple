@@ -151,7 +151,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_131 = "* ";
   protected final String TEXT_132 = "();";
   protected final String TEXT_133 = NL + "  ";
-  protected final String TEXT_134 = " ";
+  protected final String TEXT_134 = "* ";
   protected final String TEXT_135 = "(int index);" + NL + "  vector<";
   protected final String TEXT_136 = "*> ";
   protected final String TEXT_137 = "();" + NL + "  int ";
