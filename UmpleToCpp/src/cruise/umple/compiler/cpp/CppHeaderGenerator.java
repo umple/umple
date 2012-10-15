@@ -325,10 +325,10 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_305 = "\", e);" + NL + "    }" + NL + "  }" + NL;
   protected final String TEXT_306 = NL + "  bool ";
   protected final String TEXT_307 = "(";
-  protected final String TEXT_308 = " ";
+  protected final String TEXT_308 = "* ";
   protected final String TEXT_309 = ");" + NL + "  bool ";
   protected final String TEXT_310 = "(";
-  protected final String TEXT_311 = " ";
+  protected final String TEXT_311 = "* ";
   protected final String TEXT_312 = ");";
   protected final String TEXT_313 = NL + "  bool ";
   protected final String TEXT_314 = "(";
