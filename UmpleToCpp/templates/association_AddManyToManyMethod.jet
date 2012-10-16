@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
@@ -11,8 +11,8 @@
     }
 
 <% } %>
-    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) != -1)
+    <%=gen.translate("associationMany",av)%>.push_back(<%=gen.translate("parameterOne",av)%>);
+    if (<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>(this) != -1)
     {
       wasAdded = true;
     }
@@ -21,7 +21,7 @@
       wasAdded = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
       if (!wasAdded)
       {
-        <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+        <%=gen.translate("associationMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
       }
     }
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>

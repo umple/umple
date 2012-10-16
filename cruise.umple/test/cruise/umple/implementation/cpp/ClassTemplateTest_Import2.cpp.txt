@@ -226,12 +226,12 @@
     return 0;
   }
 
-  bool Student::addCourse(Course aCourse)
+  bool Student::addCourse(Course* aCourse)
   {
     bool wasAdded = false;
     if (courses.contains(aCourse)) { return false; }
-    courses.add(aCourse);
-    if (aCourse.indexOfStudent(this) != -1)
+    courses.push_back(aCourse);
+    if (aCourse->indexOfStudent(this) != -1)
     {
       wasAdded = true;
     }
@@ -240,7 +240,7 @@
       wasAdded = aCourse.addStudent(this);
       if (!wasAdded)
       {
-        courses.remove(aCourse);
+        courses.erase(find(courses.begin(),courses.end(),aCourse));
       }
     }
     return wasAdded;

@@ -68,12 +68,12 @@
     return 0;
   }
 
-  bool Course::addStudent(Student aStudent)
+  bool Course::addStudent(Student* aStudent)
   {
     bool wasAdded = false;
     if (students.contains(aStudent)) { return false; }
-    students.add(aStudent);
-    if (aStudent.indexOfCourse(this) != -1)
+    students.push_back(aStudent);
+    if (aStudent->indexOfCourse(this) != -1)
     {
       wasAdded = true;
     }
@@ -82,7 +82,7 @@
       wasAdded = aStudent.addCourse(this);
       if (!wasAdded)
       {
-        students.remove(aStudent);
+        students.erase(find(students.begin(),students.end(),aStudent));
       }
     }
     return wasAdded;

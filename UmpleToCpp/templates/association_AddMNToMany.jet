@@ -15,18 +15,18 @@
       return wasRemoved;
     }
 	
-    int oldIndex = std::find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
+    int oldIndex = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
     <%=gen.translate("associationMany",av)%>.erase(oldIndex);
-    if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) == -1)
+    if (<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
+      wasRemoved = <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>(this);
       if (!wasRemoved)
       {
-        <%=gen.translate("associationMany",av)%>.add(oldIndex,<%=gen.translate("parameterOne",av)%>);
+        <%=gen.translate("associationMany",av)%>->add(oldIndex,<%=gen.translate("parameterOne",av)%>);
       }
     }
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>

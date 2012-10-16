@@ -11,7 +11,7 @@
       {
         continue;
       }
-      <%=gen.translate("parameterVerifiedMany",av)%>push_back(<%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("parameterVerifiedMany",av)%>.push_back(<%=gen.translate("parameterOne",av)%>);
     }
 
     if (<%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=gen.translate("parameterMany",av)%>.length)
