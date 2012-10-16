@@ -1927,6 +1927,11 @@ private void analyzeClassToken(Token t, int analysisStep)
     if (type == null)
     {
       type = "String";
+    } else {    	
+    	if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type)) {
+    		setFailedPosition(attributeToken.getPosition(), 140, type);
+        	return;
+        }
     }
 
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);

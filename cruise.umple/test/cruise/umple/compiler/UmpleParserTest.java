@@ -880,6 +880,13 @@ public class UmpleParserTest
   }
   
   @Test
+  public void attributeInvalidTypeName()
+  {
+	  assertFailedParse("008_attributeInvalidType.ump", 140);
+	  assertFailedParse("008_attributeAllNumericType.ump", 140);
+  }
+  
+  @Test
   public void associationName()
   {
     assertParse("009_externalNamedAssociation.ump");
