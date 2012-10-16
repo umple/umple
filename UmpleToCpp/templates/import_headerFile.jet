@@ -2,4 +2,10 @@
 <%
 	appendln(stringBuffer, "");
 	append(stringBuffer, "#include \"{0}.h\"",uClass.getName()); 
+	if (uClass.hasAssociationVariables())
+	for (AssociationVariable av : uClass.getAssociationVariables())
+	{
+	appendln(stringBuffer, "");
+	append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName()); 
+	}
 %>

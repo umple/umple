@@ -1128,7 +1128,7 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1108 = NL + "    ";
   protected final String TEXT_1109 = " = ";
   protected final String TEXT_1110 = ";" + NL + "    if (";
-  protected final String TEXT_1111 = " != NULL && !";
+  protected final String TEXT_1111 = " != NULL && ";
   protected final String TEXT_1112 = "!=";
   protected final String TEXT_1113 = ")" + NL + "    {";
   protected final String TEXT_1114 = NL + "      ";
@@ -1788,15 +1788,15 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1768 = " != NULL)" + NL + "    {" + NL + "      delete ";
   protected final String TEXT_1769 = ";" + NL + "    }";
   protected final String TEXT_1770 = NL + "    if (";
-  protected final String TEXT_1771 = " != null)" + NL + "    {";
+  protected final String TEXT_1771 = " != NULL)" + NL + "    {";
   protected final String TEXT_1772 = NL + "      ";
-  protected final String TEXT_1773 = " ";
+  protected final String TEXT_1773 = "* ";
   protected final String TEXT_1774 = " = ";
   protected final String TEXT_1775 = ";" + NL + "      this->";
   protected final String TEXT_1776 = " = NULL;";
   protected final String TEXT_1777 = NL + "      ";
   protected final String TEXT_1778 = "->";
-  protected final String TEXT_1779 = "(this);" + NL + "    }";
+  protected final String TEXT_1779 = "(this);" + NL + "    }" + NL;
   protected final String TEXT_1780 = NL + "    if (";
   protected final String TEXT_1781 = " != NULL)" + NL + "    {" + NL + "      delete ";
   protected final String TEXT_1782 = ";" + NL + "    }";
@@ -1920,6 +1920,12 @@ public class CppClassGenerator implements ILang
     
 	appendln(stringBuffer, "");
 	append(stringBuffer, "#include \"{0}.h\"",uClass.getName()); 
+	if (uClass.hasAssociationVariables())
+	for (AssociationVariable av : uClass.getAssociationVariables())
+	{
+	appendln(stringBuffer, "");
+	append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName()); 
+	}
 
     stringBuffer.append(TEXT_3);
      if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
