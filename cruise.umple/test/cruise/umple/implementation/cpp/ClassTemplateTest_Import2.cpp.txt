@@ -3,6 +3,8 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 #include "Student.h"
+#include "Mentor.h"
+#include "Course.h"
 
 	
   //------------------------

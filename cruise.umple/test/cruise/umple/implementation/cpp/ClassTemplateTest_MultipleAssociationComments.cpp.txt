@@ -3,6 +3,10 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 #include "Foo.h"
+#include "Bar1.h"
+#include "Bar2.h"
+#include "Bar3.h"
+#include "Bar4.h"
 
 	
   //------------------------
