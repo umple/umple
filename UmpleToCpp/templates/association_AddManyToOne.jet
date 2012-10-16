@@ -4,33 +4,33 @@
     return new <%=gen.translate("type",av)%>(<%=gen.translate("callerArgumentsExcept",relatedAssociation)%>);
   }
 
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
-    bool <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);
+    bool <%=gen.relatedTranslate("parameterIsNew",av)%> = (<%=gen.relatedTranslate("parameterExisting",av)%> != NULL && this!=<%=gen.relatedTranslate("parameterExisting",av)%>);
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
     {
-      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
+      <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(this);
     }
     else
     {
-      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("associationMany",av)%>->push_back(<%=gen.translate("parameterOne",av)%>);
     }
     wasAdded = true;
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
     return wasAdded;
   }
 
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
     //Unable to remove <%=gen.translate("parameterOne",av)%>, as it must always have a <%=gen.relatedTranslate("associationOne",av)%>
-    if (!this.equals(<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
+    if (this!=<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>())
     {
-      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("associationMany",av)%>->erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
       wasRemoved = true;
     }
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>

@@ -169,31 +169,31 @@
     return new Bar1(this);
   }
 
-  bool Foo::addBar1(Bar1 aBar1)
+  bool Foo::addBar1(Bar1* aBar1)
   {
     bool wasAdded = false;
     if (bar1s.contains(aBar1)) { return false; }
     Foo existingFoo = aBar1.getFoo();
-    bool isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
     {
-      aBar1.setFoo(this);
+      aBar1->setFoo(this);
     }
     else
     {
-      bar1s.add(aBar1);
+      bar1s->push_back(aBar1);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  bool Foo::removeBar1(Bar1 aBar1)
+  bool Foo::removeBar1(Bar1* aBar1)
   {
     bool wasRemoved = false;
     //Unable to remove aBar1, as it must always have a foo
-    if (!this.equals(aBar1.getFoo()))
+    if (this!=aBar1->getFoo())
     {
-      bar1s.remove(aBar1);
+      bar1s->erase(find(bar1s.begin(),bar1s.end(),aBar1));
       wasRemoved = true;
     }
     return wasRemoved;
@@ -208,31 +208,31 @@
     return new Bar2(this);
   }
 
-  bool Foo::addBar2(Bar2 aBar2)
+  bool Foo::addBar2(Bar2* aBar2)
   {
     bool wasAdded = false;
     if (bar2s.contains(aBar2)) { return false; }
     Foo existingFoo = aBar2.getFoo();
-    bool isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
     {
-      aBar2.setFoo(this);
+      aBar2->setFoo(this);
     }
     else
     {
-      bar2s.add(aBar2);
+      bar2s->push_back(aBar2);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  bool Foo::removeBar2(Bar2 aBar2)
+  bool Foo::removeBar2(Bar2* aBar2)
   {
     bool wasRemoved = false;
     //Unable to remove aBar2, as it must always have a foo
-    if (!this.equals(aBar2.getFoo()))
+    if (this!=aBar2->getFoo())
     {
-      bar2s.remove(aBar2);
+      bar2s->erase(find(bar2s.begin(),bar2s.end(),aBar2));
       wasRemoved = true;
     }
     return wasRemoved;
@@ -247,31 +247,31 @@
     return new Bar3(this);
   }
 
-  bool Foo::addBar3(Bar3 aBar3)
+  bool Foo::addBar3(Bar3* aBar3)
   {
     bool wasAdded = false;
     if (bar3s.contains(aBar3)) { return false; }
     Foo existingFoo = aBar3.getFoo();
-    bool isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
     {
-      aBar3.setFoo(this);
+      aBar3->setFoo(this);
     }
     else
     {
-      bar3s.add(aBar3);
+      bar3s->push_back(aBar3);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  bool Foo::removeBar3(Bar3 aBar3)
+  bool Foo::removeBar3(Bar3* aBar3)
   {
     bool wasRemoved = false;
     //Unable to remove aBar3, as it must always have a foo
-    if (!this.equals(aBar3.getFoo()))
+    if (this!=aBar3->getFoo())
     {
-      bar3s.remove(aBar3);
+      bar3s->erase(find(bar3s.begin(),bar3s.end(),aBar3));
       wasRemoved = true;
     }
     return wasRemoved;
@@ -286,31 +286,31 @@
     return new Bar4(this);
   }
 
-  bool Foo::addBar4(Bar4 aBar4)
+  bool Foo::addBar4(Bar4* aBar4)
   {
     bool wasAdded = false;
     if (bar4s.contains(aBar4)) { return false; }
     Foo existingFoo = aBar4.getFoo();
-    bool isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
     {
-      aBar4.setFoo(this);
+      aBar4->setFoo(this);
     }
     else
     {
-      bar4s.add(aBar4);
+      bar4s->push_back(aBar4);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  bool Foo::removeBar4(Bar4 aBar4)
+  bool Foo::removeBar4(Bar4* aBar4)
   {
     bool wasRemoved = false;
     //Unable to remove aBar4, as it must always have a foo
-    if (!this.equals(aBar4.getFoo()))
+    if (this!=aBar4->getFoo())
     {
-      bar4s.remove(aBar4);
+      bar4s->erase(find(bar4s.begin(),bar4s.end(),aBar4));
       wasRemoved = true;
     }
     return wasRemoved;

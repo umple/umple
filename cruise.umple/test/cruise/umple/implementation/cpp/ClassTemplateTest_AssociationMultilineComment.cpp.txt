@@ -73,31 +73,31 @@
     return new Bar(this);
   }
 
-  bool Foo::addBar(Bar aBar)
+  bool Foo::addBar(Bar* aBar)
   {
     bool wasAdded = false;
     if (bars.contains(aBar)) { return false; }
     Foo existingFoo = aBar.getFoo();
-    bool isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
     {
-      aBar.setFoo(this);
+      aBar->setFoo(this);
     }
     else
     {
-      bars.add(aBar);
+      bars->push_back(aBar);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  bool Foo::removeBar(Bar aBar)
+  bool Foo::removeBar(Bar* aBar)
   {
     bool wasRemoved = false;
     //Unable to remove aBar, as it must always have a foo
-    if (!this.equals(aBar.getFoo()))
+    if (this!=aBar->getFoo())
     {
-      bars.remove(aBar);
+      bars->erase(find(bars.begin(),bars.end(),aBar));
       wasRemoved = true;
     }
     return wasRemoved;
