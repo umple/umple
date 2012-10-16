@@ -19,7 +19,7 @@
     
     <%=gen.translate("type",av)%> <%=gen.translate("parameterExisting",av)%> = <%=gen.translate("associationOne",av)%>;
     <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>;
-    if (<%=gen.translate("parameterExisting",av)%> != null && !<%=gen.translate("parameterExisting",av)%>.equals(<%=gen.translate("parameterOne",av)%>))
+    if (<%=gen.translate("parameterExisting",av)%> != NULL && <%=gen.translate("parameterExisting",av)%>!=<%=gen.translate("parameterOne",av)%>))
     {
       bool didRemove = <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
       if (!didRemove)
@@ -29,7 +29,7 @@
         return wasSet;
       }
     }
-    <%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
+    <%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("addMethod",av)%>(this);
     wasSet = true;
     <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
     return wasSet;
