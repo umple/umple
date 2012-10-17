@@ -71,7 +71,7 @@
   bool Course::addStudent(Student* aStudent)
   {
     bool wasAdded = false;
-    if (students.contains(aStudent)) { return false; }
+    if (find(students.end(),students.end(),aStudent)) { return false; }
     students.push_back(aStudent);
     if (aStudent->indexOfCourse(this) != -1)
     {

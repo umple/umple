@@ -3,7 +3,7 @@
   {
     bool wasDeleted = false;
     <% if (customDeletePrefixCode != null) { append(stringBuffer, "\n    {0}",customDeletePrefixCode); } %>
-    if(<%=gen.translate("associationOne",av)%>.equals(<%=gen.translate("parameterOne",av)%>))
+    if(<%=gen.translate("associationOne",av)%>=<%=gen.translate("parameterOne",av)%>)
     {
       <%=gen.translate("associationOne",av)%> = NULL;
       wasDeleted = true;

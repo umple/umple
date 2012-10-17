@@ -29,7 +29,7 @@
     if (find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),(<%=gen.translate("parameterOne",av)%>)))
     {
       <%=gen.translate("associationMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
-      <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(null);
+      <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(NULL);
       wasRemoved = true;
     }
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>

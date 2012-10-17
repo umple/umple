@@ -3,5 +3,5 @@
     <%=gen.translate("associationOne",av)%> = NULL;
     if (<%=gen.translate("parameterExisting",av)%> != NULL)
     {
-      <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(NULL);
+      <%=gen.translate("parameterExisting",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(NULL);
     }

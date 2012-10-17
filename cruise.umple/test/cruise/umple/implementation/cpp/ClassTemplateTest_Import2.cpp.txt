@@ -126,7 +126,7 @@
   bool Student::addMentor(Mentor aMentor)
   {
     bool wasAdded = false;
-    if (mentors.contains(aMentor)) { return false; }
+    if (find(mentors.end(),mentors.end(),aMentor)) { return false; }
     Student existingStudent = aMentor.getStudent();
     if (existingStudent != null && existingStudent.numberOfMentors() <= minimumNumberOfMentors())
     {
@@ -161,30 +161,31 @@
       return wasSet;
     }
 
-    vector<Mentor*> checkNewMentors = new vector<Mentor*>();
-    HashMap<Student,Integer> studentToNewMentors = new HashMap<Student,Integer>();
+    vector<Mentor*> checkNewMentors;
+	
+    map<Student,int> studentToNewMentors;
     for (Mentor aMentor : newMentors)
     {
-      if (checkNewMentors.contains(aMentor))
+      if (find(checkNewMentors.begin(),checkNewMentors.end(),aMentor))
       {
         return wasSet;
       }
-      else if (aMentor.getStudent() != null && !this.equals(aMentor.getStudent()))
+      else if (aMentor->getStudent() != NULL && this!=aMentor->getStudent())
       {
-        Student existingStudent = aMentor.getStudent();
-        if (!studentToNewMentors.containsKey(existingStudent))
+        Student* existingStudent = aMentor.getStudent();
+        if (!studentToNewMentors.find(existingStudent))
         {
-          studentToNewMentors.put(existingStudent, new Integer(existingStudent.numberOfMentors()));
+          studentToNewMentors.insert(existingStudent, new int(existingStudent->numberOfMentors()));
         }
-        Integer currentCount = studentToNewMentors.get(existingStudent);
+        int currentCount = studentToNewMentors.find(existingStudent)->firtst;
         int nextCount = currentCount - 1;
         if (nextCount < 1)
         {
           return wasSet;
         }
-        studentToNewMentors.put(existingStudent, new Integer(nextCount));
+        studentToNewMentors.insert(existingStudent, new int(nextCount));
       }
-      checkNewMentors.add(aMentor);
+      checkNewMentors.push_back(aMentor);
     }
 
     mentors.removeAll(checkNewMentors);
@@ -198,10 +199,10 @@
     {
       if (aMentor.getStudent() != null)
       {
-        aMentor.getStudent().mentors.remove(aMentor);
+        aMentor.getStudent()->mentors.erase(aMentor);
       }
       setStudent(aMentor, this);
-      mentors.add(aMentor);
+      mentors.push_back(aMentor);
     }
     wasSet = true;
     return wasSet;
@@ -229,7 +230,7 @@
   bool Student::addCourse(Course* aCourse)
   {
     bool wasAdded = false;
-    if (courses.contains(aCourse)) { return false; }
+    if (find(courses.end(),courses.end(),aCourse)) { return false; }
     courses.push_back(aCourse);
     if (aCourse->indexOfStudent(this) != -1)
     {

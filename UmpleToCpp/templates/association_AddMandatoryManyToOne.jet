@@ -9,7 +9,7 @@
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
-    bool <%=gen.relatedTranslate("parameterIsNew",av)%> = (<%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>));
+    bool <%=gen.relatedTranslate("parameterIsNew",av)%> = (<%=gen.relatedTranslate("parameterExisting",av)%> != null && this != <%=gen.relatedTranslate("parameterExisting",av)%>);
 
     if (<%=gen.relatedTranslate("parameterIsNew",av)%> && <%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("minimumNumberOfMethod",av)%>())
     {

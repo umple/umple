@@ -720,7 +720,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       
       if (av.isMany())
       {
-        String code = StringFormatter.format("if ({0}.contains({1})) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
+        String code = StringFormatter.format("if (find({0}.end(),{0}.end(),{1})) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
         CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);

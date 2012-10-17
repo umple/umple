@@ -3,5 +3,5 @@
     <%=gen.translate("associationMany",av)%>.clear();
     for(int i=0;sizeof(<%=gen.translate("associationMany",av)%>);i++)
     {
-      <%=gen.translate("associationMany",av)%>[i].<%=gen.relatedTranslate("removeMethod",av)%>(this);
+      <%=gen.translate("associationMany",av)%>[i]-><%=gen.relatedTranslate("removeMethod",av)%>(this);
     }
