@@ -3,32 +3,32 @@
   {
     bool wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
-    if (<%=gen.translate("parameterNew",av)%> == null)
+    if (<%=gen.translate("parameterNew",av)%> == NULL)
     {
       <%=gen.translate("type",av)%> <%=gen.translate("parameterExisting",av)%> = <%=gen.translate("associationOne",av)%>;
-      <%=gen.translate("associationOne",av)%> = null;
+      <%=gen.translate("associationOne",av)%> = NULL;
       
-      if (<%=gen.translate("parameterExisting",av)%> != null && <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("getMethod",av)%>() != null)
+      if (<%=gen.translate("parameterExisting",av)%> != NULL && <%=gen.translate("parameterExisting",av)%>-><%=gen.relatedTranslate("getMethod",av)%>() != NULL)
       {
-        <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(null);
+        <%=gen.translate("parameterExisting",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(NULL);
       }
       wasSet = true;
       <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
       return wasSet;
     }
 
-    <%=gen.translate("type",av)%> <%=gen.translate("parameterCurrent",av)%> = <%=gen.translate("getMethod",av)%>();
-    if (<%=gen.translate("parameterCurrent",av)%> != null && !<%=gen.translate("parameterCurrent",av)%>.equals(<%=gen.translate("parameterNew",av)%>))
+    <%=gen.translate("type",av)%>* <%=gen.translate("parameterCurrent",av)%> = <%=gen.translate("getMethod",av)%>();
+    if (<%=gen.translate("parameterCurrent",av)%> != NULL && <%=gen.translate("parameterCurrent",av)%>!=<%=gen.translate("parameterNew",av)%>)
     {
-      <%=gen.translate("parameterCurrent",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(null);
+      <%=gen.translate("parameterCurrent",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(NULL);
     }
 
     <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterNew",av)%>;
-    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
+    <%=gen.relatedTranslate("type",av)%>* <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterNew",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
 
-    if (!equals(<%=gen.relatedTranslate("parameterExisting",av)%>))
+    if (!=<%=gen.relatedTranslate("parameterExisting",av)%>)
     {
-      <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
+      <%=gen.translate("parameterNew",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(this);
     }
     wasSet = true;
     <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>

@@ -31,7 +31,7 @@
   {
     bool wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
-    if (<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>) && <%=gen.translate("numberOfMethod",av)%>() > <%=gen.translate("minimumNumberOfMethod",av)%>())
+    if (find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) && <%=gen.translate("numberOfMethod",av)%>() > <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
       <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
       <%=gen.relatedTranslate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>,null);

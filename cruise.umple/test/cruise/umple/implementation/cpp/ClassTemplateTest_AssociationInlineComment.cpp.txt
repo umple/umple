@@ -35,7 +35,7 @@
 
   Bar* Foo::getBar(int index) 
   {
-    Bar aBar = bars[index];
+    Bar* aBar = bars[index];
     return aBar;
   }
 

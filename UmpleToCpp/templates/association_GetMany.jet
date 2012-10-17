@@ -2,7 +2,7 @@
   <%=gen.translate("type",av)%>* <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",av)%>(int index) 
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
-    <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>[index];
+    <%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>[index];
     <% if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } %>
     return <%=gen.translate("parameterOne",av)%>;
   }

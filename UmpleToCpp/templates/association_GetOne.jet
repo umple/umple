@@ -5,7 +5,7 @@
 <% if (customGetPostfixCode == null) { %>
     return <%=gen.translate("associationOne",av)%>;
 <% } else { %>
-    <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationOne",av)%>;
+    <%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationOne",av)%>;
     <% append(stringBuffer, "\n    {0}",customGetPostfixCode); %>
     return <%=gen.translate("parameterOne",av)%>;
 <% } %>

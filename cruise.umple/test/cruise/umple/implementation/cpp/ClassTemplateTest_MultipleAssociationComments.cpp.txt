@@ -41,7 +41,7 @@
 
   Bar1* Foo::getBar1(int index) 
   {
-    Bar1 aBar1 = bar1s[index];
+    Bar1* aBar1 = bar1s[index];
     return aBar1;
   }
 
@@ -71,7 +71,7 @@
   
   Bar2* Foo::getBar2(int index) 
   {
-    Bar2 aBar2 = bar2s[index];
+    Bar2* aBar2 = bar2s[index];
     return aBar2;
   }
 
@@ -101,7 +101,7 @@
   
   Bar3* Foo::getBar3(int index) 
   {
-    Bar3 aBar3 = bar3s[index];
+    Bar3* aBar3 = bar3s[index];
     return aBar3;
   }
 
@@ -131,7 +131,7 @@
   
   Bar4* Foo::getBar4(int index) 
   {
-    Bar4 aBar4 = bar4s[index];
+    Bar4* aBar4 = bar4s[index];
     return aBar4;
   }
 

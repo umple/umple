@@ -60,7 +60,7 @@
 
   Mentor* Student::getMentor(int index) 
   {
-    Mentor aMentor = mentors[index];
+    Mentor* aMentor = mentors[index];
     return aMentor;
   }
 
@@ -90,7 +90,7 @@
   
   Course* Student::getCourse(int index) 
   {
-    Course aCourse = courses[index];
+    Course* aCourse = courses[index];
     return aCourse;
   }
 
@@ -145,7 +145,7 @@
   bool Student::removeMentor(Mentor aMentor)
   {
     bool wasRemoved = false;
-    if (mentors.contains(aMentor) && numberOfMentors() > minimumNumberOfMentors())
+    if (find(mentors.begin(),mentors.end(),aMentor) && numberOfMentors() > minimumNumberOfMentors())
     {
       mentors.remove(aMentor);
       setStudent(aMentor,null);
@@ -249,7 +249,7 @@
   bool Student::removeCourse(Course aCourse)
   {
     bool wasRemoved = false;
-    if (!courses.contains(aCourse))
+    if (!find(courses.begin(),courses.end(),aCourse))
     {
       return wasRemoved;
     }

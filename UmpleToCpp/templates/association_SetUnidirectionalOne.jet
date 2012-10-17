@@ -3,7 +3,7 @@
   {
     bool wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
-    if (<%=gen.translate("parameterNew",av)%> != null)
+    if (<%=gen.translate("parameterNew",av)%> != NULL)
     {
       <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterNew",av)%>;
       wasSet = true;

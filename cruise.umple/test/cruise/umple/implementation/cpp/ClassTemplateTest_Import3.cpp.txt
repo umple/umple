@@ -35,7 +35,7 @@
 
   Student* Course::getStudent(int index) 
   {
-    Student aStudent = students[index];
+    Student* aStudent = students[index];
     return aStudent;
   }
 
@@ -91,7 +91,7 @@
   bool Course::removeStudent(Student aStudent)
   {
     bool wasRemoved = false;
-    if (!students.contains(aStudent))
+    if (!find(students.begin(),students.end(),aStudent))
     {
       return wasRemoved;
     }
