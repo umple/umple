@@ -26,7 +26,7 @@
       <%=gen.translate("associationMany",av)%>.push_back(<%=gen.translate("parameterNew",av)%>);
       if (find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>))
       {
-        <%=gen.translate("parameterOldMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.end());
+        <%=gen.translate("parameterOldMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
       }
       else
       {

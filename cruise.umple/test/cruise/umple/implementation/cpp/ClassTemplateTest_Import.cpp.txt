@@ -70,9 +70,9 @@ Mentor::~Mentor()
       }
       else
       {
-        Student placeholderStudent = student;
+        Student* placeholderStudent = student;
         this.student = NULL;
-        placeholderStudent.removeMentor(this);
+        placeholderStudent->removeMentor(this);
       }
     }
   }

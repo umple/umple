@@ -15,7 +15,7 @@
       return wasRemoved;
     }
 
-    int oldIndex = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
+    int oldIndex = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
     <%=gen.translate("associationMany",av)%>.erase(oldIndex);
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) == -1)
     {

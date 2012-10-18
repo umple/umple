@@ -71,7 +71,7 @@
   bool Course::addStudent(Student* aStudent)
   {
     bool wasAdded = false;
-    if (find(students.end(),students.end(),aStudent)) { return false; }
+    if (find(students.begin(),students.end(),aStudent)) { return false; }
     students.push_back(aStudent);
     if (aStudent->indexOfCourse(this) != -1)
     {
@@ -120,10 +120,10 @@
   
 Course::~Course()
   {
-    vector<Student> copyOfStudents = new vector<Student>(students);
+    vector<Student*> copyOfStudents = students;
     students.clear();
     for(int i=0;sizeof(students);i++)
     {
-      students[i].removeCourse(this);
+      students[i]->removeCourse(this);
     }
   }

@@ -172,7 +172,7 @@
   bool Foo::addBar1(Bar1* aBar1)
   {
     bool wasAdded = false;
-    if (find(bar1s.end(),bar1s.end(),aBar1)) { return false; }
+    if (find(bar1s.begin(),bar1s.end(),aBar1)) { return false; }
     Foo existingFoo = aBar1.getFoo();
     bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
@@ -211,7 +211,7 @@
   bool Foo::addBar2(Bar2* aBar2)
   {
     bool wasAdded = false;
-    if (find(bar2s.end(),bar2s.end(),aBar2)) { return false; }
+    if (find(bar2s.begin(),bar2s.end(),aBar2)) { return false; }
     Foo existingFoo = aBar2.getFoo();
     bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
@@ -250,7 +250,7 @@
   bool Foo::addBar3(Bar3* aBar3)
   {
     bool wasAdded = false;
-    if (find(bar3s.end(),bar3s.end(),aBar3)) { return false; }
+    if (find(bar3s.begin(),bar3s.end(),aBar3)) { return false; }
     Foo existingFoo = aBar3.getFoo();
     bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
@@ -289,7 +289,7 @@
   bool Foo::addBar4(Bar4* aBar4)
   {
     bool wasAdded = false;
-    if (find(bar4s.end(),bar4s.end(),aBar4)) { return false; }
+    if (find(bar4s.begin(),bar4s.end(),aBar4)) { return false; }
     Foo existingFoo = aBar4.getFoo();
     bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)

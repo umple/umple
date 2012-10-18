@@ -126,7 +126,7 @@
   bool Student::addMentor(Mentor aMentor)
   {
     bool wasAdded = false;
-    if (find(mentors.end(),mentors.end(),aMentor)) { return false; }
+    if (find(mentors.begin(),mentors.end(),aMentor)) { return false; }
     Student existingStudent = aMentor.getStudent();
     if (existingStudent != null && existingStudent.numberOfMentors() <= minimumNumberOfMentors())
     {
@@ -230,7 +230,7 @@
   bool Student::addCourse(Course* aCourse)
   {
     bool wasAdded = false;
-    if (find(courses.end(),courses.end(),aCourse)) { return false; }
+    if (find(courses.begin(),courses.end(),aCourse)) { return false; }
     courses.push_back(aCourse);
     if (aCourse->indexOfStudent(this) != -1)
     {
@@ -284,10 +284,10 @@ Student::~Student()
       setStudent(aMentor[i],NULL);
     }
     mentors.clear();
-    vector<Course> copyOfCourses = new vector<Course>(courses);
+    vector<Course*> copyOfCourses = courses;
     courses.clear();
     for(int i=0;sizeof(courses);i++)
     {
-      courses[i].removeStudent(this);
+      courses[i]->removeStudent(this);
     }
   }
