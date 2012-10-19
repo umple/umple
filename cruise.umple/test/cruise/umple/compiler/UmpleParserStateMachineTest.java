@@ -810,16 +810,52 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("blabla", a1.getActionCode());
   }
   
+  @Test
+  public void transitionsWithUndeclaredState(){
+	  //Make sure it it parses correctly when states in transitions have been declared
+	  assertParse("105_transitionUsingDeclaredState.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:state1][transition][event:e1][stateName:state2][state][stateName:state2][transition][event:e2][stateName:state3][state][stateName:state3][transition][event:e3][stateName:state1]");
+	  assertParse("105_multipleTransitionsUsingDeclaredState.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:state1][transition][event:e1][stateName:state2][state][stateName:state2][transition][event:e2][stateName:state4][state][stateName:state3][transition][event:e3][stateName:state4][state][stateName:state4][transition][event:e4][stateName:state3]");
+	  //Make sure it throws an warning when a state in a transition has not been declared.
+	  assertHasWarning("105_transitionUsingUndeclaredState.ump", 0, 50, new Position("105_transitionUsingUndeclaredState.ump", 7, 6, 75));
+	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 0, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 7, 6, 75));
+	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 1, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 10, 6, 113));
+  }
+  
+  //TODO: Uncomment once solution has been implemented
+  /*@Test
+  public void stateMachinesWithInvalidIdentifiers(){
+	  assertHasWarning("106_invalidStateMachineName.ump", 0, 150, new Position("106_invalidStateMachineName.ump", 2, 3, 12));
+	  assertHasWarning("106_invalidStateName.ump", 0, 152, new Position("106_invalidStateName.ump", 3, 5, 22));
+  }*/
+  
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);
   }
 
-//  private void assertFailedParse(String filename, Position expectedPosition)
-//  {
-//    assertParse(filename, "", false);
-//    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
-//  }  
+  private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError, Position expectedPosition){
+	    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+	    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+	    model.setShouldGenerate(false);
+	    parser = UmpleParserFactory.create(umpleParserName,model,true);
+	    boolean answer = parser.parse("program", input).getWasSuccess();
+	    
+	    if (answer)
+	    {
+	      answer = parser.analyze(false).getWasSuccess();
+	    }
+
+	    if (answer == false)
+	    {
+	      System.out.println("failed at:" + parser.getParseResult().getPosition());
+	    }
+	    
+	  Assert.assertEquals(answer, true);
+	  Assert.assertEquals(true, parser.getParseResult().getHasWarnings());
+	  Assert.assertNotNull(parser.getParseResult().getErrorMessage(expectedWarningIndex));
+	  Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedWarningIndex).getErrorType().getErrorCode());
+	  Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+  }
   
   private void assertParse(String filename, String expectedOutput, boolean expected)
   {

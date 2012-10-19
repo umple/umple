@@ -1,0 +1,16 @@
+class X {
+  sm {
+    state1 {
+      e1 -> state2;
+    }
+    state2 {
+      e2 -> state4;
+    }
+    state3{
+    	e3 -> state4;
+    }
+    state4{
+        e4 -> state3;
+    }
+  }
+}

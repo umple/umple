@@ -18,6 +18,7 @@ class UmpleInternalParser
 {
   internal StateMachine placeholderStateMachine = null;
   internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
+  internal Map<State,List<Token>> possiblyUnknownStates = new HashMap<State,List<Token>>();
   
   // Analyze state machine related tokens
   private void analyzeStateMachineToken(Token token, int analysisStep)
@@ -64,7 +65,14 @@ class UmpleInternalParser
   
   private void postTokenStateMachineAnalysis()
   {
-    
+    for(Iterator i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
+    	Map.Entry entry = (Map.Entry)i.next();
+    	List<Token> tokens = (List<Token>)entry.getValue();
+		for(int j = 0; j < tokens.size(); j++){
+			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue());
+		}    
+    }
+    possiblyUnknownStates = new HashMap<State,List<Token>>();
   }
   
   private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
@@ -138,11 +146,14 @@ class UmpleInternalParser
       if (nextState == null)
       {
         nextState = placeholderStateMachine.findState(name);
+        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
       }
 
       if (nextState == null)
       {
         nextState = new State(name,placeholderStateMachine);
+        possiblyUnknownStates.put(nextState, new ArrayList());
+        possiblyUnknownStates.get(nextState).add(transitionToken);
       }
     }
     return nextState;
@@ -163,6 +174,7 @@ class UmpleInternalParser
     {
       s = new State(stateToken.getValue("stateName"),sm);
     }
+    possiblyUnknownStates.remove(s);
     return s;
   }
 

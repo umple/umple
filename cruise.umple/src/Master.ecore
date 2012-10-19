@@ -594,6 +594,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastComment" eType="#//List%3CComment%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="possiblyUnknownState" eType="#//Map%3CState%2CList%3CToken%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="messagesToExpect" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/umpleInternalParser"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="warningsToIgnore" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/umpleInternalParser"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="strictness" eType="#//Strictness" />
@@ -604,6 +605,7 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleInterface,List&lt;String>>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="List&lt;Comment>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,Token>"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;State,List&lt;Token>>"/>
   <eClassifiers xsi:type="ecore:EEnum" name="Strictness">
     <eLiterals name="none" value="0"/>
     <eLiterals name="modelOnly" value="1"/>

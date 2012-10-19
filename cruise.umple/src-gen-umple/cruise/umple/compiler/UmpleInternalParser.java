@@ -48,6 +48,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private List<Comment> lastComments;
   private StateMachine placeholderStateMachine;
   private Map<String,Token> stateMachineNameToToken;
+  private Map<State,List<Token>> possiblyUnknownStates;
 
   //UmpleInternalParser State Machines
   enum Strictness { none, modelOnly, noExtraCode }
@@ -79,6 +80,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     lastComments = new ArrayList<Comment>();
     placeholderStateMachine = null;
     stateMachineNameToToken = new HashMap<String, Token>();
+    possiblyUnknownStates = new HashMap<State,List<Token>>();
     messagesToExpect = new ArrayList<ErrorType>();
     warningsToIgnore = new ArrayList<ErrorType>();
     setStrictness(Strictness.none);
@@ -2001,7 +2003,14 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   
   private void postTokenStateMachineAnalysis()
   {
-    
+    for(Iterator i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
+    	Map.Entry entry = (Map.Entry)i.next();
+    	List<Token> tokens = (List<Token>)entry.getValue();
+		for(int j = 0; j < tokens.size(); j++){
+			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue());
+		}    
+    }
+    possiblyUnknownStates = new HashMap<State,List<Token>>();
   }
   
   private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
@@ -2075,11 +2084,14 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
       if (nextState == null)
       {
         nextState = placeholderStateMachine.findState(name);
+        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
       }
 
       if (nextState == null)
       {
         nextState = new State(name,placeholderStateMachine);
+        possiblyUnknownStates.put(nextState, new ArrayList());
+        possiblyUnknownStates.get(nextState).add(transitionToken);
       }
     }
     return nextState;
@@ -2100,6 +2112,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     {
       s = new State(stateToken.getValue("stateName"),sm);
     }
+    possiblyUnknownStates.remove(s);
     return s;
   }
 
