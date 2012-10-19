@@ -2007,7 +2007,7 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
     	Map.Entry entry = (Map.Entry)i.next();
     	List<Token> tokens = (List<Token>)entry.getValue();
 		for(int j = 0; j < tokens.size(); j++){
-			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue());
+			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
 		}    
     }
     possiblyUnknownStates = new HashMap<State,List<Token>>();
