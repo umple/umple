@@ -162,6 +162,11 @@ private static void postpareTrace(UmpleModel aModel)
 			  processTracedTransition(traceDirective,tracedStm.getTransition(),t,template);
 		  }
 		  
+		  if( tracedStm.getEntry() )
+		  {
+			  processTracedStateEntry(traceDirective,tracedStm,t,template);
+		  }
+		  
 		  if(tracer.equals("console") && tracedStm.getTraceStateMachineFlag() )
 		  {
 			  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
@@ -196,6 +201,15 @@ private static void postpareTrace(UmpleModel aModel)
 	  }
   }
   
+  private static void processTracedStateEntry(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
+  {
+	  StateMachine stm = tracedStm.getStateMachine();
+	  String stmCode = null;
+	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  stmCode += StringFormatter.format(template,prepareConsistentOutput("entry",t.translate("parameterOne",stm)));
+	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+  }
+
   private static void processTracedTransition( TraceDirective traceDirective, Transition tran, CodeTranslator t, String template) 
   {
 	  String stmCode = null;

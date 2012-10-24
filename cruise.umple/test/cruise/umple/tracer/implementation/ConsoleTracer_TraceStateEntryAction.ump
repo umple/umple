@@ -5,12 +5,10 @@ class Light
   status
   {
     On { 
-      entry / { System.out.println("State On entry"); } 
       flip -> Off;
     }
     Off {
-      entry / { System.out.println("State Off entry"); }
-     flip -> On; 
+      flip -> On; 
     }
   }
   trace entry On;

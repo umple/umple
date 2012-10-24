@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package example;
 
@@ -60,18 +60,9 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
+    if( aStatus.equals(Status.On) )
+      System.err.println("entry=" + aStatus);
     status = aStatus;
-
-    // entry actions and do activities
-    switch(status)
-    {
-      case On:
-        System.out.println("State On entry");
-        break;
-      case Off:
-        System.out.println("State Off entry");
-        break;
-    }
   }
 
   public void delete()

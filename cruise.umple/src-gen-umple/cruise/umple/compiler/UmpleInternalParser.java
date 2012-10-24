@@ -2553,7 +2553,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  }  
 	  // if trace entity is a state 
 	  else if( state != null )  
-	  {  
+	  {
 		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();
 		  tracedStm.setStateMachine(stm);
 		  if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )  

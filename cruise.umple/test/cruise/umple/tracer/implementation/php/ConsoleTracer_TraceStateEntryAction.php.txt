@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class Light
 {
@@ -60,18 +60,9 @@ class Light
 
   private function setStatus($aStatus)
   {
+    if( aStatus.equals(int.On) )
+      print(""entry=" + aStatus={${1}}");
     $this->status = $aStatus;
-
-    // entry actions and do activities
-    if ($this->status == self::$StatusOn)
-    {
-      print("Tracing state StatusOn entry action(s)");
-      System.out.println("State On entry");
-    }
-    elseif ($this->status == self::$StatusOff)
-    {
-      System.out.println("State Off entry");
-    }
   }
 
   public function equals($compareTo)
