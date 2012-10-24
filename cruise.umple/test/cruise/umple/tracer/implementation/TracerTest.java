@@ -442,6 +442,12 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateExitAction.ump",languagePath + "/ConsoleTracer_TraceStateExitAction."+ languagePath +".txt","Light");
 	}
 	
+	@Test
+	public void ConsoleTracer_TraceTransition()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceTransition.ump",languagePath + "/ConsoleTracer_TraceTransition."+ languagePath +".txt","Light");
+	}
+	
 	//====== File tracer
 	@Test @Ignore
 	public void FileTracer_State()

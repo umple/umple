@@ -77,7 +77,7 @@ class StateMachine_TraceItem
 	boolean entry = false;
 	boolean exit = false;
 	boolean traceStateMachineFlag = false;
-	0..* -- 1 StateMachine;
+	0..* -- 0..1 StateMachine;
 	0..* -- 0..1 Transition;
 }
 

@@ -2493,8 +2493,25 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  	  
 	  if( traceToken.getParentToken().getSubToken(1).getName().equals("transition"))
 	  {
-		  System.out.println("inside = "+traceToken.getParentToken().getSubToken(1).getName());
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();
 
+		  for( int i = 0 ; i < stms.size() ; ++i )
+		  {
+			  for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+			  {
+				  State nestedState = stms.get(i).getState(j);
+				  for( int k = 0 ; k < nestedState.numberOfTransitions() ; ++k )
+				  {
+					  if( nestedState.getTransition(k).getEvent().getName().equals(traceToken.getValue()) )
+					  {
+						  tracedStm.setTransition(nestedState.getTransition(k));
+						  tracedStm.setStateMachine(stms.get(i));
+						  traceDirective.addStateMachineTraceItem(tracedStm);
+					  }
+				  }
+			  }
+		  }
+		  
 	  }
 		  
 	  if( stmTraceItem != null && stmTraceItem.contains("."))
@@ -2527,16 +2544,18 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  // if trace entity is a state machine  
 	  if( stm != null && state == null )
 	  {	  
-		  StateMachine_TraceItem traced_stm = new StateMachine_TraceItem(stm);	
-		  traced_stm.setEntry(true);
-		  traced_stm.setExit(true);
-		  traced_stm.setTraceStateMachineFlag(true);
-		  traceDirective.addStateMachineTraceItem(traced_stm);
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();	
+		  tracedStm.setStateMachine(stm);
+		  tracedStm.setEntry(true);
+		  tracedStm.setExit(true);
+		  tracedStm.setTraceStateMachineFlag(true);
+		  traceDirective.addStateMachineTraceItem(tracedStm);
 	  }  
 	  // if trace entity is a state 
 	  else if( state != null )  
 	  {  
-		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem(stm);
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();
+		  tracedStm.setStateMachine(stm);
 		  if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )  
 		  {
 			  tracedStm.setEntry(true); 

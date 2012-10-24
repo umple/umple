@@ -1702,15 +1702,10 @@ public class UmpleParserTracerTest
 	  assertParse("379_traceTransition.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:flip]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
-	  TraceDirective tc = clazz.getTraceDirective(0);
+	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
+	  Transition tran = tracedState.getTransition();
+	  Assert.assertEquals(tran,clazz.getStateMachine(0).getState(0).getNextTransition(0));
 
-//	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
-//	  Assert.assertEquals(tracedState.getEntry(),true);
-//	  Assert.assertEquals(tracedState.getExit(),true);
-//	  StateMachine stm = tracedState.getStateMachine();
-//	  Assert.assertEquals(stm.numberOfStates(),1);
-//	  State state = stm.getState(0);
-//	  Assert.assertEquals(state,clazz.getStateMachine(0).getState(0));
   }
   
   //===================================

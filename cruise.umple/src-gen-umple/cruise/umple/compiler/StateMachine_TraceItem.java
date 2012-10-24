@@ -25,16 +25,11 @@ public class StateMachine_TraceItem
   // CONSTRUCTOR
   //------------------------
 
-  public StateMachine_TraceItem(StateMachine aStateMachine)
+  public StateMachine_TraceItem()
   {
     entry = false;
     exit = false;
     traceStateMachineFlag = false;
-    boolean didAddStateMachine = setStateMachine(aStateMachine);
-    if (!didAddStateMachine)
-    {
-      throw new RuntimeException("Unable to create stateMachineTraceItem due to stateMachine");
-    }
     traceDirectives = new ArrayList<TraceDirective>();
   }
 
@@ -124,18 +119,16 @@ public class StateMachine_TraceItem
   public boolean setStateMachine(StateMachine aStateMachine)
   {
     boolean wasSet = false;
-    if (aStateMachine == null)
-    {
-      return wasSet;
-    }
-
     StateMachine existingStateMachine = stateMachine;
     stateMachine = aStateMachine;
     if (existingStateMachine != null && !existingStateMachine.equals(aStateMachine))
     {
       existingStateMachine.removeStateMachineTraceItem(this);
     }
-    stateMachine.addStateMachineTraceItem(this);
+    if (aStateMachine != null)
+    {
+      aStateMachine.addStateMachineTraceItem(this);
+    }
     wasSet = true;
     return wasSet;
   }
@@ -209,9 +202,12 @@ public class StateMachine_TraceItem
 
   public void delete()
   {
-    StateMachine placeholderStateMachine = stateMachine;
-    this.stateMachine = null;
-    placeholderStateMachine.removeStateMachineTraceItem(this);
+    if (stateMachine != null)
+    {
+      StateMachine placeholderStateMachine = stateMachine;
+      this.stateMachine = null;
+      placeholderStateMachine.removeStateMachineTraceItem(this);
+    }
     if (transition != null)
     {
       Transition placeholderTransition = transition;

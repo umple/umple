@@ -291,20 +291,19 @@ public class StateMachine
     return 0;
   }
 
-  public StateMachine_TraceItem addStateMachineTraceItem()
-  {
-    return new StateMachine_TraceItem(this);
-  }
-
   public boolean addStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
   {
     boolean wasAdded = false;
     if (stateMachineTraceItems.contains(aStateMachineTraceItem)) { return false; }
     StateMachine existingStateMachine = aStateMachineTraceItem.getStateMachine();
-    boolean isNewStateMachine = existingStateMachine != null && !this.equals(existingStateMachine);
-    if (isNewStateMachine)
+    if (existingStateMachine == null)
     {
       aStateMachineTraceItem.setStateMachine(this);
+    }
+    else if (!this.equals(existingStateMachine))
+    {
+      existingStateMachine.removeStateMachineTraceItem(aStateMachineTraceItem);
+      addStateMachineTraceItem(aStateMachineTraceItem);
     }
     else
     {
@@ -317,10 +316,10 @@ public class StateMachine
   public boolean removeStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
   {
     boolean wasRemoved = false;
-    //Unable to remove aStateMachineTraceItem, as it must always have a stateMachine
-    if (!this.equals(aStateMachineTraceItem.getStateMachine()))
+    if (stateMachineTraceItems.contains(aStateMachineTraceItem))
     {
       stateMachineTraceItems.remove(aStateMachineTraceItem);
+      aStateMachineTraceItem.setStateMachine(null);
       wasRemoved = true;
     }
     return wasRemoved;
@@ -408,10 +407,9 @@ public class StateMachine
     {
       aTraceRecord.removeStateMachine(this);
     }
-    for(int i=stateMachineTraceItems.size(); i > 0; i--)
+    for(StateMachine_TraceItem aStateMachineTraceItem : stateMachineTraceItems)
     {
-      StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(i - 1);
-      aStateMachineTraceItem.delete();
+      aStateMachineTraceItem.setStateMachine(null);
     }
   }
   
