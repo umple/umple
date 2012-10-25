@@ -9,7 +9,8 @@
 // [*http://umple.org/license*]
 
 // The core of umple is a "program". This is the grammar's 'start symbol'
-program- : ( [[comment]] | [[directive]] )*
+// Comments and lone semicolons are ignored
+program- : ( [[comment]] | [[directive]] | ; )*
 
 // Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
 // A directive is either used to configure the system or else is

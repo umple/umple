@@ -550,7 +550,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entry" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exit" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceStateMachineFlag" eType="#//boolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="1" upperBound="1" eType="#//StateMachine" eOpposite="#//StateMachine/stateMachineTraceItems"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="0" upperBound="1" eType="#//StateMachine" eOpposite="#//StateMachine/stateMachineTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transition" lowerBound="0" upperBound="1" eType="#//Transition" eOpposite="#//Transition/stateMachineTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirectives" lowerBound="0" upperBound="-1" eType="#//TraceDirective" eOpposite="#//TraceDirective/stateMachineTraceItems"/>
   </eClassifiers>
