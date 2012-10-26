@@ -874,7 +874,7 @@ private void analyzeClassToken(Token t, int analysisStep)
   private UmpleClass analyzeClass(Token classToken)
   {
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
-    if (UmpleClass.validName(classToken.getValue("name")) != true) {
+    if (Token.isValidIdentifier(classToken.getValue("name"), "[A-Za-z]") != true) {
       setFailedPosition(classToken.getPosition(), 100, classToken.getValue("name"));
     }
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
@@ -1864,8 +1864,8 @@ private void analyzeClassToken(Token t, int analysisStep)
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-    boolean validName = Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w)*", attributeToken.getValue("name"));
-    boolean properName = Pattern.matches("([a-z]|_)(\\d|\\w)*", attributeToken.getValue("name"));
+    boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
+    boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
@@ -2022,6 +2022,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass)
   {
     String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
     String definitionName = stateMachineToken.getValue("definitionName");
       
     Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
@@ -2051,6 +2056,11 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
   {
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
     stateMachineNameToToken.put(name,stateMachineToken);
     
     StateMachine sm = new StateMachine(name);
@@ -2072,6 +2082,9 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
 
   private State createStateFromTransition(Token transitionToken, StateMachine sm)
   {
+    if(!Token.isValidIdentifier(transitionToken.getValue("stateName"))){
+    	setFailedPosition(transitionToken.getPosition(), 152, transitionToken.getValue("stateName"));
+    }
     String name = transitionToken.getValue("stateName");
     State nextState = sm.findState(name);
     
@@ -2099,6 +2112,9 @@ private void analyzeStateMachineToken(Token token, int analysisStep)
 
   private State createStateFromDefinition(Token stateToken, StateMachine sm)
   {
+    if(!Token.isValidIdentifier(stateToken.getValue("stateName"))){
+    	setFailedPosition(stateToken.getPosition(), 152, stateToken.getValue("stateName"));
+    }
     State s = sm.findState(stateToken.getValue("stateName"),false);
     if (s == null)
     {

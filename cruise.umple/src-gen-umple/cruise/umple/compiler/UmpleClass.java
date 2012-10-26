@@ -1411,44 +1411,4 @@ public class UmpleClass extends UmpleElement
 
     return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
   }
-  
-
-  //Method to evaluate if an UmpleClass has a valid name
-  //Valid name is defined as containing only letters, numbers, and underscores; and staring with a letter
-  public static boolean validName(String aName) 
-  {
-  
-    //make sure name is assigned
-    if (aName != null)
-    {
-      int len = aName.length();
-      //make sure name is non-empty
-      if (len >= 1) 
-      {
-        //check first character
-        if (Character.isLetter(aName.charAt(0)) == false) 
-        {
-          return false;
-        }
-        
-        for (int i = 1; i < len; i++) {
-          //check all subsequent characters
-          if ((Character.isLetterOrDigit(aName.charAt(i)) == false) && (aName.charAt(i) != '_')) 
-          {
-            return false;
-          }
-        }
-        
-        return true; 
-      }
-      else
-      {
-        return false;
-      }
-    }
-    else
-    {
-      return false;
-    }
-  }
 }

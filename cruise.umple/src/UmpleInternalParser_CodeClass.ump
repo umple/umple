@@ -300,7 +300,7 @@ class UmpleInternalParser
   private UmpleClass analyzeClass(Token classToken)
   {
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
-    if (UmpleClass.validName(classToken.getValue("name")) != true) {
+    if (Token.isValidIdentifier(classToken.getValue("name"), "[A-Za-z]") != true) {
       setFailedPosition(classToken.getPosition(), 100, classToken.getValue("name"));
     }
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
@@ -1290,8 +1290,8 @@ class UmpleInternalParser
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
-    boolean validName = Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w)*", attributeToken.getValue("name"));
-    boolean properName = Pattern.matches("([a-z]|_)(\\d|\\w)*", attributeToken.getValue("name"));
+    boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
+    boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");

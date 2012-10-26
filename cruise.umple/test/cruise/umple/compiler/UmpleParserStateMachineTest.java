@@ -821,18 +821,64 @@ public class UmpleParserStateMachineTest
 	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 1, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 10, 6, 113));
   }
   
-  //TODO: Uncomment once solution has been implemented
-  /*@Test
-  public void stateMachinesWithInvalidIdentifiers(){
-	  assertHasWarning("106_invalidStateMachineName.ump", 0, 150, new Position("106_invalidStateMachineName.ump", 2, 3, 12));
-	  assertHasWarning("106_invalidStateName.ump", 0, 152, new Position("106_invalidStateName.ump", 3, 5, 22));
-  }*/
+  @Test
+  public void stateMachineWithInvalidName(){
+	  assertFailedParse("106_invalidStateMachineNamePartAmper.ump", new Position("106_invalidStateMachineNamePartAmper.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNamePartDollar.ump", new Position("106_invalidStateMachineNamePartDollar.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNamePartDot.ump", new Position("106_invalidStateMachineNamePartDot.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNamePartExclaim.ump", new Position("106_invalidStateMachineNamePartExclaim.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNamePartQuest.ump", new Position("106_invalidStateMachineNamePartQuest.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNamePartQuote.ump", new Position("106_invalidStateMachineNamePartQuote.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNameStartAmper.ump", new Position("106_invalidStateMachineNameStartAmper.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNameStartDollar.ump", new Position("106_invalidStateMachineNameStartDollar.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNameStartDot.ump", new Position("106_invalidStateMachineNameStartDot.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNameStartExclaim.ump", new Position("106_invalidStateMachineNameStartExclaim.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNameStartQuest.ump", new Position("106_invalidStateMachineNameStartQuest.ump", 2, 2, 12), 150);
+	  assertFailedParse("106_invalidStateMachineNameStartQuote.ump", new Position("106_invalidStateMachineNameStartQuote.ump", 2, 2, 12), 150);
+  }
+  
+  @Test
+  public void stateWithInvalidName(){
+	  assertFailedParse("106_invalidStateNamePartAmper.ump", new Position("106_invalidStateNamePartAmper.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNamePartDollar.ump", new Position("106_invalidStateNamePartDollar.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNamePartDot.ump", new Position("106_invalidStateNamePartDot.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNamePartExclaim.ump", new Position("106_invalidStateNamePartExclaim.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNamePartQuest.ump", new Position("106_invalidStateNamePartQuest.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNamePartQuote.ump", new Position("106_invalidStateNamePartQuote.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNameStartAmper.ump", new Position("106_invalidStateNameStartAmper.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNameStartDollar.ump", new Position("106_invalidStateNameStartDollar.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNameStartDot.ump", new Position("106_invalidStateNameStartDot.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNameStartExclaim.ump", new Position("106_invalidStateNameStartExclaim.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNameStartQuest.ump", new Position("106_invalidStateNameStartQuest.ump", 3, 4, 21), 152);
+	  assertFailedParse("106_invalidStateNameStartQuote.ump", new Position("106_invalidStateNameStartQuote.ump", 3, 4, 21), 152);
+	
+  }
   
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);
   }
 
+  public void assertFailedParse(String filename, Position expectedPosition, int expectedError)
+  {
+	    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+	    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+	    model.setShouldGenerate(false);
+	    parser = UmpleParserFactory.create(umpleParserName,model,true);
+	    boolean answer = parser.parse("program", input).getWasSuccess();
+	    
+	    if (answer)
+	    {
+	      answer = parser.analyze(false).getWasSuccess();
+	    }
+	    
+	  Assert.assertEquals(answer, false);
+	  //Assert.assertEquals(true, parser.getParseResult().getHasWarnings());
+	  Assert.assertNotNull(parser.getParseResult().getErrorMessage(0));
+	  Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+	  Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(0).getPosition());
+  }
+  
   private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError, Position expectedPosition){
 	    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
 	    model = new UmpleModel(new UmpleFile(pathToInput,filename));

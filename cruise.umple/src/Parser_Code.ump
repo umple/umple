@@ -80,13 +80,27 @@ class Couple
 
 class Token
 {
-
+  depend java.util.regex.*;
   public Token(String aName, String aValue, Position aPosition)
   {
     this(aName,aValue);
     setPosition(aPosition);
   }
 
+  public static boolean isValidIdentifier(String identifier, String prefix){
+    String _prefix = "^" + prefix;
+    String body = "[a-zA-Z0-9_]*$";
+    String expression = _prefix + body;
+    if(Pattern.matches(expression, identifier)){
+    	return true;
+    }
+    return false;
+  }
+  
+  public static boolean isValidIdentifier(String identifier){
+  	return isValidIdentifier(identifier, "[a-zA-Z_]");
+  }
+	
   public void addSubToken(int index, Token aSubToken)
   {
     subTokens.add(index,aSubToken);

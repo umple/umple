@@ -84,6 +84,11 @@ class UmpleInternalParser
   private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass)
   {
     String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
     String definitionName = stateMachineToken.getValue("definitionName");
       
     Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
@@ -113,6 +118,11 @@ class UmpleInternalParser
   {
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
     stateMachineNameToToken.put(name,stateMachineToken);
     
     StateMachine sm = new StateMachine(name);
@@ -134,6 +144,9 @@ class UmpleInternalParser
 
   private State createStateFromTransition(Token transitionToken, StateMachine sm)
   {
+    if(!Token.isValidIdentifier(transitionToken.getValue("stateName"))){
+    	setFailedPosition(transitionToken.getPosition(), 152, transitionToken.getValue("stateName"));
+    }
     String name = transitionToken.getValue("stateName");
     State nextState = sm.findState(name);
     
@@ -161,6 +174,9 @@ class UmpleInternalParser
 
   private State createStateFromDefinition(Token stateToken, StateMachine sm)
   {
+    if(!Token.isValidIdentifier(stateToken.getValue("stateName"))){
+    	setFailedPosition(stateToken.getPosition(), 152, stateToken.getValue("stateName"));
+    }
     State s = sm.findState(stateToken.getValue("stateName"),false);
     if (s == null)
     {

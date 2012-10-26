@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.regex.*;
 import java.util.*;
 
 /**
@@ -203,7 +204,21 @@ public class Token
 this(aName,aValue);
     setPosition(aPosition);
   }
-public void addSubToken(int index, Token aSubToken)
+public static boolean isValidIdentifier(String identifier, String prefix){
+    String _prefix = "^" + prefix;
+    String body = "[a-zA-Z0-9_]*$";
+    String expression = _prefix + body;
+    if(Pattern.matches(expression, identifier)){
+    	return true;
+    }
+    return false;
+  }
+  
+  public static boolean isValidIdentifier(String identifier){
+  	return isValidIdentifier(identifier, "[a-zA-Z_]");
+  }
+	
+  public void addSubToken(int index, Token aSubToken)
   {
     subTokens.add(index,aSubToken);
   }
