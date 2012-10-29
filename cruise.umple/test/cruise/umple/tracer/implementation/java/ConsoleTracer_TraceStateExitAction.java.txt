@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package example;
 
@@ -71,6 +71,8 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
+    if( status != null && status.equals(Status.Off) && !aStatus.equals(Status.Off) )
+      System.err.println("exit=" + status);
     status = aStatus;
 
     // entry actions and do activities

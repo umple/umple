@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class Light
 {
@@ -63,13 +63,14 @@ class Light
   {
     if ($this->status == self::$StatusOn)
     {
-      print("Tracing state StatusOn exit action(s)");
       doExit();
     }
   }
 
   private function setStatus($aStatus)
   {
+    if( status != null && status.equals(int.Off) && !aStatus.equals(int.Off) )
+      print(""exit=" + status={${1}}");
     $this->status = $aStatus;
 
     // entry actions and do activities

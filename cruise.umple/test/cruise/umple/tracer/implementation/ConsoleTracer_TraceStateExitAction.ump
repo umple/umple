@@ -13,5 +13,5 @@ class Light
       flip -> On;
     }
   }
-  trace exit On;
+  trace exit Off;
 }

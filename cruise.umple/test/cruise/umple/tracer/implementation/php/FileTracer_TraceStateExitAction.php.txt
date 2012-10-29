@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class Light
 {
@@ -70,6 +70,8 @@ class Light
 
   private function setStatus($aStatus)
   {
+    if( status != null && status.equals(int.On) && !aStatus.equals(int.On) )
+      fileTracer($"exit=" + status);
     $this->status = $aStatus;
 
     // entry actions and do activities
