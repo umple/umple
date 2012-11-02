@@ -403,6 +403,38 @@ public class Student
     return wasSet;
   }
 
+  public boolean addM3At(M3 aMentor, int index)
+  {  
+    boolean wasAdded = false;
+    if(addM3(aM3))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfM3s()) { index = numberOfM3s() - 1; }
+      m3s.remove(aM3);
+      m3s.add(index, aM3);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveM3At(Mentor aM3, int index)
+  {
+    boolean wasAdded = false;
+    if(m3s.contains(aM3))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfM3s()) { index = numberOfM3s() - 1; }
+      m3s.remove(aM3);
+      m3s.add(index, aM3);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addM3At(aM3, index);
+    }
+    return wasAdded;
+  }
+
   public boolean isNumberOfM4sValid()
   {
     print "isNumberOfM4sValid";

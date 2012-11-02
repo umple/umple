@@ -100,6 +100,38 @@ public class Foo
     return wasRemoved;
   }
 
+  public boolean addBarAt(Bar aBar, int index)
+  {  
+    boolean wasAdded = false;
+    if(addBar(aBar))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBars()) { index = numberOfBars() - 1; }
+      bars.remove(aBar);
+      bars.add(index, aBar);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveBarAt(Bar aBar, int index)
+  {
+    boolean wasAdded = false;
+    if(bars.contains(aBar))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBars()) { index = numberOfBars() - 1; }
+      bars.remove(aBar);
+      bars.add(index, aBar);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addBarAt(aBar, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     for(int i=bars.size(); i > 0; i--)
