@@ -353,6 +353,38 @@ public class State
     return wasRemoved;
   }
 
+  public boolean addActionAt(Action aAction, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAction(aAction))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfActions()) { index = numberOfActions() - 1; }
+      actions.remove(aAction);
+      actions.add(index, aAction);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveActionAt(Action aAction, int index)
+  {
+    boolean wasAdded = false;
+    if(actions.contains(aAction))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfActions()) { index = numberOfActions() - 1; }
+      actions.remove(aAction);
+      actions.add(index, aAction);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addActionAt(aAction, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setStateMachine(StateMachine aStateMachine)
   {
     boolean wasSet = false;
@@ -411,6 +443,38 @@ public class State
     return wasRemoved;
   }
 
+  public boolean addNestedStateMachineAt(StateMachine aNestedStateMachine, int index)
+  {  
+    boolean wasAdded = false;
+    if(addNestedStateMachine(aNestedStateMachine))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfNestedStateMachines()) { index = numberOfNestedStateMachines() - 1; }
+      nestedStateMachines.remove(aNestedStateMachine);
+      nestedStateMachines.add(index, aNestedStateMachine);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveNestedStateMachineAt(StateMachine aNestedStateMachine, int index)
+  {
+    boolean wasAdded = false;
+    if(nestedStateMachines.contains(aNestedStateMachine))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfNestedStateMachines()) { index = numberOfNestedStateMachines() - 1; }
+      nestedStateMachines.remove(aNestedStateMachine);
+      nestedStateMachines.add(index, aNestedStateMachine);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addNestedStateMachineAt(aNestedStateMachine, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfTransitions()
   {
     return 0;
@@ -451,6 +515,38 @@ public class State
     return wasRemoved;
   }
 
+  public boolean addTransitionAt(Transition aTransition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTransition(aTransition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTransitions()) { index = numberOfTransitions() - 1; }
+      transitions.remove(aTransition);
+      transitions.add(index, aTransition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveTransitionAt(Transition aTransition, int index)
+  {
+    boolean wasAdded = false;
+    if(transitions.contains(aTransition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTransitions()) { index = numberOfTransitions() - 1; }
+      transitions.remove(aTransition);
+      transitions.add(index, aTransition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTransitionAt(aTransition, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfNextTransition()
   {
     return 0;
@@ -489,6 +585,38 @@ public class State
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addNextTransitionAt(Transition aNextTransition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addNextTransition(aNextTransition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfNextTransition()) { index = numberOfNextTransition() - 1; }
+      nextTransition.remove(aNextTransition);
+      nextTransition.add(index, aNextTransition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveNextTransitionAt(Transition aNextTransition, int index)
+  {
+    boolean wasAdded = false;
+    if(nextTransition.contains(aNextTransition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfNextTransition()) { index = numberOfNextTransition() - 1; }
+      nextTransition.remove(aNextTransition);
+      nextTransition.add(index, aNextTransition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addNextTransitionAt(aNextTransition, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

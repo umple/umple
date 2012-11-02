@@ -213,6 +213,38 @@ public class Attribute_TraceItem
     return wasRemoved;
   }
 
+  public boolean addAttributeAt(Attribute aAttribute, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAttribute(aAttribute))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributes()) { index = numberOfAttributes() - 1; }
+      attributes.remove(aAttribute);
+      attributes.add(index, aAttribute);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAttributeAt(Attribute aAttribute, int index)
+  {
+    boolean wasAdded = false;
+    if(attributes.contains(aAttribute))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributes()) { index = numberOfAttributes() - 1; }
+      attributes.remove(aAttribute);
+      attributes.add(index, aAttribute);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAttributeAt(aAttribute, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setTraceDirective(TraceDirective aTraceDirective)
   {
     boolean wasSet = false;

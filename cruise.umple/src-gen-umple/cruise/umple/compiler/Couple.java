@@ -134,6 +134,38 @@ public class Couple
     return wasRemoved;
   }
 
+  public boolean addIgnoreAt(Couple aIgnore, int index)
+  {  
+    boolean wasAdded = false;
+    if(addIgnore(aIgnore))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfIgnores()) { index = numberOfIgnores() - 1; }
+      ignores.remove(aIgnore);
+      ignores.add(index, aIgnore);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveIgnoreAt(Couple aIgnore, int index)
+  {
+    boolean wasAdded = false;
+    if(ignores.contains(aIgnore))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfIgnores()) { index = numberOfIgnores() - 1; }
+      ignores.remove(aIgnore);
+      ignores.add(index, aIgnore);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addIgnoreAt(aIgnore, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setCouple(Couple aCouple)
   {
     boolean wasSet = false;

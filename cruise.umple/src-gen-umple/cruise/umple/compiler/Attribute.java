@@ -259,6 +259,38 @@ public class Attribute extends UmpleVariable
     return wasRemoved;
   }
 
+  public boolean addCommentAt(Comment aComment, int index)
+  {  
+    boolean wasAdded = false;
+    if(addComment(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCommentAt(Comment aComment, int index)
+  {
+    boolean wasAdded = false;
+    if(comments.contains(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCommentAt(aComment, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
@@ -328,6 +360,38 @@ public class Attribute extends UmpleVariable
     return wasRemoved;
   }
 
+  public boolean addTraceRecordAt(TraceRecord aTraceRecord, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTraceRecord(aTraceRecord))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceRecords()) { index = numberOfTraceRecords() - 1; }
+      traceRecords.remove(aTraceRecord);
+      traceRecords.add(index, aTraceRecord);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveTraceRecordAt(TraceRecord aTraceRecord, int index)
+  {
+    boolean wasAdded = false;
+    if(traceRecords.contains(aTraceRecord))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceRecords()) { index = numberOfTraceRecords() - 1; }
+      traceRecords.remove(aTraceRecord);
+      traceRecords.add(index, aTraceRecord);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTraceRecordAt(aTraceRecord, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfAttributeTraceItems()
   {
     return 0;
@@ -376,6 +440,38 @@ public class Attribute extends UmpleVariable
       }
     }
     return wasRemoved;
+  }
+
+  public boolean addAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAttributeTraceItem(aAttributeTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributeTraceItems()) { index = numberOfAttributeTraceItems() - 1; }
+      attributeTraceItems.remove(aAttributeTraceItem);
+      attributeTraceItems.add(index, aAttributeTraceItem);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
+  {
+    boolean wasAdded = false;
+    if(attributeTraceItems.contains(aAttributeTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributeTraceItems()) { index = numberOfAttributeTraceItems() - 1; }
+      attributeTraceItems.remove(aAttributeTraceItem);
+      attributeTraceItems.add(index, aAttributeTraceItem);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAttributeTraceItemAt(aAttributeTraceItem, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

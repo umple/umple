@@ -97,6 +97,8 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");
     UpperCaseSingularLookupMap.put("deleteMethod", "delete{0}");
     UpperCaseSingularLookupMap.put("setMethod", "set{0}");
+    UpperCaseSingularLookupMap.put("addAtMethod", "add{0}At");
+    UpperCaseSingularLookupMap.put("addOrMoveAtMethod", "addOrMove{0}At");
     UpperCaseSingularLookupMap.put("enterMethod", "enter{0}");
     UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
     UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");

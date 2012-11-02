@@ -256,6 +256,38 @@ public class Transition
     return wasRemoved;
   }
 
+  public boolean addStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStateMachineTraceItem(aStateMachineTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachineTraceItems()) { index = numberOfStateMachineTraceItems() - 1; }
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
+      stateMachineTraceItems.add(index, aStateMachineTraceItem);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  {
+    boolean wasAdded = false;
+    if(stateMachineTraceItems.contains(aStateMachineTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachineTraceItems()) { index = numberOfStateMachineTraceItems() - 1; }
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
+      stateMachineTraceItems.add(index, aStateMachineTraceItem);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStateMachineTraceItemAt(aStateMachineTraceItem, index);
+    }
+    return wasAdded;
+  }
+
   public boolean equals(Object obj)
   {
     if (obj == null) { return false; }

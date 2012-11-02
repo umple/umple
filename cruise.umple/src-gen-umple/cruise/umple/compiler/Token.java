@@ -154,6 +154,38 @@ public class Token
     return wasRemoved;
   }
 
+  public boolean addSubTokenAt(Token aSubToken, int index)
+  {  
+    boolean wasAdded = false;
+    if(addSubToken(aSubToken))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfSubTokens()) { index = numberOfSubTokens() - 1; }
+      subTokens.remove(aSubToken);
+      subTokens.add(index, aSubToken);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveSubTokenAt(Token aSubToken, int index)
+  {
+    boolean wasAdded = false;
+    if(subTokens.contains(aSubToken))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfSubTokens()) { index = numberOfSubTokens() - 1; }
+      subTokens.remove(aSubToken);
+      subTokens.add(index, aSubToken);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addSubTokenAt(aSubToken, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setPosition(Position newPosition)
   {
     boolean wasSet = false;

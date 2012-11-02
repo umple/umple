@@ -148,6 +148,38 @@ public class UmletGenerator implements CodeGenerator
     return wasRemoved;
   }
 
+  public boolean addClassElementAt(UmletElement aClassElement, int index)
+  {  
+    boolean wasAdded = false;
+    if(addClassElement(aClassElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfClassElements()) { index = numberOfClassElements() - 1; }
+      classElements.remove(aClassElement);
+      classElements.add(index, aClassElement);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveClassElementAt(UmletElement aClassElement, int index)
+  {
+    boolean wasAdded = false;
+    if(classElements.contains(aClassElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfClassElements()) { index = numberOfClassElements() - 1; }
+      classElements.remove(aClassElement);
+      classElements.add(index, aClassElement);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addClassElementAt(aClassElement, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfAssociationElements()
   {
     return 0;
@@ -171,6 +203,38 @@ public class UmletGenerator implements CodeGenerator
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addAssociationElementAt(UmletElement aAssociationElement, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAssociationElement(aAssociationElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAssociationElements()) { index = numberOfAssociationElements() - 1; }
+      associationElements.remove(aAssociationElement);
+      associationElements.add(index, aAssociationElement);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAssociationElementAt(UmletElement aAssociationElement, int index)
+  {
+    boolean wasAdded = false;
+    if(associationElements.contains(aAssociationElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAssociationElements()) { index = numberOfAssociationElements() - 1; }
+      associationElements.remove(aAssociationElement);
+      associationElements.add(index, aAssociationElement);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAssociationElementAt(aAssociationElement, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

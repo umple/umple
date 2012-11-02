@@ -260,6 +260,38 @@ public class TraceDirective
     return wasRemoved;
   }
 
+  public boolean addAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAttributeTraceItem(aAttributeTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributeTraceItems()) { index = numberOfAttributeTraceItems() - 1; }
+      attributeTraceItems.remove(aAttributeTraceItem);
+      attributeTraceItems.add(index, aAttributeTraceItem);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
+  {
+    boolean wasAdded = false;
+    if(attributeTraceItems.contains(aAttributeTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributeTraceItems()) { index = numberOfAttributeTraceItems() - 1; }
+      attributeTraceItems.remove(aAttributeTraceItem);
+      attributeTraceItems.add(index, aAttributeTraceItem);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAttributeTraceItemAt(aAttributeTraceItem, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfStateMachineTraceItems()
   {
     return 0;
@@ -310,6 +342,38 @@ public class TraceDirective
     return wasRemoved;
   }
 
+  public boolean addStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStateMachineTraceItem(aStateMachineTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachineTraceItems()) { index = numberOfStateMachineTraceItems() - 1; }
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
+      stateMachineTraceItems.add(index, aStateMachineTraceItem);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  {
+    boolean wasAdded = false;
+    if(stateMachineTraceItems.contains(aStateMachineTraceItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachineTraceItems()) { index = numberOfStateMachineTraceItems() - 1; }
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
+      stateMachineTraceItems.add(index, aStateMachineTraceItem);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStateMachineTraceItemAt(aStateMachineTraceItem, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfMethodTraceEntities()
   {
     return 0;
@@ -358,6 +422,38 @@ public class TraceDirective
       }
     }
     return wasRemoved;
+  }
+
+  public boolean addMethodTraceEntityAt(MethodTraceEntity aMethodTraceEntity, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMethodTraceEntity(aMethodTraceEntity))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethodTraceEntities()) { index = numberOfMethodTraceEntities() - 1; }
+      methodTraceEntities.remove(aMethodTraceEntity);
+      methodTraceEntities.add(index, aMethodTraceEntity);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMethodTraceEntityAt(MethodTraceEntity aMethodTraceEntity, int index)
+  {
+    boolean wasAdded = false;
+    if(methodTraceEntities.contains(aMethodTraceEntity))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethodTraceEntities()) { index = numberOfMethodTraceEntities() - 1; }
+      methodTraceEntities.remove(aMethodTraceEntity);
+      methodTraceEntities.add(index, aMethodTraceEntity);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMethodTraceEntityAt(aMethodTraceEntity, index);
+    }
+    return wasAdded;
   }
 
   public boolean setAssociationVariable(AssociationVariable newAssociationVariable)
@@ -416,6 +512,38 @@ public class TraceDirective
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addConditionAt(TraceCondition aCondition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCondition(aCondition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCondition()) { index = numberOfCondition() - 1; }
+      condition.remove(aCondition);
+      condition.add(index, aCondition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveConditionAt(TraceCondition aCondition, int index)
+  {
+    boolean wasAdded = false;
+    if(condition.contains(aCondition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCondition()) { index = numberOfCondition() - 1; }
+      condition.remove(aCondition);
+      condition.add(index, aCondition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addConditionAt(aCondition, index);
+    }
+    return wasAdded;
   }
 
   public boolean setTraceRecord(TraceRecord newTraceRecord)
@@ -493,6 +621,38 @@ public class TraceDirective
       }
     }
     return wasRemoved;
+  }
+
+  public boolean addTraceCaseAt(TraceCase aTraceCase, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTraceCase(aTraceCase))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceCases()) { index = numberOfTraceCases() - 1; }
+      traceCases.remove(aTraceCase);
+      traceCases.add(index, aTraceCase);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveTraceCaseAt(TraceCase aTraceCase, int index)
+  {
+    boolean wasAdded = false;
+    if(traceCases.contains(aTraceCase))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceCases()) { index = numberOfTraceCases() - 1; }
+      traceCases.remove(aTraceCase);
+      traceCases.add(index, aTraceCase);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTraceCaseAt(aTraceCase, index);
+    }
+    return wasAdded;
   }
 
   public boolean setUmpleClass(UmpleClass aUmpleClass)

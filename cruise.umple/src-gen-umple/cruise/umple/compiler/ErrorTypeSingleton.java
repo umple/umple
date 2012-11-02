@@ -101,6 +101,38 @@ public class ErrorTypeSingleton
     return wasRemoved;
   }
 
+  public boolean addErrorTypeAt(ErrorType aErrorType, int index)
+  {  
+    boolean wasAdded = false;
+    if(addErrorType(aErrorType))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfErrorTypes()) { index = numberOfErrorTypes() - 1; }
+      errorTypes.remove(aErrorType);
+      errorTypes.add(index, aErrorType);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveErrorTypeAt(ErrorType aErrorType, int index)
+  {
+    boolean wasAdded = false;
+    if(errorTypes.contains(aErrorType))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfErrorTypes()) { index = numberOfErrorTypes() - 1; }
+      errorTypes.remove(aErrorType);
+      errorTypes.add(index, aErrorType);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addErrorTypeAt(aErrorType, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     errorTypes.clear();

@@ -200,6 +200,38 @@ public class StateMachine_TraceItem
     return wasRemoved;
   }
 
+  public boolean addTraceDirectiveAt(TraceDirective aTraceDirective, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTraceDirective(aTraceDirective))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceDirectives()) { index = numberOfTraceDirectives() - 1; }
+      traceDirectives.remove(aTraceDirective);
+      traceDirectives.add(index, aTraceDirective);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveTraceDirectiveAt(TraceDirective aTraceDirective, int index)
+  {
+    boolean wasAdded = false;
+    if(traceDirectives.contains(aTraceDirective))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceDirectives()) { index = numberOfTraceDirectives() - 1; }
+      traceDirectives.remove(aTraceDirective);
+      traceDirectives.add(index, aTraceDirective);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTraceDirectiveAt(aTraceDirective, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     if (stateMachine != null)

@@ -188,6 +188,38 @@ public class UmpleInterface extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addExtendsInterfaceAt(UmpleInterface aExtendsInterface, int index)
+  {  
+    boolean wasAdded = false;
+    if(addExtendsInterface(aExtendsInterface))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfExtendsInterface()) { index = numberOfExtendsInterface() - 1; }
+      extendsInterface.remove(aExtendsInterface);
+      extendsInterface.add(index, aExtendsInterface);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveExtendsInterfaceAt(UmpleInterface aExtendsInterface, int index)
+  {
+    boolean wasAdded = false;
+    if(extendsInterface.contains(aExtendsInterface))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfExtendsInterface()) { index = numberOfExtendsInterface() - 1; }
+      extendsInterface.remove(aExtendsInterface);
+      extendsInterface.add(index, aExtendsInterface);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addExtendsInterfaceAt(aExtendsInterface, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfMethods()
   {
     return 0;
@@ -211,6 +243,38 @@ public class UmpleInterface extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addMethodAt(Method aMethod, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMethod(aMethod))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethods()) { index = numberOfMethods() - 1; }
+      methods.remove(aMethod);
+      methods.add(index, aMethod);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMethodAt(Method aMethod, int index)
+  {
+    boolean wasAdded = false;
+    if(methods.contains(aMethod))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethods()) { index = numberOfMethods() - 1; }
+      methods.remove(aMethod);
+      methods.add(index, aMethod);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMethodAt(aMethod, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfDepends()
@@ -239,6 +303,38 @@ public class UmpleInterface extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addDependAt(Depend aDepend, int index)
+  {  
+    boolean wasAdded = false;
+    if(addDepend(aDepend))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfDepends()) { index = numberOfDepends() - 1; }
+      depends.remove(aDepend);
+      depends.add(index, aDepend);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveDependAt(Depend aDepend, int index)
+  {
+    boolean wasAdded = false;
+    if(depends.contains(aDepend))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfDepends()) { index = numberOfDepends() - 1; }
+      depends.remove(aDepend);
+      depends.add(index, aDepend);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addDependAt(aDepend, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfConstants()
   {
     return 0;
@@ -262,6 +358,38 @@ public class UmpleInterface extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addConstantAt(Constant aConstant, int index)
+  {  
+    boolean wasAdded = false;
+    if(addConstant(aConstant))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConstants()) { index = numberOfConstants() - 1; }
+      constants.remove(aConstant);
+      constants.add(index, aConstant);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveConstantAt(Constant aConstant, int index)
+  {
+    boolean wasAdded = false;
+    if(constants.contains(aConstant))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConstants()) { index = numberOfConstants() - 1; }
+      constants.remove(aConstant);
+      constants.add(index, aConstant);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addConstantAt(aConstant, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

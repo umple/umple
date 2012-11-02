@@ -174,6 +174,38 @@ public class AssociationVariable extends UmpleVariable
     return wasRemoved;
   }
 
+  public boolean addCommentAt(Comment aComment, int index)
+  {  
+    boolean wasAdded = false;
+    if(addComment(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCommentAt(Comment aComment, int index)
+  {
+    boolean wasAdded = false;
+    if(comments.contains(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCommentAt(aComment, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;

@@ -137,6 +137,38 @@ public class VmlSystem
     return wasRemoved;
   }
 
+  public boolean addCodeSnippetAt(CodeSnippet aCodeSnippet, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCodeSnippet(aCodeSnippet))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCodeSnippets()) { index = numberOfCodeSnippets() - 1; }
+      codeSnippets.remove(aCodeSnippet);
+      codeSnippets.add(index, aCodeSnippet);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCodeSnippetAt(CodeSnippet aCodeSnippet, int index)
+  {
+    boolean wasAdded = false;
+    if(codeSnippets.contains(aCodeSnippet))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCodeSnippets()) { index = numberOfCodeSnippets() - 1; }
+      codeSnippets.remove(aCodeSnippet);
+      codeSnippets.add(index, aCodeSnippet);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCodeSnippetAt(aCodeSnippet, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfConcerns()
   {
     return 0;
@@ -174,6 +206,38 @@ public class VmlSystem
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addConcernAt(Concern aConcern, int index)
+  {  
+    boolean wasAdded = false;
+    if(addConcern(aConcern))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConcerns()) { index = numberOfConcerns() - 1; }
+      concerns.remove(aConcern);
+      concerns.add(index, aConcern);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveConcernAt(Concern aConcern, int index)
+  {
+    boolean wasAdded = false;
+    if(concerns.contains(aConcern))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConcerns()) { index = numberOfConcerns() - 1; }
+      concerns.remove(aConcern);
+      concerns.add(index, aConcern);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addConcernAt(aConcern, index);
+    }
+    return wasAdded;
   }
 
   public void delete()
