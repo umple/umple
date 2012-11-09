@@ -84,6 +84,8 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
     UpperCaseSingularLookupMap.put("addMethod", "add{0}");
     UpperCaseSingularLookupMap.put("addViaMethod", "add{0}Via");
+    UpperCaseSingularLookupMap.put("addAtMethod", "add{0}At");
+    UpperCaseSingularLookupMap.put("addOrMoveAtMethod", "addOrMove{0}At");
     UpperCaseSingularLookupMap.put("removeMethod", "remove{0}");
     UpperCaseSingularLookupMap.put("indexOfMethod", "indexOf{0}");
     UpperCaseSingularLookupMap.put("parameterOld", "old{0}");

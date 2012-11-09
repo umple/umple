@@ -3740,7 +3740,6 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     String includeFile = null;
     String includeFile2 = null;
 
-
     if (!relatedAssociation.getIsNavigable())
     {
       if (av.isOptionalOne())
@@ -3938,7 +3937,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(relatedAssociation);
     
     }
-
+	
     boolean addNewLine = false;
     if (hasIsNumberOfValidMethod)
     {
@@ -6606,6 +6605,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
+    
   }
 
      if (uClass.getKey().isProvided()) { 

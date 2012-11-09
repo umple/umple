@@ -159,6 +159,38 @@ class Mentor
     return $wasRemoved;
   }
 
+  public function addSecondaryAt($aSecondary, $index)
+  {  
+    $wasAdded = false;
+    if($this->addSecondary($aSecondary))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfSecondaries()) { $index = $this->numberOfSecondaries() - 1; }
+      array_splice($this->secondaries, $this->indexOfSecondary($aSecondary), 1);
+      array_splice($this->secondaries, $index, 0, array($aSecondary));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveSecondaryAt($aSecondary, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfSecondary($aSecondary) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfSecondaries()) { $index = $this->numberOfSecondaries() - 1; }
+      array_splice($this->secondaries, $this->indexOfSecondary($aSecondary), 1);
+      array_splice($this->secondaries, $index, 0, array($aSecondary));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addSecondaryAt($aSecondary, $index);
+    }
+    return $wasAdded;
+  }
+
   public function equals($compareTo)
   {
     if ($compareTo == null) { return false; }

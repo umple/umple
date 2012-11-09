@@ -1411,101 +1411,126 @@ public class PhpClassGenerator implements ILang
   protected final String TEXT_1391 = " = $";
   protected final String TEXT_1392 = ";" + NL + "    $wasSet = true;";
   protected final String TEXT_1393 = NL + "    return $wasSet;" + NL + "  }" + NL;
-  protected final String TEXT_1394 = NL + "  public function equals($compareTo)" + NL + "  {" + NL + "    if ($compareTo == null) { return false; }" + NL + "    if (get_class($this) != get_class($compareTo)) { return false; }" + NL;
-  protected final String TEXT_1395 = NL + "    ";
-  protected final String TEXT_1396 = NL + NL + "    return true;" + NL + "  }" + NL + "" + NL + "  public function hashCode()" + NL + "  {" + NL + "    if ($this->cachedHashCode != -1)" + NL + "    {" + NL + "      return $this->cachedHashCode;" + NL + "    }" + NL + "    $this->cachedHashCode = 17;";
-  protected final String TEXT_1397 = NL + "    ";
-  protected final String TEXT_1398 = NL;
-  protected final String TEXT_1399 = NL + "    ";
-  protected final String TEXT_1400 = NL + "    return $this->cachedHashCode;" + NL + "  }" + NL;
-  protected final String TEXT_1401 = NL + "  public function equals($compareTo)" + NL + "  {" + NL + "    return $this == $compareTo;" + NL + "  }" + NL;
-  protected final String TEXT_1402 = NL + "    $this->";
-  protected final String TEXT_1403 = " = null;";
-  protected final String TEXT_1404 = NL + "    $this->";
-  protected final String TEXT_1405 = " = array();";
-  protected final String TEXT_1406 = NL + "    $";
-  protected final String TEXT_1407 = " = $this->";
-  protected final String TEXT_1408 = ";" + NL + "    $this->";
-  protected final String TEXT_1409 = " = null;" + NL + "    if ($";
-  protected final String TEXT_1410 = " != null)" + NL + "    {" + NL + "      $";
-  protected final String TEXT_1411 = "->delete();" + NL + "    }";
-  protected final String TEXT_1412 = NL + "    if ($this->";
-  protected final String TEXT_1413 = " != null)" + NL + "    {" + NL + "      $this->";
-  protected final String TEXT_1414 = "->";
-  protected final String TEXT_1415 = "(null);" + NL + "    }";
-  protected final String TEXT_1416 = NL + "    $";
-  protected final String TEXT_1417 = " = $this->";
-  protected final String TEXT_1418 = ";" + NL + "    $this->";
-  protected final String TEXT_1419 = " = null;" + NL + "    if ($";
-  protected final String TEXT_1420 = " != null)" + NL + "    {" + NL + "      $";
-  protected final String TEXT_1421 = "->";
-  protected final String TEXT_1422 = "(null);" + NL + "    }";
-  protected final String TEXT_1423 = NL + "    $";
-  protected final String TEXT_1424 = " = $this->";
-  protected final String TEXT_1425 = ";" + NL + "    $this->";
-  protected final String TEXT_1426 = " = null;" + NL + "    if ($";
-  protected final String TEXT_1427 = " != null)" + NL + "    {" + NL + "      $";
-  protected final String TEXT_1428 = "->delete();" + NL + "    }";
-  protected final String TEXT_1429 = NL + "    if ($this->";
-  protected final String TEXT_1430 = " != null)" + NL + "    {" + NL + "      $this->";
-  protected final String TEXT_1431 = "->";
-  protected final String TEXT_1432 = "($this);" + NL + "    }";
-  protected final String TEXT_1433 = NL + "    if ($this->";
-  protected final String TEXT_1434 = " != null)" + NL + "    {" + NL + "      $this->";
-  protected final String TEXT_1435 = "->delete();" + NL + "    }";
-  protected final String TEXT_1436 = NL + "    if ($this->";
-  protected final String TEXT_1437 = " != null)" + NL + "    {" + NL + "      if ($this->";
-  protected final String TEXT_1438 = "->";
-  protected final String TEXT_1439 = "() <= ";
-  protected final String TEXT_1440 = ")" + NL + "      {" + NL + "        $this->";
-  protected final String TEXT_1441 = "->delete();" + NL + "      }" + NL + "      else" + NL + "      {" + NL + "        $this->";
-  protected final String TEXT_1442 = "->";
-  protected final String TEXT_1443 = "($this);" + NL + "      }" + NL + "    }";
-  protected final String TEXT_1444 = NL + "    $";
-  protected final String TEXT_1445 = " = $this->";
-  protected final String TEXT_1446 = ";" + NL + "    $this->";
-  protected final String TEXT_1447 = " = null;" + NL + "    $";
-  protected final String TEXT_1448 = "->";
-  protected final String TEXT_1449 = "($this);";
-  protected final String TEXT_1450 = NL + "    foreach ($this->";
-  protected final String TEXT_1451 = " as $";
-  protected final String TEXT_1452 = ")" + NL + "    {" + NL + "      $this->";
-  protected final String TEXT_1453 = "($";
-  protected final String TEXT_1454 = ",null);" + NL + "    }" + NL + "    $this->";
-  protected final String TEXT_1455 = " = array();";
-  protected final String TEXT_1456 = NL + "    $";
-  protected final String TEXT_1457 = " = $this->";
-  protected final String TEXT_1458 = ";" + NL + "    $this->";
-  protected final String TEXT_1459 = " = array();" + NL + "    foreach ($";
-  protected final String TEXT_1460 = " as $";
-  protected final String TEXT_1461 = ")" + NL + "    {" + NL + "      if ($";
-  protected final String TEXT_1462 = "->";
-  protected final String TEXT_1463 = "() <= ";
-  protected final String TEXT_1464 = "::";
-  protected final String TEXT_1465 = "())" + NL + "      {" + NL + "        $";
-  protected final String TEXT_1466 = "->delete();" + NL + "      }" + NL + "      else" + NL + "      {" + NL + "        $";
+  protected final String TEXT_1394 = NL + "  public function ";
+  protected final String TEXT_1395 = "($";
+  protected final String TEXT_1396 = ", $index)" + NL + "  {  " + NL + "    $wasAdded = false;" + NL + "    if($this->";
+  protected final String TEXT_1397 = "($";
+  protected final String TEXT_1398 = "))" + NL + "    {" + NL + "      if($index < 0 ) { $index = 0; }" + NL + "      if($index > $this->";
+  protected final String TEXT_1399 = "()) { $index = $this->";
+  protected final String TEXT_1400 = "() - 1; }" + NL + "      array_splice($this->";
+  protected final String TEXT_1401 = ", $this->";
+  protected final String TEXT_1402 = "($";
+  protected final String TEXT_1403 = "), 1);" + NL + "      array_splice($this->";
+  protected final String TEXT_1404 = ", $index, 0, array($";
+  protected final String TEXT_1405 = "));" + NL + "      $wasAdded = true;" + NL + "    }" + NL + "    return $wasAdded;" + NL + "  }" + NL + "" + NL + "  public function ";
+  protected final String TEXT_1406 = "($";
+  protected final String TEXT_1407 = ", $index)" + NL + "  {" + NL + "    $wasAdded = false;" + NL + "    if($this->";
+  protected final String TEXT_1408 = "($";
+  protected final String TEXT_1409 = ") !== -1)" + NL + "    {" + NL + "      if($index < 0 ) { $index = 0; }" + NL + "      if($index > $this->";
+  protected final String TEXT_1410 = "()) { $index = $this->";
+  protected final String TEXT_1411 = "() - 1; }" + NL + "      array_splice($this->";
+  protected final String TEXT_1412 = ", $this->";
+  protected final String TEXT_1413 = "($";
+  protected final String TEXT_1414 = "), 1);" + NL + "      array_splice($this->";
+  protected final String TEXT_1415 = ", $index, 0, array($";
+  protected final String TEXT_1416 = "));" + NL + "      $wasAdded = true;" + NL + "    } " + NL + "    else " + NL + "    {" + NL + "      $wasAdded = $this->";
+  protected final String TEXT_1417 = "($";
+  protected final String TEXT_1418 = ", $index);" + NL + "    }" + NL + "    return $wasAdded;" + NL + "  }" + NL;
+  protected final String TEXT_1419 = NL + "  public function equals($compareTo)" + NL + "  {" + NL + "    if ($compareTo == null) { return false; }" + NL + "    if (get_class($this) != get_class($compareTo)) { return false; }" + NL;
+  protected final String TEXT_1420 = NL + "    ";
+  protected final String TEXT_1421 = NL + NL + "    return true;" + NL + "  }" + NL + "" + NL + "  public function hashCode()" + NL + "  {" + NL + "    if ($this->cachedHashCode != -1)" + NL + "    {" + NL + "      return $this->cachedHashCode;" + NL + "    }" + NL + "    $this->cachedHashCode = 17;";
+  protected final String TEXT_1422 = NL + "    ";
+  protected final String TEXT_1423 = NL;
+  protected final String TEXT_1424 = NL + "    ";
+  protected final String TEXT_1425 = NL + "    return $this->cachedHashCode;" + NL + "  }" + NL;
+  protected final String TEXT_1426 = NL + "  public function equals($compareTo)" + NL + "  {" + NL + "    return $this == $compareTo;" + NL + "  }" + NL;
+  protected final String TEXT_1427 = NL + "    $this->";
+  protected final String TEXT_1428 = " = null;";
+  protected final String TEXT_1429 = NL + "    $this->";
+  protected final String TEXT_1430 = " = array();";
+  protected final String TEXT_1431 = NL + "    $";
+  protected final String TEXT_1432 = " = $this->";
+  protected final String TEXT_1433 = ";" + NL + "    $this->";
+  protected final String TEXT_1434 = " = null;" + NL + "    if ($";
+  protected final String TEXT_1435 = " != null)" + NL + "    {" + NL + "      $";
+  protected final String TEXT_1436 = "->delete();" + NL + "    }";
+  protected final String TEXT_1437 = NL + "    if ($this->";
+  protected final String TEXT_1438 = " != null)" + NL + "    {" + NL + "      $this->";
+  protected final String TEXT_1439 = "->";
+  protected final String TEXT_1440 = "(null);" + NL + "    }";
+  protected final String TEXT_1441 = NL + "    $";
+  protected final String TEXT_1442 = " = $this->";
+  protected final String TEXT_1443 = ";" + NL + "    $this->";
+  protected final String TEXT_1444 = " = null;" + NL + "    if ($";
+  protected final String TEXT_1445 = " != null)" + NL + "    {" + NL + "      $";
+  protected final String TEXT_1446 = "->";
+  protected final String TEXT_1447 = "(null);" + NL + "    }";
+  protected final String TEXT_1448 = NL + "    $";
+  protected final String TEXT_1449 = " = $this->";
+  protected final String TEXT_1450 = ";" + NL + "    $this->";
+  protected final String TEXT_1451 = " = null;" + NL + "    if ($";
+  protected final String TEXT_1452 = " != null)" + NL + "    {" + NL + "      $";
+  protected final String TEXT_1453 = "->delete();" + NL + "    }";
+  protected final String TEXT_1454 = NL + "    if ($this->";
+  protected final String TEXT_1455 = " != null)" + NL + "    {" + NL + "      $this->";
+  protected final String TEXT_1456 = "->";
+  protected final String TEXT_1457 = "($this);" + NL + "    }";
+  protected final String TEXT_1458 = NL + "    if ($this->";
+  protected final String TEXT_1459 = " != null)" + NL + "    {" + NL + "      $this->";
+  protected final String TEXT_1460 = "->delete();" + NL + "    }";
+  protected final String TEXT_1461 = NL + "    if ($this->";
+  protected final String TEXT_1462 = " != null)" + NL + "    {" + NL + "      if ($this->";
+  protected final String TEXT_1463 = "->";
+  protected final String TEXT_1464 = "() <= ";
+  protected final String TEXT_1465 = ")" + NL + "      {" + NL + "        $this->";
+  protected final String TEXT_1466 = "->delete();" + NL + "      }" + NL + "      else" + NL + "      {" + NL + "        $this->";
   protected final String TEXT_1467 = "->";
   protected final String TEXT_1468 = "($this);" + NL + "      }" + NL + "    }";
   protected final String TEXT_1469 = NL + "    $";
   protected final String TEXT_1470 = " = $this->";
   protected final String TEXT_1471 = ";" + NL + "    $this->";
-  protected final String TEXT_1472 = " = array();" + NL + "    foreach ($";
-  protected final String TEXT_1473 = " as $";
-  protected final String TEXT_1474 = ")" + NL + "    {" + NL + "      $";
-  protected final String TEXT_1475 = "->";
-  protected final String TEXT_1476 = "($this);" + NL + "    }";
-  protected final String TEXT_1477 = NL + "    foreach ($this->";
-  protected final String TEXT_1478 = " as $";
-  protected final String TEXT_1479 = ")" + NL + "    {" + NL + "      $";
-  protected final String TEXT_1480 = "->delete();" + NL + "    }";
-  protected final String TEXT_1481 = NL + "    foreach ($this->";
-  protected final String TEXT_1482 = " as $";
-  protected final String TEXT_1483 = ")" + NL + "    {" + NL + "      $";
-  protected final String TEXT_1484 = "->";
-  protected final String TEXT_1485 = "(null);" + NL + "    }";
-  protected final String TEXT_1486 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_1487 = NL + "  ";
-  protected final String TEXT_1488 = NL + "}" + NL + "?>";
+  protected final String TEXT_1472 = " = null;" + NL + "    $";
+  protected final String TEXT_1473 = "->";
+  protected final String TEXT_1474 = "($this);";
+  protected final String TEXT_1475 = NL + "    foreach ($this->";
+  protected final String TEXT_1476 = " as $";
+  protected final String TEXT_1477 = ")" + NL + "    {" + NL + "      $this->";
+  protected final String TEXT_1478 = "($";
+  protected final String TEXT_1479 = ",null);" + NL + "    }" + NL + "    $this->";
+  protected final String TEXT_1480 = " = array();";
+  protected final String TEXT_1481 = NL + "    $";
+  protected final String TEXT_1482 = " = $this->";
+  protected final String TEXT_1483 = ";" + NL + "    $this->";
+  protected final String TEXT_1484 = " = array();" + NL + "    foreach ($";
+  protected final String TEXT_1485 = " as $";
+  protected final String TEXT_1486 = ")" + NL + "    {" + NL + "      if ($";
+  protected final String TEXT_1487 = "->";
+  protected final String TEXT_1488 = "() <= ";
+  protected final String TEXT_1489 = "::";
+  protected final String TEXT_1490 = "())" + NL + "      {" + NL + "        $";
+  protected final String TEXT_1491 = "->delete();" + NL + "      }" + NL + "      else" + NL + "      {" + NL + "        $";
+  protected final String TEXT_1492 = "->";
+  protected final String TEXT_1493 = "($this);" + NL + "      }" + NL + "    }";
+  protected final String TEXT_1494 = NL + "    $";
+  protected final String TEXT_1495 = " = $this->";
+  protected final String TEXT_1496 = ";" + NL + "    $this->";
+  protected final String TEXT_1497 = " = array();" + NL + "    foreach ($";
+  protected final String TEXT_1498 = " as $";
+  protected final String TEXT_1499 = ")" + NL + "    {" + NL + "      $";
+  protected final String TEXT_1500 = "->";
+  protected final String TEXT_1501 = "($this);" + NL + "    }";
+  protected final String TEXT_1502 = NL + "    foreach ($this->";
+  protected final String TEXT_1503 = " as $";
+  protected final String TEXT_1504 = ")" + NL + "    {" + NL + "      $";
+  protected final String TEXT_1505 = "->delete();" + NL + "    }";
+  protected final String TEXT_1506 = NL + "    foreach ($this->";
+  protected final String TEXT_1507 = " as $";
+  protected final String TEXT_1508 = ")" + NL + "    {" + NL + "      $";
+  protected final String TEXT_1509 = "->";
+  protected final String TEXT_1510 = "(null);" + NL + "    }";
+  protected final String TEXT_1511 = NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_1512 = NL + "  ";
+  protected final String TEXT_1513 = NL + "}" + NL + "?>";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -3634,7 +3659,7 @@ public class PhpClassGenerator implements ILang
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-
+    String includeFile3 = null;
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -3833,7 +3858,12 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(relatedAssociation);
     
     }
-
+    
+    if(av.isMany() && !av.isImmutable() && !av.isN())
+    {
+      includeFile3 = "association_AddIndexControlFunctions.jet";
+    }
+    
     boolean addNewLine = false;
     if (hasIsNumberOfValidMethod)
     {
@@ -6096,6 +6126,60 @@ public class PhpClassGenerator implements ILang
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
+    
+    if(includeFile3 == "association_AddIndexControlFunctions.jet"){
+      
+    stringBuffer.append(TEXT_1394);
+    stringBuffer.append(gen.translate("addAtMethod",av));
+    stringBuffer.append(TEXT_1395);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1396);
+    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_1397);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1398);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1399);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1400);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1401);
+    stringBuffer.append(gen.translate("indexOfMethod",av));
+    stringBuffer.append(TEXT_1402);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1403);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1404);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1405);
+    stringBuffer.append(gen.translate("addOrMoveAtMethod",av));
+    stringBuffer.append(TEXT_1406);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1407);
+    stringBuffer.append(gen.translate("indexOfMethod",av));
+    stringBuffer.append(TEXT_1408);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1409);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1410);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1411);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1412);
+    stringBuffer.append(gen.translate("indexOfMethod",av));
+    stringBuffer.append(TEXT_1413);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1414);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1415);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1416);
+    stringBuffer.append(gen.translate("addAtMethod",av));
+    stringBuffer.append(TEXT_1417);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1418);
+    
+    }
   }
 
      if (uClass.getKey().isProvided()) { 
@@ -6169,18 +6253,18 @@ public class PhpClassGenerator implements ILang
   }
 
 
-    stringBuffer.append(TEXT_1394);
-    stringBuffer.append(TEXT_1395);
+    stringBuffer.append(TEXT_1419);
+    stringBuffer.append(TEXT_1420);
     stringBuffer.append( checks.toString().trim() );
-    stringBuffer.append(TEXT_1396);
-    stringBuffer.append(TEXT_1397);
+    stringBuffer.append(TEXT_1421);
+    stringBuffer.append(TEXT_1422);
     stringBuffer.append( hash.toString().trim() );
-    stringBuffer.append(TEXT_1398);
-    stringBuffer.append(TEXT_1399);
+    stringBuffer.append(TEXT_1423);
+    stringBuffer.append(TEXT_1424);
     stringBuffer.append( canSet.toString().trim() );
-    stringBuffer.append(TEXT_1400);
+    stringBuffer.append(TEXT_1425);
      } else { 
-    stringBuffer.append(TEXT_1401);
+    stringBuffer.append(TEXT_1426);
      } 
     
 
@@ -6214,18 +6298,18 @@ public class PhpClassGenerator implements ILang
       {
         hasSomethingToDelete = true;
         
-    stringBuffer.append(TEXT_1402);
+    stringBuffer.append(TEXT_1427);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1403);
+    stringBuffer.append(TEXT_1428);
     
       }
       else if (av.isMany())
       {
         hasSomethingToDelete = true;
         
-    stringBuffer.append(TEXT_1404);
+    stringBuffer.append(TEXT_1429);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1405);
+    stringBuffer.append(TEXT_1430);
     
       }
       continue;
@@ -6234,213 +6318,213 @@ public class PhpClassGenerator implements ILang
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1406);
+    stringBuffer.append(TEXT_1431);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1407);
+    stringBuffer.append(TEXT_1432);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1408);
+    stringBuffer.append(TEXT_1433);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1409);
+    stringBuffer.append(TEXT_1434);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1410);
+    stringBuffer.append(TEXT_1435);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1411);
+    stringBuffer.append(TEXT_1436);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1412);
+    stringBuffer.append(TEXT_1437);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1413);
+    stringBuffer.append(TEXT_1438);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1414);
+    stringBuffer.append(TEXT_1439);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1415);
+    stringBuffer.append(TEXT_1440);
     
     }
     else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1416);
+    stringBuffer.append(TEXT_1441);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1417);
+    stringBuffer.append(TEXT_1442);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1418);
+    stringBuffer.append(TEXT_1443);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1419);
+    stringBuffer.append(TEXT_1444);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1420);
+    stringBuffer.append(TEXT_1445);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1421);
+    stringBuffer.append(TEXT_1446);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1422);
+    stringBuffer.append(TEXT_1447);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1423);
+    stringBuffer.append(TEXT_1448);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1424);
+    stringBuffer.append(TEXT_1449);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1425);
+    stringBuffer.append(TEXT_1450);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1426);
+    stringBuffer.append(TEXT_1451);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1427);
+    stringBuffer.append(TEXT_1452);
     stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1428);
+    stringBuffer.append(TEXT_1453);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
     {
       
-    stringBuffer.append(TEXT_1429);
+    stringBuffer.append(TEXT_1454);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1430);
+    stringBuffer.append(TEXT_1455);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1431);
+    stringBuffer.append(TEXT_1456);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1432);
+    stringBuffer.append(TEXT_1457);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isN())
     {
       
-    stringBuffer.append(TEXT_1433);
+    stringBuffer.append(TEXT_1458);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1434);
+    stringBuffer.append(TEXT_1459);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1435);
+    stringBuffer.append(TEXT_1460);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isMN())
     {
       
-    stringBuffer.append(TEXT_1436);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1437);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1438);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
-    stringBuffer.append(TEXT_1439);
-    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
-    stringBuffer.append(TEXT_1440);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1441);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1442);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1443);
-    
-    }
-    else if (av.isOne() && relatedAssociation.isMany())
-    {
-      
-    stringBuffer.append(TEXT_1444);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1445);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1446);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1447);
-    stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1448);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1449);
-    
-    }
-    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
-    {
-      
-    stringBuffer.append(TEXT_1450);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1451);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1452);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1453);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1454);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1455);
-    
-    }
-    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
-    {
-      
-    stringBuffer.append(TEXT_1456);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1457);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1458);
-    stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1459);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1460);
-    stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1461);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1462);
-    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1463);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
     stringBuffer.append(TEXT_1464);
-    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
+    stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_1465);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1466);
-    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1467);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1468);
     
     }
-    else if (av.isMany() && relatedAssociation.isMany())
+    else if (av.isOne() && relatedAssociation.isMany())
     {
       
     stringBuffer.append(TEXT_1469);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1470);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1471);
-    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1472);
-    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(gen.translate("removeParameterOne",av));
     stringBuffer.append(TEXT_1473);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1474);
-    stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1475);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1474);
+    
+    }
+    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
+    {
+      
+    stringBuffer.append(TEXT_1475);
+    stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1476);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1477);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1478);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1479);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1480);
+    
+    }
+    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+    {
+      
+    stringBuffer.append(TEXT_1481);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1482);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1483);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1484);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1485);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1486);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1487);
+    stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1488);
+    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(TEXT_1489);
+    stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
+    stringBuffer.append(TEXT_1490);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1491);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1492);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1493);
+    
+    }
+    else if (av.isMany() && relatedAssociation.isMany())
+    {
+      
+    stringBuffer.append(TEXT_1494);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1495);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1496);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1497);
+    stringBuffer.append(gen.translate("parameterCopyOfMany",av));
+    stringBuffer.append(TEXT_1498);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1499);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1500);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1501);
     
     }
     else if (av.isMany() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1477);
+    stringBuffer.append(TEXT_1502);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1478);
+    stringBuffer.append(TEXT_1503);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1479);
+    stringBuffer.append(TEXT_1504);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1480);
+    stringBuffer.append(TEXT_1505);
     
     }
     else if (av.isMany() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1481);
+    stringBuffer.append(TEXT_1506);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1482);
+    stringBuffer.append(TEXT_1507);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1483);
+    stringBuffer.append(TEXT_1508);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1484);
+    stringBuffer.append(TEXT_1509);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1485);
+    stringBuffer.append(TEXT_1510);
     
     }
     else
@@ -6540,8 +6624,8 @@ public class PhpClassGenerator implements ILang
 
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_1486);
-    stringBuffer.append(TEXT_1487);
+    stringBuffer.append(TEXT_1511);
+    stringBuffer.append(TEXT_1512);
     stringBuffer.append(uClass.getExtraCode());
      } 
     
@@ -6566,7 +6650,7 @@ public class PhpClassGenerator implements ILang
 }
 
 
-    stringBuffer.append(TEXT_1488);
+    stringBuffer.append(TEXT_1513);
     return stringBuffer.toString();
   }
 }

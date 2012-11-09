@@ -92,6 +92,8 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     AsIsSingularLookupMap.put("parameterNext", "next_{0}");
     AsIsSingularLookupMap.put("addMethod", "add_{0}");
     AsIsSingularLookupMap.put("addViaMethod", "add_{0}_via");
+    UpperCaseSingularLookupMap.put("addAtMethod", "add{0}At");
+    UpperCaseSingularLookupMap.put("addOrMoveAtMethod", "addOrMove{0}At");
     AsIsSingularLookupMap.put("removeMethod", "remove_{0}");
     AsIsSingularLookupMap.put("indexOfMethod", "index_of_{0}");
     AsIsSingularLookupMap.put("parameterOld", "old_{0}");

@@ -111,6 +111,38 @@ class Foo
     return $wasRemoved;
   }
 
+  public function addBarAt($aBar, $index)
+  {  
+    $wasAdded = false;
+    if($this->addBar($aBar))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBars()) { $index = $this->numberOfBars() - 1; }
+      array_splice($this->bars, $this->indexOfBar($aBar), 1);
+      array_splice($this->bars, $index, 0, array($aBar));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveBarAt($aBar, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfBar($aBar) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBars()) { $index = $this->numberOfBars() - 1; }
+      array_splice($this->bars, $this->indexOfBar($aBar), 1);
+      array_splice($this->bars, $index, 0, array($aBar));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addBarAt($aBar, $index);
+    }
+    return $wasAdded;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;
