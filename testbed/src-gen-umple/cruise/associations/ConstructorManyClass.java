@@ -163,6 +163,38 @@ public class ConstructorManyClass
     return wasSet;
   }
 
+  public boolean addOthersOneAt(Otherclass aOthersOne, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOthersOne(aOthersOne))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOthersOne()) { index = numberOfOthersOne() - 1; }
+      othersOne.remove(aOthersOne);
+      othersOne.add(index, aOthersOne);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOthersOneAt(Otherclass aOthersOne, int index)
+  {
+    boolean wasAdded = false;
+    if(othersOne.contains(aOthersOne))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOthersOne()) { index = numberOfOthersOne() - 1; }
+      othersOne.remove(aOthersOne);
+      othersOne.add(index, aOthersOne);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOthersOneAt(aOthersOne, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfOthersTwo()
   {
     return 1;
@@ -225,6 +257,38 @@ public class ConstructorManyClass
     othersTwo.addAll(verifiedOthersTwo);
     wasSet = true;
     return wasSet;
+  }
+
+  public boolean addOthersTwoAt(Otherclass aOthersTwo, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOthersTwo(aOthersTwo))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOthersTwo()) { index = numberOfOthersTwo() - 1; }
+      othersTwo.remove(aOthersTwo);
+      othersTwo.add(index, aOthersTwo);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOthersTwoAt(Otherclass aOthersTwo, int index)
+  {
+    boolean wasAdded = false;
+    if(othersTwo.contains(aOthersTwo))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOthersTwo()) { index = numberOfOthersTwo() - 1; }
+      othersTwo.remove(aOthersTwo);
+      othersTwo.add(index, aOthersTwo);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOthersTwoAt(aOthersTwo, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

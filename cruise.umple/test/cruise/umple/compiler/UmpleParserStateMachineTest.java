@@ -854,6 +854,19 @@ public class UmpleParserStateMachineTest
 	
   }
   
+  @Test
+  public void malformedStateMachine(){
+	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxEmptyCodeBlock.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyCodeBlock.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxEmptyGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyGuard.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxExtraSemiColon.ump", 0, 1006, new Position("107_badStateMachineSyntaxExtraSemiColon.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxMisplacedAttribute.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedAttribute.ump", 3, 2, 16));
+	  assertHasWarning("107_badStateMachineSyntaxMisplacedGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedGuard.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxMissingForwardSlash.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingForwardSlash.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxMissingSemiColon.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingSemiColon.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxMissmatchedBrackets.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissmatchedBrackets.ump", 4, 2, 45));
+  }
+  
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);

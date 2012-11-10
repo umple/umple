@@ -1,0 +1,16 @@
+class badSM
+{
+  boolean someValue = false;
+  sm{
+    state1
+    {
+      entry / {someValue = true;}
+      transition -> state2
+      exit / {someValue = false;}
+    }
+    state2
+    {
+      transition [!isGuarded()] -> state1;
+    }
+  }
+}

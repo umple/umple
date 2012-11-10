@@ -809,6 +809,8 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
     else if (token.is("extraCode"))
     {
+      //This is a catch all and will be used less often as the grammar gets updated.
+      if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
       aClass.appendExtraCode(token.getValue());
     }
     else if (token.is("constantDeclaration"))
@@ -2023,7 +2025,16 @@ private void analyzeClassToken(Token t, int analysisStep)
       attribute.addComment(c);
     }
   }
-private void analyzeStateMachineToken(Token token, int analysisStep)
+private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
+    String code = extraCodeToken.getValue();
+    String[] parts = code.split("\\{");
+    if(parts.length < 2) return false; //This means there are no opening brackets
+    if(!Token.isValidIdentifier(parts[0].trim())) return false; //This means we don't have an identifier. If the SM name is misspelt, that should be picked up elsewhere.
+    return true; //We have an identifier followe by a { followe by something else that is probably a state machine
+  }
+  
+  // Analyze state machine related tokens
+  private void analyzeStateMachineToken(Token token, int analysisStep)
   {
     if (analysisStep != 1)
     {

@@ -184,6 +184,38 @@ class StudentAE
     return $wasRemoved;
   }
 
+  public function addMentorAt($aMentor, $index)
+  {  
+    $wasAdded = false;
+    if($this->addMentor($aMentor))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfMentors()) { $index = $this->numberOfMentors() - 1; }
+      array_splice($this->mentors, $this->indexOfMentor($aMentor), 1);
+      array_splice($this->mentors, $index, 0, array($aMentor));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveMentorAt($aMentor, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfMentor($aMentor) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfMentors()) { $index = $this->numberOfMentors() - 1; }
+      array_splice($this->mentors, $this->indexOfMentor($aMentor), 1);
+      array_splice($this->mentors, $index, 0, array($aMentor));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addMentorAt($aMentor, $index);
+    }
+    return $wasAdded;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;

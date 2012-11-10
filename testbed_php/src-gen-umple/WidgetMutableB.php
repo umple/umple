@@ -123,6 +123,38 @@ class WidgetMutableB
     return $wasSet;
   }
 
+  public function addWidgetImmutableBAt($aWidgetImmutableB, $index)
+  {  
+    $wasAdded = false;
+    if($this->addWidgetImmutableB($aWidgetImmutableB))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfWidgetImmutableBs()) { $index = $this->numberOfWidgetImmutableBs() - 1; }
+      array_splice($this->widgetImmutableBs, $this->indexOfWidgetImmutableB($aWidgetImmutableB), 1);
+      array_splice($this->widgetImmutableBs, $index, 0, array($aWidgetImmutableB));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveWidgetImmutableBAt($aWidgetImmutableB, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfWidgetImmutableB($aWidgetImmutableB) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfWidgetImmutableBs()) { $index = $this->numberOfWidgetImmutableBs() - 1; }
+      array_splice($this->widgetImmutableBs, $this->indexOfWidgetImmutableB($aWidgetImmutableB), 1);
+      array_splice($this->widgetImmutableBs, $index, 0, array($aWidgetImmutableB));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addWidgetImmutableBAt($aWidgetImmutableB, $index);
+    }
+    return $wasAdded;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;

@@ -171,6 +171,8 @@ class UmpleInternalParser
     }
     else if (token.is("extraCode"))
     {
+      //This is a catch all and will be used less often as the grammar gets updated.
+      if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
       aClass.appendExtraCode(token.getValue());
     }
     else if (token.is("constantDeclaration"))
