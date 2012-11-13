@@ -43,8 +43,8 @@ public class Light
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    System.err.println("state@pre="+status);
-    System.err.println("event=flip");
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=flip,");
     switch (aStatus)
     {
       case On:

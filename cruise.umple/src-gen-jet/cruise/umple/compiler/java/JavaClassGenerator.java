@@ -3619,8 +3619,8 @@ public class JavaClassGenerator implements ILang
 		  {
 			  if( tracedStm.getTransition() != null )
 			  {
-				  allCases.append(StringFormatter.format("\n    System.err.println(\"state@pre=\"+{0});",tracedStm.getStateMachine().getName()));
-				  allCases.append(StringFormatter.format("\n    System.err.println(\"event={0}\");",gen.translate("eventMethod",e)));
+				  allCases.append(StringFormatter.format("\n    System.err.print(\"state@pre=\"+{0}+\",\");",tracedStm.getStateMachine().getName()));
+				  allCases.append(StringFormatter.format("\n    System.err.print(\"event={0},\");",gen.translate("eventMethod",e)));
 			  }
 			
 		  }
