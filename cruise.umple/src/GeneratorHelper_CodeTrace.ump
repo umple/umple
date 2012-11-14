@@ -151,82 +151,113 @@ private static void postpareTrace(UmpleModel aModel)
   private static void processTraceDirectiveStateMachines( TraceDirective traceDirective, CodeTranslator t, String template, String tracer) 
   {
 	  TraceRecord traceRecord = traceDirective.getTraceRecord();
+	  String[] record = {null};
 	  
 	  for( StateMachine_TraceItem tracedStm : traceDirective.getStateMachineTraceItems() )
 	  {
-		  StateMachine stm = tracedStm.getStateMachine();
-		  String stmCode = null;
+		  if( traceRecord != null )
+		  {
+			  System.out.println("Test = "+traceRecord.getAttribute(0).getName());
+			  if( traceRecord.hasAttributes() )
+			  {
+				  int index = 0;
+				  for( Attribute attr : traceRecord.getAttributes() )
+				  {
+//					  record += "\"," + attr.getName() + "=\" + " + attr.getName();
+					  record[index] = attr.getName();
+					  ++index;
+				  }
+			  }
+//			  processTracedStateRecord(traceDirective,tracedStm,t,template);
+		  }
 		  
 		  if( tracedStm.getTransition() != null )
 		  {
-			  processTracedTransition(traceDirective,tracedStm.getTransition(),t,template);
+			  processTracedTransition(traceDirective,tracedStm.getTransition(),t,template,record);
 		  }
 		  
 		  if( tracedStm.getEntry() )
 		  {
-			  processTracedStateEntry(traceDirective,tracedStm,t,template);
+			  processTracedStateEntry(traceDirective,tracedStm,t,template,record);
 		  }
 		  
 		  if( tracedStm.getExit() )
 		  {
-			  processTracedStateExit(traceDirective,tracedStm,t,template);
+			  processTracedStateExit(traceDirective,tracedStm,t,template,record);
 		  }
 		  
-		  if(tracedStm.getTraceStateMachineFlag() )
+		  if( tracedStm.getTraceStateMachineFlag() )
 		  {
-			  processTracedStateMachine(traceDirective,tracedStm,t,template);
+			  processTracedStateMachine(traceDirective,tracedStm,t,template,record);
 		  }
 		  
-		  if(tracer.equals("console") && traceRecord != null )
-		  {
-			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-			  stmCode += StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
-	  		  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
-
-			  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  		  stmCode += StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
-			  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
-			  
-			  stmCode = "if( " + t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  		  stmCode += "System.out.println(\"action=" + stm.getState(0).getName() + "-exit" +", " + traceRecord.getRecord() +  "=\" + "+traceRecord.getRecord()+");";
-			  tmp(traceDirective,t,stm,stmCode,"after");
-		  }
 	  }
   }
   
-  private static void processTracedStateMachine(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
+  private static void processTracedStateMachine(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template, String[] record) 
   {
 	  StateMachine stm = tracedStm.getStateMachine();
 	  String stmCode = null;
-	  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+	  if( traceDirective.getTraceRecord() != null )
+		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm),record[0],record[0]));
+	  else
+		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
-	  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+	  if( traceDirective.getTraceRecord() != null )
+		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm),record[0],record[0]));
+	  else
+		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
   }
   
-  private static void processTracedStateEntry(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
+  private static void processTracedStateEntry(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template, String[] record) 
   {
 	  StateMachine stm = tracedStm.getStateMachine();
 	  String stmCode = null;
 	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  stmCode += StringFormatter.format(template,prepareConsistentOutput("entry",t.translate("parameterOne",stm)));
+	  if( traceDirective.getTraceRecord() != null )
+		  stmCode += StringFormatter.format(template,prepareConsistentOutput("entry",t.translate("parameterOne",stm),record[0],record[0]));
+	  else
+		  stmCode += StringFormatter.format(template,prepareConsistentOutput("entry",t.translate("parameterOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
   }
   
-  private static void processTracedStateExit(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
+  private static void processTracedStateExit(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template, String[] record) 
   {
 	  StateMachine stm = tracedStm.getStateMachine();
 	  String stmCode = null;
 	  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  stmCode += StringFormatter.format(template,prepareConsistentOutput("exit",t.translate("stateMachineOne",stm)));
+	  if( traceDirective.getTraceRecord() != null )
+		  stmCode += StringFormatter.format(template,prepareConsistentOutput("exit",t.translate("stateMachineOne",stm),record[0],record[0]));
+	  else
+		  stmCode += StringFormatter.format(template,prepareConsistentOutput("exit",t.translate("stateMachineOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
   }
 
-  private static void processTracedTransition( TraceDirective traceDirective, Transition tran, CodeTranslator t, String template) 
+  private static void processTracedTransition( TraceDirective traceDirective, Transition tran, CodeTranslator t, String template, String[] record) 
   {
 	  String stmCode = null;
 	  stmCode = StringFormatter.format(template,prepareConsistentOutput("state@pre",t.translate("stateMachineOne",tran.getFromState().getStateMachine())));
 	  InjectTracedTransition(traceDirective,t,stmCode,"before");
+  }
+  
+  private static void processTracedStateRecord(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
+  {
+	  StateMachine stm = tracedStm.getStateMachine();
+	  TraceRecord traceRecord = traceDirective.getTraceRecord();
+	  String stmCode = null;
+	  
+//	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";	  
+//	  stmCode += StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+//	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+//
+//	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+//	  stmCode += StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+//	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+//	  
+//	  stmCode = "if( " + t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+//	  stmCode += "System.out.println(\"action=" + stm.getState(0).getName() + "-exit" +", " + traceRecord.getRecord() +  "=\" + "+traceRecord.getRecord()+");";
+//	  tmp(traceDirective,t,stm,stmCode,"after");
   }
   
   //*********************************************** 

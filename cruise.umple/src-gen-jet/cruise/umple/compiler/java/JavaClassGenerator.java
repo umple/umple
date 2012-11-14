@@ -3893,28 +3893,28 @@ public class JavaClassGenerator implements ILang
 	    {
 	      StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
 	      StateMachine stm = tracedState.getStateMachine();
-		    if( traceRecord != null )
-		    {
-		      for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-		      {
-		  	    State stat = stm.getState(j);
-
-		  	    if( stat == state )
-		  	    {
-		  	      traceRecords.append("\n    ");
-  		        traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
-  		        traceRecords.append("\n      ");
-    		      if( model.getTraceType().equals("Console"))
-    		      {
-    		        traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
- 			        }
- 			        else if( model.getTraceType().equals("File"))
-      		    {
-      		      traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
-      		    }
-		  	    }
- 		      }
-		    }
+//		    if( traceRecord != null )
+//		    {
+//		      for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+//		      {
+//		  	    State stat = stm.getState(j);
+//
+//		  	    if( stat == state )
+//		  	    {
+//		  	      traceRecords.append("\n    ");
+//  		        traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
+//  		        traceRecords.append("\n      ");
+//    		      if( model.getTraceType().equals("Console"))
+//    		      {
+//    		        traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+// 			        }
+// 			        else if( model.getTraceType().equals("File"))
+//      		    {
+//      		      traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+//      		    }
+//		  	    }
+// 		      }
+//		    }
 	    }
     }	
     if (state.getActivity() != null)

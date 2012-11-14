@@ -1,0 +1,18 @@
+namespace example;
+
+class Light
+{
+  Integer v = 0;
+  status
+  {
+    On { 
+      entry / { System.out.println("entry state On"); } 
+      flip -> Off;
+    }
+    Off { 
+      entry / { System.out.println("entry state Off"); }
+      flip -> On;
+    }
+    trace entry On record v;
+  }
+}
