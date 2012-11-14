@@ -172,21 +172,9 @@ private static void postpareTrace(UmpleModel aModel)
 			  processTracedStateExit(traceDirective,tracedStm,t,template);
 		  }
 		  
-		  if(tracer.equals("console") && tracedStm.getTraceStateMachineFlag() )
+		  if(tracedStm.getTraceStateMachineFlag() )
 		  {
-			  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
-	  		  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
-	  		  
-	  		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
-			  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
-		  }
-		  else if(tracer.equals("file") && tracedStm.getTraceStateMachineFlag() )
-		  {
-			  stmCode = StringFormatter.format(template,"\"status\"+"+t.translate("stateMachineOne",stm));
-	  		  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
-	  		  
-	  		  stmCode = StringFormatter.format(template,"\"status\"+"+t.translate("stateMachineOne",stm));
-			  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
+			  processTracedStateMachine(traceDirective,tracedStm,t,template);
 		  }
 		  
 		  if(tracer.equals("console") && traceRecord != null )
@@ -204,6 +192,16 @@ private static void postpareTrace(UmpleModel aModel)
 			  tmp(traceDirective,t,stm,stmCode,"after");
 		  }
 	  }
+  }
+  
+  private static void processTracedStateMachine(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
+  {
+	  StateMachine stm = tracedStm.getStateMachine();
+	  String stmCode = null;
+	  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
+	  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
   }
   
   private static void processTracedStateEntry(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
