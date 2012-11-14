@@ -125,6 +125,40 @@ class Mentor
     was_removed
   end
 
+  def add_secondary_at(a_secondary, index)
+    was_added = false
+    if add_secondary(a_secondary)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_secondaries())
+        index = number_of_secondaries() - 1
+      end
+      @secondaries.delete(a_secondary)
+      @secondaries.insert(index, a_secondary)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_secondary_at(a_secondary, index)
+    was_added = false
+    if @secondaries.include?(a_secondary)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_secondaries())
+        index = number_of_secondaries() - 1
+      end
+      @secondaries.delete(a_secondary)
+      @secondaries.insert(index, a_secondary)
+      was_added = true
+    else
+      was_added = add_secondary_at(a_secondary, index)
+    end
+    was_added
+  end
+
   def eql?(obj)
     return false if obj.nil?
     return false unless self.class == obj.class

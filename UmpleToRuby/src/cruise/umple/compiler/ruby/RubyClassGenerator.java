@@ -1312,135 +1312,158 @@ public class RubyClassGenerator implements ILang
   protected final String TEXT_1292 = " << ";
   protected final String TEXT_1293 = NL + "    end" + NL + "" + NL + "    was_set = true";
   protected final String TEXT_1294 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1295 = NL + "  def eql?(obj)" + NL + "    return false if obj.nil?" + NL + "    return false unless self.class == obj.class" + NL + "" + NL + "    compareTo = obj";
-  protected final String TEXT_1296 = NL + "    ";
-  protected final String TEXT_1297 = NL + "    true" + NL + "  end" + NL + "" + NL + "  def hash" + NL + "    return @cachedHashCode unless @cachedHashCode == -1" + NL + "    @cachedHashCode = 17";
-  protected final String TEXT_1298 = NL + "    ";
-  protected final String TEXT_1299 = NL + "    ";
-  protected final String TEXT_1300 = NL + "    @cachedHashCode" + NL + "  end" + NL;
-  protected final String TEXT_1301 = NL + "  def ";
-  protected final String TEXT_1302 = NL + "    ";
-  protected final String TEXT_1303 = NL + "  end" + NL;
-  protected final String TEXT_1304 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
-  protected final String TEXT_1305 = NL + "    ";
-  protected final String TEXT_1306 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
-  protected final String TEXT_1307 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    def run()" + NL + "    {" + NL + "      try" + NL + "      {";
-  protected final String TEXT_1308 = NL + "        ";
-  protected final String TEXT_1309 = NL + "      }" + NL + "      catch (InterruptedException e)" + NL + "      {" + NL + "        e.printStackTrace();" + NL + "      }" + NL + "    }" + NL + "  }" + NL;
-  protected final String TEXT_1310 = NL + "  def ";
-  protected final String TEXT_1311 = NL + "    ";
-  protected final String TEXT_1312 = " = new TimedEventHandler(this,\"";
-  protected final String TEXT_1313 = "\",";
-  protected final String TEXT_1314 = ")" + NL + "  end" + NL + "" + NL + "  def ";
-  protected final String TEXT_1315 = NL + "    ";
-  protected final String TEXT_1316 = ".stop()" + NL + "  end" + NL;
-  protected final String TEXT_1317 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
-  protected final String TEXT_1318 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
-  protected final String TEXT_1319 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    def stop" + NL + "      timer.cancel();" + NL + "    end" + NL + "    " + NL + "    def run";
-  protected final String TEXT_1320 = NL + "      if (\"";
-  protected final String TEXT_1321 = "\".eql?(timeoutMethodName))" + NL + "      {" + NL + "        shouldRestart = !controller.";
-  protected final String TEXT_1322 = NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
-  protected final String TEXT_1323 = NL + "        }" + NL + "        return;" + NL + "      }";
-  protected final String TEXT_1324 = NL + "    end" + NL + "  }" + NL;
-  protected final String TEXT_1325 = NL + "    @";
-  protected final String TEXT_1326 = " = nil";
-  protected final String TEXT_1327 = NL + "    @";
-  protected final String TEXT_1328 = ".clear";
-  protected final String TEXT_1329 = NL + "    ";
-  protected final String TEXT_1330 = " = @";
-  protected final String TEXT_1331 = NL + "    @";
-  protected final String TEXT_1332 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1333 = ".nil?";
-  protected final String TEXT_1334 = NL + "      ";
-  protected final String TEXT_1335 = ".delete" + NL + "    end";
-  protected final String TEXT_1336 = NL + "    unless @";
-  protected final String TEXT_1337 = ".nil?" + NL + "      @";
-  protected final String TEXT_1338 = ".";
-  protected final String TEXT_1339 = "(nil)" + NL + "    end";
-  protected final String TEXT_1340 = NL + "    ";
-  protected final String TEXT_1341 = " = @";
-  protected final String TEXT_1342 = NL + "    @";
-  protected final String TEXT_1343 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1344 = ".nil?";
-  protected final String TEXT_1345 = NL + "      ";
-  protected final String TEXT_1346 = ".";
-  protected final String TEXT_1347 = "(nil)" + NL + "    end";
-  protected final String TEXT_1348 = NL + "    ";
-  protected final String TEXT_1349 = " = @";
+  protected final String TEXT_1295 = NL + "  def ";
+  protected final String TEXT_1296 = "(";
+  protected final String TEXT_1297 = ", index)" + NL + "    was_added = false" + NL + "    if ";
+  protected final String TEXT_1298 = "(";
+  protected final String TEXT_1299 = ")" + NL + "      if(index < 0)" + NL + "        index = 0" + NL + "      end" + NL + "      if(index > ";
+  protected final String TEXT_1300 = "())" + NL + "        index = ";
+  protected final String TEXT_1301 = "() - 1" + NL + "      end" + NL + "      @";
+  protected final String TEXT_1302 = ".delete(";
+  protected final String TEXT_1303 = ")" + NL + "      @";
+  protected final String TEXT_1304 = ".insert(index, ";
+  protected final String TEXT_1305 = ")" + NL + "      was_added = true" + NL + "    end" + NL + "    was_added" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_1306 = "(";
+  protected final String TEXT_1307 = ", index)" + NL + "    was_added = false" + NL + "    if @";
+  protected final String TEXT_1308 = ".include?(";
+  protected final String TEXT_1309 = ")" + NL + "      if(index < 0)" + NL + "        index = 0" + NL + "      end" + NL + "      if(index > ";
+  protected final String TEXT_1310 = "())" + NL + "        index = ";
+  protected final String TEXT_1311 = "() - 1" + NL + "      end" + NL + "      @";
+  protected final String TEXT_1312 = ".delete(";
+  protected final String TEXT_1313 = ")" + NL + "      @";
+  protected final String TEXT_1314 = ".insert(index, ";
+  protected final String TEXT_1315 = ")" + NL + "      was_added = true" + NL + "    else" + NL + "      was_added = ";
+  protected final String TEXT_1316 = "(";
+  protected final String TEXT_1317 = ", index)" + NL + "    end" + NL + "    was_added" + NL + "  end" + NL;
+  protected final String TEXT_1318 = NL + "  def eql?(obj)" + NL + "    return false if obj.nil?" + NL + "    return false unless self.class == obj.class" + NL + "" + NL + "    compareTo = obj";
+  protected final String TEXT_1319 = NL + "    ";
+  protected final String TEXT_1320 = NL + "    true" + NL + "  end" + NL + "" + NL + "  def hash" + NL + "    return @cachedHashCode unless @cachedHashCode == -1" + NL + "    @cachedHashCode = 17";
+  protected final String TEXT_1321 = NL + "    ";
+  protected final String TEXT_1322 = NL + "    ";
+  protected final String TEXT_1323 = NL + "    @cachedHashCode" + NL + "  end" + NL;
+  protected final String TEXT_1324 = NL + "  def ";
+  protected final String TEXT_1325 = NL + "    ";
+  protected final String TEXT_1326 = NL + "  end" + NL;
+  protected final String TEXT_1327 = NL + "  private static class DoActivityThread extends Thread" + NL + "  {";
+  protected final String TEXT_1328 = NL + "    ";
+  protected final String TEXT_1329 = " controller;" + NL + "    String doActivityMethodName;" + NL + "    " + NL + "    public DoActivityThread(";
+  protected final String TEXT_1330 = " aController,String aDoActivityMethodName)" + NL + "    {" + NL + "      controller = aController;" + NL + "      doActivityMethodName = aDoActivityMethodName;" + NL + "      start();" + NL + "    }" + NL + "    " + NL + "    def run()" + NL + "    {" + NL + "      try" + NL + "      {";
+  protected final String TEXT_1331 = NL + "        ";
+  protected final String TEXT_1332 = NL + "      }" + NL + "      catch (InterruptedException e)" + NL + "      {" + NL + "        e.printStackTrace();" + NL + "      }" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1333 = NL + "  def ";
+  protected final String TEXT_1334 = NL + "    ";
+  protected final String TEXT_1335 = " = new TimedEventHandler(this,\"";
+  protected final String TEXT_1336 = "\",";
+  protected final String TEXT_1337 = ")" + NL + "  end" + NL + "" + NL + "  def ";
+  protected final String TEXT_1338 = NL + "    ";
+  protected final String TEXT_1339 = ".stop()" + NL + "  end" + NL;
+  protected final String TEXT_1340 = NL + "  public static class TimedEventHandler extends TimerTask  " + NL + "  {" + NL + "    private ";
+  protected final String TEXT_1341 = " controller;" + NL + "    private String timeoutMethodName;" + NL + "    private double howLongInSeconds;" + NL + "    private Timer timer;" + NL + "    " + NL + "    public TimedEventHandler(";
+  protected final String TEXT_1342 = " aController, String aTimeoutMethodName, double aHowLongInSeconds)" + NL + "    {" + NL + "      controller = aController;" + NL + "      timeoutMethodName = aTimeoutMethodName;" + NL + "      howLongInSeconds = aHowLongInSeconds;" + NL + "      timer = new Timer();" + NL + "      timer.schedule(this, (long)howLongInSeconds*1000);" + NL + "    }" + NL + "    " + NL + "    def stop" + NL + "      timer.cancel();" + NL + "    end" + NL + "    " + NL + "    def run";
+  protected final String TEXT_1343 = NL + "      if (\"";
+  protected final String TEXT_1344 = "\".eql?(timeoutMethodName))" + NL + "      {" + NL + "        shouldRestart = !controller.";
+  protected final String TEXT_1345 = NL + "        if (shouldRestart)" + NL + "        {" + NL + "          controller.";
+  protected final String TEXT_1346 = NL + "        }" + NL + "        return;" + NL + "      }";
+  protected final String TEXT_1347 = NL + "    end" + NL + "  }" + NL;
+  protected final String TEXT_1348 = NL + "    @";
+  protected final String TEXT_1349 = " = nil";
   protected final String TEXT_1350 = NL + "    @";
-  protected final String TEXT_1351 = " = nil" + NL + "    unless ";
-  protected final String TEXT_1352 = ".nil?";
-  protected final String TEXT_1353 = NL + "      ";
-  protected final String TEXT_1354 = ".delete" + NL + "    end";
-  protected final String TEXT_1355 = NL + "    unless @";
-  protected final String TEXT_1356 = ".nil?" + NL + "      @";
-  protected final String TEXT_1357 = ".";
-  protected final String TEXT_1358 = "(self)" + NL + "    end";
+  protected final String TEXT_1351 = ".clear";
+  protected final String TEXT_1352 = NL + "    ";
+  protected final String TEXT_1353 = " = @";
+  protected final String TEXT_1354 = NL + "    @";
+  protected final String TEXT_1355 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1356 = ".nil?";
+  protected final String TEXT_1357 = NL + "      ";
+  protected final String TEXT_1358 = ".delete" + NL + "    end";
   protected final String TEXT_1359 = NL + "    unless @";
   protected final String TEXT_1360 = ".nil?" + NL + "      @";
-  protected final String TEXT_1361 = ".delete" + NL + "    end";
-  protected final String TEXT_1362 = NL + "    unless @";
-  protected final String TEXT_1363 = ".nil?" + NL + "      if @";
-  protected final String TEXT_1364 = ".";
-  protected final String TEXT_1365 = " <= ";
-  protected final String TEXT_1366 = NL + "        @";
-  protected final String TEXT_1367 = ".delete" + NL + "      else" + NL + "        @";
-  protected final String TEXT_1368 = ".";
-  protected final String TEXT_1369 = "(self)" + NL + "      end" + NL + "    end";
-  protected final String TEXT_1370 = NL + "    @";
-  protected final String TEXT_1371 = " = @";
-  protected final String TEXT_1372 = NL + "    @";
-  protected final String TEXT_1373 = " = nil" + NL + "    @";
-  protected final String TEXT_1374 = ".";
-  protected final String TEXT_1375 = "(self)";
-  protected final String TEXT_1376 = NL + "    @";
-  protected final String TEXT_1377 = ".each do |";
-  protected final String TEXT_1378 = "|";
-  protected final String TEXT_1379 = NL + "      ";
-  protected final String TEXT_1380 = ".instance_variable_set(\"@";
-  protected final String TEXT_1381 = "\",nil)" + NL + "    end" + NL + "    @";
-  protected final String TEXT_1382 = ".clear";
-  protected final String TEXT_1383 = NL + "    ";
-  protected final String TEXT_1384 = " = @";
-  protected final String TEXT_1385 = ".dup" + NL + "    @";
-  protected final String TEXT_1386 = ".clear";
-  protected final String TEXT_1387 = NL + "    ";
-  protected final String TEXT_1388 = ".each do |";
-  protected final String TEXT_1389 = "|" + NL + "      if ";
-  protected final String TEXT_1390 = ".";
-  protected final String TEXT_1391 = " <= ";
-  protected final String TEXT_1392 = ".";
-  protected final String TEXT_1393 = NL + "        ";
-  protected final String TEXT_1394 = ".delete" + NL + "      else";
-  protected final String TEXT_1395 = NL + "        ";
-  protected final String TEXT_1396 = ".";
-  protected final String TEXT_1397 = "(self)" + NL + "      end" + NL + "    end";
-  protected final String TEXT_1398 = NL + "    ";
-  protected final String TEXT_1399 = " = @";
-  protected final String TEXT_1400 = ".dup" + NL + "    @";
-  protected final String TEXT_1401 = ".clear";
-  protected final String TEXT_1402 = NL + "    ";
-  protected final String TEXT_1403 = ".each do |";
-  protected final String TEXT_1404 = "|";
-  protected final String TEXT_1405 = NL + "      ";
-  protected final String TEXT_1406 = ".";
-  protected final String TEXT_1407 = "(self)" + NL + "    end";
-  protected final String TEXT_1408 = NL + "    @";
-  protected final String TEXT_1409 = ".each do |";
-  protected final String TEXT_1410 = "|";
-  protected final String TEXT_1411 = NL + "      ";
-  protected final String TEXT_1412 = ".delete" + NL + "    end";
-  protected final String TEXT_1413 = NL + "    @";
-  protected final String TEXT_1414 = ".each do |";
-  protected final String TEXT_1415 = "|";
-  protected final String TEXT_1416 = NL + "      ";
-  protected final String TEXT_1417 = ".";
-  protected final String TEXT_1418 = "(nil)" + NL + "    end";
-  protected final String TEXT_1419 = NL + NL;
-  protected final String TEXT_1420 = NL + "  #------------------------" + NL + "  # DEVELOPER CODE - PROVIDED AS-IS" + NL + "  #------------------------" + NL + "  ";
-  protected final String TEXT_1421 = NL + "  ";
-  protected final String TEXT_1422 = NL + "end";
-  protected final String TEXT_1423 = NL;
+  protected final String TEXT_1361 = ".";
+  protected final String TEXT_1362 = "(nil)" + NL + "    end";
+  protected final String TEXT_1363 = NL + "    ";
+  protected final String TEXT_1364 = " = @";
+  protected final String TEXT_1365 = NL + "    @";
+  protected final String TEXT_1366 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1367 = ".nil?";
+  protected final String TEXT_1368 = NL + "      ";
+  protected final String TEXT_1369 = ".";
+  protected final String TEXT_1370 = "(nil)" + NL + "    end";
+  protected final String TEXT_1371 = NL + "    ";
+  protected final String TEXT_1372 = " = @";
+  protected final String TEXT_1373 = NL + "    @";
+  protected final String TEXT_1374 = " = nil" + NL + "    unless ";
+  protected final String TEXT_1375 = ".nil?";
+  protected final String TEXT_1376 = NL + "      ";
+  protected final String TEXT_1377 = ".delete" + NL + "    end";
+  protected final String TEXT_1378 = NL + "    unless @";
+  protected final String TEXT_1379 = ".nil?" + NL + "      @";
+  protected final String TEXT_1380 = ".";
+  protected final String TEXT_1381 = "(self)" + NL + "    end";
+  protected final String TEXT_1382 = NL + "    unless @";
+  protected final String TEXT_1383 = ".nil?" + NL + "      @";
+  protected final String TEXT_1384 = ".delete" + NL + "    end";
+  protected final String TEXT_1385 = NL + "    unless @";
+  protected final String TEXT_1386 = ".nil?" + NL + "      if @";
+  protected final String TEXT_1387 = ".";
+  protected final String TEXT_1388 = " <= ";
+  protected final String TEXT_1389 = NL + "        @";
+  protected final String TEXT_1390 = ".delete" + NL + "      else" + NL + "        @";
+  protected final String TEXT_1391 = ".";
+  protected final String TEXT_1392 = "(self)" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1393 = NL + "    @";
+  protected final String TEXT_1394 = " = @";
+  protected final String TEXT_1395 = NL + "    @";
+  protected final String TEXT_1396 = " = nil" + NL + "    @";
+  protected final String TEXT_1397 = ".";
+  protected final String TEXT_1398 = "(self)";
+  protected final String TEXT_1399 = NL + "    @";
+  protected final String TEXT_1400 = ".each do |";
+  protected final String TEXT_1401 = "|";
+  protected final String TEXT_1402 = NL + "      ";
+  protected final String TEXT_1403 = ".instance_variable_set(\"@";
+  protected final String TEXT_1404 = "\",nil)" + NL + "    end" + NL + "    @";
+  protected final String TEXT_1405 = ".clear";
+  protected final String TEXT_1406 = NL + "    ";
+  protected final String TEXT_1407 = " = @";
+  protected final String TEXT_1408 = ".dup" + NL + "    @";
+  protected final String TEXT_1409 = ".clear";
+  protected final String TEXT_1410 = NL + "    ";
+  protected final String TEXT_1411 = ".each do |";
+  protected final String TEXT_1412 = "|" + NL + "      if ";
+  protected final String TEXT_1413 = ".";
+  protected final String TEXT_1414 = " <= ";
+  protected final String TEXT_1415 = ".";
+  protected final String TEXT_1416 = NL + "        ";
+  protected final String TEXT_1417 = ".delete" + NL + "      else";
+  protected final String TEXT_1418 = NL + "        ";
+  protected final String TEXT_1419 = ".";
+  protected final String TEXT_1420 = "(self)" + NL + "      end" + NL + "    end";
+  protected final String TEXT_1421 = NL + "    ";
+  protected final String TEXT_1422 = " = @";
+  protected final String TEXT_1423 = ".dup" + NL + "    @";
+  protected final String TEXT_1424 = ".clear";
+  protected final String TEXT_1425 = NL + "    ";
+  protected final String TEXT_1426 = ".each do |";
+  protected final String TEXT_1427 = "|";
+  protected final String TEXT_1428 = NL + "      ";
+  protected final String TEXT_1429 = ".";
+  protected final String TEXT_1430 = "(self)" + NL + "    end";
+  protected final String TEXT_1431 = NL + "    @";
+  protected final String TEXT_1432 = ".each do |";
+  protected final String TEXT_1433 = "|";
+  protected final String TEXT_1434 = NL + "      ";
+  protected final String TEXT_1435 = ".delete" + NL + "    end";
+  protected final String TEXT_1436 = NL + "    @";
+  protected final String TEXT_1437 = ".each do |";
+  protected final String TEXT_1438 = "|";
+  protected final String TEXT_1439 = NL + "      ";
+  protected final String TEXT_1440 = ".";
+  protected final String TEXT_1441 = "(nil)" + NL + "    end";
+  protected final String TEXT_1442 = NL + NL;
+  protected final String TEXT_1443 = NL + "  #------------------------" + NL + "  # DEVELOPER CODE - PROVIDED AS-IS" + NL + "  #------------------------" + NL + "  ";
+  protected final String TEXT_1444 = NL + "  ";
+  protected final String TEXT_1445 = NL + "end";
+  protected final String TEXT_1446 = NL;
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -3053,7 +3076,7 @@ public class RubyClassGenerator implements ILang
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-
+    String includeFile3 = null;
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -3252,7 +3275,12 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(relatedAssociation);
     
     }
-
+    
+    if(av.isMany() && !av.isImmutable() && !av.isN())
+    {
+      includeFile3 = "association_AddIndexControlFunctions.jet";
+    }
+    
     boolean addNewLine = false;
     if (hasIsNumberOfValidMethod)
     {
@@ -5438,6 +5466,56 @@ public class RubyClassGenerator implements ILang
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
+    
+    if(includeFile3 == "association_AddIndexControlFunctions.jet"){
+      
+    stringBuffer.append(TEXT_1295);
+    stringBuffer.append(gen.translate("addAtMethod",av));
+    stringBuffer.append(TEXT_1296);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1297);
+    stringBuffer.append(gen.translate("addMethod",av));
+    stringBuffer.append(TEXT_1298);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1299);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1300);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1301);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1302);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1303);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1304);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1305);
+    stringBuffer.append(gen.translate("addOrMoveAtMethod",av));
+    stringBuffer.append(TEXT_1306);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1307);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1308);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1309);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1310);
+    stringBuffer.append(gen.translate("numberOfMethod",av));
+    stringBuffer.append(TEXT_1311);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1312);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1313);
+    stringBuffer.append(gen.translate("associationMany",av));
+    stringBuffer.append(TEXT_1314);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1315);
+    stringBuffer.append(gen.translate("addAtMethod",av));
+    stringBuffer.append(TEXT_1316);
+    stringBuffer.append(gen.translate("parameterOne",av));
+    stringBuffer.append(TEXT_1317);
+    
+    }
   }
 
      if (uClass.getKey().isProvided()) { 
@@ -5531,15 +5609,15 @@ public class RubyClassGenerator implements ILang
   }
 
 
-    stringBuffer.append(TEXT_1295);
-    stringBuffer.append(TEXT_1296);
+    stringBuffer.append(TEXT_1318);
+    stringBuffer.append(TEXT_1319);
     stringBuffer.append( checks.toString().trim() );
-    stringBuffer.append(TEXT_1297);
-    stringBuffer.append(TEXT_1298);
+    stringBuffer.append(TEXT_1320);
+    stringBuffer.append(TEXT_1321);
     stringBuffer.append( hash.toString().trim() );
-    stringBuffer.append(TEXT_1299);
+    stringBuffer.append(TEXT_1322);
     stringBuffer.append( canSet.toString().trim() );
-    stringBuffer.append(TEXT_1300);
+    stringBuffer.append(TEXT_1323);
      } 
     
 { 
@@ -5552,11 +5630,11 @@ public class RubyClassGenerator implements ILang
       {
         hasActivities = true;
         
-    stringBuffer.append(TEXT_1301);
+    stringBuffer.append(TEXT_1324);
     stringBuffer.append( gen.translate("doActivityMethod",state));
-    stringBuffer.append(TEXT_1302);
+    stringBuffer.append(TEXT_1325);
     stringBuffer.append( state.getActivity().getActivityCode() );
-    stringBuffer.append(TEXT_1303);
+    stringBuffer.append(TEXT_1326);
     
       }
     }
@@ -5591,15 +5669,15 @@ public class RubyClassGenerator implements ILang
     }
   }
 
-    stringBuffer.append(TEXT_1304);
-    stringBuffer.append(TEXT_1305);
+    stringBuffer.append(TEXT_1327);
+    stringBuffer.append(TEXT_1328);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_1306);
+    stringBuffer.append(TEXT_1329);
     stringBuffer.append(gen.translate("type",uClass));
-    stringBuffer.append(TEXT_1307);
-    stringBuffer.append(TEXT_1308);
+    stringBuffer.append(TEXT_1330);
+    stringBuffer.append(TEXT_1331);
     stringBuffer.append( output );
-    stringBuffer.append(TEXT_1309);
+    stringBuffer.append(TEXT_1332);
     
   }
 }
@@ -5615,19 +5693,19 @@ public class RubyClassGenerator implements ILang
       {
         hasTimedEvents = true;
         
-    stringBuffer.append(TEXT_1310);
+    stringBuffer.append(TEXT_1333);
     stringBuffer.append(gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_1311);
+    stringBuffer.append(TEXT_1334);
     stringBuffer.append( gen.translate("eventHandler",e) );
-    stringBuffer.append(TEXT_1312);
+    stringBuffer.append(TEXT_1335);
     stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_1313);
+    stringBuffer.append(TEXT_1336);
     stringBuffer.append( e.getTimerInSeconds() );
-    stringBuffer.append(TEXT_1314);
+    stringBuffer.append(TEXT_1337);
     stringBuffer.append(gen.translate("eventStopMethod",e) );
-    stringBuffer.append(TEXT_1315);
+    stringBuffer.append(TEXT_1338);
     stringBuffer.append( gen.translate("eventHandler",e) );
-    stringBuffer.append(TEXT_1316);
+    stringBuffer.append(TEXT_1339);
     
       }
     }
@@ -5639,11 +5717,11 @@ public class RubyClassGenerator implements ILang
  
 
 
-    stringBuffer.append(TEXT_1317);
+    stringBuffer.append(TEXT_1340);
     stringBuffer.append( gen.translate("type",uClass) );
-    stringBuffer.append(TEXT_1318);
+    stringBuffer.append(TEXT_1341);
     stringBuffer.append( gen.translate("type",uClass) );
-    stringBuffer.append(TEXT_1319);
+    stringBuffer.append(TEXT_1342);
     
   for(StateMachine sm : uClass.getStateMachines())
   {
@@ -5652,19 +5730,19 @@ public class RubyClassGenerator implements ILang
       if (e.getIsTimer())
       {
         
-    stringBuffer.append(TEXT_1320);
+    stringBuffer.append(TEXT_1343);
     stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_1321);
+    stringBuffer.append(TEXT_1344);
     stringBuffer.append( gen.translate("eventMethod",e) );
-    stringBuffer.append(TEXT_1322);
+    stringBuffer.append(TEXT_1345);
     stringBuffer.append( gen.translate("eventStartMethod",e) );
-    stringBuffer.append(TEXT_1323);
+    stringBuffer.append(TEXT_1346);
     
       }
     }
   }
 
-    stringBuffer.append(TEXT_1324);
+    stringBuffer.append(TEXT_1347);
     
   }
 }
@@ -5698,17 +5776,17 @@ public class RubyClassGenerator implements ILang
       if (av.isOne())
       {
         
-    stringBuffer.append(TEXT_1325);
+    stringBuffer.append(TEXT_1348);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1326);
+    stringBuffer.append(TEXT_1349);
     
       }
       else if (av.isMany())
       {
         
-    stringBuffer.append(TEXT_1327);
+    stringBuffer.append(TEXT_1350);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1328);
+    stringBuffer.append(TEXT_1351);
     
       }
       continue;
@@ -5717,81 +5795,21 @@ public class RubyClassGenerator implements ILang
     if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1329);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1330);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1331);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1332);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1333);
-    stringBuffer.append(TEXT_1334);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1335);
-    
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
-    {
-      
-    stringBuffer.append(TEXT_1336);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1337);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1338);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1339);
-    
-    }
-    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
-    {
-      
-    stringBuffer.append(TEXT_1340);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1341);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1342);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1343);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1344);
-    stringBuffer.append(TEXT_1345);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1346);
-    stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1347);
-    
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
-    {
-      
-    stringBuffer.append(TEXT_1348);
-    stringBuffer.append(gen.translate("parameterExisting",av));
-    stringBuffer.append(TEXT_1349);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1350);
-    stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1351);
-    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1352);
-    stringBuffer.append(TEXT_1353);
     stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1353);
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1354);
-    
-    }
-    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
-    {
-      
+    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1355);
-    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1356);
-    stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1357);
-    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1358);
     
     }
-    else if (av.isOptionalOne() && relatedAssociation.isN())
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
     {
       
     stringBuffer.append(TEXT_1359);
@@ -5799,141 +5817,201 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1360);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1361);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1362);
+    
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
+    {
+      
+    stringBuffer.append(TEXT_1363);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1364);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1365);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1366);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1367);
+    stringBuffer.append(TEXT_1368);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1369);
+    stringBuffer.append(gen.relatedTranslate("setMethod",av));
+    stringBuffer.append(TEXT_1370);
+    
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
+    {
+      
+    stringBuffer.append(TEXT_1371);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1372);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1373);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1374);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1375);
+    stringBuffer.append(TEXT_1376);
+    stringBuffer.append(gen.translate("parameterExisting",av));
+    stringBuffer.append(TEXT_1377);
+    
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+    {
+      
+    stringBuffer.append(TEXT_1378);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1379);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1380);
+    stringBuffer.append(gen.relatedTranslate("removeMethod",av));
+    stringBuffer.append(TEXT_1381);
+    
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isN())
+    {
+      
+    stringBuffer.append(TEXT_1382);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1383);
+    stringBuffer.append(gen.translate("associationOne",av));
+    stringBuffer.append(TEXT_1384);
     
     }
     else if (av.isOptionalOne() && relatedAssociation.isMN())
     {
       
-    stringBuffer.append(TEXT_1362);
+    stringBuffer.append(TEXT_1385);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1363);
+    stringBuffer.append(TEXT_1386);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1364);
+    stringBuffer.append(TEXT_1387);
     stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
-    stringBuffer.append(TEXT_1365);
+    stringBuffer.append(TEXT_1388);
     stringBuffer.append(relatedAssociation.getMultiplicity().getLowerBound());
-    stringBuffer.append(TEXT_1366);
+    stringBuffer.append(TEXT_1389);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1367);
+    stringBuffer.append(TEXT_1390);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1368);
+    stringBuffer.append(TEXT_1391);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1369);
+    stringBuffer.append(TEXT_1392);
     
     }
     else if (av.isOne() && relatedAssociation.isMany())
     {
       
-    stringBuffer.append(TEXT_1370);
+    stringBuffer.append(TEXT_1393);
     stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1371);
+    stringBuffer.append(TEXT_1394);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1372);
+    stringBuffer.append(TEXT_1395);
     stringBuffer.append(gen.translate("associationOne",av));
-    stringBuffer.append(TEXT_1373);
+    stringBuffer.append(TEXT_1396);
     stringBuffer.append(gen.translate("removeParameterOne",av));
-    stringBuffer.append(TEXT_1374);
+    stringBuffer.append(TEXT_1397);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1375);
+    stringBuffer.append(TEXT_1398);
     
     }
     else if (av.isMandatory() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1376);
+    stringBuffer.append(TEXT_1399);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1377);
+    stringBuffer.append(TEXT_1400);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1378);
-    stringBuffer.append(TEXT_1379);
+    stringBuffer.append(TEXT_1401);
+    stringBuffer.append(TEXT_1402);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1380);
+    stringBuffer.append(TEXT_1403);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
-    stringBuffer.append(TEXT_1381);
+    stringBuffer.append(TEXT_1404);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1382);
+    stringBuffer.append(TEXT_1405);
     
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
     {
       
-    stringBuffer.append(TEXT_1383);
+    stringBuffer.append(TEXT_1406);
     stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1384);
+    stringBuffer.append(TEXT_1407);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1385);
+    stringBuffer.append(TEXT_1408);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1386);
-    stringBuffer.append(TEXT_1387);
+    stringBuffer.append(TEXT_1409);
+    stringBuffer.append(TEXT_1410);
     stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1388);
+    stringBuffer.append(TEXT_1411);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1389);
+    stringBuffer.append(TEXT_1412);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1390);
+    stringBuffer.append(TEXT_1413);
     stringBuffer.append(gen.relatedTranslate("numberOfMethod",av));
-    stringBuffer.append(TEXT_1391);
+    stringBuffer.append(TEXT_1414);
     stringBuffer.append(gen.translate("type",av));
-    stringBuffer.append(TEXT_1392);
+    stringBuffer.append(TEXT_1415);
     stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
-    stringBuffer.append(TEXT_1393);
+    stringBuffer.append(TEXT_1416);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1394);
-    stringBuffer.append(TEXT_1395);
+    stringBuffer.append(TEXT_1417);
+    stringBuffer.append(TEXT_1418);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1396);
+    stringBuffer.append(TEXT_1419);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1397);
+    stringBuffer.append(TEXT_1420);
     
     }
     else if (av.isMany() && relatedAssociation.isMany())
     {
       
-    stringBuffer.append(TEXT_1398);
+    stringBuffer.append(TEXT_1421);
     stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1399);
+    stringBuffer.append(TEXT_1422);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1400);
+    stringBuffer.append(TEXT_1423);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1401);
-    stringBuffer.append(TEXT_1402);
+    stringBuffer.append(TEXT_1424);
+    stringBuffer.append(TEXT_1425);
     stringBuffer.append(gen.translate("parameterCopyOfMany",av));
-    stringBuffer.append(TEXT_1403);
+    stringBuffer.append(TEXT_1426);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1404);
-    stringBuffer.append(TEXT_1405);
+    stringBuffer.append(TEXT_1427);
+    stringBuffer.append(TEXT_1428);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1406);
+    stringBuffer.append(TEXT_1429);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
-    stringBuffer.append(TEXT_1407);
+    stringBuffer.append(TEXT_1430);
     
     }
     else if (av.isMany() && relatedAssociation.isOnlyOne())
     {
       
-    stringBuffer.append(TEXT_1408);
+    stringBuffer.append(TEXT_1431);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1409);
+    stringBuffer.append(TEXT_1432);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1410);
-    stringBuffer.append(TEXT_1411);
+    stringBuffer.append(TEXT_1433);
+    stringBuffer.append(TEXT_1434);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1412);
+    stringBuffer.append(TEXT_1435);
     
     }
     else if (av.isMany() && relatedAssociation.isOptionalOne())
     {
       
-    stringBuffer.append(TEXT_1413);
+    stringBuffer.append(TEXT_1436);
     stringBuffer.append(gen.translate("associationMany",av));
-    stringBuffer.append(TEXT_1414);
+    stringBuffer.append(TEXT_1437);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1415);
-    stringBuffer.append(TEXT_1416);
+    stringBuffer.append(TEXT_1438);
+    stringBuffer.append(TEXT_1439);
     stringBuffer.append(gen.translate("parameterOne",av));
-    stringBuffer.append(TEXT_1417);
+    stringBuffer.append(TEXT_1440);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
-    stringBuffer.append(TEXT_1418);
+    stringBuffer.append(TEXT_1441);
     
     }
     else
@@ -6030,15 +6108,15 @@ public class RubyClassGenerator implements ILang
     	}
     }
 
-    stringBuffer.append(TEXT_1419);
+    stringBuffer.append(TEXT_1442);
      } 
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_1420);
-    stringBuffer.append(TEXT_1421);
+    stringBuffer.append(TEXT_1443);
+    stringBuffer.append(TEXT_1444);
     stringBuffer.append(uClass.getExtraCode());
      } 
-    stringBuffer.append(TEXT_1422);
-    stringBuffer.append(TEXT_1423);
+    stringBuffer.append(TEXT_1445);
+    stringBuffer.append(TEXT_1446);
     stringBuffer.append(gen.translate("packageDefinitionEnd",uClass));
     return stringBuffer.toString();
   }

@@ -124,6 +124,40 @@ class Mentor
     was_removed
   end
 
+  def add_pupil_at(a_pupil, index)
+    was_added = false
+    if add_pupil(a_pupil)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_pupils())
+        index = number_of_pupils() - 1
+      end
+      @pupils.delete(a_pupil)
+      @pupils.insert(index, a_pupil)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_pupil_at(a_pupil, index)
+    was_added = false
+    if @pupils.include?(a_pupil)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_pupils())
+        index = number_of_pupils() - 1
+      end
+      @pupils.delete(a_pupil)
+      @pupils.insert(index, a_pupil)
+      was_added = true
+    else
+      was_added = add_pupil_at(a_pupil, index)
+    end
+    was_added
+  end
+
   def delete
     @deleted = true
     @pupils.each do |a_pupil|
