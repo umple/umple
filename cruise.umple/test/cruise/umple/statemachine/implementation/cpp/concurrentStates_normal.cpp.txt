@@ -11,8 +11,8 @@
   
  LightFixture::LightFixture()
   {
-    if (statusMotorIdle == null) { setStatusMotorIdle(StatusMotorIdle.Null); }
-    if (statusFanIdle == null) { setStatusFanIdle(StatusFanIdle.Null); }
+    if (statusMotorIdle == NULL) { setStatusMotorIdle(StatusMotorIdle.Null); }
+    if (statusFanIdle == NULL) { setStatusFanIdle(StatusFanIdle.Null); }
     setStatus(Status.Off);
   }
   

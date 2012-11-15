@@ -15,7 +15,10 @@
   }
   
 %>
-    <%=gen.translate("associationMany",av)%> = new vector<<%=gen.translate("type",av)%>*>();
+    for (unsigned int i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+	{
+		<%=gen.translate("associationMany",av)%>[i] = NULL;
+	}
     bool <%=gen.translate("didAddMany",av)%> = <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterAll",av)%>);
     if (!<%=gen.translate("didAddMany",av)%>)
     {

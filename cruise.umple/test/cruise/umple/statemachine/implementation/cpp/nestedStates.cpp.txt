@@ -11,7 +11,7 @@
   
  LightFixture::LightFixture()
   {
-    if (bulbOn == null) { setBulbOn(BulbOn.Null); }
+    if (bulbOn == NULL) { setBulbOn(BulbOn.Null); }
     setBulb(Bulb.Off);
   }
   

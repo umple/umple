@@ -14,7 +14,10 @@
  Student::Student(const string & aNumber, vector<Mentor*> allMentors)
   {
     number = aNumber;
-    mentors = new vector<Mentor*>();
+    for (unsigned int i=0; i<mentors.size(); i++)
+	{
+		mentors[i] = NULL;
+	}
     bool didAddMentors = setMentors(allMentors);
     if (!didAddMentors)
     {
