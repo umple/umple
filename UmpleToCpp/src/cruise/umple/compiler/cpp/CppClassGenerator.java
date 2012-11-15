@@ -827,9 +827,9 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_807 = "* ";
   protected final String TEXT_808 = ")" + NL + "  {" + NL + "    bool wasAdded = false;";
   protected final String TEXT_809 = NL + "    ";
-  protected final String TEXT_810 = " ";
+  protected final String TEXT_810 = "* ";
   protected final String TEXT_811 = " = ";
-  protected final String TEXT_812 = ".";
+  protected final String TEXT_812 = "->";
   protected final String TEXT_813 = "();" + NL + "    bool ";
   protected final String TEXT_814 = " = (";
   protected final String TEXT_815 = " != NULL && this!=";
@@ -1114,8 +1114,8 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_1094 = ")" + NL + "  {" + NL + "    bool wasRemoved = false;";
   protected final String TEXT_1095 = NL + "    if (find(";
   protected final String TEXT_1096 = ".begin(),";
-  protected final String TEXT_1097 = ".end(),(";
-  protected final String TEXT_1098 = ")))" + NL + "    {";
+  protected final String TEXT_1097 = ".end(),";
+  protected final String TEXT_1098 = "))" + NL + "    {";
   protected final String TEXT_1099 = NL + "      ";
   protected final String TEXT_1100 = ".erase(find(";
   protected final String TEXT_1101 = ".begin(),";

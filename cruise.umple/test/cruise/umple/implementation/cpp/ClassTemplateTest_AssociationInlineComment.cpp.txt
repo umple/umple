@@ -76,8 +76,8 @@
   bool Foo::addBar(Bar* aBar)
   {
     bool wasAdded = false;
-    if (find(bars.begin(),bars.end(),aBar)) { return false; }
-    Foo existingFoo = aBar.getFoo();
+    if (find(bars.begin(),bars.end(),aBar) != bars.end()) { return false; }
+    Foo* existingFoo = aBar->getFoo();
     bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
     if (isNewFoo)
     {

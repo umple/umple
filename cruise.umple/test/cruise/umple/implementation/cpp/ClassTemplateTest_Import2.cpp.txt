@@ -126,7 +126,7 @@
   bool Student::addMentor(Mentor aMentor)
   {
     bool wasAdded = false;
-    if (find(mentors.begin(),mentors.end(),aMentor)) { return false; }
+    if (find(mentors.begin(),mentors.end(),aMentor) != mentors.end()) { return false; }
     Student existingStudent = aMentor.getStudent();
     if (existingStudent != null && existingStudent.numberOfMentors() <= minimumNumberOfMentors())
     {
@@ -230,7 +230,7 @@
   bool Student::addCourse(Course* aCourse)
   {
     bool wasAdded = false;
-    if (find(courses.begin(),courses.end(),aCourse)) { return false; }
+    if (find(courses.begin(),courses.end(),aCourse) != courses.end()) { return false; }
     courses.push_back(aCourse);
     if (aCourse->indexOfStudent(this) != -1)
     {
