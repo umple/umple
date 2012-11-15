@@ -18,7 +18,7 @@ public class CppClassGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL + "\t";
@@ -54,11 +54,11 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_34 = "[i] = NULL;" + NL + "\t}" + NL + "    bool ";
   protected final String TEXT_35 = " = ";
   protected final String TEXT_36 = "(";
-  protected final String TEXT_37 = ");" + NL + "    if (!";
-  protected final String TEXT_38 = ")" + NL + "    {" + NL + "      throw new RuntimeException(\"Unable to create ";
+  protected final String TEXT_37 = ");" + NL + "    try {" + NL + "\t\t throw  ";
+  protected final String TEXT_38 = ";" + NL + "\t\t}" + NL + "\tcatch (exception& e)\t" + NL + "\t{" + NL + "\tcout<<\"Unable to create ";
   protected final String TEXT_39 = ", must have ";
   protected final String TEXT_40 = " ";
-  protected final String TEXT_41 = "\");" + NL + "    }";
+  protected final String TEXT_41 = "\";" + NL + "\t}";
   protected final String TEXT_42 = NL + "    for (unsigned int i=0; i<";
   protected final String TEXT_43 = ".size(); i++)" + NL + "\t{" + NL + "\t\t";
   protected final String TEXT_44 = "[i] = NULL;" + NL + "\t}" + NL + "    bool ";
@@ -108,11 +108,11 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_88 = "[i] = NULL;" + NL + "\t}" + NL + "    bool ";
   protected final String TEXT_89 = " = ";
   protected final String TEXT_90 = "(";
-  protected final String TEXT_91 = ");" + NL + "    if (!";
-  protected final String TEXT_92 = ")" + NL + "    {" + NL + "      throw new RuntimeException(\"Unable to create ";
+  protected final String TEXT_91 = ");" + NL + "    try {" + NL + "\t\t throw  ";
+  protected final String TEXT_92 = ";" + NL + "\t\t}" + NL + "\tcatch (exception& e)\t" + NL + "\t{" + NL + "\tcout<<\"Unable to create ";
   protected final String TEXT_93 = ", must have ";
   protected final String TEXT_94 = " ";
-  protected final String TEXT_95 = "\");" + NL + "    }";
+  protected final String TEXT_95 = "\";" + NL + "\t}";
   protected final String TEXT_96 = "for (unsigned int i=0; i<";
   protected final String TEXT_97 = ".size(); i++)" + NL + "\t{" + NL + "\t\t";
   protected final String TEXT_98 = "[i] = NULL;" + NL + "\t};";
@@ -167,11 +167,11 @@ public class CppClassGenerator implements ILang
   protected final String TEXT_147 = "[i] = NULL;" + NL + "\t}" + NL + "    bool ";
   protected final String TEXT_148 = " = ";
   protected final String TEXT_149 = "(";
-  protected final String TEXT_150 = ");" + NL + "    if (!";
-  protected final String TEXT_151 = ")" + NL + "    {" + NL + "      throw new RuntimeException(\"Unable to create ";
+  protected final String TEXT_150 = ");" + NL + "    try {" + NL + "\t\t throw  ";
+  protected final String TEXT_151 = ";" + NL + "\t\t}" + NL + "\tcatch (exception& e)\t" + NL + "\t{" + NL + "\tcout<<\"Unable to create ";
   protected final String TEXT_152 = ", must have ";
   protected final String TEXT_153 = " ";
-  protected final String TEXT_154 = "\");" + NL + "    }";
+  protected final String TEXT_154 = "\";" + NL + "\t}";
   protected final String TEXT_155 = "for (unsigned int i=0; i<";
   protected final String TEXT_156 = ".size(); i++)" + NL + "\t{" + NL + "\t\t";
   protected final String TEXT_157 = "[i] = NULL;" + NL + "\t};";

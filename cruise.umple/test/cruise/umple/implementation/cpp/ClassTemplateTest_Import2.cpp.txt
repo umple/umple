@@ -19,10 +19,13 @@
 		mentors[i] = NULL;
 	}
     bool didAddMentors = setMentors(allMentors);
-    if (!didAddMentors)
-    {
-      throw new RuntimeException("Unable to create Student, must have at least 1 mentors");
-    }
+    try {
+		 throw  didAddMentors;
+		}
+	catch (exception& e)	
+	{
+	cout<<"Unable to create Student, must have at least 1 mentors";
+	}
     for (unsigned int i=0; i<courses.size(); i++)
 	{
 		courses[i] = NULL;
