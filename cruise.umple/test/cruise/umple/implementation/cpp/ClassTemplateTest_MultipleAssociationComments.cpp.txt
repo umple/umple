@@ -15,10 +15,22 @@
   
  Foo::Foo()
   {
-    bar1s = new vector<Bar1*>();
-    bar2s = new vector<Bar2*>();
-    bar3s = new vector<Bar3*>();
-    bar4s = new vector<Bar4*>();
+    for (unsigned int i=0; i<bar1s.size(); i++)
+	{
+		bar1s[i] = NULL;
+	}
+    for (unsigned int i=0; i<bar2s.size(); i++)
+	{
+		bar2s[i] = NULL;
+	}
+    for (unsigned int i=0; i<bar3s.size(); i++)
+	{
+		bar3s[i] = NULL;
+	}
+    for (unsigned int i=0; i<bar4s.size(); i++)
+	{
+		bar4s[i] = NULL;
+	}
   }
   
   //------------------------

@@ -10,9 +10,11 @@
     %><%@ include file="constructor_AssociationAssignOne.jet" %><%
   }
   else if (av.isOptionalMany())
-  {
-    appendln(stringBuffer,"");
-    append(stringBuffer, "    {0} = new vector<{1}*>();", gen.translate("associationMany",av), gen.getType(av));
+  {%>
+    for (unsigned int i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+	{
+		<%=gen.translate("associationMany",av)%>[i] = NULL;
+	}<%
   }
   else if (av.isMandatoryMany())
   {

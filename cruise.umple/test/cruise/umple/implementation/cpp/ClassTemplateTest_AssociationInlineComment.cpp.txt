@@ -12,7 +12,10 @@
   
  Foo::Foo()
   {
-    bars = new vector<Bar*>();
+    for (unsigned int i=0; i<bars.size(); i++)
+	{
+		bars[i] = NULL;
+	}
   }
   
   //------------------------

@@ -23,7 +23,10 @@
     {
       throw new RuntimeException("Unable to create Student, must have at least 1 mentors");
     }
-    courses = new vector<Course*>();
+    for (unsigned int i=0; i<courses.size(); i++)
+	{
+		courses[i] = NULL;
+	}
   }
   
   //------------------------
