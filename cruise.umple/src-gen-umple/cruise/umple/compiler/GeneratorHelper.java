@@ -385,18 +385,15 @@ private static void postpareTrace(UmpleModel aModel)
 	  {
 		  if( traceRecord != null )
 		  {
-			  System.out.println("Test = "+traceRecord.getAttribute(0).getName());
 			  if( traceRecord.hasAttributes() )
 			  {
 				  int index = 0;
 				  for( Attribute attr : traceRecord.getAttributes() )
 				  {
-//					  record += "\"," + attr.getName() + "=\" + " + attr.getName();
 					  record[index] = attr.getName();
 					  ++index;
 				  }
 			  }
-//			  processTracedStateRecord(traceDirective,tracedStm,t,template);
 		  }
 		  
 		  if( tracedStm.getTransition() != null )
@@ -426,15 +423,9 @@ private static void postpareTrace(UmpleModel aModel)
   {
 	  StateMachine stm = tracedStm.getStateMachine();
 	  String stmCode = null;
-	  if( traceDirective.getTraceRecord() != null )
-		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm),record[0],record[0]));
-	  else
-		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+	  stmCode = StringFormatter.format(template,prepareConsistentOutput(record,"state",t.translate("stateMachineOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
-	  if( traceDirective.getTraceRecord() != null )
-		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm),record[0],record[0]));
-	  else
-		  stmCode = StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
+	  stmCode = StringFormatter.format(template,prepareConsistentOutput(record,"state",t.translate("stateMachineOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
   }
   
@@ -443,10 +434,7 @@ private static void postpareTrace(UmpleModel aModel)
 	  StateMachine stm = tracedStm.getStateMachine();
 	  String stmCode = null;
 	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  if( traceDirective.getTraceRecord() != null )
-		  stmCode += StringFormatter.format(template,prepareConsistentOutput("entry",t.translate("parameterOne",stm),record[0],record[0]));
-	  else
-		  stmCode += StringFormatter.format(template,prepareConsistentOutput("entry",t.translate("parameterOne",stm)));
+	  stmCode += StringFormatter.format(template,prepareConsistentOutput(record,"entry",t.translate("parameterOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
   }
   
@@ -455,37 +443,15 @@ private static void postpareTrace(UmpleModel aModel)
 	  StateMachine stm = tracedStm.getStateMachine();
 	  String stmCode = null;
 	  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-	  if( traceDirective.getTraceRecord() != null )
-		  stmCode += StringFormatter.format(template,prepareConsistentOutput("exit",t.translate("stateMachineOne",stm),record[0],record[0]));
-	  else
-		  stmCode += StringFormatter.format(template,prepareConsistentOutput("exit",t.translate("stateMachineOne",stm)));
+	  stmCode += StringFormatter.format(template,prepareConsistentOutput(record,"exit",t.translate("stateMachineOne",stm)));
 	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
   }
 
   private static void processTracedTransition( TraceDirective traceDirective, Transition tran, CodeTranslator t, String template, String[] record) 
   {
 	  String stmCode = null;
-	  stmCode = StringFormatter.format(template,prepareConsistentOutput("state@pre",t.translate("stateMachineOne",tran.getFromState().getStateMachine())));
+	  stmCode = StringFormatter.format(template,prepareConsistentOutput(record,"state@pre",t.translate("stateMachineOne",tran.getFromState().getStateMachine())));
 	  InjectTracedTransition(traceDirective,t,stmCode,"before");
-  }
-  
-  private static void processTracedStateRecord(TraceDirective traceDirective, StateMachine_TraceItem tracedStm, CodeTranslator t, String template) 
-  {
-	  StateMachine stm = tracedStm.getStateMachine();
-	  TraceRecord traceRecord = traceDirective.getTraceRecord();
-	  String stmCode = null;
-	  
-//	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";	  
-//	  stmCode += StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
-//	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
-//
-//	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-//	  stmCode += StringFormatter.format(template,prepareConsistentOutput("state",t.translate("stateMachineOne",stm)));
-//	  prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
-//	  
-//	  stmCode = "if( " + t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
-//	  stmCode += "System.out.println(\"action=" + stm.getState(0).getName() + "-exit" +", " + traceRecord.getRecord() +  "=\" + "+traceRecord.getRecord()+");";
-//	  tmp(traceDirective,t,stm,stmCode,"after");
   }
   
   //*********************************************** 
@@ -630,15 +596,28 @@ private static void postpareTrace(UmpleModel aModel)
   
   // Process output to force consistency 
   // this method deals with what is inside the System.err.println();
-  static String prepareConsistentOutput(Object... params) 
+  static String prepareConsistentOutput(String[] record, Object... params) 
   {
 	  String output = StringFormatter.format("\"{0}=\" + {1}",params[0],params[1]);
+	  int i;
 	  
-	  for( int i = 2 ; i < params.length ; i += 2 )
+	  for( i = 2 ; i < params.length ; i += 2 )
 	  {
 		  if( ! outputRedundant( i, params[i] , params ) )
 			  output += StringFormatter.format(" + \",{0}=\" + {1}",params[i],params[i+1]);
 	  }
+
+	  if( record != null )
+		  for( i = 0 ; i < record.length ; ++i )
+		  {
+			  if( record[i] == null )
+			  {
+			
+			  }
+			  else
+				  output += StringFormatter.format(" + \",{0}=\" + {1}",record[i],record[i]);
+		  }
+	  
 	  return output;
   }
   
