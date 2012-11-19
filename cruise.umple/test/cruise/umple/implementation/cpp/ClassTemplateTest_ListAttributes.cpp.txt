@@ -77,9 +77,9 @@
     return has;
   }
 
-  int Token::indexOfPosition(Position aPosition)
+  int Token::indexOfPosition(Position* aPosition)
   {
-    int index = positions.indexOf(aPosition);
+    int index = find(positions.begin(), positions.end(), aPosition) - positions.begin();
     return index;
   }
 

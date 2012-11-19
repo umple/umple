@@ -31,10 +31,10 @@
     return has;
   }
 
-  int <%=gen.translate("type",uClass)%>::<%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  int <%=gen.translate("type",uClass)%>::<%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } %>
-    int index = <%=gen.translate("attributeMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);
+    int index = find(<%=gen.translate("attributeMany",av)%>.begin(), <%=gen.translate("attributeMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("attributeMany",av)%>.begin();
     <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } %>
     return index;
   }

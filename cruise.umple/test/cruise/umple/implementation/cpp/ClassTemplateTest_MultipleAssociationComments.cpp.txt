@@ -202,10 +202,12 @@
   bool Foo::removeBar1(Bar1* aBar1)
   {
     bool wasRemoved = false;
+	int index = find(bar1s.begin(), bar1s.end(), aBar1) - bar1s.begin();
     //Unable to remove aBar1, as it must always have a foo
     if (this!=aBar1->getFoo())
     {
-      bar1s->erase(find(bar1s.begin(),bar1s.end(),aBar1));
+      bar1s.erase(find(bar1s.begin(),bar1s.end(),aBar1));
+	  delete bar1s[index];
       wasRemoved = true;
     }
     return wasRemoved;
@@ -241,10 +243,12 @@
   bool Foo::removeBar2(Bar2* aBar2)
   {
     bool wasRemoved = false;
+	int index = find(bar2s.begin(), bar2s.end(), aBar2) - bar2s.begin();
     //Unable to remove aBar2, as it must always have a foo
     if (this!=aBar2->getFoo())
     {
-      bar2s->erase(find(bar2s.begin(),bar2s.end(),aBar2));
+      bar2s.erase(find(bar2s.begin(),bar2s.end(),aBar2));
+	  delete bar2s[index];
       wasRemoved = true;
     }
     return wasRemoved;
@@ -280,10 +284,12 @@
   bool Foo::removeBar3(Bar3* aBar3)
   {
     bool wasRemoved = false;
+	int index = find(bar3s.begin(), bar3s.end(), aBar3) - bar3s.begin();
     //Unable to remove aBar3, as it must always have a foo
     if (this!=aBar3->getFoo())
     {
-      bar3s->erase(find(bar3s.begin(),bar3s.end(),aBar3));
+      bar3s.erase(find(bar3s.begin(),bar3s.end(),aBar3));
+	  delete bar3s[index];
       wasRemoved = true;
     }
     return wasRemoved;
@@ -319,10 +325,12 @@
   bool Foo::removeBar4(Bar4* aBar4)
   {
     bool wasRemoved = false;
+	int index = find(bar4s.begin(), bar4s.end(), aBar4) - bar4s.begin();
     //Unable to remove aBar4, as it must always have a foo
     if (this!=aBar4->getFoo())
     {
-      bar4s->erase(find(bar4s.begin(),bar4s.end(),aBar4));
+      bar4s.erase(find(bar4s.begin(),bar4s.end(),aBar4));
+	  delete bar4s[index];
       wasRemoved = true;
     }
     return wasRemoved;

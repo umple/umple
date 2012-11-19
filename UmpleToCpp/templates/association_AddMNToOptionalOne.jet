@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
@@ -27,14 +27,16 @@
     return wasAdded;
   }
 
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasRemoved = false;
+	int index = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
-    if (find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) && <%=gen.translate("numberOfMethod",av)%>() > <%=gen.translate("minimumNumberOfMethod",av)%>())
+    if ((find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) !=<%=gen.translate("associationMany",av)%>.end()) && <%=gen.translate("numberOfMethod",av)%>() > <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
-      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
-      <%=gen.relatedTranslate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>,null);
+      <%=gen.translate("associationMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
+      <%=gen.relatedTranslate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>,NULL);
+	  delete <%=gen.translate("associationMany",av)%>[index];
       wasRemoved = true;
     }
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>

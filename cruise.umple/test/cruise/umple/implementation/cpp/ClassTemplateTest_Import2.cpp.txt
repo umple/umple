@@ -132,7 +132,7 @@
     return 1;
   }
 
-  bool Student::addMentor(Mentor aMentor)
+  bool Student::addMentor(Mentor* aMentor)
   {
     bool wasAdded = false;
     if (find(mentors.begin(),mentors.end(),aMentor) != mentors.end()) { return false; }
@@ -151,13 +151,15 @@
     return wasAdded;
   }
 
-  bool Student::removeMentor(Mentor aMentor)
+  bool Student::removeMentor(Mentor* aMentor)
   {
     bool wasRemoved = false;
-    if (find(mentors.begin(),mentors.end(),aMentor) && numberOfMentors() > minimumNumberOfMentors())
+	int index = find(mentors.begin(), mentors.end(), aMentor) - mentors.begin();
+    if ((find(mentors.begin(),mentors.end(),aMentor) !=mentors.end()) && numberOfMentors() > minimumNumberOfMentors())
     {
-      mentors.remove(aMentor);
-      setStudent(aMentor,null);
+      mentors.erase(find(mentors.begin(),mentors.end(),aMentor));
+      setStudent(aMentor,NULL);
+	  delete mentors[index];
       wasRemoved = true;
     }
     return wasRemoved;

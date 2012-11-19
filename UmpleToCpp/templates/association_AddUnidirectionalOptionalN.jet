@@ -15,10 +15,12 @@
   bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasRemoved = false;
+	int index = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
-    if (find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>))
+    if (find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) != <%=gen.translate("associationMany",av)%>.end())
     {
-      <%=gen.translate("associationMany",av)%>erase(<%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("associationMany",av)%>.erase(<%=gen.translate("parameterOne",av)%>);
+	  delete <%=gen.translate("associationMany",av)%>[index];
       wasRemoved = true;
     }
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>

@@ -32,9 +32,9 @@
   bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     bool wasRemoved = false;
-    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+	<% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
     //Unable to remove <%=gen.translate("parameterOne",av)%>, as it must always have a <%=gen.relatedTranslate("associationOne",av)%>
-    if (this.equals(<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
+    if (this == <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>()))
     {
       <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } %>
       return wasRemoved;

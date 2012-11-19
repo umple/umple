@@ -97,10 +97,12 @@
   bool Foo::removeBar(Bar* aBar)
   {
     bool wasRemoved = false;
+	int index = find(bars.begin(), bars.end(), aBar) - bars.begin();
     //Unable to remove aBar, as it must always have a foo
     if (this!=aBar->getFoo())
     {
-      bars->erase(find(bars.begin(),bars.end(),aBar));
+      bars.erase(find(bars.begin(),bars.end(),aBar));
+	  delete bars[index];
       wasRemoved = true;
     }
     return wasRemoved;
