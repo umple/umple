@@ -1,6 +1,6 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <% String requiredNumber = StringFormatter.format("{0}", av.getMultiplicity().getUpperBound()); %>
-    for (unsigned int i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+    for (i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
 	{
 		<%=gen.translate("associationMany",av)%>[i] = NULL;
 	}

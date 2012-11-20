@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-    for( int i =0; sizeof(<%=gen.translate("associationMany",av)%>); i++)
+    for(i =0; sizeof(<%=gen.translate("associationMany",av)%>); i++)
     {
       <%=gen.translate("associationMany",av)%>[i]-><%=gen.relatedTranslate("setMethod",av)%>(NULL);
     }

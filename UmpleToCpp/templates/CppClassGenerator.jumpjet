@@ -35,7 +35,16 @@
 	<%  if (uClass.getIsSingleton())
   {
     %><%@ include file="members_Singleton.jet"%><%
-  }%>
+  }
+  for(AssociationVariable av : uClass.getAssociationVariables())
+  {
+  	if(av.isMany())
+  	{
+  		%>int i;<%
+		break;
+  	}
+  }
+  %>
   //------------------------
   // CONSTRUCTOR
   //------------------------

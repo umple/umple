@@ -11,7 +11,7 @@
   }
   else if (av.isOptionalMany())
   {%>
-    for (unsigned int i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+    for (i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
 	{
 		<%=gen.translate("associationMany",av)%>[i] = NULL;
 	}<%
@@ -22,7 +22,7 @@
   }
   else if (av.getMultiplicity().getLowerBound() > 0)
   {
-    %>for (unsigned int i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+    %>for (i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
 	{
 		<%=gen.translate("associationMany",av)%>[i] = NULL;
 	};
