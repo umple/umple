@@ -4,8 +4,16 @@ class Light
 {
   status
   {
-    On { flip -> Off; }
-    Off { flip -> On; }
+    On 
+    { 
+      flip -> Off;
+      SemiOn {}
+	  FullOn {}
+    }
+    Off 
+    { 
+      flip -> On; 
+    }
   }
   trace On;
 }

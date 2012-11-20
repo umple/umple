@@ -406,7 +406,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateMachine.ump",languagePath + "/ConsoleTracer_TraceStateMachine."+ languagePath +".txt","GarageDoor");
 	}
 	
-	@Test @Ignore
+	@Test
 	public void ConsoleTracer_State()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","Light");
