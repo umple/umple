@@ -6,7 +6,7 @@
 #include "Mentor.h"
 #include "Course.h"
 
-	
+	int i;
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -14,7 +14,7 @@
  Student::Student(const string & aNumber, vector<Mentor*> allMentors)
   {
     number = aNumber;
-    for (unsigned int i=0; i<mentors.size(); i++)
+    for (i=0; i<mentors.size(); i++)
 	{
 		mentors[i] = NULL;
 	}
@@ -26,7 +26,7 @@
 	{
 	cout<<"Unable to create Student, must have at least 1 mentors";
 	}
-    for (unsigned int i=0; i<courses.size(); i++)
+    for (i=0; i<courses.size(); i++)
 	{
 		courses[i] = NULL;
 	}
@@ -290,14 +290,14 @@
   
 Student::~Student()
   {
-    for( int i =0; sizeof(mentors); i++)
+    for(i =0; sizeof(mentors); i++)
     {
       setStudent(aMentor[i],NULL);
     }
     mentors.clear();
     vector<Course*> copyOfCourses = courses;
     courses.clear();
-    for(int i=0;sizeof(courses);i++)
+    for(i=0;sizeof(courses);i++)
     {
       courses[i]->removeStudent(this);
     }

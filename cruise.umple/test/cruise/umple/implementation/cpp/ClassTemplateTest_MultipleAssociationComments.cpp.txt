@@ -8,26 +8,26 @@
 #include "Bar3.h"
 #include "Bar4.h"
 
-	
+	int i;
   //------------------------
   // CONSTRUCTOR
   //------------------------
   
  Foo::Foo()
   {
-    for (unsigned int i=0; i<bar1s.size(); i++)
+    for (i=0; i<bar1s.size(); i++)
 	{
 		bar1s[i] = NULL;
 	}
-    for (unsigned int i=0; i<bar2s.size(); i++)
+    for (i=0; i<bar2s.size(); i++)
 	{
 		bar2s[i] = NULL;
 	}
-    for (unsigned int i=0; i<bar3s.size(); i++)
+    for (i=0; i<bar3s.size(); i++)
 	{
 		bar3s[i] = NULL;
 	}
-    for (unsigned int i=0; i<bar4s.size(); i++)
+    for (i=0; i<bar4s.size(); i++)
 	{
 		bar4s[i] = NULL;
 	}
@@ -342,19 +342,19 @@
   
 Foo::~Foo()
   {
-    for( int i =0; sizeof(bar1s); i++)
+    for(i =0; sizeof(bar1s); i++)
     {
       delete bar1s[i];
     }
-    for( int i =0; sizeof(bar2s); i++)
+    for(i =0; sizeof(bar2s); i++)
     {
       delete bar2s[i];
     }
-    for( int i =0; sizeof(bar3s); i++)
+    for(i =0; sizeof(bar3s); i++)
     {
       delete bar3s[i];
     }
-    for( int i =0; sizeof(bar4s); i++)
+    for(i =0; sizeof(bar4s); i++)
     {
       delete bar4s[i];
     }

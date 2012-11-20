@@ -11,7 +11,7 @@
   
  Token::Token()
   {
-        for (unsigned int i=0; i<positions.size(); i++)
+		for (int i=0; i<positions.size(); i++)
 	{
 		positions[i] = NULL;
 	}
