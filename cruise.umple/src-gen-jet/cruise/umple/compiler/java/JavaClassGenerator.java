@@ -3711,7 +3711,10 @@ public class JavaClassGenerator implements ILang
 	  {
 		  if( tracedStm.getTransition() != null )
 		  {
-			  allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0});",tracedStm.getStateMachine().getName()));
+			  if( tc.getTraceRecord() != null )
+				  allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0}+\",{1}=\"+{2});",tracedStm.getStateMachine().getName(),tc.getTraceRecord().getAttribute(0).getName(),tc.getTraceRecord().getAttribute(0).getName()));
+			  else 
+				  allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0});",tracedStm.getStateMachine().getName()));
 		  }
 		
 	  }
