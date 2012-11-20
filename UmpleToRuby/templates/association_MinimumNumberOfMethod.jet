@@ -9,9 +9,9 @@
   end
 <% } else { %>
   def self.<%=gen.translate("minimumNumberOfMethod",av)%>
-    <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } %>
+    <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } %>
     minimum = <%=av.getMultiplicity().getLowerBound()%>
-    <% if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPostfixCode); } %>
+    <% if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } %>
     minimum
   end
 <% } %>

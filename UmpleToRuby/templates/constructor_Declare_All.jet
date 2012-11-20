@@ -22,7 +22,7 @@
   
   if (customConstructorPrefixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
   }
   
   if (uClass.getKey().isProvided())
@@ -174,7 +174,7 @@
   
   if (customConstructorPostfixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
   }
 
   appendln(stringBuffer, "\n    @initialized = true");

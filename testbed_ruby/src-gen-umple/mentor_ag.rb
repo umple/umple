@@ -107,6 +107,40 @@ class MentorAG
     was_removed
   end
 
+  def add_friend_at(a_friend, index)
+    was_added = false
+    if add_friend(a_friend)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_friend())
+        index = number_of_friend() - 1
+      end
+      @friend.delete(a_friend)
+      @friend.insert(index, a_friend)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_friend_at(a_friend, index)
+    was_added = false
+    if @friend.include?(a_friend)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_friend())
+        index = number_of_friend() - 1
+      end
+      @friend.delete(a_friend)
+      @friend.insert(index, a_friend)
+      was_added = true
+    else
+      was_added = add_friend_at(a_friend, index)
+    end
+    was_added
+  end
+
   def delete
     @deleted = true
     copy_of_friend = @friend.dup

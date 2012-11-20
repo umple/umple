@@ -2,10 +2,10 @@
   public function <%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasRemoved = false;
-    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     if ($this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>) == -1)
     {
-      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } %>
+      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return $wasRemoved;
     }
 
@@ -25,6 +25,6 @@
       }
     }
     $this-><%=gen.translate("attributeMany",av)%> = array_values($this-><%=gen.translate("attributeMany",av)%>);
-    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
     return $wasRemoved;
   }

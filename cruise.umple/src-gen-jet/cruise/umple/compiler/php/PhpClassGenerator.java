@@ -1920,7 +1920,7 @@ public class PhpClassGenerator implements ILang
 
   if (customConstructorPrefixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
     hasBody = true;
   }
   
@@ -2408,7 +2408,7 @@ public class PhpClassGenerator implements ILang
 
   if (customConstructorPostfixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
     hasBody = true;
   }
 
@@ -2663,7 +2663,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_155);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_156);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_157);
     stringBuffer.append( gen.translate("attributeCanSet",av) );
     stringBuffer.append(TEXT_158);
@@ -2671,7 +2671,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_159);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_160);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_161);
     
       }
@@ -2684,23 +2684,23 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_163);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_164);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_165);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_166);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_167);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_168);
     stringBuffer.append(gen.translate("resetMethod",av));
     stringBuffer.append(TEXT_169);
-     if (customResetPrefixCode != null) { append(stringBuffer, "\n    {0}",customResetPrefixCode); } 
+     if (customResetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_170);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_171);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_172);
-     if (customResetPostfixCode != null) { append(stringBuffer, "\n    {0}",customResetPostfixCode); } 
+     if (customResetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_173);
     
     }
@@ -2712,19 +2712,19 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_175);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_176);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_177);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_178);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_179);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_180);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_181);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_182);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_183);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_184);
@@ -2736,7 +2736,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_187);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_188);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_189);
     
     }
@@ -2748,13 +2748,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_191);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_192);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_193);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_194);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_195);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_196);
     
     }
@@ -2793,55 +2793,55 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_197);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_198);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_199);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_200);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_201);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_202);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_203);
     stringBuffer.append(gen.translate("getManyMethod",av));
     stringBuffer.append(TEXT_204);
-     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } 
+     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_205);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_206);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_207);
-     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } 
+     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_208);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_209);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_210);
-     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } 
+     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_211);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_212);
-     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } 
+     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_213);
     stringBuffer.append(gen.translate("hasManyMethod",av));
     stringBuffer.append(TEXT_214);
-     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } 
+     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_215);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_216);
-     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } 
+     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_217);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_218);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_219);
-     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } 
+     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_220);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_221);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_222);
-     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } 
+     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_223);
     
     }
@@ -2854,13 +2854,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_224);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_225);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_226);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_227);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_228);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_229);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_230);
@@ -2872,7 +2872,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_231);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_232);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_233);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_234);
@@ -2884,13 +2884,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_235);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_236);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_237);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_238);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_239);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_240);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_241);
@@ -2902,7 +2902,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_242);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_243);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_244);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_245);
@@ -2917,13 +2917,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_246);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_247);
-     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPrefixCode); } 
+     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_248);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_249);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_250);
-     if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPostfixCode); } 
+     if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_251);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_252);
@@ -2935,7 +2935,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_253);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_254);
-     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPrefixCode); } 
+     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_255);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_256);
@@ -2958,13 +2958,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_257);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_258);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_259);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_260);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_261);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_262);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_263);
@@ -2976,7 +2976,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_264);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_265);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_266);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_267);
@@ -3006,7 +3006,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_269);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_270);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_271);
     stringBuffer.append( gen.translate("type",av) );
     stringBuffer.append(TEXT_272);
@@ -3014,7 +3014,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_273);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_274);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_275);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_276);
@@ -3028,7 +3028,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_278);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_279);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_280);
     stringBuffer.append(gen.translate("parameterValue",av));
     stringBuffer.append(TEXT_281);
@@ -3042,13 +3042,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_283);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_284);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_285);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_286);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_287);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_288);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_289);
@@ -3060,7 +3060,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_290);
     stringBuffer.append(gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_291);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_292);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_293);
@@ -3532,7 +3532,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_331);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_332);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
      if (customGetPostfixCode == null) { 
     stringBuffer.append(TEXT_333);
     stringBuffer.append(gen.translate("associationOne",av));
@@ -3543,7 +3543,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_336);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_337);
-     append(stringBuffer, "\n    {0}",customGetPostfixCode); 
+     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); 
     stringBuffer.append(TEXT_338);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_339);
@@ -3557,49 +3557,49 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_341);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_342);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_343);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_344);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_345);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_346);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_347);
     stringBuffer.append(gen.translate("getManyMethod",av));
     stringBuffer.append(TEXT_348);
-     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } 
+     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_349);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_350);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_351);
-     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } 
+     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_352);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_353);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_354);
-     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } 
+     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_355);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_356);
-     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } 
+     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_357);
     stringBuffer.append(gen.translate("hasManyMethod",av));
     stringBuffer.append(TEXT_358);
-     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } 
+     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_359);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_360);
-     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } 
+     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_361);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_362);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_363);
-     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } 
+     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_364);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_365);
@@ -3609,7 +3609,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_367);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_368);
-     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } 
+     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_369);
     
     }
@@ -3873,7 +3873,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_373);
     stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
     stringBuffer.append(TEXT_374);
-     if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } 
+     if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } 
      if (av.getMultiplicity().isUpperBoundMany()) { 
     stringBuffer.append(TEXT_375);
     stringBuffer.append(gen.translate("numberOfMethod",av));
@@ -3891,7 +3891,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_382);
      } 
-     if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } 
+     if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_383);
     
     }
@@ -3915,11 +3915,11 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_387);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_388);
-     if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } 
+     if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_389);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_390);
-     if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPostfixCode); } 
+     if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_391);
      } 
     
@@ -3944,11 +3944,11 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_395);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_396);
-     if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } 
+     if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_397);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_398);
-     if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPostfixCode); } 
+     if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_399);
      } 
     
@@ -3973,11 +3973,11 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_403);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_404);
-     if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } 
+     if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_405);
     stringBuffer.append(av.getMultiplicity().getUpperBound());
     stringBuffer.append(TEXT_406);
-     if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } 
+     if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_407);
      } 
     
@@ -3993,14 +3993,14 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_409);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_410);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
      if (!av.getMultiplicity().isUpperBoundMany()) { 
     stringBuffer.append(TEXT_411);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_412);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_413);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_414);
      } 
     stringBuffer.append(TEXT_415);
@@ -4018,7 +4018,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_421);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_422);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_423);
     
     }
@@ -4033,13 +4033,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_425);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_426);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_427);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_428);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_429);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_430);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_431);
@@ -4065,7 +4065,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_441);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_442);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_443);
     
     }
@@ -4085,13 +4085,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_446);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_447);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_448);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_449);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_450);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_451);
     
     }
@@ -4106,7 +4106,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_454);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_455);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_456);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_457);
@@ -4114,7 +4114,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_458);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_459);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_460);
     
     }
@@ -4126,7 +4126,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_462);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_463);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_464);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_465);
@@ -4142,7 +4142,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_470);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_471);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPrefixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } 
     stringBuffer.append(TEXT_472);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_473);
@@ -4170,7 +4170,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_484);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_485);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_486);
     
     }
@@ -4182,7 +4182,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_488);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_489);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_490);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_491);
@@ -4191,7 +4191,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_493);
     stringBuffer.append(gen.translate("associationOne",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_494);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_495);
@@ -4209,7 +4209,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_501);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_502);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_503);
     stringBuffer.append(gen.translate("parameterOld",av));
     stringBuffer.append(TEXT_504);
@@ -4229,7 +4229,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_511);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_512);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_513);
     
     }
@@ -4249,7 +4249,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_519);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_520);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_521);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_522);
@@ -4281,13 +4281,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_535);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_536);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_537);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_538);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_539);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_540);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_541);
@@ -4297,7 +4297,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_543);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_544);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_545);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_546);
@@ -4307,7 +4307,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_548);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_549);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_550);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_551);
@@ -4319,7 +4319,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_554);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_555);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_556);
     
     }
@@ -4343,13 +4343,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_564);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_565);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_566);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_567);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_568);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_569);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_570);
@@ -4371,7 +4371,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_578);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_579);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_580);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_581);
@@ -4383,13 +4383,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_584);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_585);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_586);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_587);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_588);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_589);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_590);
@@ -4399,7 +4399,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_592);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_593);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_594);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_595);
@@ -4409,7 +4409,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_597);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_598);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_599);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_600);
@@ -4421,7 +4421,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_603);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_604);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_605);
     
     }
@@ -4445,13 +4445,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_613);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_614);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_615);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_616);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_617);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_618);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_619);
@@ -4475,13 +4475,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_628);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_629);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_630);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_631);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_632);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_633);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_634);
@@ -4501,7 +4501,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_641);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_642);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_643);
     
     }
@@ -4513,7 +4513,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_645);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_646);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_647);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_648);
@@ -4537,7 +4537,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_657);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_658);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_659);
     stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_660);
@@ -4575,7 +4575,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_676);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_677);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_678);
     
     }
@@ -4595,7 +4595,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_684);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_685);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_686);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_687);
@@ -4619,13 +4619,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_696);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_697);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_698);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_699);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_700);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_701);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_702);
@@ -4645,7 +4645,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_709);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_710);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_711);
     
     }
@@ -4657,7 +4657,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_713);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_714);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_715);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_716);
@@ -4677,7 +4677,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_723);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_724);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_725);
     stringBuffer.append(gen.translate("parameterCurrent",av));
     stringBuffer.append(TEXT_726);
@@ -4709,7 +4709,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_739);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_740);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_741);
     
     }
@@ -4721,19 +4721,19 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_743);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_744);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_745);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_746);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_747);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_748);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_749);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_750);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_751);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_752);
@@ -4759,7 +4759,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_762);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_763);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_764);
     
     }
@@ -4771,19 +4771,19 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_766);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_767);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_768);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_769);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_770);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_771);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_772);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_773);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_774);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_775);
@@ -4809,7 +4809,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_785);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_786);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_787);
     
     }
@@ -4821,7 +4821,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_789);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_790);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_791);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_792);
@@ -4833,7 +4833,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_795);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_796);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_797);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_798);
@@ -4859,7 +4859,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_808);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_809);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_810);
     
     }
@@ -4871,11 +4871,11 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_812);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_813);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_814);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_815);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_816);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_817);
@@ -4899,7 +4899,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_826);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_827);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_828);
     
     }
@@ -4911,7 +4911,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_830);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_831);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_832);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_833);
@@ -4919,7 +4919,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_834);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_835);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_836);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_837);
@@ -4933,7 +4933,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_841);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_842);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_843);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_844);
@@ -4957,13 +4957,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_853);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_854);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_855);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_856);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_857);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_858);
     
     }
@@ -4975,7 +4975,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_860);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_861);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_862);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_863);
@@ -4983,7 +4983,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_864);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_865);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_866);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_867);
@@ -4995,7 +4995,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_870);
     stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_871);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_872);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_873);
@@ -5019,13 +5019,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_882);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_883);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_884);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_885);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_886);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_887);
     
     }
@@ -5037,7 +5037,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_889);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_890);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_891);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_892);
@@ -5067,13 +5067,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_904);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_905);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_906);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_907);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_908);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_909);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_910);
@@ -5097,7 +5097,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_919);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_920);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_921);
     
     }
@@ -5109,7 +5109,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_923);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_924);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_925);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_926);
@@ -5139,7 +5139,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_938);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_939);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_940);
     
     }
@@ -5151,13 +5151,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_942);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_943);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_944);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_945);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_946);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_947);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_948);
@@ -5187,13 +5187,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_960);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_961);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_962);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_963);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_964);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_965);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_966);
@@ -5213,7 +5213,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_973);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_974);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_975);
     
     }
@@ -5225,7 +5225,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_977);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_978);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_979);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_980);
@@ -5235,25 +5235,25 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_982);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_983);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_984);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_985);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_986);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_987);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_988);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_989);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_990);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_991);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_992);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_993);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_994);
@@ -5265,7 +5265,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_997);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_998);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_999);
     
     }
@@ -5277,14 +5277,14 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1001);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1002);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
      if (!av.isStar()) { 
     stringBuffer.append(TEXT_1003);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1004);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1005);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1006);
      } 
     stringBuffer.append(TEXT_1007);
@@ -5302,7 +5302,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1013);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1014);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1015);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1016);
@@ -5332,13 +5332,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1028);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1029);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1030);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1031);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1032);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1033);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_1034);
@@ -5362,7 +5362,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1043);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1044);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1045);
     
     }
@@ -5374,7 +5374,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1047);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1048);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1049);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1050);
@@ -5386,7 +5386,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1053);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1054);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1055);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_1056);
@@ -5396,7 +5396,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1058);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1059);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1060);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1061);
@@ -5406,7 +5406,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1063);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1064);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1065);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1066);
@@ -5428,7 +5428,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1074);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_1075);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1076);
     stringBuffer.append(TEXT_1077);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
@@ -5459,19 +5459,19 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1088);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1089);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1090);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1091);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1092);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1093);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1094);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1095);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1096);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_1097);
@@ -5487,7 +5487,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1102);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1103);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1104);
     
     }
@@ -5499,7 +5499,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1106);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1107);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1108);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1109);
@@ -5509,13 +5509,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1111);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1112);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1113);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1114);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1115);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1116);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_1117);
@@ -5531,7 +5531,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1122);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1123);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1124);
     
     }
@@ -5543,31 +5543,31 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1126);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1127);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1128);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1129);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1130);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1131);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1132);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1133);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1134);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_1135);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1136);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1137);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1138);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1139);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1140);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1141);
@@ -5579,7 +5579,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1144);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1145);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1146);
     
     }
@@ -5594,7 +5594,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1149);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1150);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1151);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1152);
@@ -5618,13 +5618,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1161);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_1162);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1163);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1164);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1165);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1166);
     
     }
@@ -5639,7 +5639,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1169);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1170);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1171);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1172);
@@ -5659,7 +5659,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1179);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1180);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1181);
     stringBuffer.append(instanceIdentifier);
     stringBuffer.append(TEXT_1182);
@@ -5667,7 +5667,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1183);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1184);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1185);
     
     }
@@ -5684,7 +5684,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1187);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1188);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1189);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1190);
@@ -5712,7 +5712,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1201);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1202);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1203);
     stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1204);
@@ -5750,7 +5750,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1220);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1221);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1222);
     
     }
@@ -5762,7 +5762,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1224);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1225);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1226);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1227);
@@ -5786,7 +5786,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1236);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1237);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1238);
     stringBuffer.append(gen.translate("parameterOldMany",av));
     stringBuffer.append(TEXT_1239);
@@ -5824,7 +5824,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1255);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1256);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1257);
     
     }
@@ -5839,7 +5839,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1260);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1261);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1262);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1263);
@@ -5867,13 +5867,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1274);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1275);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1276);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1277);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1278);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1279);
     
     }
@@ -5889,7 +5889,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1281);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1282);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1283);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1284);
@@ -5897,7 +5897,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1285);
     stringBuffer.append(orCheckMaxBound);
     stringBuffer.append(TEXT_1286);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1287);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1288);
@@ -5911,7 +5911,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1292);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_1293);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1294);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1295);
@@ -5949,7 +5949,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1311);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1312);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1313);
     stringBuffer.append(existingToNewMap);
     stringBuffer.append(TEXT_1314);
@@ -6009,7 +6009,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1341);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1342);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1343);
     stringBuffer.append(TEXT_1344);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
@@ -6043,7 +6043,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1356);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1357);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1358);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1359);
@@ -6067,13 +6067,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1368);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1369);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1370);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1371);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1372);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1373);
     
     }
@@ -6088,7 +6088,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1376);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1377);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1378);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1379);
@@ -6112,13 +6112,13 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_1388);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1389);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1390);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1391);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1392);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1393);
     
     }
@@ -6279,7 +6279,7 @@ public class PhpClassGenerator implements ILang
 
   if (customDeletePrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
     hasSomethingToDelete = true;
   }
 
@@ -6543,7 +6543,7 @@ public class PhpClassGenerator implements ILang
 
   if (customDeletePostfixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
     hasSomethingToDelete = true;
   }
   

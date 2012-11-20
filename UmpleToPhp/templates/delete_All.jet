@@ -12,7 +12,7 @@
 
   if (customDeletePrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
     hasSomethingToDelete = true;
   }
 
@@ -108,7 +108,7 @@
 
   if (customDeletePostfixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
     hasSomethingToDelete = true;
   }
   

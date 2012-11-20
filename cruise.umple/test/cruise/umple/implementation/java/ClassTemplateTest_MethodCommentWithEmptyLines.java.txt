@@ -40,7 +40,7 @@ public class Foo
    * Comments such as these are often used to improve readability through whitespace clarity.
    */
   public void testMethod(){
-      // I am a test method.
+    // I am a test method.
   }
 
 }

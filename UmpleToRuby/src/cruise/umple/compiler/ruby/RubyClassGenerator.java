@@ -1770,7 +1770,7 @@ public class RubyClassGenerator implements ILang
   
   if (customConstructorPrefixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
   }
   
   if (uClass.getKey().isProvided())
@@ -2248,7 +2248,7 @@ public class RubyClassGenerator implements ILang
   
   if (customConstructorPostfixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
   }
 
   appendln(stringBuffer, "\n    @initialized = true");
@@ -2289,7 +2289,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_109);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_110);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_111);
     stringBuffer.append( gen.translate("attributeCanSet",av) );
     stringBuffer.append(TEXT_112);
@@ -2297,7 +2297,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_113);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_114);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_115);
     
       }
@@ -2310,23 +2310,23 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_117);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_118);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_119);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_120);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_121);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_122);
     stringBuffer.append(gen.translate("resetMethod",av));
     stringBuffer.append(TEXT_123);
-     if (customResetPrefixCode != null) { append(stringBuffer, "\n    {0}",customResetPrefixCode); } 
+     if (customResetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_124);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_125);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_126);
-     if (customResetPostfixCode != null) { append(stringBuffer, "\n    {0}",customResetPostfixCode); } 
+     if (customResetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_127);
     
     }
@@ -2338,24 +2338,24 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_129);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_130);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_131);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_132);
     stringBuffer.append(gen.translate("parameterOne",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_133);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_134);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_135);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_136);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_137);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_138);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_139);
     
     }
@@ -2367,13 +2367,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_141);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_142);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_143);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_144);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_145);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_146);
     
     }
@@ -2412,18 +2412,18 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_147);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_148);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_149);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_150);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_151);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_152);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_153);
     stringBuffer.append(gen.translate("getManyMethod",av));
-     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } 
+     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_154);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_155);
@@ -2435,35 +2435,35 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_158);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_159);
-     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } 
+     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_160);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_161);
     stringBuffer.append(gen.translate("numberOfMethod",av));
-     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } 
+     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_162);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_163);
-     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } 
+     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_164);
     stringBuffer.append(gen.translate("hasManyMethod",av));
-     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } 
+     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_165);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_166);
-     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } 
+     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_167);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_168);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_169);
-     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } 
+     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_170);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_171);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_172);
-     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } 
+     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_173);
     
     }
@@ -2475,12 +2475,12 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_174);
     stringBuffer.append(gen.translate("getMethod",av));
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_175);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_176);
     stringBuffer.append( gen.translate("parameterValue",av) );
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_177);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_178);
@@ -2491,7 +2491,7 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_179);
     stringBuffer.append(gen.translate("getMethod",av));
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_180);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_181);
@@ -2502,12 +2502,12 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_182);
     stringBuffer.append( gen.translate("getMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_183);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_184);
     stringBuffer.append(gen.translate("attributeOne",av));
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_185);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_186);
@@ -2518,7 +2518,7 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_187);
     stringBuffer.append( gen.translate("getMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_188);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_189);
@@ -2532,12 +2532,12 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_190);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
-     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPrefixCode); } 
+     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_191);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_192);
     stringBuffer.append( gen.translate("parameterValue",av) );
-     if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPostfixCode); } 
+     if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_193);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_194);
@@ -2548,7 +2548,7 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_195);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
-     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPrefixCode); } 
+     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_196);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_197);
@@ -2570,12 +2570,12 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_198);
     stringBuffer.append( gen.translate("getMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_199);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_200);
     stringBuffer.append(gen.translate("attributeOne",av));
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_201);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_202);
@@ -2586,7 +2586,7 @@ public class RubyClassGenerator implements ILang
         
     stringBuffer.append(TEXT_203);
     stringBuffer.append( gen.translate("getMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_204);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_205);
@@ -2613,12 +2613,12 @@ public class RubyClassGenerator implements ILang
       
     stringBuffer.append(TEXT_206);
     stringBuffer.append( gen.translate("isMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_207);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_208);
     stringBuffer.append( gen.translate("parameterValue",av) );
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_209);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_210);
@@ -2629,7 +2629,7 @@ public class RubyClassGenerator implements ILang
       
     stringBuffer.append(TEXT_211);
     stringBuffer.append( gen.translate("isMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_212);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_213);
@@ -2640,12 +2640,12 @@ public class RubyClassGenerator implements ILang
       
     stringBuffer.append(TEXT_214);
     stringBuffer.append( gen.translate("isMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_215);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_216);
     stringBuffer.append(gen.translate("attributeOne",av));
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_217);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_218);
@@ -2656,7 +2656,7 @@ public class RubyClassGenerator implements ILang
       
     stringBuffer.append(TEXT_219);
     stringBuffer.append( gen.translate("isMethod",av) );
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_220);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_221);
@@ -2958,7 +2958,7 @@ public class RubyClassGenerator implements ILang
       
     stringBuffer.append(TEXT_253);
     stringBuffer.append(gen.translate("getMethod",av));
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
      if (customGetPostfixCode == null) { 
     stringBuffer.append(TEXT_254);
     stringBuffer.append(gen.translate("associationOne",av));
@@ -2967,8 +2967,8 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_256);
     stringBuffer.append(gen.translate("associationOne",av));
-     append(stringBuffer, "\n    {0}",customGetPostfixCode); 
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_257);
     stringBuffer.append(gen.translate("parameterOne",av));
      } 
@@ -2981,52 +2981,52 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_259);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_260);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_261);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_262);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_263);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_264);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_265);
     stringBuffer.append(gen.translate("getManyMethod",av));
-     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } 
+     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_266);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_267);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_268);
-     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } 
+     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_269);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_270);
     stringBuffer.append(gen.translate("numberOfMethod",av));
-     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } 
+     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_271);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_272);
-     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } 
+     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_273);
     stringBuffer.append(gen.translate("hasManyMethod",av));
-     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } 
+     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_274);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_275);
-     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } 
+     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_276);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_277);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_278);
-     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } 
+     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_279);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_280);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_281);
-     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } 
+     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_282);
     
     }
@@ -3289,7 +3289,7 @@ public class RubyClassGenerator implements ILang
       
     stringBuffer.append(TEXT_286);
     stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
-     if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } 
+     if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } 
      if (av.getMultiplicity().isUpperBoundMany()) { 
     stringBuffer.append(TEXT_287);
     stringBuffer.append(gen.translate("numberOfMethod",av));
@@ -3311,7 +3311,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_295);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
      } 
-     if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } 
+     if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_296);
     
     }
@@ -3334,10 +3334,10 @@ public class RubyClassGenerator implements ILang
      } else { 
     stringBuffer.append(TEXT_300);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
-     if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } 
+     if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_301);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
-     if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPostfixCode); } 
+     if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_302);
      } 
     
@@ -3361,10 +3361,10 @@ public class RubyClassGenerator implements ILang
      } else { 
     stringBuffer.append(TEXT_306);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } 
+     if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_307);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
-     if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPostfixCode); } 
+     if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_308);
      } 
     
@@ -3388,10 +3388,10 @@ public class RubyClassGenerator implements ILang
      } else { 
     stringBuffer.append(TEXT_312);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } 
+     if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_313);
     stringBuffer.append(av.getMultiplicity().getUpperBound());
-     if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } 
+     if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_314);
      } 
     
@@ -3407,7 +3407,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_316);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_317);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
      if (!av.getMultiplicity().isUpperBoundMany()) { 
     stringBuffer.append(TEXT_318);
     stringBuffer.append(gen.translate("numberOfMethod",av));
@@ -3415,7 +3415,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_320);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_321);
      } 
     stringBuffer.append(TEXT_322);
@@ -3435,7 +3435,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_329);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_330);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_331);
     
     }
@@ -3450,13 +3450,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_333);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_334);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_335);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_336);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_337);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_338);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_339);
@@ -3476,7 +3476,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_346);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_347);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_348);
     
     }
@@ -3493,13 +3493,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_350);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_351);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_352);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_353);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_354);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_355);
     
     }
@@ -3511,7 +3511,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_357);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_358);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_359);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_360);
@@ -3519,7 +3519,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_361);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_362);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_363);
     
     }
@@ -3531,7 +3531,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_365);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_366);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_367);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_368);
@@ -3547,7 +3547,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_373);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_374);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPrefixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } 
     stringBuffer.append(TEXT_375);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_376);
@@ -3576,7 +3576,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_388);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_389);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_390);
     
     }
@@ -3588,7 +3588,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_392);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_393);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_394);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_395);
@@ -3597,7 +3597,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_397);
     stringBuffer.append(gen.translate("associationOne",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_398);
     stringBuffer.append(TEXT_399);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
@@ -3616,7 +3616,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_406);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_407);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_408);
     stringBuffer.append(TEXT_409);
     stringBuffer.append(gen.translate("parameterOld",av));
@@ -3638,7 +3638,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_418);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_419);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_420);
     
     }
@@ -3650,7 +3650,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_422);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_423);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_424);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_425);
@@ -3673,7 +3673,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_434);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_435);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_436);
@@ -3685,13 +3685,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_439);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_440);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_441);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_442);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_443);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_444);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_445);
@@ -3701,7 +3701,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_447);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_448);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_449);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_450);
@@ -3712,13 +3712,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_453);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_454);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_455);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_456);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_457);
     
     }
@@ -3730,14 +3730,14 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_459);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_460);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_461);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_462);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_463);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_464);
     stringBuffer.append(TEXT_465);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
@@ -3761,7 +3761,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_475);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_476);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_477);
@@ -3773,13 +3773,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_480);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_481);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_482);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_483);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_484);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_485);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_486);
@@ -3789,7 +3789,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_488);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_489);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_490);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_491);
@@ -3800,13 +3800,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_494);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_495);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_496);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_497);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_498);
     
     }
@@ -3818,14 +3818,14 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_500);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_501);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_502);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_503);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_504);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_505);
     stringBuffer.append(TEXT_506);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
@@ -3850,13 +3850,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_516);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_517);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_518);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_519);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_520);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_521);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_522);
@@ -3870,7 +3870,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_526);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_527);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_528);
     
     }
@@ -3882,7 +3882,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_530);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_531);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_532);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_533);
@@ -3910,7 +3910,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_545);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_546);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_547);
     stringBuffer.append(TEXT_548);
     stringBuffer.append(gen.translate("parameterOldMany",av));
@@ -3952,7 +3952,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_569);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_570);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_571);
     
     }
@@ -3964,7 +3964,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_573);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_574);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_575);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_576);
@@ -3988,13 +3988,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_585);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_586);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_587);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_588);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_589);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_590);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_591);
@@ -4008,7 +4008,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_595);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_596);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_597);
     
     }
@@ -4020,7 +4020,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_599);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_600);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_601);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_602);
@@ -4042,7 +4042,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_611);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_612);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_613);
     stringBuffer.append(TEXT_614);
     stringBuffer.append(gen.translate("parameterCurrent",av));
@@ -4077,7 +4077,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_630);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_631);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_632);
     
     }
@@ -4089,20 +4089,20 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_634);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_635);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_636);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_637);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_638);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_639);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_640);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_641);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_642);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_643);
@@ -4122,7 +4122,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_650);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_651);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_652);
     
     }
@@ -4134,20 +4134,20 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_654);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_655);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_656);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_657);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_658);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_659);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_660);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_661);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_662);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_663);
@@ -4167,7 +4167,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_670);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_671);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_672);
     
     }
@@ -4179,7 +4179,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_674);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_675);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_676);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_677);
@@ -4190,7 +4190,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_680);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_681);
     stringBuffer.append(TEXT_682);
     stringBuffer.append(gen.translate("parameterExisting",av));
@@ -4219,7 +4219,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_695);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_696);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_697);
     
     }
@@ -4231,11 +4231,11 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_699);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_700);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_701);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_702);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_703);
     stringBuffer.append(TEXT_704);
     stringBuffer.append(gen.translate("parameterExisting",av));
@@ -4261,7 +4261,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_715);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_716);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_717);
     
     }
@@ -4273,7 +4273,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_719);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_720);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_721);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_722);
@@ -4281,7 +4281,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_723);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_724);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_725);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_726);
@@ -4294,7 +4294,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_730);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_731);
     stringBuffer.append(TEXT_732);
     stringBuffer.append(gen.translate("parameterExisting",av));
@@ -4318,13 +4318,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_742);
     stringBuffer.append(gen.translate("parameterExisting",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_743);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_744);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_745);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_746);
     
     }
@@ -4336,7 +4336,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_748);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_749);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_750);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_751);
@@ -4344,7 +4344,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_752);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_753);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_754);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_755);
@@ -4355,7 +4355,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_758);
     stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_759);
     stringBuffer.append(TEXT_760);
     stringBuffer.append(gen.translate("parameterExisting",av));
@@ -4379,13 +4379,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_770);
     stringBuffer.append(gen.translate("parameterExisting",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_771);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_772);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_773);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_774);
     
     }
@@ -4397,7 +4397,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_776);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_777);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_778);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_779);
@@ -4430,13 +4430,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_794);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_795);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_796);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_797);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_798);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_799);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_800);
@@ -4451,7 +4451,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_805);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_806);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_807);
     
     }
@@ -4463,7 +4463,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_809);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_810);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_811);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_812);
@@ -4491,7 +4491,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_824);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_825);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_826);
     
     }
@@ -4503,14 +4503,14 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_828);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_829);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_830);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_831);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_832);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_833);
     stringBuffer.append(TEXT_834);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
@@ -4544,13 +4544,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_850);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_851);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_852);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_853);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_854);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_855);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_856);
@@ -4565,7 +4565,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_861);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_862);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_863);
     
     }
@@ -4577,7 +4577,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_865);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_866);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_867);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_868);
@@ -4589,32 +4589,32 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_871);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_872);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_873);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_874);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_875);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_876);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_877);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_878);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_879);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_880);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_881);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_882);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_883);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_884);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_885);
     
     }
@@ -4626,7 +4626,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_887);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_888);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
      if (!av.isStar()) { 
     stringBuffer.append(TEXT_889);
     stringBuffer.append(gen.translate("numberOfMethod",av));
@@ -4634,7 +4634,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_891);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_892);
      } 
     stringBuffer.append(TEXT_893);
@@ -4653,7 +4653,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_900);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_901);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_902);
@@ -4672,13 +4672,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_909);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_910);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_911);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_912);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_913);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_914);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_915);
@@ -4699,7 +4699,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_923);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_924);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_925);
     
     }
@@ -4711,7 +4711,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_927);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_928);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_929);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
     stringBuffer.append(TEXT_930);
@@ -4724,7 +4724,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_934);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_935);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_936);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_937);
@@ -4734,7 +4734,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_939);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_940);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_941);
     stringBuffer.append(TEXT_942);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
@@ -4746,7 +4746,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_946);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_947);
     stringBuffer.append(TEXT_948);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
@@ -4777,7 +4777,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_962);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_963);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_964);
     
     }
@@ -4789,19 +4789,19 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_966);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_967);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_968);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_969);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_970);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_971);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_972);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_973);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_974);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_975);
@@ -4811,7 +4811,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_977);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_978);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_979);
     
     }
@@ -4823,7 +4823,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_981);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_982);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_983);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_984);
@@ -4835,13 +4835,13 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_987);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_988);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_989);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_990);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_991);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_992);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_993);
@@ -4851,7 +4851,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_995);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_996);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_997);
     
     }
@@ -4863,38 +4863,38 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_999);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1000);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1001);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1002);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1003);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1004);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1005);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1006);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1007);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1008);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1009);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1010);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1011);
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1012);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1013);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1014);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1015);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1016);
     
     }
@@ -4906,7 +4906,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1018);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1019);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1020);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1021);
@@ -4933,7 +4933,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1033);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1034);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1035);
@@ -4946,7 +4946,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1039);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1040);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1041);
     
     }
@@ -4958,7 +4958,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1043);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1044);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1045);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1046);
@@ -4980,7 +4980,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1055);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1056);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1057);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1058);
@@ -4993,7 +4993,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1062);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1063);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1064);
     
     }
@@ -5010,7 +5010,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1066);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1067);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1068);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1069);
@@ -5043,7 +5043,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1084);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1085);
     stringBuffer.append(TEXT_1086);
     stringBuffer.append(gen.translate("parameterOldMany",av));
@@ -5085,7 +5085,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1107);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1108);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1109);
     
     }
@@ -5097,7 +5097,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1111);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1112);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1113);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1114);
@@ -5124,7 +5124,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1126);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1127);
     stringBuffer.append(TEXT_1128);
     stringBuffer.append(gen.translate("parameterOldMany",av));
@@ -5166,7 +5166,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1149);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1150);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1151);
     
     }
@@ -5178,7 +5178,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1153);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1154);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1155);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1156);
@@ -5211,7 +5211,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1171);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1172);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1173);
@@ -5224,7 +5224,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1177);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1178);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1179);
     
     }
@@ -5240,7 +5240,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1181);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1182);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1183);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1184);
@@ -5248,7 +5248,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1185);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(orCheckMaxBound);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1186);
     stringBuffer.append(TEXT_1187);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
@@ -5265,7 +5265,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1194);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1195);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1196);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1197);
@@ -5300,7 +5300,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1213);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "          ")); } 
     stringBuffer.append(TEXT_1214);
     stringBuffer.append(TEXT_1215);
     stringBuffer.append(existingToNewMap);
@@ -5354,7 +5354,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1242);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1243);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1244);
     
     }
@@ -5366,7 +5366,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1246);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1247);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1248);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1249);
@@ -5393,7 +5393,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1261);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1262);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1263);
@@ -5406,7 +5406,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1267);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1268);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1269);
     
     }
@@ -5418,7 +5418,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1271);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1272);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1273);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1274);
@@ -5445,7 +5445,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_1286);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1287);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1288);
@@ -5458,7 +5458,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1292);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1293);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1294);
     
     }
@@ -5759,7 +5759,7 @@ public class RubyClassGenerator implements ILang
 
   if (customDeletePrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
   }
 
   for (AssociationVariable av : uClass.getAssociationVariables()) 
@@ -6028,7 +6028,7 @@ public class RubyClassGenerator implements ILang
 
   if (customDeletePostfixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
   }
 
   appendln(stringBuffer, "");

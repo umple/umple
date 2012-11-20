@@ -1,21 +1,21 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   def <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterMany",av)%>)
     was_set = false
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     <%=gen.translate("parameterCheckNewMany",av)%> = []
     <%=gen.translate("parameterMany",av)%>.each do |<%=gen.translate("associationNew",av)%>|
       if <%=gen.translate("parameterCheckNewMany",av)%>.include?(<%=gen.translate("associationNew",av)%>)
-        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
         return was_set
       elsif !<%=gen.translate("associationNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.nil? and !<%=gen.translate("associationNew",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.eql?(self)
-        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
         return was_set
       end
       <%=gen.translate("parameterCheckNewMany",av)%> << <%=gen.translate("associationNew",av)%>
     end
 
     if <%=gen.translate("parameterCheckNewMany",av)%>.size != <%=uClass.getName()%>.<%=gen.translate("minimumNumberOfMethod",av)%>
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return was_set
     end
 
@@ -32,7 +32,7 @@
       @<%=gen.translate("associationMany",av)%> << <%=gen.translate("associationNew",av)%>
     end
     was_set = true
-    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
     was_set
   end
 

@@ -49,12 +49,12 @@ public class UmpleConsoleMainTest
    String[] args = new String[] { "--version"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Version: @UMPLE_VERSION@\n", UmpleConsoleMain.console);
+   Assert.assertEquals("Version: 1.15.0.2188\n", UmpleConsoleMain.console);
 
    args = new String[] { "-v"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Version: @UMPLE_VERSION@\n", UmpleConsoleMain.console);
+   Assert.assertEquals("Version: 1.15.0.2188\n", UmpleConsoleMain.console);
   }
 
   @Test

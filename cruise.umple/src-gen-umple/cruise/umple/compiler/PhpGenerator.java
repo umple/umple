@@ -676,7 +676,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
       
       if (av.isImmutable())
       {
-        String code = StringFormatter.format("if (!$this->{0}) { return false; }\n    $this->{0} = false;",translate("associationCanSet",av));
+        String code = StringFormatter.format("if (!$this->{0}) { return false; }\n$this->{0} = false;",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
         CodeInjection set = new CodeInjection("before", methods, code);
         set.setIsInternal(true);

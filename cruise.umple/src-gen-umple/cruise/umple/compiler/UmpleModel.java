@@ -23,7 +23,7 @@ public class UmpleModel
   // STATIC VARIABLES
   //------------------------
 
-  public static final String versionNumber = "@UMPLE_VERSION@";
+  public static final String versionNumber = "1.15.0.2188";
 
   //------------------------
   // MEMBER VARIABLES

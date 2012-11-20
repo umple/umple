@@ -1,7 +1,7 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   def <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterMany",av)%>)
     was_set = false
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     <%=gen.translate("parameterVerifiedMany",av)%> = []
     <%=gen.translate("parameterMany",av)%>.each do |<%=gen.translate("parameterOne",av)%>|
       next if (<%=gen.translate("parameterVerifiedMany",av)%>.include?(<%=gen.translate("parameterOne",av)%>)) 
@@ -9,7 +9,7 @@
     end
 
     if <%=gen.translate("parameterVerifiedMany",av)%>.size != <%=gen.translate("parameterMany",av)%>.length or <%=gen.translate("parameterVerifiedMany",av)%>.size < <%=uClass.getName()%>.<%=gen.translate("minimumNumberOfMethod",av)%> or <%=gen.translate("parameterVerifiedMany",av)%>.size() > <%=uClass.getName()%>.<%=gen.translate("maximumNumberOfMethod",av)%>
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return was_set
     end
 
@@ -28,7 +28,7 @@
       <%=gen.translate("parameterOld",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(self)
     end
     was_set = true
-    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
     was_set
   end
 

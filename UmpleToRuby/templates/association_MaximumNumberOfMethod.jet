@@ -9,9 +9,9 @@
   end
 <% } else { %>
   def self.<%=gen.translate("maximumNumberOfMethod",av)%>
-    <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } %>
+    <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } %>
     maximum = <%=av.getMultiplicity().getUpperBound()%>
-    <% if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } %>
+    <% if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } %>
     maximum
   end
 <% } %>

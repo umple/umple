@@ -38,7 +38,7 @@ public class GeneratorHelperTest
     all.add(new CodeInjection("before","myOpp","//code"));
     all.add(new CodeInjection("before","myOpp","//code2"));
 
-    Assert.assertEquals("//code\n    //code2",GeneratorHelper.toCode(all));
+    Assert.assertEquals("//code\n//code2",GeneratorHelper.toCode(all));
   }
 
   GeneratorHelper helper;

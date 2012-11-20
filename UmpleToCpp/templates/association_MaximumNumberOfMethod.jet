@@ -13,9 +13,9 @@
 <% } else { %>
   static int <%=gen.translate("type",uClass)%>::<%=gen.translate("maximumNumberOfMethod",av)%>()
   {
-    <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } %>
+    <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } %>
     int maximum = <%=av.getMultiplicity().getUpperBound()%>;
-    <% if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } %>
+    <% if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } %>
     return maximum;
   }
 <% } %>

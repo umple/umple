@@ -2335,7 +2335,7 @@ public class JavaClassGenerator implements ILang
   
   if (customConstructorPrefixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
     hasBody = true;
   }
 
@@ -2806,7 +2806,7 @@ public class JavaClassGenerator implements ILang
   
   if (customConstructorPostfixCode != null)
   {
-    append(stringBuffer, "\n    {0}",customConstructorPostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
     hasBody = true;
   }
 
@@ -2856,7 +2856,7 @@ public class JavaClassGenerator implements ILang
   
   if (customConstructorPrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
     hasBody = true;
   }
   
@@ -3045,7 +3045,7 @@ public class JavaClassGenerator implements ILang
   
   if (customConstructorPostfixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customConstructorPostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPostfixCode, "    "));
     hasBody = true;
   }
   
@@ -3099,7 +3099,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_158);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_159);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_160);
     stringBuffer.append( gen.translate("attributeCanSet",av) );
     stringBuffer.append(TEXT_161);
@@ -3108,7 +3108,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_163);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_164);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_165);
     
       }
@@ -3123,23 +3123,23 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_168);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_169);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_170);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_171);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_172);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_173);
     stringBuffer.append(gen.translate("resetMethod",av));
     stringBuffer.append(TEXT_174);
-     if (customResetPrefixCode != null) { append(stringBuffer, "\n    {0}",customResetPrefixCode); } 
+     if (customResetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_175);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_176);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_177);
-     if (customResetPostfixCode != null) { append(stringBuffer, "\n    {0}",customResetPostfixCode); } 
+     if (customResetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_178);
     
     }
@@ -3153,13 +3153,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_181);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_182);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_183);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_184);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_185);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_186);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_187);
@@ -3167,13 +3167,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_188);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_189);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_190);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_191);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_192);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_193);
     
     }
@@ -3187,13 +3187,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_196);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_197);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_198);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_199);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_200);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_201);
     
     }
@@ -3234,7 +3234,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_203);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_204);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_205);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_206);
@@ -3242,7 +3242,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_207);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_208);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_209);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_210);
@@ -3250,7 +3250,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_211);
     stringBuffer.append(gen.translate("getManyMethod",av));
     stringBuffer.append(TEXT_212);
-     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } 
+     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_213);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_214);
@@ -3262,25 +3262,25 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_217);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_218);
-     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } 
+     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_219);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_220);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_221);
-     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } 
+     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_222);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_223);
-     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } 
+     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_224);
     stringBuffer.append(gen.translate("hasManyMethod",av));
     stringBuffer.append(TEXT_225);
-     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } 
+     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_226);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_227);
-     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } 
+     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_228);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_229);
@@ -3288,13 +3288,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_230);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_231);
-     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } 
+     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_232);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_233);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_234);
-     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } 
+     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_235);
     
     }
@@ -3309,7 +3309,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_237);
     stringBuffer.append( gen.translate("getMethod",av) );
     stringBuffer.append(TEXT_238);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_239);
     stringBuffer.append( gen.translate("type",av) );
     stringBuffer.append(TEXT_240);
@@ -3317,7 +3317,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_241);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_242);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_243);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_244);
@@ -3343,7 +3343,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_250);
     stringBuffer.append( gen.translate("getMethod",av) );
     stringBuffer.append(TEXT_251);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_252);
     stringBuffer.append( gen.translate("type",av) );
     stringBuffer.append(TEXT_253);
@@ -3351,7 +3351,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_254);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_255);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_256);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_257);
@@ -3366,7 +3366,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_259);
     stringBuffer.append( gen.translate("getMethod",av) );
     stringBuffer.append(TEXT_260);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_261);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_262);
@@ -3383,7 +3383,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_264);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_265);
-     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPrefixCode); } 
+     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_266);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_267);
@@ -3391,7 +3391,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_268);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_269);
-     if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPostfixCode); } 
+     if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_270);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_271);
@@ -3405,7 +3405,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_273);
     stringBuffer.append(gen.translate("getDefaultMethod",av));
     stringBuffer.append(TEXT_274);
-     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetDefaultPrefixCode); } 
+     if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_275);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_276);
@@ -3430,7 +3430,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_278);
     stringBuffer.append( gen.translate("getMethod",av) );
     stringBuffer.append(TEXT_279);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_280);
     stringBuffer.append( gen.translate("type",av) );
     stringBuffer.append(TEXT_281);
@@ -3438,7 +3438,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_282);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_283);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_284);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_285);
@@ -3453,7 +3453,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_287);
     stringBuffer.append( gen.translate("getMethod",av) );
     stringBuffer.append(TEXT_288);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_289);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_290);
@@ -3483,7 +3483,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_292);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_293);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_294);
     stringBuffer.append( gen.translate("type",av) );
     stringBuffer.append(TEXT_295);
@@ -3491,7 +3491,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_296);
     stringBuffer.append( gen.translate("parameterValue",av) );
     stringBuffer.append(TEXT_297);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_298);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_299);
@@ -3505,7 +3505,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_301);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_302);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_303);
     stringBuffer.append(gen.translate("parameterValue",av));
     stringBuffer.append(TEXT_304);
@@ -3519,7 +3519,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_306);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_307);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_308);
     stringBuffer.append( gen.translate("type",av) );
     stringBuffer.append(TEXT_309);
@@ -3527,7 +3527,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_310);
     stringBuffer.append( gen.translate("attributeOne",av) );
     stringBuffer.append(TEXT_311);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_312);
     stringBuffer.append( gen.translate("parameterOne",av) );
     stringBuffer.append(TEXT_313);
@@ -3541,7 +3541,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_315);
     stringBuffer.append( gen.translate("isMethod",av) );
     stringBuffer.append(TEXT_316);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_317);
     stringBuffer.append(gen.translate("attributeOne",av));
     stringBuffer.append(TEXT_318);
@@ -4049,7 +4049,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_370);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_371);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
      if (customGetPostfixCode == null) { 
     stringBuffer.append(TEXT_372);
     stringBuffer.append(gen.translate("associationOne",av));
@@ -4062,7 +4062,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_376);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_377);
-     append(stringBuffer, "\n    {0}",customGetPostfixCode); 
+     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); 
     stringBuffer.append(TEXT_378);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_379);
@@ -4078,7 +4078,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_382);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_383);
-     if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } 
+     if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_384);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_385);
@@ -4086,7 +4086,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_386);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_387);
-     if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } 
+     if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_388);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_389);
@@ -4096,7 +4096,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_391);
     stringBuffer.append(gen.translate("getManyMethod",av));
     stringBuffer.append(TEXT_392);
-     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } 
+     if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_393);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_394);
@@ -4104,25 +4104,25 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_395);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_396);
-     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } 
+     if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_397);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_398);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_399);
-     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } 
+     if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_400);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_401);
-     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } 
+     if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_402);
     stringBuffer.append(gen.translate("hasManyMethod",av));
     stringBuffer.append(TEXT_403);
-     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } 
+     if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_404);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_405);
-     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } 
+     if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_406);
     stringBuffer.append(gen.translate("indexOfMethod",av));
     stringBuffer.append(TEXT_407);
@@ -4130,13 +4130,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_408);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_409);
-     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } 
+     if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_410);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_411);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_412);
-     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } 
+     if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_413);
     
     }
@@ -4400,7 +4400,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_417);
     stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
     stringBuffer.append(TEXT_418);
-     if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPrefixCode); } 
+     if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } 
      if (av.getMultiplicity().isUpperBoundMany()) { 
     stringBuffer.append(TEXT_419);
     stringBuffer.append(gen.translate("numberOfMethod",av));
@@ -4418,7 +4418,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_426);
      } 
-     if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n    {0}",customIsNumberOfValidPostfixCode); } 
+     if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_427);
     
     }
@@ -4442,11 +4442,11 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_431);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_432);
-     if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } 
+     if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_433);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_434);
-     if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPostfixCode); } 
+     if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_435);
      } 
     
@@ -4471,11 +4471,11 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_439);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_440);
-     if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } 
+     if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_441);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_442);
-     if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPostfixCode); } 
+     if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_443);
      } 
     
@@ -4502,11 +4502,11 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_447);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_448);
-     if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPrefixCode); } 
+     if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_449);
     stringBuffer.append(av.getMultiplicity().getUpperBound());
     stringBuffer.append(TEXT_450);
-     if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMaximumNumberOfPostfixCode); } 
+     if (customMaximumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_451);
      } 
     
@@ -4524,14 +4524,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_454);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_455);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
      if (!av.getMultiplicity().isUpperBoundMany()) { 
     stringBuffer.append(TEXT_456);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_457);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_458);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_459);
      } 
     stringBuffer.append(TEXT_460);
@@ -4552,7 +4552,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_468);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_469);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_470);
     
     }
@@ -4569,13 +4569,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_473);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_474);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_475);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_476);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_477);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_478);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_479);
@@ -4597,7 +4597,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_488);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_489);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_490);
     
     }
@@ -4619,13 +4619,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_494);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_495);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_496);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_497);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_498);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_499);
     
     }
@@ -4642,7 +4642,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_503);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_504);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_505);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_506);
@@ -4651,7 +4651,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_508);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_509);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_510);
     
     }
@@ -4665,7 +4665,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_513);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_514);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_515);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_516);
@@ -4681,7 +4681,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_521);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_522);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPrefixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } 
     stringBuffer.append(TEXT_523);
     stringBuffer.append(TEXT_524);
     stringBuffer.append(gen.translate("associationOne",av));
@@ -4715,7 +4715,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_540);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_541);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_542);
     
     }
@@ -4729,7 +4729,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_545);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_546);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_547);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_548);
@@ -4738,7 +4738,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_550);
     stringBuffer.append(gen.translate("associationOne",av));
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_551);
     stringBuffer.append(TEXT_552);
     stringBuffer.append(gen.relatedTranslate("type",av));
@@ -4759,7 +4759,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_560);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_561);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_562);
     stringBuffer.append(TEXT_563);
     stringBuffer.append(gen.translate("type",av));
@@ -4785,7 +4785,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_575);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_576);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_577);
     
     }
@@ -4809,7 +4809,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_585);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_586);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_587);
     stringBuffer.append(gen.relatedTranslate("type",av));
     stringBuffer.append(TEXT_588);
@@ -4845,7 +4845,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_604);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_605);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_606);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_607);
@@ -4853,7 +4853,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_608);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_609);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_610);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_611);
@@ -4863,7 +4863,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_613);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_614);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_615);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_616);
@@ -4873,14 +4873,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_618);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_619);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_620);
     stringBuffer.append(TEXT_621);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_622);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_623);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_624);
     
     }
@@ -4908,13 +4908,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_634);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_635);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_636);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_637);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_638);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_639);
     stringBuffer.append(TEXT_640);
     stringBuffer.append(gen.relatedTranslate("type",av));
@@ -4939,7 +4939,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_650);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_651);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_652);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
     stringBuffer.append(TEXT_653);
@@ -4953,7 +4953,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_658);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_659);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_660);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_661);
@@ -4961,7 +4961,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_662);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_663);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_664);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_665);
@@ -4971,7 +4971,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_667);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_668);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_669);
     stringBuffer.append(gen.relatedTranslate("associationOne",av));
     stringBuffer.append(TEXT_670);
@@ -4981,14 +4981,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_672);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_673);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_674);
     stringBuffer.append(TEXT_675);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_676);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_677);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_678);
     
     }
@@ -5016,13 +5016,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_688);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_689);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_690);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_691);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_692);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_693);
     stringBuffer.append(TEXT_694);
     stringBuffer.append(gen.relatedTranslate("type",av));
@@ -5051,7 +5051,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_707);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_708);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_709);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_710);
@@ -5059,7 +5059,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_711);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_712);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_713);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_714);
@@ -5074,7 +5074,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_719);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_720);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_721);
     
     }
@@ -5088,7 +5088,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_724);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_725);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_726);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_727);
@@ -5119,7 +5119,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_740);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_741);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_742);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_743);
@@ -5168,7 +5168,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_767);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_768);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_769);
     
     }
@@ -5192,7 +5192,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_777);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_778);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_779);
     stringBuffer.append(gen.relatedTranslate("type",av));
     stringBuffer.append(TEXT_780);
@@ -5220,7 +5220,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_792);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_793);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_794);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_795);
@@ -5228,7 +5228,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_796);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_797);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_798);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_799);
@@ -5243,7 +5243,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_804);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_805);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_806);
     
     }
@@ -5257,7 +5257,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_809);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_810);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_811);
     stringBuffer.append(gen.translate("parameterNew",av));
     stringBuffer.append(TEXT_812);
@@ -5282,7 +5282,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_823);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_824);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_825);
     stringBuffer.append(TEXT_826);
     stringBuffer.append(gen.translate("type",av));
@@ -5323,7 +5323,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_846);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_847);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_848);
     
     }
@@ -5337,19 +5337,19 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_851);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_852);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_853);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_854);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_855);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_856);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_857);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_858);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_859);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_860);
@@ -5371,7 +5371,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_869);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_870);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_871);
     
     }
@@ -5385,19 +5385,19 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_874);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_875);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_876);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_877);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_878);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_879);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_880);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_881);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_882);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_883);
@@ -5419,7 +5419,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_892);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_893);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_894);
     
     }
@@ -5433,7 +5433,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_897);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_898);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_899);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_900);
@@ -5445,7 +5445,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_903);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_904);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_905);
     stringBuffer.append(TEXT_906);
     stringBuffer.append(gen.translate("type",av));
@@ -5477,7 +5477,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_921);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_922);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_923);
     
     }
@@ -5491,11 +5491,11 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_926);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_927);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_928);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_929);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_930);
     stringBuffer.append(TEXT_931);
     stringBuffer.append(gen.translate("type",av));
@@ -5525,7 +5525,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_945);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_946);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_947);
     
     }
@@ -5539,7 +5539,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_950);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_951);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_952);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_953);
@@ -5547,7 +5547,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_954);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_955);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_956);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_957);
@@ -5561,7 +5561,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_961);
     stringBuffer.append(gen.relatedTranslate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_962);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_963);
     stringBuffer.append(TEXT_964);
     stringBuffer.append(gen.translate("type",av));
@@ -5590,14 +5590,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_977);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_978);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_979);
     stringBuffer.append(TEXT_980);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_981);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_982);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_983);
     
     }
@@ -5611,7 +5611,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_986);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_987);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_988);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_989);
@@ -5619,7 +5619,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_990);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_991);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_992);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_993);
@@ -5631,7 +5631,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_996);
     stringBuffer.append(gen.relatedTranslate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_997);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_998);
     stringBuffer.append(TEXT_999);
     stringBuffer.append(gen.translate("type",av));
@@ -5660,14 +5660,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1012);
     stringBuffer.append(gen.translate("parameterExisting",av));
     stringBuffer.append(TEXT_1013);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1014);
     stringBuffer.append(TEXT_1015);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_1016);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_1017);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1018);
     
     }
@@ -5681,7 +5681,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1021);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1022);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1023);
     stringBuffer.append(gen.relatedTranslate("type",av));
     stringBuffer.append(TEXT_1024);
@@ -5717,7 +5717,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1041);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1042);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1043);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1044);
@@ -5725,7 +5725,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1045);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1046);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1047);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1048);
@@ -5741,7 +5741,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1054);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1055);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1056);
     
     }
@@ -5755,7 +5755,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1059);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1060);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1061);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1062);
@@ -5786,7 +5786,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1076);
     stringBuffer.append(gen.relatedTranslate("addMethod",av));
     stringBuffer.append(TEXT_1077);
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1078);
     
     }
@@ -5800,13 +5800,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1081);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1082);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1083);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1084);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1085);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1086);
     stringBuffer.append(TEXT_1087);
     stringBuffer.append(gen.relatedTranslate("type",av));
@@ -5843,7 +5843,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1105);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1106);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1107);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1108);
@@ -5851,7 +5851,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1109);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1110);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1111);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1112);
@@ -5867,7 +5867,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1118);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1119);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1120);
     
     }
@@ -5881,7 +5881,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1123);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1124);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1125);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1126);
@@ -5892,7 +5892,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1129);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1130);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1131);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1132);
@@ -5900,26 +5900,26 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1133);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1134);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1135);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1136);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1137);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1138);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1139);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1140);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1141);
     stringBuffer.append(TEXT_1142);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1143);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1144);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1145);
     
     }
@@ -5933,14 +5933,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1148);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1149);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
      if (!av.isStar()) { 
     stringBuffer.append(TEXT_1150);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1151);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1152);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1153);
      } 
     stringBuffer.append(TEXT_1154);
@@ -5960,7 +5960,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1161);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1162);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1163);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_1164);
@@ -5981,7 +5981,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1173);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1174);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1175);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1176);
@@ -5989,7 +5989,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1177);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1178);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1179);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1180);
@@ -6009,7 +6009,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1188);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1189);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1190);
     
     }
@@ -6023,7 +6023,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1193);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1194);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1195);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1196);
@@ -6041,7 +6041,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1202);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_1203);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1204);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_1205);
@@ -6051,7 +6051,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1207);
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1208);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1209);
     stringBuffer.append(TEXT_1210);
     stringBuffer.append(gen.translate("parameterCheckNewMany",av));
@@ -6062,7 +6062,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1213);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1214);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1215);
     stringBuffer.append(TEXT_1216);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6095,7 +6095,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1232);
     stringBuffer.append(gen.translate("associationNew",av));
     stringBuffer.append(TEXT_1233);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1234);
     stringBuffer.append(TEXT_1235);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
@@ -6132,13 +6132,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1249);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1250);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1251);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1252);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1253);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1254);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1255);
@@ -6146,7 +6146,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1256);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1257);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1258);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1259);
@@ -6157,7 +6157,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1262);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1263);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1264);
     
     }
@@ -6171,7 +6171,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1267);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1268);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1269);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1270);
@@ -6182,7 +6182,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1273);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1274);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1275);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1276);
@@ -6190,7 +6190,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1277);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1278);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1279);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1280);
@@ -6201,7 +6201,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1283);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1284);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1285);
     
     }
@@ -6215,13 +6215,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1288);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1289);
-     if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } 
+     if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1290);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1291);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1292);
-     if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } 
+     if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1293);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_1294);
@@ -6229,26 +6229,26 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1295);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1296);
-     if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } 
+     if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1297);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1298);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1299);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1300);
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1301);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1302);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1303);
     stringBuffer.append(TEXT_1304);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1305);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1306);
-     if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } 
+     if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1307);
     
     }
@@ -6265,7 +6265,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1311);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1312);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1313);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1314);
@@ -6296,7 +6296,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1327);
     stringBuffer.append(gen.translate("requiredNumberOfMethod",av));
     stringBuffer.append(TEXT_1328);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1329);
     stringBuffer.append(TEXT_1330);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6306,7 +6306,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1333);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1334);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1335);
     
     }
@@ -6323,7 +6323,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1339);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1340);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1341);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1342);
@@ -6350,7 +6350,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1353);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1354);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1355);
     stringBuffer.append(TEXT_1356);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6360,7 +6360,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1359);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1360);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1361);
     
     }
@@ -6379,7 +6379,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1364);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1365);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1366);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1367);
@@ -6414,7 +6414,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1382);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1383);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1384);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1385);
@@ -6463,7 +6463,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1409);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1410);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1411);
     
     }
@@ -6477,7 +6477,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1414);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1415);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1416);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1417);
@@ -6508,7 +6508,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1430);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1431);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1432);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1433);
@@ -6557,7 +6557,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1457);
     stringBuffer.append(gen.relatedTranslate("removeMethod",av));
     stringBuffer.append(TEXT_1458);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1459);
     
     }
@@ -6574,7 +6574,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1463);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1464);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1465);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1466);
@@ -6609,7 +6609,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1481);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1482);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1483);
     stringBuffer.append(TEXT_1484);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6619,7 +6619,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1487);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1488);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1489);
     
     }
@@ -6637,7 +6637,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1492);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1493);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1494);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1495);
@@ -6645,7 +6645,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1496);
     stringBuffer.append(orCheckMaxBound);
     stringBuffer.append(TEXT_1497);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1498);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1499);
@@ -6669,7 +6669,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1508);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1509);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } 
     stringBuffer.append(TEXT_1510);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1511);
@@ -6707,7 +6707,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1528);
     stringBuffer.append(av.getMultiplicity().getLowerBound());
     stringBuffer.append(TEXT_1529);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "          ")); } 
     stringBuffer.append(TEXT_1530);
     stringBuffer.append(TEXT_1531);
     stringBuffer.append(existingToNewMap);
@@ -6763,7 +6763,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1560);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1561);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1562);
     stringBuffer.append(TEXT_1563);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
@@ -6803,7 +6803,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1578);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1579);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1580);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1581);
@@ -6834,7 +6834,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1594);
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1595);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1596);
     stringBuffer.append(TEXT_1597);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6844,7 +6844,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1600);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1601);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1602);
     
     }
@@ -6861,7 +6861,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1606);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_1607);
-     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } 
+     if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_1608);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_1609);
@@ -6892,7 +6892,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1622);
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1623);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1624);
     stringBuffer.append(TEXT_1625);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6902,7 +6902,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_1628);
     stringBuffer.append(gen.translate("parameterVerifiedMany",av));
     stringBuffer.append(TEXT_1629);
-     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } 
+     if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1630);
     
     }
@@ -7272,7 +7272,7 @@ public class JavaClassGenerator implements ILang
 
   if (customDeletePrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
     hasSomethingToDelete = true;
   }
 
@@ -7604,7 +7604,7 @@ public class JavaClassGenerator implements ILang
 
   if (customDeletePostfixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePostfixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
     hasSomethingToDelete = true;
   }
 
@@ -7629,7 +7629,7 @@ public class JavaClassGenerator implements ILang
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
     		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
-    		String properMethodBody = "      " + methodBody; 
+    		String properMethodBody = "    " + methodBody; 
     		String override =  aMethod.getIsImplemented() ? "  @Override" : "";
     		String paramName="";
     		String paramType="";

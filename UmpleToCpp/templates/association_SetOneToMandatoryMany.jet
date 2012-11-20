@@ -2,17 +2,17 @@
   bool <%=gen.translate("type",uClass)%>::<%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasSet = false;
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     //Must provide <%=gen.translate("associationOne",av)%> to <%=gen.relatedTranslate("associationOne",av)%>
     if (<%=gen.translate("parameterOne",av)%> == NULL)
     {
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
       return wasSet;
     }
 
     if (<%=gen.translate("associationOne",av)%> != NULL && <%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("numberOfMethod",av)%>() <= <%=gen.translate("type",av)%>.<%=gen.relatedTranslate("minimumNumberOfMethod",av)%>())
     {
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
       return wasSet;
     }
 
@@ -24,12 +24,12 @@
       if (!didRemove)
       {
         <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterExisting",av)%>;
-        <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+        <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
         return wasSet;
       }
     }
     <%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("addMethod",av)%>(this);
     wasSet = true;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return wasSet;
   }

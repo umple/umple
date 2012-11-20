@@ -2,20 +2,20 @@
   public function <%=gen.translate("setMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasSet = false;
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     $this-><%=gen.translate("attributeOne",av)%> = $<%=gen.translate("parameterOne",av)%>;
     $wasSet = true;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return $wasSet;
   }
 
   public function <%=gen.translate("resetMethod",av)%>()
   {
     $wasReset = false;
-    <% if (customResetPrefixCode != null) { append(stringBuffer, "\n    {0}",customResetPrefixCode); } %>
+    <% if (customResetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPrefixCode, "    ")); } %>
     $this-><%=gen.translate("attributeOne",av)%> = $this-><%=gen.translate("getDefaultMethod",av)%>();
     $wasReset = true;
-    <% if (customResetPostfixCode != null) { append(stringBuffer, "\n    {0}",customResetPostfixCode); } %>
+    <% if (customResetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customResetPostfixCode, "    ")); } %>
     return $wasReset;
   }
 

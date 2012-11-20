@@ -11,9 +11,9 @@
 <% } else { %>
   public static int <%=gen.translate("requiredNumberOfMethod",av)%>()
   {
-    <% if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPrefixCode); } %>
+    <% if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } %>
     int required = <%=av.getMultiplicity().getLowerBound()%>;
-    <% if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customRequiredNumberOfPostfixCode); } %>
+    <% if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } %>
     return required;
   }
 <% } %>

@@ -262,7 +262,7 @@ public class UmpleModelTest
   @Test
   public void getVersionNumber()
   {
-    Assert.assertEquals("@UMPLE_VERSION@",UmpleModel.versionNumber);
+    Assert.assertEquals("1.15.0.2188",UmpleModel.versionNumber);
   }
   
 }

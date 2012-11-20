@@ -1,42 +1,42 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>(int index)
   {
-    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
+    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
     <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>.get(index);
-    <% if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } %>
+    <% if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } %>
     return <%=gen.translate("parameterOne",av)%>;
   }
 
   <% if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } %>
   public List<<%=gen.translate("type",av)%>> <%=gen.translate("getManyMethod",av)%>()
   {
-    <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
+    <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } %>
     List<<%=gen.translate("type",av)%>> <%=gen.translate("parameterMany",av)%> = Collections.unmodifiableList(<%=gen.translate("associationMany",av)%>);
-    <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } %>
+    <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } %>
     return <%=gen.translate("parameterMany",av)%>;
   }
 
   public int <%=gen.translate("numberOfMethod",av)%>()
   {
-    <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } %>
+    <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } %>
     int number = <%=gen.translate("associationMany",av)%>.size();
-    <% if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } %>
+    <% if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } %>
     return number;
   }
 
   public boolean <%=gen.translate("hasManyMethod",av)%>()
   {
-    <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } %>
+    <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } %>
     boolean has = <%=gen.translate("associationMany",av)%>.size() > 0;
-    <% if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } %>
+    <% if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } %>
     return has;
   }
 
   public int <%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
-    <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } %>
+    <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } %>
     int index = <%=gen.translate("associationMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);
-    <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } %>
+    <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } %>
     return index;
   }
 

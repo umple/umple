@@ -2,18 +2,18 @@
   bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasAdded = false;
-    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
 <% if (!av.isStar()) { %>
     if (<%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("maximumNumberOfMethod",av)%>())
     {
-      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } %>
+      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
       return wasAdded;
     }
 <% } %>
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
     if (<%=gen.relatedTranslate("parameterExisting",av)%> != null && <%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
-      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } %>
+      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
       return wasAdded;
     }
     else if (<%=gen.relatedTranslate("parameterExisting",av)%> != null)
@@ -23,7 +23,7 @@
     <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
     <%=gen.relatedTranslate("setMethod",av)%>(<%=gen.translate("parameterOne",av)%>,this);
     wasAdded = true;
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } %>
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
     return wasAdded;
   }
 
@@ -31,7 +31,7 @@
   {
     bool wasRemoved = false;
 	int index = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
-    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     if ((find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) !=<%=gen.translate("associationMany",av)%>.end()) && <%=gen.translate("numberOfMethod",av)%>() > <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
       <%=gen.translate("associationMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
@@ -39,6 +39,6 @@
 	  delete <%=gen.translate("associationMany",av)%>[index];
       wasRemoved = true;
     }
-    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
     return wasRemoved;
   }

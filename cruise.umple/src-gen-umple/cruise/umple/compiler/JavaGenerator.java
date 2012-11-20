@@ -689,7 +689,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       
       if (av.isImmutable())
       {
-        String code = StringFormatter.format("if (!{0}) { return false; }\n    {0} = false;",translate("associationCanSet",av));
+        String code = StringFormatter.format("if (!{0}) { return false; }\n{0} = false;",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
         CodeInjection set = new CodeInjection("before", methods, code);
         set.setIsInternal(true);
@@ -796,10 +796,10 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   static void processOccurrences(TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr) 
   {
 	  String attrCode = null, Type = "For";
-	  attrCode = "if( " + getFlag(t,attr,"For") +" > 0 )\n    ";	  
-	  attrCode += "{\n  ";  	  
-	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n  ";
-	  attrCode += "    --" + getFlag(t,attr,"For") + ";\n    ";
+	  attrCode = "if( " + getFlag(t,attr,"For") +" > 0 )\n";	  
+	  attrCode += "{\n";  	  
+	  attrCode += "  " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null, t.translate("attribute",attr),t.translate("parameter",attr))) + "\n";
+	  attrCode += "  --" + getFlag(t,attr,"For") + ";\n";
 	  attrCode += "}";
 	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,Type);	  
   }
@@ -824,9 +824,9 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   {
 	  String attrCode = null, conditionType = "where";
 	  TraceCondition tc = traceDirective.getCondition(0);
-	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n    ";  
-	  attrCode += "{\n  ";  	  
-	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n    ";
+	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n";  
+	  attrCode += "{\n";  	  
+	  attrCode += "  " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n";
 	  attrCode += "}";
 	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);	  
   }
@@ -836,9 +836,9 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   {
 	  String attrCode = null, conditionType = "giving";
 	  TraceCondition tc = traceDirective.getCondition(0);
-	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n    ";  
-	  attrCode += "{\n  ";  	  
-	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr),tc.getLhs(),tc.getLhs(),tc.getRhs().getRhs(),tc.getRhs().getRhs())) +"\n    ";
+	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n";  
+	  attrCode += "{\n";  	  
+	  attrCode += "  " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr),tc.getLhs(),tc.getLhs(),tc.getRhs().getRhs(),tc.getRhs().getRhs())) +"\n";
 	  attrCode += "}";
 	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);	  
   }
@@ -848,13 +848,13 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   {
 	  String attrCode = null, conditionType = "until";
 	  TraceCondition tc = traceDirective.getCondition(0);  
-	  attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " && " + getFlag(t,attr,"Until") +" )\n    ";  
-	  attrCode += "{\n  ";
-	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n    ";
-	  attrCode += "}\n    ";
-	  attrCode += "else\n    ";
-	  attrCode += "{\n  ";  	  
-	  attrCode += "    " + getFlag(t, attr, "Until") + " = false;\n    ";
+	  attrCode = "if( " + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " && " + getFlag(t,attr,"Until") +" )\n";  
+	  attrCode += "{\n";
+	  attrCode += "  " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n";
+	  attrCode += "}\n";
+	  attrCode += "else\n";
+	  attrCode += "{\n";  	  
+	  attrCode += "  " + getFlag(t, attr, "Until") + " = false;\n";
 	  attrCode += "}";
 	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
   }
@@ -864,13 +864,13 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   {
 	  String attrCode = null, conditionType = "after";
 	  TraceCondition tc = traceDirective.getCondition(0);
-	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n    ";	  
-	  attrCode += "{\n  ";	  	  
-	  attrCode += "    " + getFlag(t, attr, "After") + " = true;\n    ";
-	  attrCode += "}\n    ";	  
-	  attrCode += "if( " + getFlag(t,attr,"After") +" )\n    ";  	  
-	  attrCode += "{\n  ";	  	  
-	  attrCode += "    " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n    ";
+	  attrCode = "if( " + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )\n";	  
+	  attrCode += "{\n";	  	  
+	  attrCode += "  " + getFlag(t, attr, "After") + " = true;\n";
+	  attrCode += "}\n";	  
+	  attrCode += "if( " + getFlag(t,attr,"After") +" )\n";  	  
+	  attrCode += "{\n";	  	  
+	  attrCode += "  " + StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,t.translate("attribute",attr),t.translate("parameter",attr))) + "\n";
 	  attrCode += "}";
 	  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);
   }

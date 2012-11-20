@@ -1,12 +1,12 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   def <%=gen.translate("getMethod",av)%>
-    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
+    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
 <% if (customGetPostfixCode == null) { %>
     @<%=gen.translate("associationOne",av)%>
 <% } else { %>
     <%=gen.translate("parameterOne",av)%> = @<%=gen.translate("associationOne",av)%>
-    <% append(stringBuffer, "\n    {0}",customGetPostfixCode); %>
-    <% if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } %>
+    <% append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); %>
+    <% if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } %>
     <%=gen.translate("parameterOne",av)%>
 <% } %>
   end

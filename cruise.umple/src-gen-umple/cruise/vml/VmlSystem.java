@@ -44,11 +44,11 @@ public class VmlSystem
   public String getCode()
   {
     code = "";
-    for (CodeSnippet snippet : codeSnippets)
-    {
-      code += snippet.getCode();
-      code += "\n";
-    }
+        for (CodeSnippet snippet : codeSnippets)
+        {
+          code += snippet.getCode();
+          code += "\n";
+        }
     return code;
   }
 

@@ -2,6 +2,6 @@
   <% if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Attribute Javadoc", av.getComments())); } %>
   public <%=gen.translate("type",av)%> <%= gen.translate("getMethod",av) %>()
   {
-    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
+    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
     return <%=gen.translate("attributeOne",av)%>;
   }

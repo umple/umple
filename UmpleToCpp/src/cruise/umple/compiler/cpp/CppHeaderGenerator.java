@@ -857,7 +857,7 @@ public class CppHeaderGenerator implements ILang
   
   if (customConstructorPrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customConstructorPrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
     hasBody = true;
   }
   
@@ -2518,7 +2518,7 @@ public class CppHeaderGenerator implements ILang
 
   if (customDeletePrefixCode != null) 
   {
-    append(stringBuffer, "\n    {0}",customDeletePrefixCode);
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
     hasSomethingToDelete = true;
   }
 

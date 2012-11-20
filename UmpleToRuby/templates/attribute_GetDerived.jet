@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   def <%=gen.translate("getMethod",av)%>
-    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
+    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
     <%= gen.translate("parameterValue",av) %>
   end

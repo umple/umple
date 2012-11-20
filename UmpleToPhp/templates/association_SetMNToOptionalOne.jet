@@ -6,10 +6,10 @@
   public function <%=gen.translate("setManyMethod",av)%>($<%=gen.translate("parameterMany",av)%>)
   {
     $wasSet = false;
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     if (count($<%=gen.translate("parameterMany",av)%>) < self::<%=gen.translate("minimumNumberOfMethod",av)%>()<%=orCheckMaxBound%>)
     {
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return $wasSet;
     }
 
@@ -19,7 +19,7 @@
     {
       if (array_search($<%=gen.translate("parameterOne",av)%>,$<%=gen.translate("parameterCheckNewMany",av)%>) !== false)
       {
-        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
         return $wasSet;
       }
       else if ($<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>() != null && $this !== $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>())
@@ -33,7 +33,7 @@
         $nextCount = $<%=existingToNewMap%>[$<%=gen.relatedTranslate("parameterExistingSerialized",av)%>] - 1;
         if ($nextCount < self::minimum<%=gen.translate("numberOfMethod",av)%>())
         {
-          <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+          <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
           return $wasSet;
         }
         $<%=existingToNewMap%>[$<%=gen.relatedTranslate("parameterExistingSerialized",av)%>] = $nextCount;
@@ -71,7 +71,7 @@
       $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
     }
     $wasSet = true;
-    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
     return $wasSet;
   }
 

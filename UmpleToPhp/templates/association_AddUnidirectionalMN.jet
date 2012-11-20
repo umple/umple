@@ -2,36 +2,36 @@
   public function <%=gen.translate("addMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasAdded = false;
-    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     if ($this-><%=gen.translate("numberOfMethod",av)%>() < self::<%=gen.translate("maximumNumberOfMethod",av)%>())
     {
       $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
       $wasAdded = true;
     }
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return $wasAdded;
   }
 
   public function <%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasRemoved = false;
-    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     if ($this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>) == -1)
     {
-      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } %>
+      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return $wasRemoved;
     }
 
     if ($this-><%=gen.translate("numberOfMethod",av)%>() <= self::<%=gen.translate("minimumNumberOfMethod",av)%>())
     {
-      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n      {0}",customRemovePostfixCode); } %>
+      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return $wasRemoved;
     }
 
     unset($this-><%=gen.translate("associationMany",av)%>[$this-><%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>)]);
     $this-><%=gen.translate("associationMany",av)%> = array_values($this-><%=gen.translate("associationMany",av)%>);
     $wasRemoved = true;
-    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
     return $wasRemoved;
   }
 

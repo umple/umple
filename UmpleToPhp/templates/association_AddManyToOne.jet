@@ -7,7 +7,7 @@
   public function <%=gen.translate("addMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasAdded = false;
-    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     $<%=gen.relatedTranslate("parameterExisting",av)%> = $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
     $<%=gen.relatedTranslate("parameterIsNew",av)%> = $<%=gen.relatedTranslate("parameterExisting",av)%> != null && $this !== $<%=gen.relatedTranslate("parameterExisting",av)%>;
     if ($<%=gen.relatedTranslate("parameterIsNew",av)%>)
@@ -19,14 +19,14 @@
       $this-><%=gen.translate("associationMany",av)%>[] = $<%=gen.translate("parameterOne",av)%>;
     }
     $wasAdded = true;
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return $wasAdded;
   }
 
   public function <%=gen.translate("removeMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasRemoved = false;
-    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n    {0}",customRemovePrefixCode); } %>
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     //Unable to remove <%=gen.translate("parameterOne",av)%>, as it must always have a <%=gen.relatedTranslate("associationOne",av)%>
     if ($this !== $<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>())
     {
@@ -34,7 +34,7 @@
       $this-><%=gen.translate("attributeMany",av)%> = array_values($this-><%=gen.translate("attributeMany",av)%>);
       $wasRemoved = true;
     }
-    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n    {0}",customRemovePostfixCode); } %>
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
     return $wasRemoved;
   }
 

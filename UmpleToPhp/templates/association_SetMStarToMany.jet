@@ -2,7 +2,7 @@
   public function <%=gen.translate("setManyMethod",av)%>($<%=gen.translate("parameterMany",av)%>)
   {
     $wasSet = false;
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     $<%=gen.translate("parameterVerifiedMany",av)%> = array();
     foreach ($<%=gen.translate("parameterMany",av)%> as $<%=gen.translate("parameterOne",av)%>)
     {
@@ -15,7 +15,7 @@
 
     if (count($<%=gen.translate("parameterVerifiedMany",av)%>) != count($<%=gen.translate("parameterMany",av)%>) || count($<%=gen.translate("parameterVerifiedMany",av)%>) < self::<%=gen.translate("minimumNumberOfMethod",av)%>())
     {
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return $wasSet;
     }
 
@@ -41,7 +41,7 @@
       $<%=gen.translate("parameterOld",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
     }
     $wasSet = true;
-    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
     return $wasSet;
   }
 

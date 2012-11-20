@@ -8,7 +8,7 @@
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
     		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
-    		String properMethodBody = "      " + methodBody; 
+    		String properMethodBody = "    " + methodBody; 
     		String override =  aMethod.getIsImplemented() ? "  @Override" : "";
     		String paramName="";
     		String paramType="";

@@ -1,10 +1,10 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   def <%=gen.translate("setMethod",av)%>(<%=gen.translate("parameterNew",av)%>)
     was_set = false
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     if !@<%=gen.translate("associationOne",av)%>.nil? and !@<%=gen.translate("associationOne",av)%>.eql?(<%=gen.translate("parameterNew",av)%>) and self.eql?(@<%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>)
       #Unable to <%=gen.translate("setMethod",av)%>, as existing @<%=gen.translate("associationOne",av)%> would become an orphan
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPrefixCode); } %>
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } %>
       return was_set
     end
 
@@ -20,7 +20,7 @@
       end
     end
     was_set = true
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     was_set
   end
 

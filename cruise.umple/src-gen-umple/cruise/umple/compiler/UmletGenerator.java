@@ -249,7 +249,7 @@ public class UmletGenerator implements CodeGenerator
    * Different generators will do different things regarding where the files are put, etc.
    */  @Override
   public boolean setOutput(String aString){
-            return false;
+          return false;
   }
   
   //------------------------

@@ -11,9 +11,9 @@
 <% } else { %>
   public static int <%=gen.translate("minimumNumberOfMethod",av)%>()
   {
-    <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPrefixCode); } %>
+    <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } %>
     int minimum = <%=av.getMultiplicity().getLowerBound()%>;
-    <% if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customMinimumNumberOfPostfixCode); } %>
+    <% if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } %>
     return minimum;
   }
 <% } %>

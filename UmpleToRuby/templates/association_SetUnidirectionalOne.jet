@@ -1,12 +1,12 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   def <%=gen.translate("setMethod",av)%>(<%=gen.translate("parameterNew",av)%>)
     was_set = false
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     unless <%=gen.translate("parameterNew",av)%>.nil?
       @<%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterNew",av)%>
       was_set = true
     end
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     was_set
   end
 

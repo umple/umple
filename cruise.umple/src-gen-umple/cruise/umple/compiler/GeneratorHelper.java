@@ -99,11 +99,26 @@ public static void postpareClass(UmpleModel model)
         }
         else
         {
-          asCode = StringFormatter.format("{0}\n    {1}",asCode,inject.getCode());
+          asCode = StringFormatter.format("{0}\n{1}",asCode,inject.getCode());
         }
       }
     }
     return asCode;
+  }  
+  
+  public static String doIndent(String code, String indents)
+  {
+    StringBuilder builder = new StringBuilder(code.length() + indents.length()); //Assume generally only one line, will expand otherwise
+    builder.append(indents); //Indent first line
+    for (int i = 0; i < code.length(); i++)
+    {
+      builder.append(code.charAt(i));
+      if (code.charAt(i) == '\n')
+      {
+        builder.append(indents);
+      }
+    }
+    return builder.toString();
   }
 private static void postpareStateMachine(UmpleModel aModel)
   {

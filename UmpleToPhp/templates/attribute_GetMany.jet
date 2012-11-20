@@ -1,42 +1,42 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public function <%=gen.translate("getMethod",av)%>($index)
   {
-    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetPrefixCode); } %>
+    <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
     $<%=gen.translate("parameterOne",av)%> = $this-><%=gen.translate("attributeMany",av)%>[$index];
-    <% if (customGetPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetPostfixCode); } %>
+    <% if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } %>
     return $<%=gen.translate("parameterOne",av)%>;
   }
 
   public function <%=gen.translate("getManyMethod",av)%>()
   {
-    <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPrefixCode); } %>
+    <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } %>
     $<%=gen.translate("parameterMany",av)%> = $this-><%=gen.translate("attributeMany",av)%>;
-    <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customGetManyPostfixCode); } %>
+    <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } %>
     return $<%=gen.translate("parameterMany",av)%>;
   }
 
   public function <%=gen.translate("numberOfMethod",av)%>()
   {
-    <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPrefixCode); } %>
+    <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } %>
     $number = count($this-><%=gen.translate("attributeMany",av)%>);
-    <% if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customNumberOfPostfixCode); } %>
+    <% if (customNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } %>
     return $number;
   }
 
   public function <%=gen.translate("hasManyMethod",av)%>()
   {
-    <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPrefixCode); } %>
+    <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } %>
     $has = <%=gen.translate("attributeMany",av)%>.size() > 0;
-    <% if (customHasManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customHasManyPostfixCode); } %>
+    <% if (customHasManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); } %>
     return $has;
   }
 
   public function <%=gen.translate("indexOfMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
-    <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPrefixCode); } %>
+    <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } %>
     $rawAnswer = array_search($<%=gen.translate("parameterOne",av)%>,$this-><%=gen.translate("attributeMany",av)%>);
     $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
-    <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n    {0}",customIndexOfPostfixCode); } %>
+    <% if (customIndexOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPostfixCode, "    ")); } %>
     return $index;
   }
 

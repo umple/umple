@@ -5,9 +5,9 @@
 %>
   def <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterMany",av)%>)
     was_set = false
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     if <%=gen.translate("parameterMany",av)%>.length < <%=uClass.getName()%>.<%=gen.translate("minimumNumberOfMethod",av)%><%=orCheckMaxBound%>
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return was_set
     end
 
@@ -15,7 +15,7 @@
     <%=existingToNewMap%> = {}
     <%=gen.translate("parameterMany",av)%>.each do |<%=gen.translate("parameterOne",av)%>|
       if <%=gen.translate("parameterCheckNewMany",av)%>.include?(<%=gen.translate("parameterOne",av)%>)
-        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n        {0}",customSetManyPostfixCode); } %>
+        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
         return was_set
       elsif !<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.nil? and !<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>.eql?(self)
         <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>
@@ -25,7 +25,7 @@
         currentCount = <%=existingToNewMap%>[<%=gen.relatedTranslate("parameterExisting",av)%>]
         nextCount = currentCount - 1
         if nextCount < <%=av.getMultiplicity().getLowerBound()%>
-          <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n          {0}",customSetManyPostfixCode); } %>
+          <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "          ")); } %>
           return was_set
         end
         <%=existingToNewMap%>[<%=gen.relatedTranslate("parameterExisting",av)%>] = nextCount
@@ -49,7 +49,7 @@
       @<%=gen.translate("associationMany",av)%> << <%=gen.translate("parameterOne",av)%>
     end
     was_set = true
-    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPostfixCode); } %>
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
     was_set
   end
 

@@ -2,7 +2,7 @@
   public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%>)
   {
     boolean wasSet = false;
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     if (<%=gen.translate("parameterNew",av)%> == null)
     {
       <%=gen.translate("type",av)%> <%=gen.translate("parameterExisting",av)%> = <%=gen.translate("associationOne",av)%>;
@@ -13,7 +13,7 @@
         <%=gen.translate("parameterExisting",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(null);
       }
       wasSet = true;
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
       return wasSet;
     }
 
@@ -31,7 +31,7 @@
       <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
     }
     wasSet = true;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}",customSetPostfixCode); } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return wasSet;
   }
 

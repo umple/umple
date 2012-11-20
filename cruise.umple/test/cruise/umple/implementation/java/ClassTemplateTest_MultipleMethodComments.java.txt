@@ -29,7 +29,7 @@ public class Foo
    * Inline comment above method.
    */
   public void testMethod1(){
-      // I am a comment inside a method.
+    // I am a comment inside a method.
   }
 
 
@@ -38,7 +38,7 @@ public class Foo
    * above method.
    */
   public void testMethod2(){
-      // I am a comment inside a method.
+    // I am a comment inside a method.
   }
 
 
@@ -46,7 +46,7 @@ public class Foo
    * Multiline comment above method.
    */
   public void testMethod3(){
-      // I am a comment inside a method.
+    // I am a comment inside a method.
   }
 
 
@@ -55,7 +55,7 @@ public class Foo
    * above method.
    */
   public void testMethod4(){
-      // I am a comment inside a method.
+    // I am a comment inside a method.
   }
 
 }

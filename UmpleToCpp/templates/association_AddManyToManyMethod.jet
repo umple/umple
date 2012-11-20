@@ -2,11 +2,11 @@
   bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasAdded = false;
-    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n    {0}",customAddPrefixCode); } %>
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
 <% if (!av.getMultiplicity().isUpperBoundMany()) { %>
     if (<%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("maximumNumberOfMethod",av)%>())
     {
-      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n      {0}",customAddPostfixCode); } %>
+      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
       return wasAdded;
     }
 
@@ -24,7 +24,7 @@
         <%=gen.translate("associationMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
       }
     }
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n    {0}",customAddPostfixCode); } %>
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
   }
   

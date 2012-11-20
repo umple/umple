@@ -2,13 +2,13 @@
   public boolean <%=gen.translate("deleteMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasDeleted = false;
-    <% if (customDeletePrefixCode != null) { append(stringBuffer, "\n    {0}",customDeletePrefixCode); } %>
+    <% if (customDeletePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    ")); } %>
     if(<%=gen.translate("associationOne",av)%>.equals(<%=gen.translate("parameterOne",av)%>))
     {
       <%=gen.translate("associationOne",av)%> = null;
       wasDeleted = true;
     }
-    <% if (customDeletePostfixCode != null) { append(stringBuffer, "\n    {0}",customDeletePostfixCode); } %>
+    <% if (customDeletePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    ")); } %>
     return wasDeleted;
   }
 

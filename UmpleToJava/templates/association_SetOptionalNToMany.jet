@@ -2,7 +2,7 @@
   public boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
   {
     boolean wasSet = false;
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     ArrayList<<%=gen.translate("type",av)%>> <%=gen.translate("parameterVerifiedMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
     {
@@ -15,7 +15,7 @@
 
     if (<%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=gen.translate("parameterMany",av)%>.length || <%=gen.translate("parameterVerifiedMany",av)%>.size() > <%=gen.translate("maximumNumberOfMethod",av)%>())
     {
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetManyPostfixCode); } %>
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return wasSet;
     }
 
@@ -39,7 +39,7 @@
       <%=gen.translate("parameterOld",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(this);
     }
     wasSet = true;
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetManyPrefixCode); } %>
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     return wasSet;
   }
 

@@ -2,10 +2,10 @@
   public function <%=gen.translate("setMethod",av)%>($<%=gen.translate("parameterOne",av)%>)
   {
     $wasSet = false;
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}",customSetPrefixCode); } %>
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     if ($<%=gen.translate("parameterOne",av)%> == null)
     {
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
       return $wasSet;
     }
     
@@ -17,7 +17,7 @@
     }
     $this-><%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("addMethod",av)%>($this);
     $wasSet = true;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n      {0}",customSetPostfixCode); } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
     return $wasSet;
   }
 

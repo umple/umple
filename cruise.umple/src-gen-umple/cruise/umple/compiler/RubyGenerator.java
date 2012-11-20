@@ -636,7 +636,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       
       if (av.isImmutable())
       {
-        String code = StringFormatter.format("return false unless @{0}\n    @{0} = false",translate("associationCanSet",av));
+        String code = StringFormatter.format("return false unless @{0}\n@{0} = false",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
         CodeInjection inject = new CodeInjection("before", methods, code);
         inject.setIsInternal(true);
@@ -662,8 +662,8 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     } 
     
     Map<String,String> lookups = new HashMap<String,String>();
-    String executeMethods = "def self.execute(message)\n  self.getInstance().addTrace(message)\nend\n";
-    executeMethods += "def reset\n  self.getInstance().traces = []\nend";
+    String executeMethods = "def self.execute(message)\nself.getInstance().addTrace(message)\nend\n";
+    executeMethods += "def reset\nself.getInstance().traces = []\nend";
     lookups.put("consoleTemplate","puts \"{0}=#{{1}}\"");
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
