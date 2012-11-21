@@ -16,7 +16,7 @@
     }
     else if (this!=<%=gen.relatedTranslate("parameterExisting",av)%>)
     {
-      <%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("removeMethod",av)%>(<%=gen.translate("parameterOne",av)%>);
+      <%=gen.relatedTranslate("parameterExisting",av)%>-><%=gen.translate("removeMethod",av)%>(<%=gen.translate("parameterOne",av)%>);
       <%=gen.translate("addMethod",av)%>(<%=gen.translate("parameterOne",av)%>);
     }
     else

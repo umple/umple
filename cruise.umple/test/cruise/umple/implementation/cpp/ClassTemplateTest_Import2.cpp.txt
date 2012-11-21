@@ -136,8 +136,8 @@
   {
     bool wasAdded = false;
     if (find(mentors.begin(),mentors.end(),aMentor) != mentors.end()) { return false; }
-    Student existingStudent = aMentor.getStudent();
-    if (existingStudent != null && existingStudent.numberOfMentors() <= minimumNumberOfMentors())
+    Student existingStudent = aMentor->getStudent();
+    if (existingStudent != NULL && existingStudent->numberOfMentors() <= minimumNumberOfMentors())
     {
       return wasAdded;
     }
@@ -177,7 +177,7 @@
     map<Student,int> studentToNewMentors;
     for (Mentor aMentor : newMentors)
     {
-      if (find(checkNewMentors.begin(),checkNewMentors.end(),aMentor))
+      if (find(checkNewMentors.begin(),checkNewMentors.end(),aMentor) != checkNewMentors.end())
       {
         return wasSet;
       }

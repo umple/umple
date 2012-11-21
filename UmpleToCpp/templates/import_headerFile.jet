@@ -5,7 +5,10 @@
 	if (uClass.hasAssociationVariables())
 	for (AssociationVariable av : uClass.getAssociationVariables())
 	{
-	appendln(stringBuffer, "");
-	append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName()); 
+	if ( uClass.getName() != av.getRelatedAssociation().getUmpleClass().getName())
+	{
+		appendln(stringBuffer, "");
+		append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName()); 
+	}
 	}
 %>

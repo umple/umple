@@ -21,7 +21,7 @@
       return wasAdded;
     }
 
-    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
+    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
     bool <%=gen.relatedTranslate("parameterIsNew",av)%> = (<%=gen.relatedTranslate("parameterExisting",av)%> != NULL && this != <%=gen.relatedTranslate("parameterExisting",av)%>);
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
     {

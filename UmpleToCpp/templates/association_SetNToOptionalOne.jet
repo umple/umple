@@ -7,7 +7,7 @@
 	
     for (<%=gen.translate("type",av)%> <%=gen.translate("associationNew",av)%> : <%=gen.translate("parameterMany",av)%>)
     {
-      if (find(<%=gen.translate("parameterCheckNewMany",av)%>.begin(),<%=gen.translate("parameterCheckNewMany",av)%>.end(),<%=gen.translate("associationNew",av)%>))
+      if (find(<%=gen.translate("parameterCheckNewMany",av)%>.begin(),<%=gen.translate("parameterCheckNewMany",av)%>.end(),<%=gen.translate("associationNew",av)%>) != <%=gen.translate("parameterCheckNewMany",av)%>.end())
       {
         <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
         return wasSet;

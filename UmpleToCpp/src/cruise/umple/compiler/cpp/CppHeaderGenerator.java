@@ -496,8 +496,11 @@ public class CppHeaderGenerator implements ILang
   {
 
    
-    appendln(stringBuffer, "");
+    if (uClass.getName() != av.getRelatedAssociation().getUmpleClass().getName())
+	{
+	appendln(stringBuffer, "");
     append(stringBuffer, "class {0};",av.getRelatedAssociation().getUmpleClass().getName());
+	}
     }
   
 

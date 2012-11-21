@@ -7,7 +7,7 @@
 	
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
     {
-      if (find(<%=gen.translate("parameterVerifiedMany",av)%>.begin(),<%=gen.translate("parameterVerifiedMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>))
+      if (find(<%=gen.translate("parameterVerifiedMany",av)%>.begin(),<%=gen.translate("parameterVerifiedMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) != <%=gen.translate("parameterVerifiedMany",av)%>.end())
       {
         continue;
       }
@@ -25,7 +25,7 @@
     for (<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%> : <%=gen.translate("parameterVerifiedMany",av)%>)
     {
       <%=gen.translate("associationMany",av)%>->add(<%=gen.translate("parameterNew",av)%>);
-      if (find(<%=gen.translate("parameterOldMany",av)%>.begin(),<%=gen.translate("parameterOldMany",av)%>.end(),<%=gen.translate("parameterNew",av)%>))
+      if (find(<%=gen.translate("parameterOldMany",av)%>.begin(),<%=gen.translate("parameterOldMany",av)%>.end(),<%=gen.translate("parameterNew",av)%>) != <%=gen.translate("parameterOldMany",av)%>.end())
       {
         <%=gen.translate("parameterOldMany",av)%>.erase(<%=gen.translate("parameterNew",av)%>);
       }

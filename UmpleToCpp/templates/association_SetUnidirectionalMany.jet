@@ -7,7 +7,7 @@
     vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterVerifiedMany",av)%>;
     for (int i=0 ; i<<%=gen.translate("parameterOne",av)%>.size() ; i++)
     {
-      if (find(<%=gen.translate("parameterVerifiedMany",av)%>.begin(),<%=gen.translate("parameterVerifiedMany",av)%>.end(),(<%=gen.translate("parameterOne",av)%>) - <%=gen.translate("parameterVerifiedMany",av)%>.end())
+      if (find(<%=gen.translate("parameterVerifiedMany",av)%>.begin(),<%=gen.translate("parameterVerifiedMany",av)%>.end(),(<%=gen.translate("parameterOne",av)%>) != <%=gen.translate("parameterVerifiedMany",av)%>.end())
       {
         continue;
       }
