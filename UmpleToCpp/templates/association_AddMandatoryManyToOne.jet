@@ -8,17 +8,17 @@
   {
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
-    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
+    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
     bool <%=gen.relatedTranslate("parameterIsNew",av)%> = (<%=gen.relatedTranslate("parameterExisting",av)%> != null && this != <%=gen.relatedTranslate("parameterExisting",av)%>);
 
-    if (<%=gen.relatedTranslate("parameterIsNew",av)%> && <%=gen.relatedTranslate("parameterExisting",av)%>.<%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("minimumNumberOfMethod",av)%>())
+    if (<%=gen.relatedTranslate("parameterIsNew",av)%> && <%=gen.relatedTranslate("parameterExisting",av)%>-><%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
       return wasAdded;
     }
 
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
     {
-      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
+      <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(this);
     }
     else
     {
@@ -29,7 +29,7 @@
     return wasAdded;
   }
 
-  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%>* <%=gen.translate("parameterOne",av)%>)
   {
     bool wasRemoved = false;
 	<% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>

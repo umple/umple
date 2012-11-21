@@ -159,7 +159,7 @@ public class CppHeaderGenerator implements ILang
   protected final String TEXT_139 = "();" + NL + "  bool ";
   protected final String TEXT_140 = "();" + NL + "  int ";
   protected final String TEXT_141 = "(";
-  protected final String TEXT_142 = " ";
+  protected final String TEXT_142 = "* ";
   protected final String TEXT_143 = ");";
   protected final String TEXT_144 = "UNABLE TO UNDERSAND association variable (see header_association_Get_All.jet)";
   protected final String TEXT_145 = "//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP ";

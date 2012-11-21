@@ -193,7 +193,7 @@
     }
     else
     {
-      bar1s->push_back(aBar1);
+      bar1s.push_back(aBar1);
     }
     wasAdded = true;
     return wasAdded;
@@ -234,7 +234,7 @@
     }
     else
     {
-      bar2s->push_back(aBar2);
+      bar2s.push_back(aBar2);
     }
     wasAdded = true;
     return wasAdded;
@@ -275,7 +275,7 @@
     }
     else
     {
-      bar3s->push_back(aBar3);
+      bar3s.push_back(aBar3);
     }
     wasAdded = true;
     return wasAdded;
@@ -316,7 +316,7 @@
     }
     else
     {
-      bar4s->push_back(aBar4);
+      bar4s.push_back(aBar4);
     }
     wasAdded = true;
     return wasAdded;

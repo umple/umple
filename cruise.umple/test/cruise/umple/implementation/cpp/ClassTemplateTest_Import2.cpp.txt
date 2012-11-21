@@ -143,9 +143,9 @@
     }
     else if (existingStudent != null)
     {
-      existingStudent.mentors.remove(aMentor);
+      existingStudent.mentors.erase(find(mentors.begin(),mentors.end(),aMentor));
     }
-    mentors.add(aMentor);
+    mentors.push_back(aMentor);
     setStudent(aMentor,this);
     wasAdded = true;
     return wasAdded;
@@ -266,18 +266,18 @@
       return wasRemoved;
     }
 
-    int oldIndex = courses.indexOf(aCourse);
-    courses.remove(oldIndex);
-    if (aCourse.indexOfStudent(this) == -1)
+    int oldIndex = find(courses.begin(), courses.end(), aCourse) - courses.begin();
+    courses.erase(find(courses.begin(),courses.end(),aCourse));
+    if (aCourse->indexOfStudent(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aCourse.removeStudent(this);
+      wasRemoved = aCourse->removeStudent(this);
       if (!wasRemoved)
       {
-        courses.add(oldIndex,aCourse);
+        courses.push_back(oldIndex,aCourse);
       }
     }
     return wasRemoved;

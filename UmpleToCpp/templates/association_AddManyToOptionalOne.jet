@@ -3,10 +3,10 @@
   {
     bool wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
-    <%=gen.relatedTranslate("type",av)%>* <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
+    <%=gen.relatedTranslate("type",av)%>* <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
     if (<%=gen.relatedTranslate("parameterExisting",av)%> == NULL)
     {
-      <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
+      <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(this);
     }
     else if (this!=<%=gen.relatedTranslate("parameterExisting",av)%>)
     {

@@ -99,18 +99,18 @@
       return wasRemoved;
     }
 
-    int oldIndex = students.indexOf(aStudent);
-    students.remove(oldIndex);
-    if (aStudent.indexOfCourse(this) == -1)
+    int oldIndex = find(students.begin(), students.end(), aStudent) - students.begin();
+    students.erase(find(students.begin(),students.end(),aStudent));
+    if (aStudent->indexOfCourse(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aStudent.removeCourse(this);
+      wasRemoved = aStudent->removeCourse(this);
       if (!wasRemoved)
       {
-        students.add(oldIndex,aStudent);
+        students.push_back(oldIndex,aStudent);
       }
     }
     return wasRemoved;

@@ -88,7 +88,7 @@
     }
     else
     {
-      bars->push_back(aBar);
+      bars.push_back(aBar);
     }
     wasAdded = true;
     return wasAdded;
