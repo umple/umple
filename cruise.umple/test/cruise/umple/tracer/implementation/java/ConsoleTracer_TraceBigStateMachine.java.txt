@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package example;
 
@@ -407,17 +407,15 @@ public class StateMachineTest
         setV(3);
         break;
     }
-    if( status.equals(Status.S3) )
-      System.err.println("action=S3-exit, v=" + v);
   }
 
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.S3) )
-      System.err.println("state=" + status);
+      System.err.println("entry=" + aStatus + ",v=" + v);
+if( status != null && status.equals(Status.S3) && !aStatus.equals(Status.S3) )
+      System.err.println("exit=" + status + ",v=" + v);
     status = aStatus;
-    if( aStatus.equals(Status.S3) )
-      System.err.println("state=" + status);
 
     // entry actions and do activities
     switch(status)
@@ -429,8 +427,6 @@ public class StateMachineTest
         if (statusS2 == StatusS2.Null) { setStatusS2(StatusS2.S2A); }
         break;
     }
-    if( aStatus.equals(Status.S3) )
-      System.err.println("action=S3-entry, v=" + v);
   }
 
   private void exitStatusS1()

@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class StateMachineTest
 {
@@ -398,17 +398,16 @@ class StateMachineTest
     {
       setV(3);
     }
-    if( status.equals(int.S3) )
-      print("action=S3-exit, v=$" + v);
   }
 
   private function setStatus($aStatus)
   {
     if( aStatus.equals(int.S3) )
-      print("state={$status}");
+      print(""entry=" + aStatus + ",v=" + v={$if( status != null && status.equals(int.S3) && !aStatus.equals(int.S3) )
+      print(""exit=" + status + ",v=" + v={${1}}");}");
+if( status != null && status.equals(int.S3) && !aStatus.equals(int.S3) )
+      print(""exit=" + status + ",v=" + v={${1}}");
     $this->status = $aStatus;
-    if( aStatus.equals(int.S3) )
-      print("state={$status}");
 
     // entry actions and do activities
     if ($this->status == self::$StatusS1)

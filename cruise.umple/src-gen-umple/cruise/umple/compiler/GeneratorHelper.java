@@ -399,11 +399,11 @@ private static void postpareTrace(UmpleModel aModel)
 	  for( StateMachine_TraceItem tracedStm : traceDirective.getStateMachineTraceItems() )
 	  {
 		  StateMachine stm = tracedStm.getStateMachine();
-		  
 		  if( traceRecord != null )
 		  {
 			  if( traceRecord.hasAttributes() )
 			  {
+				  record = new String[traceRecord.numberOfAttributes()];
 				  int index = 0;
 				  for( Attribute attr : traceRecord.getAttributes() )
 				  {
@@ -453,11 +453,11 @@ private static void postpareTrace(UmpleModel aModel)
 	  
 	  for( StateMachine_TraceItem tracedStm : traceDirective.getStateMachineTraceItems() )
 	  {
-		  
 		  if( traceRecord != null )
 		  {
 			  if( traceRecord.hasAttributes() )
 			  {
+				  record = new String[traceRecord.numberOfAttributes()];
 				  int index = 0;
 				  for( Attribute attr : traceRecord.getAttributes() )
 				  {
@@ -465,11 +465,6 @@ private static void postpareTrace(UmpleModel aModel)
 					  ++index;
 				  }
 			  }
-		  }
-		  
-		  if( tracedStm.getTransition() != null )
-		  {
-			  processTracedTransition(traceDirective,tracedStm.getTransition(),t,template,record);
 		  }
 		  
 		  if( tracedStm.getEntry() )
@@ -687,7 +682,7 @@ private static void postpareTrace(UmpleModel aModel)
 			  else
 				  output += StringFormatter.format(" + \",{0}=\" + {1}",record[i],record[i]);
 		  }
-	  
+	  	  
 	  return output;
   }
   
