@@ -3951,14 +3951,14 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_340);
     stringBuffer.append(gen.translate("exitMethod",sm));
     stringBuffer.append(TEXT_341);
-     if (customExitPrefixCode != null) { append(stringBuffer, "\n    {0}", customExitPrefixCode); } 
+     if (customExitPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_342);
     stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_343);
     stringBuffer.append(TEXT_344);
     stringBuffer.append( exitActions );
     stringBuffer.append(TEXT_345);
-     if (customExitPostfixCode != null) { append(stringBuffer, "\n    {0}", customExitPostfixCode); } 
+     if (customExitPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_346);
      } 
     stringBuffer.append(TEXT_347);
@@ -3968,7 +3968,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_349);
     stringBuffer.append( gen.translate("parameterOne",sm) );
     stringBuffer.append(TEXT_350);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}", customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_351);
     stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_352);
@@ -3995,7 +3995,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append( gen.translate("stateOne",parentState) );
     stringBuffer.append(TEXT_363);
      } 
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}", customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
      if (hasEntry) { 
     stringBuffer.append(TEXT_364);
     stringBuffer.append( gen.translate("stateMachineOne",sm) );

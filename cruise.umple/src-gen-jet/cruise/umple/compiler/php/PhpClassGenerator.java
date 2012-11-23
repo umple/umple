@@ -3452,10 +3452,10 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_311);
     stringBuffer.append(gen.translate("exitMethod",sm));
     stringBuffer.append(TEXT_312);
-     if (customExitPrefixCode != null) { append(stringBuffer, "\n    {0}", customExitPrefixCode); } 
+     if (customExitPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_313);
     stringBuffer.append( exitActions );
-     if (customExitPostfixCode != null) { append(stringBuffer, "\n    {0}", customExitPostfixCode); } 
+     if (customExitPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_314);
      } 
     stringBuffer.append(TEXT_315);
@@ -3463,7 +3463,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append(TEXT_316);
     stringBuffer.append( gen.translate("parameterOne",sm) );
     stringBuffer.append(TEXT_317);
-     if (customSetPrefixCode != null) { append(stringBuffer, "\n    {0}", customSetPrefixCode); } 
+     if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_318);
     stringBuffer.append( gen.translate("stateMachineOne",sm) );
     stringBuffer.append(TEXT_319);
@@ -3484,7 +3484,7 @@ public class PhpClassGenerator implements ILang
     stringBuffer.append( gen.translate("stateOne",parentState) );
     stringBuffer.append(TEXT_327);
      } 
-     if (customSetPostfixCode != null) { append(stringBuffer, "\n    {0}", customSetPostfixCode); } 
+     if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } 
      if (hasEntry) { 
     stringBuffer.append(TEXT_328);
     stringBuffer.append(TEXT_329);

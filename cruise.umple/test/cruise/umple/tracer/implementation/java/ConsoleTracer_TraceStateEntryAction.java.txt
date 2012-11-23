@@ -61,7 +61,7 @@ public class Light
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.On) )
-      System.err.println("entry=" + aStatus);
+          System.err.println("entry=" + aStatus);
     status = aStatus;
   }
 
