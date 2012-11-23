@@ -402,11 +402,6 @@ class StateMachineTest
 
   private function setStatus($aStatus)
   {
-    if( aStatus.equals(int.S3) )
-      print(""entry=" + aStatus + ",v=" + v={$if( status != null && status.equals(int.S3) && !aStatus.equals(int.S3) )
-      print(""exit=" + status + ",v=" + v={${1}}");}");
-if( status != null && status.equals(int.S3) && !aStatus.equals(int.S3) )
-      print(""exit=" + status + ",v=" + v={${1}}");
     $this->status = $aStatus;
 
     // entry actions and do activities

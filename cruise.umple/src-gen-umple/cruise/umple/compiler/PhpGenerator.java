@@ -892,6 +892,11 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
 	  
 	  return null;
   }
+  
+  static void processStateMachine( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, StateMachine_TraceItem traceStm, StateMachine stm) 
+  {
+	  //ToBeDone
+  }
   //====================== End of Tracing code
 
   private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)

@@ -412,7 +412,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","Light");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void ConsoleTracer_TraceStateEntryAction()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryAction.ump",languagePath + "/ConsoleTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
@@ -429,7 +429,13 @@ public class TracerTest extends TracerTemplateTest
 	{
 //		assertUmpleTemplateFor("ConsoleTracer_TraceNestedStateEntryRecord.ump",languagePath + "/ConsoleTracer_TraceNestedStateEntryRecord."+ languagePath +".txt","StateMachineTest");
 	}
-	
+
+	@Test @Ignore
+	public void ConsoleTracer_TraceStateEntryWhere()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryWhere.ump",languagePath + "/ConsoleTracer_TraceStateEntryWhere."+ languagePath +".txt","Light");
+	}
+		
 	@Test
 	public void ConsoleTracer_TraceStateExitAction()
 	{

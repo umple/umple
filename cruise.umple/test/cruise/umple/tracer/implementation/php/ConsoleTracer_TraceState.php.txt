@@ -115,11 +115,6 @@ class Light
 
   private function setStatus($aStatus)
   {
-    if( aStatus.equals(int.On) )
-      print(""entry=" + aStatus={$if( status != null && status.equals(int.On) && !aStatus.equals(int.On) )
-      print(""exit=" + status={${1}}");}");
-if( status != null && status.equals(int.On) && !aStatus.equals(int.On) )
-      print(""exit=" + status={${1}}");
     $this->status = $aStatus;
 
     // entry actions and do activities
@@ -132,11 +127,6 @@ if( status != null && status.equals(int.On) && !aStatus.equals(int.On) )
 
   private function setStatusOn($aStatusOn)
   {
-    if( aStatusOn.equals(int.SemiOn) )
-      print(""entry=" + aStatusOn={$if( statusOn != null && statusOn.equals(int.SemiOn) && !aStatusOn.equals(int.SemiOn) )
-      print(""exit=" + statusOn={${1}}");}");
-if( statusOn != null && statusOn.equals(int.SemiOn) && !aStatusOn.equals(int.SemiOn) )
-      print(""exit=" + statusOn={${1}}");
     $this->statusOn = $aStatusOn;
     if ($this->status != self::$StatusOn && $aStatusOn != self::$StatusOnNull) { $this->setStatus(self::$StatusOn); }
   }

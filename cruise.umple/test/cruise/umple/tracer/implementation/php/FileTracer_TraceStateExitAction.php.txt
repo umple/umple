@@ -70,8 +70,6 @@ class Light
 
   private function setStatus($aStatus)
   {
-    if( status != null && status.equals(int.On) && !aStatus.equals(int.On) )
-      fileTracer($"exit=" + status);
     $this->status = $aStatus;
 
     // entry actions and do activities

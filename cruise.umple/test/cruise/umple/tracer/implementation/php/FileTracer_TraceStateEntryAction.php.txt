@@ -60,8 +60,6 @@ class Light
 
   private function setStatus($aStatus)
   {
-    if( aStatus.equals(int.On) )
-      fileTracer($"entry=" + aStatus);
     $this->status = $aStatus;
 
     // entry actions and do activities

@@ -69,8 +69,6 @@ class Light
 
   private function setStatus($aStatus)
   {
-    if( status != null && status.equals(int.Off) && !aStatus.equals(int.Off) )
-      print(""exit=" + status={${1}}");
     $this->status = $aStatus;
 
     // entry actions and do activities
