@@ -1,0 +1,18 @@
+namespace example;
+
+class Light
+{
+  Integer v;
+  Integer y;
+  status
+  {
+    On 
+    { 
+      flip -> Off; 
+      
+    }
+    Off { flip -> On; }
+     
+  }
+  trace exit On where v == 10;
+}

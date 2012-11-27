@@ -1028,7 +1028,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   {
 	  String stmCode = null;
 	  if( condCode != null )
-		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")"  + " && " + condCode +  ")\n  ";
+		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")"  + " && " + condCode +  " )\n  ";
 	  else
 		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n  ";
 	  stmCode += StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(record,"exit",t.translate("stateMachineOne",stm)));
