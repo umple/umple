@@ -78,7 +78,7 @@ public class Light
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.On) )
-          System.err.println("entry=" + aStatus + ",v=" + v);
+      System.err.println("entry=" + aStatus + ",v=" + v);
     status = aStatus;
 
     // entry actions and do activities

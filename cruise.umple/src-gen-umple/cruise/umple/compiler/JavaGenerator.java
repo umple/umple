@@ -910,7 +910,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   {
 	  TraceRecord traceRecord = traceDirective.getTraceRecord();
 	  String[] record = {null};
-	  
+	  String condCode = null;
 		
 	  if( traceRecord != null )
 	  {
@@ -923,42 +923,47 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 				  record[index] = attr.getName();
 				  ++index;
 				  }
-			  }
-		  }
-		  
+			  }  
+	  }
+	  if( traceDirective.hasCondition() )
+	  {
+		  condCode = processTraceCondition(traceDirective,t,template,traceStm,stm);	
+	  }
+	  
 		  if( traceStm.getTransition() != null )
 		  {
-			  processTracedTransition(traceDirective,traceStm.getTransition(),t,template,record);
+			  processTracedTransition(traceDirective,traceStm.getTransition(),t,template,record,condCode);  
 		  }
 		  
 		  if( traceStm.getEntry() )
-		  {
-			  processTracedStateEntry(traceDirective,stm,t,template,record);
+		  {	  
+			  processTracedStateEntry(traceDirective,stm,t,template,record,condCode);
 		  }
-		  
+			    
 		  if( traceStm.getExit() )
 		  {
-			  processTracedStateExit(traceDirective,stm,t,template,record);
+			  processTracedStateExit(traceDirective,stm,t,template,record,condCode);
 		  }
-		  
+			  
 		  if( traceStm.getTraceStateMachineFlag() )
 		  {
-			  processTracedStateMachine(traceDirective,stm,t,template,record);
+			  processTracedStateMachine(traceDirective,stm,t,template,record,condCode);  
 		  }
-		  
+			   
 		  if( stm.getNestedStateMachines() != null )
-			  processTracedNestedStateMachine(traceDirective,stm,t,template,record);
+			  processTracedNestedStateMachine(traceDirective,stm,t,template,record,condCode);
+	  
   }
   
-  private static void processTracedNestedStateMachine(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record) 
+  private static void processTracedNestedStateMachine(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record, String condCode) 
   {
 	  for( StateMachine s : stm.getNestedStateMachines() )
 	  {
-		  processNestedStateMachine(traceDirective,t,template,s);
+		  processNestedStateMachine(traceDirective,t,template,s,condCode);
 	  }
   }
   
-  private static void processNestedStateMachine( TraceDirective traceDirective, CodeTranslator t, String template, StateMachine stm) 
+  private static void processNestedStateMachine( TraceDirective traceDirective, CodeTranslator t, String template, StateMachine stm, String condCode) 
   {
 	  TraceRecord traceRecord = traceDirective.getTraceRecord();
 	  String[] record = {null};
@@ -981,25 +986,25 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 		  
 		  if( traceStm.getEntry() )
 		  {
-			  processTracedStateEntry(traceDirective,stm,t,template,record);
+			  processTracedStateEntry(traceDirective,stm,t,template,record,condCode);
 		  }
 		  
 		  if( traceStm.getExit() )
 		  {
-			  processTracedStateExit(traceDirective,stm,t,template,record);
+			  processTracedStateExit(traceDirective,stm,t,template,record,condCode);
 		  }
 		  
 		  if( traceStm.getTraceStateMachineFlag() )
 		  {
-			  processTracedStateMachine(traceDirective,stm,t,template,record);
+			  processTracedStateMachine(traceDirective,stm,t,template,record,condCode);
 		  }
 		  
 		  if( stm.getNestedStateMachines() != null )
-			  processTracedNestedStateMachine(traceDirective,stm,t,template,record);
+			  processTracedNestedStateMachine(traceDirective,stm,t,template,record,condCode);
 	  }
   }
   
-  private static void processTracedStateMachine(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record) 
+  private static void processTracedStateMachine(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record, String condCode) 
   {
 	  String stmCode = null;
 	  stmCode = StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(record,"state",t.translate("stateMachineOne",stm)));
@@ -1008,28 +1013,52 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"after");
   }
   
-  private static void processTracedStateEntry(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record) 
+  private static void processTracedStateEntry(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record, String condCode) 
   {
 	  String stmCode = null;
-	  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  if( condCode != null )
+		  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && " + condCode + " )\n  ";
+	  else
+		  stmCode = "if( " + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n  ";
 	  stmCode += StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(record,"entry",t.translate("parameterOne",stm)));
 	  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
   }
   
-  private static void processTracedStateExit(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record) 
+  private static void processTracedStateExit(TraceDirective traceDirective, StateMachine stm, CodeTranslator t, String template, String[] record, String condCode) 
   {
 	  String stmCode = null;
-	  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n      ";
+	  if( condCode != null )
+		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")"  + " && " + condCode +  ")\n  ";
+	  else
+		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + ".equals(" + t.translate("type",stm) + "." + stm.getState(0).getName() + ") )\n  ";
 	  stmCode += StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(record,"exit",t.translate("stateMachineOne",stm)));
 	  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
   }
 
-  private static void processTracedTransition( TraceDirective traceDirective, Transition tran, CodeTranslator t, String template, String[] record) 
+  private static void processTracedTransition( TraceDirective traceDirective, Transition tran, CodeTranslator t, String template, String[] record, String condCode) 
   {
 	  String stmCode = null;
 	  stmCode = StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(record,"state@pre",t.translate("stateMachineOne",tran.getFromState().getStateMachine())));
 	  GeneratorHelper.InjectTracedTransition(traceDirective,t,stmCode,"before");
   }
+  
+  // Process condition in a trace directive based on its type
+  static String processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, StateMachine_TraceItem traceStm, StateMachine stm ) 
+  {
+	  TraceCondition tc = traceDirective.getCondition(0);
+	  String condCode = null;
+	  if( tc.getConditionType().equals("where") )
+		  condCode = tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs();
+//	  else if( tc.getConditionType().equals("giving") )  
+//		  processGivingCondition(traceDirective,t,template,traceStm,stm);
+//	  else if( tc.getConditionType().equals("until") )  
+//		  processUntilCondition(traceDirective,t,template,traceStm,stm);	
+//	  else if( tc.getConditionType().equals("after") )
+//		  processAfterCondition(traceDirective,t,template,traceStm,stm);
+	  return condCode;
+  }
+  
+
   
   //====================== End of Tracing code
    

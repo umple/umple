@@ -412,9 +412,9 @@ public class StateMachineTest
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.S3) )
-          System.err.println("entry=" + aStatus + ",v=" + v);
+      System.err.println("entry=" + aStatus + ",v=" + v);
     if( status != null && status.equals(Status.S3) && !aStatus.equals(Status.S3) )
-          System.err.println("exit=" + status + ",v=" + v);
+      System.err.println("exit=" + status + ",v=" + v);
     status = aStatus;
 
     // entry actions and do activities

@@ -117,9 +117,9 @@ public class Light
   private void setStatus(Status aStatus)
   {
     if( aStatus.equals(Status.On) )
-          System.err.println("entry=" + aStatus);
+      System.err.println("entry=" + aStatus);
     if( status != null && status.equals(Status.On) && !aStatus.equals(Status.On) )
-          System.err.println("exit=" + status);
+      System.err.println("exit=" + status);
     status = aStatus;
 
     // entry actions and do activities
@@ -134,9 +134,9 @@ public class Light
   private void setStatusOn(StatusOn aStatusOn)
   {
     if( aStatusOn.equals(StatusOn.SemiOn) )
-          System.err.println("entry=" + aStatusOn);
+      System.err.println("entry=" + aStatusOn);
     if( statusOn != null && statusOn.equals(StatusOn.SemiOn) && !aStatusOn.equals(StatusOn.SemiOn) )
-          System.err.println("exit=" + statusOn);
+      System.err.println("exit=" + statusOn);
     statusOn = aStatusOn;
     if (status != Status.On && aStatusOn != StatusOn.Null) { setStatus(Status.On); }
   }
