@@ -630,7 +630,7 @@ public class CppGeneratorTest
     Assert.assertEquals("placeholderVcrOn",generator.translate("removeParameterOne",sm));    
     Assert.assertEquals("getVcrOn",generator.translate("getMethod",sm));
     Assert.assertEquals("getVcrOnFullName",generator.translate("getFullMethod",sm));
-    Assert.assertEquals("String",generator.translate("typeGet",sm));
+    Assert.assertEquals("string",generator.translate("typeGet",sm));
     Assert.assertEquals("VcrOn",generator.translate("type",sm));
     Assert.assertEquals("Null",generator.translate("stateNull",sm));
     Assert.assertEquals("s3, s4",generator.translate("listStates",sm));
@@ -653,8 +653,8 @@ public class CppGeneratorTest
     Assert.assertEquals("getGrade",generator.translate("getMethod",sm));
     Assert.assertEquals("getGradeFullName",generator.translate("getFullMethod",sm));
     Assert.assertEquals("isGradeFinal",generator.translate("isFinalMethod",sm));
-    Assert.assertEquals("String",generator.translate("typeFull",sm));
-    Assert.assertEquals("String",generator.translate("typeGet",sm));
+    Assert.assertEquals("string",generator.translate("typeFull",sm));
+    Assert.assertEquals("string",generator.translate("typeGet",sm));
     Assert.assertEquals("Grade",generator.translate("type",sm));
     Assert.assertEquals("Null",generator.translate("stateNull",sm));
     Assert.assertEquals("s1, s2",generator.translate("listStates",sm));
@@ -911,7 +911,7 @@ public class CppGeneratorTest
     Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
-    Assert.assertEquals("if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }",onState.getAction(1).getActionCode());
+    Assert.assertEquals("if (bulbOn == Null) { setBulbOn(Normal); }",onState.getAction(1).getActionCode());
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,onState.numberOfActions());
@@ -970,10 +970,10 @@ public class CppGeneratorTest
     Assert.assertEquals("exitOn();",onState.getAction(0).getActionCode());
     
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
-    Assert.assertEquals("if (bulbA == BulbA.Null) { setBulbA(BulbA.Normal); }",onState.getAction(1).getActionCode());
+    Assert.assertEquals("if (bulbA == Null) { setBulbA(Normal); }",onState.getAction(1).getActionCode());
 
     Assert.assertEquals("entry",onState.getAction(2).getActionType());
-    Assert.assertEquals("if (bulbB == BulbB.Null) { setBulbB(BulbB.Normal2); }",onState.getAction(2).getActionCode());
+    Assert.assertEquals("if (bulbB == Null) { setBulbB(Normal2); }",onState.getAction(2).getActionCode());
     
     GeneratorHelper.postpare(model);
     Assert.assertEquals(0,onState.numberOfActions());

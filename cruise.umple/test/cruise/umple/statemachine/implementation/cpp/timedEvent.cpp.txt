@@ -12,7 +12,7 @@
  Mentor::Mentor()
   {
     howLongUntilOk = 3;
-    setStatus(Status.Ok);
+    setStatus(Ok);
   }
   
   //------------------------
@@ -50,26 +50,36 @@
     return howLongUntilOk;
   }
 
-  String Mentor::getStatusFullName()
+  string Mentor::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Mentor::getStatus()
+  
+  Mentor::Status Mentor::getStatus()
   {
     return status;
   }
 
+  string Mentor::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Ok"; break;}
+      case 1 : {return "NotOkay"; break;}
+      case 2 : {return "NotOk"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Mentor::timeoutOkToNotOk()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case Ok:
         exitStatus();
-        setStatus(Status.NotOk);
+        setStatus(NotOk);
         wasEventProcessed = true;
         break;
     }
@@ -79,13 +89,13 @@
 
   bool Mentor::timeoutNotOkayToOk()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case NotOkay:
         exitStatus();
-        setStatus(Status.Ok);
+        setStatus(Ok);
         wasEventProcessed = true;
         break;
     }
@@ -93,7 +103,7 @@
     return wasEventProcessed;
   }
 
-  private void Mentor::exitStatus()
+  void Mentor::exitStatus()
   {
     switch(status)
     {
@@ -106,7 +116,7 @@
     }
   }
 
-  private void Mentor::setStatus(Status aStatus)
+  void Mentor::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -121,26 +131,17 @@
         break;
     }
   }
+  
 
-  void Mentor::startTimeoutOkToNotOkHandler()
-  {
-    timeoutOkToNotOkHandler = new TimedEventHandler(this,"timeoutOkToNotOk",4);
-  }
+  void startTimeoutOkToNotOkHandler();
+  void stopTimeoutOkToNotOkHandler();
+  
 
-  void Mentor::stopTimeoutOkToNotOkHandler()
-  {
-    timeoutOkToNotOkHandler.stop();
-  }
 
-  void Mentor::startTimeoutNotOkayToOkHandler()
-  {
-    timeoutNotOkayToOkHandler = new TimedEventHandler(this,"timeoutNotOkayToOk",howLongUntilOk);
-  }
+  void startTimeoutNotOkayToOkHandler();
+  void stopTimeoutNotOkayToOkHandler();
+  
 
-  void Mentor::stopTimeoutNotOkayToOkHandler()
-  {
-    timeoutNotOkayToOkHandler.stop();
-  }
 
   public static class TimedEventHandler extends TimerTask  
   {

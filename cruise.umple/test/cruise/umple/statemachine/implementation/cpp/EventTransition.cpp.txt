@@ -11,7 +11,7 @@
   
  Course::Course()
   {
-    setStatus(Status.Open);
+    setStatus(Open);
   }
   
   //------------------------
@@ -32,25 +32,33 @@
   // INTERFACE
   //------------------------
 
-  String Course::getStatusFullName()
+  string Course::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Course::getStatus()
+  
+  Course::Status Course::getStatus()
   {
     return status;
   }
 
+  string Course::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Open"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Course::register()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case Open:
-        setStatus(Status.Open);
+        setStatus(Open);
         wasEventProcessed = true;
         break;
     }
@@ -58,10 +66,11 @@
     return wasEventProcessed;
   }
 
-  private void Course::setStatus(Status aStatus)
+  void Course::setStatus(Status aStatus)
   {
     status = aStatus;
   }
+  
 
   
   //------------------------

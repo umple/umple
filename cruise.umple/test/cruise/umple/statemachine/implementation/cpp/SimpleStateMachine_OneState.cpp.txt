@@ -11,7 +11,7 @@
   
  Student::Student()
   {
-    setGrade(Grade.Pass);
+    setGrade(Pass);
   }
   
   //------------------------
@@ -32,15 +32,23 @@
   // INTERFACE
   //------------------------
 
-  String Student::getGradeFullName()
+  string Student::getGradeFullName()
   {
-    String answer = grade.toString();
+    string answer = getGradeStringName(grade);
     return answer;
   }
-
-  Grade Student::getGrade()
+  
+  Student::Grade Student::getGrade()
   {
     return grade;
+  }
+
+  string Student::getGradeStringName (Grade grade)
+  {
+    switch (grade)  {
+      case 0 : {return "Pass"; break;}
+      default: {return ""; break;}
+    }
   }
 
   bool Student::setGrade(Grade aGrade)

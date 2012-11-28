@@ -49,7 +49,7 @@
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
         }
 
-        allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
+        allCases.append(StringFormatter.format("{0}{1}({3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
         allCases.append(StringFormatter.format("{0}break;\n",tabSpace));
 
@@ -73,12 +73,12 @@
     allCases.append(StringFormatter.format("    }\n\n"));
   }
   
-  String scope = e.getIsInternal() || e.isAutoTransition() ? "private " : "";
+  String scope = e.getIsInternal() || e.isAutoTransition() ? "" : "";
   String outputCases = allCases.toString().trim();
 %>
   <%=scope%>bool <%=gen.translate("type",uClass)%>::<%=gen.translate("eventMethod",e)%>()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     <%= outputCases %>
 

@@ -9,7 +9,7 @@
     allParents.remove(0);
     for (StateMachine childSm : parentSm.getNestedStateMachines()) 
     {
-      output.append(StringFormatter.format("\n    if ({0} != {1}.Null) { answer += \".\" + {0}.toString(); }",gen.translate("stateMachineOne",childSm),gen.translate("type",childSm)));
+      output.append(StringFormatter.format("\n    if ({0} != Null) { answer += \".\" + {2}({0}); }",gen.translate("stateMachineOne",childSm),gen.translate("type",childSm),gen.translate("getStringMethod",childSm)));
       allParents.addAll(childSm.getNestedStateMachines());
     }     
   }
@@ -17,8 +17,9 @@
 %>
   <%=gen.translate("typeFull",sm)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getFullMethod",sm)%>()
   {
-    String answer = <%=gen.translate("stateMachineOne",sm)%>.toString();
+    string answer = <%=gen.translate("getStringMethod",sm)%>(<%=gen.translate("stateMachineOne",sm)%>);
     <% if (outputAsString.length() > 0) { append(stringBuffer, "{0}",outputAsString); } %>
     return answer;
   }
-
+  
+  

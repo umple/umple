@@ -11,7 +11,7 @@
   
  Switch::Switch()
   {
-    setStatus(Status.On);
+    setStatus(On);
   }
   
   //------------------------
@@ -32,25 +32,34 @@
   // INTERFACE
   //------------------------
 
-  String Switch::getStatusFullName()
+  string Switch::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Switch::getStatus()
+  
+  Switch::Status Switch::getStatus()
   {
     return status;
   }
 
+  string Switch::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Switch::press()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case On:
-        setStatus(Status.Off);
+        setStatus(Off);
         wasEventProcessed = true;
         break;
     }
@@ -58,7 +67,7 @@
     return wasEventProcessed;
   }
 
-  private void Switch::setStatus(Status aStatus)
+  void Switch::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -70,6 +79,7 @@
         break;
     }
   }
+  
 
    void Switch::doActivityStatusOff()
   {

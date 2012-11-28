@@ -1,6 +1,10 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  <%=gen.translate("type",sm)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",sm)%>()
-  {
-    return <%= gen.translate("stateOne",sm) %>;
-  }
-
+  <%=uClass.getName()%>::<%=gen.translate("type",sm)%> <%=gen.translate("type",uClass)%>::<%=gen.translate("getMethod",sm)%>()
+  <%
+  appendln(stringBuffer,"");
+  appendln(stringBuffer,"  {");
+  appendln(stringBuffer,"    return {0};", gen.translate("stateOne",sm));
+  appendln(stringBuffer,"  }");
+  appendln(stringBuffer,"");
+  %><%@ include file="state_machine_GetStateNameString.jet" %><%
+%>

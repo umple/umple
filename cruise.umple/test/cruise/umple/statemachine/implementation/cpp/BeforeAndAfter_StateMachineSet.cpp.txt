@@ -11,7 +11,7 @@
   
  LightFixture::LightFixture()
   {
-    setLight(Light.On);
+    setLight(On);
   }
   
   //------------------------
@@ -32,29 +32,38 @@
   // INTERFACE
   //------------------------
 
-  String LightFixture::getLightFullName()
+  string LightFixture::getLightFullName()
   {
-    String answer = light.toString();
+    string answer = getLightStringName(light);
     return answer;
   }
-
-  Light LightFixture::getLight()
+  
+  LightFixture::Light LightFixture::getLight()
   {
     return light;
   }
 
+  string LightFixture::getLightStringName (Light light)
+  {
+    switch (light)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool LightFixture::flip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (light)
     {
       case On:
-        setLight(Light.Off);
+        setLight(Off);
         wasEventProcessed = true;
         break;
       case Off:
-        setLight(Light.On);
+        setLight(On);
         wasEventProcessed = true;
         break;
     }
@@ -62,10 +71,11 @@
     return wasEventProcessed;
   }
 
-  private void LightFixture::setLight(Light aLight)
+  void LightFixture::setLight(Light aLight)
   {
     light = aLight;
   }
+  
 
   
   //------------------------

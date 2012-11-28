@@ -115,6 +115,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
     UpperCaseSingularLookupMap.put("getMethod", "get{0}");
     UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
+    UpperCaseSingularLookupMap.put("getStringMethod", "get{0}StringName");
     UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");    
     UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
     UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
@@ -317,7 +318,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     }
     else if ("typeGet".equals(keyName) || "typeFull".equals(keyName))
     {
-      return "String";
+      return "string";
     }
     else if ("type".equals(keyName))
     {
@@ -784,7 +785,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       Map<String,String> lookups = new HashMap<String,String>();
       lookups.put("entryEventName",translate("enterMethod",parentState));
       lookups.put("exitEventName",translate("exitMethod",parentState));
-      lookups.put("parentEntryActionCode",StringFormatter.format("if ({0} == {1}.{2}) { {3}({1}.{4}); }"
+      lookups.put("parentEntryActionCode",StringFormatter.format("if ({0} == {2}) { {3}({4}); }"
           ,translate("stateMachineOne",sm)
           ,translate("type",sm)
           ,translate("stateNull",sm)

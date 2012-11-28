@@ -9,7 +9,7 @@
     {
       output.append(" && ");
     }
-    output.append(StringFormatter.format("{0} == {1}.{2}",gen.translate("stateMachineOne",finalSm),gen.translate("type",finalSm),gen.translate("stateOne",state)));
+    output.append(StringFormatter.format("{0} == {2}",gen.translate("stateMachineOne",finalSm),gen.translate("type",finalSm),gen.translate("stateOne",state)));
   }
   String outputAsString = output.toString();
 %>

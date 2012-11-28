@@ -11,7 +11,7 @@
   
  Course::Course()
   {
-    setStatus(Status.Open);
+    setStatus(Open);
   }
   
   //------------------------
@@ -32,15 +32,24 @@
   // INTERFACE
   //------------------------
 
-  String Course::getStatusFullName()
+  string Course::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Course::getStatus()
+  
+  Course::Status Course::getStatus()
   {
     return status;
+  }
+
+  string Course::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Open"; break;}
+      case 1 : {return "Full"; break;}
+      default: {return ""; break;}
+    }
   }
 
   bool Course::setStatus(Status aStatus)

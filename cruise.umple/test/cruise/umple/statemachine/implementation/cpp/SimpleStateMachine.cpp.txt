@@ -30,15 +30,22 @@
   // INTERFACE
   //------------------------
 
-  String Mentor::getStatusFullName()
+  string Mentor::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Mentor::getStatus()
+  
+  Mentor::Status Mentor::getStatus()
   {
     return status;
+  }
+
+  string Mentor::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      default: {return ""; break;}
+    }
   }
 
   

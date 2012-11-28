@@ -37,7 +37,7 @@
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-    String includeFile3 = null;
+
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -231,11 +231,6 @@
     {
       %>//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP <%=av%> : <%=relatedAssociation%><%
     }
-    
-    if(av.isMany() && !av.isImmutable() && !av.isN())
-    {
-      includeFile3 = "association_AddIndexControlFunctions.jet";
-    }
 
     boolean addNewLine = false;
     if (hasIsNumberOfValidMethod)
@@ -425,10 +420,5 @@
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
-    
-    if(includeFile3 == "association_AddIndexControlFunctions.jet"){
-      %><%@ include file="association_AddIndexControlFunctions.jet"%><%
-    }
-
   }
 %>

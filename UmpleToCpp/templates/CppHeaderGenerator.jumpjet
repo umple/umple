@@ -74,16 +74,16 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 
   <%@ include file="header_attribute_SetAll.jet" %>
   <%@ include file="header_attribute_GetAll.jet" %>
-  <%@ include file="state_machine_Get_All.jet" %>
-  <%@ include file="state_machine_Events_All.jet" %>
-  <%@ include file="state_machine_Set_All.jet" %>
+  <%@ include file="header_state_machine_Get_All.jet" %>
+  <%@ include file="header_state_machine_Events_All.jet" %>
+  <%@ include file="header_state_machine_Set_All.jet" %>
   <%@ include file="header_association_Get_All.jet" %>
   <%@ include file="header_association_SetAll.jet" %>
 <% if (uClass.getKey().isProvided()) { %>
   <%@ include file="header_equals.jet" %>
 <% } %>
-  <%@ include file="state_machine_doActivity_All.jet" %>
-  <%@ include file="state_machine_timedEvent_All.jet" %>
+  <%@ include file="header_state_machine_doActivity_All.jet" %>
+  <%@ include file="header_state_machine_timedEvent_All.jet" %>
   //------------------------
   // Destructor
   //------------------------

@@ -11,7 +11,7 @@
   
  Mentor::Mentor()
   {
-    setStatus(Status.Ok);
+    setStatus(Ok);
   }
   
   //------------------------
@@ -32,25 +32,34 @@
   // INTERFACE
   //------------------------
 
-  String Mentor::getStatusFullName()
+  string Mentor::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Mentor::getStatus()
+  
+  Mentor::Status Mentor::getStatus()
   {
     return status;
   }
 
+  string Mentor::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Ok"; break;}
+      case 1 : {return "Final"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Mentor::flip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case Ok:
-        setStatus(Status.Final);
+        setStatus(Final);
         wasEventProcessed = true;
         break;
     }
@@ -58,10 +67,11 @@
     return wasEventProcessed;
   }
 
-  private void Mentor::setStatus(Status aStatus)
+  void Mentor::setStatus(Status aStatus)
   {
     status = aStatus;
   }
+  
 
   
   //------------------------

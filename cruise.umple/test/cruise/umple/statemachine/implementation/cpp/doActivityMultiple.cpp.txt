@@ -11,7 +11,7 @@
   
  Lamp::Lamp()
   {
-    setStatus(Status.On);
+    setStatus(On);
   }
   
   //------------------------
@@ -32,29 +32,38 @@
   // INTERFACE
   //------------------------
 
-  String Lamp::getStatusFullName()
+  string Lamp::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Lamp::getStatus()
+  
+  Lamp::Status Lamp::getStatus()
   {
     return status;
   }
 
+  string Lamp::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Lamp::press()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case On:
-        setStatus(Status.Off);
+        setStatus(Off);
         wasEventProcessed = true;
         break;
       case Off:
-        setStatus(Status.On);
+        setStatus(On);
         wasEventProcessed = true;
         break;
     }
@@ -62,7 +71,7 @@
     return wasEventProcessed;
   }
 
-  private void Lamp::setStatus(Status aStatus)
+  void Lamp::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -77,6 +86,7 @@
         break;
     }
   }
+  
 
    void Lamp::doActivityStatusOn()
   {

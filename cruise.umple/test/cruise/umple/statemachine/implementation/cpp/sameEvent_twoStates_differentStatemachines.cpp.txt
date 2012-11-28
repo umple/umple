@@ -11,8 +11,8 @@
   
  LightFixture::LightFixture()
   {
-    setBulb(Bulb.On);
-    setAnotherBulb(AnotherBulb.On);
+    setBulb(On);
+    setAnotherBulb(On);
   }
   
   //------------------------
@@ -33,40 +33,58 @@
   // INTERFACE
   //------------------------
 
-  String LightFixture::getBulbFullName()
+  string LightFixture::getBulbFullName()
   {
-    String answer = bulb.toString();
+    string answer = getBulbStringName(bulb);
     return answer;
   }
-
-  String LightFixture::getAnotherBulbFullName()
+  
+  string LightFixture::getAnotherBulbFullName()
   {
-    String answer = anotherBulb.toString();
+    string answer = getAnotherBulbStringName(anotherBulb);
     return answer;
   }
-
-  Bulb LightFixture::getBulb()
+  
+  LightFixture::Bulb LightFixture::getBulb()
   {
     return bulb;
   }
 
-  AnotherBulb LightFixture::getAnotherBulb()
+  string LightFixture::getBulbStringName (Bulb bulb)
+  {
+    switch (bulb)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  LightFixture::AnotherBulb LightFixture::getAnotherBulb()
   {
     return anotherBulb;
   }
 
+  string LightFixture::getAnotherBulbStringName (AnotherBulb anotherBulb)
+  {
+    switch (anotherBulb)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Amber"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool LightFixture::flip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (bulb)
     {
       case On:
-        setBulb(Bulb.Off);
+        setBulb(Off);
         wasEventProcessed = true;
         break;
       case Off:
-        setBulb(Bulb.On);
+        setBulb(On);
         wasEventProcessed = true;
         break;
     }
@@ -74,7 +92,7 @@
     switch (anotherBulb)
     {
       case On:
-        setAnotherBulb(AnotherBulb.Amber);
+        setAnotherBulb(Amber);
         wasEventProcessed = true;
         break;
     }
@@ -84,12 +102,12 @@
 
   bool LightFixture::unflip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (anotherBulb)
     {
       case Amber:
-        setAnotherBulb(AnotherBulb.On);
+        setAnotherBulb(On);
         wasEventProcessed = true;
         break;
     }
@@ -97,15 +115,17 @@
     return wasEventProcessed;
   }
 
-  private void LightFixture::setBulb(Bulb aBulb)
+  void LightFixture::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
   }
+  
 
-  private void LightFixture::setAnotherBulb(AnotherBulb aAnotherBulb)
+  void LightFixture::setAnotherBulb(AnotherBulb aAnotherBulb)
   {
     anotherBulb = aAnotherBulb;
   }
+  
 
   
   //------------------------

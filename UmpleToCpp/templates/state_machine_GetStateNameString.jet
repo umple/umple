@@ -1,0 +1,16 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+   <% int i=0;
+   appendln(stringBuffer,"  string {3}::{0} ({1} {2})",gen.translate("getStringMethod",sm),gen.translate("type",sm),gen.translate("stateMachineOne", sm),uClass.getName());
+	appendln(stringBuffer,"  {");
+	appendln(stringBuffer,"    switch ({0})  {",gen.translate("stateMachineOne", sm));
+	if (!sm.getStates().equals(null))
+	{
+		for (State state : sm.getStates())
+		{
+			appendln(stringBuffer,"      case {1} : {return \"{0}\"; break;}", gen.translate("stateOne",state),i++);
+		}
+		appendln(stringBuffer,"      default: {return \"\"; break;}");
+		appendln(stringBuffer,"    }");
+		appendln(stringBuffer,"  }");
+    }
+%>

@@ -11,7 +11,7 @@
   
  Light::Light()
   {
-    setBulb(Bulb.Off);
+    setBulb(Off);
   }
   
   //------------------------
@@ -32,25 +32,34 @@
   // INTERFACE
   //------------------------
 
-  String Light::getBulbFullName()
+  string Light::getBulbFullName()
   {
-    String answer = bulb.toString();
+    string answer = getBulbStringName(bulb);
     return answer;
   }
-
-  Bulb Light::getBulb()
+  
+  Light::Bulb Light::getBulb()
   {
     return bulb;
   }
 
-  private bool Light::__autotransition1__()
+  string Light::getBulbStringName (Bulb bulb)
   {
-    boolean wasEventProcessed = false;
+    switch (bulb)  {
+      case 0 : {return "Off"; break;}
+      case 1 : {return "On"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Light::__autotransition1__()
+  {
+    bool wasEventProcessed = false;
 
     switch (bulb)
     {
       case Off:
-        setBulb(Bulb.On);
+        setBulb(On);
         wasEventProcessed = true;
         break;
     }
@@ -58,10 +67,11 @@
     return wasEventProcessed;
   }
 
-  private void Light::setBulb(Bulb aBulb)
+  void Light::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
   }
+  
 
   
   //------------------------

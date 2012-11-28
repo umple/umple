@@ -11,8 +11,8 @@
   
  LightFixture::LightFixture()
   {
-    if (bulbOn == NULL) { setBulbOn(BulbOn.Null); }
-    setBulb(Bulb.Off);
+    if (bulbOn == Null) { setBulbOn(Null); }
+    setBulb(Off);
   }
   
   //------------------------
@@ -33,36 +33,55 @@
   // INTERFACE
   //------------------------
 
-  String LightFixture::getBulbFullName()
+  string LightFixture::getBulbFullName()
   {
-    String answer = bulb.toString();
-    if (bulbOn != BulbOn.Null) { answer += "." + bulbOn.toString(); }
+    string answer = getBulbStringName(bulb);
+    if (bulbOn != Null) { answer += "." + getBulbOnStringName(bulbOn); }
     return answer;
   }
-
-  Bulb LightFixture::getBulb()
+  
+  LightFixture::Bulb LightFixture::getBulb()
   {
     return bulb;
   }
 
-  BulbOn LightFixture::getBulbOn()
+  string LightFixture::getBulbStringName (Bulb bulb)
+  {
+    switch (bulb)  {
+      case 0 : {return "Off"; break;}
+      case 1 : {return "On"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  LightFixture::BulbOn LightFixture::getBulbOn()
   {
     return bulbOn;
   }
 
+  string LightFixture::getBulbOnStringName (BulbOn bulbOn)
+  {
+    switch (bulbOn)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "Normal"; break;}
+      case 2 : {return "Dimmed"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool LightFixture::flip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (bulb)
     {
       case Off:
-        setBulb(Bulb.On);
+        setBulb(On);
         wasEventProcessed = true;
         break;
       case On:
         exitBulb();
-        setBulb(Bulb.Off);
+        setBulb(Off);
         wasEventProcessed = true;
         break;
     }
@@ -70,14 +89,14 @@
     return wasEventProcessed;
   }
 
-  private bool LightFixture::enterOn()
+  bool LightFixture::enterOn()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (bulbOn)
     {
       case Null:
-        setBulbOn(BulbOn.Normal);
+        setBulbOn(Normal);
         wasEventProcessed = true;
         break;
     }
@@ -85,18 +104,18 @@
     return wasEventProcessed;
   }
 
-  private bool LightFixture::exitOn()
+  bool LightFixture::exitOn()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (bulbOn)
     {
       case Normal:
-        setBulbOn(BulbOn.Null);
+        setBulbOn(Null);
         wasEventProcessed = true;
         break;
       case Dimmed:
-        setBulbOn(BulbOn.Null);
+        setBulbOn(Null);
         wasEventProcessed = true;
         break;
     }
@@ -106,16 +125,16 @@
 
   bool LightFixture::touch()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (bulbOn)
     {
       case Normal:
-        setBulbOn(BulbOn.Dimmed);
+        setBulbOn(Dimmed);
         wasEventProcessed = true;
         break;
       case Dimmed:
-        setBulb(Bulb.Off);
+        setBulb(Off);
         wasEventProcessed = true;
         break;
     }
@@ -123,7 +142,7 @@
     return wasEventProcessed;
   }
 
-  private void LightFixture::exitBulb()
+  void LightFixture::exitBulb()
   {
     switch(bulb)
     {
@@ -133,7 +152,7 @@
     }
   }
 
-  private void LightFixture::setBulb(Bulb aBulb)
+  void LightFixture::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
 
@@ -141,16 +160,18 @@
     switch(bulb)
     {
       case On:
-        if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }
+        if (bulbOn == Null) { setBulbOn(Normal); }
         break;
     }
   }
+  
 
-  private void LightFixture::setBulbOn(BulbOn aBulbOn)
+  void LightFixture::setBulbOn(BulbOn aBulbOn)
   {
     bulbOn = aBulbOn;
-    if (bulb != Bulb.On && aBulbOn != BulbOn.Null) { setBulb(Bulb.On); }
+    if (bulb != On && aBulbOn != Null) { setBulb(On); }
   }
+  
 
   
   //------------------------

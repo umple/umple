@@ -11,7 +11,7 @@
   
  Garage::Garage()
   {
-    setGarageDoor(GarageDoor.Closed);
+    setGarageDoor(Closed);
   }
   
   //------------------------
@@ -32,26 +32,35 @@
   // INTERFACE
   //------------------------
 
-  String Garage::getGarageDoorFullName()
+  string Garage::getGarageDoorFullName()
   {
-    String answer = GarageDoor.toString();
+    string answer = getGarageDoorStringName(GarageDoor);
     return answer;
   }
-
-  GarageDoor Garage::getGarageDoor()
+  
+  Garage::GarageDoor Garage::getGarageDoor()
   {
     return GarageDoor;
   }
 
+  string Garage::getGarageDoorStringName (GarageDoor GarageDoor)
+  {
+    switch (GarageDoor)  {
+      case 0 : {return "Closed"; break;}
+      case 1 : {return "Opening"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Garage::pressButton()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (GarageDoor)
     {
       case Closed:
         turnLightOn();
-        setGarageDoor(GarageDoor.Opening);
+        setGarageDoor(Opening);
         wasEventProcessed = true;
         break;
     }
@@ -59,10 +68,11 @@
     return wasEventProcessed;
   }
 
-  private void Garage::setGarageDoor(GarageDoor aGarageDoor)
+  void Garage::setGarageDoor(GarageDoor aGarageDoor)
   {
     GarageDoor = aGarageDoor;
   }
+  
 
   
   //------------------------

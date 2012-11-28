@@ -11,9 +11,9 @@
   
  LightFixture::LightFixture()
   {
-    if (statusMotorIdle == NULL) { setStatusMotorIdle(StatusMotorIdle.Null); }
-    if (statusFanIdle == NULL) { setStatusFanIdle(StatusFanIdle.Null); }
-    setStatus(Status.Off);
+    if (statusMotorIdle == Null) { setStatusMotorIdle(Null); }
+    if (statusFanIdle == Null) { setStatusFanIdle(Null); }
+    setStatus(Off);
   }
   
   //------------------------
@@ -34,37 +34,66 @@
   // INTERFACE
   //------------------------
 
-  String LightFixture::getStatusFullName()
+  string LightFixture::getStatusFullName()
   {
-    String answer = status.toString();
-    if (statusMotorIdle != StatusMotorIdle.Null) { answer += "." + statusMotorIdle.toString(); }
-    if (statusFanIdle != StatusFanIdle.Null) { answer += "." + statusFanIdle.toString(); }
+    string answer = getStatusStringName(status);
+    if (statusMotorIdle != Null) { answer += "." + getStatusMotorIdleStringName(statusMotorIdle); }
+    if (statusFanIdle != Null) { answer += "." + getStatusFanIdleStringName(statusFanIdle); }
     return answer;
   }
-
-  Status LightFixture::getStatus()
+  
+  LightFixture::Status LightFixture::getStatus()
   {
     return status;
   }
 
-  StatusMotorIdle LightFixture::getStatusMotorIdle()
+  string LightFixture::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Off"; break;}
+      case 1 : {return "On"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  LightFixture::StatusMotorIdle LightFixture::getStatusMotorIdle()
   {
     return statusMotorIdle;
   }
 
-  StatusFanIdle LightFixture::getStatusFanIdle()
+  string LightFixture::getStatusMotorIdleStringName (StatusMotorIdle statusMotorIdle)
+  {
+    switch (statusMotorIdle)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "MotorIdle"; break;}
+      case 2 : {return "MotorRunning"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  LightFixture::StatusFanIdle LightFixture::getStatusFanIdle()
   {
     return statusFanIdle;
   }
 
+  string LightFixture::getStatusFanIdleStringName (StatusFanIdle statusFanIdle)
+  {
+    switch (statusFanIdle)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "FanIdle"; break;}
+      case 2 : {return "FanRunning"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool LightFixture::turnOn()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case Off:
-        setStatus(Status.On);
+        setStatus(On);
         wasEventProcessed = true;
         break;
     }
@@ -72,14 +101,14 @@
     return wasEventProcessed;
   }
 
-  private bool LightFixture::enterOn()
+  bool LightFixture::enterOn()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (statusMotorIdle)
     {
       case Null:
-        setStatusMotorIdle(StatusMotorIdle.MotorIdle);
+        setStatusMotorIdle(MotorIdle);
         wasEventProcessed = true;
         break;
     }
@@ -87,7 +116,7 @@
     switch (statusFanIdle)
     {
       case Null:
-        setStatusFanIdle(StatusFanIdle.FanIdle);
+        setStatusFanIdle(FanIdle);
         wasEventProcessed = true;
         break;
     }
@@ -95,18 +124,18 @@
     return wasEventProcessed;
   }
 
-  private bool LightFixture::exitOn()
+  bool LightFixture::exitOn()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (statusMotorIdle)
     {
       case MotorIdle:
-        setStatusMotorIdle(StatusMotorIdle.Null);
+        setStatusMotorIdle(Null);
         wasEventProcessed = true;
         break;
       case MotorRunning:
-        setStatusMotorIdle(StatusMotorIdle.Null);
+        setStatusMotorIdle(Null);
         wasEventProcessed = true;
         break;
     }
@@ -114,11 +143,11 @@
     switch (statusFanIdle)
     {
       case FanIdle:
-        setStatusFanIdle(StatusFanIdle.Null);
+        setStatusFanIdle(Null);
         wasEventProcessed = true;
         break;
       case FanRunning:
-        setStatusFanIdle(StatusFanIdle.Null);
+        setStatusFanIdle(Null);
         wasEventProcessed = true;
         break;
     }
@@ -128,16 +157,16 @@
 
   bool LightFixture::flip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (statusMotorIdle)
     {
       case MotorIdle:
-        setStatusMotorIdle(StatusMotorIdle.MotorRunning);
+        setStatusMotorIdle(MotorRunning);
         wasEventProcessed = true;
         break;
       case MotorRunning:
-        setStatusMotorIdle(StatusMotorIdle.MotorIdle);
+        setStatusMotorIdle(MotorIdle);
         wasEventProcessed = true;
         break;
     }
@@ -147,16 +176,16 @@
 
   bool LightFixture::flop()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (statusFanIdle)
     {
       case FanIdle:
-        setStatusFanIdle(StatusFanIdle.FanRunning);
+        setStatusFanIdle(FanRunning);
         wasEventProcessed = true;
         break;
       case FanRunning:
-        setStatusFanIdle(StatusFanIdle.FanIdle);
+        setStatusFanIdle(FanIdle);
         wasEventProcessed = true;
         break;
     }
@@ -164,7 +193,7 @@
     return wasEventProcessed;
   }
 
-  private void LightFixture::exitStatus()
+  void LightFixture::exitStatus()
   {
     switch(status)
     {
@@ -174,7 +203,7 @@
     }
   }
 
-  private void LightFixture::setStatus(Status aStatus)
+  void LightFixture::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -182,23 +211,26 @@
     switch(status)
     {
       case On:
-        if (statusMotorIdle == StatusMotorIdle.Null) { setStatusMotorIdle(StatusMotorIdle.MotorIdle); }
-        if (statusFanIdle == StatusFanIdle.Null) { setStatusFanIdle(StatusFanIdle.FanIdle); }
+        if (statusMotorIdle == Null) { setStatusMotorIdle(MotorIdle); }
+        if (statusFanIdle == Null) { setStatusFanIdle(FanIdle); }
         break;
     }
   }
+  
 
-  private void LightFixture::setStatusMotorIdle(StatusMotorIdle aStatusMotorIdle)
+  void LightFixture::setStatusMotorIdle(StatusMotorIdle aStatusMotorIdle)
   {
     statusMotorIdle = aStatusMotorIdle;
-    if (status != Status.On && aStatusMotorIdle != StatusMotorIdle.Null) { setStatus(Status.On); }
+    if (status != On && aStatusMotorIdle != Null) { setStatus(On); }
   }
+  
 
-  private void LightFixture::setStatusFanIdle(StatusFanIdle aStatusFanIdle)
+  void LightFixture::setStatusFanIdle(StatusFanIdle aStatusFanIdle)
   {
     statusFanIdle = aStatusFanIdle;
-    if (status != Status.On && aStatusFanIdle != StatusFanIdle.Null) { setStatus(Status.On); }
+    if (status != On && aStatusFanIdle != Null) { setStatus(On); }
   }
+  
 
   
   //------------------------

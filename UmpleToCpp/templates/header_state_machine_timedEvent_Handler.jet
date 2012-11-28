@@ -1,0 +1,16 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+
+  static class TimedEventHandler extends TimerTask  
+  {
+    private:
+	<%= gen.translate("type",uClass) %> controller;
+    string timeoutMethodName;
+    double howLongInSeconds;
+    Timer timer;
+    
+    public:
+	TimedEventHandler(<%= gen.translate("type",uClass) %> aController, string aTimeoutMethodName, double aHowLongInSeconds);
+    void stop();        
+    void run ();    
+  };
+

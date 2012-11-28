@@ -11,7 +11,7 @@
   
  Light::Light()
   {
-    setStatus(Status.On);
+    setStatus(On);
   }
   
   //------------------------
@@ -32,29 +32,38 @@
   // INTERFACE
   //------------------------
 
-  String Light::getStatusFullName()
+  string Light::getStatusFullName()
   {
-    String answer = status.toString();
+    string answer = getStatusStringName(status);
     return answer;
   }
-
-  Status Light::getStatus()
+  
+  Light::Status Light::getStatus()
   {
     return status;
   }
 
+  string Light::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Light::flip()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (status)
     {
       case On:
-        setStatus(Status.Off);
+        setStatus(Off);
         wasEventProcessed = true;
         break;
       case Off:
-        setStatus(Status.On);
+        setStatus(On);
         wasEventProcessed = true;
         break;
     }
@@ -62,7 +71,7 @@
     return wasEventProcessed;
   }
 
-  private void Light::setStatus(Status aStatus)
+  void Light::setStatus(Status aStatus)
   {
     status = aStatus;
 
@@ -75,6 +84,7 @@
         break;
     }
   }
+  
 
   
   //------------------------

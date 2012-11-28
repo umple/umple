@@ -12,7 +12,7 @@
  LightFixture::LightFixture()
   {
     brightness = 0;
-    setBulb(Bulb.On);
+    setBulb(On);
   }
   
   //------------------------
@@ -50,27 +50,36 @@
     return brightness;
   }
 
-  String LightFixture::getBulbFullName()
+  string LightFixture::getBulbFullName()
   {
-    String answer = bulb.toString();
+    string answer = getBulbStringName(bulb);
     return answer;
   }
-
-  Bulb LightFixture::getBulb()
+  
+  LightFixture::Bulb LightFixture::getBulb()
   {
     return bulb;
   }
 
+  string LightFixture::getBulbStringName (Bulb bulb)
+  {
+    switch (bulb)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool LightFixture::push()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (bulb)
     {
       case On:
         if (brightness < 1)
         {
-          setBulb(Bulb.Off);
+          setBulb(Off);
           wasEventProcessed = true;
           break;
         }
@@ -80,10 +89,11 @@
     return wasEventProcessed;
   }
 
-  private void LightFixture::setBulb(Bulb aBulb)
+  void LightFixture::setBulb(Bulb aBulb)
   {
     bulb = aBulb;
   }
+  
 
   
   //------------------------

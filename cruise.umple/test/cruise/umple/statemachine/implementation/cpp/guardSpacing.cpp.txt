@@ -12,7 +12,7 @@
  Garage::Garage(const bool & aEntranceClear)
   {
     entranceClear = aEntranceClear;
-    setGarageDoor(GarageDoor.Open);
+    setGarageDoor(Open);
   }
   
   //------------------------
@@ -50,27 +50,36 @@
     return entranceClear;
   }
 
-  String Garage::getGarageDoorFullName()
+  string Garage::getGarageDoorFullName()
   {
-    String answer = GarageDoor.toString();
+    string answer = getGarageDoorStringName(GarageDoor);
     return answer;
   }
-
-  GarageDoor Garage::getGarageDoor()
+  
+  Garage::GarageDoor Garage::getGarageDoor()
   {
     return GarageDoor;
   }
 
+  string Garage::getGarageDoorStringName (GarageDoor GarageDoor)
+  {
+    switch (GarageDoor)  {
+      case 0 : {return "Open"; break;}
+      case 1 : {return "Closing"; break;}
+      default: {return ""; break;}
+    }
+  }
+
   bool Garage::pressButton()
   {
-    boolean wasEventProcessed = false;
+    bool wasEventProcessed = false;
 
     switch (GarageDoor)
     {
       case Open:
         if (getEntranceClear())
         {
-          setGarageDoor(GarageDoor.Closing);
+          setGarageDoor(Closing);
           wasEventProcessed = true;
           break;
         }
@@ -80,10 +89,11 @@
     return wasEventProcessed;
   }
 
-  private void Garage::setGarageDoor(GarageDoor aGarageDoor)
+  void Garage::setGarageDoor(GarageDoor aGarageDoor)
   {
     GarageDoor = aGarageDoor;
   }
+  
 
   
   //------------------------

@@ -14,19 +14,20 @@
       isFirst = false;
     }
   
-    append(stringBuffer, "\n  enum {0} { {1} }", gen.translate("type",sm), gen.translate("listStates",sm));
+    append(stringBuffer, "\n  enum {0} { {1} };", gen.translate("type",sm), gen.translate("listStates",sm));
 
     for (StateMachine nestedSm : allNested)
     {
-      append(stringBuffer, "\n  enum {0} { {1} }", gen.translate("type",nestedSm), gen.translate("listStates",nestedSm));
+      append(stringBuffer, "\n  enum {0} { {1} };", gen.translate("type",nestedSm), gen.translate("listStates",nestedSm));
+	  
     }
     
-    append(stringBuffer, "\n  private {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
+    append(stringBuffer, "\n  {0} {1};", gen.translate("type",sm), gen.translate("stateMachineOne", sm));
+	
     for (StateMachine nestedSm : allNested)
     {
-      append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      append(stringBuffer, "\n  {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
-
-  }
+	}
 }
 %>
