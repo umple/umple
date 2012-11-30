@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 class Student
 {
@@ -448,38 +448,6 @@ class Student
     return $wasSet;
   }
 
-  public function addM3At($aM3, $index)
-  {  
-    $wasAdded = false;
-    if($this->addM3($aM3))
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM3s()) { $index = $this->numberOfM3s() - 1; }
-      array_splice($this->m3s, $this->indexOfM3($aM3), 1);
-      array_splice($this->m3s, $index, 0, array($aM3));
-      $wasAdded = true;
-    }
-    return $wasAdded;
-  }
-
-  public function addOrMoveM3At($aM3, $index)
-  {
-    $wasAdded = false;
-    if($this->indexOfM3($aM3) !== -1)
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM3s()) { $index = $this->numberOfM3s() - 1; }
-      array_splice($this->m3s, $this->indexOfM3($aM3), 1);
-      array_splice($this->m3s, $index, 0, array($aM3));
-      $wasAdded = true;
-    } 
-    else 
-    {
-      $wasAdded = $this->addM3At($aM3, $index);
-    }
-    return $wasAdded;
-  }
-
   public function isNumberOfM4sValid()
   {
     print "isNumberOfM4sValid";
@@ -614,38 +582,6 @@ class Student
     return $wasSet;
   }
 
-  public function addM4At($aM4, $index)
-  {  
-    $wasAdded = false;
-    if($this->addM4($aM4))
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM4s()) { $index = $this->numberOfM4s() - 1; }
-      array_splice($this->m4s, $this->indexOfM4($aM4), 1);
-      array_splice($this->m4s, $index, 0, array($aM4));
-      $wasAdded = true;
-    }
-    return $wasAdded;
-  }
-
-  public function addOrMoveM4At($aM4, $index)
-  {
-    $wasAdded = false;
-    if($this->indexOfM4($aM4) !== -1)
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM4s()) { $index = $this->numberOfM4s() - 1; }
-      array_splice($this->m4s, $this->indexOfM4($aM4), 1);
-      array_splice($this->m4s, $index, 0, array($aM4));
-      $wasAdded = true;
-    } 
-    else 
-    {
-      $wasAdded = $this->addM4At($aM4, $index);
-    }
-    return $wasAdded;
-  }
-
   public function isNumberOfM5sValid()
   {
     print "isNumberOfM5sValid";
@@ -766,38 +702,6 @@ class Student
     return $wasSet;
   }
 
-  public function addM5At($aM5, $index)
-  {  
-    $wasAdded = false;
-    if($this->addM5($aM5))
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM5s()) { $index = $this->numberOfM5s() - 1; }
-      array_splice($this->m5s, $this->indexOfM5($aM5), 1);
-      array_splice($this->m5s, $index, 0, array($aM5));
-      $wasAdded = true;
-    }
-    return $wasAdded;
-  }
-
-  public function addOrMoveM5At($aM5, $index)
-  {
-    $wasAdded = false;
-    if($this->indexOfM5($aM5) !== -1)
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM5s()) { $index = $this->numberOfM5s() - 1; }
-      array_splice($this->m5s, $this->indexOfM5($aM5), 1);
-      array_splice($this->m5s, $index, 0, array($aM5));
-      $wasAdded = true;
-    } 
-    else 
-    {
-      $wasAdded = $this->addM5At($aM5, $index);
-    }
-    return $wasAdded;
-  }
-
   public static function minimumNumberOfM6s()
   {
     return 0;
@@ -853,38 +757,6 @@ class Student
     $this->m6s = array_values($this->m6s);
     print "after removeM6";
     return $wasRemoved;
-  }
-
-  public function addM6At($aM6, $index)
-  {  
-    $wasAdded = false;
-    if($this->addM6($aM6))
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM6s()) { $index = $this->numberOfM6s() - 1; }
-      array_splice($this->m6s, $this->indexOfM6($aM6), 1);
-      array_splice($this->m6s, $index, 0, array($aM6));
-      $wasAdded = true;
-    }
-    return $wasAdded;
-  }
-
-  public function addOrMoveM6At($aM6, $index)
-  {
-    $wasAdded = false;
-    if($this->indexOfM6($aM6) !== -1)
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfM6s()) { $index = $this->numberOfM6s() - 1; }
-      array_splice($this->m6s, $this->indexOfM6($aM6), 1);
-      array_splice($this->m6s, $index, 0, array($aM6));
-      $wasAdded = true;
-    } 
-    else 
-    {
-      $wasAdded = $this->addM6At($aM6, $index);
-    }
-    return $wasAdded;
   }
 
   public function equals($compareTo)

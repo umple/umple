@@ -175,38 +175,6 @@ public class UmletElement
     return wasRemoved;
   }
 
-  public boolean addUmletDiagramAt(UmletDiagram aUmletDiagram, int index)
-  {  
-    boolean wasAdded = false;
-    if(addUmletDiagram(aUmletDiagram))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfUmletDiagrams()) { index = numberOfUmletDiagrams() - 1; }
-      umletDiagrams.remove(aUmletDiagram);
-      umletDiagrams.add(index, aUmletDiagram);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveUmletDiagramAt(UmletDiagram aUmletDiagram, int index)
-  {
-    boolean wasAdded = false;
-    if(umletDiagrams.contains(aUmletDiagram))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfUmletDiagrams()) { index = numberOfUmletDiagrams() - 1; }
-      umletDiagrams.remove(aUmletDiagram);
-      umletDiagrams.add(index, aUmletDiagram);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addUmletDiagramAt(aUmletDiagram, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     coordinate = null;

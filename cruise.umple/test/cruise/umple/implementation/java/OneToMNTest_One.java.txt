@@ -151,38 +151,6 @@ public class Mentor
     return wasRemoved;
   }
 
-  public boolean addPupilAt(Pupil aPupil, int index)
-  {  
-    boolean wasAdded = false;
-    if(addPupil(aPupil))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfPupils()) { index = numberOfPupils() - 1; }
-      pupils.remove(aPupil);
-      pupils.add(index, aPupil);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMovePupilAt(Pupil aPupil, int index)
-  {
-    boolean wasAdded = false;
-    if(pupils.contains(aPupil))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfPupils()) { index = numberOfPupils() - 1; }
-      pupils.remove(aPupil);
-      pupils.add(index, aPupil);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addPupilAt(aPupil, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     for(int i=pupils.size(); i > 0; i--)

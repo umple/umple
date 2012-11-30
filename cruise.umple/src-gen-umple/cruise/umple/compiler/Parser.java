@@ -244,38 +244,6 @@ public class Parser
     return wasRemoved;
   }
 
-  public boolean addRuleAt(Rule aRule, int index)
-  {  
-    boolean wasAdded = false;
-    if(addRule(aRule))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRules()) { index = numberOfRules() - 1; }
-      rules.remove(aRule);
-      rules.add(index, aRule);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveRuleAt(Rule aRule, int index)
-  {
-    boolean wasAdded = false;
-    if(rules.contains(aRule))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRules()) { index = numberOfRules() - 1; }
-      rules.remove(aRule);
-      rules.add(index, aRule);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addRuleAt(aRule, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfCouples()
   {
     return 0;
@@ -299,38 +267,6 @@ public class Parser
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addCoupleAt(Couple aCouple, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCouple(aCouple))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCouples()) { index = numberOfCouples() - 1; }
-      couples.remove(aCouple);
-      couples.add(index, aCouple);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveCoupleAt(Couple aCouple, int index)
-  {
-    boolean wasAdded = false;
-    if(couples.contains(aCouple))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCouples()) { index = numberOfCouples() - 1; }
-      couples.remove(aCouple);
-      couples.add(index, aCouple);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCoupleAt(aCouple, index);
-    }
-    return wasAdded;
   }
 
   public void delete()

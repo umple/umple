@@ -182,38 +182,6 @@ public class TraceRecord
     return wasRemoved;
   }
 
-  public boolean addAttributeAt(Attribute aAttribute, int index)
-  {  
-    boolean wasAdded = false;
-    if(addAttribute(aAttribute))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAttributes()) { index = numberOfAttributes() - 1; }
-      attributes.remove(aAttribute);
-      attributes.add(index, aAttribute);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveAttributeAt(Attribute aAttribute, int index)
-  {
-    boolean wasAdded = false;
-    if(attributes.contains(aAttribute))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAttributes()) { index = numberOfAttributes() - 1; }
-      attributes.remove(aAttribute);
-      attributes.add(index, aAttribute);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addAttributeAt(aAttribute, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfStateMachines()
   {
     return 0;
@@ -262,38 +230,6 @@ public class TraceRecord
       }
     }
     return wasRemoved;
-  }
-
-  public boolean addStateMachineAt(StateMachine aStateMachine, int index)
-  {  
-    boolean wasAdded = false;
-    if(addStateMachine(aStateMachine))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStateMachines()) { index = numberOfStateMachines() - 1; }
-      stateMachines.remove(aStateMachine);
-      stateMachines.add(index, aStateMachine);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveStateMachineAt(StateMachine aStateMachine, int index)
-  {
-    boolean wasAdded = false;
-    if(stateMachines.contains(aStateMachine))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStateMachines()) { index = numberOfStateMachines() - 1; }
-      stateMachines.remove(aStateMachine);
-      stateMachines.add(index, aStateMachine);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addStateMachineAt(aStateMachine, index);
-    }
-    return wasAdded;
   }
 
   public boolean setTraceDirective(TraceDirective newTraceDirective)

@@ -199,38 +199,6 @@ public class VariationPoint
     return wasRemoved;
   }
 
-  public boolean addVariantAt(Variant aVariant, int index)
-  {  
-    boolean wasAdded = false;
-    if(addVariant(aVariant))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfVariants()) { index = numberOfVariants() - 1; }
-      variants.remove(aVariant);
-      variants.add(index, aVariant);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveVariantAt(Variant aVariant, int index)
-  {
-    boolean wasAdded = false;
-    if(variants.contains(aVariant))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfVariants()) { index = numberOfVariants() - 1; }
-      variants.remove(aVariant);
-      variants.add(index, aVariant);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addVariantAt(aVariant, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfRequires()
   {
     return 0;
@@ -254,38 +222,6 @@ public class VariationPoint
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addRequireAt(VariationPoint aRequire, int index)
-  {  
-    boolean wasAdded = false;
-    if(addRequire(aRequire))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRequires()) { index = numberOfRequires() - 1; }
-      requires.remove(aRequire);
-      requires.add(index, aRequire);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveRequireAt(VariationPoint aRequire, int index)
-  {
-    boolean wasAdded = false;
-    if(requires.contains(aRequire))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRequires()) { index = numberOfRequires() - 1; }
-      requires.remove(aRequire);
-      requires.add(index, aRequire);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addRequireAt(aRequire, index);
-    }
-    return wasAdded;
   }
 
   public boolean setConcern(Concern aConcern)

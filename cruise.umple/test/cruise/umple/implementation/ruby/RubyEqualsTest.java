@@ -23,8 +23,8 @@ public class RubyEqualsTest extends EqualsTest
 
   @Test
   public void indexOf_Key()
-  {    assertUmpleTemplateFor("indexOf_Key.ump",languagePath + "/indexOf_Key."+ languagePath +".txt","Student");
-
+  {
+    assertUmpleTemplateFor("indexOf_Key.ump",languagePath + "/indexOf_Key."+ languagePath +".txt","Student");
   }
 
 }

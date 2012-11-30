@@ -402,38 +402,6 @@ public class Student
     return wasSet;
   }
 
-  public boolean addM3At(Mentor aM3, int index)
-  {  
-    boolean wasAdded = false;
-    if(addM3(aM3))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM3s()) { index = numberOfM3s() - 1; }
-      m3s.remove(aM3);
-      m3s.add(index, aM3);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveM3At(Mentor aM3, int index)
-  {
-    boolean wasAdded = false;
-    if(m3s.contains(aM3))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM3s()) { index = numberOfM3s() - 1; }
-      m3s.remove(aM3);
-      m3s.add(index, aM3);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addM3At(aM3, index);
-    }
-    return wasAdded;
-  }
-
   public boolean isNumberOfM4sValid()
   {
     print "isNumberOfM4sValid";
@@ -564,38 +532,6 @@ public class Student
     return wasSet;
   }
 
-  public boolean addM4At(Mentor aM4, int index)
-  {  
-    boolean wasAdded = false;
-    if(addM4(aM4))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM4s()) { index = numberOfM4s() - 1; }
-      m4s.remove(aM4);
-      m4s.add(index, aM4);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveM4At(Mentor aM4, int index)
-  {
-    boolean wasAdded = false;
-    if(m4s.contains(aM4))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM4s()) { index = numberOfM4s() - 1; }
-      m4s.remove(aM4);
-      m4s.add(index, aM4);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addM4At(aM4, index);
-    }
-    return wasAdded;
-  }
-
   public boolean isNumberOfM5sValid()
   {
     print "isNumberOfM5sValid";
@@ -712,38 +648,6 @@ public class Student
     return wasSet;
   }
 
-  public boolean addM5At(Mentor aM5, int index)
-  {  
-    boolean wasAdded = false;
-    if(addM5(aM5))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM5s()) { index = numberOfM5s() - 1; }
-      m5s.remove(aM5);
-      m5s.add(index, aM5);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveM5At(Mentor aM5, int index)
-  {
-    boolean wasAdded = false;
-    if(m5s.contains(aM5))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM5s()) { index = numberOfM5s() - 1; }
-      m5s.remove(aM5);
-      m5s.add(index, aM5);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addM5At(aM5, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfM6s()
   {
     return 0;
@@ -797,38 +701,6 @@ public class Student
     }
     print "after removeM6";
     return wasRemoved;
-  }
-
-  public boolean addM6At(Mentor aM6, int index)
-  {  
-    boolean wasAdded = false;
-    if(addM6(aM6))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM6s()) { index = numberOfM6s() - 1; }
-      m6s.remove(aM6);
-      m6s.add(index, aM6);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveM6At(Mentor aM6, int index)
-  {
-    boolean wasAdded = false;
-    if(m6s.contains(aM6))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfM6s()) { index = numberOfM6s() - 1; }
-      m6s.remove(aM6);
-      m6s.add(index, aM6);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addM6At(aM6, index);
-    }
-    return wasAdded;
   }
 
   public void delete()

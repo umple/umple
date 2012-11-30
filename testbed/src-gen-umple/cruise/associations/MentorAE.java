@@ -140,38 +140,6 @@ public class MentorAE
     return wasRemoved;
   }
 
-  public boolean addStudentAt(StudentAE aStudent, int index)
-  {  
-    boolean wasAdded = false;
-    if(addStudent(aStudent))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
-      students.remove(aStudent);
-      students.add(index, aStudent);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveStudentAt(StudentAE aStudent, int index)
-  {
-    boolean wasAdded = false;
-    if(students.contains(aStudent))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
-      students.remove(aStudent);
-      students.add(index, aStudent);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addStudentAt(aStudent, index);
-    }
-    return wasAdded;
-  }
-
   public boolean setProgram(ProgramAE newProgram)
   {
     boolean wasSet = false;

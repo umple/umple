@@ -144,38 +144,6 @@ public class RuleInstance
     return wasRemoved;
   }
 
-  public boolean addRulePartAt(RulePart aRulePart, int index)
-  {  
-    boolean wasAdded = false;
-    if(addRulePart(aRulePart))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRuleParts()) { index = numberOfRuleParts() - 1; }
-      ruleParts.remove(aRulePart);
-      ruleParts.add(index, aRulePart);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveRulePartAt(RulePart aRulePart, int index)
-  {
-    boolean wasAdded = false;
-    if(ruleParts.contains(aRulePart))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfRuleParts()) { index = numberOfRuleParts() - 1; }
-      ruleParts.remove(aRulePart);
-      ruleParts.add(index, aRulePart);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addRulePartAt(aRulePart, index);
-    }
-    return wasAdded;
-  }
-
   public boolean setParser(Parser newParser)
   {
     boolean wasSet = false;

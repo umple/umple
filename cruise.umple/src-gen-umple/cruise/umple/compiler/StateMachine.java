@@ -236,38 +236,6 @@ public class StateMachine
     return wasRemoved;
   }
 
-  public boolean addStateAt(State aState, int index)
-  {  
-    boolean wasAdded = false;
-    if(addState(aState))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStates()) { index = numberOfStates() - 1; }
-      states.remove(aState);
-      states.add(index, aState);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveStateAt(State aState, int index)
-  {
-    boolean wasAdded = false;
-    if(states.contains(aState))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStates()) { index = numberOfStates() - 1; }
-      states.remove(aState);
-      states.add(index, aState);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addStateAt(aState, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfTraceRecords()
   {
     return 0;
@@ -318,38 +286,6 @@ public class StateMachine
     return wasRemoved;
   }
 
-  public boolean addTraceRecordAt(TraceRecord aTraceRecord, int index)
-  {  
-    boolean wasAdded = false;
-    if(addTraceRecord(aTraceRecord))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfTraceRecords()) { index = numberOfTraceRecords() - 1; }
-      traceRecords.remove(aTraceRecord);
-      traceRecords.add(index, aTraceRecord);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveTraceRecordAt(TraceRecord aTraceRecord, int index)
-  {
-    boolean wasAdded = false;
-    if(traceRecords.contains(aTraceRecord))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfTraceRecords()) { index = numberOfTraceRecords() - 1; }
-      traceRecords.remove(aTraceRecord);
-      traceRecords.add(index, aTraceRecord);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addTraceRecordAt(aTraceRecord, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfStateMachineTraceItems()
   {
     return 0;
@@ -387,38 +323,6 @@ public class StateMachine
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
-  {  
-    boolean wasAdded = false;
-    if(addStateMachineTraceItem(aStateMachineTraceItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStateMachineTraceItems()) { index = numberOfStateMachineTraceItems() - 1; }
-      stateMachineTraceItems.remove(aStateMachineTraceItem);
-      stateMachineTraceItems.add(index, aStateMachineTraceItem);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
-  {
-    boolean wasAdded = false;
-    if(stateMachineTraceItems.contains(aStateMachineTraceItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfStateMachineTraceItems()) { index = numberOfStateMachineTraceItems() - 1; }
-      stateMachineTraceItems.remove(aStateMachineTraceItem);
-      stateMachineTraceItems.add(index, aStateMachineTraceItem);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addStateMachineTraceItemAt(aStateMachineTraceItem, index);
-    }
-    return wasAdded;
   }
 
   public boolean equals(Object obj)

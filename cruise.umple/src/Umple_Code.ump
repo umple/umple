@@ -1205,6 +1205,11 @@ class AssociationVariable
   {
     return multiplicity.getLowerBound() == 0 && isMany();
   }
+  
+  public boolean isUpperBounded()
+  {
+  	return multiplicity.getUpperBound() >= 0;
+  }
 
   public boolean isN()
   {

@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# This code was generated using the UMPLE 1.15.0.1751 modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -90,40 +90,6 @@ class Mentor
       was_removed = true
     end
     was_removed
-  end
-
-  def add_student_at(a_student, index)
-    was_added = false
-    if add_student(a_student)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_students())
-        index = number_of_students() - 1
-      end
-      @students.delete(a_student)
-      @students.insert(index, a_student)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_student_at(a_student, index)
-    was_added = false
-    if @students.include?(a_student)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_students())
-        index = number_of_students() - 1
-      end
-      @students.delete(a_student)
-      @students.insert(index, a_student)
-      was_added = true
-    else
-      was_added = add_student_at(a_student, index)
-    end
-    was_added
   end
 
   def delete

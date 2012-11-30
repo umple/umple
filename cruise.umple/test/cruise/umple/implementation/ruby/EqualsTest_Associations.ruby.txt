@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# This code was generated using the UMPLE 1.15.0.1751 modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -123,40 +123,6 @@ class Mentor
       was_removed = true
     end
     was_removed
-  end
-
-  def add_secondary_at(a_secondary, index)
-    was_added = false
-    if add_secondary(a_secondary)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_secondaries())
-        index = number_of_secondaries() - 1
-      end
-      @secondaries.delete(a_secondary)
-      @secondaries.insert(index, a_secondary)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_secondary_at(a_secondary, index)
-    was_added = false
-    if @secondaries.include?(a_secondary)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_secondaries())
-        index = number_of_secondaries() - 1
-      end
-      @secondaries.delete(a_secondary)
-      @secondaries.insert(index, a_secondary)
-      was_added = true
-    else
-      was_added = add_secondary_at(a_secondary, index)
-    end
-    was_added
   end
 
   def eql?(obj)

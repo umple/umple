@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package example.one;
 import example.two.*;
@@ -48,6 +48,56 @@ public class Mentor
     return student;
   }
 
+  public boolean setStudent(Student aStudent)
+  {
+    //
+    // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+    // This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    // it's not required (No upper bound)
+    //   
+    boolean wasSet = false;
+    Student existingStudent = student;
+	
+    if (existingStudent == null)
+    {
+      if (aStudent != null)
+      {
+        if (aStudent.addMentor(this))
+        {
+          existingStudent = aStudent;
+          wasSet = true;
+        }
+      }
+    } 
+    else if (existingStudent != null)
+    {
+      if (aStudent == null)
+      {
+        if (existingStudent.minimumNumberOfMentors() < existingStudent.numberOfMentors())
+        {
+          existingStudent.removeMentor(this);
+          existingStudent = aStudent;  // aStudent == null
+          wasSet = true;
+        }
+      } 
+      else
+      {
+        if (existingStudent.minimumNumberOfMentors() < existingStudent.numberOfMentors())
+        {
+          existingStudent.removeMentor(this);
+          aStudent.addMentor(this);
+          existingStudent = aStudent;
+          wasSet = true;
+        }
+      }
+    }
+    if (wasSet)
+    {
+      student = existingStudent;
+    }
+    return wasSet;
+  }
+  
   public void delete()
   {
     if (student != null)

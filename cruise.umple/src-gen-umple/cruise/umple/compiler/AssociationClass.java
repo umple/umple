@@ -115,38 +115,6 @@ public class AssociationClass extends UmpleClass
     return wasSet;
   }
 
-  public boolean addAssociatedToAt(Association aAssociatedTo, int index)
-  {  
-    boolean wasAdded = false;
-    if(addAssociatedTo(aAssociatedTo))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAssociatedTo()) { index = numberOfAssociatedTo() - 1; }
-      associatedTo.remove(aAssociatedTo);
-      associatedTo.add(index, aAssociatedTo);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveAssociatedToAt(Association aAssociatedTo, int index)
-  {
-    boolean wasAdded = false;
-    if(associatedTo.contains(aAssociatedTo))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAssociatedTo()) { index = numberOfAssociatedTo() - 1; }
-      associatedTo.remove(aAssociatedTo);
-      associatedTo.add(index, aAssociatedTo);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addAssociatedToAt(aAssociatedTo, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     associatedTo.clear();

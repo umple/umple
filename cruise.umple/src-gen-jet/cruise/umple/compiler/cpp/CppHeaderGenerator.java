@@ -1536,6 +1536,42 @@ public class CppHeaderGenerator implements ILang
     {
       includeFile = "header_association_SetOptionalOneToMany.jet";
     }
+    else if (av.isOptionalOne() && relatedAssociation.isMandatoryMany())
+    {
+      // Insert code to include code here
+      if (relatedAssociation.isUpperBounded())
+      {
+        //
+        // This program cannot currently include header_association_SetOptionalOneToMandatoryMN.jet because of Issue351 where add/remove methods do not generate
+        //
+        // includeFile = "header_association_SetOptionalOneToMandatoryMN.jet";
+      } 
+      else
+      {
+        //
+        // We can include header_association_SetOptionalOneToMandatoryMany.jet
+        // 
+        includeFile = "header_association_SetOptionalOneToMandatoryMany.jet";
+      } 
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isMandatoryMany())
+    {
+      // Insert code to include code here
+      if (relatedAssociation.isUpperBounded())
+      {
+        //
+        // This program cannot currently include header_association_SetOptionalOneToMandatoryMN.jet because of Issue351 where add/remove methods do not generate
+        //
+        // includeFile = "header_association_SetOptionalOneToMandatoryMN.jet";
+      } 
+      else
+      {
+        //
+        // We can include header_association_SetOptionalOneToMandatoryMany.jet
+        // 
+        includeFile = "header_association_SetOptionalOneToMandatoryMany.jet";
+      } 
+    }
     else if (av.isOptionalOne() && relatedAssociation.isMandatory())
     {
       //ignore

@@ -88,38 +88,6 @@ public class ContentParser extends Parser
     return wasRemoved;
   }
 
-  public boolean addGroupAt(Group aGroup, int index)
-  {  
-    boolean wasAdded = false;
-    if(addGroup(aGroup))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfGroups()) { index = numberOfGroups() - 1; }
-      groups.remove(aGroup);
-      groups.add(index, aGroup);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveGroupAt(Group aGroup, int index)
-  {
-    boolean wasAdded = false;
-    if(groups.contains(aGroup))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfGroups()) { index = numberOfGroups() - 1; }
-      groups.remove(aGroup);
-      groups.add(index, aGroup);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addGroupAt(aGroup, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     groups.clear();

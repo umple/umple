@@ -104,40 +104,6 @@ class WidgetMutableB
     was_set
   end
 
-  def add_widgetImmutableB_at(a_widgetImmutableB, index)
-    was_added = false
-    if add_widgetImmutableB(a_widgetImmutableB)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_widgetImmutableBs())
-        index = number_of_widgetImmutableBs() - 1
-      end
-      @widgetImmutableBs.delete(a_widgetImmutableB)
-      @widgetImmutableBs.insert(index, a_widgetImmutableB)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_widgetImmutableB_at(a_widgetImmutableB, index)
-    was_added = false
-    if @widgetImmutableBs.include?(a_widgetImmutableB)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_widgetImmutableBs())
-        index = number_of_widgetImmutableBs() - 1
-      end
-      @widgetImmutableBs.delete(a_widgetImmutableB)
-      @widgetImmutableBs.insert(index, a_widgetImmutableB)
-      was_added = true
-    else
-      was_added = add_widgetImmutableB_at(a_widgetImmutableB, index)
-    end
-    was_added
-  end
-
   def delete
     @deleted = true
     @widgetImmutableBs.clear

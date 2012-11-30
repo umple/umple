@@ -114,38 +114,6 @@ public class WidgetMutableB
     return wasSet;
   }
 
-  public boolean addWidgetImmutableBAt(WidgetImmutableB aWidgetImmutableB, int index)
-  {  
-    boolean wasAdded = false;
-    if(addWidgetImmutableB(aWidgetImmutableB))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWidgetImmutableBs()) { index = numberOfWidgetImmutableBs() - 1; }
-      widgetImmutableBs.remove(aWidgetImmutableB);
-      widgetImmutableBs.add(index, aWidgetImmutableB);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveWidgetImmutableBAt(WidgetImmutableB aWidgetImmutableB, int index)
-  {
-    boolean wasAdded = false;
-    if(widgetImmutableBs.contains(aWidgetImmutableB))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWidgetImmutableBs()) { index = numberOfWidgetImmutableBs() - 1; }
-      widgetImmutableBs.remove(aWidgetImmutableB);
-      widgetImmutableBs.add(index, aWidgetImmutableB);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addWidgetImmutableBAt(aWidgetImmutableB, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     widgetImmutableBs.clear();

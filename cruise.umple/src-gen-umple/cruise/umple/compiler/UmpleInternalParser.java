@@ -231,38 +231,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return wasRemoved;
   }
 
-  public boolean addMessagesToExpectAt(ErrorType aMessagesToExpect, int index)
-  {  
-    boolean wasAdded = false;
-    if(addMessagesToExpect(aMessagesToExpect))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMessagesToExpect()) { index = numberOfMessagesToExpect() - 1; }
-      messagesToExpect.remove(aMessagesToExpect);
-      messagesToExpect.add(index, aMessagesToExpect);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveMessagesToExpectAt(ErrorType aMessagesToExpect, int index)
-  {
-    boolean wasAdded = false;
-    if(messagesToExpect.contains(aMessagesToExpect))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMessagesToExpect()) { index = numberOfMessagesToExpect() - 1; }
-      messagesToExpect.remove(aMessagesToExpect);
-      messagesToExpect.add(index, aMessagesToExpect);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addMessagesToExpectAt(aMessagesToExpect, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfWarningsToIgnore()
   {
     return 0;
@@ -286,38 +254,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addWarningsToIgnoreAt(ErrorType aWarningsToIgnore, int index)
-  {  
-    boolean wasAdded = false;
-    if(addWarningsToIgnore(aWarningsToIgnore))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWarningsToIgnore()) { index = numberOfWarningsToIgnore() - 1; }
-      warningsToIgnore.remove(aWarningsToIgnore);
-      warningsToIgnore.add(index, aWarningsToIgnore);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveWarningsToIgnoreAt(ErrorType aWarningsToIgnore, int index)
-  {
-    boolean wasAdded = false;
-    if(warningsToIgnore.contains(aWarningsToIgnore))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfWarningsToIgnore()) { index = numberOfWarningsToIgnore() - 1; }
-      warningsToIgnore.remove(aWarningsToIgnore);
-      warningsToIgnore.add(index, aWarningsToIgnore);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addWarningsToIgnoreAt(aWarningsToIgnore, index);
-    }
-    return wasAdded;
   }
 
   public void delete()

@@ -1,6 +1,6 @@
 /* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 #include "Mentor.h"
 #include "Student.h"
@@ -55,6 +55,59 @@
     return student;
   }
 
+  bool Mentor::setStudent(Student aStudent)
+  {
+    // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+    // This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    // it's not required (No upper bound)
+    //   
+    // THIS TEMPLATE IS EXPERIMENTAL
+    //   I cut/Paste from UmpleToJava/templates/association_SetOptionalOneToMandatoryMany.jet
+    //   and then converted to cpp. 
+    //
+    bool wasSet = false;
+    Student *existingStudent = student;
+	
+    if (existingStudent == NULL)
+    {
+      if (aStudent != NULL)
+      {
+        if (aStudent->addMentor(this))
+        {
+          existingStudent = aStudent;
+          wasSet = true;
+        }
+      }
+    } 
+    else if (existingStudent != NULL)
+    {
+      if (aStudent == NULL)
+      {
+        if (existingStudent->minimumNumberOfMentors() < existingStudent->numberOfMentors())
+        {
+          existingStudent->removeMentor(this);
+          existingStudent = aStudent;  // aStudent == NULL
+          wasSet = true;
+        }
+      } 
+      else
+      {
+        if (existingStudent->minimumNumberOfMentors() < existingStudent->numberOfMentors())
+        {
+          existingStudent->removeMentor(this);
+          aStudent->addMentor(this);
+          existingStudent = aStudent;
+          wasSet = true;
+        }
+      }
+    }
+    if (wasSet)
+    {
+      student = existingStudent;
+    }
+    return wasSet;
+  }
+  
   
   //------------------------
   // DESTRUCTOR
@@ -76,3 +129,4 @@ Mentor::~Mentor()
       }
     }
   }
+

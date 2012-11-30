@@ -83,6 +83,58 @@ class StudentF
     return $wasSet;
   }
 
+  public function setMentor($aMentor)
+  {
+    //
+    // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+    // This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    // it's not required (No upper bound)
+    //   
+
+    $wasSet = false;
+    
+    $existingMentor = $this->mentor;
+	
+    if ($existingMentor == null)
+    {
+      if ($aMentor != null)
+      {
+        if ($aMentor->addStudent($this))
+        {
+          $existingMentor = $aMentor;
+          $wasSet = true;
+        }
+      }
+    } 
+    else if ($existingMentor != null)
+    {
+      if ($aMentor == null)
+      {
+        if ($existingMentor->minimumNumberOfStudents() < $existingMentor->numberOfStudents())
+        {
+          $existingMentor->removeStudent($this);
+          $existingMentor = $aMentor;  // aMentor == null
+          $wasSet = true;
+        }
+      } 
+      else
+      {
+        if ($existingMentor->minimumNumberOfStudents() < $existingMentor->numberOfStudents())
+        {
+          $existingMentor->removeStudent($this);
+          $aMentor->addStudent($this);
+          $existingMentor = $aMentor;
+          $wasSet = true;
+        }
+      }
+    }
+    if ($wasSet)
+    {
+      $mentor = $existingMentor;
+    }
+    return $wasSet;
+  }
+  
   public function equals($compareTo)
   {
     return $this == $compareTo;

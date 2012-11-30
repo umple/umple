@@ -37,7 +37,7 @@
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-    String includeFile3 = null;
+
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -223,20 +223,34 @@
     {
       includeFile = "association_SetOptionalOneToMany.jet";
     }
+    else if (av.isOptionalOne() && relatedAssociation.isMandatoryMany())
+    {
+      // Insert code to include code here
+      if (relatedAssociation.isUpperBounded())
+      {
+        //
+        // This program cannot currently include SetOptionalOneToMandatoryMN.jet because of Issue351 where add/remove methods do not generate
+        //
+        // includeFile = "association_SetOptionalOneToMandatoryMN.jet";
+      } 
+      else
+      {
+        //
+        // We can include association_SetOptionalOneToMandatoryMany.jet
+        // 
+        includeFile = "association_SetOptionalOneToMandatoryMany.jet";
+      } 
+    }
     else if (av.isOptionalOne() && relatedAssociation.isMandatory())
     {
       //ignore
     }
+
     else
     {
       %>//FIXME - FOUND UNKNOWN ASSOCIATION RELATIONSHIP <%=av%> : <%=relatedAssociation%><%
     }
-    
-    if(av.isMany() && !av.isImmutable() && !av.isN())
-    {
-      includeFile3 = "association_AddIndexControlFunctions.jet";
-    }
-    
+
     boolean addNewLine = false;
     if (hasIsNumberOfValidMethod)
     {
@@ -392,6 +406,14 @@
     {
     	%><%@ include file="association_SetUnidirectionalMany.jet"%><%
     }
+	else if (includeFile == "association_SetOptionalOneToMandatoryMany.jet")
+    {
+      %><%@ include file="association_SetOptionalOneToMandatoryMany.jet"%><%
+    }
+    else if (includeFile == "association_SetOptionalOneToMandatoryMN.jet")
+    {
+      %><%@ include file="association_SetOptionalOneToMandatoryMN.jet"%><%
+    }
     else if (includeFile != null)
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile);
@@ -424,10 +446,6 @@
     else if (includeFile2 != null)
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
-    }
-    
-    if(includeFile3 == "association_AddIndexControlFunctions.jet"){
-      %><%@ include file="association_AddIndexControlFunctions.jet"%><%
     }
   }
 %>

@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# This code was generated using the UMPLE 1.15.0.1751 modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -49,6 +49,48 @@ class Mentor
     @student
   end
 
+  def set_student(a_student)
+    #
+    # self source of self source generation is association_SetOptionalOneToMandatoryMany.jet
+    # self set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    # it's not required (No upper bound)
+    #   
+    
+    wasSet = false
+    
+    existing_student = student;
+	
+    if existing_student.nil?
+      if !a_student.nil
+        if a_student.add_mentor(self)
+          existing_student = a_student
+          wasSet = true
+        end
+      end
+    elsif existing_student != null
+      if a_student == null
+        if existing_student.minimum_number_of_mentors() < existing_student.number_of_mentors()
+          existing_student.remove_mentor(self);
+          existing_student = a_student;  # a_student == null
+          wasSet = true;
+        end
+      else
+        if existing_student.minimum_number_of_mentors() < existing_student.number_of_mentors()
+          existing_student.remove_mentor(self);
+          a_student.add_mentor(self);
+          existing_student = a_student;
+          wasSet = true;
+        end
+      end
+    end
+    
+    if wasSet == true
+      student = existing_student;
+    end
+    
+    return wasSet;
+  end
+  
   def delete
     @deleted = true
     unless @student.nil?

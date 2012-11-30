@@ -140,40 +140,6 @@ class StudentO
     was_removed
   end
 
-  def add_mentor_at(a_mentor, index)
-    was_added = false
-    if add_mentor(a_mentor)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_mentors())
-        index = number_of_mentors() - 1
-      end
-      @mentors.delete(a_mentor)
-      @mentors.insert(index, a_mentor)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_mentor_at(a_mentor, index)
-    was_added = false
-    if @mentors.include?(a_mentor)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_mentors())
-        index = number_of_mentors() - 1
-      end
-      @mentors.delete(a_mentor)
-      @mentors.insert(index, a_mentor)
-      was_added = true
-    else
-      was_added = add_mentor_at(a_mentor, index)
-    end
-    was_added
-  end
-
   def delete
     @deleted = true
     unless @program.nil?

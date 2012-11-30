@@ -217,38 +217,6 @@ public class Student
     }
   }
 
-  public boolean addMentorAt(Mentor aMentor, int index)
-  {  
-    boolean wasAdded = false;
-    if(addMentor(aMentor))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMentors()) { index = numberOfMentors() - 1; }
-      mentors.remove(aMentor);
-      mentors.add(index, aMentor);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveMentorAt(Mentor aMentor, int index)
-  {
-    boolean wasAdded = false;
-    if(mentors.contains(aMentor))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMentors()) { index = numberOfMentors() - 1; }
-      mentors.remove(aMentor);
-      mentors.add(index, aMentor);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addMentorAt(aMentor, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfCourses()
   {
     return 0;
@@ -297,38 +265,6 @@ public class Student
       }
     }
     return wasRemoved;
-  }
-
-  public boolean addCourseAt(Course aCourse, int index)
-  {  
-    boolean wasAdded = false;
-    if(addCourse(aCourse))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCourses()) { index = numberOfCourses() - 1; }
-      courses.remove(aCourse);
-      courses.add(index, aCourse);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveCourseAt(Course aCourse, int index)
-  {
-    boolean wasAdded = false;
-    if(courses.contains(aCourse))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfCourses()) { index = numberOfCourses() - 1; }
-      courses.remove(aCourse);
-      courses.add(index, aCourse);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addCourseAt(aCourse, index);
-    }
-    return wasAdded;
   }
 
   public void delete()

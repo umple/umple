@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# This code was generated using the UMPLE 1.15.0.1751 modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -339,40 +339,6 @@ class Student
     was_set
   end
 
-  def add_m3_at(a_m3, index)
-    was_added = false
-    if add_m3(a_m3)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m3s())
-        index = number_of_m3s() - 1
-      end
-      @m3s.delete(a_m3)
-      @m3s.insert(index, a_m3)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_m3_at(a_m3, index)
-    was_added = false
-    if @m3s.include?(a_m3)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m3s())
-        index = number_of_m3s() - 1
-      end
-      @m3s.delete(a_m3)
-      @m3s.insert(index, a_m3)
-      was_added = true
-    else
-      was_added = add_m3_at(a_m3, index)
-    end
-    was_added
-  end
-
   def is_number_of_m4s_valid
     print "isNumberOfM4sValid";
     is_valid = number_of_m4s >= Student.minimum_number_of_m4s and number_of_m4s <= Student.maximum_number_of_m4s
@@ -474,40 +440,6 @@ class Student
     was_set
   end
 
-  def add_m4_at(a_m4, index)
-    was_added = false
-    if add_m4(a_m4)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m4s())
-        index = number_of_m4s() - 1
-      end
-      @m4s.delete(a_m4)
-      @m4s.insert(index, a_m4)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_m4_at(a_m4, index)
-    was_added = false
-    if @m4s.include?(a_m4)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m4s())
-        index = number_of_m4s() - 1
-      end
-      @m4s.delete(a_m4)
-      @m4s.insert(index, a_m4)
-      was_added = true
-    else
-      was_added = add_m4_at(a_m4, index)
-    end
-    was_added
-  end
-
   def is_number_of_m5s_valid
     print "isNumberOfM5sValid";
     is_valid = number_of_m5s >= Student.minimum_number_of_m5s
@@ -597,40 +529,6 @@ class Student
     was_set
   end
 
-  def add_m5_at(a_m5, index)
-    was_added = false
-    if add_m5(a_m5)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m5s())
-        index = number_of_m5s() - 1
-      end
-      @m5s.delete(a_m5)
-      @m5s.insert(index, a_m5)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_m5_at(a_m5, index)
-    was_added = false
-    if @m5s.include?(a_m5)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m5s())
-        index = number_of_m5s() - 1
-      end
-      @m5s.delete(a_m5)
-      @m5s.insert(index, a_m5)
-      was_added = true
-    else
-      was_added = add_m5_at(a_m5, index)
-    end
-    was_added
-  end
-
   def self.minimum_number_of_m6s
     0
   end
@@ -670,40 +568,6 @@ class Student
     end
     print "after removeM6";
     was_removed
-  end
-
-  def add_m6_at(a_m6, index)
-    was_added = false
-    if add_m6(a_m6)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m6s())
-        index = number_of_m6s() - 1
-      end
-      @m6s.delete(a_m6)
-      @m6s.insert(index, a_m6)
-      was_added = true
-    end
-    was_added
-  end
-
-  def add_or_move_m6_at(a_m6, index)
-    was_added = false
-    if @m6s.include?(a_m6)
-      if(index < 0)
-        index = 0
-      end
-      if(index > number_of_m6s())
-        index = number_of_m6s() - 1
-      end
-      @m6s.delete(a_m6)
-      @m6s.insert(index, a_m6)
-      was_added = true
-    else
-      was_added = add_m6_at(a_m6, index)
-    end
-    was_added
   end
 
   def delete

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 
 import java.util.*;
@@ -207,38 +207,6 @@ public class Foo
     return wasRemoved;
   }
 
-  public boolean addBar1At(Bar1 aBar1, int index)
-  {  
-    boolean wasAdded = false;
-    if(addBar1(aBar1))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar1s()) { index = numberOfBar1s() - 1; }
-      bar1s.remove(aBar1);
-      bar1s.add(index, aBar1);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveBar1At(Bar1 aBar1, int index)
-  {
-    boolean wasAdded = false;
-    if(bar1s.contains(aBar1))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar1s()) { index = numberOfBar1s() - 1; }
-      bar1s.remove(aBar1);
-      bar1s.add(index, aBar1);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addBar1At(aBar1, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfBar2s()
   {
     return 0;
@@ -277,38 +245,6 @@ public class Foo
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addBar2At(Bar2 aBar2, int index)
-  {  
-    boolean wasAdded = false;
-    if(addBar2(aBar2))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar2s()) { index = numberOfBar2s() - 1; }
-      bar2s.remove(aBar2);
-      bar2s.add(index, aBar2);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveBar2At(Bar2 aBar2, int index)
-  {
-    boolean wasAdded = false;
-    if(bar2s.contains(aBar2))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar2s()) { index = numberOfBar2s() - 1; }
-      bar2s.remove(aBar2);
-      bar2s.add(index, aBar2);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addBar2At(aBar2, index);
-    }
-    return wasAdded;
   }
 
   public static int minimumNumberOfBar3s()
@@ -351,38 +287,6 @@ public class Foo
     return wasRemoved;
   }
 
-  public boolean addBar3At(Bar3 aBar3, int index)
-  {  
-    boolean wasAdded = false;
-    if(addBar3(aBar3))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar3s()) { index = numberOfBar3s() - 1; }
-      bar3s.remove(aBar3);
-      bar3s.add(index, aBar3);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveBar3At(Bar3 aBar3, int index)
-  {
-    boolean wasAdded = false;
-    if(bar3s.contains(aBar3))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar3s()) { index = numberOfBar3s() - 1; }
-      bar3s.remove(aBar3);
-      bar3s.add(index, aBar3);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addBar3At(aBar3, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfBar4s()
   {
     return 0;
@@ -421,38 +325,6 @@ public class Foo
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addBar4At(Bar4 aBar4, int index)
-  {  
-    boolean wasAdded = false;
-    if(addBar4(aBar4))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar4s()) { index = numberOfBar4s() - 1; }
-      bar4s.remove(aBar4);
-      bar4s.add(index, aBar4);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveBar4At(Bar4 aBar4, int index)
-  {
-    boolean wasAdded = false;
-    if(bar4s.contains(aBar4))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfBar4s()) { index = numberOfBar4s() - 1; }
-      bar4s.remove(aBar4);
-      bar4s.add(index, aBar4);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addBar4At(aBar4, index);
-    }
-    return wasAdded;
   }
 
   public void delete()

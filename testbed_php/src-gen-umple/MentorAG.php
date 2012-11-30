@@ -135,38 +135,6 @@ class MentorAG
     return $wasRemoved;
   }
 
-  public function addFriendAt($aFriend, $index)
-  {  
-    $wasAdded = false;
-    if($this->addFriend($aFriend))
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfFriend()) { $index = $this->numberOfFriend() - 1; }
-      array_splice($this->friend, $this->indexOfFriend($aFriend), 1);
-      array_splice($this->friend, $index, 0, array($aFriend));
-      $wasAdded = true;
-    }
-    return $wasAdded;
-  }
-
-  public function addOrMoveFriendAt($aFriend, $index)
-  {
-    $wasAdded = false;
-    if($this->indexOfFriend($aFriend) !== -1)
-    {
-      if($index < 0 ) { $index = 0; }
-      if($index > $this->numberOfFriend()) { $index = $this->numberOfFriend() - 1; }
-      array_splice($this->friend, $this->indexOfFriend($aFriend), 1);
-      array_splice($this->friend, $index, 0, array($aFriend));
-      $wasAdded = true;
-    } 
-    else 
-    {
-      $wasAdded = $this->addFriendAt($aFriend, $index);
-    }
-    return $wasAdded;
-  }
-
   public function equals($compareTo)
   {
     return $this == $compareTo;

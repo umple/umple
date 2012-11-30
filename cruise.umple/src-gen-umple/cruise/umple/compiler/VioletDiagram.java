@@ -114,38 +114,6 @@ public class VioletDiagram
     return wasRemoved;
   }
 
-  public boolean addVioletClassAt(VioletClass aVioletClass, int index)
-  {  
-    boolean wasAdded = false;
-    if(addVioletClass(aVioletClass))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfVioletClasses()) { index = numberOfVioletClasses() - 1; }
-      violetClasses.remove(aVioletClass);
-      violetClasses.add(index, aVioletClass);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveVioletClassAt(VioletClass aVioletClass, int index)
-  {
-    boolean wasAdded = false;
-    if(violetClasses.contains(aVioletClass))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfVioletClasses()) { index = numberOfVioletClasses() - 1; }
-      violetClasses.remove(aVioletClass);
-      violetClasses.add(index, aVioletClass);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addVioletClassAt(aVioletClass, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfVioletAssociations()
   {
     return 0;
@@ -169,38 +137,6 @@ public class VioletDiagram
       wasRemoved = true;
     }
     return wasRemoved;
-  }
-
-  public boolean addVioletAssociationAt(VioletAssociation aVioletAssociation, int index)
-  {  
-    boolean wasAdded = false;
-    if(addVioletAssociation(aVioletAssociation))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfVioletAssociations()) { index = numberOfVioletAssociations() - 1; }
-      violetAssociations.remove(aVioletAssociation);
-      violetAssociations.add(index, aVioletAssociation);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveVioletAssociationAt(VioletAssociation aVioletAssociation, int index)
-  {
-    boolean wasAdded = false;
-    if(violetAssociations.contains(aVioletAssociation))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfVioletAssociations()) { index = numberOfVioletAssociations() - 1; }
-      violetAssociations.remove(aVioletAssociation);
-      violetAssociations.add(index, aVioletAssociation);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addVioletAssociationAt(aVioletAssociation, index);
-    }
-    return wasAdded;
   }
 
   public void delete()

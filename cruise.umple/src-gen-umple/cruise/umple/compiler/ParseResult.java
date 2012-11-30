@@ -171,38 +171,6 @@ public class ParseResult
     return wasRemoved;
   }
 
-  public boolean addErrorMessageAt(ErrorMessage aErrorMessage, int index)
-  {  
-    boolean wasAdded = false;
-    if(addErrorMessage(aErrorMessage))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfErrorMessages()) { index = numberOfErrorMessages() - 1; }
-      errorMessages.remove(aErrorMessage);
-      errorMessages.add(index, aErrorMessage);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveErrorMessageAt(ErrorMessage aErrorMessage, int index)
-  {
-    boolean wasAdded = false;
-    if(errorMessages.contains(aErrorMessage))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfErrorMessages()) { index = numberOfErrorMessages() - 1; }
-      errorMessages.remove(aErrorMessage);
-      errorMessages.add(index, aErrorMessage);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addErrorMessageAt(aErrorMessage, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     position = null;

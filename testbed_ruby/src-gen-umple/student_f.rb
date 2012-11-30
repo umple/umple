@@ -84,6 +84,48 @@ class StudentF
     was_set
   end
 
+  def set_mentor(a_mentor)
+    #
+    # self source of self source generation is association_SetOptionalOneToMandatoryMany.jet
+    # self set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    # it's not required (No upper bound)
+    #   
+    
+    wasSet = false
+    
+    existing_mentor = mentor;
+	
+    if existing_mentor.nil?
+      if !a_mentor.nil
+        if a_mentor.add_student(self)
+          existing_mentor = a_mentor
+          wasSet = true
+        end
+      end
+    elsif existing_mentor != null
+      if a_mentor == null
+        if existing_mentor.minimum_number_of_students() < existing_mentor.number_of_students()
+          existing_mentor.remove_student(self);
+          existing_mentor = a_mentor;  # a_mentor == null
+          wasSet = true;
+        end
+      else
+        if existing_mentor.minimum_number_of_students() < existing_mentor.number_of_students()
+          existing_mentor.remove_student(self);
+          a_mentor.add_student(self);
+          existing_mentor = a_mentor;
+          wasSet = true;
+        end
+      end
+    end
+    
+    if wasSet == true
+      mentor = existing_mentor;
+    end
+    
+    return wasSet;
+  end
+  
   def delete
     @deleted = true
     unless @program.nil?
