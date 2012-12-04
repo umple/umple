@@ -354,8 +354,22 @@ private static void postpareTrace(UmpleModel aModel)
 		  if( traceDirective.hasStateMachineTraceItems() )
 		  {
 			  processTraceDirectiveStateMachines(model,traceDirective,t,template,tracer);	
-		  }		  	  
+		  }
+		  // if the traceItem is an association
+		  if( traceDirective.getAssociationVariable() != null )
+		  {
+			  processTraceDirectiveAssociation(model,traceDirective,t,template,tracer);	
+		  }
 	  }
+  }
+
+  //**************************************************** 
+  //*******  Methods dealing with Attribute Trace Items
+  //****************************************************
+  // Process every AttributeTraceItem in a trace directive
+  private static void processTraceDirectiveAssociation(UmpleModel model,TraceDirective traceDirective, CodeTranslator t, String template, String tracer) 
+  {
+	  JavaGenerator.processAssociation(model,traceDirective,t,template);
   }
 
   //**************************************************** 
@@ -495,6 +509,15 @@ private static void postpareTrace(UmpleModel aModel)
 	  lookups.put("Code",stmCode);
 	  lookups.put("setMethod",t.translate("setMethod",stm));
 	  injectTraceDirective(traceDirective,lookups,injectionType,"setMethod");
+  }
+  
+
+  public static void prepareTraceDirectiveAssociationInject( TraceDirective traceDirective, CodeTranslator t, AssociationVariable aVar, String assCode, String injectionType) 
+  {
+	  Map<String,String> lookups = new HashMap<String,String>();
+	  lookups.put("Code",assCode);
+	  lookups.put("addMethod",t.translate("addMethod",aVar));
+	  injectTraceDirective(traceDirective,lookups,injectionType,"addMethod");
   }
   
   public static void tmp( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 

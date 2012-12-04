@@ -1059,6 +1059,14 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   }
   
 
+
+  public static void processAssociation(UmpleModel model,TraceDirective traceDirective, CodeTranslator t, String template) 
+  {
+	  String assCode = null;
+	  AssociationVariable aVar = traceDirective.getAssociationVariable();
+	  assCode = StringFormatter.format(template,GeneratorHelper.prepareConsistentOutput(null,"cardinality",t.translate("numberOfMethod",aVar)+"()"));
+	  GeneratorHelper.prepareTraceDirectiveAssociationInject(traceDirective,t,aVar,assCode,"after");	
+  }
   
   //====================== End of Tracing code
    

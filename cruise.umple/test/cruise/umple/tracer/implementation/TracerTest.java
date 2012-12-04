@@ -495,6 +495,11 @@ public class TracerTest extends TracerTemplateTest
 	//**** Trace Association ****//
 	//****  Code Generation  ****//
 	//***************************//
+	@Test
+	public void ConsoleTracer_TraceAssociationCardinality1()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceAssociationCardinality1.ump",languagePath + "/ConsoleTracer_TraceAssociationCardinality1."+ languagePath +".txt","Company");
+	}
 	  
 	@Test @Ignore
 	public void TracesSupportAssoiations()

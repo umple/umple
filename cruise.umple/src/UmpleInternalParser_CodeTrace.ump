@@ -162,7 +162,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  // here, i faced a problem of finding traced state machine because
 	  // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
 	  analyzeStateMachineTraceItem(traceToken,traceDirective);
-	  
+	  analyzeAssociationTraceItem(traceToken,traceDirective);
 	  if( traceToken.getName().equals("entry") )
 	  {
 		  mte.setEntry(true);
@@ -295,6 +295,20 @@ private void analyzeTraceToken(Token token, int analysisStep)
 	  }
   }
 
+  private void analyzeAssociationTraceItem( Token traceToken, TraceDirective traceDirective)
+  {
+	  if( traceToken.getParentToken().getSubToken(1).getName().equals("cardinality") )  
+	  {
+		  for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
+		  {
+			  if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+				  traceDirective.setAssociationVariable(aVar);
+		  }
+		  
+		  
+	  }
+  }
+  
   // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
   // Returns a trace condition filled with left and right hands operands, with comparison operator used
   private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType )

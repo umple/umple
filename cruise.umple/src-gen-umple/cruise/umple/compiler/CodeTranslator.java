@@ -11,4 +11,5 @@ public interface CodeTranslator
  public String translate(String id, Attribute attribute);
  public String translate(String id, StateMachine stm);
  public String translate(String id, Event e);
+ public String translate(String id, AssociationVariable aVar);
 }
