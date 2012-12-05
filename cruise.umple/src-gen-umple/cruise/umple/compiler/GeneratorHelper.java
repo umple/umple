@@ -285,6 +285,10 @@ private static void postpareTrace(UmpleModel aModel)
       {
     	  prepareStringTraces(model,aClass,t,templateLookups);
       }
+      else if ("Lttng".equals(model.getTraceType()))
+      {
+    	  prepareLttngTraces(model,aClass,t,templateLookups);
+      }
   }
   
   // "Console Tracer" Look through all trace directives and inject the necessary code
@@ -299,6 +303,12 @@ private static void postpareTrace(UmpleModel aModel)
   {
 	  String fileTemplate = templateLookups.get("fileTemplate");  	
 	  prepareTraceDirectives(model,aClass,t,fileTemplate,"file");
+  }
+  
+  private static void prepareLttngTraces( UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
+  {
+	  String lttngTemplate = templateLookups.get("lttngTemplate");  	
+	  prepareTraceDirectives(model,aClass,t,lttngTemplate,"lttng");
   }
 
   // "String Tracer" Look through all traces and inject the necessary code
@@ -399,6 +409,11 @@ private static void postpareTrace(UmpleModel aModel)
 	  {
 		  PhpGenerator.processAttribute(model,traceDirective,t,template,traceAttr,attr);
 	  }
+	  
+	   if( model.getDefaultGenerate().equals("Cpp"))
+	  {
+		  CppGenerator.processAttribute(model,traceDirective,t,template,traceAttr,attr);
+	  }
   }
   
   //********************************************************
@@ -428,6 +443,11 @@ private static void postpareTrace(UmpleModel aModel)
 	  {
 		  PhpGenerator.processStateMachine(model,traceDirective,t,template,traceStm,stm);
 	  }
+	  
+	   if( model.getDefaultGenerate().equals("Cpp"))
+	  {
+		  CppGenerator.processStateMachine(model,traceDirective,t,template,traceStm,stm);
+	  }
   }
   
   //*********************************************** 
@@ -454,6 +474,17 @@ private static void postpareTrace(UmpleModel aModel)
 		  {
 			  processTraceDirectiveAttributes(model,traceDirective,t,template);
 			  PhpGenerator.processTraceRecord(traceDirective,t,template,tracer);	
+		  }
+	  }
+	  
+	  if( model.getDefaultGenerate().equals("Cpp"))
+	  {
+		  if( traceDirective.getTraceRecord().getRecordOnly() )
+			  CppGenerator.processTraceRecord(traceDirective,t,template,tracer);
+		  else
+		  {
+			  processTraceDirectiveAttributes(model,traceDirective,t,template);
+			  CppGenerator.processTraceRecord(traceDirective,t,template,tracer);	
 		  }
 	  }
   }

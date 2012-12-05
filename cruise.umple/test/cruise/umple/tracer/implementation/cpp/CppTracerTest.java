@@ -14,6 +14,7 @@ package cruise.umple.tracer.implementation.cpp;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import cruise.umple.tracer.implementation.*;
 import cruise.umple.util.SampleFileWriter;
@@ -34,4 +35,13 @@ public class CppTracerTest extends TracerTest
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "statemachine/cpp/example");
   }
+  
+  @Test //@Ignore
+  public void lttngSingleAttribute()
+  {
+	  
+	assertUmpleTemplateFor(languagePath +"/LttngTracer_SingleAttribute.ump",languagePath + "/LttngTracer_SingleAttribute."+ languagePath +".txt","A");
+		
+  }
+  
 }

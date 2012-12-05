@@ -93,4 +93,6 @@
   //------------------------
    
   <%=uClass.getExtraCode()%>
+  
 <% } %>
+<%@ include file="trace.jet" %>

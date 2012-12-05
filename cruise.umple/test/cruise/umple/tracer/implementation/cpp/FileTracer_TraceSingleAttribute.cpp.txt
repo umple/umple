@@ -1,0 +1,105 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+#include "Tracer.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Tracer::Tracer(const string & aX, const int & aY)
+  {
+    x = aX;
+    y = aY;
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Tracer::Tracer(const Tracer & tracer)
+  {
+    this->x = tracer.x;
+    this->y = tracer.y;
+  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Tracer Tracer::operator=(const Tracer & tracer)
+  {
+    this->x = tracer.x;
+    this->y = tracer.y;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Tracer::setX(const string & aX)
+  {
+    bool wasSet = false;
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Tracer::setY(const int & aY)
+  {
+    bool wasSet = false;
+    y = aY;
+    wasSet = true;
+    return wasSet;
+  }
+
+  string Tracer::getX() const
+  {
+    return x;
+  }
+
+  int Tracer::getY() const
+  {
+    return y;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Tracer::~Tracer()
+  {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  static void fileTracer(Object obj)
+  {
+    FileOutputStream fout = null;
+    Date date = new Date();
+    try
+    {
+      // Open an output stream
+      fout = new FileOutputStream ("TraceLog.txt",true);
+    }
+    catch (IOException e)
+    {
+      System.err.println ("Unable to write to file");
+      System.exit(-1);
+    }
+    // Write traced Item information
+    new PrintStream(fout).println(obj);
+    try
+    {
+      // Close output stream
+      fout.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }

@@ -1,6 +1,42 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  StringBuffer allExitCases = new StringBuffer();
+  StringBuffer allEnterCases = new StringBuffer();
+  boolean hasExit = sm.getHasExitAction();
+  boolean hasEntry = sm.getHasEntryAction();
+  
+  for(State s : sm.getStates())
+  {
+    if (hasExit)
+    {
+      allExitCases.append(StringFormatter.format("    if ({0} == {1}.{2} && {3} != {1}.{2} ) { {4}(); }\n"
+        , gen.translate("stateMachineOne",sm)
+        , gen.translate("type",sm)
+        , gen.translate("stateOne",s)
+        , gen.translate("parameterOne",sm)
+        , gen.translate("exitMethod",s)
+      ));
+    }
+
+    if (hasEntry)
+    {
+      allEnterCases.append(StringFormatter.format("    if ({0} != {1}.{2} && {3} == {1}.{2} ) { {4}(); }\n"
+        , gen.translate("stateMachineOne",sm)
+        , gen.translate("type",sm)
+        , gen.translate("stateOne",s)
+        , gen.translate("parameterOne",sm)
+        , gen.translate("enterMethod",s)
+      ));
+    }
+  }
+  
+  String exitCasesOutput = allExitCases.toString().trim();
+  String enterCasesOutput = allEnterCases.toString().trim();
+%>
   bool <%=gen.translate("type",uClass)%>::<%=gen.translate("setMethod",sm)%>(<%= gen.translate("type",sm) %> <%= gen.translate("parameterOne",sm) %>)
   {
+    <% if (!exitCasesOutput.isEmpty()) { append(stringBuffer, "\n    {0}",exitCasesOutput); } %>
+    <% if (!enterCasesOutput.isEmpty()) { append(stringBuffer, "\n    {0}",enterCasesOutput); } %>
     <%= gen.translate("stateMachineOne",sm) %> = <%= gen.translate("parameterOne",sm) %>;
     return true;
   }

@@ -1,0 +1,81 @@
+<%@ jet package="cruise.umple.compiler.cpp" class="CppLttngGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+	UmpleClass uClass = (UmpleClass) uElement;
+  	GeneratedClass gClass = uClass.getGeneratedClass();
+  	CppGenerator gen = new CppGenerator();
+  	gen.setModel(model);
+	StringBuffer tp_code = new StringBuffer();
+  	
+  	HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+    }
+    else
+    {
+      newCodeToInject = inject.getCode();
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }
+
+  boolean isFirst = true;
+
+ 	
+%>
+
+<% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
+
+  //----------------------------------
+  // Tracepoint Event
+  //----------------------------------
+  <%for( TraceDirective td : uClass.getTraceDirectives() )
+  {
+    for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
+    {
+	for( Attribute att : traceAttr.getAttributes() )
+	{
+	tp_code = null;
+	appendln(tp_code,"TRACEPOINT_EVENT(");
+	%>
+	
+  //----------------------------------
+  // Variables
+  //----------------------------------
+  <%@ include file ="lttng_tp_variables.jet" %>
+  //----------------------------------
+  // Message
+  //----------------------------------
+	<%@ include file ="lttng_tp_message.jet" %>
+  //------------------------------------
+  // Tracepoint Arguments Macro
+  //------------------------------------
+  	<%@ include file ="lttng_tp_arguments.jet" %>  
+  //------------------------------------
+  // Tracepoint Fields
+  //-----------------------------------
+	<%@ include file ="lttng_tp_fields.jet" %>  
+)
+  //------------------------------------
+  // Tracepoint Log Level (Optional)
+  //-----------------------------------
+  <%@ include file ="lttng_tp_logLevel.jet" %> 
+  
+  <% //sending TP code to create @attribute_tracepoint.tp files
+  try{
+	gen.writeLttngFile(att,tp_code.toString());
+  }
+  catch (Exception e) {
+        System.err.println("Error writing TP files: " + e.getMessage());
+    }%>
+  <%}%>
+  <%}%>
+  <%}%>
+	
+
+

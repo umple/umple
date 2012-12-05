@@ -65,6 +65,8 @@ public class CppClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("cpp/ClassTemplateTest_Import.ump", "cpp/ClassTemplateTest_Import.cpp.txt","Mentor");
     assertUmpleTemplateFor("cpp/ClassTemplateTest_Import.ump","cpp/ClassTemplateTest_Import2.cpp.txt","Student");
     assertUmpleTemplateFor("cpp/ClassTemplateTest_Import.ump","cpp/ClassTemplateTest_Import3.cpp.txt","Course");
-  }  
+  }
+  
+ 
   
 }

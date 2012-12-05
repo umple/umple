@@ -73,7 +73,9 @@
 
   void LightFixture::setLight(Light aLight)
   {
+    System.out.println("About to flip");
     light = aLight;
+    System.out.println("Just flipped");
   }
   
 

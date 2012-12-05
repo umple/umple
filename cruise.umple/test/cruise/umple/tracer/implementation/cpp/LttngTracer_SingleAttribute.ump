@@ -1,0 +1,11 @@
+generate Cpp;
+tracer Lttng;
+
+class A
+{
+  Integer x;
+  String y;
+  
+  trace x;
+  //trace y;
+}

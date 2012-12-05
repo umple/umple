@@ -11,4 +11,19 @@
 		append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName()); 
 	}
 	}
+	
+	if( model.getTraceType().equals("Lttng") && uClass.hasTraceDirectives() )
+  {
+	for (TraceDirective td : uClass.getTraceDirectives())
+	    	{
+	  for (Attribute_TraceItem ati: td.getAttributeTraceItems())
+	  {
+		for (Attribute att : ati.getAttributes())
+		{
+		appendln(stringBuffer, "");
+		append(stringBuffer, "#include \"{0}_tracepoint.h\";",att.getName());	
+		}
+	  }
+	  }
+  }  
 %>
