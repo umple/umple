@@ -1054,7 +1054,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
 	  if( condCode != null )
 		  stmCode = "if( " + t.translate("parameterOne",stm) + "== " + stm.getState(0).getName() + " && " + condCode + " )\n  ";
 	  else
-		  stmCode = "if( " + t.translate("parameterOne",stm) + " == " + stm.getState(0).getName() + ") )\n  ";
+		  stmCode = "if( " + t.translate("parameterOne",stm) + " == " + stm.getState(0).getName() + ")\n  ";
 	  stmCode += StringFormatter.format(template,t.translate("parameterOne",stm));
 	  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
  }
@@ -1063,9 +1063,9 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
  {
 	  String stmCode = null;
 	  if( condCode != null )
-		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + " == " + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + " == " + "." + stm.getState(0).getName() + ")"  + " && " + condCode +  " )\n  ";
+		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + " == " + stm.getState(0).getName() + " && !" + t.translate("parameterOne",stm) + " == " + stm.getState(0).getName() + " && " + condCode +  " )\n  ";
 	  else
-		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + " == " + stm.getState(0).getName() + ")" + " && !" + t.translate("parameterOne",stm) + " == " + stm.getState(0).getName() + ") )\n  ";
+		  stmCode = "if( " + t.translate("stateMachineOne",stm) + " != null && "+ t.translate("stateMachineOne",stm) + " == " + stm.getState(0).getName() + " && !" + t.translate("parameterOne",stm) + " == " + stm.getState(0).getName() + ")\n  ";
 	  stmCode += StringFormatter.format(template,t.translate("stateMachineOne",stm));
 	  GeneratorHelper.prepareTraceDirectiveInjectStateMachine(traceDirective,t,stm,stmCode,"before");
  }
@@ -1370,71 +1370,118 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     return typeOf(aType);
   }
   
-  private String processLttngfile(Attribute att)
+   //return applicable tracepoints arguments based on attribute type
+  private String getTpArguments(String t)
+  {	  
+		if (t.equals("String"))
+			return "TP_ARGS(char *, text),\n";
+		if (t.equals("Integer"))
+			return "TP_ARGS(int, intfield),\n";
+		if (t.equals("Double"))
+			return "TP_ARGS(double, doublefield),\n";
+		return "";
+	}
+  //tracepoint message
+  private String getTpMessage(String t)
   {
-	  
-	  
-	  String tp_code = null;
-	  String tp_arg = null;
-	  String tp_message = null;
-	  String tp_field = null;
-	  String tp_loglevel = null;
+	  if(t.equals("String"))		
+			return "message,\n"; 
+		  if(t.equals( "Integer"))
+			  return "intfield,\n"; 
+		  if(t.equals( "Double"))
+			  return "doublefield,\n";
+		  if(t.equals("Entry"))		
+				return "entry,\n"; 
+			  if(t.equals( "Exit"))
+				  return "exit,\n"; 
+	  return"";
+  }
+  
  
-	  
-	  //tracepoint argument	  
-	  if(att.getType().equals("String"))		
-		tp_arg = "TP_ARGS(char *, text),\n"; 
-	  if(att.getType().equals("Integer"))
-		tp_arg = "TP_ARGS(int, intfield),\n"; 
-	  if(att.getType().equals( "Double"))
-		tp_arg = "TP_ARGS(double, doublefield),\n";
-	  
-	  //tracepoint message
-	  if(att.getType().equals("String"))		
-		tp_message = "message,\n"; 
-	  if(att.getType().equals( "Integer"))
-		  tp_message = "intfield,\n"; 
-	  if(att.getType().equals( "Double"))
-		  tp_message = "doublefield,\n";
-	  
-	  //tracepoint field
-	  if(att.getType().equals("String"))		
-		  tp_field = "ctf_string(message,"+ att.getName()+")";
-	  if(att.getType().equals( "Integer"))
-		  tp_field = "ctf_integer(int, intfield,"+ att.getName()+")"; 
-	  if(att.getType().equals( "Double"))
-		  tp_field = "ctf_string(double, doublefield,"+ att.getName()+")";
-	  
-	//tracepoint log level 
-	  tp_loglevel = "\nTRACEPOINT_LOGLEVEL(\n";
-	  if(att.getType() .equals("String"))	
+  
+  //get TP field: n name, t type
+  private String getTpField( String t, String n)
+  {
+	  if(t.equals("String"))		
+		  return "ctf_string(message,"+ n+")";
+	  if(t.equals( "Integer"))
+		  return "ctf_integer(int, intfield,"+ n+")"; 
+	  if(t.equals( "Double"))
+		  return "ctf_string(double, doublefield,"+ n+")";
+	  if(t.equals("Entry"))		
+		  return "ctf_string(entry,"+ n+")";
+	  if(t.equals("Exit"))		
+		  return "ctf_string(exit,"+ n+")";
+	  return"";
+  }
+  
+  private String getTpLogLevel(String t)
+  {
+	  String tp_loglevel = "\nTRACEPOINT_LOGLEVEL(\n";
+	  if(t .equals("String"))	
 		  tp_loglevel += "message,\n";
-	  if(att.getType() .equals( "Integer"))
+	  if(t .equals( "Integer"))
 		  tp_loglevel += "intfield,\n"; 
-	  if(att.getType() .equals( "Double"))
+	  if(t .equals( "Double"))
 		  tp_loglevel += "doublefield,\n";
-	  tp_loglevel += "TRACE_WARNING)";
+	  if(t .equals("Exit"))	
+		  tp_loglevel += "exit,\n";
+	  if(t .equals("Entry"))	
+		  tp_loglevel += "entry,\n";
+	  return tp_loglevel += "TRACE_WARNING)";
 	  
+  }
+    
+  private String processLttngfile(Attribute att)
+  {	  
+	  String tp_code = null;
+	  String tp_arg = getTpArguments(att.getType());
+	  String tp_message = getTpMessage(att.getType());
+	  String tp_field = getTpField(att.getType(), att.getName());
+	  String tp_loglevel = getTpLogLevel(att.getType());	 
+	  	  
 	  //tracepoint code 
 	  tp_code = "TRACEPOINT_EVENT(\n" + att.getName() + ",\n" + tp_arg + tp_message + tp_field + tp_loglevel + "\n)\n";
 	  
 	  //System.out.println(tp_code);
-	  return tp_code;
+	  return tp_code;	  
+  }
+  
+  //Process Lttng tracepoints for state machines, treating state as String.
+  private String processLttngFile(StateMachine_TraceItem smti) {
+	  String tp_code = null;
+	  String tp_arg = getTpArguments("String"); //passing states to TP as string
+	  String tp_message = null;	  
+	  String tp_field = null;
+	  String tp_loglevel = null;
 	  
+	  if(smti.getEntry())
+		  {
+		  tp_message = getTpMessage("Entry");
+		  tp_field = getTpField("Entry",smti.getStateMachine().getName());
+		  tp_loglevel = getTpLogLevel("Entry");
+		  }
+	  
+	  else if(smti.getExit())
+	  {	  
+		  tp_message = getTpMessage("Exit");
+		  tp_field = getTpField("Exit",smti.getStateMachine().getName());
+		  tp_loglevel= getTpLogLevel("Exit");
+	  }
+	  	  	  
+	  tp_code = "TRACEPOINT_EVENT(\n" + smti.getStateMachine().getName() + ",\n" + tp_arg + tp_message + tp_field + tp_loglevel + "\n)\n";
+	  return tp_code;
   }
   
   
-  public void writeLttngFile(Attribute att, String tp_code) throws IOException
+  public void writeLttngFile(String name, String tp_code, String path) throws IOException
   {
-	  String path = StringFormatter.addPathOrAbsolute( 
-			  model.getUmpleFile().getPath(), 
-              getOutput()) + 
-              att.getUmpleClass().getPackageName().replace(".", File.separator);
-	  String lttngFileName = path + File.separator + att.getName() + "_tracepoint.tp";
+	  
+	  String lttngFileName = path + File.separator + name + "_tracepoint.tp";
 		BufferedWriter lttngBw = new BufferedWriter(new FileWriter(lttngFileName));
 		String lttngContent = tp_code.toString();
 		//System.out.println(tp_code);
-		model.getGeneratedCode().put(att.getUmpleClass().getName()+"_tp",lttngContent);
+		model.getGeneratedCode().put(name +"_tp",lttngContent);
 		try {
 			lttngBw.write(lttngContent);
 			lttngBw.flush();
@@ -1477,26 +1524,30 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       	if( callLttng = true)
 		{
       	if (model.getTraceType().equals("Lttng") && uClass.hasTraceDirectives() && callHeader == false)
-    	{ 
-      	     
-			 
-    		 
-    		//ILang lttngLang = new CppLttngGenerator();
+    	{     		 
+      		//ILang lttngLang = new CppLttngGenerator();
     		//lttngLang.getCode(model, aClass);    	
     	   	//ILang lttngLang = new CppLttngGenerator();    			
     		
 	    	for (TraceDirective td : uClass.getTraceDirectives())
 	    	{ 
+	    		String tp_code = null;
 	    		for (Attribute_TraceItem ati: td.getAttributeTraceItems())
 	    	
 	    		{
 	    			for (Attribute att : ati.getAttributes()) 
 	    			{
-	    				 String tp_code = null;
+	    				 
       					tp_code = processLttngfile(att);
-						writeLttngFile(att, tp_code);
+						writeLttngFile(att.getName(), tp_code,path);
 	    			}
-	    		}	
+	    		}
+	    		
+	    		for (StateMachine_TraceItem smti : td.getStateMachineTraceItems() )
+	    		{
+	    		    tp_code = processLttngFile(smti);
+				    writeLttngFile(smti.getStateMachine().getName(), tp_code,path);
+	    		}
 	    	}
     	}
     	

@@ -68,7 +68,7 @@
   
   <% //sending TP code to create @attribute_tracepoint.tp files
   try{
-	gen.writeLttngFile(att,tp_code.toString());
+	gen.writeLttngFile(att.getName(),tp_code.toString(),null);
   }
   catch (Exception e) {
         System.err.println("Error writing TP files: " + e.getMessage());
