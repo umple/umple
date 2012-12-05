@@ -50,7 +50,7 @@ public class PlaygroundMain
             print("-classList <filename>\n");
             print("-interfaceList <filename>\n");
             print("-source <filename>\n");
-            print("-generate <Ecore|Papyrus|TextUml|Violet|Umlet> <filename>\n");
+            print("-generate <Ecore|Papyrus|TextUml|GvStateDiagram|Violet|Umlet> <filename>\n");
             print("<action> <deltaCode> <filename>\n");
             return;
         }
@@ -74,7 +74,7 @@ public class PlaygroundMain
         UmpleFile umpleFile = null;
         UmpleModel model = null;
 
-        // Valid values include Json, Yuml, Xmi, Ecore, Papyrus, TextUml
+        // Valid values include Json, Yuml, Xmi, Ecore, Papyrus, TextUml, GvStateDiagram
         if ("-generate".equals(args[0]) && args.length >= 2)
         {
             String filename = args[2];
