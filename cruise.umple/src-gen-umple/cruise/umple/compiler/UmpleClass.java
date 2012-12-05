@@ -585,6 +585,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addCodeInjectionAt(CodeInjection aCodeInjection, int index)
+  {  
+    boolean wasAdded = false;
+    if(addCodeInjection(aCodeInjection))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCodeInjections()) { index = numberOfCodeInjections() - 1; }
+      codeInjections.remove(aCodeInjection);
+      codeInjections.add(index, aCodeInjection);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCodeInjectionAt(CodeInjection aCodeInjection, int index)
+  {
+    boolean wasAdded = false;
+    if(codeInjections.contains(aCodeInjection))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfCodeInjections()) { index = numberOfCodeInjections() - 1; }
+      codeInjections.remove(aCodeInjection);
+      codeInjections.add(index, aCodeInjection);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCodeInjectionAt(aCodeInjection, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
@@ -636,6 +668,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addParentInterfaceAt(UmpleInterface aParentInterface, int index)
+  {  
+    boolean wasAdded = false;
+    if(addParentInterface(aParentInterface))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfParentInterface()) { index = numberOfParentInterface() - 1; }
+      parentInterface.remove(aParentInterface);
+      parentInterface.add(index, aParentInterface);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveParentInterfaceAt(UmpleInterface aParentInterface, int index)
+  {
+    boolean wasAdded = false;
+    if(parentInterface.contains(aParentInterface))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfParentInterface()) { index = numberOfParentInterface() - 1; }
+      parentInterface.remove(aParentInterface);
+      parentInterface.add(index, aParentInterface);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addParentInterfaceAt(aParentInterface, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfDepends()
   {
     return 0;
@@ -660,6 +724,38 @@ public class UmpleClass extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addDependAt(Depend aDepend, int index)
+  {  
+    boolean wasAdded = false;
+    if(addDepend(aDepend))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfDepends()) { index = numberOfDepends() - 1; }
+      depends.remove(aDepend);
+      depends.add(index, aDepend);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveDependAt(Depend aDepend, int index)
+  {
+    boolean wasAdded = false;
+    if(depends.contains(aDepend))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfDepends()) { index = numberOfDepends() - 1; }
+      depends.remove(aDepend);
+      depends.add(index, aDepend);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addDependAt(aDepend, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfMethods()
@@ -687,6 +783,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addMethodAt(Method aMethod, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMethod(aMethod))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethods()) { index = numberOfMethods() - 1; }
+      methods.remove(aMethod);
+      methods.add(index, aMethod);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMethodAt(Method aMethod, int index)
+  {
+    boolean wasAdded = false;
+    if(methods.contains(aMethod))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethods()) { index = numberOfMethods() - 1; }
+      methods.remove(aMethod);
+      methods.add(index, aMethod);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMethodAt(aMethod, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfConstants()
   {
     return 0;
@@ -710,6 +838,38 @@ public class UmpleClass extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addConstantAt(Constant aConstant, int index)
+  {  
+    boolean wasAdded = false;
+    if(addConstant(aConstant))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConstants()) { index = numberOfConstants() - 1; }
+      constants.remove(aConstant);
+      constants.add(index, aConstant);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveConstantAt(Constant aConstant, int index)
+  {
+    boolean wasAdded = false;
+    if(constants.contains(aConstant))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConstants()) { index = numberOfConstants() - 1; }
+      constants.remove(aConstant);
+      constants.add(index, aConstant);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addConstantAt(aConstant, index);
+    }
+    return wasAdded;
   }
 
   public boolean setUniqueIdentifier(UniqueIdentifier newUniqueIdentifier)
@@ -760,6 +920,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addAttributeAt(Attribute aAttribute, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAttribute(aAttribute))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributes()) { index = numberOfAttributes() - 1; }
+      attributes.remove(aAttribute);
+      attributes.add(index, aAttribute);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAttributeAt(Attribute aAttribute, int index)
+  {
+    boolean wasAdded = false;
+    if(attributes.contains(aAttribute))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAttributes()) { index = numberOfAttributes() - 1; }
+      attributes.remove(aAttribute);
+      attributes.add(index, aAttribute);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAttributeAt(aAttribute, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfAssociationVariables()
   {
     return 0;
@@ -800,6 +992,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addAssociationVariableAt(AssociationVariable aAssociationVariable, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAssociationVariable(aAssociationVariable))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAssociationVariables()) { index = numberOfAssociationVariables() - 1; }
+      associationVariables.remove(aAssociationVariable);
+      associationVariables.add(index, aAssociationVariable);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAssociationVariableAt(AssociationVariable aAssociationVariable, int index)
+  {
+    boolean wasAdded = false;
+    if(associationVariables.contains(aAssociationVariable))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAssociationVariables()) { index = numberOfAssociationVariables() - 1; }
+      associationVariables.remove(aAssociationVariable);
+      associationVariables.add(index, aAssociationVariable);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAssociationVariableAt(aAssociationVariable, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfComments()
   {
     return 0;
@@ -823,6 +1047,38 @@ public class UmpleClass extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addCommentAt(Comment aComment, int index)
+  {  
+    boolean wasAdded = false;
+    if(addComment(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCommentAt(Comment aComment, int index)
+  {
+    boolean wasAdded = false;
+    if(comments.contains(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCommentAt(aComment, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfTraceDirectives()
@@ -864,6 +1120,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addTraceDirectiveAt(TraceDirective aTraceDirective, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTraceDirective(aTraceDirective))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceDirectives()) { index = numberOfTraceDirectives() - 1; }
+      traceDirectives.remove(aTraceDirective);
+      traceDirectives.add(index, aTraceDirective);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveTraceDirectiveAt(TraceDirective aTraceDirective, int index)
+  {
+    boolean wasAdded = false;
+    if(traceDirectives.contains(aTraceDirective))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceDirectives()) { index = numberOfTraceDirectives() - 1; }
+      traceDirectives.remove(aTraceDirective);
+      traceDirectives.add(index, aTraceDirective);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTraceDirectiveAt(aTraceDirective, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfTraceCases()
   {
     return 0;
@@ -901,6 +1189,38 @@ public class UmpleClass extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addTraceCaseAt(TraceCase aTraceCase, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTraceCase(aTraceCase))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceCases()) { index = numberOfTraceCases() - 1; }
+      traceCases.remove(aTraceCase);
+      traceCases.add(index, aTraceCase);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveTraceCaseAt(TraceCase aTraceCase, int index)
+  {
+    boolean wasAdded = false;
+    if(traceCases.contains(aTraceCase))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTraceCases()) { index = numberOfTraceCases() - 1; }
+      traceCases.remove(aTraceCase);
+      traceCases.add(index, aTraceCase);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTraceCaseAt(aTraceCase, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfStateMachines()
@@ -943,6 +1263,38 @@ public class UmpleClass extends UmpleElement
     return wasRemoved;
   }
 
+  public boolean addStateMachineAt(StateMachine aStateMachine, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStateMachine(aStateMachine))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachines()) { index = numberOfStateMachines() - 1; }
+      stateMachines.remove(aStateMachine);
+      stateMachines.add(index, aStateMachine);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStateMachineAt(StateMachine aStateMachine, int index)
+  {
+    boolean wasAdded = false;
+    if(stateMachines.contains(aStateMachine))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachines()) { index = numberOfStateMachines() - 1; }
+      stateMachines.remove(aStateMachine);
+      stateMachines.add(index, aStateMachine);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStateMachineAt(aStateMachine, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfSubclasses()
   {
     return 0;
@@ -980,6 +1332,38 @@ public class UmpleClass extends UmpleElement
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addSubclassAt(UmpleClass aSubclass, int index)
+  {  
+    boolean wasAdded = false;
+    if(addSubclass(aSubclass))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfSubclasses()) { index = numberOfSubclasses() - 1; }
+      subclasses.remove(aSubclass);
+      subclasses.add(index, aSubclass);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveSubclassAt(UmpleClass aSubclass, int index)
+  {
+    boolean wasAdded = false;
+    if(subclasses.contains(aSubclass))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfSubclasses()) { index = numberOfSubclasses() - 1; }
+      subclasses.remove(aSubclass);
+      subclasses.add(index, aSubclass);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addSubclassAt(aSubclass, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

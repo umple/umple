@@ -129,6 +129,38 @@ public class Concern
     return wasRemoved;
   }
 
+  public boolean addVariationPointAt(VariationPoint aVariationPoint, int index)
+  {  
+    boolean wasAdded = false;
+    if(addVariationPoint(aVariationPoint))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVariationPoints()) { index = numberOfVariationPoints() - 1; }
+      variationPoints.remove(aVariationPoint);
+      variationPoints.add(index, aVariationPoint);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveVariationPointAt(VariationPoint aVariationPoint, int index)
+  {
+    boolean wasAdded = false;
+    if(variationPoints.contains(aVariationPoint))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVariationPoints()) { index = numberOfVariationPoints() - 1; }
+      variationPoints.remove(aVariationPoint);
+      variationPoints.add(index, aVariationPoint);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addVariationPointAt(aVariationPoint, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setVmlSystem(VmlSystem aVmlSystem)
   {
     boolean wasSet = false;

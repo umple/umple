@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -431,6 +431,38 @@ public class UmpleModel
     return wasRemoved;
   }
 
+  public boolean addAssociationAt(Association aAssociation, int index)
+  {  
+    boolean wasAdded = false;
+    if(addAssociation(aAssociation))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAssociations()) { index = numberOfAssociations() - 1; }
+      associations.remove(aAssociation);
+      associations.add(index, aAssociation);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveAssociationAt(Association aAssociation, int index)
+  {
+    boolean wasAdded = false;
+    if(associations.contains(aAssociation))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfAssociations()) { index = numberOfAssociations() - 1; }
+      associations.remove(aAssociation);
+      associations.add(index, aAssociation);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addAssociationAt(aAssociation, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfUmpleClasses()
   {
     return 0;
@@ -454,6 +486,38 @@ public class UmpleModel
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addUmpleClassAt(UmpleClass aUmpleClass, int index)
+  {  
+    boolean wasAdded = false;
+    if(addUmpleClass(aUmpleClass))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleClasses()) { index = numberOfUmpleClasses() - 1; }
+      umpleClasses.remove(aUmpleClass);
+      umpleClasses.add(index, aUmpleClass);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveUmpleClassAt(UmpleClass aUmpleClass, int index)
+  {
+    boolean wasAdded = false;
+    if(umpleClasses.contains(aUmpleClass))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleClasses()) { index = numberOfUmpleClasses() - 1; }
+      umpleClasses.remove(aUmpleClass);
+      umpleClasses.add(index, aUmpleClass);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addUmpleClassAt(aUmpleClass, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfStateMachineDefinitions()
@@ -481,6 +545,38 @@ public class UmpleModel
     return wasRemoved;
   }
 
+  public boolean addStateMachineDefinitionAt(StateMachine aStateMachineDefinition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStateMachineDefinition(aStateMachineDefinition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachineDefinitions()) { index = numberOfStateMachineDefinitions() - 1; }
+      stateMachineDefinitions.remove(aStateMachineDefinition);
+      stateMachineDefinitions.add(index, aStateMachineDefinition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStateMachineDefinitionAt(StateMachine aStateMachineDefinition, int index)
+  {
+    boolean wasAdded = false;
+    if(stateMachineDefinitions.contains(aStateMachineDefinition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStateMachineDefinitions()) { index = numberOfStateMachineDefinitions() - 1; }
+      stateMachineDefinitions.remove(aStateMachineDefinition);
+      stateMachineDefinitions.add(index, aStateMachineDefinition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStateMachineDefinitionAt(aStateMachineDefinition, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfUmpleInterfaces()
   {
     return 0;
@@ -504,6 +600,38 @@ public class UmpleModel
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addUmpleInterfaceAt(UmpleInterface aUmpleInterface, int index)
+  {  
+    boolean wasAdded = false;
+    if(addUmpleInterface(aUmpleInterface))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleInterfaces()) { index = numberOfUmpleInterfaces() - 1; }
+      umpleInterfaces.remove(aUmpleInterface);
+      umpleInterfaces.add(index, aUmpleInterface);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveUmpleInterfaceAt(UmpleInterface aUmpleInterface, int index)
+  {
+    boolean wasAdded = false;
+    if(umpleInterfaces.contains(aUmpleInterface))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleInterfaces()) { index = numberOfUmpleInterfaces() - 1; }
+      umpleInterfaces.remove(aUmpleInterface);
+      umpleInterfaces.add(index, aUmpleInterface);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addUmpleInterfaceAt(aUmpleInterface, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

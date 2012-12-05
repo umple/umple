@@ -4117,7 +4117,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-
+	String includeFile3 = null;
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -4334,6 +4334,11 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     stringBuffer.append(TEXT_430);
     stringBuffer.append(relatedAssociation);
     
+    }
+    
+    if(av.isMany() && !av.isImmutable() && !av.isN())
+    {
+      includeFile3 = "association_AddIndexControlFunctions.jet";
     }
 
     boolean addNewLine = false;
@@ -7370,6 +7375,12 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     else if (includeFile2 != null)
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
+    }
+    
+    if(includeFile3 == "association_AddIndexControlFunctions.jet")
+    {
+      
+    
     }
   }
 

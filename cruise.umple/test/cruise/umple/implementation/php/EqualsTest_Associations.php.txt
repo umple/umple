@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 class Mentor
 {
@@ -157,6 +157,38 @@ class Mentor
       $wasRemoved = true;
     }
     return $wasRemoved;
+  }
+
+  public function addSecondaryAt($aSecondary, $index)
+  {  
+    $wasAdded = false;
+    if($this->addSecondary($aSecondary))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfSecondaries()) { $index = $this->numberOfSecondaries() - 1; }
+      array_splice($this->secondaries, $this->indexOfSecondary($aSecondary), 1);
+      array_splice($this->secondaries, $index, 0, array($aSecondary));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveSecondaryAt($aSecondary, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfSecondary($aSecondary) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfSecondaries()) { $index = $this->numberOfSecondaries() - 1; }
+      array_splice($this->secondaries, $this->indexOfSecondary($aSecondary), 1);
+      array_splice($this->secondaries, $index, 0, array($aSecondary));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addSecondaryAt($aSecondary, $index);
+    }
+    return $wasAdded;
   }
 
   public function equals($compareTo)

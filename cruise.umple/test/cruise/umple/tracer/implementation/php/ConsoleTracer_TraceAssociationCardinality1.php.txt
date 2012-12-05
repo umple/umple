@@ -119,6 +119,38 @@ class Company
     return $wasRemoved;
   }
 
+  public function addManagerAt($aManager, $index)
+  {  
+    $wasAdded = false;
+    if($this->addManager($aManager))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfManager()) { $index = $this->numberOfManager() - 1; }
+      array_splice($this->manager, $this->indexOfManager($aManager), 1);
+      array_splice($this->manager, $index, 0, array($aManager));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveManagerAt($aManager, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfManager($aManager) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfManager()) { $index = $this->numberOfManager() - 1; }
+      array_splice($this->manager, $this->indexOfManager($aManager), 1);
+      array_splice($this->manager, $index, 0, array($aManager));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addManagerAt($aManager, $index);
+    }
+    return $wasAdded;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;

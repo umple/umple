@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -98,6 +98,38 @@ public class Foo
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addBarAt(Bar aBar, int index)
+  {  
+    boolean wasAdded = false;
+    if(addBar(aBar))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBars()) { index = numberOfBars() - 1; }
+      bars.remove(aBar);
+      bars.add(index, aBar);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveBarAt(Bar aBar, int index)
+  {
+    boolean wasAdded = false;
+    if(bars.contains(aBar))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBars()) { index = numberOfBars() - 1; }
+      bars.remove(aBar);
+      bars.add(index, aBar);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addBarAt(aBar, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

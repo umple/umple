@@ -99,6 +99,38 @@ public class Group
     return wasRemoved;
   }
 
+  public boolean addContentAt(Content aContent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addContent(aContent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfContents()) { index = numberOfContents() - 1; }
+      contents.remove(aContent);
+      contents.add(index, aContent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveContentAt(Content aContent, int index)
+  {
+    boolean wasAdded = false;
+    if(contents.contains(aContent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfContents()) { index = numberOfContents() - 1; }
+      contents.remove(aContent);
+      contents.add(index, aContent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addContentAt(aContent, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     contents.clear();

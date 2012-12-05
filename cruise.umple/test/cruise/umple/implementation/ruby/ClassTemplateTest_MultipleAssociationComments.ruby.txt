@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE 1.15.0.1751 modeling language!
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -169,6 +169,40 @@ class Foo
     was_removed
   end
 
+  def add_bar1_at(a_bar1, index)
+    was_added = false
+    if add_bar1(a_bar1)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar1s())
+        index = number_of_bar1s() - 1
+      end
+      @bar1s.delete(a_bar1)
+      @bar1s.insert(index, a_bar1)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_bar1_at(a_bar1, index)
+    was_added = false
+    if @bar1s.include?(a_bar1)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar1s())
+        index = number_of_bar1s() - 1
+      end
+      @bar1s.delete(a_bar1)
+      @bar1s.insert(index, a_bar1)
+      was_added = true
+    else
+      was_added = add_bar1_at(a_bar1, index)
+    end
+    was_added
+  end
+
   def self.minimum_number_of_bar2s
     0
   end
@@ -195,6 +229,40 @@ class Foo
       was_removed = true
     end
     was_removed
+  end
+
+  def add_bar2_at(a_bar2, index)
+    was_added = false
+    if add_bar2(a_bar2)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar2s())
+        index = number_of_bar2s() - 1
+      end
+      @bar2s.delete(a_bar2)
+      @bar2s.insert(index, a_bar2)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_bar2_at(a_bar2, index)
+    was_added = false
+    if @bar2s.include?(a_bar2)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar2s())
+        index = number_of_bar2s() - 1
+      end
+      @bar2s.delete(a_bar2)
+      @bar2s.insert(index, a_bar2)
+      was_added = true
+    else
+      was_added = add_bar2_at(a_bar2, index)
+    end
+    was_added
   end
 
   def self.minimum_number_of_bar3s
@@ -225,6 +293,40 @@ class Foo
     was_removed
   end
 
+  def add_bar3_at(a_bar3, index)
+    was_added = false
+    if add_bar3(a_bar3)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar3s())
+        index = number_of_bar3s() - 1
+      end
+      @bar3s.delete(a_bar3)
+      @bar3s.insert(index, a_bar3)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_bar3_at(a_bar3, index)
+    was_added = false
+    if @bar3s.include?(a_bar3)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar3s())
+        index = number_of_bar3s() - 1
+      end
+      @bar3s.delete(a_bar3)
+      @bar3s.insert(index, a_bar3)
+      was_added = true
+    else
+      was_added = add_bar3_at(a_bar3, index)
+    end
+    was_added
+  end
+
   def self.minimum_number_of_bar4s
     0
   end
@@ -251,6 +353,40 @@ class Foo
       was_removed = true
     end
     was_removed
+  end
+
+  def add_bar4_at(a_bar4, index)
+    was_added = false
+    if add_bar4(a_bar4)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar4s())
+        index = number_of_bar4s() - 1
+      end
+      @bar4s.delete(a_bar4)
+      @bar4s.insert(index, a_bar4)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_bar4_at(a_bar4, index)
+    was_added = false
+    if @bar4s.include?(a_bar4)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_bar4s())
+        index = number_of_bar4s() - 1
+      end
+      @bar4s.delete(a_bar4)
+      @bar4s.insert(index, a_bar4)
+      was_added = true
+    else
+      was_added = add_bar4_at(a_bar4, index)
+    end
+    was_added
   end
 
   def delete

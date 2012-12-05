@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -144,6 +144,38 @@ public class Mentor
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addSecondaryAt(Course aSecondary, int index)
+  {  
+    boolean wasAdded = false;
+    if(addSecondary(aSecondary))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfSecondaries()) { index = numberOfSecondaries() - 1; }
+      secondaries.remove(aSecondary);
+      secondaries.add(index, aSecondary);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveSecondaryAt(Course aSecondary, int index)
+  {
+    boolean wasAdded = false;
+    if(secondaries.contains(aSecondary))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfSecondaries()) { index = numberOfSecondaries() - 1; }
+      secondaries.remove(aSecondary);
+      secondaries.add(index, aSecondary);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addSecondaryAt(aSecondary, index);
+    }
+    return wasAdded;
   }
 
   public boolean equals(Object obj)

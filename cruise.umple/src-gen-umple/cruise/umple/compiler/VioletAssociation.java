@@ -158,6 +158,38 @@ public class VioletAssociation
     return wasSet;
   }
 
+  public boolean addVioletClassAt(VioletClass aVioletClass, int index)
+  {  
+    boolean wasAdded = false;
+    if(addVioletClass(aVioletClass))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVioletClasses()) { index = numberOfVioletClasses() - 1; }
+      violetClasses.remove(aVioletClass);
+      violetClasses.add(index, aVioletClass);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveVioletClassAt(VioletClass aVioletClass, int index)
+  {
+    boolean wasAdded = false;
+    if(violetClasses.contains(aVioletClass))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVioletClasses()) { index = numberOfVioletClasses() - 1; }
+      violetClasses.remove(aVioletClass);
+      violetClasses.add(index, aVioletClass);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addVioletClassAt(aVioletClass, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     violetClasses.clear();

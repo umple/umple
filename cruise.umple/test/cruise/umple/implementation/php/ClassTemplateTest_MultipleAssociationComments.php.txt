@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 class Foo
 {
@@ -254,6 +254,38 @@ class Foo
     return $wasRemoved;
   }
 
+  public function addBar1At($aBar1, $index)
+  {  
+    $wasAdded = false;
+    if($this->addBar1($aBar1))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar1s()) { $index = $this->numberOfBar1s() - 1; }
+      array_splice($this->bar1s, $this->indexOfBar1($aBar1), 1);
+      array_splice($this->bar1s, $index, 0, array($aBar1));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveBar1At($aBar1, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfBar1($aBar1) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar1s()) { $index = $this->numberOfBar1s() - 1; }
+      array_splice($this->bar1s, $this->indexOfBar1($aBar1), 1);
+      array_splice($this->bar1s, $index, 0, array($aBar1));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addBar1At($aBar1, $index);
+    }
+    return $wasAdded;
+  }
+
   public static function minimumNumberOfBar2s()
   {
     return 0;
@@ -293,6 +325,38 @@ class Foo
       $wasRemoved = true;
     }
     return $wasRemoved;
+  }
+
+  public function addBar2At($aBar2, $index)
+  {  
+    $wasAdded = false;
+    if($this->addBar2($aBar2))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar2s()) { $index = $this->numberOfBar2s() - 1; }
+      array_splice($this->bar2s, $this->indexOfBar2($aBar2), 1);
+      array_splice($this->bar2s, $index, 0, array($aBar2));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveBar2At($aBar2, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfBar2($aBar2) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar2s()) { $index = $this->numberOfBar2s() - 1; }
+      array_splice($this->bar2s, $this->indexOfBar2($aBar2), 1);
+      array_splice($this->bar2s, $index, 0, array($aBar2));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addBar2At($aBar2, $index);
+    }
+    return $wasAdded;
   }
 
   public static function minimumNumberOfBar3s()
@@ -336,6 +400,38 @@ class Foo
     return $wasRemoved;
   }
 
+  public function addBar3At($aBar3, $index)
+  {  
+    $wasAdded = false;
+    if($this->addBar3($aBar3))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar3s()) { $index = $this->numberOfBar3s() - 1; }
+      array_splice($this->bar3s, $this->indexOfBar3($aBar3), 1);
+      array_splice($this->bar3s, $index, 0, array($aBar3));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveBar3At($aBar3, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfBar3($aBar3) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar3s()) { $index = $this->numberOfBar3s() - 1; }
+      array_splice($this->bar3s, $this->indexOfBar3($aBar3), 1);
+      array_splice($this->bar3s, $index, 0, array($aBar3));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addBar3At($aBar3, $index);
+    }
+    return $wasAdded;
+  }
+
   public static function minimumNumberOfBar4s()
   {
     return 0;
@@ -375,6 +471,38 @@ class Foo
       $wasRemoved = true;
     }
     return $wasRemoved;
+  }
+
+  public function addBar4At($aBar4, $index)
+  {  
+    $wasAdded = false;
+    if($this->addBar4($aBar4))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar4s()) { $index = $this->numberOfBar4s() - 1; }
+      array_splice($this->bar4s, $this->indexOfBar4($aBar4), 1);
+      array_splice($this->bar4s, $index, 0, array($aBar4));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveBar4At($aBar4, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfBar4($aBar4) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBar4s()) { $index = $this->numberOfBar4s() - 1; }
+      array_splice($this->bar4s, $this->indexOfBar4($aBar4), 1);
+      array_splice($this->bar4s, $index, 0, array($aBar4));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addBar4At($aBar4, $index);
+    }
+    return $wasAdded;
   }
 
   public function equals($compareTo)

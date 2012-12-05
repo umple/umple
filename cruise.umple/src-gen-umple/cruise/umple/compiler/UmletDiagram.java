@@ -107,6 +107,38 @@ public class UmletDiagram
     return wasRemoved;
   }
 
+  public boolean addUmletElementAt(UmletElement aUmletElement, int index)
+  {  
+    boolean wasAdded = false;
+    if(addUmletElement(aUmletElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmletElements()) { index = numberOfUmletElements() - 1; }
+      umletElements.remove(aUmletElement);
+      umletElements.add(index, aUmletElement);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveUmletElementAt(UmletElement aUmletElement, int index)
+  {
+    boolean wasAdded = false;
+    if(umletElements.contains(aUmletElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmletElements()) { index = numberOfUmletElements() - 1; }
+      umletElements.remove(aUmletElement);
+      umletElements.add(index, aUmletElement);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addUmletElementAt(aUmletElement, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     ArrayList<UmletElement> copyOfUmletElements = new ArrayList<UmletElement>(umletElements);

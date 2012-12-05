@@ -108,6 +108,38 @@ public class Company
     return wasRemoved;
   }
 
+  public boolean addManagerAt(Manager aManager, int index)
+  {  
+    boolean wasAdded = false;
+    if(addManager(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveManagerAt(Manager aManager, int index)
+  {
+    boolean wasAdded = false;
+    if(manager.contains(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addManagerAt(aManager, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     ArrayList<Manager> copyOfManager = new ArrayList<Manager>(manager);

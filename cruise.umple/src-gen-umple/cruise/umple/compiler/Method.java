@@ -208,6 +208,38 @@ public class Method
     return wasRemoved;
   }
 
+  public boolean addMethodParameterAt(MethodParameter aMethodParameter, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMethodParameter(aMethodParameter))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethodParameters()) { index = numberOfMethodParameters() - 1; }
+      methodParameters.remove(aMethodParameter);
+      methodParameters.add(index, aMethodParameter);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMethodParameterAt(MethodParameter aMethodParameter, int index)
+  {
+    boolean wasAdded = false;
+    if(methodParameters.contains(aMethodParameter))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMethodParameters()) { index = numberOfMethodParameters() - 1; }
+      methodParameters.remove(aMethodParameter);
+      methodParameters.add(index, aMethodParameter);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMethodParameterAt(aMethodParameter, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setMethodBody(MethodBody newMethodBody)
   {
     boolean wasSet = false;
@@ -239,6 +271,38 @@ public class Method
       wasRemoved = true;
     }
     return wasRemoved;
+  }
+
+  public boolean addCommentAt(Comment aComment, int index)
+  {  
+    boolean wasAdded = false;
+    if(addComment(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveCommentAt(Comment aComment, int index)
+  {
+    boolean wasAdded = false;
+    if(comments.contains(aComment))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfComments()) { index = numberOfComments() - 1; }
+      comments.remove(aComment);
+      comments.add(index, aComment);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addCommentAt(aComment, index);
+    }
+    return wasAdded;
   }
 
   public void delete()
