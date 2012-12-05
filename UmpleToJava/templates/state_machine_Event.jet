@@ -9,7 +9,7 @@
 	  {
 		  for( StateMachine_TraceItem tracedStm : tc .getStateMachineTraceItems() )
 		  {
-			  if( tracedStm.getTransition() != null )
+			  if( tracedStm.getTransition() != null || tracedStm.getTraceStateMachineFlag()  )
 			  {
 				  allCases.append(StringFormatter.format("\n    System.err.print(\"state@pre=\"+{0}+\",\");",tracedStm.getStateMachine().getName()));
 				  allCases.append(StringFormatter.format("\n    System.err.print(\"event={0},\");",gen.translate("eventMethod",e)));
@@ -101,7 +101,7 @@
   {
 	  for( StateMachine_TraceItem tracedStm : tc .getStateMachineTraceItems() )
 	  {
-		  if( tracedStm.getTransition() != null )
+		  if( tracedStm.getTransition() != null || tracedStm.getTraceStateMachineFlag() )
 		  {
 			  if( tc.getTraceRecord() != null )
 				  allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0}+\",{1}=\"+{2});",tracedStm.getStateMachine().getName(),tc.getTraceRecord().getAttribute(0).getName(),tc.getTraceRecord().getAttribute(0).getName()));

@@ -930,6 +930,12 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 		  condCode = processTraceCondition(traceDirective,t,template,traceStm,stm);	
 	  }
 	  
+	  if( traceStm.getTraceStateMachineFlag() )
+	  {
+//		  processTracedStateMachine(traceDirective,stm,t,template,record,condCode);  
+	  }
+	  else
+	  {
 		  if( traceStm.getTransition() != null )
 		  {
 			  processTracedTransition(traceDirective,traceStm.getTransition(),t,template,record,condCode);  
@@ -944,11 +950,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 		  {
 			  processTracedStateExit(traceDirective,stm,t,template,record,condCode);
 		  }
-			  
-		  if( traceStm.getTraceStateMachineFlag() )
-		  {
-			  processTracedStateMachine(traceDirective,stm,t,template,record,condCode);  
-		  }
+	  }
 			   
 		  if( stm.getNestedStateMachines() != null )
 			  processTracedNestedStateMachine(traceDirective,stm,t,template,record,condCode);
@@ -970,6 +972,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 	  
 	  for( StateMachine_TraceItem traceStm : traceDirective.getStateMachineTraceItems() )
 	  {
+
 		  if( traceRecord != null )
 		  {
 			  if( traceRecord.hasAttributes() )
@@ -996,7 +999,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
 		  
 		  if( traceStm.getTraceStateMachineFlag() )
 		  {
-			  processTracedStateMachine(traceDirective,stm,t,template,record,condCode);
+			  //processTracedStateMachine(traceDirective,stm,t,template,record,condCode);
 		  }
 		  
 		  if( stm.getNestedStateMachines() != null )

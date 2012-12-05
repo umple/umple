@@ -33,7 +33,6 @@ public class TracerTest extends TracerTemplateTest
 		
 	//***************************//
 	//**** Trace Attributes *****//
-	//**** Code Generation  *****//
 	//***************************//
 		
 
@@ -396,7 +395,6 @@ public class TracerTest extends TracerTemplateTest
 	
 	//*******************************//
 	//**** Trace State Machines *****//
-	//****    Code Generation   *****//
 	//*******************************//	
 
 	//====== Console tracer
@@ -493,7 +491,6 @@ public class TracerTest extends TracerTemplateTest
 	
 	//***************************//
 	//**** Trace Association ****//
-	//****  Code Generation  ****//
 	//***************************//
 	@Test
 	public void ConsoleTracer_TraceAssociationCardinality1()
@@ -506,4 +503,15 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("AssociationTrace.ump",languagePath + "/AssociationTrace."+ languagePath +".txt","Tracer");
 	}
+	
+	
+	//***************************//
+	//**** Trace Examples    ****//
+	//***************************//
+	@Test
+	public void ConsoleTracer_Phone()
+	{
+		assertUmpleTemplateFor("Phone.ump",languagePath + "/Phone."+ languagePath +".txt","PhoneLine");
+	}
+	
 }
