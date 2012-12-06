@@ -22,6 +22,8 @@
 21: 2, http://umple.org/E021InvalidReflexiveAssociation.html, Reflexive association to class '{0}' must use a role name or else self ;
 22: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' has duplicate attribute name {1} ;
 23: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
+24: 2, http://umple.org/PageBeingDeveloped.html, Association '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
+25: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' does not contain variable {1} ;
 50: 4, http://umple.org/PageBeingDeveloped.html, State '{0}' has not been declared ;
 100: 2, http://umple.org/PageBeingDeveloped.html, Class name '{0}' must be alphanumeric, starting with an alpha character, and with _ allowed.  ;
 101: 4, http://umple.org/PageBeingDeveloped.html, Class name '{0}' should start with a capital letter ;

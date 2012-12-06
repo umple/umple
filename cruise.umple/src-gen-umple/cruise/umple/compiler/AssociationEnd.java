@@ -21,6 +21,7 @@ public class AssociationEnd
   private String referenceToClassName;
   private Multiplicity multiplicity;
   private boolean isDefaultRoleName;
+  private String priority;
 
   //AssociationEnd Associations
   private Association association;
@@ -51,6 +52,7 @@ public class AssociationEnd
     referenceToClassName = aReferenceToClassName;
     multiplicity = aMultiplicity;
     isDefaultRoleName = false;
+    priority = "";
   }
 
   //------------------------
@@ -110,6 +112,14 @@ public class AssociationEnd
     return wasSet;
   }
 
+  public boolean setPriority(String aPriority)
+  {
+    boolean wasSet = false;
+    priority = aPriority;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getRoleName()
   {
     if (roleName == null) { return ""; }
@@ -145,6 +155,11 @@ public class AssociationEnd
   public boolean getIsDefaultRoleName()
   {
     return isDefaultRoleName;
+  }
+
+  public String getPriority()
+  {
+    return priority;
   }
 
   public boolean isIsDefaultRoleName()

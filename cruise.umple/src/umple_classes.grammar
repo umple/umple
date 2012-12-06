@@ -54,10 +54,11 @@ parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0])
 association : [=modifier:immutable]? [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
 symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
 inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
-inlineAssociationEnd : [[multiplicity]] [roleName]?
+inlineAssociationEnd : [[multiplicity]] [[isSorted]] | [[multiplicity]] [roleName] [[isSorted]] | [[multiplicity]] [roleName]?
 singleAssociationEnd : [[multiplicity]] [type,roleName] ;
-associationEnd : [[multiplicity]] [type,roleName]
+associationEnd : [[multiplicity]] [type,roleName] | [[multiplicity]] [type,roleName] [[isSorted]]
 multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]
+isSorted- : sorted { [priority] }
 
 // Details of attributes. See user manual page [*AttributeDefinition*]
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]

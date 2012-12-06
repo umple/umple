@@ -1271,6 +1271,11 @@ class AssociationVariable
     return wasSet;
   }
 
+  public boolean isSorted()
+  {
+    return !priority.equals("");
+  }
+
   private boolean canBeImmutable()
   {
     AssociationVariable related = getRelatedAssociation();

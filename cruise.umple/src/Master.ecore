@@ -452,11 +452,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceToClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="multiplicity" eType="#//Multiplicity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefaultRoleName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="association" lowerBound="0" upperBound="1" eType="#//Association" eOpposite="#//Association/ends"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssociationVariable" eSuperTypes="#//UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="multiplicity" eType="#//Multiplicity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNavigable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/associationVariable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/associationVariables"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="0" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/associationVariable"/>

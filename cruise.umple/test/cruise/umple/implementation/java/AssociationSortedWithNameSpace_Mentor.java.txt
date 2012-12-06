@@ -1,0 +1,183 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+
+import java.util.*;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+  private String myStudentsPriority;
+
+  //Mentor Associations
+  private List<Student> myStudents;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName)
+  {
+    name = aName;
+    myStudentsPriority = "id";
+    myStudents = new ArrayList<Student>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setMyStudentsPriority(String aMyStudentsPriority)
+  {
+    boolean wasSet = false;
+    myStudentsPriority = aMyStudentsPriority;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public String getMyStudentsPriority()
+  {
+    return myStudentsPriority;
+  }
+
+  public Student getMyStudent(int index)
+  {
+    Student aMyStudent = myStudents.get(index);
+    return aMyStudent;
+  }
+
+  public List<Student> getMyStudents()
+  {
+    List<Student> newMyStudents = Collections.unmodifiableList(myStudents);
+    return newMyStudents;
+  }
+
+  public int numberOfMyStudents()
+  {
+    int number = myStudents.size();
+    return number;
+  }
+
+  public boolean hasMyStudents()
+  {
+    boolean has = myStudents.size() > 0;
+    return has;
+  }
+
+  public int indexOfMyStudent(Student aMyStudent)
+  {
+    int index = myStudents.indexOf(aMyStudent);
+    return index;
+  }
+
+  public static int minimumNumberOfMyStudents()
+  {
+    return 0;
+  }
+
+  public boolean addMyStudent(Student aMyStudent)
+  {
+    boolean wasAdded = false;
+    if (myStudents.contains(aMyStudent)) { return false; }
+    myStudents.add(aMyStudent);
+    if (aMyStudent.indexOfProf(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aMyStudent.addProf(this);
+      if (!wasAdded)
+      {
+        myStudents.remove(aMyStudent);
+      }
+    }
+    sort(myStudents, myStudentsPriority);
+    
+    return wasAdded;
+  }
+
+  public boolean removeMyStudent(Student aMyStudent)
+  {
+    boolean wasRemoved = false;
+    if (!myStudents.contains(aMyStudent))
+    {
+      sort(myStudents, myStudentsPriority);
+      
+      return wasRemoved;
+    }
+
+    int oldIndex = myStudents.indexOf(aMyStudent);
+    myStudents.remove(oldIndex);
+    if (aMyStudent.indexOfProf(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aMyStudent.removeProf(this);
+      if (!wasRemoved)
+      {
+        myStudents.add(oldIndex,aMyStudent);
+      }
+    }
+    sort(myStudents, myStudentsPriority);
+    
+    return wasRemoved;
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public void sort(List toSort, final String thePriority)
+  {
+    if(toSort.size() > 0)
+    {
+      Collections.sort(toSort, new Comparator<Object>()
+      {
+        @Override
+        public int compare(Object arg0, Object arg1)
+        {
+          try
+          {
+            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
+            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
+          }
+          catch (Exception e)
+          {
+            e.printStackTrace();
+          }
+          return 0;
+        }
+      });
+    }
+  }
+
+  public void delete()
+  {
+    ArrayList<Student> copyOfMyStudents = new ArrayList<Student>(myStudents);
+    myStudents.clear();
+    for(Student aMyStudent : copyOfMyStudents)
+    {
+      aMyStudent.removeProf(this);
+    }
+  }
+
+}

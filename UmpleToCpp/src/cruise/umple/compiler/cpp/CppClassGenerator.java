@@ -4336,7 +4336,11 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     
     }
     
-    if(av.isMany() && !av.isImmutable() && !av.isN())
+    if(av.isSorted())
+    {
+      includeFile3 = "association_Sort.jet";
+    }
+    else if(av.isMany() && !av.isImmutable() && !av.isN())
     {
       includeFile3 = "association_AddIndexControlFunctions.jet";
     }
@@ -7377,7 +7381,12 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
     
-    if(includeFile3 == "association_AddIndexControlFunctions.jet")
+    if(includeFile3 == "association_Sort.jet")
+    {
+      
+    
+    }
+    else if(includeFile3 == "association_AddIndexControlFunctions.jet")
     {
       
     

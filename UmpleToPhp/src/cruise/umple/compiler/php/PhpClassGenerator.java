@@ -3951,7 +3951,11 @@ public class PhpClassGenerator implements ILang
     
     }
     
-    if(av.isMany() && !av.isImmutable() && !av.isN())
+    if(av.isSorted())
+    {
+      includeFile3 = "association_Sort.jet";
+    }
+    else if(av.isMany() && !av.isImmutable() && !av.isN())
     {
       includeFile3 = "association_AddIndexControlFunctions.jet";
     }
@@ -6373,7 +6377,12 @@ public class PhpClassGenerator implements ILang
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
     
-    if(includeFile3 == "association_AddIndexControlFunctions.jet")
+    if(includeFile3 == "association_Sort.jet")
+    {
+      
+    
+    }
+    else if(includeFile3 == "association_AddIndexControlFunctions.jet")
     {
       
     stringBuffer.append(TEXT_1467);

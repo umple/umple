@@ -188,6 +188,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Person.java");
     SampleFileWriter.destroy(pathToInput + "/Student.java");
     SampleFileWriter.destroy(pathToInput + "/Teacher.java");
+    SampleFileWriter.destroy(pathToInput + "/Mentor.java");
   }
 
   @Test

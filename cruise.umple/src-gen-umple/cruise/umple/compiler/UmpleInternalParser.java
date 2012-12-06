@@ -892,6 +892,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       addUnlinkedExtends();
       checkDuplicateAssociationNames();
       checkExtendsForCycles();
+      checkSortedAssociations();
     }
   }
 
@@ -1548,6 +1549,45 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
   }
 
+  private void checkSortedAssociations()
+  {
+    for (Association association : model.getAssociations()) 
+    {
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+      String value;
+      
+      if(!"".equals(yourEnd.getPriority())){
+      	Attribute temp = yourClass.getAttribute(yourEnd.getPriority());
+      	if(temp != null)
+		{
+      	  if(Pattern.matches("Integer|Short|Float|Double|String", temp.getType())) 
+		    myClass.addAttribute(yourEnd.getRoleName()+"Priority", "String", "", "\""+yourEnd.getPriority()+"\"", false);
+      	  else
+      		setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
+      	}
+		else
+		  setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), yourEnd.getPriority());
+      }
+      
+      if(!"".equals(myEnd.getPriority())){
+      	Attribute temp = myClass.getAttribute(myEnd.getPriority());
+      	if(temp != null)
+		{
+      	  if(Pattern.matches("Integer|Short|Float|Double|String", temp.getType()))
+		    yourClass.addAttribute(myEnd.getRoleName()+"Priority", "String", "", "\""+myEnd.getPriority()+"\"", false);
+      	  else
+      		setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
+		}
+		else
+		  setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), myEnd.getPriority());
+      }
+    }
+  }
+  
   /*
    * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
    * method instance and added to an Umple element (which could be an Umple class).
@@ -1776,6 +1816,8 @@ private void analyzeClassToken(Token t, int analysisStep)
     String myBound = myMultToken.getValue("bound");
     String myLowerBound = myMultToken.getValue("lowerBound");
     String myUpperBound = myMultToken.getValue("upperBound");
+    String myPriority = myMultToken.getValue("priority");
+    
     Multiplicity myMult = new Multiplicity(); 
     myMult.setBound(myBound);
     myMult.setRange(myLowerBound,myUpperBound);
@@ -1794,7 +1836,8 @@ private void analyzeClassToken(Token t, int analysisStep)
     String yourBound = yourMultToken.getValue("bound");
     String yourLowerBound = yourMultToken.getValue("lowerBound");
     String yourUpperBound = yourMultToken.getValue("upperBound");
-
+	String yourPriority = yourMultToken.getValue("priority");
+	
     Multiplicity yourMult = new Multiplicity();
     yourMult.setBound(yourBound);
     yourMult.setRange(yourLowerBound,yourUpperBound);
@@ -1821,6 +1864,9 @@ private void analyzeClassToken(Token t, int analysisStep)
     AssociationEnd firstEnd = new AssociationEnd(myName,myType,myModifier,yourType,myMult);
     AssociationEnd secondEnd = new AssociationEnd(yourName,yourType,yourModifier,myType,yourMult);
     updateAssociationEnds(firstEnd,secondEnd);
+
+	if(myPriority != null)	{ firstEnd.setPriority(myPriority);	}
+	if(yourPriority != null) { secondEnd.setPriority(yourPriority); }
 
     Association association = createAssociation(navigation,firstEnd,secondEnd);
     
@@ -1885,6 +1931,9 @@ private void analyzeClassToken(Token t, int analysisStep)
     AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
     AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
     myAs.setRelatedAssociation(yourAs);
+    
+    if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
+    if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
     
     if (association.isImmutable())
     {

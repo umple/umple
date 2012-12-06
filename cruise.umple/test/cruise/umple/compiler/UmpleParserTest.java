@@ -1177,7 +1177,6 @@ public class UmpleParserTest
     assertFailedParse("009_ReflexiveNonDirectedZeroOneSeparateAssocError21.ump",21);
   }
   
-  
   @Test
   public void associationClass2()
   {

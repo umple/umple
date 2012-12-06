@@ -17,6 +17,7 @@ public class AssociationVariable extends UmpleVariable
   //AssociationVariable Attributes
   private Multiplicity multiplicity;
   private boolean isNavigable;
+  private String priority;
 
   //AssociationVariable Associations
   private AssociationVariable relatedAssociation;
@@ -37,6 +38,7 @@ public class AssociationVariable extends UmpleVariable
     multiplicity = aMultiplicity;
     isNavigable = aIsNavigable;
     canSetIsNavigable = false;
+    priority = "";
     comments = new ArrayList<Comment>();
   }
 
@@ -52,6 +54,14 @@ public class AssociationVariable extends UmpleVariable
     return wasSet;
   }
 
+  public boolean setPriority(String aPriority)
+  {
+    boolean wasSet = false;
+    priority = aPriority;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Multiplicity getMultiplicity()
   {
     return multiplicity;
@@ -60,6 +70,11 @@ public class AssociationVariable extends UmpleVariable
   public boolean getIsNavigable()
   {
     return isNavigable;
+  }
+
+  public String getPriority()
+  {
+    return priority;
   }
 
   public boolean isIsNavigable()
@@ -407,6 +422,11 @@ public class AssociationVariable extends UmpleVariable
       wasSet = true;
     }
     return wasSet;
+  }
+
+  public boolean isSorted()
+  {
+    return !priority.equals("");
   }
 
   private boolean canBeImmutable()

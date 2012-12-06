@@ -378,6 +378,7 @@ class AssociationEnd
   referenceToClassName;
   Multiplicity multiplicity;
   Boolean isDefaultRoleName = false;
+  String priority = "";
 
   key { multiplicity, roleName, className, modifier, referenceToClassName }
   //modifier { Settable, Immutable, Internal, Defaulted, Constant }
@@ -394,7 +395,8 @@ class AssociationVariable
   isA UmpleVariable;
   Multiplicity multiplicity;
   immutable Boolean isNavigable;
-
+  String priority = "";
+  
   0..1 self relatedAssociation;
 
   // The comments associated with the association (such as the Javadoc above it).
