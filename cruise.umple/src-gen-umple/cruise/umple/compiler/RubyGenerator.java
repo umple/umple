@@ -659,6 +659,14 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
         aClass.addCodeInjection(set);
       }
       
+      if(av.isSorted())
+      {
+        String code = StringFormatter.format("sort(@{0}, @{0}Priority)\n",translate("attributeMany",av), translate("attributeMany",av));
+        String methods = StringFormatter.format("{0},{1}",translate("removeMethod",av),translate("addMethod",av));
+        CodeInjection set = new CodeInjection("after", methods, code);
+        set.setIsInternal(true);
+        aClass.addCodeInjection(set);
+      }
     } 
     
     Map<String,String> lookups = new HashMap<String,String>();

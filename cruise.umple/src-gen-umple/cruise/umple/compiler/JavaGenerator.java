@@ -703,6 +703,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
+      
       if(av.isSorted())
       {
         String code = StringFormatter.format("sort({0}, {1}Priority);\n",translate("attributeMany",av), translate("attributeMany",av));

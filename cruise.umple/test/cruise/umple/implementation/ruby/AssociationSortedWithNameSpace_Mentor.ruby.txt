@@ -1,0 +1,144 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Mentor
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name, :myStudentsPriority
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :myStudents
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_name)
+    @initialized = false
+    @deleted = false
+    @name = a_name
+    @myStudentsPriority = "id"
+    @myStudents = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def set_myStudentsPriority(a_myStudentsPriority)
+    was_set = false
+    @myStudentsPriority = a_myStudentsPriority
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_myStudentsPriority
+    @myStudentsPriority
+  end
+
+  def get_myStudent(index)
+    a_myStudent = @myStudents[index]
+    a_myStudent
+  end
+
+  def get_myStudents
+    new_myStudents = @myStudents.dup
+    new_myStudents
+  end
+
+  def number_of_myStudents
+    number = @myStudents.size
+    number
+  end
+
+  def has_myStudents
+    has = @myStudents.size > 0
+    has
+  end
+
+  def index_of_myStudent(a_myStudent)
+    index = @myStudents.index(a_myStudent)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_myStudents
+    0
+  end
+
+  def add_myStudent(a_myStudent)
+    was_added = false
+    return false if index_of_myStudent(a_myStudent) != -1
+    @myStudents << a_myStudent
+    if a_myStudent.index_of_Prof(self) != -1
+      was_added = true
+    else
+      was_added = a_myStudent.add_Prof(self)
+      unless was_added
+        @myStudents.delete(a_myStudent)
+      end
+    end
+    sort(@myStudents, @myStudentsPriority)
+    
+    was_added
+  end
+
+  def remove_myStudent(a_myStudent)
+    was_removed = false
+    unless @myStudents.include?(a_myStudent)
+      sort(@myStudents, @myStudentsPriority)
+      
+      return was_removed
+    end
+
+    oldIndex = @myStudents.index(a_myStudent)
+    @myStudents.delete_at(oldIndex)
+    if a_myStudent.index_of_Prof(self) == -1
+      was_removed = true
+    else
+      was_removed = a_myStudent.remove_Prof(self)
+      @myStudents.insert(oldIndex,a_myStudent) unless was_removed
+    end
+    sort(@myStudents, @myStudentsPriority)
+    
+    was_removed
+  end
+
+  def sort(toSort, thePriority)
+    if(toSort.size > 0)
+      methodName = "get_" + thePriority;
+        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
+    end
+  end
+
+  def delete
+    @deleted = true
+    copy_of_myStudents = @myStudents.dup
+    @myStudents.clear
+    copy_of_myStudents.each do |a_myStudent|
+      a_myStudent.remove_Prof(self)
+    end
+  end
+
+end
