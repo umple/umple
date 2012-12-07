@@ -103,15 +103,16 @@ public class BuilderTest {
      Class<?> myClass = Class.forName("MeToo");
      Assert.assertNotNull(myClass);
    }    
+
+*/   
    
-   
-   @Ignore   @Test 
+   @Test 
    public void executeSimpleAntScript()
    {
      Builder builder = new Builder();
      builder.runAnt("mybuild.xml");
      Assert.assertEquals(true,(new File("deleteme.txt")).exists());
    }
-*/
+
   
 }
