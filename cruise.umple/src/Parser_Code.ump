@@ -321,7 +321,8 @@ class Token
 
 class Position
 {
-  depend java.nio.file.*;
+  //Re-add when Java 7 supported
+  //depend java.nio.file.*;
 
   public Position(int aLineNumber, int aCharacterOffset, int aOffset)
   {
@@ -361,8 +362,17 @@ class Position
   {
     return str.replace('\\','/');
   }
-
+  
+  //Temporary version the returns full path rather than relative path
   public String getRelativePath(UmpleClass parent, String language)
+  {
+    return filename;
+  }
+
+  //This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
+  //It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
+  //As a result, it has been replaced by the placeholder above, that simply returns the full path.
+  /*public String getRelativePath(UmpleClass parent, String language)
   {
     if (filename == null)
     {
@@ -416,7 +426,7 @@ class Position
       build.append(Paths.get(filename).getFileName());
       return deWindowsify(build.toString());
     }
-  }
+  }*/
 }
 
 class RulePart
