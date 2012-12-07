@@ -2,7 +2,9 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.compiler.Position;
 
+// line 203 "../../../../src/Umple.ump"
 public class CodeInjection
 {
 
@@ -14,18 +16,26 @@ public class CodeInjection
   private String type;
   private String operation;
   private String code;
+  private Position position;
   private boolean isInternal;
+
+  //CodeInjection Associations
+  private UmpleClass umpleClass;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public CodeInjection(String aType, String aOperation, String aCode)
+  public CodeInjection(String aType, String aOperation, String aCode, UmpleClass aUmpleClass)
   {
     type = aType;
     operation = aOperation;
     code = aCode;
     isInternal = false;
+    if (!setUmpleClass(aUmpleClass))
+    {
+      throw new RuntimeException("Unable to create CodeInjection due to aUmpleClass");
+    }
   }
 
   //------------------------
@@ -56,6 +66,14 @@ public class CodeInjection
     return wasSet;
   }
 
+  public boolean setPosition(Position aPosition)
+  {
+    boolean wasSet = false;
+    position = aPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setIsInternal(boolean aIsInternal)
   {
     boolean wasSet = false;
@@ -79,6 +97,11 @@ public class CodeInjection
     return code;
   }
 
+  public Position getPosition()
+  {
+    return position;
+  }
+
   public boolean getIsInternal()
   {
     return isInternal;
@@ -89,7 +112,25 @@ public class CodeInjection
     return isInternal;
   }
 
+  public UmpleClass getUmpleClass()
+  {
+    return umpleClass;
+  }
+
+  public boolean setUmpleClass(UmpleClass newUmpleClass)
+  {
+    boolean wasSet = false;
+    if (newUmpleClass != null)
+    {
+      umpleClass = newUmpleClass;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
   public void delete()
-  {}
+  {
+    umpleClass = null;
+  }
 
 }

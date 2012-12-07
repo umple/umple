@@ -2,11 +2,14 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.compiler.Position;
 import java.util.*;
 
 /**
  * A method which recides inside an Umple Class.
  */
+// line 103 "../../../../src/Umple.ump"
+// line 391 "../../../../src/Umple_Code.ump"
 public class Method
 {
 
@@ -17,6 +20,7 @@ public class Method
   //Method Attributes
   private String modifier;
   private String name;
+  private Position position;
   private String type;
   private boolean isImplemented;
 
@@ -59,6 +63,14 @@ public class Method
     return wasSet;
   }
 
+  public boolean setPosition(Position aPosition)
+  {
+    boolean wasSet = false;
+    position = aPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setType(String aType)
   {
     boolean wasSet = false;
@@ -89,6 +101,11 @@ public class Method
   public String getName()
   {
     return name;
+  }
+
+  public Position getPosition()
+  {
+    return position;
   }
 
   /**
@@ -316,6 +333,7 @@ public class Method
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 393 ../../../../src/Umple_Code.ump
   public String toString()
   {
     StringBuffer methodBuffer = new StringBuffer();

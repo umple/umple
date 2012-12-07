@@ -11,4 +11,5 @@ public interface UmpleParser
   public UmpleModel getModel();
   public boolean setModel(UmpleModel model);
   public ParseResult getParseResult();
+  public boolean setFilename(String filename);
 }

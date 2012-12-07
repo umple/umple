@@ -4,6 +4,7 @@
 package cruise.umple.util;
 import java.io.*;
 
+// line 77 "../../../../src/Util_Code.ump"
 public class Input
 {
 
@@ -49,6 +50,7 @@ public class Input
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 84 ../../../../src/Util_Code.ump
   public String readUmpleFile(String[] args, PrintStream writer)
   {
     if (args.length > 0)

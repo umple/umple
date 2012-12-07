@@ -6,6 +6,8 @@ import java.io.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+// line 14 "../../../../src/Umlet.ump"
+// line 12 "../../../../src/Umlet_Code.ump"
 public class UmletGenerator implements CodeGenerator
 {
 
@@ -247,7 +249,9 @@ public class UmletGenerator implements CodeGenerator
   /**
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
-   */  @Override
+   */
+  // line 21 "../../../../src/Generator.ump"
+  @Override
   public boolean setOutput(String aString){
           return false;
   }
@@ -256,6 +260,7 @@ public class UmletGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 15 ../../../../src/Umlet_Code.ump
   public void generate()
   {
     UmpleFile umpleFile = model.getUmpleFile();

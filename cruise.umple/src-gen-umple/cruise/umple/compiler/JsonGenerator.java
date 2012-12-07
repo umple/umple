@@ -4,6 +4,8 @@
 package cruise.umple.compiler;
 import cruise.umple.util.*;
 
+// line 137 "../../../../src/Generator.ump"
+// line 934 "../../../../src/Generator_Code.ump"
 public class JsonGenerator implements CodeGenerator
 {
 
@@ -66,6 +68,7 @@ public class JsonGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 937 ../../../../src/Generator_Code.ump
   public void generate()
   {
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
@@ -75,10 +78,10 @@ public class JsonGenerator implements CodeGenerator
     boolean isFirst = true;
     for (UmpleClass aClass : model.getUmpleClasses())
     {
-      String x = aClass.getPosition().getX() + "";
-      String y = aClass.getPosition().getY() + "";
-      String width = aClass.getPosition().getWidth() + "";
-      String height = aClass.getPosition().getHeight() + "";
+      String x = aClass.getCoordinates().getX() + "";
+      String y = aClass.getCoordinates().getY() + "";
+      String width = aClass.getCoordinates().getWidth() + "";
+      String height = aClass.getCoordinates().getHeight() + "";
       String name = aClass.getName();
 
       String jsonForAttributes = "";
@@ -111,10 +114,10 @@ public class JsonGenerator implements CodeGenerator
     boolean isFirstInterface = true;
     for (UmpleInterface aInterface : model.getUmpleInterfaces())
     {
-      String x = aInterface.getPosition().getX() + "";
-      String y = aInterface.getPosition().getY() + "";
-      String width = aInterface.getPosition().getWidth() + "";
-      String height = aInterface.getPosition().getHeight() + "";
+      String x = aInterface.getCoordinates().getX() + "";
+      String y = aInterface.getCoordinates().getY() + "";
+      String width = aInterface.getCoordinates().getWidth() + "";
+      String height = aInterface.getCoordinates().getHeight() + "";
       String name = aInterface.getName();
 
       if (!isFirstInterface)

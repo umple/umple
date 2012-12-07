@@ -4,6 +4,9 @@
 package cruise.vml;
 import java.util.*;
 
+// line 41 "../../../src/Vml.ump"
+// line 127 "../../../src/Vml_Code.ump"
+// line 376 "../../../src/Vml_Code.ump"
 public class VariationPoint
 {
 
@@ -402,6 +405,7 @@ public class VariationPoint
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 129 ../../../src/Vml_Code.ump
   public String toString()
   {
     if (codeSnippet == null)

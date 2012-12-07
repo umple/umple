@@ -4,6 +4,7 @@
 package cruise.umple.util;
 import java.io.File;
 
+// line 305 "../../../../src/Util_Code.ump"
 public class StringFormatter
 {
 
@@ -29,6 +30,7 @@ public class StringFormatter
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 309 ../../../../src/Util_Code.ump
   public static String toCamelCase(String input)
   {
     if (input == null || input.length() == 0)

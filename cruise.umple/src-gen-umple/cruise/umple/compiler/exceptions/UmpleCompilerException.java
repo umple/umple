@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler.exceptions;
 
+// line 18 "../../../../../src/UmpleExceptions.ump"
 public class UmpleCompilerException extends RuntimeException
 {
 
@@ -30,5 +31,6 @@ public class UmpleCompilerException extends RuntimeException
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 22 ../../../../../src/UmpleExceptions.ump
   static final long serialVersionUID = 1;
 }

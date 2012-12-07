@@ -35,7 +35,7 @@ class UmpleInternalParser
   
     if (token.is("elementPosition"))
     {
-      aClass.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+      aClass.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
     }
     else if (token.is("associationPosition"))
     {
@@ -70,14 +70,14 @@ class UmpleInternalParser
     {
       UmpleClass c = model.getUmpleClass(i);
 
-      if (c.getPosition().getStatus() == Coordinate.Status.Defaulted)
+      if (c.getCoordinates().getStatus() == Coordinate.Status.Defaulted)
       {
         // Do nothing
       }
-      else if (c.getPosition().getStatus() == Coordinate.Status.Undefined)
+      else if (c.getCoordinates().getStatus() == Coordinate.Status.Undefined)
       {
-        c.setPosition(model.getDefaultClassPosition(i+1));
-        c.getPosition().setStatus(Coordinate.Status.Defaulted);
+        c.setCoordinates(model.getDefaultClassPosition(i+1));
+        c.getCoordinates().setStatus(Coordinate.Status.Defaulted);
       }
     }
 
@@ -86,14 +86,14 @@ class UmpleInternalParser
     {
       UmpleInterface c = model.getUmpleInterface(i);
 
-      if (c.getPosition().getStatus() == Coordinate.Status.Defaulted)
+      if (c.getCoordinates().getStatus() == Coordinate.Status.Defaulted)
       {
         // Do nothing
       }
-      else if (c.getPosition().getStatus() == Coordinate.Status.Undefined)
+      else if (c.getCoordinates().getStatus() == Coordinate.Status.Undefined)
       {
-        c.setPosition(model.getDefaultClassPosition(i+1));
-        c.getPosition().setStatus(Coordinate.Status.Defaulted);
+        c.setCoordinates(model.getDefaultClassPosition(i+1));
+        c.getCoordinates().setStatus(Coordinate.Status.Defaulted);
       }
     }
 

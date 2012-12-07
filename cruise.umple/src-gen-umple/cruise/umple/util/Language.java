@@ -4,6 +4,7 @@
 package cruise.umple.util;
 import java.util.*;
 
+// line 24 "../../../../src/Util_Code.ump"
 public class Language
 {
 
@@ -23,6 +24,7 @@ public class Language
 
   private Language()
   {
+    // line 29 "../../../../src/Util_Code.ump"
     init();
   }
 
@@ -46,6 +48,7 @@ public class Language
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 31 ../../../../src/Util_Code.ump
   private static final boolean default_strictness = false;
   private Hashtable<String, String> _allEnglish;
 

@@ -645,6 +645,12 @@ class SampleFileWriter
           expectedLine = expectedReader.readLine();
         }
         actualLine = actualReader.readLine();
+        // HACK: To deal with // line # comments
+        while (actualLine != null && actualLine.indexOf("// line") != -1)
+        { //Ignore the line, go to next
+          actualLine = actualReader.readLine();
+        }
+        
         line++;
         
         if (expectedLine == null) 
@@ -676,6 +682,11 @@ class SampleFileWriter
   
   public static void assertFileContent(File expected, String actual)
   {
+    assertFileContent(expected, actual, true);
+  }
+  
+  public static void assertFileContent(File expected, String actual, boolean ignoreLineComments)
+  {
     
     BufferedReader expectedReader = null;
     BufferedReader actualReader = null;
@@ -691,8 +702,17 @@ class SampleFileWriter
       int line = 0;
       do 
       {
-        expectedLine = expectedReader.readLine();
         actualLine = actualReader.readLine();
+        if (ignoreLineComments)
+        {
+	        // HACK: To deal with // line # comments
+	        while (actualLine != null && actualLine.indexOf("// line") != -1)
+	        { //Ignore the line, go to next
+	          actualLine = actualReader.readLine();
+	        }
+	    }
+        expectedLine = expectedReader.readLine();
+        
         line++;
         
         // HACK: To deal with umple version issues

@@ -3,6 +3,7 @@
 
 package cruise.umple.util;
 
+// line 841 "../../../../src/Util_Code.ump"
 public class Word
 {
 

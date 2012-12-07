@@ -590,7 +590,7 @@ class PhpGenerator
       if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -599,7 +599,7 @@ class PhpGenerator
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }",translate("attributeCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -611,7 +611,7 @@ class PhpGenerator
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -620,7 +620,7 @@ class PhpGenerator
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }\n$this->{0} = false;",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
-        CodeInjection set = new CodeInjection("before", methods, code);
+        CodeInjection set = new CodeInjection("before", methods, code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -628,7 +628,7 @@ class PhpGenerator
       if (av.isMany())
       {
         String code = StringFormatter.format("if ($this->{0}(${1}) !== -1) { return false; }",translate("indexOfMethod",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -819,7 +819,7 @@ class PhpGenerator
     else if( "until".equals(conditionType) || "after".equals(conditionType) || "giving".equals(conditionType) )
     	injectionType = "after";
 
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code);
+    CodeInjection set = new CodeInjection(injectionType, setMethod, code, aClass);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }

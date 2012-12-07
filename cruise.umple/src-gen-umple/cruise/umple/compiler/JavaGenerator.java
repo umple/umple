@@ -9,6 +9,8 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.java.*;
 import cruise.umple.util.StringFormatter;
 
+// line 148 "../../../../src/Generator.ump"
+// line 12 "../../../../src/Generator_CodeJava.ump"
 public class JavaGenerator implements CodeGenerator,CodeTranslator
 {
 
@@ -71,6 +73,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 16 ../../../../src/Generator_CodeJava.ump
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
@@ -661,7 +664,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -670,7 +673,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -682,7 +685,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before",methods , code);
+        CodeInjection inject = new CodeInjection("before",methods , code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -691,7 +694,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("if (!{0}) { return false; }\n{0} = false;",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
-        CodeInjection set = new CodeInjection("before", methods, code);
+        CodeInjection set = new CodeInjection("before", methods, code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -699,7 +702,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       if (av.isMany())
       {
         String code = StringFormatter.format("if ({0}.contains({1})) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -708,7 +711,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("sort({0}, {1}Priority);\n",translate("attributeMany",av), translate("attributeMany",av));
         String methods = StringFormatter.format("{0},{1}",translate("removeMethod",av),translate("addMethod",av));
-        CodeInjection set = new CodeInjection("after", methods, code);
+        CodeInjection set = new CodeInjection("after", methods, code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }

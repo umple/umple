@@ -65,4 +65,9 @@ class UmpleXtextParser
     return temp.getParseResult();
   }
   
+  public boolean setFilename(String filename)
+  {
+    return temp.setFilename(filename);
+  }
+  
 }

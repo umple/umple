@@ -53,6 +53,10 @@
         hasEntry = true;
         hasThisEntry = true;
         isFirstEntry = false;
+        Position p = action.getPosition();
+        if (p != null) {
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+        }
         entryActions.append("\n        " + action.getActionCode());
       }
       else if ("exit".equals(action.getActionType()))
@@ -87,6 +91,10 @@
         hasExit = true;
         hasThisExit = true;
         isFirstExit = false;
+        Position p = action.getPosition();
+        if (p != null) {
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+        }
         exitActions.append("\n        " + action.getActionCode());
       }
     }

@@ -46,6 +46,9 @@ class State
 
 class Activity
 {
+  depend cruise.umple.compiler.Position;
+
+  lazy Position position;
   activityCode;  // target language code
   * -> 0..1 Event onCompletionEvent;
 }
@@ -68,7 +71,10 @@ class Transition
 
 class Action
 {
+  depend cruise.umple.compiler.Position;
+  
   actionType = null;
+  lazy Position position;
   actionCode;  // target language code
   Boolean isInternal = false;
   
@@ -89,6 +95,9 @@ class Event
 
 class Guard
 {
+  depend cruise.umple.compiler.Position;
+  
+  lazy Position position;
   condition; // target language code
   key { condition }
 }

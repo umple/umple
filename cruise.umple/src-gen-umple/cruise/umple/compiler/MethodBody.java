@@ -6,6 +6,7 @@ package cruise.umple.compiler;
 /**
  * The contents of a method, such as the code within it.
  */
+// line 139 "../../../../src/Umple.ump"
 public class MethodBody
 {
 

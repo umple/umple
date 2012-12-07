@@ -12,6 +12,8 @@ package cruise.umple.compiler;
 import java.util.*;
 import org.junit.*;
 
+import cruise.umple.util.AssertHelper;
+
 public class UmpleInternalParserTest extends UmpleParserTest
 {
   
@@ -257,9 +259,10 @@ public class UmpleInternalParserTest extends UmpleParserTest
 
   private void assertParse(String filename, String expectedOutput)
   {
+	  
     boolean answer = parse(filename);
     Assert.assertEquals(true, answer);
-    Assert.assertEquals(expectedOutput, parser.toString());  
+    AssertHelper.assertEqualsSafe(expectedOutput, parser.toString());  
   }
   
   

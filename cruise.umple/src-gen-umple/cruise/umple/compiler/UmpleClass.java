@@ -8,6 +8,9 @@ import java.util.*;
 /**
  * Represents an Umple class which can contain attributes, associations and methods.
  */
+// line 245 "../../../../src/Umple.ump"
+// line 90 "../../../../src/Trace.ump"
+// line 484 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleElement
 {
 
@@ -22,6 +25,7 @@ public class UmpleClass extends UmpleElement
   private Key key;
   private boolean iAmImmutable;
   private boolean ancestorIsImmutable;
+  private UmpleModel sourceModel;
 
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
@@ -44,7 +48,7 @@ public class UmpleClass extends UmpleElement
   // CONSTRUCTOR
   //------------------------
 
-  public UmpleClass(String aName)
+  public UmpleClass(String aName, UmpleModel aSourceModel)
   {
     super(aName);
     isAbstract = false;
@@ -53,6 +57,7 @@ public class UmpleClass extends UmpleElement
     key = new Key();
     iAmImmutable = false;
     ancestorIsImmutable = false;
+    sourceModel = aSourceModel;
     codeInjections = new ArrayList<CodeInjection>();
     parentInterface = new ArrayList<UmpleInterface>();
     depends = new ArrayList<Depend>();
@@ -109,6 +114,14 @@ public class UmpleClass extends UmpleElement
     return wasSet;
   }
 
+  public boolean setSourceModel(UmpleModel aSourceModel)
+  {
+    boolean wasSet = false;
+    sourceModel = aSourceModel;
+    wasSet = true;
+    return wasSet;
+  }
+
   /**
    * Specifies whether or not the Umple class is an abstract class.
    */
@@ -158,6 +171,11 @@ public class UmpleClass extends UmpleElement
   public Key getKey()
   {
     return key;
+  }
+
+  public UmpleModel getSourceModel()
+  {
+    return sourceModel;
   }
 
   public boolean isIsAbstract()
@@ -569,6 +587,7 @@ public class UmpleClass extends UmpleElement
   {
     boolean wasAdded = false;
     if (codeInjections.contains(aCodeInjection)) { return false; }
+    if (codeInjections.contains(aCodeInjection)) { return false; }
     codeInjections.add(aCodeInjection);
     wasAdded = true;
     return wasAdded;
@@ -620,6 +639,7 @@ public class UmpleClass extends UmpleElement
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
+    // line 299 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -708,6 +728,7 @@ public class UmpleClass extends UmpleElement
   public boolean addDepend(Depend aDepend)
   {
     boolean wasAdded = false;
+    // line 293 "../../../../src/Umple.ump"
     if (depends.contains(aDepend)) { return false; }
     if (depends.contains(aDepend)) { return false; }
     depends.add(aDepend);
@@ -960,6 +981,7 @@ public class UmpleClass extends UmpleElement
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
+    // line 297 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1231,6 +1253,7 @@ public class UmpleClass extends UmpleElement
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
+    // line 301 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1414,6 +1437,10 @@ public class UmpleClass extends UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+   public UmpleClass(String name)  {
+this(name, null);
+  }
+// line 492 ../../../../src/Umple_Code.ump
   public List<StateMachine> getAllStateMachines()
   {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();

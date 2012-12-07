@@ -3,6 +3,9 @@
 
 package cruise.vml;
 
+// line 52 "../../../src/Vml.ump"
+// line 159 "../../../src/Vml_Code.ump"
+// line 385 "../../../src/Vml_Code.ump"
 public class Variant
 {
 
@@ -161,6 +164,7 @@ public class Variant
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 161 ../../../src/Vml_Code.ump
   public String toString()
   {
     if (name == null)

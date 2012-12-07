@@ -8,6 +8,8 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sql.*;
 
+// line 217 "../../../../src/Generator.ump"
+// line 12 "../../../../src/Generator_CodeSql.ump"
 public class SqlGenerator implements CodeGenerator,CodeTranslator
 {
 
@@ -70,6 +72,7 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 15 ../../../../src/Generator_CodeSql.ump
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
@@ -892,7 +895,7 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
       if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("return false unless @{0}",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -901,7 +904,7 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("return false unless @{0}",translate("attributeCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -913,7 +916,7 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("return false unless @{0}",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -921,7 +924,7 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
       if (av.getIsNavigable()  && av.isMandatoryOne() && av.getRelatedAssociation().isMandatory())
       {
         String code = StringFormatter.format("raise \"Mandatory relationship with {0} not satisfied\" if (@initialized and !@deleted and @{1}.nil?)",av.getName(),translate("associationOne",av));
-        CodeInjection injection = new CodeInjection("before","!constructor",code);
+        CodeInjection injection = new CodeInjection("before","!constructor",code, aClass);
         injection.setIsInternal(true);
         aClass.addCodeInjection(injection);
       }
@@ -929,7 +932,7 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
       if (av.isMany())
       {
         String code = StringFormatter.format("return false if {0}({1}) != -1",translate("indexOfMethod",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }

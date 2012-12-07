@@ -8,6 +8,7 @@ import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.util.StringFormatter;
 
+// line 14 "../../../../src/Compiler.ump"
 public class CodeCompiler
 {
 
@@ -33,6 +34,7 @@ public class CodeCompiler
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 22 ../../../../src/Compiler.ump
   public static String console;
 
 	public static boolean compile(UmpleModel model, String entryClass) {
@@ -86,7 +88,7 @@ public class CodeCompiler
 		String code_file = st.nextToken(); //NOT USED
 		st.nextToken(); // Line number in java file NOT USED
 		String error_type = st.nextToken(); // Error type
-		String umpFile_name = aClass.getUmpFile();
+		List<Position> classPositions = aClass.getPositions();
 
 		String class_name = "";
 		try {
@@ -127,25 +129,30 @@ public class CodeCompiler
 				error_msg = error_msg + java_code + "\n";
 				java_code = pos_locator;
 			}
-
-			BufferedReader umpFile = new BufferedReader(new FileReader(umpFile_name));
-			String line;
-			line_num=0;
-			while(true) {
-				line = umpFile.readLine();
-				if (line == null) {
+			for (Position p : classPositions)
+			{
+				Boolean found = false;
+				BufferedReader umpFile = new BufferedReader(new FileReader(p.getFilename()));
+				String line;
+				line_num=0;
+				while(true) {
+					line = umpFile.readLine();
+					if (line == null) {
+						break;
+					}
+					line_num++;
+					if (line.trim().equals(java_code_trim)) {
+						found = true;
+						break;
+					}
+				}
+				if (found == true)
+				{
+					println(getSimpleFileName(p.getFilename())+":"+line_num+": Generic Java Error"+error_type);
 					break;
 				}
-				line_num++;
-				if (line.trim().equals(java_code_trim)) {
-					break;
-				}
+				umpFile.close();
 			}
-
-			println(getSimpleFileName(umpFile_name)+":"+line_num+": Generic Java Error"+error_type);
-			//println(error_msg+java_code+"\n"+pos_locator);
-
-			umpFile.close();
 		} catch (IOException e) {
 		}
 	}

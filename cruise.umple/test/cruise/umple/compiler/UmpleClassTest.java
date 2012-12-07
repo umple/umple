@@ -490,7 +490,7 @@ public class UmpleClassTest
   public void getCodeInjectionsFor_perfectMatch()
   {
     UmpleClass c = new UmpleClass("Student");
-    CodeInjection code = new CodeInjection("before","myOpp","//the code");
+    CodeInjection code = new CodeInjection("before","myOpp","//the code",c);
     List<CodeInjection> allCodes;
     
     allCodes = c.getApplicableCodeInjections(null,"myOpp");
@@ -521,10 +521,10 @@ public class UmpleClassTest
   public void getCodeInjectionsFor_supportStar()
   {
     UmpleClass c = new UmpleClass("Student");
-    CodeInjection code = new CodeInjection("before","myOpp","//the code");
-    CodeInjection code2 = new CodeInjection("before","yourOpp","//the code");
-    CodeInjection code3 = new CodeInjection("before","*Opp","//the code");
-    CodeInjection code4 = new CodeInjection("before","*Opp*","//the code");
+    CodeInjection code = new CodeInjection("before","myOpp","//the code",c);
+    CodeInjection code2 = new CodeInjection("before","yourOpp","//the code",c);
+    CodeInjection code3 = new CodeInjection("before","*Opp","//the code",c);
+    CodeInjection code4 = new CodeInjection("before","*Opp*","//the code",c);
 
     List<CodeInjection> allCodes;
         
@@ -546,7 +546,7 @@ public class UmpleClassTest
   public void getCodeInjectionsFor_supportDifferentNamingConvention()
   {
     UmpleClass c = new UmpleClass("Student");
-    CodeInjection code = new CodeInjection("before","my_opp","//the code");
+    CodeInjection code = new CodeInjection("before","my_opp","//the code",c);
 
     List<CodeInjection> allCodes;
         
@@ -563,7 +563,7 @@ public class UmpleClassTest
   {
     List<CodeInjection> allCodes;
     UmpleClass c = new UmpleClass("Student");
-    c.addCodeInjection(new CodeInjection("before","get*,setOne","//the code"));
+    c.addCodeInjection(new CodeInjection("before","get*,setOne","//the code",c));
     
     allCodes = c.getApplicableCodeInjections("before","getX");
     Assert.assertEquals(1,allCodes.size());
@@ -582,7 +582,7 @@ public class UmpleClassTest
   {
     List<CodeInjection> allCodes;
     UmpleClass c = new UmpleClass("Student");
-    c.addCodeInjection(new CodeInjection("before","!constructor,!set*","//a1"));
+    c.addCodeInjection(new CodeInjection("before","!constructor,!set*","//a1",c));
 
     allCodes = c.getApplicableCodeInjections("before","constructor");
     Assert.assertEquals(0,allCodes.size());
@@ -602,11 +602,11 @@ public class UmpleClassTest
   {
     List<CodeInjection> allCodes;
     UmpleClass c = new UmpleClass("Student");
-    c.addCodeInjection(new CodeInjection("before","get*,!getX","//a1"));
-    c.addCodeInjection(new CodeInjection("before","!get*,getX","//a2"));
-    c.addCodeInjection(new CodeInjection("before","!getY","//b"));
-    c.addCodeInjection(new CodeInjection("before","!getZ,getZ2*","//c"));
-    c.addCodeInjection(new CodeInjection("before","!","//d"));
+    c.addCodeInjection(new CodeInjection("before","get*,!getX","//a1",c));
+    c.addCodeInjection(new CodeInjection("before","!get*,getX","//a2",c));
+    c.addCodeInjection(new CodeInjection("before","!getY","//b",c));
+    c.addCodeInjection(new CodeInjection("before","!getZ,getZ2*","//c",c));
+    c.addCodeInjection(new CodeInjection("before","!","//d",c));
     
     allCodes = c.getApplicableCodeInjections("before","getX");
     Assert.assertEquals(3,allCodes.size());

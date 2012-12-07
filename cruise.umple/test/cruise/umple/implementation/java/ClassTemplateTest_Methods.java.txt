@@ -24,11 +24,9 @@ public class CodeTranslator
   public void delete()
   {}
 
-
   public String translate(String id, Attribute attribute){
     return "1";
   }
-
 
   public String translate(String id, AssociationVariable associationVariable){
     return "1";

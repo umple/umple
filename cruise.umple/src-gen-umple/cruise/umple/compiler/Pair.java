@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// line 47 "../../../../src/UmpleInternalParser.ump"
 public class Pair
 {
 

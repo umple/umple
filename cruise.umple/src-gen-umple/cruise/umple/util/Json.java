@@ -4,6 +4,8 @@
 package cruise.umple.util;
 import java.util.*;
 
+// line 17 "../../../../src/Json.ump"
+// line 127 "../../../../src/Json_Code.ump"
 public class Json
 {
 
@@ -154,6 +156,7 @@ public class Json
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 130 ../../../../src/Json_Code.ump
   public boolean isComposite()
   {
     return value == null;

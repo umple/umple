@@ -5,6 +5,8 @@ package cruise.umple.sync;
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 
+// line 67 "../../../../src/UmpleSync.ump"
+// line 836 "../../../../src/UmpleSync_Code.ump"
 public class EditAssociationAction extends SynchronizationAction
 {
 
@@ -34,6 +36,7 @@ public class EditAssociationAction extends SynchronizationAction
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 839 ../../../../src/UmpleSync_Code.ump
   public void go()
   {
     try

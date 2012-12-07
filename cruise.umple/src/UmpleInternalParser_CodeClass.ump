@@ -173,7 +173,16 @@ class UmpleInternalParser
     {
       //This is a catch all and will be used less often as the grammar gets updated.
       if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
-      aClass.appendExtraCode(token.getValue());
+      //Append #line comment to indicate line and position of source
+      if (token.getPosition() != null)
+      {
+      	aClass.appendExtraCode("// line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aClass, "Java"));
+      	aClass.appendExtraCode("  " + token.getValue());
+      }
+      else
+      {
+      	aClass.appendExtraCode(token.getValue());
+      }
     }
     else if (token.is("constantDeclaration"))
     {
@@ -308,8 +317,8 @@ class UmpleInternalParser
     }
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
 
-	// Set the original .ump file
-	aClass.setUmpFile(classToken.getPosition().getFilename());
+	// Set the original .ump file and line number
+	aClass.addPosition(classToken.getPosition());
 
     // Add all the comments in the comment list to the Umple class.
     for (Comment c : lastComments)
@@ -440,7 +449,7 @@ class UmpleInternalParser
       }
       else if (token.is("elementPosition"))
       {
-        aInterface.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+        aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
       }
 
     }
@@ -962,6 +971,9 @@ class UmpleInternalParser
     String modifier = "";
     Method aMethod = new Method("","","",false);
 
+	// Set method position
+	aMethod.setPosition(method.getPosition());
+
     // Add comments above the method to the method.
     for (Comment c : lastComments)
     {
@@ -1102,7 +1114,9 @@ class UmpleInternalParser
   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";
-    aClass.addCodeInjection(new CodeInjection(type,injectToken.getValue("operationName"),injectToken.getValue("code")));
+    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass);
+    injection.setPosition(injectToken.getPosition());
+    aClass.addCodeInjection(injection);
   }
 
   private void analyzeKey(Token keyToken, UmpleClass aClass)

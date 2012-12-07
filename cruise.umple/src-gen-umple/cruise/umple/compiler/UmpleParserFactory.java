@@ -3,6 +3,8 @@
 
 package cruise.umple.compiler;
 
+// line 34 "../../../../src/UmpleHelper.ump"
+// line 118 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleParserFactory
 {
 
@@ -28,6 +30,7 @@ public class UmpleParserFactory
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 121 ../../../../src/UmpleHelper_Code.ump
   public static UmpleParser create(String className) 
   {
     

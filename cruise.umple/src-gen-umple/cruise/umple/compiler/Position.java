@@ -2,11 +2,14 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import java.nio.file.*;
 
 /**
  * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
  * filename, the line number and the corresponding offset on that line number.
  */
+// line 111 "../../../../src/Parser.ump"
+// line 322 "../../../../src/Parser_Code.ump"
 public class Position
 {
 
@@ -189,7 +192,8 @@ public class Position
    public Position(int aLineNumber,int aCharacterOffset,int aOffset)  {
 this(null, aLineNumber, aCharacterOffset, aOffset);
   }
-public Position copy()
+// line 331 ../../../../src/Parser_Code.ump
+  public Position copy()
   {
     return new Position(filename,lineNumber,characterOffset,offset);
   }
@@ -203,5 +207,79 @@ public Position copy()
   public String toString()
   {
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
+  }
+
+  private int countChars(String str, char c)
+  {
+    int count = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+      if (str.charAt(i) == c)
+      {
+        count= count + 1;
+      }
+    }
+    return count;
+  }
+  
+  private String deWindowsify(String str)
+  {
+    return str.replace('\\','/');
+  }
+
+  public String getRelativePath(UmpleClass parent, String language)
+  {
+    if (filename == null)
+    {
+      return "";
+    }
+    if (parent == null)
+    { //No parent class? This might happen with state machines
+      return Paths.get(filename).getFileName().toString();
+    }
+    
+    //Find path relative to namespace folders
+    String packageName = parent.getPackageName();
+    if (packageName == null || packageName.equals(""))
+    { //No package, file is output in current directory
+      return Paths.get(filename).getFileName().toString();
+    } 
+    else
+    { //Has a package, add appropriate number of ..
+      int pathCount = countChars(packageName, '.') + 1;
+      StringBuilder build = new StringBuilder();
+      for (int i = 0; i < pathCount; i++)
+      {
+        build.append("../");
+      }
+      
+      //Add on relative path from generator location
+      if (parent.getSourceModel() == null)
+      {
+        build.append(Paths.get(filename).getFileName());
+        return deWindowsify(build.toString());
+      }
+      Path currentPath = Paths.get(parent.getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
+      Path generatesPath = null;
+      GenerateTarget [] generates = parent.getSourceModel().getGenerates();
+      for (int i = 0; i < generates.length; i++)
+      {
+        if (generates[i].getLanguage().equals(language))
+        {
+          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+        }
+      }
+      if (generatesPath != null)
+      {
+      	Path result = generatesPath.relativize(currentPath);
+      	if (!result.equals(Paths.get("")))
+      	{
+      	  build.append(result.toString() + '/');
+      	}
+      }
+      
+      build.append(Paths.get(filename).getFileName());
+      return deWindowsify(build.toString());
+    }
   }
 }

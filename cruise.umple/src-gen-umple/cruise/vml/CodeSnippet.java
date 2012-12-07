@@ -3,6 +3,9 @@
 
 package cruise.vml;
 
+// line 59 "../../../src/Vml.ump"
+// line 112 "../../../src/Vml_Code.ump"
+// line 408 "../../../src/Vml_Code.ump"
 public class CodeSnippet
 {
 
@@ -92,6 +95,7 @@ public class CodeSnippet
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 114 ../../../src/Vml_Code.ump
   public String toString()
   {
     if (code == null)

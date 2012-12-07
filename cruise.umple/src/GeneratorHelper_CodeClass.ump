@@ -57,6 +57,7 @@ class GeneratorHelper
   public static String toCode(List<CodeInjection> allCodeInjections)
   {
     String asCode = null;
+    String positionString = "";
     if (allCodeInjections != null)
     {
       for (CodeInjection inject : allCodeInjections)
@@ -64,6 +65,10 @@ class GeneratorHelper
         if (asCode == null)
         {
           asCode = inject.getCode();
+          Position p = inject.getPosition();
+	      if (p != null) {
+	          positionString =  "// line " + p.getLineNumber() + " \"" + p.getRelativePath(inject.getUmpleClass(), inject.getUmpleClass().getSourceModel().getDefaultGenerate()) + "\"\n";
+	      }
         }
         else
         {
@@ -71,9 +76,13 @@ class GeneratorHelper
         }
       }
     }
-    return asCode;
+    if (asCode == null)
+    {
+      return null;
+    }
+    return positionString + asCode;
   }  
-  
+
   public static String doIndent(String code, String indents)
   {
     StringBuilder builder = new StringBuilder(code.length() + indents.length()); //Assume generally only one line, will expand otherwise

@@ -834,7 +834,7 @@ class SqlGenerator
       if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("return false unless @{0}",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -843,7 +843,7 @@ class SqlGenerator
       {
         String code = StringFormatter.format("return false unless @{0}",translate("attributeCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -855,7 +855,7 @@ class SqlGenerator
       {
         String code = StringFormatter.format("return false unless @{0}",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -863,7 +863,7 @@ class SqlGenerator
       if (av.getIsNavigable()  && av.isMandatoryOne() && av.getRelatedAssociation().isMandatory())
       {
         String code = StringFormatter.format("raise \"Mandatory relationship with {0} not satisfied\" if (@initialized and !@deleted and @{1}.nil?)",av.getName(),translate("associationOne",av));
-        CodeInjection injection = new CodeInjection("before","!constructor",code);
+        CodeInjection injection = new CodeInjection("before","!constructor",code, aClass);
         injection.setIsInternal(true);
         aClass.addCodeInjection(injection);
       }
@@ -871,7 +871,7 @@ class SqlGenerator
       if (av.isMany())
       {
         String code = StringFormatter.format("return false if {0}({1}) != -1",translate("indexOfMethod",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }

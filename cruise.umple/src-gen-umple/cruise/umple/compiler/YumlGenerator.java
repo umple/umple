@@ -5,6 +5,8 @@ package cruise.umple.compiler;
 import java.util.*;
 import cruise.umple.util.*;
 
+// line 124 "../../../../src/Generator.ump"
+// line 865 "../../../../src/Generator_Code.ump"
 public class YumlGenerator implements CodeGenerator
 {
 
@@ -67,7 +69,9 @@ public class YumlGenerator implements CodeGenerator
   /**
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
-   */  @Override
+   */
+  // line 21 "../../../../src/Generator.ump"
+  @Override
   public boolean setOutput(String aString){
           return false;
   }
@@ -76,6 +80,7 @@ public class YumlGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 868 ../../../../src/Generator_Code.ump
   public void generate()
   {
     StringBuilder yuml = new StringBuilder();

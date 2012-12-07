@@ -5,6 +5,9 @@ package cruise.vml;
 import cruise.umple.compiler.*;
 import java.util.*;
 
+// line 66 "../../../src/Vml.ump"
+// line 174 "../../../src/Vml_Code.ump"
+// line 401 "../../../src/Vml_Code.ump"
 public class VmlParser extends Parser
 {
 
@@ -28,6 +31,7 @@ public class VmlParser extends Parser
     super(aName);
     variationPointToRequiresListMap = null;
     invokedVariations = new ArrayList<VariationPoint>();
+    // line 178 "../../../src/Vml_Code.ump"
     init();
   }
 
@@ -58,6 +62,7 @@ public class VmlParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 180 ../../../src/Vml_Code.ump
   private void init()
   {
     addCouple(new Couple("\"","\""));

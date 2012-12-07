@@ -10,6 +10,8 @@ import java.util.*;
  * these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
  * track of the positions that the input parser parsed things at.
  */
+// line 90 "../../../../src/Parser.ump"
+// line 81 "../../../../src/Parser_Code.ump"
 public class Token
 {
 
@@ -62,6 +64,7 @@ public class Token
    */
   public String getName()
   {
+    // line 100 "../../../../src/Parser.ump"
     if (name == null) { return ""; }
     return name;
   }
@@ -71,6 +74,7 @@ public class Token
    */
   public String getValue()
   {
+    // line 101 "../../../../src/Parser.ump"
     if (value == null) { return ""; }
     return value;
   }
@@ -189,9 +193,11 @@ public class Token
   public boolean setPosition(Position newPosition)
   {
     boolean wasSet = false;
+    // line 103 "../../../../src/Parser.ump"
     String tFilename = position == null ? newPosition.getFilename() : position.getFilename();
     position = newPosition;
     wasSet = true;
+    // line 104 "../../../../src/Parser.ump"
     position.setFilename(tFilename);
     return wasSet;
   }
@@ -236,7 +242,8 @@ public class Token
 this(aName,aValue);
     setPosition(aPosition);
   }
-public static boolean isValidIdentifier(String identifier, String prefix){
+// line 90 ../../../../src/Parser_Code.ump
+  public static boolean isValidIdentifier(String identifier, String prefix){
     String _prefix = "^" + prefix;
     String body = "[a-zA-Z0-9_]*$";
     String expression = _prefix + body;

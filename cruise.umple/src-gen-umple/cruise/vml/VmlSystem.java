@@ -4,6 +4,9 @@
 package cruise.vml;
 import java.util.*;
 
+// line 14 "../../../src/Vml.ump"
+// line 68 "../../../src/Vml_Code.ump"
+// line 392 "../../../src/Vml_Code.ump"
 public class VmlSystem
 {
 
@@ -43,6 +46,7 @@ public class VmlSystem
 
   public String getCode()
   {
+    // line 21 "../../../src/Vml.ump"
     code = "";
         for (CodeSnippet snippet : codeSnippets)
         {
@@ -253,6 +257,7 @@ public class VmlSystem
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 70 ../../../src/Vml_Code.ump
   public Concern getConcern(String concernName)
   {
     if (concernName == null)

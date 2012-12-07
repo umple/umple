@@ -3,6 +3,8 @@
 
 package cruise.umple.sync;
 
+// line 14 "../../../../src/UmpleSync.ump"
+// line 14 "../../../../src/UmpleSync_Code.ump"
 public class SynchronizationAction
 {
 
@@ -61,6 +63,7 @@ public class SynchronizationAction
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 17 ../../../../src/UmpleSync_Code.ump
   public void go()
   {
   

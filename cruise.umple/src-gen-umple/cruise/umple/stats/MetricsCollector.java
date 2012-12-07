@@ -6,6 +6,7 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+// line 60 "../../../../src/UmpleStats_Code.ump"
 public class MetricsCollector
 {
 
@@ -22,6 +23,7 @@ public class MetricsCollector
 
   public MetricsCollector()
   {
+    // line 68 "../../../../src/UmpleStats_Code.ump"
     init();
     logs = new ArrayList<String>();
   }
@@ -81,6 +83,7 @@ public class MetricsCollector
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 70 ../../../../src/UmpleStats_Code.ump
   private Hashtable<String, Hashtable<String, Integer>> _projectToMetricsMap;  
   private String _currentProject;
   private ArrayList<String> _allProjectIds;

@@ -9,6 +9,7 @@ import java.util.*;
  * 
  * Examples of this are a class definition.
  */
+// line 133 "../../../../src/Parser.ump"
 public class Rule
 {
 

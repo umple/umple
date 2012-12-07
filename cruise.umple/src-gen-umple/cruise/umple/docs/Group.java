@@ -4,6 +4,8 @@
 package cruise.umple.docs;
 import java.util.*;
 
+// line 37 "../../../../src/Documenter.ump"
+// line 339 "../../../../src/Documenter_Code.ump"
 public class Group
 {
 
@@ -140,6 +142,7 @@ public class Group
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 341 ../../../../src/Documenter_Code.ump
   public String getGroupIdName()
   {
     return name.replace(" ","");

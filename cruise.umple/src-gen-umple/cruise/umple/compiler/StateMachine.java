@@ -5,6 +5,8 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 import java.util.*;
 
+// line 14 "../../../../src/StateMachine.ump"
+// line 14 "../../../../src/StateMachine_Code.ump"
 public class StateMachine
 {
 
@@ -163,6 +165,7 @@ public class StateMachine
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
+    // line 25 "../../../../src/StateMachine.ump"
     if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;
@@ -513,6 +516,7 @@ public class StateMachine
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 17 ../../../../src/StateMachine_Code.ump
   public boolean getHasExitAction()
   {
     return getHasAction("exit");

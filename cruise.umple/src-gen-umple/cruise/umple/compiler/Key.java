@@ -4,6 +4,8 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 215 "../../../../src/Umple.ump"
+// line 361 "../../../../src/Umple_Code.ump"
 public class Key
 {
 
@@ -98,6 +100,7 @@ public class Key
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 363 ../../../../src/Umple_Code.ump
   public boolean isProvided()
   {
     return isDefault || members.size() > 0;

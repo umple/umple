@@ -9,6 +9,8 @@ import java.util.*;
  * This is a problem for model-to-model transformations
  * Should be abolished
  */
+// line 439 "../../../../src/Umple.ump"
+// line 1469 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {
 
@@ -34,6 +36,7 @@ public class GeneratedElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 1472 ../../../../src/Umple_Code.ump
   private Map<String, String> lookups = new HashMap<String, String>();
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 

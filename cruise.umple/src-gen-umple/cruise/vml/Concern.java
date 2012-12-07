@@ -7,6 +7,9 @@ import java.util.*;
 /**
  * POSITION INFORMATION
  */
+// line 33 "../../../src/Vml.ump"
+// line 87 "../../../src/Vml_Code.ump"
+// line 369 "../../../src/Vml_Code.ump"
 public class Concern
 {
 
@@ -235,6 +238,7 @@ public class Concern
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 89 ../../../src/Vml_Code.ump
   public String toString()
   {
     return name + ":" + numberOfVariationPoints() + " variation points";

@@ -5,6 +5,8 @@ package cruise.umple.util;
 import cruise.umple.compiler.*;
 import java.util.*;
 
+// line 12 "../../../../src/Json.ump"
+// line 12 "../../../../src/Json_Code.ump"
 public class JsonParser extends Parser
 {
 
@@ -19,6 +21,7 @@ public class JsonParser extends Parser
   public JsonParser(String aName)
   {
     super(aName);
+    // line 15 "../../../../src/Json_Code.ump"
     init();
   }
 
@@ -35,6 +38,7 @@ public class JsonParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 16 ../../../../src/Json_Code.ump
   private void init()
   {
     addCouple(new Couple("{", "}"));

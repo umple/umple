@@ -275,6 +275,7 @@ class UmpleInternalParser
       else if (subToken.is("entryOrExitAction"))
       {
         Action action = new Action(subToken.getValue("actionCode"));
+        action.setPosition(subToken.getPosition());
         action.setActionType(subToken.getValue("type"));
         fromState.addAction(action);
       }
@@ -319,7 +320,9 @@ class UmpleInternalParser
 
   private Activity analyzeActivity(Token activityToken, State fromState)
   {
-    return new Activity(activityToken.getValue("activityCode"),fromState);
+    Activity act = new Activity(activityToken.getValue("activityCode"),fromState);
+    act.setPosition(activityToken.getPosition());
+    return act;
   }
 
   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
@@ -349,13 +352,17 @@ class UmpleInternalParser
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      t.setGuard(new Guard(guardToken.getValue("guardCode")));
+      Guard g = new Guard(guardToken.getValue("guardCode"));
+      g.setPosition(guardToken.getPosition());
+      t.setGuard(g);
     }
 
     Token actionToken = transitionToken.getSubToken("action");
     if (actionToken != null)
     {
-      t.setAction(new Action(actionToken.getValue("actionCode")));
+      Action act = new Action(actionToken.getValue("actionCode"));
+      act.setPosition(actionToken.getPosition());
+      t.setAction(act);
     }
 
     if (eventName != null || isAutoTransition)

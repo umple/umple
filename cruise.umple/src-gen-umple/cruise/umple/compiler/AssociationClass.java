@@ -4,6 +4,8 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 312 "../../../../src/Umple.ump"
+// line 476 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
 
@@ -18,9 +20,9 @@ public class AssociationClass extends UmpleClass
   // CONSTRUCTOR
   //------------------------
 
-  public AssociationClass(String aName)
+  public AssociationClass(String aName, UmpleModel aSourceModel)
   {
-    super(aName);
+    super(aName, aSourceModel);
     associatedTo = new ArrayList<Association>();
   }
 
@@ -152,5 +154,12 @@ public class AssociationClass extends UmpleClass
     associatedTo.clear();
     super.delete();
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+   public AssociationClass(String name)  {
+super(name);
+  }
 }

@@ -4,6 +4,7 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 75 "../../../../src/Trace.ump"
 public class StateMachine_TraceItem
 {
 

@@ -8,6 +8,8 @@ import cruise.umple.compiler.exceptions.*;
 /**
  * TODO: Users of this can most likely just use File, so this could be refactored out
  */
+// line 23 "../../../../src/UmpleHelper.ump"
+// line 12 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleFile
 {
 
@@ -76,7 +78,8 @@ this(new File(aPath,aFilename));
  public UmpleFile(String aFullFilename)  {
 this(new File(aFullFilename));
   }
-private StringBuilder init()
+// line 25 ../../../../src/UmpleHelper_Code.ump
+  private StringBuilder init()
   {
     String fullFilename = file.getAbsolutePath();
     fileName = file.getName();

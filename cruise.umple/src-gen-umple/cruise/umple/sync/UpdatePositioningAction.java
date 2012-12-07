@@ -6,6 +6,8 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+// line 20 "../../../../src/UmpleSync.ump"
+// line 23 "../../../../src/UmpleSync_Code.ump"
 public class UpdatePositioningAction extends SynchronizationAction
 {
 
@@ -47,6 +49,7 @@ public class UpdatePositioningAction extends SynchronizationAction
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 26 ../../../../src/UmpleSync_Code.ump
   public void go()
   {
     try

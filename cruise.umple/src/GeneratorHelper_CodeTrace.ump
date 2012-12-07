@@ -321,7 +321,7 @@ private static void postpareTrace(UmpleModel aModel)
     String setMethod = lookups.get("exitMethod");
     String code = lookups.get("Code");
 
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code);
+    CodeInjection set = new CodeInjection(injectionType, setMethod, code, aClass);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }
@@ -341,7 +341,7 @@ private static void postpareTrace(UmpleModel aModel)
     String Method = lookups.get(method);
     String code = lookups.get("Code");
 
-    CodeInjection set = new CodeInjection(injectionType, Method, code);
+    CodeInjection set = new CodeInjection(injectionType, Method, code, aClass);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }

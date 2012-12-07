@@ -4,6 +4,8 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 14 "../../../../src/Parser.ump"
+// line 12 "../../../../src/Parser_Code.ump"
 public class Couple
 {
 
@@ -201,6 +203,7 @@ public class Couple
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 15 ../../../../src/Parser_Code.ump
   public boolean isBalanced(String input)
   {
 

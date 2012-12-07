@@ -9,6 +9,7 @@ import cruise.umple.util.*;
 import java.net.*;
 import java.io.*;
 
+// line 162 "../../../src/Main_Code.ump"
 public class UmpleRunMain
 {
 
@@ -34,6 +35,7 @@ public class UmpleRunMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 172 ../../../src/Main_Code.ump
   public static String console;
     public static boolean displayOutput = true;
 

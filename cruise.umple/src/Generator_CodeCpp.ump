@@ -621,7 +621,7 @@ class CppGenerator
       if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -630,7 +630,7 @@ class CppGenerator
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("attributeCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -642,7 +642,7 @@ class CppGenerator
       {
         String code = StringFormatter.format("if (!{0}) { return false; }",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before",methods , code);
+        CodeInjection inject = new CodeInjection("before",methods , code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -650,7 +650,7 @@ class CppGenerator
       if (av.isMany())
       {
         String code = StringFormatter.format("if (find({0}.begin(),{0}.end(),{1}) != {0}.end()) { return false; }",translate("attributeMany",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }

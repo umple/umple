@@ -8,6 +8,8 @@ import java.util.List;
 /**
  * Represents an error type, which contains an error code, the severity of the error, etc.
  */
+// line 61 "../../../../src/Parser.ump"
+// line 1670 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {
 
@@ -137,6 +139,7 @@ public class ErrorType
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 1675 ../../../../src/Parser_Code.ump
   public String format(List<String> arguments)
   {
     return StringFormatter.format(errorFormat, arguments.toArray());

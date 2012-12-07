@@ -3,6 +3,7 @@
 
 package cruise.umple.docs;
 
+// line 13 "../../../../src/Documenter_Code.ump"
 public class DocumenterMain
 {
 
@@ -28,6 +29,7 @@ public class DocumenterMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 15 ../../../../src/Documenter_Code.ump
   private static String console = "";
   
   public static void main(String[] args) 

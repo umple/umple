@@ -2,7 +2,9 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.compiler.Position;
 
+// line 47 "../../../../src/StateMachine.ump"
 public class Activity
 {
 
@@ -11,6 +13,7 @@ public class Activity
   //------------------------
 
   //Activity Attributes
+  private Position position;
   private String activityCode;
 
   //Activity Associations
@@ -35,12 +38,25 @@ public class Activity
   // INTERFACE
   //------------------------
 
+  public boolean setPosition(Position aPosition)
+  {
+    boolean wasSet = false;
+    position = aPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
     activityCode = aActivityCode;
     wasSet = true;
     return wasSet;
+  }
+
+  public Position getPosition()
+  {
+    return position;
   }
 
   public String getActivityCode()

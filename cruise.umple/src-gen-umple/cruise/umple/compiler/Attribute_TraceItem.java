@@ -4,6 +4,7 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 64 "../../../../src/Trace.ump"
 public class Attribute_TraceItem
 {
 

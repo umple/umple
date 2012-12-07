@@ -5,6 +5,7 @@ package cruise.vml;
 import java.io.*;
 import cruise.umple.util.*;
 
+// line 15 "../../../src/Vml_Code.ump"
 public class VmlConsole
 {
 
@@ -30,6 +31,7 @@ public class VmlConsole
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 19 ../../../src/Vml_Code.ump
   public static String console = "";
   
   public static void main(String[] args) 

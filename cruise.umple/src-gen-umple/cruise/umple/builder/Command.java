@@ -6,6 +6,7 @@ import java.util.regex.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+// line 6 "../../../../src/Builder_Code.ump"
 public class Command
 {
 
@@ -202,6 +203,7 @@ public class Command
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 16 ../../../../src/Builder_Code.ump
   public void addAttributes(String input)
   {
     if (input == null)

@@ -8,6 +8,8 @@ import java.util.*;
  * Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
  * as an Umple file.
  */
+// line 16 "../../../../src/TextParser.ump"
+// line 12 "../../../../src/TextParser_Code.ump"
 public class TextParser
 {
 
@@ -50,6 +52,7 @@ public class TextParser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 14 ../../../../src/TextParser_Code.ump
   private char[] _textCharacters;
 
   public TextParser(String filename, String input)

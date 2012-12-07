@@ -7,6 +7,8 @@ import cruise.umple.util.SampleFileWriter;
 import java.io.*;
 import java.util.*;
 
+// line 75 "../../../../src/Parser.ump"
+// line 1681 "../../../../src/Parser_Code.ump"
 public class ErrorTypeSingleton
 {
 
@@ -30,6 +32,7 @@ public class ErrorTypeSingleton
   private ErrorTypeSingleton()
   {
     errorTypes = new ArrayList<ErrorType>();
+    // line 1683 "../../../../src/Parser_Code.ump"
     init();
   }
 
@@ -142,6 +145,7 @@ public class ErrorTypeSingleton
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 1685 ../../../../src/Parser_Code.ump
   private void init()
   {
     String filename = "/en.error";

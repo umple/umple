@@ -9,6 +9,7 @@ import java.util.Arrays;
 import joptsimple.*;
 import java.io.IOException;
 
+// line 14 "../../../src/Main_Code.ump"
 public class UmpleConsoleMain
 {
 
@@ -34,6 +35,7 @@ public class UmpleConsoleMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 24 ../../../src/Main_Code.ump
   public static String console;
     private static OptionParser optparser;
 

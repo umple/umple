@@ -70,6 +70,10 @@
         if (t.getAction() != null)
         {
           Action a1 = t.getAction();
+          Position p = a1.getPosition();
+	      if (p != null) {
+	        allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
+	      }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
         }
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));

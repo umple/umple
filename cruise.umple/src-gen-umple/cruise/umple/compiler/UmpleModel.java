@@ -16,6 +16,10 @@ import java.util.*;
  * 
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  */
+// line 24 "../../../../src/Umple.ump"
+// line 17 "../../../../src/Trace.ump"
+// line 13 "../../../../src/UmpleVersion.ump"
+// line 15 "../../../../src/Umple_Code.ump"
 public class UmpleModel
 {
 
@@ -646,6 +650,7 @@ public class UmpleModel
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 17 ../../../../src/Umple_Code.ump
   public List<UmpleElement> getUmpleElements()
   {
     List<UmpleElement> all = new ArrayList<UmpleElement>();
@@ -670,7 +675,7 @@ public class UmpleModel
     UmpleClass newClass = getUmpleClass(name);
     if (newClass == null)
     {
-      newClass = new UmpleClass(name);
+      newClass = new UmpleClass(name, this);
       addUmpleClass(newClass);
     }
     return newClass;
@@ -843,8 +848,8 @@ public class UmpleModel
 
     String classOne = a.getEnd(0).getClassName();
     String classTwo = a.getEnd(1).getClassName();
-    Coordinate classOnePos = getUmpleClass(classOne).getPosition();
-    Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
+    Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
+    Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
 
     if (classOne.equals(classTwo))
     {
@@ -932,7 +937,7 @@ public class UmpleModel
   {
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
-    Coordinate position = getUmpleClass(name).getPosition();
+    Coordinate position = getUmpleClass(name).getCoordinates();
 
     // determine which corner the association should be positioned at
     int index = 0;

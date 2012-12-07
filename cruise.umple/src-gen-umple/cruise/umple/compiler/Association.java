@@ -7,6 +7,8 @@ import java.util.*;
 /**
  * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
  */
+// line 368 "../../../../src/Umple.ump"
+// line 925 "../../../../src/Umple_Code.ump"
 public class Association
 {
 
@@ -43,6 +45,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
+    // line 380 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -101,6 +104,7 @@ public class Association
    */
   public String getName()
   {
+    // line 379 "../../../../src/Umple.ump"
     if (name == null || "".equals(name)) { return this.deriveName(); }
     return name;
   }
@@ -270,6 +274,7 @@ public class Association
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 928 ../../../../src/Umple_Code.ump
   public void setLeftAndRight()
   {
     String name = this.getName();

@@ -4,6 +4,7 @@
 package cruise.umple.stats;
 import cruise.umple.util.*;
 
+// line 14 "../../../../src/UmpleStats_Code.ump"
 public class StatsMain
 {
 
@@ -29,6 +30,7 @@ public class StatsMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 18 ../../../../src/UmpleStats_Code.ump
   public static String console;
   
   public static void main(String[] args) 

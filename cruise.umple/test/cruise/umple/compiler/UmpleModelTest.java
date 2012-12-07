@@ -158,14 +158,14 @@ public class UmpleModelTest
 	model.addUmpleClass(c1);
 	model.addUmpleClass(c2);
 	model.addAssociation(a);
-	c1.setPosition(model.getDefaultClassPosition(0));
-	c2.setPosition(model.getDefaultClassPosition(1));
+	c1.setCoordinates(model.getDefaultClassPosition(0));
+	c2.setCoordinates(model.getDefaultClassPosition(1));
 	
 	//class two to the right of class one
-	c1.getPosition().setX(0);
-	c1.getPosition().setY(0);
-	c2.getPosition().setX(200);
-	c2.getPosition().setY(0);
+	c1.getCoordinates().setX(0);
+	c1.getCoordinates().setY(0);
+	c2.getCoordinates().setX(200);
+	c2.getCoordinates().setY(0);
 	Coordinate[] defaults = model.getDefaultAssociationPosition(a);
 	a.addPosition(defaults[0]);
 	a.addPosition(defaults[1]);
@@ -175,10 +175,10 @@ public class UmpleModelTest
 	a.removePosition(defaults[1]);
 	
 	//class two to the left of class one
-	c1.getPosition().setX(200);
-	c1.getPosition().setY(0);
-	c2.getPosition().setX(0);
-	c2.getPosition().setY(0);
+	c1.getCoordinates().setX(200);
+	c1.getCoordinates().setY(0);
+	c2.getCoordinates().setX(0);
+	c2.getCoordinates().setY(0);
 	defaults = model.getDefaultAssociationPosition(a);
 	a.addPosition(defaults[0]);
 	a.addPosition(defaults[1]);
@@ -188,10 +188,10 @@ public class UmpleModelTest
 	a.removePosition(defaults[1]);
 	
 	//class two below class one
-	c1.getPosition().setX(0);
-	c1.getPosition().setY(0);
-	c2.getPosition().setX(0);
-	c2.getPosition().setY(150);
+	c1.getCoordinates().setX(0);
+	c1.getCoordinates().setY(0);
+	c2.getCoordinates().setX(0);
+	c2.getCoordinates().setY(150);
 	defaults = model.getDefaultAssociationPosition(a);
 	a.addPosition(defaults[0]);
 	a.addPosition(defaults[1]);
@@ -201,10 +201,10 @@ public class UmpleModelTest
 	a.removePosition(defaults[1]);
 	
 	//class two above class one
-	c1.getPosition().setX(0);
-	c1.getPosition().setY(150);
-	c2.getPosition().setX(0);
-	c2.getPosition().setY(0);
+	c1.getCoordinates().setX(0);
+	c1.getCoordinates().setY(150);
+	c2.getCoordinates().setX(0);
+	c2.getCoordinates().setY(0);
 	defaults = model.getDefaultAssociationPosition(a);
 	a.addPosition(defaults[0]);
 	a.addPosition(defaults[1]);
@@ -214,10 +214,10 @@ public class UmpleModelTest
 	a.removePosition(defaults[1]);
 	
 	//diagonal
-	c1.getPosition().setX(0);
-	c1.getPosition().setY(0);
-	c2.getPosition().setX(210);
-	c2.getPosition().setY(69);
+	c1.getCoordinates().setX(0);
+	c1.getCoordinates().setY(0);
+	c2.getCoordinates().setX(210);
+	c2.getCoordinates().setY(69);
 	defaults = model.getDefaultAssociationPosition(a);
 	a.addPosition(defaults[0]);
 	a.addPosition(defaults[1]);
@@ -239,7 +239,7 @@ public class UmpleModelTest
 	  UmpleModel model = new UmpleModel(null);
 	  model.addUmpleClass(c1);
 	  model.addAssociation(a);
-	  c1.setPosition(model.getDefaultClassPosition(0));
+	  c1.setCoordinates(model.getDefaultClassPosition(0));
 	  Coordinate[] defaults = model.getDefaultAssociationPosition(a);
 	  a.addPosition(defaults[0]);
 	  a.addPosition(defaults[1]);

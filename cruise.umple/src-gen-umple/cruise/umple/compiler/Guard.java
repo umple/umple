@@ -2,7 +2,9 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.compiler.Position;
 
+// line 96 "../../../../src/StateMachine.ump"
 public class Guard
 {
 
@@ -11,6 +13,7 @@ public class Guard
   //------------------------
 
   //Guard Attributes
+  private Position position;
   private String condition;
 
   //Helper Variables
@@ -32,6 +35,14 @@ public class Guard
   // INTERFACE
   //------------------------
 
+  public boolean setPosition(Position aPosition)
+  {
+    boolean wasSet = false;
+    position = aPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
@@ -39,6 +50,11 @@ public class Guard
     condition = aCondition;
     wasSet = true;
     return wasSet;
+  }
+
+  public Position getPosition()
+  {
+    return position;
   }
 
   public String getCondition()

@@ -460,8 +460,8 @@ public class UmpleParserTest
   {
     assertParse("003_multipleExtraCode.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
-     Assert.assertEquals("blahblah"+ 
-        System.getProperty("line.separator") + "moreblah",aClass.getExtraCode());
+    AssertHelper.assertEqualsSafe("  blahblah"+ 
+        System.getProperty("line.separator") + "  moreblah",aClass.getExtraCode());
   }
   
   @Test
@@ -1193,10 +1193,10 @@ public class UmpleParserTest
 	UmpleClass associationClass = model.getUmpleClass("Relationship");
     Coordinate position = new Coordinate(1,2,3,4);
       
-	Assert.assertEquals(position.getX(), associationClass.getPosition().getX());
-    Assert.assertEquals(position.getY(), associationClass.getPosition().getY());
-    Assert.assertEquals(position.getWidth(), associationClass.getPosition().getWidth());
-    Assert.assertEquals(position.getHeight(), associationClass.getPosition().getHeight());
+	Assert.assertEquals(position.getX(), associationClass.getCoordinates().getX());
+    Assert.assertEquals(position.getY(), associationClass.getCoordinates().getY());
+    Assert.assertEquals(position.getWidth(), associationClass.getCoordinates().getWidth());
+    Assert.assertEquals(position.getHeight(), associationClass.getCoordinates().getHeight());
   }
   
   @Test
@@ -1230,7 +1230,9 @@ public class UmpleParserTest
     
     Assert.assertEquals("example",aClass.getPackageName());
     Assert.assertEquals("Thing", aClass.getExtendsClass().getName());
-    Assert.assertEquals("public int one() {return 1;}",aClass.getExtraCode());
+    Assert.assertTrue(aClass.getExtraCode().contains("public int one() {return 1;}"));
+    //Replaced in favor of above line due to // line comments being added:
+    //Assert.assertEquals("public int one() {return 1;}",aClass.getExtraCode()); 
     Assert.assertEquals("name",aClass.getAttribute("name").getName());
     Assert.assertEquals("type",aClass.getAttribute("type").getName());
     
@@ -1398,7 +1400,7 @@ public class UmpleParserTest
     
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Student",aClass.getName());
-    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getPosition());
+    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getCoordinates());
   }
   
   @Test
@@ -1408,7 +1410,7 @@ public class UmpleParserTest
     
     UmpleClass aClass = model.getUmpleClass("Student");
     Assert.assertEquals("Student",aClass.getName());
-    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getPosition());
+    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getCoordinates());
   }  
   
   @Test
@@ -1432,7 +1434,7 @@ public class UmpleParserTest
     
     UmpleClass aClass = model.getUmpleClass("Relationship");
     Assert.assertEquals("Relationship",aClass.getName());
-    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getPosition());
+    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getCoordinates());
     
     // make sure that "isWellDefined" is true
   } 
@@ -1460,7 +1462,7 @@ public class UmpleParserTest
     
     UmpleClass aClass = model.getUmpleClass("Relationship");
     Assert.assertEquals("Relationship",aClass.getName());
-    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getPosition());
+    Assert.assertEquals(new Coordinate(10,20,30,40),aClass.getCoordinates());
   }  
   
   @Test

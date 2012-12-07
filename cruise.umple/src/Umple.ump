@@ -69,11 +69,14 @@ class UmpleModel
  */
 class UmpleElement
 {
+  depend cruise.umple.compiler.Position;
+
   // The name of the Umple element.
   name;
-
-  // The original ump file
-  umpFile = "";
+  
+  // The position(s) of the element in the source code, used in debugging
+  //  may have multiple positions in the case of mixins
+  1 -> 0..* Position positions;
 
   // The modifier associated with the Umple element.
   modifier = null;
@@ -89,7 +92,7 @@ class UmpleElement
   Boolean isInternal = false;
 
   // Specifies the position of this Umple element (ex. The UmpleOnline diagram).
-  Coordinate position = new Coordinate(-1,-1,-1,-1);
+  Coordinate coordinates = new Coordinate(-1,-1,-1,-1);
 
   before setPackageName { if (aPackageName == null) { return false; } }  
 }
@@ -99,11 +102,15 @@ class UmpleElement
  */
 class Method
 {
+  depend cruise.umple.compiler.Position;
+  
   // The modifier associated with the method.
   modifier;
 
   // The name of the method. 
   name;
+  
+  lazy Position position;
 
   // The type of the method.
   type;
@@ -195,9 +202,13 @@ class ReferenceType{
 
 class CodeInjection
 {
+  depend cruise.umple.compiler.Position;
+  
   type;
   operation;
   code;
+  * -> 1 UmpleClass;
+  lazy Position position;
   Boolean isInternal = false;
 }
 
@@ -276,6 +287,8 @@ class UmpleClass
 
   // The comments associated with the Umple Class (such as the Javadoc above it).
   1 -> * Comment;
+  
+  UmpleModel sourceModel;
 
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
 

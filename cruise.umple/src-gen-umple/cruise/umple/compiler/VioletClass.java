@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// line 34 "../../../../src/Violet.ump"
 public class VioletClass
 {
 

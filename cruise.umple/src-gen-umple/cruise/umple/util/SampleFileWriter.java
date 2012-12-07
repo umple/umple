@@ -6,6 +6,7 @@ import java.util.*;
 import java.io.*;
 import org.junit.*;
 
+// line 567 "../../../../src/Util_Code.ump"
 public class SampleFileWriter
 {
 
@@ -31,6 +32,7 @@ public class SampleFileWriter
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 574 ../../../../src/Util_Code.ump
   public static File[] getAllFiles(File inputDirectory)
   {
     File[] allFiles = inputDirectory.listFiles();
@@ -105,6 +107,12 @@ public class SampleFileWriter
           expectedLine = expectedReader.readLine();
         }
         actualLine = actualReader.readLine();
+        // HACK: To deal with // line # comments
+        while (actualLine != null && actualLine.indexOf("// line") != -1)
+        { //Ignore the line, go to next
+          actualLine = actualReader.readLine();
+        }
+        
         line++;
         
         if (expectedLine == null) 
@@ -136,6 +144,11 @@ public class SampleFileWriter
   
   public static void assertFileContent(File expected, String actual)
   {
+    assertFileContent(expected, actual, true);
+  }
+  
+  public static void assertFileContent(File expected, String actual, boolean ignoreLineComments)
+  {
     
     BufferedReader expectedReader = null;
     BufferedReader actualReader = null;
@@ -151,8 +164,17 @@ public class SampleFileWriter
       int line = 0;
       do 
       {
-        expectedLine = expectedReader.readLine();
         actualLine = actualReader.readLine();
+        if (ignoreLineComments)
+        {
+	        // HACK: To deal with // line # comments
+	        while (actualLine != null && actualLine.indexOf("// line") != -1)
+	        { //Ignore the line, go to next
+	          actualLine = actualReader.readLine();
+	        }
+	    }
+        expectedLine = expectedReader.readLine();
+        
         line++;
         
         // HACK: To deal with umple version issues

@@ -356,16 +356,13 @@ public class PhoneLine
     }
   }
 
-
   public String toString(){
     return getId();
   }
 
-
   public void p(){
     System.out.println("  other party of "+getId()+"="+getOtherParty());
   }
-
 
   public void say(String s){
     String voice ="";
@@ -376,7 +373,6 @@ public class PhoneLine
     catch (IOException e) {}
     pause(2000);
   }
-
 
   public void pause(long ms){
     try {

@@ -4,6 +4,7 @@
 package cruise.umple.util;
 import java.util.*;
 
+// line 206 "../../../../src/Util_Code.ump"
 public class ActionResponse
 {
 
@@ -99,6 +100,7 @@ public class ActionResponse
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 213 ../../../../src/Util_Code.ump
   public void merge(ActionResponse other)
   {
     errors.addAll(other.errors);

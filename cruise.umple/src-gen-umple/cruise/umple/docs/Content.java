@@ -4,6 +4,8 @@
 package cruise.umple.docs;
 import java.util.*;
 
+// line 28 "../../../../src/Documenter.ump"
+// line 330 "../../../../src/Documenter_Code.ump"
 public class Content
 {
 
@@ -143,6 +145,7 @@ public class Content
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 333 ../../../../src/Documenter_Code.ump
   public String getTitleFilename()
   {
     return title.replace(" ","") + ".html";

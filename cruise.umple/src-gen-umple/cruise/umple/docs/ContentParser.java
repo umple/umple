@@ -5,6 +5,8 @@ package cruise.umple.docs;
 import java.util.*;
 import cruise.umple.compiler.*;
 
+// line 43 "../../../../src/Documenter.ump"
+// line 347 "../../../../src/Documenter_Code.ump"
 public class ContentParser extends Parser
 {
 
@@ -130,6 +132,7 @@ public class ContentParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 351 ../../../../src/Documenter_Code.ump
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");

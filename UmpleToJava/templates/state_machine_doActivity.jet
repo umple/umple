@@ -4,6 +4,9 @@
   Event e = activity.getOnCompletionEvent();
   String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
 %>
+<% Position p = state.getActivity().getPosition();
+if (p != null) { %>
+  // line <%= p.getLineNumber() %> "<%= p.getRelativePath(sm.getUmpleClass(), "Java") %>"<% } %>
   private void <%= gen.translate("doActivityMethod",state)%>()
   {
     try

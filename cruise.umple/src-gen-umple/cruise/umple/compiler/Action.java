@@ -2,7 +2,9 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.compiler.Position;
 
+// line 72 "../../../../src/StateMachine.ump"
 public class Action
 {
 
@@ -12,6 +14,7 @@ public class Action
 
   //Action Attributes
   private String actionType;
+  private Position position;
   private String actionCode;
   private boolean isInternal;
 
@@ -47,6 +50,14 @@ public class Action
     return wasSet;
   }
 
+  public boolean setPosition(Position aPosition)
+  {
+    boolean wasSet = false;
+    position = aPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
@@ -67,6 +78,11 @@ public class Action
   public String getActionType()
   {
     return actionType;
+  }
+
+  public Position getPosition()
+  {
+    return position;
   }
 
   public String getActionCode()

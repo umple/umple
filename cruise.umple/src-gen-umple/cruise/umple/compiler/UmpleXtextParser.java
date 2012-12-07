@@ -3,6 +3,8 @@
 
 package cruise.umple.compiler;
 
+// line 17 "../../../../src/UmpleXtextParser.ump"
+// line 14 "../../../../src/UmpleXtextParser_Code.ump"
 public class UmpleXtextParser implements UmpleParser
 {
 
@@ -53,6 +55,7 @@ public class UmpleXtextParser implements UmpleParser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 16 ../../../../src/UmpleXtextParser_Code.ump
   public String toGrammar()
   {
     return temp.toGrammar();
@@ -103,5 +106,10 @@ public class UmpleXtextParser implements UmpleParser
   public ParseResult getParseResult()
   {
     return temp.getParseResult();
+  }
+  
+  public boolean setFilename(String filename)
+  {
+    return temp.setFilename(filename);
   }
 }

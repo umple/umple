@@ -4,6 +4,7 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 131 "../../../../src/Umple.ump"
 public class Modifier
 {
 

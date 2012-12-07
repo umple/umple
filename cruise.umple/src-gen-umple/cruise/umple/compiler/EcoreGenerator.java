@@ -7,6 +7,8 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
+// line 40 "../../../../src/Generator.ump"
+// line 12 "../../../../src/Generator_Code.ump"
 public class EcoreGenerator implements CodeGenerator
 {
 
@@ -69,6 +71,7 @@ public class EcoreGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 15 ../../../../src/Generator_Code.ump
   public void generate()
   {
     StringBuilder code = new StringBuilder();

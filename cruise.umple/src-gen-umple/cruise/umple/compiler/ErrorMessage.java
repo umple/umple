@@ -8,6 +8,8 @@ import java.util.*;
 /**
  * Represents an error message, typically used with parsing.
  */
+// line 46 "../../../../src/Parser.ump"
+// line 1649 "../../../../src/Parser_Code.ump"
 public class ErrorMessage
 {
 
@@ -133,7 +135,8 @@ public class ErrorMessage
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
-public String getFormattedMessage()
+// line 1656 ../../../../src/Parser_Code.ump
+  public String getFormattedMessage()
   {
     return errorType.format(this.parameters);
   }

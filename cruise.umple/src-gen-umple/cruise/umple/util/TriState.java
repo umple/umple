@@ -3,6 +3,7 @@
 
 package cruise.umple.util;
 
+// line 12 "../../../../src/Util_Code.ump"
 public class TriState
 {
 
@@ -41,6 +42,7 @@ public class TriState
     boolean wasSet = false;
     status = aStatus;
     wasSet = true;
+    // line 17 "../../../../src/Util_Code.ump"
     isSet = true;
     return wasSet;
   }
@@ -72,6 +74,7 @@ public class TriState
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 19 ../../../../src/Util_Code.ump
   public boolean isTrue() { return isSet && status; }
   public boolean isFalse() { return isSet && !status; }
 }

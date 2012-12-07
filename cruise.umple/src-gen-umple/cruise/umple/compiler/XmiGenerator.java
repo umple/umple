@@ -7,6 +7,8 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
+// line 68 "../../../../src/Generator.ump"
+// line 405 "../../../../src/Generator_Code.ump"
 public class XmiGenerator implements CodeGenerator
 {
 
@@ -69,6 +71,7 @@ public class XmiGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 408 ../../../../src/Generator_Code.ump
   public void generate()
   {
     StringBuilder code = new StringBuilder();

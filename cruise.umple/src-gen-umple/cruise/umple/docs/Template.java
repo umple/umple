@@ -3,6 +3,8 @@
 
 package cruise.umple.docs;
 
+// line 49 "../../../../src/Documenter.ump"
+// line 412 "../../../../src/Documenter_Code.ump"
 public class Template
 {
 
@@ -39,6 +41,7 @@ public class Template
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 415 ../../../../src/Documenter_Code.ump
   private static String navigationHeaderTemplate()
   {
     return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +

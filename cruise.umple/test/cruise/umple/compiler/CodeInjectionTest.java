@@ -18,7 +18,7 @@ public class CodeInjectionTest
   @Test
   public void Constructor()
   {
-    CodeInjection inject = new CodeInjection("before","addName","x");
+    CodeInjection inject = new CodeInjection("before","addName","x",new UmpleClass("test"));
     Assert.assertEquals("before",inject.getType());
     Assert.assertEquals("addName",inject.getOperation());
     Assert.assertEquals("x",inject.getCode());

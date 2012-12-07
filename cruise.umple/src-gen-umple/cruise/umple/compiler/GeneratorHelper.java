@@ -5,6 +5,11 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 import java.util.*;
 
+// line 35 "../../../../src/Generator.ump"
+// line 20 "../../../../src/GeneratorHelper_Code.ump"
+// line 16 "../../../../src/GeneratorHelper_CodeClass.ump"
+// line 16 "../../../../src/GeneratorHelper_CodeStateMachine.ump"
+// line 16 "../../../../src/GeneratorHelper_CodeTrace.ump"
 public class GeneratorHelper
 {
 
@@ -30,6 +35,7 @@ public class GeneratorHelper
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 26 ../../../../src/GeneratorHelper_Code.ump
   public static void postpare(UmpleModel model)
   {
     postpareClass(model);
@@ -49,7 +55,8 @@ public class GeneratorHelper
     postpareStateMachine(aClass);
     postpareTrace(aClass);
   }
-public static void postpareClass(UmpleModel model)
+// line 20 ../../../../src/GeneratorHelper_CodeClass.ump
+  public static void postpareClass(UmpleModel model)
   {
     int maxIndex = model.numberOfUmpleClasses() - 1;
     for (int i=maxIndex; i>=0; i--)
@@ -89,6 +96,7 @@ public static void postpareClass(UmpleModel model)
   public static String toCode(List<CodeInjection> allCodeInjections)
   {
     String asCode = null;
+    String positionString = "";
     if (allCodeInjections != null)
     {
       for (CodeInjection inject : allCodeInjections)
@@ -96,6 +104,10 @@ public static void postpareClass(UmpleModel model)
         if (asCode == null)
         {
           asCode = inject.getCode();
+          Position p = inject.getPosition();
+	      if (p != null) {
+	          positionString =  "// line " + p.getLineNumber() + " \"" + p.getRelativePath(inject.getUmpleClass(), inject.getUmpleClass().getSourceModel().getDefaultGenerate()) + "\"\n";
+	      }
         }
         else
         {
@@ -103,9 +115,13 @@ public static void postpareClass(UmpleModel model)
         }
       }
     }
-    return asCode;
+    if (asCode == null)
+    {
+      return null;
+    }
+    return positionString + asCode;
   }  
-  
+
   public static String doIndent(String code, String indents)
   {
     StringBuilder builder = new StringBuilder(code.length() + indents.length()); //Assume generally only one line, will expand otherwise
@@ -120,7 +136,8 @@ public static void postpareClass(UmpleModel model)
     }
     return builder.toString();
   }
-private static void postpareStateMachine(UmpleModel aModel)
+// line 20 ../../../../src/GeneratorHelper_CodeStateMachine.ump
+  private static void postpareStateMachine(UmpleModel aModel)
   {
     
   }
@@ -259,7 +276,8 @@ private static void postpareStateMachine(UmpleModel aModel)
       }       
     }
   }
-private static void postpareTrace(UmpleModel aModel)
+// line 19 ../../../../src/GeneratorHelper_CodeTrace.ump
+  private static void postpareTrace(UmpleModel aModel)
   {}
 
   // Currently no internal trace entities to remove at the class level
@@ -564,7 +582,7 @@ private static void postpareTrace(UmpleModel aModel)
     String setMethod = lookups.get("exitMethod");
     String code = lookups.get("Code");
 
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code);
+    CodeInjection set = new CodeInjection(injectionType, setMethod, code, aClass);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }
@@ -584,7 +602,7 @@ private static void postpareTrace(UmpleModel aModel)
     String Method = lookups.get(method);
     String code = lookups.get("Code");
 
-    CodeInjection set = new CodeInjection(injectionType, Method, code);
+    CodeInjection set = new CodeInjection(injectionType, Method, code, aClass);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }

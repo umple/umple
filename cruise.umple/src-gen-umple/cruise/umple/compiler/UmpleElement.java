@@ -2,11 +2,14 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.compiler.Position;
 import java.util.*;
 
 /**
  * An element partaining to an entity with Umple.
  */
+// line 70 "../../../../src/Umple.ump"
+// line 455 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
 
@@ -16,13 +19,15 @@ public class UmpleElement
 
   //UmpleElement Attributes
   private String name;
-  private String umpFile;
   private String modifier;
   private List<String> namespaces;
   private String packageName;
   private String extraCode;
   private boolean isInternal;
-  private Coordinate position;
+  private Coordinate coordinates;
+
+  //UmpleElement Associations
+  private List<Position> positions;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,13 +36,13 @@ public class UmpleElement
   public UmpleElement(String aName)
   {
     name = aName;
-    umpFile = "";
     modifier = null;
     namespaces = new ArrayList<String>();
     packageName = "";
     extraCode = "";
     isInternal = false;
-    position = new Coordinate(-1,-1,-1,-1);
+    coordinates = new Coordinate(-1,-1,-1,-1);
+    positions = new ArrayList<Position>();
   }
 
   //------------------------
@@ -48,14 +53,6 @@ public class UmpleElement
   {
     boolean wasSet = false;
     name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setUmpFile(String aUmpFile)
-  {
-    boolean wasSet = false;
-    umpFile = aUmpFile;
     wasSet = true;
     return wasSet;
   }
@@ -85,6 +82,7 @@ public class UmpleElement
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
+    // line 97 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -107,10 +105,10 @@ public class UmpleElement
     return wasSet;
   }
 
-  public boolean setPosition(Coordinate aPosition)
+  public boolean setCoordinates(Coordinate aCoordinates)
   {
     boolean wasSet = false;
-    position = aPosition;
+    coordinates = aCoordinates;
     wasSet = true;
     return wasSet;
   }
@@ -121,14 +119,6 @@ public class UmpleElement
   public String getName()
   {
     return name;
-  }
-
-  /**
-   * The original ump file
-   */
-  public String getUmpFile()
-  {
-    return umpFile;
   }
 
   /**
@@ -193,9 +183,9 @@ public class UmpleElement
   /**
    * Specifies the position of this Umple element (ex. The UmpleOnline diagram).
    */
-  public Coordinate getPosition()
+  public Coordinate getCoordinates()
   {
-    return position;
+    return coordinates;
   }
 
   public boolean isIsInternal()
@@ -203,13 +193,107 @@ public class UmpleElement
     return isInternal;
   }
 
+  public Position getPosition(int index)
+  {
+    Position aPosition = positions.get(index);
+    return aPosition;
+  }
+
+  /**
+   * The position(s) of the element in the source code, used in debugging
+   * may have multiple positions in the case of mixins
+   */
+  public List<Position> getPositions()
+  {
+    List<Position> newPositions = Collections.unmodifiableList(positions);
+    return newPositions;
+  }
+
+  public int numberOfPositions()
+  {
+    int number = positions.size();
+    return number;
+  }
+
+  public boolean hasPositions()
+  {
+    boolean has = positions.size() > 0;
+    return has;
+  }
+
+  public int indexOfPosition(Position aPosition)
+  {
+    int index = positions.indexOf(aPosition);
+    return index;
+  }
+
+  public static int minimumNumberOfPositions()
+  {
+    return 0;
+  }
+
+  public boolean addPosition(Position aPosition)
+  {
+    boolean wasAdded = false;
+    if (positions.contains(aPosition)) { return false; }
+    positions.add(aPosition);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removePosition(Position aPosition)
+  {
+    boolean wasRemoved = false;
+    if (positions.contains(aPosition))
+    {
+      positions.remove(aPosition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addPositionAt(Position aPosition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addPosition(aPosition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfPositions()) { index = numberOfPositions() - 1; }
+      positions.remove(aPosition);
+      positions.add(index, aPosition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMovePositionAt(Position aPosition, int index)
+  {
+    boolean wasAdded = false;
+    if(positions.contains(aPosition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfPositions()) { index = numberOfPositions() - 1; }
+      positions.remove(aPosition);
+      positions.add(index, aPosition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addPositionAt(aPosition, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
-  {}
+  {
+    positions.clear();
+  }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 457 ../../../../src/Umple_Code.ump
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);

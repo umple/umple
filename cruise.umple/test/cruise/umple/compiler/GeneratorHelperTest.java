@@ -26,7 +26,7 @@ public class GeneratorHelperTest
   public void toCode_one()
   {
     List<CodeInjection> all = new ArrayList<CodeInjection>();
-    CodeInjection code = new CodeInjection("before","myOpp","//code");
+    CodeInjection code = new CodeInjection("before","myOpp","//code",new UmpleClass("test"));
     all.add(code);
     Assert.assertEquals("//code",GeneratorHelper.toCode(all));
   }
@@ -35,8 +35,8 @@ public class GeneratorHelperTest
   public void toCode_many()
   {
     List<CodeInjection> all = new ArrayList<CodeInjection>();
-    all.add(new CodeInjection("before","myOpp","//code"));
-    all.add(new CodeInjection("before","myOpp","//code2"));
+    all.add(new CodeInjection("before","myOpp","//code",new UmpleClass("test")));
+    all.add(new CodeInjection("before","myOpp","//code2",new UmpleClass("test")));
 
     Assert.assertEquals("//code\n//code2",GeneratorHelper.toCode(all));
   }

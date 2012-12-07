@@ -7,6 +7,8 @@ import java.util.*;
 /**
  * Represents an Umple interface.
  */
+// line 224 "../../../../src/Umple.ump"
+// line 426 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleElement
 {
 
@@ -285,6 +287,7 @@ public class UmpleInterface extends UmpleElement
   public boolean addDepend(Depend aDepend)
   {
     boolean wasAdded = false;
+    // line 239 "../../../../src/Umple.ump"
     if (depends.contains(aDepend)) { return false; }
     if (depends.contains(aDepend)) { return false; }
     depends.add(aDepend);
@@ -405,6 +408,7 @@ public class UmpleInterface extends UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 428 ../../../../src/Umple_Code.ump
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();

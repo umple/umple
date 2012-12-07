@@ -7,6 +7,8 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
+// line 54 "../../../../src/Generator.ump"
+// line 234 "../../../../src/Generator_Code.ump"
 public class PapyrusGenerator implements CodeGenerator
 {
 
@@ -69,6 +71,7 @@ public class PapyrusGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 237 ../../../../src/Generator_Code.ump
   public void generate()
   {
     StringBuilder code = new StringBuilder();

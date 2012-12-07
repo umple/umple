@@ -8,6 +8,8 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.*;
 
+// line 183 "../../../../src/Generator.ump"
+// line 12 "../../../../src/Generator_CodePhp.ump"
 public class PhpGenerator implements CodeGenerator,CodeTranslator
 {
 
@@ -70,6 +72,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 15 ../../../../src/Generator_CodePhp.ump
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
@@ -648,7 +651,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
       if (av.isImmutable() || aClass.getKey().isMember(av))
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }",translate("attributeCanSet",av));
-        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("setMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -657,7 +660,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }",translate("attributeCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -669,7 +672,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1},{2},{3},{4}",translate("addMethod",av),translate("removeMethod",av),translate("setManyMethod",av),translate("setMethod",av),translate("resetMethod",av));
-        CodeInjection inject = new CodeInjection("before", methods, code);
+        CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
       }
@@ -678,7 +681,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
       {
         String code = StringFormatter.format("if (!$this->{0}) { return false; }\n$this->{0} = false;",translate("associationCanSet",av));
         String methods = StringFormatter.format("{0},{1}",translate("setManyMethod",av),translate("setMethod",av));
-        CodeInjection set = new CodeInjection("before", methods, code);
+        CodeInjection set = new CodeInjection("before", methods, code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -686,7 +689,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
       if (av.isMany())
       {
         String code = StringFormatter.format("if ($this->{0}(${1}) !== -1) { return false; }",translate("indexOfMethod",av),translate("parameterOne",av));
-        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code);
+        CodeInjection set = new CodeInjection("before",translate("addMethod",av) , code, aClass);
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
@@ -877,7 +880,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     else if( "until".equals(conditionType) || "after".equals(conditionType) || "giving".equals(conditionType) )
     	injectionType = "after";
 
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code);
+    CodeInjection set = new CodeInjection(injectionType, setMethod, code, aClass);
     set.setIsInternal(true);
     aClass.addCodeInjection(set);  
   }

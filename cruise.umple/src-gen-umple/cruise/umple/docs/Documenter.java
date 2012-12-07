@@ -8,6 +8,8 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.*;
 import java.util.*;
 
+// line 14 "../../../../src/Documenter.ump"
+// line 50 "../../../../src/Documenter_Code.ump"
 public class Documenter
 {
 
@@ -130,6 +132,7 @@ public class Documenter
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 53 ../../../../src/Documenter_Code.ump
   public boolean generate()
   {
     File inputDirectory = new File(getInputPath());

@@ -4,6 +4,7 @@
 package cruise.umple.util;
 import java.util.*;
 
+// line 847 "../../../../src/Util_Code.ump"
 public class Glossary
 {
 
@@ -21,6 +22,7 @@ public class Glossary
   public Glossary()
   {
     words = new ArrayList<Word>();
+    // line 851 "../../../../src/Util_Code.ump"
     init();
   }
 
@@ -79,6 +81,7 @@ public class Glossary
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 855 ../../../../src/Util_Code.ump
   private void init()
   {
     addWord(new Word("fish","fish"));

@@ -4,6 +4,7 @@
 package cruise.umple.util;
 import java.io.*;
 
+// line 107 "../../../../src/Util_Code.ump"
 public class FileManager
 {
 
@@ -29,6 +30,7 @@ public class FileManager
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 115 ../../../../src/Util_Code.ump
   public static String loadFile(String filename)
   {
     try 

@@ -4,6 +4,7 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 42 "../../../../src/Violet.ump"
 public class VioletAssociation
 {
 

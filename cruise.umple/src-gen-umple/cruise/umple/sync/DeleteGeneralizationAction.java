@@ -5,6 +5,8 @@ package cruise.umple.sync;
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 
+// line 83 "../../../../src/UmpleSync.ump"
+// line 1160 "../../../../src/UmpleSync_Code.ump"
 public class DeleteGeneralizationAction extends SynchronizationAction
 {
 
@@ -34,6 +36,7 @@ public class DeleteGeneralizationAction extends SynchronizationAction
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 1163 ../../../../src/UmpleSync_Code.ump
   public void go()
   {
     try

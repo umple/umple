@@ -8,6 +8,8 @@ import java.util.*;
 /**
  * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
  */
+// line 24 "../../../../src/Parser.ump"
+// line 1582 "../../../../src/Parser_Code.ump"
 public class ParseResult
 {
 
@@ -136,11 +138,13 @@ public class ParseResult
   public boolean addErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasAdded = false;
+    // line 1584 "../../../../src/Parser_Code.ump"
     if(!_acceptsErrors)
           return true; // This should technically return false
     if (errorMessages.contains(aErrorMessage)) { return false; }
     errorMessages.add(aErrorMessage);
     wasAdded = true;
+    // line 1590 "../../../../src/Parser_Code.ump"
     // If the severity level is 1 then it's the most severe error
         // And we stop accepting errors (The parser may continue to parse,
         // as but we won't report any further errors, as they may be non-sensical)
@@ -213,6 +217,7 @@ public class ParseResult
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 1610 ../../../../src/Parser_Code.ump
   public String toString()
   {
     String ret = "";

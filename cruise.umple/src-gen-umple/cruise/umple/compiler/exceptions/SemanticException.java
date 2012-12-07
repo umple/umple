@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler.exceptions;
 
+// line 25 "../../../../../src/UmpleExceptions.ump"
 public class SemanticException
 {
 
@@ -28,5 +29,6 @@ public class SemanticException
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 29 ../../../../../src/UmpleExceptions.ump
   static final long serialVersionUID = 2;
 }

@@ -4,6 +4,8 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 28 "../../../../src/Violet.ump"
+// line 110 "../../../../src/Violet_Code.ump"
 public class VioletDiagram
 {
 
@@ -213,6 +215,7 @@ public class VioletDiagram
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 113 ../../../../src/Violet_Code.ump
   public String toXml()
   {
     StringBuffer answer = new StringBuffer();

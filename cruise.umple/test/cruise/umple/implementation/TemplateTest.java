@@ -216,15 +216,20 @@ public class TemplateTest
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className)
   {
-    assertUmpleTemplateFor(umpleFile, codeFile, className, true);
+    assertUmpleTemplateFor(umpleFile, codeFile, className, true, true);
   }
 
   public void assertUmplePartialTemplateFor(String umpleFile, String codeFile, String className)
   {
-    assertUmpleTemplateFor(umpleFile, codeFile, className, false);
+    assertUmpleTemplateFor(umpleFile, codeFile, className, false, true);
   }
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch)
+  {
+	  assertUmpleTemplateFor(umpleFile, codeFile, className, isFullMatch, true);
+  }
+  
+  public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch, boolean ignoreLineComments)
   {
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
 
@@ -253,7 +258,10 @@ public class TemplateTest
     
     if (isFullMatch)
     {
-      SampleFileWriter.assertFileContent(expected, actual);  
+      if (ignoreLineComments)
+    	  SampleFileWriter.assertFileContent(expected, actual, true); 
+      else
+    	  SampleFileWriter.assertFileContent(expected, actual, false);
     }
     else
     {
@@ -267,6 +275,7 @@ public class TemplateTest
     UmpleParser parser = UmpleParserFactory.create(umpleParserName, true);
 
     String input = SampleFileWriter.readContent(new File(path, filename));
+    parser.setFilename(filename);
     ParseResult result = parser.parse("program", input);
 
     if (!result.getWasSuccess())

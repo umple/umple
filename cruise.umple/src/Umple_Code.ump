@@ -38,7 +38,7 @@ class UmpleModel
     UmpleClass newClass = getUmpleClass(name);
     if (newClass == null)
     {
-      newClass = new UmpleClass(name);
+      newClass = new UmpleClass(name, this);
       addUmpleClass(newClass);
     }
     return newClass;
@@ -211,8 +211,8 @@ class UmpleModel
 
     String classOne = a.getEnd(0).getClassName();
     String classTwo = a.getEnd(1).getClassName();
-    Coordinate classOnePos = getUmpleClass(classOne).getPosition();
-    Coordinate classTwoPos = getUmpleClass(classTwo).getPosition();
+    Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
+    Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
 
     if (classOne.equals(classTwo))
     {
@@ -300,7 +300,7 @@ class UmpleModel
   {
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
-    Coordinate position = getUmpleClass(name).getPosition();
+    Coordinate position = getUmpleClass(name).getCoordinates();
 
     // determine which corner the association should be positioned at
     int index = 0;
@@ -473,8 +473,21 @@ class UmpleElement
   }
 }
 
+class AssociationClass
+{
+  public AssociationClass(String name)
+  {
+    super(name);
+  }
+}
+
 class UmpleClass
 {
+
+  public UmpleClass(String name)
+  {
+    this(name, null);
+  }
 
   public List<StateMachine> getAllStateMachines()
   {

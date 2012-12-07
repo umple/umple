@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 
+// line 144 "../../../../src/Parser.ump"
 public class RulePartValue
 {
 

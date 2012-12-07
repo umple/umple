@@ -4,6 +4,8 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+// line 26 "../../../../src/Umlet.ump"
+// line 140 "../../../../src/Umlet_Code.ump"
 public class UmletDiagram
 {
 
@@ -153,6 +155,7 @@ public class UmletDiagram
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 143 ../../../../src/Umlet_Code.ump
   public String toXml()
   {
     StringBuffer answer = new StringBuffer();

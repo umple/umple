@@ -25,6 +25,13 @@ import java.util.*;
  * 
  * Please refer to UmpleInternalParser_Code.ump for implementation details.
  */
+// line 22 "../../../../src/UmpleInternalParser.ump"
+// line 33 "../../../../src/UmpleInternalParser_Code.ump"
+// line 17 "../../../../src/UmpleInternalParser_CodeCore.ump"
+// line 17 "../../../../src/UmpleInternalParser_CodeClass.ump"
+// line 17 "../../../../src/UmpleInternalParser_CodeStateMachine.ump"
+// line 17 "../../../../src/UmpleInternalParser_CodeTrace.ump"
+// line 17 "../../../../src/UmpleInternalParser_CodeLayout.ump"
 public class UmpleInternalParser extends Parser implements UmpleParser
 {
 
@@ -84,6 +91,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     messagesToExpect = new ArrayList<ErrorType>();
     warningsToIgnore = new ArrayList<ErrorType>();
     setStrictness(Strictness.none);
+    // line 41 "../../../../src/UmpleInternalParser_Code.ump"
     init();
   }
 
@@ -104,6 +112,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
+    // line 44 "../../../../src/UmpleInternalParser.ump"
     if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}
     return wasSet;
   }
@@ -337,7 +346,8 @@ this("UmpleInternalParser", new UmpleModel(null));
  public UmpleInternalParser(UmpleModel aModel)  {
 this("UmpleInternalParser", aModel);
   }
-private void init()
+// line 53 ../../../../src/UmpleInternalParser_Code.ump
+  private void init()
   {
     if(model.getUmpleFile() != null)
     {
@@ -555,7 +565,8 @@ private void init()
       addNecessaryFiles();
     }    
   }
-private void analyzeCoreToken(Token t, int analyzeCoreToken)
+// line 21 ../../../../src/UmpleInternalParser_CodeCore.ump
+  private void analyzeCoreToken(Token t, int analyzeCoreToken)
   {
     if (analyzeCoreToken != 1)
     {
@@ -672,7 +683,8 @@ private void analyzeCoreToken(Token t, int analyzeCoreToken)
       model.addGenerate(genToken.getValue());
   	}
   }
-private void analyzeClassToken(Token t, int analysisStep)
+// line 37 ../../../../src/UmpleInternalParser_CodeClass.ump
+  private void analyzeClassToken(Token t, int analysisStep)
   {
     if (analysisStep != 2)
     {
@@ -811,7 +823,16 @@ private void analyzeClassToken(Token t, int analysisStep)
     {
       //This is a catch all and will be used less often as the grammar gets updated.
       if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
-      aClass.appendExtraCode(token.getValue());
+      //Append #line comment to indicate line and position of source
+      if (token.getPosition() != null)
+      {
+      	aClass.appendExtraCode("// line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aClass, "Java"));
+      	aClass.appendExtraCode("  " + token.getValue());
+      }
+      else
+      {
+      	aClass.appendExtraCode(token.getValue());
+      }
     }
     else if (token.is("constantDeclaration"))
     {
@@ -946,8 +967,8 @@ private void analyzeClassToken(Token t, int analysisStep)
     }
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
 
-	// Set the original .ump file
-	aClass.setUmpFile(classToken.getPosition().getFilename());
+	// Set the original .ump file and line number
+	aClass.addPosition(classToken.getPosition());
 
     // Add all the comments in the comment list to the Umple class.
     for (Comment c : lastComments)
@@ -1078,7 +1099,7 @@ private void analyzeClassToken(Token t, int analysisStep)
       }
       else if (token.is("elementPosition"))
       {
-        aInterface.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+        aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
       }
 
     }
@@ -1600,6 +1621,9 @@ private void analyzeClassToken(Token t, int analysisStep)
     String modifier = "";
     Method aMethod = new Method("","","",false);
 
+	// Set method position
+	aMethod.setPosition(method.getPosition());
+
     // Add comments above the method to the method.
     for (Comment c : lastComments)
     {
@@ -1740,7 +1764,9 @@ private void analyzeClassToken(Token t, int analysisStep)
   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";
-    aClass.addCodeInjection(new CodeInjection(type,injectToken.getValue("operationName"),injectToken.getValue("code")));
+    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass);
+    injection.setPosition(injectToken.getPosition());
+    aClass.addCodeInjection(injection);
   }
 
   private void analyzeKey(Token keyToken, UmpleClass aClass)
@@ -2074,7 +2100,8 @@ private void analyzeClassToken(Token t, int analysisStep)
       attribute.addComment(c);
     }
   }
-private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
+// line 24 ../../../../src/UmpleInternalParser_CodeStateMachine.ump
+  private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
     String[] parts = code.split("\\{");
     if(parts.length < 2) return false; //This means there are no opening brackets
@@ -2328,6 +2355,7 @@ private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
       else if (subToken.is("entryOrExitAction"))
       {
         Action action = new Action(subToken.getValue("actionCode"));
+        action.setPosition(subToken.getPosition());
         action.setActionType(subToken.getValue("type"));
         fromState.addAction(action);
       }
@@ -2372,7 +2400,9 @@ private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
 
   private Activity analyzeActivity(Token activityToken, State fromState)
   {
-    return new Activity(activityToken.getValue("activityCode"),fromState);
+    Activity act = new Activity(activityToken.getValue("activityCode"),fromState);
+    act.setPosition(activityToken.getPosition());
+    return act;
   }
 
   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
@@ -2402,13 +2432,17 @@ private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      t.setGuard(new Guard(guardToken.getValue("guardCode")));
+      Guard g = new Guard(guardToken.getValue("guardCode"));
+      g.setPosition(guardToken.getPosition());
+      t.setGuard(g);
     }
 
     Token actionToken = transitionToken.getSubToken("action");
     if (actionToken != null)
     {
-      t.setAction(new Action(actionToken.getValue("actionCode")));
+      Action act = new Action(actionToken.getValue("actionCode"));
+      act.setPosition(actionToken.getPosition());
+      t.setAction(act);
     }
 
     if (eventName != null || isAutoTransition)
@@ -2441,7 +2475,8 @@ private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     }
 
   }
-private void analyzeTraceToken(Token token, int analysisStep)
+// line 24 ../../../../src/UmpleInternalParser_CodeTrace.ump
+  private void analyzeTraceToken(Token token, int analysisStep)
   {
     
     if (analysisStep != 1)
@@ -2840,7 +2875,8 @@ private void analyzeTraceToken(Token token, int analysisStep)
   //****************************************
   //********* End of Trace Glue Code   *****
   //****************************************
-private void analyzeLayoutToken(Token token, int analysisStep)
+// line 21 ../../../../src/UmpleInternalParser_CodeLayout.ump
+  private void analyzeLayoutToken(Token token, int analysisStep)
   {
   }
 
@@ -2857,7 +2893,7 @@ private void analyzeLayoutToken(Token token, int analysisStep)
   
     if (token.is("elementPosition"))
     {
-      aClass.setPosition(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+      aClass.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
     }
     else if (token.is("associationPosition"))
     {
@@ -2892,14 +2928,14 @@ private void analyzeLayoutToken(Token token, int analysisStep)
     {
       UmpleClass c = model.getUmpleClass(i);
 
-      if (c.getPosition().getStatus() == Coordinate.Status.Defaulted)
+      if (c.getCoordinates().getStatus() == Coordinate.Status.Defaulted)
       {
         // Do nothing
       }
-      else if (c.getPosition().getStatus() == Coordinate.Status.Undefined)
+      else if (c.getCoordinates().getStatus() == Coordinate.Status.Undefined)
       {
-        c.setPosition(model.getDefaultClassPosition(i+1));
-        c.getPosition().setStatus(Coordinate.Status.Defaulted);
+        c.setCoordinates(model.getDefaultClassPosition(i+1));
+        c.getCoordinates().setStatus(Coordinate.Status.Defaulted);
       }
     }
 
@@ -2908,14 +2944,14 @@ private void analyzeLayoutToken(Token token, int analysisStep)
     {
       UmpleInterface c = model.getUmpleInterface(i);
 
-      if (c.getPosition().getStatus() == Coordinate.Status.Defaulted)
+      if (c.getCoordinates().getStatus() == Coordinate.Status.Defaulted)
       {
         // Do nothing
       }
-      else if (c.getPosition().getStatus() == Coordinate.Status.Undefined)
+      else if (c.getCoordinates().getStatus() == Coordinate.Status.Undefined)
       {
-        c.setPosition(model.getDefaultClassPosition(i+1));
-        c.getPosition().setStatus(Coordinate.Status.Defaulted);
+        c.setCoordinates(model.getDefaultClassPosition(i+1));
+        c.getCoordinates().setStatus(Coordinate.Status.Defaulted);
       }
     }
 

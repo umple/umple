@@ -7,6 +7,8 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
+// line 96 "../../../../src/Generator.ump"
+// line 702 "../../../../src/Generator_Code.ump"
 public class GvStateDiagramGenerator implements CodeGenerator
 {
 
@@ -69,6 +71,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 705 ../../../../src/Generator_Code.ump
   public void generate()
   {
     StringBuilder code = new StringBuilder();
