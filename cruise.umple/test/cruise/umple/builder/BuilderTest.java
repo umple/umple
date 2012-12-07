@@ -45,6 +45,8 @@ public class BuilderTest {
     SampleFileWriter.destroy("MyApp");
   }
 
+
+/* Temporary commenting out of everything
    @Ignore   @Test 
   public void compile()
   {
@@ -54,7 +56,7 @@ public class BuilderTest {
     Assert.assertEquals(true,(new File("MyApp/myproject.jar")).exists());
   }
   
-  
+ 
    @Ignore   @Test 
       public void loadWithPackage() throws ClassNotFoundException
    {
@@ -110,5 +112,6 @@ public class BuilderTest {
      builder.runAnt("mybuild.xml");
      Assert.assertEquals(true,(new File("deleteme.txt")).exists());
    }
+*/
   
 }
