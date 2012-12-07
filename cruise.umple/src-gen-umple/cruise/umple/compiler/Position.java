@@ -274,7 +274,7 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
       }
       if (generatesPath != null)
       {
-      	Path result = generatesPath.relativize(currentPath);
+      	Path result = generatesPath.relativize(currentPath).normalize();
       	if (!result.equals(Paths.get("")))
       	{
       	  build.append(result.toString() + '/');
