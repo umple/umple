@@ -12,7 +12,7 @@ import java.util.*;
  * As parsing is going on "tokens" will be created and linked together in a hierarchy fashion based on what was parsed.
  */
 // line 172 "../../../../src/Parser.ump"
-// line 681 "../../../../src/Parser_Code.ump"
+// line 674 "../../../../src/Parser_Code.ump"
 public class Parser
 {
 
@@ -354,7 +354,7 @@ filename = aFilename;
     rules = new ArrayList<Rule>();
     couples = new ArrayList<Couple>();
   }
-// line 701 ../../../../src/Parser_Code.ump
+// line 694 ../../../../src/Parser_Code.ump
   public Token reset()
   {
     rootToken = new Token(getName(),"ROOT", new Position(filename,1,0,0));

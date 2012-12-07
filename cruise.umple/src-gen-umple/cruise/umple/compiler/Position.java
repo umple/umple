@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
 
 package cruise.umple.compiler;
+import java.nio.file.*;
 
 /**
  * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
@@ -191,7 +192,7 @@ public class Position
    public Position(int aLineNumber,int aCharacterOffset,int aOffset)  {
 this(null, aLineNumber, aCharacterOffset, aOffset);
   }
-// line 332 ../../../../src/Parser_Code.ump
+// line 331 ../../../../src/Parser_Code.ump
   public Position copy()
   {
     return new Position(filename,lineNumber,characterOffset,offset);
@@ -225,17 +226,11 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
   {
     return str.replace('\\','/');
   }
-  
-  //Temporary version the returns full path rather than relative path
-  public String getRelativePath(UmpleClass parent, String language)
-  {
-    return filename;
-  }
 
   //This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
   //It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
   //As a result, it has been replaced by the placeholder above, that simply returns the full path.
-  /*public String getRelativePath(UmpleClass parent, String language)
+  public String getRelativePath(UmpleClass parent, String language)
   {
     if (filename == null)
     {
@@ -289,5 +284,5 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
       build.append(Paths.get(filename).getFileName());
       return deWindowsify(build.toString());
     }
-  }*/
+  }
 }

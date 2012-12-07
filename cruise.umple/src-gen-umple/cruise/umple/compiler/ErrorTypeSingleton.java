@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 // line 75 "../../../../src/Parser.ump"
-// line 1691 "../../../../src/Parser_Code.ump"
+// line 1684 "../../../../src/Parser_Code.ump"
 public class ErrorTypeSingleton
 {
 
@@ -32,7 +32,7 @@ public class ErrorTypeSingleton
   private ErrorTypeSingleton()
   {
     errorTypes = new ArrayList<ErrorType>();
-    // line 1693 "../../../../src/Parser_Code.ump"
+    // line 1686 "../../../../src/Parser_Code.ump"
     init();
   }
 
@@ -145,7 +145,7 @@ public class ErrorTypeSingleton
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1695 ../../../../src/Parser_Code.ump
+  // line 1688 ../../../../src/Parser_Code.ump
   private void init()
   {
     String filename = "/en.error";

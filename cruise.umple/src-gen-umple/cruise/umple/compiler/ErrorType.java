@@ -9,7 +9,7 @@ import java.util.List;
  * Represents an error type, which contains an error code, the severity of the error, etc.
  */
 // line 61 "../../../../src/Parser.ump"
-// line 1680 "../../../../src/Parser_Code.ump"
+// line 1673 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {
 
@@ -139,7 +139,7 @@ public class ErrorType
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1685 ../../../../src/Parser_Code.ump
+  // line 1678 ../../../../src/Parser_Code.ump
   public String format(List<String> arguments)
   {
     return StringFormatter.format(errorFormat, arguments.toArray());

@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 // line 198 "../../../../src/Parser.ump"
-// line 1365 "../../../../src/Parser_Code.ump"
+// line 1358 "../../../../src/Parser_Code.ump"
 public class RuleInstance
 {
 
@@ -199,7 +199,7 @@ public class RuleInstance
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1368 ../../../../src/Parser_Code.ump
+  // line 1361 ../../../../src/Parser_Code.ump
   public void configureDefinition(String definition, String... allStopAts)
   {
     stopAts.clear();
