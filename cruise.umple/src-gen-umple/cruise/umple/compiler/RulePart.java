@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 // line 151 "../../../../src/Parser.ump"
-// line 425 "../../../../src/Parser_Code.ump"
+// line 426 "../../../../src/Parser_Code.ump"
 public class RulePart
 {
 
@@ -154,7 +154,7 @@ public class RulePart
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 428 ../../../../src/Parser_Code.ump
+  // line 429 ../../../../src/Parser_Code.ump
   public boolean isWithinLimits(int numberSoFar)
   {
     return getMaximumPartsFound() == -1 || numberSoFar < getMaximumPartsFound();

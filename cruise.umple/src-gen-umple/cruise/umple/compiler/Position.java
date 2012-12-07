@@ -274,9 +274,10 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
       }
       if (generatesPath != null)
       {
-      	Path result = generatesPath.relativize(currentPath).normalize();
+      	Path result = generatesPath.relativize(currentPath);
       	if (!result.equals(Paths.get("")))
       	{
+      	  result = result.normalize();
       	  build.append(result.toString() + '/');
       	}
       }
