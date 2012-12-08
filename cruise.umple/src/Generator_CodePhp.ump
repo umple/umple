@@ -632,6 +632,15 @@ class PhpGenerator
         set.setIsInternal(true);
         aClass.addCodeInjection(set);
       }
+      
+      if(av.isSorted())
+      {
+        String code = StringFormatter.format("$this->sort($this->{0}, $this->{0}Priority);\n",translate("attributeMany",av));
+        String methods = StringFormatter.format("{0},{1}",translate("removeMethod",av),translate("addMethod",av));
+        CodeInjection set = new CodeInjection("after", methods, code, aClass);
+        set.setIsInternal(true);
+        aClass.addCodeInjection(set);
+      }
     }
 
     Map<String,String> lookups = new HashMap<String,String>();

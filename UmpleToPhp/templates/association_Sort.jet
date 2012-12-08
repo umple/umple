@@ -1,1 +1,15 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public function sort(&$toSort, $thePriority)
+  {
+    if(count($toSort) > 0)
+    {
+      $methodName = "get".ucfirst($thePriority);
+      usort($toSort, function($x, $y) use ($methodName)
+      {
+        $var1 = call_user_func(array($x, $methodName));
+        $var2 = call_user_func(array($y, $methodName));
+        return $var1 - $var2;
+      });
+    }
+  }
+

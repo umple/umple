@@ -709,7 +709,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
       
       if(av.isSorted())
       {
-        String code = StringFormatter.format("sort({0}, {1}Priority);\n",translate("attributeMany",av), translate("attributeMany",av));
+        String code = StringFormatter.format("sort({0}, {0}Priority);\n",translate("attributeMany",av));
         String methods = StringFormatter.format("{0},{1}",translate("removeMethod",av),translate("addMethod",av));
         CodeInjection set = new CodeInjection("after", methods, code, aClass);
         set.setIsInternal(true);
