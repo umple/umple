@@ -4,6 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
+// line 26 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetD
 {
 
@@ -32,9 +33,11 @@ public class WidgetD
   public boolean setId(String aId)
   {
     boolean wasSet = false;
+    // line 32 "../../../../src/TestHarnessPatterns.ump"
     addLog("before setId:" + id);
     id = aId;
     wasSet = true;
+    // line 33 "../../../../src/TestHarnessPatterns.ump"
     addLog("after setId:" + id);
     return wasSet;
   }
@@ -55,8 +58,10 @@ public class WidgetD
 
   public String getId()
   {
+    // line 34 "../../../../src/TestHarnessPatterns.ump"
     addLog("before getId");
     String aId = id;
+    // line 35 "../../../../src/TestHarnessPatterns.ump"
     addLog("after getId");
     return aId;
   }

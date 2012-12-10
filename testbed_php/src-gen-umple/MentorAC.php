@@ -151,6 +151,38 @@ class MentorAC
     return $wasRemoved;
   }
 
+  public function addStudentAt($aStudent, $index)
+  {  
+    $wasAdded = false;
+    if($this->addStudent($aStudent))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfStudents()) { $index = $this->numberOfStudents() - 1; }
+      array_splice($this->students, $this->indexOfStudent($aStudent), 1);
+      array_splice($this->students, $index, 0, array($aStudent));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveStudentAt($aStudent, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfStudent($aStudent) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfStudents()) { $index = $this->numberOfStudents() - 1; }
+      array_splice($this->students, $this->indexOfStudent($aStudent), 1);
+      array_splice($this->students, $index, 0, array($aStudent));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addStudentAt($aStudent, $index);
+    }
+    return $wasAdded;
+  }
+
   public function setProgram($newProgram)
   {
     $wasSet = false;

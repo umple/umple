@@ -4,6 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
+// line 61 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class ClassOptionalN
 {
 

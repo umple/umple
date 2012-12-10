@@ -4,6 +4,8 @@
 package cruise.attributes.test;
 import java.sql.Date;
 
+// line 37 "../../../../src/TestHarnessAttributes.ump"
+// line 18 "../../../../src/LocalHarness.ump"
 public class DoorE
 {
 

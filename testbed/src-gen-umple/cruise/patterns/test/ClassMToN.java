@@ -4,6 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
+// line 37 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class ClassMToN
 {
 

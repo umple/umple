@@ -4,6 +4,7 @@
 package cruise.statemachine.test;
 import java.util.*;
 
+// line 9 "../../../../src/TestHarnessStateMachine.ump"
 public class CourseD
 {
 

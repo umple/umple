@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 
 // line 137 "../../../../src/Generator.ump"
-// line 934 "../../../../src/Generator_Code.ump"
+// line 1036 "../../../../src/Generator_Code.ump"
 public class JsonGenerator implements CodeGenerator
 {
 
@@ -68,7 +68,7 @@ public class JsonGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 937 ../../../../src/Generator_Code.ump
+  // line 1039 ../../../../src/Generator_Code.ump
   public void generate()
   {
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");

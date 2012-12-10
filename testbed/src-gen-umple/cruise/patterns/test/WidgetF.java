@@ -4,6 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
+// line 57 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetF
 {
 
@@ -71,8 +72,10 @@ public class WidgetF
 
   public int numberOfIds()
   {
+    // line 62 "../../../../src/TestHarnessPatterns.ump"
     addLog("before numberOfIds");
     int number = ids.size();
+    // line 63 "../../../../src/TestHarnessPatterns.ump"
     addLog("after numberOfIds");
     return number;
   }

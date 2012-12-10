@@ -4,6 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
+// line 409 "../../../src/TestHarnessAssociations.ump"
 public class MentorAA
 {
 
@@ -179,6 +180,38 @@ public class MentorAA
     }
     wasSet = true;
     return wasSet;
+  }
+
+  public boolean addStudentAt(StudentAA aStudent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStudent(aStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
+      students.remove(aStudent);
+      students.add(index, aStudent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStudentAt(StudentAA aStudent, int index)
+  {
+    boolean wasAdded = false;
+    if(students.contains(aStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
+      students.remove(aStudent);
+      students.add(index, aStudent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStudentAt(aStudent, index);
+    }
+    return wasAdded;
   }
 
   public boolean setProgram(ProgramAA newProgram)

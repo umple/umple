@@ -4,6 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
+// line 600 "../../../src/TestHarnessAssociations.ump"
 public class ClassMToNAssociation
 {
 

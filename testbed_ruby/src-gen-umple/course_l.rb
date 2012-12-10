@@ -138,6 +138,7 @@ class CourseL
 
   def delete
     @deleted = true
+    // line 124 "../../../../src/TestHarnessStateMachinePhp.ump"
     $this->addLog("deleted");
   end
 

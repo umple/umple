@@ -3,6 +3,7 @@
 
 package cruise.statemachine.test;
 
+// line 4 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseB
 {
 
@@ -81,6 +82,7 @@ public class CourseB
     switch(status)
     {
       case Open:
+        // line 11 "../../../../src/TestHarnessStateMachineJava.ump"
         log = "exit called";
         break;
     }
@@ -94,6 +96,7 @@ public class CourseB
     switch(status)
     {
       case Open:
+        // line 10 "../../../../src/TestHarnessStateMachineJava.ump"
         log = "entry called";
         break;
     }

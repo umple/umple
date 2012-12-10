@@ -3,6 +3,7 @@
 
 package cruise.statemachine.test;
 
+// line 198 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseV
 {
 
@@ -98,6 +99,7 @@ public class CourseV
     }
   }
 
+  // line 204 "../../../../src/TestHarnessStateMachineJava.ump"
   private void doActivityStatusOff()
   {
     try
@@ -140,6 +142,7 @@ public class CourseV
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
+  // line 209 ../../../../src/TestHarnessStateMachineJava.ump
   public void doX() { 
     count += 1;
   }

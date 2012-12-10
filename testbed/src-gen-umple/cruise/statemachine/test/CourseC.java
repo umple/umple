@@ -4,6 +4,7 @@
 package cruise.statemachine.test;
 import java.util.*;
 
+// line 20 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseC
 {
 
@@ -129,15 +130,18 @@ public class CourseC
     switch(status)
     {
       case Open:
+        // line 26 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Open Entry");
         break;
       case Closed:
+        // line 30 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Closed Entry");
         doActivityStatusClosedThread = new DoActivityThread(this,"doActivityStatusClosed");
         break;
     }
   }
 
+  // line 32 "../../../../src/TestHarnessStateMachineJava.ump"
   private void doActivityStatusClosed()
   {
     try

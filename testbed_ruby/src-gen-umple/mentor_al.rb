@@ -126,6 +126,40 @@ class MentorAL
     was_set
   end
 
+  def add_student_at(a_student, index)
+    was_added = false
+    if add_student(a_student)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_students())
+        index = number_of_students() - 1
+      end
+      @students.delete(a_student)
+      @students.insert(index, a_student)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_student_at(a_student, index)
+    was_added = false
+    if @students.include?(a_student)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_students())
+        index = number_of_students() - 1
+      end
+      @students.delete(a_student)
+      @students.insert(index, a_student)
+      was_added = true
+    else
+      was_added = add_student_at(a_student, index)
+    end
+    was_added
+  end
+
   def set_program(new_program)
     was_set = false
     if new_program.nil?

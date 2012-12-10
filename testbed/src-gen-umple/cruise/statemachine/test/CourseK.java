@@ -4,6 +4,7 @@
 package cruise.statemachine.test;
 import java.util.*;
 
+// line 86 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseK
 {
 
@@ -118,6 +119,7 @@ public class CourseK
 
   public void delete()
   {
+    // line 96 "../../../../src/TestHarnessStateMachineJava.ump"
     addLog("deleted");
   }
 

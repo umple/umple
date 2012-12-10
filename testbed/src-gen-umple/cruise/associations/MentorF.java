@@ -4,6 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
+// line 80 "../../../src/TestHarnessAssociations.ump"
 public class MentorF
 {
 
@@ -185,6 +186,38 @@ public class MentorF
     {
       throw new RuntimeException("Issue internally setting aMentor to aStudent", e);
     }
+  }
+
+  public boolean addStudentAt(StudentF aStudent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStudent(aStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
+      students.remove(aStudent);
+      students.add(index, aStudent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStudentAt(StudentF aStudent, int index)
+  {
+    boolean wasAdded = false;
+    if(students.contains(aStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
+      students.remove(aStudent);
+      students.add(index, aStudent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStudentAt(aStudent, index);
+    }
+    return wasAdded;
   }
 
   public boolean setProgram(ProgramF newProgram)

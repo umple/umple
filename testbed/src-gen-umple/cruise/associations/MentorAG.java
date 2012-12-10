@@ -4,6 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
+// line 495 "../../../src/TestHarnessAssociations.ump"
 public class MentorAG
 {
 
@@ -122,6 +123,38 @@ public class MentorAG
       }
     }
     return wasRemoved;
+  }
+
+  public boolean addFriendAt(MentorAG aFriend, int index)
+  {  
+    boolean wasAdded = false;
+    if(addFriend(aFriend))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfFriend()) { index = numberOfFriend() - 1; }
+      friend.remove(aFriend);
+      friend.add(index, aFriend);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveFriendAt(MentorAG aFriend, int index)
+  {
+    boolean wasAdded = false;
+    if(friend.contains(aFriend))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfFriend()) { index = numberOfFriend() - 1; }
+      friend.remove(aFriend);
+      friend.add(index, aFriend);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addFriendAt(aFriend, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

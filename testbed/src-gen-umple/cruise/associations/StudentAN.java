@@ -3,6 +3,7 @@
 
 package cruise.associations;
 
+// line 48 "../../../src/LocalHarness.ump"
 public class StudentAN
 {
 

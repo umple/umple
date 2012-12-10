@@ -4,6 +4,7 @@
 package cruise.statemachine.test;
 import java.util.*;
 
+// line 128 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseR
 {
 
@@ -109,9 +110,11 @@ public class CourseR
     switch(one)
     {
       case Off:
+        // line 135 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Exit Off");
         break;
       case On:
+        // line 140 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Exit On");
         break;
     }
@@ -125,10 +128,12 @@ public class CourseR
     switch(one)
     {
       case Off:
+        // line 134 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Enter Off");
         __autotransition2__();
         break;
       case On:
+        // line 139 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Enter On");
         break;
     }

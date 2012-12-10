@@ -3,6 +3,7 @@
 
 package cruise.patterns.test;
 
+// line 4 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class WidgetImmutableA
 {
 

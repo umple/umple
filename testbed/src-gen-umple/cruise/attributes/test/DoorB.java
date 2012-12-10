@@ -3,6 +3,7 @@
 
 package cruise.attributes.test;
 
+// line 12 "../../../../src/TestHarnessAttributes.ump"
 public class DoorB
 {
 

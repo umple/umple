@@ -3,6 +3,7 @@
 
 package cruise.statemachine.test;
 
+// line 219 "../../../../src/TestHarnessStateMachine.ump"
 public class CourseO
 {
 

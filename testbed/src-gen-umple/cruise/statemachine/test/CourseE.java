@@ -4,6 +4,7 @@
 package cruise.statemachine.test;
 import java.util.*;
 
+// line 41 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseE
 {
 
@@ -244,13 +245,16 @@ public class CourseE
     switch(status)
     {
       case Off:
+        // line 51 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Exit Off");
         break;
       case Sleep:
+        // line 58 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Exit Sleep");
         break;
       case On:
         exitOn();
+        // line 64 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Exit On");
         break;
     }
@@ -264,12 +268,15 @@ public class CourseE
     switch(status)
     {
       case Off:
+        // line 50 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Enter Off");
         break;
       case Sleep:
+        // line 57 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Enter Sleep");
         break;
       case On:
+        // line 63 "../../../../src/TestHarnessStateMachineJava.ump"
         addLog("Enter On");
         if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Play); }
         break;
@@ -281,9 +288,11 @@ public class CourseE
     switch(statusOn)
     {
       case Play:
+        // line 70 "TestHarnessStateMachineJava.ump"
         addLog("Exit Play");
         break;
       case Pause:
+        // line 76 "TestHarnessStateMachineJava.ump"
         addLog("Exit Pause");
         break;
     }
@@ -298,9 +307,11 @@ public class CourseE
     switch(statusOn)
     {
       case Play:
+        // line 69 "TestHarnessStateMachineJava.ump"
         addLog("Enter Play");
         break;
       case Pause:
+        // line 75 "TestHarnessStateMachineJava.ump"
         addLog("Enter Pause");
         break;
     }

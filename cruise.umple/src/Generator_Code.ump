@@ -236,6 +236,8 @@ class PapyrusGenerator
 
   public void generate()
   {
+    //this function examines the contents of the Umple code file and translates these into XML that Papyrus can understand.
+    //It repeatedly adds these strings to 'code' a massive StringBuilder instance, rather then straight into a file.
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
     ArrayList<Association> allAssociations = new ArrayList<Association>();
@@ -379,9 +381,105 @@ class PapyrusGenerator
     }
 
     model.setCode(code.toString());
+   //at this point calls the writeModel() function to write the contents of code to a file.
+   //to facilitate loading into Papyrus, it creates a directory with the name of the umple file
+   //and calls the uml file generated model.uml
     writeModel();
+    
+    //additional simple functions to create more files for Papyrus
+    writeModNotation(); // model.notation
+    writeModDI(); // model.di
+    writeModProject(); //.project
+    
   }
 
+  // Creates a "model.notation" file. This file specifies the visual layout and style of the diagram.
+  // As currently created, it is very bare bones. To increase Papyrus functionality, you will need to improve this function.
+  private void writeModNotation()
+  {
+    try {
+      String path = model.getUmpleFile().getPath();
+      StringBuilder noteCode = new StringBuilder();
+    
+      noteCode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+      noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
+      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/4.0.0/UML\" xmi:id=\"_{0}Notation\"",model.getUmpleFile().getSimpleFileName()));
+      noteCode.append(StringFormatter.format(" type=\"PapyrusUMLClassDiagram\" name=\"{0}\" measurementUnit=\"Pixel\">\n",model.getUmpleFile().getSimpleFileName()));
+      noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}DiagramStyle\"/>\n",model.getUmpleFile().getSimpleFileName()));
+      noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:Model\" href=\"model.uml#_{0}\"/>\n",model.getUmpleFile().getSimpleFileName()));
+      noteCode.append("</notation:Diagram>\n");
+      
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + "model.notation";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(noteCode.toString());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+  }
+
+  // Creates a "model.di" file. This file specifies what types of models are part of the Papyrus project.
+  private void writeModDI()
+  {
+    try {
+      String path = model.getUmpleFile().getPath();
+      StringBuilder diCode = new StringBuilder();
+    
+      diCode.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
+      diCode.append("<di:SashWindowsMngr xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.eclipse.org/papyrus/0.7.0/sashdi\">\n");
+      diCode.append("  <pageList>\n    <availablePage>\n");
+      diCode.append(StringFormatter.format("      <emfPageIdentifier href=\"model.notation#_{0}Notation\"/>\n",model.getUmpleFile().getSimpleFileName()));
+      diCode.append("    </availablePage>\n  </pageList>\n");
+      diCode.append("  <sashModel currentSelection=\"//@sashModel/@windows.0/@children.0\">\n");
+      diCode.append("    <windows>\n      <children xsi:type=\"di:TabFolder\">\n        <children>\n");
+      diCode.append(StringFormatter.format("          <emfPageIdentifier href=\"model.notation#_{0}Notation\"/>\n",model.getUmpleFile().getSimpleFileName()));
+      diCode.append("        </children>\n      </children>\n    </windows>\n");
+      diCode.append("  </sashModel>\n</di:SashWindowsMngr>\n");
+      
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + "model.di";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(diCode.toString());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+  }
+  
+  // Creates a ".project" file for Eclipse. This allows the Papyrus output to be easily loaded into Eclipse for editing.
+  private void writeModProject() 
+  {
+    try {
+      String path = model.getUmpleFile().getPath();
+      StringBuilder projectCode = new StringBuilder();
+    
+      projectCode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+      projectCode.append("<projectDescription>\n");
+      projectCode.append(StringFormatter.format("    <name>{0}</name>\n",model.getUmpleFile().getSimpleFileName()));
+      projectCode.append("    <comment></comment>\n    <projects>\n    </projects>\n");
+      projectCode.append("    <buildSpec>\n    </buildSpec>\n    <natures>\n    </natures>\n");
+      projectCode.append("</projectDescription>\n");
+      
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + ".project";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(projectCode.toString());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+
+  }
+
+  // Creates a "model.uml" file. This specifies the mechanical attributes and relationships of the classes and associations in the diagram.
+  // The code generation for this file is done above, in the 'generate()' function.
   private void writeModel()
   {
     try
@@ -389,7 +487,11 @@ class PapyrusGenerator
       String path = model.getUmpleFile().getPath();
       File file = new File(path);
       file.mkdirs();
-      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".uml";
+      
+      File file2 = new File(path + File.separator + model.getUmpleFile().getSimpleFileName());
+      file2.mkdirs();
+
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + "model.uml";
       BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
       bw.write(model.getCode());
       bw.flush();

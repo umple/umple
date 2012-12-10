@@ -4,6 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
+// line 48 "../../../src/TestHarnessAssociations.ump"
 public class MentorD
 {
 

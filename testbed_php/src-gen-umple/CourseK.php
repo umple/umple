@@ -123,6 +123,7 @@ class CourseK
 
   public function delete()
   {
+    // line 96 "../../../../src/TestHarnessStateMachinePhp.ump"
     $this->addLog("deleted");
   }
 

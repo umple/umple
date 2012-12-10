@@ -25,8 +25,21 @@ public class PapyrusGeneratorTest extends TemplateTest
   public void tearDown()
   {
     super.tearDown();
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus.uml");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations.uml");
+    
+    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/model.uml");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/model.di");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/model.notation");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/.project");
+    File destroyDirPap = new File(pathToInput + "/papyrus/papyrus");
+    destroyDirPap.delete();
+    
+    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/model.uml");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/model.di");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/model.notation");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/.project");
+    File destroyDirAss = new File(pathToInput + "/papyrus/associations");
+    destroyDirAss.delete();
+    
   }
 
   @Test
@@ -34,7 +47,13 @@ public class PapyrusGeneratorTest extends TemplateTest
   {
     language = null;
     assertUmpleTemplateFor("papyrus/Papyrus.ump","papyrus/Papyrus.uml.txt");
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus.uml")).exists());
+    
+    //ensure all required files created appropriately
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/model.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/model.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/model.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/.project")).exists());
+    
   }  
 
   @Test
@@ -42,7 +61,12 @@ public class PapyrusGeneratorTest extends TemplateTest
   {
     language = null;
     assertUmpleTemplateFor("papyrus/Associations.ump","papyrus/Associations.uml.txt");
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations.uml")).exists());
+    
+    //ensure all required files created appropriately
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/model.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/model.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/model.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/.project")).exists());
   }  
   
 }

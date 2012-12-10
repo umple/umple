@@ -3,6 +3,7 @@
 
 package cruise.associations;
 
+// line 64 "../../../src/LocalHarness.ump"
 public class StudentAO
 {
 

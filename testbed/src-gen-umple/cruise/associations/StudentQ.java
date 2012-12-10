@@ -4,6 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
+// line 256 "../../../src/TestHarnessAssociations.ump"
 public class StudentQ
 {
 
@@ -161,6 +162,38 @@ public class StudentQ
       }
     }
     return wasRemoved;
+  }
+
+  public boolean addMentorAt(MentorQ aMentor, int index)
+  {  
+    boolean wasAdded = false;
+    if(addMentor(aMentor))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMentors()) { index = numberOfMentors() - 1; }
+      mentors.remove(aMentor);
+      mentors.add(index, aMentor);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveMentorAt(MentorQ aMentor, int index)
+  {
+    boolean wasAdded = false;
+    if(mentors.contains(aMentor))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfMentors()) { index = numberOfMentors() - 1; }
+      mentors.remove(aMentor);
+      mentors.add(index, aMentor);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addMentorAt(aMentor, index);
+    }
+    return wasAdded;
   }
 
   public void delete()

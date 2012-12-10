@@ -4,6 +4,7 @@
 package cruise.tracer.test;
 import cruise.util.*;
 
+// line 6 "../../../../src/TestHarnessTracer.ump"
 public class PersonA
 {
 

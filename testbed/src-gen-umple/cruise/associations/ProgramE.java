@@ -3,6 +3,7 @@
 
 package cruise.associations;
 
+// line 77 "../../../src/TestHarnessAssociations.ump"
 public class ProgramE
 {
 

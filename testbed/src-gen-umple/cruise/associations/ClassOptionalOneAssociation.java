@@ -3,6 +3,7 @@
 
 package cruise.associations;
 
+// line 625 "../../../src/TestHarnessAssociations.ump"
 public class ClassOptionalOneAssociation
 {
 

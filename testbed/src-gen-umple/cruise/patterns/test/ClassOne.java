@@ -3,6 +3,7 @@
 
 package cruise.patterns.test;
 
+// line 55 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class ClassOne
 {
 

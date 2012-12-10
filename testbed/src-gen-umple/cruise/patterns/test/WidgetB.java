@@ -3,6 +3,7 @@
 
 package cruise.patterns.test;
 
+// line 16 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetB
 {
 
