@@ -26,18 +26,18 @@ public class PapyrusGeneratorTest extends TemplateTest
   {
     super.tearDown();
     
-    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/model.uml");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/model.di");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/model.notation");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/papyrus/.project");
-    File destroyDirPap = new File(pathToInput + "/papyrus/papyrus");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/model.uml");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/model.di");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/model.notation");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/.project");
+    File destroyDirPap = new File(pathToInput + "/papyrus/Papyrus");
     destroyDirPap.delete();
     
-    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/model.uml");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/model.di");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/model.notation");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/associations/.project");
-    File destroyDirAss = new File(pathToInput + "/papyrus/associations");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/model.uml");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/model.di");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/model.notation");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/.project");
+    File destroyDirAss = new File(pathToInput + "/papyrus/Associations");
     destroyDirAss.delete();
     
   }
@@ -49,10 +49,10 @@ public class PapyrusGeneratorTest extends TemplateTest
     assertUmpleTemplateFor("papyrus/Papyrus.ump","papyrus/Papyrus.uml.txt");
     
     //ensure all required files created appropriately
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/model.uml")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/model.di")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/model.notation")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/papyrus/.project")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/model.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/model.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/model.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/.project")).exists());
     
   }  
 
@@ -63,10 +63,10 @@ public class PapyrusGeneratorTest extends TemplateTest
     assertUmpleTemplateFor("papyrus/Associations.ump","papyrus/Associations.uml.txt");
     
     //ensure all required files created appropriately
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/model.uml")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/model.di")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/model.notation")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/associations/.project")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/model.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/model.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/model.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/.project")).exists());
   }  
   
 }
