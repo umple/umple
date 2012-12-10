@@ -20,6 +20,9 @@ class UmpleConsoleMain
     depend java.util.Arrays;
     depend joptsimple.*;
     depend java.io.IOException;
+    depend java.io.*;
+    depend java.util.Scanner;
+    depend java.util.regex.*;
 
     public static String console;
     private static OptionParser optparser;
@@ -61,6 +64,31 @@ class UmpleConsoleMain
             if(!model.isShouldGenerate())
                 System.exit(-1);
         }
+        catch(java.lang.RuntimeException rte) {
+          System.err.println("Umple compiler error. Stack trace follows");
+          
+          String generatedSourcePath = System.getenv("GeneratedSourcePath");
+          if (generatedSourcePath == null) {
+            System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to where the generated Java is located");
+          }
+          else {
+            System.err.println("Using GeneratedSourcePath="+generatedSourcePath);
+          }
+          
+          StackTraceElement [] st = rte.getStackTrace();
+          StackTraceElement ust = null;
+          for (int i=0;i<st.length;i++) {
+            System.err.println(st[i].toString());
+            if(generatedSourcePath != null) {
+              ust = javaToUmpleStackTrace(st[i], generatedSourcePath);
+              if(ust != null) {
+                System.err.println("  => "+ust.getFileName()+":"+ust.getLineNumber());
+              }
+            }
+          }
+
+          System.exit(-1);
+        }
 
         // Compile success means the output was generated
 		boolean compileSuccess = model.getLastResult().getWasSuccess();
@@ -74,7 +102,53 @@ class UmpleConsoleMain
 
         String successWord = compileSuccess ? "Success! " : "";
         println(successWord + "Processed "+ filename +".");
+    }
 
+    // Translate the java stack trace line information into the corresponding Umple line
+    private static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
+      StackTraceElement newSt;
+      String javaFileName = javaStack.getFileName();
+      String umpleFileName="Did not find line = information in Java code";
+      int javaLineNumber = javaStack.getLineNumber();;
+      int umpleLineNumber=1000000;
+      
+      // TODO -- need to test on WIndows with separator characters
+      // TODO -- make it work with paths and to walk up directories
+      Scanner sc;
+      String fileToScan=generatedSourcePath+System.getProperty("file.separator")+javaFileName;
+      try {
+        sc = new Scanner(new BufferedReader(new FileReader(fileToScan)));
+      }
+      catch (FileNotFoundException fne) {
+        return null;
+      }
+
+      String foundLine;
+      Pattern linePattern = Pattern.compile(
+        ".*line ([0-9]+) (.*)"
+        );
+      MatchResult result;
+      
+      for (int lineNum=1; sc.hasNextLine(); lineNum++) {
+        foundLine = sc.nextLine();
+        
+        // if foundLine is a line directive reset the line directive counter
+        Matcher m = linePattern.matcher(foundLine);
+        if(m.matches()) {
+          umpleFileName = m.group(2);
+          umpleLineNumber = Integer.parseInt(m.group(1))-1;
+        }
+        else {
+          umpleLineNumber++;
+        }
+
+        if(lineNum == javaLineNumber) {
+          break;         
+        }
+      }
+            
+      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName, umpleLineNumber);
+     
     }
 
     private static void println(String output)
