@@ -9,7 +9,7 @@ package cruise.umple.compiler;
  * This class should go and instead AssociationEnd should be the member variable
  */
 // line 321 "../../../../src/Umple.ump"
-// line 877 "../../../../src/Umple_Code.ump"
+// line 884 "../../../../src/Umple_Code.ump"
 public class UmpleVariable
 {
 
@@ -115,7 +115,7 @@ public class UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 879 ../../../../src/Umple_Code.ump
+  // line 886 ../../../../src/Umple_Code.ump
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)

@@ -8,7 +8,7 @@ package cruise.umple.compiler;
  * Create a derived attribute otherend (the other AssociationEnd)
  */
 // line 386 "../../../../src/Umple.ump"
-// line 1035 "../../../../src/Umple_Code.ump"
+// line 1042 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
 
@@ -305,7 +305,7 @@ public class AssociationEnd
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1038 ../../../../src/Umple_Code.ump
+  // line 1045 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()

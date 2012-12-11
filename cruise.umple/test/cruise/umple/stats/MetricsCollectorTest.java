@@ -128,7 +128,7 @@ public class MetricsCollectorTest
     String[] logs = collector.getLogs();
     
     Assert.assertEquals(1,logs.length);
-    Assert.assertEquals("Unable to read content: unknown.ump", logs[0]);
+    Assert.assertEquals("Error on line 1 of file \"unknown.ump\":\nFile 'unknown.ump' referred to in use statement was not found\n: unknown.ump", logs[0]);
   }
   
 }

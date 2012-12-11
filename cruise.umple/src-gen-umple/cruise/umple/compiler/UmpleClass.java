@@ -10,7 +10,7 @@ import java.util.*;
  */
 // line 245 "../../../../src/Umple.ump"
 // line 90 "../../../../src/Trace.ump"
-// line 484 "../../../../src/Umple_Code.ump"
+// line 491 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleElement
 {
 
@@ -1440,7 +1440,7 @@ public class UmpleClass extends UmpleElement
    public UmpleClass(String name)  {
 this(name, null);
   }
-// line 492 ../../../../src/Umple_Code.ump
+// line 499 ../../../../src/Umple_Code.ump
   public List<StateMachine> getAllStateMachines()
   {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();

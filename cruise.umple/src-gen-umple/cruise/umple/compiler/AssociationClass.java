@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 // line 312 "../../../../src/Umple.ump"
-// line 476 "../../../../src/Umple_Code.ump"
+// line 483 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
 

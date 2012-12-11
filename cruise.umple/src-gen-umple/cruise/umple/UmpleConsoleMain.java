@@ -100,7 +100,7 @@ public class UmpleConsoleMain
           
           String generatedSourcePath = System.getenv("GeneratedSourcePath");
           if (generatedSourcePath == null) {
-            System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to where the generated Java is located");
+            System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to where the generated Java is located:\ne.g. setenv GeneratedSourcePath ~/umple/cruise.umple/src-gen-umple");
           }
           else {
             System.err.println("Using GeneratedSourcePath="+generatedSourcePath);

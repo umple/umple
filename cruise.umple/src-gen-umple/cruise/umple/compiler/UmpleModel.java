@@ -784,10 +784,17 @@ public class UmpleModel
 
   public void run()
   {
+    boolean failed = false;
+    String input;
     UmpleParser parser = new UmpleInternalParser(this);
-    String input = SampleFileWriter.readContent(getUmpleFile().getFile());
+    try {
+      input = SampleFileWriter.readContent(getUmpleFile().getFile());
+    }
+    catch (RuntimeException e){
+      input = "use "+getUmpleFile().getFileName()+";\n";
+    }
     ParseResult result = parser.parse("program", input);
-    boolean failed = !result.getWasSuccess();
+    failed = !result.getWasSuccess();
     lastResult = result;
 
     if(!failed)
