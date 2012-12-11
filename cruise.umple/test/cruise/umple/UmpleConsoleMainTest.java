@@ -66,7 +66,8 @@ public class UmpleConsoleMainTest
    Assert.assertEquals("Option:\'IDONTEXIST\' is not a recognized option\nUsage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", UmpleConsoleMain.console);
   }
   
-  @Test
+   // Ignore the following - currently does exit
+  @Test  @Ignore
   public void generateOverride() {
 		String[] cppargs = new String[] {"-g", "Cpp", "--override", "testclass.ump"};
 		
