@@ -14,6 +14,7 @@ public class Event
 
   //Event Attributes
   private String name;
+  private String args;
   private boolean isTimer;
   private boolean autoTransition;
   private String timerInSeconds;
@@ -32,6 +33,7 @@ public class Event
     cachedHashCode = -1;
     canSetName = true;
     name = aName;
+    args = null;
     isTimer = false;
     autoTransition = false;
     timerInSeconds = "0";
@@ -47,6 +49,14 @@ public class Event
     boolean wasSet = false;
     if (!canSetName) { return false; }
     name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setArgs(String aArgs)
+  {
+    boolean wasSet = false;
+    args = aArgs;
     wasSet = true;
     return wasSet;
   }
@@ -86,6 +96,11 @@ public class Event
   public String getName()
   {
     return name;
+  }
+
+  public String getArgs()
+  {
+    return args;
   }
 
   public boolean getIsTimer()

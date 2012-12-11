@@ -809,6 +809,26 @@ public class UmpleParserStateMachineTest
     Assert.assertNotNull(a1);
     Assert.assertEquals("blabla", a1.getActionCode());
   }
+
+  
+  @Test
+  public void eventWithArgument()
+  {
+	  assertParse("100_eventWithArgument.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][actionCode:setBrightness(lightval)][stateName:Off][transition][event:flipSwitch][stateName:Dimmed][state][stateName:Dimmed][transition][event:entry][guard][guardCode:dimmer > 99][stateName:On][transition][event:flipSwitch][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][actionCode:setBrightness(lightval)][stateName:Dimmed][state][stateName:On][transition][event:flipSwitch][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][actionCode:setBrightness(lightval)][stateName:Dimmed]");
+	  UmpleClass c = model.getUmpleClass("LightFixture");
+	    
+	  StateMachine sm = c.getStateMachine(0);
+	  State off = sm.getState(0);
+	  Event turnDimmer = off.getTransition(0).getEvent();
+	  Event flipSwitch = off.getTransition(1).getEvent();
+	  Assert.assertEquals("Integer lightval", turnDimmer.getArgs());
+	  Assert.assertEquals("", flipSwitch.getArgs());
+  }
+  
+  @Test
+  public void eventsWithInconsistentArguments(){
+	  assertFailedParse("100_eventWithInconsistentArguments.ump", new Position("100_eventWithInconsistentArguments.ump", 12,8,226), 51);
+  }
   
   @Test
   public void transitionsWithUndeclaredState(){

@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
-// line 96 "../../../../src/StateMachine.ump"
+// line 97 "../../../../src/StateMachine.ump"
 public class Guard
 {
 

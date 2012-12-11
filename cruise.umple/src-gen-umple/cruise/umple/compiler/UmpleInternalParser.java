@@ -2423,7 +2423,7 @@ this("UmpleInternalParser", aModel);
 
     String eventName = transitionToken.getValue("event");
     String eventTimerAmount = transitionToken.getValue("timer");
-
+	String eventArgs = transitionToken.getValue("eventArgs");
     if (eventName == null && eventTimerAmount != null)
     {
       eventName = fromState.newTimedEventName(nextState);
@@ -2450,6 +2450,10 @@ this("UmpleInternalParser", aModel);
       StateMachine sm = fromState.getStateMachine();
       UmpleClass uClass = sm.getUmpleClass();
       Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+      if(event.getArgs() != null && event.getArgs().equals(eventArgs == null?"":eventArgs) == false){
+      	setFailedPosition(transitionToken.getPosition(), 51, eventArgs);
+      }
+      event.setArgs(eventArgs == null?"":eventArgs);
       if (eventTimerAmount != null)
       {
         event.setIsTimer(true);

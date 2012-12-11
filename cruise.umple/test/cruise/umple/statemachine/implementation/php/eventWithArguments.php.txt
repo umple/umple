@@ -1,0 +1,141 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.2289 modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture Attributes
+  private $brightness;
+
+  //LightFixture State Machines
+  private static $BulbOff = 1;
+  private static $BulbDimmed = 2;
+  private static $BulbOn = 3;
+  private $bulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->brightness = 0;
+    $this->setBulb(self::$BulbOff);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setBrightness($aBrightness)
+  {
+    $wasSet = false;
+    $this->brightness = $aBrightness;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getBrightness()
+  {
+    return $this->brightness;
+  }
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    elseif ($this->bulb == self::$BulbDimmed) { return "BulbDimmed"; }
+    elseif ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    return null;
+  }
+
+  public function turnDimmer(Integer lightval)
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOff)
+    {
+      setBrightness(lightval)
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulb == self::$BulbDimmed)
+    {
+      setBrightness(lightval)
+      $this->setBulb(self::$BulbDimmed);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulb == self::$BulbOn)
+    {
+      setBrightness(lightval)
+      $this->setBulb(self::$BulbDimmed);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function flipSwitch()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbDimmed);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulb == self::$BulbDimmed)
+    {
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulb == self::$BulbOn)
+    {
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function entry()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbDimmed)
+    {
+      if (dimmer > 99)
+      {
+        $this->setBulb(self::$BulbOn);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

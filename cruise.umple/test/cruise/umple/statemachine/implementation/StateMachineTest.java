@@ -178,6 +178,12 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
 
   @Test
+  public void eventWithArguments(){
+	  assertUmpleTemplateFor("eventWithArguments.ump",languagePath + "/eventWithArguments."+ languagePath +".txt","LightFixture");
+  }
+  
+  
+  @Test
   public void autoEventTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
     Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");

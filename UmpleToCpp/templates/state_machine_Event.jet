@@ -76,7 +76,7 @@
   String scope = e.getIsInternal() || e.isAutoTransition() ? "" : "";
   String outputCases = allCases.toString().trim();
 %>
-  <%=scope%>bool <%=gen.translate("type",uClass)%>::<%=gen.translate("eventMethod",e)%>()
+  <%=scope%>bool <%=gen.translate("type",uClass)%>::<%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
   {
     bool wasEventProcessed = false;
 

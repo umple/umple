@@ -25,6 +25,7 @@
 24: 2, http://umple.org/PageBeingDeveloped.html, Association '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
 25: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' does not contain variable {1} ;
 50: 4, http://umple.org/PageBeingDeveloped.html, State '{0}' has not been declared ;
+51: 2, http://umple.org/PageBeingDeveloped.html, Event arguments '{0}'are inconsistent with previous declaration ; 
 100: 2, http://umple.org/PageBeingDeveloped.html, Class name '{0}' must be alphanumeric, starting with an alpha character, and with _ allowed.  ;
 101: 4, http://umple.org/PageBeingDeveloped.html, Class name '{0}' should start with a capital letter ;
 110: 2, http://umple.org/PageBeingDeveloped.html, Interface name '{0}' must be alphanumeric, starting with an alpha character, and with _ allowed ;

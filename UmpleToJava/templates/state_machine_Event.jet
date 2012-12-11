@@ -119,7 +119,7 @@
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
 %>
-  <%= scope %> boolean <%=gen.translate("eventMethod",e)%>()
+  <%= scope %> boolean <%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
   {
     boolean wasEventProcessed = false;
     <%= eventOutput %>

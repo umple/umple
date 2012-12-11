@@ -33,9 +33,10 @@ autoTransitionBlock- : [[guard]]? -> [[action]]? [stateName] ; |  [[guard]]? [[a
 // The order of guard and event definition can also be interchanged
 transition : [[guard]]? [[eventDefinition]]? -> [[action]]? [stateName] ; | [[guard]]? [[eventDefinition]]? [[action]]? -> [stateName] ; | [[eventDefinition]]? [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]]? [[guard]]? [[action]]? -> [stateName] ; 
 
-eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [[eventWithArgs]] | [~event]
 afterEveryEvent- : afterEvery -( [timer] -)
 afterEvent- : after -( [timer] -)
+eventWithArgs- : [event] -( [**eventArgs] -)
 
 // An action can be executed on a transition, or on entry or exit
 action : / { [**actionCode] } 
