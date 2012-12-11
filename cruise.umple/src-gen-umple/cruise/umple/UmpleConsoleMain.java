@@ -79,7 +79,7 @@ public class UmpleConsoleMain
             if(!model.isShouldGenerate())
                 System.exit(-1);
         }
-        catch(java.lang.RuntimeException rte) {
+        catch(Exception ex) {
           System.err.println("Umple compiler error. Stack trace follows");
           
           String generatedSourcePath = System.getenv("GeneratedSourcePath");
@@ -89,15 +89,15 @@ public class UmpleConsoleMain
           else {
             System.err.println("Using GeneratedSourcePath="+generatedSourcePath);
           }
-          
-          StackTraceElement [] st = rte.getStackTrace();
+          System.err.println("Exception "+ex.getClass().getName()+" in");
+          StackTraceElement [] st = ex.getStackTrace();
           StackTraceElement ust = null;
           for (int i=0;i<st.length;i++) {
             System.err.println(st[i].toString());
             if(generatedSourcePath != null) {
               ust = javaToUmpleStackTrace(st[i], generatedSourcePath);
               if(ust != null) {
-                System.err.println("  => "+ust.getFileName()+":"+ust.getLineNumber());
+                System.err.println("   => "+ust.getFileName()+":"+ust.getLineNumber());
               }
             }
           }
@@ -125,12 +125,31 @@ public class UmpleConsoleMain
       String javaFileName = javaStack.getFileName();
       String umpleFileName="Did not find line = information in Java code";
       int javaLineNumber = javaStack.getLineNumber();;
-      int umpleLineNumber=1000000;
+      int umpleLineNumber=1000000; // Dummy so errors can be noticed
+      String fullClassPath = javaStack.getClassName();
       
-      // TODO -- need to test on WIndows with separator characters
-      // TODO -- make it work with paths and to walk up directories
+      // TODO -- need to test on Windows
+      
+      // Walk up the class name packages to find the Java file
+      String fileToScan=generatedSourcePath;
+      String dirs[] = fullClassPath.split("\\.",-1);
+      int walks = 0; // Depth of tree we will walk
+      for (int d=0; d<dirs.length; d++) {
+        String trialFile = fileToScan+System.getProperty("file.separator")+dirs[d];
+        File f = new File(trialFile);
+        if(!f.isDirectory()) {
+          break; // We have gone too far
+        }
+        fileToScan = trialFile;
+        walks++;
+      }
+      
+      // At this point fileToScan is either invalid or contains the directory of the
+      // file we need 
+      fileToScan=fileToScan+System.getProperty("file.separator")+javaFileName;
+
+      // We have hopefully found the file, now open it
       Scanner sc;
-      String fileToScan=generatedSourcePath+System.getProperty("file.separator")+javaFileName;
       try {
         sc = new Scanner(new BufferedReader(new FileReader(fileToScan)));
       }
@@ -139,9 +158,7 @@ public class UmpleConsoleMain
       }
 
       String foundLine;
-      Pattern linePattern = Pattern.compile(
-        ".*line ([0-9]+) (.*)"
-        );
+      Pattern linePattern = Pattern.compile(".*line ([0-9]+) (.*)");
       MatchResult result;
       
       for (int lineNum=1; sc.hasNextLine(); lineNum++) {
@@ -159,6 +176,15 @@ public class UmpleConsoleMain
 
         if(lineNum == javaLineNumber) {
           break;         
+        }
+      }
+      
+      // If umpleFileName has leading "../" remove as many of them as there were 
+      // levels that we walked up
+      String prefix = ".."+System.getProperty("file.separator");
+      for(int w=0; w<walks; w++) {
+        if(umpleFileName.startsWith(prefix)) {
+          umpleFileName = umpleFileName.substring(3,umpleFileName.length());
         }
       }
             
