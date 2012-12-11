@@ -12,7 +12,7 @@ import java.io.*;
  * TODO: Code smell - rename?
  * Text to diagram merging tool used by UmpleOnline
  */
-// line 377 "../../../src/Main_Code.ump"
+// line 383 "../../../src/Main_Code.ump"
 public class PlaygroundMain
 {
 
@@ -38,7 +38,7 @@ public class PlaygroundMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 385 ../../../src/Main_Code.ump
+  // line 391 ../../../src/Main_Code.ump
   public static String console = "";
 
     public static void main(String[] args)

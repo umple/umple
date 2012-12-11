@@ -69,15 +69,31 @@ public class UmpleConsoleMain
             return;
         }
 
-        try
-        {
-            model.run();
-        }
-        catch(UmpleCompilerException e)
-        {
-            printerr(e.getMessage());
-            if(!model.isShouldGenerate())
-                System.exit(-1);
+        try {
+          try
+          {
+              model.run();
+          }
+          catch(UmpleCompilerException e)
+          {
+              printerr(e.getMessage());
+              if(!model.isShouldGenerate())
+                  System.exit(-1);
+          }
+          
+          // Compile success means the output was generated
+          boolean compileSuccess = model.getLastResult().getWasSuccess();
+
+          // The "c" option causes an attempt to compile the resulting base language
+          // code. Not completely tested at current time.
+          if (compileSuccess && optset.has("c")) {
+              CodeCompiler compiler = new CodeCompiler();
+              compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
+          }
+
+          String successWord = compileSuccess ? "Success! " : "";
+          println(successWord + "Processed "+ filename +".");
+         
         }
         catch(Exception ex) {
           System.err.println("Umple compiler error. Stack trace follows");
@@ -104,23 +120,11 @@ public class UmpleConsoleMain
 
           System.exit(-1);
         }
-
-        // Compile success means the output was generated
-		boolean compileSuccess = model.getLastResult().getWasSuccess();
-
-        // The "c" option causes an attempt to compile the resulting base language
-        // code. Not completely tested at current time.
-        if (compileSuccess && optset.has("c")) {
-            CodeCompiler compiler = new CodeCompiler();
-            compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
-        }
-
-        String successWord = compileSuccess ? "Success! " : "";
-        println(successWord + "Processed "+ filename +".");
+        System.exit(0);
     }
 
     // Translate the java stack trace line information into the corresponding Umple line
-    private static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
+    public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
       StackTraceElement newSt;
       String javaFileName = javaStack.getFileName();
       String umpleFileName="Did not find line = information in Java code";
@@ -147,6 +151,8 @@ public class UmpleConsoleMain
       // At this point fileToScan is either invalid or contains the directory of the
       // file we need 
       fileToScan=fileToScan+System.getProperty("file.separator")+javaFileName;
+      
+      // System.err.println("!!"+fileToScan); //debug
 
       // We have hopefully found the file, now open it
       Scanner sc;
