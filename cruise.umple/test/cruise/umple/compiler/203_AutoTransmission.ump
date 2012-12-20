@@ -1,0 +1,34 @@
+Class Car
+{
+    transmission;
+{
+    Neutral{
+    init;
+    selectreverse -> Reverse;
+    selectSecond -> Second;
+    selectDrive -> Driving;
+    selectFirst -> First;    
+    }
+    
+    Reverse{
+    selectNeutral -> Neutral;
+    }
+
+    Driving{
+        First{
+        init;
+        reschSecondSpeed [driveSelected] -> Second;
+        }
+        
+        Second{
+        dropBelowSecondSpeed [driveSelected] -> Second;
+        selectSecond ->Second;
+        reachThirdSpeed [driveSelected]-> Third;
+        }
+        
+        Third{
+        dropBelowThirdSpeed -> Second;
+        }
+    }
+}
+}

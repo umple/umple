@@ -1,0 +1,35 @@
+Tracing Attributes with Occurrences
+Tracing
+noreferences
+
+@@description
+<p>
+MOTL provides the functionality of tracing an attribute for a certain number of occurrences by using the "for" keyword.
+</p>
+
+@@syntax
+[[traceFor]]
+
+@@example
+
+// this example traces attribute name whenever its value is changed for 5 times 
+
+class Student
+{
+  name;
+  trace name for 5;
+}
+
+@@endexample
+
+@@example
+
+// this example traces attribute name whenever its value is accessed for 5 times 
+
+class Student
+{
+  name;
+  trace get name for 5;
+}
+
+@@endexample

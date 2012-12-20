@@ -1,0 +1,1794 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Methods for the metamodel found in Umple.ump. Most of these are mixins.
+
+ */
+
+
+namespace cruise.umple.compiler;
+
+class UmpleModel
+{
+  public List<UmpleElement> getUmpleElements()
+  {
+    List<UmpleElement> all = new ArrayList<UmpleElement>();
+    all.addAll(getUmpleClasses());
+    all.addAll(getUmpleInterfaces());
+    return all;
+  }
+
+  public UmpleInterface addUmpleInterface(String name)
+  {
+    UmpleInterface newInterface = getUmpleInterface(name);
+    if (newInterface == null)
+    {
+      newInterface = new UmpleInterface(name);
+      addUmpleInterface(newInterface);
+    }
+    return newInterface;
+  }
+
+  public UmpleClass addUmpleClass(String name)
+  {
+    UmpleClass newClass = getUmpleClass(name);
+    if (newClass == null)
+    {
+      newClass = new UmpleClass(name, this);
+      addUmpleClass(newClass);
+    }
+    return newClass;
+  }
+
+  public Association getAssociation(String name)
+  {
+    for (Association a : associations)
+    {
+      if (a.getName().equals(name))
+      {
+        return a;
+      }
+    }
+    return null;
+  }
+
+  public AssociationClass addAssociationClass(String className)
+  {
+    AssociationClass newClass = (AssociationClass) getUmpleClass(className);
+    if (newClass == null)
+    {
+      newClass = new AssociationClass(className);
+      addUmpleClass(newClass);
+    }
+    return newClass;
+  }
+
+  public void addGenerate(String lang)
+  {
+    addGenerate(new GenerateTarget(lang, null));
+  }
+
+  public void addGenerate(Collection <?extends GenerateTarget> c)
+  {
+    generates.addAll(c);
+  }
+
+  public String getDefaultGenerate()
+  {
+    // Note that this method should be getDefaultGenerateLanguage
+    // To avoid rippling changes throughout the code, the name is left as is 
+    if (numberOfGenerates() == 0)
+    {
+      return null;
+    }
+    else
+    {
+      return getGenerate(0).getLanguage();
+    }
+  }
+
+  public String getDefaultGeneratePath()
+  {
+    if (numberOfGenerates() == 0)
+    {
+      return null;
+    }
+    else
+    {
+      return getGenerate(0).getPath() == null ? "./" : getGenerate(0).getPath();
+    }
+  }
+
+  public void clearGenerates()
+  {
+    generates.clear();
+  }
+
+  public UmpleClass getUmpleClass(String name)
+  {
+    for (UmpleClass aClass : getUmpleClasses())
+    {
+      if (aClass.getName().equals(name))
+      {
+        return aClass;
+      }
+    }
+    return null;
+  }
+
+  public UmpleInterface getUmpleInterface(String name)
+  {
+    for (UmpleInterface aInterface : getUmpleInterfaces())
+    {
+      if (aInterface.getName().equals(name))
+      {
+        return aInterface;
+      }
+    }
+    return null;
+  }
+
+
+  public StateMachine getStateMachineDefinition(String name)
+  {
+    for (StateMachine aStateMachine : getStateMachineDefinitions())
+    {
+      if (aStateMachine.getName().equals(name))
+      {
+        return aStateMachine;
+      }
+    }
+    return null;
+  }
+
+  public void run()
+  {
+    boolean failed = false;
+    String input;
+    UmpleParser parser = new UmpleInternalParser(this);
+    try {
+      input = SampleFileWriter.readContent(getUmpleFile().getFile());
+    }
+    catch (RuntimeException e){
+      input = "use "+getUmpleFile().getFileName()+";\n";
+    }
+    ParseResult result = parser.parse("program", input);
+    failed = !result.getWasSuccess();
+    lastResult = result;
+
+    if(!failed)
+      result = parser.analyze(getShouldGenerate());
+
+    failed |= !result.getWasSuccess();
+
+    if(failed || result.getHasWarnings())
+      throw new UmpleCompilerException(result.toString(),null);
+  }  
+
+  // Generates the actual code
+  public void generate()
+  {
+    try
+    {
+      for (GenerateTarget target : getGenerates())
+      {
+        // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
+        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
+
+        Class<?> classDefinition = Class.forName(className);
+        CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
+
+        // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
+        generator.setModel(this);
+
+        generator.setOutput(target.getPath());
+        generator.generate();
+      }
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("Unable to generate code\n",e);
+    }
+  }
+
+  public Coordinate getDefaultClassPosition(int numDefaults)
+  {
+    int xIndex  = 0;
+    int yIndex = 0;
+    int yOffset = 0;
+    int xOffset = 0;
+
+    xIndex = (numDefaults-1) / (maxYLevels);
+    yIndex = (numDefaults-1) % (maxYLevels);
+    yOffset = (yIndex * levelOffset.getY()) + initialOffset.getY();
+    xOffset = (xIndex * levelOffset.getX()) + initialOffset.getX();
+
+    return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
+  }
+
+  public Coordinate[] getDefaultAssociationPosition(Association a)
+  {
+    Coordinate[] defaults = new Coordinate[2];
+    int offsetY = offsetFromEdge.getX();
+    int offsetX = offsetFromEdge.getY();
+
+    String classOne = a.getEnd(0).getClassName();
+    String classTwo = a.getEnd(1).getClassName();
+    Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
+    Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
+
+    if (classOne.equals(classTwo))
+    {
+      return getDefaultReflexiveAssociationPosition(a);
+    }
+
+    int num = 1;
+    String tempClass1 = "";
+    String tempClass2 = "";
+    for (Association temp : getAssociations())
+    {
+      tempClass1 = temp.getEnd(0).getClassName();
+      tempClass2 = temp.getEnd(1).getClassName();
+
+      if (temp.getName().equals(a.getName()) &&
+          tempClass1.equals(classOne)        && 
+          tempClass2.equals(classTwo)) 
+      {
+        break; 
+      }
+
+      if (tempClass1.equals(classOne) && tempClass2.equals(classTwo)){ ++num; break; }
+      else if (tempClass1.equals(classTwo) && tempClass2.equals(classOne)){ ++num; break; }
+    }
+
+    Coordinate classOneNoX = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+    Coordinate classTwoNoX = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+    Coordinate classOneNoY = new Coordinate(classOnePos.getX(),classOnePos.getY(),classOnePos.getWidth(),classOnePos.getHeight());
+    Coordinate classTwoNoY = new Coordinate(classTwoPos.getX(),classTwoPos.getY(),classTwoPos.getWidth(),classTwoPos.getHeight());
+    classOneNoX.setX(0);
+    classTwoNoX.setX(0);
+    classOneNoY.setY(0);
+    classTwoNoY.setY(0);
+    String whereVert = classOneNoX.whereIs(classTwoNoX);
+    String whereHorz = classOneNoY.whereIs(classTwoNoY);
+
+    // alternative 1: left/right wall of class one to left/right wall of class two
+    int offsetOneX = whereHorz.equals("right")? classOnePos.getWidth() : 0;
+    int offsetTwoX = whereHorz.equals("right")? 0 : classTwoPos.getWidth();
+    int offsetOneY = num > 1 ? (num+1)*offsetY : offsetY;
+    int offsetTwoY = num > 1 ? (num+1)*offsetY : offsetY;
+    Coordinate offsetOne = new Coordinate(offsetOneX, offsetOneY, 0, 0);
+    Coordinate offsetTwo = new Coordinate(offsetTwoX, offsetTwoY, 0, 0);
+    Coordinate start = new Coordinate(classOnePos.getX() + offsetOne.getX(),
+        classOnePos.getY() + offsetOne.getY(),
+        0,0);
+    Coordinate end = new Coordinate(  classTwoPos.getX() + offsetTwo.getX(),
+        classTwoPos.getY() + offsetTwo.getY(),
+        0,0);
+
+    int distance = start.distanceTo(end);
+
+    // alternative 2: top/bottom wall of class one to top/bottom wall of class two
+    int altXOne = num*offsetX;
+    int altXTwo = num*offsetX;
+    int altYOne = whereVert.equals("top")? 0 : classOnePos.getHeight();
+    int altYTwo = whereVert.equals("top")? classTwoPos.getHeight() : 0;
+    Coordinate altOffsetOne = new Coordinate(altXOne, altYOne, 0, 0);
+    Coordinate altOffsetTwo = new Coordinate(altXTwo, altYTwo, 0, 0);
+    Coordinate altStart = new Coordinate(classOnePos.getX() + altOffsetOne.getX(),
+        classOnePos.getY() + altOffsetOne.getY(),
+        0,0);
+    Coordinate altEnd = new Coordinate(  classTwoPos.getX() + altOffsetTwo.getX(),
+        classTwoPos.getY() + altOffsetTwo.getY(),
+        0,0);
+
+    int altDistance = altStart.distanceTo(altEnd);
+
+    // choose alternative that generates the shortest line
+    if (altDistance < distance)
+    {
+      defaults[0] = altOffsetOne;
+      defaults[1] = altOffsetTwo;
+    } 
+    else
+    {
+      defaults[0] = offsetOne;
+      defaults[1] = offsetTwo;
+    }
+
+    return defaults;
+  }
+
+  private Coordinate[] getDefaultReflexiveAssociationPosition(Association a)
+  {
+    Coordinate[] defaults = new Coordinate[2];
+    String name  = a.getEnd(0).getClassName();
+    Coordinate position = getUmpleClass(name).getCoordinates();
+
+    // determine which corner the association should be positioned at
+    int index = 0;
+    for (int i=0; i < numberOfAssociations(); i++)
+    {
+      Association current = getAssociation(i);
+      if (current.getEnd(0).getClassName().equals(name) && current.getEnd(1).getClassName().equals(name))
+      {    
+        if (current.numberOfPositions() > 0)
+        {
+          if (current.getPosition(0).getStatus().equals(Coordinate.Status.Defaulted))
+          {
+            index += 1;
+          }
+        }
+      }
+    }
+
+    Coordinate offsetOne = new Coordinate(0,0,0,0);
+    Coordinate offsetTwo = new Coordinate(0,0,0,0);
+
+    if (index % 4 == 0)
+    {
+      offsetOne.setX(reflexiveSegmentLength);
+      offsetOne.setY(position.getHeight());
+      offsetTwo.setX(0);
+      offsetTwo.setY(position.getHeight() - reflexiveSegmentLength);
+    }
+    else if (index % 4 == 1)
+    {
+      offsetOne.setX(position.getWidth() - reflexiveSegmentLength);
+      offsetOne.setY(position.getHeight());
+      offsetTwo.setX(position.getWidth());
+      offsetTwo.setY(position.getHeight() - reflexiveSegmentLength);
+    }
+    else if (index % 4 == 2)
+    {
+      offsetOne.setX(position.getWidth() - reflexiveSegmentLength);
+      offsetOne.setY(0);
+      offsetTwo.setX(position.getWidth());
+      offsetTwo.setY(reflexiveSegmentLength);
+    }
+    else
+    {
+      offsetOne.setX(reflexiveSegmentLength);
+      offsetOne.setY(0);
+      offsetTwo.setX(0);
+      offsetTwo.setY(reflexiveSegmentLength);
+    }
+
+    defaults[0] = offsetOne;
+    defaults[1] = offsetTwo;
+
+    return defaults;
+  }
+}
+
+class Key
+{
+  public boolean isProvided()
+  {
+    return isDefault || members.size() > 0;
+  }
+
+  public boolean isMember(UmpleVariable av)
+  {
+    if (av == null)
+    {
+      return false;
+    }
+    return indexOfMember(av.getName()) != -1;
+  }  
+}
+
+class Depend
+{
+  public String getPackageName()
+  {
+    if (name == null || "".equals(name))
+    {
+      return "";
+    }
+    int dotIndex = name.lastIndexOf(".");
+    return dotIndex >= 0 ? name.substring(0,dotIndex) : name;
+  }
+}
+
+class Method
+{  
+  public String toString()
+  {
+    StringBuffer methodBuffer = new StringBuffer();
+    methodBuffer.append(" " + this.getType()+ " " + this.getName());
+    methodBuffer.append("(");
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+    if (this.hasMethodParameters()){
+      for (MethodParameter aMethodParam : this.getMethodParameters()) 
+      {
+        paramName = aMethodParam.getName();
+        paramType = aMethodParam.getType();
+        isList = aMethodParam.getIsList() ? " [] " : " ";
+        aSingleParameter = paramType + isList + paramName;
+        parameters += aSingleParameter + ",";
+      }
+      finalParams = parameters.substring(0, parameters.length()-1);
+      methodBuffer.append(finalParams);
+    }
+    methodBuffer.append(")");
+    methodBuffer.append("  {");
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append(    this.getMethodBody().getExtraCode());
+    methodBuffer.append(System.getProperty("line.separator"));
+    methodBuffer.append("  }");
+    return methodBuffer.toString();
+  }
+}
+
+class UmpleInterface
+{
+  public boolean hasMethod(Method comparedMethod){
+    boolean isMethod=false;
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){	
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size()){
+          for (MethodParameter param: aMethod.getMethodParameters()){
+            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+              if (param.getType().equals(paramToCompare.getType())){
+                isMethod=true;			  
+              }
+              else{
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return isMethod;  
+  }
+
+}
+
+class UmpleElement
+{
+  public void appendExtraCode(String newCode)
+  {
+    appendExtraCode(newCode,true);
+  }
+
+  public void appendExtraCode(String newCode, boolean addNewline)
+  {
+    if (newCode == null) 
+    { 
+      return;
+    }
+    if (!"".equals(extraCode) && addNewline)
+    {
+      extraCode += System.getProperty("line.separator");
+    } 
+    extraCode += newCode;
+  }
+}
+
+class AssociationClass
+{
+  public AssociationClass(String name)
+  {
+    super(name);
+  }
+}
+
+class UmpleClass
+{
+
+  public UmpleClass(String name)
+  {
+    this(name, null);
+  }
+
+  public List<StateMachine> getAllStateMachines()
+  {
+    ArrayList<StateMachine> all = new ArrayList<StateMachine>();
+    all.addAll(getStateMachines());
+    for (StateMachine sm : getStateMachines())
+    {
+      all.addAll(sm.getNestedStateMachines());
+    }
+    return all;
+  }
+
+  public List<CodeInjection> getApplicableCodeInjections(String type, String method)
+  {  
+    ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
+    if (type == null || method == null)
+    {
+      return all;
+    }
+    String formattedMethod = StringFormatter.toUnderscore(method);
+
+    for (CodeInjection code : getCodeInjections())
+    {
+      if (code.getOperation() == null || !type.equals(code.getType()))
+      {
+        continue;
+      }
+
+      boolean isAllExcludes = true;
+      TriState isMatch = new TriState(false);
+      TriState isMatchOnExclude = new TriState(true);
+
+      String[] allOperations = code.getOperation().split(",");
+      for (String operation : allOperations)
+      {
+
+        boolean isNot = false;
+        if (operation.startsWith("!"))
+        {
+          isNot = true;
+          operation = operation.substring(1);
+        }
+        else
+        {
+          isAllExcludes = false;
+        }
+        isMatchOnExclude.setIsSet(true);
+
+        String regexOperation = StringFormatter.toUnderscore(operation);
+        regexOperation = regexOperation.replace("_*", "*");
+        regexOperation = regexOperation.replace("*", ".*");
+        boolean isCurrentMatch = formattedMethod.matches(regexOperation);
+
+        if (isNot && isCurrentMatch)
+        {
+          isMatch.setStatus(false);
+          isMatchOnExclude.setStatus(false);
+        }
+        else if (!isNot && isCurrentMatch)
+        {
+          isMatch.setStatus(true);
+        }
+      }
+
+      if ((isAllExcludes && isMatchOnExclude.isTrue()) || isMatch.isTrue()) 
+      {
+        all.add(code);
+      }
+    } 
+
+    return all;
+  }
+
+  public List<StateMachine> getStateMachines(Event e)
+  { 
+    List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
+    for (StateMachine sm : getAllStateMachines())
+    {
+      List<Event> allEvents = sm.getEvents();
+      if (allEvents.contains(e))
+      {
+        allStateMachines.add(sm);
+      }
+    }
+    return allStateMachines;
+  }
+
+  public List<Event> getEvents()
+  {
+    List<Event> allEvents = new ArrayList<Event>();
+    for (StateMachine sm : getAllStateMachines())
+    {
+      allEvents.addAll(sm.getEvents());
+    }
+
+    List<Event> allUniqueEvents = new ArrayList<Event>();
+    for (Event e : allEvents)
+    {
+      if (!allUniqueEvents.contains(e))
+      {
+        allUniqueEvents.add(e);
+      }
+    }
+    return allUniqueEvents;
+  }
+
+  public Event findOrCreateEvent(String aName)
+  {
+    if (aName == null)
+    {
+      return null;
+    }
+
+    for (StateMachine sm : getStateMachines())
+    {
+      for (Event aEvent : sm.getAllEvents())
+      {
+        if (aName.equals(aEvent.getName()))
+        {
+          return aEvent;
+        }
+      }
+    }
+    return new Event(aName);
+  }
+
+  public StateMachine getStateMachine(String name)
+  {
+    for (StateMachine sm : stateMachines)
+    {
+      if (sm.getName().equals(name))
+      {
+        return sm;
+      }
+    }
+    return null;
+  }
+
+  public void addReferencedPackage(String aNamespace)
+  {
+    if (indexOfNamespace(aNamespace) == -1 && !aNamespace.equals(getPackageName()))
+    {
+      addNamespace(aNamespace);
+    }
+  }
+
+  public AssociationVariable getAssociationVariable(String name)
+  {
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+
+  public AssociationVariable getAssociationVariableFor(UmpleClass uClass)
+  {
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getType().equals(uClass.getName()))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+
+
+  public boolean hasMethod(Method comparedMethod){
+    boolean isMethod=false;
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){	
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size()){
+          for (MethodParameter param: aMethod.getMethodParameters()){
+            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+              if (param.getType().equals(paramToCompare.getType())){
+                isMethod=true;			  
+              }
+              else{
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return isMethod;  
+  }
+
+  public Attribute getAttribute(String name)
+  {
+    for (Attribute av : attributes)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+
+  public boolean isRoot()
+  {
+    return extendsClass == null;
+  }
+
+  protected GeneratedClass gClass = null;
+  public GeneratedClass getGeneratedClass()
+  {
+    return gClass;
+  }
+
+  public GeneratedClass createGeneratedClass(UmpleModel model)
+  {
+    gClass = new GeneratedClass(model, this);
+    if (getExtendsClass() != null)
+    {
+      gClass.setParentClass(getExtendsClass().getGeneratedClass());
+    }
+    return getGeneratedClass();
+  }
+
+
+
+  public boolean hasUniqueIdentifier()
+  {
+    return getUniqueIdentifier() != null;
+  }
+
+  public boolean isAttributeClass()
+  {
+    for (AssociationVariable association : getAssociationVariables())
+    {
+      if (association.getIsNavigable())
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  /* @return true if this class is immutable, either because it has the "immutable" modifier or 
+   * because an ancestor class is immutable; false if this class neither has the "immutable" modifier 
+   * nor an immutable ancestor.
+   */
+  public boolean isImmutable()
+   {
+     return (iAmImmutable || ancestorIsImmutable);
+  }
+    
+  public boolean setImmutable()
+  {
+    boolean wasSet = false;
+    if (extendsClass != null && !ancestorIsImmutable) { return wasSet; }
+    
+    if (propagateImmutabilityToAllRelationships(true)) 
+    { 
+      iAmImmutable = true;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+  
+  private boolean propagateImmutabilityToAllRelationships(boolean isImmutable)
+  {
+    if (isImmutable)
+    {
+      if (this.hasStateMachines()) { return false; }
+
+      for (AssociationVariable av : associationVariables)
+      {
+        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+      }
+    }
+    
+    return notifySubclassesAncestorImmutable(isImmutable);
+  }
+  
+  private boolean notifySubclassesAncestorImmutable(boolean isImmutable)
+  {
+    boolean notified = true;
+    List<UmpleClass> wereSet = new ArrayList<UmpleClass>();
+    for (UmpleClass subclass : getSubclasses())
+    {
+      notified = subclass.setAncestorIsImmutable(isImmutable);
+      if (!notified)
+      {
+        for (UmpleClass wasSet : wereSet)
+        {
+          wasSet.setAncestorIsImmutable(!isImmutable);
+        }
+        return notified;
+      }
+    }
+    return notified;
+  }
+  
+  protected boolean setAncestorIsImmutable(boolean isImmutable)
+  {
+    if (iAmImmutable)
+    {
+      ancestorIsImmutable = isImmutable;
+      return true;
+    }
+    else
+    {
+      boolean success = propagateImmutabilityToAllRelationships(isImmutable);
+      if (success) { ancestorIsImmutable = isImmutable; }
+      return success;
+    }
+  }
+  
+  private boolean enforceImmutabilityInheritanceRules(UmpleClass newSuperClass)
+  {
+    // A subclass may not be immutable if the superclass is not immutable
+    if (iAmImmutable && newSuperClass != null && !newSuperClass.isImmutable()) { return false; }
+    boolean ancestorImmutable = (newSuperClass == null) ? false : newSuperClass.isImmutable();
+    return setAncestorIsImmutable(ancestorImmutable);
+  }
+
+  protected static boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, 
+      AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable)
+  {
+    boolean satisfied = false;
+    if (myAV == null || yourAV == null)
+    {
+      satisfied = true;
+    }
+    else if (!myClassImmutable && !yourClassImmutable && !"immutable".equals(myAV.getModifier()) && !"immutable".equals(yourAV.getModifier()))
+    {
+      satisfied = true;
+    } 
+    else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
+    {
+      //satisfied = false;
+    }
+    else if (myClass == null && yourClass == null)
+    {
+      satisfied = true;
+    }
+    else if (!yourAV.getIsNavigable() && (yourClass == null || yourClassImmutable))
+    {
+      if (yourClass != null && yourClass == myClass && myAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
+    }
+    else if (!myAV.getIsNavigable() && (myClass == null || myClassImmutable))
+    {
+      if (myClass != null && yourClass == myClass && yourAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
+    }
+    return satisfied;
+  }
+
+  protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myClassImmutable)
+  {
+    AssociationVariable relatedAV = myAV.getRelatedAssociation();
+    UmpleClass relatedClass = (relatedAV == null) ? null : relatedAV.getUmpleClass();
+    boolean relatedClassImmutable = (relatedClass == null) ? false : ((relatedClass == this) ? myClassImmutable : relatedClass.isImmutable());
+
+    return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
+  }
+
+}
+
+
+class UmpleVariable
+{
+  public String getUpperCaseName()
+  {
+    if (name == null || name.length() == 0)
+    {
+      return name;
+    }
+    else if (name.length() == 1)
+    {
+      return name.toUpperCase();
+    }
+    else
+    {
+      return name.toUpperCase().charAt(0) + name.substring(1);
+    }
+  }
+
+  public boolean isImmutable()
+  {
+    return "immutable".equals(modifier);
+  }	
+
+}
+
+class Attribute
+{
+  public boolean isConstant()
+  {
+    return "const".equals(getModifier());
+  }  
+
+  public boolean isPrimitive()
+  {
+    return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
+  }
+
+
+  public boolean isImmutable()
+  {
+    boolean varIsImmutable = super.isImmutable();
+    boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
+
+    return (varIsImmutable || classIsImmutable);
+  }
+}
+
+
+class Association
+{
+
+  public void setLeftAndRight()
+  {
+    String name = this.getName();
+
+    int underscore = name.indexOf("__");
+    String nameOne = name.substring(0,underscore);
+    String nameTwo = name.substring(underscore + "__".length(), name.length());
+
+    if (nameOne.compareTo(nameTwo) > 0)
+    {
+
+    }
+
+  }
+
+  public int whoIsInvalid()
+  {
+    if (!getIsLeftNavigable() || !getIsRightNavigable())
+    {
+      return -1;
+    }
+
+    if (getEnd(0).getClassName().equals(getEnd(1).getClassName()))
+    {
+      if (getEnd(0).getMultiplicity().getLowerBound() != 0)
+      {
+        return 0;
+      }
+      else if (getEnd(1).getMultiplicity().getLowerBound() != 0)
+      {
+        return 1;
+      }
+    }
+    return -1;
+  }
+
+  public boolean isValid()
+  {
+    return whoIsInvalid() == -1;
+  }
+
+  public String getArrowString()
+  {
+    String arrow = "--";
+    if (getIsLeftNavigable() && !getIsRightNavigable())
+    {
+      arrow = "<-";
+    }
+    else if (!getIsLeftNavigable() && getIsRightNavigable())
+    {
+      arrow = "->";
+    }
+    else if (!getIsLeftNavigable() && !getIsRightNavigable())
+    {
+      arrow = "><";
+    }
+    return arrow;
+  }
+
+  public String toGenericString()
+  {
+    String leftSide = getEnd(0).toGenericString();
+    String rightSide = getEnd(1).toGenericString();
+
+
+    if (leftSide.equals("n") && rightSide.equals("n") && !getEnd(0).toSimpleString().equals(getEnd(1).toSimpleString()))
+    {
+      return cruise.umple.util.StringFormatter.format("n {0} m",getArrowString());
+    }
+    else
+    {
+      return cruise.umple.util.StringFormatter.format("{0} {1} {2}",leftSide,getArrowString(),rightSide);
+    }
+  }
+
+  public String deriveName()
+  {
+    AssociationEnd firstEnd = this.getEnd(0);
+    AssociationEnd secondEnd = this.getEnd(1);
+
+    String firstClassName = firstEnd.getClassName();
+    String secondClassName = secondEnd.getClassName();
+
+    String firstRole = firstEnd.getDisplayRoleName().equals("") ? "" : ":" + firstEnd.getDisplayRoleName();
+    String secondRole = secondEnd.getDisplayRoleName().equals("") ? "" : ":" + secondEnd.getDisplayRoleName();
+
+    if (firstClassName.compareTo(secondClassName) <= 0)
+    {
+      return firstClassName + firstRole + "__" + secondClassName + secondRole;
+    }
+    else
+    {
+      return secondClassName + secondRole + "__" + firstClassName + firstRole;
+    }
+  }
+  
+  public void setImmutable()
+  {
+    this.immutable = true;
+  }
+  
+  public boolean isImmutable()
+  {
+    return this.immutable;
+  }
+}
+
+class AssociationEnd
+{
+
+  private static int MULT_MANY = -1;
+
+  public boolean isNavigable()
+  {
+    return !getModifier().toLowerCase().equals("nonnavigable");
+  }  
+
+  public String getLowerBoundString()
+  {
+    return getMultiplicity().getLowerBound() == -1 ? "*" : getMultiplicity().getLowerBound() + "";
+  }
+
+  public String getUpperBoundString()
+  {
+    return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
+  }
+
+  public String getDisplayRoleName()
+  {
+    return isDefaultRoleName ? "" : getRoleName();
+  }
+
+  public String toSimpleString()
+  {
+    if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == MULT_MANY && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == getMultiplicity().getUpperBound())
+    {
+      return formatEnd(getMultiplicity().getLowerBound());
+    }
+    else
+    {
+      return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
+    }
+  }
+
+  public String toGenericString()
+  {
+    if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == MULT_MANY && getMultiplicity().getUpperBound() == MULT_MANY)
+    {
+      return formatEnd(getMultiplicity().getLowerBound()) + ".." + formatEnd(getMultiplicity().getUpperBound());
+    }
+    else if (getMultiplicity().getLowerBound() == getMultiplicity().getUpperBound())
+    {
+      return formatGenericEnd(getMultiplicity().getLowerBound(),"n");
+    }
+    else if (getMultiplicity().getLowerBound() == 0 || getMultiplicity().getLowerBound() == 1)
+    {
+      return getMultiplicity().getLowerBound() + ".." + formatGenericEnd(getMultiplicity().getUpperBound(),"n");
+    }
+    else
+    {
+      return formatGenericEnd(getMultiplicity().getLowerBound(),"n") + ".." + formatGenericEnd(getMultiplicity().getUpperBound(),"m");
+    }
+  }
+
+  public String toString()
+  {
+    String asText = "";
+
+    if (!getModifier().equals("internal"))
+    {
+      asText += getModifier() + " " + asText;
+    }
+    asText += toSimpleString();
+
+    if (getRoleName().length() > 0)
+    {
+      asText += " [" + roleName + "]";
+    }
+
+    if (getClassName().length() > 0)
+    {
+      asText += " " + className;
+    }
+
+    if (getReferenceToClassName().length() > 0)
+    {
+      asText += " -- " + referenceToClassName;
+    }
+
+    return asText;
+  }
+
+  private String formatEnd(int aValue)
+  {
+    return aValue == MULT_MANY ? "*" : aValue + "";
+  }
+
+  private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
+  {
+
+    if (aValue == MULT_MANY)
+    {
+      return "*";
+    }
+    else if (aValue == 0 || aValue == 1)
+    {
+      return aValue + "";
+    }
+    else
+    {
+      return defaultIfNotOneOrMany;
+    }
+  }  
+
+}
+
+
+class AssociationVariable
+{
+  public boolean isReflexive()
+  {
+    return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());
+  }
+
+  public boolean isSymmetricReflexive()
+  {
+    return getRelatedAssociation() != null && "symmetricreflexive".equals(getModifier());
+  }
+
+  public void configureRelatedAssociation(AssociationVariable newRelatedAssociation)
+  {
+    if (newRelatedAssociation == null || !getType().equals(newRelatedAssociation.getType()))
+    {
+      setRelatedAssociation(newRelatedAssociation);
+    }
+    else
+    {
+      multiplicity.minimizeRange(newRelatedAssociation.getMultiplicity());
+      setRelatedAssociation(this);
+    }
+  }
+
+  public static int min(int first, int second)
+  {
+    return first == -1 ? second : second == -1 ? first : Math.min(first, second);
+  }
+
+  public static int max(int first, int second)
+  {
+    return first == -1 ? first : second == -1 ? second : Math.max(first, second);
+  }
+
+  public boolean isMany()
+  {
+    return multiplicity.getUpperBound() == -1 || multiplicity.getUpperBound() > 1;
+  }
+
+  public boolean isOptionalN()
+  {
+    return multiplicity.getLowerBound() == 0 && multiplicity.getUpperBound() > 1;
+  }
+
+  public boolean isOne()
+  {
+    return multiplicity.getUpperBound() == 1;
+  }
+
+  public boolean isOnlyOne()
+  {
+    return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 1;
+  }
+
+  public boolean isOptionalOne()
+  {
+    return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 0;
+  }
+
+  public boolean isOptionalMany()
+  {
+    return multiplicity.getLowerBound() == 0 && isMany();
+  }
+  
+  public boolean isUpperBounded()
+  {
+  	return multiplicity.getUpperBound() >= 0;
+  }
+
+  public boolean isN()
+  {
+    return multiplicity.getLowerBound() > 1 && multiplicity.getLowerBound() == multiplicity.getUpperBound();
+  }
+
+  public boolean isMN()
+  {
+    return multiplicity.getLowerBound() > 0 && (multiplicity.getUpperBound() > multiplicity.getLowerBound() || multiplicity.getUpperBound() == -1);
+  }
+
+  public boolean isMStar()
+  {
+    return multiplicity.getLowerBound() > 0 && multiplicity.getUpperBound() == -1;
+  }
+
+  public boolean isStar()
+  {
+    return multiplicity.getUpperBound() == -1;
+  }
+
+  public boolean isMandatory()
+  {
+    return multiplicity.getLowerBound() > 0;
+  }
+
+  public boolean isMandatoryOne()
+  {
+    return multiplicity.getLowerBound() == 1 && multiplicity.getUpperBound() == 1;
+  }
+
+  public boolean isMandatoryMany()
+  {
+    return multiplicity.getLowerBound() > 0 && isMany();
+  }
+
+  public boolean isImmutable()
+  {
+    AssociationVariable related = getRelatedAssociation();
+    Boolean relatedAssocIsImmutable = (related == null) ? false : "immutable".equals(related.getModifier());
+
+    Boolean myUmpleClassIsImmutable = 
+      (getIsNavigable() && getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+    Boolean yourUmpleClassIsImmutable = 
+      (related != null && related.getIsNavigable() && related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
+
+    return (super.isImmutable() || relatedAssocIsImmutable 
+        || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
+  }
+
+  public boolean setImmutable()
+  {
+    boolean wasSet = false;
+    if (canBeImmutable())
+    {
+      setModifier("immutable");
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public boolean isSorted()
+  {
+    return !priority.equals("");
+  }
+
+  private boolean canBeImmutable()
+  {
+    AssociationVariable related = getRelatedAssociation();
+    if (related == null) { return true; }
+
+    boolean canBe = true;
+    if (getIsNavigable() && related.getIsNavigable())
+    {
+      canBe = false;
+    }
+    else if (related.getIsNavigable() && (umpleClass != null) && !umpleClass.isImmutable())
+    {
+      canBe = false;
+    }
+    else if (getIsNavigable() && (related.getUmpleClass() != null) && !related.getUmpleClass().isImmutable())
+    {
+      canBe = false;
+    }
+    return canBe;
+  }
+
+  private boolean canBeRelatedAssociation(AssociationVariable related)
+  {
+    if (related == null)
+    {
+      return true;
+    }
+    Boolean myUmpleClassIsImmutable = (getUmpleClass() != null) ? getUmpleClass().isImmutable() : false;
+    Boolean yourUmpleClassIsImmutable = (related.getUmpleClass() != null) ? related.getUmpleClass().isImmutable() : false;
+
+    return UmpleClass.immutabilityAssociationRulesSatisfied(this, umpleClass, myUmpleClassIsImmutable, 
+        related, related.getUmpleClass(), yourUmpleClassIsImmutable);
+  }
+  
+}
+
+class Multiplicity
+{
+
+  public void setRange(String lowerBound, String upperBound)
+  {
+    minimum = lowerBound;
+    maximum = upperBound;
+  }
+
+  public String getRange()
+  {
+    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
+    String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
+    return StringFormatter.format("[{0},{1}]",lowerBound,upperBound);
+  }
+
+  public String[] getRangeParts()
+  {
+    String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
+    String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
+    return new String[] { lowerBound, upperBound };
+  }
+
+  public boolean isValid()
+  {
+    if ("*".equals(getMinimum()))
+    {
+      return false;
+    }
+
+    if ("-1".equals(getMinimum()) || "-1".equals(getMaximum()) || "-1".equals(getBound()))
+    {
+      return false;
+    }
+
+    if (getLowerBound() < -1 || getUpperBound() < -1)
+    {
+      return false;
+    }
+    
+    // Fix for issue 292
+    if (getUpperBound() == 0)
+    {
+      return false;
+    }
+
+
+    if (getLowerBound() > getUpperBound() && !isUpperBoundMany())
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public void minimizeRange(Multiplicity compareTo)
+  {
+    if (compareTo.getLowerBound() > getLowerBound() && compareTo.minimum != null)
+    {
+      minimum = compareTo.minimum;
+    }
+    if (compareTo.getUpperBound() < getUpperBound() && compareTo.maximum != null && compareTo.getUpperBound() != -1)
+    {
+      maximum = compareTo.maximum;
+    }
+  }
+
+  public int getLowerBound()
+  {
+    if (getBound() != null)
+    {
+      return parseInt(getBound(),0);
+    }
+    else
+    {
+      return parseInt(getMinimum(),-1);
+    }
+  }
+
+  public int getUpperBound()
+  {
+    if (getBound() != null)
+    {
+      return parseInt(getBound(),-1);
+    }
+    else
+    {
+      return parseInt(getMaximum(),-1);
+    }
+  }
+
+  public boolean isLowerBoundMany()
+  {
+    return getLowerBound() == -1;
+  }
+
+  public boolean isUpperBoundMany()
+  {
+    return getUpperBound() == -1;
+  }
+
+  public boolean isLowerBoundNumeric()
+  {
+    return getLowerBound() >= -1;
+  }
+
+  public boolean isUpperBoundNumeric()
+  {
+    return getUpperBound() >= -1;
+  }
+
+  public boolean isMany()
+  {
+    return getUpperBound() > 1 || getUpperBound() == -1;
+  }
+
+  public boolean isOne()
+  {
+    return getUpperBound() == 1;
+  }
+
+  private int parseInt(String input, int defaultIfStar)
+  {
+    try
+    {
+      if ("*".equals(input))
+      {
+        return defaultIfStar;
+      }
+      else
+      {
+        return Integer.parseInt(input);
+      }
+    }
+    catch(Exception e)
+    {
+      return -2;
+    }
+  }
+}
+
+class GeneratedElement
+{
+
+  private Map<String, String> lookups = new HashMap<String, String>();
+  private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
+
+  public void setLookup(String aKey, String aValue)
+  {
+    lookups.put(aKey, aValue);
+  }
+
+  public String getLookup(String aKey)
+  {
+    if (aKey == null)
+    {
+      return null;
+    }
+    else
+    {
+      return lookups.get(aKey);  
+    }
+  }
+
+  public boolean addMultiLookup(String aKey, String aValue)
+  {
+    List<String> oldList = null;
+    if (multiLookups.containsKey(aKey))
+    {
+      oldList = multiLookups.get(aKey);
+    }
+    else
+    {
+      oldList = new ArrayList<String>();
+    }
+
+    if (aValue == null || "".equals(aValue) || oldList.contains(aValue))
+    {
+      return false;
+    }
+
+    oldList.add(aValue);
+    multiLookups.put(aKey, oldList);
+    return true;
+  }
+
+  public String[] getMultiLookup(String aKey)
+  {
+    if (aKey == null || !multiLookups.containsKey(aKey))
+    {
+      return new String[0];
+    }
+    else
+    {
+      List<String> list = multiLookups.get(aKey);
+
+      return list.toArray(new String[list.size()]);
+    }
+  }
+
+  public String toString()
+  {
+    String answer = "<<";
+    for (String aKey : lookups.keySet())
+    {
+      answer += "[" + aKey + ":" + lookups.get(aKey) + "]";
+    }    
+    answer += ">>";
+    return answer;
+  }
+}
+
+class Point
+{
+
+  public static Point create(int n)
+  {
+    int p = (int)Math.sqrt(n) + 1;
+    if (n - (p-2)*p <= p)
+    {
+      return new Point(n - (p-2)*p, p);
+    }
+    else
+    {
+      return new Point(p, n - (p-1) * p);
+    }
+  }
+
+  public String toString()
+  {
+    return "(" + getX() + "," + getY() + ")";
+  }
+}
+
+class Coordinate
+{
+
+  public Point getTopLeft()
+  {
+    return new Point(x,y);
+  }
+
+  public Point getTopRight()
+  {
+    return new Point(x+width,y);
+  }
+
+  public Point getBottomLeft()
+  {
+    return new Point(x,y+height);
+  }
+
+  public Point getBottomRight()
+  {
+    return new Point(x+width,y+height);
+  }
+
+  public Point getTopMiddle()
+  {
+    return new Point(x+width/2,y);
+  }
+
+  public Point getBottomMiddle()
+  {
+    return new Point(x+width/2,y+height);
+  }
+
+  public Point getRightMiddle()
+  {
+    return new Point(x+width,y+height/2);
+  }
+
+  public Point getLeftMiddle()
+  {
+    return new Point(x,y+height/2);
+  }
+
+  public String whereIs(Coordinate neighbour)
+  {
+    int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
+    int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
+
+    int bottomDeltaY = neighbour.getTopMiddle().getY() - getBottomMiddle().getY();
+    int bottomDeltaX = getBottomMiddle().getX() - neighbour.getTopMiddle().getX(); 
+
+    if (topDeltaY > 0 && Math.abs(topDeltaY) > Math.abs(topDeltaX))
+    {
+      return "top";
+    }
+    else if (bottomDeltaY > 0 && Math.abs(bottomDeltaY) > Math.abs(bottomDeltaX))
+    {
+      return "bottom";
+    }
+    else if (neighbour.getX() < getX())
+    {
+      return "left";
+    }
+    else
+    {
+      return "right";
+    }
+  }
+
+  public int distanceTo(Coordinate other)
+  {
+    int a = other.getX() - getX();
+    int b = other.getY() - getY();
+    int c = (int) Math.round(Math.sqrt(Math.pow(a,2) + Math.pow(b,2)));
+    return c; 
+  }
+
+  public String toString()
+  {
+    return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
+  }
+
+  private void updateStatus()
+  {
+    if (x == -1 && y == -1 && width == -1 && height == -1)
+    {
+      setStatus(Status.Undefined);
+    }
+    else 
+    {
+      setStatus(Status.Explicit);
+    }
+  }
+}
+
+class Comment
+{
+  public Boolean isInline = true;
+
+  /**
+   * Used to take a comment and process it into a format appropriate for displaying in generated code.
+   * 
+   * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).
+   * 
+   * @param type Indicates the type of comment which determines how the comments are formatted.  The types are: Hash, Javadoc, Attribute Javadoc, Association Javadoc, Method Javadoc, RubyMultiline, RubyMultiline Internal and Multiline.  Defaults to "//" if not specified.
+   * @param allComments A list of comments to be processed and formatted all together as one.
+   * 
+   * @return The processed/formatted comment appropriate for use in generated code output.
+   */
+  public static String format(String type,List<Comment> allComments)
+  {
+    //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
+
+    String commentDelimiter;
+
+    // Set the comment delimiter based on the type of the comment. (ex. For Javadoc prepend "*" before every comment line)
+    if (type == "Hash")
+    {
+      commentDelimiter = "# ";
+    }
+    else if (type == "Javadoc")
+    {
+      commentDelimiter = " * ";
+    }
+    else if (type == "Attribute Javadoc")
+    {
+      commentDelimiter = "   * ";
+    }
+    else if (type == "Association Javadoc")
+    {
+      commentDelimiter = "   * ";
+    }
+    else if (type == "Method Javadoc")
+    {
+      commentDelimiter = "   * ";
+    }
+    else if (type == "RubyMultiline")
+    {
+      commentDelimiter = "";
+    }
+    else if (type == "RubyMultiline Internal")
+    {
+      commentDelimiter = "  ";
+    }
+    else if (type == "Multiline")
+    {
+      commentDelimiter = "";
+    }
+    else
+    {
+      commentDelimiter = "// ";
+    }
+
+    if (allComments.size() == 0)
+    {
+      return null;
+    }
+
+    String output = "";
+
+    for (Comment c : allComments)
+    {
+      if (type == "Javadoc" || type == "Attribute Javadoc" || type == "Association Javadoc" || type == "Method Javadoc" || type == "RubyMultiline" || type == "RubyMultiline Internal")
+      {
+        int startIndex = 0;
+
+        // Go through each letter of the current comment to find start of content.
+        for (int i = 0; i < c.getText().length(); i++)
+        {
+          char letter = c.getText().charAt(i);
+
+          // Remove these letters until the actual content is found in the line.
+          if (letter == ' ' || letter == '\t' || letter == '*')
+          {
+            startIndex++;
+          }
+          // Comment content found, set comment to start here.
+          else
+          {
+            c.setText(c.getText().substring(startIndex));
+            break;
+          }
+        }
+
+        // Special case where the comment line had no content (only spaces, tabs or asterisks).
+        if (startIndex == c.getText().length())
+        {
+          c.setText(c.getText().substring(startIndex));
+        }
+      }
+      output += commentDelimiter + c.getText() + "\n"; 
+    }
+
+    // Finalize the comment based on what type it was. (ex. For Javadoc place the "/**" and "*/" around the comment)
+    if (type == "Javadoc")
+    {
+      output = "/**\n" + output + " */";
+    }
+    else if (type == "Attribute Javadoc")
+    {
+      output = "  /**\n" + output + "   */";
+    }
+    else if (type == "Association Javadoc")
+    {
+      output = "  /**\n" + output + "   */";
+    }
+    else if (type == "Method Javadoc")
+    {
+      output = "  /**\n" + output + "   */";
+    }
+    else if (type == "RubyMultiline")
+    {
+      output = "=begin\n" + output + "=end";
+    }
+    else if (type == "RubyMultiline Internal")
+    {
+      output = "  =begin\n" + output + "  =end";
+    }
+    else if (type == "Multiline")
+    {
+      output = "/*\n" + output + "*/";
+    }
+
+    return output.trim();
+  }
+}

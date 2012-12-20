@@ -1,0 +1,85 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Token
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Token Attributes
+  private $positions;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->positions = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function addPosition($aPosition)
+  {
+    $wasAdded = false;
+    $this->positions[] = $aPosition;
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removePosition($aPosition)
+  {
+    $wasRemoved = false;
+    unset($this->positions[$this->indexOfPosition($aPosition)]);
+    $this->positions = array_values($this->positions);
+    $wasRemoved = true;
+    return $wasRemoved;
+  }
+
+  public function getPosition($index)
+  {
+    $aPosition = $this->positions[$index];
+    return $aPosition;
+  }
+
+  public function getPositions()
+  {
+    $newPositions = $this->positions;
+    return $newPositions;
+  }
+
+  public function numberOfPositions()
+  {
+    $number = count($this->positions);
+    return $number;
+  }
+
+  public function hasPositions()
+  {
+    $has = positions.size() > 0;
+    return $has;
+  }
+
+  public function indexOfPosition($aPosition)
+  {
+    $rawAnswer = array_search($aPosition,$this->positions);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    return $index;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

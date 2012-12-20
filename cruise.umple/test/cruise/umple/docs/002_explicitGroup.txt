@@ -1,0 +1,11 @@
+aTitle
+aGroupName
+@@description
+the description
+
+@@syntax
+the syntax
+
+@@example
+the example
+@@endexample

@@ -1,0 +1,12 @@
+namespace example;
+
+class Mentor 
+{
+  name;
+  1 -> 1 Student;
+}
+
+class Student
+{
+  number;
+}

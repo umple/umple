@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Builds the "JHotDraw Draw" demo application and demo applet. -->
+<project name="build-all" default="all" basedir=".">
+    <target name="init">
+        <property name="version" value="7.6"/>
+        <property name="srcalldir" value="dist"/>
+        <property name="distalldir" value="dist"/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${distalldir}" />
+    </target>
+
+    <target name="src" depends="init">
+        <mkdir dir="${distalldir}/JHotDraw ${version}/Source/jhotdraw7"/>
+        <copy todir="${distalldir}/JHotDraw ${version}/Source/jhotdraw7">
+            <fileset dir=".">
+                <exclude name="${distalldir}/**"/>
+                <exclude name="build/**"/>
+                <exclude name="nbproject/private/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="dist-all" depends="clean,src">
+        <ant antfile="build-draw.xml" target="dist"/>
+        <ant antfile="build-jhotdraw.xml" target="dist"/>
+        <ant antfile="build-net.xml" target="dist"/>
+        <!--ant antfile="build-odg.xml" target="dist"/-->
+        <ant antfile="build-pert.xml" target="dist"/>
+        <ant antfile="build-svg.xml" target="dist"/>
+        <ant antfile="build-teddy.xml" target="dist"/>
+
+        <ant antfile="build-jhotdraw.xml" target="documentation"/>
+        <ant antfile="build-jhotdraw.xml" target="javadoc"/>
+    </target>
+    <target name="dist-allsigned" depends="clean,src">
+        <ant antfile="build-draw.xml" target="distsigned"/>
+        <ant antfile="build-jhotdraw.xml" target="distsigned"/>
+        <ant antfile="build-net.xml" target="distsigned"/>
+        <!--ant antfile="build-odg.xml" target="dist"/-->
+        <ant antfile="build-pert.xml" target="distsigned"/>
+        <ant antfile="build-svg.xml" target="distsigned"/>
+        <ant antfile="build-teddy.xml" target="distsigned"/>
+
+        <ant antfile="build-jhotdraw.xml" target="documentation"/>
+        <ant antfile="build-jhotdraw.xml" target="javadoc"/>
+    </target>
+
+
+    <target name="bundle-all" depends="dist-all">
+        <zip file="${distalldir}/JHotDraw ${version}.zip" compress="false">
+            <fileset dir="${distalldir}">
+                <include name="JHotDraw ${version}/**"/>
+                <exclude name="**/.*"/>
+                <exclude name="**/Samples/**/signed/**"/>
+            </fileset>
+        </zip>
+        <zip file="${distalldir}/jhotdraw-${version}.nested.zip" compress="true">
+            <fileset dir="${distalldir}">
+                <include name="JHotDraw ${version}.zip"/>
+            </fileset>
+        </zip>
+        <delete file="${distalldir}/JHotDraw ${version}.zip"/>
+    </target>
+    <target name="bundle-allsigned" depends="dist-allsigned">
+        <zip file="${distalldir}/JHotDraw ${version}.zip" compress="false">
+            <fileset dir="${distalldir}">
+                <include name="JHotDraw ${version}/**"/>
+                <exclude name="**/.*"/>
+                <exclude name="**/Samples/**/unsigned/**"/>
+            </fileset>
+        </zip>
+        <zip file="${distalldir}/jhotdraw-${version}.nested.zip" compress="true">
+            <fileset dir="${distalldir}">
+                <include name="JHotDraw ${version}.zip"/>
+            </fileset>
+        </zip>
+        <delete file="${distalldir}/JHotDraw ${version}.zip"/>
+    </target>
+
+</project>

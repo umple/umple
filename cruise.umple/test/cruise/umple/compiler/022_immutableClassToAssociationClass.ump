@@ -1,0 +1,15 @@
+class Student
+{
+	immutable;
+}
+
+class Mentor
+{
+	immutable;
+}
+
+associationClass StudentMentorAssociation
+{
+	* Student student;
+	* Mentor mentor;
+}

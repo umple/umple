@@ -1,0 +1,1172 @@
+Concern CRequired{
+  // base case - date is required for time entry
+  // feature supported in: Base case, Klok, Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPTimeEntryDate{
+    Kind: Optional;
+    class TimeEntry{
+      Date date;
+    }
+  }
+}
+invoke(CRequired, VPTimeEntryDate);
+// either duration or both start and end time are required
+Concern CTimeEntry{
+  VariationPoint VPEntryDuration{
+    Kind: Alternative;
+    // feature supported in: Base case, Leia, Anuko Time Tracker
+    Variant VDuration{
+      class TimeEntry{
+        Double duration;
+      } 
+    }
+    // feature supported in: Klok, TimeTrex
+    Variant VStartEndTime{
+      class TimeEntry{
+        Time startTime;
+        Time endTime;
+      } 
+    }
+  }
+  // time entry can optionally be exported
+  // feature supported in: Leia
+  VariationPoint VPTimeEntryExported{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean exported;
+    }     
+  }
+  // time entry can have an optional rejection comment
+  // feature supported in: Leia
+  VariationPoint VPTimeEntryRejectedComment{
+    Kind: Optional;
+    class TimeEntry{
+      String rejectedComment;
+    }
+  }
+  // time entry can have an optional time stamp
+  // feature supported in: Anuko Time Tracker, TimeTrex
+  VariationPoint VPTimeEntryTimestamp{
+    Kind: Optional;
+    class TimeEntry{
+      Time timestamp;
+    }
+  }
+  // time entry can have an optional proof flag
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPTimeEntryProof{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean proof;
+    }
+  }
+  // time entry can have an optional charge flag
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPTimeEntryCharge{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean charge;
+    }
+  }
+  // time entry can have an optional billable flag
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPTimeEntryBillable{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean billable;
+    }
+  }
+  // time entry can be associated with a time type
+  // feature supported in: Leia
+  VariationPoint VPTimeEntryTimeType{
+    Kind: Optional;
+    class TimeType{
+      String name;
+    }
+    association {
+      0..1 TimeType <- * TimeEntry;
+    }
+  }
+  // time entry can be associated with a status
+  // feature supported in: Leia
+  VariationPoint VPTimeEntryStatus{
+    Kind: Optional;
+    class TimeEntryStatus{
+      String name;
+    } 
+    association {
+      0..1 TimeEntryStatus <- * TimeEntry;
+    }
+  }
+  // time entry can be associated with a punch
+  // feature supported in: TimeTrex
+  VariationPoint VPTimeEntryPunch{
+    Kind: Optional;
+    class Punch{
+      Boolean direction;
+      Time originalTimeStamp;
+      Time actualTimeStamp;
+      Double longitude;
+      Double latitude;
+    }
+    association {
+      * Punch <- 1 TimeEntry;
+    }
+  }
+  // punch can have an optional transfer flag
+  // feature supported in: TimeTrex
+  VariationPoint VPTimeEntryPunchTransfer requires VPTimeEntryPunch{
+    Kind: Optional;
+    class Punch{
+      Boolean transfer;
+    }
+  }
+  // punch can have an optional override flag
+  // feature supported in: TimeTrex
+  VariationPoint VPTimeEntryPunchOverride requires VPTimeEntryPunch{
+    Kind: Optional;
+    class Punch{
+      Boolean override;
+    }
+  }
+}
+Concern CTimeEntryAgainstProject{
+  // time can be logged by providing a comment for each time entry
+  // feature supported in: Base case
+  VariationPoint VPEntryAgainstProject{
+    Kind: Alternative;
+    Variant VComment{
+      class TimeEntry{
+        String comment;
+      } 
+    }
+    // time can be entered against project
+    // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+    Variant VProject{
+      class Project{
+        String name;
+      }
+      association {
+        0..1 Project <- * TimeEntry;
+      }
+    }
+  }   
+  // in addition to being associated with a project, a time entry 
+  // can have an optional comment
+  // feature supported in: Klok, Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPTimeEntryComment requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class TimeEntry{
+      String comment;
+    }     
+  }
+  // a project can optionally have a parent project
+  // feature supported in: Klok, Leia
+  VariationPoint VPProjectParent requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    association {
+      0..1 Project parent  <- * Project;
+    }     
+  }
+  // project can optionally include a time estimate
+  // feature supported in: Klok, Leia
+  VariationPoint VPProjectEstimate requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Double timeEstimate;
+    }     
+  }
+  // project can optionally be set as archived
+  // feature supported in: Klok, Leia
+  VariationPoint VPProjectArchive requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Boolean archived;
+    }   
+  } 
+  // project can optionally have a code
+  // feature supported in: Leia
+  VariationPoint VPProjectCode requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      String code;
+    }   
+  } 
+  // project can optionally have start and end dates
+  // feature supported in: Leia
+  VariationPoint VPProjectStartEndDates requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Date startDate;
+      Date endDate;
+    }   
+  } 
+  // project can optionally have complexity identified
+  // feature supported in: Leia
+  VariationPoint VPProjectComplexity requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Integer complexity;
+    }   
+  } 
+  // project can optionally have comments
+  // feature supported in: Leia
+  VariationPoint VPProjectComments requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      String comments;
+    }   
+  } 
+  // project can optionally have a budget
+  // feature supported in: Leia
+  VariationPoint VPProjectBudget requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Integer budget;
+    }   
+  }   
+  // project can optionally have a last modified date
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPProjectLastModified requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Time lastModified;
+    }   
+  }     
+  // project can optionally have a status
+  // feature supported in: Leia, Anuko Time Tracker
+  VariationPoint VPProjectStatus requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectStatus{
+      String name;
+      String description;
+    } 
+    association {
+      0..1 ProjectStatus <- * Project;
+    }
+  }     
+  // project can optionally have a type
+  // feature supported in: Leia
+  VariationPoint VPProjectType requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectType{
+      String name;
+      String description;
+    } 
+    association {
+      0..1 ProjectType <- * Project;
+    }
+  }       
+  // project can optionally have an intensity
+  // feature supported in: Leia
+  VariationPoint VPProjectIntensity requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectIntensity{
+      String name;
+    } 
+    association {
+      0..1 ProjectIntensity <- * Project;
+    }     
+  }         
+  // project can optionally have milestones
+  // feature supported in: Leia
+  VariationPoint VPProjectMilestone requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectMilestone{
+      String name;
+      Date releaseDate;
+    } 
+    association {
+      1 Project <- * ProjectMilestone;
+    }     
+  }   
+  // project can optionally be associated with a client
+  // feature supported in: Klok, Leia, Anuko Time Tracker
+  VariationPoint VPClient requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Client{
+      String name;
+    }
+    association {
+      0..1 Client <- * Project;
+    }
+  } 
+  // client can optionally have an email address
+  // feature supported in: Klok
+  VariationPoint VPClientEmail requires VPClient{
+    Kind: Optional;
+    class Client{
+      String emailAddress;
+    }     
+  } 
+  // client can optionally have a phone number
+  // feature supported in: Klok
+  VariationPoint VPClientPhoneNumber requires VPClient{
+    Kind: Optional;
+    class Client{
+      String phoneNumber;
+    }
+  } 
+  // client can optionally have an SLA level assigned
+  // feature supported in: Leia
+  VariationPoint VPClientSLALevel requires VPClient{
+    Kind: Optional;
+    class Client{
+      String slaLevel;
+    }     
+  } 
+  // client can optionally have an address
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPClientAddress requires VPClient{
+    Kind: Optional;
+    class Client{
+      String address;
+    }     
+  } 
+  // client can optionally have a comment
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPClientComment requires VPClient{
+    Kind: Optional;
+    class Client{
+      String comment;
+    }     
+  }   
+  // client can optionally have a tax rate specified
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPClientTax requires VPClient{
+    Kind: Optional;
+    class Client{
+      Double tax;
+    }     
+  }   
+  // client can optionally have a discount rate specified
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPClientDiscount requires VPClient{
+    Kind: Optional;
+    class Client{
+      Double discount;
+    }     
+  }     
+  // client can optionally have a status
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPClientStatus requires VPClient{
+    Kind: Optional;
+    class Client{
+      Integer status;
+    }     
+  }
+}
+Concern CCompany{
+  // time entry can be logged against an activity
+  // feature supported in: Leia
+  VariationPoint VPActivity{
+    Kind: Optional;
+    class Activity{
+      String name;
+      String description;
+    } 
+    association {
+      0..1 Activity <- * TimeEntry;
+    }   
+  }
+  // activity can optionally be archived
+  // feature supported in: Leia
+  VariationPoint VPActivityArchived requires VPActivity{
+    Kind: Optional;
+    class Activity{
+      Boolean archived;
+    }     
+  } 
+  // company-related information can optionally be represented
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPCompany{
+    Kind: Optional;
+    class Company{
+      String name;
+    }     
+  } 
+  // company can optionally have an address
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyAddress requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String address;
+    }     
+  } 
+  // company can optionally have a web site URL
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPCompanyURL requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String url;
+    }     
+  }   
+  // company can optionally have a currency specified
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPCompanyCurrency requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String currency;
+    }     
+  }   
+  // company can optionally have a lock time specified
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPCompanyLockTime requires VPCompany{
+    Kind: Optional;
+    class Company{
+      Integer locktime;
+    }     
+  }
+  // company can optionally have a short name
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyShortName requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String shortName;
+    }     
+  } 
+  // company can optionally have a city specified
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyCity requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String city;
+    }     
+  } 
+  // company can optionally have a province specified
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyProvince requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String province;
+    }     
+  }   
+  // company can optionally have a postal code specified
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyPostalCode requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String postalCode;
+    }     
+  }   
+  // company can optionally have a phone number
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyPhoneNumber requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String phoneNumber;
+    }     
+  }   
+  // company can optionally have a fax number
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyFaxNumber requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String faxNumber;
+    }     
+  }   
+  // company can optionally have a business number
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyBusinessNumber requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String businessNumber;
+    }     
+  }   
+  // company can optionally have an administrative contact
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyAdminContact requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String adminContact;
+    }     
+  }   
+  // company can optionally have a billing contact
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyBillingContact requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String billingContact;
+    }     
+  }   
+  // company can optionally have a support contact
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanySupportContact requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String supportContact;
+    }     
+  }     
+  // company can optionally have multiple branches
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyBranch requires VPCompany{
+    Kind: Optional;
+    class Branch{
+      String name;
+      String address;
+      String city;
+      String province;
+      String country;
+      String postalCode;
+      String phoneNumber;
+      String faxNumber;
+    } 
+    association {
+      1 Company <- * Branch;
+    }   
+  }     
+  // company can optionally have multiple departments
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPCompanyDepartment requires VPCompany{
+    Kind: Optional;
+    class Department{
+      String name;
+    } 
+    association {
+      1 Company <- * Department;
+    } 
+  }     
+  // company can optionally have a parent company
+  // feature supported in: TimeTrex
+  VariationPoint VPCompanyParent requires VPCompany{
+    Kind: Optional;
+    association {
+      0..1 Company parent  <- * Company;
+    } 
+  }   
+  // department can optionally have a parent department
+  // feature supported in: Leia
+  VariationPoint VPDepartmentParent requires VPDepartment{
+    Kind: Optional;
+    association {
+      0..1 Department parent  <- * Department;
+    } 
+  } 
+}
+
+Concern CTask{
+  // time can be logged against a task
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPTask{
+    Kind: Optional;
+    class Task{
+      String name;
+    } 
+    association {
+      0..1 Task <- * TimeEntry;
+    }   
+  }
+  // task can optionally have a description
+  // feature supported in: Leia
+  VariationPoint VPTaskDescription requires VPTask{
+    Kind: Optional;
+    class Task{
+      String description;
+    }     
+  } 
+  // task can optionally have a priority
+  // feature supported in: Leia
+  VariationPoint VPTaskPriority requires VPTask{
+    Kind: Optional;
+    class Task{
+      Integer priority;
+    }     
+  } 
+  // task can optionally have a due date
+  // feature supported in: Leia
+  VariationPoint VPTaskDueDate requires VPTask{
+    Kind: Optional;
+    class Task{
+      Date dueDate;
+    }     
+  } 
+  // task can optionally have a time estimate for completion
+  // feature supported in: Leia, TimeTrex
+  VariationPoint VPTaskEstimatedTime requires VPTask{
+    Kind: Optional;
+    class Task{
+      Integer estimatedTime;
+    }     
+  } 
+  // task can optionally have a last modified time
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPTaskLastModified requires VPTask{
+    Kind: Optional;
+    class Task{
+      Time lastModified;
+    }     
+  } 
+  // task can optionally have a start time
+  // feature supported in: TimeTrex
+  VariationPoint VPTaskStartTime requires VPTask{
+    Kind: Optional;
+    class Task{
+      Time startTime;
+    }     
+  }   
+  // task can optionally have an end time
+  // feature supported in: TimeTrex
+  VariationPoint VPTaskEndTime requires VPTask{
+    Kind: Optional;
+    class Task{
+      Time endTime;
+    }     
+  }
+  // task can optionally be associated with a status
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPTaskStatus requires VPTask{
+    Kind: Optional;
+    class TaskStatus{
+      String name;
+    }   
+    association {
+      0..1 TaskStatus <- * Task;
+    } 
+  } 
+  // task can optionally be associated with a project
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPTaskProject requires VPTask, VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    association {
+      0..1 Project <- * Task;
+    }
+  }   
+  // task can optionally be associated with an activity
+  // feature supported in: Leia
+  VariationPoint VPTaskActivity requires VPTask, VPActivity{
+    Kind: Optional;
+    association {
+      0..1 Activity <- * Task;
+    }
+  }     
+  // task can optionally be associated with a project milestone
+  // feature supported in: Leia
+  VariationPoint VPTaskProjectMilestone requires VPTask, VPProjectMilestone{
+    Kind: Optional;
+    association {
+      0..1 ProjectMilestone <- * Task;
+    }
+  }
+}
+
+Concern CUser{
+  // time can be logged by multiple users
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPUser{
+    Kind: Optional;
+    class User{
+      String firstName;
+      String lastName;
+      String username;
+      String password;
+      Boolean isActive;
+    }
+    association {
+      0..1 User <- * TimeEntry;
+    }   
+  }
+  // user can optionally have a work email
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPUserWorkEmail requires VPUser{
+    Kind: Optional;
+    class User{
+      String workEmail;
+    }     
+  }   
+  // user can optionally have a phone extension
+  // feature supported in: Leia
+  VariationPoint VPUserPhoneExtension requires VPUser{
+    Kind: Optional;
+    class User{
+      Integer phoneExtension;
+    }     
+  } 
+  // user can optionally have a host name
+  // feature supported in: Leia
+  VariationPoint VPUserHostName requires VPUser{
+    Kind: Optional;
+    class User{
+      String hostName;
+    }     
+  } 
+  // user can optionally have a last login time
+  // feature supported in: Leia, TimeTrex
+  VariationPoint VPUserLastLoginTime requires VPUser{
+    Kind: Optional;
+    class User{
+      Time lastLogin;
+    }     
+  } 
+  // user can optionally have a level
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPUserLevel requires VPUser{
+    Kind: Optional;
+    class User{
+      Integer level;
+    }     
+  } 
+  // user can optionally have a rate
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPUserRate requires VPUser{
+    Kind: Optional;
+    class User{
+      Double rate;
+    }     
+  } 
+  // user can optionally have a language
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPUserLanguage requires VPUser{
+    Kind: Optional;
+    class User{
+      String language;
+    }     
+  } 
+  // user can optionally have a last modified time
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPUserLastModified requires VPUser{
+    Kind: Optional;
+    class User{
+      Time lastModified;
+    }     
+  } 
+  // user can optionally have a phone ID
+  // feature supported in: TimeTrex
+  VariationPoint VPUserPhoneID requires VPUser{
+    Kind: Optional;
+    class User{
+      String phoneID;
+    }     
+  } 
+  // user can optionally have a phone password
+  // feature supported in: TimeTrex
+  VariationPoint VPUserPhonePassword requires VPUser{
+    Kind: Optional;
+    class User{
+      String phonePassword;
+    }     
+  } 
+  // user can optionally have a middle name
+  // feature supported in: TimeTrex
+  VariationPoint VPUserMiddleName requires VPUser{
+    Kind: Optional;
+    class User{
+      String middleName;
+    }     
+  } 
+  // user can optionally have a sex
+  // feature supported in: TimeTrex
+  VariationPoint VPUserSex requires VPUser{
+    Kind: Optional;
+    class User{
+      String sex;
+    }     
+  } 
+  // user can optionally have an address
+  // feature supported in: TimeTrex
+  VariationPoint VPUserAddress requires VPUser{
+    Kind: Optional;
+    class User{
+      String address;
+    }     
+  } 
+  // user can optionally have a city
+  // feature supported in: TimeTrex
+  VariationPoint VPUserCity requires VPUser{
+    Kind: Optional;
+    class User{
+      String city;
+    }     
+  } 
+  // user can optionally have a province
+  // feature supported in: TimeTrex
+  VariationPoint VPUserProvince requires VPUser{
+    Kind: Optional;
+    class User{
+      String province;
+    }     
+  }   
+  // user can optionally have a country
+  // feature supported in: TimeTrex
+  VariationPoint VPUserCountry requires VPUser{
+    Kind: Optional;
+    class User{
+      String country;
+    }     
+  }   
+  // user can optionally have a postal code
+  // feature supported in: TimeTrex
+  VariationPoint VPUserPostalCode requires VPUser{
+    Kind: Optional;
+    class User{
+      String postalCode;
+    }     
+  }     
+  // user can optionally have a work phone number
+  // feature supported in: TimeTrex
+  VariationPoint VPUserWorkPhoneNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String workPhoneNumber;
+    }     
+  }       
+  // user can optionally have a home phone number
+  // feature supported in: TimeTrex
+  VariationPoint VPUserHomePhoneNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String homePhoneNumber;
+    }     
+  }       
+  // user can optionally have a mobile phone number
+  // feature supported in: TimeTrex
+  VariationPoint VPUserMobilePhoneNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String mobilePhoneNumber;
+    }     
+  }         
+  // user can optionally have a fax number
+  // feature supported in: TimeTrex
+  VariationPoint VPUserFaxNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String faxNumber;
+    }     
+  }       
+  // user can optionally have a home email address
+  // feature supported in: TimeTrex
+  VariationPoint VPUserHomeEmail requires VPUser{
+    Kind: Optional;
+    class User{
+      String homeEmail;
+    }     
+  }       
+  // user can optionally have a birth date
+  // feature supported in: TimeTrex
+  VariationPoint VPUserBirthDate requires VPUser{
+    Kind: Optional;
+    class User{
+      Date birthDate;
+    }     
+  }         
+  // user can optionally have a hire date
+  // feature supported in: TimeTrex
+  VariationPoint VPUserHireDate requires VPUser{
+    Kind: Optional;
+    class User{
+      Date hireDate;
+    }     
+  }           
+  // user can optionally have a social insurance number
+  // feature supported in: TimeTrex
+  VariationPoint VPUserSocialInsuranceNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String socialInsuranceNumber;
+    }     
+  }           
+  // user can optionally have an employee number
+  // feature supported in: TimeTrex
+  VariationPoint VPUserEmployeeNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String employeeNumber;
+    }     
+  }           
+  // user can optionally have a note
+  // feature supported in: TimeTrex
+  VariationPoint VPUserNote requires VPUser{
+    Kind: Optional;
+    class User{
+      String note;
+    }     
+  }           
+  // user can optionally have a termination date
+  // feature supported in: TimeTrex
+  VariationPoint VPUserTerminationDate requires VPUser{
+    Kind: Optional;
+    class User{
+      Date terminationDate;
+    }     
+  } 
+  // user can optionally be associated with a status
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPUserStatus requires VPUser{
+    Kind: Optional;
+    class UserStatus{
+      String name;
+    }
+    association {
+      0..1 UserStatus <- * User;
+    }   
+  } 
+  // user can potentially have preferences
+  // feature supported in: Leia, TimeTrex
+  VariationPoint VPUserPreference requires VPUser{
+    Kind: Optional;
+    class UserPreference{
+      String dateFormat;
+      String timeFormat;
+      String timeUnitFormat;
+      String timeZone;
+      Integer itemsPerPage;
+      Integer startWeekDay;
+      String interfaceLanguage;
+    }
+    association {
+      1 User -- 1 UserPreference;
+    }
+  }
+  // user can optionally be associated with a task
+  // feature supported in: Leia, Anuko Time Tracker
+  VariationPoint VPUserTask requires VPUser, VPTask{
+    Kind: Optional;
+    class TaskUser{
+    }
+    association {
+      1 Task <- * TaskUser;
+    }
+    association {
+      1 User <- * TaskUser;
+    }
+  }   
+  //  user can have a rate identified for a particular task
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPUserTaskRate requires VPUserTask{
+    Kind: Optional;
+    class TaskUser{
+      Double rate;
+    }
+  } 
+  // user can optionally be associated with an activity
+  // feature supported in: Leia
+  VariationPoint VPUserActivity requires VPUser, VPActivity{
+    Kind: Optional;
+    association {
+      0..1 User manager  <- * Activity;
+    }
+  }     
+  // user can optionally be assigned roles on a project
+  // feature supported in: Leia, Anuko Time Tracker
+  VariationPoint VPUserProjectRole requires VPUser, VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Role{
+      String name;
+      Boolean multipleUsersAllowed;
+      String description;
+    }   
+    class RoleGroupItem{
+    }   
+    class RoleGroup{
+      String name;
+    }   
+    class ProjectUserRole{
+    }
+    association {
+      1 Role <- * RoleGroupItem;
+    }
+    association {
+      1 RoleGroup <- * RoleGroupItem;
+    }
+    association {
+      1 Role <- * ProjectUserRole;
+    }
+    association {
+      1 User <- * ProjectUserRole;
+    }
+    association {
+      1 Project <- * ProjectUserRole;
+    }
+  }   
+  // user can have a rate identified for a particular role on a project
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPProjectUserRoleRate requires VPUserProjectRole{
+    Kind: Optional;
+    class ProjectUserRole{
+      Double rate;
+    }
+  }     
+  // task can optionally have a manager
+  // feature supported in: Anuko Time Tracker
+  VariationPoint VPTaskManager requires VPTask, VPUser{
+    Kind: Optional;
+    association {
+      0..1 User manager  <- * Task;
+    }
+  } 
+  VariationPoint VPUserCompanyConnection{
+    Kind: Alternative;
+    // user can be a stand-alone user
+    // feature supported in: Base case, Klok
+    Variant VNone{
+    }
+    // user can be associated with a company
+    // feature supported in: none of the case studies
+    Variant VUserCompany requires VPCompany, VPUser{
+      association {
+        0..1 Company <- * User;
+      } 
+    }
+    // user can be associated with a branch
+    // feature supported in: none of the case studies
+    Variant VUserBranch requires VPBranch, VPUser{
+      association {
+        0..1 Branch <- * User worksAt;
+      }
+    }
+    // user can be associated with a department
+    // feature supported in: Leia, Anuko Time Tracker
+    Variant VUserDepartment requires VPDepartment, VPUser{
+      association {
+        0..1 Department <- * User worksAt;
+      }
+    }
+    // user can be associated with a combination of a branch and a department
+    // feature supported in: TimeTrex
+    Variant VUserBranchDepartment requires VPBranch, VPDepartment, VPUser{
+      class DepartmentBranch{
+      }     
+      class DepartmentBranchUser{
+      }
+      association {
+        1 Branch <- * DepartmentBranch;
+      }
+      association {
+        1 Department <- * DepartmentBranch;
+      }
+      association {
+        1 DepartmentBranch <- * DepartmentBranchUser;
+      }
+      association {
+        1 User <- * DepartmentBranchUser;
+      }
+    }
+  }
+  // user can optionally manage a department
+  // feature supported in: Leia, Anuko Time Tracker, TimeTrex
+  VariationPoint VPUserDepartmentManager requires VPDepartment, VPUser{
+    Kind: Optional;
+    association {
+      0..1 User <- * Department manager;
+    } 
+  }
+  // user can optionally have a title within the company
+  // feature supported in: TimeTrex
+  VariationPoint VPUserCompanyTitle requires VPCompany, VPUser{
+    Kind: Optional;
+    class UserTitle{
+      String name;
+    } 
+    association {
+      1 User <- * UserTitle;
+        }
+    association {
+      * UserTitle -> 1 Company;
+    }
+  }
+  // user can optionally belong to a group within the company
+  // feature supported in: TimeTrex
+  VariationPoint VPUserCompanyGroup requires VPCompany, VPUser{
+    Kind: Optional;
+    class UserGroup{
+      String name;
+    }
+    association {
+      1 UserGroup <- * User;
+    }
+    association {
+      1 Company <- * UserGroup;
+    }
+  }
+}
+// Invocation of a system similar to Anuko TimeTracker
+
+// Time Entry
+
+// log time duration
+invoke(CTimeEntry, VPEntryDuration, VDuration);
+// store time entry time stamp
+invoke(CTimeEntry, VPTimeEntryTimestamp);
+// store time entry proof
+invoke(CTimeEntry, VPTimeEntryProof);
+// store time entry charges
+invoke(CTimeEntry, VPTimeEntryCharge);
+// allow time entries to be billable
+invoke(CTimeEntry, VPTimeEntryBillable);
+
+// Project
+
+// enter time against projects (client-related work items)
+invoke(CTimeEntryAgainstProject, VPEntryAgainstProject, VProject);
+// store optional comments for time entries
+invoke(CTimeEntryAgainstProject, VPTimeEntryComment);
+// store last modified date of projects
+invoke(CTimeEntryAgainstProject, VPProjectLastModified);
+// store project status
+invoke(CTimeEntryAgainstProject, VPProjectStatus);
+// associate projects with clients
+invoke(CTimeEntryAgainstProject, VPClient);
+// store client's addresses
+invoke(CTimeEntryAgainstProject, VPClientAddress);
+// store client comments
+invoke(CTimeEntryAgainstProject, VPClientComment);
+// store client tax
+invoke(CTimeEntryAgainstProject, VPClientTax);
+// store client discounts
+invoke(CTimeEntryAgainstProject, VPClientDiscount);
+// store client status
+invoke(CTimeEntryAgainstProject, VPClientStatus);
+
+// Company
+
+// store company information
+invoke(CCompany, VPCompany);
+// store company URL
+invoke(CCompany, VPCompanyURL);
+// store company currency
+invoke(CCompany, VPCompanyCurrency);
+// store company lock time
+invoke(CCompany, VPCompanyLockTime);
+// allow company to have multiple departments
+invoke(CCompany, VPCompanyDepartment);
+
+// Task
+
+// log time against tasks
+invoke(CTask, VPTask);
+// store task's last modified date
+invoke(CTask, VPTaskLastModified);
+// store task status
+invoke(CTask, VPTaskStatus);
+// allow tasks to be associated with projects
+invoke(CTask, VPTaskProject);
+
+// User
+
+// allow multiple users to log time
+invoke(CUser, VPUser);
+// store user work emails
+invoke(CUser, VPUserWorkEmail);
+// store user level
+invoke(CUser, VPUserLevel);
+// store user rate
+invoke(CUser, VPUserRate);
+// store user language
+invoke(CUser, VPUserLanguage);
+// store user last modified date
+invoke(CUser, VPUserLastModified);
+// store user status
+invoke(CUser, VPUserStatus);
+// allow assigning users to tasks
+invoke(CUser, VPUserTask);
+// allow setting user rate for a specific task
+invoke(CUser, VPUserTaskRate);
+// allow assigning roles to users on a project
+invoke(CUser, VPUserProjectRole);
+// allow setting user rate for a specific project
+invoke(CUser, VPProjectUserRoleRate);
+// allow assigning manager users to tasks
+invoke(CUser, VPTaskManager);
+// associate users with departments
+invoke(CUser, VPUserCompanyConnection, VUserDepartment);
+// allow assigning a manager user to departments
+invoke(CUser, VPUserDepartmentManager);

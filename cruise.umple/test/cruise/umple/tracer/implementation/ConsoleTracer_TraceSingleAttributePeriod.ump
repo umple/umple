@@ -1,0 +1,9 @@
+namespace example;
+
+class Tracer
+{
+	Integer id;
+	String name;
+	trace name period 30ms;
+	trace id period 100s;
+}

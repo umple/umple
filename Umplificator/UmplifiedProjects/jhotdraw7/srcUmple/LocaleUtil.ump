@@ -1,0 +1,18 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.util ;
+
+class LocaleUtil 
+{
+depend java.util.*;
+
+  private static Locale defaultLocale;
+public static void setDefault(Locale newValue) {
+        defaultLocale = newValue;
+    }
+public static Locale getDefault() {
+        return (defaultLocale == null) ? Locale.getDefault() : defaultLocale;
+    }
+
+}

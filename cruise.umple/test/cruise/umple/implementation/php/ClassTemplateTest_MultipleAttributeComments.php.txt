@@ -1,0 +1,113 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+
+  /**
+   * Inline comment above attribute.
+   */
+  private $testAttribute1;
+
+  /**
+   * Multiple inline comments
+   * above attribute.
+   */
+  private $testAttribute2;
+
+  /**
+   * Multiline comment above attribute.
+   */
+  private $testAttribute3;
+
+  /**
+   * Multiple multiline comments
+   * above attribute.
+   */
+  private $testAttribute4;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aTestAttribute1, $aTestAttribute2, $aTestAttribute3, $aTestAttribute4)
+  {
+    $this->testAttribute1 = $aTestAttribute1;
+    $this->testAttribute2 = $aTestAttribute2;
+    $this->testAttribute3 = $aTestAttribute3;
+    $this->testAttribute4 = $aTestAttribute4;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setTestAttribute1($aTestAttribute1)
+  {
+    $wasSet = false;
+    $this->testAttribute1 = $aTestAttribute1;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setTestAttribute2($aTestAttribute2)
+  {
+    $wasSet = false;
+    $this->testAttribute2 = $aTestAttribute2;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setTestAttribute3($aTestAttribute3)
+  {
+    $wasSet = false;
+    $this->testAttribute3 = $aTestAttribute3;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setTestAttribute4($aTestAttribute4)
+  {
+    $wasSet = false;
+    $this->testAttribute4 = $aTestAttribute4;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getTestAttribute1()
+  {
+    return $this->testAttribute1;
+  }
+
+  public function getTestAttribute2()
+  {
+    return $this->testAttribute2;
+  }
+
+  public function getTestAttribute3()
+  {
+    return $this->testAttribute3;
+  }
+
+  public function getTestAttribute4()
+  {
+    return $this->testAttribute4;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

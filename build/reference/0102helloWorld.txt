@@ -1,0 +1,96 @@
+Hello World Examples
+User Manual Basics
+noreferences
+
+@@description
+<p>As is customary when introducing a new language, here are some 'hello world' examples for Umple. Load these examples into UmpleOnline by clicking on the links. Then generate Java code by clicking on the 'Generate' button. Next click on the 'download zip file' link and run 'javac' on the result or else compile it in Eclipse.</p>
+
+<p><b>First example below:</b> This looks identical to how a Java 'hello world' example would look, illustrating a key feature of Umple: Umple <i>adds</i> features to existing languages: Code in the original language can and does remain the same. Umple just replaces and simplifies some (or a lot) of it.</p>
+
+
+<p><b>Second example below:</b> This shows some very simple features of Umple: An attribute, an association, a generalization, some Java methods and the mixin capability:<br/>
+<ul>
+<li><a href="AttributeDefinition.html">Attributes</a> look very much like variables in Java or other similar programming languages; however they are more than that: Umple generates code for setting and getting each attribute. You can also add lots of other features to attributes, such as making them immutable (so they cannot change), adding constraints, or making them part of a 'key'.</p>
+<li>An <a href="AssociationDefinition.html">association</a> such as the one shown here maintains links between objects at run-time. Here the student can get its mentors, and the mentor can find his or her optional student.
+<li>A <a href="isAclause.html">generalization</a>, as in other object-oriented language, sets up inheritance relationships. Umple uses the 'isA' keyword. Here both Student and Mentor inherit the name attribute.
+<li>The <a href="MethodDefinition.html">methods</a> in the example are just normal Java methods. If you generate java from this, compile using javac, and then run the Person class using java, its main program will run.
+<li>You will notice that Student is apparently defined twice. This is a feature of Umple called using 'mixin' technology. All the elements are combined to create the resulting class.
+</ul>
+</p>
+
+<p><b>Umple and UML:</b> Here is the class diagram of the second example in UML. If you click on the 'open in UmpleOnline' link, you will see the UML diagram generated. You can then edit the UML diagram to change the code, or change the code to edit the UML diagram.</p>
+
+<img src="examples/MentorStudent.png" alt="UML class diagram showing superclass Person (with attribute name), and with subclasses Student and Mentor. There is a 0..1 -- * association between the subclasses."/>
+
+
+@@example
+/*
+ * Simple Hello World example for Umple.
+ * Compile this with Umple and it will generate Java
+ * that is essentially the same.
+ * 
+ * You could just as readily compile this code directly
+ * with javac. However, this serves as the starting point:
+ * Other examples in this manual show other things you
+ * can do with Umple
+ */
+class HelloWorld {
+  public static void main(String [ ] args) {
+    System.out.println("Hello World");
+  }
+}
+
+@@endexample
+
+@@example
+/*
+ * Introductory example of Umple showing classes,
+ * attribute, association, generalization, methods
+ * and the mixin capability. Generate java and run this.
+ * 
+ * The output will be:
+ * The mentor of Tom The Student is Nick The Mentor
+ * The students of Nick The Mentor are [Tom The Student]
+ */
+class Person {
+  name; // Attribute, string by default
+  String toString () {
+    return(getName());
+  }
+}
+
+class Student {
+  isA Person;
+}
+
+class Mentor {
+  isA Person;
+}
+
+association {
+  0..1 Mentor -- * Student;
+}
+
+class Person {
+  // Notice that we are defining more contents for Person
+  // This uses Umple's mixin capability
+  
+  public static void main(String [ ] args) {
+    Mentor m = new Mentor("Nick The Mentor");
+    Student s = new Student("Tom The Student");
+    s.setMentor(m);
+    System.out.println("The mentor of "  + s  + " is " +  s.getMentor());
+    System.out.println("The students of " +  m  + " are " +  m.getStudents());
+  }
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 154 29 109 60;
+}
+
+class Mentor
+{
+  position 253 130 109 45;
+}
+@@endexample

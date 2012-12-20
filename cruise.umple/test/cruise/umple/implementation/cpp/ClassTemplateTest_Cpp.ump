@@ -1,0 +1,6 @@
+generate Cpp;
+namespace example;
+
+class Mentor 
+{
+}

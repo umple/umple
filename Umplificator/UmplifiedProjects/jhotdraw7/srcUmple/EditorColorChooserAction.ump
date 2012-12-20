@@ -1,0 +1,46 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class EditorColorChooserAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.event.FigureSelectionEvent;
+depend java.util.*;
+depend java.awt.*;
+depend javax.swing.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AttributeAction;
+
+  protected AttributeKey<Color> key;
+protected static JColorChooser colorChooser;
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        if (colorChooser == null) {
+            colorChooser = new JColorChooser();
+        }
+        Color initialColor = getInitialColor();
+        // FIXME - Reuse colorChooser object instead of calling static method here.
+        ResourceBundleUtil labels =
+                ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        Color chosenColor = JColorChooser.showDialog((Component) e.getSource(), labels.getString("attribute.color.text"), initialColor);
+        if (chosenColor != null) {
+            HashMap<AttributeKey, Object> attr = new HashMap<AttributeKey, Object>(attributes);
+            attr.put(key, chosenColor);
+            applyAttributesTo(attr, getView().getSelectedFigures());
+        }
+    }
+public void selectionChanged(FigureSelectionEvent evt) {
+        //setEnabled(getView().getSelectionCount() > 0);
+    }
+protected Color getInitialColor() {
+        Color initialColor = (Color) getEditor().getDefaultAttribute(key);
+        if (initialColor == null) {
+            initialColor = Color.red;
+        }
+        return initialColor;
+    }
+
+}

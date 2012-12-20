@@ -1,0 +1,20 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.components" 
+imports="cruise.ui.jsf.*"
+class="SkinBean" skeleton="../skeleton/IGenerator.skeleton" %>
+<% String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);%>
+package <%=preffix%>.components.bean;
+
+public class SkinBean {
+ 
+   private String skin;
+ 
+   public String getSkin() {
+   if(skin==null){
+   	skin= "wine";
+   }
+	return skin;
+   }
+   public void setSkin(String skin) {
+	this.skin = skin;
+   }
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE MODE SYSTEM "xmode.dtd">
+<MODE>
+    <PROPS>
+    	<PROPERTY NAME="commentStart" VALUE="/*" />
+    	<PROPERTY NAME="commentEnd" VALUE="*/" />
+    	<PROPERTY NAME="lineComment" VALUE="//" />
+    	<PROPERTY NAME="indentOpenBrackets" VALUE="{" />
+    	<PROPERTY NAME="indentCloseBrackets" VALUE="}" />
+    </PROPS>
+    <RULES>
+    <SPAN TYPE="COMMENT1">
+    	<BEGIN>/*</BEGIN>
+    	<END>*/</END>
+    </SPAN>
+    <!-- This doesn't seem to work for highlighting single line comments. The hack
+    below works though.
+    <EOL_SPAN TYPE="COMMENT1">
+    	<BEGIN>//</BEGIN>	
+    </EOL_SPAN>
+    -->
+    <SPAN TYPE="COMMENT1" NO_LINE_BREAK="TRUE">
+    	<BEGIN>//</BEGIN>
+    	<END>""</END>
+    </SPAN>
+    
+    
+    <KEYWORDS>
+    	<KEYWORD1>abstract</KEYWORD1>
+    	<KEYWORD1>activate</KEYWORD1>	
+	<KEYWORD1>after</KEYWORD1>
+	<KEYWORD1>afterEvery</KEYWORD1>
+	<KEYWORD1>as</KEYWORD1>
+	<KEYWORD1>association</KEYWORD1>
+	<KEYWORD1>associationClass</KEYWORD1>
+	<KEYWORD1>before</KEYWORD1>
+	<KEYWORD1>cardinality</KEYWORD1>
+	<KEYWORD1>class</KEYWORD1>
+	<KEYWORD1>const</KEYWORD1>
+	<KEYWORD1>constant</KEYWORD1>
+	<KEYWORD1>deactivate</KEYWORD1>
+	<KEYWORD1>debug</KEYWORD1>
+	<KEYWORD1>defaulted</KEYWORD1>
+	<KEYWORD1>depend</KEYWORD1>
+	<KEYWORD1>do</KEYWORD1>
+	<KEYWORD1>during</KEYWORD1>
+	<KEYWORD1>entry</KEYWORD1>
+	<KEYWORD1>execute</KEYWORD1>
+	<KEYWORD1>exit</KEYWORD1>
+	<KEYWORD1>external</KEYWORD1>
+	<KEYWORD1>final</KEYWORD1>
+	<KEYWORD1>for</KEYWORD1>
+	<KEYWORD1>generate</KEYWORD1>
+	<KEYWORD1>immutable</KEYWORD1>
+	<KEYWORD1>interface</KEYWORD1>
+	<KEYWORD1>internal</KEYWORD1>
+	<KEYWORD1>isA</KEYWORD1>
+	<KEYWORD1>key</KEYWORD1>
+	<KEYWORD1>lazy</KEYWORD1>
+	<KEYWORD1>namespace</KEYWORD1>
+	<KEYWORD1>onThisObject</KEYWORD1>
+	<KEYWORD1>period</KEYWORD1>
+	<KEYWORD1>position</KEYWORD1>
+	<KEYWORD1>position.association</KEYWORD1>
+	<KEYWORD1>protected</KEYWORD1>
+	<KEYWORD1>public</KEYWORD1>
+	<KEYWORD1>self</KEYWORD1>
+	<KEYWORD1>settable</KEYWORD1>
+	<KEYWORD1>singleton</KEYWORD1>
+	<KEYWORD1>statemachine</KEYWORD1>
+	<KEYWORD1>trace</KEYWORD1>
+	<KEYWORD1>tracecase</KEYWORD1>
+	<KEYWORD1>tracer</KEYWORD1>
+	<KEYWORD1>unique</KEYWORD1>
+	<KEYWORD1>until</KEYWORD1>
+	<KEYWORD1>use</KEYWORD1>
+	<KEYWORD1>where</KEYWORD1>
+    </KEYWORDS>
+    </RULES>
+
+
+</MODE>

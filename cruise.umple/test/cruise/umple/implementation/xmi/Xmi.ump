@@ -1,0 +1,41 @@
+generate Xmi;
+namespace example;
+
+class Person
+{
+  status { Registered, Active, Inactive }
+}
+
+class Product
+{
+  description;
+  Integer available;
+  Double price;
+  Date createdDate;
+  Time createdTime;
+  Boolean isActive;
+}
+
+interface ICart
+{
+
+}
+
+class Cart
+{
+  isA ICart;
+}
+
+class CartItem
+{
+  3..* item -- 0..1 Product;
+}
+
+class PaymentMethod
+{
+} 
+
+class Cheque
+{
+  isA PaymentMethod;
+}

@@ -1,0 +1,4 @@
+interface ISomething
+{
+ position 10 20 30 40;
+}

@@ -1,0 +1,62 @@
+<project name="JSF" default="war" basedir=".">
+	<description>
+		Ant sript to create a JSF war file
+    </description>
+	<!-- set global properties for this build -->
+	<xmlproperty file="${xmlFile}" keepRoot="true"
+		semanticAttributes="true" />
+	<property name="outputFolder" value="${UmpleProject.OutputFolder}" />
+	<property name="umpleFile" value="${UmpleProject.UmpleFile}" />
+	<property name="projectName" value="${UmpleProject.name}" />
+	<property name="src" value="${outputFolder}/JavaSource" />
+	<property name="build" value="${outputFolder}/bin" />
+	<property name="compile-libs" value="${outputFolder}/compile-libs" />
+
+	<target name="run">
+		<java classname="cruise.generator.UIGU" fork="true">
+			<arg value="${xmlFile}" />
+			<arg value="${umpleFile}" />
+			<arg value="${outputFolder}" />
+			<arg value="${projectName}" />
+			<classpath>
+				<pathelement location="../../scripts/JSFProvider/GUIGenerator.jar" />
+				<pathelement location="../../scripts/JSFProvider/JSFProvider.jar" />
+				<pathelement location="../../scripts/JSFProvider/GUIModel.jar" />
+				<pathelement location="../../scripts/JSFProvider/Umple.jar" />
+			</classpath>
+		</java>
+	</target>
+
+
+	<target name="war" depends="run, compile" description="generate war">
+		<war destfile="${projectName}.war"
+			webxml="${outputFolder}/WebContent/WEB-INF/web.xml"
+			basedir="${outputFolder}/WebContent">
+			<classes dir="${outputFolder}/bin" />
+		</war>
+	</target>
+	
+	<target name="prepare">
+		<mkdir dir="${build}" />
+		 <copy todir="${build}/bundles">
+		<fileset dir="${outputFolder}/JavaSource/bundles"/>
+		</copy>
+	</target>
+
+
+
+	<target name="compile" depends="run, prepare">
+		<javac debug="on" srcdir="${src}" destdir="${build}" includes="**/*">
+			<classpath>
+				<pathelement location="${compile-libs}/jsf-api.jar" />
+				<pathelement location="${compile-libs}/jsf-impl.jar" />
+				<pathelement location="${compile-libs}/servlet-api.jar" />
+				<pathelement location="${compile-libs}/el-api.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+
+
+</project>
+

@@ -1,0 +1,11 @@
+use ChopRoundRectangleConnector.ump;
+use AbstractConnector.ump;
+use package-info.ump;
+use StickyRectangleConnector.ump;
+use ChopTriangleConnector.ump;
+use ChopRectangleConnector.ump;
+use ChopDiamondConnector.ump;
+use LocatorConnector.ump;
+use ChopEllipseConnector.ump;
+use ChopBezierConnector.ump;
+use Connector.ump;

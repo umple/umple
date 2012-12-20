@@ -1,0 +1,11 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+appendln(tp_code,"TP_FIELDS(");
+		if(att.getType() =="Integer")		
+		{ appendln(tp_code,"ctf_integer(int, intfield,{0})",att.getName()); }
+		if(att.getType() == "Double")
+		{ appendln(tp_code,"ctf_float(double, doublefield,{0})",att.getName()) ;}
+		if(att.getType() == "String")
+		{ appendln(tp_code,"ctf_string(message,{0})",att.getName()) ;} 
+		appendln(tp_code,")");
+	%>		

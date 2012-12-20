@@ -1,0 +1,64 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Php;
+
+namespace services;
+
+class ElectionForPositionService {
+  singleton;
+
+  lazy Integer idElection;
+  lazy Integer idPosition;
+  lazy String latestResult;
+  lazy isConnected;
+  lazy efpJSON;
+  lazy internal efpFound;
+  
+  after setEfpJSON {
+    $this->createElectionForPosition();
+  }
+
+  ServiceProvidingCycle {
+    Idle {
+      createElectionForPosition -> FindingElectionForPosition;
+    }
+    CreatingElectionForPosition {
+      entry / {$this->tryToCreateElectionForPosition();}
+      -> Idle;
+    }
+    FindingElectionForPosition {
+      entry / {$this->tryFindingElectionForPosition();}
+      [$this->efpFound] -> Idle;
+      [!$this->efpFound] -> CreatingElectionForPosition;
+    }
+  }
+
+  before setServiceProvidingCycle {
+    require_once("Credentials.php");
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    mysql_select_db(Credentials::$db_database);
+  }
+    
+  private function tryToCreateElectionForPosition() {
+    $efpData=json_decode($this->efpJSON);
+    if (mysql_query("insert into election_for_position (election_id_election, position_id_position) values ('$efpData->election', '$efpData->position')"))
+      $this->latestResult='Successfully added!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
+  private function tryFindingElectionForPosition() {
+    $efpData=json_decode($this->efpJSON);
+    $this->efpFound=true;
+    $result = mysql_query("SELECT * FROM election_for_position where election_id_election='$efpData->election' and position_id_position='$efpData->position'");
+    if (mysql_num_rows($result)==0)
+      $this->efpFound=false;
+  }
+}

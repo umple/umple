@@ -1,0 +1,541 @@
+namespace umple.pts.domain.math;
+
+use Entities.ump;
+
+/**
+ * Interface (collection of required methods and functions) for the directed graph class.
+ * @see {@link DirectedGraph}
+ * @see {@link QuickestRouteCalculusProperties}
+ * @see {@link DirectedEdge}
+ * @see {@link Vertex}
+ */
+interface IDirectedGraph{
+	depend java.util.List;
+	/**
+	 * Method for getting neighbor edges of an edge.
+	 * @param anEdge An edge which neighbors are wanted.
+	 * @return List of neighbor edges of an edge from parameter.
+	 */
+	List<DirectedEdge> getNeighbourEdges(DirectedEdge anEdge);
+	
+	/**
+     * Method for searching quickest route from one vertex to another.
+     * @param fromVertex Start vertex. (from)
+     * @param toVertex End vertex. (to)
+     * @return {@link QuickestRouteCalculusProperties} containing information about search. Can return null if vertices are not connected.
+     */
+	QuickestRouteCalculusProperties getQuickestRoute(Vertex fromVertex, Vertex toVertex);
+}
+
+/**
+ * <i>Class for representation of pts Graph view of schematizing map.<br>
+ * Used for calculation of shortest (quickest) path between stops.<br>
+ * Maybe will be used for optimization</i>
+ *
+ * @see {@link DirectedEdge}
+ * @see {@link Vertex}
+ */
+class DirectedGraph{
+	isA IDirectedGraph;
+	1 -- 1..* Vertex;
+	1 -- * DirectedEdge;
+	depend umple.pts.domain.coreEntities.Stop;
+	depend umple.pts.domain.coreEntities.Line;
+	depend umple.pts.domain.coreEntities.ArrivalTimeToStop;
+	depend umple.pts.domain.coreEntities.LineTimeTable;
+	depend umple.pts.domain.coreEntities.Run;
+	depend java.sql.Time;
+
+  public DirectedGraph(List<LineTimeTable> timetables){
+	  this();
+	  List<Line> lines = new ArrayList<Line>();
+	  for(LineTimeTable ltt: timetables){
+		  lines.add(ltt.getForLine());
+	  }
+	  //reads data
+	  readDataFromLines(lines);
+	  
+	  //adjust run data
+	  for(LineTimeTable ltt: timetables){
+		  for(Run run : ltt.getScheduledRuns()){
+			  for(ArrivalTimeToStop arrivalTime : run.getArrivalTimeToStops()){
+				  Vertex vertexForStop = findVertexByStop(arrivalTime.getStop());
+				  if(vertexForStop != null){
+					  vertexForStop.addPassingRun(run);
+				  }
+			  }
+		  }
+	  }
+  }
+  
+  /**
+   * Reads data from list of lines
+   */
+  public void readDataFromLines(List<Line> linesOnGraph){
+	  HashMap<Stop,Vertex> stopsWithDefinedVertex = new HashMap<Stop,Vertex>();
+		for(Line line: linesOnGraph){
+			Stop previousStop = null;
+			for(Stop stop: line.getStops()){
+				if(!stopsWithDefinedVertex.containsKey(stop)){
+					stopsWithDefinedVertex.put(stop, new Vertex(stop,this));
+				}
+				
+				if(previousStop != null){
+					DirectedEdge anEdge = new DirectedEdge(1, stopsWithDefinedVertex.get(previousStop), 
+								stopsWithDefinedVertex.get(stop), this);
+					
+					this.addDirectedEdge(anEdge);
+				}
+				previousStop = stop;
+			}
+			//last one and first are connected
+			//upon the agreement about how to interpret list of stops
+			this.addDirectedEdge(new DirectedEdge(1d, stopsWithDefinedVertex.get(line.getStop(line.numberOfStops() - 1)), 
+						stopsWithDefinedVertex.get(line.getStop(0)), this));
+		}
+  }
+
+	/**
+  	 * Method for finding a neighbor edges of an edge.
+  	 * @param anEdge Edge for which neighbor edges are wanted.
+  	 * @return <i>List of a neighbor edges to <b>anEdge</b>.</i> 
+  	 * 
+  	 * @see {@link DirectedEdge}
+  	 */
+	public List<DirectedEdge> getNeighbourEdges(DirectedEdge anEdge) {
+		List<DirectedEdge> neighbourEdges= new ArrayList<DirectedEdge>();
+		
+		for (DirectedEdge edge : getDirectedEdges()) {
+			if(edge == anEdge){
+				continue;
+			}
+			
+			if(edge.getGoingFrom() == anEdge.getGoingTo() || edge.getGoingTo() == anEdge.getGoingFrom()
+					|| edge.getGoingFrom() == anEdge.getGoingTo() || edge.getGoingTo() == anEdge.getGoingFrom()){
+				neighbourEdges.add(edge);
+			}
+		}
+		
+		return neighbourEdges;
+	}
+	
+	/**
+	 * Method for finding quickest route between two vertices
+	 * @param fromVertex Source for calculation (Start vertex)
+	 * @param toVertex Destination for calculation (End vertex)
+	 * @return <i>Quickest route from <b>fromVertex</b> to <b>toVertex</b> if there is any possible, null otherwise.</i>
+	 * 
+	 * @see {@link QuickestRouteCalculusProperties}
+	 * @see {@link Vertex}
+	 */
+	public QuickestRouteCalculusProperties getQuickestRoute(Vertex fromVertex,
+			Vertex toVertex) {
+		QuickestRouteCalculusProperties properties = new QuickestRouteCalculusProperties();
+		properties.addPassedVertexe(fromVertex);
+		
+		return findQuickestRoute(properties, toVertex);
+	}
+	
+	/**
+	 * This method is used to recursively find a quickest way out of possible ways.
+	 * @param properties Current quickest route properties.
+	 * @param destination Destination vertex for quickest route calculation.
+	 * @return quickest path available from current path defined by parameter <i>properties</i> and destination vertex.
+	 * 
+	 * @see {@link QuickestRouteCalculusProperties}
+	 * @see {@link Vertex}
+	 */
+	private QuickestRouteCalculusProperties findQuickestRoute(QuickestRouteCalculusProperties properties, Vertex destination){
+		QuickestRouteCalculusProperties quickestRoute = null;
+		Vertex currentVertex = properties.getPassedVertexe(properties.numberOfPassedVertexes()-1);
+		
+		if(currentVertex.equals(destination)){
+			return properties;
+		}
+		
+		for(DirectedEdge anEdge : currentVertex.getOutgoingEdges()){
+			QuickestRouteCalculusProperties calculatedNewProperties = new QuickestRouteCalculusProperties(properties);
+			if(calculatedNewProperties.addEdgeToCalculus(anEdge)){
+				calculatedNewProperties = findQuickestRoute(calculatedNewProperties, destination);
+				if(quickestRoute == null){
+					quickestRoute = calculatedNewProperties;
+				} else if(calculatedNewProperties.getTotalWeight() < quickestRoute.getTotalWeight()){
+					quickestRoute = calculatedNewProperties;
+				}
+			}
+		}
+		
+		return quickestRoute;
+	}
+	
+	/**
+	 * Finds vertex defined by a stop from parameter <code>aStop</code>.
+	 * @param aStop Stop that defines a vertex that this function will return if it has a vertex defined by that stop.
+	 * @return <i> A vertex defined by a stop from argument if one exists, null otherwise</i>
+	 */
+	public Vertex findVertexByStop(Stop aStop){
+		for(Vertex vertex : vertices){
+			if(vertex.getStop().equals(aStop)){
+				return vertex;
+			}
+		} 
+		return null;
+	}
+	
+	/**
+	 * Method for finding quickest routes between <code>fromStop</code> and <code>endStop</code>. 
+	 * <br>It searches only runs in period [<code>startTime</code>, <code>startTime</code> + 1h]
+	 * @param fromStop From stop - from where 
+	 * @param toStop To stop - destination
+	 * @param startTime Expected start time
+	 * @return List of all possible quickest routes taking multiple runs.
+	 */
+	public List<QuickestRunsCalculusProperties> getQuickestRoutes(Stop fromStop, Stop toStop, Time startTime){
+		List<QuickestRunsCalculusProperties> quickestRoutes = new ArrayList<QuickestRunsCalculusProperties>();
+		
+		Vertex startVertex = findVertexByStop(fromStop);
+		if(startVertex == null){
+			return quickestRoutes;
+		}
+		
+		Vertex endVertex = findVertexByStop(toStop);
+		if(endVertex == null){
+			return quickestRoutes;
+		}
+		
+		List<Run> possibleRuns = possibleRuns(startVertex, startTime);
+		for(Run run : possibleRuns){
+			QuickestRunsCalculusProperties calculusProperties = new QuickestRunsCalculusProperties(startTime, startTime);
+			calculusProperties.addRunStopsCalculusProperty(new RunStopsCalculusProperties(run, toStop, toStop, startTime, startTime));
+			QuickestRunsCalculusProperties calculatedProps = getQuickestRoute(calculusProperties, startVertex, endVertex, run.getArrivalTimeToStop(fromStop));
+		
+			if(calculatedProps != null){
+				quickestRoutes.add(calculatedProps);
+			}
+		}
+		
+		return quickestRoutes;
+	}
+	
+	private QuickestRunsCalculusProperties getQuickestRoute(QuickestRunsCalculusProperties properties, Vertex currentVertex, Vertex destination, Time currentTime){
+				
+		if(properties == null){
+			return null;
+		}
+		if(currentVertex == destination){
+			return properties;
+		}
+		
+		RunStopsCalculusProperties currentRunProps = properties.getRunStopsCalculusProperty(properties.numberOfRunStopsCalculusProperties() -1);
+		QuickestRunsCalculusProperties quickestRoute = null;
+		
+		for(DirectedEdge edge : currentVertex.getOutgoingEdges()){
+			Vertex nextVertex = edge.getGoingTo();
+			if(properties.getPassedStops().contains(nextVertex.getStop())){
+				continue;
+			}
+			
+			List<Run> possibleRuns = possibleRuns(nextVertex, currentTime);	
+			
+			//first try for possible run
+			if(possibleRuns.contains(currentRunProps.getOnRun())){
+				QuickestRunsCalculusProperties preparedProps = new QuickestRunsCalculusProperties(properties);
+				
+				Time arrivalTime = currentRunProps.getOnRun().getArrivalTimeToStop(nextVertex.getStop());
+				if(arrivalTime == null){
+					arrivalTime = preparedProps.getEndTime();
+				}
+				
+				RunStopsCalculusProperties rsProps = preparedProps.getRunStopsCalculusProperty(preparedProps.numberOfRunStopsCalculusProperties() -1);
+				rsProps.setToStop(nextVertex.getStop());
+				rsProps.setEndTime(arrivalTime);
+				preparedProps.setEndTime(arrivalTime);
+				preparedProps.addPassedStop(nextVertex.getStop());
+				
+				QuickestRunsCalculusProperties maybeQuickestProps = getQuickestRoute(preparedProps, nextVertex, destination, preparedProps.getEndTime());
+				if(quickestRoute == null){
+					quickestRoute = maybeQuickestProps;
+				} else if(maybeQuickestProps.getEndTime().getTime() <= quickestRoute.getEndTime().getTime()){
+					quickestRoute = maybeQuickestProps;
+				}
+				
+			}
+			
+			for(Run possibleRun : possibleRuns){
+				
+				if(possibleRun == currentRunProps.getOnRun()){
+					continue;
+				}
+				
+				QuickestRunsCalculusProperties preparedProps = new QuickestRunsCalculusProperties(properties);
+				RunStopsCalculusProperties rsProps = preparedProps.getRunStopsCalculusProperty(preparedProps.numberOfRunStopsCalculusProperties() -1);
+				Time arrivalTime = possibleRun.getArrivalTimeToStop(nextVertex.getStop());
+				if(arrivalTime == null){
+					arrivalTime = preparedProps.getEndTime();
+				}
+				
+				preparedProps.setEndTime(arrivalTime);
+				if(possibleRun == currentRunProps.getOnRun()){
+					rsProps.setToStop(nextVertex.getStop());
+					rsProps.setEndTime(arrivalTime);
+				} else {
+					preparedProps.addRunStopsCalculusProperty(new RunStopsCalculusProperties(possibleRun, nextVertex.getStop(), nextVertex.getStop(), arrivalTime, arrivalTime));
+				}
+				
+				preparedProps.addPassedStop(nextVertex.getStop());
+				
+				QuickestRunsCalculusProperties maybeQuickestRoute = getQuickestRoute(preparedProps, nextVertex, destination, preparedProps.getEndTime());
+				if(quickestRoute == null){
+					quickestRoute = maybeQuickestRoute;
+				} else if(quickestRoute.getEndTime().getTime() > maybeQuickestRoute.getEndTime().getTime()){
+					quickestRoute = maybeQuickestRoute;
+				}
+			}
+		}
+		
+		return quickestRoute;
+	}
+	
+	private List<Run> possibleRuns(Vertex vertex, Time time){
+		List<Run> possibleRuns = new ArrayList<Run>();
+		if(time == null){
+			return possibleRuns;
+		}
+		Time timePlusHour = new Time(time.getTime() + 1000 * 60 * 60);
+		for(Run run : vertex.getPassingRuns()){
+			Time arrivalTime = run.getArrivalTimeToStop(vertex.getStop());
+			if(arrivalTime != null){
+				if(arrivalTime.getTime() >= time.getTime() && arrivalTime.getTime() <= timePlusHour.getTime()){
+					possibleRuns.add(run);
+				}
+			}
+		}
+		
+		return possibleRuns;
+	}
+}
+
+/**
+ * <i>Class that is information holder of a vertex of a graph.<br>
+ * It is defined by a stop.</i>
+ * 
+ * @see {@link Stop}
+ * @see {@link DirectedGraph}
+ * @see {@link DirectedEdge}
+ */
+class Vertex{
+	depend umple.pts.domain.coreEntities.*;
+	Stop stop;
+	1 -> * Run passingRuns;
+	
+  /**
+   * <i>This methods finds all neighbors of aVertex.</i>
+   * @return List of neighbor vertices
+   */
+  public List<Vertex> getNeighbourVertexes() {
+	List<Vertex> neighbourVertexes = new ArrayList<Vertex>(getPossibleNextVertices());
+	
+	
+	for(Vertex anVertex : getPossiblePreviousVertices())
+	{
+		if(!neighbourVertexes.contains(anVertex)){
+			neighbourVertexes.add(anVertex);
+		}
+	}
+	
+	return neighbourVertexes;
+  }
+  
+  /**
+   * <i>This method can be used for finding neighbor vertices by output arcs (edges).</i>
+   * @return List of vertices that are connected by a this vertex by output edges.
+   */
+  public List<Vertex> getPossibleNextVertices() {
+	List<Vertex> outgoingNeighbours = new ArrayList<Vertex>();
+	
+	for(DirectedEdge anEdge : getOutgoingEdges()){
+		if(!outgoingNeighbours.contains(anEdge.getGoingTo())){
+			outgoingNeighbours.add(anEdge.getGoingTo());
+		}
+	}
+	
+	return outgoingNeighbours;
+  }
+
+  /**
+   * <i>This method can be used for finding neighbor vertices by input arcs (edges).</i>
+   * @return List of vertices that are connected by a this vertex by input edges.
+   */
+  public List<Vertex> getPossiblePreviousVertices() {
+	List<Vertex> ingoingNeighbours = new ArrayList<Vertex>();
+	
+	for(DirectedEdge anEdge : getIncomingEdges()){
+		if(!ingoingNeighbours.contains(anEdge.getGoingFrom())){
+			ingoingNeighbours.add(anEdge.getGoingFrom());
+		}
+	}
+	
+	return ingoingNeighbours;
+  }
+  
+}
+
+/**
+ * <i>Class is information holder about edges in directed graph.<br>
+ * Holds information about vertices from which and toward which it's directed together with it's weight</i>
+ * 
+ * @see {@link DirectedGraph}
+ * @see {@link Vertex}
+ */
+class DirectedEdge{
+	* outgoingEdges -- 1 Vertex goingFrom;
+	* incomingEdges -- 1 Vertex goingTo;
+	double weight;
+	
+	public boolean equals(Object obj){
+	  if(obj == null || !(obj instanceof DirectedEdge)){
+		  return false;
+	  }
+	  
+	  if(obj == this){
+		  return true;
+	  }
+	  
+	  DirectedEdge anotherEdge = (DirectedEdge)obj;
+	  
+	  return anotherEdge.weight == this.weight
+	  	&& anotherEdge.goingFrom.equals(this.goingFrom)
+	  	&& anotherEdge.goingTo.equals(this.goingTo);
+  }
+}
+
+class RunStopsCalculusProperties{
+	depend umple.pts.domain.coreEntities.Run;
+	depend umple.pts.domain.coreEntities.Stop;
+	Run onRun;
+	Stop fromStop;
+	Stop toStop;
+	Time startTime;
+	Time endTime;
+	
+	public RunStopsCalculusProperties(RunStopsCalculusProperties props){
+	  if(props != null){
+		  this.endTime = props.endTime;
+		  this.startTime = props.startTime;
+		  this.onRun = props.onRun;
+		  this.toStop = props.toStop;
+		  this.fromStop = props.fromStop; 
+	  } else {
+		  //let it be junk
+	  }
+	  
+  }
+}
+
+class QuickestRunsCalculusProperties{
+	
+	Time startTime;
+	Time endTime;
+	1 -> * RunStopsCalculusProperties;
+	1 -> * Stop passedStops;
+    /**
+    * Constructor from other properties. Full copy.
+    */
+	public QuickestRunsCalculusProperties(QuickestRunsCalculusProperties properties) {
+	
+	 if(properties != null){
+		 if(properties.endTime != null){
+				this.endTime =  new Time(properties.endTime.getTime());
+			} else {
+				this.endTime = null;
+			}
+			
+			if(properties.startTime != null){
+				this.startTime = new Time( properties.startTime.getTime());
+			} else {
+				this.startTime = null;
+			} 
+	 } else {
+		 this.endTime = null;
+		 this.startTime = null;
+		 this.runStopsCalculusProperties = new ArrayList<RunStopsCalculusProperties>();
+	 }
+	
+		this.runStopsCalculusProperties = new ArrayList<RunStopsCalculusProperties>();
+		for(RunStopsCalculusProperties props : properties.getRunStopsCalculusProperties()){
+			runStopsCalculusProperties.add(new RunStopsCalculusProperties(props));
+		}
+		
+		this.passedStops = new ArrayList<Stop>();
+		this.passedStops.addAll(properties.getPassedStops());
+	}
+}
+
+
+/**
+ * <i>Class is information holder about quickest (shortest) route calculation.<br>
+ * <b>Temporary</b> or <b>Final</b>.<br><br>
+ * Holds information about passed vertices and used edges.</i>
+ */
+class QuickestRouteCalculusProperties{
+	double totalWeight = 0;
+	1 -> * DirectedEdge edges;
+	1 -> * Vertex passedVertexes;
+	1 -> * Run passedRuns;
+	
+  /**
+   * <i>Adds an edge to calculus by adding ending vertex and adds it's weight to totalWeight.<br></i>
+   * 
+   * @param anEdge An edge from which data will be derived.
+   * 
+   * @return <i>true</i> if edge data is added, <i>false</i> otherwise.
+   * 
+   * @see {@link DirectedEdge}
+   */
+	public boolean addEdgeToCalculus(DirectedEdge anEdge){
+		if(passedVertexes.contains(anEdge.getGoingTo())){
+			return false;
+		} else {
+			edges.add(anEdge);
+			passedVertexes.add(anEdge.getGoingTo());
+			totalWeight+=anEdge.getWeight();
+			return true;
+		}
+	}
+   
+  /**
+   * <i>Adds data from already calculated properties if it can.<br>
+   * If properties contains any of edges already contained by this property, it adds nothing.</i>
+   * @param properties Properties from which data will be added.
+   * @return <i>true</i> if every data is added, <i>false</i> otherwise.
+   */
+	public boolean addDataFromCalculusProperties(QuickestRouteCalculusProperties properties){
+	  double oldTotalWeight = this.totalWeight;
+
+	  //QuickestRouteCalculusProperties Associations
+	  List<DirectedEdge> oldEdges = new ArrayList<DirectedEdge>(this.edges);
+	  List<Vertex> oldPassedVertexes = new ArrayList<Vertex>(this.passedVertexes);
+	  
+	  for(DirectedEdge anEdge : properties.getEdges()){
+		  if(!this.addEdgeToCalculus(anEdge)){
+			  this.totalWeight = oldTotalWeight;
+			  this.edges = oldEdges;
+			  this.passedVertexes = oldPassedVertexes;
+		  } else {
+			  return false;
+		  }
+	  }
+	  
+	  return true;
+  }
+  
+  /**
+   * <i>Constructor from other properties.</i>
+   * @param properties Properties from which data will be derived.
+   */
+  public QuickestRouteCalculusProperties( QuickestRouteCalculusProperties properties){
+	  this.totalWeight = properties.getTotalWeight();
+	  this.passedVertexes = new ArrayList<Vertex>(properties.getPassedVertexes());
+	  this.edges = new ArrayList<DirectedEdge>(properties.edges);
+  }
+}

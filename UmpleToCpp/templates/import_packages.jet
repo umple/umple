@@ -1,0 +1,26 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  for (Depend depend : uClass.getDepends())
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "#include <{0}.h>",depend.getName());
+  }
+  
+  for (String anImport : gClass.getMultiLookup("import"))
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "#include <{0}>",anImport);
+  }
+  
+  for (String anImport : gClass.getMultiLookup("using"))
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "using namespace {0};",anImport);
+  }
+  
+  if (uClass.hasAssociationVariables())
+  {
+  	appendln(stringBuffer, "");
+    append(stringBuffer, "#include<algorithm>");  	
+  }
+%>

@@ -1,0 +1,101 @@
+<%@ jet package="cruise.ui.jsf.templates.impl" 
+imports="java.util.* cruise.model.abstractObjects.BackingObject cruise.umple.compiler.* cruise.ui.jsf.* "
+class="Validation" skeleton="../skeleton/IGenerator.skeleton" %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    List<AssociationVariable> constructorOneAsociations= bckObject.getConstructorOneAsociations();
+	List<AssociationVariable> multipleZeroManyToOptionalAssociations=bckObject.getZeroManyToOptionalAssociations();
+	List<AssociationVariable> multipleNManyToOptionalAssociations=bckObject.getNManyToOptionalAssociations();
+	List<AssociationVariable> multipleManyToOneAsociations =bckObject.getManyToOneAssociations();
+	List<AssociationVariable> mandatoryToSingletonAssociations=bckObject.getMandatoryToSingletonAssociations();
+	List<AssociationVariable> optionalToSingletonAssociations=bckObject.getOptionalToSingletonAssociations();
+	
+%>
+
+	public boolean validate(){
+		boolean success=true;
+	   <% for (AssociationVariable assocVar: constructorOneAsociations) { %>
+	   if(getSelected<%=assocVar.getUpperCaseName()%>()==null){
+	   	  	FacesMessage fm = new FacesMessage( resourceBundle.getString("<%=assocVar.getUpperCaseName()%>")+" cannot be null!");
+	   	  	fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, fm);
+	   		success=false;
+	   	}
+	   <% } %>
+	   <% for (AssociationVariable assocVar: mandatoryToSingletonAssociations) { %>
+	   if(getSelected<%=assocVar.getUpperCaseName()%>()==null){
+	   	  	FacesMessage fm = new FacesMessage( resourceBundle.getString("<%=assocVar.getUpperCaseName()%>")+" cannot be null!");
+	   	  	fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, fm);
+	   		success=false;
+	   	}
+	   <% } %>	 
+	   
+	   <% for (AssociationVariable assocVar: multipleNManyToOptionalAssociations) { 
+	   
+	   	boolean addtoValidation=false;
+	    String ifClause="getSelected"+assocVar.getUpperCaseName()+"List()==null ||";
+	    String ifMinBound="";
+	    String ifMaxBound="";
+	   	String msg="resourceBundle.getString(\"" + bckObject.getClassName()+"ClassName\")+\" \" ";
+
+	   	if (assocVar.getMultiplicity().getLowerBound() > 0){
+	   		ifMinBound ="getSelected"+assocVar.getUpperCaseName()+"List().size()<"+assocVar.getMultiplicity().getLowerBound();
+	   		msg=msg +"+\"should have at least "+assocVar.getMultiplicity().getLowerBound() + " \"+"  +  "resourceBundle.getString(\"" + assocVar.getUpperCaseName()+"\")" + "+\"(s)" ;
+	   		addtoValidation=true;
+	   	} 
+   		
+	   	if (assocVar.getMultiplicity().getUpperBound() > 0){
+	   		ifMaxBound =((ifMinBound.length()>0)?" || ":"")+ " getSelected"+assocVar.getUpperCaseName()+"List().size()>"+assocVar.getMultiplicity().getUpperBound();
+	   		msg=msg+((ifMinBound.length()>0)?" and it ":"+\"")+ "should have up to "+assocVar.getMultiplicity().getUpperBound() + " \"+"  +  "resourceBundle.getString(\"" + assocVar.getUpperCaseName()+"\")" + "+\"(s)" ;
+	   		addtoValidation=true;
+	   	}
+	   	
+		if(addtoValidation){
+		  ifClause=ifClause+ ifMinBound+ ifMaxBound;   
+	   %>
+
+	   if(<%=ifClause%> ) {
+	   	  	FacesMessage fm = new FacesMessage(<%=msg%>");
+	   	  	fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, fm);
+	   		success=false;
+	   	}
+	   <%}
+	    } %>	
+
+  <% for (AssociationVariable assocVar: multipleZeroManyToOptionalAssociations) { 
+	   
+	   	boolean addtoValidation=false;
+	    String ifClause="getSelected"+assocVar.getUpperCaseName()+"List()!=null &&";
+	    String ifMaxBound="";
+	   	String msg="resourceBundle.getString(\"" + bckObject.getClassName()+"ClassName\")+\" \" ";
+
+   		
+	   	if (assocVar.getMultiplicity().getUpperBound() > 0){
+	   		ifMaxBound =" getSelected"+assocVar.getUpperCaseName()+"List().size()>"+assocVar.getMultiplicity().getUpperBound();
+	   		msg=msg+ "+\""+ "should have up to "+assocVar.getMultiplicity().getUpperBound() + " \"+"  +  "resourceBundle.getString(\"" + assocVar.getUpperCaseName()+"\")" + "+\"(s)" ;
+	   		addtoValidation=true;
+	   	}
+	   	
+		if(addtoValidation){
+		  ifClause=ifClause+  ifMaxBound;   
+	   %>
+
+	   if(<%=ifClause%> ) {
+	   	  	FacesMessage fm = new FacesMessage(<%=msg%>");
+	   	  	fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+            FacesContext.getCurrentInstance().addMessage(null, fm);
+	   		success=false;
+	   	}
+	   <%}
+	    } %>	
+
+	   
+	   	     
+	return success;
+	
+	
+	
+	}
+
+

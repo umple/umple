@@ -1,0 +1,37 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+/*
+ * Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
+ * as an Umple file.
+ */
+class TextParser
+{
+  depend java.util.*;
+
+  internal _currentName = null;
+  internal Integer _lastCharacterIndex = 0;
+
+  // Specifies where the parser currently is in terms of the textual input character array.
+  internal Integer _currentCharacterIndex = 0;
+
+  internal Integer _maxCharacterIndex = 0;
+  internal Hashtable<Integer,Integer> indexToReplacementOffsetMap = new Hashtable<Integer,Integer>();
+
+  // The textual input from the input file.
+  internal _text = init("");
+
+  // The filename that the parser is going to retrieve textual input data from.
+  internal _filename = null;
+
+}
+
+use TextParser_Code.ump;

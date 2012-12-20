@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class DuplicateAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.gui.EditableComponent;
+  isA AbstractSelectionAction;
+
+  public final static String ID = "edit.duplicate";
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        JComponent c = target;
+        if (c == null && (KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                getPermanentFocusOwner() instanceof JComponent)) {
+            c = (JComponent) KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                    getPermanentFocusOwner();
+        }
+        if (c != null && c.isEnabled()) {
+            if (c instanceof EditableComponent) {
+                ((EditableComponent) c).duplicate();
+            } else {
+                c.getToolkit().beep();
+            }
+        }
+    }
+
+}

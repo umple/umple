@@ -1,0 +1,26 @@
+class Student
+{
+}
+
+class Mentor
+{
+}
+
+class Course
+{
+}
+
+class Student
+{
+  position 60 60 109 41;
+}
+
+class Mentor
+{
+  position 60 160 109 41;
+}
+
+class Course
+{
+  position 60 260 109 41;
+}

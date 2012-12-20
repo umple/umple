@@ -1,0 +1,34 @@
+E021 Invalid Reflexive Association
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple syntactic error reported when a class has a reflexive association (an association with both ends the same) but there is neither a role name (indicating it is asymmetric), nor a 'self' keyword (indicating it is symmetric).</h2>
+
+<p>Code cannot be generated for asymmetric reflexive associations unless there is a role name at at least one end. This ensures the generated API has distinct words for each end. 
+</p>
+
+<p><a href="ReflexiveAssociations.html">For more information about  reflexive associations, see this page.</a></p>
+
+@@example
+// The following example shows how to generate this error.
+class X {
+    0..1 -- 0..1 X;
+}
+@@endexample
+
+
+@@example
+// The following example shows how to fix the error if this is an asymmetric association.
+class X {
+    0..1 -- 0..1 X right;
+}
+@@endexample
+
+@@example
+// The following example shows how to fix the error if this is a symmetric association.
+class X {
+    0..1 self right;
+}
+@@endexample

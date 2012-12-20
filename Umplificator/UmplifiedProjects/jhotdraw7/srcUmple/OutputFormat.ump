@@ -1,0 +1,63 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.io ;
+
+class OutputFormat 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.*;
+depend java.awt.datatransfer.*;
+depend java.io.*;
+depend java.net.URI;
+depend java.util.*;
+depend javax.swing.*;
+
+  /**
+     * Return a FileFilter that can be used to identify files which can be stored 
+     * with this output format. Typically, each output format has its own
+     * recognizable file extension.
+     *
+     * @return FileFilter to be used with a javax.swing.JFileChooser
+     */
+    public javax.swing.filechooser.FileFilter getFileFilter();
+/**
+     * Returns the file extension for the output format.
+     * The file extension should be appended to a file name when storing a
+     * Drawing with the specified file format.
+     */
+    public String getFileExtension();
+/**
+     * Return a JFileChooser accessory that can be used to customize the output
+     * format.
+     *
+     * @return A JFileChooser accessory to be used with a javax.swing.JFileChooser
+     * Returns null, if no accessory is provided for this format.
+     */
+    @Nullable public JComponent getOutputFormatAccessory();
+/**
+     * Writes a Drawing into an URI.
+     *
+     * @param uri The uri.
+     * @param drawing The drawing.
+     */
+    public void write(URI uri, Drawing drawing) throws IOException;
+/**
+     * Writes a Drawing into an output stream.
+     *
+     * @param out The output stream.
+     * @param drawing The drawing.
+     */
+    public void write(OutputStream out, Drawing drawing) throws IOException;
+/**
+     * Creates a Transferable for the specified list of Figures.
+     *
+     * @param drawing The drawing.
+     * @param figures A list of figures of the drawing.
+     * @param scaleFactor The factor to be used, when the Transferable creates
+     * an image with a fixed size from the figures.
+     * @return The Transferable.
+     */
+    public Transferable createTransferable(Drawing drawing, List<Figure> figures, double scaleFactor) throws IOException;
+
+}

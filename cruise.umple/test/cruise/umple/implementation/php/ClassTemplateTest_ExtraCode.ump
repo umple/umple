@@ -1,0 +1,9 @@
+generate Php;
+namespace example;
+
+class Mentor 
+{
+  
+  public function showMe() {}
+
+}

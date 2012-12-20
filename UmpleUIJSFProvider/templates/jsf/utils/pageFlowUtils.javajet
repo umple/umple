@@ -1,0 +1,73 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.utils" 
+imports="java.util.*  cruise.umple.compiler.* cruise.ui.jsf.*"
+class="PageFlowUtils" skeleton="../skeleton/IGenerator.skeleton" %>
+<%
+ String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);
+%>
+
+package <%=preffix%>.utils;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Stack;
+import javax.faces.context.FacesContext;
+import dao.factory.DAOFactory;
+import <%=preffix%>.control.BeanLinker;
+import <%=preffix%>.control.MainBean;
+import javax.servlet.http.HttpSession;
+
+public class PageFlowUtils {
+
+	public static final String STACK ="STACK";
+	
+	private  static HttpSession getSession(){
+		HttpSession session = (HttpSession)  FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		return session;
+	}
+	@SuppressWarnings("unchecked")
+	public static Map getPageFlow() {
+	//	HttpSession session = (HttpSession)  FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		//if(session.getAttribute("pageFlow")==null){
+	//		session.setAttribute("pageFlow", new HashMap());
+	//	}
+		return peekBeanLinker().getAttributeMap();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void clearPageFlow() {
+	//	getSession().clear();
+		Stack<BeanLinker> stack =new Stack<BeanLinker>();
+		BeanLinker linker=new BeanLinker();
+		stack.add(linker);
+		getSession().setAttribute(STACK,  stack);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void pushBeanLinker(BeanLinker linker) {
+		((Stack<BeanLinker>)getSession().getAttribute(STACK)).push(linker);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static BeanLinker peekBeanLinker() {
+		return ((Stack<BeanLinker>)getSession().getAttribute(STACK)).peek();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static BeanLinker popBeanLinker() {
+		return ((Stack<BeanLinker>)getSession().getAttribute(STACK)).pop();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static boolean  isStackEmpty(){
+		return ((Stack<BeanLinker>)getSession().getAttribute(STACK)).size()==0;
+		
+	} 
+	
+	public static DAOFactory getDAOFactory(){
+	MainBean mainBean = (MainBean) FacesContext.getCurrentInstance()
+	.getELContext().getELResolver().getValue(
+			FacesContext.getCurrentInstance().getELContext(), null,
+			"mainBean");
+	return mainBean.getDAOFactory();
+	}
+}

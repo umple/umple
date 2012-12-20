@@ -1,0 +1,46 @@
+Immutable Pattern
+Patterns
+noreferences
+
+@@description
+<p>Mark a class as immutable to force all its contents to be immutable. The code ensures all attributes and associations can only be set in the constructor, and cannot be modified again subsequently.</p>
+
+<p>The only associations allowed to be immutable are directed associations to other immutable classes</p>
+
+<p>A class can only be immutable if all its superclasses are also immutable. Declaring a superclass immutable forces its subclasses to be immutable; in other words, immutability is inherited. If the subclasses break immutability constraints (such as the type of attributes allowed), then errors will be raised.</p>
+
+<p>Individual attributes and associations can be marked as immutable instead of the entire class. An attribute can be marked as <a href="LazyImmutableAttributes.html">lazy immutable</a> if it needs to be initialized after the constructor has finished.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Immutable_object" target=wikipedia">For more details on the Immutable pattern, see this Wikipedia page.</a></p>
+
+<br />
+
+@@syntax
+[[association]] [[inlineAssociation]] [[derivedAttribute]] [[complexAttribute]] [[immutable]] [[softwarePattern]]
+
+@@example
+// A simple example of an immutable class
+class Point2D
+{
+  immutable;
+  Float x;
+  Float y;
+}
+@@endexample
+
+@@example
+// An example of one immutable class making reference to another
+
+class Path
+{
+  immutable;
+  1 -- * Point2D pathElements;
+}
+
+class Point2D
+{
+  immutable;
+  Float x;
+  Float y;
+}
+@@endexample

@@ -1,0 +1,21 @@
+namespace example;
+
+class Student
+{
+  isA Mentor;
+}
+
+class Mentor
+{
+
+}
+
+class Student
+{
+  position 100 100 109 41;
+}
+
+class Mentor
+{
+  position 100 100 109 41;
+}

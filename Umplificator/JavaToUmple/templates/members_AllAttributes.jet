@@ -1,0 +1,14 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  for (Attribute av : uClass.getAttributes()) 
+  {
+  	if (av != null){
+  		String name = av.getName();
+		String type = av.getType();
+		String value= (av.getValue().length() > 0) ?  "= " + av.getValue() : "" ;
+		String attr  = type + " " + name + value + ";";
+	    appendln(stringBuffer, "");
+	    append(stringBuffer, attr);
+	}			
+  }
+%>

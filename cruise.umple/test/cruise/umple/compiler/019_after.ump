@@ -1,0 +1,6 @@
+
+class Student
+{
+  name;
+  after getName { notReallyPossible(); }  
+}

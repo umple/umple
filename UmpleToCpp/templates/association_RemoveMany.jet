@@ -1,0 +1,29 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  {
+    bool wasRemoved = false;
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
+    if (!find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>))
+    {
+      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
+      return wasRemoved;
+    }
+
+    int oldIndex = find(<%=gen.translate("associationMany",av)%>.begin(), <%=gen.translate("associationMany",av)%>.end(), <%=gen.translate("parameterOne",av)%>) - <%=gen.translate("associationMany",av)%>.begin();
+    <%=gen.translate("associationMany",av)%>.erase(find(<%=gen.translate("associationMany",av)%>.begin(),<%=gen.translate("associationMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>));
+    if (<%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("indexOfMethod",av)%>(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = <%=gen.translate("parameterOne",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>(this);
+      if (!wasRemoved)
+      {
+        <%=gen.translate("associationMany",av)%>.push_back(oldIndex,<%=gen.translate("parameterOne",av)%>);
+      }
+    }
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
+    return wasRemoved;
+  }
+  

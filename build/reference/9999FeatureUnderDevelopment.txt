@@ -1,0 +1,12 @@
+W9999 Feature Under Development
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple warning reported a feature is used that is not yet fully implemented in Umple</h2>
+
+<p>Features are often added to the <a href="UmpleGrammar.html">syntax</a> of Umple <i>before</i> they are added to the semantics and code generation. This is to ensure that adding the feature will not break existing code. If you receive this warning, then it means you are using such a feature. No code is yet generated from this feature, or else the generated code is incomplete.
+
+</p>
+

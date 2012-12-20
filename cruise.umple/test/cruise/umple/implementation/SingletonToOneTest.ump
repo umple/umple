@@ -1,0 +1,17 @@
+namespace example;
+
+class Student
+{
+  number;
+}
+
+class Mentor 
+{
+	singleton;
+  name;
+  
+}
+
+association {
+	* Mentor -- 1 Student;
+}

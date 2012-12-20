@@ -1,0 +1,59 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.control" 
+imports="java.util.* cruise.umple.compiler.* cruise.ui.jsf.*"
+class="MainBean" skeleton="../skeleton/IGenerator.skeleton" %>
+<% String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);%>
+package <%=preffix%>.control;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+import dao.factory.DAOFactory;
+import <%=preffix%>.utils.PageFlowUtils;
+
+public class MainBean {
+
+	private String menuOption;
+	
+	
+	private DAOFactory daoFactory=DAOFactory.instance(DAOFactory.FakeDAO);
+	
+	
+	public DAOFactory getDAOFactory() {
+		return daoFactory;
+	}
+
+	public MainBean() {
+	}
+	
+	public String invalidateSession(){
+		ExternalContext ectx = FacesContext.getCurrentInstance().getExternalContext();
+		HttpSession session = (HttpSession)ectx.getSession(false);
+		session.invalidate(); 
+		return "home";
+	}
+
+
+	public String navigate(){
+		PageFlowUtils.clearPageFlow();
+		return menuOption;
+	}
+	
+		
+	public void setMenuOption(String menuOption) {
+		this.menuOption = menuOption;
+	}
+
+	public String getMenuOption() {
+		return menuOption;
+	}
+	
+	public String getKey(){
+		String uid=java.util.UUID.randomUUID().toString();
+		System.out.println("UIIIIIID:  "+uid);
+		return uid;
+	}
+	public void setKey(String some){
+		
+	}
+}
+

@@ -1,0 +1,28 @@
+<%@ jet package="cruise.umple.compiler.java" class="JavaInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+  UmpleInterface uInterface = (UmpleInterface) uElement;
+  //GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+
+  String extraCode = "";
+  if (uInterface.getExtraCode() != null)
+  {
+    extraCode = uInterface.getExtraCode();
+  }
+
+%>
+<%=gen.translate("packageDefinition",uInterface)%>
+<%@ include file="import_packages_interface.jet" %>
+
+public interface <%=uInterface.getName()%><%= gen.translate("isA",uInterface) %>
+{
+  <%=extraCode%>
+<% if (uInterface.hasConstants()) { %>
+<%@ include file="interface_constantDeclaration.jet" %>
+<% } %>
+ <% if (uInterface.hasMethods()) { %>
+<%@ include file="interface_AbstractMethodDeclaration.jet" %>
+<% } %>
+}

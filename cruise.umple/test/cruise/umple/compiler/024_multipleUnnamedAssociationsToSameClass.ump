@@ -1,0 +1,6 @@
+class SourceObject {}
+
+class SourceRelationship{
+  * -- 1 SourceObject;
+  3 -- 1 SourceObject;
+}

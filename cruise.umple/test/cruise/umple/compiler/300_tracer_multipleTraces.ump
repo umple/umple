@@ -1,0 +1,11 @@
+
+class LightFixture
+{ 
+  trace 
+    m2();
+    m3(); 
+  execute 
+  {
+    record("x",result);
+  }
+}

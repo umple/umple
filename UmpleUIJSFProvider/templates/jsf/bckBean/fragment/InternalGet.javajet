@@ -1,0 +1,9 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.get" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="InternalGet" skeleton="bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<% if(attVar.getValue()==null) {%>
+		public <%= attVar.getType()%> get<%= attVar.getUpperCaseName()%>() {
+			return <%="a"+ attVar.getUpperCaseName()%>;
+		}
+<%}%>

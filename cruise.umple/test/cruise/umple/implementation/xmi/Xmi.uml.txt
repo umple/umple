@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_0" name="example">
+  <packageImport xmi:id="_packageImport.0" importedPackage="dataType"/>
+  <packagedElement xmi:type="uml:Package" xmi:id="dataType" name="dataType">
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-String" name="String"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-Integer" name="Integer"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-Double" name="Double"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-Date" name="Date"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-Time" name="Time"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-Boolean" name="Boolean"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="Person" name="Person">
+    <ownedAttribute xmi:id="Person-status" name="status" visibility="private" type="Status">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Person-status-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Person-status-_lowerValue" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="Status" name="Status">
+    <ownedLiteral xmi:id="Status-Registered" name="Registered"/>
+    <ownedLiteral xmi:id="Status-Active" name="Active"/>
+    <ownedLiteral xmi:id="Status-Inactive" name="Inactive"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="Product" name="Product">
+    <ownedAttribute xmi:id="Product-description" name="description" visibility="private" type="dataType-String">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-description-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-description-_lowerValue" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="Product-available" name="available" visibility="private" type="dataType-Integer">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-available-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-available-_lowerValue" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="Product-price" name="price" visibility="private" type="dataType-Double">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-price-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-price-_lowerValue" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="Product-createdDate" name="createdDate" visibility="private" type="dataType-Date">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-createdDate-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-createdDate-_lowerValue" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="Product-createdTime" name="createdTime" visibility="private" type="dataType-Time">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-createdTime-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-createdTime-_lowerValue" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="Product-isActive" name="isActive" visibility="private" type="dataType-Boolean">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-isActive-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-isActive-_lowerValue" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="CartItem:item__Product" name="CartItem:item__Product" memberEnd="CartItem:item__Product-item CartItem:item__Product-product" navigableOwnedEnd="CartItem:item__Product-item CartItem:item__Product-product">
+    <ownedEnd xmi:id="CartItem:item__Product-item" name="item" type="CartItem" association="CartItem:item__Product">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CartItem:item__Product-item-_upperValue" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CartItem:item__Product-item-_lowerValue" value="3"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="CartItem:item__Product-product" name="product" type="Product" association="CartItem:item__Product">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="CartItem:item__Product-product-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="CartItem:item__Product-product-_lowerValue" value="0"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="Cart" name="Cart">
+    <interfaceRealization xmi:id="Cart-_interfaceRealization.0" supplier="ICart" client="Cart" contract="ICart"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="CartItem" name="CartItem">
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="PaymentMethod" name="PaymentMethod">
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="Cheque" name="Cheque">
+    <generalization xmi:id="Cheque-_generalization.0" general="PaymentMethod"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Interface" xmi:id="ICart" name="ICart">
+</uml:Package>

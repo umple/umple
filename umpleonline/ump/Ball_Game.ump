@@ -1,0 +1,57 @@
+namespace generatedCode;
+
+class Ball_Game {
+
+  ballPosition;
+  wallPosition;
+  brickPosition;
+  paddlePosition;
+    
+  ball_Status {
+    
+    NoBall {
+      startGame -> Initialized;
+    }
+    
+    Initialized  {
+      mouseClick -> Moving;     
+    }
+    
+    BehindPaddle {
+      entry / {PlayTune();}
+      entry / {decrementBalls(1,bar);}
+      noMoreBalls -> End;    
+    }
+    
+    Moving {
+      do {moving();}
+      (ballPossition==wallPosition) -> HitsWall;
+      (ballPosition==paddlePosition) -> HitsPaddle;
+      (ballPosition==brickPosition) -> HitsBrick;
+      ballOut -> behindPaddle;
+    }
+   
+    HitsBrick  {
+      entry / {playHitSound();}
+      entry / {increaseScore(1);}
+      exit / {calculateNewDirection();}
+      directionUpdated -> Moving;
+    }
+    
+    HitsWall {
+      entry / {calculateNewDirection();}
+      directionUpdated -> Moving;
+    }
+    
+    HitsPaddle {
+      
+      entry / {calculateNewDirection();}
+      directionUpdated -> Moving; 
+    }
+    
+    End {
+      entry / {displayGameOver();}
+    }        
+  }
+}
+  

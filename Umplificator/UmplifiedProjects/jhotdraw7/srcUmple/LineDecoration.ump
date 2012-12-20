@@ -1,0 +1,28 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.decoration ;
+
+class LineDecoration 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.awt.geom.*;
+depend java.io.*;
+
+  /**
+     * Draws the decoration in the direction specified by the two Points.
+     */
+    public void draw(Graphics2D g, Figure f, Point2D.Double p1, Point2D.Double p2);
+/**
+     * Returns the radius of the decorator.
+     * This is used to crop the end of the line, to prevent it from being
+     * drawn over the decorator.
+     */
+    public abstract double getDecorationRadius(Figure f);
+/**
+     * Returns the drawing bounds of the decorator.
+     */
+    public Rectangle2D.Double getDrawingArea(Figure f, Point2D.Double p1, Point2D.Double p2);
+
+}

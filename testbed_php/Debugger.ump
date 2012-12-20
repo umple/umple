@@ -1,0 +1,29 @@
+generate Php "../src-gen-umple";
+namespace example;
+
+class CourseSection
+{
+  status
+  {
+    Planned 
+    {
+      openRegistration -> OpenNotEnoughStudents;
+    }
+    OpenNotEnoughStudents
+    {
+      requestToRegister -> OpenNotEnoughStudents;
+      closeRegistration -> Cancelled;
+      cancel -> Cancelled;
+      classSizeExceedsMinimum -> OpenEnoughStudents;
+    }
+    OpenEnoughStudents
+    {
+      requestToRegister -> OpenEnoughStudents;
+      closeRegistration -> Closed;
+      classSizeExceedsMaximum -> Closed;
+    }
+    Cancelled { }
+    Closed { }
+  }
+
+}

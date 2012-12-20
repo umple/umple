@@ -1,0 +1,16 @@
+Concern C
+{
+  VariationPoint VP1 requires VP2 {
+    Kind: Alternative;
+    Variant var1 { class X{ name; } }
+    Variant var2 { class X{ Integer id; } }
+  }
+
+  VariationPoint VP2 {
+    Kind: Optional;
+    class X{ key {name} }
+  }
+  
+}
+invoke(C,VP2);
+invoke(C,VP1,var1);

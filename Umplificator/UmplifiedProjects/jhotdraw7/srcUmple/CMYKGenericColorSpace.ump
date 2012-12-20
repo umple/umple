@@ -1,0 +1,27 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class CMYKGenericColorSpace 
+{
+depend java.awt.color.ICC_ColorSpace;
+depend java.awt.color.ICC_Profile;
+depend java.io.IOException;
+  isA ICC_ColorSpace;
+
+  private static CMYKGenericColorSpace instance;
+public static CMYKGenericColorSpace getInstance() {
+        if (instance == null) {
+            try {
+                instance = new CMYKGenericColorSpace();
+            } catch (IOException ex) {
+                InternalError error = new InternalError("Can't instanciate CMYKColorSpace");
+                error.initCause(ex);
+                throw error;
+            }
+        }
+        return instance;
+    }
+
+}

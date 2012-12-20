@@ -1,0 +1,150 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Lamp
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Lamp State Machines
+  enum Status { On, Off }
+  private Status status;
+
+  //Lamp Do Activity Threads
+  Thread doActivityStatusOnThread = null;
+  Thread doActivityStatusOffThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Lamp()
+  {
+    setStatus(Status.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean press()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case On:
+        exitStatus();
+        setStatus(Status.Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        exitStatus();
+        setStatus(Status.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case On:
+        if (doActivityStatusOnThread != null) { doActivityStatusOnThread.interrupt(); }
+        break;
+      case Off:
+        if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); }
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        doActivityStatusOnThread = new DoActivityThread(this,"doActivityStatusOn");
+        break;
+      case Off:
+        doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff");
+        break;
+    }
+  }
+
+  private void doActivityStatusOn()
+  {
+    try
+    {
+      alsoDo();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private void doActivityStatusOff()
+  {
+    try
+    {
+      keepDoing();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    Lamp controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(Lamp aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivityStatusOn".equals(doActivityMethodName))
+      {
+        controller.doActivityStatusOn();
+      }
+        else if ("doActivityStatusOff".equals(doActivityMethodName))
+      {
+        controller.doActivityStatusOff();
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+}

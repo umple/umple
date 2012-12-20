@@ -1,0 +1,6 @@
+interface ISomething
+{
+ constant String aVariable = aValue;
+ constant String aSecondVariable = aSecondValue;
+ String getMethod(String name); 
+}

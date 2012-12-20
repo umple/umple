@@ -1,0 +1,105 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+generate Php;
+
+namespace services;
+
+class PollService {
+  singleton;
+
+  lazy Integer idElection;
+  lazy Integer idpoll;
+  lazy String allPolls;
+  lazy String latestResult;
+  lazy isConnected;
+  lazy pollJSON;
+  
+  after setPollJSON {
+    $this->createPoll();
+  }
+
+  ServiceProvidingCycle {
+    Idle {
+      getElectionPolls -> LoadingElectionPolls;
+      openPoll -> OpeningPoll;
+      createPoll -> CreatingPoll;
+    }
+    LoadingElectionPolls {
+      entry / {$this->loadElectionPolls($this->idElection);}
+      -> Idle;
+    }
+    OpeningPoll {
+      entry / {$this->tryToOpenPoll($this->idpoll);}
+      -> Idle;
+    }
+    CreatingPoll {
+      entry / {$this->tryToCreatePoll();}
+      -> Idle;
+    }
+  }
+
+  before setServiceProvidingCycle {
+    require_once("Credentials.php");
+    $this->isConnected = mysql_connect(Credentials::$db_hostname,Credentials::$db_username,Credentials::$db_password);
+    mysql_select_db(Credentials::$db_database);
+  }
+
+  private function loadElectionPolls($idElection) {
+    $result = mysql_query("SELECT * FROM election where id_election=$idElection");
+
+    require_once("./domain/Election.php");
+    $anElection=null;
+    
+    while($row = mysql_fetch_array($result)) {
+      $anElection=new Election($row['id_election'],$row['name'],$row['description']);
+    }
+    
+      $result = mysql_query("SELECT * FROM poll where election_id_election=$idElection");
+
+    require_once("./domain/Poll.php");
+    
+    $this->allPolls='{"polls" : [';
+    $first=true;
+    while($row = mysql_fetch_array($result)) {
+      $aPoll=new Poll($row['id_poll'],$row['name'],$row['description'],$anElection);
+      if ($first) {
+        $this->allPolls=$this->allPolls.$this->jsonSerialize($aPoll);
+        $first=false;
+      } else
+        $this->allPolls=$this->allPolls.",".$this->jsonSerialize($aPoll);
+    }
+    $this->allPolls=$this->allPolls.']}';
+  }
+  
+  private function tryToOpenPoll($idpoll) {
+    $wasUpdated=false;
+    if ($this->isConnected) {
+      $wasUpdated = mysql_query("update poll set status='open' where id_poll=$idpoll");
+    }
+    
+    if ($this->isConnected && $wasUpdated)
+      $this->latestResult='Poll open!';
+    else
+      $this->latestResult='An error occured!';
+  }
+  
+    
+  private function tryToCreatePoll() {
+    $pollData=json_decode($this->pollJSON);
+    if (mysql_query("insert into poll (election_id_election, name, description) values ('$pollData->election', '$pollData->name', '$pollData->description')"))
+      $this->latestResult='Successfully added!';
+    else
+      $this->latestResult=mysql_error();
+  }
+  
+  private function jsonSerialize($aPoll) {
+    return '{"idpoll":"'.$aPoll->getIdPoll().'","name":"'.$aPoll->getName().'","description":"'.$aPoll->getDescription().'","theElection":"'.$aPoll->getElection()->getIdElection().'"}';
+  }
+}

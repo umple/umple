@@ -1,0 +1,122 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.registerCandidate;
+
+class RegisterCandidateController
+{
+  singleton;
+  
+  depend view.registerCandidate.RegisterCandidateView;
+  depend javax.swing.JOptionPane;
+  depend service.CandidateService;
+  depend shared.domain.Candidate;
+  depend usecase.startup.Controller;
+    
+  lazy internal RegisterCandidateView registerCandidateView;
+  lazy internal String candidateName;
+  lazy internal String candidateAddress;
+  lazy internal String candidateTelephone;
+  lazy internal Boolean candidateFound;
+    
+  CandidateRegistrationSteps {
+    Initial
+    {
+      registerCandidate -> RegisterCandidateViewShown;
+    }
+    RegisterCandidateViewShown
+    {
+      entry / {showRegisterCandidateView();}
+      addButtonClicked -> CheckingCandidateData;
+      closeView -> ClosingView;
+    }
+    CheckingCandidateData
+    {
+      entry / {checkCandidateData();}
+      [candidateName.trim().isEmpty()] -> CandidateNameEmpty;
+      [candidateAddress.trim().isEmpty()] -> CandidateAddressEmpty;
+      [candidateTelephone.trim().isEmpty()] -> CandidateTelephoneEmpty;
+      -> CheckingExistingCandidate;
+      /*[!candidateName.trim().isEmpty() &&
+      !candidateAddress.trim().isEmpty() &&
+      !candidateTelephone.trim().isEmpty()]*/
+    }
+    CheckingExistingCandidate
+    {
+      entry / {CandidateService.getInstance().setCandidateNameToSearch(candidateName);
+          candidateFound=CandidateService.getInstance().getCandidateFound();}
+      [!candidateFound] -> AddingCandidate;
+      [candidateFound] -> CandidateExists;
+    }
+    AddingCandidate
+    {
+      entry / {tryToAddCandidate();}
+      [CandidateService.getInstance().getCandidateAdded()] -> CandidateAdded;
+      [CandidateService.getInstance().getCandidateAdded()] -> CandidateNotAdded;
+    }
+    CandidateAdded
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Candidate Added Successfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    CandidateNotAdded
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Adding Candidate Failed!", "Error!", JOptionPane.ERROR_MESSAGE); Controller.getInstance().start();}
+      -> Initial;
+    }
+    CandidateExists
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Candidate Exists!", "Error!", JOptionPane.ERROR_MESSAGE);
+          Controller.getInstance().start();
+          registerCandidateView.dispose();}
+      -> Initial;
+    }
+    CandidateNameEmpty
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Candidate name cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);}
+      addButtonClicked -> CheckingCandidateData;
+      closeView -> ClosingView;
+    }
+    CandidateAddressEmpty
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Candidate address cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);}
+      addButtonClicked -> CheckingCandidateData;
+      closeView -> ClosingView;
+    }
+    CandidateTelephoneEmpty
+    {
+      entry / {JOptionPane.showMessageDialog(null, "Candidate telephone cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);}
+      addButtonClicked -> CheckingCandidateData;
+      closeView -> ClosingView;
+    }
+    ClosingView
+    {
+      entry / {registerCandidateView.dispose();}
+      -> Initial;
+    }
+  }
+   
+  private void showRegisterCandidateView() {
+    registerCandidateView=new RegisterCandidateView();
+    registerCandidateView.setVisible(true);
+  }
+  
+  private void checkCandidateData() {
+    candidateName=registerCandidateView.getCandidateName();
+    candidateAddress=registerCandidateView.getCandidateAddress();
+    candidateTelephone=registerCandidateView.getCandidateTelephone();
+  }
+  
+  private void tryToAddCandidate() {
+    Candidate candidate=new Candidate(-1, candidateName, candidateAddress, candidateTelephone);
+    CandidateService.getInstance().setNewCandidate(candidate);
+    registerCandidateView.dispose();
+  }
+}

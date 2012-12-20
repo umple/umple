@@ -1,0 +1,87 @@
+Attribute Definition
+Attributes
+noreferences
+
+@@description
+<p>An attribute represents some information held by a class.</p>
+
+<p>The attribute can have many properties, 
+and can be defaulted to a certain value.</p>
+
+<p>It is important to distinguish an attribute from the concept of a 'field' or
+'instance variable' in Java or another programming language. An attribute is a
+UML/Umple entity that represents simple data. In Java it will become a field, but 
+there will also be methods associated with the Umple attribute to get it, set it, and constrain
+its value. An attribute may also automatically be added to the argument list
+of the constructor and constructed in the constructor. In
+addition to representing attributes, Java fields also represent the ends of 
+<a href="AssociationDefinition.html">associations</a>. Both attributes and associations should be considered more abstract
+than fields</p>
+
+<p><a href="BasicStateMachines.html">Umple state machines</a> are a special kind of attribute, and Umple also allows you to <a href="BeforeAndAfterStatements.html">inject
+code that will constrain or alter the values of attributes using aspect-oriented
+techniques.</a></p>
+
+<p>The example below shows the basic properties of attributes.<p>
+
+@@syntax
+[[attribute]] [[simpleAttribute]]  [[autouniqueAttribute]]  [[derivedAttribute]]  [[complexAttribute]]
+
+
+@@example
+
+class Group 
+{
+  // Simple Umple Integer. Note that code generation in different languages will
+  // use the simplest native type in that language. In Java it will use int.
+  // The initial value must be supplied through a constructor argument.
+  // The value can later be accessed through set and get methods
+  // (here setI and getI)
+  Integer i;
+
+  // const: Declares a constant (static final in Java)
+  const Integer MAX = 100;
+
+  // immutable: A constructor argument is required so it can be set at
+  // construction time; cannot be changed after that since no set method
+  // is generated.
+  immutable String str;
+  
+  // lazy: A constructor argument is not required. Numbers are initialized
+  // to zero, Objects (including Strings) are initialized to null,
+  // Booleans are initialized to false.
+  lazy Time t;
+  lazy Boolean b;
+  lazy s;
+  
+  // settable: Set using a constructor argument and can be changed after that
+  // This is the default, so the settable keyword can be omitted
+  settable Date d;
+  
+  // internal: No getter and setter methods created. Only for private
+  // use in internal methods. However in this case it is initalized using =
+  // The code following = is in the 'base' language, here Java.
+  internal Time t = new Time();
+
+  // autounique: Every new object created will have a new integer assigned
+  // You can get the value (an integer) but not set it.  
+  autounique x;
+
+  // The value is initialized as shown in the constructor
+  // There is no constructor argument generated.
+  String q = "chicken"; 
+      
+  // defaulted: Set in the constructor to the default, and can be reset to the
+  // default any time by calling a reset method (here resetP()). 
+  // Can also be set to any other value using setP()
+  // The default can be queried by calling getDefaultP()
+  defaulted String p = "robot";
+  
+  // Similar to the above, except this shows that if no type is given,
+  // then the default type is String
+  // Note that currently in Umple the space before and after the =
+  // is required.
+  defaulted r = "";
+}
+@@endexample
+

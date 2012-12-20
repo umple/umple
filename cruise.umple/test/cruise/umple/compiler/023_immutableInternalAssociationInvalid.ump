@@ -1,0 +1,7 @@
+class Student
+{
+  immutable 1 -> * Mentor aMentor;
+}
+
+class Mentor
+{}

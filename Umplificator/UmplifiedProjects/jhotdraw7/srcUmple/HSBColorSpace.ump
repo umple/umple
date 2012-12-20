@@ -1,0 +1,82 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class HSBColorSpace 
+{
+depend java.awt.Color;
+depend java.awt.color.ColorSpace;
+  isA ColorSpace;
+
+  private static HSBColorSpace instance;
+public static HSBColorSpace getInstance() {
+        if (instance == null) {
+            instance = new HSBColorSpace();
+        }
+        return instance;
+    }
+@Override
+    public float[] toRGB(float[] c) {
+        int rgb = Color.HSBtoRGB(c[0], c[1], c[2]);
+
+        return new float[]{//
+                    ((rgb & 0xff0000) >> 16) / 255f,//
+                    ((rgb & 0xff00) >> 8) / 255f,//
+                    (rgb & 0xff) / 255f//
+                };
+    }
+@Override
+    public float[] fromRGB(float[] rgbvalue) {
+        return Color.RGBtoHSB(//
+                (int) (rgbvalue[0] * 255),//
+                (int) (rgbvalue[1] * 255),//
+                (int) (rgbvalue[2] * 255),//
+                new float[3]);
+    }
+@Override
+    public float[] toCIEXYZ(float[] colorvalue) {
+        float[] rgb = toRGB(colorvalue);
+        return ColorSpace.getInstance(CS_sRGB).toCIEXYZ(rgb);
+    }
+@Override
+    public float[] fromCIEXYZ(float[] colorvalue) {
+        float[] sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB).fromCIEXYZ(colorvalue);
+        return fromRGB(sRGB);
+    }
+@Override
+    public String getName(int idx) {
+        switch (idx) {
+            case 0:
+                return "Hue";
+            case 1:
+                return "Saturation";
+            case 2:
+                return "Brightness";
+            default:
+                throw new IllegalArgumentException("index must be between 0 and 2:" + idx);
+        }
+    }
+@Override
+    public float getMaxValue(int component) {
+        return 1f;
+    }
+@Override
+    public float getMinValue(int component) {
+        return 0f;
+    }
+@Override
+    public boolean equals(Object o) {
+        return (o instanceof HSBColorSpace);
+    }
+@Override
+    public int hashCode() {
+
+        return getClass().getSimpleName().hashCode();
+    }
+@Override
+    public String getName() {
+        return "HSB";
+    }
+
+}

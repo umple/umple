@@ -1,0 +1,100 @@
+namespace access_control;
+
+
+//Ref_Facility_Type 
+class FacilityType
+{
+  code;
+  description { Menu, Record, Screen }
+  key {code}
+}
+
+//Functional_Area
+class FunctionalArea
+{
+  String code;
+  0..1 parent -- * FunctionalArea child;
+  description { Hr, Finance }
+  key {code}  
+}
+
+//Facility_Functional_Area
+association
+{
+  * FunctionalArea -- * Facility;
+}
+
+class Facility
+{
+  Integer id;
+  * -> 0..1 FacilityType;
+  Integer access_count;
+  name;
+  description;
+  other_details;
+  
+  key {id}
+}
+
+class Role
+{
+  code;
+  role_description { Dba, ProjectMgr }
+  
+  key {code}
+}
+
+class User
+{
+  Integer id;
+  * -> 0..1 Role;
+  first_name;
+  last_name;
+  password;
+  other_details;
+  
+  key {id}
+}
+
+associationClass RoleFacilityAccessRight
+{
+  * Facility;
+  * Role;
+  CRUD_Value { R, RW }
+}
+//$?[End_of_model]$?
+
+// Positioning
+class FunctionalArea
+{
+  position 21 28 109 62;
+  position.association FunctionalArea:parent__FunctionalArea:child 109,48 95,62;
+}
+
+class Facility
+{
+  position 21 134 178 130;
+  position.association Facility__FacilityType 70,130 50,0;
+}
+
+class FacilityType
+{
+  position 41 314 109 62;
+}
+
+class User
+{
+  position 247 25 146 113;
+  position.association Role__User 72,113 45,0;
+}
+
+class Role
+{
+  position 274 194 110 61;
+}
+
+class RoleFacilityAccessRight{
+  position 225 315 165 57;
+  position.association Role__RoleFacilityAccessRight 77,0 28,62;
+  position.association Facility__RoleFacilityAccessRight 27,0 163,130;
+}

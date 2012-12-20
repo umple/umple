@@ -1,0 +1,98 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Pupil
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Pupil Attributes
+  private $number;
+
+  //Pupil Associations
+  private $mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aNumber, $aMentor)
+  {
+    $this->number = $aNumber;
+    $didAddMentor = $this->setMentor($aMentor);
+    if (!$didAddMentor)
+    {
+      throw new Exception("Unable to create pupil due to mentor");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setNumber($aNumber)
+  {
+    $wasSet = false;
+    $this->number = $aNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getNumber()
+  {
+    return $this->number;
+  }
+
+  public function getMentor()
+  {
+    return $this->mentor;
+  }
+
+  public function setMentor($aMentor)
+  {
+    $wasSet = false;
+    //Must provide mentor to pupil
+    if ($aMentor == null)
+    {
+      return $wasSet;
+    }
+
+    //mentor already at maximum (7)
+    if ($aMentor->numberOfPupils() >= Mentor::maximumNumberOfPupils())
+    {
+      return $wasSet;
+    }
+    
+    $existingMentor = $this->mentor;
+    $this->mentor = $aMentor;
+    if ($existingMentor != null && $existingMentor != $aMentor)
+    {
+      $didRemove = $existingMentor->removePupil($this);
+      if (!$didRemove)
+      {
+        $this->mentor = $existingMentor;
+        return $wasSet;
+      }
+    }
+    $this->mentor->addPupil($this);
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $placeholderMentor = $this->mentor;
+    $this->mentor = null;
+    $placeholderMentor->removePupil($this);
+  }
+
+}
+?>

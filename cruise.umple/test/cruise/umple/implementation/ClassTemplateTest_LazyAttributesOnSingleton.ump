@@ -1,0 +1,10 @@
+namespace example;
+
+class Application
+{
+  singleton;
+  
+  name;
+  version;
+  list id;
+}

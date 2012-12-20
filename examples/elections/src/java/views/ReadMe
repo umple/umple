@@ -1,0 +1,14 @@
+This directory contains Umple code for view classes.
+
+files:
+----------------------------------------------------------------
+AddElectionView.ump: the view of the Add Election use case.
+AddPollView.ump: the view of the Add Poll use case.
+AddPositionView.ump: the view of the Add Position use case.
+MainView.ump: the main view the application.
+RegisterCandidateView.ump: the view of the Register Candidate use case.
+ViewUtils.ump: provides utilities for other views such as centering a frame.
+
+directories:
+----------------------------------------------------------------
+N/A

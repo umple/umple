@@ -1,0 +1,15 @@
+class LightFixture
+{ 
+  Integer count;
+  bulb 
+  {
+    Off
+    {
+     [count > 10] -> On;
+    }
+    On
+    {
+    }
+    
+  }
+}

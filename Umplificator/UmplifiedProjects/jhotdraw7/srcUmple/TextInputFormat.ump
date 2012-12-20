@@ -1,0 +1,157 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.io ;
+
+class TextInputFormat 
+{
+depend org.jhotdraw.gui.filechooser.ExtensionFileFilter;
+depend org.jhotdraw.draw.*;
+depend java.awt.datatransfer.*;
+depend java.awt.geom.*;
+depend java.io.*;
+depend java.net.URI;
+depend java.util.*;
+depend javax.swing.*;
+depend org.jhotdraw.geom.Dimension2DDouble;
+
+  /**
+     * The prototype for creating a figure that holds the imported text.
+     */
+    private TextHolderFigure prototype;
+/**
+     * Format description used for the file filter.
+     */
+    private String description;
+/**
+     * File name extension used for the file filter.
+     */
+    private String fileExtension;
+/**
+     * Image IO image format name.
+     */
+    private String formatName;
+/**
+     * This should be set to true for ImageHolderFigures that can hold multiple
+     * lines of text.
+     */
+    private boolean isMultiline;
+@Override
+    public javax.swing.filechooser.FileFilter getFileFilter() {
+        return new ExtensionFileFilter(description, fileExtension);
+    }
+public String getFileExtension() {
+        return fileExtension;
+    }
+@Override
+    public JComponent getInputFormatAccessory() {
+        return null;
+    }
+@Override
+    public void read(URI uri, Drawing drawing) throws IOException {
+        read(new File(uri), drawing);
+    }
+@Override
+    public void read(URI uri, Drawing drawing, boolean replace) throws IOException {
+        read(new File(uri), drawing, replace);
+    }
+public void read(File file, Drawing drawing) throws IOException {
+        read(file, drawing, true);
+    }
+public void read(File file, Drawing drawing, boolean replace) throws IOException {
+        InputStream in = new FileInputStream(file);
+        try {
+            read(in, drawing, replace);
+        } finally {
+            in.close();
+        }
+    }
+@Override
+    public void read(InputStream in, Drawing drawing, boolean replace) throws IOException {
+        if (replace) {
+            drawing.removeAllChildren();
+        }
+        drawing.basicAddAll(0, createTextHolderFigures(in));
+    }
+public LinkedList<Figure> createTextHolderFigures(InputStream in) throws IOException {
+        LinkedList<Figure> list = new LinkedList<Figure>();
+
+        BufferedReader r = new BufferedReader(new InputStreamReader(in, "UTF8"));
+
+        if (isMultiline) {
+            TextHolderFigure figure = (TextHolderFigure) prototype.clone();
+            StringBuilder buf = new StringBuilder();
+            for (String line = null; line != null; line = r.readLine()) {
+                if (buf.length() != 0) {
+                    buf.append('\n');
+                }
+                buf.append(line);
+            }
+            figure.setText(buf.toString());
+            Dimension2DDouble s = figure.getPreferredSize();
+            figure.setBounds(
+                    new Point2D.Double(0, 0),
+                    new Point2D.Double(
+                    s.width, s.height));
+        } else {
+            double y = 0;
+            for (String line = null; line != null; line = r.readLine()) {
+                TextHolderFigure figure = (TextHolderFigure) prototype.clone();
+                figure.setText(line);
+                Dimension2DDouble s = figure.getPreferredSize();
+                figure.setBounds(
+                        new Point2D.Double(0, y),
+                        new Point2D.Double(
+                        s.width, s.height));
+                list.add(figure);
+                y += s.height;
+            }
+        }
+        if (list.size() == 0) {
+            throw new IOException("No text found");
+        }
+        return list;
+    }
+@Override
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+        return flavor.equals(DataFlavor.stringFlavor);
+    }
+@Override
+    public void read(Transferable t, Drawing drawing, boolean replace) throws UnsupportedFlavorException, IOException {
+        String text = (String) t.getTransferData(DataFlavor.stringFlavor);
+
+        LinkedList<Figure> list = new LinkedList<Figure>();
+        if (isMultiline) {
+            TextHolderFigure figure = (TextHolderFigure) prototype.clone();
+            figure.setText(text);
+            Dimension2DDouble s = figure.getPreferredSize();
+            figure.willChange();
+            figure.setBounds(
+                    new Point2D.Double(0, 0),
+                    new Point2D.Double(
+                    s.width, s.height));
+            figure.changed();
+            list.add(figure);
+        } else {
+            double y = 0;
+            for (String line : text.split("\n")) {
+                TextHolderFigure figure = (TextHolderFigure) prototype.clone();
+                figure.setText(line);
+                Dimension2DDouble s = figure.getPreferredSize();
+                y += s.height;
+                figure.willChange();
+                figure.setBounds(
+                        new Point2D.Double(0, 0 + y),
+                        new Point2D.Double(
+                        s.width, s.height + y));
+                figure.changed();
+                list.add(figure);
+            }
+        }
+        if (replace) {
+            drawing.removeAllChildren();
+        }
+        drawing.addAll(list);
+    }
+
+}

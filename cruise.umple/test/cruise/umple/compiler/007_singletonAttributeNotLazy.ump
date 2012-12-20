@@ -1,0 +1,4 @@
+class Student {
+	singleton;
+	var id;
+}

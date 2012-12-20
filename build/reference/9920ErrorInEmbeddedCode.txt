@@ -1,0 +1,12 @@
+W20xx Error in Embedded Code
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple warning issued when a base language compiler encounters a non-umple error</h2>
+
+<p><i>Under development:</i> Umple can have code in any programming language embedded in method bodies or other constructs. This warning is issued when the compiler for the embedded language reports an error. This can occur of the -c option is supplied to the Umple compiler, telling it to invoke the base language compiler after the Umple is generated.
+
+</p>
+

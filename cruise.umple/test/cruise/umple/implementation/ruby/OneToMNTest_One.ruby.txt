@@ -1,0 +1,169 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Mentor
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :pupils
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_name)
+    @initialized = false
+    @deleted = false
+    @name = a_name
+    @pupils = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_pupil(index)
+    a_pupil = @pupils[index]
+    a_pupil
+  end
+
+  def get_pupils
+    new_pupils = @pupils.dup
+    new_pupils
+  end
+
+  def number_of_pupils
+    number = @pupils.size
+    number
+  end
+
+  def has_pupils
+    has = @pupils.size > 0
+    has
+  end
+
+  def index_of_pupil(a_pupil)
+    index = @pupils.index(a_pupil)
+    index = -1 if index.nil?
+    index
+  end
+
+  def is_number_of_pupils_valid
+    is_valid = number_of_pupils >= Mentor.minimum_number_of_pupils and number_of_pupils <= Mentor.maximum_number_of_pupils
+    is_valid
+  end
+
+  def self.minimum_number_of_pupils
+    5
+  end
+
+  def self.maximum_number_of_pupils
+    7
+  end
+
+  def add_pupil(a_pupil)
+    was_added = false
+    return false if index_of_pupil(a_pupil) != -1
+    if number_of_pupils >= Mentor.maximum_number_of_pupils
+      return was_added
+    end
+
+    existing_mentor = a_pupil.get_mentor
+    is_new_mentor = (!existing_mentor.nil? and !existing_mentor.eql?(self))
+
+    if is_new_mentor and existing_mentor.number_of_pupils <= Mentor.minimum_number_of_pupils
+      return was_added
+    end
+
+    if is_new_mentor
+      a_pupil.set_mentor(self)
+    else
+      @pupils << a_pupil
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_pupil(a_pupil)
+    was_removed = false
+    # Unable to remove a_pupil, as it must always have a mentor
+    if a_pupil.get_mentor.eql?(self)
+      return was_removed
+    end
+
+    # mentor already at minimum (5)
+    if number_of_pupils <= Mentor.minimum_number_of_pupils
+      return was_removed
+    end
+
+    @pupils.delete(a_pupil)
+    was_removed = true
+    was_removed
+  end
+
+  def add_pupil_at(a_pupil, index)
+    was_added = false
+    if add_pupil(a_pupil)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_pupils())
+        index = number_of_pupils() - 1
+      end
+      @pupils.delete(a_pupil)
+      @pupils.insert(index, a_pupil)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_pupil_at(a_pupil, index)
+    was_added = false
+    if @pupils.include?(a_pupil)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_pupils())
+        index = number_of_pupils() - 1
+      end
+      @pupils.delete(a_pupil)
+      @pupils.insert(index, a_pupil)
+      was_added = true
+    else
+      was_added = add_pupil_at(a_pupil, index)
+    end
+    was_added
+  end
+
+  def delete
+    @deleted = true
+    @pupils.each do |a_pupil|
+      a_pupil.delete
+    end
+  end
+
+end
+end

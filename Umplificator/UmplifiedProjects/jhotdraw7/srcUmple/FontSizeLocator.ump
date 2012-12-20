@@ -1,0 +1,38 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.locator ;
+
+class FontSizeLocator 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+depend org.jhotdraw.draw.AttributeKeys.*;
+
+  /**
+     * Locates a position on the provided figure.
+     * @return a Point2D.Double on the figure.
+     */
+    @Override
+    public Point2D.Double locate(Figure owner) {
+        Point2D.Double p = (Point2D.Double) owner.getStartPoint().clone();
+        
+        if (owner instanceof TextHolderFigure) {
+            p.y += ((TextHolderFigure) owner).getFontSize();
+            p.y += ((TextHolderFigure) owner).getInsets().top;
+        } else {
+            p.y += owner.get(FONT_SIZE);
+        }
+        
+        if (owner.get(TRANSFORM) != null) {
+            owner.get(TRANSFORM).transform(p, p);
+        }
+        
+        return p;
+    }
+@Override
+    public Point2D.Double locate(Figure owner, Figure dependent) {
+        return locate(owner);
+    }
+
+}

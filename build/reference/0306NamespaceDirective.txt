@@ -1,0 +1,26 @@
+Namespace Directives
+Directives
+noreferences
+
+@@description
+Namespaces allow you to group similar entities to promote cohesion, 
+as well as reduce the possibility of name collision.
+
+@@syntax
+[[namespace]]
+
+@@example
+namespace school.admin;
+
+class Faculty{}
+class Student{}
+
+namespace elevator.structure;
+
+class Building
+{
+  1 -- * Classroom;
+}
+
+class Classroom{}
+@@endexample

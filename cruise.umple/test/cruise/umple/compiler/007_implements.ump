@@ -1,0 +1,7 @@
+class Student
+{
+  isA IStudent;
+}
+
+interface IStudent
+{}

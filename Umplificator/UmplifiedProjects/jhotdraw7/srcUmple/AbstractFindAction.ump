@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class AbstractFindAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.app.action.AbstractViewAction;
+depend org.jhotdraw.util.*;
+  isA AbstractViewAction;
+
+  public final static String ID = "edit.find";
+
+}

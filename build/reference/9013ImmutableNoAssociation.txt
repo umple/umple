@@ -1,0 +1,102 @@
+E013 Non Immutable Association
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an immutable class is defined as having an association to a non-immutable class.</h2>
+
+<p>By definition, an immutable class can't change state, so it can't have an association that can change state or an association to a class that can change state.
+
+</p>
+
+
+@@example
+// The following example generates the error message
+class X {
+   Integer x;
+}
+
+class Y {
+  String s;
+  immutable;
+  0..1 -> 0..1 X;
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}
+@@endexample
+
+@@example
+// One way to solve this is to make the association point to
+// another immutable class
+// But note that this only works for one-way associations
+class X {
+   Integer x;
+   immutable;
+}
+
+class Y {
+  immutable;
+  String s;
+  0..1 -> 0..1 X;
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}
+@@endexample
+
+@@example
+// Another solution is to not require the association to be immutable,
+// just the attributes. But this may not match the intended semantics.
+class X {
+   immutable Integer x;
+}
+
+class Y {
+    immutable String s;
+    0..1 -- 0..1 X;
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}
+class X {
+   immutable Integer x;
+}
+
+class Y {
+    immutable String s;
+    0..1 -- 0..1 X;
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}
+@@endexample

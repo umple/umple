@@ -1,0 +1,52 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+#include "Application.h"
+
+	  Application* Application::theInstance = NULL //singleton;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Application::Application()
+  {}
+
+  Application* Application::getInstance()
+  {
+    if(!theInstance)
+    {
+      theInstance = new Application;
+    }
+    return theInstance;
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Application::Application(const Application & application)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Application Application::operator=(const Application & application)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Application::~Application()
+  {}
+
+}

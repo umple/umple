@@ -1,0 +1,107 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Registration
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Registration Attributes
+  private $grade;
+
+  //Registration Associations
+  private $student;
+  private $courseSection;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aGrade)
+  {
+    $this->grade = $aGrade;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setGrade($aGrade)
+  {
+    $wasSet = false;
+    $this->grade = $aGrade;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getGrade()
+  {
+    return $this->grade;
+  }
+
+  public function getStudent()
+  {
+    return $this->student;
+  }
+
+  public function getCourseSection()
+  {
+    return $this->courseSection;
+  }
+
+  public function setStudent($aStudent)
+  {
+    $wasSet = false;
+    $existingStudent = $this->student;
+    $this->student = $aStudent;
+    if ($existingStudent != null && $existingStudent !== $aStudent)
+    {
+      $existingStudent->removeRegistration($this);
+    }
+    if ($aStudent != null && $aStudent !== $existingStudent)
+    {
+      $aStudent->addRegistration($this);
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setCourseSection($aCourseSection)
+  {
+    $wasSet = false;
+    $existingCourseSection = $this->courseSection;
+    $this->courseSection = $aCourseSection;
+    if ($existingCourseSection != null && $existingCourseSection !== $aCourseSection)
+    {
+      $existingCourseSection->removeRegistration($this);
+    }
+    if ($aCourseSection != null && $aCourseSection !== $existingCourseSection)
+    {
+      $aCourseSection->addRegistration($this);
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    if ($this->student != null)
+    {
+      $this->student->removeRegistration($this);
+    }
+    if ($this->courseSection != null)
+    {
+      $this->courseSection->removeRegistration($this);
+    }
+  }
+
+}
+?>

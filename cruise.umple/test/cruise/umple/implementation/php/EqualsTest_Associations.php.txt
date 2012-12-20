@@ -1,0 +1,254 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Associations
+  private $main;
+  private $secondaries;
+
+  //Helper Variables
+  private $cachedHashCode;
+  private $canSetMain;
+  private $canSetSecondaries;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->cachedHashCode = -1;
+    $this->canSetMain = true;
+    $this->canSetSecondaries = true;
+    $this->secondaries = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getMain()
+  {
+    return $this->main;
+  }
+
+  public function getSecondary($index)
+  {
+    $aSecondary = $this->secondaries[$index];
+    return $aSecondary;
+  }
+
+  public function getSecondaries()
+  {
+    $newSecondaries = $this->secondaries;
+    return $newSecondaries;
+  }
+
+  public function numberOfSecondaries()
+  {
+    $number = count($this->secondaries);
+    return $number;
+  }
+
+  public function hasSecondaries()
+  {
+    $has = $this->numberOfSecondaries() > 0;
+    return $has;
+  }
+
+  public function indexOfSecondary($aSecondary)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->secondaries as $secondary)
+    {
+      if ($secondary->equals($aSecondary))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public function setMain($newMain)
+  {
+    $wasSet = false;
+    if (!$this->canSetMain) { return false; }
+    if ($newMain == null)
+    {
+      $existingMain = $this->main;
+      $this->main = null;
+      
+      if ($existingMain != null && $existingMain->getMentorMain() != null)
+      {
+        $existingMain->setMentorMain(null);
+      }
+      $wasSet = true;
+      return $wasSet;
+    }
+    
+    $currentMain = $this->getMain();
+    if ($currentMain != null && $currentMain != $newMain)
+    {
+      $currentMain->setMentorMain(null);
+    }
+    
+    $this->main = $newMain;
+    $existingMentorMain = $newMain->getMentorMain();
+    
+    if ($this != $existingMentorMain)
+    {
+      $newMain->setMentorMain($this);
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public static function minimumNumberOfSecondaries()
+  {
+    return 0;
+  }
+
+  public function addSecondary($aSecondary)
+  {
+    $wasAdded = false;
+    if (!$this->canSetSecondaries) { return false; }
+    if ($this->indexOfSecondary($aSecondary) !== -1) { return false; }
+    $existingMentorSecondary = $aSecondary->getMentorSecondary();
+    if ($existingMentorSecondary == null)
+    {
+      $aSecondary->setMentorSecondary($this);
+    }
+    elseif ($this !== $existingMentorSecondary)
+    {
+      $existingMentorSecondary->removeSecondary($aSecondary);
+      $this->addSecondary($aSecondary);
+    }
+    else
+    {
+      $this->secondaries[] = $aSecondary;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeSecondary($aSecondary)
+  {
+    $wasRemoved = false;
+    if (!$this->canSetSecondaries) { return false; }
+    if ($this->indexOfSecondary($aSecondary) != -1)
+    {
+      unset($this->secondaries[$this->indexOfSecondary($aSecondary)]);
+      $this->secondaries = array_values($this->secondaries);
+      if ($this === $aSecondary->getMentorSecondary())
+      {
+        $aSecondary->setMentorSecondary(null);
+      }
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function addSecondaryAt($aSecondary, $index)
+  {  
+    $wasAdded = false;
+    if($this->addSecondary($aSecondary))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfSecondaries()) { $index = $this->numberOfSecondaries() - 1; }
+      array_splice($this->secondaries, $this->indexOfSecondary($aSecondary), 1);
+      array_splice($this->secondaries, $index, 0, array($aSecondary));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveSecondaryAt($aSecondary, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfSecondary($aSecondary) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfSecondaries()) { $index = $this->numberOfSecondaries() - 1; }
+      array_splice($this->secondaries, $this->indexOfSecondary($aSecondary), 1);
+      array_splice($this->secondaries, $index, 0, array($aSecondary));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addSecondaryAt($aSecondary, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function equals($compareTo)
+  {
+    if ($compareTo == null) { return false; }
+    if (get_class($this) != get_class($compareTo)) { return false; }
+
+    if ($this->main != $compareTo->main)
+    {
+      return false;
+    }
+
+    if ($this->secondaries != $compareTo->secondaries)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public function hashCode()
+  {
+    if ($this->cachedHashCode != -1)
+    {
+      return $this->cachedHashCode;
+    }
+    $this->cachedHashCode = 17;
+    if ($this->main != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->main);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+    if ($this->secondaries != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->secondaries);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+
+    $this->canSetMain = false;
+    $this->canSetSecondaries = false;
+    return $this->cachedHashCode;
+  }
+
+  public function delete()
+  {
+    if ($this->main != null)
+    {
+      $this->main->setMentorMain(null);
+    }
+    foreach ($this->secondaries as $aSecondary)
+    {
+      $aSecondary->setMentorSecondary(null);
+    }
+  }
+
+}
+?>

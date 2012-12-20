@@ -1,0 +1,67 @@
+class Person {
+    String name;
+}
+
+class Student {
+   isA Person;
+   private int stNum;
+   
+   private int status; /* 0=appled; 1=enrolled; 2=graduated; 3=quit */
+   private Supervisor mySupervisor;
+   
+   public Student(int stNum) {
+     this.stNum= stNum;
+     status=0;
+   }
+   
+   public int stNum() {return stNum;}
+   
+   public void enrol() {if(status ==0) status=1;}
+   void graduate() {
+      if(status==1) {
+         removeSupervisor();
+         status=2;
+      }
+   }
+   
+   public void quit() {removeSupervisor(); status=3;}
+    
+   public boolean setSupervisor(Supervisor newSupervisor) {
+      if(mySupervisor != null || status!=1) return(false);
+      mySupervisor = newSupervisor;
+      newSupervisor.mentees.add(this);
+      return(true);
+   }
+   public boolean removeSupervisor() {
+      if(mySupervisor == null) return(false);
+      mySupervisor.mentees.remove(this);
+      mySupervisor = null;
+      return(true);
+   }
+
+   public String toString() {
+      return(
+         (getName()==null ? " " : getName) +
+         " status="+status +
+         " stNum="+stNum + " Supervisor=" +
+         (mySupervisor==null ? "nobody" : mySupervisor.toString())
+      );
+   }
+}
+
+class Supervisor
+{
+   isA Person;
+   List<Student> mentees = new ArrayList<Student>();
+   
+   Supervisor() {}
+
+   public String toString() {
+      return(
+         (getName()==null ? " " : getName()) + " " +
+         mentees.size()+ " mentees"
+      );
+   }
+}
+
+

@@ -1,0 +1,11 @@
+
+namespace example;
+
+class Light
+{
+  bulb
+  {
+    Off { -> On; }
+    On { }
+  }
+}

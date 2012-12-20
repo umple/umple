@@ -1,0 +1,538 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+The main Umple metamodel.
+
+ */
+
+namespace cruise.umple.compiler;
+
+/*
+ * The main meta-model of Umple.
+ * 
+ * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
+ * the classes, attributes, associations, methods, etc that were in it.
+ * 
+ * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
+ * 
+ * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
+ */
+class UmpleModel
+{
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+  isA Runnable;
+
+  // The Umple file (.ump) that was used to populate the model.
+  UmpleFile umpleFile;
+
+  defaultPackage = null;
+  GenerateTarget[] generates;
+  Boolean shouldGenerate = true;
+  Glossary glossary = new Glossary();
+  String defaultNamespace = null;
+  String code = null;
+  Boolean debugMode = false;
+  ParseResult lastResult = null;
+
+  Map<String,String> generatedCode = new HashMap<String,String>();
+
+  // data for default class positioning
+  internal Coordinate levelOffset = new Coordinate(200,100,0,0);
+  internal Coordinate initialOffset = new Coordinate(50,30,0,0);
+  internal Coordinate classSize = new Coordinate(0,0,109,45);
+  internal int maxYLevels = 5;
+
+  // data for default association positioning
+  internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
+  internal int reflexiveSegmentLength = 15;
+
+  // The Associations contained within the model.
+  1 -> * Association;
+
+  // The Umple Classes contained within the model.
+  1 -> * UmpleClass;
+
+  // The State Machines contained within the model.
+  1 -> * StateMachine stateMachineDefinitions;
+
+  // The Umple interfaces contained within the model.
+  1 -> * UmpleInterface;
+}
+
+/*
+ * An element partaining to an entity with Umple.
+ */
+class UmpleElement
+{
+  depend cruise.umple.compiler.Position;
+
+  // The name of the Umple element.
+  name;
+  
+  // The position(s) of the element in the source code, used in debugging
+  //  may have multiple positions in the case of mixins
+  1 -> 0..* Position positions;
+
+  // The modifier associated with the Umple element.
+  modifier = null;
+
+  String[] namespaces;
+
+  packageName = "";
+
+  // The code associated with the Umple element.
+  extraCode = "";
+
+  // Specifies whether or not the Umple element is internal.
+  Boolean isInternal = false;
+
+  // Specifies the position of this Umple element (ex. The UmpleOnline diagram).
+  Coordinate coordinates = new Coordinate(-1,-1,-1,-1);
+
+  before setPackageName { if (aPackageName == null) { return false; } }  
+}
+
+/*
+ * A method which recides inside an Umple Class.
+ */
+class Method
+{
+  depend cruise.umple.compiler.Position;
+  
+  // The modifier associated with the method.
+  modifier;
+
+  // The name of the method. 
+  name;
+  
+  lazy Position position;
+
+  // The type of the method.
+  type;
+
+  // Specifies whether or not the method is implemented.
+  Boolean isImplemented;
+
+  // The method parameters.
+  1 -> 0..* MethodParameter;
+
+  // The body of the method (such as the code within).
+  1 -> 0..1 MethodBody;
+
+  // The comments associated with the method (such as the Javadoc above it).
+  1 -> * Comment;
+}
+
+class Modifier
+{
+  String [] name;
+}
+
+/*
+ * The contents of a method, such as the code within it.
+ */
+class MethodBody
+{
+  // The code within the method body.
+  extraCode;
+}
+
+/*
+ * Represents a constant.
+ */
+class Constant
+{
+  // The name of the constant.
+  name;
+
+  // The type of the constant.
+  type;
+
+  // The modifier of the constant.
+  modifier; 
+
+  // The value of the constant.
+  value;
+
+  class UniqueIdentifier { } 
+}
+
+/*
+ * Represents a parameter in a method and its various forms.
+ */
+class MethodParameter
+{
+  isA UmpleVariable;
+
+  // Specifies whether or not the method parameter is auto unique.
+  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+
+  // Specifies whether or not the method parameter is a list.
+  Boolean isList = false;
+
+  // Specifies whether or not the method parameter is derived.
+  Boolean isDerived = false;
+
+  // Specifies whether or not the method parameter is lazy.
+  Boolean isLazy = false;
+}
+
+// NOT used right now
+// Type is a simple string 
+class Type{
+}
+
+// NOT used right now
+class PrimitiveType{
+  isA Type;
+  typeName;
+}
+
+// NOT used right now
+class ReferenceType{
+  isA Type;
+  * -> 0..1 UmpleClass;
+  * -> 0..1 UmpleInterface;
+}
+// Under Development
+// The Constraint object related to Umple Classes
+class Constraint{
+  constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
+  String[] expression;
+  String[] type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+}
+
+class CodeInjection
+{
+  depend cruise.umple.compiler.Position;
+  
+  type;
+  operation;
+  code;
+  * -> 1 UmpleClass;
+  lazy Position position;
+  Boolean isInternal = false;
+}
+
+class Key
+{
+  Boolean isDefault = false;
+  String[] members;
+}
+
+/*
+ * Represents an Umple interface.
+ */
+class UmpleInterface
+{
+  isA UmpleElement;
+
+  * -> 0..* UmpleInterface extendsInterface;
+
+  // The methods contained within the Umple interface.
+  1 -> 0..* Method;
+
+  * -> * Depend;
+
+  // The constants contained within the Umple interface.
+  1 -> 0..* Constant;
+
+  before setPackageName { if (aPackageName == null) { return false; } }
+  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+}
+
+/*
+ * Represents an Umple class which can contain attributes, associations and methods.
+ */
+class UmpleClass
+{
+  depend cruise.umple.util.*;
+
+  isA UmpleElement;
+
+  // Specifies whether or not the Umple class is an abstract class.
+  Boolean isAbstract = false;
+
+  // Specifies whether or not the Umple class is a singleton.
+  Boolean isSingleton = false;
+
+  Association[] associations;
+
+  Key key = new Key();
+
+  // Specifies whether or not the Umple class is immutable.
+  internal Boolean iAmImmutable = false;
+  internal Boolean ancestorIsImmutable = false;
+
+  1 -> * CodeInjection;
+
+  // The possible Constraints related to the Umple Class
+  1 -> 0..* Constraint;
+
+  // The Umple Class's super class (if there is one).
+  * subclasses -- 0..1 UmpleClass extendsClass;
+
+  * -> 0..1 Token extendsToken;
+  * -> 0..* UmpleInterface parentInterface;
+  * -> * Depend;
+
+  // The methods contained within the Umple class.
+  1 -> 0..* Method;
+
+  // The constants contained within the Umple class.
+  1 -> 0..* Constant;
+
+  1 -> 0..1 UniqueIdentifier;
+
+  // The attributes contained within the Umple class.
+  1 -- * Attribute;
+
+  // The associations contained within the Umple class.
+  0..1 -- * AssociationVariable;
+
+  // The comments associated with the Umple Class (such as the Javadoc above it).
+  1 -> * Comment;
+  
+  UmpleModel sourceModel;
+
+  before addDepend { if (depends.contains(aDepend)) { return false; } }  
+
+  before setImmutable { if (!canBeImmutable()) { return false; } }
+
+  before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
+  
+  before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
+  
+  before addStateMachine { if (isImmutable()) { return false; } }
+}
+
+class Depend
+{
+  name;
+  Boolean isInternal = false;
+
+  key { name }
+}
+
+class AssociationClass
+{
+  isA UmpleClass;
+  1 -> 0..2 Association associatedTo;
+}
+
+// Superclass for tracking member variables in all target languages
+// TODO: Code smell because we have both an association variable and also an association
+// This class should go and instead AssociationEnd should be the member variable
+class UmpleVariable
+{
+  // The name of the Umple variable.
+  name;
+
+  // The type of the Umple variable.
+  type;
+
+  // The modifier associated with the Umple variable.
+  modifier; // potential enum, 'settable'
+
+  // The value of the Umple variable.
+  value;
+
+  before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
+
+  before getModifier { if (modifier == null) { return "settable"; } }
+
+  class UniqueIdentifier { }  
+}
+
+/*
+ * Represents an attribute.
+ */
+class Attribute
+{
+  isA UmpleVariable;
+
+  // Specifies whether or not the method parameter is auto unique.
+  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+
+  // Specifies whether or not the method parameter is a list.
+  Boolean isList = false;
+
+  // Specifies whether or not the method parameter is derived.
+  Boolean isDerived = false;
+
+  // Specifies whether or not the method parameter is lazy.
+  Boolean isLazy = false;
+
+  // The comments associated with the attribute (such as the Javadoc above it).
+  1 -> * Comment;
+}
+
+/*
+ * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
+ */
+class Association
+{
+  // The name of the association.
+  name = null;
+  Boolean isLeftNavigable;
+  Boolean isRightNavigable;
+  Coordinate[] positions;
+  0..1 -- 2 AssociationEnd ends;
+  Position tokenPosition = null;
+  internal Boolean immutable = false;
+
+  before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
+  after constructor { this.setLeftAndRight(); }
+}
+
+
+// TODO: Code smell referenceToClassName is a duplication, can access via the association 
+// Create a derived attribute otherend (the other AssociationEnd)
+class AssociationEnd
+{
+  roleName;
+  className;
+  modifier; // potential enum 'internal'
+  referenceToClassName;
+  Multiplicity multiplicity;
+  Boolean isDefaultRoleName = false;
+  String priority = "";
+
+  key { multiplicity, roleName, className, modifier, referenceToClassName }
+  //modifier { Settable, Immutable, Internal, Defaulted, Constant }
+
+  before getRoleName { if (roleName == null) { return ""; } }
+  before getClassName { if (className == null) { return ""; } }
+  before getModifier { if (modifier == null || "".equals(modifier)) { return "internal"; } }
+  before getReferenceToClassName { if (referenceToClassName == null) { return ""; } }
+}
+
+// TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
+class AssociationVariable
+{
+  isA UmpleVariable;
+  Multiplicity multiplicity;
+  immutable Boolean isNavigable;
+  String priority = "";
+  
+  0..1 self relatedAssociation;
+
+  // The comments associated with the association (such as the Javadoc above it).
+  1 -> * Comment;
+
+  before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
+
+  before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
+}
+
+// TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+class Multiplicity
+{
+  depend cruise.umple.util.*;
+
+  bound = null; // used when minimum=maximum; 
+  minimum = null;
+  maximum = null;
+
+  key { bound, minimum, maximum } 
+
+}
+
+// TODO: Code smell: This duplicates the structure of the class from UmpleClass
+// This is a problem for model-to-model transformations
+// Should be abolished
+class GeneratedElement
+{
+  depend java.util.*;
+}
+
+/*
+ * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
+ */
+class GeneratedClass
+{
+  isA GeneratedElement;
+
+  // Generated classes come from an Umple model (which comes from an Umple file), hence many generated classes to one model.
+  * -> 1 UmpleModel model;
+
+  // Generated classes are translated from an Umple class, hence the relation.
+  0..1 -> 1 UmpleClass uClass;
+
+  // Generated classes may have a parent class/super class.
+  0..1 -> 0..1 GeneratedClass parentClass;
+}
+
+//class GeneratedInterface
+//{
+//  isA GeneratedElement;
+//  //code = null;
+//  * -> 1 UmpleModel model;
+//  0..1 -> 1 UmpleInterface uInterface;
+//}
+
+
+class Point
+{
+  Integer x;
+  Integer y;
+
+  key { x, y }
+}
+
+class Coordinate
+{
+  Integer x;
+  Integer y;
+  Integer width;
+  Integer height;
+  status {Explicit, Undefined, Defaulted}
+
+  after constructor { updateStatus(); }
+  after setX { if(wasSet) updateStatus(); }
+  after setY { if(wasSet) updateStatus(); }
+  after setWidth { if(wasSet) updateStatus(); }
+  after setHeight { if(wasSet) updateStatus(); }
+
+  key { x, y, width, height }
+}
+
+/*
+ * Represents a comment, such as those found around classes, methods, attributes and associations.
+ */
+class Comment
+{
+  depend java.util.*;
+
+  // The text associated with the comment.
+  text;
+}
+
+/*
+ * Represents the generation target, such as what the generated output language will be.
+ */
+class GenerateTarget
+{
+  // The target language, such as Java, Cpp, Php or Ruby.
+  language;
+
+  path;
+
+  Boolean override = false;
+  Boolean overrideAll = false;
+
+  before getPath{if(path == null) path = ""; }
+  key{language}
+}
+
+use UmpleVersion.ump;
+use UmpleHelper.ump;
+use UmpleDiagram.ump;
+use StateMachine.ump;
+use Util_Code.ump;
+use Umple_Code.ump;

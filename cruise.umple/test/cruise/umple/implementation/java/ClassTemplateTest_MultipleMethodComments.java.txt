@@ -1,0 +1,61 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+
+  /**
+   * Inline comment above method.
+   */
+  public void testMethod1(){
+    // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiple inline comments
+   * above method.
+   */
+  public void testMethod2(){
+    // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiline comment above method.
+   */
+  public void testMethod3(){
+    // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiple multiline comments
+   * above method.
+   */
+  public void testMethod4(){
+    // I am a comment inside a method.
+  }
+
+}

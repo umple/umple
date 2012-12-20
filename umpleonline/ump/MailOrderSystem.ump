@@ -1,0 +1,74 @@
+/*
+  Mail Order System , System- sample system 
+  Last updated: June 8, 2010
+*/
+//Namespace for facade class.
+namespace MailOrderSystem;
+
+//Namespace for core of the system.
+namespace MailOrderSystem.core;
+
+class Client{
+ number; name; 
+ address; phone; creditLimit; 
+ 1 -- * OrderFromClient;
+ 1 -- * ShipmentToClient;
+}
+
+class OrderFromClient{
+ ourOrderNumber; datePlaced;
+ clientsPurchaseOrder; creditCardToCharge; 
+ 1 -- * ClientOrderLineItem;
+}
+class SalesPerson {
+ name; 
+ 0..1 -- * OrderFromClient;
+}
+class ClientOrderLineItem{
+ numberOrdered; pricePerUnitCharged; 
+ 1 -- * ShipmentLineItem;
+}
+class ShipmentToClient{
+ dateShipped; invoiceNumber;
+ totalPriceOfShipment; amountPaid; 
+ 1 -- * ShipmentLineItem;
+}
+class ShipmentLineItem{ numShipped;}
+class ProductCategory{
+ name; 
+ 1 -- * Product;
+}
+class ProductSource {
+ supplierCode; 
+ advertisedCostPerUnit; 
+ 1 -- * SupplierOrderLineItem;
+}
+class Product{
+ ourCode; description; picture;
+ ourListPricePerunit; numberInInventory; numberToKeepInv;
+ 1 -- * ClientOrderLineItem;
+ 1-- * ProductSource;
+}
+class Supplier {
+ id; name; address; 
+ 1 -- * ProductSource;
+ 1 -- * OrderToSupplier;
+ 1 -- * ReceivedDelivery;
+}
+class ReceivedDelivery{
+ numberReceived;
+ actualCostPerUnit;
+ 1 -- * ReceivedLineItem;
+}
+
+class SupplierOrderLineItem{
+ numberOrdered;
+ dateExpected; 
+ 1 -- * ReceivedLineItem;
+}
+class OrderToSupplier {
+ poNumber; 
+ dateOrdered; 
+ 1 -- * SupplierOrderLineItem;
+}
+class ReceivedLineItem { numberReceived; actualCostPerUnit; }

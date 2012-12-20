@@ -1,0 +1,46 @@
+Tracing Attributes
+Tracing
+noreferences
+
+@@description
+<p>
+MOTL allows the tracing of attributes at the model level. Attribute tracing can occur whenever an attribute value is changed (i.e. setter is called) or/and when the value is accessed (i.e. the getter method is called). Thus, attribute tracing can be made to occur any of the following modes: </p>
+
+<ul>
+<li><b>set</b>: When the "set" keyword is specified before the traced attribute, tracing occurs when the attribute setter method is executed. This is also the default when no keyword is specified before the attribute</li>
+<li><b>get</b>: When the "get" keyword is specified before the traced attribute, tracing occurs when the attribute setter method is executed</li>
+<li><b>set,get</b>: When "set,get"  is specified tracing occurs when both the getter and setter method are executed.</li>
+</ul>
+</p>
+
+@@syntax
+[[traceDirective]] [[traceItem]] [[executeClause]] [[traceWhere]] [[traceEntity]]
+
+@@example
+// This traces setId() and setName()
+class Student
+{
+  Integer id;
+  String name;
+  trace id;
+  trace set name;
+}
+@@endexample
+
+@@example
+// This traces  getId() method
+class Student
+{
+  Integer id;
+  trace get id;
+}
+@@endexample
+
+@@example
+// This example traces getId() and setId()
+class Student
+{
+  Integer id;
+  trace set,get id;
+}
+@@endexample

@@ -1,0 +1,5 @@
+class Student
+{
+  immutable;
+  0..1 me -> 1 Student them;
+}

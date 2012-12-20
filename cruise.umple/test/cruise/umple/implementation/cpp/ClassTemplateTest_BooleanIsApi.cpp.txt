@@ -1,0 +1,46 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+
+public class BoolTest
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //BoolTest Attributes
+  private boolean test;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public BoolTest(boolean aTest)
+  {
+    test = aTest;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setTest(boolean aTest)
+  {
+    boolean wasSet = false;
+    test = aTest;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean getTest()
+  {
+    return test;
+  }
+
+  public void delete()
+  {}
+
+}

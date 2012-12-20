@@ -1,0 +1,995 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.util;
+
+class TriState
+{
+  Boolean isSet = false;
+  Boolean status;
+  
+  after setStatus { isSet = true; }
+
+  public boolean isTrue() { return isSet && status; }
+  public boolean isFalse() { return isSet && !status; }
+  
+}
+
+class Language
+{
+  depend java.util.*;
+  singleton;
+  
+  before constructor { init(); }
+  
+  private static final boolean default_strictness = false;
+  private Hashtable<String, String> _allEnglish;
+
+  private void init()
+  {
+    _allEnglish = new Hashtable<String, String>();
+    add("problem_with_umple_file","Unable to use @1, due to @2");
+  }
+
+  public static void reset()
+  {
+    getInstance().init();
+  }
+  
+  public void add(String id, String english)
+  {
+    _allEnglish.put(id, english);
+  }
+  
+  public String lookup(String id)
+  {
+    return lookup(id,default_strictness);
+  }
+  
+  public String lookup(String id, boolean isStrict)
+  {
+    String defaultText = isStrict ? "UNKNOWN: " + id : id;
+    return _allEnglish.containsKey(id) ? _allEnglish.get(id) : defaultText;
+  }
+
+  public String lookup(String id, String[] allReplacements)
+  {
+    return lookup(id,true,allReplacements);
+  }
+  
+  public String lookup(String id, boolean isStrict, String[] allReplacements)
+  {
+    String text = lookup(id,isStrict);
+    for (int i=1; i<=allReplacements.length; i++)
+    {
+      text = text.replace("@" + i, allReplacements[i-1]);
+    }
+    return text;
+  }
+}
+
+class Input
+{
+  depend java.io.*;
+  
+  InputStream stream;
+  internal BufferedReader reader = new BufferedReader(new InputStreamReader(aStream));
+  
+  public String readUmpleFile(String[] args, PrintStream writer)
+  {
+    if (args.length > 0)
+    {
+      return args[0];
+    }
+    else
+    {
+      writer.println("Please specify the file to compile:");
+      return readLine();
+    }
+  }
+  
+  public String readLine()
+  {
+    try {
+      return reader.readLine();
+    } catch (IOException e) {
+      return "";
+    }
+  }
+}
+
+class FileManager
+{
+  depend java.io.*;
+  
+  //```````````````````````
+  // INTERFACE
+  //```````````````````````  
+  
+  public static String loadFile(String filename)
+  {
+    try 
+    {
+      return loadFile(new FileReader(filename));
+    } 
+    catch (Exception e) 
+    {
+      return null;
+    }  
+  }   
+  
+  public static String loadFile(File file)
+  {
+    try 
+    {
+      return loadFile(new FileReader(file));
+    } 
+    catch (Exception e) 
+    {
+      return null;
+    } 
+  }   
+
+  public static File writeFileToDisk(String filename, String text)
+  {
+    try 
+    {
+      FileOutputStream fout = new FileOutputStream(filename);
+      FileManager.writeFileToDisk(fout,text);
+      return new File(filename);
+    } 
+    catch (Exception e) 
+    {
+      throw new RuntimeException("Error writing ["+ filename +"] to disk",e);
+    }
+  }
+  
+  public static void writeFileToDisk(File file, String text)
+  {
+    try 
+    {
+      FileOutputStream fout = new FileOutputStream(file);
+      FileManager.writeFileToDisk(fout,text);
+    } 
+    catch (Exception e) 
+    {
+      throw new RuntimeException("Error writing ["+ file.getAbsoluteFile() +"] to disk",e);
+    }
+  }
+  
+  //```````````````````````
+  // INTERFACE
+  //``````````````````````` 
+  
+  private static void writeFileToDisk(FileOutputStream fout, String text) throws IOException
+  {
+    OutputStream bout = new BufferedOutputStream(fout);
+    OutputStreamWriter out = new OutputStreamWriter(bout);
+
+    out.write(text);
+    out.flush();
+    out.close();
+  }
+  
+  private static String loadFile(FileReader reader)
+  {
+    try 
+    {
+      String content = "";
+      BufferedReader in = new BufferedReader(reader);
+      String input;
+      while ((input = in.readLine()) != null) 
+      {
+        if (!"".equals(content))
+        {
+          content += "\n";  
+        }
+        content += input;
+      }
+      in.close();
+      return content;
+    } 
+    catch (Exception e) 
+    {
+      return null;
+    }  
+  }   
+
+}
+
+class ActionResponse
+{
+  const default_success_message_id = "Success!";
+  successMessage = default_success_message_id;
+  ErrorItem[] errors;
+  
+ 
+  public void merge(ActionResponse other)
+  {
+    errors.addAll(other.errors);
+  }  
+
+  public boolean isError(String errorId)
+  {
+    for (ErrorItem error : errors)
+    {
+      if (error.getId().equals(errorId))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public boolean isError(String errorId, String[] allErrorData)
+  {
+    for (ErrorItem error : errors)
+    {
+      if (!error.getId().equals(errorId))
+      {
+        continue;
+      }
+
+      if (error.numberOfParts() != allErrorData.length)
+      {
+        return false;
+      }
+    
+      for (int i=0; i<error.numberOfParts(); i++)
+      {
+        if (!error.getPart(i).equals(allErrorData[i]))
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+  
+  
+  public boolean isValid()
+  {
+    return numberOfErrors() == 0;
+  }
+  
+  public String getMessage()
+  {
+    
+    if (isValid())
+    {
+      String messageId = getSuccessMessage();
+      return Language.getInstance().lookup(messageId);
+    }
+    else
+    {
+      StringBuilder builder = new StringBuilder();
+      for (int i=0; i<numberOfErrors(); i++)
+      {
+        ErrorItem item = getError(i);
+        String errorId = item.getId();
+        String[] allErrorData = item.getParts();
+        if (i > 0)
+        {
+          builder.append(",\n");
+        }
+        builder.append(Language.getInstance().lookup(errorId,false,allErrorData));
+      }
+      return builder.toString();
+    }
+  }  
+}
+
+class ErrorItem
+{
+  String id;
+  String[] parts;
+  
+  public ErrorItem(String aId, String[] aParts)
+  {
+    this(aId);
+    for (String part : aParts)
+    {
+      addPart(part);
+    }
+  }
+}
+
+
+class StringFormatter
+{
+  depend java.io.File;
+  
+  public static String toCamelCase(String input)
+  {
+    if (input == null || input.length() == 0)
+    {
+      return input;
+    }
+    String answer = "";
+    boolean isUpperCase = false;
+    for (char c : input.toCharArray())
+    {
+      String asIs = c + "";
+
+      if (answer.length() == 0)
+      {
+        answer += asIs.toLowerCase();
+      }
+      else if (isUpperCase)
+      {
+        answer += asIs.toUpperCase();
+        isUpperCase = false;
+      }
+      else if ("_".equals(asIs))
+      {
+        isUpperCase = true;
+      }
+      else
+      {
+        answer += asIs;
+      }
+    }
+    return answer; 
+  }
+
+  public static String toUnderscore(String input)
+  {
+    if (input == null || input.length() == 0)
+    {
+      return input;
+    }
+    String answer = "";
+    String lastToken = "";
+    String lastTokenType = "underscore";
+    for (char c : input.toCharArray())
+    {
+      String asIs = c + "";
+      String upperCase = asIs.toUpperCase();
+      String lowerCase = asIs.toLowerCase();
+      
+      if ("_".equals(asIs))
+      {
+        answer += lastToken + asIs;
+        lastToken = "";
+        lastTokenType = "underscore";
+      }
+      else if (asIs.equals(upperCase)) //Is upperCase or a number
+      {
+        if (lastTokenType.equals("lower") || (lastTokenType.equals("upper") && Character.isDigit(c)) || (lastTokenType.equals("number") && !Character.isDigit(c)))
+        {
+          answer += lastToken + "_";
+          lastToken = "";
+        }
+        lastToken += lowerCase;
+        lastTokenType = Character.isDigit(c) ? "number" : "upper";
+      }
+      else //Must be lowerCase
+      {
+        if (lastTokenType.equals("upper"))
+        {
+          if (lastToken.length() > 1)
+          {
+            answer += lastToken.substring(0,lastToken.length()-1) + "_" + lastToken.charAt(lastToken.length()-1);
+          }
+          else
+          {
+            answer += lastToken;
+          }
+          lastToken = "";
+        }
+        else if (lastTokenType.equals("number"))
+        {
+          answer += lastToken + "_";
+          lastToken = "";
+        }
+        lastToken += asIs;
+        lastTokenType = "lower";
+      }
+    }
+    return answer + lastToken;
+  }
+
+  public static String toPascalCase(String input)
+  {
+    if (input == null || input.length() == 0)
+    {
+      return input;
+    }
+    String answer = "";
+    for(String section : input.split("\\."))
+    {
+      if (section.length() == 1)
+      {
+        answer += section.toUpperCase();
+      }
+      else
+      {
+        answer += section.substring(0,1).toUpperCase() + section.substring(1);
+      }
+    }
+    return answer; 
+  }
+
+
+  public static String joinParameters(String first, String second)
+  {
+    first = first == null ?  "" : first;
+    second = second == null ?  "" : second;
+    
+    if ("".equals(first))
+    {
+      return second;
+    }
+    else if ("".equals(second))
+    {
+      return first;
+    }
+    else
+    {
+      return first + ", " + second;
+    }
+  }
+  
+  public static String appendParameter(String input, String endingText)
+  {
+    if (input == null || "".equals(input))
+    {
+      return "";
+    }
+
+    String[] allParameters = input.split(",");
+    StringBuffer answer = new StringBuffer();
+    for (int i=0; i<allParameters.length; i++)
+    {
+      String currentParameter = allParameters[i].trim();
+      
+      if (answer.length() > 0)
+      {
+        answer.append(", ");
+      }
+      answer.append(currentParameter);
+      answer.append(endingText);
+    }
+    return answer.toString();
+  }
+  
+  public static String replaceParameter(String input, String oldParameter, String newParameter)
+  {
+    if (input == null || "".equals(input))
+    {
+      return "";
+    }
+    
+    boolean shouldKeep = newParameter != null && !newParameter.equals("");
+    
+    String[] allParameters = input.split(",");
+    StringBuffer answer = new StringBuffer();
+    for (int i=0; i<allParameters.length; i++)
+    {
+      String currentParameter = allParameters[i].trim();
+      String nextParameter = null;
+      
+      if (!oldParameter.equals(currentParameter))
+      {
+        nextParameter = currentParameter;
+      }
+      else if (shouldKeep)
+      {
+        nextParameter = newParameter;
+      }
+      
+      if (nextParameter == null)
+      {
+        continue;
+      }
+      
+      
+      if (answer.length() > 0)
+      {
+        answer.append(", ");
+      }
+      answer.append(nextParameter);
+      
+    }
+    return answer.toString();
+  }
+  
+  public static String format(String input)
+  {
+    return input;
+  }
+  
+  public static String format(String input, Object... variables)
+  {
+    String answer = input;
+    for (int i=0; i<variables.length; i++)
+    {
+      String toReplace = "{" + i + "}";
+      answer = answer.replace(toReplace, clean(variables[i]));
+    }
+    
+    return answer;
+  }
+  
+  public static String addPathOrAbsolute(String prePath, String path)
+  {
+  	if(path.startsWith("/") || path.matches("^[a-zA-Z]:.*"))
+  		return path + File.separator;
+  	
+  	return prePath + File.separator + path + File.separator;
+  }
+  
+  public static String stripLeadingPath(String filename)
+  {  	
+	int index = 0;
+	while(filename.indexOf(File.separatorChar, index) != -1)
+	  index = filename.indexOf(File.separatorChar, index) + 1;
+  	return filename.substring(index);
+  }
+  
+  public static String sanitizeForJson(String input){
+	 String ret = "";
+     for (int i=0; i<input.length(); i++)
+	 {
+         switch(input.charAt(i))
+         {
+         	case '\\':         		
+         		ret += "\\\\";
+     		break;
+
+         	/*case '\'':
+         		ret += "\\'";
+         		break;*/
+
+         	case  '"':
+         		ret += "\\\"";
+         		break;
+         		default:
+         			ret += input.charAt(i);
+         			break;
+         }
+	 }
+	 return ret;   
+  }
+  private static String clean(Object input)
+  {
+    return input == null ? "" : input.toString();
+  }
+}
+
+class SampleFileWriter 
+{
+
+  depend java.util.*;
+  depend java.io.*;
+  depend org.junit.*;
+
+  public static File[] getAllFiles(File inputDirectory)
+  {
+    File[] allFiles = inputDirectory.listFiles();
+    Arrays.sort(allFiles, new Comparator<File>(){
+      public int compare(File f1, File f2)
+      {
+        return f1.getName().compareTo(f2.getName());
+      } 
+    });
+    return allFiles;
+  }
+
+  public static String readContent(File filename)
+  {
+    BufferedReader reader = null;
+    StringBuffer answer = new StringBuffer();
+    
+    try
+    {
+      reader = new BufferedReader(new FileReader(filename));
+      String nextLine = null;
+      while (( nextLine = reader.readLine()) != null)
+      {
+        answer.append(nextLine);
+        answer.append("\n");
+      } 
+      
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Unable to read content",e);
+    }
+    finally
+    {
+      closeAsRequired(reader);
+    }    
+    return answer.toString();
+
+  }
+  
+  public static void assertEitherFileContent(File expected1, File expected2, String actual)
+  {
+    try
+    {
+      assertFileContent(expected1,actual);
+    }
+    catch (AssertionError e)
+    {
+      assertFileContent(expected2,actual);
+    }
+  }
+  
+  public static void assertPartialFileContent(File partial, String actual)
+  {
+    BufferedReader expectedReader = null;
+    BufferedReader actualReader = null;
+    boolean foundMatch = false;
+    
+    try
+    {
+      expectedReader = new BufferedReader(new FileReader(partial));
+      actualReader = new BufferedReader(new StringReader(actual));
+
+      String expectedLine = null;
+      String actualLine = null;
+      
+      int line = 0;
+      do 
+      {
+        if (expectedLine == null || foundMatch)
+        {
+          expectedLine = expectedReader.readLine();
+        }
+        actualLine = actualReader.readLine();
+        // HACK: To deal with // line # comments
+        while (actualLine != null && actualLine.indexOf("// line") != -1)
+        { //Ignore the line, go to next
+          actualLine = actualReader.readLine();
+        }
+        
+        line++;
+        
+        if (expectedLine == null) 
+        {
+          break; 
+        }
+        else if (foundMatch)
+        {
+          Assert.assertEquals("Failed at:" + line,expectedLine,actualLine);
+        }
+        else if (expectedLine.equals(actualLine))
+        {
+          foundMatch = true;
+        }
+      } 
+      while (expectedLine != null);
+    }
+    catch (Exception e)
+    {
+      Assert.fail(e.getMessage());
+    }
+    finally
+    {
+      closeAsRequired(expectedReader);
+      closeAsRequired(actualReader);
+    }
+    if (!foundMatch) { Assert.fail("Did not find expected lines"); }
+  }
+  
+  public static void assertFileContent(File expected, String actual)
+  {
+    assertFileContent(expected, actual, true);
+  }
+  
+  public static void assertFileContent(File expected, String actual, boolean ignoreLineComments)
+  {
+    
+    BufferedReader expectedReader = null;
+    BufferedReader actualReader = null;
+    
+    try
+    {
+      expectedReader = new BufferedReader(new FileReader(expected));
+      actualReader = new BufferedReader(new StringReader(actual));
+
+      String expectedLine = null;
+      String actualLine = null;
+      
+      int line = 0;
+      do 
+      {
+        actualLine = actualReader.readLine();
+        if (ignoreLineComments)
+        {
+	        // HACK: To deal with // line # comments
+	        while (actualLine != null && actualLine.indexOf("// line") != -1)
+	        { //Ignore the line, go to next
+	          actualLine = actualReader.readLine();
+	        }
+	    }
+        expectedLine = expectedReader.readLine();
+        
+        line++;
+        
+        // HACK: To deal with umple version issues
+        if (expectedLine != null && expectedLine.indexOf("This code was generated using the UMPLE") == -1)
+        {
+          Assert.assertEquals("Failed at:" + line,expectedLine,actualLine);  
+        }
+      } 
+      while (expectedLine != null && actualLine != null);
+    }
+    catch (Exception e)
+    {
+      Assert.fail(e.getMessage());
+    }
+    finally
+    {
+      closeAsRequired(expectedReader);
+      closeAsRequired(actualReader);
+    }    
+  }
+  
+  public static void closeAsRequired(BufferedReader reader)
+  {
+    if (reader != null)
+    {
+      try
+      {
+        reader.close();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public static void closeAsRequired(InputStream reader)
+  {
+    if (reader != null)
+    {
+      try
+      {
+        reader.close();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public static String rationalize(String rawPath)
+  {
+    String path = rawPath;
+    File f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+    
+    path = "../cruise.umple/" + rawPath;
+    f = new File(path);
+    if (f.exists())
+    {
+      return path;
+    }
+
+    path = "/h/ralph/umple/trunk/cruise.umple/" + rawPath;
+    return path;
+  }
+  
+  public static void createFile(String filename, String input)
+  {
+    File f = new File(filename);
+    f.getAbsoluteFile().getParentFile().mkdirs();
+    
+    try
+    {
+      BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+      out.write(input);
+      out.close();
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException("Unable to create file [" + filename + "]", e);
+    }
+  }
+  
+  public static void destroy(String filename)
+  {
+    
+    File file = new File(filename);
+    
+    if (file.isDirectory())
+    {
+      destroy(file);
+    }
+    else
+    {
+      file.delete();
+    }
+  }
+  
+  private static void destroy(File path)
+  {
+    if( path.exists() ) {
+      File[] files = path.listFiles();
+      for(int i=0; i<files.length; i++) {
+         if(files[i].isDirectory()) {
+           destroy(files[i]);
+         }
+         else {
+           files[i].delete();
+         }
+      }
+    }
+    path.delete();
+  }
+}
+
+class DeleteLanguage
+{
+  singleton;
+}
+
+class Word
+{
+  singular;
+  plural;
+}
+
+class Glossary
+{
+  Word[] words;
+  
+  after constructor { init(); }
+  
+  
+  
+  private void init()
+  {
+    addWord(new Word("fish","fish"));
+    addWord(new Word("sheep","sheep"));
+    addWord(new Word("equipment","equipment"));
+    addWord(new Word("information","information"));
+    addWord(new Word("rice","rice"));
+    addWord(new Word("money","money"));
+    addWord(new Word("species","species"));
+    addWord(new Word("series","series"));
+    addWord(new Word("man","men"));
+    addWord(new Word("child","children"));
+    addWord(new Word("sex","sexes"));
+    addWord(new Word("move","moves"));
+
+
+	addWord(new Word("shoe","shoes"));
+	addWord(new Word("axis","axes"));
+	addWord(new Word("testis","testes"));
+	addWord(new Word("crisis","crises"));
+	addWord(new Word("virus","viruses")); 
+	addWord(new Word("octopus","octopi"));
+	addWord(new Word("status","statuses"));
+	addWord(new Word("alias","aliases"));
+	addWord(new Word("ox","oxen"));
+	addWord(new Word("index","indices"));
+	addWord(new Word("vertex","vertices"));
+	addWord(new Word("quiz","quizzes"));
+	addWord(new Word("matrix","matrices"));
+	addWord(new Word("radius","radii"));
+  }
+  
+  
+  public String getSingular(String plural)
+  {
+    if (plural == null || plural.length() == 0)
+    {
+      return "";
+    }
+    else
+    {
+      for(Word w : getWords())
+      {
+        if (w.getPlural().equals(plural))
+        {
+          return w.getSingular();
+        }
+      }
+      
+      if (plural.endsWith("y"))
+      {
+        return plural;
+      }
+      else if (plural.endsWith("ies"))
+      {
+        return plural.substring(0,plural.length()-3) + "y";
+      }
+      
+      else if (plural.endsWith("sses"))
+      {
+        return plural.substring(0,plural.length()-2);
+      }
+      else if (plural.endsWith("ss"))
+      {
+        return plural;
+      }
+
+      else if (plural.endsWith("uses"))
+      {
+        return plural.substring(0,plural.length()-2);
+      }
+      else if (plural.endsWith("us"))
+      {
+        return plural;
+      }
+      
+      else if (plural.endsWith("s"))
+      {
+        return plural.substring(0,plural.length()-1);
+      }
+      else
+      {
+        return plural;
+      }
+    }
+  }
+  
+  public String getPlural(String singular)
+  {
+    if (singular == null || singular.length() == 0)
+    {
+      return "s";
+    }
+    else
+    {
+      for(Word w : getWords())
+      {
+        if (w.getSingular().equals(singular))
+        {
+          return w.getPlural();
+        }
+      }
+
+      if (singular.endsWith("y"))
+      {
+        return singular.substring(0,singular.length()-1) + "ies";
+      }
+      else if (singular.endsWith("ies"))
+      {
+        return singular;
+      }
+      
+      else if (singular.endsWith("sses"))
+      {
+        return singular;
+      }
+      else if (singular.endsWith("ss"))
+      {
+        return singular + "es";
+      }
+
+      else if (singular.endsWith("uses"))
+      {
+        return singular;
+      }
+      else if (singular.endsWith("us"))
+      {
+        return singular + "es";
+      }
+      
+      else if (singular.endsWith("s"))
+      {
+        return singular;
+      }
+      else
+      {
+        return singular + "s";
+      }
+    }
+  }
+}

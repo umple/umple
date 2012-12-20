@@ -1,0 +1,5 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+   <%
+   appendln(stringBuffer,"");
+   appendln(stringBuffer,"  string {0} ({1} {2});",gen.translate("getStringMethod",sm),gen.translate("type",sm),gen.translate("stateMachineOne", sm),uClass.getName());
+%>

@@ -1,0 +1,38 @@
+Umple messages
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>General information about Umple errors and warnings</h2>
+
+<p>The subsequent pages in the user manual describe each of the errors or warnings that 
+can be emitted by the compiler. These can appear in <a href="UsingUmpleOnline.html"> UmpleOnline</a>, Eclipse and the 
+command-line compiler.
+</p>
+
+<p>An <b>error</b> is a situation where the compiler can't generate code because the Umple 
+code doesn't make sense; i.e. there is something critical missing, or there is an inconsistency.</p>
+
+<p>A <b>warning</b> is a situation where code can be generated, but the resulting system 
+may not to have the intended semantics (it may not behave as intended) because of an 
+inconsistency, redundancy or assumption that may not be correct.</p>
+<br />
+
+<hr>
+
+<p><i>For developers of Umple itself: The file defining the messages in English is called
+<a href="http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/en.error">
+en.error</a> and is  located in cruise.umple/src. Errors have severity 1 or 2, and warnings have severity 3, 4 and 5. When adding a message, a user manual 
+page should be added describing it.<br />
+
+All 
+messages should be detected in the <a href="http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/UmpleInternalParser_CodeClass.ump">parsing phase by calling setFailedPosition</a>.
+
+<br />
+It is intended in the future that 
+internationalized versions of Umple will be created; for example fr.error would be the 
+French version. In the near future, it is intended to enable messages from Java or other 
+compilers to be passed through as part of the Umple compilation process; these would be 
+the same as the native language compiler, except that line numbers would be changed to 
+point to the correct line of Umple code.</i></p>

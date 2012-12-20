@@ -1,0 +1,11 @@
+Concern C
+{
+  VariationPoint VP1 {
+    Kind: Optional;
+    
+    this
+    is
+    extra
+    
+  }  
+}

@@ -1,0 +1,14 @@
+
+class Token
+{
+  [] blah;
+  String[] name;
+  Position[] start;
+  Integer[] number;
+}
+
+class Position
+{
+  Integer lineNumber;
+  Integer offset;
+}

@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class SaveFileAsAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+  isA SaveFileAction;
+
+  public final static String ID = "file.saveAs";
+
+}

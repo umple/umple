@@ -1,0 +1,30 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class ZoomEditorAction 
+{
+depend org.jhotdraw.draw.DrawingEditor;
+depend org.jhotdraw.draw.DrawingView;
+depend javax.swing.*;
+  isA AbstractDrawingEditorAction;
+
+  public final static String ID = "zoomEditor";
+private double scaleFactor;
+private AbstractButton button;
+private String label;
+private boolean updateAllViews;
+public void actionPerformed(java.awt.event.ActionEvent e) {
+        if (button != null) {
+            button.setText(label);
+        }
+        if (updateAllViews) {
+        for (DrawingView v : getEditor().getDrawingViews()) {
+            v.setScaleFactor(scaleFactor);
+        }} else {
+            getView().setScaleFactor(scaleFactor);
+        }
+    }
+
+}

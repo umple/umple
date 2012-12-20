@@ -1,0 +1,87 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class MyDriver
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MyDriver Attributes
+  private String name;
+
+  //MyDriver Associations
+  private MySubordinate mySubordinate;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public MyDriver(String aName)
+  {
+    name = aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public MySubordinate getMySubordinate()
+  {
+    return mySubordinate;
+  }
+
+  public boolean setMySubordinate(MySubordinate newMySubordinate)
+  {
+    boolean wasSet = false;
+    if (mySubordinate != null && !mySubordinate.equals(newMySubordinate) && equals(mySubordinate.getMyDriver()))
+    {
+      //Unable to setMySubordinate, as existing mySubordinate would become an orphan
+      return wasSet;
+    }
+
+    mySubordinate = newMySubordinate;
+    MyDriver oldMyDriver = newMySubordinate != null ? newMySubordinate.getMyDriver() : null;
+
+    if (!this.equals(oldMyDriver))
+    {
+      if (oldMyDriver != null)
+      {
+        oldMyDriver.mySubordinate = null;
+      }
+      if (mySubordinate != null)
+      {
+        mySubordinate.setMyDriver(this);
+      }
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    MySubordinate existingMySubordinate = mySubordinate;
+    mySubordinate = null;
+    if (existingMySubordinate != null)
+    {
+      existingMySubordinate.delete();
+    }
+  }
+
+}

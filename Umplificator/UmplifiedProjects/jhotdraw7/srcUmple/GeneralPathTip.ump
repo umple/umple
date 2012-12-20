@@ -1,0 +1,22 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.decoration ;
+
+class GeneralPathTip 
+{
+depend java.awt.geom.*;
+  isA AbstractLineDecoration;
+
+  private Path2D.Double path;
+double decorationRadius;
+@Override
+    protected Path2D.Double getDecoratorPath(org.jhotdraw.draw.Figure f) {
+        return (Path2D.Double) path.clone();
+    }
+@Override
+    protected double getDecoratorPathRadius(org.jhotdraw.draw.Figure f) {
+        return decorationRadius;
+    }
+
+}

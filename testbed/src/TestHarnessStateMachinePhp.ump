@@ -1,0 +1,178 @@
+
+namespace cruise.statemachine.test;
+
+class CourseB
+{
+  log = "initial value";
+  
+  status {
+    Open {
+      entry / { $this->log = "entry called"; }
+      exit / { $this->log = "exit called"; }
+      anEvent -> Closed;
+    }
+    Closed {
+      anEvent -> Open;
+    }
+  }
+}
+
+class CourseC
+{
+  String[] logs;
+  
+  status {
+    Open {
+      entry / { $this->addLog("Open Entry"); }
+      flip -> Closed;
+      do 
+      { 
+        usleep(400000);
+        $this->addLog("Do Activity On Open");
+      }
+    }
+    Closed {
+      entry / { $this->addLog("Closed Entry"); }
+      flip -> Open;
+    }
+  }
+}
+
+class CourseE
+{
+
+  String[] logs;
+  
+  status
+  {
+    Off
+    {
+      entry / { $this->addLog("Enter Off"); }
+      exit / { $this->addLog("Exit Off"); }
+      turnOn -> On;
+      turnSleep -> Sleep;
+    }
+    Sleep
+    {
+      entry / { $this->addLog("Enter Sleep"); }
+      exit / { $this->addLog("Exit Sleep"); }
+      wake -> Pause;
+    }
+    On
+    {
+      entry / { $this->addLog("Enter On"); }
+      exit / { $this->addLog("Exit On"); }
+      
+      turnOff -> Off;
+      Play 
+      { 
+        entry / { $this->addLog("Enter Play"); }
+        exit / { $this->addLog("Exit Play"); }
+        push -> Pause;
+      }
+      Pause
+      {
+        entry / { $this->addLog("Enter Pause"); }
+        exit / { $this->addLog("Exit Pause"); }
+        push -> Play;      
+        standby -> Sleep;
+      }      
+      
+    }
+ }
+ 
+}
+
+class CourseK
+{
+  String[] logs;
+  
+  status
+  {
+    On { flip -> Final; }
+    Final { }
+  }
+
+  after delete {  $this->addLog("deleted"); }
+  
+}
+
+class CourseL
+{
+  String[] logs;
+  
+  status
+  {
+    On
+    {
+      MotorIdle
+      {
+        flip -> Final; 
+      }
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> Final;  
+      }
+      
+    }
+
+  }
+
+  after delete {  $this->addLog("deleted"); }
+  
+}
+
+class CourseR
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { $this->addLog("Enter Off"); }
+     exit / { $this->addLog("Exit Off"); }
+     -> On;
+    }
+    On { 
+      entry / { $this->addLog("Enter On"); }
+      exit / { $this->addLog("Exit On"); }
+    }  
+  }
+}
+
+class CourseS
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { $this->addLog("Enter Off 1"); }
+     entry / { $this->addLog("Enter Off 2"); }
+     exit / { $this->addLog("Exit Off 1"); }
+     exit / { $this->addLog("Exit Off 2"); }
+     flip -> On;
+    }
+    On { 
+    }  
+  }
+
+}
+
+
+class CourseT
+{
+  Integer count;
+  one
+  {
+    Off {
+     [$this->count > 10] -> On;
+     [$this->count <= 10] -> Wait;
+    }
+    On { 
+    }  
+    Wait { 
+    }  
+  }
+}

@@ -1,0 +1,11 @@
+class LightFixture
+{
+  bulb
+  {
+    On {
+      push -> On;
+      pull -> On;
+    }
+
+  }
+}

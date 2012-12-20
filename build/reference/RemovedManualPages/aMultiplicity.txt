@@ -1,0 +1,25 @@
+aMultiplicity
+Associations
+
+@@description
+<p>      
+A multiplicity end describes one end of the relationship of an association.  The
+details of the end include: a multiplicity (i.e. 0--1, *, 3..5), a type (i.e. Person)
+and optionally a name (i.e. mentor).
+</p>
+
+<p>
+This syntax is as part of an inline association.
+</p>
+  
+@@syntax
+[[multiplicity]] [type,name]
+
+@@example
+0..1 Person supervisor
+@@endexample
+
+@@example
+* Person
+@@endexample
+

@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.locator ;
+
+class Locator 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+
+  /**
+	 * Locates a position on the provided figure.
+	 * @return a point on the figure.
+	 */
+	public Point2D.Double locate(Figure owner);
+/**
+	 * Locates a position on the provided figure relative to the dependent
+         * figure.
+	 * @return a point on the figure.
+	 */
+	public Point2D.Double locate(Figure owner, Figure dependent);
+
+}

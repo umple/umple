@@ -1,0 +1,11 @@
+class Student
+{
+    * -- * Course;
+position 68 52 109 42;
+  position.association Course__Student 30,35 40,45;
+}
+
+class Course
+{
+  position 176 199 109 42;
+}

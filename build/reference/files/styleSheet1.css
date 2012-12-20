@@ -1,0 +1,371 @@
+/* default styles for extension "tx_ablinklist_pi1" */
+
+/* --------------------  general styles  -------------------- */
+
+.tx_ablinklist_viewDetailsForLink {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_viewAddNewLink {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_viewAddNewLinkResult {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_viewReportBrokenLink {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_viewReportBrokenLinkResult {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_viewRateLink {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_viewRateLinkResult {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_categoryPath {
+	font-size : small;
+}
+
+.tx_ablinklist_formErrorMsg {
+	color : red;
+	margin-top : 10px;
+	margin-bottom : 10px;
+}
+
+/* --------------------  listView  -------------------- */
+
+.tx_ablinklist_listView_categoryPath {
+	font-size : small;
+}
+
+.tx_ablinklist_listView_categories {
+	margin-top : 10px;
+}
+
+.tx_ablinklist_listView_category {
+	margin-top : 10px;
+}
+
+.tx_ablinklist_listView_categoryLabel { }
+
+.tx_ablinklist_listView_links {
+	margin-top : 10px;
+}
+
+.tx_ablinklist_listView_link { }
+
+.tx_ablinklist_listView_linkAddNew {
+	margin-top : 10px;
+}
+
+.tx_ablinklist_listView_linkLabel { }
+
+.tx_ablinklist_listView_linkDetails { }
+
+.tx_ablinklist_listView_linkReportBroken { }
+
+.tx_ablinklist_listView_linkRate { }
+
+.tx_ablinklist_listView_linkImage { }
+
+/* --------------------  treeView  -------------------- */
+
+.tx_ablinklist_treeView_category {
+	margin-top : 10px;
+	margin-bottom : 10px;
+}
+
+.tx_ablinklist_treeView_category_level_1 { }
+
+.tx_ablinklist_treeView_category_level_2 { }
+
+.tx_ablinklist_treeView_category_level_3 { }
+
+.tx_ablinklist_treeView_category_level_4 { }
+
+.tx_ablinklist_treeView_links {
+	margin-bottom : 10px;
+}
+
+.tx_ablinklist_treeView_linkAddNew {
+	font-size : small;
+}
+
+.tx_ablinklist_treeView_linkLabel { }
+
+.tx_ablinklist_treeView_linkDetails { }
+
+.tx_ablinklist_treeView_linkReportBroken { }
+
+.tx_ablinklist_treeView_linkRate { }
+
+.tx_ablinklist_treeView_linkImage { }
+
+/* --------------------  searchView  -------------------- */
+
+.tx_ablinklist_searchView_resultMessage {
+	margin-top : 10px;
+	margin-bottom : 10px;
+}
+
+.tx_ablinklist_searchView_noLinksMessage {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-top : 10px;
+	margin-bottom : 10px;
+	display : block;
+	text-align : center;
+}
+
+.tx_ablinklist_searchView_categoryPath {
+	font-size : small;
+}
+
+.tx_ablinklist_searchView_categoryLabel { }
+
+.tx_ablinklist_searchView_links {
+	margin-top : 10px;
+}
+
+.tx_ablinklist_searchView_linkLabel { }
+
+.tx_ablinklist_searchView_linkDetails { }
+
+.tx_ablinklist_searchView_linkReportBroken { }
+
+.tx_ablinklist_searchView_linkRate { }
+
+.tx_ablinklist_searchView_linkImage { }
+
+/* --------------------  topView  -------------------- */
+
+.tx_ablinklist_topView_links {
+	font-size : medium;
+	border : solid 1px #C5C5C5;
+	background-color : #E5E5E5;
+	padding : 5px;
+	margin-bottom : 10px;
+	display : block;
+	text-align : left;
+}
+
+.tx_ablinklist_topView_link {
+	margin-top : 5px;
+}
+
+.tx_ablinklist_topView_linkLabel { }
+
+.tx_ablinklist_topView_linkDetails { }
+
+.tx_ablinklist_topView_linkImage { }
+
+/* --------------------  catalogView  -------------------- */
+
+.tx_ablinklist_catalogView_categoryPath {
+	font-size : small;
+}
+
+.tx_ablinklist_catalogView_category {
+	float : left;
+	width : 300px;
+	padding-top : 20px;
+}
+
+.tx_ablinklist_catalogView_subcategories {
+	font-size : small;
+}
+
+.tx_ablinklist_catalogView_categoryLabel { }
+
+.tx_ablinklist_catalogView_links {
+	clear : both;
+	padding-top : 20px;
+}
+
+.tx_ablinklist_catalogView_link { }
+
+.tx_ablinklist_catalogView_linkAddNew {
+	margin-top : 10px;
+}
+
+.tx_ablinklist_catalogView_linkLabel { }
+
+.tx_ablinklist_catalogView_linkDetails { }
+
+.tx_ablinklist_catalogView_linkReportBroken { }
+
+.tx_ablinklist_catalogView_linkRate { }
+
+.tx_ablinklist_catalogView_linkImage { }
+
+/* default styles for extension "tx_cssstyledcontent" */
+	/* Captions */
+	DIV.csc-textpic-caption-c .csc-textpic-caption { text-align: center; }
+	DIV.csc-textpic-caption-r .csc-textpic-caption { text-align: right; }
+	DIV.csc-textpic-caption-l .csc-textpic-caption { text-align: left; }
+
+	/* Needed for noRows setting */
+	DIV.csc-textpic DIV.csc-textpic-imagecolumn { float: left; display: inline; }
+
+	/* Border just around the image */
+	DIV.csc-textpic-border DIV.csc-textpic-imagewrap .csc-textpic-image IMG {
+		border: 2px solid black;
+		padding: 0px 0px;
+	}
+
+	DIV.csc-textpic-imagewrap { padding: 0; }
+
+	DIV.csc-textpic IMG { border: none; }
+
+	/* DIV: This will place the images side by side */
+	DIV.csc-textpic DIV.csc-textpic-imagewrap DIV.csc-textpic-image { float: left; }
+
+	/* UL: This will place the images side by side */
+	DIV.csc-textpic DIV.csc-textpic-imagewrap UL { list-style: none; margin: 0; padding: 0; }
+	DIV.csc-textpic DIV.csc-textpic-imagewrap UL LI { float: left; margin: 0; padding: 0; }
+
+	/* DL: This will place the images side by side */
+	DIV.csc-textpic DIV.csc-textpic-imagewrap DL.csc-textpic-image { float: left; }
+	DIV.csc-textpic DIV.csc-textpic-imagewrap DL.csc-textpic-image DT { float: left; }
+	DIV.csc-textpic DIV.csc-textpic-imagewrap DL.csc-textpic-image DD { float: none; }
+	DIV.csc-textpic DIV.csc-textpic-imagewrap DL.csc-textpic-image DD IMG { border: none; } /* FE-Editing Icons */
+	DL.csc-textpic-image { margin: 0; }
+	DL.csc-textpic-image DT { margin: 0; display: inline; }
+	DL.csc-textpic-image DD { margin: 0; }
+
+	/* Clearer */
+	DIV.csc-textpic-clear { clear: both; }
+
+	/* Margins around images: */
+
+	/* Pictures on left, add margin on right */
+	DIV.csc-textpic-left DIV.csc-textpic-imagewrap .csc-textpic-image,
+	DIV.csc-textpic-intext-left-nowrap DIV.csc-textpic-imagewrap .csc-textpic-image,
+	DIV.csc-textpic-intext-left DIV.csc-textpic-imagewrap .csc-textpic-image {
+		display: inline; /* IE fix for double-margin bug */
+		margin-right: 10px;
+	}
+
+	/* Pictures on right, add margin on left */
+	DIV.csc-textpic-right DIV.csc-textpic-imagewrap .csc-textpic-image,
+	DIV.csc-textpic-intext-right-nowrap DIV.csc-textpic-imagewrap .csc-textpic-image,
+	DIV.csc-textpic-intext-right DIV.csc-textpic-imagewrap .csc-textpic-image {
+		display: inline; /* IE fix for double-margin bug */
+		margin-left: 10px;
+	}
+
+	/* Pictures centered, add margin on left */
+	DIV.csc-textpic-center DIV.csc-textpic-imagewrap .csc-textpic-image {
+		display: inline; /* IE fix for double-margin bug */
+		margin-left: 10px;
+	}
+	DIV.csc-textpic DIV.csc-textpic-imagewrap .csc-textpic-image .csc-textpic-caption { margin: 0; }
+	DIV.csc-textpic DIV.csc-textpic-imagewrap .csc-textpic-image IMG { margin: 0; }
+
+	/* Space below each image (also in-between rows) */
+	DIV.csc-textpic DIV.csc-textpic-imagewrap .csc-textpic-image { margin-bottom: 5px; }
+	DIV.csc-textpic-equalheight DIV.csc-textpic-imagerow { margin-bottom: 5px; display: block; }
+	DIV.csc-textpic DIV.csc-textpic-imagerow { clear: both; }
+
+	/* No margins around the whole image-block */
+	DIV.csc-textpic DIV.csc-textpic-imagewrap .csc-textpic-firstcol { margin-left: 0px !important; }
+	DIV.csc-textpic DIV.csc-textpic-imagewrap .csc-textpic-lastcol { margin-right: 0px !important; }
+
+	/* Add margin from image-block to text (in case of "Text w/ images") */
+	DIV.csc-textpic-intext-left DIV.csc-textpic-imagewrap,
+	DIV.csc-textpic-intext-left-nowrap DIV.csc-textpic-imagewrap {
+		margin-right: 10px !important;
+	}
+	DIV.csc-textpic-intext-right DIV.csc-textpic-imagewrap,
+	DIV.csc-textpic-intext-right-nowrap DIV.csc-textpic-imagewrap {
+		margin-left: 10px !important;
+	}
+
+	/* Positioning of images: */
+
+	/* Above */
+	DIV.csc-textpic-above DIV.csc-textpic-text { clear: both; }
+
+	/* Center (above or below) */
+	DIV.csc-textpic-center { text-align: center; /* IE-hack */ }
+	DIV.csc-textpic-center DIV.csc-textpic-imagewrap { margin: 0 auto; }
+	DIV.csc-textpic-center DIV.csc-textpic-imagewrap .csc-textpic-image { text-align: left; /* Remove IE-hack */ }
+	DIV.csc-textpic-center DIV.csc-textpic-text { text-align: left; /* Remove IE-hack */ }
+
+	/* Right (above or below) */
+	DIV.csc-textpic-right DIV.csc-textpic-imagewrap { float: right; }
+	DIV.csc-textpic-right DIV.csc-textpic-text { clear: right; }
+
+	/* Left (above or below) */
+	DIV.csc-textpic-left DIV.csc-textpic-imagewrap { float: left; }
+	DIV.csc-textpic-left DIV.csc-textpic-text { clear: left; }
+
+	/* Left (in text) */
+	DIV.csc-textpic-intext-left DIV.csc-textpic-imagewrap { float: left; }
+
+	/* Right (in text) */
+	DIV.csc-textpic-intext-right DIV.csc-textpic-imagewrap { float: right; }
+
+	/* Right (in text, no wrap around) */
+	DIV.csc-textpic-intext-right-nowrap DIV.csc-textpic-imagewrap { float: right; clear: both; }
+	/* Hide from IE5-mac. Only IE-win sees this. \*/
+	* html DIV.csc-textpic-intext-right-nowrap .csc-textpic-text { height: 1%; }
+	/* End hide from IE5/mac */
+
+	/* Left (in text, no wrap around) */
+	DIV.csc-textpic-intext-left-nowrap DIV.csc-textpic-imagewrap { float: left; clear: both; }
+	/* Hide from IE5-mac. Only IE-win sees this. \*/
+	* html DIV.csc-textpic-intext-left-nowrap .csc-textpic-text { height: 1%; }
+	/* End hide from IE5/mac */

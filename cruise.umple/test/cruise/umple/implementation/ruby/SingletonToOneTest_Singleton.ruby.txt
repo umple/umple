@@ -1,0 +1,63 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+require 'singleton'
+
+class Mentor
+  include Singleton
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :student
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_student
+    @student
+  end
+
+  def set_student(a_student)
+    was_set = false
+    existing_student = @student
+    @student = a_student
+    if !existing_student.nil? and !existing_student.eql?(a_student)
+      existing_student.remove_mentor(self)
+    end
+    unless a_student.nil?
+      a_student.add_mentor(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    unless @student.nil?
+      @student.remove_mentor(self)
+    end
+  end
+
+end
+end

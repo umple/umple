@@ -1,0 +1,113 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { On, Off }
+  private Bulb bulb;
+  enum AnotherBulb { On, Amber }
+  private AnotherBulb anotherBulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulb(Bulb.On);
+    setAnotherBulb(AnotherBulb.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public String getAnotherBulbFullName()
+  {
+    String answer = anotherBulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  public AnotherBulb getAnotherBulb()
+  {
+    return anotherBulb;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    AnotherBulb aAnotherBulb = anotherBulb;
+    switch (aBulb)
+    {
+      case On:
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        setBulb(Bulb.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (aAnotherBulb)
+    {
+      case On:
+        setAnotherBulb(AnotherBulb.Amber);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean unflip()
+  {
+    boolean wasEventProcessed = false;
+    
+    AnotherBulb aAnotherBulb = anotherBulb;
+    switch (aAnotherBulb)
+    {
+      case Amber:
+        setAnotherBulb(AnotherBulb.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+  }
+
+  private void setAnotherBulb(AnotherBulb aAnotherBulb)
+  {
+    anotherBulb = aAnotherBulb;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,15 @@
+namespace example;
+
+class LightFixture
+{ 
+  bulb 
+  {
+    Off { flip -> On; }
+    On 
+    {
+      flip -> Off;
+      Normal { touch -> Dimmed; }
+      Dimmed { touch -> Off; }
+    }
+  }
+}

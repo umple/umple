@@ -1,0 +1,17 @@
+namespace example;
+
+class Mentor 
+{
+  name;
+}
+
+class SubMentor
+{
+  isA Mentor;
+}
+
+class SubMentor2
+{
+  isA Mentor;
+  subName;
+}

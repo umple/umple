@@ -1,0 +1,77 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Example
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Example State Machines
+  private static $LightOn = 1;
+  private static $LightOff = 2;
+  private $light;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setLight(self::$LightOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getLightFullName()
+  {
+    $answer = $this->getLight();
+    return $answer;
+  }
+
+  public function getLight()
+  {
+    if ($this->light == self::$LightOn) { return "LightOn"; }
+    elseif ($this->light == self::$LightOff) { return "LightOff"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+    
+    $aLight = $this->light;
+    if ($aLight == self::$LightOn)
+    {
+      $this->setLight(self::$LightOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($aLight == self::$LightOff)
+    {
+      $this->setLight(self::$LightOn);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setLight($aLight)
+  {
+    System.out.println("About to flip");
+    $this->light = $aLight;
+    System.out.println("Just flipped");
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

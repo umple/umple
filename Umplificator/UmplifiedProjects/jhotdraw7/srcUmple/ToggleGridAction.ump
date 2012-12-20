@@ -1,0 +1,27 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class ToggleGridAction 
+{
+depend org.jhotdraw.app.action.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractDrawingViewAction;
+
+  public final static String ID = "view.toggleGrid";
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        DrawingView view = getView();
+        if (view != null) {
+            view.setConstrainerVisible(! view.isConstrainerVisible());
+        }
+    }
+@Override
+    protected void updateViewState() {
+        DrawingView view = getView();
+        putValue(ActionUtil.SELECTED_KEY, view != null && view.isConstrainerVisible());
+    }
+
+}

@@ -1,0 +1,6 @@
+// c 5
+// c 5b
+namespace example; // c 6
+// c 7
+// c 7b
+// c 7c

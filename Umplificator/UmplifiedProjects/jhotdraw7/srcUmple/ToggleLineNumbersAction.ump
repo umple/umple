@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.teddy.action ;
+
+class ToggleLineNumbersAction 
+{
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.app.action.*;
+depend org.jhotdraw.samples.teddy.*;
+depend org.jhotdraw.util.*;
+depend java.awt.event.*;
+depend javax.swing.Action;
+  isA AbstractViewAction;
+
+  public final static String ID = "view.toggleLineNumbers";
+private ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.teddy.Labels");
+@Override
+    public TeddyView getActiveView() {
+        return (TeddyView) super.getActiveView();
+    }
+@Override
+    public void actionPerformed(ActionEvent e) {
+        getActiveView().setLineNumbersVisible(! getActiveView().isLineNumbersVisible());
+    }
+@Override
+    protected void updateView() {
+        putValue(
+                Action.SELECTED_KEY,
+                getActiveView() != null && getActiveView().isLineNumbersVisible()
+                );
+    }
+
+}

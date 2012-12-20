@@ -1,0 +1,12 @@
+
+namespace example;
+
+class Mentor 
+{
+
+  status
+  {
+    Ok { flip -> Final; }
+    Final {  } 
+  }
+}

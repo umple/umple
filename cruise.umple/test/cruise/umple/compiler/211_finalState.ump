@@ -1,0 +1,8 @@
+class OnOffSwitch
+{
+  bulb
+  {
+    On { push -> Off; }
+    final Off { }
+  }
+}

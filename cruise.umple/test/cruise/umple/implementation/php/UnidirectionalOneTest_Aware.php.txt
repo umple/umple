@@ -1,0 +1,75 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $name;
+
+  //Mentor Associations
+  private $student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName, $aStudent)
+  {
+    $this->name = $aName;
+    if (!$this->setStudent($aStudent))
+    {
+      throw new Exception("Unable to create Mentor due to aStudent");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getStudent()
+  {
+    return $this->student;
+  }
+
+  public function setStudent($newStudent)
+  {
+    $wasSet = false;
+    if ($newStudent != null)
+    {
+      $this->student = $newStudent;
+      $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $this->student = null;
+  }
+
+}
+?>

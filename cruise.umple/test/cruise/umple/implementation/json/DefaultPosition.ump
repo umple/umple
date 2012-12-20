@@ -1,0 +1,61 @@
+class A
+{
+}
+
+class B
+{
+}
+
+class ExplicitlyDefined
+{
+  position 1 2 3 4;
+}
+
+class C
+{
+}
+
+class D
+{
+}
+
+class E
+{
+}
+
+class F
+{
+}
+
+class G
+{
+}
+
+class H
+{
+}
+
+class ExplicitlyDefinedToo
+{
+  position 5 6 7 8;
+}
+
+class I
+{
+}
+
+class J
+{
+}
+
+class K
+{
+}
+
+class L
+{
+}
+
+class M
+{
+}

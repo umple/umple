@@ -1,0 +1,62 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  
+  StringBuffer allCases = new StringBuffer();
+  StringBuffer allExitCases = new StringBuffer();
+  StringBuffer allEnterCases = new StringBuffer();
+  boolean hasExit = sm.getHasExitAction();
+  boolean hasEntry = sm.getHasEntryAction();
+
+  for (State state : sm.getStates())
+  {
+    if (state.getIsStartState())
+    {
+      allCases.append(StringFormatter.format("if"));
+    }
+    else
+    {
+      allCases.append(StringFormatter.format("    elseif"));
+    }
+    allCases.append(StringFormatter.format(" (${0} == \"{1}\" || ${0} == self::${1})\n",gen.translate("parameterOne",sm),gen.translate("stateOne",state)));
+    allCases.append(StringFormatter.format("    {\n"));
+    allCases.append(StringFormatter.format("      $this->{0} = self::${1};\n",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+    allCases.append(StringFormatter.format("      return true;\n"));
+    allCases.append(StringFormatter.format("    }\n"));
+
+    if (hasExit)
+    {
+      allExitCases.append(StringFormatter.format("    if ($this->{0} == self::${1} && (${2} != self::${1} && ${2} != \"{1}\") ) { $this->{3}(); }\n"
+        , gen.translate("stateMachineOne",sm)
+        , gen.translate("stateOne",state)
+        , gen.translate("parameterOne",sm)
+        , gen.translate("exitMethod",state)
+      ));
+    }
+
+    if (hasEntry)
+    {
+      allEnterCases.append(StringFormatter.format("    if ($this->{0} != self::${1} && (${2} == self::${1} || ${2} == \"{1}\") ) { $this->{3}(); }\n"
+        , gen.translate("stateMachineOne",sm)
+        , gen.translate("stateOne",state)
+        , gen.translate("parameterOne",sm)
+        , gen.translate("enterMethod",state)
+      ));
+    }
+
+  }
+  String outputCases = allCases.toString().trim();
+  String exitCasesOutput = allExitCases.toString().trim();
+  String enterCasesOutput = allEnterCases.toString().trim();
+
+%>
+  public function <%=gen.translate("setMethod",sm)%>($<%= gen.translate("parameterOne",sm) %>)
+  {
+    <% if (!exitCasesOutput.isEmpty()) { append(stringBuffer, "\n    {0}",exitCasesOutput); } %>
+    <% if (!enterCasesOutput.isEmpty()) { append(stringBuffer, "\n    {0}",enterCasesOutput); } %>
+    <%= outputCases %>
+    else
+    {
+      return false;
+    }
+  }
+

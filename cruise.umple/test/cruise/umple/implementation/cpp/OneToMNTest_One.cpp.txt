@@ -1,0 +1,163 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+import java.util.*;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private string name;
+
+  //Mentor Associations
+  private List<Pupil> pupils;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(string aName)
+  {
+    name = aName;
+    pupils = new ArrayList<Pupil>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(string aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public string getName()
+  {
+    return name;
+  }
+
+  public Pupil getPupil(int index)
+  {
+    Pupil aPupil = pupils.get(index);
+    return aPupil;
+  }
+
+  public List<Pupil> getPupils()
+  {
+    List<Pupil> newPupils = Collections.unmodifiableList(pupils);
+    return newPupils;
+  }
+
+  public int numberOfPupils()
+  {
+    int number = pupils.size();
+    return number;
+  }
+
+  public boolean hasPupils()
+  {
+    boolean has = pupils.size() > 0;
+    return has;
+  }
+
+  public int indexOfPupil(Pupil aPupil)
+  {
+    int index = pupils.indexOf(aPupil);
+    return index;
+  }
+
+  public boolean isNumberOfPupilsValid()
+  {
+    boolean isValid = numberOfPupils() >= minimumNumberOfPupils() && numberOfPupils() <= maximumNumberOfPupils();
+    return isValid;
+  }
+
+  public static int minimumNumberOfPupils()
+  {
+    return 5;
+  }
+
+  public static int maximumNumberOfPupils()
+  {
+    return 7;
+  }
+
+  public Pupil addPupil(string aNumber)
+  {
+    if (numberOfPupils() >= maximumNumberOfPupils())
+    {
+      return null;
+    }
+    else
+    {
+      return new Pupil(aNumber, this);
+    }
+  }
+
+  public boolean addPupil(Pupil aPupil)
+  {
+    boolean wasAdded = false;
+    if (pupils.contains(aPupil)) { return false; }
+    if (numberOfPupils() >= maximumNumberOfPupils())
+    {
+      return wasAdded;
+    }
+
+    Mentor existingMentor = aPupil.getMentor();
+    boolean isNewMentor = existingMentor != null && !this.equals(existingMentor);
+
+    if (isNewMentor && existingMentor.numberOfPupils() <= minimumNumberOfPupils())
+    {
+      return wasAdded;
+    }
+
+    if (isNewMentor)
+    {
+      aPupil.setMentor(this);
+    }
+    else
+    {
+      pupils.add(aPupil);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removePupil(Pupil aPupil)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aPupil, as it must always have a mentor
+    if (this.equals(aPupil.getMentor()))
+    {
+      return wasRemoved;
+    }
+
+    //mentor already at minimum (5)
+    if (numberOfPupils() <= minimumNumberOfPupils())
+    {
+      return wasRemoved;
+    }
+
+    pupils.remove(aPupil);
+    wasRemoved = true;
+    return wasRemoved;
+  }
+
+  public void delete()
+  {
+    for(Pupil aPupil : pupils)
+    {
+      aPupil.delete();
+    }
+  }
+
+}

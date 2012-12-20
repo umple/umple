@@ -1,0 +1,71 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.view ;
+
+class ViewPropertyAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.event.*;
+depend java.beans.*;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractViewAction;
+depend org.jhotdraw.app.action.ActionUtil;
+  isA AbstractViewAction;
+
+  private String propertyName;
+private Class[] parameterClass;
+private Object propertyValue;
+private String setterName;
+private String getterName;
+private PropertyChangeListener viewListener = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName() == propertyName) { // Strings get interned
+                updateSelectedState();
+            }
+        }
+    };
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        View p = getActiveView();
+        try {
+            p.getClass().getMethod(setterName, parameterClass).invoke(p, new Object[] {propertyValue});
+        } catch (Throwable e) {
+                InternalError error = new InternalError("Method invocation failed. setter:"+setterName+" object:"+p);
+            error.initCause(e);
+            throw error;
+        }
+    }
+@Override protected void installViewListeners(View p) {
+        super.installViewListeners(p);
+        p.addPropertyChangeListener(viewListener);
+        updateSelectedState();
+    }
+/**
+     * Installs listeners on the view object.
+     */
+   @Override protected void uninstallViewListeners(View p) {
+        super.uninstallViewListeners(p);
+        p.removePropertyChangeListener(viewListener);
+    }
+private void updateSelectedState() {
+        boolean isSelected = false;
+        View p = getActiveView();
+        if (p != null) {
+            try {
+                Object value = p.getClass().getMethod(getterName, (Class[]) null).invoke(p);
+                isSelected = value == propertyValue ||
+                        value != null && propertyValue != null &&
+                        value.equals(propertyValue);
+            } catch (Throwable e) {
+                InternalError error = new InternalError("Method invocation failed. getter:"+getterName+" object:"+p);
+                error.initCause(e);
+                throw error;
+            }
+        }
+        putValue(ActionUtil.SELECTED_KEY, isSelected);
+    }
+
+}

@@ -1,0 +1,60 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Model for generating documentation such as the Umple user manual
+See Documenter_Code.ump for the methods injected into these classes
+*/
+
+namespace cruise.umple.docs;
+
+class Documenter
+{
+  depend java.io.*;
+  depend java.net.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.*;
+  
+  inputPath;
+  outputPath;
+  String[] messages;
+  
+  1 -> 0..1 ContentParser parser;
+}
+
+class Content
+{
+  title;
+  Boolean shouldIncludeReferences = true;
+  description;
+  syntax;
+  String[] examples;
+}
+
+class Group
+{
+  name;
+  1 -> * Content;
+}
+
+class ContentParser
+{
+  isA Parser;
+  1 -> * Group;
+}
+
+class Template
+{
+  const htmlTemplate = htmlTemplate();
+  const exampleTemplate = exampleTemplate();
+  const syntaxTemplate = syntaxTemplate();
+  const navigationHeaderTemplate = navigationHeaderTemplate();
+  const navigationItemTemplate = navigationItemTemplate();
+  const navigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
+}
+
+use Parser.ump;
+use Documenter_Code.ump;

@@ -1,0 +1,53 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $age;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aAge)
+  {
+    $this->age = $aAge;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setAge($aAge)
+  {
+    $wasSet = false;
+    if ($aAge>18)
+    {
+    $this->age = $aAge;
+    $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function getAge()
+  {
+    return $this->age;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

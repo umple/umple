@@ -1,0 +1,39 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Helper classes that re needed by the Umple system, but are not key to understanding the metamodel
+
+*/
+
+
+namespace cruise.umple.compiler;
+
+//Describes the interface for each code generating class to implement
+// TODO: These classes - should be refactored out
+interface ILang
+{
+  public String getCode(UmpleModel model, UmpleElement uElement);
+}
+
+// TODO: Users of this can most likely just use File, so this could be refactored out
+class UmpleFile
+{
+  depend java.io.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  File file;
+  fileName = null;
+  internal String path = null;
+  internal StringBuilder fileContent = init();
+}
+
+class UmpleParserFactory
+{
+ 
+}
+
+use UmpleHelper_Code.ump;

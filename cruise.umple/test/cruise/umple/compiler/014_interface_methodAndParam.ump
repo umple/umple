@@ -1,0 +1,4 @@
+interface ISomething
+{
+String[] getMethod(String[] aname, Integer anotherType);
+}

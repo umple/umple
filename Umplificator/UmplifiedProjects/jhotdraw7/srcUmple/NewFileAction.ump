@@ -1,0 +1,37 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class NewFileAction 
+{
+depend org.jhotdraw.util.*;
+depend java.awt.event.*;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractApplicationAction;
+  isA AbstractApplicationAction;
+
+  public final static String ID = "file.new";
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        Application app = getApplication();
+        final View newView = app.createView();
+        int multiOpenId = 1;
+        for (View existingP : app.views()) {
+            if (existingP.getURI() == null) {
+                multiOpenId = Math.max(multiOpenId, existingP.getMultipleOpenId() + 1);
+            }
+        }
+        newView.setMultipleOpenId(multiOpenId);
+        app.add(newView);
+        newView.execute(new Runnable() {
+            @Override
+            public void run() {
+                newView.clear();
+            }
+        });
+        app.show(newView);
+    }
+
+}

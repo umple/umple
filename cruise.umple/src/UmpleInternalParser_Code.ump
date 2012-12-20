@@ -1,0 +1,277 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file contains the implementation details for our internal Umple parser.
+
+This class parses an Umple file into an abstract syntax tree of tokens, which are then
+analyzed into an ubstabce of of Umple meta model.  This meta model instance can then 
+be passed to our code generator to generate target implementations such as Java, PHP 
+and Ruby.  It is configured to mostly delegate to helper methods for the following components
+
+ + Core (most things outside of the elements below)
+ + Umple Classes
+ + State Machinesx
+ + Traces
+ + Layouts
+
+The grammar is parsed from the *.grammar files in the /src directory.  Please refer to the
+addRulesInFile() methods to see which files comprise the current grammar.
+
+This file also contains helper methods for delegating the analysis of token, so that
+we properly populate the Umple instance of the Umple meta-model.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  
+  internal String[] unparsedUmpleFiles;
+  internal String[] parsedUmpleFiles;
+  internal Boolean shouldProcessAgain = false;
+  internal Boolean shouldProcessClassAgain = false;
+  
+  after constructor { init(); }
+  
+  public UmpleInternalParser()
+  {
+    this("UmpleInternalParser", new UmpleModel(null));
+  }
+
+  public UmpleInternalParser(UmpleModel aModel)
+  {   
+    this("UmpleInternalParser", aModel);
+  }
+
+  private void init()
+  {
+    if(model.getUmpleFile() != null)
+    {
+      setFilename(model.getUmpleFile().getFileName());
+      setRootToken(reset()); // Makes sure the root token position has the filename
+    }
+    
+    addCouple(new Couple("\"","\""));
+    addCouple(new Couple("{","}"));
+    addRulesInFile("/umple_core.grammar");
+    addRulesInFile("/umple_classes.grammar");
+    addRulesInFile("/umple_patterns.grammar");
+    addRulesInFile("/umple_state_machines.grammar");
+    addRulesInFile("/umple_traces.grammar");
+    addRulesInFile("/umple_constraints.grammar");  // TODO Under development
+    addRulesInFile("/umple_layout.grammar");
+  }
+
+  public ParseResult parse(String ruleName, String input)
+  {
+    return super.parse(ruleName,input);
+  }
+
+  public ParseResult analyze(boolean shouldGenerate)
+  {
+    parseAllFiles();
+    analyzeAllTokens(getRootToken());
+    postTokenAnalysis();
+    if (shouldGenerate && getParseResult().getWasSuccess())
+    {
+      model.generate();
+    }
+    return getParseResult();
+  }
+
+  //------------------------
+  // PRIVATE METHODS
+  //------------------------
+
+  // When an error occurs, set the failed position and mark the compile as NOT successful
+  private void setFailedPosition(Position position, int errorCode, String... messages)
+  {
+    //getParseResult().setWasSuccess(false);
+    getParseResult().setPosition(position);
+    getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
+  }
+
+  // Analyze all child tokens of the "root" token.  This delegates to a individual
+  // Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
+  // analyzeToken and quits early if a problem arises
+  private void analyzeAllTokens(Token rootToken)
+  {
+    int analysisStep = 0;
+    shouldProcessAgain = true;
+    do
+    {
+      analysisStep += 1;
+      shouldProcessAgain = false;
+      for(Token t : rootToken.getSubTokens())
+      {
+        analyzeToken(t,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
+      }
+    }
+    while (shouldProcessAgain);
+  }
+
+  // Delegate function to analyze a token within the context of a class
+  // Each token is analyzed as long as "shouldProcessClassAgain" is set to true during the analysis
+  // "1" is for the first round of analysis and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
+  // put everything under the "1"
+  private void analyzeAllTokens(Token rootToken, UmpleClass aClass)
+  {
+    int analysisStep = 0;
+    shouldProcessClassAgain = true;
+    do
+    {
+      analysisStep += 1;
+      shouldProcessClassAgain = false;
+      for(Token token : rootToken.getSubTokens())
+      {
+        analyzeToken(token,aClass,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
+      }
+    }
+    while (shouldProcessClassAgain);
+  }
+
+  // Delegate function to analyze a token and send it to the write
+  private void analyzeToken(Token t, int analysisStep)
+  {
+    analyzeCoreToken(t,analysisStep);
+    analyzeClassToken(t,analysisStep);
+    analyzeStateMachineToken(t,analysisStep);
+    analyzeTraceToken(t,analysisStep);
+    analyzeLayoutToken(t,analysisStep);
+  }
+
+  // Analyze an individual token, delegates to the various components in Umple
+  private void analyzeToken(Token t, UmpleClass aClass, int analysisStep)
+  {
+    analyzeCoreToken(t,aClass,analysisStep);
+    analyzeClassToken(t,aClass,analysisStep);
+    analyzeStateMachineToken(t,aClass,analysisStep);
+    analyzeTraceToken(t,aClass,analysisStep);
+    analyzeLayoutToken(t,aClass,analysisStep);
+  }
+  
+  // Once you have analyze all tokens, you allowed a second 'pass' to apply any additional checks
+  // Each step in the process might "fail", so we check the status before calling each delegate
+  // token post token analysis method
+  private void postTokenAnalysis()
+  {
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenCoreAnalysis();
+    }
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenInterfaceAnalysis();
+    }
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenClassAnalysis();  
+    }
+
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenStateMachineAnalysis();
+    }
+    
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenTraceAnalysis();  
+    }
+
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenLayoutAnalysis();
+    }
+
+  }
+
+
+  // Locate all 'use *.ump' references and add those files if not already parsed 
+  private void addNecessaryFiles()
+  {
+    for(Token t : getRootToken().getSubTokens())
+    {
+      if (t.is("use"))
+      {
+        // A file included with a use statement could be in the same directory
+        String filename = model.getUmpleFile().getPath() + File.separator + t.getValue();
+        
+        // Or it could be in the parent directory
+        String filenamePD = model.getUmpleFile().getParent() + File.separator + t.getValue();
+        
+        // Or it could be in a lib directory of the current directory
+        String filenameLD = model.getUmpleFile().getPath() + File.separator + "lib" + File.separator + t.getValue();
+        
+        // TO DO: Or it could be on the web as a standard Umple file
+        // This should ideally also be turned into a 'search path' based mechanism
+
+        if (!parsedUmpleFiles.contains(filename) && !unparsedUmpleFiles.contains(filename) && !parsedUmpleFiles.contains(filenamePD) && !unparsedUmpleFiles.contains(filenamePD) && !parsedUmpleFiles.contains(filenameLD) && !unparsedUmpleFiles.contains(filenameLD) )
+        {
+          // We have not encountered this 'use' file yet
+          // Check if file name exists - if not raise error message        
+          if((new File(filename)).exists()) {
+            // We have found the file and it needs to be queued for processing
+            unparsedUmpleFiles.add(filename);
+          }
+          else if((new File(filenamePD)).exists()) {
+            // We have found the file and it needs to be queued for processing
+            unparsedUmpleFiles.add(filenamePD);
+          }
+          else if((new File(filenameLD)).exists()) {
+            // We have found the file and it needs to be queued for processing
+            unparsedUmpleFiles.add(filenameLD);
+          }
+          else {
+            getParseResult().addErrorMessage(new ErrorMessage(1510, t.getPosition(), t.getValue()));
+
+          }
+        }  
+        
+        // To do: If file doesn't exist, then t.getValue may be referring to a
+        // library file in ../ump or on the web. Try these before raising error
+        
+      }
+    }
+  }
+  
+  // Loop through all unparsed files, parse them, and add any missing references
+  private void parseAllFiles()
+  {
+    addNecessaryFiles();
+    while (!unparsedUmpleFiles.isEmpty())
+    {
+      String nextFile = unparsedUmpleFiles.get(0);
+      unparsedUmpleFiles.remove(0);
+      parsedUmpleFiles.add(nextFile);
+      String input = SampleFileWriter.readContent(new File(nextFile));
+      //TODO: parse() should probably be responsible for
+      // reading file data, if we refactor it to be as such,
+      // then we can get rid of this ugly bit of code
+      setFilename(nextFile);
+      parse("program", input);
+      addNecessaryFiles();
+    }    
+  }  
+}
+
+use UmpleInternalParser_CodeCore.ump;
+use UmpleInternalParser_CodeClass.ump;
+use UmpleInternalParser_CodeStateMachine.ump;
+use UmpleInternalParser_CodeTrace.ump;
+use UmpleInternalParser_CodeLayout.ump;

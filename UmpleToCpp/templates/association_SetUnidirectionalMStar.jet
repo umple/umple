@@ -1,0 +1,31 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
+  {
+    bool wasSet = false;
+    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
+    vector<<%=gen.translate("type",av)%>*> <%=gen.translate("parameterVerifiedMany",av)%>;
+    for (<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> : <%=gen.translate("parameterMany",av)%>)
+    {
+      if (find(<%=gen.translate("parameterVerifiedMany",av)%>.begin(),<%=gen.translate("parameterVerifiedMany",av)%>.end(),<%=gen.translate("parameterOne",av)%>) != <%=gen.translate("parameterVerifiedMany",av)%>.end())
+      {
+        continue;
+      }
+      <%=gen.translate("parameterVerifiedMany",av)%>->add(<%=gen.translate("parameterOne",av)%>);
+    }
+
+    if (<%=gen.translate("parameterVerifiedMany",av)%>.size() != <%=gen.translate("parameterMany",av)%>.size() || <%=gen.translate("parameterVerifiedMany",av)%>.size() < <%=gen.translate("minimumNumberOfMethod",av)%>())
+    {
+      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
+      return wasSet;
+    }
+
+    <%=gen.translate("associationMany",av)%>.clear();
+    for (int i=0; i<<%=gen.translate("parameterVerifiedMany",av)%>.size(); i++)
+	{
+		<%=gen.translate("associationMany",av)%>.push_back(<%=gen.translate("parameterVerifiedMany",av)%>[i]);
+	}
+	
+    wasSet = true;
+    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
+    return wasSet;
+  }

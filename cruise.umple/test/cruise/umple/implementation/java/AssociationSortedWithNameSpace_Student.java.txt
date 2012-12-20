@@ -1,0 +1,183 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+
+import java.util.*;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private int id;
+  private String ProfsPriority;
+
+  //Student Associations
+  private List<Mentor> Profs;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(int aId)
+  {
+    id = aId;
+    ProfsPriority = "name";
+    Profs = new ArrayList<Mentor>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setProfsPriority(String aProfsPriority)
+  {
+    boolean wasSet = false;
+    ProfsPriority = aProfsPriority;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getProfsPriority()
+  {
+    return ProfsPriority;
+  }
+
+  public Mentor getProf(int index)
+  {
+    Mentor aProf = Profs.get(index);
+    return aProf;
+  }
+
+  public List<Mentor> getProfs()
+  {
+    List<Mentor> newProfs = Collections.unmodifiableList(Profs);
+    return newProfs;
+  }
+
+  public int numberOfProfs()
+  {
+    int number = Profs.size();
+    return number;
+  }
+
+  public boolean hasProfs()
+  {
+    boolean has = Profs.size() > 0;
+    return has;
+  }
+
+  public int indexOfProf(Mentor aProf)
+  {
+    int index = Profs.indexOf(aProf);
+    return index;
+  }
+
+  public static int minimumNumberOfProfs()
+  {
+    return 0;
+  }
+
+  public boolean addProf(Mentor aProf)
+  {
+    boolean wasAdded = false;
+    if (Profs.contains(aProf)) { return false; }
+    Profs.add(aProf);
+    if (aProf.indexOfMyStudent(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aProf.addMyStudent(this);
+      if (!wasAdded)
+      {
+        Profs.remove(aProf);
+      }
+    }
+    sort(Profs, ProfsPriority);
+    
+    return wasAdded;
+  }
+
+  public boolean removeProf(Mentor aProf)
+  {
+    boolean wasRemoved = false;
+    if (!Profs.contains(aProf))
+    {
+      sort(Profs, ProfsPriority);
+      
+      return wasRemoved;
+    }
+
+    int oldIndex = Profs.indexOf(aProf);
+    Profs.remove(oldIndex);
+    if (aProf.indexOfMyStudent(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aProf.removeMyStudent(this);
+      if (!wasRemoved)
+      {
+        Profs.add(oldIndex,aProf);
+      }
+    }
+    sort(Profs, ProfsPriority);
+    
+    return wasRemoved;
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public void sort(List toSort, final String thePriority)
+  {
+    if(toSort.size() > 0)
+    {
+      Collections.sort(toSort, new Comparator<Object>()
+      {
+        @Override
+        public int compare(Object arg0, Object arg1)
+        {
+          try
+          {
+            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
+            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
+          }
+          catch (Exception e)
+          {
+            e.printStackTrace();
+          }
+          return 0;
+        }
+      });
+    }
+  }
+
+  public void delete()
+  {
+    ArrayList<Mentor> copyOfProfs = new ArrayList<Mentor>(Profs);
+    Profs.clear();
+    for(Mentor aProf : copyOfProfs)
+    {
+      aProf.removeMyStudent(this);
+    }
+  }
+
+}

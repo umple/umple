@@ -1,0 +1,35 @@
+Tracing Attributes with timeline
+Tracing
+noreferences
+
+@@description
+<p>
+MOTL allows the manipulation of attributes tracing timeline. "until" keyword triggers tracing and continue tracing of attribute until given condition is satisfied. In the other hand, "after" keyword provides the opposite behaviour. Tracing will start once given condition is satisfied and then continues indefinitely without any interruption.  
+</p>
+
+@@syntax
+[[traceUntil]] [[traceAfter]]
+
+@@example
+
+// this example starts the tracing of attribute name and doesn't stop until condition becomes true
+
+class Student
+{
+  name;
+  trace name until name == "john";
+}
+
+@@endexample
+
+@@example
+
+// this example will not start tracing of attribute name until condition becomes true and then always continue tracing 
+
+class Student
+{
+  name;
+  trace name after name == "john";
+}
+
+@@endexample

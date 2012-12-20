@@ -1,0 +1,13 @@
+E1510 Use File Missing
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple error messages reported when a use statement refers to a file that cannot be loaded.</h2>
+
+<p>
+The argument to a use statement must be a valid .ump file found in the same directory as the file with the use statement, or in its parent directory, or in a subdirectory named lib.
+</p>
+
+<p>Check the spelling of the filename, and check file permissions.</p>

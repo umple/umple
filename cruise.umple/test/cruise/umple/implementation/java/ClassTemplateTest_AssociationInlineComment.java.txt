@@ -1,0 +1,144 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+import java.util.*;
+
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Associations
+  private List<Bar> bars;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo()
+  {
+    bars = new ArrayList<Bar>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Bar getBar(int index)
+  {
+    Bar aBar = bars.get(index);
+    return aBar;
+  }
+
+  /**
+   * I am a inline comment above an association.
+   */
+  public List<Bar> getBars()
+  {
+    List<Bar> newBars = Collections.unmodifiableList(bars);
+    return newBars;
+  }
+
+  public int numberOfBars()
+  {
+    int number = bars.size();
+    return number;
+  }
+
+  public boolean hasBars()
+  {
+    boolean has = bars.size() > 0;
+    return has;
+  }
+
+  public int indexOfBar(Bar aBar)
+  {
+    int index = bars.indexOf(aBar);
+    return index;
+  }
+
+  public static int minimumNumberOfBars()
+  {
+    return 0;
+  }
+
+  public Bar addBar()
+  {
+    return new Bar(this);
+  }
+
+  public boolean addBar(Bar aBar)
+  {
+    boolean wasAdded = false;
+    if (bars.contains(aBar)) { return false; }
+    Foo existingFoo = aBar.getFoo();
+    boolean isNewFoo = existingFoo != null && !this.equals(existingFoo);
+    if (isNewFoo)
+    {
+      aBar.setFoo(this);
+    }
+    else
+    {
+      bars.add(aBar);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeBar(Bar aBar)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aBar, as it must always have a foo
+    if (!this.equals(aBar.getFoo()))
+    {
+      bars.remove(aBar);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addBarAt(Bar aBar, int index)
+  {  
+    boolean wasAdded = false;
+    if(addBar(aBar))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBars()) { index = numberOfBars() - 1; }
+      bars.remove(aBar);
+      bars.add(index, aBar);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveBarAt(Bar aBar, int index)
+  {
+    boolean wasAdded = false;
+    if(bars.contains(aBar))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBars()) { index = numberOfBars() - 1; }
+      bars.remove(aBar);
+      bars.add(index, aBar);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addBarAt(aBar, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    for(int i=bars.size(); i > 0; i--)
+    {
+      Bar aBar = bars.get(i - 1);
+      aBar.delete();
+    }
+  }
+
+}

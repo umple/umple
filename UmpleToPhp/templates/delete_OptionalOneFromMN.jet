@@ -1,0 +1,12 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+    if ($this-><%=gen.translate("associationOne",av)%> != null)
+    {
+      if ($this-><%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("numberOfMethod",av)%>() <= <%=relatedAssociation.getMultiplicity().getLowerBound()%>)
+      {
+        $this-><%=gen.translate("associationOne",av)%>->delete();
+      }
+      else
+      {
+        $this-><%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("removeMethod",av)%>($this);
+      }
+    }

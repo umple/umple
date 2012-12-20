@@ -1,0 +1,16 @@
+This directory contains Umple code for use case controllers.
+
+files:
+----------------------------------------------------------------
+AddElectionController.ump: controls the Add Election use case.
+AddPollController.ump: controls the Add Poll use case.
+AddPositionController.ump: controls the Add Position use case.
+AssignCandidatureController.ump: controls the Assign Candidature to Election for Position use case.
+AssignPositionElectionController.ump: controls the Assign Positions to Election use case.
+Controller.ump: main controller of the application.
+OpenPollController.ump: controls the Open Poll use case.
+Runner.ump: runs the main controller only.
+
+directories:
+----------------------------------------------------------------
+N/A

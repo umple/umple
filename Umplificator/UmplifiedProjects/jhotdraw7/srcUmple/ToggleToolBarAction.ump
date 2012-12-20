@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.window ;
+
+class ToggleToolBarAction 
+{
+depend java.awt.event.*;
+depend javax.swing.*;
+depend java.beans.*;
+depend org.jhotdraw.app.action.ActionUtil;
+  isA AbstractAction;
+
+  private JToolBar toolBar;
+private PropertyChangeListener propertyHandler;
+@Override
+    public void putValue(String key, Object newValue) {
+        super.putValue(key, newValue);
+        if (key == ActionUtil.SELECTED_KEY) {
+            if (toolBar != null) {
+                toolBar.setVisible((Boolean) newValue);
+            }
+        }
+    }
+public void setToolBar(JToolBar newValue) {
+        if (toolBar != null) {
+            toolBar.removePropertyChangeListener(propertyHandler);
+        }
+        
+        toolBar = newValue;
+ 
+        if (toolBar != null) {
+            toolBar.addPropertyChangeListener(propertyHandler);
+            putValue(ActionUtil.SELECTED_KEY, toolBar.isVisible());
+        }
+    }
+@Override
+    public void actionPerformed(ActionEvent e) {
+        if (toolBar != null) {
+            putValue(ActionUtil.SELECTED_KEY, ! toolBar.isVisible());
+        }
+    }
+
+}

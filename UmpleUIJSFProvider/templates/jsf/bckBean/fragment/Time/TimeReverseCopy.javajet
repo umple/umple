@@ -1,0 +1,6 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.copy" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="TimeReverseCopy" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<%="this.a"+ attVar.getUpperCaseName()+"Hour"%>=#1#.get<%= attVar.getUpperCaseName()%>().getHours();
+<%="this.a"+ attVar.getUpperCaseName()+"Minute"%>=#1#.get<%= attVar.getUpperCaseName()%>().getMinutes();

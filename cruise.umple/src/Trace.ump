@@ -1,0 +1,96 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+The tracing meta model.
+
+It currently only supports tracing of attributes, but we are currently in the process
+of enhancing the Umple syntax and meta model to support richer trace objects.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleModel
+{
+	String traceType = "Console"; 
+}
+
+class TraceCondition
+{
+	// condition may be where, until, after, or giving
+	conditionType = null;
+	boolean preCondition  = false;
+	boolean postCondition = false;
+	lhs = null;
+	0..1 -> 1 ConditionRhs rhs;
+}
+
+class ConditionRhs
+{
+	rhs = null;
+	comparisonOperator = null;
+}
+
+class TraceRecord
+{
+    boolean recordOnly = false;
+    0..* -- 0..* Attribute;
+    0..* -- 0..* StateMachine;
+	record = null;
+}
+
+class MethodTraceEntity
+{
+	name = null;
+	boolean entry = false;
+	boolean exit = false;
+}
+
+class TraceDirective
+{
+	Integer id = 0;
+    1 -- 0..* Attribute_TraceItem;
+ 	0..* -- 0..* StateMachine_TraceItem;
+ 	0..* -- 0..* MethodTraceEntity;
+ 	0..1 -- 0..1 AssociationVariable;
+ 	1 -> 0..* TraceCondition condition;
+ 	1 -- 0..1 TraceRecord;
+}
+
+class Attribute_TraceItem
+{
+	boolean traceSet = true;   // defualt case is to trace setters
+	boolean traceGet = false;
+	Integer forClause = 0;
+ 	periodClause = null;
+ 	duringClause = null;
+ 	executeClause = null;
+ 	0..* -- 0..* Attribute;
+}
+
+class StateMachine_TraceItem
+{
+	boolean entry = false;
+	boolean exit = false;
+	boolean traceStateMachineFlag = false;
+	0..* -- 0..1 StateMachine;
+	0..* -- 0..1 Transition;
+}
+
+class TraceCase
+{
+	name = null;
+	0..* -- 0..* TraceDirective;
+}
+
+class UmpleClass
+{
+	0..1 -- * TraceDirective;
+	0..1 -- * TraceCase;
+}
+
+use Trace_Code.ump;

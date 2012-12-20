@@ -1,0 +1,12 @@
+namespace example;
+
+class Garage {
+GarageDoor {
+
+ Closed {
+   pressButton /{turnLightOn();}-> Opening;
+ }
+ Opening {
+ }
+
+} }

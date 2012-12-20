@@ -1,0 +1,24 @@
+
+class DVDplayer
+{
+  DVDplayerStatus {
+    NormalOperation {
+      On {
+        Playing {
+          stop -> Stopped;
+        }
+
+        Stopped {
+          play -> Playing;
+          pause -> Paused;
+        }
+ 
+        history {}
+
+      }
+      Off {
+        turnOn/{actionCode} -> Final;
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.plaf.palette ;
+
+class PaletteSliderThumbIcon 
+{
+depend java.awt.*;
+depend javax.swing.*;
+depend org.jhotdraw.util.Images;
+  isA MultiIcon;
+
+  private final static int E = 0;
+private final static int EP = 1;
+private final static int D = 2;
+private final static int I = 3;
+private final static int DI = 4;
+private final static int FOCUS_RING = 5;
+@Override
+    protected void generateMissingIcons() {
+        Icon[] oldIcons;
+        if (icons.length != 6) {
+            oldIcons = new Icon[6];
+            System.arraycopy(icons, 0, oldIcons, 0, Math.min(icons.length, 6));
+        } else {
+            oldIcons = icons;
+        }
+        if (icons[EP] == null) {
+            icons[EP] = icons[E];
+        }
+        if (icons[D] == null) {
+            icons[D] = icons[E];
+        }
+        if (icons[I] == null) {
+            icons[I] = icons[E];
+        }
+        if (icons[DI] == null) {
+            icons[DI] = icons[D];
+        }
+    }
+protected Icon getIcon(Component c) {
+        Icon icon;
+        boolean isActive = true; //QuaquaUtilities.isOnActiveWindow(c);
+        
+        if (c instanceof JSlider) {
+            JSlider slider = (JSlider) c;
+            if (isActive) {
+                if (c.isEnabled()) {
+                    if (slider.getModel().getValueIsAdjusting()) {
+                        icon = icons[EP];
+                    } else {
+                        icon = icons[E];
+                    }
+                } else {
+                    icon = icons[D];
+                }
+            } else {
+                if (c.isEnabled()) {
+                    icon = icons[I];
+                } else {
+                    icon = icons[DI];
+                }
+            }
+        } else {
+            if (isActive) {
+                if (c.isEnabled()) {
+                    icon = icons[E];
+                } else {
+                    icon = icons[D];
+                }
+            } else {
+                if (c.isEnabled()) {
+                    icon = icons[I];
+                } else {
+                    icon = icons[DI];
+                }
+            }
+        }
+        return icon;
+    }
+public void paintIcon(java.awt.Component c, java.awt.Graphics g, int x, int y) {
+        super.paintIcon(c, g, x, y);
+        if (c.isFocusOwner()/*QuaquaUtilities.isFocused(c)*/ &&
+                icons[FOCUS_RING] != null) {
+            icons[FOCUS_RING].paintIcon(c, g, x, y);
+        }
+    }
+
+}

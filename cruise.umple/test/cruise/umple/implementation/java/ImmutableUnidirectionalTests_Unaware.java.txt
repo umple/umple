@@ -1,0 +1,41 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+
+  //Helper Variables
+  private boolean canSetName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName)
+  {
+    name = aName;
+    canSetName = false;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,14 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="SetteableDoubleCreate" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+	<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+<% if (attVar.getValue()==null){ %>
+	<h:inputText value="#{#1#Bean.<%=attVar.getName()%>}" >
+		<f:converter converterId="javax.faces.Double" />
+	</h:inputText>
+<% } else {%>
+	<h:outputText value="#{#1#Bean.initial<%=attVar.getUpperCaseName()%>}"  style="text-align:right;" >
+		<f:converter converterId="javax.faces.Double" />
+	</h:outputText>
+<%}%>

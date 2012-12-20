@@ -1,0 +1,33 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.pert ;
+
+class PertFactory 
+{
+depend org.jhotdraw.draw.locator.RelativeLocator;
+depend org.jhotdraw.draw.connector.LocatorConnector;
+depend org.jhotdraw.draw.connector.ChopRectangleConnector;
+depend org.jhotdraw.draw.decoration.ArrowTip;
+depend org.jhotdraw.samples.pert.figures.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.xml.*;
+  isA DefaultDOMFactory;
+
+  private final static Object[][] classTagArray = {
+        { DefaultDrawing.class, "PertDiagram" },
+        { TaskFigure.class, "task" },
+        { DependencyFigure.class, "dep" },
+        { ListFigure.class, "list" },
+        { TextFigure.class, "text" },
+        { GroupFigure.class, "g" },
+        { TextAreaFigure.class, "ta" },
+        { SeparatorLineFigure.class, "separator" },
+        
+        { ChopRectangleConnector.class, "rectConnector" },
+        { LocatorConnector.class, "locConnector" },
+        { RelativeLocator.class, "relativeLocator" },
+        { ArrowTip.class, "arrowTip" }
+    };
+
+}

@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.layouter ;
+
+class AbstractLayouter 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.geom.*;
+
+  public Insets2D.Double getInsets(Figure child) {
+        Insets2D.Double value =  child.get(CompositeFigure.LAYOUT_INSETS);
+        return (value == null) ? new Insets2D.Double() : (Insets2D.Double) value.clone();
+    }
+
+}

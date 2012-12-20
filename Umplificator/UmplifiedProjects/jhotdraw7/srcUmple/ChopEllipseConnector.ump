@@ -1,0 +1,46 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.connector ;
+
+class ChopEllipseConnector 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.awt.geom.*;
+depend org.jhotdraw.draw.AttributeKeys.*;
+depend org.jhotdraw.geom.*;
+  isA ChopRectangleConnector;
+
+  private Color getStrokeColor(Figure f) {
+        return f.get(STROKE_COLOR);
+    }
+private float getStrokeWidth(Figure f) {
+        Double w = f.get(STROKE_WIDTH);
+        return (w == null) ? 1f : w.floatValue();
+    }
+@Override
+    protected Point2D.Double chop(Figure target, Point2D.Double from) {
+        target =  getConnectorTarget(target);
+        Rectangle2D.Double r = target.getBounds();
+        if (getStrokeColor(target) != null) {
+            double grow;
+            switch (target.get(STROKE_PLACEMENT)) {
+                case CENTER:
+                 default :
+                    grow = getStrokeTotalWidth(target) / 2d;
+                    break;
+                case OUTSIDE :
+                    grow = getStrokeTotalWidth(target);
+                    break;
+                case INSIDE :
+                    grow = 0f;
+                    break;
+            }
+            Geom.grow(r, grow, grow);
+        }
+        double angle = Geom.pointToAngle(r, from);
+        return Geom.ovalAngleToPoint(r, angle);
+    }
+
+}

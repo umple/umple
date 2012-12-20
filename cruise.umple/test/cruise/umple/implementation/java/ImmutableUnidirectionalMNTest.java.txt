@@ -1,0 +1,119 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+
+  //Student Associations
+  private List<Mentor> mentors;
+
+  //Helper Variables
+  private boolean canSetNumber;
+  private boolean canSetMentors;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber, Mentor... allMentors)
+  {
+    number = aNumber;
+    canSetNumber = false;
+    canSetMentors = true;
+    mentors = new ArrayList<Mentor>();
+    boolean didAddMentors = setMentors(allMentors);
+    if (!didAddMentors)
+    {
+      throw new RuntimeException("Unable to create Student, must have 2 to 4 mentors");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor(int index)
+  {
+    Mentor aMentor = mentors.get(index);
+    return aMentor;
+  }
+
+  public List<Mentor> getMentors()
+  {
+    List<Mentor> newMentors = Collections.unmodifiableList(mentors);
+    return newMentors;
+  }
+
+  public int numberOfMentors()
+  {
+    int number = mentors.size();
+    return number;
+  }
+
+  public boolean hasMentors()
+  {
+    boolean has = mentors.size() > 0;
+    return has;
+  }
+
+  public int indexOfMentor(Mentor aMentor)
+  {
+    int index = mentors.indexOf(aMentor);
+    return index;
+  }
+
+  public static int minimumNumberOfMentors()
+  {
+    return 2;
+  }
+
+  public static int maximumNumberOfMentors()
+  {
+    return 4;
+  }
+
+  private boolean setMentors(Mentor... newMentors)
+  {
+    boolean wasSet = false;
+    if (!canSetMentors) { return false; }
+    canSetMentors = false;
+    ArrayList<Mentor> verifiedMentors = new ArrayList<Mentor>();
+    for (Mentor aMentor : newMentors)
+    {
+      if (verifiedMentors.contains(aMentor))
+      {
+        continue;
+      }
+      verifiedMentors.add(aMentor);
+    }
+
+    if (verifiedMentors.size() != newMentors.length || verifiedMentors.size() < minimumNumberOfMentors() || verifiedMentors.size() > maximumNumberOfMentors())
+    {
+      return wasSet;
+    }
+
+    mentors.clear();
+    mentors.addAll(verifiedMentors);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {}
+
+}

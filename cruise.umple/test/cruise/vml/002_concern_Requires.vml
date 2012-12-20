@@ -1,0 +1,16 @@
+Concern C
+{
+  VariationPoint VP1 {
+    Kind: Optional;
+  }
+  
+  VariationPoint VP2 requires VP1 {
+    Kind: Alternative;
+    Variant var1 { do this; }
+  } 
+  
+  VariationPoint VP3 requires VP1, VP2 {
+    Kind: Optional;
+  }
+  
+}

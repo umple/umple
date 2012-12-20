@@ -1,0 +1,52 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class EditGridAction 
+{
+depend java.awt.event.*;
+depend java.beans.PropertyChangeListener;
+depend java.util.prefs.Preferences;
+depend javax.swing.*;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.util.prefs.PreferencesUtil;
+  isA AbstractDrawingViewAction;
+
+  public final static String ID = "view.editGrid";
+private JDialog dialog;
+private EditGridPanel settingsPanel;
+private PropertyChangeListener propertyChangeHandler;
+private Application app;
+@Override
+    public void actionPerformed(ActionEvent e) {
+        getDialog().setVisible(true);
+    }
+@Override protected void updateViewState() {
+        if (getView() != null && settingsPanel != null) {
+            settingsPanel.setConstrainer((GridConstrainer) getView().getVisibleConstrainer());
+    }
+    }
+protected Application getApplication() {
+        return app;
+        }
+protected JDialog getDialog() {
+        if (dialog == null) {
+            ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+            dialog = new JDialog();
+            dialog.setTitle(labels.getString("editGrid"));
+            dialog.setResizable(false);
+            settingsPanel = new EditGridPanel();
+            dialog.add(settingsPanel);
+            dialog.pack();
+            Preferences prefs = PreferencesUtil.userNodeForPackage(getClass());
+            PreferencesUtil.installFramePrefsHandler(prefs, "editGrid", dialog);
+            getApplication().addWindow(dialog, null);
+        }
+            settingsPanel.setConstrainer((GridConstrainer) getView().getVisibleConstrainer());
+        return dialog;
+    }
+
+}

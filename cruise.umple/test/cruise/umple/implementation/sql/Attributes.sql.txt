@@ -1,0 +1,71 @@
+-- PLEASE DO NOT EDIT THIS CODE
+-- This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+CREATE DATABASE IF NOT EXISTS `example`;
+USE `example`;
+
+CREATE TABLE IF NOT EXISTS `example`.`mentor`
+(
+  /*------------------------*/
+  /* MEMBER VARIABLES       */
+  /*------------------------*/
+  
+  /*mentor Constants*/
+  max INT DEFAULT '100' CHECK (max = '100'),
+  min INT DEFAULT '-99' CHECK (min = '-99'),
+  hello VARCHAR(255) DEFAULT 'Hello' CHECK (hello = 'Hello'),
+
+  /*mentor Attributes*/
+  str VARCHAR(255),
+  str_2 VARCHAR(255),
+  some_name VARCHAR(255),
+  l_doub DOUBLE,
+  l_bool BIT,
+  name VARCHAR(255) DEFAULT 'Johannes',
+  d DATE,
+  i INT,
+  derived_twice_i INT DEFAULT 'i*2',
+  x INT AUTO_INCREMENT,
+  p VARCHAR(255) DEFAULT 'robot',
+  q VARCHAR(255) DEFAULT 'chicken',
+  r VARCHAR(255) DEFAULT '',
+  s VARCHAR(255) DEFAULT '123',
+  tt DATE DEFAULT 'Date.parse("1978-12-25")',
+  u TIME DEFAULT 'Time.parse("12:13:14")',
+  v DATE DEFAULT 'Date.parse("1978-12-26")',
+  w TIME DEFAULT 'Time.parse("12:59:59")',
+  PRIMARY KEY(max)
+
+);
+
+
+/*mentor Constant Enforcement*/
+DELIMITER //
+CREATE TRIGGER `const_insert` BEFORE insert ON `example`.`mentor`
+FOR EACH ROW BEGIN
+  IF NEW.`max` <> '100' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute `max` in  `mentor`';
+  END IF;
+  IF NEW.`min` <> '-99' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute `min` in  `mentor`';
+  END IF;
+  IF NEW.`hello` <> 'Hello' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute `hello` in  `mentor`';
+  END IF;
+END;
+//
+CREATE TRIGGER `const_update` BEFORE update ON `example`.`mentor`
+FOR EACH ROW BEGIN
+  IF NEW.`max` <> '100' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute `max` in  `mentor`';
+  END IF;
+  IF NEW.`min` <> '-99' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute `min` in  `mentor`';
+  END IF;
+  IF NEW.`hello` <> 'Hello' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ERROR: Attempt to modify constant attribute `hello` in  `mentor`';
+  END IF;
+END;
+//
+DELIMITER ;
+

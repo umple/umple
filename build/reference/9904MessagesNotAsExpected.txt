@@ -1,0 +1,15 @@
+E1004-5 Messages not as Expected
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple errors reported when an expected message is not found or a disallowed message is found.</h2>
+
+<p>The <a href="StrictnessDirective.html">strictness</a> clause with 'expected' can be used to indicate that a certain message is expected. An error occurs when the expected warning or error does not actually occur.
+</p>
+
+<p>Similarly, the strictness clause with 'disallowed' can be used to indicate that a certain message is not expected. An error occurs when the expected warning or error does occur.
+</p>
+
+

@@ -1,0 +1,50 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This class helps perform common operations to a meta-model instance prior
+to being consumed by the code generator.  The caller of these helper methods
+must provide language specific code blocks (i.e. PHP versus Java action semantics),
+and it will apply them in a consistent manner to all relevant objects within a meta-model
+instance.
+
+Please refer to Generator.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
+{
+  depend cruise.umple.util.*;
+  depend java.util.*;
+  
+  // Following code generation, undo all meta-model internal changes.
+  public static void postpare(UmpleModel model)
+  {
+    postpareClass(model);
+    postpareStateMachine(model);
+    postpareTrace(model);
+    
+    for (UmpleClass aClass : model.getUmpleClasses())
+    {
+      postpare(aClass);
+    }  
+  }
+
+  // Undo all class level internal changes
+  private static void postpare(UmpleClass aClass)
+  {
+    postpareClass(aClass);
+    postpareStateMachine(aClass);
+    postpareTrace(aClass);
+  }
+
+}
+
+use GeneratorHelper_CodeClass.ump;
+use GeneratorHelper_CodeStateMachine.ump;
+use GeneratorHelper_CodeTrace.ump;

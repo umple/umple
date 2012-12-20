@@ -1,0 +1,208 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Mentor
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :main, :secondaries
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @cachedHashCode = -1
+    @can_set_main = true
+    @can_set_secondaries = true
+    @main = nil
+    @secondaries = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_main
+    @main
+  end
+
+  def get_secondary(index)
+    a_secondary = @secondaries[index]
+    a_secondary
+  end
+
+  def get_secondaries
+    new_secondaries = @secondaries.dup
+    new_secondaries
+  end
+
+  def number_of_secondaries
+    number = @secondaries.size
+    number
+  end
+
+  def has_secondaries
+    has = @secondaries.size > 0
+    has
+  end
+
+  def index_of_secondary(a_secondary)
+    index = @secondaries.index(a_secondary)
+    index = -1 if index.nil?
+    index
+  end
+
+  def set_main(new_main)
+    was_set = false
+    return false unless @can_set_main
+    if new_main.nil?
+      existing_main = @main
+      @main = nil
+      
+      if !existing_main.nil? and !existing_main.get_mentorMain.nil?
+        existing_main.set_mentorMain(nil)
+      end
+      was_set = true
+      return was_set
+    end
+
+    current_main = self.get_main
+    if !current_main.nil? and !current_main.eql?(new_main)
+      current_main.set_mentorMain(nil)
+    end
+
+    @main = new_main
+    existing_mentorMain = new_main.get_mentorMain
+
+    unless self.eql?(existing_mentorMain)
+      new_main.set_mentorMain(self)
+    end
+    was_set = true
+    was_set
+  end
+
+  def self.minimum_number_of_secondaries
+    0
+  end
+
+  def add_secondary(a_secondary)
+    was_added = false
+    return false unless @can_set_secondaries
+    return false if index_of_secondary(a_secondary) != -1
+    existing_mentorSecondary = a_secondary.get_mentorSecondary
+    if existing_mentorSecondary.nil?
+      a_secondary.set_mentorSecondary(self)
+    elsif !existing_mentorSecondary.eql?(self)
+      existing_mentorSecondary.remove_secondary(a_secondary)
+      add_secondary(a_secondary)
+    else
+      @secondaries << a_secondary
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_secondary(a_secondary)
+    was_removed = false
+    return false unless @can_set_secondaries
+    if @secondaries.include?(a_secondary)
+      @secondaries.delete(a_secondary)
+      a_secondary.set_mentorSecondary(nil)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def add_secondary_at(a_secondary, index)
+    was_added = false
+    if add_secondary(a_secondary)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_secondaries())
+        index = number_of_secondaries() - 1
+      end
+      @secondaries.delete(a_secondary)
+      @secondaries.insert(index, a_secondary)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_secondary_at(a_secondary, index)
+    was_added = false
+    if @secondaries.include?(a_secondary)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_secondaries())
+        index = number_of_secondaries() - 1
+      end
+      @secondaries.delete(a_secondary)
+      @secondaries.insert(index, a_secondary)
+      was_added = true
+    else
+      was_added = add_secondary_at(a_secondary, index)
+    end
+    was_added
+  end
+
+  def eql?(obj)
+    return false if obj.nil?
+    return false unless self.class == obj.class
+
+    compareTo = obj
+    return false if (@main.nil? and !compareTo.instance_variable_get("@main").nil?)
+    return false if (!@main.nil? and !@main.eql?(compareTo.instance_variable_get("@main")))
+
+    return false unless @secondaries.size == compareTo.instance_variable_get("@secondaries").size
+    @secondaries.each do |me|
+      them = compareTo.instance_variable_get("@secondaries").get(i)
+      return false if (me.nil? and !them.nil?)
+      return false if (!me.nil? and !me.eql?(them))
+    end
+    true
+  end
+
+  def hash
+    return @cachedHashCode unless @cachedHashCode == -1
+    @cachedHashCode = 17
+    if (!@main.nil?)
+      @cachedHashCode = @cachedHashCode * 23 + @main.hash
+    else
+      @cachedHashCode = @cachedHashCode * 23
+    end
+    if (!@secondaries.nil?)
+      @cachedHashCode = @cachedHashCode * 23 + @secondaries.hash
+    else
+      @cachedHashCode = @cachedHashCode * 23
+    end
+    @can_set_main = false
+    @can_set_secondaries = false
+    @cachedHashCode
+  end
+
+  def delete
+    @deleted = true
+    unless @main.nil?
+      @main.set_mentorMain(nil)
+    end
+    @secondaries.each do |a_secondary|
+      a_secondary.set_mentorSecondary(nil)
+    end
+  end
+
+end
+end

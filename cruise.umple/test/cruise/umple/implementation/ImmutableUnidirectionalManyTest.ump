@@ -1,0 +1,13 @@
+namespace example;
+
+class Student
+{
+	immutable;
+	number;
+	1 -> * Mentor;
+}
+class Mentor
+{
+	immutable;
+	name;
+}

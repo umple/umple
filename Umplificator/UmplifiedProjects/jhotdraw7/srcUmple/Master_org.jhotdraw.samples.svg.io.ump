@@ -1,0 +1,9 @@
+use SVGZOutputFormat.ump;
+use SVGElementFactory.ump;
+use SVGZInputFormat.ump;
+use SVGInputFormat.ump;
+use SVGOutputFormat.ump;
+use SVGFigureFactory.ump;
+use package-info.ump;
+use ImageMapOutputFormat.ump;
+use DefaultSVGFigureFactory.ump;

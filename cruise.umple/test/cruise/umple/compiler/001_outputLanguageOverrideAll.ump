@@ -1,0 +1,7 @@
+generate Php "1";
+generate Java "2";
+generate Ruby "3" --override;
+generate Java "4" --override-all;
+generate Java "5" --override-all;
+generate Php "6";
+generate Ruby "7" --override;

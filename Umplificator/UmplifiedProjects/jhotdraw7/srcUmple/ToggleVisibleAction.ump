@@ -1,0 +1,20 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.window ;
+
+class ToggleVisibleAction 
+{
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.app.action.ActionUtil;
+  isA AbstractAction;
+
+  private Component component;
+@Override
+    public void actionPerformed(ActionEvent e) {
+        component.setVisible(! component.isVisible());
+    }
+
+}

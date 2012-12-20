@@ -1,0 +1,22 @@
+class Person
+{
+	abstract;
+	
+	String name;
+	int age;
+}
+
+class Student
+{
+	isA Person;
+	
+	int studentID;
+}
+
+class Teacher
+{
+	isA Person;
+	
+	String position;
+	1 -- * Student;
+}

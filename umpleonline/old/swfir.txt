@@ -1,0 +1,158 @@
+//	==========================================================================================
+//	swfir!
+//	==========================================================================================
+//	Copyright 2006, 2007 Jon Aldinger, Mark Huot
+//	and Dan Mall
+//	
+//	This software is licensed under the CC-GNU LGPL
+//	http://creativecommons.org/licenses/LGPL/2.1/
+//	------------------------------------------------------------------------------------------
+
+	swfir is a SWF Image Replacement technique to swap out boring html img tags and replace
+	them with richer stylized graphics.  It can be applied to any image at which time the
+	image will be brought into flash, styled as specified and rendered in the same position
+	as the original img tag.  To get started just follow these steps:
+	
+	1. Download swfir! -- You've done that already, obviously, or you wouldn't be reading this 
+		readme.
+	
+	2. Upload swfir -- Place the js and swf in the SAME folder as your HTML page.  If you need
+		to place them in a different directory make sure to update your JS <script /> tag as
+		well as  the swfir "src" parameter (more on that in a bit).
+	
+	3. Include the JS -- Just like any other JS simply place the script tag inbetween the
+		opening <head> and closing </head> tags like so:
+						 
+			<head>
+				<script type="text/javascript" src="swfir.js"></script>
+			</head>
+	
+	4. Specify the styles -- Here's the tricky part, you'll want to copy these first lines
+		directly into the bottom of your <body>
+		
+			<script type="text/javascript">
+				window.onload = function()
+				{
+					var sir = new swfir();
+				}
+			</script>
+		
+		Then, below the "new swfir();" line you can add the styles you'd like to apply.  The
+			possible styles are listed below in the Parameters section.  They are applied like
+			so:
+			
+			sir.specify([parameter], [value]);
+			
+		Notice the first parameter is the name and the second parameter is the value.  That
+			means a sample implementation could look like this:
+			
+			sir.specify("border-width", "20");
+			sir.specify("border-color", "fff");
+		
+		Note: This is where you will define your SWF path (if it's not in the same directory
+			as your html).  You can set it with the parameter name of "src":
+			
+			sir.specify("src", "/swf/swfir.swf");
+		
+		Lastly, you define which images should be affected by the styles (in case you don't
+			want) it on every image.  This is done with the swap() method.  It accepts a
+			standard CSS selector inside quotes.
+			
+			sir.swap("#example img");
+		
+		Note 1: The selector could be just "img" to affect every image on the page.
+		Note 2: If the styled swfir object isn't the correct size when the page loads try
+			placing the swfir command into a window.onload event as shown below:
+			
+			<script type="text/javascript">
+				window.onload = function()
+				{
+					var sir = new swfir();
+					sir.specify("border-width", "20");
+					sir.specify("border-color", "fff");
+					sir.swap("#example img");
+				}
+			</script>
+	
+	That's it!  Have fun and do let us know if something isn't quite working, we'll always be
+		accessible through http://www.swfir.com
+		
+
+//	------------------------------------------------------------------------------------------
+# Available swfir Parameters:
+
+border-radius    = Number
+border-width     = Number
+border-color     = CSS Styled Color (i.e. fc600)
+shadow-offset    = Number
+shadow-angle     = Number
+shadow-alpha     = Number between 0 - 100
+shadow-blur-x    = Number
+shadow-blur-y    = Number
+shadow-strength  = Number
+shadow-color     = CSS Styled Color (i.e. fc600)
+shadow-quality   = Number between 0 - 1
+shadow-inner     = Boolean (true or false)
+shadow-knockout  = Boolean (true or false)
+shadow-hide      = Boolean (true or false)
+rotate           = Number between -359 - 359
+overflow         = 'expand-x', 'expand-y' or 'fit'
+link             = String (i.e. http://www.swfir.com)
+src              = String (path to your swf, if not standard)
+wmode            = String ('opaque', 'transparent', etc.)
+elasticity       = String ('true'), Number (pixel-to-em ratio)
+
+
+//	------------------------------------------------------------------------------------------
+# Sample Implementations
+  See more at: http://build.swfir.com/examples/
+
+window.onload = function()
+{
+	sir = new swfir();
+	sir.specify("border-width", "20");
+	sir.specify("border-radius", "15");
+	sir.specify("border-color", "fff");
+	sir.specify("rotate","-5");
+	sir.specify("shadow-blur", "15");
+	sir.specify("background-color", "9dcee0");
+	sir.specify('src', '/swfir.swf');
+	sir.swap("#example img");
+}
+
+window.onload = function(){	
+  elastic = new swfir(); 
+  elastic.specify('src', '/swfir.swf');
+  elastic.specify('elasticity', 'true');
+  elastic.swap('img');		
+}
+
+window.onload = function(){	
+  rotate = new swfir();
+  rotate.specify('src', '/swfir.swf');
+  rotate.specify('rotate', '-5');
+  rotate.swap("img");
+}
+
+window.onload = function(){	
+  round = new swfir();
+  round.specify('src', '/swfir.swf');
+  round.specify('border-color', 'ffffff');
+  round.specify('border-radius', '10');
+  round.swap("img");
+}
+
+
+//	------------------------------------------------------------------------------------------
+# Notes
+
+sir.swap() accepts a CSS Selector so any of the following are valid:
+"#photo"               - to grab an image with an id of 'photo'
+"#conatiner img"       - to grab all images with a div having an id of 'container'
+"img[alt='Head Shot']" - to grab all images with an alt of 'Head Shot'
+
+Setting 'elasticity' to 'true' will set your swf widths in em's instead of pixels.  This way
+your images will resize when the text does, perfect for elastic layouts!  Or, if you know your
+pixel to em ratio (usually 10 for a body font-size of 62.5%) you can specify it here and skip
+the auto calculation, saving you a few milliseconds on your render.
+

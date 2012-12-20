@@ -1,0 +1,132 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Course.h"
+#include "Student.h"
+
+	int i;
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Course::Course()
+  {
+    for (i=0; i<students.size(); i++)
+	{
+		students[i] = NULL;
+	}
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Course::Course(const Course & course)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Course Course::operator=(const Course & course)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  Student* Course::getStudent(int index) 
+  {
+    Student* aStudent = students[index];
+    return aStudent;
+  }
+
+  vector<Student*> Course::getStudents() 
+  {
+    vector<Student*> newStudents = students;
+    return newStudents;
+  }
+
+  int Course::numberOfStudents()
+  {
+    int number = students.size();
+    return number;
+  }
+
+  bool Course::hasStudents()
+  {
+    bool has = students.size() > 0;
+    return has;
+  }
+  
+  int Course::indexOfStudent(Student* aStudent)
+  {
+    int index = find(students.begin(), students.end(), aStudent) - students.begin();
+    return index;
+  }
+  
+  static int minimumNumberOfStudents()
+  {
+    return 0;
+  }
+
+  bool Course::addStudent(Student* aStudent)
+  {
+    bool wasAdded = false;
+    if (find(students.begin(),students.end(),aStudent) != students.end()) { return false; }
+    students.push_back(aStudent);
+    if (aStudent->indexOfCourse(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aStudent.addCourse(this);
+      if (!wasAdded)
+      {
+        students.erase(find(students.begin(),students.end(),aStudent));
+      }
+    }
+    return wasAdded;
+  }
+
+  bool Course::removeStudent(Student aStudent)
+  {
+    bool wasRemoved = false;
+    if (!find(students.begin(),students.end(),aStudent))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = find(students.begin(), students.end(), aStudent) - students.begin();
+    students.erase(find(students.begin(),students.end(),aStudent));
+    if (aStudent->indexOfCourse(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aStudent->removeCourse(this);
+      if (!wasRemoved)
+      {
+        students.push_back(oldIndex,aStudent);
+      }
+    }
+    return wasRemoved;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Course::~Course()
+  {
+    vector<Student*> copyOfStudents = students;
+    students.clear();
+    for(i=0;sizeof(students);i++)
+    {
+      students[i]->removeCourse(this);
+    }
+  }

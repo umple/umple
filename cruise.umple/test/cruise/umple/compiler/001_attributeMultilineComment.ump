@@ -1,0 +1,7 @@
+class Foo
+{
+	/*
+	 * I am a multiline comment above an attribute.
+	 */
+	 name;
+}

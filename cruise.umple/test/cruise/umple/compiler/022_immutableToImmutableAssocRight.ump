@@ -1,0 +1,10 @@
+class StudentC
+{
+	immutable;
+	1 -> * MentorC;
+}
+
+class MentorC
+{
+	immutable;
+}

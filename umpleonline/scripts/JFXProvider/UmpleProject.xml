@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- UMPLE PROJECT JSF PROVIDER-->
+<UmpleProject UmpleFile="examples/school.ump" name="School" UIFactory="cruise.ui.jfx.JFXFactory" OutputFolder="Output" xsi:noNamespaceSchemaLocation="UmpleProject.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Properties>
+		<Property name="UMPLE_FOLDER" value="/" />
+		<Property name="ATTRIBUTE_CONFIGURATOR" value="xml/AttributeConfigurator.xml" />
+		<Property name="GUI_ATTRIBUTE_CONFIGURATOR" value="xml/GUIConfigurator.xml" />
+		<!--Property name="PROVIDER_JAR" value="c:\pruebas\JSFProvider.jar" / -->
+		<!-- JFX PROVIDER Properties-->
+		<Property name="PACKAGE_PREFIX" value="jfx" />
+
+		
+	</Properties>
+	<GenerationUnits>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao" OutputExtension="java" TemplatePackage="cruise.data.impl.dao" TemplateClass="DAOInterface"  ClassSuffix="DAO" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.keys" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic" TemplateClass="KeyClass" OutputPackage="dao.keys" ClassSuffix="Key" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.keys" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic.impl" TemplateClass="IKey" OutputName="IKey" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.factory" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.factory" TemplateClass="DAOFactory" OutputName="DAOFactory" ParameterType="ALL_NORMAL_CLASSES"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.factory" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.factory" TemplateClass="FakeDAOFactory" OutputName="FakeDAOFactory" ParameterType="ALL_NORMAL_CLASSES"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.generic" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic" TemplateClass="GenericDAO" OutputName="GenericDAO" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.generic.impl" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic.impl" TemplateClass="GenericFakeDAO" OutputName="GenericFakeDAO" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.session" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.session" TemplateClass="ObjectRepository" OutputName="ObjectRepository" ParameterType="ALL_NORMAL_CLASSES"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.session" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.session" TemplateClass="Session" OutputName="Session" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="bundles" OutputExtension="properties" TemplatePackage="cruise.data.impl.bundles" TemplateClass="ResourceBundle" OutputPackage="bundles" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="bundles" OutputExtension="properties" TemplatePackage="cruise.data.impl.bundles" TemplateClass="ResourceBundle" OutputPackage="bundles" ParameterType="SINGLETON_CLASS_BY_CLASS"/>
+		
+		<!-- JFX PROVIDER GenerationUnits-->
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="View" ClassSuffix="View" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="SelectManyView" ClassSuffix="SelectManyView" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="SelectOneView" ClassSuffix="SelectOneView" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx" OutputExtension="java" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="Table" ClassSuffix="Table" ParameterType="NORMAL_CLASS_BY_CLASS"/>	
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx" OutputExtension="java" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="KeyTable" ClassSuffix="KeyTable" ParameterType="NORMAL_CLASS_BY_CLASS"/>	
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx.components" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="Menu" OutputName="Menu"  ParameterType="ALL_CLASSES"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="main" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="Main" OutputName="Main" ClassSuffix="View" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="main" OutputExtension="java" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="MainApp" OutputName="Main" ClassSuffix="App" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="dao.utils" OutputExtension="java" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="DAOUtils" OutputName="DAOUtils" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx.components" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="ScrollPane" OutputName="ScrollPane"  ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx.components" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="Bounds" OutputName="Bounds"  ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx.components" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="Button" OutputName="Button"  ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx.components" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="IntegerBox" OutputName="IntegerBox"  ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="jfx.components" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="BorderPanel" OutputName="BorderPanel"  ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="main" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="Application" OutputName="Application"  ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="main" OutputExtension="fx" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="PopUp" OutputName="PopUp"  ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="/" PackagePreffix="runtime" OutputExtension="jnlp" TemplatePackage="cruise.ui.jfx.templates.impl" TemplateClass="RT" OutputName="Runtime"  ParameterType="NONE"/>		
+	</GenerationUnits>
+	<Files>
+		<Directory  InputFolder="images" OutputSubFolder="main/images" />
+		<Directory  InputFolder="com" OutputSubFolder="/com" />
+	</Files>
+</UmpleProject>

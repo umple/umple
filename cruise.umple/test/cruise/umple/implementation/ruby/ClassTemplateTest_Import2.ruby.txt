@@ -1,0 +1,295 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module ExampleTwo
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :number
+
+  #Student Associations - for documentation purposes
+  #attr_reader :mentors, :courses
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number, all_mentors)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @mentors = []
+    did_add_mentors = set_mentors(all_mentors)
+    raise "Unable to create Student, must have at least 1 @mentors" unless did_add_mentors 
+    @courses = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_number(a_number)
+    was_set = false
+    @number = a_number
+    was_set = true
+    was_set
+  end
+
+  def get_number
+    @number
+  end
+
+  def get_mentor(index)
+    a_mentor = @mentors[index]
+    a_mentor
+  end
+
+  def get_mentors
+    new_mentors = @mentors.dup
+    new_mentors
+  end
+
+  def number_of_mentors
+    number = @mentors.size
+    number
+  end
+
+  def has_mentors
+    has = @mentors.size > 0
+    has
+  end
+
+  def index_of_mentor(a_mentor)
+    index = @mentors.index(a_mentor)
+    index = -1 if index.nil?
+    index
+  end
+
+  def get_course(index)
+    a_course = @courses[index]
+    a_course
+  end
+
+  def get_courses
+    new_courses = @courses.dup
+    new_courses
+  end
+
+  def number_of_courses
+    number = @courses.size
+    number
+  end
+
+  def has_courses
+    has = @courses.size > 0
+    has
+  end
+
+  def index_of_course(a_course)
+    index = @courses.index(a_course)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_mentors
+    1
+  end
+
+  def add_mentor(a_mentor)
+    was_added = false
+    return false if index_of_mentor(a_mentor) != -1
+    existing_student = a_mentor.get_student
+    if !existing_student.nil? and existing_student.number_of_mentors <= Student.minimum_number_of_mentors
+      return was_added
+    elsif !existing_student.nil?
+      existing_student.instance_variable_get("@mentors").delete(a_mentor)
+    end
+    @mentors << a_mentor
+    a_mentor.instance_variable_set("@student",self)
+    was_added = true
+    was_added
+  end
+
+  def remove_mentor(a_mentor)
+    was_removed = false
+    if @mentors.include?(a_mentor) and number_of_mentors > Student.minimum_number_of_mentors
+      @mentors.delete(a_mentor)
+      a_mentor.instance_variable_set("@student",nil)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def set_mentors(new_mentors)
+    was_set = false
+    if new_mentors.length < Student.minimum_number_of_mentors
+      return was_set
+    end
+
+    check_new_mentors = []
+    studentToNewMentors = {}
+    new_mentors.each do |a_mentor|
+      if check_new_mentors.include?(a_mentor)
+        return was_set
+      elsif !a_mentor.get_student.nil? and !a_mentor.get_student.eql?(self)
+        existing_student = a_mentor.get_student
+        unless studentToNewMentors.has_key?(existing_student)
+          studentToNewMentors[existing_student] = existing_student.number_of_mentors
+        end
+        currentCount = studentToNewMentors[existing_student]
+        nextCount = currentCount - 1
+        if nextCount < 1
+          return was_set
+        end
+        studentToNewMentors[existing_student] = nextCount
+      end
+      check_new_mentors << a_mentor
+    end
+
+    check_new_mentors.each do |a_mentor|
+      @mentors.delete(a_mentor)
+    end
+
+    @mentors.each do |orphan|
+      orphan.instance_variable_set("@student",nil)
+    end
+    @mentors.clear
+    new_mentors.each do |a_mentor|
+      unless a_mentor.get_student.nil?
+        a_mentor.get_student.instance_variable_get("@mentors").delete(a_mentor)
+      end
+      a_mentor.instance_variable_set("@student",self)
+      @mentors << a_mentor
+    end
+    was_set = true
+    was_set
+  end
+
+  def add_mentor_at(a_mentor, index)
+    was_added = false
+    if add_mentor(a_mentor)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_mentors())
+        index = number_of_mentors() - 1
+      end
+      @mentors.delete(a_mentor)
+      @mentors.insert(index, a_mentor)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_mentor_at(a_mentor, index)
+    was_added = false
+    if @mentors.include?(a_mentor)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_mentors())
+        index = number_of_mentors() - 1
+      end
+      @mentors.delete(a_mentor)
+      @mentors.insert(index, a_mentor)
+      was_added = true
+    else
+      was_added = add_mentor_at(a_mentor, index)
+    end
+    was_added
+  end
+
+  def self.minimum_number_of_courses
+    0
+  end
+
+  def add_course(a_course)
+    was_added = false
+    return false if index_of_course(a_course) != -1
+    @courses << a_course
+    if a_course.index_of_student(self) != -1
+      was_added = true
+    else
+      was_added = a_course.add_student(self)
+      unless was_added
+        @courses.delete(a_course)
+      end
+    end
+    was_added
+  end
+
+  def remove_course(a_course)
+    was_removed = false
+    unless @courses.include?(a_course)
+      return was_removed
+    end
+
+    oldIndex = @courses.index(a_course)
+    @courses.delete_at(oldIndex)
+    if a_course.index_of_student(self) == -1
+      was_removed = true
+    else
+      was_removed = a_course.remove_student(self)
+      @courses.insert(oldIndex,a_course) unless was_removed
+    end
+    was_removed
+  end
+
+  def add_course_at(a_course, index)
+    was_added = false
+    if add_course(a_course)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_courses())
+        index = number_of_courses() - 1
+      end
+      @courses.delete(a_course)
+      @courses.insert(index, a_course)
+      was_added = true
+    end
+    was_added
+  end
+
+  def add_or_move_course_at(a_course, index)
+    was_added = false
+    if @courses.include?(a_course)
+      if(index < 0)
+        index = 0
+      end
+      if(index > number_of_courses())
+        index = number_of_courses() - 1
+      end
+      @courses.delete(a_course)
+      @courses.insert(index, a_course)
+      was_added = true
+    else
+      was_added = add_course_at(a_course, index)
+    end
+    was_added
+  end
+
+  def delete
+    @deleted = true
+    @mentors.each do |a_mentor|
+      a_mentor.instance_variable_set("@student",nil)
+    end
+    @mentors.clear
+    copy_of_courses = @courses.dup
+    @courses.clear
+    copy_of_courses.each do |a_course|
+      a_course.remove_student(self)
+    end
+  end
+
+end
+end

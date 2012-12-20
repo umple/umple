@@ -1,0 +1,142 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class GarageDoor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //GarageDoor State Machines
+  private static $StatusOpen = 1;
+  private static $StatusClosing = 2;
+  private static $StatusClosed = 3;
+  private static $StatusOpening = 4;
+  private static $StatusHalfOpen = 5;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusOpen);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
+    elseif ($this->status == self::$StatusClosing) { return "StatusClosing"; }
+    elseif ($this->status == self::$StatusClosed) { return "StatusClosed"; }
+    elseif ($this->status == self::$StatusOpening) { return "StatusOpening"; }
+    elseif ($this->status == self::$StatusHalfOpen) { return "StatusHalfOpen"; }
+    return null;
+  }
+
+  public function buttonOrObstacle()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    fileTracer("Event=buttonOrObstacle");
+    
+    if ($aStatus == self::$StatusOpen)
+    {
+      $this->setStatus(self::$StatusClosing);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStatus == self::$StatusClosing)
+    {
+      $this->setStatus(self::$StatusOpening);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStatus == self::$StatusClosed)
+    {
+      $this->setStatus(self::$StatusOpening);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStatus == self::$StatusOpening)
+    {
+      $this->setStatus(self::$StatusHalfOpen);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStatus == self::$StatusHalfOpen)
+    {
+      $this->setStatus(self::$StatusOpening);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function reachBottom()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    fileTracer("Event=reachBottom");
+    
+    if ($aStatus == self::$StatusClosing)
+    {
+      $this->setStatus(self::$StatusClosed);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function reachTop()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    fileTracer("Event=reachTop");
+    
+    if ($aStatus == self::$StatusOpening)
+    {
+      $this->setStatus(self::$StatusOpen);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    fileTracer($status);
+    $this->status = $aStatus;
+    fileTracer($status);
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  function fileTracer($tracedItem)
+  {
+    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+    fprintf($file,"Traced object value: $tracedItem".PHP_EOL);
+    fprintf($file,"Trace time: ".date(DATE_RFC822).PHP_EOL);
+    fclose($file);
+  }
+
+}
+?>

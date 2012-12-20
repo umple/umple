@@ -1,0 +1,149 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace service;
+
+class PositionService {
+  depend java.util.List;
+  depend java.util.ArrayList;
+  depend shared.domain.Election;
+  depend shared.domain.Position;
+  depend java.sql.Connection;
+  depend java.sql.ResultSet;
+  depend java.sql.Statement;
+  depend java.sql.DriverManager;
+  depend shared.Credentials;
+  
+  singleton;
+  
+  lazy Position selectedPosition;
+  lazy Position newPosition;
+  lazy Position positionById;
+  
+  lazy Election selectedElection;
+  lazy List<Position> positions;
+  lazy Connection theConnection;
+  lazy Boolean positionOpenned;
+  lazy Boolean positionAdded;
+  lazy Position positionToSearch;
+  lazy Boolean positionFound;
+  
+  after setNewPosition
+  {
+    createPosition();
+  }
+
+  after setPositionToSearch {
+    findPosition();
+  }
+  
+  before getPositions {
+    getAllPositions();
+  }
+  
+  before getPositionById {
+    findPositionById();
+  }
+  
+  PositionServiceCycle {
+    Idle {
+      createPosition -> CreatingPosition;
+      findPosition -> FindingPosition;
+      getAllPositions -> LoadingAllPositions;
+      findPositionById -> FindingPositionById;
+    }
+    CreatingPosition
+    {
+      entry / {addPosition();}
+      -> Idle;
+    }
+    FindingPosition
+    {
+      entry / {searchForPosition();}
+      -> Idle;
+    }
+    FindingPositionById
+    {
+      entry / {searchForPositionById();}
+      -> Idle;
+    }
+    LoadingAllPositions
+    {
+      entry / {loadAllPositions();}
+      -> Idle;
+    }
+  }
+  
+  before setPositionServiceCycle
+  {
+    try {
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+  
+  void loadAllPositions() {
+    positions=new ArrayList<Position>();
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM position");
+      while (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        int id=Integer.parseInt(rs.getString("id_position"));
+        Position position=new Position(id, name, description);
+        positions.add(position);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+    
+  void addPosition() {
+    try {
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.position (name, description) values ('"+newPosition.getName()+"', '"+newPosition.getDescription()+"')");
+      positionAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      positionAdded=false;
+    }
+  }
+
+  private void searchForPosition() {
+    positionFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM elections.position where name='"+positionToSearch.getName()+"'");
+      if (!rs.next())
+        positionFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      positionFound=false;
+    }
+  }
+
+  private void searchForPositionById() {
+    positionFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM elections.position where id_position='"+positionById.getIdPosition()+"'");
+      if (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        positionById.setName(name);
+        positionById.setDescription(description);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+}

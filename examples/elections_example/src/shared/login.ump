@@ -1,0 +1,17 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace shared;
+
+class Credentials {
+	const db_hostname="localhost:3306";
+	const db_username="umple";
+	const db_password="ems";
+	const db_database="elections";
+}

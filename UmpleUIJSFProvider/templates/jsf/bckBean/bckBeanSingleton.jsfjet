@@ -1,0 +1,237 @@
+<%@ jet package="cruise.ui.jsf.templates.impl" 
+imports="java.util.* cruise.model.abstractObjects.BackingObject cruise.umple.compiler.* cruise.ui.jsf.* "
+class="BckBeanSingleton" skeleton="../skeleton/IGenerator.skeleton" %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    String voName= bckObject.getClassName()+"VO";
+    String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);
+    String suffix=JSFProvider.properties.getProperty(cruise.model.Constants.BCK_OBJECT_SUFFIX);
+    String className=bckObject.getClassName()+JSFProvider.properties.getProperty(cruise.model.Constants.BCK_OBJECT_SUFFIX);
+    List<AssociationVariable> mergeList= new ArrayList<AssociationVariable>();
+	mergeList.addAll( bckObject.getConstructorOneAsociations());
+	mergeList.addAll(bckObject.getZeroOrOneAsociations());
+	List<AssociationVariable> multipleZeroManyToOptionalAssociations=bckObject.getZeroManyToOptionalAssociations();
+	List<AssociationVariable> multipleNManyToOptionalAssociations=bckObject.getNManyToOptionalAssociations();
+	List<AssociationVariable> multipleManyToOneAsociations =bckObject.getManyToOneAssociations();
+	
+	List<AssociationVariable> mandatoryToSingletonAssociations=bckObject.getMandatoryToSingletonAssociations();
+	List<AssociationVariable> optionalToSingletonAssociations=bckObject.getOptionalToSingletonAssociations();
+	List<AssociationVariable> manyToOneSingletonAssociations =bckObject.getManyToOneSingletonAssociations();	
+	
+%>
+/**
+ * 
+ */
+package <%=preffix + "." + bckObject.getPackageName()%>;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.Calendar;
+import <%=preffix%>.control.BeanLinker;
+import <%=preffix%>.utils.PageFlowUtils;
+import dao.keys.<%=bckObject.getPackageName()%>.*;
+import <%=bckObject.getPackageName()%>.<%=bckObject.getClassName()%>;
+ <% for (Iterator<String> i = bckObject.getImports().iterator(); i.hasNext(); ) { %>
+import <%=i.next().toString()%>;
+ <% } 
+ 
+ 
+ %>
+
+public class  <%=className%> implements java.io.Serializable {
+
+	private static final long serialVersionUID = 1L;
+    java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+ 	public <%=className%>(){
+ 		if(getEdited<%=voName%>()==null){
+  			setEdited<%=voName%>(<%=bckObject.getClassName()%>.getInstance());
+  			prepareForEdit();
+  		}
+ 	} 
+
+ <% for (Attribute attVar: bckObject.getAttVariables()) { %>
+	<%=bckObject.getFragmentProvider().getDeclarationFragment(attVar)%>
+ <% } %>
+  <% for (Attribute attVar: bckObject.getKeysAttributes()) { %>
+	<%=bckObject.getFragmentProvider().getDeclarationFragment(attVar)%>
+ <% } %>
+
+
+  <%@ include file="includes/OneAssociations.javapart" %>
+  <%@ include file="includes/ZeroManyToOptionalAssociations.javapart" %>
+  <%@ include file="includes/NManyToOptionalAssociations.javapart" %>
+  <%@ include file="includes/OneSingletonAssociations.javapart" %>
+  <%@ include file="includes/ManyToOneSingletonAssociations.javapart" %>
+
+<% for (Attribute attVar: bckObject.getAttVariables()) { %> 
+<%=bckObject.getFragmentProvider().getGetFragment(attVar)%>
+<%=bckObject.getFragmentProvider().getSetFragment(attVar)%>
+<% } %>
+<% for (Attribute attVar: bckObject.getKeysAttributes()) { %> 
+<%=bckObject.getFragmentProvider().getGetFragment(attVar)%>
+<%=bckObject.getFragmentProvider().getSetFragment(attVar)%>
+<% } %>
+	public String cancel() {
+	  <% for (Attribute attVar: bckObject.getAttVariables()) { 
+	  Object obj= attVar.getValue();
+	  if (obj!=null &&  !"Date".equals(attVar.getType()) ){
+	  %>
+	  <%=bckObject.getFragmentProvider().getAsignationFragment(attVar, obj.toString()) %>  
+		<% }else if ("Date".equals(attVar.getType()) ){ %>
+		<%=bckObject.getFragmentProvider().getAsignationFragment(attVar, "getInitial"+attVar.getUpperCaseName()+"()") %>
+		<% }else{ %>
+		<%=bckObject.getFragmentProvider().getAsignationFragment(attVar, "null") %> 
+		<% }
+	   } %>
+	  <% for (Attribute attVar: bckObject.getKeysAttributes()) { 
+	  Object obj= attVar.getValue();
+	  if (obj!=null &&  !"Date".equals(attVar.getType()) ){
+	  %>
+	  <%=bckObject.getFragmentProvider().getAsignationFragment(attVar, obj.toString()) %>  
+		<% }else if ("Date".equals(attVar.getType()) ){ %>
+		<%=bckObject.getFragmentProvider().getAsignationFragment(attVar, "getInitial"+attVar.getUpperCaseName()+"()") %>
+		<% }else{ %>
+		<%=bckObject.getFragmentProvider().getAsignationFragment(attVar, "null") %> 
+		<% }
+	   } %>
+	   <% for (AssociationVariable assocVar: mergeList) { %>
+	   removeSelected<%=assocVar.getUpperCaseName()%>();
+	   <% } %>
+	    <% for (AssociationVariable assocVar: multipleZeroManyToOptionalAssociations) { %>
+		removeSelected<%=assocVar.getUpperCaseName()%>List();
+		<% } %>
+		<% for (AssociationVariable assocVar: multipleNManyToOptionalAssociations) { %>
+		removeSelected<%=assocVar.getUpperCaseName()%>List();
+		<% } %>
+		System.out.println("Canceling... ");
+		setEdited<%=voName%>(<%=bckObject.getClassName()%>.getInstance());
+		prepareForEdit();
+		return "";
+	}
+
+	public String edit() {
+		 try{
+				<% for (Attribute attVar: bckObject.getAttVariables()) { %>
+				<%=bckObject.getFragmentProvider().getCopyFragment(attVar,"this.getEdited"+voName+"()") %><% } %>
+				<% for (Attribute attVar: bckObject.getKeysAttributes()) { %>
+				<%=bckObject.getFragmentProvider().getCopyFragment(attVar,"this.getEdited"+voName+"()") %><% } %>
+	
+				<% for (AssociationVariable assocVar: mergeList) { %>
+			 	this.getEdited<%=voName%>().set<%=assocVar.getUpperCaseName()%>(this.getSelected<%=assocVar.getUpperCaseName()%>());
+			 	<% } %>
+				
+				<% for (AssociationVariable assocVar: multipleZeroManyToOptionalAssociations) { %>
+				if (getSelected<%=assocVar.getUpperCaseName()%>List() !=null)
+				for ( <%=assocVar.getType()%> obj : getSelected<%=assocVar.getUpperCaseName()%>List()){
+			 		if(this.getEdited<%=voName%>().indexOf<%=assocVar.getUpperCaseName()%>(obj)<0)
+			 			this.getEdited<%=voName%>().add<%=assocVar.getUpperCaseName()%>(obj);
+			 	}
+			 	if (this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s()!=null){
+				 	ArrayList<<%=assocVar.getType()%>> toRemove =new ArrayList<<%=assocVar.getType()%>>();
+				 	for ( <%=assocVar.getType()%> obj : this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s()){
+				 		if(getSelected<%=assocVar.getUpperCaseName()%>List()!=null && !getSelected<%=assocVar.getUpperCaseName()%>List().contains(obj))
+				 			toRemove.add(obj);
+				 			
+				 			
+				 	}
+				 	for ( <%=assocVar.getType()%> obj : toRemove){
+				 		this.getEdited<%=voName%>().remove<%=assocVar.getUpperCaseName()%>(obj);
+				 	}
+			 	}
+			 	<% } %>	
+			 	<% for (AssociationVariable assocVar: multipleNManyToOptionalAssociations) { %>
+				if (getSelected<%=assocVar.getUpperCaseName()%>List() !=null)
+				for ( <%=assocVar.getType()%> obj : getSelected<%=assocVar.getUpperCaseName()%>List()){
+			 		if(this.getEdited<%=voName%>().indexOf<%=assocVar.getUpperCaseName()%>(obj)<0)
+			 			this.getEdited<%=voName%>().add<%=assocVar.getUpperCaseName()%>(obj);
+			 	}
+			 	if (this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s()!=null){
+				 	ArrayList<<%=assocVar.getType()%>> toRemove =new ArrayList<<%=assocVar.getType()%>>();
+				 	for ( <%=assocVar.getType()%> obj : this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s()){
+				 		if(getSelected<%=assocVar.getUpperCaseName()%>List()!=null && !getSelected<%=assocVar.getUpperCaseName()%>List().contains(obj))
+				 			toRemove.add(obj);
+				 			
+				 			
+				 	}
+				 	for ( <%=assocVar.getType()%> obj : toRemove){
+				 		this.getEdited<%=voName%>().remove<%=assocVar.getUpperCaseName()%>(obj);
+				 	}
+			 	}
+			 	<% } %>	
+				
+			
+		}catch(RuntimeException e){
+			   	FacesMessage fm = new FacesMessage(e.getMessage());
+            	fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+              	FacesContext.getCurrentInstance().addMessage(e.getMessage(), fm);
+              	return "";
+			
+			}
+		cancel();
+		return "";
+	}
+
+
+
+	public String prepareForEdit() {
+	<% for (Attribute attVar: bckObject.getAttVariables()) { %>
+	<%=bckObject.getFragmentProvider().getReverseCopyFragment(attVar,"this.getEdited"+voName+"()") %><% } %>
+	<% for (Attribute attVar: bckObject.getKeysAttributes()) { %>
+	<%=bckObject.getFragmentProvider().getReverseCopyFragment(attVar,"this.getEdited"+voName+"()") %><% } %>
+		   <% for (AssociationVariable assocVar: mergeList) { %>
+	  this.setSelected<%=assocVar.getUpperCaseName()%>(this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>());
+	   <% } %>
+	  <% for (AssociationVariable assocVar: multipleZeroManyToOptionalAssociations) { %>
+	  this.setSelected<%=assocVar.getUpperCaseName()%>List(new ArrayList(this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s()));
+	   <% } %>
+	   <% for (AssociationVariable assocVar: multipleNManyToOptionalAssociations) { %>
+	  this.setSelected<%=assocVar.getUpperCaseName()%>List(new ArrayList(this.getEdited<%=voName%>().get<%=assocVar.getUpperCaseName()%>s()));
+	   <% } %>
+
+	return "";
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	public void setEdited<%=voName%>(<%=bckObject.getClassName()%> edited<%=voName%>) {
+		PageFlowUtils.getPageFlow().put("edited<%=voName%>", edited<%=voName%>);
+	}
+
+	public <%=bckObject.getClassName()%> getEdited<%=voName%>() {
+		return (<%=bckObject.getClassName()%>) PageFlowUtils.getPageFlow().get("edited<%=voName%>");
+
+	}
+
+	public String bind() {
+		PageFlowUtils.peekBeanLinker().setLinker(getSelected<%=voName%>());
+		return "";
+	}
+
+	public String removeLinker() {
+		PageFlowUtils.peekBeanLinker().setLinker(null);
+		return "";
+	}
+	
+	
+	public boolean isSingleSelection(){
+		return PageFlowUtils.peekBeanLinker().isSingleSelection();
+	}
+	
+	public <%=bckObject.getClassName()%> getSelected<%=voName%>() {
+		if(PageFlowUtils.peekBeanLinker().getLinker() instanceof <%=bckObject.getClassName()%>)
+			return (<%=bckObject.getClassName()%>) PageFlowUtils.peekBeanLinker().getLinker();
+		return null;
+	}
+	
+	public void  setSelected<%=voName%>(<%=bckObject.getClassName()%> selected<%=voName%>) {
+		PageFlowUtils.peekBeanLinker().setLinker(selected<%=voName%>);
+	}
+	
+	public boolean isEditing(){
+		return true;
+	}
+		
+}

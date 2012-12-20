@@ -1,0 +1,144 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :id, :ProfsPriority
+
+  #Student Associations - for documentation purposes
+  #attr_reader :Profs
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_id)
+    @initialized = false
+    @deleted = false
+    @id = a_id
+    @ProfsPriority = "name"
+    @Profs = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_id(a_id)
+    was_set = false
+    @id = a_id
+    was_set = true
+    was_set
+  end
+
+  def set_ProfsPriority(a_ProfsPriority)
+    was_set = false
+    @ProfsPriority = a_ProfsPriority
+    was_set = true
+    was_set
+  end
+
+  def get_id
+    @id
+  end
+
+  def get_ProfsPriority
+    @ProfsPriority
+  end
+
+  def get_Prof(index)
+    a_Prof = @Profs[index]
+    a_Prof
+  end
+
+  def get_Profs
+    new_Profs = @Profs.dup
+    new_Profs
+  end
+
+  def number_of_Profs
+    number = @Profs.size
+    number
+  end
+
+  def has_Profs
+    has = @Profs.size > 0
+    has
+  end
+
+  def index_of_Prof(a_Prof)
+    index = @Profs.index(a_Prof)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_Profs
+    0
+  end
+
+  def add_Prof(a_Prof)
+    was_added = false
+    return false if index_of_Prof(a_Prof) != -1
+    @Profs << a_Prof
+    if a_Prof.index_of_myStudent(self) != -1
+      was_added = true
+    else
+      was_added = a_Prof.add_myStudent(self)
+      unless was_added
+        @Profs.delete(a_Prof)
+      end
+    end
+    sort(@Profs, @ProfsPriority)
+    
+    was_added
+  end
+
+  def remove_Prof(a_Prof)
+    was_removed = false
+    unless @Profs.include?(a_Prof)
+      sort(@Profs, @ProfsPriority)
+      
+      return was_removed
+    end
+
+    oldIndex = @Profs.index(a_Prof)
+    @Profs.delete_at(oldIndex)
+    if a_Prof.index_of_myStudent(self) == -1
+      was_removed = true
+    else
+      was_removed = a_Prof.remove_myStudent(self)
+      @Profs.insert(oldIndex,a_Prof) unless was_removed
+    end
+    sort(@Profs, @ProfsPriority)
+    
+    was_removed
+  end
+
+  def sort(toSort, thePriority)
+    if(toSort.size > 0)
+      methodName = "get_" + thePriority;
+        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
+    end
+  end
+
+  def delete
+    @deleted = true
+    copy_of_Profs = @Profs.dup
+    @Profs.clear
+    copy_of_Profs.each do |a_Prof|
+      a_Prof.remove_myStudent(self)
+    end
+  end
+
+end

@@ -1,0 +1,14 @@
+
+namespace example;
+
+class Mentor 
+{
+
+  int howLongUntilOk = 3;
+
+  status
+  {
+    Ok { afterEvery(4) -> NotOk; }
+    NotOkay { afterEvery(howLongUntilOk) -> Ok; } 
+  }
+}

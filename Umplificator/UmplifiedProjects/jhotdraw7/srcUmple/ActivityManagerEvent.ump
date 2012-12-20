@@ -1,0 +1,17 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.event ;
+
+class ActivityManagerEvent 
+{
+depend java.util.EventObject;
+depend org.jhotdraw.gui.ActivityModel;
+  isA EventObject;
+
+  private ActivityModel activity;
+public ActivityModel getActivityModel() {
+        return activity;
+    }
+
+}

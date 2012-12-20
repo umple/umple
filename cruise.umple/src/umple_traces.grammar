@@ -1,0 +1,42 @@
+// The master of this part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_traces.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Trace capabilities of the MOTL sublanguage of Umple.
+// See user manual page: [*ModelOrientedTracingLanguage(MOTL)*]
+
+// The tool to output the trace: [*Tracers*]
+traceType- : tracer [traceType] ;
+
+trace : [[traceDirective]] | [[traceCase]]
+
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceGiving]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;
+
+traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
+traceEntity- : [[traceOptions]]? [trace_entity] ( , [trace_entity] )* 
+traceOptions- : set,get | set | get | entry | exit | cardinality | transition
+PreOrPostCondition- : (giving | where)? [[traceCondition]]
+
+executeClause- : execute { [**trace_execute] }
+traceWhere :  where  [[traceCondition]]
+traceUntil :  until  [[traceCondition]] 
+traceAfter :  after  [[traceCondition]]
+traceGiving : giving [[traceCondition]]
+
+traceFor- : for [trace_for]
+tracePeriod- : period [trace_period]
+traceDuring- : during [trace_duration]
+traceRecord- : record [[recordEntity]]
+recordEntity- : ( only )? [**trace_record] ( , [**trace_record] )*
+
+traceCondition- : [LHS] [[conditionRHS]]
+conditionRHS- : [comparison_operator] [RHS]
+
+traceCase- : [[traceCaseDef]] | [[traceCaseActivation]] | [[traceCaseDeactivation]]
+traceCaseDef- : tracecase [tracecase_name] { [[traceDirective]]* }
+traceCaseActivation- : activate [tracecase_act_name] (onAllObjects | onThisThreadOnly)? ;
+traceCaseDeactivation- : deactivate [tracecase_deact_name] onThisObject [[deActivateFor]]? ;
+deActivateFor- : for [deactivate_for]

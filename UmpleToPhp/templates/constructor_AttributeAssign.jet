@@ -1,0 +1,5 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  String assignValue = av.getValue() == null ? "$" + gen.translate("parameterOne",av) : gen.translate("parameterValue",av);
+%>
+    $<%=instanceIdentifier%>-><%=gen.translate("attributeOne",av)%> = <%=assignValue%>;

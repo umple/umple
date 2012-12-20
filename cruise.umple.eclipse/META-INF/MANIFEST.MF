@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Umple Plug-in
+Bundle-SymbolicName: cruise.umple.ui.eclipse; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: cruise.umple.ui.eclipse.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.ide,
+ org.eclipse.jface.text,
+ org.eclipse.jdt.core
+Bundle-ClassPath: .
+Export-Package: cruise.umple.ui.eclipse;
+  uses:="org.eclipse.jface.wizard,
+   org.eclipse.ui,
+   org.eclipse.jface.viewers,
+   org.eclipse.swt.widgets",
+ cruise.umple.ui.eclipse.editors;
+  uses:="org.eclipse.jface.text,
+   org.eclipse.jface.text.source,
+   org.eclipse.jface.text.presentation,
+   org.eclipse.swt.graphics,
+   org.eclipse.jface.text.rules,
+   org.eclipse.ui.editors.text"
+

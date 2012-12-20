@@ -1,0 +1,157 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+
+  StringBuilder checks = new StringBuilder();
+  StringBuilder hash = new StringBuilder();
+  StringBuilder canSet = new StringBuilder();
+  
+  for(String memberId : uClass.getKey().getMembers())
+  {
+    Attribute av = uClass.getAttribute(memberId);
+    AssociationVariable as = uClass.getAssociationVariable(memberId);
+    if (av != null)
+    {
+      canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
+      if (av.getIsList())
+      {
+        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n\n"));
+        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",av),gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",av),gen.translate("attributeMany",av)));
+        checks.append(StringFormatter.format("      if (me == null && them != null)\n"));
+        checks.append(StringFormatter.format("      {\n"));
+        checks.append(StringFormatter.format("       return false;\n"));
+        checks.append(StringFormatter.format("      }\n"));
+        checks.append(StringFormatter.format("      else if (me != null && !me.equals(them))\n"));
+        checks.append(StringFormatter.format("      {\n"));
+        checks.append(StringFormatter.format("        return false;\n"));
+        checks.append(StringFormatter.format("      }\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
+      else if ("Integer".equals(av.getType()) || "Boolean".equals(av.getType()) || "Double".equals(av.getType()))
+      {
+        checks.append(StringFormatter.format("    if ({0} != compareTo.{0})\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
+      else
+      {
+        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
+      checks.append("\n");
+    }
+    else if (as != null)
+    {
+      canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("associationCanSet",as)));
+      if (as.isMany())
+      {
+        checks.append(StringFormatter.format("    if ({0}.size() != compareTo.{0}.size())\n",gen.translate("associationMany",as)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n\n"));
+        checks.append(StringFormatter.format("    for (int i=0; i<{0}.size(); i++)\n",gen.translate("attributeMany",as)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      {0} me = {1}.get(i);\n",gen.translate("type",as),gen.translate("associationMany",as)));
+        checks.append(StringFormatter.format("      {0} them = compareTo.{1}.get(i);\n",gen.translate("type",as),gen.translate("associationMany",as)));
+        checks.append(StringFormatter.format("      if (me == null && them != null)\n"));
+        checks.append(StringFormatter.format("      {\n"));
+        checks.append(StringFormatter.format("       return false;\n"));
+        checks.append(StringFormatter.format("      }\n"));
+        checks.append(StringFormatter.format("      else if (me != null && !me.equals(them))\n"));
+        checks.append(StringFormatter.format("      {\n"));
+        checks.append(StringFormatter.format("        return false;\n"));
+        checks.append(StringFormatter.format("      }\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
+      else
+      {
+        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
+      checks.append("\n");
+    }
+    
+    if (av != null)
+    {
+      if ("Integer".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",gen.translate("attributeOne",av)));
+      }
+      else if ("Double".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + (new Double({0})).hashCode();\n",gen.translate("attributeOne",av)));
+      }
+      else if ("Boolean".equals(av.getType()) && !av.getIsList())
+      {
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + ({0} ? 1 : 0);\n",gen.translate("attributeOne",av)));
+      }
+      else
+      {
+        String attributeType = av.getIsList() ? "attributeMany" : "attributeOne";
+        hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("    {\n"));
+        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("    }\n"));
+        hash.append(StringFormatter.format("    else\n"));
+        hash.append(StringFormatter.format("    {\n"));
+        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23;\n"));
+        hash.append(StringFormatter.format("    }\n"));
+      }
+      hash.append("\n");
+    }
+    else if (as != null)
+    {
+      String attributeType = as.isOne() ? "attributeOne" : "attributeMany";
+      hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("    {\n"));
+      hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,as)));
+      hash.append(StringFormatter.format("    }\n"));
+      hash.append(StringFormatter.format("    else\n"));
+      hash.append(StringFormatter.format("    {\n"));
+      hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23;\n"));
+      hash.append(StringFormatter.format("    }\n"));
+    }
+  }
+
+%>
+  bool equals(Object obj)
+  {
+    if (obj == NULL) { return false; }
+    if (getClass() != obj.getClass()) { return false; }
+
+    <%= uClass.getName() %> == (<%= uClass.getName() %>)obj;
+  
+    return true;
+  }
+
+ int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    <%= hash.toString().trim() %>
+
+    <%= canSet.toString().trim() %>
+    return cachedHashCode;
+  }
+

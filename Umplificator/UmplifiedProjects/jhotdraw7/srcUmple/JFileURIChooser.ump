@@ -1,0 +1,28 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui ;
+
+class JFileURIChooser 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.io.File;
+depend java.net.URI;
+depend javax.swing.JComponent;
+depend javax.swing.JFileChooser;
+  isA JFileChooser;
+
+  @Override
+    public void setSelectedURI(@Nullable URI uri) {
+        setSelectedFile(uri==null?null:new File(uri));
+    }
+@Override @Nullable
+    public URI getSelectedURI() {
+        return getSelectedFile() == null ? null : getSelectedFile().toURI();
+    }
+@Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+}

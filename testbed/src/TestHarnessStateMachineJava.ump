@@ -1,0 +1,214 @@
+
+namespace cruise.statemachine.test;
+
+class CourseB
+{
+  log = "initial value";
+  
+  status {
+    Open {
+      entry / { log = "entry called"; }
+      exit / { log = "exit called"; }
+      anEvent -> Closed;
+    }
+    Closed {
+      anEvent -> Open;
+    }
+  }
+}
+
+class CourseC
+{
+  String[] logs;
+  
+  status {
+    Open {
+      entry / { addLog("Open Entry"); }
+      flip -> Closed;
+    }
+    Closed {
+      entry / { addLog("Closed Entry"); }
+      flip -> Open;
+      do 
+      {  
+        Thread.sleep(400);
+        addLog("Do Activity On Closed");
+      }
+    }
+  }
+}
+
+class CourseE
+{
+
+  String[] logs;
+  
+  status
+  {
+    Off
+    {
+      entry / { addLog("Enter Off"); }
+      exit / { addLog("Exit Off"); }
+      turnOn -> On;
+      turnSleep -> Sleep;
+    }
+    Sleep
+    {
+      entry / { addLog("Enter Sleep"); }
+      exit / { addLog("Exit Sleep"); }
+      wake -> Pause;
+    }
+    On
+    {
+      entry / { addLog("Enter On"); }
+      exit / { addLog("Exit On"); }
+      
+      turnOff -> Off;
+      Play 
+      { 
+        entry / { addLog("Enter Play"); }
+        exit / { addLog("Exit Play"); }
+        push -> Pause;
+      }
+      Pause
+      {
+        entry / { addLog("Enter Pause"); }
+        exit / { addLog("Exit Pause"); }
+        push -> Play;      
+        standby -> Sleep;
+      }      
+      
+    }
+  }
+ 
+}
+
+class CourseK
+{
+  String[] logs;
+  
+  status
+  {
+    On { flip -> Final; }
+    Final { }
+  }
+
+  after delete {  addLog("deleted"); }
+  
+}
+
+class CourseL
+{
+  String[] logs;
+  
+  status
+  {
+    On
+    {
+      MotorIdle
+      {
+        flip -> Final; 
+      }
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> Final;  
+      }
+      
+    }
+
+  }
+
+  after delete {  addLog("deleted"); }
+  
+}
+
+class CourseR
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { addLog("Enter Off"); }
+     exit / { addLog("Exit Off"); }
+     -> On;
+    }
+    On { 
+      entry / { addLog("Enter On"); }
+      exit / { addLog("Exit On"); }
+    }  
+  }
+}
+
+class CourseS
+{
+  String[] logs;
+  one
+  {
+    Off {
+     entry / { addLog("Enter Off 1"); }
+     entry / { addLog("Enter Off 2"); }
+     exit / { addLog("Exit Off 1"); }
+     exit / { addLog("Exit Off 2"); }
+     flip -> On;
+    }
+    On { 
+    }  
+  }
+
+}
+
+class CourseT
+{
+  Integer count;
+  one
+  {
+    Off {
+     [count > 10] -> On;
+     [count <= 10] -> Wait;
+    }
+    On { 
+    }  
+    Wait { 
+    }  
+  }
+}
+
+class CourseU {
+
+  Integer count;
+
+  status {
+    Off {
+      flip -> On;
+      do {incr();}
+    }
+    On { }
+  }
+
+  public void incr() 
+  { 
+    count += 1;
+  }
+
+}
+
+class CourseV {
+
+  Integer count = 0;
+
+  status {
+    Off {
+      do {doX();} -> On;
+    }
+    On { }
+  }
+
+  public void doX() { 
+    count += 1;
+  } 
+
+}
+

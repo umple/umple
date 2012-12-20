@@ -1,0 +1,13 @@
+This directory contains Umple files for the Elections system case study in Php.
+
+files:
+----------------------------------------------------------------
+services.ump: master file used to generate service classes
+ElectionService.ump: database tasks related to Election object
+PollService.ump: database tasks related to Poll object
+PositionService.ump: database tasks related to Position object
+ElectionForPositionService.ump: database tasks related to ElectionForPosition object (election_for_position table)
+
+directories:
+----------------------------------------------------------------
+N/A

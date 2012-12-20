@@ -1,0 +1,16 @@
+Concern C
+{
+  VariationPoint VP1 requires VP2 {
+    Kind: Alternative;
+    Variant var1 { do this; }
+    Variant var2 { do that; }
+  }
+
+  VariationPoint VP2 {
+    Kind: Optional;
+    do what;
+  }
+  
+}
+invoke(C,VP2);
+invoke(C,VP1,var1);

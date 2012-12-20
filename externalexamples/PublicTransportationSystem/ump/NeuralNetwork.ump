@@ -1,0 +1,415 @@
+namespace umple.pts.domain.math.nn;
+
+
+/**
+ * <i>Information holder class for a neural network node.<br>
+ * Should be an abstract class, but it cannot be at the moment.</i>
+ *
+ * @see {@link NeuralNetwork}
+ * @see {@link NodeInputWeight}
+ * 
+ * @see {@link SigmoidNode}
+ * @see {@link LinearNode}
+ * @see {@link InputNode}
+ */
+class Node{
+	java.lang.Double result;
+	double bias;
+	
+  	/**
+   	 * Method for calculation of an node's output.
+   	 * <br>Result of it's activation function.
+   	 * <br>
+   	 * <i>Defined final so it cannot be overridden</i>
+   	 */
+  	public final double getOutput(){
+	  
+	  if(getResult() == null){
+		  updateResult();
+	  }
+	    
+	  return getResult().doubleValue();
+  	}
+  	
+  	/**
+   	 * Method for result reset.<br>
+   	 * <i>Result field was added for optimization, because if there isn't it would have to calculate 
+   	 * output for each of input notes, and for their input nodes and so on.<br><br></i>
+   	 * So when new output is required, this method should be called.
+   	 * <br>
+   	 * <i>Defined final so it cannot be overridden</i>
+   	 */
+  	public final  void resetResult(){
+		result = null;
+	}
+	
+  	/**
+  	 * When there will be a support for defining an abstract class, this method will be abstract.
+  	 * <br>
+  	 * <br><i>It is used when calculation of new result is needed, and should be implemented in each of 
+  	 * child class</i>
+  	 */
+  	public void updateResult(){
+	}
+	
+  	/**
+  	 * When there will be a support for defining an abstract class, this method will be abstract.
+  	 * <br>
+  	 * <br><i>It is used for calculation of an value of derivated activation function of current input</i>
+  	 */
+	public double getDerivatedOutput(){
+  		return 0;
+  	}
+}
+
+class SigmoidNode{
+	isA Node;
+	  	
+  	/**
+	 * Sets result value to a <i> 1 / (1 + e^(-<b>net</b>)</i>, where <b>net</b> is current input sum.
+	 */
+	public void updateResult(){
+		double input = getBias();
+		for(NodeInputWeight prevNodeInfluence : getInputWeights()){
+			input += prevNodeInfluence.getWeight() * prevNodeInfluence.getFromNode().getOutput();
+		} 
+		setResult(1d/(1d +Math.exp((-1)*input)));
+	}
+	
+  	/**
+  	 * Gets value of derivation function on current input.
+  	 * @return <b>y(net)*(1-y(net))</b>, where <i>y(<b>net</b>) = 1 / (1 + e^(-<b>net</b>)</i> and <b>net</b> is input sum.
+  	 */
+	public double getDerivatedOutput(){
+  		if(getResult() == null){
+  			updateResult();
+  		}
+  		
+  		return getResult().doubleValue() * ( 1 - getResult().doubleValue());
+  	}
+	
+}
+
+/**
+ * <i>Linear node is a node with linar activation function.<br><br>
+ * It's activation function is y(<b>net</b>) = <b>net</b></i>
+ *
+ * @see {@link Node}
+ */
+class LinearNode{
+	isA Node;
+	
+    /**
+     * Sets result value to a <i><b>net</b></i>, where <b>net</b> is current input sum.
+     */
+    public void updateResult(){
+		double input = getBias();
+		for(NodeInputWeight prevNodeInfluence : getInputWeights()){
+			input += prevNodeInfluence.getWeight() * prevNodeInfluence.getFromNode().getOutput();
+		}
+		
+		setResult(input);
+	}
+	
+    /**
+  	 * Gets value of derivation function on current input.
+  	 * @return <b>1</b>, because <i>y(<b>net</b>) = <b>net</b></i> and <b>net</b> is input sum.
+  	 */
+	public double getDerivatedOutput(){
+  		return 1d;
+  	}
+}
+
+/**
+ * Input node class.
+ * 
+ * @see {@link Node}
+ */
+class InputNode{
+	isA Node;
+	
+	/**
+     * Constructor based on a value.
+     */
+    public InputNode(double inputValue){
+		super(inputValue, inputValue);
+	}
+	
+	/**
+	 * Setter for an inputValue property. 
+	 * <br><br><i>Getter is <code>getOutput()</code> or <code>getResult()</code> 
+	 */
+	public void setInputValue(double inputValue){
+		setBias(inputValue);
+		setResult(inputValue);
+	}
+	
+	/**
+	 * Getter for an inputValue property.
+	 * @return Input value
+	 */
+	public double getInputValue(){
+		return getOutput();
+	}
+}
+
+/**
+ * <i>Information holder class about node connectors.
+ * <br>
+ * It is defined by two nodes (<code>fromNode</code> and <code>toNode</code>) and it's weight.
+ * When input sum of a node is calculated, it uses association defined as a <code>toNode</code> and gets <code>fromNode</code>.
+ * Then it multiplies it's output with <code>weight</code>.</i>
+ */
+class NodeInputWeight{
+	* outputWeights -- 1 Node fromNode;
+	* inputWeights -- 1 Node toNode;
+	double weight;
+}
+
+/**
+ * <i>Class for neural network.<br>
+ * <br>For more information about artificial neural networks visit:
+ * <ul>
+ * <li><a href="http://books.google.com/books?id=nlmVQgAACAAJ&dq=isbn:0070428077&ei=kbgDTfjlIY_uyASG0sFj&cd=1">Tom M. Mitchell - Machine learning</a></li>
+ * <li><a href="http://en.wikipedia.org/wiki/Artificial_neural_network">Artificial neural network - wiki</a></li>
+ * </ul>
+ * </i>
+ *
+ *@see {@link Node}
+ *@see {@link NodeInputWeight}
+ *@see {@link InputNetworkLayer}
+ *@see {@link OutputNetworkLayer}
+ *@see {@link HiddenNetworkLayer}
+ */
+class NeuralNetwork{
+	InputNetworkLayer inputLayer;
+	OutputNetworkLayer outputLayer;
+	1 -> * HiddenNetworkLayer hiddenLayers;
+	
+	/**
+     * Method for learning neural network with backpropagation algorithm based on it's arguments and pairs of input-output data.<br>
+     * It is expected that <code>expectedResult</code> value at index <code>i</code> is expected result for a neural network for input
+     * defined in <code>inputData</code> at index <code>i</code>.
+     * 
+     * @param inputData Input data for learning. It is a field of fields because one input data is a vector.
+     * @param expectedResult Expected result for each of corresponding input data. 
+     * @param allowedError Learning stop parameter. During each iteration algorithm calculates errors, and when it is bellow that error, algorithm stops with learnign.
+     * @param learningRate Learning rate on each of iteration (used in derivation function of error -> for minimization of an error)
+     * 
+     * @see <a href="http://en.wikipedia.org/wiki/Backpropagation">Backpropagation algorithm - wiki</a>
+     * @see <a href="http://books.google.com/books?id=nlmVQgAACAAJ&dq=isbn:0070428077&ei=kbgDTfjlIY_uyASG0sFj&cd=1">Tom M. Mitchell - Machine learning</a>
+     * @see <a href="http://en.wikipedia.org/wiki/Stochastic_gradient_descent">Stohastic gradient descent</a>
+     */
+	public void learnWithBackPropagationAlgorithm(double[][] inputData, double[][] expectedResult, double allowedError, double learningRate){
+	  if(inputData.length != expectedResult.length){
+		  return;
+	  }
+	  
+	  int sizeOfInputVector = getInputLayer().numberOfInputNodes();
+	  if(inputData[0].length != sizeOfInputVector){
+		  return ;
+	  }
+	  
+	  int sizeOfOutputVector =  getOutputLayer().numberOfOutputNodes();
+	  if (expectedResult[0].length != sizeOfOutputVector){
+		  return;
+	  }
+	  
+	  double maxError = Double.MAX_VALUE;
+	  
+	  for(int i = 0; i < 20000 && maxError > allowedError; i++){
+		 //sets maxError to zero (resets value)
+		 maxError = 0;
+		 
+		 for(int dataIter = 0; dataIter < inputData.length; dataIter++){
+			 HashMap<Node, Double> localGradients = new HashMap<Node, Double>();
+			 double totalError = 0;
+			 
+			 for(int inputVectorIter = 0; inputVectorIter < inputData[dataIter].length; inputVectorIter++){
+				 inputLayer.getInputNode(inputVectorIter).setInputValue(inputData[dataIter][inputVectorIter]);
+			 }
+			 
+			 this.resetNetwork();
+			 
+			 //calculus of output local gradients (deltas)
+			 for(int resultVectorIter = 0; resultVectorIter < expectedResult[dataIter].length; resultVectorIter++){
+				 Node outputNode = outputLayer.getOutputNode(resultVectorIter);
+				 double actualOutput = outputNode.getOutput();
+				 double expectedOutput = expectedResult[dataIter][resultVectorIter];
+				 
+				 double error = expectedOutput - actualOutput;
+				 
+				 totalError += Math.abs(error);
+				 
+				 double localGradient = error * outputNode.getDerivatedOutput();
+				 localGradients.put(outputNode, localGradient);
+			 }
+			 
+			 if(totalError > maxError){
+				 maxError = totalError;
+			 }
+			 
+			//calculus of output local gradients (deltas) in each of hidden layer
+			 for(int hiddenLayerIter = numberOfHiddenLayers() -1 ; hiddenLayerIter >= 0; hiddenLayerIter--){
+				 for(Node hiddenNode : getHiddenLayer(hiddenLayerIter).getNodes()){
+					 
+					 double localGradient = 0;
+					 for(NodeInputWeight outputWeight: hiddenNode.getOutputWeights()){
+						 localGradient += outputWeight.getWeight() * localGradients.get(outputWeight.getToNode());
+					 }
+					 
+					 localGradient *= hiddenNode.getDerivatedOutput();
+					 
+					 localGradients.put(hiddenNode, localGradient);
+				 }
+			 }
+			 
+			 //updating of weights
+			 for(Node node : localGradients.keySet()){
+				 node.setBias(node.getBias() + localGradients.get(node) * learningRate);
+				 for(NodeInputWeight inputWeight : node.getInputWeights()){
+					 double newWeight = inputWeight.getWeight();
+					 newWeight += localGradients.get(node) * learningRate * inputWeight.getFromNode().getOutput();
+					 
+					 inputWeight.setWeight(newWeight);
+				 }
+			 }
+		 }
+	  }
+  }
+  
+  /**
+   * Method for resetting values of each non-input node in network.
+   * <br><br>It calls <code>resetResult()</code> method on each of non-input node.
+   * 
+   * @see {@link Node#resetResult()}
+   */  
+  public void resetNetwork(){
+	  //resets values of nodes in hidden layers
+	  for(HiddenNetworkLayer hiddenLayer: this.hiddenLayers){
+		  for(Node node: hiddenLayer.getNodes()){
+			  node.resetResult();
+		  }
+	  }
+	  for(Node node: outputLayer.getOutputNodes()){
+		  node.resetResult();
+	  }
+	  
+  }
+
+  /**
+   * Generates neural network with at least two layers, input and output layer. Any other layer is considered as hidden
+   * layer and data about it should  be in a <code>hiddenLayersNodeNumber</code>.
+   * <br><br>Weight of each of arc in network is defined as gaussian value divided by 100. Gausian value has parameters 0 and 1.
+   * That means that in 95% of times it will be between -0.01 and 0.01. 
+   * <br>Weights defer from zero because then algorithm convergates toward solution faster. 
+   * 
+   * @param numberOfInputNodes Number of input nodes.
+   * @param hiddenLayersNodeNumber Field of integers about hidden layer nodes. Each value of this array defines how many nodes are in layer
+   * defined by it's index.
+   * @param numberOfOutputNodes Number of output nodes.
+   * 
+   * @return Auto-generated neural network class.
+   * 
+   * @see {@link HiddenNetworkLayer}
+   * @see {@link InputNetworkLayer}
+   * @see {@link OutputNetworkLayer}
+   * @see <a href="http://books.google.com/books?id=nlmVQgAACAAJ&dq=isbn:0070428077&ei=kbgDTfjlIY_uyASG0sFj&cd=1">Tom M. Mitchell - Machine learning</a>
+   */
+  public static NeuralNetwork generateNeuralNetwork(int numberOfInputNodes, int[] hiddenLayersNodeNumber, int numberOfOutputNodes){
+	  
+	  //there must be at least 1 input and at least 1 output node
+	  if(numberOfInputNodes <= 0 || numberOfOutputNodes <= 0){
+		  return null;
+	  }
+	  
+	  if(hiddenLayersNodeNumber != null){
+		  //each hidden layer must have at least 1 node
+		  for(int i= 0; i < hiddenLayersNodeNumber.length; i++){
+			  if(hiddenLayersNodeNumber[i] <= 0){
+				  return null;
+			  }
+		  }
+	  }
+	  
+	  
+	  Random randomGen = new Random();
+	  //creating input node
+	  List<InputNode> inputNodes = new ArrayList<InputNode>();
+	  
+	  for(int inputNodeIter = 0; inputNodeIter < numberOfInputNodes; inputNodeIter++){
+		  inputNodes.add(new InputNode(0d));
+	  }
+	  InputNetworkLayer inputLayer = new InputNetworkLayer((InputNode[])inputNodes.toArray(new InputNode[inputNodes.size()]));
+	  
+	  //generating nodes for outputLayers
+	  List<LinearNode> outputNodes = new ArrayList<LinearNode>();
+	  for(int outputNodeIter = 0; outputNodeIter < numberOfOutputNodes; outputNodeIter++){
+		  outputNodes.add(new LinearNode(null, randomGen.nextGaussian() / 100));
+	  }
+	  OutputNetworkLayer outputLayer = new OutputNetworkLayer((LinearNode[])outputNodes.toArray(new LinearNode[outputNodes.size()]));
+	  
+	  NeuralNetwork generatedNetwork = new NeuralNetwork(inputLayer, outputLayer);
+	  
+	  HiddenNetworkLayer lastHiddenLayer = null;
+	  //generating nodes for hidden Layers
+	  if(hiddenLayersNodeNumber != null){
+		  for(int hiddenLayerIter = 0; hiddenLayerIter < hiddenLayersNodeNumber.length; hiddenLayerIter ++){
+			  HiddenNetworkLayer newHiddenLayer = new HiddenNetworkLayer();
+			  for(int hiddenLayerNodeIter = 0; hiddenLayerNodeIter < hiddenLayersNodeNumber[hiddenLayerIter]; hiddenLayerNodeIter++){
+				  Node hiddenNode = new SigmoidNode(null, randomGen.nextGaussian() / 100);
+				  if(lastHiddenLayer == null){
+					  for(InputNode inputNode : inputLayer.getInputNodes()){
+						  hiddenNode.addInputWeight(randomGen.nextGaussian() / 100, inputNode);
+					  } 
+				  } else {
+					  for(Node hiddenNodeFromPrevLayer : lastHiddenLayer.getNodes()){
+						  hiddenNode.addInputWeight(randomGen.nextGaussian() / 100, hiddenNodeFromPrevLayer);
+					  }
+				  }
+				  
+				  newHiddenLayer.addNode(hiddenNode);
+			  }
+			  
+			  generatedNetwork.addHiddenLayer(newHiddenLayer);
+			  lastHiddenLayer = newHiddenLayer;
+		  }
+	  }
+	  	  
+	  //updating weights for output nodes inputs
+	  for(Node outputNode : generatedNetwork.getOutputLayer().getOutputNodes()){
+		  if(lastHiddenLayer == null){
+			  for(InputNode inputNode : inputLayer.getInputNodes()){
+				  outputNode.addInputWeight(randomGen.nextGaussian() / 100, inputNode);
+			  } 
+		  } else {
+			  for(Node hiddenNodeFromPrevLayer : lastHiddenLayer.getNodes()){
+				  outputNode.addInputWeight(randomGen.nextGaussian() / 100, hiddenNodeFromPrevLayer);
+			  }
+		  }
+	  }
+	  
+	  return generatedNetwork;
+  }
+}
+
+/**
+ * <i>Information holder class about hidden network layer in a neural network.</i>
+ */
+class HiddenNetworkLayer{
+	1 -> * Node;
+}
+
+/**
+ * <i>Information holder class for an input layer of a neural network.</i>
+ */
+class InputNetworkLayer{
+	1 -> 1..* InputNode;
+}
+
+/**
+ * <i>Information holder class for an output layer  of a neural network.</i>
+ */
+class OutputNetworkLayer{
+	1 -> 1..* Node outputNodes;
+}

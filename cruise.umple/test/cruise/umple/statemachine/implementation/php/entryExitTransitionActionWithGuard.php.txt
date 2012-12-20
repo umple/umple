@@ -1,0 +1,89 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private static $BulbOn = 1;
+  private static $BulbOff = 2;
+  private $bulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    elseif ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    return null;
+  }
+
+  public function push()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOn)
+    {
+      if (isTurnedOn)
+      {
+        $this->exitBulb();
+        doTransition();
+        $this->setBulb(self::$BulbOff);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitBulb()
+  {
+    if ($this->bulb == self::$BulbOn)
+    {
+      doExit();
+    }
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+
+    // entry actions and do activities
+    if ($this->bulb == self::$BulbOn)
+    {
+      doEntry();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

@@ -1,0 +1,31 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  
+  String signature = gClass.getLookup("constructorSignature_mandatory");
+  hasBody = false;
+%>
+
+  <%=uClass.getName()%>::<%=uClass.getName()%>(<%=gen.translate("constructorMandatory",uClass)%>)
+  {
+<%
+  if (!uClass.isRoot())
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "    uClass.getName():{0}({1});", gClass.getParentClass().getLookup("constructorSignature_caller"),gClass.getParentClass().getClass().getName());
+    hasBody = true;
+  }
+  
+  if (customConstructorPrefixCode != null) 
+  {
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customConstructorPrefixCode, "    "));
+    hasBody = true;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+%>

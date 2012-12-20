@@ -1,0 +1,28 @@
+namespace generatedCode;
+
+class Messenger {
+
+  message {
+    Composed {
+      cancel -> Discarded;
+      send -> Sent;
+    }
+    
+    Sent {
+      transmitViaGateway [externalContact]  -> InTransit;
+      transmit [internalContact] -> Delivered;
+      delete -> Deleted;
+    }
+    
+    InTransit {
+      reachRecipient -> delivered;
+      delete -> Deleted;
+    }
+    
+    Delivered {
+      read -> read;
+    }
+    Deleted { } 
+  }
+}
+  

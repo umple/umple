@@ -1,0 +1,92 @@
+Structure of Umple Code
+User Manual Basics
+noreferences
+
+@@description
+
+<p><b>Organizing the contents of an Umple (.ump) file</b></p>
+
+<p>An Umple file will contain a number of <a href="TypesofDirectives.html">directives</a>. These can be:
+
+<ul>
+
+<li><b>Entitles</b> such as <a href="ClassDefinition.html">classes</a> or 
+<a href="interfaceDefinition.html">interfaces</a>. These look very similar to 
+the definitions of classes or interfaces in Java. Indeed they can be 
+identical to what you would find in a Java (or PHP or Ruby) file. However, 
+the key difference is that they can also contain Umple code for UML 
+constructs such as <a href="AssociationDefinition.html">associations</a>, <a href="AttributeDefinition.html">attributes</a> and <a href="BasicStateMachines.html">state machines</a>. Another 
+difference is that in Umple, you can have multiple definitions of the same 
+class; the contents of the second and subsequent definition are 
+<i>added</i> to the overall definition of the class.</li>
+
+<br />
+
+<li><b><a href="UseStatements.html">Use statements</a></b> that direct Umple to include 
+other Umple files in the system. It does not matter if you 'use' the same 
+file repeatedly.</li>
+
+<br />
+
+<li><b><a href="NamespaceDirectives.html">Namespaces</a></b>. These allow for improved modularization of a 
+system.</li>
+
+</ul>
+
+&nbsp;<br />
+
+<p><b>Methods in classes</b></p>
+
+<p>Much of the code in an Umple file is processed by the Umple 
+compiler, and used to generate code in a 'base' or 'native' language (e.g, Java, PHP or Ruby) for the final 
+system. However <a href="MethodDefinition.html">methods</a> are treated differently: They are passed 
+through essentially unchanged to the resulting system.</p>
+
+<p>If you include methods in Umple code, you therefore have to ensure that 
+any given Umple file has methods of just one chosen target language (Java, 
+PHP, Ruby. etc.).</p>
+
+<p>Anything that Umple can't parse itself may be interpreted to be a method; this can result in unintended results: What you intend to be some Umple code such as an attribute or association may end up being treated as 'extra code', i.e. a method, and passed through unchanged without warning, with the result that expected functionality in the generated system is missing. You can use the <a href="StrictnessDirective.html">strictness</a> directive to force Umple to warn when this occurs; this can be particularly useful in early development, when the Umple is intended to be only a model</p>
+
+<p>The resulting system will contain many more methods than those that you 
+explicitly include. This is because one of the key points about Umple is 
+that it <i>generates</i> a high percentage of the methods you would 
+normally need to write by hand if you were programming directly in the 
+target language. In other words, when you compile Umple constructs such as 
+assocations, attributes and state machines, you are generating many 
+methods that you can call; the set of methods you can call is the 
+generated API. You can find out the API by using Javadoc, or a similar 
+tool, on the generated code, or you can look at the <a href="APISummary.html"> quick reference manual page.</a> One of the options in <a href="UsingUmpleOnline.html">UmpleOnline</a> is to generate Javadoc output.</p>
+
+&nbsp;<br />
+
+<p><b>Organizing a system containing many files</b></p>
+
+<p>If your system is large, you should divide it into many files. One way 
+to do this is to follow the Java convention of having one .ump file per 
+class. Another common approach is to have one or more files for the model 
+code (just the pure UML elements such as classes with their attributes, 
+associations and state machines) and separate files for the methods; you 
+can in fact have some files for Java methods, and other files for PHP or 
+Ruby methods. The same model can then be used to deveop systems that are 
+deplpyed in multiple base languages.</p>
+
+<p>The fact that Umple allows for multiple definitions to be added to 
+create a complete definition, also means that you can create 
+<i>mixins</i>. A mixin is a file that has some definitions that can be 
+added to add extra features to a system. You can therefore organize your 
+system, in whole or in part, by <i>feature</i>. The various pieces of code 
+needed to implement a feature (including entire new classes, or bits such 
+as associations and methods to add to existing classes), can be therefore 
+be grouped together. There are limits to this, however: At the current 
+time, this mechanism does not allow you to override existing elememts, 
+which you might need to do to add a feature. Taken together, these 
+mechanisms allow for a form of product-line development. Umple does, 
+however, have an extra feature, called <a 
+href="http://cruise.site.uottawa.ca/umpleonline/vml.php">VML</a> that should assist with this when complete.</p>
+
+@@syntax
+
+[[program]] [[comment]] [[directive]]  [[useStatement]] 
+     [[namespace]] [[entity]]
+

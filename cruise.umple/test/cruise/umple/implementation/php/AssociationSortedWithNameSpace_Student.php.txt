@@ -1,0 +1,189 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private $id;
+  private $ProfsPriority;
+
+  //Student Associations
+  private $Profs;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aId)
+  {
+    $this->id = $aId;
+    $this->ProfsPriority = "name";
+    $this->Profs = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setProfsPriority($aProfsPriority)
+  {
+    $wasSet = false;
+    $this->ProfsPriority = $aProfsPriority;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  public function getProfsPriority()
+  {
+    return $this->ProfsPriority;
+  }
+
+  public function getProf($index)
+  {
+    $aProf = $this->Profs[$index];
+    return $aProf;
+  }
+
+  public function getProfs()
+  {
+    $newProfs = $this->Profs;
+    return $newProfs;
+  }
+
+  public function numberOfProfs()
+  {
+    $number = count($this->Profs);
+    return $number;
+  }
+
+  public function hasProfs()
+  {
+    $has = $this->numberOfProfs() > 0;
+    return $has;
+  }
+
+  public function indexOfProf($aProf)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->Profs as $Prof)
+    {
+      if ($Prof->equals($aProf))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfProfs()
+  {
+    return 0;
+  }
+
+  public function addProf($aProf)
+  {
+    $wasAdded = false;
+    if ($this->indexOfProf($aProf) !== -1) { return false; }
+    $this->Profs[] = $aProf;
+    if ($aProf->indexOfMyStudent($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aProf->addMyStudent($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->Profs);
+      }
+    }
+      $this->sort($this->Profs, $this->ProfsPriority);
+      
+    return $wasAdded;
+  }
+
+  public function removeProf($aProf)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfProf($aProf) == -1)
+    {
+      $this->sort($this->Profs, $this->ProfsPriority);
+      
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfProf($aProf);
+    unset($this->Profs[$oldIndex]);
+    if ($aProf->indexOfMyStudent($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aProf->removeMyStudent($this);
+      if (!$wasRemoved)
+      {
+        $this->Profs[$oldIndex] = $aProf;
+        ksort($this->Profs);
+      }
+    }
+    $this->Profs = array_values($this->Profs);
+    $this->sort($this->Profs, $this->ProfsPriority);
+    
+    return $wasRemoved;
+  }
+
+  public function sort(&$toSort, $thePriority)
+  {
+    if(count($toSort) > 0)
+    {
+      $methodName = "get".ucfirst($thePriority);
+      usort($toSort, function($x, $y) use ($methodName)
+      {
+        $var1 = call_user_func(array($x, $methodName));
+        $var2 = call_user_func(array($y, $methodName));
+        return $var1 - $var2;
+      });
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $copyOfProfs = $this->Profs;
+    $this->Profs = array();
+    foreach ($copyOfProfs as $aProf)
+    {
+      $aProf->removeMyStudent($this);
+    }
+  }
+
+}
+?>

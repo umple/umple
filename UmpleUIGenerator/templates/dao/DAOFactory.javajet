@@ -1,0 +1,28 @@
+<%@ jet package="cruise.data.impl.dao.factory" 
+imports="java.util.* cruise.model.abstractObjects.BackingObject;"
+class="DAOFactory"   skeleton="../skeleton/IGenerator.skeleton" %>
+<% ArrayList<BackingObject> clazzez =(ArrayList<BackingObject>)argument; %>
+
+package dao.factory;
+
+<% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); %>
+import dao.<%=clazz.getPackageName()%>.<%=clazz.getClassName()%>DAO;
+ <% } %>
+
+public abstract class DAOFactory {
+
+	public static final Class FakeDAO = FakeDAOFactory.class;
+
+	public static DAOFactory instance(Class factory) {
+		try {
+			return (DAOFactory) factory.newInstance();
+		} catch (Exception ex) {
+			throw new RuntimeException("Couldn't create DAOFactory: " + factory);
+		}
+	}
+
+ <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); %>
+	public abstract <%=clazz.getClassName()%>DAO get<%=clazz.getClassName()%>DAO();  <% } %>
+}

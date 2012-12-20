@@ -1,0 +1,21 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.util ;
+
+class ReversedList 
+{
+depend java.util.*;
+  isA AbstractList<T>;
+
+  private List<T> target;
+@Override
+    public T get(int index) {
+        return target.get(target.size() - 1 - index);
+    }
+@Override
+    public int size() {
+        return target.size();
+    }
+
+}

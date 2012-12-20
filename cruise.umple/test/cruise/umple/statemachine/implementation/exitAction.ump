@@ -1,0 +1,13 @@
+namespace example;
+
+class LightFixture
+{
+  bulb
+  {
+    On {
+      exit/ {blahblah;}
+      push -> Off;
+    }
+    Off {}
+  }
+}

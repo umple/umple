@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Builds the "JHotDraw BezierDemo" demo application and demo applet. -->
+<project name="build-bezierdemo" default="all" basedir=".">
+    <target name="init">
+        <property name="libdir" value="lib"/>
+        <property name="srcdir" value="src/main/java"/>
+        <property name="builddir" value="build"/>
+        <property name="classdir" value="${builddir}/classes"/>
+        <property name="distdir" value="dist/BezierDemo"/>
+
+        <!-- properties for copyright and versioning -->
+        <property name="author" value="the authors and contributors of JHotDraw"/>
+        <property name="version" value="7.6"/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${classdir}" />
+    </target>
+    <target name="application.compile" depends="init,clean">
+        <mkdir dir="${classdir}"/>
+        <javac  destdir="${classdir}"
+                srcdir="${srcdir}"
+                debug="true"
+                optimize="true"
+                encoding="UTF-8"
+         >
+            <classpath path="${libdir}/quaqua.jar"/>
+            <classpath path="${libdir}/annotations.jar"/>
+            <classpath path="${libdir}/jsr305.jar"/>
+            <include name="org/jhotdraw/samples/mini/BezierDemo.java"/> 
+        </javac>
+        <copy todir="${classdir}/org/jhotdraw/geom">
+            <fileset dir="${srcdir}/org/jhotdraw/geom" >
+                <include name="Bezier.java"/>
+                <include name="BezierPath.java"/>
+                <include name="BezierPathIterator.java"/>
+                <include name="Geom.java"/>
+                <include name="Shapes.java"/>
+                </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/samples/mini">
+            <fileset dir="${srcdir}/org/jhotdraw/samples/mini">
+                <include name="BezierDemo.*"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="application.jar" depends="init,application.compile">
+        <mkdir dir="${distdir}"/>
+        <jar destfile="${distdir}/JHotDraw BezierDemo.jar" basedir="${classdir}">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.mini.BezierDemo"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+    </target>
+    <target name="application.run" depends="init">
+        <java fork="true" jar="${distdir}/JHotDraw BezierDemo.jar">
+            <jvmarg value="-Xdock:name=JHotDraw BezierDemo"/>
+            <jvmarg value="-Dlocale=en"/>
+            <jvmarg value="-Dapple.awt.graphics.UseQuartz=false"/>
+            <jvmarg value="-Djava.library.path=${libdir}"/>
+        </java>
+    </target>
+    <target name="dist" depends="init,application.jar">
+    </target>
+</project>

@@ -1,0 +1,63 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student State Machines
+  private static $GradePass = 1;
+  private $grade;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setGrade(self::$GradePass);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getGradeFullName()
+  {
+    $answer = $this->getGrade();
+    return $answer;
+  }
+
+  public function getGrade()
+  {
+    if ($this->grade == self::$GradePass) { return "GradePass"; }
+    return null;
+  }
+
+  public function setGrade($aGrade)
+  {
+    if ($aGrade == "GradePass" || $aGrade == self::$GradePass)
+    {
+      $this->grade = self::$GradePass;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

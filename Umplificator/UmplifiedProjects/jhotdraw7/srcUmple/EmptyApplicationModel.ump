@@ -1,0 +1,28 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app ;
+
+class EmptyApplicationModel 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.util.*;
+depend javax.swing.*;
+  isA AbstractApplicationModel;
+
+  /** Returns an empty ActionMap. */
+    @Override
+    public ActionMap createActionMap(Application a, @Nullable View v) {
+        return new ActionMap();
+    }
+/** Returns an empty unmodifiable list. */
+    @Override
+    public List<JToolBar> createToolBars(Application app, @Nullable View v) {
+        return Collections.emptyList();
+    }
+@Override
+    public MenuBuilder getMenuBuilder() {
+        return new EmptyMenuBuilder();
+    }
+
+}

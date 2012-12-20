@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="VersionNew" >
+
+    <exec executable="svn" output="build/svn.properties">
+      <arg value="info" />
+    </exec>
+    <property prefix="svn" file="build/svn.properties"/>
+    <property prefix="base" file="build/umpleversion.txt"/>
+
+    <property name="umple.version" value="${base.version}.${svn.Revision}" />
+    <echo message="Current Version: ${umple.version}" />
+  
+</project>
+

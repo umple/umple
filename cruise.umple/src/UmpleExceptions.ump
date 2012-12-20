@@ -1,0 +1,30 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler.exceptions;
+
+external RuntimeException
+{
+  str;
+  Exception parent;
+}
+
+class UmpleCompilerException
+{
+  isA RuntimeException;
+
+  static final long serialVersionUID = 1;  
+}
+
+class SemanticException
+{
+  isA RuntimeExceptin;
+  
+  static final long serialVersionUID = 2;
+}

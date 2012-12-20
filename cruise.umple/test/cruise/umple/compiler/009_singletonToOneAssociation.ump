@@ -1,0 +1,8 @@
+class Student {
+	singleton;
+	* -- 1 Professor;
+}
+
+class Professor {
+	
+}

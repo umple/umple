@@ -1,0 +1,40 @@
+<html>
+<head>
+
+<style>
+#wrap3 { width: 600px; height: 390px; padding: 0; overflow: hidden; }
+#frame3 { width: 840px; height: 660px; }
+#frame3 {
+    zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.75);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.75);
+    -webkit-transform-origin: -100 -100;
+}
+</style>
+
+<title>Example of embedding an UmpleOnline page in an iFrame showing just a read-only diagram</title>
+</head>
+<body>
+<h1>Example of embedding an UmpleOnline page in an iFrame showing just a read-only diagram </h1>
+<p>The following umpleOnline iframe URL uses ?example=2DShapes&amp;readOnly&amp;notext&amp;nomenu&amp;nochrome  </p>
+
+<p><iframe height=550 width=100% frameborder="0" scrolling="auto" src="umple.php?example=2DShapes&readOnly&notext&nomenu&nochrome"><p>This will display if iframes are not supported</p> </iframe></p>
+
+<p>Height should to be specified, or else scrolling should be used. You can also show just text, a menu and various other combinations of UmpleOnline features. You can allow editing as part of a live document (although it is recommended setting up your own UmpleOnline server if you do that in your organization). Below is the same example with only the text shown.</p>
+
+<p><iframe height=550 width=100% frameborder="0" scrolling="auto" src="umple.php?example=2DShapes&readOnly&nodiagram&nomenu&nochrome"><p>This will display if iframes are not supported</p> </iframe></p>
+
+<p>Finally, here is an example of the same diagram scaled down to a smaller size.</p>
+
+
+<p>
+<div id="wrap3" width=100%>
+<iframe id="frame3" height=550 width=100% frameborder="0" scrolling="no" src="umple.php?example=2DShapes&readOnly&notext&nomenu&nochrome"><p>This will display if iframes are not supported</p> </iframe>
+</div>
+</p>
+
+</body>
+</html>

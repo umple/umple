@@ -1,0 +1,66 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Garage
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Garage State Machines
+  enum GarageDoor { Closed, Opening }
+  private GarageDoor GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Garage()
+  {
+    setGarageDoor(GarageDoor.Closed);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getGarageDoorFullName()
+  {
+    String answer = GarageDoor.toString();
+    return answer;
+  }
+
+  public GarageDoor getGarageDoor()
+  {
+    return GarageDoor;
+  }
+
+  public boolean pressButton()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Closed:
+        turnLightOn();
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setGarageDoor(GarageDoor aGarageDoor)
+  {
+    GarageDoor = aGarageDoor;
+  }
+
+  public void delete()
+  {}
+
+}

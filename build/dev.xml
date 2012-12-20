@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="go" name="DEV">
+
+  <import file="_local.xml" />
+
+  <target name="go" >
+    <echo>Used for development only</echo>
+  </target>
+  
+  <!-- Moved the generic JET templates into the various UmpleTo* projects -->
+  <target name="templates">
+    <ant antfile="build/build.umple.xml" target="templates" inheritAll="true" />
+  </target>
+
+  <!-- Move the generated code from UmpleTo* to cruise.umple -->
+  <target name="codegen">
+    <ant antfile="build/build.umple.xml" target="codegen" inheritAll="true" />
+  </target>
+
+  <!-- Move Umpleonline files back into the test data -->
+  <target name="umpleonlineToTest">
+    <ant antfile="build/build.umple.xml" target="umpleonlineToTest" inheritAll="true" />
+  </target>
+
+  <!-- Move test data into Umpleonline -->
+  <target name="testToUmpleonline">
+    <ant antfile="build/build.umple.xml" target="testToUmpleonline" inheritAll="true" />
+  </target>
+
+  <!-- Re-code generate Umple -->
+  <target name="umpleSelf">
+    <ant antfile="build/build.umple.xml" target="codegen" inheritAll="true" />
+    <ant antfile="build/build.umple.xml" target="compile" inheritAll="true" />
+    <ant antfile="build/build.umple.xml" target="package" inheritAll="true" />
+    <ant antfile="build/build.umple.xml" target="umpleSelf" inheritAll="true" />
+  </target>
+
+  <!-- Re-code generate the testbed -->
+  <target name="umpleTestbed">
+    <ant antfile="build/build.testbed.xml" target="umpleTestbed" inheritAll="true" />
+  </target>
+
+
+</project>
+

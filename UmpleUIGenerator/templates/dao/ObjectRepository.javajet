@@ -1,0 +1,53 @@
+<%@ jet package="cruise.data.impl.dao.session" 
+imports="java.util.* cruise.umple.compiler.Attribute cruise.umple.compiler.UmpleClass cruise.model.abstractObjects.BackingObject;"
+class="ObjectRepository"  skeleton="../skeleton/IGenerator.skeleton" %>
+<% ArrayList<BackingObject> clazzez =(ArrayList<BackingObject>)argument; %>
+package dao.session;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ObjectRepository {
+	
+	 @SuppressWarnings("unchecked")
+	protected ObjectRepository(){
+		//initialize
+<% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  	BackingObject clazz= iterClazzez.next(); 
+  	if(!clazz.hasParent()){
+  	%>
+ 		map.put(<%=clazz.getPackageName()%>.<%=clazz.getClassName()%>.class, new HashMap());
+ <% } } %>
+
+	}
+	
+    @SuppressWarnings("unchecked")
+	private  HashMap<Class, Map> map= new HashMap<Class, Map>();
+
+	
+    @SuppressWarnings("unchecked")
+	public HashMap<Class, Map> getMap() {
+		return map;
+	}
+
+
+    @SuppressWarnings("unchecked")
+	public Map getTable(Class persistenceEntity){
+		
+		return map.get(persistenceEntity);
+	}
+    
+    @SuppressWarnings("unchecked")
+	public void save(Class persistenceEntity, Object key, Object obj){
+		if (map.get(persistenceEntity).get(key)!=null)
+			throw new RuntimeException("An entity with the same key field(s) exists!");
+		map.get(persistenceEntity).put(key, obj);
+		
+	}
+	
+    @SuppressWarnings("unchecked")
+	public void delete(Class persistenceEntity, Object key){
+		map.get(persistenceEntity).remove(key);
+		
+	}
+}

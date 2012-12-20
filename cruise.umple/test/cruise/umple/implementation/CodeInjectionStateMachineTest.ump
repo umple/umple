@@ -1,0 +1,17 @@
+class Example
+{
+  light
+  {
+    On { flip -> Off; }
+    Off { flip -> On; }
+  }  
+
+  after setLight {
+    System.out.println("Just flipped");
+  }
+
+  before setLight {
+    System.out.println("About to flip");
+  }
+
+}

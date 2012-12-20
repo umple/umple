@@ -1,0 +1,92 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class MyDriver
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MyDriver Attributes
+  private $name;
+
+  //MyDriver Associations
+  public $mySubordinate; //until PHP 5.3 (setAccessible)
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName)
+  {
+    $this->name = $aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getMySubordinate()
+  {
+    return $this->mySubordinate;
+  }
+
+  public function setMySubordinate($newMySubordinate)
+  {
+    $wasSet = false;
+    if ($this->mySubordinate != null && $this->mySubordinate != $newMySubordinate && $this == $this->mySubordinate->getMyDriver())
+    {
+      //Unable to setMySubordinate, as existing mySubordinate would become an orphan
+      return $wasSet;
+    }
+    
+    $this->mySubordinate = $newMySubordinate;
+    $oldMyDriver = $newMySubordinate != null ? $newMySubordinate->getMyDriver() : null;
+    
+    if ($this != $oldMyDriver)
+    {
+      if ($oldMyDriver != null)
+      {
+        $oldMyDriver->mySubordinate = null;
+      }
+      if ($this->mySubordinate != null)
+      {
+        $this->mySubordinate->setMyDriver($this);
+      }
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingMySubordinate = $this->mySubordinate;
+    $this->mySubordinate = null;
+    if ($existingMySubordinate != null)
+    {
+      $existingMySubordinate->delete();
+    }
+  }
+
+}
+?>

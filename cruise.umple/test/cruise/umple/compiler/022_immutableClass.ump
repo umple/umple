@@ -1,0 +1,10 @@
+
+class Student
+{
+  immutable;	
+}
+
+class Mentor
+{
+  	
+}

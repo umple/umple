@@ -1,0 +1,75 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class TransformEdit 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.*;
+depend javax.swing.undo.*;
+depend java.awt.geom.*;
+depend java.util.*;
+  isA AbstractUndoableEdit;
+
+  private Collection<Figure> figures;
+private AffineTransform tx;
+@Override
+    public String getPresentationName() {
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        return labels.getString("edit.transform.text");
+    }
+@Override
+    public boolean addEdit(UndoableEdit anEdit) {
+        if (anEdit instanceof TransformEdit) {
+            TransformEdit that = (TransformEdit) anEdit;
+            if (that.figures == this.figures) {
+                this.tx.concatenate(that.tx);
+                that.die();
+                return true;
+            }
+        }
+        return false;
+    }
+@Override
+    public boolean replaceEdit(UndoableEdit anEdit) {
+        if (anEdit instanceof TransformEdit) {
+            TransformEdit that = (TransformEdit) anEdit;
+            if (that.figures == this.figures) {
+                this.tx.preConcatenate(that.tx);
+                that.die();
+                return true;
+            }
+        }
+        return false;
+    }
+@Override
+    public void redo() throws CannotRedoException {
+        super.redo();
+        for (Figure f : figures) {
+            f.willChange();
+            f.transform(tx);
+                f.changed();
+            
+        }
+    }
+@Override
+    public void undo() throws CannotUndoException {
+        super.undo();
+        try {
+            AffineTransform inverse = tx.createInverse();
+            for (Figure f : figures) {
+                f.willChange();
+                f.transform(inverse);
+                f.changed();
+            }
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
+    }
+@Override
+    public String toString() {
+        return getClass().getName()+'@'+hashCode()+" tx:"+tx;
+    }
+
+}

@@ -1,0 +1,10 @@
+class Mentor
+{
+    isA Student;
+position 171 43 109 41;
+}
+
+class Student
+{
+  position 184 139 109 41;
+}

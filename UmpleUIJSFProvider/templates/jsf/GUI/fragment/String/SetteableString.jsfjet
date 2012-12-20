@@ -1,0 +1,6 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="SetteableString" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+<h:inputText value="#{#1#Bean.<%=attVar.getName()%>}" ></h:inputText>

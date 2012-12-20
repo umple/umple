@@ -1,0 +1,84 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace view.assignPositionCandidate;
+
+external JFrame{}
+
+class AssignPositionCandidateView {
+  isA JFrame;
+
+  depend java.util.List;
+  depend java.util.ArrayList;
+  
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+  depend javax.swing.JTextField;
+  depend javax.swing.JTextArea;
+  depend javax.swing.JButton;
+  depend javax.swing.JComboBox;
+  depend javax.swing.JList;
+  
+  depend shared.listeners.GenericMouseListener;
+  depend shared.listeners.GenericWindowListener;
+  
+  depend shared.domain.Candidate;
+  depend shared.domain.Candidature;
+  depend shared.domain.ElectionForPosition;
+  
+  depend view.ViewUtils;
+
+  lazy internal JButton updateButton;
+  lazy internal JLabel positionsLabel;
+  lazy internal JComboBox positionsComboBox;
+  lazy internal JLabel candidatesLabel;
+  lazy internal JList candidatesList;
+  
+  List<Candidate> candidates;
+  List<ElectionForPosition> positions;
+  lazy List<Candidature> candidatures;
+    
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    candidatesLabel=new JLabel("Select some candidates:");
+    candidatesLabel.setBounds(10, 10, 200, 20);
+    add(candidatesLabel);
+
+    candidatesList=new JList(candidates.toArray());
+    candidatesList.setBounds(10, 30, 200, 100);
+    add(candidatesList);
+    
+    positionsLabel=new JLabel("Select a position:");
+    positionsLabel.setBounds(10, 135, 200, 20);
+    add(positionsLabel);
+
+    positionsComboBox=new JComboBox(positions.toArray());
+    positionsComboBox.setBounds(10, 155, 200, 20);
+    add(positionsComboBox);
+    
+    updateButton=new JButton("update");
+    updateButton.setBounds(75, 180, 75, 20);
+    updateButton.addMouseListener(GenericMouseListener.AssignPositionCandidateViewMouseListener);
+    add(updateButton);
+    
+    pack();
+    setSize(250, 250);
+    
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.AssignPositionCandidateViewWindowListener);
+  }
+  
+  before getCandidatures {
+    candidatures=new ArrayList<Candidature>();
+    for (Object o:candidatesList.getSelectedValues()) {
+    	candidatures.add(new Candidature(-1, (Candidate)o, (ElectionForPosition)positionsComboBox.getSelectedItem()));
+    }
+  }
+}

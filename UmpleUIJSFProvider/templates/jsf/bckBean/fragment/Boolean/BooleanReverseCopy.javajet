@@ -1,0 +1,5 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.copy" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="BooleanReverseCopy" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+this.a<%=attVar.getUpperCaseName()%>=#1#.get<%= attVar.getUpperCaseName()%>();

@@ -1,0 +1,42 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.components" 
+imports="java.util.* cruise.umple.compiler.* cruise.ui.jsf.*"
+class="TimeBean" skeleton="../skeleton/IGenerator.skeleton" %>
+<% String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX);%>
+package <%=preffix%>.components.bean;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.faces.model.SelectItem;
+
+
+public class TimeBean {
+	private List<SelectItem> hours;
+	private List<SelectItem> minutes;
+	public TimeBean() {
+		hours=new ArrayList<SelectItem>();
+		minutes=new ArrayList<SelectItem>();
+		for (int i=0; i<24; i++)
+			hours.add(new SelectItem(i,String.valueOf(i)));
+		for (int i=0; i<60; i++)
+			minutes.add(new SelectItem(i,String.valueOf(i)));
+		
+	}
+	public List<SelectItem> getHours() {
+		return hours;
+	}
+	public void setHours(List<SelectItem> hours) {
+		this.hours = hours;
+	}
+	public List<SelectItem> getMinutes() {
+		return minutes;
+	}
+	public void setMinutes(List<SelectItem> minutes) {
+		this.minutes = minutes;
+	}
+	public static java.sql.Time getSqlTime(int hours, int minutes){
+		 java.sql.Time jsqlT = java.sql.Time.valueOf( hours+":"+minutes+":00" );
+		return jsqlT;
+	}
+
+	
+}

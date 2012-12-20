@@ -1,0 +1,95 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class OneSymmetric
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //OneSymmetric Attributes
+  private $name;
+  private $number;
+
+  //OneSymmetric Associations
+  private $friend;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName = null, $aNumber = null, $aFriend = null)
+  {
+    if (func_num_args() == 0) { return; }
+
+    $this->name = $aName;
+    $this->number = $aNumber;
+    if ($aFriend == null || $aFriend->getFriend() != null)
+    {
+      throw new Exception("Unable to create OneSymmetric due to aFriend");
+    }
+    $this->friend = $aFriend;
+  }
+  public static function newInstance($aName, $aNumber, $aNameForFriend, $aNumberForFriend)
+  {
+    $thisInstance = new OneSymmetric();
+    $thisInstance->name = $aName;
+    $thisInstance->number = $aNumber;
+    $thisInstance->friend = new OneSymmetric($aNameForFriend, $aNumberForFriend, $thisInstance);
+    return $thisInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setNumber($aNumber)
+  {
+    $wasSet = false;
+    $this->number = $aNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getNumber()
+  {
+    return $this->number;
+  }
+
+  public function getFriend()
+  {
+    return $this->friend;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingFriend = $this->friend;
+    $this->friend = null;
+    if ($existingFriend != null)
+    {
+      $existingFriend->delete();
+    }
+  }
+
+}
+?>

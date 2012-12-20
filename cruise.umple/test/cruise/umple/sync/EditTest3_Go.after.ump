@@ -1,0 +1,18 @@
+class Person
+{
+}
+
+class Mentor
+{
+  isA Person;
+}
+
+class Person
+{
+  position 73 52 109 42;
+}
+
+class Mentor
+{
+  position 134 159 109 42;
+}

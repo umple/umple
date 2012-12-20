@@ -1,0 +1,124 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class GarageDoor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //GarageDoor State Machines
+  private static $StatusOpen = 1;
+  private static $StatusClosing = 2;
+  private static $StatusClosed = 3;
+  private static $StatusOpening = 4;
+  private static $StatusHalfOpen = 5;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusOpen);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
+    elseif ($this->status == self::$StatusClosing) { return "StatusClosing"; }
+    elseif ($this->status == self::$StatusClosed) { return "StatusClosed"; }
+    elseif ($this->status == self::$StatusOpening) { return "StatusOpening"; }
+    elseif ($this->status == self::$StatusHalfOpen) { return "StatusHalfOpen"; }
+    return null;
+  }
+
+  public function buttonOrObstacle()
+  {
+    $wasEventProcessed = false;
+
+    print("Event: buttonOrObstacle");
+    if ($this->status == self::$StatusOpen)
+    {
+      $this->setStatus(self::$StatusClosing);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->status == self::$StatusClosing)
+    {
+      $this->setStatus(self::$StatusOpening);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->status == self::$StatusClosed)
+    {
+      $this->setStatus(self::$StatusOpening);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->status == self::$StatusOpening)
+    {
+      $this->setStatus(self::$StatusHalfOpen);
+      $wasEventProcessed = true;
+    }
+    elseif ($this->status == self::$StatusHalfOpen)
+    {
+      $this->setStatus(self::$StatusOpening);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function reachBottom()
+  {
+    $wasEventProcessed = false;
+
+    print("Event: reachBottom");
+    if ($this->status == self::$StatusClosing)
+    {
+      $this->setStatus(self::$StatusClosed);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function reachTop()
+  {
+    $wasEventProcessed = false;
+
+    print("Event: reachTop");
+    if ($this->status == self::$StatusOpening)
+    {
+      $this->setStatus(self::$StatusOpen);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    print("Previous state ={$status}");
+    $this->status = $aStatus;
+    print("Current state ={$status}");
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

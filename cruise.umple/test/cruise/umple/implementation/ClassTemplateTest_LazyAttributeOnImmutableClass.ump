@@ -1,0 +1,8 @@
+namespace example;
+
+class Student
+{
+	immutable;
+	name;
+	lazy studentNumber;
+}

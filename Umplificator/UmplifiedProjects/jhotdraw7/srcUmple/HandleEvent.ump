@@ -1,0 +1,26 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class HandleEvent 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.handle.Handle;
+depend org.jhotdraw.draw.*;
+depend java.awt.*;
+depend java.util.*;
+  isA EventObject;
+
+  @Nullable private Rectangle invalidatedArea;
+public Handle getHandle() {
+        return (Handle) getSource();
+    }
+/**
+     *  Gets the bounds of the invalidated area on the drawing view.
+     */
+    @Nullable public Rectangle getInvalidatedArea() {
+        return invalidatedArea;
+    }
+
+}

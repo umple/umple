@@ -1,0 +1,113 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "LightFixture.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ LightFixture::LightFixture()
+  {
+    brightness = 0;
+    setBulb(On);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {
+    this->brightness = lightfixture.brightness;
+  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ LightFixture LightFixture::operator=(const LightFixture & lightfixture)
+  {
+    this->brightness = lightfixture.brightness;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool LightFixture::setBrightness(const int & aBrightness)
+  {
+    bool wasSet = false;
+    brightness = aBrightness;
+    wasSet = true;
+    return wasSet;
+  }
+
+  int LightFixture::getBrightness() const
+  {
+    return brightness;
+  }
+
+  string LightFixture::getBulbFullName()
+  {
+    string answer = getBulbStringName(bulb);
+    return answer;
+  }
+  
+  LightFixture::Bulb LightFixture::getBulb()
+  {
+    return bulb;
+  }
+
+  string LightFixture::getBulbStringName (Bulb bulb)
+  {
+    switch (bulb)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      case 2 : {return "Amber"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool LightFixture::push()
+  {
+    bool wasEventProcessed = false;
+
+    switch (bulb)
+    {
+      case On:
+        if (brightness < 1)
+        {
+          setBulb(Off);
+          wasEventProcessed = true;
+          break;
+        }
+        if (brightness > 10)
+        {
+          setBulb(Amber);
+          wasEventProcessed = true;
+          break;
+        }
+        setBulb(On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void LightFixture::setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+LightFixture::~LightFixture()
+  {}

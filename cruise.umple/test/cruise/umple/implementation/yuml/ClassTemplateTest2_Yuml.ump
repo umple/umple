@@ -1,0 +1,12 @@
+generate Yuml;
+namespace example;
+
+class Student
+{
+  position 85 42 0 0;
+}
+
+class Mentor
+{
+  position 294 200 0 0;
+} 

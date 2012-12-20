@@ -1,0 +1,45 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class PickAttributesAction 
+{
+depend org.jhotdraw.draw.event.FigureSelectionEvent;
+depend java.util.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+depend org.jhotdraw.draw.AttributeKeys.*;
+  isA AbstractSelectedAction;
+
+  private Set<AttributeKey> excludedAttributes = new HashSet<AttributeKey>(
+            Arrays.asList(new AttributeKey[]{TRANSFORM, TEXT}));
+/**
+     * Set of attributes that is excluded when applying default attributes.
+     * By default, the TRANSFORM attribute is excluded.
+     */
+    public void setExcludedAttributes(Set<AttributeKey> a) {
+        this.excludedAttributes = a;
+    }
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        pickAttributes();
+    }
+@SuppressWarnings("unchecked")
+    public void pickAttributes() {
+        DrawingEditor editor = getEditor();
+        Collection<Figure> selection = getView().getSelectedFigures();
+        if (selection.size() > 0) {
+            Figure figure = (Figure) selection.iterator().next();
+            for (Map.Entry<AttributeKey, Object> entry : figure.getAttributes().entrySet()) {
+                if (!excludedAttributes.contains(entry.getKey())) {
+                    editor.setDefaultAttribute(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+    }
+public void selectionChanged(FigureSelectionEvent evt) {
+        setEnabled(getView().getSelectionCount() == 1);
+    }
+
+}

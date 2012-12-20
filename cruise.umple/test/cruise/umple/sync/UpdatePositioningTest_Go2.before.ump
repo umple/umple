@@ -1,0 +1,13 @@
+class Student
+{
+}
+
+class Mentor
+{
+}
+
+associationClass Course
+{
+  * Student;
+  * Mentor;  
+}

@@ -1,0 +1,146 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Lamp.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Lamp::Lamp()
+  {
+    setStatus(On);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Lamp::Lamp(const Lamp & lamp)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Lamp Lamp::operator=(const Lamp & lamp)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string Lamp::getStatusFullName()
+  {
+    string answer = getStatusStringName(status);
+    return answer;
+  }
+  
+  Lamp::Status Lamp::getStatus()
+  {
+    return status;
+  }
+
+  string Lamp::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Lamp::press()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case On:
+        setStatus(Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        setStatus(On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void Lamp::setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        doActivityStatusOnThread = new DoActivityThread(this,"doActivityStatusOn");
+        break;
+      case Off:
+        doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff");
+        break;
+    }
+  }
+  
+
+   void Lamp::doActivityStatusOn()
+  {
+     try
+     {
+       alsoDo();
+     }
+     catch (InterruptedException e)
+     {
+ 
+     }
+  }
+
+   void Lamp::doActivityStatusOff()
+  {
+     try
+     {
+       keepDoing();
+     }
+     catch (InterruptedException e)
+     {
+ 
+     }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    Lamp controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(Lamp aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivityStatusOn".equals(doActivityMethodName))
+      {
+        controller.doActivityStatusOn();
+      }
+        else if ("doActivityStatusOff".equals(doActivityMethodName))
+      {
+        controller.doActivityStatusOff();
+      }
+    }
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Lamp::~Lamp()
+  {}

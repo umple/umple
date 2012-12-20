@@ -1,0 +1,1797 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class Couple
+{
+
+  public boolean isBalanced(String input)
+  {
+
+    if (input == null)
+    {
+      return true;
+    }
+
+    input = removeIgnoredText(input);
+
+    int numberOfOpen = 0;
+    int numberOfClosed = 0;
+
+    int currentIndex = 0;
+    while ((currentIndex = input.indexOf(open,currentIndex)) != -1)
+    {
+      numberOfOpen += 1;
+      currentIndex += 1;
+    }
+
+    currentIndex = 0;
+    while (numberOfClosed <= numberOfOpen && (currentIndex = input.indexOf(close,currentIndex)) != -1)
+    {
+      numberOfClosed += 1;
+      currentIndex += 1;
+    }
+    return numberOfOpen <= numberOfClosed;
+  }
+
+
+  public String removeIgnoredText(String input)
+  {
+    String output = input;
+
+    for (Couple ignore : ignores)
+    {
+      output = ignore.removeIgnoredText(output);
+      int startIndex = 0;
+      while ((startIndex = output.indexOf(ignore.getOpen())) != -1)
+      {
+        int endIndex = output.indexOf(ignore.getClose(),startIndex+ignore.getOpen().length());
+        int endIndexOffset = ignore.getClose().length();
+
+        if (startIndex == 0 && (endIndex == -1 || endIndex == output.length() - 1))
+        {
+          output = "";
+        }
+        else if (startIndex == 0)
+        {
+          output = output.substring(endIndex+ignore.getClose().length());
+        }
+        else if (endIndex == -1)
+        {
+          output = output.substring(0,startIndex);
+        }
+        else
+        {
+          output = output.substring(0,startIndex) + output.substring(endIndex+endIndexOffset);
+        }
+      }
+    }
+    return output;
+  }  
+
+}
+
+class Token
+{
+  depend java.util.regex.*;
+  public Token(String aName, String aValue, Position aPosition)
+  {
+    this(aName,aValue);
+    setPosition(aPosition);
+  }
+
+  public static boolean isValidIdentifier(String identifier, String prefix){
+    String _prefix = "^" + prefix;
+    String body = "[a-zA-Z0-9_]*$";
+    String expression = _prefix + body;
+    if(Pattern.matches(expression, identifier)){
+    	return true;
+    }
+    return false;
+  }
+  
+  public static boolean isValidIdentifier(String identifier){
+  	return isValidIdentifier(identifier, "[a-zA-Z_]");
+  }
+	
+  public void addSubToken(int index, Token aSubToken)
+  {
+    subTokens.add(index,aSubToken);
+  }
+
+  public Position getPosition(String tokenName)
+  {
+    Token t = getSubToken(tokenName);
+    if (t != null)
+    {
+      return t.getPosition();
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+  public int getInnerLength()
+  {
+    if ("START_TOKEN".equals(getValue()))
+    {
+      return getLength(); 
+    }
+    else if (isStatic())
+    {
+      return getName().length();
+    }
+    else
+    {
+      return getValue().length();
+    }
+  }
+
+  public int getLength()
+  {
+    if (getParentToken() != null)
+    {
+      Token parent = getParentToken();
+      Token grandParent = parent.getParentToken();
+      int startOffset = this.getPosition().getOffset();
+      int myIndex = getParentToken().indexOfSubToken(this);
+      int nextIndex = myIndex + 1;
+
+      boolean hasMoreSiblings = nextIndex < getParentToken().numberOfSubTokens();
+
+      if (hasMoreSiblings)
+      {
+        return parent.getSubToken(nextIndex).getPosition().getOffset() - startOffset;
+      }
+      else 
+      {
+        if (grandParent != null)
+        {
+          int myParentIndex = grandParent.indexOfSubToken(parent);
+          int nextParentIndex = myParentIndex + 1;
+          boolean hasMoreParentSiblings = nextParentIndex < grandParent.numberOfSubTokens();
+          if (hasMoreParentSiblings)
+          {
+            return grandParent.getSubToken(nextParentIndex).getPosition().getOffset() - startOffset;
+          }
+        }
+        Token currentToken = this;
+        Token lastToken = this;
+        while (currentToken.numberOfSubTokens() > 0)
+        {
+          lastToken = currentToken.getSubToken(currentToken.numberOfSubTokens() - 1);
+          currentToken = lastToken;
+        }
+        return lastToken.getPosition().getOffset() + lastToken.getValue().length() - getPosition().getOffset();
+      }
+    }
+    else if (numberOfSubTokens() == 0)
+    {
+      return getValue().length();
+    }
+    else
+    {
+      Token currentParent = this;
+      Token lastSubToken = null;
+      while (currentParent.numberOfSubTokens() > 0)
+      {
+        lastSubToken = currentParent.getSubToken(currentParent.numberOfSubTokens() - 1);
+        currentParent = lastSubToken;
+      }
+      return lastSubToken.getPosition().getOffset() + lastSubToken.getValue().length() - getPosition().getOffset();  
+    }
+  }
+
+  public int getIntValue(String tokenName)
+  {
+    return getIntValue(tokenName,0);
+  }
+
+  public int getIntValue(String tokenName, int defaultIfInvalid)
+  {
+    String value = getValue(tokenName);
+    if (value == null)
+    {
+      return defaultIfInvalid;
+    }
+    else
+    {
+      try
+      {
+        return Integer.parseInt(value);
+      }
+      catch (NumberFormatException e)
+      {
+        return defaultIfInvalid;
+      }
+    }
+  }
+
+  public Token getSubToken(String tokenName, int offset)
+  {
+    if (is(tokenName))
+    {
+      return this;
+    }
+    else
+    {
+      int currentOffset = 0;
+      for (Token t : subTokens)
+      {
+        if (t.is(tokenName))
+        {
+          if (currentOffset == offset)
+          {
+            return t;  
+          }
+          currentOffset += 1;  
+        }
+      }
+    }
+    return null;
+  }
+
+  public Token getSubToken(String tokenName)
+  {
+    return getSubToken(tokenName,0);
+  }
+
+  public String getValue(String tokenName)
+  {
+    Token t = getSubToken(tokenName);
+    if (t != null)
+    {
+      return t.getValue();
+    }
+    else
+    {
+      // This should be "", as getValue() returns "" by default
+      return null;
+    }
+  }
+
+  public boolean is(String aName)
+  {
+    return getName().equals(aName) && !isStatic();
+  }
+
+  public boolean isStatic(String aName)
+  {
+    return getName().equals(aName) && isStatic();
+  }
+
+  public boolean isStatic()
+  {
+    return "STATIC".equals(getValue());
+  }
+
+  public boolean isValue(String compareTo)
+  {
+    return getValue().equals(compareTo);
+  }
+
+  public void remove(int index)
+  {
+    if (index < 0 || index >= subTokens.size())
+    {
+      return;
+    }
+    subTokens.remove(index);
+  }
+
+  public String toString()
+  {
+    StringBuffer answer = new StringBuffer();
+    toString(answer,null);
+    return answer.toString();
+  }
+
+  // Code refactored from Parser class to Token class
+  public StringBuffer toString(StringBuffer stringSoFar, Token parserRoot)
+  {
+    if ("START_TOKEN".equals(getValue()))
+    {
+      stringSoFar.append("[" + getName() + "]");
+    }
+    else if ("STATIC".equals(getValue()))
+    {
+      //ignore
+    }
+    else if (parserRoot == null || !this.equals(parserRoot))
+    {
+      stringSoFar.append("[" + getName() + ":" + getValue() + "]");
+    }
+
+    for(Token subToken : getSubTokens())
+    {
+      subToken.toString(stringSoFar,null);
+    }
+    return stringSoFar;
+  }
+
+}
+
+class Position
+{
+  depend java.nio.file.*;
+
+  public Position(int aLineNumber, int aCharacterOffset, int aOffset)
+  {
+    this(null, aLineNumber, aCharacterOffset, aOffset);
+  }
+
+  public Position copy()
+  {
+    return new Position(filename,lineNumber,characterOffset,offset);
+  }
+
+  public Position add(Position more)
+  {
+    String tfile = filename == null ? more.getFilename() : filename;
+    return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
+  }
+
+  public String toString()
+  {
+    return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
+  }
+
+  private int countChars(String str, char c)
+  {
+    int count = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+      if (str.charAt(i) == c)
+      {
+        count= count + 1;
+      }
+    }
+    return count;
+  }
+  
+  private String deWindowsify(String str)
+  {
+    return str.replace('\\','/');
+  }
+
+  //This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
+  //It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
+  //As a result, it has been replaced by the placeholder above, that simply returns the full path.
+  public String getRelativePath(UmpleClass parent, String language)
+  {
+    if (filename == null)
+    {
+      return "";
+    }
+    if (parent == null)
+    { //No parent class? This might happen with state machines
+      return Paths.get(filename).getFileName().toString();
+    }
+    
+    //Find path relative to namespace folders
+    String packageName = parent.getPackageName();
+    if (packageName == null || packageName.equals(""))
+    { //No package, file is output in current directory
+      return Paths.get(filename).getFileName().toString();
+    } 
+    else
+    { //Has a package, add appropriate number of ..
+      int pathCount = countChars(packageName, '.') + 1;
+      StringBuilder build = new StringBuilder();
+      for (int i = 0; i < pathCount; i++)
+      {
+        build.append("../");
+      }
+      
+      //Add on relative path from generator location
+      if (parent.getSourceModel() == null)
+      {
+        build.append(Paths.get(filename).getFileName());
+        return deWindowsify(build.toString());
+      }
+      Path currentPath = Paths.get(parent.getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
+      Path generatesPath = null;
+      GenerateTarget [] generates = parent.getSourceModel().getGenerates();
+      for (int i = 0; i < generates.length; i++)
+      {
+        if (generates[i].getLanguage().equals(language))
+        {
+          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
+        }
+      }
+      if (generatesPath != null)
+      {
+      	Path result = generatesPath.relativize(currentPath);
+      	if (!result.equals(Paths.get("")))
+      	{
+      	  result = result.normalize();
+      	  build.append(result.toString() + '/');
+      	}
+      }
+      
+      build.append(Paths.get(filename).getFileName());
+      return deWindowsify(build.toString());
+    }
+  }
+}
+
+class RulePart
+{
+
+  public boolean isWithinLimits(int numberSoFar)
+  {
+    return getMaximumPartsFound() == -1 || numberSoFar < getMaximumPartsFound();
+  }
+
+  public String getDisplayName()
+  {
+    if (isEnum())
+    {
+      TextParser parser = new TextParser(name);
+      parser.nextAt("=");
+      return parser.nextUntil(":");
+    }
+    else if (isToEndOfLine())
+    {
+      return name.substring(1);
+    }
+    else if (isMultiWord())
+    {
+      return name.substring(2);
+    }
+    else if (isAlphanumeric()) {
+      return name.substring(1);
+    }
+    else
+    {
+      return name;
+    }
+  }
+
+  public void removeNextIdentifiers()
+  {
+    nextIdentifiers.clear();
+  }
+
+  public String[] getInnerNames()
+  {
+    if (!hasInnerNames())
+    {
+      return new String[0];
+    }
+
+    TextParser parser = new TextParser(name);
+    parser.load(parser.nextUntil(">"));
+    ArrayList<String> allNames = new ArrayList<String>();
+
+
+    while(parser.nextUntil(",") != null)
+    {
+      allNames.add(parser.name());
+      parser.nextAt(",");
+    }
+    return allNames.toArray(new String[allNames.size()]);
+  }
+
+  public boolean isValidInnerValues(String value)
+  {
+    if (value == null)
+    {
+      return false;
+    }
+    TextParser parser = new TextParser(value);
+    int number = 0;
+    while (parser.next() != null)
+    {
+      number++;
+    }
+    return number > 0 && number <= getInnerNames().length;
+  }
+
+  public RulePartValue[] getInnerValues(String value)
+  {
+    if (!hasInnerNames())
+    {
+      return new RulePartValue[0];
+    }
+
+    String[] allNames = getInnerNames();
+    RulePartValue[] allRulePartValues = new RulePartValue[allNames.length];
+
+    for (int i=0; i<allNames.length; i++)
+    {
+      allRulePartValues[i] = new RulePartValue();
+      allRulePartValues[i].setName(allNames[i]);
+    }
+
+
+    if (value == null)
+    {
+      return allRulePartValues;
+    }
+
+    ArrayList<String> allUnorderedValues = new ArrayList<String>();
+    ArrayList<Position> allUnorderedPositions = new ArrayList<Position>();
+
+    TextParser parser = new TextParser(value);
+    while(parser.peek() != null)
+    {
+      allUnorderedPositions.add(parser.currentPosition().copy());
+      allUnorderedValues.add(parser.next());
+    }
+
+    int[] allValueIndicies = new int[allNames.length];
+
+    TextParser namesParser = new TextParser(name);
+    namesParser.nextUntil(">");
+    namesParser.nextAt(">");
+    for (int i=0; i<allValueIndicies.length; i++)
+    {
+      String nextOrderText = namesParser.nextUntil(",");
+      int next = nextOrderText == null ? i : Integer.parseInt(nextOrderText);
+      namesParser.nextAt(",");
+      allValueIndicies[i] = next;
+    }
+
+    int maximumIndex = allUnorderedValues.size() - 1;
+    int unorderedIndex = 0;
+    for (int i=0; i<allValueIndicies.length; i++)
+    {
+      int currentIndex = allValueIndicies[i];
+      String orderedValue = currentIndex <= maximumIndex ? allUnorderedValues.get(unorderedIndex) : null;
+      Position orderedPosition = currentIndex <= maximumIndex ? allUnorderedPositions.get(unorderedIndex++) : null;
+
+      allRulePartValues[i].setValue(orderedValue);
+      allRulePartValues[i].setPosition(orderedPosition);
+    }
+
+    return allRulePartValues;
+  }
+
+  public boolean hasInnerNames()
+  {
+    return getName() != null && getName().indexOf(",") != -1;
+  }
+
+  public boolean isStatic()
+  {
+    return Type.Static.equals(getType()); 
+  }
+
+  public boolean isMultiWord()
+  {
+    return getName().startsWith("**");
+  }
+
+  public boolean isToEndOfLine()
+  {
+    return !isMultiWord() && getName().startsWith("*");
+  }
+
+  public boolean isAlphanumeric() {
+    return getName().startsWith("~");
+  }
+
+
+  public boolean isVariable()
+  {
+    return Type.Variable.equals(getType()); 
+  }
+
+  public boolean isEnum()
+  {
+    return isVariable() && name != null && name.startsWith("="); 
+  }
+
+  public String[] getEnums()
+  {
+    if (name == null)
+    {
+      return new String[0];
+    }
+
+    TextParser parser = new TextParser(name);
+    parser.nextAfter(":");
+
+    if (parser.peek() == null)
+    {
+      return new String[] {getDisplayName()}; 
+    }
+
+    ArrayList<String> allEnums = new ArrayList<String>();
+    while (parser.nextUntil("|") != null)
+    {
+      allEnums.add(parser.name());
+      parser.nextAt("|");
+    }
+    return allEnums.toArray(new String[allEnums.size()]);
+  }
+
+  public boolean isEnumValue(String input)
+  {
+    if (!isEnum() || input == null)
+    {
+      return false;
+    }
+
+    for (String aEnum : getEnums())
+    {
+      if (aEnum.equals(input))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean isRule()
+  {
+    return Type.Rule.equals(getType()); 
+  }  
+
+
+  public boolean isOne()
+  {
+    return "1".equals(getMultiplicity());
+  }
+
+  public boolean isOptional()
+  {
+    return "?".equals(getMultiplicity());
+  }
+
+  public boolean isMany()
+  {
+    return "*".equals(getMultiplicity());
+  }
+
+  public boolean isAnonymous()
+  {
+    return getName().startsWith("anonymous::");
+  }
+
+  public String toString()
+  {
+    StringBuffer answer = new StringBuffer();
+    answer.append("Nexts:");
+    for (int i=0; i<nextIdentifiers.size(); i++)
+    {
+      answer.append("[" + nextIdentifiers.get(i) + "]");
+    }
+    answer.append("\n");
+    return answer.toString();
+  }
+
+}
+
+class Parser
+{
+  /*
+   * Constructor.
+   * 
+   * @param aFilename The Umple file (.ump) that the parser will parse.
+   * @param aName The name of the parser, typically "UmpleInternalParser" or "innerParser".
+   */
+  public Parser(String aFilename, String aName)
+  {
+    filename = aFilename;
+    name = aName;
+    grammarRules = new ArrayList<String>();
+    parseResult = new ParseResult(true);
+    rootToken = reset();
+    rules = new ArrayList<Rule>();
+    couples = new ArrayList<Couple>();
+  }
+
+
+  public Token reset()
+  {
+    rootToken = new Token(getName(),"ROOT", new Position(filename,1,0,0));
+    return rootToken;
+  }
+
+  public Rule getRule(String ruleName)
+  {
+    for (Rule r : rules)
+    {
+      if (r.getName().equals(ruleName))
+      {
+        return r;
+      }
+    }
+    return null;
+  }
+
+  public String toString()
+  {
+    StringBuffer answer = new StringBuffer();
+    toString(answer,rootToken);
+    return answer.toString();
+  }
+
+  public String toGrammarNoStyle()
+  {
+    StringBuilder answer = new StringBuilder();
+    for(String rule : grammarRules)
+    {
+      if (answer.length() > 0)
+      {
+        answer.append("<br />\n");
+      }
+
+      String cleanedUpRule = rule;
+      cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "-(");
+      cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", "-)");
+      cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "-||");
+      answer.append(cleanedUpRule);
+    }
+    return answer.toString();
+  }
+
+  // Used to generate a nice html representation for the user manual
+  public String toGrammar()
+  {
+    return toGrammarParts("");
+  }
+  
+  public String toGrammarParts(String rulesToOutput)
+  {
+    StringBuilder answer = new StringBuilder();
+    StringBuilder queuedComments = new StringBuilder();
+    for(String rule : grammarRules)
+    {
+      // There are three possible 'rule' types
+
+      // Blank line, do nothing except output any queued comments
+      if (rule.length() == 0)
+      {
+        if (rulesToOutput.length() == 0) {  // only output for complete grammar
+          answer.append(queuedComments.toString());
+          answer.append("<br />\n");
+        }
+        queuedComments = new StringBuilder();  // throw away comments so far
+      }
+      else if (rule.length() >= 2 && rule.charAt(0) == '/' &&  rule.charAt(1) == '/')
+      {
+        // Comment - queue it for possible outputting when a space or non-comment is found
+        // Skip items in the grammar marked 'TODO'
+        if(!rule.matches("\\Q//TODO\\E.*"))
+        {
+          queuedComments.append("<br />\n<font color=\"brown\">");
+          // Replace URLs in [* *] by links to them
+          String commentInterior=rule.replaceAll("\\Q[*http\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"http$1\">http$1</a>");
+          // Replace user manual refs by links to the local copy of the UM
+          commentInterior=commentInterior.replaceAll("\\Q[*\\E(.*)\\Q*]\\E","<a style=\"color: brown\" href=\"$1.html\">$1</a>");
+          queuedComments.append(commentInterior);
+          queuedComments.append("</font>");
+        }
+      }
+      else
+      {
+        // Should be a rule name, find name of it then format
+        String[] splitRule = rule.split(":",2);
+        if(splitRule[0].length() != 0) {
+          // We seem to have a valid rule
+          int ruleLength = splitRule[1].length();
+
+          // Determine if there is a minus sign indicating a rule
+          // whose name will not appear in the parse tree
+          int hasMinus = (splitRule[0]).charAt(splitRule[0].length()-2) == '-'? 1 : 0;
+          String ruleName = 
+            (splitRule[0]).substring(0,(splitRule[0]).length()-1-hasMinus);
+          
+          if(rulesToOutput.length() == 0 || rulesToOutput.contains("[["+ruleName+"]]"))
+          {
+            // We are to output the rule since we are outputting all
+            // or it was listed in rulesToOutput
+            String cleanedUpRule = splitRule[1];
+            
+            // Replace all references to rules using [[ ]] with links to the rules 
+            cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"UmpleGrammar.html#$1\">$1</a>]]");
+            
+            // Colour all named identifiers such as [name] green
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
+            
+            // Colour pairs of identifiers green (where one or both may be supplied
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E)([a-zA-Z_]+),([a-zA-Z_]+)", "$1<font color=\"green\">$2</font>,<font color=\"green\">$3</font>");
+            
+            
+            // Colour constant strings (i.e. keywords) and explicit special characters red
+            cleanedUpRule = cleanedUpRule.replaceAll("([(]|\\s)([a-zA-Z_{}.,:;\\-\\\"<>]+|/|//|/\\*|\\*/|\\[|\\])(\\s|$|[)])", "$1<font color=\"red\">$2</font>$3");
+
+            // There are a couple of places with parens that need making red
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\s)([{}]|OPEN_ROUND_BRACKET)(\\s)", "$1<font color=\"red\">$2</font>$3");
+
+            
+            // Colour constant strings sets such as [=modifier:immutable|settable] red
+            cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:|[|])([A-Za-z\\-+<>*]+)", "$1<font color=\"red\">$2</font>");
+                        
+            // Colour special case [=list:[]] red
+            cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:)\\Q[]\\E", "$1<font color=\"red\">[]</font>");
+                        
+            // Colour special constants such as [=debug] red 
+            cleanedUpRule = cleanedUpRule.replaceAll("[\\[]=([a-zA-Z_]*)[\\]]", "[=<font color=\"red\">$1</font>]");
+            
+            // Colour arbitrary text blocks dirty yellow
+            cleanedUpRule = cleanedUpRule.replaceAll("[\\[][*][*]?([a-zA-Z_]*)[\\]]", "[**<font color=\"#AAAA22\">$1</font>]");
+
+            // Revert changes made during rule parsing
+            cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "(");
+            cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", ")");
+            cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "||");
+            
+            // If long rule, then indent on any 'or'
+            if(ruleLength > 80) {
+              cleanedUpRule = cleanedUpRule.replaceAll("\\s[|]\\s", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp| ");
+            }
+          
+            // Output the rule nicely
+
+            // Start by outputting any queued comments (if there are any)
+            answer.append(queuedComments.toString());                 
+            
+            answer.append("<br />\n<a name=\"");
+            answer.append(ruleName);  // anchor to link to
+            answer.append("\" ></a>"); 
+          
+            answer.append("<b><font color=\"#2E64FE\">");
+            answer.append(ruleName);  // displayed name
+            answer.append("</font></b>");
+
+            if(hasMinus == 1) answer.append("-");
+            answer.append(" :");
+            
+            answer.append(cleanedUpRule);
+            answer.append("<br />\n");
+            
+          } // End outputting rule
+          queuedComments = new StringBuilder(); // clear them whether or not output
+        }
+      }
+    } // end for loop of every line in the rule file
+    return answer.toString();
+  }
+  
+  // Output the parse tree. The code originally here has been refactored to Token class
+  public StringBuffer toString(StringBuffer stringSoFar, Token currentToken)
+  {
+    return currentToken.toString(stringSoFar,rootToken);
+  }
+
+  public int addRulesInFile(String filenameOrResourcePath)
+  {
+    InputStream resourceStream = null;
+    BufferedReader reader = null;
+    int numberOfRulesProcessed = 0;
+    try
+    {
+      if ((new File(filenameOrResourcePath)).exists())
+      {
+        reader = new BufferedReader(new FileReader(filenameOrResourcePath));
+      }
+      else
+      {
+        resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
+
+      String nextRule = null;
+      do 
+      {
+        nextRule = reader.readLine();
+        if (nextRule == null)
+        {
+          continue;
+        }
+        nextRule = nextRule.trim();
+        if (nextRule.startsWith("//") || nextRule.startsWith("#") || nextRule.equals(""))
+        {
+          addGrammarRule(nextRule);
+        }
+        else
+        {
+          addRule(nextRule);
+          numberOfRulesProcessed += 1;
+        }
+
+      } 
+      while (nextRule != null);
+    }
+    catch (Exception e)
+    {
+
+    }
+    finally
+    {
+      SampleFileWriter.closeAsRequired(reader);
+      SampleFileWriter.closeAsRequired(resourceStream);
+    }    
+    return numberOfRulesProcessed;
+  }
+
+  public void addRule(String input)
+  {
+    input = input.replace("-(","OPEN_ROUND_BRACKET");
+    input = input.replace("-)","CLOSE_ROUND_BRACKET");
+    input = input.replace("-||","DOUBLE_OR_BARS");
+
+    grammarRules.add(input);
+    TextParser ruleParser = new TextParser(input);
+    String name = ruleParser.next();
+    boolean shouldHide = false;
+    if (name.endsWith("-"))
+    {
+      shouldHide = true;
+      name = name.substring(0,name.length() - 1);
+    }
+
+    ruleParser.nextAt(":");
+    int startIndex = ruleParser.previousIndex();
+
+    int index = 0;
+    Parser innerParser = new Parser("innerParser");
+    while (ruleParser.lookFor("(",")",true) != null)
+    {
+      String anonymousRuleName = cruise.umple.util.StringFormatter.format("anonymous::{0}::{1}",name,++index);
+      String anonymousRuleDefinition = ruleParser.name().substring(1,ruleParser.name().length() - 1).trim();
+      innerParser.addRule(cruise.umple.util.StringFormatter.format("{0}- : {1}",anonymousRuleName,anonymousRuleDefinition));
+      ruleParser.replace("[[" + anonymousRuleName + "]]");
+    }
+    ruleParser.reset(startIndex);
+    ruleParser.nextAt(":");
+
+    Rule newRule = new Rule(name);
+    newRule.setShouldHide(shouldHide);
+    while (ruleParser.nextUntil(false,"|") != null)
+    {
+      String definition = ruleParser.name();
+      int innerStartIndex = ruleParser.previousIndex();
+      while (isWithinVariable(definition))
+      {
+        ruleParser.nextAfter("]");
+        ruleParser.nextUntil(false,"|");
+        definition = ruleParser.extractFrom(innerStartIndex);
+      }
+      definition = definition.replace("OPEN_ROUND_BRACKET","(");
+      definition = definition.replace("CLOSE_ROUND_BRACKET",")");
+      definition = definition.replace("DOUBLE_OR_BARS","||");
+      newRule.addDefinition(definition);
+      ruleParser.nextAt("|");
+    }
+    rules.add(newRule);
+    rules.addAll(innerParser.rules);
+  }
+
+  /**
+   * Parses input based on a rule.
+   * 
+   * @param ruleName The rule to parse based on.
+   * @param input The textual input to parse (such as that from the Umple file).
+   * 
+   * @return The result of the parsing.
+   */
+  public ParseResult parse(String ruleName, String input)
+  {
+    // Create a new instance of a text parser to parse the input from the Umple file.
+    TextParser inputParser = new TextParser(filename, input);
+
+    // Initialize the parse result.
+    parseResult.setPosition(inputParser.currentPosition());
+
+    _curParsePos = inputParser.currentPosition();
+
+    // Parse the input and store whether or not it was successful in doing so.  As its parsing it will build up a hierarchy of tokens.
+    boolean didParse = parse(ruleName, inputParser, rootToken, 0);
+
+    parseResult.setWasSuccess(didParse);
+
+    return parseResult;
+  }
+
+  /**
+   * Parses input initialized into a textual parser and builds up a tree-like structure of tokens representing what was parsed.
+   * 
+   * It is VERY important to know this method, as its extremely vital to where a significant amount of parsing is done.
+   * 
+   * @param ruleName The rule to begin parsing off of.
+   * @param inputParser The textual parser that is initialized to start parsing input from a pre-determined Umple file.
+   * @param parentToken The current token, that will be built off of.
+   * @param level The level The current level the parser is at (related to the token tree).
+   * 
+   * @return True if the input was successfully parsed, false otherwise.
+   */
+  private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
+  {
+    // Go through each rule.
+    for (Rule r : rules)
+    {
+      if (!r.getName().equals(ruleName))
+      {
+        continue;
+      }
+
+      // Create a new empty token that will later on be populated based on what is parsed as things get parsed and added to the token tree.
+      Token currentToken = null;
+
+      if (r.getShouldHide())
+      {
+        currentToken = parentToken;
+      }
+      else
+      {
+        currentToken = new Token(ruleName,"START_TOKEN",inputParser.currentPosition().copy()); 
+      }
+
+      // Go through each definition, from the current rule.
+      for (String definition : r.getDefinitions())
+      {
+        int currentTokenSize = currentToken.numberOfSubTokens();
+
+        // Assume the parsing will succeed and prove otherwise (if theres an error).
+        boolean isSucceeding = true;
+
+        // Store where the input parser currently is on the text so that if an error occurs later we can reset to this spot.
+        int savedIndex = inputParser.currentIndex();
+
+        RuleInstance instance = new RuleInstance(this);
+        instance.configureDefinition(definition, stopAts);
+
+        // As long as there are more sub parts to the rule, parse based on them.
+        while (instance.hasMoreRuleParts())
+        {
+          Position startTokenPosition = inputParser.currentPosition().copy();
+
+          // Store the current rule from the rule instance which will be used to determine how the parsing proceeds.
+          RulePart part = instance.nextRulePart();
+
+          String currentRule = part.getName();
+
+          if (part.isStatic())
+          {
+            String inputValue = inputParser.nextAt(currentRule);
+            if (inputValue == null)
+            { 
+              isSucceeding = false;
+              break;
+            }
+
+            // Add what we just parsed (the value of what was parsed that was a "static") as a subtoken of our current token.
+            // Essentially build up the token tree.
+            currentToken.addSubToken(new Token(inputValue, "STATIC", startTokenPosition));
+
+            // Update the parsers position in the input (from the textual parser) as well as store this information in the parsing result.
+            _curParsePos = inputParser.currentPosition();
+            parseResult.setPosition(inputParser.currentPosition());
+          }
+          // This is where most of the work is done, a variable is essentially any "content" of a rule/definition.
+          // (ex. The rule could be an "inlineComment"  and the actual "part" (if its variable) is the content associated for it.
+          else if (part.isVariable())
+          {
+            String value = null;
+            int startIndex = inputParser.currentIndex();
+
+            // Only proceed to check for an empty comment if it is possible that we could have just had one.
+            if (startIndex >= 3 && currentRule.equals("*inlineComment"))
+            {
+              String lastThree = inputParser.getText().substring(startIndex - 3, startIndex);
+
+              // Empty comment in the most basic form.  Ignore looking for a complete comment since there is none, go to next definition.
+              if (lastThree.equals("//\n"))
+              {
+                continue;
+              }
+              // Empty comment with spaces.  Ignore looking for a complete comment since there is none, go to next definition.
+              else if (lastThree.charAt(2) == '\n')
+              {
+                continue;
+              }
+            }
+
+            // Only proceed to check for an empty multiLine comment if it is possible that we could have just had one.
+            if (startIndex >= 2 && currentRule.equals("**multilineComment"))
+            {
+              boolean emptyMultiLineComment = false;
+
+              String testString = inputParser.getText();
+
+              // Starting where the input parser currently is, look ahead to see if this is an empty multiLine comment.
+              for (int i = startIndex; i < testString.length() - 2 && emptyMultiLineComment == false; i++)
+              {
+                if (testString.substring(i, i + 2).equals("*/"))
+                {
+                  emptyMultiLineComment = true;
+                }
+                else if (!testString.substring(i, i + 1).equals("\n") && !testString.substring(i, i + 1).equals(" "))
+                {
+                  break;
+                }
+              }
+
+              // Since an empty multiLine comment was found, ignore looking for a complete comment since there is none.
+              if (emptyMultiLineComment) continue;
+            }
+
+            if (part.isToEndOfLine())
+            {
+              value = inputParser.nextLine();
+            }
+            else if (part.getNextIdentifiers().length > 0)
+            {
+              boolean stopAtSpace = !part.isMultiWord() && !part.hasInnerNames();
+              boolean isAlphaNumeric = part.isAlphanumeric();
+              value = inputParser.nextUntil(stopAtSpace, isAlphaNumeric, part.getNextIdentifiers());
+
+              while (part.isMultiWord() && !isBalanced(value))
+              {
+                int internalIndex = inputParser.currentIndex();
+                inputParser.nextAt(part.getNextIdentifiers());
+                String nextValue = inputParser.nextUntil(stopAtSpace,part.getNextIdentifiers());
+
+                if (inputParser.peekAt(part.getNextIdentifiers()) == null)
+                {
+                  inputParser.reset(internalIndex);
+                  break;
+                }
+
+                value = inputParser.extractFrom(startIndex);
+                if (nextValue == null && inputParser.peekAt(part.getNextIdentifiers()) == null)
+                {
+                  break;
+                }
+              }
+            }
+            else if (part.isMultiWord())
+            {
+              value = inputParser.nextUntil(false,(String[])null);
+            }
+            else
+            {
+              value = inputParser.next();
+            }
+
+            if (part.isEnum() && !part.isEnumValue(value))
+            {
+              value = null;
+            }
+
+            if (part.hasInnerNames() && !part.isValidInnerValues(value))
+            {
+              value = null;
+            }
+
+            if (value == null && part.isOne())
+            {
+              isSucceeding = instance.removeOptionalPart();
+              if (isSucceeding)
+              {
+                instance.resetRulePart();
+
+                // Back up the textual parser to the saved index since something went wrong.
+                restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+                continue;
+              }
+              else
+              {
+                break;
+              }
+            }
+            else if (value == null)
+            {
+              instance.removeRulePart(part);
+              instance.resetRulePart();
+
+              // Back up the textual parser to the saved index since something went wrong.
+              restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+              continue;
+            }
+
+            if (part.hasInnerNames())
+            {
+              RulePartValue[] allValues = part.getInnerValues(value);
+              for (int innerI=0; innerI<allValues.length; innerI++)
+              {
+                String innerValue = allValues[innerI].getValue();
+                if (innerValue == null)
+                {
+                  continue;
+                }
+                String innerName = allValues[innerI].getName();
+                Position innerPosition = allValues[innerI].getPosition();
+
+                // Update the token tree, create a new token based on what was just parsed and add it to the tree.
+                currentToken.addSubToken(new Token(innerName,innerValue, startTokenPosition.add(innerPosition)));
+              }
+            }
+            else
+            {
+              // Update the token tree, create a new token based on what was just parsed and add it to the tree.
+              currentToken.addSubToken(new Token(part.getDisplayName(), value, startTokenPosition));
+            }
+          }
+          else if (part.isRule())
+          {
+            if (part.isOne())
+            {
+              isSucceeding = parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers());
+            }
+            else if (part.isOptional())
+            {
+              isSucceeding = true;
+              boolean didParse = parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers());
+              if (!didParse)
+              {
+                instance.removeRulePart(part);
+                instance.resetRulePart();
+
+                // Back up the textual parser to the saved index since something went wrong.
+                restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+                continue;
+              }
+            }
+            else if (part.isMany())
+            {
+              int maxFound = part.getMaximumPartsFound();
+              if (maxFound == 0)
+              {
+                instance.removeRulePart(part);
+                instance.resetRulePart();
+
+                // Back up the textual parser to the saved index since something went wrong.
+                restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+                continue;
+              }
+
+              isSucceeding = true;
+              int numberFoundSoFar = 0;
+              while (part.isWithinLimits(numberFoundSoFar) && parse(part.getName(),inputParser,currentToken,level+1,part.getNextIdentifiers()))
+              {
+                numberFoundSoFar += 1;
+              }
+              part.setMaximumPartsFound(numberFoundSoFar - 2);
+            }
+          }
+        }
+
+        // If there is currently a problem parsing (error, etc) back up the textual input parser.
+        if (!isSucceeding)
+        {
+          // Back up the textual parser to the saved index since something went wrong.
+          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+        }
+        else if (inputParser.peek() != null && level == 0)
+        {
+          String badWord = inputParser.peek();
+          int messageNumber = 1500;
+          // Back up the textual parser to the saved index since something went wrong.
+          restorePrevious(inputParser,savedIndex,currentToken,currentTokenSize);
+
+          // Since there was a critical error, store an error message in the parsing result.
+          if("generate".equals(badWord) || "use".equals(badWord) || "strictness".equals(badWord) || "traceType".equals(badWord)) {
+            messageNumber=1501;
+          }
+          else if("class".equals(badWord) || "association".equals(badWord) || "interface".equals(badWord) || "external".equals(badWord) || "associationClass".equals(badWord) || "stateMachine".equals(badWord)) {
+            messageNumber=1502;
+          }
+          parseResult.addErrorMessage(new ErrorMessage(messageNumber, _curParsePos, badWord));
+
+          return false;
+        }
+        // Otherwise if everything is okay we will add what we have parsed (which should be in a token by now) to the "parent/root" token.
+        else
+        {
+          if (!r.getShouldHide())
+          {
+            // Update the token tree, add the current token to the parent.
+            parentToken.addSubToken(currentToken);
+          }
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private void restorePrevious(TextParser inputParser, int savedIndex, Token currentToken, int size)
+  {
+    inputParser.reset(savedIndex);
+    while (size < currentToken.numberOfSubTokens())
+    {
+      currentToken.remove(size);
+    }
+  }
+
+  private boolean isWithinVariable(String definition)
+  {
+    int openBracket = definition.lastIndexOf("[");
+    int closeBracket = definition.lastIndexOf("]");
+    return openBracket > closeBracket;
+  }
+
+  private boolean isBalanced(String input)
+  {
+    for (Couple couple : couples)
+    {
+      if (!couple.isBalanced(input))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public Token getToken(int index)
+  {
+    return rootToken.getSubToken(index);
+  }
+
+  public List<Token> getTokens()
+  {
+    return rootToken.getSubTokens();
+  }
+
+  public int numberOfTokens()
+  {
+    return rootToken.numberOfSubTokens();
+  }
+
+  public boolean hasTokens()
+  {
+    return numberOfTokens() > 0;
+  }
+
+  public int indexOf(Token aToken)
+  {
+    return rootToken.indexOfSubToken(aToken);
+  }
+
+
+}
+
+class RuleInstance
+{
+
+  public void configureDefinition(String definition, String... allStopAts)
+  {
+    stopAts.clear();
+    for(String stopAt : allStopAts)
+    {
+      stopAts.add(stopAt);
+    }
+    TextParser ruleParser = new TextParser(definition);
+    while (ruleParser.next() != null)
+    {
+      String currentRule = ruleParser.name();
+      RulePart currentPart = analyzeRule(currentRule);
+      addRulePart(currentPart);
+    }
+    updateNextIdentifier();
+  }
+
+  public boolean hasMoreRuleParts()
+  {
+    return rulePartsIndex < ruleParts.size();
+  }
+
+  public void resetRulePart()
+  {
+    rulePartsIndex = 0;
+  }
+
+  public RulePart nextRulePart()
+  {
+    if (rulePartsIndex >= numberOfRuleParts() || rulePartsIndex < 0)
+    {
+      return new RulePart(null,null);
+    }
+    return getRulePart(rulePartsIndex++);
+  }
+
+  public boolean nextCombination()
+  {
+    if (updateIndex == -1)
+    {
+      updateIndex = 0;
+      return true;
+    }
+
+    boolean didChange = false;
+    while (updateIndex < ruleParts.size() - 1)
+    {
+      RulePart part = ruleParts.get(updateIndex);
+      if (part.isOptional())
+      {
+        ruleParts.remove(updateIndex);
+        didChange = true;
+        break;
+      }
+      else
+      {
+        updateIndex++;
+      }
+    }
+    return didChange;
+  }
+
+  public void updateNextIdentifier()
+  {
+    for (int i = 0; i < numberOfRuleParts(); i++)
+    {
+      updateNextPart(i);
+    }
+  }
+
+  private void updateNextPart(int i)
+  {
+    RulePart currentPart = getRulePart(i);
+    currentPart.removeNextIdentifiers();
+    int lastIndex = numberOfRuleParts() - 1;
+
+    if (i == lastIndex)
+    {
+      updateLastNextPart(currentPart);
+      return;
+    }
+
+    if (currentPart.isRule() && currentPart.isMany())
+    {
+      Rule r = parser.getRule(currentPart.getName());
+
+      if (r.numberOfDefinitions() > 0)
+      {
+        TextParser textParser = new TextParser(r.getDefinition(0));
+        RulePart ruleFirstPart = analyzeRule(textParser.next());
+        addNextIdentifierFor(currentPart,ruleFirstPart);
+      }
+    }
+
+    int nextPartOffset = 1;
+    RulePart nextPart = getRulePart(i + nextPartOffset);
+
+    if (nextPart.isMany() && (i + nextPartOffset) == lastIndex)
+    {
+      updateLastNextPart(currentPart);
+    }
+
+    while (nextPart.isRule())
+    {
+
+      Rule r = parser.getRule(nextPart.getName());
+
+      boolean keepTrying = false;
+      while (r != null)
+      {
+        for (String definition : r.getDefinitions())
+        {
+          TextParser textParser = new TextParser(definition);
+          RulePart ruleFirstPart = analyzeRule(textParser.next());
+
+
+          if (ruleFirstPart.isRule())
+          {
+            r = parser.getRule(ruleFirstPart.getName());
+            keepTrying = true;
+            break;
+          }
+          else
+          {
+            addNextIdentifierFor(currentPart,ruleFirstPart);
+          }
+        }
+
+        if (keepTrying)
+        {
+          keepTrying = false;
+        }
+        else
+        {
+          r = null;
+        }
+      }
+
+      nextPartOffset++;
+      if ( (i+nextPartOffset) < ruleParts.size() && (nextPart.isOptional() || nextPart.isMany()) && !currentPart.isMany())
+      {
+        nextPart = getRulePart(i + nextPartOffset);
+      }
+      else
+      {
+        nextPart = new RulePart(null,null);
+      }
+    }
+
+    if (!nextPart.isRule())
+    {
+      addNextIdentifierFor(currentPart,nextPart);
+    }
+  }
+
+  private void updateLastNextPart(RulePart part)
+  {
+    for (String stop : stopAts)
+    {
+      part.addNextIdentifier(stop);
+    }
+  }
+
+  public boolean removeOptionalPart()
+  {
+    for (int i=0; i<numberOfRuleParts(); i++)
+    {
+      RulePart part = getRulePart(i);
+      if (part.isOptional() && part.isVariable() && !part.isEnum())
+      {
+        removeRulePart(part);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void addNextIdentifierFor(RulePart currentPart, RulePart nextPart)
+  {
+    if (nextPart.isStatic())
+    {
+      currentPart.addNextIdentifier(nextPart.getName());
+    }
+    else if (nextPart.isEnum())
+    {
+      for(String aName : nextPart.getEnums())
+      {
+        currentPart.addNextIdentifier(aName);
+      }
+    }
+  }
+
+  private RulePart analyzeRule(String input)
+  {
+    RulePart part = new RulePart(input, null);
+
+    if (input == null)
+    {
+      return part;
+    }
+
+    if (input.endsWith("*") || input.endsWith("?"))
+    {
+      String multiplicity = input.substring(input.length() - 1);
+      part.setMultiplicity(multiplicity);
+      input = input.substring(0, input.length() - 1);
+    }
+
+    if (input.startsWith("[[") && input.endsWith("]]"))
+    {
+      part.setName(input.substring(2, input.length() - 2));
+      part.setType(RulePart.Type.Rule);
+    }
+    else if (input.startsWith("[") && input.endsWith("]"))
+    {
+      part.setName(input.substring(1, input.length() - 1));
+      part.setType(RulePart.Type.Variable);
+    }
+
+    return part;
+  }
+
+}
+
+class ParseResult
+{
+  before addErrorMessage {
+
+    if(!_acceptsErrors)
+      return true; // This should technically return false
+  }
+
+  after addErrorMessage 
+  {
+    // If the severity level is 1 then it's the most severe error
+    // And we stop accepting errors (The parser may continue to parse,
+    // as but we won't report any further errors, as they may be non-sensical)
+    if(aErrorMessage.getErrorType().getSeverity() == 1){
+      _acceptsErrors = false;
+      wasSuccess = false;
+    }
+
+    // Otherwise, if the severity is 2, we may have an error, 
+    // but we'll continue to compile and generate additional errors/warnings 
+    else if(aErrorMessage.getErrorType().getSeverity() == 2)  
+      wasSuccess = false;
+
+    // Everything else must be a warning.
+    else
+      hasWarnings = true;
+  }
+
+  public String toString()
+  {
+    String ret = "";
+    for(ErrorMessage em : errorMessages)
+      ret += em.toString() + "\n";
+    return ret;
+  }
+
+  public String toJSON ()
+  {
+    String ret = "{ \"results\" : [ ";
+    boolean hasOne = false;
+    for(ErrorMessage em : errorMessages)
+    {
+      ErrorType et = em.getErrorType();
+
+      String line     = String.valueOf(em.getPosition().getLineNumber());
+      String file     = StringFormatter.sanitizeForJson(em.getPosition().getFilename());
+      String message  = StringFormatter.sanitizeForJson(em.getFormattedMessage());
+      String severity = String.valueOf(et.getSeverity());
+      String code     = String.valueOf(et.getErrorCode());
+      String url    = StringFormatter.sanitizeForJson(et.getErrorUrl());
+
+      ret += "{ \"errorCode\" : \"" + code + "\",";
+      ret += " \"severity\" : \"" +severity + "\", ";
+      ret += "\"url\" : \"" + url + "\", ";
+      ret += "\"line\" : \"" + line + "\", ";
+      ret += "\"filename\" : \"" + file + "\", ";
+      ret += "\"message\" : \"" + message + "\"},";
+      hasOne = true;
+    }
+
+    if(hasOne)
+      ret = ret.substring(0, ret.length()-1);
+    ret += "]}";
+    return ret;
+  } 
+}
+
+class ErrorMessage
+{
+  public ErrorMessage(int errorCode, Position pos, String... parameters)  
+  {
+    this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
+    this.parameters = Arrays.asList(parameters);
+  }
+  public String getFormattedMessage()
+  {
+    return errorType.format(this.parameters);
+  }
+  public String toString()
+  {
+    String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
+    String err = sev + " on line " + this.position.getLineNumber();
+    err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
+    return  err + errorType.format(this.parameters);
+  }
+
+}
+
+class ErrorType
+{
+  depend cruise.umple.util.StringFormatter;
+  depend java.util.List;
+
+  public String format(List<String> arguments)
+  {
+    return StringFormatter.format(errorFormat, arguments.toArray());
+  }
+}
+
+class ErrorTypeSingleton
+{
+  after constructor{init();}
+
+  private void init()
+  {
+    String filename = "/en.error";
+    String input = readFile(filename);
+    parse(new TextParser(filename, input));
+  }
+
+  public String readFile(String filenameOrResourcePath)
+  {
+    InputStream resourceStream = null;
+    BufferedReader reader = null;
+    String str = "";
+    try
+    {
+      if ((new File(filenameOrResourcePath)).exists())
+      {
+        reader = new BufferedReader(new FileReader(filenameOrResourcePath));
+      }
+      else
+      {
+        resourceStream = getClass().getResourceAsStream(filenameOrResourcePath);
+        reader = new BufferedReader(new InputStreamReader(resourceStream));
+      }
+      String line;
+      while((line=reader.readLine())!=null)
+        str += line;
+    }
+    catch (Exception e)
+    {
+      str = null;
+    }
+    finally
+    {
+      SampleFileWriter.closeAsRequired(reader);
+      SampleFileWriter.closeAsRequired(resourceStream);
+    }    
+    return str;
+  }
+
+  private boolean parse(TextParser textParser)
+  { 
+    while(textParser.peek() != null)
+    {
+      Position p = textParser.currentPosition();
+
+      String code = textParser.nextUntil(false,":");
+      textParser.nextAfter(false,":");
+
+      String severity = textParser.nextUntil(false, ",");
+      textParser.nextAfter(false,",");
+
+      String url = textParser.nextUntil(false, ",");
+      textParser.nextAfter(false,",");
+
+      String formatString = textParser.nextUntil(false, ";");
+      textParser.nextAfter(false,";");
+
+      int codeInt;
+      int severityInt;
+
+      if(code == null || severity == null || url == null || formatString == null)
+        throw new UmpleCompilerException("Error parsing error definitions (line " + p.getLineNumber()+")",null);
+
+      try
+      {
+        codeInt = Integer.parseInt(code);
+      }
+      catch(NumberFormatException e)
+      {
+        throw new UmpleCompilerException("Error code must be an integer (line " + p.getLineNumber()+")",null);
+      }
+
+      try
+      {
+        severityInt = Integer.parseInt(severity);
+      }
+      catch(NumberFormatException e)
+      {
+        throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
+      }
+
+      if(severityInt < 1 || severityInt > 5)
+        throw new UmpleCompilerException("Severity must be an integer between [1,5] (line " + p.getLineNumber()+")",null);
+
+      this.errorTypes.add(new ErrorType(codeInt, severityInt, formatString, url));
+    }
+    return true;
+  }
+
+  public void clear()
+  {
+    this.errorTypes = new ArrayList<ErrorType>();
+  }
+
+  public void reset()
+  {
+    clear();
+    init();
+  }
+
+  public ErrorType getErrorTypeForCode(int code)
+  {
+    for(ErrorType et : this.errorTypes)
+      if(et.getErrorCode() == code)
+        return et;
+
+    return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
+  }
+}

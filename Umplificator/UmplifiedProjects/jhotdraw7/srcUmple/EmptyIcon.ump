@@ -1,0 +1,26 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui ;
+
+class EmptyIcon 
+{
+depend java.awt.Component;
+depend java.awt.Graphics;
+depend javax.swing.Icon;
+
+  private int width;
+private int height;
+@Override
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+    }
+@Override
+    public int getIconWidth() {
+        return width;
+    }
+@Override
+    public int getIconHeight() {
+        return height;
+    }
+
+}

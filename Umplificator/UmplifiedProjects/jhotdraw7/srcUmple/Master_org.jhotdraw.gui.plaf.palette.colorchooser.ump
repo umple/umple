@@ -1,0 +1,12 @@
+use PaletteColorSlidersChooser.ump;
+use PaletteColorChooserPreviewPanel.ump;
+use PaletteHSBChooser.ump;
+use PaletteColorWheelChooser.ump;
+use package-info.ump;
+use PaletteRGBChooser.ump;
+use PaletteCMYKChooser.ump;
+use ColorIcon.ump;
+use ColorSliderTextFieldHandler.ump;
+use PaletteColorChooserMainPanel.ump;
+use PaletteColorSliderModel.ump;
+use PaletteSwatchesChooser.ump;

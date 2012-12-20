@@ -1,0 +1,37 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Something implements ISomething
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Something()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  @Override
+  public String getCode(String [] aParam, Integer anotherParam){
+          return "";
+  }
+
+  @Override
+  public String isValid(){
+          return "";
+  }
+
+}

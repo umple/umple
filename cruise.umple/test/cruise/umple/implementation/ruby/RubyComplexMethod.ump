@@ -1,0 +1,9 @@
+class Foo
+{
+	void testMethod(firstName, lastName)
+	{
+		@fullName = firstName + ' ' + lastName
+		@greeting = 'Hello there ' + @fullName
+		@greeting = @greeting + ', how are you doing?'
+	}
+}

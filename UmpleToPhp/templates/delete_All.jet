@@ -1,0 +1,126 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+
+  appendln(stringBuffer,"");
+  appendln(stringBuffer,"  public function delete()");
+  append(stringBuffer,"  {");
+
+  boolean hasSomethingToDelete = false;
+
+  String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
+  String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
+
+  if (customDeletePrefixCode != null) 
+  {
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
+    hasSomethingToDelete = true;
+  }
+
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    
+    if (!av.getIsNavigable() || av.isImmutable())
+    {
+      continue;
+    }
+    
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOne())
+      {
+        hasSomethingToDelete = true;
+        %><%@ include file="delete_UndirectionalOne.jet" %><%
+      }
+      else if (av.isMany())
+      {
+        hasSomethingToDelete = true;
+        %><%@ include file="delete_UndirectionalMany.jet" %><%
+      }
+      continue;
+    }
+    
+    if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+    {
+      %><%@ include file="delete_OneFromOne.jet" %><%
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+    {
+      %><%@ include file="delete_OptionalOneFromOptionalOne.jet" %><%
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isOptionalOne())
+    {
+      %><%@ include file="delete_OneFromOptionalOne.jet" %><%
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOnlyOne())
+    {
+      %><%@ include file="delete_OptionalOneFromOne.jet" %><%
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+    {
+      %><%@ include file="delete_OptionalOneFromMany.jet" %><%
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isN())
+    {
+      %><%@ include file="delete_OptionalOneFromN.jet" %><%
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isMN())
+    {
+      %><%@ include file="delete_OptionalOneFromMN.jet" %><%
+    }
+    else if (av.isOne() && relatedAssociation.isMany())
+    {
+      %><%@ include file="delete_OneFromMany.jet" %><%
+    }
+    else if (av.isMandatory() && relatedAssociation.isOptionalOne())
+    {
+      %><%@ include file="delete_MandatoryFromOptionalOne.jet" %><%
+    }
+    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+    {
+      %><%@ include file="delete_ManyFromMN.jet" %><%
+    }
+    else if (av.isMany() && relatedAssociation.isMany())
+    {
+      %><%@ include file="delete_ManyFromMany.jet" %><%
+    }
+    else if (av.isMany() && relatedAssociation.isOnlyOne())
+    {
+      %><%@ include file="delete_ManyFromOne.jet" %><%
+    }
+    else if (av.isMany() && relatedAssociation.isOptionalOne())
+    {
+      %><%@ include file="delete_ManyFromOptionalOne.jet" %><%
+    }
+    else
+    {
+      continue;
+    }
+    hasSomethingToDelete = true;
+  }
+  
+  if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
+  {
+    hasSomethingToDelete = true;
+    appendln(stringBuffer,"");
+    append(stringBuffer, "    parent::delete();");
+  }
+
+  if (customDeletePostfixCode != null) 
+  {
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
+    hasSomethingToDelete = true;
+  }
+  
+  if (hasSomethingToDelete)
+  {
+    appendln(stringBuffer, "");
+    appendln(stringBuffer, "  }");
+  }
+  else
+  {
+    appendln(stringBuffer, "}");
+  }
+  
+  
+%>

@@ -1,0 +1,79 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int id;
+  private String name;
+  //Trace Attributes
+  private boolean traceNameAfter = false;
+  private boolean traceIdAfter = false;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aId, String aName)
+  {
+    id = aId;
+    name = aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    if( id == 234 )
+    {
+      traceIdAfter = true;
+    }
+    if( traceIdAfter )
+    {
+      System.err.println("id=" + aId);
+    }
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    if( id == 234 )
+    {
+      traceNameAfter = true;
+    }
+    if( traceNameAfter )
+    {
+      System.err.println("name=" + aName);
+    }
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,103 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class AbstractDrawingEditorAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.Drawing;
+depend org.jhotdraw.draw.DrawingEditor;
+depend org.jhotdraw.draw.DrawingView;
+depend javax.swing.*;
+depend javax.swing.undo.*;
+depend java.beans.*;
+depend org.jhotdraw.beans.WeakPropertyChangeListener;
+  isA AbstractAction;
+
+  protected DrawingEditor editor;
+@Nullable private EventHandler eventHandler = new EventHandler();
+public void setEditor(DrawingEditor newValue) {
+        if (eventHandler != null) {
+            unregisterEventHandler();
+        }
+        editor = newValue;
+        if (eventHandler != null) {
+            registerEventHandler();
+            updateEnabledState();
+        }
+    }
+protected void updateEnabledState() {
+        setEnabled(editor != null && editor.isEnabled());
+    }
+public DrawingEditor getEditor() {
+        return editor;
+    }
+protected DrawingView getView() {
+        return editor.getActiveView();
+    }
+protected Drawing getDrawing() {
+        return getView().getDrawing();
+    }
+/** Updates the enabled state of this action to reflect the enabled state
+     * of the active {@code DrawingView}. If no drawing view is active, this
+     * action is disabled.
+     */
+    protected void fireUndoableEditHappened(UndoableEdit edit) {
+        getDrawing().fireUndoableEditHappened(edit);
+    }
+/** By default, the enabled state of this action is updated to reflect
+     * the enabled state of the active {@code DrawingView}.
+     * Since this is not always necessary, and since many listening actions
+     * may considerably slow down the drawing editor, you can switch this
+     * behavior off here.
+     *
+     * @param newValue Specify false to prevent automatic updating of the
+     * enabled state.
+     */
+    public void setUpdateEnabledState(boolean newValue) {
+        // Note: eventHandler != null yields true, if we are currently updating
+        // the enabled state.
+        if (eventHandler != null != newValue) {
+            if (newValue) {
+                eventHandler = new EventHandler();
+                registerEventHandler();
+            } else {
+                unregisterEventHandler();
+                eventHandler = null;
+            }
+        }
+        if (newValue) {
+            updateEnabledState();
+        }
+    }
+/** Returns true, if this action automatically updates its enabled
+     * state to reflect the enabled state of the active {@code DrawingView}.
+     */
+    public boolean isUpdatEnabledState() {
+        return eventHandler != null;
+    }
+/** Unregisters the event handler from the drawing editor and the
+     * active drawing view.
+     */
+    private void unregisterEventHandler() {
+        if (editor != null) {
+            editor.removePropertyChangeListener(eventHandler);
+        }
+    }
+/** Registers the event handler from the drawing editor and the
+     * active drawing view.
+     */
+    private void registerEventHandler() {
+        if (editor != null) {
+            editor.addPropertyChangeListener(new WeakPropertyChangeListener(eventHandler));
+        }
+    }
+@Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("enabled")) {
+                updateEnabledState();
+            }
+        }
+
+}

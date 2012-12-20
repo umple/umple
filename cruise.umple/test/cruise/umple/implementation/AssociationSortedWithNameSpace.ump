@@ -1,0 +1,9 @@
+class Student 
+{
+	Integer id;
+}
+class Mentor 
+{
+	String name;
+	* Profs sorted {name} -- * Student myStudents sorted {id}; 
+}

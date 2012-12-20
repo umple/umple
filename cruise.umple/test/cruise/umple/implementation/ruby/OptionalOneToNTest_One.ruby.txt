@@ -1,0 +1,129 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Mentor
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :name
+
+  #Mentor Associations - for documentation purposes
+  #attr_reader :students
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_name, all_students)
+    @initialized = false
+    @deleted = false
+    @name = a_name
+    @students = []
+    did_add_students = set_students(all_students)
+    raise "Unable to create Mentor, must have 3 @students" unless did_add_students 
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_student(index)
+    a_student = @students[index]
+    a_student
+  end
+
+  def get_students
+    new_students = @students.dup
+    new_students
+  end
+
+  def number_of_students
+    number = @students.size
+    number
+  end
+
+  def has_students
+    has = @students.size > 0
+    has
+  end
+
+  def index_of_student(a_student)
+    index = @students.index(a_student)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.required_number_of_students
+    3
+  end
+
+  def self.minimum_number_of_students
+    3
+  end
+
+  def self.maximum_number_of_students
+    3
+  end
+
+  def set_students(new_students)
+    was_set = false
+    check_new_students = []
+    new_students.each do |new_student|
+      if check_new_students.include?(new_student)
+        return was_set
+      elsif !new_student.get_mentor.nil? and !new_student.get_mentor.eql?(self)
+        return was_set
+      end
+      check_new_students << new_student
+    end
+
+    if check_new_students.size != Mentor.minimum_number_of_students
+      return was_set
+    end
+
+    check_new_students.each do |a_student|
+      @students.delete(a_student)
+    end
+    
+    @students.each do |orphan|
+      orphan.instance_variable_set("@mentor",nil)
+    end
+    @students.clear
+    new_students.each do |new_student|
+      new_student.instance_variable_set("@mentor",self)
+      @students << new_student
+    end
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+    @students.each do |a_student|
+      a_student.instance_variable_set("@mentor",nil)
+    end
+    @students.clear
+  end
+
+end
+end

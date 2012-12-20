@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="scripts/styles_download.css" rel="stylesheet" type="text/css" />
+  <title>Downloading and Installing Umple</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+</head>
+<body>
+
+  <span class="header" summary="University of Ottawa banner"><a href="http://www.uottawa.ca/welcome.html" target="_blank"><img src="scripts/left_generic.jpg" alt="uOttawa" class="uOttawaAbbr" /></a><img src="scripts/bg_header_title.jpg" class="uOttawa" alt="University of Ottawa - Canadas University" /></span>
+  <br/><br/>
+
+  <p class="intro">
+    Below are instructions for downloading and installing Umple, a model-oriented programming technology that lets you model
+    in code.  Here is <a href="http://umple.org">more information</a> 
+    about Umple, or try it online without downloading, using the <a href="http://try.umple.org">UmpleOnline tool</a>
+  </p>
+
+  <h2>Requirements to run Umple</h2>
+  
+  <p>Umple can be used on Mac-OS, Windows or Linux.</p>
+  
+  <h3>For Eclipse</h3>
+  <ul>
+    <li>Indigo Eclipse with Modelling tools. The installation instructions below will also require you to install Jet and XText.</li>
+  </ul>
+  
+    <h3>For command-line use</h3>
+   <ul>
+     <li>An up-to-date JVM.
+   </ul>
+  &nbsp; <br/>
+  
+  
+  <h2>Directions</h2>
+  
+  <h3>Downloading Umple</h3>
+  
+ <ul>
+
+    <li><a href="http://code.google.com/p/umple/downloads/list"><b>
+    The latest official releases of Umple jars can be obtained by clicking here.</b></a>
+    Both the command-line compiler and the Eclipse plugin are available.<br />&nbsp;<br />
+    
+    <li><a href="http://try.umple.org/scripts/umple.jar"><b>The latest build of the command-line
+     compiler from our continuous build process can be obtained by clicking here</b></a>.
+    This is also the version of the compiler used by UmpleOnline. This version will contain experimental
+    features so should not be used in production.<br />&nbsp;<br />
+  
+    <li>To obtain the full tree with source code (including the Umple compiler as a jar, which is necessary to
+    compile Umple itself, select one of the following: <br />&nbsp;<br />
+  
+    <ul>
+    <li>Execute: svn checkout http://umple.googlecode.com/svn/trunk/ umple-read-only
+    <li><a href="tarballs/umple_v1.15.0.1751.tar.gz">Click here or a tarball umple_v1.15.0.1751.tar.gz</a>
+    
+    </ul><br />&nbsp;<br />
+     
+   
+   <li><b>Release notes:</b> <a href="http://changed.umple.org">The list of completed changes applied in the last six months can be found by clicking here</a>
+
+  </ul>
+  
+  <br />&nbsp;<br />
+
+  
+   <h3>Running the Umple compiler on the command line</h3>
+   <ul>
+     <li>Run <pre>java -jar umple.jar &lt;options&gt; &lt;arguments&gt;</pre>
+
+     <li>Specify your umple file as an argument.&nbsp;<br />
+
+     <li>You can use --help as an option to obtain the full set of command-line options. Options available in the <a href="http://try.umple.org/scripts/umple.jar">continuous-build version of the command-line compiler</a> include:
+     <ul>
+     <li>-g, --generate :                          Specify the output language: Java,Cpp, 
+                                          Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,
+                                          Yuml                                 
+      <li> --help :                                  Display the help message               
+      <li> --override :                              If a output language <lang> is         
+                                          specified using option -g, ouptut    
+                                          will only generate language <lang>   
+      <li> --path :                                  If a output language is specified      
+                                          using option -g, output source code  
+                                          will be placed to path               
+      <li> -v, --version :                           Print out the current Umple version    
+                                          number          
+     </ul>
+   </ul>
+
+  <h3> User Manual </h3>
+  
+  <p>Refer to the <a href="http://manual.umple.org">Umple user manual</a> for comprehensive help programming in Umple. The <a href="http://api.umple.org">API quick reference</a> and <a href="http://grammar.umple.org">grammar quick reference</a> may be of particular help for power users.</p>
+
+</body>
+</html>
+

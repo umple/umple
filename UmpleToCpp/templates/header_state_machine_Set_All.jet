@@ -1,0 +1,17 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+{
+  for (StateMachine sm : uClass.getAllStateMachines())  
+  {
+
+    if (sm.getType() == "Simple" && sm.numberOfStates() > 0)
+    {
+      %><%@ include file="header_state_machine_SetSimple.jet" %><%
+    }
+    else if (sm.numberOfStates() > 0)
+    {
+      %><%@ include file="header_state_machine_Set.jet" %><%
+    }
+  }
+}
+%>

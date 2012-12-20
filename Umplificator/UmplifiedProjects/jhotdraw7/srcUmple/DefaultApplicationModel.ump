@@ -1,0 +1,78 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app ;
+
+class DefaultApplicationModel 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.app.action.file.SaveFileAsAction;
+depend org.jhotdraw.app.action.file.SaveFileAction;
+depend org.jhotdraw.app.action.file.NewFileAction;
+depend org.jhotdraw.app.action.file.OpenFileAction;
+depend org.jhotdraw.app.action.file.CloseFileAction;
+depend org.jhotdraw.app.action.edit.PasteAction;
+depend org.jhotdraw.app.action.edit.RedoAction;
+depend org.jhotdraw.app.action.edit.CutAction;
+depend org.jhotdraw.app.action.edit.DeleteAction;
+depend org.jhotdraw.app.action.edit.CopyAction;
+depend org.jhotdraw.app.action.edit.DuplicateAction;
+depend org.jhotdraw.app.action.edit.UndoAction;
+depend org.jhotdraw.app.action.edit.SelectAllAction;
+depend java.util.*;
+depend javax.swing.*;
+depend org.jhotdraw.app.action.edit.ClearSelectionAction;
+  isA AbstractApplicationModel;
+
+  @Nullable private MenuBuilder menuBuilder;
+/**
+     * Does nothing.
+     */
+    @Override
+    public void initView(Application a, View v) {
+    }
+/**
+     * Returns an {@code ActionMap} with a default set of actions (See
+     * class comments).
+     */
+    @Override
+    public ActionMap createActionMap(Application a, @Nullable View v) {
+        ActionMap m=new ActionMap();
+        m.put(NewFileAction.ID, new NewFileAction(a));
+        m.put(OpenFileAction.ID, new OpenFileAction(a));
+        m.put(SaveFileAction.ID, new SaveFileAction(a,v));
+        m.put(SaveFileAsAction.ID, new SaveFileAsAction(a,v));
+        m.put(CloseFileAction.ID, new CloseFileAction(a,v));
+
+        m.put(UndoAction.ID, new UndoAction(a,v));
+        m.put(RedoAction.ID, new RedoAction(a,v));
+        m.put(CutAction.ID, new CutAction());
+        m.put(CopyAction.ID, new CopyAction());
+        m.put(PasteAction.ID, new PasteAction());
+        m.put(DeleteAction.ID, new DeleteAction());
+        m.put(DuplicateAction.ID, new DuplicateAction());
+        m.put(SelectAllAction.ID, new SelectAllAction());
+        m.put(ClearSelectionAction.ID, new ClearSelectionAction());
+        return m;
+    }
+/** Returns an empty unmodifiable list. */
+    @Override
+    public List<JToolBar> createToolBars(Application app, @Nullable View p) {
+        return Collections.emptyList();
+    }
+/** Creates the DefaultMenuBuilder. */
+    protected MenuBuilder createMenuBuilder() {
+        return new DefaultMenuBuilder();
+    }
+@Override
+    public MenuBuilder getMenuBuilder() {
+        if (menuBuilder==null) {
+            menuBuilder=createMenuBuilder();
+        }
+        return menuBuilder;
+    }
+public void setMenuBuilder(@Nullable MenuBuilder newValue) {
+        menuBuilder = newValue;
+    }
+
+}

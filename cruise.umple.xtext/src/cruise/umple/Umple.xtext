@@ -1,0 +1,319 @@
+grammar org.xtext.example.mydsl.Umple with org.eclipse.xtext.common.Terminals
+
+generate umple "http://www.umple.cruise/Umple"
+
+/*Current restrictions:
+	namespace followed by classes followed by statemachines (classes can contain states in any order)
+
+*/
+
+Model :
+	(entities+=entity |glosseries+=glossary | generates+=generate_ | uses+=useStatement | namespaces+=namespace )*;
+
+glossary:
+	"glossary" "{" (word )* "}";
+	
+word:
+	ID ":" ID ";";
+	
+generate_:	//generate is a key word in xtext so generate_ is used instead
+	"generate" ("Java")";" | "generate" "Cpp" | "generate" "Php" | "generate" ID ;
+	
+useStatement:
+	"use" (fileID)";";
+
+namespace:
+	"namespace" (fileID) ";";
+	
+entity:
+	(classes+=classDefinition) | (association+=associationDefinition) | (interfaces+=interfaceDefinition) |(externals+=externalDefinition) |
+	(associationClasses+=associationClassDefinition) | (statemachines+=stateMachineDefinition);
+
+
+classDefinition: "class" (name=ID) "{" (contents+=classContent)* "}";
+
+externalDefinition: "external" (name=ID) "{" (classContents+=classContent)* "}";
+
+//Interface can not have native code right now
+interfaceDefinition: "interface" name=ID "{" (depends+=depend)* (nativeCode=functionDeclaration ";")* "}";
+
+associationDefinition: "association" (name=ID)? "{" (associations+=association)* "}";	
+
+associationClassDefinition: "associationClass" name=ID "{" (associationClassContents+=associationClassContent)* "}";
+
+//CONTENT SECTION
+classContent: 
+	functionDefinition | classDefinition | position | attribute | softwarePattern | depend | 
+	symmetricReflexiveAssociation | stateMachine | 
+	inlineAssociation;
+
+associationClassContent: 
+	functionDefinition | classDefinition| softwarePattern | depend | (singleAssociationEnd) |
+	stateMachine | attribute | inlineAssociation;
+	
+//ASSOCIATIONS/
+association:  multiplicity (type1=ID) (rolename1=ID)?  ("->"|"--"|"<-"|"><") multiplicity (type2=ID) (rolename2=ID)? ";";
+symmetricReflexiveAssociation: multiplicity "self" (rolename=ID) ";";
+inlineAssociation: multiplicity (rolename1=ID)? ("->"|"--"|"<-"|"><") (multiplicity) (type=ID) (rolename2=ID)? ";";
+singleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
+multiplicity: bound | (bound ".." bound);
+bound: INT | "*";
+
+//ATTRIBUTES AND SMALLER BITS
+softwarePattern:
+	isA | singleton | keyDefinition | codeInjection;
+
+isA: "isA" (super=extendedID) ";" | "IsA" ID | "Isa" ID","ID;
+singleton: "singleton" ";";
+codeInjection: beforeCode | afterCode;
+
+attribute:
+	"autounique" name=extendedID ";"|
+	("unique")? modifier? ((type=attributeType (isList="[]")?)|(object=[classDefinition] (isList="[]")?))?  name=extendedID (it=initialization)? ";";
+	
+modifier: ("immutable"|"settable"|"internal"|"defaulted"|"const");
+
+//condictionalExpression covers all expressions except "="
+//See Expression section for details
+
+initialization:  "=" conditionalExpression;
+
+attributeType
+	: 	"Date"
+	|	"Time"
+	|	"double"
+	|	"Integer"|"integer"|"int"
+	|	"Constant"|"constant"
+	|	"Boolean"|"boolean"
+	|	"String"|"string"
+	;
+
+//This section can contain native Java code
+beforeCode: "before" (name=extendedID) code=block;
+
+afterCode: "after" (name=extendedID) code=block;
+
+keyDefinition: "key" "{" (firstKey=key ("," keys+=key)*)? "}";
+key: name=ID;
+
+depend: "depend" name = extendedID (".*")? ";";
+
+
+//STATEMACHINES
+
+stateMachineDefinition: "statemachine" name=extendedID "{" (states+=state)* "}";
+stateMachine: ENUM | inlineStateMachine | referencedStateMachine;
+inlineStateMachine: name=extendedID "{" (states+=state)* "}";
+referencedStateMachine: name = extendedID "as" (machine=[stateMachineDefinition]) ";";
+ENUM: name=extendedID "{" state1=extendedID ("," states+=extendedID)* "}";
+
+state: ("conc")? ("concurrent")? ("|")? stateName=extendedID  "{" (("*")? states+=stateEntity)* "}";
+
+stateEntity: transition | entryOrExitAction | (activity ("->" extendedID ";")?) | state | (expression ";");	
+//This covers just activities and activities that cause a state transition
+
+	
+transition: 
+	(guard (events+=eventDefinition)? "->" a=action? stateName=extendedID ";") |
+	(eventDefinition g=guard? "->" a=action? stateName=extendedID ";") |
+	("->" a=action? stateName=extendedID ";") ;
+	
+eventDefinition: timedEvent | waitEvent | eventID=ID;
+timedEvent: "afterEvery" "(" (INT|ID) ")";
+waitEvent: "wait" "(" (INT|ID) ")";
+action: "/" code=block;
+entryOrExitAction: (type="entry" |type="exit") "/" code=block;
+activity: "do" code=block ";";
+guard: "[" guardCode "]";
+
+//This does allow for additions and modifications as well as boolean expressions
+//but it is the most comprehensive
+guardCode: expression;
+
+position: (a=associationPosition | c=classPosition);
+classPosition: "position" (x=INT) (y=INT) (width=INT) (height=INT) ";";
+associationPosition: "position.association" (index=INT) (c1=coordinate) (c2=coordinate) ";"; //ERROR: UNSURE AS TO WHAT INDEX IS
+coordinate: (x=INT) "," (y=INT);
+extendedID: ID ("." ID)*;
+fileID: CHARS CHARS*;
+CHARS: (extendedID|INT);
+DOUBLE: INT "." INT;
+
+
+
+/** EXPRESSIONS (JAVA and UMPLE)
+ *	START
+ *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
+ *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
+ *	have no left-side recursion.
+ **/
+ parExpression
+	:	'(' expression ')'
+	;
+
+assignmentOperator
+	:	'='
+	|	'+='
+	|	'-='
+	;
+
+
+expressionList
+	:	expressions+=expression (',' expressions+=expression)*
+	;
+
+ 
+ expression
+	: 	expression1=conditionalExpression (assignmentOperator expression2=expression)?
+	;
+	
+conditionalExpression
+    :   expression1=conditionalOrExpression ( '?' expression2=expression ':' expression3=expression )?
+    ;
+
+conditionalOrExpression
+    :   expression1=conditionalAndExpression ( '||' expressionRest+=conditionalAndExpression )*
+    ;
+
+conditionalAndExpression
+    :   expression1=equalityExpression ( '&&' expressionRest+=equalityExpression )*
+    ;
+    
+equalityExpression
+    :   expression1=relationalExpression ( ('==' | '!=')  expressionRest+=relationalExpression)*
+    ;
+
+relationalExpression
+	:	expression1=additiveExpression  (relationalOp expressionRest+=additiveExpression)*
+	;
+
+relationalOp
+	:	"<="
+	|	"<"
+	|	">="
+	|	">"
+	;
+	
+additiveExpression
+    :   expression1=multiplicativeExpression ( ('+' | '-') expressionRest+=multiplicativeExpression )*
+    ;
+
+multiplicativeExpression
+    :   expression1=unaryExpression ( ( '*' | '/' | '%' ) expressionRest+=unaryExpression )*
+    ;
+    
+unaryExpression
+    :   '+' exp1=unaryExpression
+    |   '-' exp1=unaryExpression
+    |   '++' exp1=unaryExpression
+    |   '--' exp1=unaryExpression
+    |   exp2=unaryExpressionNotPlusMinus
+    ;
+
+unaryExpressionNotPlusMinus
+    :   '~' unaryExpression
+    |   '!' unaryExpression
+    |	primary ('++'|'--')?
+    ;
+
+primary
+	:	parExpression
+	|	literal
+	;
+
+literal
+	:	INT
+	|	DOUBLE
+	|	STRING
+	|	extendedID
+	|	javaFunctionCall
+	|	"true"	| "TRUE"
+	|	"false"	| "FALSE"
+	;
+	
+/** EXPRESSIONS
+ *	END
+ **/
+
+//LANGUAGE DEPENDENT
+functionCall: javaFunctionCall;	//Expand list with more options
+
+functionDeclaration: java=javaFunctionDeclaration;
+
+functionDefinition: java=javaFunctionDefinition;
+
+//This handles bare code
+block:	javaBlock;
+
+/** JAVA NATIVE CODE
+ *	START
+ *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
+ *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
+ *	have no left-side recursion.
+**/
+
+//Methods
+javaFunctionDeclaration:
+("static")? ("public"|"private"|"protected") (returnType=attributeType|"void") name=ID "(" (argList+=attributeType argListID+=extendedID ("," argList+=attributeType argListID+=extendedID)*)? ")";
+
+javaFunctionDefinition: 
+decl=javaFunctionDeclaration code=javaBlock
+;
+
+javaFunctionCall: name=extendedID "(" args=expressionList? ")";
+
+
+
+javaBlock
+    :   '{' blocks+=blockStatement* '}'
+    ;
+    
+blockStatement
+    :	statement
+    |	localVariableDeclarationStatement
+    ;
+
+localVariableDeclarationStatement
+    :    localVariableDeclaration ';'
+    ;
+
+localVariableDeclaration
+    :   type=attributeType dec=variableDeclarators
+    ;
+   
+variableDeclarators
+    :   vd+=variableDeclarator (',' vd+=variableDeclarator)*
+    ;
+
+variableDeclarator
+    :   name=extendedID ('=' exp=expression)?
+    ;
+
+statement
+	:	javaBlock
+	|	'if' condition=parExpression state1=statement ('else' state2=statement)?
+	|	'for' '(' control=forControl ')' state=statement
+	|	 'while' condition=parExpression state=statement
+	|   'return' retVal=expression? ';'
+	|	';'
+	|	"break" ";"
+	|	expression ';'
+	;
+	
+forControl
+	:	init=forInit? ';' condition=expression? ';' update=forUpdate?
+	;
+
+forInit
+	:	(expressions+=expression (',' expressions+=expression)*)
+	|	localVariableDeclaration
+	;
+
+forUpdate
+	:	expressionList;
+
+
+/** JAVA NATIVE CODE
+ *	END
+**/
+	

@@ -1,0 +1,30 @@
+class Foo
+{
+	// Inline comment above method.
+	void testMethod1()
+	{
+		// I am a comment inside a method.
+	}
+	
+	// Multiple inline comments
+	// above method.
+	void testMethod2()
+	{
+		// I am a comment inside a method.
+	}
+	
+	/* Multiline comment above method. */
+	void testMethod3()
+	{
+		// I am a comment inside a method.
+	}
+	
+	/*
+	 * Multiple multiline comments
+	 * above method.
+	 */
+	void testMethod4()
+	{
+		// I am a comment inside a method.
+	}
+}

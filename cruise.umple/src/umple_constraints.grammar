@@ -1,0 +1,35 @@
+// The master of this part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_constraints.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Constraints in Umple.
+// This is currently under development. Constraint capability is being
+// developed in agile increments. The first step, described below,
+// allows limiting the values of attributes. Code generation is not currently enabled.
+// Constraints may appear in classes (including association classes) 
+// as well as in states.
+precondition : [ ([name]? pre:) ([[constraint]]) ]
+postcondition : [ ([name]? post:) ([[constraint]]) ]
+
+invariant : [ ([name] :)? ([[constraint]]) ]
+// A constraint is an expression optionally be surrounded in round brackets or negated
+constraint- :  [[negativeConstraint]] | OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[constraintBody]]
+
+negativeConstraint : ! OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET | ! [[constraintBody]]
+
+// A constraint body is a Boolean constraint value or a constraint expression.  
+constraintBody- : [[boolExpr]]
+
+compoundExpr- : [[boolExpr]]
+boolExpr : ( [constraintVal] [[boolOp]] [constraintVal] ) | ( [constraintVal] )
+boolOp- : >= | > | == | != | <= | < 
+
+//constraintVal : [name]
+
+//constraintBody : [name]
+
+
+// NOTE: Additional grammar parts deleted while testing is ongoing.

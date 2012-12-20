@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleCore" >
+
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+  <import file="_template.xml" />
+
+  <property name="project.path" value="cruise.umple"/>
+  <property name="xtext.project.path" value="cruise.umple.xtext"/>
+  <property name="jopt-simple.project.path" value="jopt-simple"/>
+  <property name="bin.path" value="${project.path}/bin"/>
+  <property name="dist.path" value="dist/cruise.umple"/>
+  <property name="test.output.path" value="dist/qa/cruise.umple"/>
+
+  <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="umple.classpath"/>
+    <path refid="junit4.classpath"/>
+    <path refid="xtext_core.classpath"/>
+  </path>
+
+  <path id="xtext.project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="umple.classpath"/>
+    <path refid="junit4.classpath"/>
+    <path refid="xtext_core.classpath"/>
+  </path>
+
+  <!-- ```````````````````````````
+    Clean up and initialize any potential byproduct
+  ``````````````````````````` -->
+
+  <target name="umpleSelf">
+      <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="cruise.umple/src/Master.ump"/>
+    </java>
+  </target>
+
+  <!-- ```````````````````````````
+    Generate JET Templates
+  ``````````````````````````` -->
+ 
+  <!-- Move the generic JET templates into the various UmpleTo* projects -->
+  <target name="templates">
+	<!--
+	<exec executable="ruby" failonerror="true" dir="build">
+		<arg value="InsertDebugCodeScript.rb" />
+	</exec>	
+	-->
+    <copy todir="UmpleToJava/templates" overwrite="true">
+      <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
+    </copy>
+    <copy todir="UmpleToPhp/templates" overwrite="true">
+      <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
+    </copy>
+    <copy todir="UmpleToRuby/templates" overwrite="true">
+      <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
+    </copy>
+    <copy todir="UmpleToCpp/templates" overwrite="true">
+      <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
+    </copy>
+  </target>
+  
+  <!-- Move the generated code from UmpleTo* to cruise.umple -->
+  <target name="codegen">
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/java" overwrite="true">
+      <fileset dir="UmpleToJava/src/cruise/umple/compiler/java" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/php" overwrite="true">
+      <fileset dir="UmpleToPhp/src/cruise/umple/compiler/php" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/ruby" overwrite="true">
+      <fileset dir="UmpleToRuby/src/cruise/umple/compiler/ruby" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/cpp" overwrite="true">
+      <fileset dir="UmpleToCpp/src/cruise/umple/compiler/cpp" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
+      <fileset dir="UmpleToSql/src/cruise/umple/compiler/sql" excludes="*.svn" />
+    </copy>
+  </target>
+  
+  <!-- ```````````````````````````
+    Compile the application
+  ``````````````````````````` -->
+
+  <target name="compile">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+	<src path="${xtext.project.path}/src"/>
+      <src path="${xtext.project.path}/src-gen"/>
+      <src path="${project.path}/src"/>
+      <src path="${project.path}/src-gen-jet"/>
+      <src path="${project.path}/src-gen-umple"/>
+      <src path="${project.path}/test"/>
+      <src path="${jopt-simple.project.path}/src/main/java"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <exclude name="**/data" />
+      <classpath refid="project.classpath"/>
+    </javac>
+    <copy todir="${bin.path}" overwrite="true">
+	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
+	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
+    </copy>
+  </target>
+
+  <!-- ```````````````````````````
+    Package the application
+  ``````````````````````````` -->
+
+  <target name="packageDocs">
+    <java classname="cruise.umple.docs.DocumenterMain" fork="true" classpath="dist/umpledocs.jar">
+      <arg value="build/reference"/>
+      <arg value="${dist.path}/reference"/>
+    </java>
+    <copy todir="${dist.path}/reference/files">
+      <fileset dir="build/reference/files"/>
+    </copy>
+  </target>
+  
+  <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
+    <copy file="dist/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="dist/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
+  </target>
+
+  <target name="packageJars">
+    <property name="umple_classpath" value=" " />
+    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error" excludes="**/*Test.class">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.UmpleConsoleMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.stats.StatsMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.docs.DocumenterMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <copy todir="${bin.path}">
+      <fileset dir="lib/umplerun"/>
+    </copy>
+
+    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/** *.grammar *.error">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.UmpleRunMain"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error cruise/vml/** *.grammar *.error">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.vml.VmlConsole"/>
+        <attribute name="Class-Path" value="${umple_classpath}"/>
+      </manifest>
+    </jar>
+
+	  <!-- TODO: UNCOMMENT ONCE XTEXT IN THE MIX -->
+    <!-- <copy todir="dist/update">
+      <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
+    </copy>
+    <copy todir="../umpleonline/update">
+      <fileset dir="../cruise.umple.xtext/umpleUpdateSite"/>
+    </copy> -->
+  </target>
+	  
+  <target name="package">
+    <echo message="Package Version: ${umple.version}" />
+	  <antcall target="packageJars" />
+	  <antcall target="packageUmpleonline" />
+	  <antcall target="packageDocs" />
+  </target>
+
+  <!-- Move Umpleonline files back into the test data - Add new moves to the beginning-->
+	<target name="umpleonlineToTest">
+    <copy tofile="cruise.umple/test/data/Co-OpSystem/CoOpSystem.ump" file="umpleonline/ump/CoOpSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/CommunityAssociation/CommunityAssociation.ump" file="umpleonline/ump/CommunityAssociation.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/PizzaDelivery/Pizza.ump" file="umpleonline/ump/Pizza.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/VendingMachine/VendingMachineClassDiagram.ump" file="umpleonline/ump/VendingMachineClassDiagram.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/CardGames/OhHellWhist.ump" file="umpleonline/ump/OhHellWhist.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Canal/CanalLockStateMachine.ump" file="umpleonline/ump/CanalLockStateMachine.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Canal/CanalSystem.ump" file="umpleonline/ump/CanalSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/bCMS/RoutesAndLocations.ump" file="umpleonline/ump/RoutesAndLocations.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/bCMS/CoordinationStateMachine.ump" file="umpleonline/ump/CoordinationStateMachine.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/2DShapes/2DShapes.ump" file="umpleonline/ump/2DShapes.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/AccessControl/AccessControl.ump" file="umpleonline/ump/AccessControl.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Accidents/Accidents.ump" file="umpleonline/ump/Accidents.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Accommodations/Accommodations.ump" file="umpleonline/ump/Accommodations.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/AfghanRainDesign/AfghanRainDesign.ump" file="umpleonline/ump/AfghanRainDesign.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Airline/AirlineExample.ump" file="umpleonline/ump/AirlineExample.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Banking/a/BankingSystemA.ump" file="umpleonline/ump/BankingSystemA.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Banking/b/BankingSystemB.ump" file="umpleonline/ump/BankingSystemB.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Election/ElectionSystem.ump" file="umpleonline/ump/ElectionSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Elevator/a/ElevatorSystemA.ump" file="umpleonline/ump/ElevatorSystemA.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Elevator/b/ElevatorSystemB.ump" file="umpleonline/ump/ElevatorSystemB.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Genealogy/a/GenealogyA.ump" file="umpleonline/ump/GenealogyA.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Genealogy/b/GenealogyB.ump" file="umpleonline/ump/GenealogyB.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Genealogy/c/GenealogyC.ump" file="umpleonline/ump/GenealogyC.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/GeographicalInfo/GeographicalInformationSystem.ump" file="umpleonline/ump/GeographicalInformationSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Hospital/Hospital.ump" file="umpleonline/ump/Hospital.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Hotel/Hotel.ump" file="umpleonline/ump/Hotel.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Insurance/Insurance.ump" file="umpleonline/ump/Insurance.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump" file="umpleonline/ump/MailOrderSystemClientOrder.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/InventoryAndOrders/InventoryManagement/InventoryManagement.ump" file="umpleonline/ump/InventoryManagement.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/InventoryAndOrders/System/MailOrderSystem.ump" file="umpleonline/ump/MailOrderSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Library/Library.ump" file="umpleonline/ump/Library.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/ManufacturingPlant/ManufactoringPlantController.ump" file="umpleonline/ump/ManufactoringPlantController.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Police/PoliceSystem.ump" file="umpleonline/ump/PoliceSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/PoliticalEntities/PoliticalEntities.ump" file="umpleonline/ump/PoliticalEntities.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/TelephoneSystem/TelephoneSystem.ump" file="umpleonline/ump/TelephoneSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/TrafficLights/TrafficLightsA.ump" file="umpleonline/ump/TrafficLightsA.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/University/UniversitySystem.ump" file="umpleonline/ump/UniversitySystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Warehouse/WarehouseSystem.ump" file="umpleonline/ump/WarehouseSystem.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/RealEstate/realestate.ump" file="umpleonline/ump/realestate.ump" overwrite="true" />
+	</target>
+	
+	<!-- Move test data into Umpleonline -->
+	<target name="testToUmpleonline">
+		<copy file="cruise.umple/test/data/2DShapes/2DShapes.ump" tofile="umpleonline/ump/2DShapes.ump" overwrite="true" />
+		<copy file="cruise.umple/test/data/AccessControl/AccessControl.ump" tofile="umpleonline/ump/AccessControl.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Accidents/Accidents.ump" tofile="umpleonline/ump/Accidents.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Accommodations/Accommodations.ump" tofile="umpleonline/ump/Accommodations.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/AfghanRainDesign/AfghanRainDesign.ump" tofile="umpleonline/ump/AfghanRainDesign.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Airline/AirlineExample.ump" tofile="umpleonline/ump/AirlineExample.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Banking/a/BankingSystemA.ump" tofile="umpleonline/ump/BankingSystemA.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Banking/b/BankingSystemB.ump" tofile="umpleonline/ump/BankingSystemB.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Election/ElectionSystem.ump" tofile="umpleonline/ump/ElectionSystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Elevator/a/ElevatorSystemA.ump" tofile="umpleonline/ump/ElevatorSystemA.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Elevator/b/ElevatorSystemB.ump" tofile="umpleonline/ump/ElevatorSystemB.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Genealogy/a/GenealogyA.ump" tofile="umpleonline/ump/GenealogyA.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Genealogy/b/GenealogyB.ump" tofile="umpleonline/ump/GenealogyB.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Genealogy/c/GenealogyC.ump" tofile="umpleonline/ump/GenealogyC.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/GeographicalInfo/GeographicalInformationSystem.ump" tofile="umpleonline/ump/GeographicalInformationSystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Hotel/Hotel.ump" tofile="umpleonline/ump/Hotel.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Insurance/Insurance.ump" tofile="umpleonline/ump/Insurance.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump" tofile="umpleonline/ump/MailOrderSystemClientOrder.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/InventoryAndOrders/InventoryManagement/InventoryManagement.ump" tofile="umpleonline/ump/InventoryManagement.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/InventoryAndOrders/System/MailOrderSystem.ump" tofile="umpleonline/ump/MailOrderSystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Library/Library.ump" tofile="umpleonline/ump/Library.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/ManufacturingPlant/ManufactoringPlantController.ump" tofile="umpleonline/ump/ManufactoringPlantController.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Police/PoliceSystem.ump" tofile="umpleonline/ump/PoliceSystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/PoliticalEntities/PoliticalEntities.ump" tofile="umpleonline/ump/PoliticalEntities.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/TelephoneSystem/TelephoneSystem.ump" tofile="umpleonline/ump/TelephoneSystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/TrafficLights/TrafficLightsA.ump" tofile="umpleonline/ump/TrafficLightsA.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/University/UniversitySystem.ump" tofile="umpleonline/ump/UniversitySystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Warehouse/WarehouseSystem.ump" tofile="umpleonline/ump/WarehouseSystem.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/RealEstate/realestate.ump" tofile="umpleonline/ump/realestate.ump" overwrite="true" />
+	</target>  
+
+  <!-- ```````````````````````````
+    Deploy the application
+  ``````````````````````````` -->
+
+  <target name="deploy" if="${shouldDeploy}">
+    <echo message="Deploying Version: ${umple.version}" />
+    <antcall target="deployUmpleonlineJars" />
+  </target>
+  
+  <target name="deployUmpleonlineJars" >
+    <copy file="dist/umplesync.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="dist/umple.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="dist/vml.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar" overwrite="true" />
+  </target>
+
+  <target name="deployUmpleonline" >
+    <antcall target="deployUmpleonlineJars" />
+    <antcall target="deployUmpleDocs" />    
+    <copy todir="/h/ralph/sites/www/html/umpleonline">
+      <fileset dir="umpleonline">
+        <exclude name=".svn"/>
+        <exclude name="ump"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="deployUmpleDocs" >
+    <antcall target="packageDocs" />
+    <copy todir="/h/ralph/sites/www/html/umple">
+      <fileset dir="dist/cruise.umple/reference">
+        <exclude name=".svn"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- ```````````````````````````
+    Build the application
+  ``````````````````````````` -->
+  
+  <!-- 
+    Build
+    run by the build machine, should work as-is on your machine, but be careful
+    as your code will be run against the "latest" Umpled Umple.
+   -->
+  <target name="build" >
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
+    <antcall target="codegen" />
+    <antcall target="template.setVersion" />
+    <antcall target="compile" />
+    <antcall target="package" />
+    <antcall target="umpleSelf" />
+    <antcall target="compile" />
+    <antcall target="template.test" />
+    <antcall target="package" />
+    <antcall target="deploy" />
+    <antcall target="template.resetVersion" />
+  </target>
+  
+  <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
+  <target name="pre_build" >
+    <antcall target="compile" />
+    <antcall target="template.test" />
+  </target>
+
+  <!-- Run This Command if you are working outside Eclipse and want to see if the tests are passing -->
+  <target name="local" >
+    <antcall target="umpleSelf" />
+    <antcall target="compile" />
+    <!-- <antcall target="template.test" /> -->
+  </target>
+
+  
+  <!-- Other projects that rely on UmpleCore can call this target to ensure the the application
+       Is compiled -->
+
+  <target name="precondition" >
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
+    <antcall target="codegen" />
+    <antcall target="template.setVersion" />
+    <antcall target="compile" />
+  </target>
+
+  <target name="postcondition" >
+    <antcall target="template.resetVersion" />
+  </target>
+
+</project>
+

@@ -1,0 +1,102 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class AttributeToggler 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend javax.swing.text.*;
+depend java.util.*;
+depend javax.swing.undo.*;
+depend org.jhotdraw.app.action.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractAction;
+
+  private DrawingEditor editor;
+private AttributeKey<T> key;
+private T value1;
+private T value2;
+@Nullable private Action compatibleTextAction;
+public DrawingView getView() {
+        return editor.getActiveView();
+    }
+public DrawingEditor getEditor() {
+        return editor;
+    }
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        if (compatibleTextAction != null) {
+            Component focusOwner = KeyboardFocusManager.
+                    getCurrentKeyboardFocusManager().
+                    getPermanentFocusOwner();
+            if (focusOwner != null && focusOwner instanceof JTextComponent) {
+                compatibleTextAction.actionPerformed(evt);
+                return;
+            }
+        }
+        
+        // Determine the new value
+        Iterator i = getView().getSelectedFigures().iterator();
+        T toggleValue = value1;
+        if (i.hasNext()) {
+            Figure f = (Figure) i.next();
+            Object attr = f.get(key);
+            if (value1 == null && attr == null ||
+                    (value1 != null && attr != null && attr.equals(value1))) {
+                toggleValue = value2;
+            }
+        }
+        final T newValue = toggleValue;
+        
+        //--
+        final ArrayList<Figure> selectedFigures = new ArrayList<Figure>(getView().getSelectedFigures());
+        final ArrayList<Object> restoreData = new ArrayList<Object>(selectedFigures.size());
+        for (Figure figure : selectedFigures) {
+            restoreData.add(figure.getAttributesRestoreData());
+            figure.willChange();
+            figure.set(key, newValue);
+            figure.changed();
+        }
+        UndoableEdit edit = new AbstractUndoableEdit() {
+            @Override
+            public String getPresentationName() {
+                String name = (String) getValue(ActionUtil.UNDO_PRESENTATION_NAME_KEY);
+                if (name == null) {
+                    name = (String) getValue(AbstractAction.NAME);
+                }
+                if (name == null) {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+                    name = labels.getString("attribute.text");
+                }
+                return name;
+            }
+            @Override
+            public void undo() {
+                super.undo();
+                Iterator<Object> iRestore = restoreData.iterator();
+                for (Figure figure : selectedFigures) {
+                    figure.willChange();
+                    figure.restoreAttributesTo(iRestore.next());
+                    figure.changed();
+                }
+            }
+            @Override
+            public void redo() {
+                super.redo();
+                for (Figure figure : selectedFigures) {
+                    //restoreData.add(figure.getAttributesRestoreData());
+                    figure.willChange();
+                    figure.set(key, newValue);
+                    figure.changed();
+                }
+            }
+        };
+        getView().getDrawing().fireUndoableEditHappened(edit);
+    }
+
+}

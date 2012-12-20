@@ -1,0 +1,98 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class MySubordinate
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //MySubordinate Attributes
+  private $number;
+
+  //MySubordinate Associations
+  private $myDriver;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aNumber, $aMyDriver)
+  {
+    $this->number = $aNumber;
+    $didAddMyDriver = $this->setMyDriver($aMyDriver);
+    if (!$didAddMyDriver)
+    {
+      throw new Exception("Unable to create mySubordinate due to myDriver");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setNumber($aNumber)
+  {
+    $wasSet = false;
+    $this->number = $aNumber;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getNumber()
+  {
+    return $this->number;
+  }
+
+  public function getMyDriver()
+  {
+    return $this->myDriver;
+  }
+
+  public function setMyDriver($newMyDriver)
+  {
+    $wasSet = false;
+    if ($newMyDriver == null)
+    {
+      //Unable to setMyDriver to null, as mySubordinate must always be associated to a myDriver
+      return $wasSet;
+    }
+    
+    $existingMySubordinate = $newMyDriver->getMySubordinate();
+    if ($existingMySubordinate != null && $this != $existingMySubordinate)
+    {
+      //Unable to setMyDriver, the current myDriver already has a mySubordinate, which would be orphaned if it were re-assigned
+      return $wasSet;
+    }
+    
+    $oldMyDriver = $this->myDriver;
+    $this->myDriver = $newMyDriver;
+    $this->myDriver->setMySubordinate($this);
+    
+    if ($oldMyDriver != null)
+    {
+      $oldMyDriver->setMySubordinate(null);
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingMyDriver = $this->myDriver;
+    $this->myDriver = null;
+    if ($existingMyDriver != null)
+    {
+      $existingMyDriver->setMySubordinate(null);
+    }
+  }
+
+}
+?>

@@ -1,0 +1,28 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class RotateHandle 
+{
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+  isA AbstractRotateHandle;
+
+  @Override
+    protected Point2D.Double getCenter() {
+        Rectangle2D.Double bounds = getTransformedBounds();
+    	return new Point2D.Double(bounds.getCenterX(), bounds.getCenterY());
+    }
+@Override
+    protected Point2D.Double getOrigin() {
+        // This handle is placed above the figure.
+        // We move it up by a handlesizes, so that it won't overlap with
+        // the handles from TransformHandleKit.
+        Rectangle2D.Double bounds = getTransformedBounds();
+        Point2D.Double origin = new Point2D.Double(bounds.getCenterX(),
+                bounds.y - getHandlesize() / view.getScaleFactor());
+        return origin;
+    }
+
+}

@@ -1,0 +1,22 @@
+class NewName
+{
+}
+
+class Mentor
+{
+}
+
+association 
+{
+  * NewName -- * Mentor;
+}
+
+class NewName
+{
+  position 50 30 109 41;
+}
+
+class Mentor
+{
+  position 50 130 109 41;
+}

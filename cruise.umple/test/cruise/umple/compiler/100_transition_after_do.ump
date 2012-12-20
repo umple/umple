@@ -1,0 +1,15 @@
+class Switch
+{
+  status
+  {
+    On
+    {
+      press -> Off;
+    }
+    
+    Off 
+    {
+      do { keepDoing; } -> On;
+    }
+  }
+}

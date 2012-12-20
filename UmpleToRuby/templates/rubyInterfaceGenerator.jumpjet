@@ -1,0 +1,22 @@
+<%@ jet package="cruise.umple.compiler.ruby" class="RubyInterfaceGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+  UmpleInterface uInterface = (UmpleInterface) uElement;
+  // GeneratedInterface gInterface = uInterface.getGeneratedInterface();
+  RubyGenerator gen = new RubyGenerator();
+  gen.setModel(model);
+  
+  String extraCode = "";
+  if (uInterface.getExtraCode() != null)
+  {
+    extraCode = uInterface.getExtraCode();
+  }
+
+%>
+
+<%=gen.translate("packageDefinition",uInterface)%>
+<%@ include file="import_packages_interface.jet" %>
+
+class <%=uInterface.getName()%>
+  <%=extraCode%>
+end

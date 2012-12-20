@@ -1,0 +1,117 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+
+  //Student Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber)
+  {
+    number = aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(String aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public boolean setMentor(Mentor aMentor)
+  {
+    //
+    // This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+    // This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+    // it's not required (No upper bound)
+    //   
+    boolean wasSet = false;
+    Mentor existingMentor = mentor;
+	
+    if (existingMentor == null)
+    {
+      if (aMentor != null)
+      {
+        if (aMentor.addStudent(this))
+        {
+          existingMentor = aMentor;
+          wasSet = true;
+        }
+      }
+    } 
+    else if (existingMentor != null)
+    {
+      if (aMentor == null)
+      {
+        if (existingMentor.minimumNumberOfStudents() < existingMentor.numberOfStudents())
+        {
+          existingMentor.removeStudent(this);
+          existingMentor = aMentor;  // aMentor == null
+          wasSet = true;
+        }
+      } 
+      else
+      {
+        if (existingMentor.minimumNumberOfStudents() < existingMentor.numberOfStudents())
+        {
+          existingMentor.removeStudent(this);
+          aMentor.addStudent(this);
+          existingMentor = aMentor;
+          wasSet = true;
+        }
+      }
+    }
+    if (wasSet)
+    {
+      mentor = existingMentor;
+    }
+    return wasSet;
+  }
+  
+  public void delete()
+  {
+    if (mentor != null)
+    {
+      if (mentor.numberOfStudents() <= 5)
+      {
+        mentor.delete();
+      }
+      else
+      {
+        Mentor placeholderMentor = mentor;
+        this.mentor = null;
+        placeholderMentor.removeStudent(this);
+      }
+    }
+  }
+
+}

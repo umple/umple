@@ -1,0 +1,63 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+nameapace example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private string firstName;
+  private string lastName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(string aFirstName, string aLastName)
+  {
+    firstName = aFirstName;
+    lastName = aLastName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setFirstName(string aFirstName)
+  {
+    boolean wasSet = false;
+    firstName = aFirstName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLastName(string aLastName)
+  {
+    boolean wasSet = false;
+    lastName = aLastName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public string getFirstName()
+  {
+    print "before";
+    return firstName;
+  }
+
+  public string getLastName()
+  {
+    print "before";
+    return lastName;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,118 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+class Light
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Light Attributes
+  private $v;
+  private $y;
+
+  //Light State Machines
+  private static $StatusOn = 1;
+  private static $StatusOff = 2;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->v = 0;
+    $this->y = 0;
+    $this->setStatus(self::$StatusOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setV($aV)
+  {
+    $wasSet = false;
+    $this->v = $aV;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setY($aY)
+  {
+    $wasSet = false;
+    $this->y = $aY;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getV()
+  {
+    return $this->v;
+  }
+
+  public function getY()
+  {
+    return $this->y;
+  }
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOn) { return "StatusOn"; }
+    elseif ($this->status == self::$StatusOff) { return "StatusOff"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOn)
+    {
+      $this->setStatus(self::$StatusOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($aStatus == self::$StatusOff)
+    {
+      $this->setStatus(self::$StatusOn);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusOn)
+    {
+      print("Tracing state StatusOn entry action(s)");
+      System.out.println("entry state On");
+    }
+    elseif ($this->status == self::$StatusOff)
+    {
+      System.out.println("entry state Off");
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

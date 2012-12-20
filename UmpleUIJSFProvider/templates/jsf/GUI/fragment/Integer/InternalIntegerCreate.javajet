@@ -1,0 +1,10 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="InternalIntegerCreate" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<% if (attVar.getValue()==null){ %>
+	<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+	<h:inputText value="#{#1#Bean.<%=attVar.getName()%>}"  >
+		<f:converter converterId="javax.faces.Integer" />
+	</h:inputText>
+<% } %>

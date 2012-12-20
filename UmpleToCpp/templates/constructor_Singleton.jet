@@ -1,0 +1,9 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+  <%=uClass.getName()%>* <%=uClass.getName()%>::getInstance()
+  {
+    if(!theInstance)
+    {
+      theInstance = new <%=uClass.getName()%>;
+    }
+    return theInstance;
+  }

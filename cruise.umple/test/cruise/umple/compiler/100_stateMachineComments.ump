@@ -1,0 +1,23 @@
+
+// one
+// two
+class LightFixture
+{
+  // three
+  // four
+  status
+  {
+    // five
+    // six
+    On {
+        // seven
+        // eight 
+        flip -> Off;  
+    }
+    // nine
+    // ten
+    Off { }
+    // eleven
+    // twelve
+  }
+}

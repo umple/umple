@@ -1,0 +1,8 @@
+
+generate Java "../src-gen-umple";
+
+class Student
+{
+  name;
+  
+}

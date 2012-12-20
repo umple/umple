@@ -1,0 +1,9 @@
+namespace example;
+
+class Tracer
+{
+	Integer id;
+	String name;
+	String address;
+	trace name,id record address;
+}

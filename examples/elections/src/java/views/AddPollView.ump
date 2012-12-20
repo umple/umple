@@ -1,0 +1,92 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace view.addPoll;
+
+external JFrame{}
+
+class AddPollView {
+  isA JFrame;
+
+  depend java.util.List;
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+  depend javax.swing.JTextField;
+  depend javax.swing.JTextArea;
+  depend javax.swing.JButton;
+  depend javax.swing.JComboBox;
+  depend shared.listeners.GenericMouseListener;
+  depend shared.listeners.GenericWindowListener;
+  depend shared.domain.Election;
+  depend view.ViewUtils;
+
+  lazy internal JLabel pollNameLabel;
+  lazy internal JLabel pollDescriptionLabel;
+  lazy internal JTextField pollNameTextField;
+  lazy internal JTextArea pollDescriptionTextArea;
+  lazy internal JButton addPollButton;
+  lazy internal JLabel electionsLabel;
+  lazy internal JComboBox electionsComboBox;
+  
+  lazy String pollName;
+  lazy String pollDescription;
+  List<Election> elections;
+  lazy Election selectedElection;
+    
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    pollNameLabel=new JLabel("poll Name:");
+    pollNameLabel.setBounds(10, 10, 200, 20);
+    add(pollNameLabel);
+    
+    pollNameTextField=new JTextField();
+    pollNameTextField.setBounds(10, 30, 200, 20);
+    add(pollNameTextField);
+    
+    pollDescriptionLabel=new JLabel("Add a description:");
+    pollDescriptionLabel.setBounds(10, 50, 200, 20);
+    add(pollDescriptionLabel);
+    
+    pollDescriptionTextArea=new JTextArea();
+    pollDescriptionTextArea.setBounds(10, 70, 200, 60);
+    add(pollDescriptionTextArea);
+    
+    electionsLabel=new JLabel("Select an election:");
+    electionsLabel.setBounds(10, 135, 200, 20);
+    add(electionsLabel);
+
+    electionsComboBox=new JComboBox(elections.toArray());
+    electionsComboBox.setBounds(10, 155, 200, 20);
+    add(electionsComboBox);
+    
+    addPollButton=new JButton("add");
+    addPollButton.setBounds(75, 180, 75, 20);
+    addPollButton.addMouseListener(GenericMouseListener.AddPollViewMouseListener);
+    add(addPollButton);
+    
+    pack();
+    setSize(250, 250);
+    
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.AddPollViewWindowListener);
+  }
+  
+  before getPollName {
+    pollName=pollNameTextField.getText();
+  }
+  
+  before getPollDescription {
+    pollDescription=pollDescriptionTextArea.getText();
+  }
+  
+  before getSelectedElection {
+    selectedElection=(Election)electionsComboBox.getSelectedItem();
+  }
+}

@@ -1,0 +1,30 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.datatransfer ;
+
+class AbstractClipboard 
+{
+depend java.awt.datatransfer.Clipboard;
+depend java.awt.datatransfer.ClipboardOwner;
+depend java.awt.datatransfer.Transferable;
+  isA Clipboard;
+
+  /** Returns a {@code Transferable} object representing the current contents
+     * of the clipboard. If the clipboard currently has no contents, it returns
+     * null.
+     *
+     *    @return The current {@code Transferable} object on the clipboard.
+     */
+    @Override
+    public abstract Transferable getContents(Object requestor);
+/** Sets the current contents of the clipboard to the specified
+     * {@code Transferable} object.
+     *
+     * @param contents The {@code Transferable} object representing clipboard
+     * content.
+     */
+    @Override
+    public abstract void setContents(Transferable contents, ClipboardOwner owner);
+
+}

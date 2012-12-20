@@ -1,0 +1,20 @@
+namespace education;
+
+class School {
+ String name;
+ String address;
+ String description;
+ 0..1 -- * Person student;
+ key{name}
+}
+
+namespace human;
+
+class Person {
+ String name;
+ Integer idNumber;
+ key{idNumber}
+}
+
+
+

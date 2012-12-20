@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<f:subview>
+	<h:form>
+		<rich:panel style="width:450px" id="ElectionMainPanel#{uniqueId}">
+			<f:facet name="header">
+			#{aElectionBundle.ElectionClassName} 
+			</f:facet>
+			<h:panelGrid columns="1" >
+				<h:panelGrid columns="3"  columnClasses="colStyle1"  rendered="#{!aElectionBean.editing}" >
+				
+						<h:outputText value="#{aElectionBundle.IdElection}" />
+	<h:inputText value="#{aElectionBean.idElection}" >
+		<f:converter converterId="javax.faces.Integer" />
+	</h:inputText>
+					<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				
+				
+				<h:outputText value="#{aElectionBundle.Description}" />
+<h:inputText value="#{aElectionBean.description}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+				<h:outputText value="#{aElectionBundle.Name}" />
+<h:inputText value="#{aElectionBean.name}" ></h:inputText>
+
+					<h:outputText value=" " />
+				
+				
+					<h:outputText value="#{aElectionBundle.Date}" />
+	<rich:calendar value="#{aElectionBean.date}" popup="true"
+						datePattern="yyyy-MM-dd" showApplyButton="false" cellWidth="24px"
+						cellHeight="22px" style="width:200px" />
+					<h:outputText value=" " />
+				
+				
+				
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="colStyle1"  rendered="#{aElectionBean.editing}">
+				
+				<h:outputText value="#{aElectionBundle.IdElection}" />
+<h:outputText value="#{aElectionBean.editedElectionVO.idElection}" >
+<f:converter converterId="javax.faces.Integer" />
+</h:outputText>
+
+						<h:graphicImage value="/images/icons/key.png" style="border:0" />
+				
+				
+					<h:outputText value="#{aElectionBundle.Description}" />
+<h:inputText value="#{aElectionBean.description}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+					<h:outputText value="#{aElectionBundle.Name}" />
+<h:inputText value="#{aElectionBean.name}" ></h:inputText>
+					<h:outputText value=" " />
+					
+
+				
+						<h:outputText value="#{aElectionBundle.Date}" />
+	<rich:calendar value="#{aElectionBean.date}" popup="true"
+						datePattern="yyyy-MM-dd" showApplyButton="false" cellWidth="24px"
+						cellHeight="22px" style="width:200px" />
+					<h:outputText value=" " />
+					
+
+				
+				</h:panelGrid>
+				<h:panelGrid columns="2" columnClasses="colStyle1"  >
+			
+					
+		
+
+			</h:panelGrid>
+				
+		
+		<h:panelGrid columns="2" rendered="#{aElectionBean.editing}"	 >
+<rich:simpleTogglePanel switchType="client"  label="" style="width:350px; text-align:center;" >	
+			<f:facet name="openMarker">
+				<h:outputText value="Show #{aElectionBundle.Poll}s +" style="font-weight:bold;color:black;"/>
+			</f:facet>
+			<f:facet name="closeMarker">
+				<h:outputText value="Hide #{aElectionBundle.Poll}s -" style="font-weight:bold;color:black;"/>
+			</f:facet>				
+	<rich:dataTable value="#{aElectionBean.pollList}" var="reg"
+		onRowMouseOver="this.style.backgroundColor='#F1F1F1'" style="align:center;"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'" rows="10" rowKeyVar="row"	>
+		<f:facet name="header">
+			<h:outputText value="#{aElectionBundle.Poll}" />
+		</f:facet>
+
+		
+		
+			
+		<rich:column>	
+						<f:facet name="header"><h:outputText value="#{aPollBundle.IdPoll}"/></f:facet>
+			<h:outputText value="#{reg.idPoll}" >
+			<f:converter converterId="javax.faces.Integer" />
+			</h:outputText>
+
+		</rich:column>				
+			
+		
+							
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+
+		</rich:column>			
+		<f:facet name="footer">
+			<rich:datascroller renderIfSinglePage="false" />
+
+		</f:facet>
+	</rich:dataTable>
+	</rich:simpleTogglePanel>
+		<a4j:commandLink value="" reRender="PollPanelRichPanel#{uniqueId}"
+			immediate="true" 
+			action="#{aElectionBean.toPolls}"
+			oncomplete="Richfaces.showModalPanel('PollGridPanel#{uniqueId}');">
+			<h:outputText value="Manage" />
+		</a4j:commandLink>
+					</h:panelGrid>				
+				
+		
+		<h:panelGrid columns="2" rendered="#{aElectionBean.editing}"	 >
+<rich:simpleTogglePanel switchType="client"  label="" style="width:350px; text-align:center;" >	
+			<f:facet name="openMarker">
+				<h:outputText value="Show #{aElectionBundle.ElectionForPosition}s +" style="font-weight:bold;color:black;"/>
+			</f:facet>
+			<f:facet name="closeMarker">
+				<h:outputText value="Hide #{aElectionBundle.ElectionForPosition}s -" style="font-weight:bold;color:black;"/>
+			</f:facet>				
+	<rich:dataTable value="#{aElectionBean.electionForPositionList}" var="reg"
+		onRowMouseOver="this.style.backgroundColor='#F1F1F1'" style="align:center;"
+		onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'" rows="10" rowKeyVar="row"	>
+		<f:facet name="header">
+			<h:outputText value="#{aElectionBundle.ElectionForPosition}" />
+		</f:facet>
+
+		
+		
+			
+		<rich:column>	
+						<f:facet name="header"><h:outputText value="#{aElectionForPositionBundle.IdElectionForPosition}"/></f:facet>
+			<h:outputText value="#{reg.idElectionForPosition}" >
+			<f:converter converterId="javax.faces.Integer" />
+			</h:outputText>
+
+		</rich:column>				
+			
+		
+							
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+
+		</rich:column>			
+		<f:facet name="footer">
+			<rich:datascroller renderIfSinglePage="false" />
+
+		</f:facet>
+	</rich:dataTable>
+	</rich:simpleTogglePanel>
+		<a4j:commandLink value="" reRender="ElectionForPositionPanelRichPanel#{uniqueId}"
+			immediate="true" 
+			action="#{aElectionBean.toElectionForPositions}"
+			oncomplete="Richfaces.showModalPanel('ElectionForPositionGridPanel#{uniqueId}');">
+			<h:outputText value="Manage" />
+		</a4j:commandLink>
+					</h:panelGrid>				
+			
+			
+		
+
+			<h:panelGrid columns="2" style="width:100%; text-align:right;">
+					<a4j:commandButton action="#{aElectionBean.createOrEdit}"
+						value="#{aElectionBean.editing?'Update':'Add'}"
+						reRender="ElectionGridContainer#{uniqueId}, ElectionMainPanel#{uniqueId}" />
+					<a4j:commandButton action="#{aElectionBean.cancel}"  
+						value="Cancel" reRender="ElectionMainPanel#{uniqueId}" />
+			</h:panelGrid>
+			</h:panelGrid>
+		</rich:panel>
+	</h:form>
+</f:subview>
+<f:subview>
+	<rich:spacer height="3" />
+		<rich:panel style="border-style:none; background-color:transparent" id="ElectionGridContainer#{uniqueId}">
+		<rich:spacer height="3" />
+		 <ui:include src="grid.xhtml">
+			<ui:param name="mainPanel" value="ElectionMainPanel#{uniqueId}"/>
+			<ui:param name="parentId" value="#{uniqueId}"/>
+			<ui:param name="uniqueId" value="5" />
+		</ui:include>
+	</rich:panel>
+</f:subview>
+		
+	
+	
+<rich:modalPanel id="PollGridPanel#{uniqueId}" autosized="true">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="#{aElectionBundle.Poll}"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+
+			<f:subview>
+				<h:form>
+					<a4j:commandLink
+						action="#{aElectionBean.toPollsDone}" value=""
+						reRender="ElectionMainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('PollGridPanel#{uniqueId}');">
+						<h:graphicImage value="/images/icons/close.png"
+							styleClass="hidelink"  />
+					</a4j:commandLink>
+				</h:form>
+			</f:subview>
+		</h:panelGroup>
+	</f:facet>
+
+	<rich:panel id="PollPanelRichPanel#{uniqueId}">
+
+		<ui:include src="/pages/elections/Poll/PollInsertable.xhtml">
+			<ui:param name="mainPanel" value="ElectionMainPanel#{uniqueId}"/>
+			<ui:param name="uniqueId" value="6"/>
+		</ui:include>
+		<f:subview>
+			<h:form>
+				<h:panelGrid columns="2">
+					<a4j:commandButton
+						action="#{aElectionBean.toPollsDone}" value="Close"
+						reRender="ElectionMainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('PollGridPanel#{uniqueId}');" />
+				</h:panelGrid>
+			</h:form>
+		</f:subview>
+	</rich:panel>
+</rich:modalPanel><rich:modalPanel id="ElectionForPositionGridPanel#{uniqueId}" autosized="true">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="#{aElectionBundle.ElectionForPosition}"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+
+			<f:subview>
+				<h:form>
+					<a4j:commandLink
+						action="#{aElectionBean.toElectionForPositionsDone}" value=""
+						reRender="ElectionMainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('ElectionForPositionGridPanel#{uniqueId}');">
+						<h:graphicImage value="/images/icons/close.png"
+							styleClass="hidelink"  />
+					</a4j:commandLink>
+				</h:form>
+			</f:subview>
+		</h:panelGroup>
+	</f:facet>
+
+	<rich:panel id="ElectionForPositionPanelRichPanel#{uniqueId}">
+
+		<ui:include src="/pages/elections/ElectionForPosition/ElectionForPositionInsertable.xhtml">
+			<ui:param name="mainPanel" value="ElectionMainPanel#{uniqueId}"/>
+			<ui:param name="uniqueId" value="7"/>
+		</ui:include>
+		<f:subview>
+			<h:form>
+				<h:panelGrid columns="2">
+					<a4j:commandButton
+						action="#{aElectionBean.toElectionForPositionsDone}" value="Close"
+						reRender="ElectionMainPanel#{uniqueId}"
+						oncomplete="Richfaces.hideModalPanel('ElectionForPositionGridPanel#{uniqueId}');" />
+				</h:panelGrid>
+			</h:form>
+		</f:subview>
+	</rich:panel>
+</rich:modalPanel>	
+</html>

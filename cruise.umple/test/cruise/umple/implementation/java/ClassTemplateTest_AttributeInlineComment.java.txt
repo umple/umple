@@ -1,0 +1,48 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+public class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Attributes
+  private String bar;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Foo(String aBar)
+  {
+    bar = aBar;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setBar(String aBar)
+  {
+    boolean wasSet = false;
+    bar = aBar;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * I am a inline comment above an attribute.
+   */
+  public String getBar()
+  {
+    return bar;
+  }
+
+  public void delete()
+  {}
+
+}

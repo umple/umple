@@ -1,0 +1,14 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class ListFigure 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.layouter.VerticalLayouter;
+depend org.jhotdraw.geom.*;
+  isA GraphicalCompositeFigure;
+
+  
+}

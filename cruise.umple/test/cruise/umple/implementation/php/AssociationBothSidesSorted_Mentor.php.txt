@@ -1,0 +1,189 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $name;
+  private $studentsPriority;
+
+  //Mentor Associations
+  private $students;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aName)
+  {
+    $this->name = $aName;
+    $this->studentsPriority = "id";
+    $this->students = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setStudentsPriority($aStudentsPriority)
+  {
+    $wasSet = false;
+    $this->studentsPriority = $aStudentsPriority;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getStudentsPriority()
+  {
+    return $this->studentsPriority;
+  }
+
+  public function getStudent($index)
+  {
+    $aStudent = $this->students[$index];
+    return $aStudent;
+  }
+
+  public function getStudents()
+  {
+    $newStudents = $this->students;
+    return $newStudents;
+  }
+
+  public function numberOfStudents()
+  {
+    $number = count($this->students);
+    return $number;
+  }
+
+  public function hasStudents()
+  {
+    $has = $this->numberOfStudents() > 0;
+    return $has;
+  }
+
+  public function indexOfStudent($aStudent)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->students as $student)
+    {
+      if ($student->equals($aStudent))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfStudents()
+  {
+    return 0;
+  }
+
+  public function addStudent($aStudent)
+  {
+    $wasAdded = false;
+    if ($this->indexOfStudent($aStudent) !== -1) { return false; }
+    $this->students[] = $aStudent;
+    if ($aStudent->indexOfMentor($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aStudent->addMentor($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->students);
+      }
+    }
+      $this->sort($this->students, $this->studentsPriority);
+      
+    return $wasAdded;
+  }
+
+  public function removeStudent($aStudent)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfStudent($aStudent) == -1)
+    {
+      $this->sort($this->students, $this->studentsPriority);
+      
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfStudent($aStudent);
+    unset($this->students[$oldIndex]);
+    if ($aStudent->indexOfMentor($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aStudent->removeMentor($this);
+      if (!$wasRemoved)
+      {
+        $this->students[$oldIndex] = $aStudent;
+        ksort($this->students);
+      }
+    }
+    $this->students = array_values($this->students);
+    $this->sort($this->students, $this->studentsPriority);
+    
+    return $wasRemoved;
+  }
+
+  public function sort(&$toSort, $thePriority)
+  {
+    if(count($toSort) > 0)
+    {
+      $methodName = "get".ucfirst($thePriority);
+      usort($toSort, function($x, $y) use ($methodName)
+      {
+        $var1 = call_user_func(array($x, $methodName));
+        $var2 = call_user_func(array($y, $methodName));
+        return $var1 - $var2;
+      });
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $copyOfStudents = $this->students;
+    $this->students = array();
+    foreach ($copyOfStudents as $aStudent)
+    {
+      $aStudent->removeMentor($this);
+    }
+  }
+
+}
+?>

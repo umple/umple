@@ -1,0 +1,35 @@
+/* 
+  c 1
+  c 1b
+*/
+/* 
+  c 1c
+  c 1d
+*/
+/* c 2 */
+/* 
+  c 2b
+  c 2c
+*/
+/* 
+  c 2d
+  c 2e
+*/
+/* 
+  c 2f
+  c 2g
+*/
+/* c 3 */
+/* 
+  c 3b
+  c 3c
+*/
+namespace example; /* c 4 */
+/* 
+  c 4b
+  c 4c
+*/
+/* 
+  c 4d
+  c 4e
+*/

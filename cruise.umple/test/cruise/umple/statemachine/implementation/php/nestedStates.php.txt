@@ -1,0 +1,160 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private static $BulbOff = 1;
+  private static $BulbOn = 2;
+  private static $BulbOnNull = 3;
+  private static $BulbOnNormal = 4;
+  private static $BulbOnDimmed = 5;
+  private $bulb;
+  private $bulbOn;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulbOn(self::$BulbOnNull);
+    $this->setBulb(self::$BulbOff);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    if ($this->bulbOn != self::$BulbOnNull) { $answer .= "." . $this->getBulbOn(); }
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    elseif ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    return null;
+  }
+
+  public function getBulbOn()
+  {
+    if ($this->bulbOn == self::$BulbOnNull) { return "BulbOnNull"; }
+    elseif ($this->bulbOn == self::$BulbOnNormal) { return "BulbOnNormal"; }
+    elseif ($this->bulbOn == self::$BulbOnDimmed) { return "BulbOnDimmed"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbOn);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulb == self::$BulbOn)
+    {
+      $this->exitBulb();
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterOn()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulbOn = $this->bulbOn;
+    if ($aBulbOn == self::$BulbOnNull)
+    {
+      $this->setBulbOn(self::$BulbOnNormal);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitOn()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulbOn = $this->bulbOn;
+    if ($aBulbOn == self::$BulbOnNormal)
+    {
+      $this->setBulbOn(self::$BulbOnNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulbOn == self::$BulbOnDimmed)
+    {
+      $this->setBulbOn(self::$BulbOnNull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function touch()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulbOn = $this->bulbOn;
+    if ($aBulbOn == self::$BulbOnNormal)
+    {
+      $this->setBulbOn(self::$BulbOnDimmed);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulbOn == self::$BulbOnDimmed)
+    {
+      $this->exitBulb();
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitBulb()
+  {
+    if ($this->bulb == self::$BulbOn)
+    {
+      $this->exitOn();
+    }
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+
+    // entry actions and do activities
+    if ($this->bulb == self::$BulbOn)
+    {
+      if ($this->bulbOn == self::$BulbOnNull) { $this->setBulbOn(self::$BulbOnNormal); }
+    }
+  }
+
+  private function setBulbOn($aBulbOn)
+  {
+    $this->bulbOn = $aBulbOn;
+    if ($this->bulb != self::$BulbOn && $aBulbOn != self::$BulbOnNull) { $this->setBulb(self::$BulbOn); }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

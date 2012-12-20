@@ -1,0 +1,160 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Foo Associations
+
+  /**
+   * I am a multiline comment above an association.
+   */
+  private $bars;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->bars = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBar($index)
+  {
+    $aBar = $this->bars[$index];
+    return $aBar;
+  }
+
+  public function getBars()
+  {
+    $newBars = $this->bars;
+    return $newBars;
+  }
+
+  public function numberOfBars()
+  {
+    $number = count($this->bars);
+    return $number;
+  }
+
+  public function hasBars()
+  {
+    $has = $this->numberOfBars() > 0;
+    return $has;
+  }
+
+  public function indexOfBar($aBar)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->bars as $bar)
+    {
+      if ($bar->equals($aBar))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfBars()
+  {
+    return 0;
+  }
+
+  public function addBarVia()
+  {
+    return new Bar($this);
+  }
+
+  public function addBar($aBar)
+  {
+    $wasAdded = false;
+    if ($this->indexOfBar($aBar) !== -1) { return false; }
+    $existingFoo = $aBar->getFoo();
+    $isNewFoo = $existingFoo != null && $this !== $existingFoo;
+    if ($isNewFoo)
+    {
+      $aBar->setFoo($this);
+    }
+    else
+    {
+      $this->bars[] = $aBar;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeBar($aBar)
+  {
+    $wasRemoved = false;
+    //Unable to remove aBar, as it must always have a foo
+    if ($this !== $aBar->getFoo())
+    {
+      unset($this->bars[$this->indexOfBar($aBar)]);
+      $this->bars = array_values($this->bars);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function addBarAt($aBar, $index)
+  {  
+    $wasAdded = false;
+    if($this->addBar($aBar))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBars()) { $index = $this->numberOfBars() - 1; }
+      array_splice($this->bars, $this->indexOfBar($aBar), 1);
+      array_splice($this->bars, $index, 0, array($aBar));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveBarAt($aBar, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfBar($aBar) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfBars()) { $index = $this->numberOfBars() - 1; }
+      array_splice($this->bars, $this->indexOfBar($aBar), 1);
+      array_splice($this->bars, $index, 0, array($aBar));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addBarAt($aBar, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->bars as $aBar)
+    {
+      $aBar->delete();
+    }
+  }
+
+}
+?>

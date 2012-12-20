@@ -1,0 +1,10 @@
+<%@ jet package="cruise.data.impl.dao" 
+imports="java.util.* cruise.umple.compiler.Attribute cruise.umple.compiler.UmpleClass cruise.model.abstractObjects.BackingObject;"
+class="DAOInterface"  skeleton="../skeleton/IGenerator.skeleton" %>
+<% BackingObject clazz =(BackingObject)argument; %>
+package dao.<%=clazz.getPackageName()%>;
+import <%=clazz.getPackageName()%>.<%=clazz.getClassName()%>;
+import dao.keys.<%=clazz.getPackageName()%>.<%=clazz.getClassName()%>Key;
+import dao.generic.GenericDAO;
+public interface <%=clazz.getClassName()%>DAO extends GenericDAO<<%=clazz.getDAOTable()%>, <%=clazz.getClassName()%>Key> {
+}

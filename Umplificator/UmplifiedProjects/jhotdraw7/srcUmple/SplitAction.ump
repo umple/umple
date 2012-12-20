@@ -1,0 +1,17 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg.action ;
+
+class SplitAction 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.samples.svg.figures.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA CombineAction;
+
+  public final static String ID = "edit.splitPath";
+private ResourceBundleUtil labels =
+            ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
+
+}

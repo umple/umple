@@ -1,0 +1,14 @@
+
+namespace example;
+
+class Course
+{
+  status as generic;
+}
+
+statemachine generic
+{ 
+  Open { register -> Closed;}  
+  Closed { deregister -> Open;}
+}
+

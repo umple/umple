@@ -1,0 +1,14 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="SetteableTime" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+	<h:panelGrid columns="3">
+	<h:selectOneMenu value="#{#1#Bean.<%= attVar.getName()+"Hour"%>}">
+		<f:selectItems value="#{timeBean.hours}" />
+	</h:selectOneMenu>
+	<h:outputText value=":" />
+	<h:selectOneMenu value="#{#1#Bean.<%= attVar.getName()+"Minute"%>}">
+		<f:selectItems value="#{timeBean.minutes}" />
+	</h:selectOneMenu>
+</h:panelGrid>

@@ -1,0 +1,15 @@
+class Student
+{
+  immutable;
+}
+
+class Mentor
+{
+  immutable;
+}
+
+association
+{
+  immutable 1 Student -> 6..9 Mentor myMentor;
+  immutable * Student me -> * Student them;
+}

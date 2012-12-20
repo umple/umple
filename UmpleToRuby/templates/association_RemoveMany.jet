@@ -1,0 +1,20 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  def <%=gen.translate("removeMethod",av)%>(<%=gen.translate("parameterOne",av)%>)
+    was_removed = false
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
+    unless @<%=gen.translate("associationMany",av)%>.include?(<%=gen.translate("parameterOne",av)%>)
+      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
+      return was_removed
+    end
+
+    oldIndex = @<%=gen.translate("associationMany",av)%>.index(<%=gen.translate("parameterOne",av)%>)
+    @<%=gen.translate("associationMany",av)%>.delete_at(oldIndex)
+    if <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(self) == -1
+      was_removed = true
+    else
+      was_removed = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("removeMethod",av)%>(self)
+      @<%=gen.translate("associationMany",av)%>.insert(oldIndex,<%=gen.translate("parameterOne",av)%>) unless was_removed
+    end
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
+    was_removed
+  end

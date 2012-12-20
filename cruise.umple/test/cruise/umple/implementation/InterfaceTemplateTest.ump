@@ -1,0 +1,43 @@
+namespace example;
+
+interface ISomething
+{
+  constant String aVariable = aValue;
+  constant Integer MAX = 3;
+  
+  String getCode (String[] aParam, Integer anotherParam);
+  String isValid();
+}
+
+interface IGarbage
+{
+}
+
+interface ICodeTranslator
+{
+   String translate(String id, Attribute attribute);
+   String translate(String id, AssociationVariable associationVariable);
+}
+
+class CodeTranslator
+{
+  isA ICodeTranslator;
+}
+
+class Something
+{
+  isA ISomething;
+}
+
+class Garbage
+{
+  isA ISomething, IGarbage;
+}
+
+interface IFirstChild{
+	isA ISomething;
+}
+
+interface ISecondChild{
+	isA ISomething, IGarbage;
+}

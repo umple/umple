@@ -1,0 +1,9 @@
+
+class Student
+{
+  isA Person;
+}
+
+class Person
+{}
+

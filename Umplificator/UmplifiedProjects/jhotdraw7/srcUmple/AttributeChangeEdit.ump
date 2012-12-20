@@ -1,0 +1,36 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class AttributeChangeEdit 
+{
+depend org.jhotdraw.draw.*;
+depend javax.swing.undo.*;
+  isA AbstractUndoableEdit;
+
+  private Figure owner;
+private AttributeKey<T> name;
+private T oldValue;
+private T newValue;
+@Override
+    public String getPresentationName() {
+        // FIXME - Localize me
+        return "Eigenschaft \u00e4ndern";
+    }
+@Override
+    public void redo() throws CannotRedoException {
+        super.redo();
+        owner.willChange();
+        owner.set(name, newValue);
+        owner.changed();
+    }
+@Override
+    public void undo() throws CannotUndoException {
+        super.undo();
+        owner.willChange();
+        owner.set(name, oldValue);
+        owner.changed();
+    }
+
+}

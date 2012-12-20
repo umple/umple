@@ -1,0 +1,36 @@
+class Garage {
+
+  String door
+  {
+    state Closed
+    {
+      entry / stopMotor { System.out.println("Stopping Motor"); }
+      pressButton -> Opening;
+    }
+
+    state Opening{
+    entry / runMotorForward {extraCode}
+    openingComplete -> Open;    
+    }
+    
+    state Open{
+    entry / stopMotor {}
+    pressButton -> Closing;    
+    }
+
+    state Closing{
+    entry / runMotorInReverse ;
+    pressButton -> Opening;
+    closingComplete -> Closed;
+    
+    }
+  
+  }    
+}
+
+
+public void stopMotor() {};
+
+public void runMotorForward() {System.out.println("running forward"};
+
+

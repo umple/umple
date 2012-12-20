@@ -1,0 +1,121 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Foo.h"
+#include "Bar.h"
+
+	int i;
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Foo::Foo()
+  {
+    for (i=0; i<bars.size(); i++)
+	{
+		bars[i] = NULL;
+	}
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Foo::Foo(const Foo & foo)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Foo Foo::operator=(const Foo & foo)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  Bar* Foo::getBar(int index) 
+  {
+    Bar* aBar = bars[index];
+    return aBar;
+  }
+
+  vector<Bar*> Foo::getBars() 
+  {
+    vector<Bar*> newBars = bars;
+    return newBars;
+  }
+
+  int Foo::numberOfBars()
+  {
+    int number = bars.size();
+    return number;
+  }
+
+  bool Foo::hasBars()
+  {
+    bool has = bars.size() > 0;
+    return has;
+  }
+  
+  int Foo::indexOfBar(Bar* aBar)
+  {
+    int index = find(bars.begin(), bars.end(), aBar) - bars.begin();
+    return index;
+  }
+  
+  static int minimumNumberOfBars()
+  {
+    return 0;
+  }
+
+  Bar Foo::addBar()
+  {
+    return new Bar(this);
+  }
+
+  bool Foo::addBar(Bar* aBar)
+  {
+    bool wasAdded = false;
+    if (find(bars.begin(),bars.end(),aBar) != bars.end()) { return false; }
+    Foo* existingFoo = aBar->getFoo();
+    bool isNewFoo = (existingFoo != NULL && this!=existingFoo);
+    if (isNewFoo)
+    {
+      aBar->setFoo(this);
+    }
+    else
+    {
+      bars.push_back(aBar);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  bool Foo::removeBar(Bar* aBar)
+  {
+    bool wasRemoved = false;
+	int index = find(bars.begin(), bars.end(), aBar) - bars.begin();
+    //Unable to remove aBar, as it must always have a foo
+    if (this!=aBar->getFoo())
+    {
+      bars.erase(find(bars.begin(),bars.end(),aBar));
+	  delete bars[index];
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
+  {
+    for(i =0; sizeof(bars); i++)
+    {
+      delete bars[i];
+    }
+  }

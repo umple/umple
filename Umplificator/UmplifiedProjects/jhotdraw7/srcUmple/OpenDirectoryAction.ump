@@ -1,0 +1,20 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.file ;
+
+class OpenDirectoryAction 
+{
+depend javax.swing.JFileChooser;
+depend org.jhotdraw.app.*;
+depend org.jhotdraw.gui.URIChooser;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA OpenFileAction;
+
+  public final static String ID = "file.openDirectory";
+@Override
+    protected URIChooser getChooser(View view) {
+        return getApplication().getModel().createOpenDirectoryChooser(getApplication(), view);
+    }
+
+}

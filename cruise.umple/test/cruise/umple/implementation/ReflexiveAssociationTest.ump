@@ -1,0 +1,30 @@
+namespace example;
+
+class Mentor 
+{
+  name;
+  0..1 self superMentor;
+}
+
+class Student
+{
+  Integer number;
+  0..1 ta -- 0..1 Student pupil;
+}
+
+class OneSymmetric
+{
+  name;
+  Integer number;
+  1 self friend;
+}
+
+class OneSymmetricNoParam
+{
+  1 self friend;
+}
+
+class OneToMany
+{
+  1 <- * OneToMany lot;
+}

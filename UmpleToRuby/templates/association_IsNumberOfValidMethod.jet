@@ -1,0 +1,11 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  def <%=gen.translate("isNumberOfValidMethod",av)%>
+    <% if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } %>
+<% if (av.getMultiplicity().isUpperBoundMany()) { %>
+    is_valid = <%=gen.translate("numberOfMethod",av)%> >= <%=uClass.getName()%>.<%=gen.translate("minimumNumberOfMethod",av)%>
+<% } else { %>
+    is_valid = <%=gen.translate("numberOfMethod",av)%> >= <%=uClass.getName()%>.<%=gen.translate("minimumNumberOfMethod",av)%> and <%=gen.translate("numberOfMethod",av)%> <= <%=uClass.getName()%>.<%=gen.translate("maximumNumberOfMethod",av)%>
+<% } %>
+    <% if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } %>
+    is_valid
+  end

@@ -1,0 +1,36 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  if (!av.getIsNavigable())
+  {
+    continue;
+  }
+
+  if (av.isOnlyOne())
+  {
+    %><%@ include file="constructor_AssociationAssignOne.jet" %><%
+  }
+  else if (av.isOptionalMany())
+  {%>
+    for (i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+	{
+		<%=gen.translate("associationMany",av)%>[i] = NULL;
+	}<%
+  }
+  else if (av.isMandatoryMany())
+  {
+    %><%@ include file="constructor_AssociationAssignMandatoryMany.jet" %><%
+  }
+  else if (av.getMultiplicity().getLowerBound() > 0)
+  {
+    %>for (i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
+	{
+		<%=gen.translate("associationMany",av)%>[i] = NULL;
+	};
+    <%=gen.translate("associationMany",av)%>.push_back(<%=gen.translate("parameterOne",av)%>);<%
+  }
+  else
+  {
+    continue;
+  }
+  hasBody = true;
+%>

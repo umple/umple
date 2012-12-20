@@ -1,0 +1,340 @@
+namespace cruise.umple.builder;
+
+external Object {}
+external ClassLoader {}
+
+class Command 
+{
+  depend  java.util.regex.*;  
+  depend  java.lang.reflect.*;
+  String[] history;
+  String[] messages;
+  String[] attributes;
+  Object currentObject = null;
+  ClassLoader loader;
+
+  public void addAttributes(String input)
+  {
+    if (input == null)
+    {
+      return;
+    }
+    boolean isFirst = true;
+    for(String d : input.split(","))
+    {
+      if (isFirst)
+      {
+        isFirst = false;
+        continue;
+      }
+      addAttribute(d.trim());
+    }    
+  }
+
+  public String[] popMessages()
+  {
+    String[] local = getMessages();
+    messages = new ArrayList<String>();
+    return local;
+  }
+
+  public Object exec(String rawInput)
+  {
+    addHistory(rawInput);
+    
+    String input = "";
+    ArrayList<String> assertions = new ArrayList<String>();
+    for(String d : rawInput.split(","))
+    {
+      if (input.isEmpty())
+      {
+        input = d;
+      }
+      else
+      {
+        assertions.add(d);
+      }
+    }
+    
+    Matcher newObjectMatch = Pattern.compile("new ([^\\s]*)").matcher(input);
+    Matcher showMatch = Pattern.compile("show ([^\\s]*)").matcher(input);
+    Object answer = null;
+    if (newObjectMatch.matches())
+    {
+      answer = newObject(newObjectMatch.group(1));
+    }
+    else if (showMatch.matches())
+    {
+      answer = showResults(showMatch.group(1));
+    }
+    else
+    {
+      runMethod(input);
+    }
+    
+    for(int i=0; i<attributes.size(); i++)
+    {
+      if (i == assertions.size())
+      {
+        break;
+      }
+      String methodName = attributes.get(i);
+      String expectedValue = assertions.get(i);
+      assertMethod(methodName,expectedValue);
+    }
+    return answer;
+  }
+
+  public Object newObject(String className)
+  {
+    currentObject = null;
+    try 
+    {
+      Class classDefinition = Class.forName(className,true,loader);
+      currentObject = classDefinition.newInstance();
+    }
+    catch (Throwable e) {
+    }
+    
+    if (currentObject != null)
+    {
+      addMessage("Created " + className);
+    }
+    else
+    {
+      addMessage("Unable to create " + className);
+    }
+    
+    return currentObject;
+  }
+  
+  public void runMethod(String methodName)
+  {
+    callMethod(methodName,false,true);
+  }
+  
+  public Object showResults(String methodName)
+  {
+    return callMethod(methodName,true,false);
+  }
+  
+  public boolean assertMethod(String methodName, String rawExpectedValue)
+  {
+    String expectedValue = rawExpectedValue.trim();
+    
+    if (expectedValue.equals(""))
+    {
+      return true;
+    }
+        
+    Object result = callMethod(methodName,false,false);
+    
+    boolean isNull = result == null;
+    boolean isNullButEqual = expectedValue.equals("NULL") && isNull;
+    boolean isEqual = !isNull && expectedValue.equals(result.toString());
+    
+    if (isNullButEqual || isEqual)
+    {
+      showValue(methodName,result);
+      return true;
+    }
+    else
+    {
+      String actualValue = isNull ? "[NULL]" : result.toString();
+      addMessage("!!! ASSERTION FAILED on "+ methodName +", EXPECTED "+ expectedValue +", ACTUAL " + actualValue);
+      return false;
+    }
+  }
+  
+  private Object callMethod(String methodName, boolean showValue, boolean showExecuted)
+  {
+    try 
+    {
+      Class c = currentObject.getClass();
+      Method m = c.getMethod(methodName);
+      Object answer = m.invoke(currentObject);
+
+      if (showExecuted)
+      {
+        addMessage("Executed #" + methodName);  
+      }
+      
+      if (showValue)
+      {
+        showValue(methodName,answer);
+      }
+      return answer;
+    }
+    catch (Throwable e) {
+      addMessage("Unable to execute #" + methodName);  
+      return null;
+    }
+  }
+  
+  private void showValue(String methodName, Object answer)
+  {
+    if (answer == null)
+    {
+      addMessage(methodName + " = [NULL]");
+    }
+    else
+    {
+      addMessage(methodName + " = " + answer.toString());  
+    }
+  }
+  
+}
+
+class Builder {
+
+  depend java.io.*;
+  depend java.net.*;
+  depend org.apache.tools.ant.*;
+  
+  public URL compile(String directory, String jarname, String projectName, String javaTarget)
+  {
+
+    String buildfile = createAntFile(directory, "build-"+ projectName +".xml", jarname, javaTarget);
+    if (buildfile == null)
+    {
+      return null;
+    }
+    
+    try {
+      runAnt(buildfile);
+      File jarfile = new File(directory + "//" + jarname) ;
+      return jarfile.exists() ? new URL("jar:file:///" + jarfile.getAbsolutePath() + "!/") : null;
+    } 
+    catch (MalformedURLException e) 
+    {
+      return null;
+    }
+    catch (BuildException e2)
+    {
+      return null;
+    }
+  }
+  
+  public void load(String directory, String jarname) 
+  {
+    try {
+      //String jarfile = "jar:file:///" + new File(directory).getAbsolutePath() + "/"+ jarname +"!/";
+      DynamicClassPathLoader.addJar(directory, jarname);
+    } 
+    catch (IOException e) 
+    {
+      throw new RuntimeException("Unable to load application jar",e);
+    }
+  }
+  
+  public boolean runAnt(String buildFilename)
+  {
+    try
+    {
+      Process p;
+      if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    	  p = Runtime.getRuntime().exec("ant.bat -f " + (new File(buildFilename)).getAbsolutePath());
+      }
+      else {
+    	p = Runtime.getRuntime().exec("ant -f " + (new File(buildFilename)).getAbsolutePath());
+      }
+      //Uncomment these lines if the process has been failing. It might give you an idea of what's going on.
+      //BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
+      //System.out.println(b.readLine());
+      p.waitFor();
+      return true;  
+    }
+    catch (IOException e)
+    {
+      return false;
+    }
+    catch (InterruptedException e2)
+    {
+      return false;
+    }
+  }
+  
+  public void runAntOLD(String buildFilename)
+  {
+    File buildFile = new File(buildFilename);
+    Project p = new Project();
+    p.setUserProperty("ant.file", buildFile.getAbsolutePath());
+    p.init();
+    ProjectHelper helper = ProjectHelper.getProjectHelper();
+    p.addReference("ant.projectHelper", helper);
+    helper.parse(p, buildFile);
+    p.executeTarget(p.getDefaultTarget());    
+  }
+  
+  private String createAntFile(String baseDirectory, String buildname, String jarname, String javaTarget)
+  {
+    
+    String antScript = "" +
+      "<project name=\"runtime-compiler\" default=\"go\" basedir=\".\">\n" +
+      "  <target name=\"clean\">\n" +
+      "    <delete file=\""+ jarname +"\" failonerror=\"false\" />\n" +
+      "    <delete failonerror=\"false\">\n" +
+      "        <fileset dir=\".\" includes=\"**/*.class\"/>\n" +
+      "      </delete>\n" +
+      "  </target>\n" +
+      "  <target name=\"compile\">\n" +
+      "    <javac debug=\"true\" debuglevel=\"source,lines,vars\" includeAntRuntime=\"false\" destdir=\".\" srcdir=\".\" target=\""+ javaTarget +"\">\n" +
+      "      <exclude name=\"**/.svn\"/>\n" +
+      "    </javac>\n" +
+      "  </target>\n" +
+      "  <target name=\"jar\">\n" +
+      "    <jar destfile=\""+ jarname +"\" basedir=\".\" excludes=\"**/.svn\" />\n" +
+      "  </target>\n" +
+      "  <target name=\"go\" depends=\"clean,compile,jar\" /> \n" +       
+      "</project>";
+    
+    try {
+      String buildfile = baseDirectory + "/" + buildname;
+      BufferedWriter out = new BufferedWriter(new FileWriter(buildfile));
+      out.write(antScript);
+      out.close();
+      return buildfile;
+    } 
+    catch (IOException e) 
+    {
+      return null;
+    }
+  }
+  
+}
+
+
+class DynamicClassPathLoader
+{
+  depend java.io.*;
+  depend java.lang.reflect.*;
+  depend java.net.*;
+  depend java.net.*;
+  
+  private static final Class<?>[] parameters = new Class[]{URL.class};
+
+  public static void addJar(String baseDirectory, String jarname) throws IOException
+  {
+    URL url = new URL("jar:file:///" + new File(baseDirectory).getAbsolutePath() + "/"+ jarname +"!/");
+    DynamicClassPathLoader.addURL(url);
+  }
+  
+  public static void addURL(URL url) throws IOException
+  {
+    URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+    Class<?> sysclass = URLClassLoader.class;
+
+    try
+    {
+      Method method = sysclass.getDeclaredMethod("addURL",parameters);
+      method.setAccessible(true);
+      method.invoke(sysloader,new Object[]{ url });
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Error, could not add URL to system classloader",e);
+    }
+  }
+
+}
+

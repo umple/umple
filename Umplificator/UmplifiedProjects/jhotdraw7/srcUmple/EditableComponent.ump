@@ -1,0 +1,34 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui ;
+
+class EditableComponent 
+{
+depend java.beans.PropertyChangeListener;
+
+  /** The name of the "selectionEmpty" property. */
+    public final static String SELECTION_EMPTY_PROPERTY = "selectionEmpty";
+/**
+     * Duplicates the selected region.
+     */
+    public void duplicate();
+/**
+     * Selects all.
+     */
+    public void selectAll();
+/**
+     * Selects nothing.
+     */
+    public void clearSelection();
+/**
+     * Returns true if the selection is empty.
+     * This is a bound property.
+     */
+    public boolean isSelectionEmpty();
+/** Adds a property change listener. */
+    public void addPropertyChangeListener(PropertyChangeListener l);
+/** Removes a property change listener. */
+    public void removePropertyChangeListener(PropertyChangeListener l);
+
+}

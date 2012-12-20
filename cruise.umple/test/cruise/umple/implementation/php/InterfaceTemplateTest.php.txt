@@ -1,0 +1,18 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+interface ISomething
+{
+  // CONSTANT MEMBERS  
+
+ const aVariable = aValue;
+ const MAX = 3;
+
+  // ABSTRACT METHODS 
+
+ public function getCode ($aParam,$anotherParam);
+ public function isValid ();
+  
+}
+?>

@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="files/layout.css" />
+  <script type="text/javascript" src="files/script.js"></script>
+  <title>Umple User Manual: myGrammar</title>
+  <script type="text/javascript">
+    function showHide(section)
+    {
+      var sectionDivStyle = document.getElementById(section).style;
+      if(sectionDivStyle.display=="none") {
+        sectionDivStyle.display="inherit";
+      }
+      else {
+        sectionDivStyle.display="none";
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <span class="header" summary="University of Ottawa banner"><a href="http://www.uottawa.ca/welcome.html" target="_blank"><img src="files/left_generic.jpg" alt="uOttawa" class="uOttawaAbbr" /></a><img src="files/bg_header_title.jpg" class="uOttawa" alt="University of Ottawa - Canadas University" /></span>
+  
+  <table class="body" >
+  <tbody>
+  <tr>
+    <td class="indicatorBlocks"><img src="files/indicator_blocks.gif" /></td>
+
+    <td class="menu">
+      <div class="title"><a href="http://cruise.site.uottawa.ca/umple">Umple Home<br/>Page</a></div>
+        <div class="level1"><a href="javascript:showHide('Misc');">Misc</a></div>
+        <div id="Misc">          <div class="level2"><b>myGrammar</b></div>
+        </div>
+<div class="level1"></div>
+    </td>
+
+    <td class="dotSeparator"><img src="files/dots.gif" alt="list of dots" /></td>
+
+      <td class="content">
+
+      <h2><i>Umple User Manual </i></h2>
+      <h1><font size="+1">myGrammar</font></h1>
+      <p class="description">// The core of umple is a "program"<br />
+program- : ( [[comment]] | [[directive]] )*<br />
+<br />
+// A directive is either configurations, or model elements<br />
+directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]]<br />
+glossary : glossary { [[word]]* }<br />
+word : [singular] : [plural] ;<br />
+generate- : generate [=generate:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] ;<br />
+generate_path : generate [=language:Java|Php|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|Papyrus|Ecore|Xmi|SQL] " [**output] " [=override:--override|--override-all]? ;<br />
+useStatement- : use [use] ;<br />
+namespace- : namespace [namespace] ;<br />
+entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />
+<br />
+comment- : [[inlineComment]] | [[multilineComment]]<br />
+inlineComment- : // [*inlineComment]<br />
+multilineComment- : /* [**multilineComment] */<br />
+<br />
+debug- : [=debug] ;<br />
+abstract- : [=abstract] ;<br />
+<br />
+classDefinition : class [name] { [[classContent]]* }<br />
+externalDefinition : external [name] { [[classContent]]* }<br />
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }<br />
+associationDefinition : association [name]? { [[association]]* }<br />
+associationClassDefinition : associationClass [name] { [[associationClassContent]]* }<br />
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[abstract]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[extraCode]]<br />
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | [[extraCode]]<br />
+<br />
+<br />
+// Section for Members in Interfaces<br />
+// NOTE: We are considering type as simple String<br />
+// Interface Body: An interface can have CONSTANTS, ATTRIBUTES and METHODS<br />
+interfaceBody- : [[interfaceMemberDeclaration]]*<br />
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[isA]] | [[extraCode]]<br />
+// Constants in interfaces (e.g. constant String ACONSTANT="aValue";)<br />
+constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;<br />
+// Methods in classes and Interfaces<br />
+// Should we use modifier for concrete methods [=modifier:public|protected|private]?<br />
+// Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?<br />
+concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] }<br />
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ;<br />
+methodDeclarator : [methodName] [[parameterList]] | [methodName] -( -)<br />
+parameterList : -( [[parameter]] ( , [[parameter]] )* -)<br />
+parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0])<br />
+<br />
+association : [=modifier:immutable]? [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;<br />
+inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;<br />
+inlineAssociationEnd : [[multiplicity]] [roleName]?<br />
+singleAssociationEnd : [[multiplicity]] [type,roleName] ;<br />
+associationEnd : [[multiplicity]] [type,roleName]<br />
+multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]<br />
+<br />
+attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]<br />
+simpleAttribute- : [~name] ;<br />
+autouniqueAttribute- : [=autounique] [name] ;<br />
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }<br />
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;<br />
+<br />
+defaultKey : key { }<br />
+key : key { [keyId] ( , [keyId] )* }<br />
+depend- : depend [depend] ;<br />
+extraCode- : [**extraCode]<br />
+<br />
+softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] | [[codeInjection]]<br />
+isA- : [[singleIsA]] | [[multipleIsA]]<br />
+singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;<br />
+multipleIsA- : isA [extendsName] ( , [extendsName] )* ;<br />
+singleton- : [=singleton] ;<br />
+immutable- : [=immutable] ;<br />
+keyDefinition- : [[defaultKey]] | [[key]]<br />
+codeInjection- : [[beforeCode]] | [[afterCode]]<br />
+<br />
+beforeCode : before [operationName] { [**code] }<br />
+afterCode : after [operationName] { [**code] }<br />
+<br />
+stateMachineDefinition : statemachine [name] { [[state]]* }<br />
+stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]<br />
+inlineStateMachine : [name] { ( [[comment]] | [[state]] )* }<br />
+referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }<br />
+extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*<br />
+enum : [name] { } | [name] { [stateName] (, [stateName])* }<br />
+state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* }<br />
+stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]<br />
+stateEntity- : [=-||] | [[transition]] | [[entryOrExitAction]] | [[activity]] | [[state]]<br />
+transition : [[guard]] [[eventDefinition]] -> [[action]]? [stateName] ; | [[eventDefinition]] [[action]] -> [stateName] ; | [[eventDefinition]] [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]] [[guard]]? [[action]]? -> [stateName] ; 
+
+| [[activity]] -> [stateName]<br />
+eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event]<br />
+afterEveryEvent- : afterEvery -( [timer] -)<br />
+afterEvent- : after -( [timer] -)<br />
+action : / { [**actionCode] }<br />
+entryOrExitAction : [=type:entry|exit] / { [**actionCode] }<br />
+activity : do { [**activityCode] }<br />
+guard : [ [**guardCode] ]<br />
+<br />
+<br />
+traceType- : tracer [traceType] ;<br />
+<br />
+trace : [[traceDirective]] | [[traceCase]]<br />
+<br />
+traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhere]]? [[traceUntil]]? [[traceAfter]]? [[traceGiving]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;<br />
+<br />
+traceItem- : [[traceEntity]] | [[PreOrPostCondition]]<br />
+traceEntity- : ( set,get | set | get | entry | exit | cardinality )? [trace_entity] ( , [trace_entity] )*<br />
+PreOrPostCondition- : (giving | where)? [[traceCondition]]<br />
+<br />
+executeClause- : execute { [**trace_execute] }<br />
+traceWhere :  where  [[traceCondition]]<br />
+traceUntil :  until  [[traceCondition]]<br />
+traceAfter :  after  [[traceCondition]]<br />
+traceGiving : giving [[traceCondition]]<br />
+<br />
+traceFor- : for [trace_for]<br />
+tracePeriod- : period [trace_period]<br />
+traceDuring- : during [trace_duration]<br />
+traceRecord- : record [[recordEntity]]<br />
+recordEntity- : ( only )? [**trace_record] ( , [**trace_record] )*<br />
+<br />
+traceCondition- : [LHS] [[conditionRHS]]<br />
+conditionRHS- : [comparison_operator] [RHS]<br />
+<br />
+traceCase- : [[traceCaseDef]] | [[traceCaseActivation]] | [[traceCaseDeactivation]]<br />
+traceCaseDef- : tracecase [tracecase_name] { [[traceDirective]]* }<br />
+traceCaseActivation- : activate [tracecase_act_name] (onAllObjects | onThisThreadOnly)? ;<br />
+traceCaseDeactivation- : deactivate [tracecase_deact_name] onThisObject [[deActivateFor]]? ;<br />
+deActivateFor- : for [deactivate_for]<br />
+position- : [[associationPosition]] | [[elementPosition]]<br />
+elementPosition : position [x] [y] [width] [height] ;<br />
+associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;<br />
+coordinate : [x] , [y]</p>
+
+
+
+      </td>
+    </tr>
+  </tbody></table><link type="text/css" rel="stylesheet" href="syntaxhighlighter/SyntaxHighlighter.css"></link>
+<script language="javascript" src="syntaxhighlighter/shCore.js"></script>
+<script language="javascript" src="syntaxhighlighter/shBrushCSharp.js"></script>
+<script language="javascript" src="syntaxhighlighter/shBrushXml.js"></script>
+<script language="javascript">
+
+dp.SyntaxHighlighter.ClipboardSwf = 'syntaxhighlighter/clipboard.swf';
+dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+
+class LightFixture
+{ 
+  x;
+  trace x;
+}

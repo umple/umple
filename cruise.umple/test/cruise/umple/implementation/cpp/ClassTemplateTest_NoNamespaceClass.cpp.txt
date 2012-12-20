@@ -1,0 +1,39 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Token.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Token::Token()
+  {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Token::Token(const Token & token)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Token Token::operator=(const Token & token)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Token::~Token()
+  {}

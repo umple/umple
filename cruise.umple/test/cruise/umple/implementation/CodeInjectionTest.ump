@@ -1,0 +1,63 @@
+namespace example;
+
+class Student
+{
+  lazy immutable id;
+  name;
+  defaulted type = "None";
+  String[] roles;
+  funName = { name + "sillypans" }
+  
+  Boolean injBool;
+  Boolean dInjBool = { 2/3 }
+  
+  before isInjBool { print "before injBool"; }
+  after isInjBool { print "after injBool"; }
+  
+  before isDInjBool { print "before dInjBool"; }
+  after isDInjBool { print "after dInjBool"; }
+  
+  before constructor { print "before constructor"; }
+  after constructor { print "after constructor"; }
+
+  before getFunName { print "start funName"; }
+  after getFunName { print "end funName"; }
+
+  before setId { print "start setId"; }
+  after setId { print "end setId"; }
+  before getId { print "start getId"; }
+  after getId { print "end getId"; }
+  
+  before setName { print "start setName"; }
+  before setName { print "start setName2"; }
+  after setName { print "end setName"; }
+  before getName { print "start getName"; }
+  after getName { print "end getName"; }
+
+  before setType { print "start setType"; }
+  after setType { print "end setType"; }
+  before getType { print "start getType"; }
+  after getType { print "end getType"; }
+  before getDefaultType { print "start getDefaultType"; }
+  after getDefaultType { print "end getDefaultType"; }
+  before resetType { print "start resetType"; }
+  after resetType { print "end resetType"; }
+
+  before addRole { print "start add"; }
+  after addRole { print "end add"; }
+  before removeRole { print "start remove"; }
+  after removeRole { print "end remove"; }
+  before getRole { print "start getRole"; }
+  after getRole { print "end getRole"; }
+  before getRoles { print "start getRoles"; }
+  after getRoles { print "end getRoles"; }
+  before numberOfRoles { print "start numberOfRoles"; }
+  after numberOfRoles { print "end numberOfRoles"; }
+  before indexOfRole { print "start indexOfRole"; }
+  after indexOfRole { print "end indexOfRole"; }
+  
+  before delete { print "start delete"; }
+  after delete { print "after delete"; }
+  
+ 
+}

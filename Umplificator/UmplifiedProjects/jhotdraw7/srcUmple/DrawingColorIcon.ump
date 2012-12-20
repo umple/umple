@@ -1,0 +1,37 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class DrawingColorIcon 
+{
+depend java.awt.*;
+depend java.net.*;
+depend org.jhotdraw.draw.*;
+  isA javax.swing.ImageIcon;
+
+  private DrawingEditor editor;
+private AttributeKey<Color> key;
+private Shape colorShape;
+@Override
+    public void paintIcon(java.awt.Component c, java.awt.Graphics gr, int x, int y) {
+        Graphics2D g = (Graphics2D) gr;
+        super.paintIcon(c, g, x, y);
+        if (editor != null) {
+            Color color;
+            DrawingView view = editor.getActiveView();
+            if (view != null) {
+                color = view.getDrawing().get(key);
+            } else {
+                color = key.getDefaultValue();
+            }
+            if (color != null) {
+                g.setColor(color);
+                g.translate(x, y);
+                g.fill(colorShape);
+                g.translate(-x, -y);
+            }
+        }
+    }
+
+}

@@ -1,0 +1,136 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class ConnectionFigure 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.liner.Liner;
+depend org.jhotdraw.draw.connector.Connector;
+depend java.awt.geom.*;
+depend org.jhotdraw.geom.*;
+
+  // DRAWING
+    // SHAPE AND BOUNDS
+    // ATTRIBUTES
+    // EDITING
+    // CONNECTING
+    /**
+     * Sets the start {@code Connector} of the connection.
+     * Set this to null to disconnect the start connection.
+     * @param start the start Connector of the connection
+     */
+    public void setStartConnector(@Nullable Connector start);
+/**
+     * Gets the start {@code Connector}.
+     * Returns null, if there is no start connection.
+     */
+    @Nullable public Connector getStartConnector();
+/**
+     * Sets the end Connector of the connection.
+     * Set this to null to disconnect the end connection.
+     * @param end the end Connector of the connection
+     */
+    public void setEndConnector(@Nullable Connector end);
+/**
+     * Gets the end Connector.
+     * Returns null, if there is no end connection.
+     */
+    @Nullable public Connector getEndConnector();
+/**
+     * Updates the start and end point of the figure and fires figureChanged
+     * events.
+     */
+    public void updateConnection();
+/**
+     * Returns true, if this ConnectionFigure can connect the specified
+     * {@code Connector}s.
+     * Implement this method to constrain the allowed connections between figures.
+     */
+    public boolean canConnect(Connector start, Connector end);
+/**
+     * Checks if this {@code ConnectionFigure} can be connect to the specified
+     * {@code Connector}.
+     * This is used to provide an early feedback to the user, when he/she
+     * creates a new connection.
+     */
+    public boolean canConnect(Connector start);
+/**
+     * Sets the start point.
+     */
+    public void setStartPoint(Point2D.Double p);
+/**
+     * Sets the end point.
+     */
+    public void setEndPoint(Point2D.Double p);
+/**
+     * Sets the specified point.
+     */
+    public void setPoint(int index, Point2D.Double p);
+/**
+     * Gets the node count.
+     */
+    public int getNodeCount();
+/**
+     * Returns the specified point.
+     */
+    public Point2D.Double getPoint(int index);
+/**
+     * Returns the specified node.
+     */
+    public BezierPath.Node getNode(int index);
+/**
+     * Sets the specified node.
+     */
+    public void setNode(int index, BezierPath.Node node);
+/**
+     * Gets the start point.
+     */
+    @Override
+    public Point2D.Double getStartPoint();
+/**
+     * Gets the end point.
+     */
+    @Override
+    public Point2D.Double getEndPoint();
+/**
+     * Gets the start figure of the connection.
+     * This is a convenience method for doing getStartConnector().getOwner()
+     * and handling null cases.
+     */
+    @Nullable public Figure getStartFigure();
+/**
+     * Gets the end figure of the connection.
+     * This is a convenience method for doing getEndConnector().getOwner()
+     * and handling null cases.
+     */
+    @Nullable public Figure getEndFigure();
+// COMPOSITE FIGURES
+    /**
+     * Get a Liner object which encapsulated a lineout
+     * algorithm for this figure. Typically, a Liner
+     * accesses the child components of this figure and arranges
+     * their graphical presentation.
+     *
+     * @return lineout strategy used by this figure
+     */
+    @Nullable public Liner getLiner();
+/**
+     * Set a Liner object which encapsulated a lineout
+     * algorithm for this figure. Typically, a Liner
+     * accesses the child components of this figure and arranges
+     * their graphical presentation.
+     *
+     * @param newValue	encapsulation of a lineout algorithm.
+     */
+    public void setLiner(@Nullable Liner newValue);
+/**
+     * A "lineout" algorithm is used to define how the child components
+     * should be laid out in relation to each other. The task for
+     * layouting the child components for presentation is delegated
+     * to a Liner which can be plugged in at runtime.
+     */
+    public void lineout();
+
+}

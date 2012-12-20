@@ -1,0 +1,14 @@
+
+statemachine Machine
+{
+  On { flip->Off; }
+  Off {}
+}
+
+class OnOffSwitch
+{
+  bulb as Machine
+  {
+    On { + push -> On; }
+  }
+}

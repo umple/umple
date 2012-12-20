@@ -1,0 +1,71 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Garage
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Garage State Machines
+  private static $GarageDoorClosed = 1;
+  private static $GarageDoorOpening = 2;
+  private $GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setGarageDoor(self::$GarageDoorClosed);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getGarageDoorFullName()
+  {
+    $answer = $this->getGarageDoor();
+    return $answer;
+  }
+
+  public function getGarageDoor()
+  {
+    if ($this->GarageDoor == self::$GarageDoorClosed) { return "GarageDoorClosed"; }
+    elseif ($this->GarageDoor == self::$GarageDoorOpening) { return "GarageDoorOpening"; }
+    return null;
+  }
+
+  public function pressButton()
+  {
+    $wasEventProcessed = false;
+    
+    $aGarageDoor = $this->GarageDoor;
+    if ($aGarageDoor == self::$GarageDoorClosed)
+    {
+      turnLightOn();
+      $this->setGarageDoor(self::$GarageDoorOpening);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setGarageDoor($aGarageDoor)
+  {
+    $this->GarageDoor = $aGarageDoor;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

@@ -1,0 +1,189 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  boolean hasEntry = false;
+  boolean hasExit = false;
+  boolean isFirstEntry = true;
+  boolean isFirstExit = true;
+  State parentState = sm.getParentState();
+  StateMachine parentSm = parentState != null ? parentState.getStateMachine() : null;
+  String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",sm)));
+  String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",sm)));
+  String customExitPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("exitMethod",sm)));
+  String customExitPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("exitMethod",sm)));
+  
+  StringBuilder entryActions = new StringBuilder();
+  StringBuilder exitActions = new StringBuilder();
+  StringBuilder traceRecords = new StringBuilder();
+  
+  for(State state : sm.getStates())
+  {
+    boolean hasThisEntry = false;
+    boolean hasThisExit = false;
+    
+    for(Action action : state.getActions())
+    {
+      if ("entry".equals(action.getActionType()))
+      {
+        if (!hasThisEntry)
+        {
+          if (!isFirstEntry)
+          {
+            entryActions.append("\n      ");
+          }
+          entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          for( TraceDirective tc : uClass.getTraceDirectives() )
+      	  {
+      		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+      		{
+      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+      		  StateMachine stm = tracedState.getStateMachine();
+      		  if( tracedState.getEntry() )
+      		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+      		    {
+      		  	  State stat = stm.getState(j);
+      			  //if( stat.getName().equals(gen.translate("stateOne",state)) )
+          			//if( model.getTraceType().equals("Console"))
+      					//entryActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state)));
+       				//else if( model.getTraceType().equals("File"))
+       					//entryActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state))); 
+       		    }
+      		}
+      	  }
+        }
+        hasEntry = true;
+        hasThisEntry = true;
+        isFirstEntry = false;
+        Position p = action.getPosition();
+        if (p != null) {
+          entryActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+        }
+        entryActions.append("\n        " + action.getActionCode());
+      }
+      else if ("exit".equals(action.getActionType()))
+      {
+        if (!hasThisExit)
+        {
+          if (!isFirstExit)
+          {
+            exitActions.append("\n      ");
+          }
+          isFirstExit = false;
+          exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+          for( TraceDirective tc : uClass.getTraceDirectives() )
+      	  {
+      		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+      		{
+      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+      		  StateMachine stm = tracedState.getStateMachine();
+      		  if( tracedState.getExit() )
+      		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+      		    {
+      		  	  State stat = stm.getState(j);
+      			  //if( stat.getName().equals(gen.translate("stateOne",state)) )
+          			//if( model.getTraceType().equals("Console"))
+          				//exitActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state)));
+       				//else if( model.getTraceType().equals("File"))
+       					//exitActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state))); 
+       		    }
+      		 }
+      	   }
+        }
+        hasExit = true;
+        hasThisExit = true;
+        isFirstExit = false;
+        Position p = action.getPosition();
+        if (p != null) {
+          exitActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+        }
+        exitActions.append("\n        " + action.getActionCode());
+      }
+    }
+  
+    for( TraceDirective tc : uClass.getTraceDirectives() )
+	  {
+  	  TraceRecord traceRecord = tc.getTraceRecord();
+	    for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+	    {
+	      StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+	      StateMachine stm = tracedState.getStateMachine();
+//		    if( traceRecord != null )
+//		    {
+//		      for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+//		      {
+//		  	    State stat = stm.getState(j);
+//
+//		  	    if( stat == state )
+//		  	    {
+//		  	      traceRecords.append("\n    ");
+//  		        traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
+//  		        traceRecords.append("\n      ");
+//    		      if( model.getTraceType().equals("Console"))
+//    		      {
+//    		        traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+// 			        }
+// 			        else if( model.getTraceType().equals("File"))
+//      		    {
+//      		      traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+//      		    }
+//		  	    }
+// 		      }
+//		    }
+	    }
+    }	
+    if (state.getActivity() != null)
+    {
+      if (!hasThisEntry)
+      {
+        if (!isFirstEntry)
+        {
+          entryActions.append("\n      ");
+        }
+        entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+      }
+      hasEntry = true;
+      hasThisEntry = true;
+      isFirstEntry = false;
+      entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
+    }
+    
+    if (hasThisEntry)
+    {
+      entryActions.append("\n        break;");
+    }
+    
+    if (hasThisExit)
+    {
+      exitActions.append("\n        break;");
+    }
+  }
+%>
+<% if (hasExit) { %>
+  private void <%=gen.translate("exitMethod",sm)%>()
+  {
+    <% if (customExitPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } %>
+    switch(<%= gen.translate("stateMachineOne",sm) %>)
+    {
+      <%= exitActions %>
+    }
+    <% if (customExitPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } %>
+  }
+
+<% } %>
+  private void <%=gen.translate("setMethod",sm)%>(<%= gen.translate("type",sm) %> <%= gen.translate("parameterOne",sm) %>)
+  {
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    <%= gen.translate("stateMachineOne",sm) %> = <%= gen.translate("parameterOne",sm) %>;
+<% if (parentState != null) { %>
+    if (<%= gen.translate("stateMachineOne",parentSm) %> != <%= gen.translate("type",parentSm) %>.<%= gen.translate("stateOne",parentState) %> && <%= gen.translate("parameterOne",sm) %> != <%= gen.translate("type",sm) %>.<%= gen.translate("stateNull",sm) %>) { <%=gen.translate("setMethod",parentSm)%>(<%= gen.translate("type",parentSm) %>.<%= gen.translate("stateOne",parentState) %>); }
+<% } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
+<% if (hasEntry) { %>
+
+    // entry actions and do activities
+    switch(<%= gen.translate("stateMachineOne",sm) %>)
+    {
+      <%= entryActions %>
+    }<%= traceRecords %>
+<% } %>
+  }
+

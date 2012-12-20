@@ -1,0 +1,89 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.handle ;
+
+class DragHandle 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.event.TransformEdit;
+depend java.awt.*;
+depend java.awt.geom.*;
+depend java.util.*;
+  isA AbstractHandle;
+
+  /**
+     * The previously handled x and y coordinates.
+     */
+    private Point2D.Double oldPoint;
+/**
+     * Draws nothing.
+     * Drag Handles have no visual appearance of their own.
+     */
+    @Override
+    public void draw(Graphics2D g) {
+    }
+@Override
+    public void trackStart(Point anchor, int modifiersEx) {
+        oldPoint = view.getConstrainer().constrainPoint(view.viewToDrawing(anchor));
+    }
+@Override
+    public void trackStep(Point anchor, Point lead, int modifiersEx) {
+        Figure f = getOwner();
+        Point2D.Double newPoint = view.getConstrainer().constrainPoint(view.viewToDrawing(lead));
+        AffineTransform tx = new AffineTransform();
+        tx.translate(newPoint.x - oldPoint.x, newPoint.y - oldPoint.y);
+        f.willChange();
+        f.transform(tx);
+        f.changed();
+        
+        oldPoint = newPoint;
+    }
+@Override
+    public void trackEnd(Point anchor, Point lead, int modifiersEx) {
+        AffineTransform tx = new AffineTransform();
+        tx.translate(lead.x - anchor.x, lead.y - anchor.y);
+        
+        LinkedList<Figure> draggedFigures = new LinkedList<Figure>();
+        draggedFigures.add(getOwner());
+        Point2D.Double dropPoint = getView().viewToDrawing(lead);
+        Figure dropTarget = getView().getDrawing().findFigureExcept(
+                dropPoint, draggedFigures);
+        if (dropTarget != null) {
+            boolean snapBack = dropTarget.handleDrop(dropPoint, draggedFigures, getView());
+            if (snapBack) {
+                tx = new AffineTransform();
+                tx.translate(anchor.x - lead.x, anchor.y - lead.y);
+                for (Figure f : draggedFigures) {
+                    f.willChange();
+                    f.transform(tx);
+                    f.changed();
+                }
+            } else {
+                fireUndoableEditHappened(
+                        new TransformEdit(getOwner(),tx)
+                        );
+            }
+        } else {
+            fireUndoableEditHappened(
+                    new TransformEdit(getOwner(),tx)
+                    );
+        }
+    }
+@Override
+    public boolean contains(Point p) {
+        return getOwner().contains(getView().viewToDrawing(p));
+    }
+@Override
+    protected Rectangle basicGetBounds() {
+        return getView().drawingToView(getOwner().getDrawingArea());
+    }
+/**
+     * Returns a cursor for the handle.
+     */
+    @Override
+    public Cursor getCursor() {
+        return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+    }
+
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- UMPLE PROJECT JSF PROVIDER-->
+<UmpleProject UmpleFile="examples/school.ump" name="School" UIFactory="cruise.ui.jsf.JSFFactory" OutputFolder="AirlineOut" xsi:noNamespaceSchemaLocation="UmpleProject.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Properties>
+		<Property name="UMPLE_FOLDER" value="JavaSource" />
+		<Property name="ATTRIBUTE_CONFIGURATOR" value="xml/AttributeConfigurator.xml" />
+		<Property name="GUI_ATTRIBUTE_CONFIGURATOR" value="xml/GUIConfigurator.xml" />
+		<!--Property name="PROVIDER_JAR" value="c:\pruebas\JSFProvider.jar" / -->
+		<!-- JSF PROVIDER Properties-->
+		<Property name="BCK_OBJECT_SUFFIX" value="Bean" />
+		<Property name="PACKAGE_PREFIX" value="web" />
+
+		
+	</Properties>
+	<GenerationUnits>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao" OutputExtension="java" TemplatePackage="cruise.data.impl.dao" TemplateClass="DAOInterface"  ClassSuffix="DAO" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.keys" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic" TemplateClass="KeyClass" OutputPackage="dao.keys" ClassSuffix="Key" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.keys" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic.impl" TemplateClass="IKey" OutputName="IKey" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.factory" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.factory" TemplateClass="DAOFactory" OutputName="DAOFactory" ParameterType="ALL_NORMAL_CLASSES"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.factory" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.factory" TemplateClass="FakeDAOFactory" OutputName="FakeDAOFactory" ParameterType="ALL_NORMAL_CLASSES"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.generic" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic" TemplateClass="GenericDAO" OutputName="GenericDAO" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.generic.impl" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.generic.impl" TemplateClass="GenericFakeDAO" OutputName="GenericFakeDAO" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.session" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.session" TemplateClass="ObjectRepository" OutputName="ObjectRepository" ParameterType="ALL_NORMAL_CLASSES"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="dao.session" OutputExtension="java" TemplatePackage="cruise.data.impl.dao.session" TemplateClass="Session" OutputName="Session" ParameterType="NONE"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="bundles" OutputExtension="properties" TemplatePackage="cruise.data.impl.bundles" TemplateClass="ResourceBundle" OutputPackage="bundles" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="bundles" OutputExtension="properties" TemplatePackage="cruise.data.impl.bundles" TemplateClass="ResourceBundle" OutputPackage="bundles" ParameterType="SINGLETON_CLASS_BY_CLASS"/>
+		
+		<!-- JSF PROVIDER GenerationUnits-->
+		<!-- JSF PROVIDER Beans and Utils-->
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web.components.bean" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl.components" TemplateClass="SkinBean" OutputName="SkinBean" ParameterType="NONE"/>	
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web.components.bean" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl.components" TemplateClass="TimeBean" OutputName="TimeBean" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web.control" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl.control" TemplateClass="BeanLinker" OutputName="BeanLinker" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web.control" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl.control" TemplateClass="MainBean" OutputName="MainBean" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web.utils" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl.utils" TemplateClass="PageFlowUtils" OutputName="PageFlowUtils" ParameterType="NONE"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl" TemplateClass="BckBean" ClassSuffix="Bean" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="web" OutputExtension="java" TemplatePackage="cruise.ui.jsf.templates.impl" TemplateClass="BckBeanSingleton" ClassSuffix="Bean" ParameterType="SINGLETON_CLASS_BY_CLASS"/>		
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="bundles" OutputExtension="properties" TemplatePackage="cruise.data.impl.bundles" TemplateClass="ResourceBundle" OutputPackage="bundles" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit OutputSubFolder="JavaSource" PackagePreffix="bundles" OutputExtension="properties" TemplatePackage="cruise.data.impl.bundles" TemplateClass="ResourceBundle" OutputPackage="bundles" ParameterType="SINGLETON_CLASS_BY_CLASS"/>		
+		
+		<!-- JSF PROVIDER Config Files-->
+		<GenerationUnit  OutputSubFolder="WebContent/WEB-INF" OutputExtension="xml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI.config" TemplateClass="WebXML" OutputName="web" ParameterType="NONE"/>		
+		<GenerationUnit  OutputSubFolder="WebContent/WEB-INF" OutputExtension="xml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI.config" TemplateClass="FacesConfig" OutputName="faces-config" ParameterType="ALL_CLASSES"/>		
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  PackagePreffix="templates" OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI.templates" TemplateClass="Common" OutputName="common" ParameterType="ALL_CLASSES"/>		
+		<!-- JSF PROVIDER web pages Files-->
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="Home" OutputName="home" ParameterType="NONE"/>		
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="BaseInsertable" ClassSuffix="Insertable" AddClassNameToRoute="YES" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="BaseMain" ClassSuffix="Main" AddClassNameToRoute="YES" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="Grid" OutputName="grid" AddClassNameToRoute="YES" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="GridSelectMany" OutputName="gridSelectMany" AddClassNameToRoute="YES" ParameterType="NORMAL_CLASS_BY_CLASS"/>
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="GridSelectOne" OutputName="gridSelectOne" AddClassNameToRoute="YES" ParameterType="NORMAL_CLASS_BY_CLASS"/>		
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="BaseInsertableSingleton" ClassSuffix="Insertable" AddClassNameToRoute="YES" ParameterType="SINGLETON_CLASS_BY_CLASS"/>	
+		<GenerationUnit  OutputSubFolder="WebContent/pages"  OutputExtension="xhtml" TemplatePackage="cruise.ui.jsf.templates.impl.GUI" TemplateClass="BaseMain" ClassSuffix="Main" AddClassNameToRoute="YES" ParameterType="SINGLETON_CLASS_BY_CLASS"/>		
+	</GenerationUnits>
+	<Files>
+		<Directory  InputFolder="files/compile-libs" OutputSubFolder="compile-libs" />
+		<Directory  InputFolder="files/images" OutputSubFolder="WebContent/images" />
+		<Directory  InputFolder="files/lib" OutputSubFolder="WebContent/WEB-INF/lib" />
+		<!-- Use the following tag if your target server is Tomcat, commented it out if you are going to deploy the app in jboss-->
+		<Directory  InputFolder="files/tomcat-libs" OutputSubFolder="WebContent/WEB-INF/lib" />
+		
+		<Directory  InputFolder="files/META-INF" OutputSubFolder="WebContent/META-INF" />
+		<File InputFolder="files" OutputSubFolder="WebContent" Name="index.jsp" />
+	</Files>
+</UmpleProject>

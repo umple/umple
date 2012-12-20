@@ -1,0 +1,66 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Student.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Student::Student()
+  {
+    setGrade(Pass);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Student::Student(const Student & student)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Student Student::operator=(const Student & student)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string Student::getGradeFullName()
+  {
+    string answer = getGradeStringName(grade);
+    return answer;
+  }
+  
+  Student::Grade Student::getGrade()
+  {
+    return grade;
+  }
+
+  string Student::getGradeStringName (Grade grade)
+  {
+    switch (grade)  {
+      case 0 : {return "Pass"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Student::setGrade(Grade aGrade)
+  {
+    grade = aGrade;
+    return true;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
+  {}

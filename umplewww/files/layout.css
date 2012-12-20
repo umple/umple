@@ -1,0 +1,43 @@
+/* GENERAL STYLES */
+a {cursor:pointer;cursor:hand;}
+p, ol, ul, div, h1, h2, h3, h4, b {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; }
+h1 {font-size: 18px; font-weight:bold;}
+h2 {font-size: 14px; font-weight:bold; color: #666666;}
+h3 {font-size: 12px; font-weight: bold; color: #666666;}
+h4 {font-size: 10px; font-weight: bold; color: #666666;}
+p, h1, h2, h3, h4 {margin: 0px 0px 5px 0px;}
+p, b, ol, ul, li {line-height: 12pt;}
+
+
+/* HEADER STYLE */
+span.header {white-space:pre-line; margin:0; padding:0;}
+span.header img.uOttawaAbbr {border:0;height:53px;width:130px;}
+span.header img.uOttawa {border:10;height:53px;width:650px;}
+
+/* BODY STYLE */
+table.body {width:780px; border-collapse:collapse; }
+td.indicatorBlocks {vertical-align:top;}
+td.indicatorBlocks img {border:0;height:10px;width:34;padding:20px 1px 0 0;}
+td.dotSeparator { vertical-align:top;padding:0 10px 0 1px;}
+
+td.menu {vertical-align: top; width:100px; padding: 13px 0 0 0; white-space: nowrap;}
+
+td.menu div.title {border-bottom: 1px solid #999999; font-weight:bold; font-size: 11px; padding-top:5px; padding-left:5px; background-color: #eeeeee; filter:alpha(opacity='70', style='0');}
+
+td.menu div.title a {color:black;text-decoration:none;}
+td.menu div.title a:hover {text-decoration:underline;}
+
+td.menu div.level1 {border-bottom: 1px dotted #999999; font-weight:bold; font-size: 11px; padding-top:10px; padding-left:5px;}
+td.menu div.level1 a {color:black;text-decoration:none;}
+td.menu div.level1 a:hover {text-decoration:underline;}
+
+td.menu div.level2 {font-size: 10px; padding-left:20px;}
+td.menu div.level2 a {color:black;text-decoration:none;}
+td.menu div.level2 a:hover {text-decoration:underline;}
+td.menu div.level2 b {font-size: 10px;}
+
+/* CONTENT STYLE */
+td.content {vertical-align: top; width:100%; padding: 13px 0 0 0;}
+td.content pre {white-space:normal;}
+p.description {margin-bottom:1em;}
+td.content ul {margin:-10;padding:10;}

@@ -1,0 +1,6 @@
+
+associationClass VotesInPoll
+{
+ * Candidature;
+ * PollInElection;
+}

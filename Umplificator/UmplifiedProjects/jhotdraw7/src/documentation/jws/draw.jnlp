@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for JHotDraw Sample Application -->
+<jnlp
+  spec="1.5.0+"
+  codebase="http://www.randelshofer.ch/oop/jhotdraw"
+  href="http://www.randelshofer.ch/oop/jhotdraw/Documentation/jws/draw.jnlp">
+  <information>
+    <title>JHotDraw Draw</title>
+    <vendor>Werner Randelshofer</vendor>
+    <homepage href="http://www.randelshofer.ch/oop/jhotdraw"/>
+    <description kind="short">JHotDraw Draw Sample Application.</description>
+    <description kind="one-line">JHotDraw Draw Sample Application.</description>
+    <description kind="tooltip">JHotDraw Draw</description>
+    <offline-allowed/>
+    <shortcut online="false">
+    	<desktop/>
+    	<menu submenu="JHotDraw"/>
+    </shortcut>
+  </information>
+  <security> 
+      <all-permissions/> 
+  </security> 
+  <resources>
+    <j2se version="1.5+" initial-heap-size="64m" max-heap-size="512m" />
+ 	<nativelib href="Samples/Draw/signed/libquaqua.jnilib.jar"/>
+ 	<nativelib href="Samples/Draw/signed/libquaqua64.jnilib.jar"/>
+ 	<jar href="Samples/Draw/signed/JHotDraw%20Draw.jar"/>
+  </resources>
+  <application-desc main-class="org.jhotdraw.samples.draw.Main"/>
+</jnlp> 

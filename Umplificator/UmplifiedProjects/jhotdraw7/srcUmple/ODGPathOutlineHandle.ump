@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.odg.figures ;
+
+class ODGPathOutlineHandle 
+{
+depend org.jhotdraw.draw.handle.AbstractHandle;
+depend java.awt.*;
+depend org.jhotdraw.samples.odg.ODGAttributeKeys.*;
+  isA AbstractHandle;
+
+  private final static Color HANDLE_FILL_COLOR = new Color(0x00a8ff);
+private final static Color HANDLE_STROKE_COLOR = Color.WHITE;
+@Override
+    public ODGPathFigure getOwner() {
+        return (ODGPathFigure) super.getOwner();
+    }
+@Override
+    protected Rectangle basicGetBounds() {
+        return view.drawingToView(getOwner().getDrawingArea());
+    }
+@Override public boolean contains(Point p) {
+        return false;
+    }
+@Override
+    public void trackStart(Point anchor, int modifiersEx) {
+    }
+@Override
+    public void trackStep(Point anchor, Point lead, int modifiersEx) {
+    }
+public void trackEnd(Point anchor, Point lead, int modifiersEx) {
+    }
+@Override public void draw(Graphics2D g) {
+        Shape bounds = getOwner().getPath();
+        if (getOwner().get(TRANSFORM) != null) {
+            bounds = getOwner().get(TRANSFORM).createTransformedShape(bounds);
+        }
+        bounds = view.getDrawingToViewTransform().createTransformedShape(bounds);
+        g.setColor(HANDLE_FILL_COLOR);
+        g.draw(bounds);
+    }
+
+}

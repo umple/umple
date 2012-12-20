@@ -1,0 +1,100 @@
+ <%@ jet package="cruise.data.impl.dao.generic" 
+imports="java.util.* cruise.umple.compiler.Attribute cruise.model.abstractObjects.BackingObject"
+class="KeyClass"  skeleton="../skeleton/IGenerator.skeleton" %>
+
+<% 	
+	BackingObject clazz =(BackingObject)argument;
+	ArrayList<Attribute> keyClasses = clazz.getKeysAttributes(); 
+
+%>
+package dao.keys.<%=clazz.getPackageName()%>;
+
+import java.sql.Date;
+import java.sql.Time;
+
+
+public class <%=clazz.getClassName()%>Key implements dao.keys.IKey{
+		private int cachedHashCode=-1;
+	<% for (Attribute attVar: keyClasses) { %>
+		private <%=attVar.getType()%> a<%=attVar.getUpperCaseName()%>;
+	<% } %>
+	
+<%
+	Iterator<Attribute> keyIter=keyClasses.iterator();
+	String signature="";
+	while (keyIter.hasNext()){
+		Attribute att=keyIter.next();
+		signature=signature+" "+att.getType()+" a"+ att.getUpperCaseName();
+		if(keyIter.hasNext())
+			signature=signature+", ";
+	
+	}
+	
+%>
+	public <%=clazz.getClassName()%>Key(<%=signature%>){
+		<% for (Attribute attVar: keyClasses) { %>
+		this.a<%=attVar.getUpperCaseName()%>= a<%=attVar.getUpperCaseName()%> ;
+		<% } %>
+	
+	}
+	
+<% if(signature.trim().length()>0){ %>
+	public boolean equals(Object obj)
+  	{
+    	if (obj == null) { return false; }
+    	if (!getClass().equals(obj.getClass())) { return false; }
+	    <%=clazz.getClassName()%>Key compareTo = (<%=clazz.getClassName()%>Key)obj;
+  		<% for (Attribute att: keyClasses) { %>
+		<% if ("int".equals(att.getType())|| "double".equals(att.getType()) || "boolean".equals(att.getType()) ) { %>
+		    if (<%="a"+ att.getUpperCaseName()%>!=compareTo.<%="a"+ att.getUpperCaseName()%>)
+	    	{
+	     	 return false;
+	    	}
+		<% } else { %>
+		
+		if (<%="a"+ att.getUpperCaseName()%> == null && compareTo.<%="a"+ att.getUpperCaseName()%> != null)
+	    	{
+	      	return false;
+	    	}
+	    	else if (<%="a"+ att.getUpperCaseName()%> != null && !<%="a"+ att.getUpperCaseName()%>.equals(compareTo.<%="a"+ att.getUpperCaseName()%>))
+	    	{
+	     	 return false;
+	    	}
+		<% } %>
+		
+		<% } %>
+		
+    	return true;
+	}
+	
+	
+	public int hashCode()
+   	{
+    	if (cachedHashCode != -1)
+    	{
+      		return cachedHashCode;
+    	}
+   		cachedHashCode = 17;
+    	<% for (Attribute att: keyClasses) { %>
+		<% if ("int".equals(att.getType())|| "double".equals(att.getType()) || "boolean".equals(att.getType()) ) { %>
+	    	cachedHashCode = cachedHashCode * 23 + (int)<%="a"+ att.getUpperCaseName()%>;
+		<% } else if ("boolean".equals(att.getType()) ) { %>
+			cachedHashCode = cachedHashCode * 23 + (<%="a"+ att.getUpperCaseName()%> ? 1 : 0);
+		<% } else{ %>
+    	if (<%="a"+ att.getUpperCaseName()%> != null)
+    	{
+      		cachedHashCode = cachedHashCode * 23 + <%="a"+ att.getUpperCaseName()%>.hashCode();
+    	}	
+    	else
+    	{
+      		cachedHashCode = cachedHashCode * 23;
+	    }
+    	<% } %>
+    <% } %>   		
+	    return cachedHashCode;
+  }
+	
+	
+		
+<% } %>
+}

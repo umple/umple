@@ -1,0 +1,16 @@
+myMultiplicity
+Associations
+
+@@description
+A multiplicity end within a class refering to its relationship within the association.
+
+@@syntax
+[[multiplicity]] [name]?
+
+@@example
+0..1
+@@endexample
+
+@@example
+* child;
+@@endexample

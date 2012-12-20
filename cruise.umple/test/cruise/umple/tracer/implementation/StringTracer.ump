@@ -1,0 +1,8 @@
+tracer String;
+namespace example;
+
+class Tracer
+{
+  name;
+  trace name;
+}

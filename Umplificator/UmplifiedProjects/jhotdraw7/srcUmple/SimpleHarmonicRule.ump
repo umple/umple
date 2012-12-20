@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class SimpleHarmonicRule 
+{
+depend java.awt.Color;
+  isA AbstractHarmonicRule;
+
+  private float difference;
+private int componentIndex;
+public void setConstraint(float constraint) {
+        this.difference = constraint;
+    }
+public float getConstraint(float constraint) {
+        return constraint;
+    }
+public void setComponentIndex(int newValue) {
+        this.componentIndex = newValue;
+    }
+public int getComponentIndex() {
+        return componentIndex;
+    }
+@Override
+    public void apply(HarmonicColorModel model) {
+        if (derivedIndices != null) {
+            Color baseColor = model.get(getBaseIndex());
+            if (baseColor != null) {
+                float[] derivedComponents = null;
+                for (int i = 0; i < derivedIndices.length; i++) {
+                    derivedComponents = baseColor.getComponents(derivedComponents);
+                    derivedComponents[componentIndex] += difference * (i + 1);
+                    model.set(derivedIndices[i], new Color(model.getColorSpace(), derivedComponents,1f));
+                }
+            }
+        }
+    }
+@Override
+    public void colorChanged(HarmonicColorModel model, int index, Color oldValue, Color newValue) {
+        //
+    }
+
+}

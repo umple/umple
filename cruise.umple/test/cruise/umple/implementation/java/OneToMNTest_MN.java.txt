@@ -1,0 +1,93 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Pupil
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Pupil Attributes
+  private String number;
+
+  //Pupil Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Pupil(String aNumber, Mentor aMentor)
+  {
+    number = aNumber;
+    boolean didAddMentor = setMentor(aMentor);
+    if (!didAddMentor)
+    {
+      throw new RuntimeException("Unable to create pupil due to mentor");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(String aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public boolean setMentor(Mentor aMentor)
+  {
+    boolean wasSet = false;
+    //Must provide mentor to pupil
+    if (aMentor == null)
+    {
+      return wasSet;
+    }
+
+    //mentor already at maximum (7)
+    if (aMentor.numberOfPupils() >= Mentor.maximumNumberOfPupils())
+    {
+      return wasSet;
+    }
+    
+    Mentor existingMentor = mentor;
+    mentor = aMentor;
+    if (existingMentor != null && !existingMentor.equals(aMentor))
+    {
+      boolean didRemove = existingMentor.removePupil(this);
+      if (!didRemove)
+      {
+        mentor = existingMentor;
+        return wasSet;
+      }
+    }
+    mentor.addPupil(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    Mentor placeholderMentor = mentor;
+    this.mentor = null;
+    placeholderMentor.removePupil(this);
+  }
+
+}

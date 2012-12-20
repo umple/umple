@@ -1,0 +1,24 @@
+separateMultiplicity
+Associations
+
+@@description
+<p>      
+When describing the multiplicity of an association end, the separateMultiplicity
+refers to an isolated description of an assocation end.
+</p>
+
+<p>
+This syntax is used on separately described associations, and association classes.
+</p>
+  
+@@syntax
+[[multiplicity]] [type,name] ;
+
+@@example
+0..1 Person supervisor;
+@@endexample
+
+@@example
+* Person;
+@@endexample
+

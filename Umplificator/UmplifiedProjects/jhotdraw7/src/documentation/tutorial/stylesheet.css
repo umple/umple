@@ -1,0 +1,201 @@
+@charset "UTF-8";
+/*
+ * @(#)stylesheet.css 2.0  2008-03-23
+ *
+ * Copyright (c) 1996-2008 by the original authors of JHotDraw
+ * and all its contributors.
+ * All rights reserved.
+ *
+ * The copyright of this software is owned by the authors and  
+ * contributors of the JHotDraw project ("the copyright holders").  
+ * You may not use, copy or modify this software, except in  
+ * accordance with the license agreement you entered into with  
+ * the copyright holders. For details see accompanying license terms. 
+ *
+ */
+
+/* This is the stylesheet for the JHotDraw documentation.
+ * 
+ * The styles defined here draw ideas from the HTML 5 elements.
+ *
+ * Many of the styles act on element classes, but can be modified
+ * to act on the correspoiding HTML 5 element names, once browsers
+ * supporting HTML 5 become widespread. 
+ */
+
+/* -----------------
+ * Guide pages 
+ * -----------------
+ */
+
+/* The body element represents the main content of the document. */
+.page {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 20px;
+	margin: 0px;
+	padding: 0px;
+	color: #000;
+	background-color: #fff;
+}
+
+/* The article element represents a section of a page that consists of a composition
+ * that forms an independent part of a document, page, or site. This could be a forum
+ * post, a magazine or newspaper article, a Web log entry, a user-submitted comment,
+ * or any other independent item of content.
+ */
+.page .article {
+	margin: 0px 20px 20px 220px;
+}
+
+/* The section element represents a generic document or application section. A
+ * section, in this context, is a thematic grouping of content, typically with a
+ * header, possibly with a footer.
+ */
+.page .section {
+}
+
+/* The aside element represents a section of a page that consists of content that is
+ * tangentially related to the content around the aside element, and which could be
+ * considered separate from that content. Such sections are often represented as
+ * sidebars in printed typography.
+ */
+.page .aside {
+}
+
+/* The header element represents the header of a section. The element is typically
+ * used to group a set of h1-h6  elements to mark up a page's title with its subtitle
+ * or tagline. However, header elements may contain more than just the section's
+ * headings and subheadings — for example it would be reasonable for the header to
+ * include version history information.
+ */
+.page .header {
+	margin: 10px 20px 0px 220px;
+}
+.page .header h1 {
+	font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: normal;
+	margin: 0px;
+	padding: 0px;
+}
+
+/* The footer element represents the footer for the section it applies to. A footer 
+ * typically contains information about its section such as who wrote it, links to
+ * related documents, copyright data, and the like.
+ */
+.page .footer {
+	margin: 10px 20px 10px 220px;
+}
+
+/* The nav element represents a section of a page that links to other pages or to
+ * parts within the page: a section with navigation links. Not all groups of links 
+ * on a page need to be in a nav element — only sections that consist of primary
+ * navigation blocks are appropriate for the nav element. In particular, it is common
+ * for footers to have a list of links to various key parts of a site, but the footer
+ * element is more appropriate in such cases.
+ */
+.page .nav {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 200px;
+	bottom: 0px;
+	overflow: auto;
+	border-right: 1px solid #ccc;
+}
+
+.page .nav iframe {
+	width: 180px;
+	height: 600px;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	border-style: none;
+}
+
+.page .article h1 {
+	font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: normal;
+	margin: 0px;
+	padding: 0px;
+}
+.page .article h2 {
+	font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: bold;
+	margin: 0px;
+	padding-top: 20px;
+	padding-bottom: 0px;
+}
+.page .article h3 {
+	font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 20px;
+	font-weight: bold;
+	padding: 0px;
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
+
+
+/* -----------------
+ * Guide toc
+ * -----------------
+ */
+
+/* The body element represents the main content of the document. */
+.toc {
+	font-family: Geneva, Verdana, Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 20px;
+	margin: 10px;
+	padding: 0px;
+	color: #000;
+}
+.toc .header h1 {
+	font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: normal;
+	margin: 0px;
+	padding: 0px;
+}
+.toc p {
+	margin: 0px;
+	padding: 0px;
+}
+.toc blockquote {
+	margin: 0px 0px 0px 20px;
+	padding: 0px 0px 0px 0px;
+}
+
+
+
+/* -----------------
+ * Embedded content 
+ * -----------------
+ */
+
+
+/* The figure element represents some flow content, optionally with a caption, which 
+ * can be moved away from the main flow of the document without affecting the
+ * document's meaning.
+ *   <figure>
+ *     <video src=ogg>…</video>
+ *     <legend>Example</legend>
+ *    </figure>
+ */
+.figure {
+}
+ 
+/* The legend element represents a title or explanatory caption for the rest of
+ * the contents of the legend element's parent element.
+ */
+.legend {
+}

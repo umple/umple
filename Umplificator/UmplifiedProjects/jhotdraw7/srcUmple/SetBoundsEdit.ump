@@ -1,0 +1,64 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class SetBoundsEdit 
+{
+depend org.jhotdraw.draw.*;
+depend javax.swing.undo.*;
+depend java.awt.geom.*;
+  isA AbstractUndoableEdit;
+
+  private AbstractFigure owner;
+private Point2D.Double oldAnchor, oldLead;
+private Point2D.Double oldAnchor, oldLead;
+private Point2D.Double newAnchor, newLead;
+private Point2D.Double newAnchor, newLead;
+@Override
+    public String getPresentationName() {
+        // XXX - Localize me
+        return "Abmessungen \u00e4ndern";
+    }
+@Override
+    public boolean addEdit(UndoableEdit anEdit) {
+        if (anEdit instanceof SetBoundsEdit) {
+            SetBoundsEdit that = (SetBoundsEdit) anEdit;
+            if (that.owner == this.owner) {
+                this.newAnchor = that.newAnchor;
+                this.newLead = that.newLead;
+                that.die();
+                return true;
+            }
+        }
+        return false;
+    }
+@Override
+    public boolean replaceEdit(UndoableEdit anEdit) {
+        if (anEdit instanceof SetBoundsEdit) {
+            SetBoundsEdit that = (SetBoundsEdit) anEdit;
+            if (that.owner == this.owner) {
+                that.oldAnchor = this.oldAnchor;
+                that.oldLead = this.oldLead;
+                this.die();
+                return true;
+            }
+        }
+        return false;
+    }
+@Override
+    public void redo() throws CannotRedoException {
+        super.redo();
+        owner.willChange();
+        owner.setBounds(newAnchor, newLead);
+        owner.changed();
+    }
+@Override
+    public void undo() throws CannotUndoException {
+        super.undo();
+        owner.willChange();
+        owner.setBounds(oldAnchor, oldLead);
+        owner.changed();
+    }
+
+}

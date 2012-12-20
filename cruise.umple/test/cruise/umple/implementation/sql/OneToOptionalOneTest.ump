@@ -1,0 +1,14 @@
+generate Sql;
+
+namespace example;
+
+class MyDriver 
+{
+  name;
+  1 -- 0..1 MySubordinate;
+}
+
+class MySubordinate
+{
+  number;
+}

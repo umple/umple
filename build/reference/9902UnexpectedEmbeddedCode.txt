@@ -1,0 +1,37 @@
+W1002-3 Unexpected Embedded Code
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple warning reported when embedded code is found in a native language like Java, PHP or C++, yet 'strictness' has been set indicating this should not occur.</h2>
+
+<p>If <a href="StrictnessDirective.html">strictness</a> is set to 'modelOnly', this means that the developer intends to only include classes, associations, state machines and other modeling elements, but no embedded code in another programming language, <a href="MethodDefinition.html">not even method bodies.</a></p>
+
+<p>If <a href="StrictnessDirective.html">strictness</a> is set to 'noExtraCode', it is the same as the above, except that <a href="MethodDefinition.html">method bodies</a> are allowed.</p>
+
+<p>This warning is issued when <a href="StrictnessDirective.html">strictness</a> has been set to one of the above, yet Umple has encountered sytax that interprets as either a method body or some other code in a class that it cannot parse, and is assuming it is native code to be passed to the native compiler.
+</p>
+
+<p>This warning can often happen when the programmer/modeler wrote Umple code with a syntax error, so Umple thinks it is not Umple, but some other language. Here are some things to try in order to resolve this warning:<br>
+<ul>
+<li>Add spaces before and after Umple syntactic elements such as the -&gt; or -- of an association.
+<li>Check that you have terminated statements with semicolons where needed.
+<li>Ensure your parentheses and quotes match everywhere. An extra or missing { or } can often cause this warning.
+<li>Look at the examples of sytax in the user manual pages for such items as <a href="AssociationDefinition.html">associations</a> and <a href="BasicStateMachines.html">state machines</a>, and compare them to what you have provided.
+<li>Check <a href="UmpleGrammar.html">the grammar</a> for the elements you are trying to specify in the user manual grammar page.
+</ul>
+</p>
+
+
+@@example
+// The following example shows how to generate this warning.
+strictness modelOnly;
+class X {
+  public static void main() {
+    system.out.println("Hello World");
+  }
+}
+@@endexample
+
+

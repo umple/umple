@@ -1,0 +1,111 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.xml.css ;
+
+class CSSRule 
+{
+depend java.util.*;
+depend net.n3.nanoxml.IXMLElement;
+depend org.w3c.dom.Element;
+
+  private String selector;
+private SelectorType type;
+protected Map<String,String> properties;
+ALL
+ELEMENT_NAME
+CLASS_ATTRIBUTE
+ID_ATTRIBUTE
+public void setSelector(String selector) {
+        switch (selector.charAt(0)) {
+            case '*' : type = SelectorType.ALL; break;
+            case '.' : type = SelectorType.CLASS_ATTRIBUTE; break;
+            case '#' : type = SelectorType.ID_ATTRIBUTE; break;
+            default : type = SelectorType.ELEMENT_NAME; break;
+        }
+        this.selector = (type == SelectorType.ELEMENT_NAME) ? selector : selector.substring(1);
+    }
+public boolean matches(Element elem) {
+        boolean isMatch = false;
+        switch (type) {
+            case ALL :
+                isMatch = true;
+                break;
+            case ELEMENT_NAME : {
+                String name = elem.getLocalName();
+                isMatch = name.equals(selector);
+                break;
+            }
+            case CLASS_ATTRIBUTE : {
+                String value = elem.getAttribute("class");
+                if (value != null) {
+                    String[] clazzes = value.split(" ");
+                    for (String clazz : clazzes) {
+                        if (clazz.equals(selector)) {
+                            isMatch = true;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case ID_ATTRIBUTE : {
+                String name = elem.getAttribute("id");
+                isMatch = name != null && name.equals(selector);
+                break;
+            }
+        }
+        return isMatch;
+    }
+public boolean matches(IXMLElement elem) {
+        boolean isMatch = false;
+        switch (type) {
+            case ALL :
+                isMatch = true;
+                break;
+            case ELEMENT_NAME : {
+                String name = elem.getName();
+                isMatch = name != null && name.equals(selector);
+                break;
+            }
+            case CLASS_ATTRIBUTE : {
+                String value = elem.getAttribute("class",null);
+                if (value != null) {
+                    String[] clazzes = value.split(" ");
+                    for (String clazz : clazzes) {
+                        if (clazz.equals(selector)) {
+                            isMatch = true;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case ID_ATTRIBUTE : {
+                String name = elem.getAttribute("id",null);
+                isMatch = name != null && name.equals(selector);
+                break;
+            }
+        }
+        return isMatch;
+    }
+public void apply(Element elem) {
+        for (Map.Entry<String,String> property : properties.entrySet()) {
+            if (! elem.hasAttribute(property.getKey())) {
+                elem.setAttribute(property.getKey(), property.getValue());
+            }
+        }
+    }
+public void apply(IXMLElement elem) {
+        for (Map.Entry<String,String> property : properties.entrySet()) {
+            if (! elem.hasAttribute(property.getKey())) {
+                elem.setAttribute(property.getKey(), property.getValue());
+            }
+        }
+    }
+@Override
+    public String toString() {
+        return "CSSRule["+selector+properties+"]";
+    }
+
+}

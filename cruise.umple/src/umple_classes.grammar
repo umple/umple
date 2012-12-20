@@ -1,0 +1,80 @@
+
+// The master of this second part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_classes.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Classes are the most common elements in Umple.
+// See user manual page [*ClassDefinition*]
+classDefinition : class [name] { [[classContent]]* }
+
+//The external keyword declares a class that is defined in a different
+// compilation unit
+externalDefinition : external [=interface]? [name] { [[classContent]]* }
+
+// An Interface can only contain method. See [*interfaceDefinition*]
+interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }
+
+// Associations can be declared outside the body of classes. 
+// See user manual page [*IndependentlyDefinedAssociations*]
+associationDefinition : association [name]? { [[association]]* }
+
+// Associations that would be many-many can also become full-fledged classes too
+// See user manual page [*AssociationClassDefinition*]
+associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
+
+// The following items can be found inside the body of classes or association classes
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[abstract]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | ; | [[extraCode]]
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | ; | [[extraCode]]
+
+
+// Interfaces: Note that if the format of an abstractMethodDeclaration is not
+// followed, then the body will extraCode and passed to the base language
+// See user manual page [*interfaceDefinition*]
+interfaceBody- : [[interfaceMemberDeclaration]]*
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[isA]] | [[extraCode]]
+
+// Constants in interfaces (e.g. constant String ACONSTANT="aValue";)
+constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;
+
+//TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
+//TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
+
+// Methods: The code in concrete methods is passed to the base language
+// See user manual page [*MethodDefinition*]
+concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] } 
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
+methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
+parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
+parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
+
+// Details of associations: See manual page [*AssociationDefinition*]
+association : [=modifier:immutable]? [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
+inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+inlineAssociationEnd : [[multiplicity]] [[isSorted]] | [[multiplicity]] [roleName] [[isSorted]] | [[multiplicity]] [roleName]?
+singleAssociationEnd : [[multiplicity]] [type,roleName] ;
+associationEnd : [[multiplicity]] [type,roleName] | [[multiplicity]] [type,roleName] [[isSorted]]
+multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [bound]
+isSorted- : sorted { [priority] }
+
+// Details of attributes. See user manual page [*AttributeDefinition*]
+attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
+simpleAttribute- : [~name] ;
+autouniqueAttribute- : [=autounique] [name] ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+
+// Keys are used to define quality and hash codes, plus Sql keys.
+// See user manual page [*KeysforEqualityandHashing*]
+defaultKey : key { }
+key : key { [keyId] ( , [keyId] )* }
+
+// Depend clause. See user manual page [*Dependclause*]
+depend- : depend [depend] ;
+
+// Anything inside a class that is not parsable by Umple is passed on to the base language
+// compiler. To raise warnings when this occurs, use the strictness directive.
+extraCode- : [**extraCode]

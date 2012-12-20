@@ -1,0 +1,18 @@
+
+association
+{
+  0..1 Student aStudent -- 0..1 Mentor aMentor;
+  * Event -- * Location; 
+}
+
+class Event
+{}
+
+class Location
+{}
+
+class Student
+{}
+
+class Mentor
+{}

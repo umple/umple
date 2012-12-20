@@ -1,0 +1,10 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="InternalDateCreate" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<% if (attVar.getValue()==null){ %>
+	<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+<rich:calendar value="#{#1#Bean.<%=attVar.getName()%>}" popup="true"
+						datePattern="yyyy-MM-dd" showApplyButton="false" cellWidth="24px"
+						cellHeight="22px" style="width:200px" />
+<% } %>

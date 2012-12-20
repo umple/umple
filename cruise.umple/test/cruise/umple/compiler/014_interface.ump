@@ -1,0 +1,4 @@
+interface ISomething
+{
+ String getCode();
+}

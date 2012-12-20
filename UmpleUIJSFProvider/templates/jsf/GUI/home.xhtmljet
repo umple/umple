@@ -1,0 +1,27 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI" 
+class="Home" skeleton="../skeleton/IGenerator.skeleton" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<ui:composition template="/pages/templates/common.xhtml">
+	<ui:define name="pageTitle">Umple Generated</ui:define>
+	<ui:define name="body">
+		<f:subview>
+			<h:form>
+				<rich:panel style="width:300;" id="mainPanel">
+					<f:facet name="header">
+						<ui:insert name="pageHeader">Welcome</ui:insert>
+					</f:facet>
+					<h:panelGrid columns="1" style="text-align:right;">
+					</h:panelGrid>
+				</rich:panel>
+			</h:form>
+		</f:subview>
+	</ui:define>
+</ui:composition>
+</html>

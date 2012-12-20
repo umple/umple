@@ -1,0 +1,4 @@
+class Student
+{
+	_Prof;
+}

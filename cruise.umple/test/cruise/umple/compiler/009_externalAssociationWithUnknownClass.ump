@@ -1,0 +1,7 @@
+
+namespace example;
+
+association
+{
+  4..5 Student -- 6..9 Mentor myMentor;
+}

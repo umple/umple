@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="" default="dist" basedir=".">
+    <!--
+        
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+-->
+    
+    <description>
+        Elections example build file
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="."/>
+    
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+    </target>
+    
+    <target name="compile" description="compile the umple source" >
+        <!-- Compile the umple code -->
+        <java jar="umple.jar" fork="true" failonerror="true">
+            <arg value="src/elections_java.ump"/>
+        </java>
+    </target>
+</project>

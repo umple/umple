@@ -1,0 +1,70 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Foo
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+
+  /**
+   * Inline comment above method.
+   */
+  public function testMethod1()
+  {
+    // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiple inline comments
+   * above method.
+   */
+  public function testMethod2()
+  {
+    // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiline comment above method.
+   */
+  public function testMethod3()
+  {
+    // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiple multiline comments
+   * above method.
+   */
+  public function testMethod4()
+  {
+    // I am a comment inside a method.
+  }
+
+}
+?>

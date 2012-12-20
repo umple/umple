@@ -1,0 +1,12 @@
+my Title 3
+Misc
+@@description
+This is
+my content
+
+@@syntax
+the syntax looks like this
+
+@@example
+here is an example to consider
+@@endexample

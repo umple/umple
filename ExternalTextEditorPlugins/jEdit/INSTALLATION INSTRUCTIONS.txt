@@ -1,0 +1,9 @@
+Copy umple.xml into the modes folder in the jEdit settings directory.
+Edit the catalog file in the same folder to contain the following lines. Make sure
+that the lines appear between the <MODES> and </MODES> tags in the file.
+
+<MODE NAME="umple"		FILE="umple.xml"
+				FILE_NAME_GLOB="*.ump" />
+
+
+jEdit will now have Umple specific syntax highlighting when .ump files are opened in it.

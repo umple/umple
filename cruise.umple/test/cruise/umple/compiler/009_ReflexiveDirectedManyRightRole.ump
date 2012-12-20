@@ -1,0 +1,5 @@
+// Should be OK  no error 21
+class X {
+    * -> * X right;
+}
+

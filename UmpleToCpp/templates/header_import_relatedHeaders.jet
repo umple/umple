@@ -1,0 +1,14 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+
+   
+    if (uClass.getName() != av.getRelatedAssociation().getUmpleClass().getName())
+	{
+	appendln(stringBuffer, "");
+    append(stringBuffer, "class {0};",av.getRelatedAssociation().getUmpleClass().getName());
+	}
+    }
+  
+%>

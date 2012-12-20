@@ -1,0 +1,20 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.teddy.text ;
+
+class NumberedEditorKit 
+{
+depend javax.swing.text.*;
+  isA StyledEditorKit;
+
+  private NumberedViewFactory viewFactory;
+@Override
+    public ViewFactory getViewFactory() {
+        if (viewFactory == null) {
+            viewFactory = new NumberedViewFactory();
+        }
+        return viewFactory;
+    }
+
+}

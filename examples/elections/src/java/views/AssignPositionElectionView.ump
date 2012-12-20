@@ -1,0 +1,80 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace view.assignPositionElection;
+
+external JFrame{}
+
+class AssignPositionElectionView {
+  isA JFrame;
+
+  depend java.util.List;
+  depend java.util.ArrayList;
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+  depend javax.swing.JTextField;
+  depend javax.swing.JTextArea;
+  depend javax.swing.JButton;
+  depend javax.swing.JComboBox;
+  depend javax.swing.JList;
+  depend shared.listeners.GenericMouseListener;
+  depend shared.listeners.GenericWindowListener;
+  depend shared.domain.Election;
+  depend shared.domain.Position;
+  depend shared.domain.ElectionForPosition;
+  depend view.ViewUtils;
+
+  lazy internal JButton updateButton;
+  lazy internal JLabel electionsLabel;
+  lazy internal JComboBox electionsComboBox;
+  lazy internal JLabel positionsLabel;
+  lazy internal JList positionsList;
+  
+  List<Election> elections;
+  List<Position> positions;
+  lazy List<ElectionForPosition> electionForPositions;
+    
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    positionsLabel=new JLabel("Select some positions:");
+    positionsLabel.setBounds(10, 10, 200, 20);
+    add(positionsLabel);
+
+    positionsList=new JList(positions.toArray());
+    positionsList.setBounds(10, 30, 200, 100);
+    add(positionsList);
+    
+    electionsLabel=new JLabel("Select an election:");
+    electionsLabel.setBounds(10, 135, 200, 20);
+    add(electionsLabel);
+
+    electionsComboBox=new JComboBox(elections.toArray());
+    electionsComboBox.setBounds(10, 155, 200, 20);
+    add(electionsComboBox);
+    
+    updateButton=new JButton("update");
+    updateButton.setBounds(75, 180, 75, 20);
+    updateButton.addMouseListener(GenericMouseListener.AssignPositionElectionViewMouseListener);
+    add(updateButton);
+    
+    pack();
+    setSize(250, 250);
+    
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.AssignPositionElectionViewWindowListener);
+  }
+  
+  before getElectionForPositions {
+    electionForPositions=new ArrayList<ElectionForPosition>();
+    for (Object o:positionsList.getSelectedValues()) {
+    	electionForPositions.add(new ElectionForPosition(-1, (Election)electionsComboBox.getSelectedItem(), (Position)o));
+    }
+  }
+}

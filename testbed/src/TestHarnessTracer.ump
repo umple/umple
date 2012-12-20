@@ -1,0 +1,10 @@
+
+namespace cruise.tracer.test;
+
+tracer String;
+
+class PersonA
+{
+  name;
+  trace name;
+}

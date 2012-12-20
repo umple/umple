@@ -1,0 +1,241 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "LightFixture.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ LightFixture::LightFixture()
+  {
+    if (statusMotorIdle == Null) { setStatusMotorIdle(Null); }
+    if (statusFanIdle == Null) { setStatusFanIdle(Null); }
+    setStatus(Off);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ LightFixture LightFixture::operator=(const LightFixture & lightfixture)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string LightFixture::getStatusFullName()
+  {
+    string answer = getStatusStringName(status);
+    if (statusMotorIdle != Null) { answer += "." + getStatusMotorIdleStringName(statusMotorIdle); }
+    if (statusFanIdle != Null) { answer += "." + getStatusFanIdleStringName(statusFanIdle); }
+    return answer;
+  }
+  
+  LightFixture::Status LightFixture::getStatus()
+  {
+    return status;
+  }
+
+  string LightFixture::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Off"; break;}
+      case 1 : {return "On"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  LightFixture::StatusMotorIdle LightFixture::getStatusMotorIdle()
+  {
+    return statusMotorIdle;
+  }
+
+  string LightFixture::getStatusMotorIdleStringName (StatusMotorIdle statusMotorIdle)
+  {
+    switch (statusMotorIdle)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "MotorIdle"; break;}
+      case 2 : {return "MotorRunning"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  LightFixture::StatusFanIdle LightFixture::getStatusFanIdle()
+  {
+    return statusFanIdle;
+  }
+
+  string LightFixture::getStatusFanIdleStringName (StatusFanIdle statusFanIdle)
+  {
+    switch (statusFanIdle)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "FanIdle"; break;}
+      case 2 : {return "FanRunning"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool LightFixture::turnOn()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case Off:
+        setStatus(On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool LightFixture::enterOn()
+  {
+    bool wasEventProcessed = false;
+
+    switch (statusMotorIdle)
+    {
+      case Null:
+        setStatusMotorIdle(MotorIdle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (statusFanIdle)
+    {
+      case Null:
+        setStatusFanIdle(FanIdle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool LightFixture::exitOn()
+  {
+    bool wasEventProcessed = false;
+
+    switch (statusMotorIdle)
+    {
+      case MotorIdle:
+        setStatusMotorIdle(Null);
+        wasEventProcessed = true;
+        break;
+      case MotorRunning:
+        setStatusMotorIdle(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (statusFanIdle)
+    {
+      case FanIdle:
+        setStatusFanIdle(Null);
+        wasEventProcessed = true;
+        break;
+      case FanRunning:
+        setStatusFanIdle(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool LightFixture::flip()
+  {
+    bool wasEventProcessed = false;
+
+    switch (statusMotorIdle)
+    {
+      case MotorIdle:
+        setStatusMotorIdle(MotorRunning);
+        wasEventProcessed = true;
+        break;
+      case MotorRunning:
+        setStatusMotorIdle(MotorIdle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool LightFixture::flop()
+  {
+    bool wasEventProcessed = false;
+
+    switch (statusFanIdle)
+    {
+      case FanIdle:
+        setStatusFanIdle(FanRunning);
+        wasEventProcessed = true;
+        break;
+      case FanRunning:
+        setStatusFanIdle(FanIdle);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void LightFixture::exitStatus()
+  {
+    switch(status)
+    {
+      case On:
+        exitOn();
+        break;
+    }
+  }
+
+  void LightFixture::setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        if (statusMotorIdle == Null) { setStatusMotorIdle(MotorIdle); }
+        if (statusFanIdle == Null) { setStatusFanIdle(FanIdle); }
+        break;
+    }
+  }
+  
+
+  void LightFixture::setStatusMotorIdle(StatusMotorIdle aStatusMotorIdle)
+  {
+    statusMotorIdle = aStatusMotorIdle;
+    if (status != On && aStatusMotorIdle != Null) { setStatus(On); }
+  }
+  
+
+  void LightFixture::setStatusFanIdle(StatusFanIdle aStatusFanIdle)
+  {
+    statusFanIdle = aStatusFanIdle;
+    if (status != On && aStatusFanIdle != Null) { setStatus(On); }
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+LightFixture::~LightFixture()
+  {}

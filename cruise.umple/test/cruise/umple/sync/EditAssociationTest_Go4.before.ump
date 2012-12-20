@@ -1,0 +1,12 @@
+class Person
+{
+  position 76 28 109 42;
+}
+
+
+class Name
+{
+  * -- * Person;
+  position 86 131 109 42;
+  position.association Name__Person 109,16 69,42;
+}

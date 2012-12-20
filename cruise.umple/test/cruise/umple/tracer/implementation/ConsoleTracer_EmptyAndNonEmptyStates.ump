@@ -1,0 +1,11 @@
+namespace example;
+
+class Light
+{
+  status
+  {
+    On { flip -> Off;  }
+    Off { }
+  }
+  trace status;
+}

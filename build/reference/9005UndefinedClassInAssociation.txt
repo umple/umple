@@ -1,0 +1,47 @@
+E005 Undefined Class in Association
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an an association is specified to a class that cannot be found</h2>
+
+<p>The classes at both ends of an association must exist in the system being compiled. It might be that the specified class is spelled wrongly or has been omitted from the compilation. If you are making an association to a class in existing code, then simply
+declare the class as external, as shown in the third example below.
+
+</p>
+
+
+@@example
+// This example generates the error message
+class X {
+  1 -- * Y;
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the error
+class X {
+  1 -- * Y;
+}
+class Y {}
+@@endexample
+
+@@example
+// It is also possible to designate that the class Y is external in the following manner
+class X {
+  1 -- * Y;
+}
+external Y {}
+@@endexample
+
+@@example
+// The following will also generate the error message
+class X {}
+class Y {}
+
+association {
+  1 X -- * Z;
+}
+@@endexample
+

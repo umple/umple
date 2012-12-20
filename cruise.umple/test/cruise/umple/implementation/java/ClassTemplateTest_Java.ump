@@ -1,0 +1,6 @@
+generate Java;
+namespace example;
+
+class Mentor 
+{
+}

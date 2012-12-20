@@ -1,0 +1,62 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String firstName;
+  private String lastName;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aFirstName, String aLastName)
+  {
+    firstName = aFirstName;
+    lastName = aLastName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setFirstName(String aFirstName)
+  {
+    boolean wasSet = false;
+    firstName = aFirstName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLastName(String aLastName)
+  {
+    boolean wasSet = false;
+    lastName = aLastName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getFirstName()
+  {
+    print "before";
+    return firstName;
+  }
+
+  public String getLastName()
+  {
+    print "before";
+    return lastName;
+  }
+
+  public void delete()
+  {}
+
+}

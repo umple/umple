@@ -1,0 +1,2 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+    $this-><%=gen.translate("setMethod",nestedSm)%>(self::$<%=gen.translate("stateNull",nestedSm)%>);

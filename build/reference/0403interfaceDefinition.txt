@@ -1,0 +1,80 @@
+interface Definition
+Classes and Interfaces
+noreferences
+
+@@description
+<p>      
+An interface defines a list of <a href="MethodDefinition.html">methods</a> that are to be implemented in one or more classes.  An interface can be composed of the following elements: 
+</p>
+
+<ul>
+<li><a href="Dependclause.html">Dependencies</a></li>
+<li><a href="MethodDefinition.html">Method declarations</a></li>
+</ul>
+
+<p class="description">Umple currently supports Java, PHP and Ruby as native languages.</p>
+
+<p>To implement an interface in a class, or to create subinterfaces, use an <a href="isAclause.html">isA clause</a>.</p<
+
+@@syntax
+[[interfaceDefinition]] [[interfaceBody]] [[interfaceMemberDeclaration]]
+
+@@example
+interface RegisterCapable
+{
+  depend school.util.*;
+  
+  boolean registerForCourse(Course aCourse);
+}
+
+class Person {
+  name;
+}
+
+
+class CorporateClient {
+  isA RegisterCapable;
+  boolean registerForCourse(Course aCourse) {
+     // write code here
+  }
+  0..1 <- * Person employees;
+}
+
+class IndividualStudent {
+  isA Person, RegisterCapable;
+  boolean registerForCourse(Course aCourse) {
+     // write code here
+  }
+}
+
+
+class Course
+{
+  name;
+  description;
+  * -- * Person registrants;
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 337 19 149 80;
+  position.association Course__Person 0,24 124,15;
+}
+
+class CorporateClient
+{
+  position 77 199 121 45;
+  position.association CorporateClient__Person:Employees 30,0 25,63;
+  position.association CorporateClient__Person:employees 30,0 28,63;
+}
+
+class IndividualStudent
+{
+  position 223 204 152 45;
+}
+
+class Person
+{
+  position 46 25 124 63;
+}
+@@endexample

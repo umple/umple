@@ -1,0 +1,58 @@
+/*
+  Political Entities - sample system 
+  Last updated: June 8, 2010
+*/
+//Namespace for facade class.
+namespace PoliticalEntities;
+
+//Namespace for core of the system.
+namespace PoliticalEntities.core;
+
+class PoliticalEntity { name; }
+
+class Territory {
+ isA PoliticalEntity;
+ * -- * Territory borders;
+}
+
+class InterGovernmentalOrganization {
+ isA PoliticalEntity;
+ * -- * Territory; 
+}
+
+class Country {
+ isA Territory; 
+ 1 -- * StateOrProvince; 
+}
+
+class StateOrProvince { isA Territory; }
+
+
+class InterGovernmentalOrganization
+{
+  position 14 154 181 41;
+  position.association InterGovernmentalOrganization__Territory 200,9 0,23;
+}
+//$?[End_of_model]$?
+//Positioning
+class PoliticalEntity
+{
+  position 186 27 112 62;
+}
+
+class StateOrProvince
+{
+  position 139 295 109 41;
+}
+
+class Country
+{
+  position 305 294 109 41;
+  position.association Country__StateOrProvince 0,10 117,9;
+}
+
+class Territory
+{
+  position 280 140 109 70;
+  position.association Territory__Territory:borders 0,57 9,70;
+}

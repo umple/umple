@@ -1,0 +1,4 @@
+// Should be OK  no error 21
+class X {
+    0..1 -- 0..1 X right;
+}

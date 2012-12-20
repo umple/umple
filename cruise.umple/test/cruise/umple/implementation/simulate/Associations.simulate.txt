@@ -1,0 +1,8 @@
+<?php
+$modelOverview = new ModelOverview();
+$aClass = new ClassOverview("Student",$modelOverview);
+new AssociationEnd(0,-1,"Mentor","m",$aClass);
+new AssociationEnd(0,1,"Student","a",$aClass);
+new AssociationEnd(0,-1,"Student","b",$aClass);
+$aClass = new ClassOverview("Mentor",$modelOverview);
+new AssociationEnd(0,1,"Student","student",$aClass);

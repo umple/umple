@@ -1,0 +1,10 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="SetteableBooleanCreate" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+	<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+<% if (attVar.getValue()==null){ %>
+	<h:selectBooleanCheckbox  value="#{#1#Bean.<%=attVar.getName()%>}" />
+<% } else {%>
+	<h:selectBooleanCheckbox  value="#{#1#Bean.initial<%=attVar.getUpperCaseName()%>}" disabled="true" />
+<%}%>

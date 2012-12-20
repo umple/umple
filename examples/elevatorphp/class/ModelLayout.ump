@@ -1,0 +1,45 @@
+
+
+class Building
+{
+  position 308 45 117 64;
+  position.association Building__Elevator 30,64 189,0;
+  position.association Building__Floor 105,64 61,0;
+}
+
+class Floor
+{
+  position 467 252 136 100;
+  position.association Floor__Person:waitingPersons 10,100 82,0;
+  position.association Floor__UpRequest 136,37 0,43;
+  position.association Elevator:elevatorOnThisFloor__Floor 0,20 224,16;
+  position.association DownRequest__Floor 108,0 0,14;
+}
+
+class Elevator
+{
+  position 40 256 222 100;
+  position.association Elevator__Person:ridingPersons 50,100 0,45;
+  position.association Elevator:onItsWayTo__Floor:requestedFloors 224,74 0,78;
+}
+
+class Person
+{
+  position 395 448 238 80;
+  position.association Floor:desiredFloor__Person:exitAtPersons 200,0 128,100;
+}
+
+class FloorRequest
+{
+  position 765 43 141 63;
+}
+
+class UpRequest
+{
+  position 856 159 109 45;
+}
+
+class DownRequest
+{
+  position 665 161 109 45;
+}

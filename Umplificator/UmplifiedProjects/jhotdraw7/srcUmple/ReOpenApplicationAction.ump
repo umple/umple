@@ -1,0 +1,35 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.app ;
+
+class ReOpenApplicationAction 
+{
+depend java.awt.Component;
+depend java.awt.event.ActionEvent;
+depend javax.swing.Action;
+depend javax.swing.JFrame;
+depend javax.swing.SwingUtilities;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractApplicationAction;
+  isA AbstractApplicationAction;
+
+  public final static String ID = "application.reOpen";
+@Override
+    public void actionPerformed(ActionEvent e) {
+        Application a = getApplication();
+        if (a.getActiveView() == null && a.views().size() > 0) {
+            View v = a.views().iterator().next();
+            Component c = SwingUtilities.getRootPane(v.getComponent()).getParent();
+            if (c instanceof JFrame) {
+                JFrame f = (JFrame) c;
+                if ((f.getExtendedState() & JFrame.ICONIFIED) != 0) {
+                    f.setExtendedState(f.getExtendedState() ^ JFrame.ICONIFIED);
+                }
+                f.requestFocus();
+            }
+        }
+    }
+
+}

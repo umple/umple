@@ -1,0 +1,5 @@
+class X {}
+
+class Y {
+  0 -- 8 X;
+}

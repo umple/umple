@@ -1,0 +1,865 @@
+namespace umple.pts.domain.coreEntities;
+
+/**
+ * Interface to define the functions to be implemented by an Entity.
+ * @author Augustin and Manish
+ */
+interface IEntity
+{
+	/**
+	 * Function to validate the Entity.
+	 * @return
+	 * Returns true if the Entity is validated.
+	 */
+  boolean validateEntity();
+  
+  /**
+   * Function to get the unique identifier for the entity.
+   * @return
+   * Returns the unique integer identity of the entity. 
+   */
+	int getEntityId();
+}
+
+/**
+ * Class to hold the data about a Stop.
+ * @author Augustin and Manish 
+ */
+class Stop
+{
+  isA IEntity;
+  String name;
+  autounique stopId;
+//The autounique type ensures unique identifiers to all objects in a repository of one entity.  
+
+  public int getEntityId()
+  {
+     return this.getStopId();
+  }
+  
+  public boolean validateEntity(){
+    //Have to check that the Stop shouldnt be duplicated! 
+  	return true;
+  }
+  
+  /**
+   * This function resets the nextStopId, needed if a new list of stops are to be created.
+   * @return
+   * Returns true if successful.
+   */
+  public static boolean resetNextStopId(){
+	  nextStopId = 1;
+	  return true;
+  }
+  
+  /**
+   * @return
+   * Returns the nextStopId which will be assigned to the new Stop.
+   */
+  public static int getNextStopId(){
+	  return nextStopId;
+  }
+  
+  /**Sets the stopid of the entity.
+   */
+  public void setStopId(int i){
+	this.stopId = i;  
+  }
+  
+  @Override
+  public String toString(){
+	  return getName();
+  }
+}
+
+/**
+ * Class to store a Line. A list of all stops (back and forth) that will be runnable.
+ * @author Augustin and Manish
+ */
+class Line
+{
+  isA IEntity;
+  Stop firstEndStop;
+  Stop secondEndStop;
+  1..* -> 2..* Stop;
+  autounique lineId;
+  private String name;
+  
+  public int getEntityId()
+  {
+     return this.getLineId();
+  }
+  
+  @Override
+  public String toString(){
+	  return getName();
+  }
+  
+  public boolean validateEntity(){
+    //Have to check that the list of stops is such that they are consecutive stops
+  	return true;
+  }
+  
+  /**
+   * Checks the presence of a Stop in a Line.
+   * @param aStop
+   * The Stop which has to be checked.
+   * @return
+   * Return true if Stop is found.
+   */
+  	public boolean hasStop(Stop aStop){
+	    for (Stop anyStop:this.stops){
+	    	if(anyStop.equals(aStop)){
+	    		return true;
+	    	}
+	    }
+	    return false;
+	  }
+  
+  /**
+   * Inserts stop (newStop) in list so it will be after stop from param (afterStop)
+   * if afterStop exists and newStop isn't in list of stops
+   * @param afterStop stop to insert new one after
+   * @param newStop stop to be inserted
+   * @return true if newStop was inserted, false otherwise
+   */
+  public boolean insertStopAfter(Stop newStop, Stop afterStop){
+	boolean wasPut = false;
+	if(afterStop == null){
+		stops.add(0, newStop);
+		wasPut = true;
+	}else if (newStop != null && !stops.contains(newStop)) {
+		// index of afterStop   1
+		int indexOfStopToPutNewOne = stops.indexOf(afterStop) + 1;
+		
+		//if index was greater than -1 (afterStop is in list of stops)
+		if(indexOfStopToPutNewOne > 0){
+			stops.add(indexOfStopToPutNewOne, newStop);
+			wasPut = true;
+		}
+	}
+	
+	return wasPut;
+  }
+  
+  /**
+   * Gets the stop in a Line, which comes after the param (aStop).
+   * @param aStop
+   * The stop preceding the required stop.
+   * @return
+   * Returns the Stop found, else null.
+   */
+  public Stop getStopAfter(Stop aStop){
+		if(aStop == null){
+			return null;
+		}
+		else if (stops.contains(aStop)) {
+			return stops.get((stops.indexOf(aStop) + 1)%stops.size());
+		}
+		else{
+			return null;
+		}
+  }
+	  
+  /**
+   * This function resets the nextLineId, needed if a new list of lines are to be created.
+   * @return
+   * Returns true if successful.
+   */
+  public static boolean resetNextLineId(){
+	  nextLineId = 1;
+	  return true;
+  }
+  
+  /**
+   * 
+   * @return
+   * Returns the nextLineId which will be assigned to the new Stop.
+   */
+  public static int getNextLineId(){
+	  return nextLineId;
+  }
+  
+  /**
+   * Sets the id of the object.
+   * @param id
+   * The new id to be set.
+   */
+  public void setLineId(int id){
+	  this.lineId = id;
+  }
+  
+  /**
+   * Sets the name of the line.
+   */
+  public void setName(String name){
+	  this.name = name;
+  }
+  
+  /**
+   * Gets the name of the line.
+   * @return
+   * The name of the line.
+   */
+  public String getName(){
+	  return this.name;
+  }
+}
+
+/**
+ *This entity will store a detour or rerouting of a Line. Also, the time when the detour will be used by the system.
+ * @author Augustin and Manish
+ */
+class EmergencyLine
+{
+ isA Line;
+ String emergencyCause;
+ Time startTime;
+ Time endTime;
+ 
+ //public EmergencyLine(Stop aFirstEndStop, Stop aSecondEndStop, String aEmergencyCause, Time aStartTime, Time aEndTime, Stop... allStops)
+//The above commented code is the buildable code to overcome the bug in Umple. 
+
+ depend java.util.*;
+ 
+ 
+  /**
+   * Modifies a Line based on the given Map of Stops.
+   * @param replacingStops
+   * Accepts a HashMap to define the map of OldStop,NewStop.
+   * @return
+   * Returns true if all OldStops are replaced by all NewStops, else false.
+   */
+  public boolean modifyLine(HashMap<Stop,Stop> replacingStops){
+	if(replacingStops == null || replacingStops.isEmpty()){
+		return false;
+	}
+	
+    Set<Stop> keySet = replacingStops.keySet();
+	for(Stop oldStop: keySet){
+		int indexOfOldStop = getStops().indexOf(oldStop);
+		if(indexOfOldStop >= 0){
+			this.insertStopAfter(replacingStops.get(oldStop), oldStop);
+			this.removeStop(oldStop);
+		}
+	}
+	
+	return true;
+ }
+}
+
+/**
+ * Class to store all the runs for a particular line for a given time period defined in the class.
+ * @author Augustin and Manish
+ */
+class LineTimeTable
+{
+	isA IEntity;
+	Line forLine;
+	Time firstRunTime;
+	Time lastRunTime;
+	int minutesBetweenConsecutiveRuns;
+	1 -> 0..* ScheduledRun;
+	autounique timeTableId;
+
+    public int getEntityId()
+    {
+      return this.getTimeTableId();
+    }
+    
+    public LineTimeTable(Line aForLine, Time aFirstRunTime, Time aLastRunTime, int aMinutesBetweenConsecutiveRuns, ScheduledRun... allScheduledRuns)
+  	{
+      forLine = aForLine;
+      firstRunTime = aFirstRunTime;
+      lastRunTime = aLastRunTime;
+      minutesBetweenConsecutiveRuns = aMinutesBetweenConsecutiveRuns;
+      timeTableId = nextTimeTableId++;
+      scheduledRuns = new ArrayList<ScheduledRun>();
+      boolean didAddScheduledRuns = setScheduledRuns(allScheduledRuns);
+      if (!didAddScheduledRuns)
+      {
+        throw new RuntimeException("Unable to create LineTimeTable, must have at least 1 scheduledRuns");
+      }
+    }
+    
+    public boolean setScheduledRuns(ScheduledRun... newScheduledRuns)
+    {
+      boolean wasSet = false;
+      ArrayList<ScheduledRun> verifiedScheduledRuns = new ArrayList<ScheduledRun>();
+      for (ScheduledRun aScheduledRun : newScheduledRuns)
+      {
+        if (verifiedScheduledRuns.contains(aScheduledRun))
+        {
+          continue;
+        }
+        verifiedScheduledRuns.add(aScheduledRun);
+      }
+
+      if (verifiedScheduledRuns.size() != newScheduledRuns.length || verifiedScheduledRuns.size() < minimumNumberOfScheduledRuns())
+      {
+        return wasSet;
+      }
+
+      scheduledRuns.clear();
+      scheduledRuns.addAll(verifiedScheduledRuns);
+      wasSet = true;
+      return wasSet;
+    }
+	
+	public boolean validateEntity(){
+  		return true;
+  	}
+
+  	/**
+  	 * Finds all earliest Scheduled Run for a particular Stop at a particular Time
+  	 * @param aStop
+  	 * The Stop at which the Run has to be found.
+  	 * @param aCurrentTime
+  	 * The Time after which the earliest Run has to be found.
+  	 * @return
+  	 * Returns the Run if found, else null. 
+  	 */
+  	public ScheduledRun findRunForLineStopTime(Stop aStop, Time aCurrentTime){
+  		ScheduledRun solutionRun = null;
+  		boolean set = false;
+  		List<ScheduledRun> runList = this.getScheduledRuns();
+  		for(ScheduledRun aRun:runList){
+  			Time newTime = aRun.getArrivalTimeToStop(aStop);
+  			if(newTime != null){
+  				if(aCurrentTime.compareTo(newTime) < 0){
+  					if(set){
+  						 if( solutionRun.getArrivalTimeToStop(aStop).compareTo(newTime) > 0){
+  							 solutionRun = aRun;
+  						 }
+  					}
+  					else{
+  						solutionRun = aRun;
+  						set = true;
+  					}
+  				}
+  			}
+  		}
+  		return solutionRun;
+  	}
+  	 
+  /**
+   * This function resets the nextLineTimeTableId, needed if a new list of lineTimeTables are to be created.
+   * @return
+   * Returns true if successful.
+   */
+  public static boolean resetNextTimeTableId(){
+	  nextTimeTableId = 1;
+	  return true;
+  }
+  
+  /**
+   * Function to return get the next id for the new object.
+   * @return
+   * Returns the nextLineTimeTableId which will be assigned to the new LineTimeTable.
+   */
+  public static int getNextTimeTableId(){
+	  return nextTimeTableId;
+  }
+  
+  public void induceDelayInAllRunsAfterStartTime(Time startTime, int delayMinutes){
+	  for(ScheduledRun aRun:scheduledRuns){
+		  if(aRun.getStartTime().compareTo(startTime) > 0){
+			  aRun.induceDelay(delayMinutes);
+		  }
+	  }
+  }
+  
+  /**
+   * Sets the id of the object.
+   * @param id
+   * The new id to be set.
+   */
+  public void setTimeTableId(int id){
+	  this.timeTableId = id;
+  }
+}
+
+/**
+ *class to hold a particular run for a line and holds the time at which it starts, time it waits on stops and the start and end stops.
+ * @author Augustin and Manish
+ */
+class Run
+{
+  isA IEntity;
+  Time startTime;
+  Time endTime;
+  Time waitTime;
+  Stop startStop;
+  Stop endStop;
+  1..* -> 1 Line;
+  autounique runId;
+  
+  public int getEntityId()
+  {
+    return this.getRunId();
+  }
+  
+  public boolean validateEntity(){
+	  //Validate count of ArrivalTimes and Stops
+	  if(this.arrivalTimeToStops.size() != this.line.getStops().size()){
+		  return false;
+	  }
+	  for(ArrivalTimeToStop stopTime:arrivalTimeToStops){
+		  int ind = arrivalTimeToStops.indexOf(stopTime);
+		  
+		  if(stopTime.getArrivalTime().compareTo(arrivalTimeToStops.get(ind + 1).getArrivalTime()) > 0){
+			  return false;
+		  }				  
+	  }
+  	return true;
+  }
+  
+  /**
+   * This function resets the nextRunId, needed if a new list of runs are to be created.
+   * @return
+   * Returns true if successful.
+   */
+  public static boolean resetNextRunId(){
+	  nextRunId = 1;
+	  return true;
+  }
+  
+  /**
+   * 
+   * @return
+   * Returns the nextRunId which will be assigned to the new Run.
+   */
+  public static int getNextRunId(){
+	  return nextRunId;
+  }
+  
+  /**
+   * Gets the arrival time on a stop in the run.
+   * @param aStop
+   * The Stop at which the Arrival Time has to be found.
+   * @return
+   * Returns the Arrival Time retrieved else null.
+   */
+  public Time getArrivalTimeToStop(Stop aStop)
+  {
+    for(ArrivalTimeToStop aArrivalTimeToStop:arrivalTimeToStops){
+    	if(aArrivalTimeToStop.getStop().equals(aStop)){
+    		return aArrivalTimeToStop.getArrivalTime();
+    	}
+    }
+    return null;
+  }
+  
+  /**
+   * Sets the Arrival Time for a Stop in the run.
+   * @param aStop
+   * The Stop for which the arrival time has to be set.
+   * @param aArrivalTime
+   * The Arrival Time for the Stop.
+   * @return
+   * Returns True if the time for the stop was set.
+   */
+  public boolean setArrivalTimeToStop(Stop aStop, Time aArrivalTime)
+  {
+    for(ArrivalTimeToStop aArrivalTimeToStop:arrivalTimeToStops){
+    	if(aArrivalTimeToStop.getStop().equals(aStop)){
+    		aArrivalTimeToStop.setArrivalTime(aArrivalTime);
+    		return true;
+    	}
+    }
+    return false;
+  }
+  
+  /**
+   * Introduces a delay in the run.
+   * @param delayMinutes
+   * The minutes of delay to be induced in the run.
+   */
+  public void induceDelay(int delayMinutes){
+  	  this.startTime.setMinutes(this.startTime.getMinutes() + delayMinutes);
+	  for(ArrivalTimeToStop aTime:arrivalTimeToStops){
+		  aTime.getArrivalTime().setMinutes(aTime.getArrivalTime().getMinutes() + delayMinutes);
+	  }
+  }
+  
+  /**
+   * Sets the id of the object.
+   * @param id
+   * The new id to be set.
+   */
+  public void setRunId(int id){
+	  this.runId = id;
+  }
+}
+
+/**
+ * This class holds the arrival time at a stop for a particular run.
+ * @author Augustin and Manish
+ */
+class ArrivalTimeToStop{
+	Time arrivalTime;
+	Stop stop;
+	* -- 1 Run;
+}
+
+/**
+ *class to hold a particular run for a line and holds the time at which it starts, time it waits on stops and the start and end stops.
+ * @author Augustin and Manish
+ */
+class ScheduledRun
+{
+  isA Run;
+}
+
+/**
+ * This class holds data of an actual run which will have some delays and practical issues or problems.
+ * @author Augustin and Manish
+ */
+class ActualRun
+{
+  isA Run;
+  //The status will store whether it is working or damaged or any other problems.
+  String status = "OK";
+  int delayMinutes;
+  ScheduledRun run;
+  
+  immutable String STATUS_OK = "OK"; 
+  immutable String STATUS_VEHICLE_BROKE = "VEHICLE_BROKEN";
+  immutable String STATUS_ROUTE_BLOCKED = "ROUTE_BLOCKED";
+  
+  public boolean validateEntity(){
+	
+	//There can be only defined arrival time for stops at line
+	if(!getStatus().equals(STATUS_ROUTE_BLOCKED) && !getStatus().equals(STATUS_VEHICLE_BROKE)){
+	  for(ArrivalTimeToStop anArrivalTime : getArrivalTimeToStops() ){
+		if(anArrivalTime.getStop() == null || !getLine().getStops().contains(anArrivalTime.getStop())){
+			return false;
+		}
+	  }
+	}
+	
+  	return true;
+  }
+ }
+
+/**
+ *This class defines the emergency runs to handle the rerouted runs.
+ * @author Augustin and Manish
+ */
+class EmergencyRun{
+  depend java.util.*;
+  depend java.sql.Time;
+  isA ActualRun;
+  cause;
+  private umple.pts.domain.coreEntities.Line baseLine;
+  
+  /**
+   * This function will assign an EmergencyLine to the EmergencyRun
+   * @param aline
+   * The EmergencyLine, which will be used by the EmergencyRun
+   * @return
+   * Returns true if the switch was successful.
+   */
+  public boolean setEmergencyLine(EmergencyLine aline)
+  {
+	  this.baseLine = this.getLine();
+	  return this.setLine(aline);
+  }
+  
+  /**
+   * This function will revert the run to original line.
+   * @return
+   * Returns true if the switch was successful.
+   */
+  public boolean resetLine()
+  {
+	  boolean value = this.setLine(this.baseLine);
+	  this.baseLine = null;
+	  return value;
+  }
+  
+  /**
+   * Returns the Original Regular Line on which the Emergency Run is actually based.
+   * @return
+   * Returns the baseLine, else returns null.
+   */
+  public Line getBaseLine(){
+	  return baseLine;
+  }
+}
+
+/**
+ *This class will hold a schedule for all the scheduled runsArrivalTimeToStop
+ * @author Augustin and Manish
+ */
+class Schedule
+{
+  isA IEntity;
+  1 -> 0..* LineTimeTable;
+  scheduleName;
+  autounique scheduleId;
+  
+  public Schedule(String aScheduleName, LineTimeTable... allLineTimeTables)
+  {
+    scheduleName = aScheduleName;
+    scheduleId = nextScheduleId++;
+    lineTimeTables = new ArrayList<LineTimeTable>();
+    boolean didAddLineTimeTables = setLineTimeTables(allLineTimeTables);
+    if (!didAddLineTimeTables)
+    {
+      throw new RuntimeException("Unable to create Schedule, must have at least 1 lineTimeTables");
+    }
+  }
+  
+  public boolean setLineTimeTables(LineTimeTable... newLineTimeTables)
+  {
+    boolean wasSet = false;
+    ArrayList<LineTimeTable> verifiedLineTimeTables = new ArrayList<LineTimeTable>();
+    for (LineTimeTable aLineTimeTable : newLineTimeTables)
+    {
+      if (verifiedLineTimeTables.contains(aLineTimeTable))
+      {
+        continue;
+      }
+      verifiedLineTimeTables.add(aLineTimeTable);
+    }
+
+    if (verifiedLineTimeTables.size() != newLineTimeTables.length || verifiedLineTimeTables.size() < minimumNumberOfLineTimeTables())
+    {
+      return wasSet;
+    }
+
+    lineTimeTables.clear();
+    lineTimeTables.addAll(verifiedLineTimeTables);
+    wasSet = true;
+    return wasSet;
+  }
+  
+  public int getEntityId()
+  {
+    return this.getScheduleId();
+  }
+  
+  public boolean validateEntity(){
+  	return true;
+  }
+  
+  /**
+   * This function resets the nextScheduleId, needed if a new list of schedules are to be created.
+   * @return
+   * Returns true if successful.
+   */
+  public static boolean resetNextScheduleId(){
+	  nextScheduleId = 1;
+	  return true;
+  }
+  
+  /**
+   * 
+   * @return
+   * Returns the nextScheduleId which will be assigned to the new Schedule.
+   */
+  public static int getNextScheduleId(){
+	  return nextScheduleId;
+  }
+  
+  /**
+   * Gets the LineTimeTable for a Line.
+   * @param aLine
+   * The Line for which the LineTimeTable is to be found.
+   * @return
+   * Returns the LineTimeTable found, else null.
+   */
+  public LineTimeTable getLineTimeTableByLine(Line aLine){
+	  for(LineTimeTable table:this.lineTimeTables){
+		  if(table.getForLine().equals(aLine)){
+			  return table;
+		  }
+	  }
+	  return null;
+  }
+  
+  /**
+   * Sets the id of the object.
+   * @param id
+   * The new id to be set.
+   */
+  public void setScheduleId(int id){
+	  this.scheduleId = id;
+  }
+}
+
+/**
+ *Incase of Special cases, the special modified schedules can be stored in this class with the occurence period mentioned.
+ * @author Augustin and Manish
+ */
+class SpecialSchedule
+{
+  isA Schedule;
+  Date occurenceStart;
+  Date occurenceEnd;
+  // The occurence will store the specific date for the schedule
+  //public SpecialSchedule(Date aOccurenceStart, Date aOccurenceEnd, LineTimeTable... allLineTimeTables)
+  public boolean validateEntity(){
+  	return true;
+  }
+  
+  public SpecialSchedule(String aScheduleName, Date aOccurenceStart, Date aOccurenceEnd, LineTimeTable... allLineTimeTables)
+  {
+    super(aScheduleName, allLineTimeTables);
+    occurenceStart = aOccurenceStart;
+    occurenceEnd = aOccurenceEnd;
+  }
+}
+
+/**
+ *This class holds the details of a Vehicle in the system with all details like the Vehicle particulars and to which line is it assigned to. Its operation time is also stored.
+ * @author Augustin and Manish
+ */
+class Vehicle
+{
+  isA IEntity;
+  publicVehicleName;
+  autounique vehicleId;
+  vehicleStatus;
+  Time startOperationTime;
+  Time endOperationTime;
+  Line assignedLine;
+  
+  public boolean validateEntity()
+  {
+     return true;
+  }
+  
+  public int getEntityId()
+  {
+    return vehicleId;
+  }
+  
+  /**
+   * This function resets the nextVehicleId, needed if a new list of vehicles are to be created.
+   * @return
+   * Returns true if successful.
+   */
+  public static boolean resetNextVehicleId(){
+	  nextVehicleId = 1;
+	  return true;
+  }
+  
+  /**
+   * 
+   * @return
+   * Returns the nextVehicleId which will be assigned to the new Vehicle.
+   */
+  public static int getNextVehicleId(){
+	  return nextVehicleId;
+  }
+  
+  /**
+   * Sets the vehicle id of the object.
+   * @param id
+   * The new id to be set.
+   */
+  public void setVehicleId(int id){
+	  this.vehicleId = id;
+  }
+}
+
+/**
+ *Class to hold a Vehicle which is active on a run. It holds the status of the run.
+ * @author Augustin and Manish 
+ */
+class RunningVehicle
+{
+  isA IEntity;
+  Vehicle vehicle;
+  Stop lastStop;
+  Time lastUpdateTime;
+  ActualRun ongoingActualRun;
+  
+  /**
+   * Starts the run on a running Vehicle.
+   * @param currentTime
+   * Accepts the time at which the run is started.
+   * @return
+   * Returns true if the run starts successfully.
+   */
+  public boolean intialiseStartOfRun(Time currentTime){
+    this.lastUpdateTime = currentTime;
+    return true; 
+  }
+  
+  public boolean validateEntity() {
+	return true;
+  }
+
+
+  public int getEntityId() {
+	return this.getVehicle().getEntityId();
+  }
+}
+
+class LineTimeTable
+{
+  position 415 131 277 145;
+  position.association LineTimeTable__Run 278,69 0,21;
+}
+
+class Schedule
+{
+  position.association LineTimeTable__Schedule 174,58 0,45;
+  position 188 139 173 86;
+}
+
+class Line
+{
+  position 82 362 168 106;
+  position.association Line__Stop 30,0 57,86;
+}
+
+class Run
+{
+  position.association Line__Run 0,127 169,73;
+  position 762 171 132 165;
+}
+
+class Stop
+{
+  position 27 138 127 86;
+}
+
+class ArrivalTimeToStop
+{
+  position.association ArrivalTimeToStop__Run 53,0 116,165;
+  position 795 498 143 82;
+}
+
+class ActualRun
+{
+  position 498 429 255 165;
+}
+
+class EmergencyLine
+{
+  position 44 544 190 106;
+}
+
+class EmergencyRun
+{
+  position 542 659 114 66;
+}
+
+class SpecialSchedule
+{
+  position 217 263 167 86;
+}
+
+class Vehicle
+{
+  position 1038 343 201 165;
+}
+
+class RunningVehicle
+{
+  position 899 152 223 142;
+}

@@ -1,0 +1,49 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class ImageHolderFigure 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.image.*;
+depend java.io.*;
+
+  /**
+     * Loads an image from a File.
+     * By convention this method is never invoked on the AWT Event Dispatcher 
+     * Thread.
+     */
+    public void loadImage(File f) throws IOException;
+/**
+     * Loads an image from an Input Stream.
+     * By convention this method is never invoked on the AWT Event Dispatcher 
+     * Thread.
+     */
+    public void loadImage(InputStream in) throws IOException;
+/**
+     * Gets the buffered image from the figure.
+     */
+    @Nullable public BufferedImage getBufferedImage();
+/**
+     * Sets the buffered image for the figure.
+     */
+    public void setBufferedImage(@Nullable BufferedImage image);
+/**
+     * Sets the image.
+     *
+     * @param imageData The image data. If this is null, a buffered image must
+     * be provided.
+     * @param bufferedImage An image constructed from the imageData. If this
+     * is null, imageData must be provided.
+     */
+    public void setImage(@Nullable byte[] imageData, @Nullable BufferedImage bufferedImage) throws IOException;
+/**
+     * Gets the image data.
+     *
+     * @return imageData The image data, or null, if the ImageHolderFigure does
+     * not have an image.
+     */
+    @Nullable public byte[] getImageData();
+
+}

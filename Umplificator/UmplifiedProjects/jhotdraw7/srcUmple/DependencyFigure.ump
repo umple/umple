@@ -1,0 +1,87 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.pert.figures ;
+
+class DependencyFigure 
+{
+depend org.jhotdraw.draw.connector.Connector;
+depend org.jhotdraw.draw.decoration.ArrowTip;
+depend java.awt.*;
+depend org.jhotdraw.draw.AttributeKeys.*;
+depend org.jhotdraw.draw.*;
+  isA LineConnectionFigure;
+
+  /**
+     * Checks if two figures can be connected. Implement this method
+     * to constrain the allowed connections between figures.
+     */
+    @Override
+    public boolean canConnect(Connector start, Connector end) {
+        if ((start.getOwner() instanceof TaskFigure)
+                && (end.getOwner() instanceof TaskFigure)) {
+
+            TaskFigure sf = (TaskFigure) start.getOwner();
+            TaskFigure ef = (TaskFigure) end.getOwner();
+
+            // Disallow multiple connections to same dependent
+            if (ef.getPredecessors().contains(sf)) {
+                return false;
+            }
+
+            // Disallow cyclic connections
+            return !sf.isDependentOf(ef);
+        }
+
+        return false;
+    }
+@Override
+    public boolean canConnect(Connector start) {
+        return (start.getOwner() instanceof TaskFigure);
+    }
+/**
+     * Handles the disconnection of a connection.
+     * Override this method to handle this event.
+     */
+    @Override
+    protected void handleDisconnect(Connector start, Connector end) {
+        TaskFigure sf = (TaskFigure) start.getOwner();
+        TaskFigure ef = (TaskFigure) end.getOwner();
+
+        sf.removeDependency(this);
+        ef.removeDependency(this);
+    }
+/**
+     * Handles the connection of a connection.
+     * Override this method to handle this event.
+     */
+    @Override
+    protected void handleConnect(Connector start, Connector end) {
+        TaskFigure sf = (TaskFigure) start.getOwner();
+        TaskFigure ef = (TaskFigure) end.getOwner();
+
+        sf.addDependency(this);
+        ef.addDependency(this);
+    }
+@Override
+    public DependencyFigure clone() {
+        DependencyFigure that = (DependencyFigure) super.clone();
+
+        return that;
+    }
+@Override
+    public int getLayer() {
+        return 1;
+    }
+@Override
+    public void removeNotify(Drawing d) {
+        if (getStartFigure() != null) {
+            ((TaskFigure) getStartFigure()).removeDependency(this);
+        }
+        if (getEndFigure() != null) {
+            ((TaskFigure) getEndFigure()).removeDependency(this);
+        }
+        super.removeNotify(d);
+    }
+
+}

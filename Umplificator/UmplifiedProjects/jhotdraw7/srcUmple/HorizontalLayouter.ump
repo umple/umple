@@ -1,0 +1,93 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.layouter ;
+
+class HorizontalLayouter 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.CompositeFigure;
+depend java.awt.geom.*;
+depend org.jhotdraw.geom.*;
+depend org.jhotdraw.draw.AttributeKeys.*;
+  isA AbstractLayouter;
+
+  @Override
+    public Rectangle2D.Double calculateLayout(CompositeFigure compositeFigure, Point2D.Double anchor, Point2D.Double lead) {
+        Insets2D.Double layoutInsets = compositeFigure.get(LAYOUT_INSETS);
+
+        Rectangle2D.Double layoutBounds = new Rectangle2D.Double(anchor.x, anchor.y, 0, 0);
+        for (Figure child : compositeFigure.getChildren()) {
+            if (child.isVisible()) {
+                Dimension2DDouble preferredSize = child.getPreferredSize();
+                Insets2D.Double ins = getInsets(child);
+                layoutBounds.height = Math.max(layoutBounds.height, preferredSize.height + ins.top + ins.bottom);
+                layoutBounds.width += preferredSize.width + ins.left + ins.right;
+            }
+        }
+        layoutBounds.width += layoutInsets.left + layoutInsets.right;
+        layoutBounds.height += layoutInsets.top + layoutInsets.bottom;
+
+        return layoutBounds;
+    }
+@Override
+    public Rectangle2D.Double layout(CompositeFigure compositeFigure, Point2D.Double anchor, Point2D.Double lead) {
+        Insets2D.Double layoutInsets = compositeFigure.get(LAYOUT_INSETS);
+        Alignment compositeAlignment = compositeFigure.get(COMPOSITE_ALIGNMENT);
+
+        Rectangle2D.Double layoutBounds = calculateLayout(compositeFigure, anchor, lead);
+        double x = layoutBounds.x + layoutInsets.left;
+        for (Figure child : compositeFigure.getChildren()) {
+            if (child.isVisible()) {
+                Insets2D.Double insets = getInsets(child);
+                double width = child.getPreferredSize().width;
+                double height = child.getPreferredSize().height;
+                //--
+                switch (compositeAlignment) {
+                    case LEADING:
+                        child.setBounds(
+                                new Point2D.Double(
+                                x + insets.left,
+                                layoutBounds.y + layoutInsets.top + insets.top),
+                                new Point2D.Double(
+                                x + insets.left + width,
+                                layoutBounds.y + layoutInsets.top + insets.top + height));
+                        break;
+                    case TRAILING:
+                        child.setBounds(
+                                new Point2D.Double(
+                                x + insets.left,
+                                layoutBounds.y + layoutBounds.height - layoutInsets.bottom - insets.bottom - height),
+                                new Point2D.Double(
+                                x + insets.left + width,
+                                layoutBounds.y + layoutBounds.height - layoutInsets.bottom - insets.bottom));
+                        break;
+                    case CENTER:
+                        child.setBounds(
+                                new Point2D.Double(
+                                x + insets.left,
+                                layoutBounds.y + layoutInsets.top + (layoutBounds.height - height) / 2d),
+                                new Point2D.Double(
+                                x + insets.left + width,
+                                layoutBounds.y + layoutInsets.top + (layoutBounds.height + height) / 2d));
+                        break;
+                    case BLOCK:
+                    default:
+                        child.setBounds(
+                                new Point2D.Double(
+                                x + insets.left,
+                                layoutBounds.y + layoutInsets.top + insets.top),
+                                new Point2D.Double(
+                                x + insets.left + width,
+                                layoutBounds.y + layoutBounds.height - layoutInsets.bottom - insets.bottom));
+                        break;
+                }
+                //---
+                x += width + insets.left + insets.right;
+            }
+        }
+
+        return layoutBounds;
+    }
+
+}

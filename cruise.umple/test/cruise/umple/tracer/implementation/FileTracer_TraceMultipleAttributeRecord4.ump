@@ -1,0 +1,12 @@
+namespace example;
+
+tracer File;
+
+class Tracer
+{
+	Integer id;
+	Integer contact;
+	String name;
+	String address;
+	trace name,id record address,contact;
+}

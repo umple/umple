@@ -1,0 +1,85 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class UndoAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend java.beans.*;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.app.Application;
+depend org.jhotdraw.app.View;
+depend org.jhotdraw.app.action.AbstractViewAction;
+  isA AbstractViewAction;
+
+  public final static String ID = "edit.undo";
+private ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
+private PropertyChangeListener redoActionPropertyListener = new PropertyChangeListener() {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            String name = evt.getPropertyName();
+            if (name == AbstractAction.NAME) {
+                putValue(AbstractAction.NAME, evt.getNewValue());
+            } else if (name == "enabled") {
+                updateEnabledState();
+            }
+        }
+    };
+protected void updateEnabledState() {
+        boolean isEnabled = false;
+        Action realAction = getRealUndoAction();
+        if (realAction != null && realAction != this) {
+            isEnabled = realAction.isEnabled();
+        }
+        setEnabled(isEnabled);
+    }
+@Override
+    protected void updateView(@Nullable View oldValue, @Nullable View newValue) {
+        super.updateView(oldValue, newValue);
+        if (newValue != null && //
+                newValue.getActionMap().get(ID) != null && //
+                newValue.getActionMap().get(ID) != this) {
+            putValue(AbstractAction.NAME, newValue.getActionMap().get(ID).
+                    getValue(AbstractAction.NAME));
+            updateEnabledState();
+        }
+    }
+/**
+     * Installs listeners on the view object.
+     */
+    @Override
+    protected void installViewListeners(View p) {
+        super.installViewListeners(p);
+        Action undoActionInView = p.getActionMap().get(ID);
+        if (undoActionInView != null && undoActionInView != this) {
+            undoActionInView.addPropertyChangeListener(redoActionPropertyListener);
+        }
+    }
+/**
+     * Installs listeners on the view object.
+     */
+    @Override
+    protected void uninstallViewListeners(View p) {
+        super.uninstallViewListeners(p);
+        Action undoActionInView = p.getActionMap().get(ID);
+        if (undoActionInView != null && undoActionInView != this) {
+            undoActionInView.removePropertyChangeListener(redoActionPropertyListener);
+        }
+    }
+@Override
+    public void actionPerformed(ActionEvent e) {
+        Action realUndoAction = getRealUndoAction();
+        if (realUndoAction != null && realUndoAction != this) {
+            realUndoAction.actionPerformed(e);
+        }
+    }
+@Nullable
+    private Action getRealUndoAction() {
+        return (getActiveView() == null) ? null : getActiveView().getActionMap().get(ID);
+    }
+
+}

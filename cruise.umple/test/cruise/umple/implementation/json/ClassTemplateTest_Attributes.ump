@@ -1,0 +1,9 @@
+generate Json;
+namespace example;
+
+class NewClass
+{
+  name;
+  Integer id;
+  position 193 66 0 0;
+}

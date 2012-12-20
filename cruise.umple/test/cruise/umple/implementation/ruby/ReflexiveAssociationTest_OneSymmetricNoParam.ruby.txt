@@ -1,0 +1,53 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class OneSymmetricNoParam
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #OneSymmetricNoParam Associations - for documentation purposes
+  #attr_reader :friend
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_friend)
+    @initialized = false
+    @deleted = false
+    @friend = nil
+    unless a_friend.nil?
+      @friend = a_friend
+      a_friend.instance_variable_set("@friend",self)
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_friend
+    raise "Mandatory relationship with friend not satisfied" if (@initialized and !@deleted and @friend.nil?)
+    @friend
+  end
+
+  def delete
+    @deleted = true
+    raise "Mandatory relationship with friend not satisfied" if (@initialized and !@deleted and @friend.nil?)
+    existing_friend = @friend
+    @friend = nil
+    unless existing_friend.nil?
+      existing_friend.delete
+    end
+  end
+
+end
+end

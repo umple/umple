@@ -1,0 +1,13 @@
+// The master of this part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_layout.grammar*]
+
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// Layout elements are injected into classes as mixins by diagramming tools such
+// as UmpleOnline. Programmers can tweak the layout textually.
+position- : [[associationPosition]] | [[elementPosition]]
+elementPosition : position [x] [y] [width] [height] ;
+associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;
+coordinate : [x] , [y]

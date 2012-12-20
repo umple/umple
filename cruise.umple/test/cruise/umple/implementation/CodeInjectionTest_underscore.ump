@@ -1,0 +1,43 @@
+namespace example;
+
+class Student
+{
+  lazy immutable id;
+  name;
+  defaulted type = "None";
+  String[] roles;
+
+  before set_id { print "start set_id"; }
+  after set_id { print "end set_id"; }
+  before get_id { print "start get_id"; }
+  after get_id { print "end get_id"; }
+  
+  before set_name { print "start set_name"; }
+  before set_name { print "start set_name2"; }
+  after set_name { print "end set_name"; }
+  before get_name { print "start get_name"; }
+  after get_name { print "end get_name"; }
+
+  before set_type { print "start set_type"; }
+  after set_type { print "end set_type"; }
+  before get_type { print "start get_type"; }
+  after get_type { print "end get_type"; }
+  before getDefault_type { print "start getDefault_type"; }
+  after getDefault_type { print "end getDefault_type"; }
+  before reset_type { print "start reset_type"; }
+  after reset_type { print "end reset_type"; }
+
+  before add_role { print "start add"; }
+  after add_role { print "end add"; }
+  before remove_role { print "start remove"; }
+  after remove_role { print "end remove"; }
+  before get_role { print "start get_role"; }
+  after get_role { print "end get_role"; }
+  before get_roles { print "start get_roles"; }
+  after get_roles { print "end get_roles"; }
+  before numberOf_roles { print "start numberOf_roles"; }
+  after numberOf_roles { print "end numberOf_roles"; }
+  before indexOf_role { print "start indexOf_role"; }
+  after indexOf_role { print "end indexOf_role"; }
+   
+}

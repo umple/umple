@@ -1,0 +1,986 @@
+// base case - date is required for time entry
+Concern TBaseCase {
+  VariationPoint VPBaseCase {
+    Kind: Optional;
+    // base case - date is required for time entry
+    class TimeEntry{
+      Date date;
+    }
+  }
+}
+invoke(TBaseCase, VPBaseCase);
+
+// either duration or both start and end time are required
+Concern CTimeEntry{
+  VariationPoint VPEntryDuration{
+    Kind: Alternative;
+    Variant VDuration{
+      class TimeEntry{
+        Double duration;
+      } 
+    }
+    Variant VStartEndTime{
+      class TimeEntry{
+        Time startTime;
+        Time endTime;
+      } 
+    }
+  }
+  // time entry can optionally be exported
+  VariationPoint VPTimeEntryExported{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean exported;
+    }     
+  }
+  // time entry can have an optional rejection comment
+  VariationPoint VPTimeEntryRejectedComment{
+    Kind: Optional;
+    class TimeEntry{
+      String rejectedComment;
+    }
+  }
+  // time entry can have an optional time stamp
+  VariationPoint VPTimeEntryTimestamp{
+    Kind: Optional;
+    class TimeEntry{
+      Time timestamp;
+    }
+  }
+  // time entry can have an optional proof flag
+  VariationPoint VPTimeEntryProof{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean proof;
+    }
+  }
+  // time entry can have an optional charge flag
+  VariationPoint VPTimeEntryCharge{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean charge;
+    }
+  }
+  // time entry can have an optional billable flag
+  VariationPoint VPTimeEntryBillable{
+    Kind: Optional;
+    class TimeEntry{
+      Boolean billable;
+    }
+  }
+  // time entry can be associated with a time type
+  VariationPoint VPTimeEntryTimeType{
+    Kind: Optional;
+    class TimeType{
+      String name;
+    }
+    association {
+      0..1 TimeType <- * TimeEntry;
+    }
+  }
+  // time entry can be associated with a status
+  VariationPoint VPTimeEntryStatus{
+    Kind: Optional;
+    class TimeEntryStatus{
+      String name;
+    } 
+    association {
+      0..1 TimeEntryStatus <- * TimeEntry;
+    }
+  }
+  // time entry can be associated with a punch
+  VariationPoint VPTimeEntryPunch{
+    Kind: Optional;
+    class Punch{
+      Boolean direction;
+      Time originalTimeStamp;
+      Time actualTimeStamp;
+      Double longitude;
+      Double latitude;
+    }
+    association {
+      * Punch <- 1 TimeEntry;
+    }
+  }
+  // punch can have an optional transfer flag
+  VariationPoint VPTimeEntryPunchTransfer requires VPTimeEntryPunch{
+    Kind: Optional;
+    class Punch{
+      Boolean transfer;
+    }
+  }
+  // punch can have an optional override flag
+  VariationPoint VPTimeEntryPunchOverride requires VPTimeEntryPunch{
+    Kind: Optional;
+    class Punch{
+      Boolean override;
+    }
+  }
+}
+Concern CTimeEntryAgainstProject{
+  // time can be entered against project or
+  // by providing a comment for each time entry
+  VariationPoint VPEntryAgainstProject{
+    Kind: Alternative;
+    Variant VComment{
+      class TimeEntry{
+        String comment;
+      } 
+    }
+    Variant VProject{
+      class Project{
+        String name;
+      }
+      association {
+        0..1 Project <- * TimeEntry;
+      }
+    }
+  }   
+  // in addition to being associated with a project, a time entry 
+  // can have an optional comment
+  VariationPoint VPTimeEntryComment requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class TimeEntry{
+      String comment;
+    }     
+  }
+  // a project can optionally have a parent project
+  VariationPoint VPProjectParent requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    association {
+      0..1 Project parent  <- * Project;
+    }     
+  }
+  // project can optionally include a time estimate
+  VariationPoint VPProjectEstimate requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Double timeEstimate;
+    }     
+  }
+  // project can optionally be set as archived
+  VariationPoint VPProjectArchive requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Boolean archived;
+    }   
+  } 
+  // project can optionally have a code
+  VariationPoint VPProjectCode requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      String code;
+    }   
+  } 
+  // project can optionally have start and end dates
+  VariationPoint VPProjectStartEndDates requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Date startDate;
+      Date endDate;
+    }   
+  } 
+  // project can optionally have complexity identified
+  VariationPoint VPProjectComplexity requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Integer complexity;
+    }   
+  } 
+  // project can optionally have comments
+  VariationPoint VPProjectComments requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      String comments;
+    }   
+  } 
+  // project can optionally have a budget
+  VariationPoint VPProjectBudget requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Integer budget;
+    }   
+  }   
+  // project can optionally have a last modified date
+  VariationPoint VPProjectLastModified requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Project{
+      Time lastModified;
+    }   
+  }     
+  // project can optionally have a status
+  VariationPoint VPProjectStatus requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectStatus{
+      String name;
+      String description;
+    } 
+    association {
+      0..1 ProjectStatus <- * Project;
+    }
+  }     
+  // project can optionally have a type
+  VariationPoint VPProjectType requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectType{
+      String name;
+      String description;
+    } 
+    association {
+      0..1 ProjectType <- * Project;
+    }
+  }       
+  // project can optionally have an intensity
+  VariationPoint VPProjectIntensity requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectIntensity{
+      String name;
+    } 
+    association {
+      0..1 ProjectIntensity <- * Project;
+    }     
+  }         
+  // project can optionally have milestones
+  VariationPoint VPProjectMilestone requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class ProjectMilestone{
+      String name;
+      Date releaseDate;
+    } 
+    association {
+      1 Project <- * ProjectMilestone;
+    }     
+  }   
+  // project can optionally be associated with a client
+  VariationPoint VPClient requires VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Client{
+      String name;
+    }
+    association {
+      0..1 Client <- * Project;
+    }
+  } 
+  // client can optionally have an email address
+  VariationPoint VPClientEmail requires VPClient{
+    Kind: Optional;
+    class Client{
+      String emailAddress;
+    }     
+  } 
+  // client can optionally have a phone number
+  VariationPoint VPClientPhoneNumber requires VPClient{
+    Kind: Optional;
+    class Client{
+      String phoneNumber;
+    }
+  } 
+  // client can optionally have an SLA level assigned
+  VariationPoint VPClientSLALevel requires VPClient{
+    Kind: Optional;
+    class Client{
+      String slaLevel;
+    }     
+  } 
+  // client can optionally have an address
+  VariationPoint VPClientAddress requires VPClient{
+    Kind: Optional;
+    class Client{
+      String address;
+    }     
+  } 
+  // client can optionally have a comment
+  VariationPoint VPClientComment requires VPClient{
+    Kind: Optional;
+    class Client{
+      String comment;
+    }     
+  }   
+  // client can optionally have a tax rate specified
+  VariationPoint VPClientTax requires VPClient{
+    Kind: Optional;
+    class Client{
+      Double tax;
+    }     
+  }   
+  // client can optionally have a discount rate specified
+  VariationPoint VPClientDiscount requires VPClient{
+    Kind: Optional;
+    class Client{
+      Double discount;
+    }     
+  }     
+  // client can optionally have a status
+  VariationPoint VPClientStatus requires VPClient{
+    Kind: Optional;
+    class Client{
+      Integer status;
+    }     
+  }
+}
+Concern CCompany{
+  // time entry can be logged against an activity
+  VariationPoint VPActivity{
+    Kind: Optional;
+    class Activity{
+      String name;
+      String description;
+    } 
+    association {
+      0..1 Activity <- * TimeEntry;
+    }   
+  }
+  // activity can optionally be archived
+  VariationPoint VPActivityArchived requires VPActivity{
+    Kind: Optional;
+    class Activity{
+      Boolean archived;
+    }     
+  } 
+  // company-related information can optionally be represented
+  VariationPoint VPCompany{
+    Kind: Optional;
+    class Company{
+      String name;
+    }     
+  } 
+  // company can optionally have an address
+  VariationPoint VPCompanyAddress requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String address;
+    }     
+  } 
+  // company can optionally have a web site URL
+  VariationPoint VPCompanyURL requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String url;
+    }     
+  }   
+  // company can optionally have a currency specified
+  VariationPoint VPCompanyCurrency requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String currency;
+    }     
+  }   
+  // company can optionally have a lock time specified
+  VariationPoint VPCompanyLockTime requires VPCompany{
+    Kind: Optional;
+    class Company{
+      Integer locktime;
+    }     
+  }
+  // company can optionally have a short name
+  VariationPoint VPCompanyShortName requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String shortName;
+    }     
+  } 
+  // company can optionally have a city specified
+  VariationPoint VPCompanyCity requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String city;
+    }     
+  } 
+  // company can optionally have a province specified
+  VariationPoint VPCompanyProvince requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String province;
+    }     
+  }   
+  // company can optionally have a postal code specified
+  VariationPoint VPCompanyPostalCode requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String postalCode;
+    }     
+  }   
+  // company can optionally have a phone number
+  VariationPoint VPCompanyPhoneNumber requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String phoneNumber;
+    }     
+  }   
+  // company can optionally have a fax number
+  VariationPoint VPCompanyFaxNumber requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String faxNumber;
+    }     
+  }   
+  // company can optionally have a business number
+  VariationPoint VPCompanyBusinessNumber requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String businessNumber;
+    }     
+  }   
+  // company can optionally have an administrative contact
+  VariationPoint VPCompanyAdminContact requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String adminContact;
+    }     
+  }   
+  // company can optionally have a billing contact
+  VariationPoint VPCompanyBillingContact requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String billingContact;
+    }     
+  }   
+  // company can optionally have a support contact
+  VariationPoint VPCompanySupportContact requires VPCompany{
+    Kind: Optional;
+    class Company{
+      String supportContact;
+    }     
+  }     
+  // company can optionally have multiple branches
+  VariationPoint VPCompanyBranch requires VPCompany{
+    Kind: Optional;
+    class Branch{
+      String name;
+      String address;
+      String city;
+      String province;
+      String country;
+      String postalCode;
+      String phoneNumber;
+      String faxNumber;
+    } 
+    association {
+      1 Company <- * Branch;
+    }   
+  }     
+  // company can optionally have multiple departments
+  VariationPoint VPCompanyDepartment requires VPCompany{
+    Kind: Optional;
+    class Department{
+      String name;
+    } 
+    association {
+      1 Company <- * Department;
+    } 
+  }     
+  // company can optionally have a parent company
+  VariationPoint VPCompanyParent requires VPCompany{
+    Kind: Optional;
+    association {
+      0..1 Company parent  <- * Company;
+    } 
+  }   
+  // department can optionally have a parent department
+  VariationPoint VPDepartmentParent requires VPDepartment{
+    Kind: Optional;
+    association {
+      0..1 Department parent  <- * Department;
+    } 
+  } 
+}
+
+Concern CTask{
+  // time can be logged against a task
+  VariationPoint VPTask{
+    Kind: Optional;
+    class Task{
+      String name;
+    } 
+    association {
+      0..1 Task <- * TimeEntry;
+    }   
+  }
+  // task can optionally have a description
+  VariationPoint VPTaskDescription requires VPTask{
+    Kind: Optional;
+    class Task{
+      String description;
+    }     
+  } 
+  // task can optionally have a priority
+  VariationPoint VPTaskPriority requires VPTask{
+    Kind: Optional;
+    class Task{
+      Integer priority;
+    }     
+  } 
+  // task can optionally have a due date
+  VariationPoint VPTaskDueDate requires VPTask{
+    Kind: Optional;
+    class Task{
+      Date dueDate;
+    }     
+  } 
+  // task can optionally have a time estimate for completion
+  VariationPoint VPTaskEstimatedTime requires VPTask{
+    Kind: Optional;
+    class Task{
+      Integer estimatedTime;
+    }     
+  } 
+  // task can optionally have a last modified time
+  VariationPoint VPTaskLastModified requires VPTask{
+    Kind: Optional;
+    class Task{
+      Time lastModified;
+    }     
+  } 
+  // task can optionally have a start time
+  VariationPoint VPTaskStartTime requires VPTask{
+    Kind: Optional;
+    class Task{
+      Time startTime;
+    }     
+  }   
+  // task can optionally have an end time
+  VariationPoint VPTaskEndTime requires VPTask{
+    Kind: Optional;
+    class Task{
+      Time endTime;
+    }     
+  }
+  // task can optionally be associated with a status
+  VariationPoint VPTaskStatus requires VPTask{
+    Kind: Optional;
+    class TaskStatus{
+      String name;
+    }   
+    association {
+      0..1 TaskStatus <- * Task;
+    } 
+  } 
+  // task can optionally be associated with a project
+  VariationPoint VPTaskProject requires VPTask, VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    association {
+      0..1 Project <- * Task;
+    }
+  }   
+  // task can optionally be associated with an activity
+  VariationPoint VPTaskActivity requires VPTask, VPActivity{
+    Kind: Optional;
+    association {
+      0..1 Activity <- * Task;
+    }
+  }     
+  // task can optionally be associated with a project milestone
+  VariationPoint VPTaskProjectMilestone requires VPTask, VPProjectMilestone{
+    Kind: Optional;
+    association {
+      0..1 ProjectMilestone <- * Task;
+    }
+  }
+}
+
+Concern CUser{
+  // time can be logged by multiple users
+  VariationPoint VPUser{
+    Kind: Optional;
+    class User{
+      String firstName;
+      String lastName;
+      String username;
+      String password;
+      Boolean isActive;
+    }
+    association {
+      0..1 User <- * TimeEntry;
+    }   
+  }
+  // user can optionally have a work email
+  VariationPoint VPUserWorkEmail requires VPUser{
+    Kind: Optional;
+    class User{
+      String workEmail;
+    }     
+  }   
+  // user can optionally have a phone extension
+  VariationPoint VPUserPhoneExtension requires VPUser{
+    Kind: Optional;
+    class User{
+      Integer phoneExtension;
+    }     
+  } 
+  // user can optionally have a host name
+  VariationPoint VPUserHostName requires VPUser{
+    Kind: Optional;
+    class User{
+      String hostName;
+    }     
+  } 
+  // user can optionally have a last login time
+  VariationPoint VPUserLastLoginTime requires VPUser{
+    Kind: Optional;
+    class User{
+      Time lastLogin;
+    }     
+  } 
+  // user can optionally have a level
+  VariationPoint VPUserLevel requires VPUser{
+    Kind: Optional;
+    class User{
+      Integer level;
+    }     
+  } 
+  // user can optionally have a rate
+  VariationPoint VPUserRate requires VPUser{
+    Kind: Optional;
+    class User{
+      Double rate;
+    }     
+  } 
+  // user can optionally have a language
+  VariationPoint VPUserLanguage requires VPUser{
+    Kind: Optional;
+    class User{
+      String language;
+    }     
+  } 
+  // user can optionally have a last modified time
+  VariationPoint VPUserLastModified requires VPUser{
+    Kind: Optional;
+    class User{
+      Time lastModified;
+    }     
+  } 
+  // user can optionally have a phone ID
+  VariationPoint VPUserPhoneID requires VPUser{
+    Kind: Optional;
+    class User{
+      String phoneID;
+    }     
+  } 
+  // user can optionally have a phone password
+  VariationPoint VPUserPhonePassword requires VPUser{
+    Kind: Optional;
+    class User{
+      String phonePassword;
+    }     
+  } 
+  // user can optionally have a middle name
+  VariationPoint VPUserMiddleName requires VPUser{
+    Kind: Optional;
+    class User{
+      String middleName;
+    }     
+  } 
+  // user can optionally have a sex
+  VariationPoint VPUserSex requires VPUser{
+    Kind: Optional;
+    class User{
+      String sex;
+    }     
+  } 
+  // user can optionally have an address
+  VariationPoint VPUserAddress requires VPUser{
+    Kind: Optional;
+    class User{
+      String address;
+    }     
+  } 
+  // user can optionally have a city
+  VariationPoint VPUserCity requires VPUser{
+    Kind: Optional;
+    class User{
+      String city;
+    }     
+  } 
+  // user can optionally have a province
+  VariationPoint VPUserProvince requires VPUser{
+    Kind: Optional;
+    class User{
+      String province;
+    }     
+  }   
+  // user can optionally have a country
+  VariationPoint VPUserCountry requires VPUser{
+    Kind: Optional;
+    class User{
+      String country;
+    }     
+  }   
+  // user can optionally have a postal code
+  VariationPoint VPUserPostalCode requires VPUser{
+    Kind: Optional;
+    class User{
+      String postalCode;
+    }     
+  }     
+  // user can optionally have a work phone number
+  VariationPoint VPUserWorkPhoneNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String workPhoneNumber;
+    }     
+  }       
+  // user can optionally have a home phone number
+  VariationPoint VPUserHomePhoneNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String homePhoneNumber;
+    }     
+  }       
+  // user can optionally have a mobile phone number
+  VariationPoint VPUserMobilePhoneNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String mobilePhoneNumber;
+    }     
+  }         
+  // user can optionally have a fax number
+  VariationPoint VPUserFaxNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String faxNumber;
+    }     
+  }       
+  // user can optionally have a home email address
+  VariationPoint VPUserHomeEmail requires VPUser{
+    Kind: Optional;
+    class User{
+      String homeEmail;
+    }     
+  }       
+  // user can optionally have a birth date
+  VariationPoint VPUserBirthDate requires VPUser{
+    Kind: Optional;
+    class User{
+      Date birthDate;
+    }     
+  }         
+  // user can optionally have a hire date
+  VariationPoint VPUserHireDate requires VPUser{
+    Kind: Optional;
+    class User{
+      Date hireDate;
+    }     
+  }           
+  // user can optionally have a social insurance number
+  VariationPoint VPUserSocialInsuranceNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String socialInsuranceNumber;
+    }     
+  }           
+  // user can optionally have an employee number
+  VariationPoint VPUserEmployeeNumber requires VPUser{
+    Kind: Optional;
+    class User{
+      String employeeNumber;
+    }     
+  }           
+  // user can optionally have a note
+  VariationPoint VPUserNote requires VPUser{
+    Kind: Optional;
+    class User{
+      String note;
+    }     
+  }           
+  // user can optionally have a termination date
+  VariationPoint VPUserTerminationDate requires VPUser{
+    Kind: Optional;
+    class User{
+      Date terminationDate;
+    }     
+  } 
+  // user can optionally be associated with a status
+  VariationPoint VPUserStatus requires VPUser{
+    Kind: Optional;
+    class UserStatus{
+      String name;
+    }
+    association {
+      0..1 UserStatus <- * User;
+    }   
+  } 
+  // user can potentially have preferences
+  VariationPoint VPUserPreference requires VPUser{
+    Kind: Optional;
+    class UserPreference{
+      String dateFormat;
+      String timeFormat;
+      String timeUnitFormat;
+      String timeZone;
+      Integer itemsPerPage;
+      Integer startWeekDay;
+      String interfaceLanguage;
+    }
+    association {
+      1 User -- 1 UserPreference;
+    }
+  }
+  // user can optionally be associated with a task
+  VariationPoint VPUserTask requires VPUser, VPTask{
+    Kind: Optional;
+    class TaskUser{
+    }
+    association {
+      1 Task <- * TaskUser;
+    }
+    association {
+      1 User <- * TaskUser;
+    }
+  }   
+  //  user can have a rate identified for a particular task
+  VariationPoint VPUserTaskRate requires VPUserTask{
+    Kind: Optional;
+    class TaskUser{
+      Double rate;
+    }
+  } 
+  // user can optionally be associated with an activity
+  VariationPoint VPUserActivity requires VPUser, VPActivity{
+    Kind: Optional;
+    association {
+      0..1 User manager  <- * Activity;
+    }
+  }     
+  // user can optionally be assigned roles on a project
+  VariationPoint VPUserProjectRole requires VPUser, VPEntryAgainstProject(VProject){
+    Kind: Optional;
+    class Role{
+      String name;
+      Boolean multipleUsersAllowed;
+      String description;
+    }   
+    class RoleGroupItem{
+    }   
+    class RoleGroup{
+      String name;
+    }   
+    class ProjectUserRole{
+    }
+    association {
+      1 Role <- * RoleGroupItem;
+    }
+    association {
+      1 RoleGroup <- * RoleGroupItem;
+    }
+    association {
+      1 Role <- * ProjectUserRole;
+    }
+    association {
+      1 User <- * ProjectUserRole;
+    }
+    association {
+      1 Project <- * ProjectUserRole;
+    }
+  }   
+  // user can have a rate identified for a particular role on a project
+  VariationPoint VPProjectUserRoleRate requires VPUserProjectRole{
+    Kind: Optional;
+    class ProjectUserRole{
+      Double rate;
+    }
+  }     
+  // task can optionally have a manager
+  VariationPoint VPTaskManager requires VPTask, VPUser{
+    Kind: Optional;
+    association {
+      0..1 User manager  <- * Task;
+    }
+  } 
+  VariationPoint VPUserCompanyConnection{
+    Kind: Alternative;
+    // user can be a stand-alone user
+    Variant VNone{
+    }
+    // user can be associated with a company
+    Variant VUserCompany requires VPCompany, VPUser{
+      association {
+        0..1 Company <- * User;
+      } 
+    }
+    // user can be associated with a branch
+    Variant VUserBranch requires VPBranch, VPUser{
+      association {
+        0..1 Branch <- * User worksAt;
+      }
+    }
+    // user can be associated with a department
+    Variant VUserDepartment requires VPDepartment, VPUser{
+      association {
+        0..1 Department <- * User worksAt;
+      }
+    }
+    // user can be associated with a combination of a branch and a department
+    Variant VUserBranchDepartment requires VPBranch, VPDepartment, VPUser{
+      class DepartmentBranch{
+      }     
+      class DepartmentBranchUser{
+      }
+      association {
+        1 Branch <- * DepartmentBranch;
+      }
+      association {
+        1 Department <- * DepartmentBranch;
+      }
+      association {
+        1 DepartmentBranch <- * DepartmentBranchUser;
+      }
+      association {
+        1 User <- * DepartmentBranchUser;
+      }
+    }
+  }
+  // user can optionally manage a department
+  VariationPoint VPUserDepartmentManager requires VPDepartment, VPUser{
+    Kind: Optional;
+    association {
+      0..1 User <- * Department manager;
+    } 
+  }
+  // user can optionally have a title within the company
+  VariationPoint VPUserCompanyTitle requires VPCompany, VPUser{
+    Kind: Optional;
+    class UserTitle{
+      String name;
+    } 
+    association {
+      1 User <- * UserTitle;
+    }
+    association {
+      * UserTitle -> 1 Company;
+    }
+  }
+  // user can optionally belong to a group within the company
+  VariationPoint VPUserCompanyGroup requires VPCompany, VPUser{
+    Kind: Optional;
+    class UserGroup{
+      String name;
+    }
+    association {
+      1 UserGroup <- * User;
+    }
+    association {
+      1 Company <- * UserGroup;
+    }
+  }
+}
+
+// Invocation of a system similar to Klok
+
+// log time start and end times
+invoke(CTimeEntry, VPEntryDuration, VStartEndTime);
+// enter time against projects (client-related work items)
+invoke(CTimeEntryAgainstProject, VPEntryAgainstProject, VProject);
+// store optional comments for time entries
+invoke(CTimeEntryAgainstProject, VPTimeEntryComment);
+// allow projects to have parent projects
+invoke(CTimeEntryAgainstProject, VPProjectParent);
+// store project time estimates
+invoke(CTimeEntryAgainstProject, VPProjectEstimate);
+// allow archiving projects
+invoke(CTimeEntryAgainstProject, VPProjectArchive);
+// associate projects with clients
+invoke(CTimeEntryAgainstProject, VPClient);
+// store client email
+invoke(CTimeEntryAgainstProject, VPClientEmail);
+// store client phone number
+invoke(CTimeEntryAgainstProject, VPClientPhoneNumber);

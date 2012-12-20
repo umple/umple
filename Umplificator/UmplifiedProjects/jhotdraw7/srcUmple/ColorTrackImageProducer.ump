@@ -1,0 +1,98 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class ColorTrackImageProducer 
+{
+depend java.awt.color.ColorSpace;
+depend java.awt.image.*;
+depend javax.swing.*;
+  isA MemoryImageSource;
+
+  private int[] pixels;
+private int w, h;
+private int w, h;
+private int trackBuffer;
+private ColorSliderModel colorizer = new DefaultColorSliderModel(ColorSpace.getInstance(ColorSpace.CS_sRGB));
+private boolean isDirty = true;
+private int componentIndex = 0;
+private boolean isHorizontal;
+public int getWidth() {
+        return w;
+    }
+public int getHeight() {
+        return h;
+    }
+public void markAsDirty() {
+        isDirty = true;
+    }
+public boolean needsGeneration() {
+        return isDirty;
+    }
+public void regenerateColorTrack() {
+        if (isDirty) {
+            generateColorTrack();
+        }
+    }
+public void generateColorTrack() {
+        if (isHorizontal) {
+            generateHorizontalColorTrack();
+        } else {
+            generateVerticalColorTrack();
+        }
+        newPixels();
+        isDirty = false;
+    }
+private void generateHorizontalColorTrack() {
+        float[] components = colorizer.getComponents();
+        ColorSpace cs = colorizer.getColorSpace();
+        int offset = trackBuffer / 2;
+        float minv = cs.getMinValue(componentIndex);
+        float maxv = cs.getMaxValue(componentIndex);
+        for (int x = 0, n = w - trackBuffer - 1; x <= n; x++) {
+            components[componentIndex] =  (x / (float) n)*(maxv-minv)+minv;
+            pixels[x + offset] = ColorUtil.toRGB(cs,components);
+        }
+        for (int x=0; x < offset; x++) {
+            pixels[x] = pixels[offset];
+            pixels[w - x - 1] = pixels[w - offset - 1];
+        }
+        for (int y=w, n = w*h; y < n; y+=w) {
+            System.arraycopy(pixels, 0, pixels, y, w);
+        }
+    }
+private void generateVerticalColorTrack() {
+        float[] components = colorizer.getComponents();
+        ColorSpace cs = colorizer.getColorSpace();
+        int offset = trackBuffer / 2;
+        float minv = cs.getMinValue(componentIndex);
+        float maxv = cs.getMaxValue(componentIndex);
+        for (int y = 0, n = h - trackBuffer - 1; y <= n; y++) {
+            // Note: removed + minv - minv from formula below
+            components[componentIndex] =  maxv - (y / (float) n)*(maxv-minv);
+            pixels[(y + offset) * w] = ColorUtil.toRGB(cs,components);
+        }
+        for (int y=0; y < offset; y++) {
+            pixels[y * w] = pixels[offset * w];
+            pixels[(h - y - 1) * w] = pixels[(h - offset - 1) * w];
+        }
+        for (int x=1; x < w; x++) {
+            for (int y=0, n = w*h; y < n; y+=w) {
+                pixels[x + y] = pixels[x - 1 + y];
+            }
+        }
+    }
+public void setColorSliderModel(ColorSliderModel colorizer) {
+        this.colorizer = colorizer;
+        isDirty = true;
+    }
+public void setColorComponentIndex(int index) {
+        this.componentIndex = index;
+        isDirty = true;
+    }
+public void componentChanged(int index) {
+        isDirty |= this.componentIndex != index;
+    }
+
+}

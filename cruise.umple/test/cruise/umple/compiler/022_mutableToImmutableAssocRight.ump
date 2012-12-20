@@ -1,0 +1,9 @@
+class StudentA
+{
+	1 -> 1 MentorA;
+}
+
+class MentorA
+{
+	immutable;
+}

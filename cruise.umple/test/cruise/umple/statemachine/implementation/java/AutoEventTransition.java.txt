@@ -1,0 +1,73 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Light
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Light State Machines
+  enum Bulb { Off, On }
+  private Bulb bulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Light()
+  {
+    setBulb(Bulb.Off);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  private boolean __autotransition1__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case Off:
+        setBulb(Bulb.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+
+    // entry actions and do activities
+    switch(bulb)
+    {
+      case Off:
+        __autotransition1__();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

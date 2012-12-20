@@ -1,0 +1,14 @@
+namespace example;
+
+class LightFixture
+{
+  bulb
+  {
+    On {
+      entry / { doEntry(); }
+      exit / { doExit(); }
+      /* Allowing both a guard and an action before the arrow in a transition-issue 297*/      /*push [ isTurnedOn ] -> /{ doTransition(); } Off;*/      push [ isTurnedOn ] /{ doTransition(); } -> Off;
+    }
+    Off {}
+  }
+}

@@ -1,0 +1,39 @@
+W010 Singleton Multiplicity Over 1
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a singleton class has an
+association with incoming multiplicity > 1</h2>
+
+<p> Since there can only be one instance of a singleton class, it is
+logically impossible for another class to have links to more than one instance
+of the singleton class.
+
+</p>
+
+
+@@example
+// This example generates the warning message
+class X {
+  singleton;
+}
+
+class Y {
+   0..1 -- * X;
+}
+@@endexample
+
+@@example
+// The following shows how to avoid the warning
+class X {
+  singleton;
+}
+
+class Y {
+   0..1 -- 1 X;
+}
+@@endexample
+
+

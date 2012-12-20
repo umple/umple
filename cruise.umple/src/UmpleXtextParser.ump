@@ -1,0 +1,31 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This is a placeholder file that simply delegates to UmpleInternalParser.
+
+Will be replaced with model elements required for the glue code to work with
+the generated Xtext parser.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleXtextParser
+{
+  isA UmpleParser;
+  // depend  java.io.*;
+  // depend  org.eclipse.xtext.parser.*;
+  // depend  org.eclipse.xtext.parser.antlr.*;
+  // depend  com.google.inject.*;
+  // depend cruise.umple.UmpleStandaloneSetup;
+
+  UmpleInternalParser temp = new UmpleInternalParser();
+  //cruise.umple.parser.antlr.UmpleParser antlr = new cruise.umple.parser.antlr.UmpleParser();
+  
+}
+
+use UmpleXtextParser_Code.ump;

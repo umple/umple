@@ -1,0 +1,43 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class FigureEvent 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.*;
+depend java.awt.geom.*;
+depend java.util.*;
+  isA EventObject;
+
+  private Rectangle2D.Double invalidatedArea;
+private AttributeKey attribute;
+@Nullable private Object oldValue;
+@Nullable private Object newValue;
+/**
+     *  Gets the changed figure
+     */
+    public Figure getFigure() {
+        return (Figure) getSource();
+    }
+/**
+     *  Gets the bounds of the invalidated area on the drawing.
+     */
+    @Nullable
+    public Rectangle2D.Double getInvalidatedArea() {
+        return invalidatedArea;
+    }
+public AttributeKey getAttribute() {
+        return attribute;
+    }
+@Nullable
+    public Object getOldValue() {
+        return oldValue;
+    }
+@Nullable
+    public Object getNewValue() {
+        return newValue;
+    }
+
+}

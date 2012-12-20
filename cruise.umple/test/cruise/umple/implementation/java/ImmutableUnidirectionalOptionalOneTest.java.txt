@@ -1,0 +1,62 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+
+  //Student Associations
+  private Mentor mentor;
+
+  //Helper Variables
+  private boolean canSetNumber;
+  private boolean canSetMentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber, Mentor aMentor)
+  {
+    number = aNumber;
+    canSetNumber = false;
+    canSetMentor = true;
+    setMentor(aMentor);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  private boolean setMentor(Mentor newMentor)
+  {
+    boolean wasSet = false;
+    if (!canSetMentor) { return false; }
+    canSetMentor = false;
+    mentor = newMentor;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {}
+
+}

@@ -1,0 +1,76 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Token
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Token Attributes - for documentation purposes
+  #attr_reader :positions
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @positions = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def add_position(a_position)
+    was_added = false
+    was_added = positions << a_position
+    was_added
+  end
+
+  def remove_position(a_position)
+    was_removed = false
+    was_removed = positions.delete(a_position)
+    was_removed
+  end
+
+  def get_position(index)
+    a_position = positions[index]
+    a_position
+  end
+
+  def get_positions
+    Position[] new_positions = positions.toArray(new Position[positions.size])
+    new_positions
+  end
+
+  def number_of_positions
+    number = positions.size
+    number;
+  end
+
+  def has_positions
+    has = positions.size > 0
+    has
+  end
+
+  def index_of_position(a_position)
+    index = positions.index(a_position)
+    index = -1 if index.nil?
+    index
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

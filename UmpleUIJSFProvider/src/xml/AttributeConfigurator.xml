@@ -1,0 +1,339 @@
+<FragmentProvider 
+	fragmentSetPckg="cruise.ui.jsf.templates.impl.fragment.set" 
+	fragmentGetPckg="cruise.ui.jsf.templates.impl.fragment.get" 
+	fragmentDeclarationPckg="cruise.ui.jsf.templates.impl.fragment.declaration" 
+	fragmentAsignationPckg="cruise.ui.jsf.templates.impl.fragment.asignation" 
+	fragmentCopyPckg="cruise.ui.jsf.templates.impl.fragment.copy"
+	fragmentReverseCopyPckg="cruise.ui.jsf.templates.impl.fragment.copy"
+	fragmentPreConstructorPckg="cruise.ui.jsf.templates.impl.fragment.preConstructor" > 
+	
+	
+	<Fragment   modifier="*" 
+				type="String" 
+				fragmentSetter="SetteableStringSet" 
+				fragmentGetter="SetteableStringGet" 
+				fragmentDeclaration="SetteableStringDeclaration" 
+				fragmentAsignation="SetteableStringAsignation"
+				fragmentCopy="StringCopy"
+				fragmentReverseCopy="StringReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="String" 
+				fragmentSetter="SetteableStringSet" 
+				fragmentGetter="SetteableStringGet" 
+				fragmentDeclaration="SetteableStringDeclaration" 
+				fragmentAsignation="SetteableStringAsignation" />
+
+	<Fragment   modifier="key" 
+				type="String" 
+				fragmentSetter="SetteableStringSet" 
+				fragmentGetter="SetteableStringGet" 
+				fragmentDeclaration="SetteableStringDeclaration" 
+				fragmentAsignation="SetteableStringAsignation" />
+								
+	<Fragment   modifier="defaulted" 
+				type="String" 
+				fragmentSetter="SetteableStringSet" 
+				fragmentGetter="DefaultedStringGet" 
+				fragmentDeclaration="DefaultedStringDeclaration" 
+				fragmentAsignation="SetteableStringAsignation"
+				fragmentCopy="StringCopy"
+				fragmentReverseCopy="StringReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="String" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />
+	
+		
+	<Fragment   modifier="*" 
+				type="Integer" 
+				fragmentSetter="SetteableIntegerSet" 
+				fragmentGetter="SetteableIntegerGet" 
+				fragmentDeclaration="SetteableIntegerDeclaration" 
+				fragmentAsignation="SetteableIntegerAsignation"
+				fragmentCopy="IntegerCopy"
+				fragmentReverseCopy="IntegerReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Integer" 
+				fragmentSetter="SetteableIntegerSet" 
+				fragmentGetter="SetteableIntegerGet" 
+				fragmentDeclaration="SetteableIntegerDeclaration" 
+				fragmentAsignation="SetteableIntegerAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Integer" 
+				fragmentSetter="SetteableIntegerSet" 
+				fragmentGetter="SetteableIntegerGet" 
+				fragmentDeclaration="SetteableIntegerDeclaration" 
+				fragmentAsignation="SetteableIntegerAsignation" />
+
+				
+	<Fragment   modifier="defaulted" 
+				type="Integer" 
+				fragmentSetter="SetteableIntegerSet" 
+				fragmentGetter="DefaultedIntegerGet" 
+				fragmentDeclaration="DefaultedIntegerDeclaration" 
+				fragmentAsignation="SetteableIntegerAsignation"
+				fragmentCopy="IntegerCopy"
+				fragmentReverseCopy="IntegerReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Integer" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />
+		
+	
+		<Fragment   modifier="*" 
+				type="Double" 
+				fragmentSetter="SetteableDoubleSet" 
+				fragmentGetter="SetteableDoubleGet" 
+				fragmentDeclaration="SetteableDoubleDeclaration" 
+				fragmentAsignation="SetteableDoubleAsignation"
+				fragmentCopy="DoubleCopy"
+				fragmentReverseCopy="DoubleReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Double" 
+				fragmentSetter="SetteableDoubleSet" 
+				fragmentGetter="SetteableDoubleGet" 
+				fragmentDeclaration="SetteableDoubleDeclaration" 
+				fragmentAsignation="SetteableDoubleAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Double" 
+				fragmentSetter="SetteableDoubleSet" 
+				fragmentGetter="SetteableDoubleGet" 
+				fragmentDeclaration="SetteableDoubleDeclaration" 
+				fragmentAsignation="SetteableDoubleAsignation" />	
+				
+	<Fragment   modifier="defaulted" 
+				type="Double" 
+				fragmentSetter="SetteableDoubleSet" 
+				fragmentGetter="DefaultedDoubleGet" 
+				fragmentDeclaration="DefaultedDoubleDeclaration" 
+				fragmentAsignation="SetteableDoubleAsignation"
+				fragmentCopy="DoubleCopy"
+				fragmentReverseCopy="DoubleReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Double" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />	
+	
+		<Fragment   modifier="*" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="SetteableFloatGet" 
+				fragmentDeclaration="SetteableFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation"
+				fragmentCopy="FloatCopy"
+				fragmentReverseCopy="FloatReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="SetteableFloatGet" 
+				fragmentDeclaration="SetteableFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="SetteableFloatGet" 
+				fragmentDeclaration="SetteableFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation" />	
+				
+	<Fragment   modifier="defaulted" 
+				type="Float" 
+				fragmentSetter="SetteableFloatSet" 
+				fragmentGetter="DefaultedFloatGet" 
+				fragmentDeclaration="DefaultedFloatDeclaration" 
+				fragmentAsignation="SetteableFloatAsignation"
+				fragmentCopy="FloatCopy"
+				fragmentReverseCopy="FloatReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Float" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />	
+	
+		<Fragment   modifier="*" 
+				type="Boolean" 
+				fragmentSetter="SetteableBooleanSet" 
+				fragmentGetter="SetteableBooleanGet" 
+				fragmentDeclaration="SetteableBooleanDeclaration" 
+				fragmentAsignation="SetteableBooleanAsignation"
+				fragmentCopy="BooleanCopy"
+				fragmentReverseCopy="BooleanReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Boolean" 
+				fragmentSetter="SetteableBooleanSet" 
+				fragmentGetter="SetteableBooleanGet" 
+				fragmentDeclaration="SetteableBooleanDeclaration" 
+				fragmentAsignation="SetteableBooleanAsignation" />
+
+<Fragment   modifier="key" 
+				type="Boolean" 
+				fragmentSetter="SetteableBooleanSet" 
+				fragmentGetter="SetteableBooleanGet" 
+				fragmentDeclaration="SetteableBooleanDeclaration" 
+				fragmentAsignation="SetteableBooleanAsignation" />
+								
+	<Fragment   modifier="defaulted" 
+				type="Boolean" 
+				fragmentSetter="SetteableBooleanSet" 
+				fragmentGetter="DefaultedBooleanGet" 
+				fragmentDeclaration="DefaultedBooleanDeclaration" 
+				fragmentAsignation="SetteableBooleanAsignation"
+				fragmentCopy="BooleanCopy"
+				fragmentReverseCopy="BooleanReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Boolean" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />
+
+	<Fragment   modifier="*" 
+				type="Date" 
+				fragmentSetter="SetteableDateSet" 
+				fragmentGetter="SetteableDateGet" 
+				fragmentDeclaration="SetteableDateDeclaration" 
+				fragmentAsignation="SetteableDateAsignation"
+				fragmentCopy="DateCopy"
+				fragmentReverseCopy="DateReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Date" 
+				fragmentSetter="SetteableDateSet" 
+				fragmentGetter="SetteableDateGet" 
+				fragmentDeclaration="SetteableDateDeclaration" 
+				fragmentAsignation="SetteableDateAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Date" 
+				fragmentSetter="SetteableDateSet" 
+				fragmentGetter="SetteableDateGet" 
+				fragmentDeclaration="SetteableDateDeclaration" 
+				fragmentAsignation="SetteableDateAsignation" />
+								
+	<Fragment   modifier="defaulted" 
+				type="Date" 
+				fragmentSetter="SetteableDateSet" 
+				fragmentGetter="DefaultedDateGet" 
+				fragmentDeclaration="DefaultedDateDeclaration" 
+				fragmentAsignation="SetteableDateAsignation"
+				fragmentCopy="DateCopy"
+				fragmentReverseCopy="DateReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Date" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalDateGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />
+
+	<Fragment   modifier="*" 
+				type="Time" 
+				fragmentSetter="SetteableTimeSet" 
+				fragmentGetter="SetteableTimeGet" 
+				fragmentDeclaration="SetteableTimeDeclaration" 
+				fragmentAsignation="SetteableTimeAsignation"
+				fragmentCopy="TimeCopy"
+				fragmentPreConstructor="SetteableTimePreConstructor"
+				fragmentReverseCopy="TimeReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Time" 
+				fragmentSetter="SetteableTimeSet" 
+				fragmentGetter="SetteableTimeGet" 
+				fragmentPreConstructor="SetteableTimePreConstructor"
+				fragmentDeclaration="SetteableTimeDeclaration" 
+				fragmentAsignation="SetteableTimeAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Time" 
+				fragmentSetter="SetteableTimeSet" 
+				fragmentGetter="SetteableTimeGet" 
+				fragmentPreConstructor="SetteableTimePreConstructor"
+				fragmentDeclaration="SetteableTimeDeclaration" 
+				fragmentAsignation="SetteableTimeAsignation" />
+								
+	<Fragment   modifier="defaulted" 
+				type="Time" 
+				fragmentSetter="SetteableTimeSet" 
+				fragmentGetter="DefaultedTimeGet" 
+				fragmentPreConstructor="SetteableTimePreConstructor"
+				fragmentDeclaration="DefaultedTimeDeclaration" 
+				fragmentAsignation="SetteableTimeAsignation"
+				fragmentCopy="TimeCopy"
+				fragmentReverseCopy="TimeReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Time" 
+				fragmentSetter="InternalTimeSet" 
+				fragmentGetter="InternalTimeGet" 
+				fragmentPreConstructor="SetteableTimePreConstructor"
+				fragmentDeclaration="InternalTimeDeclaration" 
+				fragmentAsignation="InternalTimeAsignation"
+	 />
+																	
+		<Fragment   modifier="*" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="SetteableCharacterGet" 
+				fragmentDeclaration="SetteableCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation"
+				fragmentCopy="CharacterCopy"
+				fragmentReverseCopy="CharacterReverseCopy"  />
+
+	<Fragment   modifier="immutable" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="SetteableCharacterGet" 
+				fragmentDeclaration="SetteableCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation" />
+
+	<Fragment   modifier="key" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="SetteableCharacterGet" 
+				fragmentDeclaration="SetteableCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation" />	
+				
+	<Fragment   modifier="defaulted" 
+				type="Character" 
+				fragmentSetter="SetteableCharacterSet" 
+				fragmentGetter="DefaultedCharacterGet" 
+				fragmentDeclaration="DefaultedCharacterDeclaration" 
+				fragmentAsignation="SetteableCharacterAsignation"
+				fragmentCopy="CharacterCopy"
+				fragmentReverseCopy="CharacterReverseCopy"  />
+	
+	<Fragment   modifier="internal" 
+				type="Character" 
+				fragmentSetter="InternalSet" 
+				fragmentGetter="InternalGet" 
+				fragmentDeclaration="InternalDeclaration" 
+				fragmentAsignation="InternalAsignation"
+	 />
+	 	
+</FragmentProvider>

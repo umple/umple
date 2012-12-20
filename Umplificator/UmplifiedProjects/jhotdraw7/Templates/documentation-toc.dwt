@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Untitled Document</title>
+<!-- TemplateEndEditable --><!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable -->
+<link href="../src/documentation/stylesheet.css" rel="stylesheet" type="text/css" />
+<!-- TemplateParam name="headerRegion" type="boolean" value="true" -->
+</head>
+
+<body class="toc">
+<div class="header"><!-- TemplateBeginEditable name="headerRegion" --><h1>Header</h1><!-- TemplateEndEditable --></div>
+<div class="article"><!-- TemplateBeginEditable name="articleRegion" -->
+  <ul>
+    <li>Chapter 1</li>
+    <li>Chapter 2</li>
+  </ul>
+<!-- TemplateEndEditable --></div>
+</body>
+</html>

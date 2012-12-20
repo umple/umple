@@ -1,0 +1,119 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class LightFixture
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  private static $BulbOn = 1;
+  private static $BulbOff = 2;
+  private $bulb;
+
+  private static $AnotherBulbOn = 1;
+  private static $AnotherBulbAmber = 2;
+  private $anotherBulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOn);
+    $this->setAnotherBulb(self::$AnotherBulbOn);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getAnotherBulbFullName()
+  {
+    $answer = $this->getAnotherBulb();
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    elseif ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    return null;
+  }
+
+  public function getAnotherBulb()
+  {
+    if ($this->anotherBulb == self::$AnotherBulbOn) { return "AnotherBulbOn"; }
+    elseif ($this->anotherBulb == self::$AnotherBulbAmber) { return "AnotherBulbAmber"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    $aAnotherBulb = $this->anotherBulb;
+    if ($aBulb == self::$BulbOn)
+    {
+      $this->setBulb(self::$BulbOff);
+      $wasEventProcessed = true;
+    }
+    elseif ($aBulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbOn);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aAnotherBulb == self::$AnotherBulbOn)
+    {
+      $this->setAnotherBulb(self::$AnotherBulbAmber);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function unflip()
+  {
+    $wasEventProcessed = false;
+    
+    $aAnotherBulb = $this->anotherBulb;
+    if ($aAnotherBulb == self::$AnotherBulbAmber)
+    {
+      $this->setAnotherBulb(self::$AnotherBulbOn);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+  }
+
+  private function setAnotherBulb($aAnotherBulb)
+  {
+    $this->anotherBulb = $aAnotherBulb;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

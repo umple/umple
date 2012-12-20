@@ -1,0 +1,12 @@
+namespace example;
+
+external Exception
+{
+  message;
+  Exception parent;
+}
+
+class MyException
+{
+  isA Exception;
+}

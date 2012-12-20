@@ -1,0 +1,10 @@
+namespace example;
+
+class Student
+{
+  status
+  {
+    PartTime { flip -> FullTime; }
+    FullTime { flop -> PartTime; }
+  }
+}

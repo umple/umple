@@ -1,0 +1,36 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This interface bridges the gap between parsing Umple text and populating the
+Umple meta model.
+
+Currently we have two implementations.
+
+  + UmpleInternalParser
+  + UmpleXtextParser
+  
+The UmpleXtextParser is still a work in progress and currently only delegates to
+our internal parser.  We have structured our tests in generic way so that if/when
+we proceed with fully integrating the Xtext parser, our UmpleParserTest will ensure
+conformance with our current parser.
+
+*/
+
+namespace cruise.umple.compiler;
+
+interface UmpleParser
+{
+  public String toGrammar();
+  public ParseResult parse(String ruleName, String codeToParse);
+  public ParseResult analyze(boolean shouldGenerateCode);
+  public Token getRootToken();
+  public UmpleModel getModel();
+  public boolean setModel(UmpleModel model);
+  public ParseResult getParseResult();
+  public boolean setFilename(String filename);
+}
+

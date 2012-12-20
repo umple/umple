@@ -1,0 +1,12 @@
+namespace example;
+
+class Tracer
+{
+  0..1 -- 0..1 Student;
+  trace student;
+}
+
+class Student
+{
+
+}

@@ -1,0 +1,16 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="DefaultedDateEdit" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+<h:outputText value="#{#1#Bundle.<%=attVar.getUpperCaseName()%>}" />
+<h:panelGrid columns="2">
+<rich:calendar value="#{#1#Bean.<%=attVar.getName()%>}" popup="true"
+						id="<%=attVar.getUpperCaseName()%>#{uniqueId}"
+						datePattern="yyyy-MM-dd" showApplyButton="false" cellWidth="24px"
+						cellHeight="22px" style="width:200px" />
+	<a4j:commandLink 
+		action="#{#1#Bean.resetToDefaulted<%= attVar.getUpperCaseName()%>}"
+		reRender="<%=attVar.getUpperCaseName()%>#{uniqueId}">
+		<h:graphicImage value="/images/icons/reload.png" style="border:0" />
+	</a4j:commandLink>
+</h:panelGrid>

@@ -1,0 +1,159 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :id, :name, :type, :roles
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_name)
+    @initialized = false
+    @deleted = false
+    @id = nil
+    @can_set_id = true
+    @name = a_name
+    reset_type
+    @roles = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_id(a_id)
+    was_set = false
+    print "start set_id";
+    return false unless @can_set_id
+    @can_set_id = false
+    @id = a_id
+    was_set = true
+    print "end set_id";
+    was_set
+  end
+
+  def set_name(a_name)
+    was_set = false
+    print "start set_name";
+    print "start set_name2";
+    @name = a_name
+    was_set = true
+    print "end set_name";
+    was_set
+  end
+
+  def set_type(a_type)
+    was_set = false
+    print "start set_type";
+    @type = a_type
+    was_set = true
+    print "end set_type";
+    was_set
+  end
+
+  def reset_type
+    wasReset = false
+    print "start reset_type";
+    @type = get_default_type
+    wasReset = true
+    print "end reset_type";
+    wasReset
+  end
+
+  def add_role(a_role)
+    was_added = false
+    print "start add";
+    was_added = roles << a_role
+    print "end add";
+    was_added
+  end
+
+  def remove_role(a_role)
+    was_removed = false
+    print "start remove";
+    was_removed = roles.delete(a_role)
+    print "end remove";
+    was_removed
+  end
+
+  def get_id
+    print "start get_id";
+    a_id = @id
+    print "end get_id";
+    a_id
+  end
+
+  def get_name
+    print "start get_name";
+    a_name = @name
+    print "end get_name";
+    a_name
+  end
+
+  def get_type
+    print "start get_type";
+    a_type = @type
+    print "end get_type";
+    a_type
+  end
+
+  def get_default_type
+    print "start getDefault_type";
+    a_type = "None"
+    print "end getDefault_type";
+    a_type
+  end
+
+  def get_role(index)
+    print "start get_role";
+    a_role = roles[index]
+    print "end get_role";
+    a_role
+  end
+
+  def get_roles
+    print "start get_roles";
+    String[] new_roles = roles.toArray(new String[roles.size])
+    print "end get_roles";
+    new_roles
+  end
+
+  def number_of_roles
+    print "start numberOf_roles";
+    number = roles.size
+    print "end numberOf_roles";
+    number;
+  end
+
+  def has_roles
+    has = roles.size > 0
+    has
+  end
+
+  def index_of_role(a_role)
+    print "start indexOf_role";
+    index = roles.index(a_role)
+    index = -1 if index.nil?
+    print "end indexOf_role";
+    index
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

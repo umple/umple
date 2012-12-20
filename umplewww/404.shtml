@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <!--#include virtual="files/inclcommonhead.html" -->
+
+  <title>CRuiSE Server - Page not Found - Error 404</title>
+</head>
+
+<body>
+
+  <!--#include virtual="files/incltopuottawabanner.html" -->
+
+  <!-- The following is the main table, split horizontally into
+       a menu and the primary content -->
+  <table border="0" cellpadding="0" cellspacing="0" width="780">
+    <tbody>
+
+      <!-- The following specifies the part of the left bar menu
+           to highlight as current -->
+      <!--#set var="page" value="cruise" -->
+
+      <!-- The following includes the top row with the uottawa
+           banner, plus the leftmost columns of the main row
+           including the left menu -->
+      <!--#include virtual="files/inclleftmenu.shtml" -->
+
+        <!-- Page Content Area table cell: -->
+        <td id="content">
+
+<h1>A page you requested was not found</h1>
+
+<p>A page you requested was not found. If this was an UmpleOnline request to
+display a model, it might be that the page has expired; temporary models are
+kept for about a day unless they are saved as a bookmarkable URL.</p>
+
+<p>For more information about Umple <a href="/umple">see the Umple home
+page</a> or the <a href="/umple/GettingStarted.html">Umple user
+manual</a>.</p>
+
+<p>For other information about the CRuiSE group, see one of the links on
+the left.</p>
+
+&nbsp;<br>
+
+
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

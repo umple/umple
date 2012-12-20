@@ -1,0 +1,634 @@
+namespace cruise.associations;
+
+class MentorA
+{
+  0..1 mentor -- 0..1 StudentA student;
+}
+
+class StudentA
+{}
+
+class MentorB
+{
+  autounique y;
+  0..1 mentor -- 1 StudentB student;
+  0..1 mentor -- 0..1 ProgramB program;
+}
+
+class StudentB
+{
+  autounique x;
+  0..1 student -- 0..1 ProgramB program;
+}
+
+class ProgramB
+{}
+
+class MentorC
+{
+  name;
+  0..1 mentor -- * StudentC students;
+  0..1 mentor -- 0..1 ProgramC program;
+}
+
+class MentorCSub
+{
+  isA MentorC;
+}
+
+class StudentC
+{
+  Integer id;
+  0..1 student -- 0..1 ProgramC program;
+}
+
+class ProgramC
+{}
+
+class MentorD
+{
+  autounique y;
+  0..1 mentor -- 3 StudentD students;
+  0..1 mentor -- 0..1 ProgramD program;
+}
+
+class StudentD
+{
+  autounique x;
+  0..1 student -- 0..1 ProgramD program;
+}
+
+class ProgramD
+{}
+
+class MentorE
+{
+  autounique y;
+  0..1 mentor -- 2..5 StudentE students;
+  0..1 mentor -- 0..1 ProgramE program;
+}
+
+class StudentE
+{
+  autounique x;
+  0..1 student -- 0..1 ProgramE program;
+}
+
+class ProgramE
+{}
+
+class MentorF
+{
+  autounique y;
+  0..1 mentor -- 2..* StudentF students;
+  0..1 mentor -- 0..1 ProgramF program;
+}
+
+class StudentF
+{
+  autounique x;
+  0..1 student -- 0..1 ProgramF program;
+}
+
+class ProgramF
+{}
+
+
+class MentorG
+{
+  name;
+  1 mentor -- 1 StudentG student;
+  0..1 mentor -- 0..1 ProgramG program;
+}
+
+class StudentG
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramG program;
+}
+
+class ProgramG
+{}
+
+class MentorH
+{
+  name;
+  0..1 self superMentor; 
+}
+
+
+class MentorI
+{
+  name;
+  0..1 -> 2..4 StudentI students;
+  0..1 -- 0..1 ProgramI program;
+}
+
+class StudentI
+{
+  Integer number;
+  0..1 -- 0..1 ProgramI program;
+}
+
+class ProgramI
+{}
+
+class MentorJ
+{
+  name;
+  1 mentor -- * StudentJ students;
+  0..1 mentor -- 0..1 ProgramJ program;
+}
+
+class StudentJ
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramJ program;
+}
+
+class ProgramJ
+{}
+
+class MentorK
+{
+  name;
+  1 mentor -- 2..3 StudentK students;
+  0..1 mentor -- 0..1 ProgramK program;
+}
+
+class StudentK
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramK program;
+}
+
+class ProgramK
+{}
+
+class MentorL
+{
+  name;
+  1 mentor -- 2 StudentL students;
+  0..1 mentor -- 0..1 ProgramL program;
+}
+
+class StudentL
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramL program;
+}
+
+class ProgramL
+{}
+
+class MentorM
+{
+  name;
+  1 mentor -- 2..* StudentM students;
+  0..1 mentor -- 0..1 ProgramM program;
+}
+
+class StudentM
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramM program;
+}
+
+class ProgramM
+{}
+
+class MentorN
+{
+  name;
+  * mentors -- * StudentN students;
+  0..1 mentor -- 0..1 ProgramN program;
+}
+
+class StudentN
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramN program;
+}
+
+class ProgramN
+{}
+
+class MentorO
+{
+  name;
+  * mentors -- 2..4 StudentO students;
+  0..1 mentor -- 0..1 ProgramO program;
+}
+
+class StudentO
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramO program;
+}
+
+class ProgramO
+{}
+
+
+class MentorP
+{
+  name;
+  1 mentor -> * StudentP students;
+  0..1 mentor -- 0..1 ProgramP program;
+}
+
+class StudentP
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramP program;
+}
+
+class ProgramP
+{}
+
+class MentorQ
+{
+  name;
+  * mentors -- 2 StudentQ students;
+  0..1 mentor -- 0..1 ProgramQ program;
+}
+
+class StudentQ
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramQ program;
+}
+
+class ProgramQ
+{}
+
+class MentorR
+{
+  name;
+  * mentors -- 3..* StudentR students;
+  0..1 mentor -- 0..1 ProgramR program;
+}
+
+class StudentR
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramR program;
+}
+
+class ProgramR
+{}
+
+class MentorS
+{
+  name;
+  2..4 mentors -- 3..5 StudentS students;
+  0..1 mentor -- 0..1 ProgramS program;
+}
+
+class StudentS
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramS program;
+}
+
+class ProgramS
+{}
+
+class MentorT
+{
+  name;
+  2..4 mentors -- 3 StudentT students;
+  0..1 mentor -- 0..1 ProgramT program;
+}
+
+class StudentT
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramT program;
+}
+
+class ProgramT
+{}
+
+class MentorU
+{
+  name;
+  2..4 mentors -- 4..* StudentU students;
+  0..1 mentor -- 0..1 ProgramU program;
+}
+
+class StudentU
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramU program;
+}
+
+class ProgramU
+{}
+
+class MentorV
+{
+  name;
+  4 mentors -- 3 StudentV students;
+  0..1 mentor -- 0..1 ProgramV program;
+}
+
+class StudentV
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramV program;
+}
+
+class ProgramV
+{}
+
+class MentorW
+{
+  name;
+  2 mentors -- 3..* StudentW students;
+  0..1 mentor -- 0..1 ProgramW program;
+}
+
+class StudentW
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramW program;
+}
+
+class ProgramW
+{}
+
+class MentorX
+{
+  name;
+  2..* mentors -- 3..* StudentX students;
+  0..1 mentor -- 0..1 ProgramX program;
+}
+
+class StudentX
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramX program;
+}
+
+class ProgramX
+{}
+
+class MentorY
+{
+  name;
+  0..1 mentor -- 0..4 StudentY students;
+  0..1 mentor -- 0..1 ProgramY program;
+}
+
+class StudentY
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramY program;
+}
+
+class ProgramY
+{}
+
+class MentorZ
+{
+  name;
+  1 mentor -- 0..3 StudentZ students;
+  0..1 mentor -- 0..1 ProgramZ program;
+}
+
+class StudentZ
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramZ program;
+}
+
+class ProgramZ
+{}
+
+class MentorAA
+{
+  name;
+  * mentors -- 0..2 StudentAA students;
+  0..1 mentor -- 0..1 ProgramAA program;
+}
+
+class StudentAA
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAA program;
+}
+
+class ProgramAA
+{}
+
+class MentorAB
+{
+  name;
+  3..5 mentors -- 0..2 StudentAB students;
+  0..1 mentor -- 0..1 ProgramAB program;
+}
+
+class StudentAB
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAB program;
+}
+
+class ProgramAB
+{}
+
+class MentorAC
+{
+  name;
+  2 mentors -- 0..3 StudentAC students;
+  0..1 mentor -- 0..1 ProgramAC program;
+}
+
+class StudentAC
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAC program;
+}
+
+class ProgramAC
+{}
+
+class MentorAD
+{
+  name;
+  3..* mentors -- 0..2 StudentAD students;
+  0..1 mentor -- 0..1 ProgramAD program;
+}
+
+class StudentAD
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAD program;
+}
+
+class ProgramAD
+{}
+
+class MentorAE
+{
+  name;
+  0..3 mentors -- 0..2 StudentAE students;
+  0..1 mentor -- 0..1 ProgramAE program;
+}
+
+class StudentAE
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAE program;
+}
+
+class ProgramAE
+{}
+
+class MentorAF
+{
+  name;
+  1 self friend;
+}
+
+class MentorAG
+{
+  name;
+  * self friend;
+}
+
+class MentorAH
+{
+  name;
+  1 -> 1 StudentAH student;
+  0..1 mentor -- 0..1 ProgramAH program;
+}
+
+class StudentAH
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAH program;
+}
+
+class ProgramAH
+{}
+
+class MentorAI
+{
+  name;
+  * -> 0..1 StudentAI student;
+  0..1 mentor -- 0..1 ProgramAI program;
+}
+
+class StudentAI
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAI program;
+}
+
+class ProgramAI
+{}
+
+class MentorAJ
+{
+  name;
+  * -> 3 StudentAJ students;
+  0..1 mentor -- 0..1 ProgramAJ program;
+}
+
+class StudentAJ
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAJ program;
+}
+
+class ProgramAJ
+{}
+
+class MentorAK
+{
+  name;
+  * -> 0..2 StudentAK students;
+  0..1 mentor -- 0..1 ProgramAK program;
+}
+
+class StudentAK
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAK program;
+}
+
+class ProgramAK
+{}
+
+class MentorAL
+{
+  name;
+  * -> 3..* StudentAL students;
+  0..1 mentor -- 0..1 ProgramAL program;
+}
+
+class StudentAL
+{
+  Integer number;
+  0..1 student -- 0..1 ProgramAL program;
+}
+
+class ProgramAL
+{}
+
+
+class MentorAM
+{
+  name;
+  0..1 mentor -- * StudentAM students;  
+}
+
+class StudentAM
+{
+  Integer id;
+}
+
+
+
+class ClassManyAssociation
+{
+  immutable 1 -> * Otherclass;
+}
+
+class ClassMToNAssociation
+{
+  immutable 1 -> 2..3 Otherclass;
+}
+
+class ClassMStarAssociation
+{
+  immutable 1 -> 2..* Otherclass;
+}
+
+class ClassNAssociation
+{
+  immutable 2 -> 2 Otherclass;
+}
+
+class ClassOneAssociation
+{
+  immutable 0..1 -> 1 Otherclass;
+}
+
+class ClassOptionalNAssociation
+{
+  immutable 2 -> 0..2 Otherclass;
+}
+
+class ClassOptionalOneAssociation
+{
+  immutable 2 -> 0..1 Otherclass;
+}
+
+class Otherclass
+{
+  immutable;
+  name;
+}

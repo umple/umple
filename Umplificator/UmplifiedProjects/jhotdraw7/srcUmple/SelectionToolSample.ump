@@ -1,0 +1,23 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.mini ;
+
+class SelectionToolSample 
+{
+depend org.jhotdraw.draw.tool.SelectionTool;
+depend java.awt.geom.*;
+depend javax.swing.*;
+depend org.jhotdraw.draw.*;
+
+  public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                new SelectionToolSample();
+            }
+        });
+    }
+
+}

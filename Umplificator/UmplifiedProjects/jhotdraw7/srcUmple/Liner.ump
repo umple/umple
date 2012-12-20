@@ -1,0 +1,30 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.liner ;
+
+class Liner 
+{
+depend java.util.*;
+depend org.jhotdraw.draw.handle.Handle;
+depend org.jhotdraw.draw.ConnectionFigure;
+depend org.jhotdraw.geom.*;
+
+  /**
+     * Layouts the Path. This may alter the number and type of points
+     * in the Path.
+     *
+     * @param figure The ConnectionFigure to be lined out.
+     */
+    public void lineout(ConnectionFigure figure);
+/**
+     * Creates Handle's for the Liner.
+     * The ConnectionFigure can provide these handles to the user, in order
+     * to let her control the lineout.
+     * 
+     * @param path The path for which to create handles.
+     */
+    public Collection<Handle> createHandles(BezierPath path);
+public Liner clone();
+
+}

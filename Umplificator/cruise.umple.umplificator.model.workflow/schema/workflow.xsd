@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:axs="cruise.umple.umplificator.model.workflow.workflow" targetNamespace="cruise.umple.umplificator.model.workflow.workflow">
+
+	<complexType name="refactoringTask">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="refactoringSubTask" type="axs:refactoringSubTask"/>
+		</sequence>		
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="description" type="string" use="required"/>
+		<attribute name="componentID" type="string" use="required"/>
+		<attribute name="status" type="boolean" use="required"/>
+	</complexType>
+
+	<complexType name="workflow">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="refactoringTask" type="axs:refactoringTask"/>
+		</sequence>	
+		<attribute name="name" type="string" use="required"/>
+	</complexType>
+
+	<complexType name="refactoringSubTask">
+		<attribute name="name" type="string" use="required"/>
+		<attribute name="description" type="string" use="required"/>
+		<attribute name="componentID" type="string" use="required"/>
+		<attribute name="status" type="boolean" use="required"/>
+	</complexType>
+
+</schema>

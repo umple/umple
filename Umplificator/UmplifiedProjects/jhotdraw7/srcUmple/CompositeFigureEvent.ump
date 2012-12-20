@@ -1,0 +1,42 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class CompositeFigureEvent 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.CompositeFigure;
+depend java.awt.geom.*;
+depend java.util.*;
+  isA EventObject;
+
+  private Rectangle2D.Double invalidatedArea;
+private Figure child;
+private int index;
+/**
+     *  Gets the changed drawing.
+     */
+    public CompositeFigure getCompositeFigure() {
+        return (CompositeFigure) getSource();
+    }
+/**
+     *  Gets the changed child figure.
+     */
+    public Figure getChildFigure() {
+        return child;
+    }
+/**
+     *  Gets the bounds of the invalidated area on the drawing.
+     */
+    public Rectangle2D.Double getInvalidatedArea() {
+        return invalidatedArea;
+    }
+/**
+     * Returns the z-index of the child figure.
+     */
+    public int getIndex() {
+        return index;
+    }
+
+}

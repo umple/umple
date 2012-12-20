@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="Template">
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+
+  <condition property="is.osx"><os family="mac" /></condition>
+
+  <property name="myenv" value="cc" />
+  <import file="_${myenv}.xml" />
+
+  <path id="junit4.classpath">
+    <pathelement location="lib/junit.jar"/>
+    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+  </path>
+
+  <path id="umple.classpath">
+    <pathelement location="lib/ant.jar"/>
+    <pathelement location="lib/ant-launcher.jar"/>
+    <pathelement location="lib/tools.jar"/>
+  </path>
+
+  <path id="xtext_core.classpath">
+    <pathelement location="lib/xtextplugins/com.google.inject_2.0.0.v201003051000.jar" />
+    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.0.0.v200803061811.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.common_2.6.0.v20100914-1218.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore_2.7.0.v20110605-0747.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtend_1.0.1.v201008251147.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.util_2.0.0.v201106070531.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext_2.0.0.v201106070531.jar" />
+    <pathelement location="lib/xtextplugins/com.google.collect_0.8.0.v201102150722.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.ecore.xmi_2.5.0.v20100521-1846.jar"/>
+    <pathelement location="lib/xtextplugins/org.apache.commons.logging_1.0.4.v201005080501.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.core_1.1.0.v201106070424.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtend.typesystem.emf_1.0.1.v201008251147.jar"/>
+  <!-- ```````````````````````````
+    Libraries for the xtext Grammar and MWE2 Generator
+  ``````````````````````````` -->
+    <pathelement location="lib/xtextplugins/com.ibm.icu_4.2.1.v20100412.jar" />
+    <pathelement location="lib/xtextplugins/org.apache.commons.cli_1.0.0.v20080604-1500.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.codegen.ecore_2.6.1.v20100914-1218.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.codegen_2.6.0.v20100914-1218.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe.utils_1.1.0.v201106070424.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.language_1.0.2.v201102151014.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.launch_2.0.0.v201106070634.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.mwe2.runtime_2.0.0.v201106070424.jar" />
+    <pathelement location="lib/xtextplugins/org.eclipse.xpand_1.0.1.v201008251147.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types_2.0.0.v201106070531.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.generator_1.0.2.v201102150722.jar"/>
+  <!-- ```````````````````````````
+    Libraries for the Umple Editor: cruise.umple.xtext.ui
+  ``````````````````````````` -->
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui_2.0.0.v201106070531.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.edit_2.6.0.v20100914-1218.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.emf.edit.ui_2.6.0.v20100914-1218.jar"/>
+    <pathelement location="lib/xtextplugins/org.apache.log4j_1.2.15.v201005080500.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.shared_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.builder_1.0.2.v201102150722.jar"/>
+    <pathelement location="lib/xtextplugins/org.antlr.runtime_3.2.0.v201101311130.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.common.types.ui_2.0.0.v201106070531.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.codetemplates_2.0.1.v201108020636.jar"/>
+    <pathelement location="lib/xtextplugins/org.eclipse.xtext.ui.codetemplates.ui_2.0.1.v201108020636.jar"/>
+   </path>
+
+  <!-- ```````````````````````````
+    Clean up and initialize any potential byproduct
+  ``````````````````````````` -->
+
+  <target name="template.clean">
+    <delete dir="${bin.path}" failonerror="false" />
+    <delete dir="${dist.path}" failonerror="false" />
+  </target>
+
+  <target name="template.init">
+    <mkdir dir="${bin.path}"/>
+    <mkdir dir="${dist.path}"/>
+    <mkdir dir="${test.output.path}"/>
+  </target>
+
+  <target name="template.setVersion">
+    <echo message="Setting Version: ${umple.version}" />
+    <replace dir="cruise.umple/src-gen-jet/cruise" token="@UMPLE_VERSION@" value="${umple.version}">
+      <include name="**/*.java"/>
+    </replace>
+    <replace file="cruise.umple/src/UmpleVersion.ump" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+    <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+  </target>
+  
+  <target name="template.resetVersion">
+    <echo message="Resetting To Last Version: ${umple.version} -> ${last.version}" />
+    <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="${last.version}"><include name="**/*.java"/></replace>
+    <replace dir="testbed/src-gen-umple" token="${umple.version}" value="${last.version}"><include name="**/*.java"/></replace>
+    <replace dir="testbed_php/src-gen-umple" token="${umple.version}" value="${last.version}"><include name="**/*.php"/></replace>
+    <replace dir="testbed_ruby/src-gen-umple" token="${umple.version}" value="${last.version}"><include name="**/*.rb"/></replace>
+    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="${last.version}">
+      <include name="**/*.java"/>
+    </replace>
+
+    <echo message="Resetting To Test Version: ${umple.version} -> @UMPLE_VERSION@" />
+    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${last.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
+    <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
+    <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
+    <!-- TODO: UNCOMMENT ONCE RSM IN THE MIX -->
+    <!-- 
+    <replace file="../cruise.umple.rsm/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" /> 
+    -->
+  </target>
+  
+  <target name="template.localVersion">
+    <replace dir="cruise.umple/src-gen-umple/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.java"/>
+    </replace>
+    <replace dir="cruise.umple/src-gen-jet/cruise" token="${umple.version}" value="@UMPLE_VERSION@">
+      <include name="**/*.java"/>
+    </replace>
+  </target>
+
+  <!-- ```````````````````````````
+    Test the application
+  ``````````````````````````` -->
+
+  <target name="template.test">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}" >
+      <!-- <jmvarg value="-XstartOnFirstThread"/> -->
+      <formatter type="xml" unless="${showJunitOutput}"/>
+      <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
+      <batchtest fork="yes" todir="${test.output.path}">
+        <fileset dir="${project.path}/test">
+          <include name="**/*Test.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+      <classpath refid="project.classpath"/>
+    </junit>
+
+    <junitreport todir="${test.output.path}">
+      <fileset dir="${test.output.path}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${test.output.path}"/>
+    </junitreport>
+  </target>  
+
+
+</project>

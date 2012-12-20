@@ -1,0 +1,156 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  boolean hasEntry = false;
+  boolean hasExit = false;
+  boolean isFirstEntry = true;
+  boolean isFirstExit = true;
+  State parentState = sm.getParentState();
+  StateMachine parentSm = parentState != null ? parentState.getStateMachine() : null;
+  String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",sm)));
+  String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",sm)));
+  String customExitPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("exitMethod",sm)));
+  String customExitPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("exitMethod",sm)));
+
+  StringBuilder entryActions = new StringBuilder();
+  StringBuilder exitActions = new StringBuilder();
+  for(State state : sm.getStates())
+  {
+    boolean hasThisEntry = false;
+    boolean hasThisExit = false;
+    
+    for(Action action : state.getActions())
+    {
+      if ("entry".equals(action.getActionType()))
+      {
+        if (!hasThisEntry)
+        {
+          if (isFirstEntry)
+          {
+            entryActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+            for( TraceDirective tc : uClass.getTraceDirectives() )
+          	{
+                for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+                {
+              	  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+          		  StateMachine stm = tracedState.getStateMachine();
+          		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+          		  {
+          		  	State stat = stm.getState(j);
+          		  	String statName =  stm.getName() + stat.getName();
+          		  	if( tracedState.getEntry() )
+          			  if( statName.equalsIgnoreCase(gen.translate("stateOne",state)))
+              			if( model.getTraceType().equals("Console"))
+          					entryActions.append(StringFormatter.format( "\n      " + "print(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state)));
+           				else if( model.getTraceType().equals("File"))
+           					entryActions.append(StringFormatter.format( "\n      " + "fileTracer(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state))); 
+           		  }
+          	  }
+          	}
+          }
+          else
+          {
+            entryActions.append("\n    ");
+            entryActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+          }
+        }
+        hasEntry = true;
+        hasThisEntry = true;
+        isFirstEntry = false;
+        entryActions.append("\n      " + action.getActionCode());
+      }
+      else if ("exit".equals(action.getActionType()))
+      {
+        if (!hasThisExit)
+        {
+          if (isFirstExit)
+          {
+            exitActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+            for( TraceDirective tc : uClass.getTraceDirectives() )
+        	{
+              for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+              {
+            	  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+        		  StateMachine stm = tracedState.getStateMachine();
+        		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+        		  {
+        		  	State stat = stm.getState(j);
+        		  	String statName =  stm.getName() + stat.getName();
+        		  	if( tracedState.getExit() )
+        			  if( statName.equalsIgnoreCase(gen.translate("stateOne",state)))
+            			if( model.getTraceType().equals("Console"))
+            				exitActions.append(StringFormatter.format( "\n      " + "print(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state)));
+         				else if( model.getTraceType().equals("File"))
+         					exitActions.append(StringFormatter.format( "\n      " + "fileTracer(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state))); 
+         		  }
+        	  }
+        	}
+          }
+          else
+          {
+            exitActions.append("\n    ");
+            exitActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+          }
+          isFirstExit = false;
+        }
+        hasExit = true;
+        hasThisExit = true;
+        isFirstExit = false;
+        exitActions.append("\n      " + action.getActionCode());
+      }
+    }
+  
+    if (state.getActivity() != null)
+    {
+      if (!hasThisEntry)
+      {
+        if (isFirstEntry)
+        {
+          entryActions.append(StringFormatter.format("if ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+        }
+        else
+        {
+          entryActions.append("\n    ");
+          entryActions.append(StringFormatter.format("elseif ($this->{0} == self::${1})\n    {",gen.translate("stateMachineOne",sm),gen.translate("stateOne",state)));
+        }
+      }
+      hasEntry = true;
+      hasThisEntry = true;
+      isFirstEntry = false;
+      entryActions.append(StringFormatter.format("\n      {0}",state.getActivity().getActivityCode()));
+    }
+    
+    if (hasThisEntry)
+    {
+      entryActions.append("\n    }");
+    }
+    
+    if (hasThisExit)
+    {
+      exitActions.append("\n    }");
+    }
+  }
+%>
+<% if (hasExit) { %>
+  private function <%=gen.translate("exitMethod",sm)%>()
+  {
+    <% if (customExitPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } %>
+    <%= exitActions %>
+    <% if (customExitPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } %>
+  }
+
+<% } %>
+  private function <%=gen.translate("setMethod",sm)%>($<%= gen.translate("parameterOne",sm) %>)
+  {
+  <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    $this-><%= gen.translate("stateMachineOne",sm) %> = $<%= gen.translate("parameterOne",sm) %>;
+<% if (parentState != null) { %>
+    if ($this-><%= gen.translate("stateMachineOne",parentSm) %> != self::$<%= gen.translate("stateOne",parentState) %> && $<%= gen.translate("parameterOne",sm) %> != self::$<%= gen.translate("stateNull",sm) %>) { $this-><%=gen.translate("setMethod",parentSm)%>(self::$<%= gen.translate("stateOne",parentState) %>); }
+<% } %>
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
+<% if (hasEntry) { %>
+
+    // entry actions and do activities
+    <%= entryActions %>
+<% } %>
+  }
+

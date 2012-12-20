@@ -1,0 +1,27 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+//This is the declaration of the foreign key constraints. This should appear after all classes have already been output (currently not the case).
+/* Argument 6 is added to ensure no two constraints end up having the same name. Often constraints do not have the same name
+but sometimes when two tables have a foreign key referring to the same table */
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+
+    if (av.getIsNavigable() && (av.isOptionalOne() || av.isOnlyOne() || av.isN()))
+    { 
+      UmpleClass associatedUClass = av.getRelatedAssociation().getUmpleClass();
+      List<Attribute> foreignPKList = gen.resolvePrimaryKey(associatedUClass);
+      for(int i = 1; i <= av.getMultiplicity().getUpperBound(); i += 1)
+      { 
+        for(Attribute foreignPK : foreignPKList)
+        {
+          appendln(stringBuffer, "ALTER TABLE {0} ADD CONSTRAINT `fk_{6}_{2}_{3}{5}` FOREIGN KEY (`{2}_{3}{5}`) REFERENCES {1}({4});", gen.translate("typeWithPackage", uClass),
+                                                                                                                                   gen.translate("typeWithPackage", associatedUClass), 
+                                                                                                                                   gen.translate("type", associatedUClass), 
+                                                                                                                                   gen.translate("attributeOne", foreignPK), 
+                                                                                                                                   gen.translate("attributeOneQuoted", foreignPK),
+                                                                                                                                   av.isN() ? "_" + i : "", uClass.getName().toLowerCase());
+        }
+      }
+    }
+  }
+%>

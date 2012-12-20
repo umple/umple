@@ -1,0 +1,108 @@
+/*
+  Hotel - sample system 
+  Last updated: May 26, 2008
+*/
+//Namespace for facade class.
+namespace hotel;
+
+//Namespace for core of the system.
+namespace hotel.core;
+
+class HotelCompany {
+ name;
+ 1 -- * Hotel owns;
+}
+
+class Hotel {
+ name;
+ address;
+ 1 -- * RentableSpace;
+}
+
+class ItemOnBill { description; charge; }
+
+class Booking {
+ startDate; endDate; startTime;
+ endTime; bedroomsRequired; creditCardToBill;
+ 1 -- * ItemOnBill;
+ 0..1 -- * Booking subsidiaryBooking;
+}
+
+class RentableSpace {
+ costPerDay;
+ floorArea;
+ * -- * Booking;
+}
+
+class HotelBedroom { isA RentableSpace; roomNumber; qualityLevel; isSmoking; }
+
+class MeetingRoom { isA RentableSpace; name; maxSeatingCapacity; }
+
+class Suite{
+ 1 -- * RentableSpace;
+}
+
+class Event{ description; isA Booking; }
+
+class Person {
+ name; address;
+ 1 -- * Booking;
+}
+//$?[End_of_model]$?
+//Positioning
+class MeetingRoom
+{
+  position 358 444 211 76;
+}
+
+class Booking
+{
+  position 101 254 196 170;
+  position.association Booking__ItemOnBill 50,0 126,81;
+  position.association Booking__Booking:subsidiaryBooking 0,140 30,170;
+}
+
+class Event
+{
+  position 124 472 149 62;
+}
+
+class Person
+{
+  position 209 104 128 79;
+  position.association Booking__Person 47,79 155,0;
+}
+
+class HotelBedroom
+{
+  position 600 431 158 93;
+}
+
+class Suite
+{
+  position 586 167 109 45;
+  position.association RentableSpace__Suite 20,45 129,0;
+}
+
+class RentableSpace
+{
+  position 477 286 152 79;
+  position.association Booking__RentableSpace 0,15 197,47;
+}
+
+class ItemOnBill
+{
+  position 25 105 150 81;
+}
+
+class Hotel
+{
+  position 391 148 128 79;
+  position.association Hotel__RentableSpace 100,79 14,0;
+}
+
+class HotelCompany
+{
+  position 393 28 112 58;
+  position.association Hotel:owns__HotelCompany 50,62 52,0;
+}

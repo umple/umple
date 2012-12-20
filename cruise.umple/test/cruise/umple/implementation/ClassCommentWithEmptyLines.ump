@@ -1,0 +1,18 @@
+/*
+ * I am a class comment.
+ * 
+ * Notice how there are 4 empty lines below me.
+ * 
+ * 
+ * 
+ * 
+ * And 2 below me.
+ * 
+ * 
+ * These lines should come out as we see here.
+ * Comments such as these are often used to improve readability through whitespace clarity.
+ */
+class Foo
+{
+	
+}

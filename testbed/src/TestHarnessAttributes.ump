@@ -1,0 +1,49 @@
+
+namespace cruise.attributes.test;
+
+class DoorA
+{
+  immutable id = "1";
+  immutable Integer intId = 2;
+  immutable Double doubleId = 3.4;
+  immutable Boolean booleanId = false;
+}
+
+class DoorB 
+{
+  Integer id;
+  key {id}
+}
+
+class DoorC
+{
+  immutable id;
+  immutable Integer intId;
+  immutable Double doubleId;
+  immutable Date dateId;
+  immutable Time timeId;
+  immutable Boolean booleanId;
+  immutable DoorB doorId;
+}
+
+class DoorD
+{
+  defaulted id = "1";
+  defaulted Integer intId = 2;
+  defaulted Double doubleId = 3.4;
+  defaulted Boolean booleanId = false;
+}
+
+class DoorE
+{
+  Date d1 = "1978-12-01";
+  immutable Date d2 = "1978-12-02";
+  defaulted Date d3 = "1978-12-03";
+}
+
+class DoorF
+{
+  Time d1 = "12:51:51";
+  immutable Time d2 = "12:52:52";
+  defaulted Time d3 = "12:53:53";
+}

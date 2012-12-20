@@ -1,0 +1,12 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app ;
+
+class PrintableView 
+{
+depend java.awt.print.*;
+
+  public Pageable createPageable();
+
+}

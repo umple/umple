@@ -1,0 +1,15 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app ;
+
+class Disposable 
+{
+depend edu.umd.cs.findbugs.annotations.NonNull;
+
+  /** Disposes of all resources held by this object so that they can be
+     * garbage collected.
+     */
+    public void dispose();
+
+}

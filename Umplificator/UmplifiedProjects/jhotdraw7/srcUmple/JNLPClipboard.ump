@@ -1,0 +1,39 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.datatransfer ;
+
+class JNLPClipboard 
+{
+depend java.awt.datatransfer.ClipboardOwner;
+depend java.awt.datatransfer.Transferable;
+  isA AbstractClipboard;
+
+  /** The proxy target. */
+    private Object target;
+/** Returns the proxy target. */
+    public Object getTarget() {
+        return target;
+    }
+@Override
+    public Transferable getContents(Object requestor) {
+        try {
+            return (Transferable) target.getClass().getMethod("getContents").invoke(target);
+        } catch (Exception ex) {
+            InternalError error = new InternalError("Failed to invoke getContents() on "+target);
+            error.initCause(ex);
+            throw error;
+        }
+    }
+@Override
+    public void setContents(Transferable contents, ClipboardOwner owner) {
+        try {
+            target.getClass().getMethod("setContents", Transferable.class).invoke(target, contents);
+        } catch (Exception ex) {
+            InternalError error = new InternalError("Failed to invoke setContents(Transferable) on "+target);
+            error.initCause(ex);
+            throw error;
+        }
+    }
+
+}

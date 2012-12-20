@@ -1,0 +1,32 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  String isAExtendsAndImplements="";
+  String implementedInterfaces = "";
+  String extendedClass = "";
+  UmpleClass parent = uClass.getExtendsClass();
+  if (parent == null)
+  {
+	  extendedClass =  "";
+  }
+  else{
+	  extendedClass = uClass.getExtendsClass().getName() + "," ;
+  }
+
+  // Interfaces 
+  if (uClass.hasParentInterface() == false){
+	  implementedInterfaces =  "";
+  }
+  else{
+	  for (UmpleInterface uInterface : uClass.getParentInterface())
+	  {
+		  implementedInterfaces += uInterface.getName() + "," ; 
+	  }
+	  implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+  }
+  isAExtendsAndImplements = extendedClass + implementedInterfaces;
+  if (isAExtendsAndImplements.length() > 0 ){
+	  isAExtendsAndImplements = isAExtendsAndImplements.substring(0, isAExtendsAndImplements.length()-1);  
+	  appendln(stringBuffer, "");
+	  append(stringBuffer, "isA {0};",isAExtendsAndImplements);
+  }
+%>

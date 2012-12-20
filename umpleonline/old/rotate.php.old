@@ -1,0 +1,53 @@
+<?php
+
+if (!isset($_REQUEST["img"]) || !isset($_REQUEST["angle"]))
+{
+  print "Provide ?img=[fillmein.gif]&angle=[#]";
+  return;
+}
+
+$filename = $_REQUEST["img"];
+$angle = $_REQUEST["angle"];
+
+if (isset($_REQUEST["orientation"]) && $_REQUEST["orientation"] == "clockwise")
+{
+  $angle = -1 * $angle;
+}
+
+$length = strlen($filename);
+$nameLength = $length - strlen(".gif");
+$name = substr($filename,0,$nameLength);
+$normalizedAngle = getNearestAngle($angle);
+
+
+
+$rotatedName = "{$name}_${normalizedAngle}.gif";
+$original = imagecreatefromgif($rotatedName);
+header('Content-type: image/gif');
+imagegif($original);
+imagedestroy($original);
+
+function getNearestAngle($angle)
+{
+  while ($angle < 0)
+  {
+    $angle += 360;
+  }
+  
+  while ($angle > 360)
+  {
+    $angle -= 360;
+  }
+
+  if ($angle < 23) { return 0; }
+  else if ($angle < 68) { return 45; }
+  else if ($angle < 113) { return 90; }
+  else if ($angle < 158) { return 135; }
+  else if ($angle < 203) { return 180; }
+  else if ($angle < 248) { return 225; }
+  else if ($angle < 293) { return 270; }
+  else if ($angle < 338) { return 315; }
+  else { return 0; }
+}
+
+?>

@@ -1,0 +1,19 @@
+class Student
+{
+}
+
+class Mentor
+{
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 328 83 109 45;
+}
+
+class Mentor
+{
+  position 108 253 109 45;
+}

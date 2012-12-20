@@ -1,0 +1,3 @@
+<?php
+$modelOverview = new ModelOverview();
+$aClass = new ClassOverview("Student",$modelOverview);

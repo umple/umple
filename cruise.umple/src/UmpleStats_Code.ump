@@ -1,0 +1,183 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Generates metrics about Umple programs/models
+
+*/
+
+namespace cruise.umple.stats;
+
+class StatsMain
+{
+  depend cruise.umple.util.*;
+  
+  public static String console;
+  
+  public static void main(String[] args) 
+  {
+    console = "";
+    
+    if (args.length != 2)
+    {
+      println("Usage: java -jar umplestats.jar <results_file> <project_listing_file>");
+      println("Example: java -jar umplestats.jar all.results projects.txt");
+      println("Where, projects.txt is looks something like like:");
+      println("---------\np1\nC:/dev/airline.ump\np2\nC:/dev/elevator.ump");
+      return;
+    }
+    
+    String outputFilename = args[0];
+    String projectListings = FileManager.loadFile(args[1]);
+    String[] allProjects = projectListings.split("\n");
+    
+    
+    println("Analyzing umple applications:");
+    MetricsCollector collector = new MetricsCollector();
+    for(int i=1; i<allProjects.length; i+=2)
+    {
+      String projectName = allProjects[i-1];
+      String inputFilename = allProjects[i];
+      boolean didAnalyze = collector.analyze(projectName,inputFilename);
+      String text = didAnalyze ? "success" : "failed";
+      println("["+ inputFilename +"], " + text);
+    }
+    collector.save(outputFilename);
+    println("Saved results to ["+ outputFilename +"]");
+  }
+  
+  private static void println(String output)
+  {
+    console += output + "\n";
+    System.out.println(output);
+  }
+}
+
+
+class MetricsCollector
+{
+  //depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.util.*;
+  
+  String[] logs;
+
+  before constructor { init(); }
+
+  private Hashtable<String, Hashtable<String, Integer>> _projectToMetricsMap;  
+  private String _currentProject;
+  private ArrayList<String> _allProjectIds;
+  private ArrayList<String> _allAssociationTypes;
+  
+  private void init()
+  {
+    _currentProject = null;
+    _allProjectIds = new ArrayList<String>();
+    _allAssociationTypes = new ArrayList<String>();
+    _projectToMetricsMap = new Hashtable<String, Hashtable<String, Integer>>();
+  }
+  
+  public boolean analyze(String projectName, String inputFilename)
+  {
+    _currentProject = projectName;
+    _allProjectIds.add(projectName);
+    _projectToMetricsMap.put(projectName, new Hashtable<String,Integer>());
+
+    try
+    {
+      UmpleFile umpleFile = new UmpleFile(inputFilename);
+      UmpleModel model = new UmpleModel(umpleFile);
+      model.setShouldGenerate(false);
+      model.run();
+      
+      for (Association association : model.getAssociations())
+      {
+        String key = association.toGenericString();
+        incrementAssociationType(key);
+      }
+      
+      return true;
+    }
+    catch (Exception e)
+    {
+      addLog(e.getMessage() + ": " + inputFilename);
+      _allProjectIds.remove(projectName);
+      return false;
+    }
+  }
+  
+  public void save(String outputFilename)
+  {
+    FileManager.writeFileToDisk(outputFilename, toString()); 
+  }
+  
+  public int numberOf(String projectId, String lowerBound, String upperBound)
+  {
+    Hashtable<String,Integer> lookup = _projectToMetricsMap.get(projectId);
+    if (lookup == null)
+    {
+      return 0;
+    }
+    int forward = currentNumberOfAssociationType(lowerBound + " -- " + upperBound,lookup);
+    int backward = currentNumberOfAssociationType(upperBound + " -- " + lowerBound,lookup);
+    return forward + backward;
+  }
+  
+  public String toString()
+  {
+    StringBuilder header = new StringBuilder();
+    StringBuilder body = new StringBuilder();
+    header.append("Project Id");
+    for(int i=0; i<_allAssociationTypes.size(); i++)
+    {
+      header.append("\t#" + _allAssociationTypes.get(i));
+    }
+    header.append("\n");
+    
+    for (Iterator<String> p = _allProjectIds.iterator(); p.hasNext();)
+    {
+      String projectId = p.next();
+      body.append(projectId);
+      Hashtable<String, Integer> frequencyMap = _projectToMetricsMap.get(projectId);
+      for(int i=0; i<_allAssociationTypes.size(); i++)
+      {
+        String key = _allAssociationTypes.get(i);
+        int number = currentNumberOfAssociationType(key, frequencyMap);
+        body.append("\t"+ number);
+      }
+      body.append("\n");
+    }
+
+    return header.toString() + body.toString();
+  }
+  
+  private int currentNumberOfAssociationType(String key, Hashtable<String,Integer> lookup)
+  {
+    if (lookup.containsKey(key))
+    {
+      return lookup.get(key).intValue();
+    }
+    else
+    {
+      return 0;
+    }
+  }
+  
+  private void incrementAssociationType(String key)
+  {
+    incrementAssociationType(key,_projectToMetricsMap.get(_currentProject));
+  }
+  
+  private void incrementAssociationType(String key, Hashtable<String,Integer> lookup)
+  {
+    if (!_allAssociationTypes.contains(key))
+    {
+      _allAssociationTypes.add(key);
+    }
+    Integer newInt = new Integer(currentNumberOfAssociationType(key,lookup) + 1);
+    lookup.put(key, newInt);
+  }
+}

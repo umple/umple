@@ -1,0 +1,258 @@
+Using UmpleOnline
+User Manual Basics
+noreferences
+
+@@description
+
+<p>The following describes how to use the <a 
+href="http://try.umple.org">UmpleOnline tool accessible online at 
+try.umple.org</a></p>
+
+<p>For information about writing Umple models or code in UmpleOnline, look at the <a href="GettingStarted.html">Getting
+Started section of this user manual</a>, or any other topic in the left
+column of this page, including information about defining <a href="ClassDefinition.html">classes</a>,
+<a href="AttributeDefinition.html">attributes</a>, <a href="AssociationDefinition.html">associations</a> and <a href="BasicStateMachines.html">state machines</a>.</p>
+
+<br />
+
+<p><b>Loading and saving</b></p>
+
+<ul>
+
+<li><b>To explore examples of Umple</b>, In the centre pane, select a pre-prepared example from the 'TOOLS' menu. You can also directly access these examples using a
+URL whose last component is the name of the example. For example <a href="http://try.umple.org/?example=2DShapes">click
+here to jump to the 2DShapes example: http://try.umple.org/?example=2DShapes</a></li>
+
+<br />
+
+<li><b>To restart UmpleOnline</b> (you will lose any work you have not 
+saved), click 'Start Over' under the 'SAVE &amp; RESET' menu.</li>
+
+<br />
+
+<li><b>To save your work</b>, there are three approaches:
+
+<ol>
+<li><b>Create a bookmarkable URL</b>. To do this, click 'Create Bookmarkable URL'
+above 
+the left pane or 'Save Model For Future Editing' in the centre pane under 'SAVE &amp; RESET'. Then copy or bookmark the URL that 
+appears in your browser's URL bar. <br/>&nbsp;<br/>
+
+Note that from this point on you can 
+keep editing the Umple code or diagram, and your work will continue to be 
+saved at this URL. You are thus saving your work in the 'cloud'. You can 
+embed the URL in other pages to document your product. Note that at the 
+current time, anyone who knows your URL can also edit your work, and if 
+you forget your URL, or someone messes up the saved contents at that URL,
+there is no way to retrieve it. Therefore it is also 
+suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br/></li>
+
+
+<li><b>Create a URL that embeds the entire diagram</b>. This is only guaranteed to
+work for small diagrams, since some browsers such as older versions
+of Internet Explorer limit the number of characters in a URL. <br/>&nbsp;<br/>
+
+To do this, click on "Encoded URL" in the 'SAVE &amp; RESET' menu, and copy the URL that appears in a separate window. You might want to
+use a URL shortening service such as bit.ly to shorten the URL before 
+posting it or embedding it in another document. You also need to be aware that you are limited by certain browsers and URL shortening services to files with about 2000 characters or less, so test your URL once you have created it.<br/>&nbsp;<br/></li>
+
+
+<li><b>Copy and paste the text of important models somewhere 
+else</b>. One thing to note is that if you just copy the visible text in the 
+left hand pane, you will <u>not</u> be saving the <i>layout of the 
+diagram</i>. If you want to save the layout too, you have to do one of the 
+following:
+  <ul>
+     <li>Click on 'Source' in the 'SAVE &amp; RESET' menu. This will generate a popup 
+that contains Umple code with the layout information. Copy and paste the contents
+of this window, and then close the window.
+     <li>Check the box 'Layout Editor' in the 'OPTIONS' menu to view a 
+separate window containing the layout, and then save the 
+automatically-generated layout information in a file. You can actually 
+edit this layout textually, but we suggest you only do that if you are an 
+expert since it us much easier to edit the layout from the right-hand 
+graphical pane, as described later.
+  </ul>
+</li>
+</ol>  
+</li>
+
+&nbsp;<br/>
+
+<li><b>To load Umple code into UmpleOnline do one of the following:</b>
+  <ol>
+    <li><b>Load a URL you saved using one of the saving methods 1 and 2 above.</b><br /></li>
+    <li><b>Put a .ump file on the web (saved from Eclipse or using saving method 3 above), and load it using the filename argument to Umpleonline.</b> The filename
+    argument's syntax is ?filename=X, where X is the URL of the file containing
+    the Umple file, <i>minus the leading 'http://'</i>. So, for example there
+    is a .ump file in the repository at the following URL: <a href="http://umple.googlecode.com/svn/trunk/cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump">umple.googlecode.com/svn/trunk/cruise.umple/test/data/
+    InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump</a>. This can be loaded into Umple using the following URL: <a href="http://cruise.site.uottawa.ca/umpleonline/?filename=umple.googlecode.com/svn/trunk/cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump">http://cruise.site.uottawa.ca/umpleonline/?filename=umple.googlecode.com/svn/trunk/
+cruise.umple/test/data/InventoryAndOrders/ClientOrder/
+MailOrderSystemClientOrder.ump</a><br /></li> 
+    <li>Paste Umple code into UmpleOnline</b> Note however, that you have to make
+    sure the pasted file contains the layout information, as described under the saving methods above.
+  </ol>
+   <br>Note that in most of these cases, the user can edit the Umple, without affecting the 
+original content. In other words, a copy is saved first. The only exception is that when you edit Umple saved using method 1, any changes are saved permanently.
+</li>
+
+</ul>
+
+<p><b>Left Pane: Umple textual code</b></p>
+
+<ul>
+
+<li>Type any Umple code into this pane. Three seconds after you stop 
+typing, your program will be interpreted by Umple, and Umple will attempt 
+to draw a corresponding class diagram in the right-hand side. Just about 
+the simplest Umple program you could type here would be class X {}</li>
+
+<br />
+
+<li><b>If you make a mistake</b>, you can click 'Undo' in the 'TOOLS' menu, 
+repeatedly to 'back out' each change you made. You can also redo changes 
+in a similar manner.</li>
+
+<br />
+
+<li><b>You can hide this textual Umple pane entirely</b> by unchecking 'Text Editor' in the 'OPTIONS' menu.</li>
+
+<br />
+
+<li><b>If you are doing a lot of text editing</b>, and don't want to have 
+the diagram generated all the time, you can check 'Manual Sync' 
+in the 'OPTIONS' menu or uncheck 'Canvas' to hide the diagram entirely.</li>
+
+<br />
+
+<li><b>Syntax assistance:</b> As you type Umple text, the text editor will attempt to help you keep the correct indentation of your code. It will also highlight matching parentheses, and umple keywords. We intend to improve syntax assistance.
+
+<br />
+
+<li><b>Jumping to a line in the text editor:</b> You can type a line number in the box above the textual pane and hit 'tab' to jump to that line. In most browsers you can also hit 'return'. If an error message is displayed below the browser, the line number causing the error will also appear. You can click on this line number to jump to the line in the text.
+
+<br />
+
+<li><b>Collapsing blocks of text</b> You can click on the line number of any line that ends in ' {' to <i>collapse</i> that block of code. This can be used to temporarily hide the bodies of classes or methods that you are not interested in viewing. Note that currently there must be a space before the '{' for this to work.
+
+</ul>
+
+
+<p><b>Right Pane: UML diagram</b></p>
+
+<ul>
+
+<li><b>To add a <a href="ClassDefinition.html">class</a></b>, click on 'Class' in the 'TOOLS' menu, 
+then position the cursor over the canvas. To add a whole series of 
+classes, double-click on 'Class' then click repeatedly on 
+the canvas. Press escape if you change your mind and you don't want to add 
+a class.</li>
+
+<br />
+
+<li>You can also use the text (left) pane to write Umple code that will 
+appear on the canvas. If you do this, you will have to then lay out the 
+diagram, since the layout algorithm is rather simple.</li>
+
+<br />
+
+<li><b>To rename a class</b>, click on the class name and type over it, then hit 
+enter or click somewhere else. Alternatively edit it on the text (left) 
+pane.</li>
+
+<br />
+
+<li><b>To reposition classes,</b> you can drag classes around to align 
+them the way you like. You can also select a class and use the arrow keys 
+to move it by a small amount in any direction. This is nice to carefully 
+arrange classes. Note that the positions of your classes are saved in a 
+hidden text pane on the left hand side. See the discussion above regarding 
+showing this pane and saving the layout information</li>
+
+<br />
+
+
+<li><b>To add an <a href="AttributeDefinition.html">attribute</a></b>, click in the 'Add More' box and type the 
+attribute name. To give an attribute a type, follow the name by a colon, 
+and then one of the Umple types (Integer, String, Date, Time, Boolean or 
+the name of an Umple class (note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax). You can click on an attribute at any time to 
+change its name or type, or you can edit the attribute in the textual 
+(left) pane. You can add a whole series of attributes by just hitting 
+return after each one and typing the next one.</li>
+
+<br />
+
+<li><b>To delete an attribute</b>, click on the little red X next to it.</li>
+
+<br />
+
+
+<li><b>To add a <a href="isAclause.html">generalization</a></b> (an inheritance relationship between 
+classes), click on 'Generalization'  in 'TOOLS' menu., and then click 
+first on the subclass, then the superclass. If you double-click on 
+Tools/Generalization you can then hook up a subclass to its parent, and 
+then the parent to a higher-level parent, etc. Press escape to cancel the 
+process of adding generalizations..</li>
+
+<br />
+
+<li><b>To add an <a href="AssociationDefinition.html">association</a></b> (a relationship that describes how 
+instances of one class are to be connected to instances of another at run 
+time), click on 'Association' in 'TOOLS' menu. Then click on one 
+class to be connected, and then the second class. By default, the 
+multiplicity of a new association is many-to-many (* -- *). To change 
+this, or to add a name to the assocation, you currently have to edit the 
+Umple code in the left (textual) pane.</li>
+
+<br />
+
+<li><b>To adjust the location of an association</b>, in other words how it 
+is connected to each class, hover over the association until you see 
+little squares at its ends, then click. The squares should change to a 
+darker colour. Select a little squares and move it to a new location on 
+the class. If an association crosses a class's border, just move the class 
+a little. Note that the location of the association end is saved with the 
+layout information of the diagram.</li>
+
+
+<br />
+
+<li><b>To delete a class, generalization or association</b> click on 
+'Delete' in the 'TOOLS' menu and then select the item to delete.</li>
+
+<br />
+
+<li><b>To hide the 'add more' line in each class</b>, select 'Photo 
+Ready' from the 'OPTIONS' menu. You can also click on any class to adjust its 
+size a little. UmpleOnline is an excellent tool for preparing nice-looking 
+diagrams ready for publication. Note that this works best in Firefox at the current time.</li>
+
+<br />
+
+<li><b>To hide the graphical canvas</b>, uncheck 'Layout Editor' in the 'OPTIONS' menu. 
+Then you can just work with the textual Umple in the left pane.</li>
+
+<br />
+
+<li><b>To adjust the size of the canvas</b> select 'Smaller' or 'Larger' 
+from the 'OPTIONS' menu.</li>
+
+</ul>
+
+
+<p><b>Bottom Pane: Errors, Warnings and Generated Results</b></p>
+
+<ul>
+<li><b>Messages:</b> As you edit your text or diagram, warnings or errors may appear at the bottom of the page. Each warning or error message has a line number pointing you to the line in the code where the error originated. Each message also has a link to the user manual page describing the problem and how to fix it.</li>
+
+<br />
+<li><b>Generated code:</b> You can generate many types of output from your Umple model/code. Pick an output format from the pulldown menu under 'GENERATE' in the 'SAVE &amp; RESET' menu, then click 'Generate Code'.
+
+<br />
+Multiple files of generated code are concatenated when they appear on the web page. A link is also provided to download a zip file with the code so you can easily compile and execute it.</li>
+
+</ul>
+
+<hr />
+
+<p><a href="PrivacyandRisks.html">See here for the statement regarding <b>privacy and other risks when using UmpleOnline</b>.</a></p>

@@ -1,0 +1,212 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+import java.util.*;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private string number;
+
+  //Student Associations
+  private List<Mentor> mentors;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(string aNumber)
+  {
+    number = aNumber;
+    mentors = new ArrayList<Mentor>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(string aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public string getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor(int index)
+  {
+    Mentor aMentor = mentors.get(index);
+    return aMentor;
+  }
+
+  public List<Mentor> getMentors()
+  {
+    List<Mentor> newMentors = Collections.unmodifiableList(mentors);
+    return newMentors;
+  }
+
+  public int numberOfMentors()
+  {
+    int number = mentors.size();
+    return number;
+  }
+
+  public boolean hasMentors()
+  {
+    boolean has = mentors.size() > 0;
+    return has;
+  }
+
+  public int indexOfMentor(Mentor aMentor)
+  {
+    int index = mentors.indexOf(aMentor);
+    return index;
+  }
+
+  public boolean isNumberOfMentorsValid()
+  {
+    boolean isValid = numberOfMentors() >= minimumNumberOfMentors() && numberOfMentors() <= maximumNumberOfMentors();
+    return isValid;
+  }
+
+  public static int requiredNumberOfMentors()
+  {
+    return 3;
+  }
+
+  public static int minimumNumberOfMentors()
+  {
+    return 3;
+  }
+
+  public static int maximumNumberOfMentors()
+  {
+    return 3;
+  }
+
+  public boolean addMentor(Mentor aMentor)
+  {
+    boolean wasAdded = false;
+    if (mentors.contains(aMentor)) { return false; }
+    if (numberOfMentors() >= maximumNumberOfMentors())
+    {
+      return wasAdded;
+    }
+
+    mentors.add(aMentor);
+    if (aMentor.indexOfStudent(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aMentor.addStudent(this);
+      if (!wasAdded)
+      {
+        mentors.remove(aMentor);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeMentor(Mentor aMentor)
+  {
+    boolean wasRemoved = false;
+    if (!mentors.contains(aMentor))
+    {
+      return wasRemoved;
+    }
+
+    if (numberOfMentors() <= minimumNumberOfMentors())
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = mentors.indexOf(aMentor);
+    mentors.remove(oldIndex);
+    if (aMentor.indexOfStudent(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aMentor.removeStudent(this);
+      if (!wasRemoved)
+      {
+        mentors.add(oldIndex,aMentor);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean setMentors(Mentor... newMentors)
+  {
+    boolean wasSet = false;
+    ArrayList<Mentor> verifiedMentors = new ArrayList<Mentor>();
+    for (Mentor aMentor : newMentors)
+    {
+      if (verifiedMentors.contains(aMentor))
+      {
+        continue;
+      }
+      verifiedMentors.add(aMentor);
+    }
+
+    if (verifiedMentors.size() != newMentors.length || verifiedMentors.size() < minimumNumberOfMentors() || verifiedMentors.size() > maximumNumberOfMentors())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Mentor> oldMentors = new ArrayList<Mentor>(mentors);
+    mentors.clear();
+    for (Mentor newMentor : verifiedMentors)
+    {
+      mentors.add(newMentor);
+      if (oldMentors.contains(newMentor))
+      {
+        oldMentors.remove(newMentor);
+      }
+      else
+      {
+        newMentor.addStudent(this);
+      }
+    }
+
+    for (Mentor oldMentor : oldMentors)
+    {
+      oldMentor.removeStudent(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    ArrayList<Mentor> copyOfMentors = new ArrayList<Mentor>(mentors);
+    mentors.clear();
+    for(Mentor aMentor : copyOfMentors)
+    {
+      if (aMentor.numberOfStudents() <= Mentor.minimumNumberOfStudents())
+      {
+        aMentor.delete();
+      }
+      else
+      {
+        aMentor.removeStudent(this);
+      }
+    }
+  }
+
+}

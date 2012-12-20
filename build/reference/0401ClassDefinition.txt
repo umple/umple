@@ -1,0 +1,53 @@
+Class Definition
+Classes and Interfaces
+noreferences
+
+@@description
+<p>      
+A class definition defines an object-oriented  class available for use as a type in your system.  
+</p>
+
+<p>To define a class, specify the keyword 'class', followed by the name of the class (starting in a capital letter) and then the body of the class within curly brackets. The body can contain <a href="ClassContent.html">various elements that are listed in the Class Content page</a>.</p>
+
+<p>The following UML diagram shows two classes: a Student class and an Address class, linked by an association. The corresponding Umple is below.</p>
+
+<img src="examples/StudentAddress.png" alt="UML diagram showing Student and Address"/>
+
+<br />
+
+
+@@syntax
+[[classDefinition]] [[classContent]]
+
+@@example
+
+class Student
+{
+  firstName;   // attribute - defaults to String
+  lastName;
+  Integer number;  // attribute with type Integer
+  * -- * Address;  // Many-to-many association
+  
+  public String fullName()  // Method, whose content is not processed by Umple
+  {
+    return getFirstName()   " "   getLastName();
+  } 
+}
+
+class Address
+{
+  String[] line;  // Multi-valued attribute
+}//$?[End_of_model]$?
+
+class Address
+{
+  position 47 160 109 64;
+}
+
+class Student
+{
+  position.association Address__Student 30,100 30,0;
+  position 47 23 141 100;
+}
+
+@@endexample

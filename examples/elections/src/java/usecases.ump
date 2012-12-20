@@ -1,0 +1,19 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+use java/usecase_controllers/Runner.ump;
+use java/usecase_controllers/Controller.ump;
+use java/usecase_controllers/OpenPollController.ump;
+use java/usecase_controllers/AddElectionController.ump;
+use java/usecase_controllers/AddPollController.ump;
+use java/usecase_controllers/AddPositionController.ump;
+use java/usecase_controllers/AssignPositionElectionController.ump;
+use java/usecase_controllers/RegisterCandidateController.ump;
+use java/usecase_controllers/AssignCandidatureController.ump;
+use java/usecase_controllers/RegisterVoterController.ump;

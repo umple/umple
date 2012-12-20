@@ -1,0 +1,64 @@
+namespace cruise.patterns.test;
+
+class WidgetA
+{
+  id;
+  Integer intId;
+  Double doubleId;
+  Boolean boolId;
+  Date dateId;
+  WidgetB widgetId;
+  ignore;
+  
+  key { id, intId, doubleId, boolId, dateId, widgetId }
+}
+
+class WidgetB
+{
+}
+
+class WidgetC
+{
+  id;
+  key {id}
+}
+
+class WidgetD
+{
+  
+  id;
+  String[] logs;
+  
+  before setId { addLog("before setId:" + id); } 
+  after setId { addLog("after setId:" + id); }
+  before getId { addLog("before getId"); } 
+  after getId { addLog("after getId"); }
+}
+
+class WidgetE
+{
+  
+  String[] ids;
+  String[] logs;
+  
+  before addId { addLog("before addId:" + numberOfIds()); } 
+  after addId { addLog("after addId:" + numberOfIds()); }
+  before removeId { addLog("before removeId:" + numberOfIds()); } 
+  after removeId { addLog("after removeId:" + numberOfIds()); }
+  before indexOfId { addLog("before indexOfId"); } 
+  after indexOfId { addLog("after indexOfId"); }
+  before getId { addLog("before getId"); } 
+  after getId { addLog("after getId"); }
+  before getIds { addLog("before getIds"); } 
+  after getIds { addLog("after getIds"); }
+
+}
+
+class WidgetF
+{
+  String[] ids;
+  String[] logs;
+  
+  before numberOfIds { addLog("before numberOfIds"); } 
+  after numberOfIds { addLog("after numberOfIds"); }
+}

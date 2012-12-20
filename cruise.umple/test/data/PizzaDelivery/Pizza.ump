@@ -1,0 +1,119 @@
+class Account
+{
+  emailAddress;
+  contactPhoneNumber;
+  password;
+  name;
+  address;
+  preferredCredCard;
+  ExpiryDate;
+  0..1 -- * Order;
+}
+
+class Order
+{
+  timePlaced;
+  contactPhoneNumber;
+  Float totalPrice;
+  creditCardCharged;
+  expiryDate;
+  1 -- * OrderItem;
+}
+
+class OrderItem
+{
+  Integer number;
+  Float totalPrice;
+}
+
+class PizzaOrder
+{
+    isA OrderItem;
+kind;
+  * -> * ToppingType toppings;
+  * -> 1 StandardPizzaSize;
+}
+
+class ToppingType
+{
+  description;
+}
+
+class StandardPizzaSize
+{
+  sizeLabel;
+}
+
+class DrinkOrder
+{
+    isA OrderItem;
+    drinkSize;
+size;
+}
+
+class Delivery
+{
+  Time timePickedUp;
+  Time TimeDelivered;
+  * -- 0..1 Driver;
+  0..1 -- 1..* Order;
+}
+
+class Driver
+{
+  name;
+}
+
+//$?[End_of_model]$?
+
+class Account
+{
+  position 38 46 219 172;
+  position.association Account__Order 37,172 50,0;
+}
+
+class Order
+{
+  position 22 271 219 154;
+  position.association Order__OrderItem 219,54 0,48;
+}
+
+class OrderItem
+{
+  position 429 208 139 82;
+}
+
+class PizzaOrder
+{
+  position 240 465 139 118;
+  position.association PizzaOrder__ToppingType 66,82 40,0;
+  position.association PizzaOrder__ToppingType:toppings 109,20 0,0;
+  position.association PizzaOrder__StandardPizzaSize 0,11 135,7;
+}
+
+class ToppingType
+{
+  position 465 466 149 64;
+}
+
+class StandardPizzaSize
+{
+  position 15 472 135 46;
+}
+
+class DrinkOrder
+{
+  position 494 349 109 46;
+}
+
+class Delivery
+{
+  position 270 47 166 82;
+  position.association Delivery__Driver 166,42 0,40;
+  position.association Delivery__Order 133,82 219,11;
+}
+
+class Driver
+{
+  position 506 49 109 46;
+}

@@ -1,0 +1,10 @@
+class LightFixture
+{
+  bulb
+  {
+    On {
+      [x==5] push -> On;
+    }
+
+  }
+}

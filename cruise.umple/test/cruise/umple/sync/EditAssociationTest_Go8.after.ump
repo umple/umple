@@ -1,0 +1,10 @@
+class Student
+{
+  * -- 0..1 Student partner;
+}
+
+class Student
+{
+  position 100 100 109 41;
+  position.association Student__Student:partner 0,29 27,41;
+}

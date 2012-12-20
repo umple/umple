@@ -1,0 +1,304 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Student.h"
+#include "Mentor.h"
+#include "Course.h"
+
+	int i;
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Student::Student(const string & aNumber, vector<Mentor*> allMentors)
+  {
+    number = aNumber;
+    for (i=0; i<mentors.size(); i++)
+	{
+		mentors[i] = NULL;
+	}
+    bool didAddMentors = setMentors(allMentors);
+    try {
+		 throw  didAddMentors;
+		}
+	catch (exception& e)	
+	{
+	cout<<"Unable to create Student, must have at least 1 mentors";
+	}
+    for (i=0; i<courses.size(); i++)
+	{
+		courses[i] = NULL;
+	}
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Student::Student(const Student & student)
+  {
+    this->number = student.number;
+  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Student Student::operator=(const Student & student)
+  {
+    this->number = student.number;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Student::setNumber(const string & aNumber)
+  {
+    bool wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  string Student::getNumber() const
+  {
+    return number;
+  }
+
+  Mentor* Student::getMentor(int index) 
+  {
+    Mentor* aMentor = mentors[index];
+    return aMentor;
+  }
+
+  vector<Mentor*> Student::getMentors() 
+  {
+    vector<Mentor*> newMentors = mentors;
+    return newMentors;
+  }
+
+  int Student::numberOfMentors()
+  {
+    int number = mentors.size();
+    return number;
+  }
+
+  bool Student::hasMentors()
+  {
+    bool has = mentors.size() > 0;
+    return has;
+  }
+  
+  int Student::indexOfMentor(Mentor* aMentor)
+  {
+    int index = find(mentors.begin(), mentors.end(), aMentor) - mentors.begin();
+    return index;
+  }
+  
+  Course* Student::getCourse(int index) 
+  {
+    Course* aCourse = courses[index];
+    return aCourse;
+  }
+
+  vector<Course*> Student::getCourses() 
+  {
+    vector<Course*> newCourses = courses;
+    return newCourses;
+  }
+
+  int Student::numberOfCourses()
+  {
+    int number = courses.size();
+    return number;
+  }
+
+  bool Student::hasCourses()
+  {
+    bool has = courses.size() > 0;
+    return has;
+  }
+  
+  int Student::indexOfCourse(Course* aCourse)
+  {
+    int index = find(courses.begin(), courses.end(), aCourse) - courses.begin();
+    return index;
+  }
+  
+  static int minimumNumberOfMentors()
+  {
+    return 1;
+  }
+
+  bool Student::addMentor(Mentor* aMentor)
+  {
+    bool wasAdded = false;
+    if (find(mentors.begin(),mentors.end(),aMentor) != mentors.end()) { return false; }
+    Student existingStudent = aMentor->getStudent();
+    if (existingStudent != NULL && existingStudent->numberOfMentors() <= minimumNumberOfMentors())
+    {
+      return wasAdded;
+    }
+    else if (existingStudent != null)
+    {
+      existingStudent.mentors.erase(find(mentors.begin(),mentors.end(),aMentor));
+    }
+    mentors.push_back(aMentor);
+    setStudent(aMentor,this);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  bool Student::removeMentor(Mentor* aMentor)
+  {
+    bool wasRemoved = false;
+	int index = find(mentors.begin(), mentors.end(), aMentor) - mentors.begin();
+    if ((find(mentors.begin(),mentors.end(),aMentor) !=mentors.end()) && numberOfMentors() > minimumNumberOfMentors())
+    {
+      mentors.erase(find(mentors.begin(),mentors.end(),aMentor));
+      setStudent(aMentor,NULL);
+	  delete mentors[index];
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  bool Student::setMentors(Mentor... newMentors)
+  {
+    bool wasSet = false;
+    if (newMentors.length < minimumNumberOfMentors())
+    {
+      return wasSet;
+    }
+
+    vector<Mentor*> checkNewMentors;
+	
+    map<Student,int> studentToNewMentors;
+    for (Mentor aMentor : newMentors)
+    {
+      if (find(checkNewMentors.begin(),checkNewMentors.end(),aMentor) != checkNewMentors.end())
+      {
+        return wasSet;
+      }
+      else if (aMentor->getStudent() != NULL && this!=aMentor->getStudent())
+      {
+        Student* existingStudent = aMentor.getStudent();
+        if (!studentToNewMentors.find(existingStudent))
+        {
+          studentToNewMentors.insert(existingStudent, new int(existingStudent->numberOfMentors()));
+        }
+        int currentCount = studentToNewMentors.find(existingStudent)->firtst;
+        int nextCount = currentCount - 1;
+        if (nextCount < 1)
+        {
+          return wasSet;
+        }
+        studentToNewMentors.insert(existingStudent, new int(nextCount));
+      }
+      checkNewMentors.push_back(aMentor);
+    }
+
+    mentors.removeAll(checkNewMentors);
+
+    for (Mentor orphan : mentors)
+    {
+      setStudent(orphan, null);
+    }
+    mentors.clear();
+    for (Mentor aMentor : newMentors)
+    {
+      if (aMentor.getStudent() != null)
+      {
+        aMentor.getStudent()->mentors.erase(aMentor);
+      }
+      setStudent(aMentor, this);
+      mentors.push_back(aMentor);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  void Student::setStudent(Mentor aMentor, Student aStudent)
+  {
+    try
+    {
+      java.lang.reflect.Field mentorField = aMentor.getClass().getDeclaredField("student");
+      mentorField.setAccessible(true);
+      mentorField.set(aMentor, aStudent);
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Issue internally setting aStudent to aMentor", e);
+    }
+  }
+
+  static int minimumNumberOfCourses()
+  {
+    return 0;
+  }
+
+  bool Student::addCourse(Course* aCourse)
+  {
+    bool wasAdded = false;
+    if (find(courses.begin(),courses.end(),aCourse) != courses.end()) { return false; }
+    courses.push_back(aCourse);
+    if (aCourse->indexOfStudent(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aCourse.addStudent(this);
+      if (!wasAdded)
+      {
+        courses.erase(find(courses.begin(),courses.end(),aCourse));
+      }
+    }
+    return wasAdded;
+  }
+
+  bool Student::removeCourse(Course aCourse)
+  {
+    bool wasRemoved = false;
+    if (!find(courses.begin(),courses.end(),aCourse))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = find(courses.begin(), courses.end(), aCourse) - courses.begin();
+    courses.erase(find(courses.begin(),courses.end(),aCourse));
+    if (aCourse->indexOfStudent(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aCourse->removeStudent(this);
+      if (!wasRemoved)
+      {
+        courses.push_back(oldIndex,aCourse);
+      }
+    }
+    return wasRemoved;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
+  {
+    for(i =0; sizeof(mentors); i++)
+    {
+      setStudent(aMentor[i],NULL);
+    }
+    mentors.clear();
+    vector<Course*> copyOfCourses = courses;
+    courses.clear();
+    for(i=0;sizeof(courses);i++)
+    {
+      courses[i]->removeStudent(this);
+    }
+  }

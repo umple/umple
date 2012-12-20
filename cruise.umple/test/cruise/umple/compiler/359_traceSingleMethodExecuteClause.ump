@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace method1() execute { "somthing" };
+    trace method2() execute { record ("objectBeingTraced"), record("x",name) } period 100ms;
+}

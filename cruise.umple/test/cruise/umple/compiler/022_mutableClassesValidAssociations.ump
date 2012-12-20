@@ -1,0 +1,30 @@
+class A
+{
+	* -- * B;
+	1 -> * C;
+	* <- 0..2 D;
+}
+
+class B
+{
+	1 -- 1 D;
+}
+
+class C
+{}
+
+class D
+{}
+
+association 
+{ 
+	0..5 B someBs -- 0..5 C;
+	1 D <- 1 A;
+	1 C -> * B;
+}
+
+associationClass CToD
+{
+	* C;
+	* D;
+}

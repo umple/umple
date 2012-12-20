@@ -1,0 +1,88 @@
+		<f:facet name="header">
+		<%if (assocList.size()==0) {%>
+			<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=bckObject.getClassName()%>ClassName}" />
+		<%} else{
+		int span= bckObject.getKeysAttributes().size()+1;
+		for (Attribute attVar: bckObject.getAttVariables()) { 
+		String gridFmt=bckObject.getFragmentProvider().getGUIGridFragment(attVar, "reg", "a"+bckObject.getClassName() );
+			 if (gridFmt.trim().length()>0){
+			span++;
+		}
+		}
+		int totalSpan= span+1;
+		for (AssociationVariable assocVar: assocList) {
+		BackingObject assBck=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType());	
+			if(!assBck.getUClazz().getIsSingleton()){
+				totalSpan+= assBck.getKeysAttributes().size();
+			}else{
+		 		totalSpan++;
+			}
+		}
+		%>
+  		<rich:columnGroup>
+		 <rich:column  colspan="<%=totalSpan%>" >
+			<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=bckObject.getClassName()%>ClassName}" />
+		</rich:column>			
+		<rich:column  colspan="<%=span%>" breakBefore="true" >
+			<h:outputText value="" />
+		</rich:column>
+<% for (AssociationVariable assocVar: assocList) { %>
+		<% BackingObject assBck=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType()); %>
+	<% if(assBck.getKeysAttributes().size()>0 && !assBck.getUClazz().getIsSingleton() ) {%>
+		<rich:column  colspan="<%=assBck.getKeysAttributes().size()%>" >
+			<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}" />
+		</rich:column>			
+	<%} else if (assBck.getUClazz().getIsSingleton()){%>
+		<rich:column >
+			<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}" />
+		</rich:column>		
+	<%} }%>
+		<rich:column  >
+			<h:outputText value="" />
+		</rich:column>
+		</rich:columnGroup>
+		<%}%>
+		</f:facet>
+		<% for (Attribute attVar: bckObject.getKeysAttributes()) { %>
+		<% String gridFmt=bckObject.getFragmentProvider().getGUIGridFragment(attVar, "reg", "a"+bckObject.getClassName() ); %>
+			<% if (gridFmt.trim().length()>0){%>
+		<rich:column>	
+				<%=gridFmt %>
+		</rich:column>				
+			<% } %>
+		<% } %>
+		<% for (Attribute attVar: bckObject.getAttVariables()) { %>
+		<% String gridFmt=bckObject.getFragmentProvider().getGUIGridFragment(attVar, "reg", "a"+bckObject.getClassName() ); %>
+			<% if (gridFmt.trim().length()>0){%>
+		<rich:column>	
+				<%=gridFmt %>
+		</rich:column>				
+			<% } %>				
+		<% } %>
+		<rich:column>	
+			<f:facet name="header">Type</f:facet>
+			<h:outputText value="#{reg.class.name}" >
+			</h:outputText>
+		</rich:column>	
+<% for (AssociationVariable assocVar: assocList) { %>
+	<% BackingObject assBck=bckObject.getFragmentProvider().getClassMap().get(assocVar.getType()); %>	
+	<%if (!assBck.getUClazz().getIsSingleton()){ %>
+		<% for (Attribute attVar: assBck.getKeysAttributes()) { %>
+			<% String gridFmt=bckObject.getFragmentProvider().getGUIGridFragment(attVar, "reg."+ assocVar.getName(), "a"+assBck.getClassName() ); %>
+			<% if (gridFmt.trim().length()>0){%>
+			<rich:column>	
+				<%=gridFmt %>
+			</rich:column>				
+			<% } %>
+		<% } %>
+		
+	<% }else {%>
+			<rich:column>
+			<f:facet name="header">Instance</f:facet>
+			<h:outputText value="N/A" rendered="#{reg.<%=assocVar.getName()%>==null}"></h:outputText>
+			<h:graphicImage value="/images/icons/checkmark.gif" style="border:0" rendered="#{reg.<%=assocVar.getName()%>!=null}"  />
+			</rich:column>	
+			
+		<% } %>		
+<% } %>
+		

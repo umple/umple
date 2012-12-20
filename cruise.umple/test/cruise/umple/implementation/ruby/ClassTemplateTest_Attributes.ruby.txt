@@ -1,0 +1,293 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+require 'date'
+require 'time'
+
+class Mentor
+
+
+  #------------------------
+  # STATIC VARIABLES
+  #------------------------
+
+  MAX = 100;
+  MIN = -99;
+  HELLO = "Hello";
+  @@next_x = 1
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Mentor Attributes - for documentation purposes
+  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :name, :d, :t, :i, :p, :q, :r, :s, :tt, :u, :v, :w
+
+  #Autounique Attributes - for documentation purposes
+  #attr_reader x;
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_str, a_d, a_i)
+    @initialized = false
+    @deleted = false
+    @str = a_str
+    @can_set_str = false
+    @str2 = nil
+    @can_set_str2 = true
+    @someName = nil
+    @lDoub = 0
+    @lBool = false
+    @name = "Johannes"
+    @d = a_d
+    @t = new Time()
+    @i = a_i
+    reset_p
+    @q = "chicken"
+    reset_r
+    @s = "123"
+    @can_set_s = false
+    @tt = Date.parse("1978-12-25")
+    @u = Time.parse("12:13:14")
+    reset_v
+    reset_w
+    @x = @@next_x
+    @@next_x += 1
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_str2(a_str2)
+    was_set = false
+    return false unless @can_set_str2
+    @can_set_str2 = false
+    @str2 = a_str2
+    was_set = true
+    was_set
+  end
+
+  def set_someName(a_someName)
+    was_set = false
+    @someName = a_someName
+    was_set = true
+    was_set
+  end
+
+  def set_lDoub(a_lDoub)
+    was_set = false
+    @lDoub = a_lDoub
+    was_set = true
+    was_set
+  end
+
+  def set_lBool(a_lBool)
+    was_set = false
+    @lBool = a_lBool
+    was_set = true
+    was_set
+  end
+
+  def set_name(a_name)
+    was_set = false
+    @name = a_name
+    was_set = true
+    was_set
+  end
+
+  def set_d(a_d)
+    was_set = false
+    @d = a_d
+    was_set = true
+    was_set
+  end
+
+  def set_i(a_i)
+    was_set = false
+    @i = a_i
+    was_set = true
+    was_set
+  end
+
+  def set_p(a_p)
+    was_set = false
+    @p = a_p
+    was_set = true
+    was_set
+  end
+
+  def reset_p
+    wasReset = false
+    @p = get_default_p
+    wasReset = true
+    wasReset
+  end
+
+  def set_q(a_q)
+    was_set = false
+    @q = a_q
+    was_set = true
+    was_set
+  end
+
+  def set_r(a_r)
+    was_set = false
+    @r = a_r
+    was_set = true
+    was_set
+  end
+
+  def reset_r
+    wasReset = false
+    @r = get_default_r
+    wasReset = true
+    wasReset
+  end
+
+  def set_tt(a_tt)
+    was_set = false
+    @tt = a_tt
+    was_set = true
+    was_set
+  end
+
+  def set_u(a_u)
+    was_set = false
+    @u = a_u
+    was_set = true
+    was_set
+  end
+
+  def set_v(a_v)
+    was_set = false
+    @v = a_v
+    was_set = true
+    was_set
+  end
+
+  def reset_v
+    wasReset = false
+    @v = get_default_v
+    wasReset = true
+    wasReset
+  end
+
+  def set_w(a_w)
+    was_set = false
+    @w = a_w
+    was_set = true
+    was_set
+  end
+
+  def reset_w
+    wasReset = false
+    @w = get_default_w
+    wasReset = true
+    wasReset
+  end
+
+  def get_str
+    @str
+  end
+
+  def get_str2
+    @str2
+  end
+
+  def get_someName
+    @someName
+  end
+
+  def get_lDoub
+    @lDoub
+  end
+
+  def get_lBool
+    @lBool
+  end
+
+  def get_name
+    @name
+  end
+
+  def get_d
+    @d
+  end
+
+  def get_i
+    @i
+  end
+
+  def get_derivedTwiceI
+    i*2
+  end
+
+  def get_p
+    @p
+  end
+
+  def get_default_p
+    "robot"
+  end
+
+  def get_q
+    @q
+  end
+
+  def get_r
+    @r
+  end
+
+  def get_default_r
+    ""
+  end
+
+  def get_s
+    @s
+  end
+
+  def get_tt
+    @tt
+  end
+
+  def get_u
+    @u
+  end
+
+  def get_v
+    @v
+  end
+
+  def get_default_v
+    Date.parse("1978-12-26")
+  end
+
+  def get_w
+    @w
+  end
+
+  def get_default_w
+    Time.parse("12:59:59")
+  end
+
+  def get_x
+    @x
+  end
+
+  def is_lBool
+    @lBool
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

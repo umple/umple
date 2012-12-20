@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class ClearSelectionAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend javax.swing.text.*;
+depend org.jhotdraw.util.*;
+depend org.jhotdraw.gui.EditableComponent;
+  isA AbstractSelectionAction;
+
+  public final static String ID = "edit.clearSelection";
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        JComponent c = target;
+        if (c == null && (KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                getPermanentFocusOwner() instanceof JComponent)) {
+            c = (JComponent) KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                    getPermanentFocusOwner();
+        }
+        if (c != null && c.isEnabled()) {
+            if (c instanceof EditableComponent) {
+                ((EditableComponent) c).clearSelection();
+            } else if (c instanceof JTextComponent) {
+                JTextComponent tc = ((JTextComponent) c);
+                tc.select(tc.getSelectionStart(), tc.getSelectionStart());
+            } else {
+                c.getToolkit().beep();
+            }
+        }
+    }
+@Override
+    protected void updateEnabled() {
+        if (target != null) {
+            setEnabled(target.isEnabled());
+        }
+    }
+
+}

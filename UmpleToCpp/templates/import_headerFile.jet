@@ -1,0 +1,29 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+	appendln(stringBuffer, "");
+	append(stringBuffer, "#include \"{0}.h\"",uClass.getName()); 
+	if (uClass.hasAssociationVariables())
+	for (AssociationVariable av : uClass.getAssociationVariables())
+	{
+	if ( uClass.getName() != av.getRelatedAssociation().getUmpleClass().getName())
+	{
+		appendln(stringBuffer, "");
+		append(stringBuffer, "#include \"{0}.h\"",av.getRelatedAssociation().getUmpleClass().getName()); 
+	}
+	}
+	
+	if( model.getTraceType().equals("Lttng") && uClass.hasTraceDirectives() )
+  {
+	for (TraceDirective td : uClass.getTraceDirectives())
+	    	{
+	  for (Attribute_TraceItem ati: td.getAttributeTraceItems())
+	  {
+		for (Attribute att : ati.getAttributes())
+		{
+		appendln(stringBuffer, "");
+		append(stringBuffer, "#include \"{0}_tracepoint.h\";",att.getName());	
+		}
+	  }
+	  }
+  }  
+%>

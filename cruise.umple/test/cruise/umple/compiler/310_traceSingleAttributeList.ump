@@ -1,0 +1,7 @@
+class LightFixture
+{
+	Integer[] id;
+	String[] name;	
+	trace id;
+	trace name;
+}

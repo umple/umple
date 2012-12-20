@@ -1,0 +1,19 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Methods for trace aspects of an Umple meta model.
+
+Currently a place holder as no additional action semantics are required.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class TraceItem
+{
+
+}

@@ -1,0 +1,14 @@
+generate Sql;
+
+namespace example;
+
+class Mentor 
+{
+  name;
+  1 -- 4 Student;
+}
+
+class Student
+{
+  number;
+}

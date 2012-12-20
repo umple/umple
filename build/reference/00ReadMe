@@ -1,0 +1,35 @@
+Umple user Manual files are defined in this directory
+
+The order of the sections in the manual is determined by the order.group file.
+
+Each numbered file represents the source code for one of the user manual pages.
+In each numbered file:
+  - The first line indicates the title of the page. With spaces removed, this also becomes the last component of the URL of the page. As a result, avoid renaming pages since links will become stale. And also, therefore think carefully before naming a page.
+  - The second line of the file determines the section of the manual. The section must match one of the entries in order.group
+  - the third line would normally say 'noreferences' since we have turned off an obsolete feature for generating references.
+  
+The numbering sequence of the files is used to help order the files. But the order specified by order.group has precedence.
+
+Within each manual page, you specify sections delineated by @@description, @@syntax and @@example/@@endexample etc.
+
+Use html in the @@description.
+
+Code in the examples will be rendered using syntaxHighlighter. This is found in umplewww. If you are making your own local version of the manual, you will have to create a symbolic link to that directory.
+
+A link will be generated from each code example to ensure that it can be displayed in UmpleOnline. Always test and comment code samples.
+
+Instructions for building deploying the user manual can be found here: https://code.google.com/p/umple/wiki/Deploying
+In short: to build on your local environment
+cd trunk/build
+ant -Dmyenv=local -f build.umple.xml packageDocs
+then
+open <yourumpledir>/dist/cruise.umple/reference/GettingStarted.html
+
+Diagrams can be embedded in selected pages. These are stored in umplewww/examples
+Diagrams must be deployed on the server when they are created or changed. This is not done automatically.
+
+The program that generates the user manual is called umpledocs.jar
+Code for this can be found in:
+cruise.umple/src/Documenter.ump
+and
+cruise.umple/src/Documenter_Code.ump

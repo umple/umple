@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Builds the "JHotDraw Teddy" demo application and demo applet. -->
+<project name="build-teddy" default="all" basedir=".">
+    <target name="init">
+        <!-- properties for copyright and versioning -->
+        <property name="author" value="the authors and contributors of JHotDraw"/>
+        <property name="version" value="7.6"/>
+
+        <!-- build properties -->
+        <property name="libdir" value="lib"/>
+        <property name="srcdir" value="src/main/java"/>
+        <property name="builddir" value="build"/>
+        <property name="classdir" value="${builddir}/classes"/>
+        <property name="distdir" value="dist/JHotDraw ${version}/Samples/Teddy"/>
+
+        <!-- properties for jar signing -->
+        <property name="keystore.file" value="../../../../_Keystore/JavaKeystore"/>
+        <property name="keystore.alias" value="werner"/>
+        <property name="keystore.storepass" value="werner"/>
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${classdir}" />
+    </target>
+    <target name="application.compile" depends="init,clean">
+        <mkdir dir="${classdir}"/>
+        <javac
+                destdir="${classdir}"
+                srcdir="${srcdir}"
+                debug="true"
+                optimize="true"
+                encoding="UTF-8"
+         >
+            <classpath path="${libdir}/quaqua.jar"/>
+            <classpath path="${libdir}/annotations.jar"/>
+            <classpath path="${libdir}/jsr305.jar"/>
+            <include name="org/jhotdraw/samples/teddy/Main.java"/> 
+            <include name="org/jhotdraw/samples/teddy/TeddyProject.java"/> 
+        </javac>
+        <copy todir="${classdir}/org/jhotdraw/app/action/images">
+            <fileset dir="${srcdir}/org/jhotdraw/app/action/images" />
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/app">
+            <fileset dir="${srcdir}/org/jhotdraw/app">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/undo">
+            <fileset dir="${srcdir}/org/jhotdraw/undo">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/undo/images">
+            <fileset dir="${srcdir}/org/jhotdraw/undo/images">
+                <include name="*.png"/>
+            </fileset>
+        </copy>
+        <copy todir="${classdir}/org/jhotdraw/samples/teddy">
+            <fileset file="${srcdir}/org/jhotdraw/samples/teddy/Label*.properties"/>
+        </copy> 
+        <copy todir="${classdir}/org/jhotdraw/app">
+            <fileset file="${srcdir}/org/jhotdraw/app/Label*.properties"/>
+        </copy>
+    </target>
+    <target name="application.jar" depends="init,application.compile">
+        <mkdir dir="${distdir}/unsigned"/>
+        <jar destfile="${distdir}/unsigned/JHotDraw Teddy.jar" basedir="${classdir}">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.teddy.Main"/>
+                <attribute name="Class-Path" value="quaqua.jar lib/quaqua.jar ../lib/quaqua.jar ../../lib/quaqua.jar"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+        <copy todir="${distdir}/unsigned">
+            <fileset file="${libdir}/*.jar"/>
+            <fileset file="${libdir}/*.jnilib"/>
+        </copy>
+    </target>
+    <target name="application.jarsigned" depends="init,application.jar">
+        <mkdir dir="${distdir}/signed"/>
+        <unjar src="${libdir}/quaqua.jar" dest="${classdir}" />
+        <jar destfile="${distdir}/signed/JHotDraw Teddy.jar" basedir="${classdir}">
+            <manifest>
+                <attribute name="Built-By" value="${author}"/>
+                <attribute name="Main-Class" value="org.jhotdraw.samples.teddy.Main"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+          <signjar alias="${keystore.alias}" 
+                storepass="${keystore.storepass}"
+                keystore="${keystore.file}" 
+                jar="${distdir}/signed/JHotDraw Teddy.jar"
+                
+                >
+        </signjar>        
+        <jar basedir="${libdir}" compress="true"
+             jarfile="${distdir}/signed/libquaqua.jnilib.jar"
+             >
+            <include name="libquaqua.jnilib"/>
+        </jar>
+        <signjar alias="${keystore.alias}" 
+            storepass="${keystore.storepass}"
+            keystore="${keystore.file}" 
+            jar="${distdir}/signed/libquaqua.jnilib.jar"
+            >
+        </signjar>        
+        <jar basedir="${libdir}" compress="true"
+             jarfile="${distdir}/signed/libquaqua64.jnilib.jar"
+             >
+            <include name="libquaqua64.jnilib"/>
+        </jar>
+        <signjar alias="${keystore.alias}" 
+            storepass="${keystore.storepass}"
+            keystore="${keystore.file}" 
+            jar="${distdir}/signed/libquaqua64.jnilib.jar"
+            >
+        </signjar>        
+    </target>
+    <target name="application.run-jar" depends="init">
+        <java fork="true" jar="${distdir}/JHotDraw Teddy.jar">
+            <jvmarg value="-Xdock:name=JHotDraw Teddy"/>
+            <jvmarg value="-Dlocale=en"/>
+            <jvmarg value="-Dapple.awt.graphics.UseQuartz=false"/>
+            <jvmarg value="-Djava.library.path=${libdir}"/>
+        </java>
+    </target>
+    <target name="application.run-compiled" depends="init">
+        <java fork="true" classname="org.jhotdraw.samples.teddy.Main">
+            <classpath>
+                <path path="${classdir}"/>
+                <fileset dir="${libdir}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+            <jvmarg value="-Xdock:name=JHotDraw Teddy"/>
+            <jvmarg value="-Dlocale=en"/>
+            <jvmarg value="-Dapple.awt.graphics.UseQuartz=false"/>
+            <jvmarg value="-Djava.library.path=${libdir}"/>
+        </java>
+    </target>
+    <target name="application.run-jarsigned" depends="init">
+        <java fork="true" jar="${distdir}/JHotDraw Teddy.jar">
+            <jvmarg value="-Xdock:name=JHotDraw Teddy"/>
+            <jvmarg value="-Dlocale=en"/>
+            <jvmarg value="-Dapple.awt.graphics.UseQuartz=false"/>
+            <jvmarg value="-Djava.library.path=${libdir}"/>
+        </java>
+    </target>
+    <target name="dist" depends="init,application.jar">
+        <delete file="${distdir}/jhotdraw_teddy.jar" />
+        <delete file="${distdir}/jhotdraw_teddy.jar.pack.gz" />
+        <delete file="${distdir}/JHotDraw Teddy.jar" />
+        <delete file="${distdir}/libquaqua.jnilib" />
+        <delete file="${distdir}/libquaqua64.jnilib" />
+    </target>
+    <target name="distsigned" depends="init,application.jarsigned">
+        <delete file="${distdir}/jhotdraw_teddy.jar" />
+        <delete file="${distdir}/jhotdraw_teddy.jar.pack.gz" />
+        <delete file="${distdir}/JHotDraw Teddy.jar" />
+        <delete file="${distdir}/libquaqua.jnilib" />
+        <delete file="${distdir}/libquaqua64.jnilib" />
+    </target>
+</project>

@@ -1,0 +1,18 @@
+associationClassContent
+Associations
+
+@@description
+<p>      
+An association class can contain several components including:
+</p>
+
+<ul>
+<li>comment: describe the intent of your class</li>
+<li>classDefinition: define a subclass to your class</li>
+<li>isA: specify a superclass to your class (i.e. a Supervisor could be descrbied as "isA Person")</li>
+<li>depend: describe external dependencies that might be used by your class within the extraCode section</li>
+<li>separateMultiplicities: a relationship to two external classes that define the nature of this association class</li>
+<li>attribute: member variables of the class (i.e. name, dob, amount)</li>
+<li>myAssociation: an assocation to an external class</li>
+<li>extraCode: arbitrary code to provide custom functionality to the class</li>
+</ul>

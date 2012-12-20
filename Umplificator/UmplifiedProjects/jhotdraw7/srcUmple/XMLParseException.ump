@@ -1,0 +1,11 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace net.n3.nanoxml ;
+
+class XMLParseException 
+{
+  isA XMLException;
+
+  
+}

@@ -1,0 +1,22 @@
+
+namespace example;
+
+class Thing
+{}
+
+associationClass Ticket
+{
+  isA Thing;
+  name;
+  Integer type = 1;
+  * Event event;
+  * Location;
+  
+  public int one() {return 1;}
+}
+
+class Event
+{}
+
+class Location
+{}

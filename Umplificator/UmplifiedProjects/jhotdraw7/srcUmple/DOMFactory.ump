@@ -1,0 +1,39 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.xml ;
+
+class DOMFactory 
+{
+depend java.io.IOException;
+
+  /**
+     * Returns the element name for the specified object.
+     */
+    public String getName(Object o);
+/**
+     * Creates an object from the specified element name.
+     */
+    public Object create(String name);
+/** Writes the specified object to DOMOutput.
+     * <p>
+     * This method is only ever called from DOMOutput. You should never call
+     * this method directly.
+     *
+     * @param object The object to be written.
+     */
+    public void write(DOMOutput out, Object object) throws IOException;
+/** Reads the specified object from {@code DOMInput}.
+     * <p>
+     * This method is only ever called from {@code DOMInput}. You should never call
+     * this method directly.
+     * <p>
+     * If the object returned by this method is an instanceof {@link DOMStorable}
+     * then {@code DOMInput} invokes its read method.
+     *
+     * @param in The {@code DOMInput} object which creates the object from an element
+     * in a DOM.
+     */
+    public Object read(DOMInput in) throws IOException;
+
+}

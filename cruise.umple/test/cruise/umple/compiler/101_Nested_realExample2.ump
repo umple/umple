@@ -1,0 +1,29 @@
+class StrobeLight
+{
+
+  dvdPlayer
+  {
+    Off
+    {
+      turnOn -> On;
+    }
+    Sleep
+    {
+      wake -> Pause;
+    }
+    On
+    {
+      turnOff -> Off;
+      Play 
+      { 
+        push -> Pause;
+      }
+      Pause
+      {
+        push -> Play;      
+        standby -> Sleep;
+      }      
+      
+    }
+ }
+}

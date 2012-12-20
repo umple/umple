@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleSandbox" >
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+  <import file="_template.xml" />
+
+  <property name="project.path" value="sandbox"/>
+  <property name="bin.path" value="${project.path}/bin"/>
+  <property name="dist.path" value="dist/sandbox"/>
+  <property name="test.output.path" value="dist/qa/sandbox"/>
+  <property name="haltonfailure" value="true"/>
+
+  <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="junit4.classpath"/>
+  </path>
+
+  <!-- ```````````````````````````
+    Compile the application
+  ``````````````````````````` -->
+
+  <target name="compile">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+      <src path="${project.path}/src"/>
+      <src path="${project.path}/src-gen-umple"/>
+      <src path="${project.path}/test"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <classpath refid="project.classpath"/>
+    </javac>
+  </target>
+
+  <!-- ```````````````````````````
+    Build the application
+  ``````````````````````````` -->
+  
+  <target name="build" >
+    <echo>A sample build file for the Sandbox</echo>
+    <antcall target="template.clean" />
+    <antcall target="template.init" />
+    <antcall target="compile" />
+    <antcall target="template.test" />
+  </target>
+  
+  
+</project>
+

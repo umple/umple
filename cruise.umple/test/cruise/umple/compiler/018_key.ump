@@ -1,0 +1,19 @@
+
+class Student
+{
+  id;
+  name;
+  key { id, name }
+}
+
+class Mentor
+{
+  employeeId;
+  key { employeeId };
+}
+
+class Course
+{
+  code;
+  key { }
+}

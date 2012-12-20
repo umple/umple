@@ -1,0 +1,45 @@
+ <%@ jet package="cruise.data.impl.bundles" 
+imports="java.util.* cruise.umple.compiler.*  cruise.umple.compiler.Attribute cruise.model.abstractObjects.BackingObject"
+class="ResourceBundle"  skeleton="../skeleton/IGenerator.skeleton" %>
+
+<% 	
+	BackingObject bckObject =(BackingObject)argument;
+	ArrayList<Attribute> keyClasses = bckObject.getKeysAttributes(); 
+	List<AssociationVariable> mergeList= new ArrayList<AssociationVariable>();
+	mergeList.addAll( bckObject.getConstructorOneAsociations());
+	mergeList.addAll(bckObject.getZeroOrOneAsociations());
+	List<AssociationVariable> zeroManyToOptionalAssociations=bckObject.getZeroManyToOptionalAssociations();
+	List<AssociationVariable> nManyToOptionalAssociations=bckObject.getNManyToOptionalAssociations();
+	List<AssociationVariable> manyToOneAssociations=bckObject.getManyToOneAssociations();
+	List<AssociationVariable> mandatoryToSingletonAssociations= bckObject.getMandatoryToSingletonAssociations();
+    List<AssociationVariable> optionalToSingletonAssociations= bckObject.getOptionalToSingletonAssociations();
+	List<AssociationVariable> manyToOneSingletonAssociations=bckObject.getManyToOneSingletonAssociations();
+%>
+<%=bckObject.getClassName()+"ClassName"%>=<%=bckObject.getClassName().trim()%>
+<% for (Attribute attVar: keyClasses) { %>
+<%= attVar.getUpperCaseName()%>= <%= attVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (Attribute attVar: bckObject.getAttVariables()) { %>
+<%= attVar.getUpperCaseName()%>= <%= attVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: mergeList) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: zeroManyToOptionalAssociations) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: nManyToOptionalAssociations) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: manyToOneAssociations) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: mandatoryToSingletonAssociations) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: optionalToSingletonAssociations) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>
+<% for (AssociationVariable assocVar: manyToOneSingletonAssociations) { %>
+<%=assocVar.getUpperCaseName()%>=<%=assocVar.getUpperCaseName().trim()%>
+<% } %>

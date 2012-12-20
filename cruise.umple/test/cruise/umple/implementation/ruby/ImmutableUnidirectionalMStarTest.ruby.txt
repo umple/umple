@@ -1,0 +1,103 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :number
+
+  #Student Associations - for documentation purposes
+  #attr_reader :mentors
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number, all_mentors)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @can_set_number = false
+    @can_set_mentors = true
+    @mentors = []
+    did_add_mentors = set_mentors(all_mentors)
+    raise "Unable to create Student, must have at least 1 @mentors" unless did_add_mentors 
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def get_number
+    @number
+  end
+
+  def get_mentor(index)
+    a_mentor = @mentors[index]
+    a_mentor
+  end
+
+  def get_mentors
+    new_mentors = @mentors.dup
+    new_mentors
+  end
+
+  def number_of_mentors
+    number = @mentors.size
+    number
+  end
+
+  def has_mentors
+    has = @mentors.size > 0
+    has
+  end
+
+  def index_of_mentor(a_mentor)
+    index = @mentors.index(a_mentor)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_mentors
+    1
+  end
+
+  def set_mentors(new_mentors)
+    was_set = false
+    return false unless @can_set_mentors
+    @can_set_mentors = false
+    verified_mentors = []
+    new_mentors.each do |a_mentor|
+      next if (verified_mentors.include?(a_mentor))
+      verified_mentors << a_mentor
+    end
+
+    if verified_mentors.size != new_mentors.size or verified_mentors.size() < Student.minimum_number_of_mentors
+      return was_set
+    end
+
+    @mentors.clear
+    verified_mentors.each do |a_mentor|
+      @mentors << a_mentor
+    end
+
+    was_set = true
+    was_set
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
+end

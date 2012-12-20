@@ -1,0 +1,13 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.xml ;
+
+class DOMStorable 
+{
+depend java.io.*;
+
+  public void write(DOMOutput out) throws IOException;
+public void read(DOMInput in) throws IOException;
+
+}

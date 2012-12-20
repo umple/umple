@@ -1,0 +1,16 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class FigureLayerComparator 
+{
+depend java.util.*;
+
+  public final static FigureLayerComparator INSTANCE = new FigureLayerComparator();
+@Override
+    public int compare(Figure f1, Figure f2) {
+        return f1.getLayer() - f2.getLayer();
+    }
+
+}

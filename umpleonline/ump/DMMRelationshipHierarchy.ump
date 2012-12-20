@@ -1,0 +1,292 @@
+// This example refers to Figures 4 and 5 of 'The Dagstuhl Middle Metamodel: 
+// A Schema for Reverse Engineering', ATEM 2003, First International 
+// Workshop on Meta-Models and Schemas for Reverse Engineering, 
+// WCRE, Victoria, B.C., in Electronic Notes in Theoretical Computer
+// Science, Elsevier, Vol. 94, pp 7-18,
+// Authors: Lethbridge, T.C., Sander Tichelaar, and Erhard Ploedereder (2003) 
+
+// To load the entire DMM example at once, copy and paste all 
+// five DMM components (DMM*) into the editor.  Please note that the
+// position attributes of classes and associations will need to be 
+// re-adjusted, as the example has been made to display the diagrams 
+// as separate entities.
+
+class ModelRelationship{
+}
+
+class SourceRelationship{
+}
+
+class SourceModelRelationship{
+}
+
+class IsExpansionOf{
+  isA SourceRelationship;
+}
+
+class Describes{
+  isA SourceRelationship;
+}
+
+class Includes{
+  isA SourceRelationship;
+}
+
+class Contains{
+  isA SourceRelationship;
+}
+
+class Defines{
+  isA SourceModelRelationship;
+}
+
+class Declares{
+  isA SourceModelRelationship;
+}
+
+class InheritsFrom{
+  isA ModelRelationship;
+}
+
+class IsPartOf{
+  isA ModelRelationship;
+}
+
+class Invokes{
+  isA ModelRelationship;
+}
+
+class IsOfType{
+  isA ModelRelationship;
+}
+
+class Accesses{
+  isA ModelRelationship;
+}
+
+class IsDefinedInTermsOf{
+  isA ModelRelationship;
+}
+
+class IsPartOfSignatureOf{
+  isA ModelRelationship;
+}
+
+class IsActualParameterOf{
+  isA ModelRelationship;
+}
+
+class IsEnumerationLiteralOf{
+  isA IsPartOf;
+}
+
+class IsMethodOf{
+  isA IsPartOf;
+}
+
+class IsFieldOf{
+  isA IsPartOf;
+}
+
+class IsParameterOf{
+  isA IsPartOfSignatureOf;
+}
+
+class IsReturnTypeOf{
+  isA IsPartOfSignatureOf;
+}
+
+class Sets{
+  isA Accesses;
+}
+
+class Uses{
+  isA Accesses;
+}
+
+class TakesAddressOf{
+  isA Accesses;
+}
+
+class SetsComponent{
+  isA Sets;
+}
+
+class SetsObject{
+  isA Sets;
+}
+
+class UsesObject{
+  isA Uses;
+}
+
+class UsesComponent{
+  isA Uses;
+}
+
+class TakesAddressOfObject{
+  isA TakesAddressOf;
+}
+
+class TakesAddressOfComponent{
+  isA TakesAddressOf;
+}
+
+//$?[End_of_model]$?
+//Postioning
+
+//Postioning
+class TakesAddressOfComponent
+{
+  position 62 466 185 41;
+}
+
+class SourceModelRelationship
+{
+  position 698 11 177 42;
+}
+
+class TakesAddressOfObject
+{
+  position 264 465 157 41;
+}
+
+class IsEnumerationLiteralOf
+{
+  position 6 310 135 41;
+}
+
+class IsActualParameterOf
+{
+  position 779 221 144 42;
+}
+
+class IsPartOfSignatureOf
+{
+  position 625 221 148 42;
+}
+
+class IsDefinedInTermsOf
+{
+  position 485 223 135 41;
+}
+
+class SourceRelationship
+{
+  position 387 12 116 41;
+}
+
+class UsesComponent
+{
+  position 516 520 119 41;
+}
+
+class UsesObject
+{
+  position 397 520 109 41;
+}
+
+class SetsObject
+{
+  position 607 468 109 41;
+}
+
+class SetsComponent
+{
+  position 738 468 122 42;
+}
+
+class TakesAddressOf
+{
+  position 333 380 119 41;
+}
+
+class Uses
+{
+  position 457 432 109 41;
+}
+
+class Sets
+{
+  position 582 382 109 41;
+}
+
+class IsReturnTypeOf
+{
+  position 698 304 120 44;
+}
+
+class IsParameterOf
+{
+  position 579 305 109 41;
+}
+
+class IsFieldOf
+{
+  position 308 309 109 41;
+}
+
+class IsMethodOf
+{
+  position 180 310 109 41;
+}
+
+class Accesses
+{
+  position 426 290 109 39;
+}
+
+class IsOfType
+{
+  position 347 221 109 44;
+}
+
+class Invokes
+{
+  position 233 222 109 39;
+}
+
+class IsPartOf
+{
+  position 118 221 111 41;
+}
+
+class ModelRelationship
+{
+  position 50 138 110 41;
+}
+
+class InheritsFrom
+{
+  position 5 221 109 41;
+}
+
+class Declares
+{
+  position 809 93 109 41;
+}
+
+class Defines
+{
+  position 692 93 109 41;
+}
+
+class Contains
+{
+  position 564 93 109 41;
+}
+
+class Includes
+{
+  position 445 93 109 41;
+}
+
+class Describes
+{
+  position 325 93 109 41;
+}
+
+class IsExpansionOf
+{
+  position 202 93 109 41;
+}

@@ -1,0 +1,5 @@
+class LightFixture
+{
+	trace add(), subtract() for 5;
+	trace m(),n() for 100;
+}

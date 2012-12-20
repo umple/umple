@@ -1,0 +1,31 @@
+class A
+{
+  * -- * B;
+  * -- * C;
+}
+
+class B
+{
+}
+
+class C
+{
+   
+}
+
+class A
+{
+  position.association A__B 27,41 67,0;
+  position.association A__C 5,41 20,0;
+  position 131 37 109 41;
+}
+
+class B
+{
+  position 272 121 109 41;
+}
+
+class C
+{
+  position 169 214 109 41;
+}

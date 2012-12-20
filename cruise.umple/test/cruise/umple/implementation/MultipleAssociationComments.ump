@@ -1,0 +1,26 @@
+class Foo
+{
+	// Inline comment above association.
+	1 -- * Bar1;
+	
+	// Multiple inline comments
+	// above association.
+	1 -- * Bar2;
+	
+	/* Multiline comment above association. */
+	1 -- * Bar3;
+	
+	/*
+	 * Multiple multiline comments
+	 * above association.
+	 */
+	1 -- * Bar4;
+}
+
+class Bar1{}
+
+class Bar2{}
+
+class Bar3{}
+
+class Bar4{}

@@ -1,0 +1,33 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class CutAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.gui.datatransfer.ClipboardUtil;
+depend org.jhotdraw.util.*;
+  isA AbstractSelectionAction;
+
+  public final static String ID = "edit.cut";
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        JComponent c = target;
+        if (c == null && (KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                getPermanentFocusOwner() instanceof JComponent)) {
+            c = (JComponent) KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                    getPermanentFocusOwner();
+        }
+        if (c != null && c.isEnabled()) {
+            c.getTransferHandler().exportToClipboard(
+                    c,
+                    ClipboardUtil.getClipboard(),
+                    TransferHandler.MOVE);
+        }
+    }
+
+}

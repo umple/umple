@@ -1,0 +1,12 @@
+interface ISomething{
+  String getCode();
+}
+
+class Something
+{
+  implements ISomething;
+  
+  String getCode(){
+  	return 0;  
+  }
+}

@@ -1,0 +1,18 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg ;
+
+class Gradient 
+{
+depend java.awt.*;
+depend java.awt.geom.AffineTransform;
+depend org.jhotdraw.draw.*;
+
+  public Paint getPaint(Figure f, double opacity);
+public boolean isRelativeToFigureBounds();
+public void transform(AffineTransform tx);
+public Object clone();
+public void makeRelativeToFigureBounds(Figure f);
+
+}

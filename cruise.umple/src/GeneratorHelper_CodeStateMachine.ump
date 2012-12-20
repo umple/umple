@@ -1,0 +1,161 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This class provides helper methods of state machine related code generation.
+
+Please refer to GeneratorHelper_Code.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GeneratorHelper
+{
+    
+  // Currently no model-level post generate changes required
+  private static void postpareStateMachine(UmpleModel aModel)
+  {
+    
+  }
+
+  // Remove all internal state machine entities
+  private static void postpareStateMachine(UmpleClass aClass)
+  {
+    List<State> shouldDelete = new ArrayList<State>();
+    for (StateMachine sm : aClass.getAllStateMachines())
+    {
+      postpareInternalStates(sm,shouldDelete);
+    }
+
+    // Remove all internally created actions
+    for (StateMachine sm : aClass.getAllStateMachines())
+    {
+      for (State s : sm.getStates())
+      {
+        for (int i=s.numberOfTransitions()-1; i>=0; i--)
+        {
+          Transition t = s.getTransition(i);
+          if (t.getIsInternal())
+          {
+            t.delete();
+          }
+        }
+
+        for (int i=s.numberOfActions()-1; i>=0; i--)
+        {
+          Action a = s.getAction(i);
+          if (a.getIsInternal())
+          {
+            s.removeAction(a);
+          }
+        }
+      }
+    }
+    
+    for (int i=shouldDelete.size()-1; i>=0; i--)
+    {
+      State s = shouldDelete.get(i);
+      s.delete();
+    }
+  }  
+
+  public static void prepareAutoTransitions(StateMachine sm, CodeTranslator codeTranslate, Map<String,String> lookups)
+  {
+    for (State s : sm.getStates())
+    {
+      for (Transition t : s.getTransitions())
+      {
+        if (t.isAutoTransition())
+        {
+          String eventName = codeTranslate.translate("eventMethod",t.getEvent());
+          Action entryAction = new Action(StringFormatter.format(lookups.get("callEvent"),eventName));
+          entryAction.setIsInternal(true);
+          entryAction.setActionType("entry");
+          s.addAction(entryAction);
+        }
+      }
+    }
+  } 
+  
+  // Add the necessary entry action to delete the object once the final state is reached
+  public static void prepareFinalState(StateMachine sm, Map<String,String> lookups)
+  {
+    for (State s : sm.getStates())
+    {
+      if (s.isFinalState())
+      {
+        Action entryAction = new Action(lookups.get("deleteActionCode"));
+        entryAction.setIsInternal(true);
+        entryAction.setActionType("entry");
+        s.addAction(entryAction);
+      }
+    }
+  }  
+
+  // Add the necessary before / after hooks to support nested state machines
+  public static void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups)
+  {
+    String entryEventName = lookups.get("entryEventName");
+    String exitEventName = lookups.get("exitEventName");
+    String parentEntryActionCode = lookups.get("parentEntryActionCode");
+    String parentExitActionCode = lookups.get("parentExitActionCode");
+  
+    State parentState = sm.getParentState();
+    StateMachine firstSm = parentState.getNestedStateMachine(0);
+    State nullState = sm.addState("Null",0);
+    nullState.setIsInternal(true);
+
+    if (sm.getStartState() != null)
+    {
+  
+      if (concurrentIndex == 0 && parentExitActionCode != null)
+      {
+        Action parentExitAction = new Action(parentExitActionCode);
+        parentExitAction.setIsInternal(true);
+        parentExitAction.setActionType("exit");
+        parentState.addAction(parentExitAction,0);
+      }
+
+      Event enterEvent = firstSm.findOrCreateEvent(entryEventName);
+      enterEvent.setIsInternal(true);
+      Transition enterTransition = new Transition(nullState,sm.getStartState());
+      enterTransition.setIsInternal(true);
+      enterTransition.setEvent(enterEvent);
+
+      Event exitEvent = firstSm.findOrCreateEvent(exitEventName);
+      exitEvent.setIsInternal(true);
+  
+      for (State state : sm.getStates())
+      {
+        if (state == nullState) { continue; }
+        Transition exitTransition = state.addTransition(nullState,0);
+        exitTransition.setIsInternal(true);
+        exitTransition.setEvent(exitEvent);
+      }
+
+      Action parentEntryAction = new Action(parentEntryActionCode);
+      parentEntryAction.setActionType("entry");
+      parentEntryAction.setIsInternal(true);
+      parentState.addAction(parentEntryAction); 
+    }  
+  }
+
+  // Mark all internal states are ready for deletion
+  private static void postpareInternalStates(StateMachine sm, List<State> shouldDelete)
+  {
+    for (int i=sm.numberOfStates() - 1; i >= 0; i--)
+    {
+      State s = sm.getState(i);
+      if (s.getIsInternal())
+      {
+        shouldDelete.add(s);
+      }       
+    }
+  }
+
+}
+

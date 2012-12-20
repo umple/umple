@@ -1,0 +1,7 @@
+class LightFixture
+{
+	Integer id;
+	String name;
+	trace name during 50s;
+	trace id during 100ms;
+}

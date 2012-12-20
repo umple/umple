@@ -1,0 +1,35 @@
+namespace example;
+
+class Switch
+{
+  status
+  {
+    On
+    {
+      press -> Off;
+    }
+    
+    Off 
+    {
+      do { keepDoing(); }
+    }
+  }
+}
+
+class Lamp
+{
+  status
+  {
+    On
+    {
+      press -> Off;
+      do { alsoDo(); }
+    }
+    
+    Off 
+    {
+      press -> On;
+      do { keepDoing(); }
+    }
+  }
+}

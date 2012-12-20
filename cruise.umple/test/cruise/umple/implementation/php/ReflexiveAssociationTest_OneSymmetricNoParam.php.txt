@@ -1,0 +1,61 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class OneSymmetricNoParam
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //OneSymmetricNoParam Associations
+  private $friend;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aFriend = null)
+  {
+    if (func_num_args() == 0) { return; }
+
+    if ($aFriend == null || $aFriend->getFriend() != null)
+    {
+      throw new Exception("Unable to create OneSymmetricNoParam due to aFriend");
+    }
+    $this->friend = $aFriend;
+  }
+  public static function newInstance()
+  {
+    $thisInstance = new OneSymmetricNoParam();
+    $thisInstance->friend = new OneSymmetricNoParam($thisInstance);
+    return $thisInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getFriend()
+  {
+    return $this->friend;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $existingFriend = $this->friend;
+    $this->friend = null;
+    if ($existingFriend != null)
+    {
+      $existingFriend->delete();
+    }
+  }
+
+}
+?>

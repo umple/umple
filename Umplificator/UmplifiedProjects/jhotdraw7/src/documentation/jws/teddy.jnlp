@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP File for JHotDraw Sample Application -->
+<jnlp
+  spec="1.5.0+"
+  codebase="http://www.randelshofer.ch/oop/jhotdraw"
+  href="http://www.randelshofer.ch/oop/jhotdraw/Documentation/jws/teddy.jnlp">
+  <information>
+    <title>JHotDraw Teddy</title>
+    <vendor>Werner Randelshofer</vendor>
+    <homepage href="http://www.randelshofer.ch/oop/jhotdraw"/>
+    <description kind="short">JHotDraw Teddy Sample Application.</description>
+    <description kind="one-line">JHotDraw Teddy Sample Application.</description>
+    <description kind="tooltip">JHotDraw Teddy</description>
+    <offline-allowed/>
+    <shortcut online="false">
+    	<desktop/>
+    	<menu submenu="JHotDraw"/>
+    </shortcut>
+  </information>
+  <security> 
+      <all-permissions/> 
+  </security> 
+  <resources>
+    <j2se version="1.5+" initial-heap-size="64m" max-heap-size="512m" />
+ 	<nativelib href="Samples/Teddy/signed/libquaqua.jnilib.jar"/>
+ 	<nativelib href="Samples/Teddy/signed/libquaqua64.jnilib.jar"/>
+ 	<jar href="Samples/Teddy/signed/JHotDraw%20Teddy.jar"/>
+  </resources>
+  <application-desc main-class="org.jhotdraw.samples.teddy.Main"/>
+</jnlp> 

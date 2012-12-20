@@ -1,0 +1,30 @@
+class Foo
+{
+	// Inline comment above method.
+	void testMethod1()
+	{
+		System.out.println("Hello world!");
+	}
+	
+	// Multiple inline comments
+	// above method.
+	void testMethod2()
+	{
+		System.out.println("Hello world!");
+	}
+	
+	/* Multiline comment above method. */
+	void testMethod3()
+	{
+		System.out.println("Hello world!");
+	}
+	
+	/*
+	 * Multiple multiline comments
+	 * above method.
+	 */
+	void testMethod4()
+	{
+		System.out.println("Hello world!");
+	}
+}

@@ -1,0 +1,21 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+{ 
+  boolean hasTimedEvents = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    for (Event e : sm.getEvents())
+    {
+      if (e.getIsTimer())
+      {
+        hasTimedEvents = true;
+        %><%@ include file="state_machine_Event_StartStopTimer.jet" %><%
+      }
+    }
+  }
+  if (hasTimedEvents)
+  {
+    %><%@ include file="state_machine_timedEvent_Handler.jet" %><%
+  }
+}
+%>

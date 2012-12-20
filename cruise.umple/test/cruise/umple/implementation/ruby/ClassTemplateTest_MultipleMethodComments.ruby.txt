@@ -1,0 +1,65 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Foo
+
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def delete
+    @deleted = true
+  end
+
+
+  =begin
+  Inline comment above method.
+  =end
+  def testMethod1()
+    // I am a comment inside a method.
+  end
+
+
+  =begin
+  Multiple inline comments
+  above method.
+  =end
+  def testMethod2()
+    // I am a comment inside a method.
+  end
+
+
+  =begin
+  Multiline comment above method.
+  =end
+  def testMethod3()
+    // I am a comment inside a method.
+  end
+
+
+  =begin
+  Multiple multiline comments
+  above method.
+  =end
+  def testMethod4()
+    // I am a comment inside a method.
+  end
+
+
+
+end

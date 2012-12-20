@@ -1,0 +1,92 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Mentor
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Mentor theInstance = null;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+
+  //Mentor Associations
+  private Student student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  private Mentor()
+  {
+    name = null;
+  }
+
+  public static Mentor getInstance()
+  {
+    if(theInstance == null)
+    {
+      theInstance = new Mentor();
+    }
+    return theInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public boolean setStudent(Student aStudent)
+  {
+    boolean wasSet = false;
+    Student existingStudent = student;
+    student = aStudent;
+    if (existingStudent != null && !existingStudent.equals(aStudent))
+    {
+      existingStudent.removeMentor(this);
+    }
+    if (aStudent != null)
+    {
+      aStudent.addMentor(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (student != null)
+    {
+      Student placeholderStudent = student;
+      this.student = null;
+      placeholderStudent.removeMentor(this);
+    }
+  }
+
+}

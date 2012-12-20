@@ -1,0 +1,32 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%>)
+  {
+    bool
+    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    if (<%=gen.translate("parameterNew",av)%> == NULL)
+    {
+      //Unable to <%=gen.translate("setMethod",av)%> to null, as <%=gen.relatedTranslate("associationOne",av)%> must always be associated to a <%=gen.translate("associationOne",av)%>
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
+      return wasSet;
+    }
+    
+    <%=gen.relatedTranslate("type",av)%>* <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterNew",av)%>-><%=gen.relatedTranslate("getMethod",av)%>();
+    if (<%=gen.relatedTranslate("parameterExisting",av)%> != NULL && !=<%=gen.relatedTranslate("parameterExisting",av)%>)
+    {
+      //Unable to <%=gen.translate("setMethod",av)%>, the current <%=gen.translate("associationOne",av)%> already has a <%=gen.relatedTranslate("associationOne",av)%>, which would be orphaned if it were re-assigned
+      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
+      return wasSet;
+    }
+    
+    <%=gen.translate("type",av)%>* <%=gen.translate("parameterOld",av)%> = <%=gen.translate("associationOne",av)%>;
+    <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterNew",av)%>;
+    <%=gen.translate("associationOne",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(this);
+
+    if (<%=gen.translate("parameterOld",av)%> != NULL)
+    {
+      <%=gen.translate("parameterOld",av)%>-><%=gen.relatedTranslate("setMethod",av)%>(null);
+    }
+    wasSet = true;
+    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
+    return wasSet;
+  }

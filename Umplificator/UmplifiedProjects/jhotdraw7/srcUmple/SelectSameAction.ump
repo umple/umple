@@ -1,0 +1,31 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class SelectSameAction 
+{
+depend org.jhotdraw.draw.DrawingEditor;
+depend org.jhotdraw.draw.Figure;
+depend java.util.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  public final static String ID = "edit.selectSame";
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        selectSame();
+    }
+public void selectSame() {
+        HashSet<Class> selectedClasses = new HashSet<Class>();
+        for (Figure selected : getView().getSelectedFigures()) {
+            selectedClasses.add(selected.getClass());
+        }
+        for (Figure f : getDrawing().getChildren()) {
+            if (selectedClasses.contains(f.getClass())) {
+                getView().addToSelection(f);
+            }
+        }
+    }
+
+}

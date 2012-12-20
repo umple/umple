@@ -1,0 +1,424 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses trace related tokens to populate the Umple meta model for
+traces.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+
+  //****************************************
+  //********* Trace Glue Code   ************
+  //****************************************
+
+private void analyzeTraceToken(Token token, int analysisStep)
+  {
+    
+    if (analysisStep != 1)
+    {
+      return;
+    }
+    
+    if (token.is("traceType"))
+    {
+      model.setTraceType(token.getValue("traceType"));
+    }
+  }
+  
+  // Process trace related tokens within the context of a class
+  private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
+  {
+    // Only process trace tokens once all other entities have been analyzed
+    if (analysisStep == 1 || shouldProcessClassAgain)
+    {
+      shouldProcessClassAgain = true;
+      return;
+    }
+    
+    // Analyze trace statement token
+    if (token.is("trace"))
+    {
+    	analyzeTraceStatement(aClass, token);
+    }
+  }
+  
+  // Process Trace statement subtokens. Token could be trace directive or trace case
+  private void analyzeTraceStatement( UmpleClass aClass, Token token)
+  {
+	  TraceDirective traceDirective = new TraceDirective();
+	  Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+      MethodTraceEntity mte = new MethodTraceEntity();
+      TraceRecord traceRecord = null;
+      traceDirective.setUmpleClass(aClass);
+      
+      boolean isFirst = true;
+      
+      for( Token traceToken : token.getSubTokens() )
+      {
+
+    	  if( traceToken.is("trace_entity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
+    	  {
+    		  analyzeTraceItem( traceToken , traceDirective , mte, traceAttr);
+    	  }
+    	  else if( traceToken.is("traceWhere") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
+    		  traceDirective.addCondition(tc);
+    	  }
+    	  else if( traceToken.is("traceGiving") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "giving");
+    		  traceDirective.addCondition(tc);
+    	  }
+    	  else if ( traceToken.getName().equals("giving") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( token, "giving");
+    		  traceDirective.addCondition(tc);
+    		  Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("LHS"));
+    		  traceAttr.addAttribute(attr);
+    	  }
+    	  else if( traceToken.is("traceUntil") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
+    		  traceDirective.addCondition(tc);
+    	  }
+    	  else if( traceToken.is("traceAfter") )
+    	  {
+    		  TraceCondition tc = analyzeTraceCondition( traceToken, "after");
+    		  traceDirective.addCondition(tc);
+    	  }  	  
+    	  else if( traceToken.is("trace_for") )
+    	  {
+    		  traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for")));
+    	  } 	  
+    	  else if( traceToken.is("trace_period") )
+    	  {
+    		  traceAttr.setPeriodClause(token.getValue("trace_period"));
+    	  }	  
+    	  else if( traceToken.is("trace_duration") )
+    	  {
+    		  traceAttr.setDuringClause(token.getValue("trace_duration"));
+    	  }
+    	  else if( traceToken.is("trace_record") || traceToken.getName().equals("only") )
+    	  {
+    		  if( isFirst )
+    		  {
+    			  traceRecord = new TraceRecord(traceDirective);
+    			  analyzeTraceRecord(traceDirective,traceToken,traceRecord);
+    			  isFirst = false;
+    		  }
+    		  else
+    			  analyzeTraceRecord(traceDirective,traceToken,traceRecord);
+    	  }
+    	  else if( traceToken.is("trace_execute") )
+    	  {
+    		  traceAttr.setExecuteClause(token.getValue("trace_execute"));
+    	  }  
+    	  else if( traceToken.is("tracecase_name") )
+    	  {
+    		  analyzeTraceCaseToken( aClass , token );
+    		  return;
+    	  }
+      }
+      
+      if( traceAttr.numberOfAttributes() > 0 )
+    	  traceDirective.addAttributeTraceItem(traceAttr);
+      
+  }
+  
+  // Analyze trace record in a trace directive
+  private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord) 
+  {
+	  String record = token.getValue("trace_record");
+	  Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
+	  
+	  // trace only what is in the record entity
+	  if( token.getName().equals("only") )
+		  traceRecord.setRecordOnly(true);  
+	  // recording a String 
+	  else if( record.contains("\"") )
+		  traceRecord.setRecord(record);
+	  // recording an attribute
+	  else if( attr != null )
+		  traceRecord.addAttribute(attr);
+  }
+
+  // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
+  private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, Attribute_TraceItem traceAttr)
+  {
+	  Attribute attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
+	  String methodName = traceToken.getValue("trace_entity");
+	  
+	  // here, i faced a problem of finding traced state machine because
+	  // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
+	  analyzeStateMachineTraceItem(traceToken,traceDirective);
+	  analyzeAssociationTraceItem(traceToken,traceDirective);
+	  if( traceToken.getName().equals("entry") )
+	  {
+		  mte.setEntry(true);
+		  
+	  }
+	  else if( traceToken.getName().equals("exit") )
+	  {
+		  mte.setExit(true);
+	  }
+	  
+	  // if trace entity is a method
+	  if( methodName != null && methodName.contains("("))
+	  {
+		  if( mte.getName() !=  null)
+		  {
+			  mte = new MethodTraceEntity();
+		  }
+		  mte.setName(methodName);
+		  traceDirective.addMethodTraceEntity(mte);
+	  }
+	  // if trace entity is an attribute
+	  else if( attr != null )
+	  {
+		  traceAttr.addAttribute(attr);
+		  if( traceToken.getParentToken().getSubToken(1).getName().equals("set") )
+		  {
+			  traceAttr.setTraceSet(true);
+		  }
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("get") )
+		  {
+			  traceAttr.setTraceSet(false);
+			  traceAttr.setTraceGet(true);
+		  }
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("set,get") )
+		  {
+			  traceAttr.setTraceSet(true);
+			  traceAttr.setTraceGet(true);
+		  }
+	  }
+  }
+  
+  private void analyzeStateMachineTraceItem( Token traceToken, TraceDirective traceDirective)
+  {
+	  List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+	  StateMachine stm = null;
+	  State state = null;
+	  String stmTraceItem = traceToken.getValue("trace_entity");
+	  	  
+	  if( traceToken.getParentToken().getSubToken(1).getName().equals("transition"))
+	  {
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();
+
+		  for( int i = 0 ; i < stms.size() ; ++i )
+		  {
+			  for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+			  {
+				  State nestedState = stms.get(i).getState(j);
+				  for( int k = 0 ; k < nestedState.numberOfTransitions() ; ++k )
+				  {
+					  if( nestedState.getTransition(k).getEvent().getName().equals(traceToken.getValue()) )
+					  {
+						  tracedStm.setTransition(nestedState.getTransition(k));
+						  tracedStm.setStateMachine(stms.get(i));
+						  traceDirective.addStateMachineTraceItem(tracedStm);
+					  }
+				  }
+			  }
+		  }
+		  
+	  }
+		  
+	  if( stmTraceItem != null && stmTraceItem.contains("."))
+	  {
+		  String delimiter = "\\.";
+		  String[] temp = stmTraceItem.split(delimiter);
+		  stmTraceItem = temp[temp.length-1];
+	  }
+	  
+	  for( int i = 0 ; i < stms.size() ; ++i )
+	  {
+		  for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+		  {
+			  State nestedState = stms.get(i).getState(j);
+			  if( nestedState.getName().equals(stmTraceItem))
+			  {
+				  stm = new StateMachine(stms.get(i).getName());
+				  stm.addState(nestedState);
+				  state = nestedState;
+				  break;
+			  }  
+		  }
+		  if( stms.get(i).getFullName().equals(stmTraceItem))
+		  {
+			  stm = stms.get(i);
+			  break;
+		  }
+	  }
+	  
+	  // if trace entity is a state machine  
+	  if( stm != null && state == null )
+	  {	  
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();	
+		  tracedStm.setStateMachine(stm);
+		  tracedStm.setEntry(true);
+		  tracedStm.setExit(true);
+		  tracedStm.setTraceStateMachineFlag(true);
+		  traceDirective.addStateMachineTraceItem(tracedStm);
+	  }  
+	  // if trace entity is a state 
+	  else if( state != null )  
+	  {
+		  StateMachine_TraceItem tracedStm = new StateMachine_TraceItem();
+		  tracedStm.setStateMachine(stm);
+		  if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )  
+		  {
+			  tracedStm.setEntry(true); 
+			  tracedStm.setExit(false);  
+		  } 
+		  else if( traceToken.getParentToken().getSubToken(1).getName().equals("exit") )
+		  {
+			  tracedStm.setEntry(false);
+			  tracedStm.setExit(true);  
+		  }  
+		  else
+		  {
+			  tracedStm.setEntry(true);
+			  tracedStm.setExit(true);  
+		  }
+		  traceDirective.addStateMachineTraceItem(tracedStm); 
+	  }
+  }
+
+  private void analyzeAssociationTraceItem( Token traceToken, TraceDirective traceDirective)
+  {
+	  if( traceToken.getParentToken().getSubToken(1).getName().equals("cardinality") )  
+	  {
+		  for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
+		  {
+			  if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+				  traceDirective.setAssociationVariable(aVar);
+		  }
+		  
+		  
+	  }
+  }
+  
+  // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
+  // Returns a trace condition filled with left and right hands operands, with comparison operator used
+  private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType )
+  {
+	  ConditionRhs rhs = new ConditionRhs();
+	  TraceCondition tc = new TraceCondition(rhs);
+	  tc.setConditionType(conditionType);
+	  for( Token subToken : traceConditionToken.getSubTokens() )
+	  {
+		  if(subToken.is("LHS"))
+			  tc.setLhs(subToken.getValue("LHS"));
+		  if(subToken.is("comparison_operator"))
+			  rhs.setComparisonOperator(subToken.getValue("comparison_operator"));
+		  if(subToken.is("RHS"))
+			  rhs.setRhs(subToken.getValue("RHS"));
+	  }
+	  tc.setRhs(rhs);
+	  return tc;
+  }
+  
+  // Analyzes trace case token and its subtokens (i.e. trace directive tokens)
+  public void analyzeTraceCaseToken( UmpleClass aClass , Token token )
+  {
+	  TraceCase tca = new TraceCase();
+	  TraceDirective td = new TraceDirective();
+	  td.setUmpleClass(aClass);
+	  // set trace case name
+	  tca.setName(token.getValue("tracecase_name"));
+	  
+	  for( Token traceToken : token.getSubTokens() )
+	  { 
+		  // "trace" indicates the beginning of a trace directive
+		  if( traceToken.getName().equals("trace") )
+		  {
+			  td = new TraceDirective();
+			  td.setUmpleClass(aClass);
+		  }
+		  // ";" indicates the end of a trace directive, once true, then the trace directive is added to the trace case
+		  else if( traceToken.getName().equals(";") )
+		  {
+			  tca.addTraceDirective(td);
+		  }
+		  else
+			  analyzeTraceDirectiveFragments( td , aClass , traceToken, token );
+	  }
+	  aClass.addTraceCase(tca);
+  }
+  
+  // Modified version of method "analyzeTraceDirective"
+  // This method analyzes trace directive fragments inside a trace case
+  private void analyzeTraceDirectiveFragments( TraceDirective traceDirective , UmpleClass aClass , Token traceToken , Token token )
+  {
+	  Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+      MethodTraceEntity mte = new MethodTraceEntity();
+      
+      if( traceToken.is("trace_entity") )  
+      {
+    	  analyzeTraceItem( traceToken , traceDirective , mte, traceAttr );
+      }
+      else if( traceToken.getName().equals("entry") )
+      {
+    	  mte.setEntry(true);  
+      }	
+      else if( traceToken.getName().equals("exit") )	
+      { 	
+    	  mte.setExit(true);  	  
+      }   	
+      else if( traceToken.is("traceWhere") )
+	  {
+		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
+		  traceDirective.addCondition(tc);
+	  }
+	  else if( traceToken.is("traceUntil") )
+	  {
+		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
+		  traceDirective.addCondition(tc);
+	  }
+	  else if( traceToken.is("traceAfter") )
+	  {
+		  TraceCondition tc = analyzeTraceCondition( traceToken, "after");
+		  traceDirective.addCondition(tc);
+	  }	    	
+      else if( traceToken.is("trace_for") )  	
+      {	
+    	  traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for"))); 	  
+      } 	     	
+      else if( traceToken.is("trace_period") )   	
+      {  	
+    	  traceAttr.setPeriodClause(token.getValue("trace_period"));   	  
+      }	     	
+      else if( traceToken.is("trace_duration") )   	
+      {   	
+    	  traceAttr.setDuringClause(token.getValue("trace_duration"));   	  
+      }	     	
+      else if( traceToken.is("trace_execute") )   	
+      { 	
+    	  traceAttr.setExecuteClause(token.getValue("trace_execute")); 	  
+      }
+      
+      if( traceAttr.numberOfAttributes() > 0 )
+    	  traceDirective.addAttributeTraceItem(traceAttr);
+  }
+  
+  // Perform post token analysis on trace related elements of the Umple language
+  private void postTokenTraceAnalysis()
+  {
+  }
+  
+  //****************************************
+  //********* End of Trace Glue Code   *****
+  //****************************************
+  
+} 

@@ -1,0 +1,16 @@
+myTitle2
+Misc
+@@description
+This is
+my content2
+
+@@syntax
+the syntax looks like this2
+
+@@example
+one example to consider
+@@endexample
+
+@@example
+a second example to consider
+@@endexample

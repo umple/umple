@@ -1,0 +1,109 @@
+Association Class Definition
+Associations
+noreferences
+
+@@description
+<p>      
+An association class defines an object-oriented pattern to manage * to * (many to many) associations when data needs to be stored about each link of that association.
+</p>
+
+<p>An association class is a class and can have all the items found in a class. However it
+always has two one-to-many associations to classes that otherwise would have had a many-to-many relationship.</p>
+
+<p>Association classes in Umple are under development still. Some changes will
+be forthcoming. At the current time, all attributes but one must have = followed by
+a value to initialize them. Also Association classes are supposed to end up being like
+two 1-* associations; currently in Umple they appear like two 0..1-* associations.</p>
+
+<p>
+Please note that an association class must define both star "*" ends; otherwise use a simple class instead.
+</p>
+
+@@syntax
+[[associationClassDefinition]] [[associationClassContent]] [[singleAssociationEnd]]
+
+@@example
+// A person can attend many seminars,
+// and a seminar can be attended by many people
+// The relationship between Person and Seminar is thus
+// many-to-many.
+//
+// There is, however, data to record about each ticket.
+// This can be  recorded as an association class
+//
+// Note the following doesn't currently render
+// in UmpleOnline using Correct UML association class
+// notation. There are plans to fix this.
+associationClass Ticket
+{
+  Integer ticketNumber;
+  Double price = 0.0;
+  
+  * Person attendee;
+  * Seminar;
+}
+
+class Person
+{
+  name;
+}
+
+class Seminar
+{
+  Date when;
+  address;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 333 125 109 60;
+}
+
+class Ticket
+{
+  position.association Person:attendee__Ticket 166,48 0,23;
+    position.association Seminar__Ticket 30,77 30,0;
+position 50 10 166 77;
+}
+@@endexample
+
+@@example
+// The following shows the same example as using a regular class
+// Instead of an association class
+class Ticket
+{
+  Integer ticketNumber;
+  Double price = 0.0;
+  
+  1 -- * Person attendee;
+  1 -- * Seminar;
+}
+
+class Person
+{
+  name;
+}
+
+class Seminar
+{
+  Date when;
+  address;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 331 83 109 60;
+}
+
+class Ticket
+{
+  position 41 62 166 77;
+  position.association Seminar__Ticket 29,80 30,0;
+  position.association Person:attendee__Ticket 174,44 0,19;
+}
+
+class Seminar
+{
+  position 40 233 120 77;
+}
+@@endexample

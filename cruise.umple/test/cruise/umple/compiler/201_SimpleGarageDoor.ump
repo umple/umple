@@ -1,0 +1,99 @@
+// with sample generated code
+
+class Garage {
+
+  String door
+  {
+    state Closed
+    {
+      entry / stopMotor;
+      exit / startMotor;
+      pressButton -> Open;
+    }
+    
+    state Open
+    {
+      entry / stopMotor;
+      exit / startMotor;
+      pressButton -> Closed;
+    }
+   
+  }    
+
+    public void startMotor()
+    {
+      System.out.println("Start motor");
+    }
+
+    public void stopMotor()
+    {
+      System.out.println("Stop motor");
+    } 
+
+}
+
+
+public Garage
+{
+  String door;
+  
+  public Garage()
+  {
+    door = "Closed";
+  }
+
+  public pressButton()
+  {
+    if ("Closed".equals(door))
+    {
+      setDoor("Open");
+    }
+    else if ("Open".equals(door))
+    {
+      setDoor("Closed");
+    }
+  }
+
+  public void startMotor()
+  {
+    System.out.println("Start motor");
+  }
+
+  public void stopMotor()
+  {
+    System.out.println("Stop motor");
+  }  
+  
+  private void setDoor(String aDoor)
+  {
+   
+    // Exit actions
+    if ("Closed".equals(door))
+    {
+      startMotor();
+    }
+    else if ("Open".equals(door))
+    {
+      startMotor();
+    }
+          
+    // Entry actions
+    if ("Closed".equals(aDoor))
+    {
+      stopMotor();
+    }
+    else if ("Open".equals(aDoor))
+    {
+      stopMotor();
+    }
+    
+
+    door = aDoor;
+  }
+  
+  
+  
+  
+}
+
+public void stopMotor() { System.out.println("Stopping Motor");

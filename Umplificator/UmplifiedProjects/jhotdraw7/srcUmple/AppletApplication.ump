@@ -1,0 +1,74 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app ;
+
+class AppletApplication 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend javax.swing.*;
+  isA AbstractApplication;
+
+  private JApplet applet;
+@Nullable private View view;
+@Override
+    public void init() {
+        super.init();
+        initLabels();
+        setActionMap(model.createActionMap(this, null));
+        model.initApplication(this);
+    }
+@Override
+    public void show(View v) {
+        this.view = v;
+        applet.getContentPane().removeAll();
+        applet.getContentPane().add(v.getComponent());
+        v.start();
+        v.activate();
+    }
+@Override
+    public void hide(View v) {
+        v.deactivate();
+        v.stop();
+        applet.getContentPane().removeAll();
+        this.view = null;
+    }
+@Override
+    public View getActiveView() {
+        return view;
+    }
+@Override
+    public boolean isSharingToolsAmongViews() {
+        return false;
+    }
+@Override
+    public Component getComponent() {
+        return applet;
+    }
+@Override
+    protected ActionMap createViewActionMap(View p) {
+        return new ActionMap();
+    }
+@Override
+    public JMenu createFileMenu(View v) {
+        return null;
+    }
+@Override
+    public JMenu createEditMenu(View v) {
+        return null;
+    }
+@Override
+    public JMenu createViewMenu(View v) {
+        return null;
+    }
+@Override
+    public JMenu createWindowMenu(View v) {
+        return null;
+    }
+@Override
+    public JMenu createHelpMenu(View v) {
+        return null;
+    }
+
+}

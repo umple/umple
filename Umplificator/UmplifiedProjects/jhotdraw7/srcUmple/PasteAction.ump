@@ -1,0 +1,42 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.edit ;
+
+class PasteAction 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.*;
+depend java.awt.datatransfer.*;
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.gui.datatransfer.ClipboardUtil;
+depend org.jhotdraw.util.*;
+  isA AbstractSelectionAction;
+
+  public final static String ID = "edit.paste";
+@Override
+    public void actionPerformed(ActionEvent evt) {
+        JComponent c = target;
+        if (c == null && (KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                getPermanentFocusOwner() instanceof JComponent)) {
+            c = (JComponent) KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                    getPermanentFocusOwner();
+        }
+        if (c != null && c.isEnabled()) {
+            Transferable t = ClipboardUtil.getClipboard().getContents(c);
+            if (t != null && c.getTransferHandler() != null) {
+                c.getTransferHandler().importData(
+                        c,
+                        t);
+            }
+        }
+    }
+@Override
+    protected void updateEnabled() {
+        if (target != null) {
+            setEnabled(target.isEnabled());
+        }
+    }
+
+}

@@ -1,0 +1,77 @@
+<%@ jet package="cruise.umple.compiler.php" class="PhpClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%
+  UmpleClass uClass = (UmpleClass) uElement;
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  PhpGenerator gen = new PhpGenerator();
+  gen.setModel(model);
+
+  HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
+  for (CodeInjection inject : uClass.getCodeInjections())
+  {
+    String operation = StringFormatter.toUnderscore(inject.getOperation());
+    String key = inject.getType() + ":" + operation;
+    String newCodeToInject = "";
+    if (codeInjectionMap.containsKey(key))
+    {
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+    }
+    else
+    {
+      newCodeToInject = inject.getCode();
+    }
+    codeInjectionMap.put(key,newCodeToInject);
+  }
+
+  boolean isFirst = true;
+
+%>
+<?php
+<%@ include file="UmpleNotice.jet" %>
+
+<% if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } %>
+class <%= uClass.getName() %><%= gen.translate("isA",uClass) %>
+{
+  <%@ include file="members_AllStatics.jet" %>
+  <%@ include file="members_AllAttributes.jet" %>
+  <%@ include file="members_AllStateMachines.jet" %>
+  <%@ include file="members_AllDoActivities.jet" %>
+  <%@ include file="members_AllAssociations.jet" %>
+  <%@ include file="members_AllHelpers.jet" %>
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  <%@ include file="constructor_Declare_All.jet" %>
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  <%@ include file="attribute_Set_All.jet" %>
+  <%@ include file="attribute_Get_All.jet" %>
+  <%@ include file="attribute_IsBoolean_All.jet" %>
+  <%@ include file="state_machine_Get_All.jet" %>
+  <%@ include file="state_machine_Events_All.jet" %>
+  <%@ include file="state_machine_Set_All.jet" %>
+  <%@ include file="association_Get_All.jet" %>
+  <%@ include file="association_Set_All.jet" %>
+<% if (uClass.getKey().isProvided()) { %>
+  <%@ include file="equals.jet" %>
+<% } else { %>
+  <%@ include file="equals_default.jet" %>
+<% } %>
+  <%@ include file="delete_All.jet" %>
+<% if (uClass.hasMethods()) { %>
+  <%@ include file="class_MethodDeclaration.jet" %>
+<% } %>
+<% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  <%=uClass.getExtraCode()%>
+<% } %>
+  <%@ include file="trace.jet" %>
+}
+?>

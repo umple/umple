@@ -1,0 +1,84 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.undo ;
+
+class CompositeEdit 
+{
+depend javax.swing.undo.*;
+  isA CompoundEdit;
+
+  private String presentationName;
+private boolean isSignificant;
+private boolean isVerbose;
+public void setVerbose(boolean b) {
+        isVerbose = b;
+    }
+/**
+     * Returns the presentation name.
+     * If the presentation name is null, then CompoundEdit.getPresentatioName
+     * is returned.
+     * @see javax.swing.undo.CompoundEdit#getPresentationName()
+     */
+    @Override
+    public String getPresentationName() {
+        return (presentationName != null) ? presentationName : super.getPresentationName();
+    }
+/**
+     * Returns the undo presentation name.
+     * If the presentation name is null, then CompoundEdit.getUndoPresentationName
+     * is returned.
+     * @see javax.swing.undo.CompoundEdit#getUndoPresentationName()
+     */
+    @Override
+    public String getUndoPresentationName() {
+        return ((presentationName != null) ? UndoRedoManager.getLabels().getString("edit.undo.text")+" "+presentationName : super.getUndoPresentationName());
+    }
+/**
+     * Returns the redo presentation name.
+     * If the presentation name is null, then CompoundEdit.getRedoPresentationName
+     * is returned.
+     * @see javax.swing.undo.CompoundEdit#getRedoPresentationName()
+     */
+    @Override
+    public String getRedoPresentationName() {
+        return ((presentationName != null) ? UndoRedoManager.getLabels().getString("edit.redo.text")+" "+presentationName : super.getRedoPresentationName());
+    }
+/**
+     * If this edit is inProgress, accepts anEdit and returns
+     * true.
+     *
+     * <p>The last edit added to this CompositeEdit is given a
+     * chance to addEdit(anEdit). If it refuses (returns false), anEdit is
+     * given a chance to replaceEdit the last edit. If anEdit returns
+     * false here, it is added to edits.</p>
+     *
+     * <p>If the CompositeEdit is added to itself, then method end()
+     * is called, and true is returned.</p>
+     */
+    @Override
+    public boolean addEdit(UndoableEdit anEdit) {
+        if (anEdit == this) {
+                end();
+            return true;
+        } else if (isInProgress() && (anEdit instanceof CompositeEdit)) {
+            return true;
+        } else {
+            return super.addEdit(anEdit);
+        }
+    }
+/**
+     * Returns false if this edit is insignificant - for example one
+     * that maintains the user's selection, but does not change
+     * any model state.
+     */
+    @Override
+    public boolean isSignificant() {
+        return (isSignificant) ? super.isSignificant() : false;
+        //return isSignificant;
+    }
+public void setSignificant(boolean newValue) {
+      isSignificant = newValue;
+    }
+
+}

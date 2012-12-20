@@ -1,0 +1,15 @@
+use SVGTextFigure.ump;
+use LinkHandle.ump;
+use SVGAttributedFigure.ump;
+use package-info.ump;
+use SVGEllipseFigure.ump;
+use SVGRectRadiusHandle.ump;
+use SVGPathOutlineHandle.ump;
+use SVGRectFigure.ump;
+use SVGBezierFigure.ump;
+use SVGGroupFigure.ump;
+use SVGPathFigure.ump;
+use SVGFigure.ump;
+use SVGTextAreaFigure.ump;
+use SVGImageFigure.ump;
+use ConvexHullOutlineHandle.ump;

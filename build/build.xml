@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="Umple">
+  
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <target name="build" >
+    <trycatch property="foo" reference="bar">
+      <try>
+        <antcall target="qaBuildingPage" />
+
+        <echo>Building Sandbox for Testing Infrastructure</echo>
+        <ant antfile="build/build.sandbox.xml" target="build" inheritAll="false" />
+
+        <echo>Building Umple</echo>
+        <ant antfile="build/build.umple.xml" target="build" inheritAll="false" />
+
+	      <echo>Building Eclipse Plugin</echo>
+        <ant antfile="build/build.eclipseplugin.xml" target="build" inheritAll="false" />
+	
+	     <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
+        <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> --> 
+
+        <echo>Building Java Testbed (Testing that Umple Generated Code Works)</echo>
+        <ant antfile="build/build.testbed.xml" target="build" inheritAll="false" />
+      </try>
+
+      <finally>
+        <antcall target="qaLandingPage" />
+      </finally>
+    </trycatch>
+
+  </target>
+
+  <target name="qaBuildingPage">
+    <echo>Starting Build</echo>
+    <copy file="build/qa_updating.php" tofile="dist/qa/index.php" overwrite="true" />
+  </target>
+  
+  <target name="qaLandingPage">
+    <echo>Creating a QA Landing Page</echo>
+    <copy file="build/qa_index.php" tofile="dist/qa/index.php" overwrite="true" />
+  </target>
+  
+</project>
+

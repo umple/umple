@@ -1,0 +1,46 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Mentor.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Mentor::Mentor()
+  {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Mentor::Mentor(const Mentor & mentor)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Mentor Mentor::operator=(const Mentor & mentor)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Mentor::~Mentor()
+  {}
+
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+   
+  public static main()
+  {}

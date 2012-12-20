@@ -1,0 +1,24 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class IncreaseHandleDetailLevelAction 
+{
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  public final static String ID = "view.increaseHandleDetailLevel";
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        increaseHandleDetaiLevel();
+    }
+public void increaseHandleDetaiLevel() {
+      DrawingView view =  getView();
+        if (view != null) {
+            view.setHandleDetailLevel(view.getHandleDetailLevel() + 1);
+        }
+    }
+
+}

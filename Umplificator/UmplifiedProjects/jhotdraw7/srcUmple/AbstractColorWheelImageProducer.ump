@@ -1,0 +1,60 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.color ;
+
+class AbstractColorWheelImageProducer 
+{
+depend java.awt.Color;
+depend java.awt.Point;
+depend java.awt.color.ColorSpace;
+depend java.awt.image.ColorModel;
+depend java.awt.image.MemoryImageSource;
+  isA MemoryImageSource;
+
+  protected int[] pixels;
+protected int w, h;
+protected int w, h;
+protected ColorSpace colorSpace;
+protected int radialIndex = 1;
+protected int angularIndex = 0;
+protected int verticalIndex = 2;
+protected boolean isPixelsValid = false;
+protected float verticalValue = 1f;
+protected boolean isLookupValid = false;
+public void setRadialComponentIndex(int newValue) {
+        radialIndex = newValue;
+        isPixelsValid = false;
+    }
+public void setAngularComponentIndex(int newValue) {
+        angularIndex = newValue;
+        isPixelsValid = false;
+    }
+public void setVerticalComponentIndex(int newValue) {
+        verticalIndex = newValue;
+        isPixelsValid = false;
+    }
+public void setVerticalValue(float newValue) {
+        isPixelsValid = isPixelsValid && verticalValue == newValue;
+        verticalValue = newValue;
+    }
+public boolean needsGeneration() {
+        return !isPixelsValid;
+    }
+public void regenerateColorWheel() {
+        if (!isPixelsValid) {
+            generateColorWheel();
+        }
+    }
+public int getRadius() {
+        return Math.min(w, h) / 2 - 2;
+    }
+protected abstract void generateColorWheel();
+public Point getColorLocation(Color c) {
+        float[] components =ColorUtil.fromColor(colorSpace, c);
+        return getColorLocation(components);
+    }
+public abstract Point getColorLocation(float[] components);
+public abstract float[] getColorAt(int x, int y);
+
+}

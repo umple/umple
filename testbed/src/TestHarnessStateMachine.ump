@@ -1,0 +1,251 @@
+
+namespace cruise.statemachine.test;
+
+class CourseA
+{
+  status { }
+}
+
+class CourseD
+{
+  status {
+    Open
+    { 
+      after(1) -> Closed; 
+    }
+    Closed {}
+  }
+}
+
+class CourseF
+{
+  status
+  {
+    Off
+    {
+      turnOn -> On;
+    }
+    On
+    {
+      turnOff -> Off;
+      MotorIdle
+      {
+        flip -> MotorRunning;
+        flup -> Off;
+      }
+      MotorRunning
+      {
+        flip -> MotorIdle;
+      }
+      
+      ||
+      
+      FanIdle
+      {
+        flop -> FanRunning;  
+      }
+      
+      FanRunning
+      {
+        flop -> FanIdle;
+      }
+      
+      
+    }
+  
+  }
+}
+
+class CourseG
+{
+  status
+  {
+    On
+    {
+      turnOff -> Off;
+      Idle
+      {
+        flip -> Running;
+      }
+      Running
+      {
+        
+      }
+    }
+    Off
+    {
+      flip -> Idle;
+    }
+    
+  }
+  
+}
+
+class CourseH
+{
+  status
+  {
+    On
+    {
+      flip -> Off;
+      Running
+      {
+        Play
+        {
+        }
+      }
+    }
+    Off
+    {
+      Idle
+      {
+      }
+      Full
+      {
+      }    
+    }
+  }
+}
+
+
+class CourseI
+{
+  status
+  {
+    On
+    {
+      flip -> Off;
+      Running
+      {
+        flip -> Idle;
+        Play
+        {
+          flip -> Full;
+        }
+      }
+    }
+    Off
+    {
+      flip -> On;
+      Idle
+      {
+        flip -> Running;
+      }
+      Full
+      {
+        flip -> Play;
+      }    
+    }
+  }
+}
+
+class CourseJ {
+  status {
+    S1 {
+      e2 -> S2C;
+      S1A {
+        e1 -> S2;
+      }
+      S1B {
+        e5 -> S1A;
+        S1B1 {
+          e3 -> S2B;
+          e4 -> S1B2;
+        }
+        S1B2 {
+          e1 -> S3;
+          e3 -> S1A;
+          e4 -> S1B1;
+        }
+      }
+    }
+    S2 {
+      S2A {
+        e3-> S1B1;
+        e1-> S2;
+        e4 -> S1;
+      }
+      S2B {
+        e4 -> S2A;
+      }
+      S2C {
+        e1 -> S2B;
+        e2 -> S3;
+        e5 -> S3;
+        e4 -> S2B;
+      }
+    }
+    S3 {
+      e1 -> S1A;
+      e2 -> S2;
+      e3 -> S2C;
+      e5 -> S1;
+    }
+  }
+}
+
+class CourseM
+{
+  one
+  {
+    On { flip -> Off; }
+    Off { }
+  }
+  two
+  {
+    Slow { flip -> Fast; }
+    Fast { } 
+  }
+  
+}
+
+statemachine MachineN
+{
+  On { stay -> On; }
+  Off { }
+}
+
+class CourseN
+{
+  one as MachineN
+  {
+    On { 
+      + flip -> Off; 
+    }
+  }
+}
+
+
+class CourseO
+{
+  one as MachineN
+  {
+    On
+    {
+      - stay -> On;
+    }
+  }
+}
+
+class CourseP
+{
+  one as MachineN
+  {
+    - Off { }
+    + Amber { }
+    On {
+     flip -> Amber;
+    } 
+  }
+}
+
+class CourseQ
+{
+  one
+  {
+    Off {
+     -> On;
+    }
+    On { }  
+  }
+}

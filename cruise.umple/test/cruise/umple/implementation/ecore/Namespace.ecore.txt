@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="base" nsURI="cruise.example.base" nsPrefix="base">
+  <eClassifiers xsi:type="ecore:EDataType" name="Time" instanceClassName="java.sql.Time"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Student">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="n" lowerBound="1" upperBound="1" eType="#//Mentor" eOpposite="#//Mentor/b"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="o" lowerBound="3" upperBound="3" eType="#//Mentor" eOpposite="#//Mentor/c"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="p" lowerBound="0" upperBound="-1" eType="#//Mentor" eOpposite="#//Mentor/d"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="m" lowerBound="0" upperBound="4" eType="#//Mentor" eOpposite="#//Mentor/a"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Mentor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b" lowerBound="0" upperBound="-1" eType="#//Student" eOpposite="#//Student/n"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="c" lowerBound="1" upperBound="1" eType="#//Student" eOpposite="#//Student/o"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="d" lowerBound="3" upperBound="5" eType="#//Student" eOpposite="#//Student/p"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a" lowerBound="0" upperBound="1" eType="#//Student" eOpposite="#//Student/m"/>
+  </eClassifiers>
+</ecore:EPackage>

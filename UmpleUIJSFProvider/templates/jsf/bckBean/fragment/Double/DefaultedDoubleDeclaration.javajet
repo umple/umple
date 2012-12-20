@@ -1,0 +1,5 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.declaration" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="DefaultedDoubleDeclaration" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+private  <%= attVar.getType()%> <%= "a"+attVar.getUpperCaseName()%>=getDefaulted<%= attVar.getUpperCaseName()%>();

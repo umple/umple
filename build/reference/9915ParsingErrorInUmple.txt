@@ -1,0 +1,16 @@
+E15xx Parsing Error
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple error messages reported when the Umple parser can't interpret the code.</h2>
+
+<p>These messages occurs in several contexts:<br>
+<ul>
+<li>There is a typographical error in one of the <a href="TypesofDirectives.html">directives</a> specified outside a class declaration. Umple does not recognize the keyword.
+<li>The syntax (i.e. arguments) to one of the <a href="TypesofDirectives.html">directives</a> such as 'generate' or 'use' is not properly typed.
+<li>There is a missing semicolon at the end of a directive, or a missing space separating elements of the syntax.
+<li>The overall structure of an umple element does not conform to the Umple grammar. For example specifying a <a href=""ClassDefinition.html>class</a> without a name, or without a body in curly brackets.
+</ul>
+</p>

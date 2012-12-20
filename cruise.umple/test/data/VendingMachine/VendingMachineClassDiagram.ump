@@ -1,0 +1,96 @@
+class VendingMachine {
+   singleton;
+   1 -- * Dispenser slots;
+}
+
+class Dispenser {
+  Character row;
+  Character column;  
+}
+
+// It is possible for a dispenser to have
+// one product type 'in front' and another in behind
+class ProductInDispenser {
+   * -- 1 Dispenser;
+   * -- 1 ProductType;
+   Integer numberProductsOfThisTypeLeft;
+   }
+
+class ProductType {
+   Integer pricePerUnit; // cents
+}
+
+class VendingMachine {
+   1 -- * CoinHolder;
+}
+
+class CoinType {
+  Integer value; // cents
+  Integer weight; // grams
+  Integer diameter; // micrometers
+}
+
+class CoinHolder {
+   * -- 1 CoinType canHold;
+   Integer numCoinsCapacity;
+   Integer currentNumberOfCoins;
+}
+
+// Every product purchase is recorded
+class ProductTransaction {
+  * -- 1 ProductInDispenser;
+  1 -- * CoinHolderTransaction; // coins entered and change given
+}
+
+// The number of coins transferred to or from a CoinHolder
+class CoinHolderTransaction {
+   Integer numCoinsInOrOut; // negative if used to provide change
+   * -- 1 CoinHolder sourceOrDestination;
+}  
+class VendingMachine
+{
+  position 50 29 119 45;
+  position.association Dispenser:slots__VendingMachine 120,23 0,8;
+  position.association CoinHolder__VendingMachine 27,45 5,0;
+}
+
+class Dispenser
+{
+  position 290 29 149 80;
+}
+
+class ProductInDispenser
+{
+  position 166 157 291 63;
+  position.association ProductInDispenser__ProductType 10,63 30,0;
+  position.association Dispenser__ProductInDispenser 217,0 56,80;
+}
+
+class ProductType
+{
+  position 120 254 166 63;
+}
+
+class CoinType
+{
+  position 45 531 144 97;
+}
+
+class CoinHolder
+{
+  position 29 362 236 80;
+  position.association CoinHolder__CoinType:canHold 40,80 90,0;
+}
+
+class ProductTransaction
+{
+  position 337 277 136 45;
+  position.association CoinHolderTransaction__ProductTransaction 112,46 179,0;
+  position.association ProductInDispenser__ProductTransaction 3,0 93,63;
+}
+
+class CoinHolderTransaction
+{
+  position 283 501 201 63;
+  position.association CoinHolder:sourceOrDestination__CoinHolderTransaction 16,0 223,80;
+}//$?[End_of_model]$?

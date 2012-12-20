@@ -1,0 +1,73 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Foo.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Foo::Foo()
+  {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Foo::Foo(const Foo & foo)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Foo Foo::operator=(const Foo & foo)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
+  {}
+
+
+  /**
+   * Inline comment above method.
+   */
+   void Foo::testMethod1(){
+      // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiple inline comments
+   * above method.
+   */
+   void Foo::testMethod2(){
+      // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiline comment above method.
+   */
+   void Foo::testMethod3(){
+      // I am a comment inside a method.
+  }
+
+
+  /**
+   * Multiple multiline comments
+   * above method.
+   */
+   void Foo::testMethod4(){
+      // I am a comment inside a method.
+  }

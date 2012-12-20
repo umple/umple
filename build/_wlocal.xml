@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="init" name="LocalBuildProperties" >
+
+  <!-- can be run locally, and simulates almost 100% of what happens on the build server -->
+  <property name="haltonfailure" value="false"/>
+  <property name="shouldPackageUmpleOnline" value="false"/>
+  <property name="shouldDeploy" value="false"/>  
+  <property name="showJunitSummary" value="false"/>  
+  <property name="showJunitOutput" value="false"/>  
+  <property name="rake_cmd" value="rake.bat"/>  
+  
+  <import file="_versionLast.xml" />
+
+</project>

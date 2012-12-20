@@ -1,0 +1,68 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.app.action.window ;
+
+class TogglePaletteAction 
+{
+depend java.awt.event.*;
+depend javax.swing.*;
+depend java.awt.*;
+depend org.jhotdraw.app.OSXApplication;
+depend org.jhotdraw.app.action.ActionUtil;
+  isA AbstractAction;
+
+  private Window palette;
+private OSXApplication app;
+private WindowListener windowHandler;
+@Override
+    public void putValue(String key, Object newValue) {
+        super.putValue(key, newValue);
+        /*
+        if (key == ActionUtil.SELECTED_KEY) {
+            if (palette != null) {
+                boolean b = (Boolean) newValue;
+                if (b) {
+                    app.addPalette(palette);
+                    palette.setVisible(true);
+                } else {
+                    app.removePalette(palette);
+                    palette.setVisible(false);
+                }
+            }
+        }*/
+    }
+public void setPalette(Window newValue) {
+        if (palette != null) {
+            palette.removeWindowListener(windowHandler);
+        }
+        
+        palette = newValue;
+        
+        if (palette != null) {
+            palette.addWindowListener(windowHandler);
+            if (getValue(ActionUtil.SELECTED_KEY) == Boolean.TRUE) {
+                app.addPalette(palette);
+                palette.setVisible(true);
+            } else {
+                app.removePalette(palette);
+                palette.setVisible(false);
+            }
+        }
+    }
+@Override
+    public void actionPerformed(ActionEvent e) {
+        if (palette != null) {
+           // putValue(ActionUtil.SELECTED_KEY, ! palette.isVisible());
+            boolean b = (Boolean) getValue(ActionUtil.SELECTED_KEY);
+                if (b) {
+                    app.addPalette(palette);
+                    palette.setVisible(true);
+                } else {
+                    app.removePalette(palette);
+                    palette.setVisible(false);
+                }
+        }
+    }
+
+}

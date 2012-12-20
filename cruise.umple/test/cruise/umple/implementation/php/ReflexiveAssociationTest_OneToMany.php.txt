@@ -1,0 +1,58 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class OneToMany
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //OneToMany Associations
+  private $oneToMany;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aOneToMany)
+  {
+    if (!$this->setOneToMany($aOneToMany))
+    {
+      throw new Exception("Unable to create OneToMany due to aOneToMany");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getOneToMany()
+  {
+    return $this->oneToMany;
+  }
+
+  public function setOneToMany($newOneToMany)
+  {
+    $wasSet = false;
+    if ($newOneToMany != null)
+    {
+      $this->oneToMany = $newOneToMany;
+      $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $this->oneToMany = null;
+  }
+
+}
+?>

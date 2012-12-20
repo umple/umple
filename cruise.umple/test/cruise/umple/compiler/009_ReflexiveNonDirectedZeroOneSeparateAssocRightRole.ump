@@ -1,0 +1,7 @@
+// Should be OK no error 21
+class X {
+}
+
+association {
+  0..1 X -- 0..1 X right;
+}

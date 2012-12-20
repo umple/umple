@@ -1,0 +1,1 @@
+[NewClass|name:String;id:Integer;],

@@ -1,0 +1,7 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.set" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="SetteableStringSet" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+		public void set<%= attVar.getUpperCaseName()%>(<%= attVar.getType()%> <%= attVar.getName()%>) {
+			this.<%= "a"+attVar.getUpperCaseName()%> = <%= attVar.getName()%>;
+		}

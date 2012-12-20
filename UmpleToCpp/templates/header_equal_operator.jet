@@ -1,0 +1,13 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+<%
+  
+  appendln(stringBuffer, "");
+  appendln(stringBuffer, "  //------------------------");
+  appendln(stringBuffer, "  // Operator =");
+  appendln(stringBuffer, "  //------------------------");
+  appendln(stringBuffer, "");
+  appendln(stringBuffer," {0} operator=(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
+  
+  
+
+%>

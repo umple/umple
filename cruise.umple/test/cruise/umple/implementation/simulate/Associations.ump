@@ -1,0 +1,13 @@
+generate Simulate;
+namespace example;
+
+class Student
+{
+  0..1 -- * Mentor m;
+  0..1 a -- * Student b;
+}
+
+class Mentor
+{
+
+}

@@ -1,0 +1,20 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("addMethod",av)%>(const <%=gen.translate("type",av)%> & <%=gen.translate("parameterOne",av)%>)
+  {
+    bool wasAdded = false;
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
+    wasAdded = <%=gen.translate("attributeMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
+    return wasAdded;
+  }
+
+  bool <%=gen.translate("type",uClass)%>::<%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> & <%=gen.translate("parameterOne",av)%>)
+  {
+    bool wasRemoved = false;
+    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
+    wasRemoved = <%=gen.translate("attributeMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
+    return wasRemoved;
+  }
+
+  

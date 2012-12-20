@@ -1,0 +1,109 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace service;
+
+class ElectionService {
+  depend java.util.List;
+  depend java.util.ArrayList;
+  depend shared.domain.Election;
+  depend java.sql.Connection;
+  depend java.sql.ResultSet;
+  depend java.sql.Statement;
+  depend java.sql.DriverManager;
+  depend shared.Credentials;
+  
+  singleton;
+  
+  lazy Election newElection;
+  lazy List<Election> elections;
+  lazy internal Connection theConnection;
+  lazy Boolean electionAdded;
+  lazy String electionNameToSearch;
+  lazy Boolean electionFound;
+
+  after setNewElection {
+    createElection();
+  }
+
+  after setElectionNameToSearch {
+    findElectionByName();
+  }
+
+  ElectionServiceCycle {
+    Idle {
+      getAllElections -> LoadingAllElections;
+      createElection -> CreatingElection;
+      findElectionByName -> FindingElectionByName;
+    }
+    LoadingAllElections {
+      entry / {loadAllElections();}
+      -> Idle;
+    }
+    CreatingElection {
+      entry / {addElection();}
+      -> Idle;
+    }
+    FindingElectionByName {
+      entry / {tryFindingElectionByName();}
+      -> Idle;
+    }
+  }
+
+  before setElectionServiceCycle {
+    try {
+      Class.forName("com.mysql.jdbc.Driver").newInstance();
+      theConnection = DriverManager.getConnection("jdbc:mysql://"+Credentials.db_hostname+"/elections", Credentials.db_username, Credentials.db_password);
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+      
+  void loadAllElections() {
+    elections=new ArrayList<Election>();
+    
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election");
+      while (rs.next()) {
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        int id=Integer.parseInt(rs.getString("id_election"));
+        Election election=new Election(id, name, description, null);
+        elections.add(election);
+      }
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+  }
+  
+  void addElection() {
+    try {
+      Statement stmt = theConnection.createStatement();
+      stmt.executeUpdate("insert into elections.election (name, description) values ('"+newElection.getName()+"', '"+newElection.getDescription()+"')");
+      electionAdded=true;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionAdded=false;
+    }
+  }
+  
+  private void tryFindingElectionByName() {
+    electionFound=true;
+    try {
+      Statement stmt = theConnection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM election where name='"+electionNameToSearch+"'");
+      if (!rs.next())
+        electionFound=false;
+    } catch(Exception e) {
+      System.err.println("Exception: " + e.getMessage());
+      electionFound=false;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+Lazy Immutable Attributes
+Attributes
+noreferences
+
+@@description
+<p>If you want to avoid having an attribute change after it is initially
+set, but do not want to have an argument in the constructor, then use the
+combination of keywords 'lazy immutable'</p>
+
+<p>You can call the set method just once on such an attribute. The set method
+will return false if you try again. This is useful for interacting with
+architectures where objects are constructed for you, so you have no ability
+to specify constructor arguments.<p>
+
+<p>Note that if the lazy keyword is omitted, then there will be no set method and an argument will be present in the constructor to initialize the attribute. See also the <a href="ImmutablePattern.html">immutable pattern</a>.</p>
+
+<br />
+
+@@syntax
+
+[[complexAttribute]]
+
+
+@@example
+class A 
+{
+    lazy immutable z;
+}
+@@endexample

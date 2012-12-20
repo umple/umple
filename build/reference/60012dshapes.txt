@@ -1,0 +1,95 @@
+2D Shapes System
+Examples
+noreferences
+
+@@description
+<img src="examples/2dshapes.png" width="90%" title=""/>
+
+
+@@example
+namespace shapes;
+
+namespace shapes;
+
+class Shape2D {
+ center;
+}
+//Abstract
+class EllipticalShape {
+ isA Shape2D;
+ semiMajorAxis;
+}
+//Abstract
+class Polygon { 
+ isA Shape2D;
+}
+class Circle {
+ isA EllipticalShape;
+}
+class Ellipse{
+ isA EllipticalShape;
+}
+class SimplePolygon {
+ orientation;
+ isA Polygon;
+}
+class ArbitraryPolygon {
+ points;
+ isA Polygon;
+}
+class Rectangle {
+ isA SimplePolygon;
+ height;
+ width;
+}
+class RegularPolygon {
+ numPoints;
+ radius;
+ isA SimplePolygon;
+}//$?[End_of_model]$?
+
+class Ellipse
+{
+  position 82 374 109 45;
+}
+
+class Circle
+{
+  position 17 285 109 45;
+}
+
+class RegularPolygon
+{
+  position 339 493 145 80;
+}
+
+class Rectangle
+{
+  position 189 485 117 80;
+}
+
+class SimplePolygon
+{
+  position 204 362 148 63;
+}
+
+class Polygon
+{
+  position 179 246 109 45;
+}
+
+class ArbitraryPolygon
+{
+  position 367 361 119 63;
+}
+
+class Shape2D
+{
+  position 153 16 118 63;
+}
+
+class EllipticalShape
+{
+  position 36 130 173 63;
+}
+@@endexample

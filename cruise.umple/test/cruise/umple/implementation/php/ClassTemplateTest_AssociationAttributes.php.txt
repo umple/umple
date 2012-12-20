@@ -1,0 +1,50 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Token
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Token Attributes
+  private $p;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aP)
+  {
+    $this->p = $aP;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setP($aP)
+  {
+    $wasSet = false;
+    $this->p = $aP;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getP()
+  {
+    return $this->p;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

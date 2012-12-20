@@ -1,0 +1,53 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Foo.h"
+
+/*
+* I am a class comment.
+ * 
+ * Notice how there are 4 empty lines below me.
+ * 
+ * 
+ * 
+ * 
+ * And 2 below me.
+ * 
+ * 
+ * These lines should come out as we see here.
+ * Comments such as these are often used to improve readability through whitespace clarity.
+*/
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Foo::Foo()
+  {}
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Foo::Foo(const Foo & foo)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Foo Foo::operator=(const Foo & foo)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
+  {}

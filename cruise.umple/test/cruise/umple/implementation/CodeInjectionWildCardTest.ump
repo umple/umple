@@ -1,0 +1,10 @@
+namespace example;
+
+class Student
+{
+  firstName;
+  lastName;
+  
+  before get* { print "before";  }
+  
+}

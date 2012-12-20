@@ -1,0 +1,81 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $id;
+  private $name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aId, $aName)
+  {
+    $this->id = $aId;
+    $this->name = $aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getId()
+  {
+    $aId = $this->id;
+    fileTracer($id);
+    return $aId;
+  }
+
+  public function getName()
+  {
+    $aName = $this->name;
+    fileTracer($name);
+    return $aName;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  //------------------------
+  // FILE TRACER METHOD
+  //------------------------
+
+  function fileTracer($tracedItem)
+  {
+    $file=fopen("TraceLog.txt","a") or exit("Unable to open file!");
+    fprintf($file,"Traced object value: $tracedItem".PHP_EOL);
+    fprintf($file,"Trace time: ".date(DATE_RFC822).PHP_EOL);
+    fclose($file);
+  }
+
+}
+?>

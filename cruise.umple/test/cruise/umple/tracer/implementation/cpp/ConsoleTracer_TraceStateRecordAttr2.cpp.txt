@@ -1,0 +1,114 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+
+package example;
+
+public class Light
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Light Attributes
+  private int v;
+  private int y;
+
+  //Light State Machines
+  enum Status { On, Off }
+  private Status status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Light()
+  {
+    v = 0;
+    y = 0;
+    setStatus(Status.On);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setV(int aV)
+  {
+    boolean wasSet = false;
+    v = aV;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setY(int aY)
+  {
+    boolean wasSet = false;
+    y = aY;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getV()
+  {
+    return v;
+  }
+
+  public int getY()
+  {
+    return y;
+  }
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case On:
+        setStatus(Status.Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        setStatus(Status.On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    if( aStatus.equals(Status.On) )
+      System.err.println("entry=" + aStatus + ",v=" + v + ",y=" + y);
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        System.out.println("entry state On");
+        break;
+      case Off:
+        System.out.println("entry state Off");
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+}

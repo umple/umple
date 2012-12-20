@@ -1,0 +1,16 @@
+myAssociation
+Associations
+
+@@description
+An inline association described within a class.
+
+@@syntax
+[[myMultiplicity]] [=arrow:--|->] [[yourMultiplicity]] ;
+
+@@example
+0..1 -- * Part;
+@@endexample
+
+@@example
+0..1 -> * Token element;
+@@endexample

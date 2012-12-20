@@ -1,0 +1,45 @@
+class Runway {
+
+  runwayStateMachine {
+  
+    Open {
+      alarm -> Emergency;
+      
+      Free {
+        entry / {turnOnGreenLight();}
+        exit / {turnOffGreenLight();}
+        planeLanding -> Occupied;
+        repair -> Restoration;
+      }
+      
+      Occupied {
+        planeTakesOff -> Free;
+      }
+    }
+  
+    Closed {
+      entry / {closeRunway();}
+          
+      Emergency {
+        clear -> Open;
+      }
+      
+      Ready {
+        open -> Open;
+      }
+      
+      Restoration {
+        Restoration_1 {
+          Repair {
+            repairCompleted -> Inspecttion;
+          }
+          Inspection { 
+            check [success] -> Ready;
+            check [!success] -> Repair; 
+          }
+        }  
+        Restoration_2 {
+          Maintenance {
+            do { performMaintananceWork();}
+          }
+} } } } }

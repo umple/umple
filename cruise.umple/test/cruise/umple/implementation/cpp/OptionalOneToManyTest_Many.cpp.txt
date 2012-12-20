@@ -1,0 +1,78 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private string number;
+
+  //Student Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(string aNumber)
+  {
+    number = aNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber(string aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public string getNumber()
+  {
+    return number;
+  }
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public boolean setMentor(Mentor aMentor)
+  {
+    boolean wasSet = false;
+    Mentor existingMentor = mentor;
+    mentor = aMentor;
+    if (existingMentor != null && !existingMentor.equals(aMentor))
+    {
+      existingMentor.removeStudent(this);
+    }
+    if (aMentor != null)
+    {
+      aMentor.addStudent(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (mentor != null)
+    {
+      Mentor placeholderMentor = mentor;
+      this.mentor = null;
+      placeholderMentor.removeStudent(this);
+    }
+  }
+
+}

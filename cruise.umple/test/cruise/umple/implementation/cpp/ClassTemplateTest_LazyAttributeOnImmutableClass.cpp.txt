@@ -1,0 +1,68 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Student.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Student::Student(String aImmutable, String aName)
+  {
+    immutable = aImmutable;
+    name = aName;
+    studentNumber = aStudentNumber;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Student::setImmutable(string aImmutable)
+  {
+    bool wasSet = false;
+    immutable = aImmutable;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Student::setName(string aName)
+  {
+    bool wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Student::setStudentNumber(string aStudentNumber)
+  {
+    bool wasSet = false;
+    studentNumber = aStudentNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  string Student::getImmutable()
+  {
+    return immutable;
+  }
+
+  string Student::getName()
+  {
+    return name;
+  }
+
+  string Student::getStudentNumber()
+  {
+    return studentNumber;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Student::~Student()
+  {}

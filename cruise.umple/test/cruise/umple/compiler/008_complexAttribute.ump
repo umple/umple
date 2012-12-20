@@ -1,0 +1,18 @@
+
+class Token
+{
+  number;
+  Position startPosition;
+}
+
+class Position
+{
+  Integer lineNumber;
+  Integer offset;
+  * -- * Point;
+}
+
+class Point
+{
+
+}

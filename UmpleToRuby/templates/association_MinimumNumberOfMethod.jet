@@ -1,0 +1,17 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+    String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
+    String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
+%>
+<% if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { %>
+  def self.<%=gen.translate("minimumNumberOfMethod",av)%>
+    <%=av.getMultiplicity().getLowerBound()%>
+  end
+<% } else { %>
+  def self.<%=gen.translate("minimumNumberOfMethod",av)%>
+    <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } %>
+    minimum = <%=av.getMultiplicity().getLowerBound()%>
+    <% if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } %>
+    minimum
+  end
+<% } %>

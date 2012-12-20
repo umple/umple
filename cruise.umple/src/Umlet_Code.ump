@@ -1,0 +1,163 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmletGenerator
+{
+  
+  public void generate()
+  {
+    UmpleFile umpleFile = model.getUmpleFile();
+    String filename = umpleFile.getPath() + File.separator + umpleFile.getFileName() + ".uxf";
+    draw(model);
+    SampleFileWriter.createFile(filename, toXml());
+  }
+ 
+  public void draw(UmpleModel model)
+  {
+    Map<UmpleClass,UmletElement> classToElementMap = new HashMap<UmpleClass,UmletElement>();
+    
+    for (UmpleClass aClass : model.getUmpleClasses())
+    {
+      UmletElement element = newClass(aClass.getName());
+      classToElementMap.put(aClass, element);
+    }
+    
+    for (Association association : model.getAssociations())
+    {
+      UmpleClass class1 = model.getUmpleClass(association.getEnd(0).getClassName());
+      UmpleClass class2 = model.getUmpleClass(association.getEnd(1).getClassName());
+      
+      UmletElement classElement1 = classToElementMap.get(class1);
+      UmletElement classElement2 = classToElementMap.get(class2);
+      String mult1 = association.getEnd(0).toGenericString();
+      String mult2 = association.getEnd(1).toGenericString();
+      String role1 = association.getEnd(0).getRoleName();
+      String role2 = association.getEnd(1).getRoleName();
+      
+      newAssociation(classElement1, classElement2, mult2, mult1, role2, role1);
+    }
+  }
+
+  public UmletElement newClass(String name)
+  {
+    int elementOffset = numberOfClassElements();
+  
+    int width = 100;
+    int height = 100;
+    int spacing = 100;
+    
+    int startX = 40;
+    int startY = 20;
+    
+    Point position = Point.create(elementOffset);
+    int myX = startX + (position.getY()-1)*(spacing+width);
+    int myY = startY + (position.getX()-1)*(spacing+height);
+
+    Coordinate c = new Coordinate(myX,myY,width,height);
+    UmletElement e = new UmletElement("com.umlet.element.base.Class",name + "\n--","",c);
+    addClassElement(e);
+    return e;
+  }
+
+  public UmletElement newAssociation(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole)
+  {
+    String whereIs = firstClass.getCoordinate().whereIs(secondClass.getCoordinate());
+    if ("top".equals(whereIs))
+    {
+      return newAssociationTopToBottom(secondClass, firstClass, secondMultiplicity, firstMultiplicity, secondRole, firstRole);
+    }
+    else if ("right".equals(whereIs))
+    {
+      return newAssociationLeftToRight(firstClass, secondClass, firstMultiplicity, secondMultiplicity, firstRole, secondRole);
+    }
+    else if ("left".equals(whereIs))
+    {
+      return newAssociationLeftToRight(secondClass, firstClass, secondMultiplicity, firstMultiplicity, secondRole, firstRole);
+    }
+    else
+    {
+      return newAssociationTopToBottom(firstClass, secondClass, firstMultiplicity, secondMultiplicity, firstRole, secondRole);
+    }
+  }
+  
+  private UmletElement newAssociationLeftToRight(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole)
+  {
+    Coordinate firstCoordinate = firstClass.getCoordinate();
+    Coordinate secondCoordinate = secondClass.getCoordinate();
+    
+    Coordinate c = new Coordinate(firstCoordinate.getRightMiddle().getX(), firstCoordinate.getRightMiddle().getY(),1,1);
+    int xOffset = secondCoordinate.getLeftMiddle().getX() - c.getX();
+    int yOffset = secondCoordinate.getLeftMiddle().getY() - c.getY();
+
+    String panel = "lt=-\nm1="+firstMultiplicity+"\nm2="+secondMultiplicity+"\nr1="+firstRole+"\nr2="+secondRole;
+    String additional = xOffset + ";" + yOffset + ";0;0";
+    UmletElement e = new UmletElement("com.umlet.element.base.Relation",panel,additional,c);
+    addAssociationElement(e);
+    return e;  
+  }
+  
+  private UmletElement newAssociationTopToBottom(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole)
+  {
+    Coordinate firstCoordinate = firstClass.getCoordinate();
+    Coordinate secondCoordinate = secondClass.getCoordinate();
+    
+    int xOffset = (secondCoordinate.getX() + secondCoordinate.getWidth()/2) - (firstCoordinate.getX() + firstCoordinate.getWidth()/2);
+    int yOffset = secondCoordinate.getY() - (firstCoordinate.getY() + firstCoordinate.getHeight());
+
+    String panel = "lt=-\nm1="+firstMultiplicity+"\nm2="+secondMultiplicity+"\nr1="+firstRole+"\nr2="+secondRole;
+    String additional = xOffset + ";" + yOffset + ";0;0";
+    Coordinate c = new Coordinate(firstCoordinate.getX() + firstCoordinate.getWidth()/2,firstCoordinate.getY()+firstCoordinate.getHeight(),1,1);
+    UmletElement e = new UmletElement("com.umlet.element.base.Relation",panel,additional,c);
+    addAssociationElement(e);
+    return e;  
+  }
+  
+  public String toXml()
+  {
+    UmletDiagram diagram = new UmletDiagram();
+    
+    for(UmletElement e : classElements)
+    {
+      diagram.addUmletElement(e);
+    }
+    
+    for(UmletElement e : associationElements)
+    {
+      diagram.addUmletElement(e);
+    }
+    return diagram.toXml();
+  }  
+}
+
+class UmletDiagram
+{
+
+  public String toXml()
+  {
+    StringBuffer answer = new StringBuffer();
+    answer.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+    answer.append("<umlet_diagram>");
+    
+    for(UmletElement e : getUmletElements())
+    {
+      Coordinate c = e.getCoordinate();
+      
+      answer.append("<element>");
+      answer.append("<type>" + e.getType() + "</type>");
+      answer.append("<coordinates><x>"+ c.getX() +"</x><y>"+ c.getY() +"</y><w>"+ c.getWidth() +"</w><h>"+ c.getHeight() +"</h></coordinates>");
+      answer.append("<panel_attributes>" + e.getPanelAttributes() + "</panel_attributes>");
+      answer.append("<additional_attributes>" + e.getAdditionalAttributes() + "</additional_attributes>");
+      answer.append("</element>");
+    }
+    answer.append("</umlet_diagram>");
+    return answer.toString();
+  }
+}

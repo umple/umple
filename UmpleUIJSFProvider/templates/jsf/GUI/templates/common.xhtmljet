@@ -1,0 +1,140 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.templates" 
+imports="java.util.* cruise.ui.jsf.* cruise.umple.compiler.Attribute cruise.umple.compiler.UmpleClass cruise.model.abstractObjects.BackingObject;"
+class="Common" skeleton="../../skeleton/IGenerator.skeleton" %>
+<% List<BackingObject> clazzez=(List<BackingObject>)argument;
+ String preffix=JSFProvider.properties.getProperty(cruise.model.Constants.PACKAGE_PREFIX); %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+<% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+BackingObject bckObject= iterClazzez.next(); %>
+<f:loadBundle basename="bundles.<%=(bckObject.getPackageName()!=null?(bckObject.getPackageName()+"."):"" )+bckObject.getClassName()%>" var="a<%=bckObject.getClassName()%>Bundle"/>									
+<% } %>	
+
+<head>
+<title><%=JSFProvider.properties.getProperty(cruise.model.Constants.PROJECT_NAME)%></title>
+</head>
+<body bgcolor="#ffffff">
+<f:view>
+<style type="text/css">
+  .rich-stglpanel {
+  	 border-style: grooved;
+  	 background-color:transparent;
+	padding-top:2px;
+  	 
+	}
+	.rich-stglpanel-header {
+  	 border-style: none;
+  	background-color:transparent;
+  	background-image:none;
+  	font-weight:bold;
+	}
+	
+	.rich-stglpanel-body{
+	padding-top:2px;
+  	 border-style: none;
+  	 background-color:transparent; 
+  	 text-align:center;
+  	 vertical-align:text-top;
+	}
+	.rich-stglpnl-marker{
+  	 border-style: none;
+  	 background-color:transparent;
+  	 font-weight:bold;
+	}
+	
+	.colStyle1 { 
+    width: 150px;
+    text-align:right;
+    font-weight:bold;
+	}
+	
+	.label1 { 
+    	font-style: italic; 
+	}
+
+</style>
+	<table align="center" cellpadding="0" cellspacing="0" border="0"
+		width="100%">
+		<tbody>
+
+			<tr>
+				<td><f:subview>
+					<h:form>
+						<div style="padding: none;">
+						<div>
+						<div align="right"><h:outputText
+							style="color:#000000;font-size:40px;font-family:Arial,Verdana,sans-serif;"
+							value="<%=JSFProvider.properties.getProperty(cruise.model.Constants.PROJECT_NAME)%>" /></div>
+						</div>
+						<div><rich:toolBar width="100%">
+							<rich:toolBarGroup itemSeparator="line" location="left">
+								<rich:dropDownMenu>
+									<f:facet name="label">
+										<h:outputText value="OPTIONS" />
+									</f:facet>
+									<rich:menuItem value="Home" action="home">
+									</rich:menuItem>
+									 <% for (Iterator<BackingObject> iterClazzez =clazzez.iterator(); iterClazzez.hasNext(); ) { 
+  										UmpleClass clazz= iterClazzez.next().getUClazz(); %>
+									<rich:menuItem value="#{<%="a"+clazz.getName()%>Bundle.<%=clazz.getName()%>ClassName}"
+										action="#{mainBean.navigate}">
+										<f:setPropertyActionListener value="to<%=clazz.getName()%>Main"
+											target="#{mainBean.menuOption}" />
+									</rich:menuItem>
+									 <% } %>
+								</rich:dropDownMenu>
+							</rich:toolBarGroup>
+								<rich:toolBarGroup itemSeparator="line" location="right">
+							<h:panelGrid columns="2">
+								<h:outputText
+								value="Skin" />
+							   <h:selectOneMenu id="select" value="#{skinBean.skin}" onchange="document.forms[0].submit(); document.forms[1].submit();" >
+								<f:selectItem itemLabel="plain" itemValue="plain" />
+								<f:selectItem itemLabel="emeraldTown" itemValue="emeraldTown" />
+								<f:selectItem itemLabel="blueSky" itemValue="blueSky" />
+								<f:selectItem itemLabel="wine" itemValue="wine" />
+								<f:selectItem itemLabel="japanCherry" itemValue="japanCherry" />
+								<f:selectItem itemLabel="ruby" itemValue="ruby" />
+								<f:selectItem itemLabel="classic" itemValue="classic" />
+								<f:selectItem itemLabel="deepMarine" itemValue="deepMarine" />
+							   	</h:selectOneMenu>
+        					</h:panelGrid>
+							
+	
+								<h:commandButton action="#{mainBean.invalidateSession}"
+									value="Invalidate Session" />
+									
+							</rich:toolBarGroup>
+						</rich:toolBar></div>
+						</div>
+					</h:form>
+				</f:subview> <rich:spacer height="3" /></td>
+			</tr>
+
+			<tr>
+				<td><rich:messages passedLabel="" layout="list">
+					<f:facet name="errorMarker">
+						<h:graphicImage value="/images/icons/error.gif" />
+					</f:facet>
+				</rich:messages></td>
+			</tr>
+
+			<tr>
+
+				<td><ui:insert name="body">Page Body</ui:insert></td>
+			</tr>
+
+		</tbody>
+
+	</table>
+
+</f:view>
+</body>
+
+</html>

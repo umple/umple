@@ -1,0 +1,14 @@
+class LightFixture
+{ 
+  bulb 
+  {
+    On 
+    {
+      A {}
+      B {}
+      ||
+      C {}
+      D {}
+    } 
+  }
+}

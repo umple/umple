@@ -1,0 +1,6 @@
+<?php
+$modelOverview = new ModelOverview();
+$aClass = new ClassOverview("Student",$modelOverview);
+$aStateMachine = new StateMachine("Status",$aClass);
+$aStateMachine->addEvent("flip");
+$aStateMachine->addEvent("flop");

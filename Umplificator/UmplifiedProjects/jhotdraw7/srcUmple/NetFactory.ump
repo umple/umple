@@ -1,0 +1,36 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.net ;
+
+class NetFactory 
+{
+depend org.jhotdraw.draw.locator.RelativeLocator;
+depend org.jhotdraw.draw.connector.LocatorConnector;
+depend org.jhotdraw.draw.connector.ChopRectangleConnector;
+depend org.jhotdraw.draw.decoration.ArrowTip;
+depend org.jhotdraw.geom.*;
+depend org.jhotdraw.samples.net.figures.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.xml.*;
+  isA DefaultDOMFactory;
+
+  private final static Object[][] classTagArray = {
+        { DefaultDrawing.class, "Net" },
+        { NodeFigure.class, "node" },
+        { LineConnectionFigure.class, "link" },
+        { GroupFigure.class, "g" },
+        { GroupFigure.class, "g" },
+        { TextAreaFigure.class, "ta" },
+        
+        { LocatorConnector.class, "locConnect" },
+        { ChopRectangleConnector.class, "rectConnect" },
+        { ArrowTip.class, "arrowTip" },
+        { Insets2D.Double.class, "insets" },
+        { RelativeLocator.class, "relativeLoc" },
+        };
+private final static Object[][] enumTagArray = {
+        { AttributeKeys.StrokeType.class, "strokeType" },
+    };
+
+}

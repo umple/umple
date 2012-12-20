@@ -1,0 +1,88 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+namespace example{
+
+public class OneSymmetric
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //OneSymmetric Attributes
+  private string name;
+  private int number;
+
+  //OneSymmetric Associations
+  private OneSymmetric friend;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public OneSymmetric(string aName, int aNumber, OneSymmetric aFriend)
+  {
+    name = aName;
+    number = aNumber;
+    if (aFriend == null || aFriend.getFriend() != null)
+    {
+      throw new RuntimeException("Unable to create OneSymmetric due to aFriend");
+    }
+    friend = aFriend;
+  }
+
+  public OneSymmetric(string aName, int aNumber, string aNameForFriend, int aNumberForFriend)
+  {
+    name = aName;
+    number = aNumber;
+    friend = new OneSymmetric(aNameForFriend, aNumberForFriend, this);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(string aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setNumber(int aNumber)
+  {
+    boolean wasSet = false;
+    number = aNumber;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public string getName()
+  {
+    return name;
+  }
+
+  public int getNumber()
+  {
+    return number;
+  }
+
+  public OneSymmetric getFriend()
+  {
+    return friend;
+  }
+
+  public void delete()
+  {
+    OneSymmetric existingFriend = friend;
+    friend = null;
+    if (existingFriend != null)
+    {
+      existingFriend.delete();
+    }
+  }
+
+}

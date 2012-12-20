@@ -1,0 +1,43 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "SubMentor.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ SubMentor::SubMentor(const string & aName)
+  {
+    SubMentor(aName);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ SubMentor::SubMentor(const SubMentor & submentor)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ SubMentor SubMentor::operator=(const SubMentor & submentor)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+SubMentor::~SubMentor()
+  {
+    super.delete();
+  }

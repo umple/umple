@@ -1,0 +1,14 @@
+class StudentC
+{
+	immutable;
+}
+
+class MentorC
+{
+	immutable;
+}
+
+association
+{
+	1 StudentC -> * MentorC;
+}

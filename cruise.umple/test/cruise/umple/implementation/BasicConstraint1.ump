@@ -1,0 +1,5 @@
+class student
+{
+  Integer age;
+  [(age>18)]
+ }

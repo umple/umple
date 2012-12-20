@@ -1,0 +1,88 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "LightFixture.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ LightFixture::LightFixture()
+  {
+    setLight(On);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ LightFixture::LightFixture(const LightFixture & lightfixture)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ LightFixture LightFixture::operator=(const LightFixture & lightfixture)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string LightFixture::getLightFullName()
+  {
+    string answer = getLightStringName(light);
+    return answer;
+  }
+  
+  LightFixture::Light LightFixture::getLight()
+  {
+    return light;
+  }
+
+  string LightFixture::getLightStringName (Light light)
+  {
+    switch (light)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool LightFixture::flip()
+  {
+    bool wasEventProcessed = false;
+
+    switch (light)
+    {
+      case On:
+        setLight(Off);
+        wasEventProcessed = true;
+        break;
+      case Off:
+        setLight(On);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void LightFixture::setLight(Light aLight)
+  {
+    System.out.println("About to flip");
+    light = aLight;
+    System.out.println("Just flipped");
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+LightFixture::~LightFixture()
+  {}

@@ -1,0 +1,20 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+namespace example{
+
+class ISomething
+{
+  
+  // CONSTANT MEMBERS  
+
+ static const String aVariable = aValue;
+ static const Integer MAX = 3;
+  // ABSTRACT METHODS 
+  public: 
+
+
+ virtual  String getCode(String [] aParam, Integer anotherParam) = 0;
+ virtual  String isValid() = 0;
+ virtual ~ISomething(){}
+};

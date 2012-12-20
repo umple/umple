@@ -1,0 +1,87 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace view.registerCandidate;
+
+external JFrame{}
+
+class RegisterCandidateView {
+  isA JFrame;
+
+  depend javax.swing.JFrame;
+  depend javax.swing.JLabel;
+  depend javax.swing.JTextField;
+  depend javax.swing.JTextArea;
+  depend javax.swing.JButton;
+  depend shared.listeners.GenericMouseListener;
+  depend shared.listeners.GenericWindowListener;
+  depend view.ViewUtils;
+
+  lazy internal JLabel candidateNameLabel;
+  lazy internal JLabel candidateAddressLabel;
+  lazy internal JLabel candidateTelephoneLabel;
+  lazy internal JTextField candidateNameTextField;
+  lazy internal JTextField candidateTelephoneTextField;
+  lazy internal JTextArea candidateAddressTextArea;
+  lazy internal JButton registerCandidateButton;
+  
+  lazy String candidateName;
+  lazy String candidateAddress;
+  lazy String candidateTelephone;
+  
+  before getCandidateName {
+    candidateName=candidateNameTextField.getText();
+  }
+  
+  before getCandidateTelephone {
+    candidateTelephone=candidateTelephoneTextField.getText();
+  }
+  
+  before getCandidateAddress {
+    candidateAddress=candidateAddressTextArea.getText();
+  }
+  
+  after constructor {
+    getContentPane().setLayout(null);
+  
+    candidateNameLabel=new JLabel("Candidate Name:");
+    candidateNameLabel.setBounds(10, 10, 200, 20);
+    add(candidateNameLabel);
+    
+    candidateNameTextField=new JTextField();
+    candidateNameTextField.setBounds(10, 30, 200, 20);
+    add(candidateNameTextField);
+    
+    candidateTelephoneLabel=new JLabel("Candidate Telephone:");
+    candidateTelephoneLabel.setBounds(10, 50, 200, 20);
+    add(candidateTelephoneLabel);
+    
+    candidateTelephoneTextField=new JTextField();
+    candidateTelephoneTextField.setBounds(10, 70, 200, 20);
+    add(candidateTelephoneTextField);
+    
+    candidateAddressLabel=new JLabel("Add an address:");
+    candidateAddressLabel.setBounds(10, 90, 200, 20);
+    add(candidateAddressLabel);
+    
+    candidateAddressTextArea=new JTextArea();
+    candidateAddressTextArea.setBounds(10, 110, 200, 60);
+    add(candidateAddressTextArea);
+    
+    registerCandidateButton=new JButton("register");
+    registerCandidateButton.setBounds(50, 175, 125, 20);
+    registerCandidateButton.addMouseListener(GenericMouseListener.RegisterCandidateViewMouseListener);
+    add(registerCandidateButton);
+    
+    pack();
+    setSize(250, 250);
+    ViewUtils.getInstance().setToBeCenteredFrame(this);
+    addWindowListener(GenericWindowListener.RegisterCandidateViewWindowListener);
+  }
+}

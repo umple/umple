@@ -1,0 +1,17 @@
+class LightFixture
+{ 
+  bulb 
+  {
+    OutsideOn 
+    {
+      push -> On;
+      pull -> On;
+      Off {}
+      On { 
+        push -> Off;
+        pull -> OutsideOff;
+      }
+    }
+    OutsideOff {}
+  }
+}

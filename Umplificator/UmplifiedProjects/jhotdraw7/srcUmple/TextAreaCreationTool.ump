@@ -1,0 +1,174 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.tool ;
+
+class TextAreaCreationTool 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend org.jhotdraw.draw.text.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.draw.text.FloatingTextArea;
+depend java.awt.*;
+depend java.awt.geom.*;
+depend java.awt.event.*;
+depend java.util.*;
+depend javax.swing.undo.AbstractUndoableEdit;
+depend javax.swing.undo.UndoableEdit;
+depend org.jhotdraw.geom.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA CreationTool;
+
+  private FloatingTextArea textArea;
+@Nullable private TextHolderFigure typingTarget;
+/**
+     * Rubberband color of the tool. When this is null, the tool does not
+     * draw a rubberband.
+     */
+    @Nullable private Color rubberbandColor = null;
+/**
+     * Sets the rubberband color for the tool. Setting this to null, disables
+     * the rubberband.
+     *
+     * @param c Rubberband color or null.
+     */
+    public void setRubberbandColor(Color c) {
+        rubberbandColor = c;
+    }
+@Override
+    public void deactivate(DrawingEditor editor) {
+        endEdit();
+        super.deactivate(editor);
+    }
+/**
+     * Creates a new figure at the mouse location.
+     * If editing is in progress, this finishes editing.
+     */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // Note: The search sequence used here, must be
+        // consistent with the search sequence used by the
+        // HandleTracker, SelectAreaTracker, DelegationSelectionTool, SelectionTool.
+
+        if (typingTarget != null) {
+            endEdit();
+            if (isToolDoneAfterCreation()) {
+                fireToolDone();
+            }
+        } else {
+            super.mousePressed(e);
+        }
+    }
+/**
+     * This method allows subclasses to do perform additonal user interactions
+     * after the new figure has been created.
+     * The implementation of this class just invokes fireToolDone.
+     */
+    @Override
+    protected void creationFinished(Figure createdFigure) {
+        getView().clearSelection();
+        getView().addToSelection(createdFigure);
+        beginEdit((TextHolderFigure) createdFigure);
+    }
+/*
+    public void mouseDragged(java.awt.event.MouseEvent e) {
+    }
+     */
+
+    @Override
+    public void draw(Graphics2D g) {
+        if (createdFigure != null && rubberbandColor != null) {
+            g.setColor(rubberbandColor);
+            g.draw(getView().drawingToView(createdFigure.getBounds()));
+        }
+    }
+protected void beginEdit(TextHolderFigure textHolder) {
+        if (textArea == null) {
+            textArea = new FloatingTextArea();
+
+        //textArea.addActionListener(this);
+        }
+
+        if (textHolder != typingTarget && typingTarget != null) {
+            endEdit();
+        }
+        textArea.createOverlay(getView(), textHolder);
+        textArea.setBounds(getFieldBounds(textHolder), textHolder.getText());
+        textArea.requestFocus();
+        typingTarget = textHolder;
+    }
+private Rectangle2D.Double getFieldBounds(TextHolderFigure figure) {
+        Rectangle2D.Double r = figure.getDrawingArea();
+        Insets2D.Double insets = figure.getInsets();
+        insets.subtractTo(r);
+
+        // FIXME - Find a way to determine the parameters for grow.
+        //r.grow(1,2);
+        //r.width += 16;
+        r.x -= 1;
+        r.y -= 2;
+        r.width += 18;
+        r.height += 4;
+        return r;
+    }
+protected void endEdit() {
+        if (typingTarget != null) {
+            typingTarget.willChange();
+
+            final TextHolderFigure editedFigure = typingTarget;
+            final String oldText = typingTarget.getText();
+            final String newText = textArea.getText();
+
+            if (newText.length() > 0) {
+                typingTarget.setText(newText);
+            } else {
+                if (createdFigure != null) {
+                    getDrawing().remove((Figure) getAddedFigure());
+                // XXX - Fire undoable edit here!!
+                } else {
+                    typingTarget.setText("");
+                }
+            }
+
+            UndoableEdit edit = new AbstractUndoableEdit() {
+
+                @Override
+                public String getPresentationName() {
+                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+                    return labels.getString("attribute.text.text");
+                }
+
+                @Override
+                public void undo() {
+                    super.undo();
+                    editedFigure.willChange();
+                    editedFigure.setText(oldText);
+                    editedFigure.changed();
+                }
+
+                @Override
+                public void redo() {
+                    super.redo();
+                    editedFigure.willChange();
+                    editedFigure.setText(newText);
+                    editedFigure.changed();
+                }
+            };
+            getDrawing().fireUndoableEditHappened(edit);
+
+            typingTarget.changed();
+            typingTarget = null;
+
+            textArea.endOverlay();
+        }
+    //	        view().checkDamage();
+    }
+@Override
+    public void actionPerformed(ActionEvent event) {
+        endEdit();
+        if (isToolDoneAfterCreation()) {
+            fireToolDone();
+        }
+    }
+
+}

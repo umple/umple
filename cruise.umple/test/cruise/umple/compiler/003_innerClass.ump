@@ -1,0 +1,10 @@
+
+
+class Person
+{
+  name;
+  class Student
+  {
+    Integer;
+  }
+}

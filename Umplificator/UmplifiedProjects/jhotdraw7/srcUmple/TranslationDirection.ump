@@ -1,0 +1,91 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw ;
+
+class TranslationDirection 
+{
+depend edu.umd.cs.findbugs.annotations.Nullable;
+depend java.awt.Point;
+depend java.awt.geom.Point2D;
+
+  NORTH
+WEST
+SOUTH
+EAST
+NORTH_WEST
+SOUTH_WEST
+NORTH_EAST
+SOUTH_EAST
+/**
+     * Returns the direction from the provided start point to the end point.
+     * Returns null, if both points are at the same location.
+     */
+    @Nullable
+    public static TranslationDirection getDirection(Point startPoint, Point endPoint) {
+        int dx = endPoint.x - startPoint.x;
+        int dy = endPoint.y - startPoint.y;
+
+        if (dx == 0) {
+            if (dy == 0) {
+                return null;
+            } else if (dy > 0) {
+                return SOUTH;
+            } else {
+                return NORTH;
+            }
+        } else if (dx > 0) {
+            if (dy == 0) {
+                return EAST;
+            } else if (dy > 0) {
+                return SOUTH_EAST;
+            } else {
+                return NORTH_EAST;
+            }
+        } else {
+            if (dy == 0) {
+                return WEST;
+            } else if (dy > 0) {
+                return SOUTH_WEST;
+            } else {
+                return NORTH_WEST;
+            }
+        }
+    }
+/**
+     * Returns the direction from the provided start point to the end point.
+     * Returns null, if both points are at the same location.
+     */
+    @Nullable
+    public static TranslationDirection getDirection(Point2D.Double startPoint, Point2D.Double endPoint) {
+        double dx = endPoint.x - startPoint.x;
+        double dy = endPoint.y - startPoint.y;
+
+        if (dx == 0) {
+            if (dy == 0) {
+                return null;
+            } else if (dy > 0) {
+                return SOUTH;
+            } else {
+                return NORTH;
+            }
+        } else if (dx > 0) {
+            if (dy == 0) {
+                return EAST;
+            } else if (dy > 0) {
+                return SOUTH_EAST;
+            } else {
+                return NORTH_EAST;
+            }
+        } else {
+            if (dy == 0) {
+                return WEST;
+            } else if (dy > 0) {
+                return SOUTH_WEST;
+            } else {
+                return NORTH_WEST;
+            }
+        }
+    }
+
+}

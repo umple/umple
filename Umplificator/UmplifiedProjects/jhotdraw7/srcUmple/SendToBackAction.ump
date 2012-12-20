@@ -1,0 +1,51 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.action ;
+
+class SendToBackAction 
+{
+depend java.util.*;
+depend javax.swing.undo.*;
+depend org.jhotdraw.draw.*;
+depend org.jhotdraw.util.ResourceBundleUtil;
+  isA AbstractSelectedAction;
+
+  public final static String ID = "edit.sendToBack";
+@Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        final DrawingView view = getView();
+        final LinkedList<Figure> figures = new LinkedList<Figure>(view.getSelectedFigures());
+        sendToBack(view, figures);
+        fireUndoableEditHappened(new AbstractUndoableEdit() {
+
+            @Override
+            public String getPresentationName() {
+                ResourceBundleUtil labels =
+                        ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+                return labels.getTextProperty(ID);
+            }
+
+            @Override
+            public void redo() throws CannotRedoException {
+                super.redo();
+                SendToBackAction.sendToBack(view, figures);
+            }
+
+            @Override
+            public void undo() throws CannotUndoException {
+                super.undo();
+                BringToFrontAction.bringToFront(view, figures);
+            }
+        });
+    }
+public static void sendToBack(DrawingView view, Collection figures) {
+        Iterator i = figures.iterator();
+        Drawing drawing = view.getDrawing();
+        while (i.hasNext()) {
+            Figure figure = (Figure) i.next();
+            drawing.sendToBack(figure);
+        }
+    }
+
+}

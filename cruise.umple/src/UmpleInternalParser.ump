@@ -1,0 +1,58 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This is our internal parser implementation for the Umple language.  It uses
+a generic Parser that can read an external EBNF grammar file, and then populate
+an abstract syntax tree.
+
+The work of the UmpleInternalParser is 
+
+a) The grammar definition (defined externally in *.grammar files)
+b) Analyzing the AST to populate an Umple meta model instance
+c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
+
+Please refer to UmpleInternalParser_Code.ump for implementation details.
+
+ */
+
+class UmpleInternalParser
+{
+  isA UmpleParser;
+  isA Parser;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+  currentPackageName = "";
+
+  // The Umple meta model which will be populated based on what was parsed.
+  UmpleModel model;
+  
+    // The strictness level. ModelOnly means warn on method body or extra code
+  strictness {none {} modelOnly {} noExtraCode {} }
+  
+  // List of errors or warnings to expect. It is an error if they do not occur.
+  // This is used to set up test cases for the presence of certain messages
+  1 -> * ErrorType messagesToExpect;
+  
+  // List of warnings to allow and ignore
+  // Used to suppress warnings that we do not care about
+  1 -> * ErrorType warningsToIgnore;
+
+  after setModel{if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}}
+}
+
+class Pair
+{
+  name;
+  value;
+}
+
+use UmpleParser.ump;
+use Parser.ump;
+use Umple.ump;
+use UmpleDiagram.ump;
+use StateMachine.ump;
+use UmpleInternalParser_Code.ump;

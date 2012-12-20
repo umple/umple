@@ -1,0 +1,15 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.get" 
+imports="java.util.* cruise.umple.compiler.Attribute;"
+class="DefaultedIntegerGet" skeleton="../bckBean.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+		public <%= attVar.getType()%> get<%= attVar.getUpperCaseName()%>() {
+			return <%="a"+ attVar.getUpperCaseName()%>;
+		}
+
+		public <%= attVar.getType()%> getDefaulted<%= attVar.getUpperCaseName()%>() {
+			return <%= attVar.getValue()%>;
+		}
+		
+		public void resetToDefaulted<%= attVar.getUpperCaseName()%>() {
+			<%="a"+ attVar.getUpperCaseName()%>= getDefaulted<%= attVar.getUpperCaseName()%>();
+		}

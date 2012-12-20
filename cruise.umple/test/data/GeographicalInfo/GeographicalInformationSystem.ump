@@ -1,0 +1,117 @@
+/*
+  Geographical Information System- sample system 
+  Last updated: May 22, 2008
+*/
+//Namespace for facade class.
+namespace GIS;
+
+//Namespace for core of the system.
+namespace GIS.core;
+
+class Map {
+  scale; name; lattitude;
+  longitude; height; width;
+  1 -- * Feature;
+}
+
+class Feature{ 
+  name;
+}
+
+class PointFeature{
+  isA Feature;
+  1 -> 1 Point;
+}
+
+class Point{}
+
+class CurveFeature{
+  isA Feature;
+  1 -> * Point;
+}
+
+class RegionalFeature{ isA CurveFeature; }
+
+class FeatureType{ 
+  description; 
+  1 -- * Feature;
+}
+
+class PointFeatureType { 
+  isA FeatureType;
+  1 -> 1 Bitmap symbol;
+}
+
+class CurveFeatureType { 
+  colour; isA FeatureType; thickness; dashLength; gapLength; }
+
+class Bitmap {
+  bits; 
+}
+
+class RegionFeatureType {
+  isA CurveFeatureType;
+  1 -- 0..1 Bitmap fillPattern;
+}
+//$?[End_of_model]$?
+//Positioning
+class Map
+{
+  position 479 34 137 145;
+  position.association Feature__Map 75,147 52,0;
+}
+
+class CurveFeatureType
+{
+  position 247 173 153 110;
+}
+
+class FeatureType
+{
+  position 202 46 149 62;
+  position.association Feature__FeatureType 150,59 0,0;
+}
+
+class Bitmap
+{
+  position 48 346 109 58;
+}
+
+class Feature
+{
+  position 502 239 112 62;
+}
+
+class RegionFeatureType
+{
+  position 256 348 135 41;
+  position.association Bitmap:fillPattern__RegionFeatureType 0,10 109,12;
+}
+
+class PointFeatureType
+{
+  position 46 184 125 45;
+  position.association Bitmap:symbol__PointFeatureType 50,45 48,0;
+}
+
+class RegionalFeature
+{
+  position 418 457 117 41;
+}
+
+class CurveFeature
+{
+  position 422 349 109 41;
+  position.association CurveFeature__Point 109,41 0,0;
+}
+
+class Point
+{
+  position 571 459 109 41;
+}
+
+class PointFeature
+{
+  position 567 349 109 45;
+  position.association Point__PointFeature 70,45 66,0;
+}

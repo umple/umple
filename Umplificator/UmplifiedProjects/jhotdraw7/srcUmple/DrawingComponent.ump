@@ -1,0 +1,43 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.samples.svg.gui ;
+
+class DrawingComponent 
+{
+depend java.awt.event.*;
+depend javax.swing.*;
+depend org.jhotdraw.draw.*;
+
+  /**
+     * Returns the component of the DrawingComponent.
+     */
+    public JComponent getComponent();
+/**
+     * Returns the drawing of the DrawingComponent.
+     */
+    public Drawing getDrawing();
+/**
+     * Sets the drawing of the DrawingComponent.
+     */
+    public void setDrawing(Drawing newValue);
+/**
+     * Adds an ActionListener.
+     * <p>
+     * The ActionListener receives an ActionEvent with action command "save"
+     * when the user clicks at the save button on the drawing component.
+     * <p>
+     * The ActionListener receives an ActionEvent with action command "cancel"
+     * when the user clicks at the cancel button on the drawing component.
+     */
+    public void addActionListener(ActionListener listener);
+/**
+     * Removes an ActionListener.
+     */
+    public void removeActionListener(ActionListener listener);
+/**
+     * Returns a summary about the changes made on the drawing.
+     */
+    public String getSummary();
+
+}

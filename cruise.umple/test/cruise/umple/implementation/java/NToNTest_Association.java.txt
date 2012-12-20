@@ -1,0 +1,211 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+
+  //Mentor Associations
+  private List<Student> students;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName)
+  {
+    name = aName;
+    students = new ArrayList<Student>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Student getStudent(int index)
+  {
+    Student aStudent = students.get(index);
+    return aStudent;
+  }
+
+  public List<Student> getStudents()
+  {
+    List<Student> newStudents = Collections.unmodifiableList(students);
+    return newStudents;
+  }
+
+  public int numberOfStudents()
+  {
+    int number = students.size();
+    return number;
+  }
+
+  public boolean hasStudents()
+  {
+    boolean has = students.size() > 0;
+    return has;
+  }
+
+  public int indexOfStudent(Student aStudent)
+  {
+    int index = students.indexOf(aStudent);
+    return index;
+  }
+
+  public boolean isNumberOfStudentsValid()
+  {
+    boolean isValid = numberOfStudents() >= minimumNumberOfStudents() && numberOfStudents() <= maximumNumberOfStudents();
+    return isValid;
+  }
+
+  public static int requiredNumberOfStudents()
+  {
+    return 4;
+  }
+
+  public static int minimumNumberOfStudents()
+  {
+    return 4;
+  }
+
+  public static int maximumNumberOfStudents()
+  {
+    return 4;
+  }
+
+  public boolean addStudent(Student aStudent)
+  {
+    boolean wasAdded = false;
+    if (students.contains(aStudent)) { return false; }
+    if (numberOfStudents() >= maximumNumberOfStudents())
+    {
+      return wasAdded;
+    }
+
+    students.add(aStudent);
+    if (aStudent.indexOfMentor(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aStudent.addMentor(this);
+      if (!wasAdded)
+      {
+        students.remove(aStudent);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeStudent(Student aStudent)
+  {
+    boolean wasRemoved = false;
+    if (!students.contains(aStudent))
+    {
+      return wasRemoved;
+    }
+
+    if (numberOfStudents() <= minimumNumberOfStudents())
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = students.indexOf(aStudent);
+    students.remove(oldIndex);
+    if (aStudent.indexOfMentor(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aStudent.removeMentor(this);
+      if (!wasRemoved)
+      {
+        students.add(oldIndex,aStudent);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean setStudents(Student... newStudents)
+  {
+    boolean wasSet = false;
+    ArrayList<Student> verifiedStudents = new ArrayList<Student>();
+    for (Student aStudent : newStudents)
+    {
+      if (verifiedStudents.contains(aStudent))
+      {
+        continue;
+      }
+      verifiedStudents.add(aStudent);
+    }
+
+    if (verifiedStudents.size() != newStudents.length || verifiedStudents.size() < minimumNumberOfStudents() || verifiedStudents.size() > maximumNumberOfStudents())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Student> oldStudents = new ArrayList<Student>(students);
+    students.clear();
+    for (Student newStudent : verifiedStudents)
+    {
+      students.add(newStudent);
+      if (oldStudents.contains(newStudent))
+      {
+        oldStudents.remove(newStudent);
+      }
+      else
+      {
+        newStudent.addMentor(this);
+      }
+    }
+
+    for (Student oldStudent : oldStudents)
+    {
+      oldStudent.removeMentor(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    ArrayList<Student> copyOfStudents = new ArrayList<Student>(students);
+    students.clear();
+    for(Student aStudent : copyOfStudents)
+    {
+      if (aStudent.numberOfMentors() <= Student.minimumNumberOfMentors())
+      {
+        aStudent.delete();
+      }
+      else
+      {
+        aStudent.removeMentor(this);
+      }
+    }
+  }
+
+}

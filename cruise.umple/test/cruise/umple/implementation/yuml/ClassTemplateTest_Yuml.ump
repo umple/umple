@@ -1,0 +1,7 @@
+generate Yuml;
+namespace example;
+
+class NewClass
+{
+  position 193 66 10 20;
+}

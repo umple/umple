@@ -1,0 +1,112 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+module Example
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :number
+
+  #Student Associations - for documentation purposes
+  #attr_reader :mentors
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @mentors = []
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_number(a_number)
+    was_set = false
+    @number = a_number
+    was_set = true
+    was_set
+  end
+
+  def get_number
+    @number
+  end
+
+  def get_mentor(index)
+    a_mentor = @mentors[index]
+    a_mentor
+  end
+
+  def get_mentors
+    new_mentors = @mentors.dup
+    new_mentors
+  end
+
+  def number_of_mentors
+    number = @mentors.size
+    number
+  end
+
+  def has_mentors
+    has = @mentors.size > 0
+    has
+  end
+
+  def index_of_mentor(a_mentor)
+    index = @mentors.index(a_mentor)
+    index = -1 if index.nil?
+    index
+  end
+
+  def self.minimum_number_of_mentors
+    0
+  end
+
+  def add_mentor(a_mentor)
+    was_added = false
+    return false if index_of_mentor(a_mentor) != -1
+    existing_student = a_mentor.get_student
+    if existing_student.nil?
+      a_mentor.set_student(self)
+    elsif !existing_student.eql?(self)
+      existing_student.remove_mentor(a_mentor)
+      add_mentor(a_mentor)
+    else
+      @mentors << a_mentor
+    end
+    was_added = true
+    was_added
+  end
+
+  def remove_mentor(a_mentor)
+    was_removed = false
+    if @mentors.include?(a_mentor)
+      @mentors.delete(a_mentor)
+      a_mentor.set_student(nil)
+      was_removed = true
+    end
+    was_removed
+  end
+
+  def delete
+    @deleted = true
+    @mentors.each do |a_mentor|
+      a_mentor.set_student(nil)
+    end
+  end
+
+end
+end

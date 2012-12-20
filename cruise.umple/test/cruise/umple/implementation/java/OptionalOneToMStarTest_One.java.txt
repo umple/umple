@@ -1,0 +1,227 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.util.*;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String name;
+
+  //Mentor Associations
+  private List<Student> students;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aName, Student... allStudents)
+  {
+    name = aName;
+    students = new ArrayList<Student>();
+    boolean didAddStudents = setStudents(allStudents);
+    if (!didAddStudents)
+    {
+      throw new RuntimeException("Unable to create Mentor, must have at least 5 students");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Student getStudent(int index)
+  {
+    Student aStudent = students.get(index);
+    return aStudent;
+  }
+
+  public List<Student> getStudents()
+  {
+    List<Student> newStudents = Collections.unmodifiableList(students);
+    return newStudents;
+  }
+
+  public int numberOfStudents()
+  {
+    int number = students.size();
+    return number;
+  }
+
+  public boolean hasStudents()
+  {
+    boolean has = students.size() > 0;
+    return has;
+  }
+
+  public int indexOfStudent(Student aStudent)
+  {
+    int index = students.indexOf(aStudent);
+    return index;
+  }
+
+  public static int minimumNumberOfStudents()
+  {
+    return 5;
+  }
+
+  public boolean addStudent(Student aStudent)
+  {
+    boolean wasAdded = false;
+    if (students.contains(aStudent)) { return false; }
+    Mentor existingMentor = aStudent.getMentor();
+    if (existingMentor != null && existingMentor.numberOfStudents() <= minimumNumberOfStudents())
+    {
+      return wasAdded;
+    }
+    else if (existingMentor != null)
+    {
+      existingMentor.students.remove(aStudent);
+    }
+    students.add(aStudent);
+    setMentor(aStudent,this);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeStudent(Student aStudent)
+  {
+    boolean wasRemoved = false;
+    if (students.contains(aStudent) && numberOfStudents() > minimumNumberOfStudents())
+    {
+      students.remove(aStudent);
+      setMentor(aStudent,null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean setStudents(Student... newStudents)
+  {
+    boolean wasSet = false;
+    if (newStudents.length < minimumNumberOfStudents())
+    {
+      return wasSet;
+    }
+
+    ArrayList<Student> checkNewStudents = new ArrayList<Student>();
+    HashMap<Mentor,Integer> mentorToNewStudents = new HashMap<Mentor,Integer>();
+    for (Student aStudent : newStudents)
+    {
+      if (checkNewStudents.contains(aStudent))
+      {
+        return wasSet;
+      }
+      else if (aStudent.getMentor() != null && !this.equals(aStudent.getMentor()))
+      {
+        Mentor existingMentor = aStudent.getMentor();
+        if (!mentorToNewStudents.containsKey(existingMentor))
+        {
+          mentorToNewStudents.put(existingMentor, new Integer(existingMentor.numberOfStudents()));
+        }
+        Integer currentCount = mentorToNewStudents.get(existingMentor);
+        int nextCount = currentCount - 1;
+        if (nextCount < 5)
+        {
+          return wasSet;
+        }
+        mentorToNewStudents.put(existingMentor, new Integer(nextCount));
+      }
+      checkNewStudents.add(aStudent);
+    }
+
+    students.removeAll(checkNewStudents);
+
+    for (Student orphan : students)
+    {
+      setMentor(orphan, null);
+    }
+    students.clear();
+    for (Student aStudent : newStudents)
+    {
+      if (aStudent.getMentor() != null)
+      {
+        aStudent.getMentor().students.remove(aStudent);
+      }
+      setMentor(aStudent, this);
+      students.add(aStudent);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  private void setMentor(Student aStudent, Mentor aMentor)
+  {
+    try
+    {
+      java.lang.reflect.Field mentorField = aStudent.getClass().getDeclaredField("mentor");
+      mentorField.setAccessible(true);
+      mentorField.set(aStudent, aMentor);
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Issue internally setting aMentor to aStudent", e);
+    }
+  }
+
+  public boolean addStudentAt(Student aStudent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addStudent(aStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
+      students.remove(aStudent);
+      students.add(index, aStudent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveStudentAt(Student aStudent, int index)
+  {
+    boolean wasAdded = false;
+    if(students.contains(aStudent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfStudents()) { index = numberOfStudents() - 1; }
+      students.remove(aStudent);
+      students.add(index, aStudent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addStudentAt(aStudent, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    for(Student aStudent : students)
+    {
+      setMentor(aStudent,null);
+    }
+    students.clear();
+  }
+
+}

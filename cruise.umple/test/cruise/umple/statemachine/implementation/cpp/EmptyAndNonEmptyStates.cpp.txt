@@ -1,0 +1,82 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Light.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Light::Light()
+  {
+    setStatus(On);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Light::Light(const Light & light)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Light Light::operator=(const Light & light)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string Light::getStatusFullName()
+  {
+    string answer = getStatusStringName(status);
+    return answer;
+  }
+  
+  Light::Status Light::getStatus()
+  {
+    return status;
+  }
+
+  string Light::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "On"; break;}
+      case 1 : {return "Off"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Light::flip()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case On:
+        setStatus(Off);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void Light::setStatus(Status aStatus)
+  {
+    status = aStatus;
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Light::~Light()
+  {}

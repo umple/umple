@@ -1,0 +1,5 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  def <%= gen.translate("doActivityMethod",state)%>
+    <%= state.getActivity().getActivityCode() %>
+  end
+

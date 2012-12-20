@@ -1,0 +1,29 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  {
+    boolean wasAdded = false;
+    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
+<% if (!av.getMultiplicity().isUpperBoundMany()) { %>
+    if (<%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("maximumNumberOfMethod",av)%>())
+    {
+      <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
+      return wasAdded;
+    }
+
+<% } %>
+    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
+      if (!wasAdded)
+      {
+        <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+      }
+    }
+    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
+    return wasAdded;
+  }

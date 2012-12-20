@@ -1,0 +1,46 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%   
+  StringBuffer output = new StringBuffer();
+
+  isFirst = true;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    for (State state : sm.getStates())
+    {
+      if (state.getActivity() != null)
+      {
+        if (isFirst)
+        {
+          output.append(StringFormatter.format("if"));
+          isFirst = false;
+        }
+        else
+        {
+          output.append(StringFormatter.format("\n        else if"));
+        }
+        output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("      {\n"));
+        output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+        output.append(StringFormatter.format("      }"));
+      }
+    }
+  }
+%>
+  private static class DoActivityThread extends Thread
+  {
+    <%=gen.translate("type",uClass)%> controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(<%=gen.translate("type",uClass)%> aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      <%= output %>
+    }
+  }
+

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Umple Editor"
+            extensions="ump"
+            icon="$nl$/icons/umpleDocument2.gif"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="cruise.umple.ui.eclipse.editors.UmpleEditor"
+            id="cruise.umple.ui.eclipse.editors.UmpleEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="cruise.umple.ui.eclipse.UmpleAction"
+            label="Umple Tools"
+            visible="true">
+         <menu
+               id="UmpleMenu"
+               label="Umple &amp;Menu">
+            <separator
+                  name="UmpleGroup">
+            </separator>
+         </menu>
+         <action
+               class="cruise.umple.ui.eclipse.UmpleAction"
+               icon="$nl$/icons/action.compileUmple.gif"
+               id="cruise.umple.ui.eclipse.UmpleAction"
+               label="&amp;Compile Umple"
+               menubarPath="UmpleMenu/UmpleGroup"
+               toolbarPath="UmpleGroup"
+               tooltip="Compile Umple">
+         </action>
+      </actionSet>
+   </extension>
+   <!--
+  
+   The Wizard shows a "sample" Airline, but UmpleOnline provides a sufficient intro,
+   so this wizard is no longer required
+  
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="Umple Wizards"
+            id="Umple">
+      </category>
+      <wizard
+            name="Create new Umple File"
+            icon="$nl$/icons/umpleDocument.gif"
+            category="Umple"
+            class="cruise.umple.ui.eclipse.UmpleWizard"
+            id="cruise.umple.ui.eclipse.UmpleWizard">
+      </wizard>
+    </extension>
+   
+    No preferences at this time.
+
+   <extension point="org.eclipse.ui.preferencePages">
+     <page id="cruise.umple.ui.eclipse.UmplePreferencePage"
+          name="Umple"
+          class="cruise.umple.ui.eclipse.UmplePreferencePage">
+     </page>
+   </extension>
+   -->
+</plugin>

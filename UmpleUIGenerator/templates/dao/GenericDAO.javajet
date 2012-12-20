@@ -1,0 +1,27 @@
+<%@ jet package="cruise.data.impl.dao.generic" 
+imports="java.util.* cruise.umple.compiler.Attribute cruise.umple.compiler.UmpleClass;"
+class="GenericDAO"  skeleton="../skeleton/IGenerator.skeleton" %>
+package dao.generic;
+
+import java.util.List;
+
+public interface GenericDAO<T, PK> {
+
+	
+	    T findById(PK id);
+
+	    List<T> findAll();
+
+ 		List<T> findAll(Class clazz);
+ 
+	    List<T> findByInstance(T instance);
+
+	    T save(T entity, PK pk);
+
+	    void delete(PK pk);
+		
+		void deleteTree(T obj);
+		
+		void cascadeDelete(T obj);
+
+}

@@ -1,0 +1,107 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+State machine meta-model
+
+*/
+
+namespace cruise.umple.compiler;
+
+class StateMachine
+{
+  depend cruise.umple.util.*;
+
+  name;
+  * -- 0..1 UmpleClass;
+  
+  * nestedStateMachines -- 0..1 State parentState;
+  
+  key { parentState, name } 
+  
+  before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
+}
+
+class State
+{
+  name;
+  Boolean isConcurrent = { numberOfNestedStateMachines() > 1 }
+    
+  1 -- 0..1 Activity;
+  0..1 -> * Action;
+  * -- 1 StateMachine;
+
+  Boolean isStartState = false;
+  Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+  Boolean isHistoryState = false;
+  Boolean isDeepHistoryState = false;
+  Boolean finalState = false;
+  
+  before isFinalState { if ("Final".equals(name)) { finalState = true; } }
+ 
+}
+
+class Activity
+{
+  depend cruise.umple.compiler.Position;
+
+  lazy Position position;
+  activityCode;  // target language code
+  * -> 0..1 Event onCompletionEvent;
+}
+
+class Transition
+{
+    
+  Boolean isInternal = false;
+  Boolean autoTransition = false;
+
+  * -> 0..1 Event; 
+  * -- 1 State fromState;  
+  * nextTransition -- 1 State nextState;
+  * -> 0..1 Guard;
+  0..1 -> 0..1 Action;
+  
+  key { event, nextState, guard, action } 
+  
+}
+
+class Action
+{
+  depend cruise.umple.compiler.Position;
+  
+  actionType = null;
+  lazy Position position;
+  actionCode;  // target language code
+  Boolean isInternal = false;
+  
+  key { actionType, actionCode } 
+}
+
+class Event
+{
+  name;
+  String args = null;
+  Boolean isTimer = false;
+  Boolean autoTransition = false;
+  timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
+
+  Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
+  
+  key { name }
+}
+
+class Guard
+{
+  depend cruise.umple.compiler.Position;
+  
+  lazy Position position;
+  condition; // target language code
+  key { condition }
+}
+
+use Umple.ump;
+use StateMachine_Code.ump;

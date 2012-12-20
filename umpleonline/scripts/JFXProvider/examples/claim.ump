@@ -1,0 +1,18 @@
+namespace insurance.core;
+
+class Claim {
+ String sequenceNumber;
+  String sequenceNumber2;
+ String description;
+ String amountClaimed;
+ 1 -- 0..1 Clamor;
+ key{sequenceNumber, sequenceNumber2}
+}
+
+class Clamor {
+ String sequencia;
+ String descripcion="2";
+ String plata;
+ key{sequencia}
+}
+

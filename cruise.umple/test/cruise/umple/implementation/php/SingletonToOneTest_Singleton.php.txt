@@ -1,0 +1,95 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static $theInstance = null;
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $name;
+
+  //Mentor Associations
+  private $student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  private function __construct()
+  {
+    $this->name = NULL;
+  }
+
+  public static function getInstance()
+  {
+    if(self::$theInstance == null)
+    {
+      self::$theInstance = new Mentor();
+    }
+    return self::$theInstance;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function getStudent()
+  {
+    return $this->student;
+  }
+
+  public function setStudent($aStudent)
+  {
+    $wasSet = false;
+    $existingStudent = $this->student;
+    $this->student = $aStudent;
+    if ($existingStudent != null && $existingStudent !== $aStudent)
+    {
+      $existingStudent->removeMentor($this);
+    }
+    if ($aStudent != null && $aStudent !== $existingStudent)
+    {
+      $aStudent->addMentor($this);
+    }
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    if ($this->student != null)
+    {
+      $this->student->removeMentor($this);
+    }
+  }
+
+}
+?>

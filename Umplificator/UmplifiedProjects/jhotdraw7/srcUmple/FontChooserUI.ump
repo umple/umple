@@ -1,0 +1,12 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.gui.plaf ;
+
+class FontChooserUI 
+{
+depend javax.swing.plaf.ComponentUI;
+  isA ComponentUI;
+
+  
+}

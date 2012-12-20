@@ -1,0 +1,62 @@
+// A state machine with a variety of events
+// This is http://cruise.site.uottawa.ca/umpleonline/umple.php?model=116
+
+namespace example;
+
+class StateMachineTest {
+
+  Integer v = 0;
+  status {
+    S1 {
+      e2 -> S2C;
+      S1A {
+        e1 -> S2;
+      }
+      S1B {
+        e5 -> S1A;
+        S1B1 {
+          entry / {setV(0);}
+          e3 -> S2B;
+          e4 -> S1B2;
+        }
+        S1B2 {
+          e1 [v>4] -> S3;
+          e1 [v<1] -> S2;
+          e3 -> S1A;
+          e4 -> S1B1;
+        }
+      }
+    }
+    S2 {
+      exit / {setV(6);}
+      S2A {
+        e3-> S1B1;
+        e1-> S2;
+        e4 -> S1;
+      }
+      S2B {
+        e4 -> S2A;
+      }
+      S2C {
+        e1 -> / {setV(5);} S2B;
+        e2 -> S3;
+        e5 -> / {setV(2);} S3;
+        e4 -> S2B;
+      }
+    }
+    S3 {
+      exit / {setV(3);}
+      e1 -> S1A;
+      e2 -> S2;
+      e3 -> S2C;
+      e5 -> S1;
+    }
+  } // end status state machine
+
+  
+  trace status record v;
+  
+  public void v5() { setV(5); }
+  public void v0() { setV(0); }
+  
+} // end class

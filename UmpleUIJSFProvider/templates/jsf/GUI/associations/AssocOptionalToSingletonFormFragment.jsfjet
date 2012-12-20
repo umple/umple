@@ -1,0 +1,22 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.GUI.associations" 
+imports="java.util.* cruise.umple.compiler.*  cruise.model.abstractObjects.BackingObject  cruise.ui.jsf.*"
+class="AssocOptionalToSingletonFormFragment"  %>
+<%  BackingObject bckObject = (BackingObject) argument; 
+    List<AssociationVariable> optionalToSingletonAssociations= bckObject.getOptionalToSingletonAssociations();
+%>
+<% for (AssociationVariable assocVar: optionalToSingletonAssociations) { %>	
+				<h:outputText value="#{<%="a"+bckObject.getClassName()%>Bundle.<%=assocVar.getUpperCaseName()%>}"  />
+					<h:panelGrid columns="3" style="text-align:left;"	  >
+						<h:graphicImage value="/images/icons/checkmark.gif" style="border:0"  rendered="#{<%="a"+bckObject.getClassName()%>Bean.selected<%=assocVar.getUpperCaseName()%>!=null}"/>
+						<a4j:commandLink value="" reRender="<%=bckObject.getClassName()%>MainPanel#{uniqueId}"
+							rendered="#{<%="a"+bckObject.getClassName()%>Bean.selected<%=assocVar.getUpperCaseName()%>!=null}" immediate="true" 
+							action="#{<%="a"+bckObject.getClassName()%>Bean.removeSelected<%=assocVar.getUpperCaseName()%>}" >
+							<h:graphicImage value="/images/icons/delete.gif" style="border:0" />
+						</a4j:commandLink>
+						<a4j:commandLink value="" reRender="<%=bckObject.getClassName()%>MainPanel#{uniqueId}"
+							rendered="#{<%="a"+bckObject.getClassName()%>Bean.selected<%=assocVar.getUpperCaseName()%>==null}" immediate="true" 
+							action="#{<%="a"+bckObject.getClassName()%>Bean.getInstance<%=assocVar.getUpperCaseName()%>}" >
+							<h:outputText value="Instance" />
+						</a4j:commandLink>
+					</h:panelGrid>				
+			<% } %>

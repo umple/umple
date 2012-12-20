@@ -1,0 +1,8 @@
+<%@ jet package="cruise.ui.jsf.templates.impl.fragment.GUI" 
+imports="cruise.umple.compiler.Attribute;"
+class="GridSetteableTime" skeleton="../../../skeleton/IGenerator.skeleton" %>
+<% Attribute attVar = (Attribute) argument; %>
+			<f:facet name="header"><h:outputText value="#{#2#Bundle.<%=attVar.getUpperCaseName()%>}"/></f:facet>
+			<h:outputText value="#{#1#.<%=attVar.getName()%>}">
+				<f:convertDateTime pattern="hh:mm" />
+			</h:outputText>

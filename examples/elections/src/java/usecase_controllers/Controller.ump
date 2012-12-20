@@ -1,0 +1,99 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.startup;
+
+class Controller
+{
+  singleton;
+  
+  depend java.sql.Connection;
+  depend java.sql.DriverManager;
+  depend javax.swing.JOptionPane;
+  depend usecase.addPoll.AddPollController;
+  depend usecase.openPoll.OpenPollController;
+  depend usecase.addElection.AddElectionController;
+  depend usecase.addPosition.AddPositionController;
+  depend usecase.assignPositionElection.AssignPositionElectionController;
+  depend usecase.registerCandidate.RegisterCandidateController;
+  depend usecase.registerVoter.RegisterVoterController;
+  depend usecase.assignCandidature.AssignCandidatureController;
+  depend view.main.MainView;
+
+  lazy internal int option=JOptionPane.NO_OPTION;
+  lazy internal Object mainMenuOption="Quit";
+  
+  void showMainMenu()
+  {
+    MainView.getInstance().setVisible(true);
+  }
+  
+  status {
+    Initial
+    {
+    start -> ProvidingMainMenu;
+    }
+    ProvidingMainMenu {
+    entry / {showMainMenu();}
+    openPoll -> PollOpening;
+    addElection -> ElectionAdding;
+    addPoll -> PollAdding;
+    addPosition -> PositionAdding;
+    assignPositionElection -> AssigningPositionElection;
+    registerCandidate -> CandidateRegisteration;
+    registerVoter -> VoterRegisteration;
+    declareCandidature -> CandidatureDeclaration;
+    quit -> Closing;
+    }
+    PollOpening {
+    entry / {MainView.getInstance().setVisible(false);
+      OpenPollController.getInstance().openPoll();}
+    start -> ProvidingMainMenu;
+    }
+    ElectionAdding {
+    entry / {MainView.getInstance().setVisible(false);
+      AddElectionController.getInstance().addElection();}
+    start -> ProvidingMainMenu;
+    }
+    PollAdding {
+    entry / {MainView.getInstance().setVisible(false);
+    AddPollController.getInstance().addPoll();}
+    start -> ProvidingMainMenu;
+    }
+    PositionAdding {
+    entry / {MainView.getInstance().setVisible(false);
+    AddPositionController.getInstance().addPosition();}
+    start -> ProvidingMainMenu;
+    }
+    AssigningPositionElection {
+    entry / {MainView.getInstance().setVisible(false);
+    AssignPositionElectionController.getInstance().assignPositionElection();}
+    start -> ProvidingMainMenu;
+    }
+    CandidateRegisteration {
+    entry / {MainView.getInstance().setVisible(false);
+    RegisterCandidateController.getInstance().registerCandidate();}
+    start -> ProvidingMainMenu;
+    }
+    VoterRegisteration {
+    entry / {MainView.getInstance().setVisible(false);
+    RegisterVoterController.getInstance().registerVoter();}
+    start -> ProvidingMainMenu;
+    }
+    CandidatureDeclaration {
+    entry / {MainView.getInstance().setVisible(false);
+    AssignCandidatureController.getInstance().assignCandidate();}
+    start -> ProvidingMainMenu;
+    }
+    Closign {
+    entry / {MainView.getInstance().setVisible(false);
+      MainView.getInstance().dispose();}
+    }
+  }
+}

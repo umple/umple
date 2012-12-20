@@ -1,0 +1,8 @@
+use package-info.ump;
+use RelativeLocator.ump;
+use FontSizeLocator.ump;
+use BezierPointLocator.ump;
+use Locator.ump;
+use AbstractLocator.ump;
+use RelativeDecoratorLocator.ump;
+use BezierLabelLocator.ump;

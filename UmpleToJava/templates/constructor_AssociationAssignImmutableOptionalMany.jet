@@ -1,0 +1,7 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore" %>
+    <%=gen.translate("associationMany",av)%> = new ArrayList<<%=gen.translate("type",av)%>>();
+    boolean <%=gen.translate("didAddMany",av)%> = <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterAll",av)%>);
+    if (!<%=gen.translate("didAddMany",av)%>)
+    {
+      throw new RuntimeException("Unable to create <%=gen.relatedTranslate("type",av)%>, must not have duplicate <%=gen.translate("associationMany",av)%>.");
+    }

@@ -1,0 +1,36 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the Java Umplificator!*/
+
+namespace org.jhotdraw.draw.event ;
+
+class TransformRestoreEdit 
+{
+depend org.jhotdraw.draw.*;
+depend javax.swing.undo.*;
+depend org.jhotdraw.util.*;
+  isA AbstractUndoableEdit;
+
+  private Figure owner;
+private Object oldTransformRestoreData;
+private Object newTransformRestoreData;
+@Override
+    public String getPresentationName() {
+        ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        return labels.getString("edit.transform.text");
+    }
+@Override
+    public void undo() throws CannotUndoException {
+        super.undo();
+        owner.willChange();
+        owner.restoreTransformTo(oldTransformRestoreData);
+        owner.changed();
+    }
+@Override
+    public void redo() throws CannotRedoException {
+        super.redo();
+        owner.willChange();
+        owner.restoreTransformTo(newTransformRestoreData);
+        owner.changed();
+    }
+
+}

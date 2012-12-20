@@ -1,0 +1,13 @@
+
+
+class Student
+{
+  
+  name;
+  
+  public void doSomethingElse()
+  {
+    System.out.println("aha");
+  }
+
+}

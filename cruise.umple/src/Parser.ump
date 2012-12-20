@@ -1,0 +1,207 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Parser for the grammar that can be used to define any grammar
+UmpleParser.ump is the key example
+
+ */
+namespace cruise.umple.compiler;
+
+class Couple
+{
+  open;
+  close;
+  0..1 -- 0..* Couple ignores;
+}
+
+/*
+ * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
+ */
+class ParseResult
+{
+  // Specifies whether or not the parsing was successful.
+  Boolean wasSuccess;
+
+  // Specifies whether or not the parsing has warnings.
+  Boolean hasWarnings = false;
+
+  internal Boolean _acceptsErrors = true;
+
+  // Position is left for now, as not to break things
+  * -> 0..1 Position;
+
+  // The error messages related to parsing.
+  * -> * ErrorMessage;
+
+  depend  cruise.umple.util.StringFormatter;
+}
+
+/*
+ * Represents an error message, typically used with parsing.
+ */
+class ErrorMessage
+{
+  // Indicates the type of error.
+  * -> 1 ErrorType;
+
+  * -> 1 Position;
+
+  String[] parameters;
+
+  depend  cruise.umple.util.StringFormatter;
+}
+
+/*
+ * Represents an error type, which contains an error code, the severity of the error, etc.
+ */
+class ErrorType
+{
+  // The error code.
+  Integer errorCode;
+
+  // The severity of the error.
+  Integer severity;
+
+  String errorFormat;
+  String errorUrl;
+
+  key {errorCode}
+}
+
+class ErrorTypeSingleton
+{
+  singleton;
+  1 -> * ErrorType;
+
+  depend cruise.umple.compiler.exceptions.UmpleCompilerException;
+  depend cruise.umple.util.SampleFileWriter;
+  depend java.io.*;
+}
+
+/*
+ * Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
+ * these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
+ * track of the positions that the input parser parsed things at.
+ */
+class Token
+{
+  // The name of the token.
+  name;
+
+  // The value of the token.
+  value;
+  0..1 parentToken -- * Token subTokens;
+  * -> 0..1 Position;
+
+  before getName { if (name == null) { return ""; } }
+  before getValue { if (value == null) { return ""; } }
+
+  before setPosition {String tFilename = position == null ? newPosition.getFilename() : position.getFilename();}
+  after setPosition {position.setFilename(tFilename);}
+}
+
+/*
+ * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
+ * filename, the line number and the corresponding offset on that line number.
+ */
+class Position
+{
+  // The filename of the position.
+  String filename;
+
+  // The line number of the position.
+  Integer lineNumber;
+
+  // The character offset of the position.
+  Integer characterOffset;
+
+  // The offset of the position.
+  Integer offset;
+
+  key { filename, lineNumber, characterOffset, offset }
+}
+
+/*
+ * Represents a rule, which has a name and contains definitions that describe it.
+ * 
+ * Examples of this are a class definition.
+ */
+class Rule
+{
+  // The name of the rule.
+  name;
+
+  Boolean shouldHide = false;
+
+  // The definitions associated with the rule.
+  String[] definitions;
+}
+
+class RulePartValue
+{
+  String name = null;
+  String value = null;
+  * -> 0..1 Position;
+}
+
+class RulePart
+{
+  // The name of the rule part.
+  name;
+
+  multiplicity;
+  String[] nextIdentifiers;
+  Integer maximumPartsFound = -1;
+
+  // A rule part is either static, variable or rule.
+  type { Static, Variable, Rule }
+
+  before addNextIdentifier { if (aNextIdentifier == null) { return false; } }
+  before getMultiplicity { if (multiplicity == null) { return "1"; } }
+}
+
+/*
+ * Parses an Umple file (.ump) based on grammar rules.
+ * 
+ * As parsing is going on "tokens" will be created and linked together in a hierarchy fashion based on what was parsed.
+ */
+class Parser
+{
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  // The Umple file (.ump) that will be parsed.
+  String filename = null;
+
+  String name; // default 'program'
+  String[] grammarRules;
+
+  // A parser can have many "rules", likewise each rule can be part of many "parsers"; hence many-to-many.
+  * -> * Rule;
+
+  * -> * Couple;
+
+  // The results of the parsing, and any errors/warning messages will be stored here.
+  ParseResult parseResult = new ParseResult(true);
+
+  internal Position _curParsePos = null;
+
+  // Every parser makes use of "tokens" that are built up based on what is parsed.  In the end it looks almost like a "tree".
+  // This is the starting token for which everything will be built off of (sub-tokens).
+  Token rootToken = reset();
+}
+
+class RuleInstance
+{
+  String[] stopAts;
+  internal Integer updateIndex = -1;
+  internal Integer rulePartsIndex = 0;
+  * -> * RulePart;
+  * -> 1 Parser;
+}
+
+use Parser_Code.ump;

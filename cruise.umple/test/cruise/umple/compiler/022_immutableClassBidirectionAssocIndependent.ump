@@ -1,0 +1,14 @@
+class StudentE
+{
+	immutable;
+}
+
+class MentorE
+{
+	immutable;
+}
+
+association
+{
+	1 StudentE -- 1 MentorE;
+}

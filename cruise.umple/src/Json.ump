@@ -1,0 +1,26 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.util;
+
+class JsonParser
+{
+  isA Parser;
+}
+
+class Json
+{
+  name;
+  value;
+  Json[] composites;
+  Json[] arrays;
+}
+
+use Parser.ump;
+use Json_Code.ump;

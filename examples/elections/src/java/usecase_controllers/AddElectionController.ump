@@ -1,0 +1,99 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace usecase.addElection;
+
+class AddElectionController
+{
+  singleton;
+  
+  depend view.addElection.AddElectionView;
+  depend shared.Result;
+  depend service.ElectionService;
+  depend shared.domain.Election;
+  depend usecase.startup.Controller;
+    
+  lazy internal AddElectionView addElectionView;
+  lazy internal String electionName;
+  lazy internal Boolean electionFound;
+    
+  ElectionAddingSteps {
+    Initial
+    {
+      addElection -> AddElectionViewShown;
+    }
+    AddElectionViewShown
+    {
+      entry / {showAddElectionView();}
+      addButtonClicked -> CheckingElectionName;
+      closeView -> ClosingView;
+    }
+    CheckingElectionName
+    {
+      entry / {electionName=addElectionView.getElectionName();}
+      [electionName.trim().isEmpty()] -> ElectionNameEmpty;
+      [!electionName.trim().isEmpty()] -> CheckingExistingElection;
+    }
+    CheckingExistingElection
+    {
+      entry / {ElectionService.getInstance().setElectionNameToSearch(electionName);
+          electionFound=ElectionService.getInstance().getElectionFound();}
+      [!electionFound] -> AddingElection;
+      [electionFound] -> ElectionExists;
+    }
+    AddingElection
+    {
+      entry / {tryToAddElection();}
+      [ElectionService.getInstance().getElectionAdded()] -> ElectionAdded;
+      [ElectionService.getInstance().getElectionAdded()] -> ElectionNotAdded;
+    }
+    ElectionAdded
+    {
+      entry / {Result.getInstance().setMessage("Election Added Successfully!");
+          Controller.getInstance().start();}
+      -> Initial;
+    }
+    ElectionNotAdded
+    {
+      entry / {Result.getInstance().setMessage("Adding Election Failed!"); Controller.getInstance().start();}
+      -> Initial;
+    }
+    ElectionExists
+    {
+      entry / {Result.getInstance().setMessage("Election Exists!");
+          Controller.getInstance().start();
+          addElectionView.dispose();}
+      -> Initial;
+    }
+    ElectionNameEmpty
+    {
+      entry / {Result.getInstance().setMessage("Election name cannot be empty!");}
+      addButtonClicked -> CheckingElectionName;
+      closeView -> ClosingView;
+    }
+    ClosingView
+    {
+      entry / {addElectionView.dispose();}
+      -> Initial;
+    }
+  }
+   
+   void showAddElectionView() {
+     addElectionView=new AddElectionView();
+     addElectionView.setVisible(true);
+  }
+  
+  void tryToAddElection() {
+    electionName=addElectionView.getElectionName();
+    String electionDescription=addElectionView.getElectionDescription();
+    Election election=new Election(-1, electionName, electionDescription, null);
+    ElectionService.getInstance().setNewElection(election);
+    addElectionView.dispose();
+  }
+}

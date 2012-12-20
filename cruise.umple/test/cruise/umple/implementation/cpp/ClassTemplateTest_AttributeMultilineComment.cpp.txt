@@ -1,0 +1,58 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Foo.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Foo::Foo(const string & aName)
+  {
+    name = aName;
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Foo::Foo(const Foo & foo)
+  {
+    this->name = foo.name;
+  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Foo Foo::operator=(const Foo & foo)
+  {
+    this->name = foo.name;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Foo::setName(const string & aName)
+  {
+    bool wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  string Foo::getName() const
+  {
+    return name;
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Foo::~Foo()
+  {}
