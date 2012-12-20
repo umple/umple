@@ -30,7 +30,7 @@ public class Student
   public boolean setAge(int aAge)
   {
     boolean wasSet = false;
-    if (aAge>18)
+    if ((aAge>18))
     {
     age = aAge;
     wasSet = true;

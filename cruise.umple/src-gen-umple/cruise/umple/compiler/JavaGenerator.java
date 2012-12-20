@@ -719,7 +719,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     for (Constraint ac : aClass.getConstraints())
     {
       boolean isAttr = false;
-      String code = "if ";
+      String code = "if (";
       for (String expr : ac.getExpression())
       {
         if( isAttr == true && aClass.getAttribute(expr) != null)
@@ -739,7 +739,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
         }
       }
     
-      code += "\n{";
+      code += ")\n{";
       CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), code, aClass);         
       CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), "}", aClass);
       before.setIsInternal(true);
