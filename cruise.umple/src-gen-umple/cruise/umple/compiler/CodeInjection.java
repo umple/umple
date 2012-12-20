@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
-// line 203 "../../../../src/Umple.ump"
+// line 210 "../../../../src/Umple.ump"
 public class CodeInjection
 {
 

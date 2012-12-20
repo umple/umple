@@ -1,0 +1,7 @@
+namespace cruise.attributes.test;
+
+class Student
+{
+	Integer age;
+	[(age>18)]
+}	

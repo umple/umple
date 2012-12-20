@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  */
-// line 406 "../../../../src/Umple.ump"
+// line 416 "../../../../src/Umple.ump"
 // line 1164 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
@@ -135,7 +135,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setRelatedAssociation(AssociationVariable newRelatedAssociation)
   {
     boolean wasSet = false;
-    // line 420 "../../../../src/Umple.ump"
+    // line 430 "../../../../src/Umple.ump"
     if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }
     if (newRelatedAssociation == null)
     {
@@ -227,7 +227,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 418 "../../../../src/Umple.ump"
+    // line 428 "../../../../src/Umple.ump"
     if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;

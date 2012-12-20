@@ -793,11 +793,7 @@ this("UmpleInternalParser", aModel);
       shouldConsumeComment = false;
     }
     // TODO Under development
-    else if (token.is("invariant"))
-    {
-      // unimplemented feature. Issue a warning that it is currently not fully implemented
-      setFailedPosition(token.getPosition(), 9999, token.getName(), token.toString());
-    }     
+    
     else if (token.is("classDefinition"))
     {
       UmpleClass childClass = analyzeClass(token);
@@ -811,6 +807,13 @@ this("UmpleInternalParser", aModel);
     {
       analyzeAttribute(token,aClass);
     }
+    
+    else if (token.is("invariant"))
+    {
+      analyzeInvariant(token,aClass);
+      // unimplemented feature. Issue a warning that it is currently not fully implemented
+      // setFailedPosition(token.getPosition(), 9999, token.getName(), token.toString());
+    } 
     else if (token.is("beforeCode") || token.is("afterCode"))
     {
       analyzeInjectionCode(token,aClass);
@@ -2099,6 +2102,79 @@ this("UmpleInternalParser", aModel);
     {
       attribute.addComment(c);
     }
+  }
+  /*
+   * Analyzes a token recognized as a constraint
+   * 
+   * @param invariantToken The token containting the constraints.
+   * @param aClass The Umple class for which an attribute is being constrained.
+   */
+  private void analyzeInvariant (Token invariantToken, UmpleClass aClass)
+  {
+    List<String> constraintExpr = new ArrayList<String>();
+    String rawLine = "\n";
+    Boolean isFirst = false;
+    constraintExpr = analyzeInvariant(invariantToken);
+    Constraint aConstraint = new Constraint("");
+    for (String expr : constraintExpr)
+    {
+      if (expr.equals("attr"))
+      {
+        isFirst = true;
+} 
+      else if( isFirst == true && aConstraint.getConstrainedVariable().equals(""))
+      {
+        aConstraint.setConstrainedVariable(expr);
+      }
+      aConstraint.addExpression(expr);
+      
+    }
+    //setFailedPosition(invariantToken.getPosition(), 9999, invariantToken.getName(), invariantToken.toString() + rawLine);    
+    aClass.addConstraint(aConstraint);     
+  }
+  //This recursive function parses the expression. It's very broken down to allow new features to be added easily.
+  private List<String> analyzeInvariant(Token invariantToken)
+  {
+    List<String> rawLine = new ArrayList<String>();
+    List<Token> subs = invariantToken.getSubTokens();
+    for (Token t : subs)
+    {
+      if (t.getName().equals(")") || t.getName().equals("("))
+      {
+        rawLine.add(t.getName());
+      }
+      if (!t.getValue().equals("STATIC"))
+      { 
+        if (t.getName().equals("boolExpr"))
+        {
+          List<Token> BoolExpSubs = t.getSubTokens();
+          for(Token s : BoolExpSubs)
+          {
+            if (s.getValue().equals("STATIC"))
+            {
+              rawLine.add(s.getName());
+            } 
+            else if(s.getName().equals("constraintVal"))
+            {
+              rawLine.add("attr");
+              rawLine.add(s.getValue());
+            }
+            else
+            {
+              rawLine.add(s.getValue());
+            }
+          }
+        }
+        else
+        {
+          for (String addexp: analyzeInvariant(t))
+          {
+            rawLine.add(addexp);
+          }
+        }
+      } 
+    }
+  return rawLine;
   }
 // line 24 ../../../../src/UmpleInternalParser_CodeStateMachine.ump
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){

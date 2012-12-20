@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents an Umple interface.
  */
-// line 224 "../../../../src/Umple.ump"
+// line 231 "../../../../src/Umple.ump"
 // line 433 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleElement
 {
@@ -287,7 +287,7 @@ public class UmpleInterface extends UmpleElement
   public boolean addDepend(Depend aDepend)
   {
     boolean wasAdded = false;
-    // line 239 "../../../../src/Umple.ump"
+    // line 246 "../../../../src/Umple.ump"
     if (depends.contains(aDepend)) { return false; }
     if (depends.contains(aDepend)) { return false; }
     depends.add(aDepend);

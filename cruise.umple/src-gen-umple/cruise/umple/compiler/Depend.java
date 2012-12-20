@@ -3,7 +3,7 @@
 
 package cruise.umple.compiler;
 
-// line 304 "../../../../src/Umple.ump"
+// line 314 "../../../../src/Umple.ump"
 // line 385 "../../../../src/Umple_Code.ump"
 public class Depend
 {

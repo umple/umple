@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Represents an Umple class which can contain attributes, associations and methods.
  */
-// line 245 "../../../../src/Umple.ump"
+// line 252 "../../../../src/Umple.ump"
 // line 90 "../../../../src/Trace.ump"
 // line 491 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleElement
@@ -29,6 +29,7 @@ public class UmpleClass extends UmpleElement
 
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
+  private List<Constraint> constraints;
   private UmpleClass extendsClass;
   private Token extendsToken;
   private List<UmpleInterface> parentInterface;
@@ -59,6 +60,7 @@ public class UmpleClass extends UmpleElement
     ancestorIsImmutable = false;
     sourceModel = aSourceModel;
     codeInjections = new ArrayList<CodeInjection>();
+    constraints = new ArrayList<Constraint>();
     parentInterface = new ArrayList<UmpleInterface>();
     depends = new ArrayList<Depend>();
     methods = new ArrayList<Method>();
@@ -215,6 +217,39 @@ public class UmpleClass extends UmpleElement
   public int indexOfCodeInjection(CodeInjection aCodeInjection)
   {
     int index = codeInjections.indexOf(aCodeInjection);
+    return index;
+  }
+
+  public Constraint getConstraint(int index)
+  {
+    Constraint aConstraint = constraints.get(index);
+    return aConstraint;
+  }
+
+  /**
+   * The possible Constraints related to the Umple Class
+   */
+  public List<Constraint> getConstraints()
+  {
+    List<Constraint> newConstraints = Collections.unmodifiableList(constraints);
+    return newConstraints;
+  }
+
+  public int numberOfConstraints()
+  {
+    int number = constraints.size();
+    return number;
+  }
+
+  public boolean hasConstraints()
+  {
+    boolean has = constraints.size() > 0;
+    return has;
+  }
+
+  public int indexOfConstraint(Constraint aConstraint)
+  {
+    int index = constraints.indexOf(aConstraint);
     return index;
   }
 
@@ -636,10 +671,67 @@ public class UmpleClass extends UmpleElement
     return wasAdded;
   }
 
+  public static int minimumNumberOfConstraints()
+  {
+    return 0;
+  }
+
+  public boolean addConstraint(Constraint aConstraint)
+  {
+    boolean wasAdded = false;
+    if (constraints.contains(aConstraint)) { return false; }
+    constraints.add(aConstraint);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeConstraint(Constraint aConstraint)
+  {
+    boolean wasRemoved = false;
+    if (constraints.contains(aConstraint))
+    {
+      constraints.remove(aConstraint);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addConstraintAt(Constraint aConstraint, int index)
+  {  
+    boolean wasAdded = false;
+    if(addConstraint(aConstraint))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConstraints()) { index = numberOfConstraints() - 1; }
+      constraints.remove(aConstraint);
+      constraints.add(index, aConstraint);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveConstraintAt(Constraint aConstraint, int index)
+  {
+    boolean wasAdded = false;
+    if(constraints.contains(aConstraint))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfConstraints()) { index = numberOfConstraints() - 1; }
+      constraints.remove(aConstraint);
+      constraints.add(index, aConstraint);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addConstraintAt(aConstraint, index);
+    }
+    return wasAdded;
+  }
+
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 299 "../../../../src/Umple.ump"
+    // line 309 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -728,7 +820,7 @@ public class UmpleClass extends UmpleElement
   public boolean addDepend(Depend aDepend)
   {
     boolean wasAdded = false;
-    // line 293 "../../../../src/Umple.ump"
+    // line 303 "../../../../src/Umple.ump"
     if (depends.contains(aDepend)) { return false; }
     if (depends.contains(aDepend)) { return false; }
     depends.add(aDepend);
@@ -981,7 +1073,7 @@ public class UmpleClass extends UmpleElement
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 297 "../../../../src/Umple.ump"
+    // line 307 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1253,7 +1345,7 @@ public class UmpleClass extends UmpleElement
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 301 "../../../../src/Umple.ump"
+    // line 311 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1392,6 +1484,7 @@ public class UmpleClass extends UmpleElement
   public void delete()
   {
     codeInjections.clear();
+    constraints.clear();
     if (extendsClass != null)
     {
       UmpleClass placeholderExtendsClass = extendsClass;

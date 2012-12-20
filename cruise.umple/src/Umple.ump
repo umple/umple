@@ -199,6 +199,13 @@ class ReferenceType{
   * -> 0..1 UmpleClass;
   * -> 0..1 UmpleInterface;
 }
+// Under Development
+// The Constraint object related to Umple Classes
+class Constraint{
+  constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
+  String[] expression;
+  String[] type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+}
 
 class CodeInjection
 {
@@ -263,6 +270,9 @@ class UmpleClass
   internal Boolean ancestorIsImmutable = false;
 
   1 -> * CodeInjection;
+
+  // The possible Constraints related to the Umple Class
+  1 -> 0..* Constraint;
 
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;

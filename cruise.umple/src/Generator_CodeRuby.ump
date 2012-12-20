@@ -611,6 +611,39 @@ class RubyGenerator
       }
     } 
     
+    for (Constraint ac : aClass.getConstraints())
+    {
+      boolean isAttr = false;
+      String code = "if ";
+      for (String expr : ac.getExpression())
+      {
+        if( isAttr == true && aClass.getAttribute(expr) != null)
+        {
+          if (expr.equals(ac.getConstrainedVariable())) { code += StringFormatter.format("{0}", translate("parameterOne",aClass.getAttribute(expr)));}
+          else { code += StringFormatter.format("@{0}", translate("attributeOne",aClass.getAttribute(expr)));}
+          isAttr = false;
+        }
+        else if (expr.equals("attr")) 
+        {
+          isAttr = true;
+        } 
+        else
+        { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
+          code += expr;
+          isAttr = false;
+        }
+      }
+      
+      code += " then\n";
+      // This is will needed to ba changed with the type variable to allow constraints on assoications.
+      CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), code, aClass);         
+      CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), "end", aClass);
+      before.setIsInternal(true);
+      after.setIsInternal(true);
+      aClass.addCodeInjection(before);
+      aClass.addCodeInjection(after);
+    }
+    
     Map<String,String> lookups = new HashMap<String,String>();
     String executeMethods = "def self.execute(message)\nself.getInstance().addTrace(message)\nend\n";
     executeMethods += "def reset\nself.getInstance().traces = []\nend";
