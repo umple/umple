@@ -39,7 +39,7 @@ Details of each state can include:
 
 @@syntax
 
-[[stateMachineDefinition]] [[state]] [[stateInternal]] [[stateEntity]] [[transition]] [[entryOrExitAction]] [[activity]] [[guard]] [[eventDefinition]] [[action]] [[afterEveryEvent]] [[afterEvent]]
+[[stateMachine]] [[enum]] [[inlineStateMachine]] [[state]] [[stateInternal]] [[stateEntity]] [[transition]] [[entryOrExitAction]] [[autoTransition]] [[autoTransitionBlock]] [[activity]] [[guard]] [[eventDefinition]] [[eventWithArgs]] [[action]] [[afterEveryEvent]] [[afterEvent]]
 
 
 @@example
