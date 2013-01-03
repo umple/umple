@@ -3,7 +3,10 @@ Classes and Interfaces
 noreferences
 
 @@description
-The depend clause is used to indicate a dependency to another namespace, class or interface
+<p>The depend clause is used to indicate a dependency to another namespace, class or interface</p>
+
+<p>See also <a href="InterfacingtoExternalCode.html">this example of how to use the depend clause to arrange for Umple to work with external code.</a>
+</p>
 
 @@syntax
 [[depend]] 

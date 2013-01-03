@@ -1,5 +1,5 @@
 Method Definition
-Classes and Interfaces
+Methods
 noreferences
 
 @@description
@@ -7,7 +7,7 @@ noreferences
 <p>The Umple language allows a developer to extend the functionality of a class
 with arbitrary methods written the natively compiled language (e.g. Java, Php or Ruby).</p>
 
-<p>Within these arbitrary methods, a developer may call generated methods that access the Umple attributes, associations and state machines.</p>
+<p>Within these arbitrary methods, a developer may call generated methods that access the Umple attributes, associations and state machines. To determine what API methods are available to be called by methods, refer to the <a href="APISummary.html">API reference</a> or generate Javadoc from an Umple file using UmpleOnline.</p>
 
 <p>A standard Umple method will specify the return type, then the name, then the argument list and finally the method body in curly brackets. The generated output for the method will use correct format for the generated language and will be public.
 
