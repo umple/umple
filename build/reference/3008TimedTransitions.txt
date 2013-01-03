@@ -1,0 +1,66 @@
+Timed Transitions
+State Machines
+noreferences
+
+@@description
+<p>      
+A transition can be triggered after a specified delay (a floating point value, given in seconds). The transition will be taken after the delay provided the object is still in the state and any guard is true. This is accomplished using the 'after' keyword.
+</p>
+
+<p>
+The 'afterEvery' keyword, tries to trigger a transition repeatedly at a specified interval while the object remains in the state.</p>
+
+@@syntax
+
+[[afterEveryEvent]] [[afterEvent]]
+
+@@example
+
+// In this example, the system will transition to state b
+// after a 1-second delay
+class X {
+  sm {
+    a {
+      entry / {System.out.println("entering a");}
+      after(1) -> b;
+    }
+    b {
+      entry / {System.out.println("entering b");}
+    }
+  }
+  public static void main(String [ ] args) {
+    X x = new X();
+  }
+}
+
+@@endexample
+
+
+@@example
+// In this example, the system will transition to state b
+// when the value of the attribute count drops below 5
+// An attempt to make this transition is taken every second
+// The do activity slowly drops the value of count
+class X {
+  Integer count = 10;
+  sm {
+    a {
+      entry / {System.out.println("entering a");}
+      do {
+        while (count > 0) {
+          System.out.println("Count = "+count);
+          Thread.sleep(1000);
+          count --;
+        }
+      }
+      afterEvery(1) [count<5] -> b;
+    }
+    b {
+      entry / {System.out.println("entering b");}
+    }
+  }
+  public static void main(String [ ] args) {
+    X x = new X();
+  }
+}
+@@endexample
