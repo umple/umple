@@ -1,0 +1,138 @@
+Delegation Pattern
+Patterns
+noreferences
+
+@@description
+<p><a href="http://en.wikipedia.org/wiki/Delegation_pattern">Delegation</a> is one of the most fundamental patterns, that underpins many more sophisticated patterns found in the <a href="http://en.wikipedia.org/wiki/Design_Patterns">Gang of Four book</a>.  To simplify code, reduce coupling, and adhere to the <a href="http://en.wikipedia.org/wiki/Law_of_Demeter">'Law of Demeter'</a>, it encourages you to create one-line methods that do nothing other than call methods in neighbouring classes. Other code in your class then calls the delegation methods, rather than also calling the methods in the neighbouring classes. That way, very few methods (just the delegation methods) actually need to traverse associations</p>
+
+<p>In Umple there is no special syntax for delegation, however the notation for <a href="DerivedAttributes.html">derived attributes</a> has the effect of creating delegation methods in the manner shown in the example below.</p>
+
+<p>Delegation methods can also be used to help build occurrences of other patterns such as
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Adapter_pattern">Adapter</a>: You create a delegation method that calls a method with a different name in a class you are trying to adapt for use in your system.
+<li><a href="http://en.wikipedia.org/wiki/Facade_pattern">Facade</a>: You create a class that does a lot of its work by calling other classes in the system.
+</ul>
+</p>
+
+<p>Note that delegation methods as shown here are 'read only'. They generate a get method with the name of the derived attribute, not a set method.</p>
+
+<br />
+
+
+@@example
+
+// This system has many delegation methods so that information in one class can
+// be obtained in a neighbouring class easily. The delegation is created using
+// derived attributes, which generate get methods for use by other code.
+class Airline {
+  code;
+  name;
+  1 -- * RegularFlight;
+}
+
+// A regular flight flies every day and has a flight number and other fixed data.
+class RegularFlight {
+  Integer number;
+  Time depTime;
+  * outgoing -- 1 Airport origin;
+  * incoming-- 1 Airport destination;
+  fullNumber = {getAirline().getCode()+getNumber()}
+}
+
+// A specific flight actually has passengers
+class SpecificFlight {
+  * -- 1 RegularFlight;
+  Date depDate;
+  
+  // Four delegation attributes to save multiple methods in this
+  // class from having to traverse the association
+  flightNumber = {getRegularFlight().getFullNumber()}
+  Airport origin = {getRegularFlight().getOrigin()}
+  Airport destination = {getRegularFlight().getDestination()}
+  Time plannedDepTime = {getRegularFlight().getDepTime()}
+}
+
+// A passenger on a flight
+class Booking {
+  lazy seat;
+  * -- 1 SpecificFlight;
+  * -- 1 Passenger;
+  
+  // Second-level delegation - data comes from RegularFlight
+  flightNumber = {getSpecificFlight().getFlightNumber()}
+  Airport destination = {getSpecificFlight().getDestination()}
+  
+  // Simple delegation
+  passengerName = {getPassenger().getName()}
+  Time plannedDepTime = {getSpecificFlight().getPlannedDepTime()}
+
+  //Simple method using the data gathered by delegation
+  public String toString() {
+    return getFlightNumber()+" "+getPlannedDepTime()+" "+
+      getDestination().getName()+" "+getPassengerName()+" "+getSeat();
+  }
+}
+
+class Passenger {
+  lazy Integer freqFlyerNumber;
+  name;
+} 
+
+class Airport {
+  code;
+  name;
+ }
+
+
+// Mixin with main program to test the above
+class Airline {
+  public static void main(String [ ] args) {
+    Airport ott = new Airport("YOW","Ottawa");
+    Airport tor = new Airport("YYZ","Toronto Pearson");
+    Airline a = new Airline("AO","Air Ottawa");
+    RegularFlight r = a.addRegularFlight(100,java.sql.Time.valueOf("13:12:00"),ott,tor);
+    SpecificFlight f = r.addSpecificFlight(java.sql.Date.valueOf("2017-03-15"));
+    Passenger p = new Passenger("John");
+    Booking b = new Booking(f,p);
+    System.out.println(b);
+  }
+}//$?[End_of_model]$?
+
+class RegularFlight
+{
+  position 203 52 142 94;
+  position.association Airport:destination__RegularFlight:incoming 104,94 0,30;
+  position.association Airport:origin__RegularFlight:outgoing 142,53 84,0;
+}
+
+class Airport
+{
+  position 426 186 109 77;
+}
+
+class Booking
+{
+  position 43 464 175 128;
+  position.association Booking__Passenger 183,79 0,15;
+  position.association Booking__SpecificFlight 30,0 27,131;
+}
+
+class Airline
+{
+  position 26 30 109 77;
+  position.association Airline__RegularFlight 113,42 0,23;
+}
+
+class SpecificFlight
+{
+  position.association RegularFlight__SpecificFlight 30,0 0,83;
+  position 50 229 172 128;
+}
+
+class Passenger
+{
+  position 311 485 189 77;
+}
+
+@@endexample
+

@@ -1,0 +1,109 @@
+Sorted Associations
+Associations
+noreferences
+
+@@description
+<p>      
+It is possible to arrange for associations to maintain themselves in sorted order
+according to the value of an attribute. Create a <a href="DerivedAttributes.html">derived attribute</a> in order to define a complex sort order or to sort on the value of an attribute of an associated class (the example below does this in one case).
+</p>
+
+<p>To declare an association as sorted do the following: after specifying the multiplicity, and any role name, give the keyword 'sorted' followed by the name of an attribute (sort key) in curly brackets. Whenever an add method is called to add an item to the association, Umple ensures the association is maintained in sorted order. .</p>
+
+<p>
+Note that Umple associations are always 'ordered' by default; i.e. the user controls the position of items. Declaring an association as sorted makes this automatic. The presence of 'sorted' adds a 'sort' function to the API to allow for resorting (if the attributes on which sorting is based are changed, for example) and removes the API for manually ordering the association using addXAt().
+</p>
+
+<p>At the time of writing, there remain several issues: For now, you should avoid having two sorted associations in the same class.
+
+@@syntax
+[[inlineAssociationEnd]] [[isSorted]]
+
+@@example
+// This example demonstrates two cases of sorted associations
+// The main program adds items out of order
+// But when they are printed the output will be sorted
+class Academy {
+  1 -- * Course;
+  1 -- * Student registrants sorted {id};
+}
+
+class Student {
+  Integer id;
+  name;
+}
+
+class Course {
+  code;
+}
+
+class Registration {
+  * -- 1 Student;
+
+  // In each course, sort registrations by name
+  * sorted {name} -- 1 Course;
+
+  // Derived delegated attribute used for sorting+printing
+  name = {getStudent().getName()}
+
+  // Derived delegated attribute used for sorting+printing
+  code = {getCourse().getCode()}
+
+  
+  public String toString() {
+    return "Registration: "+getName()+":"+getCode();
+  }
+}
+
+// Mixin with main program and toString method
+class Academy {
+  public static void main(String [ ] args) {
+    Academy ac = new Academy();
+    Student j = ac.addRegistrant(12,"Jim");
+    Student a = ac.addRegistrant(4,"Ali");
+    Student m = ac.addRegistrant(8,"Mary");
+    Student f = ac.addRegistrant(3,"Francois");
+    Course c = ac.addCourse("CS191");
+    Course c2 = ac.addCourse("AN234");    
+    j.addRegistration(c);
+    a.addRegistration(c);
+    m.addRegistration(c);
+    f.addRegistration(c);
+    m.addRegistration(c2);
+    f.addRegistration(c2);
+    System.out.println(ac);
+  }
+  public String toString() {
+    String result="Students:\n";
+    for (Student s: getRegistrants()) {
+      result+=s+"\n";
+    }
+    result+="Courses:\n";
+    for (Course c: getCourses()) {
+      result+=c+"\n";
+    }
+
+    return result;
+  }
+}
+
+class Student {
+  public String toString() {
+    String result="Student="+id+"["+name+"]\n";
+    for (Registration r: getRegistrations()) {
+      result+="  In: "+r+"\n";
+    }
+    return result;
+  }
+}
+
+class Course {
+  public String toString() {
+    String result ="Course="+code+"\n";
+    for (Registration r: getRegistrations()) {
+      result+="  Has: "+r+"\n";
+    }    
+    return result;
+  }
+}
+@@endexample
