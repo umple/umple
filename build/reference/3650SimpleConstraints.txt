@@ -1,0 +1,30 @@
+Simple Constraints
+Constraints
+noreferences
+
+@@description
+
+<p>A capability is being developed in Umple to support OCL-type constraints that will limit what umple-generated mutator methods (set, add, etc.) can do. At the time of writing a very basic constraint capability is available that allows an attribute's value to be limited to a certain range.</p>
+
+<p>Constraints are specified within square brackets, in the same manner as guards on state machines. The present syntax allows one to specify a Boolean expression consisting of an attribute and a constant within the square brackets.</p>
+
+@@example
+// The following demonstrates two simple constraints limiting the range of age
+// The test code demonstrates that this works as expected.
+class Client {
+  const Integer minAge =18;
+  Integer age;
+  [age >= minAge]
+  [age <= 120]
+  
+  public static void main(String [ ] args) {
+    Client c = new Client(40);
+    for (int i: new int[] {-1,10,17,18,19,50,119,120,122,1000}) {
+       System.out.println("Trying to initialize age to "+i);
+       System.out.println(c.setAge(i) ? "  Success" : "  FAILURE");
+    }
+  }
+}
+
+
+@@endexample
