@@ -171,7 +171,7 @@ public class ErrorTypeSingleton
       }
       String line;
       while((line=reader.readLine())!=null)
-        str += line;
+        if(!line.startsWith("#")) str += line;
     }
     catch (Exception e)
     {
@@ -185,6 +185,7 @@ public class ErrorTypeSingleton
     return str;
   }
 
+  // Parse the error messages file (en.error etc.)
   private boolean parse(TextParser textParser)
   { 
     while(textParser.peek() != null)
