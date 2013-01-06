@@ -1,0 +1,26 @@
+E025 Sort Key Not Found
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a sort key for a sorted association is not an attribute of the destinatin class</h2>
+
+<p>The sort key of a <a href="SortedAssociations.html">sorted association</a> must be one of the attributes of the class at the other end of the association.
+</p>
+
+
+@@example
+// This example generates the error message
+class X {
+    * -- 1 Y sorted {nom};
+}
+
+class Y {
+  name;
+}
+
+@@endexample
+
+
+

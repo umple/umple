@@ -9,7 +9,7 @@ An event can have a parameter (of any valid type that the generated language can
 
 <p>
 It is absolutely necessary that all events with the same name have the same parameter
-type, or else an error will be raised
+type, or else <a href="E051EventParametersMustMatch.html">an error will be raised</a>.
 </p>
 
 @@syntax

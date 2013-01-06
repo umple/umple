@@ -1,0 +1,29 @@
+W1006 State Machine Not Parsed
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a state machine could not be fully parsed and is treated as 'extra code'.</h2>
+
+<p>In Umple, elements of a class not recognized as valid Umple are assumed to be elements of the target programming language that are embedded in the Umple. However, this warning is raised when the Umple compiler has reason to believe that the developer might have been trying to specify a state machine, because the segment of code starts with something like sm {.
+</p>
+
+<p>
+Since that sequence is not found in target languages, and since it is easy to make a mistake specifying states, substates, or events, this message is generated. If you encounter this message and indeed intended to specify a state machine, look carefully at the state machine code. Make sure the curly brackets match; make sure there are semicolons after transitions (unless the transitions have an action). If you are still stuck, comment out segments until you can narrow down the problem.
+</p>
+
+
+@@example
+// This example generates the warning because there is a missing semicolon
+class X {
+  sm {
+    a -> b
+    b -> c
+  }
+}
+
+@@endexample
+
+
+
