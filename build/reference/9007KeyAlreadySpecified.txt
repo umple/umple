@@ -1,0 +1,39 @@
+W007 Key Already Specified
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a second key statement is encountered in a class</h2>
+
+<p>To avoid confusion, a class should normally only have one <a href="KeysforEqualityandHashing.html">key specification</a>. This warning is intended to direct the programmer to list the multiple attributes within the same key directive, rather specifying them separately.</p>
+
+<p>The reason for this is that without this warning, code that is separated by many lines or found in a mixin file might modify the key in a way that wasn't anticipated by the developer who is not aware of the existence of multiple key statements. </p>
+
+<p>Developers can ignore this warning without any consequences. The examples below will generate the same compiled code.
+</p>
+
+
+@@example
+// This example generates the message
+class X {
+  name;
+  id;
+  key { name }
+  key { id }
+}
+
+@@endexample
+
+@@example
+// This example below avoids the message
+class X {
+  name;
+  id;
+  key { name, id }
+}
+
+@@endexample
+
+
+

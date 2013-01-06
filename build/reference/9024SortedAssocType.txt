@@ -1,0 +1,26 @@
+E024 Sort Key Not of Umple Type
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a sort key for a sorted association does not use one of the builtin Umple types</h2>
+
+<p>The sort key for an <a href="SortedAssociations.html">sorted association</a> must have one of the simple types Integer, Short, Long, Double, Float or String. This allows sensible code to be generated for comparisons. The set of allowed types may be expanded in the future.
+</p>
+
+
+@@example
+// This example generates the error message
+class X {
+  1 -- * Y sorted {endDate};
+}
+
+class Y {
+   Date endDate;
+}
+
+@@endexample
+
+
+

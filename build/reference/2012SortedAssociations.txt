@@ -14,7 +14,9 @@ according to the value of an attribute. Create a <a href="DerivedAttributes.html
 Note that Umple associations are always 'ordered' by default; i.e. the user controls the position of items. Declaring an association as sorted makes this automatic. The presence of 'sorted' adds a 'sort' function to the API to allow for resorting (if the attributes on which sorting is based are changed, for example) and removes the API for manually ordering the association using addXAt().
 </p>
 
-<p>At the time of writing, there remain several issues: For now, you should avoid having two sorted associations in the same class.
+<p>At the time of writing, there remain several issues: For now, you should avoid having two sorted associations in the same class.</p>
+
+<p>Errors are generated if the attribute specified as the <a href="E025SortKeyNotFound.html">sort key attribute does not exist in the class</a>, or the <a href="E024SortKeyNotofUmpleType.html">sort key attribute is not of a recognized type</a>.</p>
 
 @@syntax
 [[inlineAssociationEnd]] [[isSorted]]

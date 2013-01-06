@@ -1,0 +1,78 @@
+WE1xx Identifier Invalid
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple syntactic error or warning reported when an identifier does not have the correct syntax</h2>
+
+<p>In Umple, identifiers used for classes, association role names, types, attributes, state machines, states, events and other elements must be alphanumeric. In addition, class and interface names should start with a capital letter (or _), and other elements should start with a lower case letter. The exact error message you received will tell you which identifier has the problem. The examples below will generate these messages.
+</p>
+
+
+@@example
+// Class with non-alphanumeric name (100)
+class @ {}
+
+@@endexample
+
+@@example
+// Warnings from attribute starting with upper case letter (131)
+class X {
+  Attrib;
+}
+
+class Y {}
+
+@@endexample
+
+
+@@example
+// Attribute name with special characters (130)
+class X {
+  na$me;
+}
+
+@@endexample
+
+@@example
+// Attribute name with special characters that looks like an association (132)
+// If this is supposed to be an association, put spaces before and after the -- and *
+class X {
+  1--*Y;
+}
+
+class Y {}
+
+@@endexample
+
+@@example
+// Attribute type with special characters that looks like an association (140)
+// If this is supposed to be an association, put spaces before and after the --
+class X {
+  1--* Y;
+}
+
+class Y {}
+
+@@endexample
+
+@@example
+// State machine name with special characters (150)
+class X {
+  ed%4 {
+    s1 {}
+  }
+}
+
+@@endexample
+
+@@example
+// State  name with special characters (152)
+class X {
+  ed4 {
+    s*1 {}
+  }
+}
+
+@@endexample

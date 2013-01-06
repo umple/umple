@@ -11,7 +11,7 @@ class are equal (they have the same values for the key).</p>
 <p>Umple will also generate a hashCode method in any class that has a defined key. This helps
 when looking up an object in a set.</p>
 
-<p>Place the comma-separated list of key elements in curly brackets, after the word key.</p>
+<p>Place the comma-separated list of key elements in curly brackets, after the word key. <a href="W007KeyAlreadySpecified.html">If you have multiple key statements, a warning is generated.</a></p>
 
 @@syntax
 
