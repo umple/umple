@@ -632,3 +632,10 @@ class Otherclass
   immutable;
   name;
 }
+class ClassWithOneSortedAssociations{
+	1 -> * StudentC sorted {id};
+}
+class ClassWithManySortedAssociations{
+	1 -> * StudentC sorted {id};
+	1 -> * StudentAL sorted {number};
+}
