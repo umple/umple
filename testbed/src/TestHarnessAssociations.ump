@@ -639,3 +639,13 @@ class ClassWithManySortedAssociations{
 	1 -> * StudentC sorted {id};
 	1 -> * StudentAL sorted {number};
 }
+
+class ClassThatWillHaveSortedAssociationOne{
+	name;
+}
+class ClassThatWillHaveSortedAssociationTwo{
+}
+association{
+	* ClassThatWillHaveSortedAssociationOne mass sorted {name} <- 	* ClassThatWillHaveSortedAssociationTwo;
+}
+
