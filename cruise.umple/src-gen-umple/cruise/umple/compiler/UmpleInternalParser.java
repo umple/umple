@@ -1531,6 +1531,9 @@ this("UmpleInternalParser", aModel);
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       myAs.setRelatedAssociation(yourAs);
       
+      if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
+      if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
+      
       if (association.isImmutable())
       {
         boolean set = myAs.setImmutable();
