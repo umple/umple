@@ -1597,7 +1597,7 @@ this("UmpleInternalParser", aModel);
       		setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
       	}
 		else
-		  setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), yourEnd.getPriority());
+		  setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), yourEnd.getPriority());
       }
       
       if(!"".equals(myEnd.getPriority())){
@@ -1610,7 +1610,7 @@ this("UmpleInternalParser", aModel);
       		setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
 		}
 		else
-		  setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), myEnd.getPriority());
+		  setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), myEnd.getPriority());
       }
     }
   }
