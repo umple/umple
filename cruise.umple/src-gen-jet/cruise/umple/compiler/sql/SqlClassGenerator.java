@@ -18,7 +18,7 @@ public class SqlClassGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "-- PLEASE DO NOT EDIT THIS CODE" + NL + "-- This code was generated using the UMPLE ${last.version} modeling language!";
+  protected final String TEXT_1 = "-- PLEASE DO NOT EDIT THIS CODE" + NL + "-- This code was generated using the UMPLE 1.16.0.2388 modeling language!";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL + "CREATE TABLE IF NOT EXISTS ";
