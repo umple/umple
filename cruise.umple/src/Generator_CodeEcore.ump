@@ -1,77 +1,17 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*
 
-package cruise.umple.compiler;
-import java.io.*;
-import java.util.*;
-import cruise.umple.util.*;
-import cruise.umple.compiler.exceptions.*;
+Copyright: All contributers to the Umple Project
 
-// line 40 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeEcore.ump"
-public class EcoreGenerator implements CodeGenerator
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class EcoreGenerator
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //EcoreGenerator Attributes
-  private UmpleModel model;
-  private String output;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public EcoreGenerator()
-  {
-    model = null;
-    output = "";
-  }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public boolean setModel(UmpleModel aModel)
-  {
-    boolean wasSet = false;
-    model = aModel;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setOutput(String aOutput)
-  {
-    boolean wasSet = false;
-    output = aOutput;
-    wasSet = true;
-    return wasSet;
-  }
-
-  /**
-   * Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-   * off of what's contained in here.
-   */
-  public UmpleModel getModel()
-  {
-    return model;
-  }
-
-  public String getOutput()
-  {
-    return output;
-  }
-
-  public void delete()
-  {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  // line 15 ../../../../src/Generator_CodeEcore.ump
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -290,3 +230,5 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 }
+
+

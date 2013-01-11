@@ -1,74 +1,17 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*
 
-package cruise.umple.compiler;
-import cruise.umple.util.*;
+Copyright: All contributers to the Umple Project
 
-// line 137 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeJson.ump"
-public class JsonGenerator implements CodeGenerator
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class JsonGenerator
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //JsonGenerator Attributes
-  private UmpleModel model;
-  private String output;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public JsonGenerator()
-  {
-    model = null;
-    output = "";
-  }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public boolean setModel(UmpleModel aModel)
-  {
-    boolean wasSet = false;
-    model = aModel;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setOutput(String aOutput)
-  {
-    boolean wasSet = false;
-    output = aOutput;
-    wasSet = true;
-    return wasSet;
-  }
-
-  /**
-   * Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-   * off of what's contained in here.
-   */
-  public UmpleModel getModel()
-  {
-    return model;
-  }
-
-  public String getOutput()
-  {
-    return output;
-  }
-
-  public void delete()
-  {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  // line 15 ../../../../src/Generator_CodeJson.ump
   public void generate()
   {
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
@@ -180,3 +123,4 @@ public class JsonGenerator implements CodeGenerator
     model.setCode(json);
   }
 }
+

@@ -1,86 +1,17 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*
 
-package cruise.umple.compiler;
-import java.util.*;
-import cruise.umple.util.*;
+Copyright: All contributers to the Umple Project
 
-// line 124 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeYuml.ump"
-public class YumlGenerator implements CodeGenerator
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class YumlGenerator
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //YumlGenerator Attributes
-  private UmpleModel model;
-  private String outputPath;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public YumlGenerator()
-  {
-    model = null;
-    outputPath = "";
-  }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public boolean setModel(UmpleModel aModel)
-  {
-    boolean wasSet = false;
-    model = aModel;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setOutputPath(String aOutputPath)
-  {
-    boolean wasSet = false;
-    outputPath = aOutputPath;
-    wasSet = true;
-    return wasSet;
-  }
-
-  /**
-   * Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-   * off of what's contained in here.
-   */
-  public UmpleModel getModel()
-  {
-    return model;
-  }
-
-  public String getOutputPath()
-  {
-    return outputPath;
-  }
-
-  public void delete()
-  {}
-
-
-  /**
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
-   */
-  // line 21 "../../../../src/Generator.ump"
-  @Override
-  public boolean setOutput(String aString){
-          return false;
-  }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  // line 15 ../../../../src/Generator_CodeYuml.ump
   public void generate()
   {
     StringBuilder yuml = new StringBuilder();
