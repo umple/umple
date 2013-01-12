@@ -128,7 +128,8 @@
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
 
-  <target name="packageJars">
+  <target name="packageMainJar">
+    <echo message="Package: Main command line jar" />
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error" excludes="**/*Test.class">
       <manifest>
@@ -137,8 +138,13 @@
         <attribute name="Main-Class" value="cruise.umple.UmpleConsoleMain"/>
         <attribute name="Class-Path" value="${umple_classpath}"/>
       </manifest>
-    </jar>
+    </jar>  
+  </target>
 
+  <target name="packageJars">
+    <antcall target="packageMainJar" />
+
+    <echo message="Package: Umple statistics jar" />
     <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -148,6 +154,7 @@
       </manifest>
     </jar>
 
+    <echo message="Package: Umple documenter jar used to build the user manual" />
     <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -157,6 +164,7 @@
       </manifest>
     </jar>
 
+    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygrounMain" />
     <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -166,6 +174,7 @@
       </manifest>
     </jar>
 
+    <echo message="Package: Umplerun jar - tool for dynamically calling Umple API" />
     <copy todir="${bin.path}">
       <fileset dir="lib/umplerun"/>
     </copy>
@@ -179,6 +188,7 @@
       </manifest>
     </jar>
 
+    <echo message="Package: VML - Tool for variability modeling" />
     <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error cruise/vml/** *.grammar *.error">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
