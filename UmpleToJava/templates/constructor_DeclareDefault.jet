@@ -111,7 +111,27 @@
   	}
     append(stringBuffer, "\n    {0} = true;", gen.translate("associationCanSet",av));
   }
-  
+  boolean doneOnce=false;
+  String firstSorted = "";
+  for (AssociationVariable av : uClass.getAssociationVariables()) 
+  {
+  	if (av.isOnlyOne() && av.getRelatedAssociation().isMany() && av.getRelatedAssociation().isSorted() && av.getIsNavigable())
+  	{
+  		if("".equals(firstSorted))
+  		{
+  			firstSorted = gen.translate("attributeOne",av) + "=" + gen.translate("parameterOne",av) + ";";
+  		}
+  		else
+  		{
+  			if(!doneOnce)
+  			{
+  				append(stringBuffer,"\n    {0}\n    {1}\n    {2}","// Direct set of variable needed to ensure consistency","// for multiple sorted associations",firstSorted);
+  				doneOnce = true;
+  			}	
+  			append(stringBuffer,"\n    {0}={1};", gen.translate("attributeOne",av),gen.translate("parameterOne",av));
+    	}
+  	}
+  }
   for (AssociationVariable av : uClass.getAssociationVariables()) 
   {
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
