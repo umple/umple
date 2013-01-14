@@ -649,3 +649,31 @@ association{
 	* ClassThatWillHaveSortedAssociationOne mass sorted {name} <- 	* ClassThatWillHaveSortedAssociationTwo;
 }
 
+class MultipleSortedAcademy {
+  1 -- * MultipleSortedCourse;
+  1 -- * MultipleSortedStudent registrants sorted {id};
+}
+
+class MultipleSortedStudent {
+  Integer id;
+  name;
+}
+
+class MultipleSortedCourse {
+  code;
+}
+
+class MultipleSortedRegistration {
+  * sorted {name} -- 1 MultipleSortedCourse;
+
+  * sorted {code} -- 1 MultipleSortedStudent;
+
+  name = {getMultipleSortedStudent().getName()}
+
+  code = {getMultipleSortedCourse().getCode()}
+
+}
+	
+
+
+
