@@ -93,7 +93,7 @@ public class UmpleConsoleMain
 
           String successWord = compileSuccess ? "Success! " : "";
           println(successWord + "Processed "+ filename +".");
-         
+          System.exit(compileSuccess ? 0 : 1); 
         }
         catch(Exception ex) {
           System.err.println("Umple compiler error. Stack trace follows");
