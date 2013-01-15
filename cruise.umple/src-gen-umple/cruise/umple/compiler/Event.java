@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 
 // line 84 "../../../../src/StateMachine.ump"
-// line 416 "../../../../src/StateMachine_Code.ump"
+// line 431 "../../../../src/StateMachine_Code.ump"
 public class Event
 {
 
@@ -187,7 +187,7 @@ public class Event
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 418 ../../../../src/StateMachine_Code.ump
+  // line 433 ../../../../src/StateMachine_Code.ump
   private static int nextAutoTransitionId = 1;
 
   public static Event createAutoTransition()

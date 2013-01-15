@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 // line 28 "../../../../src/StateMachine.ump"
-// line 274 "../../../../src/StateMachine_Code.ump"
+// line 289 "../../../../src/StateMachine_Code.ump"
 public class State
 {
 
@@ -654,7 +654,7 @@ public class State
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 277 ../../../../src/StateMachine_Code.ump
+  // line 292 ../../../../src/StateMachine_Code.ump
   public boolean isSameState(State state, StateMachine relativeTo)
   {
     if (this.equals(state))
