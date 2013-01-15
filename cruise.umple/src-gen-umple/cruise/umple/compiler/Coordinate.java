@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 
 // line 488 "../../../../src/Umple.ump"
-// line 1569 "../../../../src/Umple_Code.ump"
+// line 1571 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
 
@@ -193,7 +193,7 @@ public class Coordinate
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1572 ../../../../src/Umple_Code.ump
+  // line 1574 ../../../../src/Umple_Code.ump
   public Point getTopLeft()
   {
     return new Point(x,y);

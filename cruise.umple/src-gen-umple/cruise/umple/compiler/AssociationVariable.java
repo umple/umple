@@ -8,7 +8,7 @@ import java.util.*;
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  */
 // line 416 "../../../../src/Umple.ump"
-// line 1164 "../../../../src/Umple_Code.ump"
+// line 1166 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
 
@@ -300,7 +300,7 @@ public class AssociationVariable extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1166 ../../../../src/Umple_Code.ump
+  // line 1168 ../../../../src/Umple_Code.ump
   public boolean isReflexive()
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());

@@ -788,6 +788,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Glossary">
     <eStructuralFeatures xsi:type="ecore:EReference" name="words" eType="#//Word" upperBound="-1"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExceptionDumper">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Object">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassLoader">

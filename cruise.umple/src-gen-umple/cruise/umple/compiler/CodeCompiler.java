@@ -111,8 +111,8 @@ public class CodeCompiler
     }
     // System.err.println("**"+declaringClass+"**"+javaFile); //debug
     
-    //Code Smell: javaToUmpleStackTrace needs to be put in its own class and not be static
-    ust = cruise.umple.UmpleConsoleMain.javaToUmpleStackTrace(
+    //Code Smell: javaToUmpleStackTrace needs to not be static
+    ust = cruise.umple.util.ExceptionDumper.javaToUmpleStackTrace(
       new StackTraceElement(
         declaringClass,
         "",

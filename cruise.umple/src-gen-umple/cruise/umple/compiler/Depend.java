@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 
 // line 314 "../../../../src/Umple.ump"
-// line 385 "../../../../src/Umple_Code.ump"
+// line 387 "../../../../src/Umple_Code.ump"
 public class Depend
 {
 
@@ -114,7 +114,7 @@ public class Depend
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 387 ../../../../src/Umple_Code.ump
+  // line 389 ../../../../src/Umple_Code.ump
   public String getPackageName()
   {
     if (name == null || "".equals(name))

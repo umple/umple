@@ -8,7 +8,7 @@ import java.util.*;
  * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
  */
 // line 378 "../../../../src/Umple.ump"
-// line 932 "../../../../src/Umple_Code.ump"
+// line 934 "../../../../src/Umple_Code.ump"
 public class Association
 {
 
@@ -274,7 +274,7 @@ public class Association
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 935 ../../../../src/Umple_Code.ump
+  // line 937 ../../../../src/Umple_Code.ump
   public void setLeftAndRight()
   {
     String name = this.getName();
