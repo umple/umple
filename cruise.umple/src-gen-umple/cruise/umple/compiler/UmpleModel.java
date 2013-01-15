@@ -826,9 +826,11 @@ public class UmpleModel
         generator.generate();
       }
     }
-    catch (Exception e)
+    catch (Exception ex)
     {
-      throw new UmpleCompilerException("Unable to generate code\n",e);
+      System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
+      cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
+      System.exit(-1);    
     }
   }
 
