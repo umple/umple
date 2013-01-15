@@ -134,8 +134,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
  
         for (State s : sm.getStates())
         {
-          sLabel=s.getName();
-          sName=clSmName+"_"+sLabel;
+          sLabel=s.getName();  // This is what is displayed
+          sName=getStateQualifiedName(s,uClass);  // Internal gv identifier
           code.append("\n      // State: "+sLabel+"\n");   
 
           code.append("      "+sName+" [label = "+sLabel+"];\n");
@@ -144,6 +144,11 @@ public class GvStateDiagramGenerator implements CodeGenerator
             isFirstState = false;
             code.append("      start_"+clSmName+" -> "+sName+";\n");
           }
+          
+          // Depth-first, output all nested state machines
+          // TODO: List<StateMachine> getNestedStateMachines()
+          
+          
           // Output all the transitions
           for (Transition t : s.getNextTransition()) {
             guard = t.getGuard();
@@ -151,8 +156,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
             else guardString = " ["+guard.getCondition()+"]";
             
             code.append("      "
-              + getStateQualifiedName(t.getFromState()) 
-              + " -> "+getStateQualifiedName(t.getNextState())
+              + getStateQualifiedName(t.getFromState(), uClass) 
+              + " -> "+getStateQualifiedName(t.getNextState(), uClass)
               + " [ label = \""+t.getEvent().getName()+guardString+"\" ];\n");
           }
         } // End iteration through states of a state machine
@@ -200,11 +205,11 @@ public class GvStateDiagramGenerator implements CodeGenerator
   }
 
   // The state qualified name incorporates the classname, the state machine name
-  // and the state name  
-  private String getStateQualifiedName(State s) {
+  // and the hierarchy of state names
+  // This is used as the internal graphviz label, and is not displayed.  
+  private String getStateQualifiedName(State s, UmpleClass c) {
     StateMachine sm = s.getStateMachine();
-    UmpleClass c = sm.getUmpleClass();
-    return ""+c.getName()+"_"+sm.getName()+"_"+s.getName();
+    return ""+c.getName()+"_"+sm.getFullName()+"_"+s.getName();
   }
 
 
