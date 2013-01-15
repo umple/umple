@@ -702,22 +702,37 @@ public class StateMachine
   
   public List<StateMachine> getNestedStateMachines()
   {
+    return getNestedStateMachines(true); // original - do it recursively
+  }
+  
+  public List<StateMachine> getImmediateNestedStateMachines()
+  {
+    return getNestedStateMachines(false); // just next level
+  }
+  
+  private List<StateMachine> getNestedStateMachines(boolean recursive)
+  {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();
-    addNestedStateMachinesTo(all,this);
+    addNestedStateMachinesTo(all,this, recursive);
     return all;
   }
   
   private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm)
+  {
+    addNestedStateMachinesTo(all, sm, true);
+  }
+
+  private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm, boolean recursive)
   {
     for (State s : sm.states)
     {
       for (StateMachine nestedSm : s.getNestedStateMachines())
       {
         all.add(nestedSm);
-        addNestedStateMachinesTo(all,nestedSm);
+        if(recursive) addNestedStateMachinesTo(all, nestedSm, recursive);
       }
     }
-  }
+  }  
   
   private State findState(String aName, boolean searchNestedStateMachines, boolean didFindRoot)
   {

@@ -107,9 +107,12 @@ public class GvStateDiagramGenerator implements CodeGenerator
       className = uClass.getName();
       code.append("\n  // Class: "+className+"\n");
       
+      // Process the top level state machines in a class
       for (StateMachine sm : uClass.getStateMachines())
       {
-        appendStateMachineRecursively(code, sm, uClass, className, true, smCount, 4);
+        if(sm.getParentState() == null) { // This check shouldn't be needed
+          appendStateMachineRecursively(code, sm, uClass, className, true, smCount, 4);
+        }
       } // End iteration through state machines of a class
     } // End iteration through classes
     terminateCode(code);
@@ -164,15 +167,25 @@ public class GvStateDiagramGenerator implements CodeGenerator
     Event event;
     String transitionLabel, guardString;
     Guard guard;
+    List<StateMachine> allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
     // We haven't processed any states yet in this statemachine
     Boolean isFirstState = true;
+
+    // Determine whether bottom level
+    Boolean isBottomLevel = allNestedStateMachines.isEmpty();
+    String levelPhrase = "";
+    if(isTopLevel) {
+      if(isBottomLevel) levelPhrase ="Top and Bottom Level ";
+      else levelPhrase = "Top Level ";
+    }
+    else if(isBottomLevel) levelPhrase = "Bottom Level ";
       
     smName = sm.getName();
     clSmName = className+"_"+smName;
     code.append("\n");
     appendSpaces(code,  indentLevel);
-    code.append("// StateMachine: "+smName+"\n");        
+    code.append("// "+levelPhrase+"StateMachine: "+smName+"\n");        
 
     // If there are multiple state machines in the model
     // And this is a top level state machine
@@ -232,12 +245,19 @@ public class GvStateDiagramGenerator implements CodeGenerator
           + " -> "+getStateQualifiedName(t.getNextState(), uClass)
           + " [ label = \""+transitionLabel+guardString+"\" ];\n");
       }  // End iteration through the transitions
-      
-      // Depth-first, output all nested state machines
-      // TODO: List<StateMachine> getNestedStateMachines()
-      // TODO increment nesting level by 2, false for top
-      
+
+      appendSpaces(code,  indentLevel+2);
+      code.append("// End State: "+sLabel+"\n"); 
+     
     } // End iteration through states of a state machine
+
+    // Process nested state machines
+    for(StateMachine nestedSm: allNestedStateMachines) {
+      appendStateMachineRecursively(code, nestedSm, uClass, className, false, smCount, indentLevel+2);
+    } // End iteration through nested state machines
+
+    appendSpaces(code,  indentLevel);
+    code.append("// End "+levelPhrase+"StateMachine: "+smName+"\n");  
 
     // If there are multiple state machines in the model
     // And this is the top level state machine
