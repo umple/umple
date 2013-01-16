@@ -2,9 +2,6 @@
   Hotel - sample system 
   Last updated: May 26, 2008
 */
-//Namespace for facade class.
-namespace hotel;
-
 //Namespace for core of the system.
 namespace hotel.core;
 

@@ -2,9 +2,6 @@
   Manufactoring Plant Controller- sample system 
   Last updated: June 8, 2010
 */
-//Namespace for facade class.
-namespace MFP;
-
 //Namespace for core of the system.
 namespace MFP.core.green;
 

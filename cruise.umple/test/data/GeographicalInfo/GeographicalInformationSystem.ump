@@ -2,9 +2,6 @@
   Geographical Information System- sample system 
   Last updated: May 22, 2008
 */
-//Namespace for facade class.
-namespace GIS;
-
 //Namespace for core of the system.
 namespace GIS.core;
 
