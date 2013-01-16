@@ -2,9 +2,6 @@
   2D Shapes - sample system
   Last updated: June 8, 2010
 */
-//Namespace for facade class.
-namespace Shapes;
-
 //Namespace for core of the system.
 namespace Shapes.core;
 

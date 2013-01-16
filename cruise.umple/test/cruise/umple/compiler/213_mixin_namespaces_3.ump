@@ -1,0 +1,6 @@
+namespace A;
+class X {}
+namespace B;
+class Y {}
+namespace C;
+class X {}

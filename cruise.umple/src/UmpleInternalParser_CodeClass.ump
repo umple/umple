@@ -57,11 +57,14 @@ class UmpleInternalParser
     }      
     else if (t.is("namespace"))
     {
+      if(!packageNameUsed && !t.getValue().equals(currentPackageName))
+    		setFailedPosition(t.getPosition(),31,currentPackageName,t.getValue());
       currentPackageName = t.getValue();
       if (model.getDefaultNamespace() == null)
       {
         model.setDefaultNamespace(currentPackageName);  
       }
+      packageNameUsed = false;
     }
     else if (t.is("inlineComment"))
     {
@@ -348,8 +351,14 @@ class UmpleInternalParser
     {
       aClass.setIsSingleton(true);
     }
-    aClass.setPackageName(currentPackageName);
-
+    if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
+    	setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
+    	aClass.setPackageName(currentPackageName);		
+    }		
+    if("".equals(aClass.getPackageName())){
+    	aClass.setPackageName(currentPackageName);
+	}
+	packageNameUsed = true;
     if (aClass.getIsSingleton()) 
     {
       classToken.setName(classToken.getName());	
@@ -432,7 +441,14 @@ class UmpleInternalParser
   {
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
     model.addUmpleInterface(newInterface);
-    newInterface.setPackageName(currentPackageName);
+    if(!"".equals(newInterface.getPackageName()) && !currentPackageName.equals(newInterface.getPackageName()) && !packageNameUsed){
+    	setFailedPosition(t.getPosition(), 30, newInterface.getName(), currentPackageName);
+    	newInterface.setPackageName(currentPackageName);		
+    }		
+    if("".equals(newInterface.getPackageName())){
+    	newInterface.setPackageName(currentPackageName);
+	}
+	packageNameUsed = true;
     analyzeInterface(t,newInterface);
     return newInterface;
   }
@@ -504,8 +520,14 @@ class UmpleInternalParser
     addExtendsTo(classToken, aClass);
     analyzeAllTokens(classToken,aClass);
 
-    aClass.setPackageName(currentPackageName);
-
+	if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
+    	setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
+    	aClass.setPackageName(currentPackageName);
+    }		
+    if("".equals(aClass.getPackageName())){
+    	aClass.setPackageName(currentPackageName);
+	}
+	packageNameUsed = true;
     Token leftAssociationToken = null;
     Token rightAssociationToken = null;
 

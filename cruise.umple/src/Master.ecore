@@ -604,6 +604,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInternalParser" eSuperTypes="#//Parser">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPackageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageNameUsed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unparsedUmpleFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="parsedUmpleFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
