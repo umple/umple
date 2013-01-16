@@ -109,9 +109,31 @@ class GvStateDiagramGenerator
   // This is used as the internal graphviz label, and is not displayed.  
   private String getStateQualifiedName(State s, UmpleClass c) {
     StateMachine sm = s.getStateMachine();
-    return ""+c.getName()+"_"+sm.getFullName()+"_"+s.getName();
+    String prepend = s.hasNestedStateMachines() ? "cluster" : "";
+    return prepend+c.getName()+"_"+sm.getFullName()+"_"+s.getName();
   }
 
+  // If a transition is to or from a cluster state, the transition has special syntax
+  private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin) {
+    if(s.hasNestedStateMachines()) {
+      // Transition to/from the first nested state
+      State firstSubstate = s.getNestedStateMachine(0).getState(0);
+      return getStateQualifiedName(firstSubstate, c);
+    }
+    else {
+      return getStateQualifiedName(s, c);
+    }
+  }
+
+  private String getTransitionHeadOrTailForState(State s, UmpleClass c, boolean isOrigin) {
+    if(s.hasNestedStateMachines()) {
+      // Use lhead or ltail
+      return (isOrigin? "lhead" : "ltail")+"="+getStateQualifiedName(s, c)+",";
+    }
+    else {
+      return "";
+    }
+  }  
 
   private void appendStateMachineRecursively(StringBuilder code, StateMachine sm,
       UmpleClass uClass, String className, boolean isTopLevel,
@@ -163,18 +185,33 @@ class GvStateDiagramGenerator
     {
       sLabel=s.getName();  // This is what is displayed
       sName=getStateQualifiedName(s,uClass);  // Internal gv identifier
+      
       code.append("\n");      
       appendSpaces(code,  indentLevel+2);
       code.append("// State: "+sLabel+"\n");   
 
-      appendSpaces(code,  indentLevel+2);
-      code.append(sName+" [label = "+sLabel+"];\n");
+      // Output the state (and possibly state machine) id
+      if(!s.hasNestedStateMachines()) {
+        // Simple state node
+        appendSpaces(code,  indentLevel+2);
+        code.append(sName+" [label = "+sLabel+"];\n");
+      }
+      else {
+        // Start of a subgraph
+        appendSpaces(code,  indentLevel+1);
+        code.append("subgraph "+sName+" {\n");
+        appendSpaces(code,  indentLevel+2);
+        code.append("label = \""+sLabel+"\";\n");
+        appendSpaces(code,  indentLevel+2);
+        code.append("style = rounded;\n");
+      }
       
       if(isFirstState) {
          // Output transition to first state
          isFirstState = false;
         appendSpaces(code,  indentLevel+2);
-        code.append("start_"+clSmName+" -> "+sName+";\n");
+        String dest=getTransitionNameForState(s,uClass,false);
+        code.append("start_"+clSmName+" -> "+dest+";\n");
       }
           
       // Output all the other transitions
@@ -194,21 +231,35 @@ class GvStateDiagramGenerator
             + guard.getCondition()+"]";
         }
 
-        appendSpaces(code,  indentLevel+2);            
-        code.append(getStateQualifiedName(t.getFromState(), uClass) 
-          + " -> "+getStateQualifiedName(t.getNextState(), uClass)
-          + " [ label = \""+transitionLabel+guardString+"\" ];\n");
+        appendSpaces(code,  indentLevel+2);
+        
+        String orig = getTransitionNameForState(t.getFromState(),uClass,true);
+        String dest = getTransitionNameForState(t.getNextState(),uClass,false);
+        String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
+        String destlt = getTransitionHeadOrTailForState(t.getFromState(),uClass,false);
+        
+        code.append(orig 
+          + " -> "+ dest
+          + " ["+origlh+destlt+" label = \""+transitionLabel+guardString+"\" ];\n");
       }  // End iteration through the transitions
+
+      // Process nested state machines of this state
+      allNestedStateMachines = s.getNestedStateMachines();
+      for(StateMachine nestedSm: allNestedStateMachines) {
+        appendStateMachineRecursively(code, nestedSm, uClass, className, false, smCount, indentLevel+2);
+      } // End iteration through nested state machines
+
+      // Mark end of subgraph
+      if(s.hasNestedStateMachines()) {
+        appendSpaces(code,  indentLevel+1);
+        code.append("}\n");
+      }
 
       appendSpaces(code,  indentLevel+2);
       code.append("// End State: "+sLabel+"\n"); 
      
     } // End iteration through states of a state machine
 
-    // Process nested state machines
-    for(StateMachine nestedSm: allNestedStateMachines) {
-      appendStateMachineRecursively(code, nestedSm, uClass, className, false, smCount, indentLevel+2);
-    } // End iteration through nested state machines
 
     appendSpaces(code,  indentLevel);
     code.append("// End "+levelPhrase+"StateMachine: "+smName+"\n");  
