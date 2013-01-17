@@ -75,6 +75,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   public void generate()
   {
     StringBuilder code = new StringBuilder();
+    StringBuilder transitions = new StringBuilder();
     String className;
 
     // Output basic gv file header
@@ -96,7 +97,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
       // Special case. No state machine.
       code.append("  node [shape=box, penwidth=0];\n");
       code.append("  message [label =\"No state machine found in the input Umple file\"];\n");
-      terminateCode(code);
+      terminateCode(code, transitions);
       return;
     }
 
@@ -111,14 +112,16 @@ public class GvStateDiagramGenerator implements CodeGenerator
       for (StateMachine sm : uClass.getStateMachines())
       {
         if(sm.getParentState() == null) { // This check shouldn't be needed
-          appendStateMachineRecursively(code, sm, uClass, className, true, smCount, 4);
+          appendStateMachineRecursively(code, transitions, sm, uClass, className, true, smCount, 4);
         }
       } // End iteration through state machines of a class
     } // End iteration through classes
-    terminateCode(code);
+    terminateCode(code, transitions);
   }
   
-  private void terminateCode(StringBuilder code) {
+  private void terminateCode(StringBuilder code, StringBuilder transitions) {
+    code.append("\n  // All transitions\n");
+    code.append(transitions);
     code.append("}\n");
 
     model.setCode(code.toString());
@@ -181,7 +184,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
     }
   }  
 
-  private void appendStateMachineRecursively(StringBuilder code, StateMachine sm,
+  private void appendStateMachineRecursively(StringBuilder code, StringBuilder transitions, StateMachine sm,
       UmpleClass uClass, String className, boolean isTopLevel,
       int smCount, int indentLevel) {
 
@@ -255,9 +258,9 @@ public class GvStateDiagramGenerator implements CodeGenerator
       if(isFirstState) {
          // Output transition to first state
          isFirstState = false;
-        appendSpaces(code,  indentLevel+2);
+        appendSpaces(transitions,  indentLevel+2);
         String dest=getTransitionNameForState(s,uClass,false);
-        code.append("start_"+clSmName+" -> "+dest+";\n");
+        transitions.append("start_"+clSmName+" -> "+dest+";\n");
       }
           
       // Output all the other transitions
@@ -277,14 +280,14 @@ public class GvStateDiagramGenerator implements CodeGenerator
             + guard.getCondition()+"]";
         }
 
-        appendSpaces(code,  indentLevel+2);
+        appendSpaces(transitions,  indentLevel+2);
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
         String dest = getTransitionNameForState(t.getNextState(),uClass,false);
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getFromState(),uClass,false);
         
-        code.append(orig 
+        transitions.append(orig 
           + " -> "+ dest
           + " ["+origlh+destlt+" label = \""+transitionLabel+guardString+"\" ];\n");
       }  // End iteration through the transitions
@@ -292,7 +295,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
       // Process nested state machines of this state
       allNestedStateMachines = s.getNestedStateMachines();
       for(StateMachine nestedSm: allNestedStateMachines) {
-        appendStateMachineRecursively(code, nestedSm, uClass, className, false, smCount, indentLevel+2);
+        appendStateMachineRecursively(code, transitions, nestedSm, uClass, className, false, smCount, indentLevel+2);
       } // End iteration through nested state machines
 
       // Mark end of subgraph
