@@ -2,9 +2,6 @@
   Geneology - sample system (A)
   Last updated: June 8, 2010
 */
-//Namespace for facade class.
-namespace Geneology;
-
 //Namespace for core of the system.
 namespace Geneology.core;
 
