@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents an attribute.
  */
-// line 355 "../../../../src/Umple.ump"
+// line 357 "../../../../src/Umple.ump"
 // line 911 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
