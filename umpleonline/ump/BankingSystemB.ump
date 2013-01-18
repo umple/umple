@@ -2,9 +2,6 @@
   Banking System - sample system
   Last updated: February 21, 2011
 */
-//Namespace for facade class.
-namespace BankingSystem;
-
 //Namespace for core of the system.
 namespace BankingSystem.core;
 
@@ -28,7 +25,7 @@ class FinancialInstrument{
 class ReusableFinancialInstrument{
  isA FinancialInstrument;
  number;
- PIN;
+ pin;
  * -> 1 Currency;
 }
 

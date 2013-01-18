@@ -3,9 +3,6 @@
   Last updated: June 8, 2010
   Note: this version replces the association classes with the appropriate class/association substitution
 */
-//Namespace for facade class.
-namespace University;
-
 //Namespace for core of the system.
 namespace University.core;
 
