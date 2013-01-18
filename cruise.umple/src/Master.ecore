@@ -139,7 +139,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/subTokens"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subTokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/parentToken"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsToken"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClassifiers" lowerBound="0" upperBound="-1" eType="#//UmpleClassifier" eOpposite="#//UmpleClassifier/extendsToken"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Position">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -331,8 +331,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="methodParameters" lowerBound="0" upperBound="-1" eType="#//MethodParameter" eOpposite="#//MethodParameter/method"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methodBody" lowerBound="0" upperBound="1" eType="#//MethodBody" eOpposite="#//MethodBody/method"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/method"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterface" lowerBound="1" upperBound="1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/methods"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/methods"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClassifier" lowerBound="1" upperBound="1" eType="#//UmpleClassifier" eOpposite="#//UmpleClassifier/methods"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Modifier">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="names" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
@@ -346,8 +345,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterface" lowerBound="1" upperBound="1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/constants"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/constants"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClassifier" lowerBound="1" upperBound="1" eType="#//UmpleClassifier" eOpposite="#//UmpleClassifier/constants"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UniqueIdentifier" eSuperTypes="#//UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/uniqueIdentifier"/>
@@ -387,17 +385,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefault" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="members" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleElement">
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleClassifier" eSuperTypes="#//UmpleElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleClassifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleClassifiers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleClassifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/umpleClassifiers"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleClassifier">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/extendsInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleInterfaces"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleInterface"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleInterfaces"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/umpleInterfaces"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTypes" lowerBound="0" upperBound="-1" eType="#//ReferenceType" eOpposite="#//ReferenceType/umpleInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/parentInterface"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UmpleClass" eSuperTypes="#//UmpleElement">
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleClass" eSuperTypes="#//UmpleClassifier">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSingleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associations" eType="#//Association" upperBound="-1"/>
@@ -409,11 +410,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" lowerBound="0" upperBound="-1" eType="#//Constraint" eOpposite="#//Constraint/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subclasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/subclasses"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/umpleClasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleClasses"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleClasses"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier" eOpposite="#//UniqueIdentifier/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariables" lowerBound="0" upperBound="-1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/umpleClass"/>
@@ -429,8 +426,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Depend">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/depends"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/depends"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClassifiers" lowerBound="0" upperBound="-1" eType="#//UmpleClassifier" eOpposite="#//UmpleClassifier/depends"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssociationClass" eSuperTypes="#//UmpleClass">
     <eStructuralFeatures xsi:type="ecore:EReference" name="associatedTo" lowerBound="0" upperBound="2" eType="#//Association" eOpposite="#//Association/associationClass"/>

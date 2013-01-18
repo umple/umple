@@ -226,21 +226,30 @@ class Key
 }
 
 /*
+ * Represents an Umple classifier.
+ */
+class UmpleClassifier
+{
+ isA UmpleElement;
+ // The methods contained within the Umple Classifier.
+ 1 -> 0..* Method;
+
+ * -> * Depend;
+
+  // The constants contained within the Umple Classifier.
+  1 -> 0..* Constant;
+  * -> 0..1 Token extendsToken;
+}
+
+/*
  * Represents an Umple interface.
  */
 class UmpleInterface
 {
-  isA UmpleElement;
+  isA UmpleClassifier;
 
   * -> 0..* UmpleInterface extendsInterface;
 
-  // The methods contained within the Umple interface.
-  1 -> 0..* Method;
-
-  * -> * Depend;
-
-  // The constants contained within the Umple interface.
-  1 -> 0..* Constant;
 
   before setPackageName { if (aPackageName == null) { return false; } }
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
@@ -253,7 +262,7 @@ class UmpleClass
 {
   depend cruise.umple.util.*;
 
-  isA UmpleElement;
+  isA UmpleClassifier;
 
   // Specifies whether or not the Umple class is an abstract class.
   Boolean isAbstract = false;
@@ -277,15 +286,8 @@ class UmpleClass
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;
 
-  * -> 0..1 Token extendsToken;
+
   * -> 0..* UmpleInterface parentInterface;
-  * -> * Depend;
-
-  // The methods contained within the Umple class.
-  1 -> 0..* Method;
-
-  // The constants contained within the Umple class.
-  1 -> 0..* Constant;
 
   1 -> 0..1 UniqueIdentifier;
 
