@@ -703,6 +703,12 @@ public class UmpleParserTest
   }
   
   @Test
+  public void isAttributeLazyRedundant()
+  {
+	  assertHasWarningsParse("007_isAttributeLazyRedundant.ump", 3);
+  }
+  
+  @Test
   public void isABlahAttribute()
   {
     assertParse("008_isABlahAttribute.ump");

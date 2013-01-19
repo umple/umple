@@ -2087,6 +2087,11 @@ this("UmpleInternalParser", aModel);
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("derivedValue");
 
+	if (isLazyRedundant(isLazy, value))
+	{
+		setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
+	}
+	
     for(Attribute aAttribute : aClass.getAttributes()){
       if (aAttribute.getName().equals(name)){
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
@@ -2149,6 +2154,12 @@ this("UmpleInternalParser", aModel);
       attribute.addComment(c);
     }
   }
+  
+  private Boolean isLazyRedundant(Boolean isLazy, String value)
+  {
+    return (isLazy && value != null);
+  }
+  
   /*
    * Analyzes a token recognized as a constraint
    * 
