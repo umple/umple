@@ -4,7 +4,7 @@
 0: 1, http://umple.org/PageBeingDeveloped.html, Generic Umple Error '{0}' ; 
 1: 4, http://umple.org/W001SingletonWithNon-LazyAttribute.html, Lazy keyword missing from singleton class attribute '{0}' ; 
 2: 4, http://umple.org/W002SingletonWithRequiredObject.html, Association is referencing a singleton class with multiplicity 1 '{0}' ; 
-
+3: 3, http://umple.org/PageBeingDeveloped.html, The lazy keyword is redundant '{0}' ;
 4: 1, http://umple.org/E004InvalidMultiplicity.html, Invalid multiplicity '{0}' ; 
 5: 1, http://umple.org/E005UndefinedClassinAssociation.html, Association end '{0}' is not a class ; 
 6: 2, http://umple.org/E006MissingDefault.html, No default value is specified for a defaulted attribute '{0}' ; 
