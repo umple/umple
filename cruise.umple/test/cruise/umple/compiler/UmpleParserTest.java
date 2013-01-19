@@ -677,6 +677,18 @@ public class UmpleParserTest
   {
     assertFailedParse("007_isA_ComplexCycle.ump", new Position("007_isA_ComplexCycle.ump",10,0,71)); 
   }
+  
+  @Test
+  public void is_A_SimpleCycle_Interface()
+  {
+	  assertFailedParse ("007_isA_SimpleCycle_Interface.ump", 11);
+  }
+  
+  @Test
+  public void is_A_ComplexCycle_Interface()
+  {
+	  assertFailedParse ("007_isA_ComplexCycle_Interface.ump", 12);
+  }
    
   
   @Test

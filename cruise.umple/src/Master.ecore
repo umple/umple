@@ -609,9 +609,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlinkedAssociationVariables" eType="#//AssociationVariable" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unlinkedAssociations" eType="#//Association" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="positionToClassNameReference" eType="#//Map%3CPosition%2CString%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtend" eType="#//Map%3CUmpleClass%2CList%3CString%3E%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsToken" eType="#//Map%3CUmpleClass%2CList%3CToken%3E%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedInterfaceExtend" eType="#//Map%3CUmpleInterface%2CList%3CString%3E%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtend" eType="#//Map%3CUmpleClassifier%2CList%3CString%3E%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsToken" eType="#//Map%3CUmpleClassifier%2CList%3CToken%3E%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsTokensInterface" eType="#//Map%3CUmpleClassifier%2CList%3CToken%3E%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedInterfaceExtend" eType="#//Map%3CUmpleClassifier%2CList%3CString%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastComment" eType="#//List%3CComment%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
@@ -621,9 +622,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="strictness" eType="#//Strictness" />
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;Position,String>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,List&lt;String>>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClass,List&lt;Token>>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleInterface,List&lt;String>>"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClassifier,List&lt;String>>"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClassifier,List&lt;Token>>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="List&lt;Comment>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,Token>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;State,List&lt;Token>>"/>
