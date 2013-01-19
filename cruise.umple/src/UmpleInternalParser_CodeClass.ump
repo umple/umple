@@ -21,9 +21,10 @@ class UmpleInternalParser
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
-  internal Map<UmpleClass,List<String>> unlinkedExtends = new HashMap<UmpleClass,List<String>>();
-  internal Map<UmpleClass,List<Token>> unlinkedExtendsTokens = new HashMap<UmpleClass,List<Token>>();
-  internal Map<UmpleInterface,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleInterface,List<String>>();
+  internal Map<UmpleClassifier,List<String>> unlinkedExtends = new HashMap<UmpleClassifier,List<String>>();
+  internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokens = new HashMap<UmpleClassifier,List<Token>>();
+  internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokensInterface = new HashMap <UmpleClassifier, List<Token>>();
+  internal Map<UmpleClassifier,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleClassifier,List<String>>();
 
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal List<Comment> lastComments = new ArrayList<Comment>();
@@ -276,6 +277,54 @@ class UmpleInternalParser
   private void postTokenInterfaceAnalysis()
   {
     addUnlinkedInterfaceExtends();
+    checkExtendsForCyclesInterface();
+  }
+  
+   private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map)
+  {
+
+	  List <UmpleInterface> temp = new ArrayList <UmpleInterface>();
+
+	  if(extend == null|| extend.isEmpty())
+		  return temp;
+
+
+	  for (UmpleInterface I: extend){
+		  if(map.containsKey(I)){
+			  temp.add(I);
+			  return temp;
+		  }
+		  map.put(I, true);	  
+
+		  for (UmpleInterface EI: I.getExtendsInterface()){
+			  if(parent.equals(EI)){
+				  temp.add(EI);
+				  return temp;
+			  }  
+		  }
+		  List <UmpleInterface> temptemp = recursiveCycleCheckInterface(I.getExtendsInterface(), parent, map);
+		  temp.addAll(temptemp);
+	  }  
+
+	  return temp;
+  }
+
+  private void checkExtendsForCyclesInterface()
+  {
+	  for(UmpleInterface I : model.getUmpleInterfaces())
+	  {
+		  HashMap<UmpleInterface, Boolean> vistedMap = new HashMap<UmpleInterface, Boolean>();
+		  if(I.getExtendsInterface() != null)
+		  {
+			  if(recursiveCycleCheckInterface(I.getExtendsInterface(), I, vistedMap).contains(I)){
+				  Token t = I.getExtendsToken();
+		          if(t.getValue().equals(I.getName()))
+		            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),I.getName()));
+		          else
+		            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),I.getName()));
+			  }
+		  }
+	  }
   }
 
   /*
@@ -344,7 +393,7 @@ class UmpleInternalParser
     	}
     }
 
-    addExtendsTo(classToken, aClass);
+    addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
     
     // If the "singleton" keyword is parsed, make the Umple class a singleton.
     if (classToken.getValue("singleton") != null)
@@ -379,49 +428,31 @@ class UmpleInternalParser
   }
 
   /*
-   * Takes an Umple class and analyzes a class token to add classes which extend it.
+   * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
    * 
-   * @param classToken The token to be analyzed to add subclasses to the specified Umple class.
-   * @param aClass The Umple class for which subclasses will be added.
+   * @param classifierToken The token to be analyzed to add subclasses to the specified Umple classifier.
+   * @param aClassifier The Umple classifier for which subclasses will be added.
    */
-  private void addExtendsTo(Token classToken, UmpleClass aClass)
+  private void addExtendsTo(Token classifierToken, UmpleClassifier aClassifier, Map <UmpleClassifier,List <String>> unlinkedExtends, Map <UmpleClassifier, List<Token>> unlinkedExtendsTokens)
+  //private void addExtendsTo(Token classToken, UmpleClassifier aClassifier)
   {
     List<String> extendsList = new ArrayList<String>();
     List<Token> extendsTokenList = new ArrayList<Token>();
 
     // Go through all sub-tokens of the class token to add subclasses related to the Umple class.
-    for (Token extendsToken : classToken.getSubTokens())
+    for (Token extendsToken : classifierToken.getSubTokens())
     {
       if (extendsToken.getValue("extendsName") != null)
       { 
         extendsList.add(extendsToken.getValue("extendsName"));
         extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
-        unlinkedExtends.put(aClass, extendsList);
-        unlinkedExtendsTokens.put(aClass, extendsTokenList);
+        unlinkedExtends.put(aClassifier, extendsList);
+        unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
       }  
     }
   }
 
-  /*
-   * Takes an Umple interface and analyzes a class token, much like the one for Umple classes, to deal with inheritance.
-   * 
-   * @param classToken The token to be analyzed to deal with inheritance with the Umple interface.
-   * @param aInterface The Umple interface for which inheritance will be dealt with (the token).
-   */
-  private void addExtendsTo(Token classToken, UmpleInterface aInterface)
-  {
-    List<String> extendsList = new ArrayList<String>();
-
-    // Go through all sub-tokens of the class token to deal with inheritance in relation to the Umple interface.
-    for (Token extendsToken : classToken.getSubTokens())
-    {
-      if (extendsToken.getValue("extendsName") != null)
-      { 
-        extendsList.add(extendsToken.getValue("extendsName"));
-        unlinkedInterfaceExtends.put(aInterface, extendsList);
-      }  
-    }
-  }
+  
 
   private UmpleClass analyzeExternal(Token externalToken)
   {
@@ -476,20 +507,48 @@ class UmpleInternalParser
 
   private void addUnlinkedInterfaceExtends()
   {  
-    for (UmpleInterface child : unlinkedInterfaceExtends.keySet())
+    for (UmpleClassifier c : unlinkedInterfaceExtends.keySet())
     {
+      UmpleInterface child = null; //unlinkedInterfaceExtends guaranteed to contain only UmpleInterfaces
+      if (c instanceof UmpleInterface){
+    	  child = (UmpleInterface) c;
+      }
       List<String> extendsNames = unlinkedInterfaceExtends.get(child);
+      List<Token>  extendsToken = unlinkedExtendsTokensInterface.get(child);
+      
 
       if (extendsNames == null)
       {
         continue;
       }
+      
 
       for (int i=0; i < extendsNames.size();i++)
       {
         String extendName= extendsNames.get(i);
         UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-        child.addExtendsInterface(uInterface);
+        boolean wasSet = child.addExtendsInterface(uInterface);
+        
+        if (!wasSet)
+        {
+          Position pos;
+          try
+          {
+            pos = extendsToken.get(i).getPosition();
+          }
+          catch(Exception e)
+          {
+            pos = new Position("",0,0,0);
+          }
+          setFailedPosition(pos, 16, child.getName(), uInterface.getName());
+          return;
+        }
+        try
+        {
+          child.setExtendsToken(extendsToken.get(i));
+        }
+        
+        catch(Exception e){}
       }
     }
   }  
@@ -498,7 +557,7 @@ class UmpleInternalParser
   {
     for(Token childToken : interfaceMemberToken.getSubTokens())
     {
-      addExtendsTo(interfaceMemberToken, aInterface);
+      addExtendsTo(interfaceMemberToken, aInterface, unlinkedInterfaceExtends, unlinkedExtendsTokensInterface);
       if(childToken.is("abstractMethodDeclaration"))
       {
         analyzeMethod(childToken, aInterface);   
@@ -517,7 +576,7 @@ class UmpleInternalParser
   private void analyzeAssociationClass(Token classToken)
   {
     AssociationClass aClass = model.addAssociationClass(classToken.getValue("name"));
-    addExtendsTo(classToken, aClass);
+    addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
     analyzeAllTokens(classToken,aClass);
 
 	if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
@@ -657,9 +716,14 @@ class UmpleInternalParser
 
   private void addUnlinkedExtends()
   {  
-    for (UmpleClass child : unlinkedExtends.keySet())
+    for (UmpleClassifier c : unlinkedExtends.keySet())
     {
-      List<String> extendsNames = unlinkedExtends.get(child);
+      UmpleClass child = null; // unlinkedExtends guaranteed to contain only UmpleClasses
+      if (c instanceof UmpleClass){
+    	  child = (UmpleClass) c;
+      }	
+    
+      List<String> extendsNames = unlinkedExtends.get(child);    
       List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
 
       if (extendsNames == null)
