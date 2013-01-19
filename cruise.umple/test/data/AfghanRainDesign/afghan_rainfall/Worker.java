@@ -1,9 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 import java.util.*;
 
+/**
+ * associationClass Workder
+ */
+// line 34 "../AfghanRainDesign.ump"
+// line 143 "../AfghanRainDesign.ump"
 public class Worker
 {
 
@@ -32,6 +37,8 @@ public class Worker
 
   public Worker(int aId, String aGender, String aName, String aOther_work_details, WorkersOnSurvey aWorkersOnSurvey)
   {
+    cachedHashCode = -1;
+    canSetId = true;
     id = aId;
     gender = aGender;
     name = aName;
@@ -43,8 +50,6 @@ public class Worker
     {
       throw new RuntimeException("Unable to create worker due to workersOnSurvey");
     }
-    cachedHashCode = -1;
-    canSetId = true;
   }
 
   //------------------------
@@ -53,30 +58,35 @@ public class Worker
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setGender(String aGender)
   {
+    boolean wasSet = false;
     gender = aGender;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setName(String aName)
   {
+    boolean wasSet = false;
     name = aName;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setOther_work_details(String aOther_work_details)
   {
+    boolean wasSet = false;
     other_work_details = aOther_work_details;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -101,57 +111,72 @@ public class Worker
 
   public Office getOffice(int index)
   {
-    return offices.get(index);
+    Office aOffice = offices.get(index);
+    return aOffice;
   }
 
   public List<Office> getOffices()
   {
-    return Collections.unmodifiableList(offices);
+    List<Office> newOffices = Collections.unmodifiableList(offices);
+    return newOffices;
   }
 
   public int numberOfOffices()
   {
-    return offices.size();
+    int number = offices.size();
+    return number;
   }
 
   public boolean hasOffices()
   {
-    return offices.size() > 0;
+    boolean has = offices.size() > 0;
+    return has;
   }
 
   public int indexOfOffice(Office aOffice)
   {
-    return offices.indexOf(aOffice);
+    int index = offices.indexOf(aOffice);
+    return index;
   }
 
   public WorkerRole getWorkerRole(int index)
   {
-    return workerRoles.get(index);
+    WorkerRole aWorkerRole = workerRoles.get(index);
+    return aWorkerRole;
   }
 
   public List<WorkerRole> getWorkerRoles()
   {
-    return Collections.unmodifiableList(workerRoles);
+    List<WorkerRole> newWorkerRoles = Collections.unmodifiableList(workerRoles);
+    return newWorkerRoles;
   }
 
   public int numberOfWorkerRoles()
   {
-    return workerRoles.size();
+    int number = workerRoles.size();
+    return number;
   }
 
   public boolean hasWorkerRoles()
   {
-    return workerRoles.size() > 0;
+    boolean has = workerRoles.size() > 0;
+    return has;
   }
 
   public int indexOfWorkerRole(WorkerRole aWorkerRole)
   {
-    return workerRoles.indexOf(aWorkerRole);
+    int index = workerRoles.indexOf(aWorkerRole);
+    return index;
   }
 
   public WorkersOnSurvey getWorkersOnSurvey()
   {
     return workersOnSurvey;
+  }
+
+  public static int minimumNumberOfOffices()
+  {
+    return 0;
   }
 
   public Office addOffice(int aId, String aName, String aOther_office_details)
@@ -161,13 +186,10 @@ public class Worker
 
   public boolean addOffice(Office aOffice)
   {
-    if (offices.contains(aOffice))
-    {
-      return false;
-    }
-
+    boolean wasAdded = false;
+    if (offices.contains(aOffice)) { return false; }
     Worker existingWorker = aOffice.getWorker();
-    boolean isNewWorker = existingWorker != null && !existingWorker.equals(this);
+    boolean isNewWorker = existingWorker != null && !this.equals(existingWorker);
     if (isNewWorker)
     {
       aOffice.setWorker(this);
@@ -176,21 +198,57 @@ public class Worker
     {
       offices.add(aOffice);
     }
-    return true;
+    wasAdded = true;
+    return wasAdded;
   }
 
   public boolean removeOffice(Office aOffice)
   {
+    boolean wasRemoved = false;
     //Unable to remove aOffice, as it must always have a worker
-    if (aOffice.getWorker().equals(this))
-    {
-      return false;
-    }
-    else
+    if (!this.equals(aOffice.getWorker()))
     {
       offices.remove(aOffice);
-      return true;
+      wasRemoved = true;
     }
+    return wasRemoved;
+  }
+
+  public boolean addOfficeAt(Office aOffice, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOffice(aOffice))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOffices()) { index = numberOfOffices() - 1; }
+      offices.remove(aOffice);
+      offices.add(index, aOffice);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOfficeAt(Office aOffice, int index)
+  {
+    boolean wasAdded = false;
+    if(offices.contains(aOffice))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOffices()) { index = numberOfOffices() - 1; }
+      offices.remove(aOffice);
+      offices.add(index, aOffice);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOfficeAt(aOffice, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfWorkerRoles()
+  {
+    return 0;
   }
 
   public WorkerRole addWorkerRole(String aCode, String aDescription)
@@ -200,13 +258,10 @@ public class Worker
 
   public boolean addWorkerRole(WorkerRole aWorkerRole)
   {
-    if (workerRoles.contains(aWorkerRole))
-    {
-      return false;
-    }
-
+    boolean wasAdded = false;
+    if (workerRoles.contains(aWorkerRole)) { return false; }
     Worker existingWorker = aWorkerRole.getWorker();
-    boolean isNewWorker = existingWorker != null && !existingWorker.equals(this);
+    boolean isNewWorker = existingWorker != null && !this.equals(existingWorker);
     if (isNewWorker)
     {
       aWorkerRole.setWorker(this);
@@ -215,30 +270,62 @@ public class Worker
     {
       workerRoles.add(aWorkerRole);
     }
-    return true;
+    wasAdded = true;
+    return wasAdded;
   }
 
   public boolean removeWorkerRole(WorkerRole aWorkerRole)
   {
+    boolean wasRemoved = false;
     //Unable to remove aWorkerRole, as it must always have a worker
-    if (aWorkerRole.getWorker().equals(this))
-    {
-      return false;
-    }
-    else
+    if (!this.equals(aWorkerRole.getWorker()))
     {
       workerRoles.remove(aWorkerRole);
-      return true;
+      wasRemoved = true;
     }
+    return wasRemoved;
+  }
+
+  public boolean addWorkerRoleAt(WorkerRole aWorkerRole, int index)
+  {  
+    boolean wasAdded = false;
+    if(addWorkerRole(aWorkerRole))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWorkerRoles()) { index = numberOfWorkerRoles() - 1; }
+      workerRoles.remove(aWorkerRole);
+      workerRoles.add(index, aWorkerRole);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveWorkerRoleAt(WorkerRole aWorkerRole, int index)
+  {
+    boolean wasAdded = false;
+    if(workerRoles.contains(aWorkerRole))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWorkerRoles()) { index = numberOfWorkerRoles() - 1; }
+      workerRoles.remove(aWorkerRole);
+      workerRoles.add(index, aWorkerRole);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addWorkerRoleAt(aWorkerRole, index);
+    }
+    return wasAdded;
   }
 
   public boolean setWorkersOnSurvey(WorkersOnSurvey aWorkersOnSurvey)
   {
+    boolean wasSet = false;
     if (aWorkersOnSurvey == null)
     {
-      return false;
+      return wasSet;
     }
-    
+
     WorkersOnSurvey existingWorkersOnSurvey = workersOnSurvey;
     workersOnSurvey = aWorkersOnSurvey;
     if (existingWorkersOnSurvey != null && !existingWorkersOnSurvey.equals(aWorkersOnSurvey))
@@ -246,7 +333,8 @@ public class Worker
       existingWorkersOnSurvey.removeWorker(this);
     }
     workersOnSurvey.addWorker(this);
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
@@ -279,15 +367,19 @@ public class Worker
 
   public void delete()
   {
-    for(Office aOffice : offices)
+    for(int i=offices.size(); i > 0; i--)
     {
+      Office aOffice = offices.get(i - 1);
       aOffice.delete();
     }
-    for(WorkerRole aWorkerRole : workerRoles)
+    for(int i=workerRoles.size(); i > 0; i--)
     {
+      WorkerRole aWorkerRole = workerRoles.get(i - 1);
       aWorkerRole.delete();
     }
-    workersOnSurvey.removeWorker(this);
+    WorkersOnSurvey placeholderWorkersOnSurvey = workersOnSurvey;
+    this.workersOnSurvey = null;
+    placeholderWorkersOnSurvey.removeWorker(this);
   }
 
 }

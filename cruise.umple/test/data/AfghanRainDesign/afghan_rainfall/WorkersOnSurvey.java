@@ -1,10 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 import java.sql.Date;
 import java.util.*;
 
+// line 47 "../AfghanRainDesign.ump"
+// line 163 "../AfghanRainDesign.ump"
 public class WorkersOnSurvey
 {
 
@@ -18,7 +20,7 @@ public class WorkersOnSurvey
   private Date date_assigned_to;
 
   //WorkersOnSurvey Associations
-  private List<VillageSurvey> villageSurveys;
+  private List<VillageSurvey> villageSurveies;
   private List<Worker> workers;
 
   //Helper Variables
@@ -31,13 +33,13 @@ public class WorkersOnSurvey
 
   public WorkersOnSurvey(int aId, Date aDate_assigned_from, Date aDate_assigned_to)
   {
+    cachedHashCode = -1;
+    canSetId = true;
     id = aId;
     date_assigned_from = aDate_assigned_from;
     date_assigned_to = aDate_assigned_to;
-    villageSurveys = new ArrayList<VillageSurvey>();
+    villageSurveies = new ArrayList<VillageSurvey>();
     workers = new ArrayList<Worker>();
-    cachedHashCode = -1;
-    canSetId = true;
   }
 
   //------------------------
@@ -46,24 +48,27 @@ public class WorkersOnSurvey
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setDate_assigned_from(Date aDate_assigned_from)
   {
+    boolean wasSet = false;
     date_assigned_from = aDate_assigned_from;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setDate_assigned_to(Date aDate_assigned_to)
   {
+    boolean wasSet = false;
     date_assigned_to = aDate_assigned_to;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -83,91 +88,139 @@ public class WorkersOnSurvey
 
   public VillageSurvey getVillageSurvey(int index)
   {
-    return villageSurveys.get(index);
+    VillageSurvey aVillageSurvey = villageSurveies.get(index);
+    return aVillageSurvey;
   }
 
-  public List<VillageSurvey> getVillageSurveys()
+  public List<VillageSurvey> getVillageSurveies()
   {
-    return Collections.unmodifiableList(villageSurveys);
+    List<VillageSurvey> newVillageSurveies = Collections.unmodifiableList(villageSurveies);
+    return newVillageSurveies;
   }
 
-  public int numberOfVillageSurveys()
+  public int numberOfVillageSurveies()
   {
-    return villageSurveys.size();
+    int number = villageSurveies.size();
+    return number;
   }
 
-  public boolean hasVillageSurveys()
+  public boolean hasVillageSurveies()
   {
-    return villageSurveys.size() > 0;
+    boolean has = villageSurveies.size() > 0;
+    return has;
   }
 
   public int indexOfVillageSurvey(VillageSurvey aVillageSurvey)
   {
-    return villageSurveys.indexOf(aVillageSurvey);
+    int index = villageSurveies.indexOf(aVillageSurvey);
+    return index;
   }
 
   public Worker getWorker(int index)
   {
-    return workers.get(index);
+    Worker aWorker = workers.get(index);
+    return aWorker;
   }
 
   public List<Worker> getWorkers()
   {
-    return Collections.unmodifiableList(workers);
+    List<Worker> newWorkers = Collections.unmodifiableList(workers);
+    return newWorkers;
   }
 
   public int numberOfWorkers()
   {
-    return workers.size();
+    int number = workers.size();
+    return number;
   }
 
   public boolean hasWorkers()
   {
-    return workers.size() > 0;
+    boolean has = workers.size() > 0;
+    return has;
   }
 
   public int indexOfWorker(Worker aWorker)
   {
-    return workers.indexOf(aWorker);
+    int index = workers.indexOf(aWorker);
+    return index;
   }
 
-  public VillageSurvey addVillageSurvey(int aId, Date aDue_date, String aStatus, Date aCompletion_date)
+  public static int minimumNumberOfVillageSurveies()
   {
-    return new VillageSurvey(aId, aDue_date, aStatus, aCompletion_date, this);
+    return 0;
+  }
+
+  public VillageSurvey addVillageSurvey(int aId, Date aDue_date, Date aCompletion_date)
+  {
+    return new VillageSurvey(aId, aDue_date, aCompletion_date, this);
   }
 
   public boolean addVillageSurvey(VillageSurvey aVillageSurvey)
   {
-    if (villageSurveys.contains(aVillageSurvey))
-    {
-      return false;
-    }
-
+    boolean wasAdded = false;
+    if (villageSurveies.contains(aVillageSurvey)) { return false; }
     WorkersOnSurvey existingWorkersOnSurvey = aVillageSurvey.getWorkersOnSurvey();
-    boolean isNewWorkersOnSurvey = existingWorkersOnSurvey != null && !existingWorkersOnSurvey.equals(this);
+    boolean isNewWorkersOnSurvey = existingWorkersOnSurvey != null && !this.equals(existingWorkersOnSurvey);
     if (isNewWorkersOnSurvey)
     {
       aVillageSurvey.setWorkersOnSurvey(this);
     }
     else
     {
-      villageSurveys.add(aVillageSurvey);
+      villageSurveies.add(aVillageSurvey);
     }
-    return true;
+    wasAdded = true;
+    return wasAdded;
   }
 
   public boolean removeVillageSurvey(VillageSurvey aVillageSurvey)
   {
+    boolean wasRemoved = false;
     //Unable to remove aVillageSurvey, as it must always have a workersOnSurvey
-    if (aVillageSurvey.getWorkersOnSurvey().equals(this))
+    if (!this.equals(aVillageSurvey.getWorkersOnSurvey()))
     {
-      return false;
+      villageSurveies.remove(aVillageSurvey);
+      wasRemoved = true;
     }
-    else
+    return wasRemoved;
+  }
+
+  public boolean addVillageSurveyAt(VillageSurvey aVillageSurvey, int index)
+  {  
+    boolean wasAdded = false;
+    if(addVillageSurvey(aVillageSurvey))
     {
-      villageSurveys.remove(aVillageSurvey);
-      return true;
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVillageSurveies()) { index = numberOfVillageSurveies() - 1; }
+      villageSurveies.remove(aVillageSurvey);
+      villageSurveies.add(index, aVillageSurvey);
+      wasAdded = true;
     }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveVillageSurveyAt(VillageSurvey aVillageSurvey, int index)
+  {
+    boolean wasAdded = false;
+    if(villageSurveies.contains(aVillageSurvey))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfVillageSurveies()) { index = numberOfVillageSurveies() - 1; }
+      villageSurveies.remove(aVillageSurvey);
+      villageSurveies.add(index, aVillageSurvey);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addVillageSurveyAt(aVillageSurvey, index);
+    }
+    return wasAdded;
+  }
+
+  public static int minimumNumberOfWorkers()
+  {
+    return 0;
   }
 
   public Worker addWorker(int aId, String aGender, String aName, String aOther_work_details)
@@ -177,13 +230,10 @@ public class WorkersOnSurvey
 
   public boolean addWorker(Worker aWorker)
   {
-    if (workers.contains(aWorker))
-    {
-      return false;
-    }
-
+    boolean wasAdded = false;
+    if (workers.contains(aWorker)) { return false; }
     WorkersOnSurvey existingWorkersOnSurvey = aWorker.getWorkersOnSurvey();
-    boolean isNewWorkersOnSurvey = existingWorkersOnSurvey != null && !existingWorkersOnSurvey.equals(this);
+    boolean isNewWorkersOnSurvey = existingWorkersOnSurvey != null && !this.equals(existingWorkersOnSurvey);
     if (isNewWorkersOnSurvey)
     {
       aWorker.setWorkersOnSurvey(this);
@@ -192,21 +242,52 @@ public class WorkersOnSurvey
     {
       workers.add(aWorker);
     }
-    return true;
+    wasAdded = true;
+    return wasAdded;
   }
 
   public boolean removeWorker(Worker aWorker)
   {
+    boolean wasRemoved = false;
     //Unable to remove aWorker, as it must always have a workersOnSurvey
-    if (aWorker.getWorkersOnSurvey().equals(this))
-    {
-      return false;
-    }
-    else
+    if (!this.equals(aWorker.getWorkersOnSurvey()))
     {
       workers.remove(aWorker);
-      return true;
+      wasRemoved = true;
     }
+    return wasRemoved;
+  }
+
+  public boolean addWorkerAt(Worker aWorker, int index)
+  {  
+    boolean wasAdded = false;
+    if(addWorker(aWorker))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWorkers()) { index = numberOfWorkers() - 1; }
+      workers.remove(aWorker);
+      workers.add(index, aWorker);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveWorkerAt(Worker aWorker, int index)
+  {
+    boolean wasAdded = false;
+    if(workers.contains(aWorker))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfWorkers()) { index = numberOfWorkers() - 1; }
+      workers.remove(aWorker);
+      workers.add(index, aWorker);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addWorkerAt(aWorker, index);
+    }
+    return wasAdded;
   }
 
   public boolean equals(Object obj)
@@ -239,12 +320,14 @@ public class WorkersOnSurvey
 
   public void delete()
   {
-    for(VillageSurvey aVillageSurvey : villageSurveys)
+    for(int i=villageSurveies.size(); i > 0; i--)
     {
+      VillageSurvey aVillageSurvey = villageSurveies.get(i - 1);
       aVillageSurvey.delete();
     }
-    for(Worker aWorker : workers)
+    for(int i=workers.size(); i > 0; i--)
     {
+      Worker aWorker = workers.get(i - 1);
       aWorker.delete();
     }
   }

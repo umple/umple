@@ -1,9 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 import java.sql.Date;
 
+// line 87 "../AfghanRainDesign.ump"
+// line 137 "../AfghanRainDesign.ump"
 public class Bulletin
 {
 
@@ -30,12 +32,12 @@ public class Bulletin
 
   public Bulletin(int aId, Date aNext_bulletin_due_date, Date aIssued_date, String aComments)
   {
+    cachedHashCode = -1;
+    canSetId = true;
     id = aId;
     next_bulletin_due_date = aNext_bulletin_due_date;
     issued_date = aIssued_date;
     comments = aComments;
-    cachedHashCode = -1;
-    canSetId = true;
   }
 
   //------------------------
@@ -44,30 +46,35 @@ public class Bulletin
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setNext_bulletin_due_date(Date aNext_bulletin_due_date)
   {
+    boolean wasSet = false;
     next_bulletin_due_date = aNext_bulletin_due_date;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setIssued_date(Date aIssued_date)
   {
+    boolean wasSet = false;
     issued_date = aIssued_date;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setComments(String aComments)
   {
+    boolean wasSet = false;
     comments = aComments;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -97,8 +104,10 @@ public class Bulletin
 
   public boolean setAgriculturalResearchStation(AgriculturalResearchStation newAgriculturalResearchStation)
   {
+    boolean wasSet = false;
     agriculturalResearchStation = newAgriculturalResearchStation;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
