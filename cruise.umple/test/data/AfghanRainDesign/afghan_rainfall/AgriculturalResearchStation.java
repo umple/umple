@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+// line 99 "../AfghanRainDesign.ump"
+// line 175 "../AfghanRainDesign.ump"
 public class AgriculturalResearchStation
 {
 
@@ -27,10 +29,10 @@ public class AgriculturalResearchStation
 
   public AgriculturalResearchStation(String aName)
   {
-    name = aName;
-    details = Details.Herat;
     cachedHashCode = -1;
     canSetName = true;
+    name = aName;
+    setDetails(Details.Herat);
   }
 
   //------------------------
@@ -39,17 +41,22 @@ public class AgriculturalResearchStation
 
   public boolean setName(String aName)
   {
-    if (!canSetName)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetName) { return false; }
     name = aName;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public String getName()
   {
     return name;
+  }
+
+  public String getDetailsFullName()
+  {
+    String answer = details.toString();
+    return answer;
   }
 
   public Details getDetails()

@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+// line 26 "../AfghanRainDesign.ump"
+// line 186 "../AfghanRainDesign.ump"
 public class WorkerRole
 {
 
@@ -27,6 +29,8 @@ public class WorkerRole
 
   public WorkerRole(String aCode, String aDescription, Worker aWorker)
   {
+    cachedHashCode = -1;
+    canSetCode = true;
     code = aCode;
     description = aDescription;
     boolean didAddWorker = setWorker(aWorker);
@@ -34,8 +38,6 @@ public class WorkerRole
     {
       throw new RuntimeException("Unable to create workerRole due to worker");
     }
-    cachedHashCode = -1;
-    canSetCode = true;
   }
 
   //------------------------
@@ -44,18 +46,19 @@ public class WorkerRole
 
   public boolean setCode(String aCode)
   {
-    if (!canSetCode)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetCode) { return false; }
     code = aCode;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setDescription(String aDescription)
   {
+    boolean wasSet = false;
     description = aDescription;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public String getCode()
@@ -75,11 +78,12 @@ public class WorkerRole
 
   public boolean setWorker(Worker aWorker)
   {
+    boolean wasSet = false;
     if (aWorker == null)
     {
-      return false;
+      return wasSet;
     }
-    
+
     Worker existingWorker = worker;
     worker = aWorker;
     if (existingWorker != null && !existingWorker.equals(aWorker))
@@ -87,7 +91,8 @@ public class WorkerRole
       existingWorker.removeWorkerRole(this);
     }
     worker.addWorkerRole(this);
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
@@ -131,7 +136,9 @@ public class WorkerRole
 
   public void delete()
   {
-    worker.removeWorkerRole(this);
+    Worker placeholderWorker = worker;
+    this.worker = null;
+    placeholderWorker.removeWorkerRole(this);
   }
 
 }

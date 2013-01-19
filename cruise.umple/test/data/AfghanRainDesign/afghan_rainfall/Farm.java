@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+// line 79 "../AfghanRainDesign.ump"
+// line 180 "../AfghanRainDesign.ump"
 public class Farm
 {
 
@@ -27,10 +29,10 @@ public class Farm
 
   public Farm(String aId, String aFarm_details)
   {
-    id = aId;
-    farm_details = aFarm_details;
     cachedHashCode = -1;
     canSetId = true;
+    id = aId;
+    farm_details = aFarm_details;
   }
 
   //------------------------
@@ -39,18 +41,19 @@ public class Farm
 
   public boolean setId(String aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setFarm_details(String aFarm_details)
   {
+    boolean wasSet = false;
     farm_details = aFarm_details;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public String getId()
@@ -70,8 +73,10 @@ public class Farm
 
   public boolean setVillage(Village newVillage)
   {
+    boolean wasSet = false;
     village = newVillage;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)

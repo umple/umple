@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+// line 10 "../AfghanRainDesign.ump"
+// line 197 "../AfghanRainDesign.ump"
 public class District
 {
 
@@ -24,10 +26,10 @@ public class District
 
   public District(int aId, String aName)
   {
-    id = aId;
-    name = aName;
     cachedHashCode = -1;
     canSetId = true;
+    id = aId;
+    name = aName;
   }
 
   //------------------------
@@ -36,18 +38,19 @@ public class District
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setName(String aName)
   {
+    boolean wasSet = false;
     name = aName;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()

@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+// line 3 "../AfghanRainDesign.ump"
+// line 202 "../AfghanRainDesign.ump"
 public class Watershed
 {
 
@@ -27,6 +29,8 @@ public class Watershed
 
   public Watershed(int aId, String aDetails, Village aVillage)
   {
+    cachedHashCode = -1;
+    canSetId = true;
     id = aId;
     details = aDetails;
     boolean didAddVillage = setVillage(aVillage);
@@ -34,8 +38,6 @@ public class Watershed
     {
       throw new RuntimeException("Unable to create watershed due to village");
     }
-    cachedHashCode = -1;
-    canSetId = true;
   }
 
   //------------------------
@@ -44,18 +46,19 @@ public class Watershed
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setDetails(String aDetails)
   {
+    boolean wasSet = false;
     details = aDetails;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -75,11 +78,12 @@ public class Watershed
 
   public boolean setVillage(Village aVillage)
   {
+    boolean wasSet = false;
     if (aVillage == null)
     {
-      return false;
+      return wasSet;
     }
-    
+
     Village existingVillage = village;
     village = aVillage;
     if (existingVillage != null && !existingVillage.equals(aVillage))
@@ -87,7 +91,8 @@ public class Watershed
       existingVillage.removeWatershed(this);
     }
     village.addWatershed(this);
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
@@ -120,7 +125,9 @@ public class Watershed
 
   public void delete()
   {
-    village.removeWatershed(this);
+    Village placeholderVillage = village;
+    this.village = null;
+    placeholderVillage.removeWatershed(this);
   }
 
 }

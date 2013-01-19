@@ -1,9 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 import java.sql.Date;
 
+// line 59 "../AfghanRainDesign.ump"
+// line 150 "../AfghanRainDesign.ump"
 public class VillageSurvey
 {
 
@@ -14,7 +16,6 @@ public class VillageSurvey
   //VillageSurvey Attributes
   private int id;
   private Date due_date;
-  private String status;
   private Date completion_date;
 
   //VillageSurvey Associations
@@ -29,19 +30,18 @@ public class VillageSurvey
   // CONSTRUCTOR
   //------------------------
 
-  public VillageSurvey(int aId, Date aDue_date, String aStatus, Date aCompletion_date, WorkersOnSurvey aWorkersOnSurvey)
+  public VillageSurvey(int aId, Date aDue_date, Date aCompletion_date, WorkersOnSurvey aWorkersOnSurvey)
   {
+    cachedHashCode = -1;
+    canSetId = true;
     id = aId;
     due_date = aDue_date;
-    status = aStatus;
     completion_date = aCompletion_date;
     boolean didAddWorkersOnSurvey = setWorkersOnSurvey(aWorkersOnSurvey);
     if (!didAddWorkersOnSurvey)
     {
       throw new RuntimeException("Unable to create villageSurvey due to workersOnSurvey");
     }
-    cachedHashCode = -1;
-    canSetId = true;
   }
 
   //------------------------
@@ -50,30 +50,27 @@ public class VillageSurvey
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setDue_date(Date aDue_date)
   {
+    boolean wasSet = false;
     due_date = aDue_date;
-    return true;
-  }
-
-  public boolean setStatus(String aStatus)
-  {
-    status = aStatus;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setCompletion_date(Date aCompletion_date)
   {
+    boolean wasSet = false;
     completion_date = aCompletion_date;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -84,11 +81,6 @@ public class VillageSurvey
   public Date getDue_date()
   {
     return due_date;
-  }
-
-  public String getStatus()
-  {
-    return status;
   }
 
   public Date getCompletion_date()
@@ -108,17 +100,20 @@ public class VillageSurvey
 
   public boolean setVillage(Village newVillage)
   {
+    boolean wasSet = false;
     village = newVillage;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setWorkersOnSurvey(WorkersOnSurvey aWorkersOnSurvey)
   {
+    boolean wasSet = false;
     if (aWorkersOnSurvey == null)
     {
-      return false;
+      return wasSet;
     }
-    
+
     WorkersOnSurvey existingWorkersOnSurvey = workersOnSurvey;
     workersOnSurvey = aWorkersOnSurvey;
     if (existingWorkersOnSurvey != null && !existingWorkersOnSurvey.equals(aWorkersOnSurvey))
@@ -126,7 +121,8 @@ public class VillageSurvey
       existingWorkersOnSurvey.removeVillageSurvey(this);
     }
     workersOnSurvey.addVillageSurvey(this);
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
@@ -160,7 +156,9 @@ public class VillageSurvey
   public void delete()
   {
     village = null;
-    workersOnSurvey.removeVillageSurvey(this);
+    WorkersOnSurvey placeholderWorkersOnSurvey = workersOnSurvey;
+    this.workersOnSurvey = null;
+    placeholderWorkersOnSurvey.removeVillageSurvey(this);
   }
 
 }

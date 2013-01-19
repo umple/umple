@@ -1,8 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+/**
+ * Positioning
+ */
+// line 69 "../AfghanRainDesign.ump"
+// line 131 "../AfghanRainDesign.ump"
 public class SurveyObservation
 {
 
@@ -39,32 +44,42 @@ public class SurveyObservation
 
   public boolean setId(int aId)
   {
+    boolean wasSet = false;
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setRainfall_centimetres(int aRainfall_centimetres)
   {
+    boolean wasSet = false;
     rainfall_centimetres = aRainfall_centimetres;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setHumidity(int aHumidity)
   {
+    boolean wasSet = false;
     humidity = aHumidity;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setTemperature(int aTemperature)
   {
+    boolean wasSet = false;
     temperature = aTemperature;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setOther_observation_details(String aOther_observation_details)
   {
+    boolean wasSet = false;
     other_observation_details = aOther_observation_details;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -99,8 +114,10 @@ public class SurveyObservation
 
   public boolean setVillageSurvey(VillageSurvey newVillageSurvey)
   {
+    boolean wasSet = false;
     villageSurvey = newVillageSurvey;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public void delete()

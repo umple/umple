@@ -1166,6 +1166,7 @@ this("UmpleInternalParser", aModel);
 
   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
   {
+  System.out.println(interfaceMemberToken+ " Parent: "+interfaceMemberToken.getParentToken());  // DEBUG
     for(Token childToken : interfaceMemberToken.getSubTokens())
     {
       addExtendsTo(interfaceMemberToken, aInterface);

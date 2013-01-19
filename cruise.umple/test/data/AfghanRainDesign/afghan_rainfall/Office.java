@@ -1,8 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.8.1.2163 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package afghan_rainfall;
 
+// line 17 "../AfghanRainDesign.ump"
+// line 170 "../AfghanRainDesign.ump"
 public class Office
 {
 
@@ -28,6 +30,8 @@ public class Office
 
   public Office(int aId, String aName, String aOther_office_details, Worker aWorker)
   {
+    cachedHashCode = -1;
+    canSetId = true;
     id = aId;
     name = aName;
     other_office_details = aOther_office_details;
@@ -36,8 +40,6 @@ public class Office
     {
       throw new RuntimeException("Unable to create office due to worker");
     }
-    cachedHashCode = -1;
-    canSetId = true;
   }
 
   //------------------------
@@ -46,24 +48,27 @@ public class Office
 
   public boolean setId(int aId)
   {
-    if (!canSetId)
-    {
-      return false;
-    }
+    boolean wasSet = false;
+    if (!canSetId) { return false; }
     id = aId;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setName(String aName)
   {
+    boolean wasSet = false;
     name = aName;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setOther_office_details(String aOther_office_details)
   {
+    boolean wasSet = false;
     other_office_details = aOther_office_details;
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public int getId()
@@ -88,11 +93,12 @@ public class Office
 
   public boolean setWorker(Worker aWorker)
   {
+    boolean wasSet = false;
     if (aWorker == null)
     {
-      return false;
+      return wasSet;
     }
-    
+
     Worker existingWorker = worker;
     worker = aWorker;
     if (existingWorker != null && !existingWorker.equals(aWorker))
@@ -100,7 +106,8 @@ public class Office
       existingWorker.removeOffice(this);
     }
     worker.addOffice(this);
-    return true;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
@@ -133,7 +140,9 @@ public class Office
 
   public void delete()
   {
-    worker.removeOffice(this);
+    Worker placeholderWorker = worker;
+    this.worker = null;
+    placeholderWorker.removeOffice(this);
   }
 
 }
