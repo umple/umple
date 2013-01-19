@@ -162,15 +162,20 @@ public class GvStateDiagramGenerator implements CodeGenerator
     return prepend+c.getName()+"_"+sm.getFullName()+"_"+s.getName();
   }
 
-  // If a transition is to or from a cluster state, the transition has special syntax
+  // Return the name for the state to be used in transitions
   private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin) {
-    if(s.hasNestedStateMachines()) {
-      // Transition to/from the first nested state
-      State firstSubstate = s.getNestedStateMachine(0).getState(0);
-      return getStateQualifiedName(firstSubstate, c);
+    State firstNonSuperstate = getFirstNestedNonClusterState(s);
+    return getStateQualifiedName(firstNonSuperstate, c);
+  }
+  
+  // return self if it does not have nested state, otherwise the first
+  // nested state that does not itself have a nested state
+  private State getFirstNestedNonClusterState(State s) {
+    if(!s.hasNestedStateMachines()) {
+      return s;
     }
     else {
-      return getStateQualifiedName(s, c);
+      return getFirstNestedNonClusterState(s.getNestedStateMachine(0).getState(0));
     }
   }
 
@@ -260,7 +265,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
          isFirstState = false;
         appendSpaces(transitions,  indentLevel+2);
         String dest=getTransitionNameForState(s,uClass,false);
-        transitions.append("start_"+clSmName+" -> "+dest+";\n");
+        String head=getTransitionHeadOrTailForState(s, uClass,false);
+        transitions.append("start_"+clSmName+" -> "+dest+(head=="" ? "" : " ["+head+"]")+";\n");
       }
           
       // Output all the other transitions
