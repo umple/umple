@@ -990,13 +990,52 @@ this("UmpleInternalParser", aModel);
 			  if(recursiveCycleCheckInterface(I.getExtendsInterface(), I, vistedMap).contains(I)){
 				  Token t = I.getExtendsToken();
 		          if(t.getValue().equals(I.getName()))
-		            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),I.getName()));
+		            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Interface",I.getName()));
 		          else
-		            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),I.getName()));
+		            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Interface",t.getValue(),I.getName()));
 			  }
 		  }
 	  }
   }
+
+  private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
+  {
+    UmpleClass temp = null;
+
+    if(extend == null)
+      return null;
+
+    if(map.containsKey(extend))
+      return extend;
+
+    map.put(extend, true);
+
+    if(parent.equals(extend.getExtendsClass()))
+      return extend.getExtendsClass();
+
+    temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
+    return temp;
+  }
+
+  private void checkExtendsForCycles()
+  {
+    for(UmpleClass C : model.getUmpleClasses())
+    {
+      HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
+      if(C.getExtendsClass() != null)
+      {
+        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
+        {
+          Token t = C.getExtendsToken();
+          if(t.getValue().equals(C.getName()))
+            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Class",C.getName()));
+          else
+            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Class",t.getValue(),C.getName()));
+        }
+      }
+    }
+  }
+
 
   /*
    * Analyzes all associations that are part of the given token indicated to be related to an association.
@@ -1495,44 +1534,6 @@ this("UmpleInternalParser", aModel);
     }
 
     return true;
-  }
-
-  private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
-  {
-    UmpleClass temp = null;
-
-    if(extend == null)
-      return null;
-
-    if(map.containsKey(extend))
-      return extend;
-
-    map.put(extend, true);
-
-    if(parent.equals(extend.getExtendsClass()))
-      return extend.getExtendsClass();
-
-    temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
-    return temp;
-  }
-
-  private void checkExtendsForCycles()
-  {
-    for(UmpleClass C : model.getUmpleClasses())
-    {
-      HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
-      if(C.getExtendsClass() != null)
-      {
-        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
-        {
-          Token t = C.getExtendsToken();
-          if(t.getValue().equals(C.getName()))
-            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),C.getName()));
-          else
-            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),t.getValue(),C.getName()));
-        }
-      }
-    }
   }
   
   private void checkDuplicateAssociationNames()
