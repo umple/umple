@@ -1,50 +1,35 @@
-class Application {
+class CarTransmission {
 
-  status {
-    Initial_state {
-      createApplication -> InProgress;
-    }
-  
-    InProgress {
-      set_as_complete -> CompletedByResearcher;
-    }
-  
-    CompletedByResearcher {
-      ReturnToResearcher -> InProgress;
-      Verify -> VerifiedByInstitution;
-      check -> CompletedByResearcher;
-    }
-  
-    VerifiedByInstitution {
-      reOpen -> CompletedByResearcher;
-      submit -> SubmittedByInstitution;
-    }
-  
-    SubmittedByInstitution {
-      withdraw -> Withdrawn;
-      accept -> UnderAdminReview;
-      SubmissionCheck -> SubmittedByInstitution;
-    }
-  
-    UnderAdminReview {
-      ReturnForCorrections -> ReturnedForCorrections_Institution;
-      Accept -> UnderExpertReview;
-    }
-  
-    UnderExpertReview {}
- 
-    ReturnedForCorrections_Institution {
-      returnToResearcher -> ReturnedForCorrections_Researcher;
-      Verify -> VerifiedByInstitutionAfterCorrections;
-    }
-  
-    VerifiedByInstitutionAfterCorrections {
-      ReOpen -> ReturnedForCorrections_Institution;
-      submit -> SubmitedByInstitution; 
+  state {
+    neutral {
+      selectReverse -> reverse;
+      selectDrive -> drive;
+      selectFirst -> first;
+      selectSecond -> second;
     }
     
-    ReturnedForCorrections_Researcher {
-      verify -> ReturnedForCorrections_Institution;
+    reverse {
+      selectNeutral -> neutral;
     }
+    
+    drive {
+      selectNeutral -> neutral;
+      selectFirst -> first;
+      selectSecond -> second;
+    
+      first {
+        reachSecondSpeed [driveSelected] -> second;
+      }
+      
+      second {
+        reachThirdSpeed [driveSelected] -> third;
+        dropBelowSecondSpeed [driveSelected] -> first;
+      }
+      
+      third {
+        dropBelowThirdSpeed-> second;
+      }
+    }
+   
   }
 }

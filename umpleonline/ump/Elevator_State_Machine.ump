@@ -2,41 +2,50 @@ class Elevator {
   
   elevator_state_machine {
     Idle {
-      upRequest -> DoorClosingMovingUp;
-      downRequest -> DoorClosingMovingDown;
+      upRequest -> PrepareUp;
+      downRequest -> PrepareDown;
     }
     PrepareUp {
       DoorClosingMovingUp {
-        doorClosed -> / {goUp();} ElevatorUp;
+        doorClosed -> / {goUp();} InMotion;
       }
       started -> Moving;
     }
     PrepareDown {
       DoorClosingMovingDown {
-        doorClosed  -> / {goDown();} ElevatorDown;
+        doorClosed  -> / {goDown();} InMotion;
       }
       started -> Moving;
     }
 
     InMotion {
       Moving {
-        approachingFloor  -> / {checkThisFloor();} Moving;
-        approachedRequestedFloor  -> / {stop();} Stopping;
+        approachingFloor [!floorRequested()] -> Moving;
+        approachedFloor  [floorRequested()] -> / {stop();} Stopping;
       }
       Stopping {
-        stopped  -> /{openDoor();} DoorOpening;
-      }
-      DoorOpening {
-        doorOpened  -> / {startTimer();} AtFloor;
-      }
-    after(timer) -> / {checkNextDestination();} CheckingNextDestination;
-    }
+        stopped -> / {openDoor();} DoorOpening;
+      } 
+    } 
 
-    CheckingNextDestination {
-      upRequest -> DoorClosingMovingUp;
-      downRequest -> DoorClosingMovingDown;
-      noRequest -> Idle;
-  
-    }
+    OnFloor {    
+      DoorOpening {
+        doorOpened  -> AtFloor;
+      }
+      AtFloor {
+        after(timer) [!obstruction()] -> DoorClosing;
+        doorClosingRequest -> DoorClosing;
+      }
+      DoorClosing {
+        doorCLosed -> CheckingNextDestination;
+        obstruction -> DoorOpening;
+        doorOpeningRequest -> DoorOpening;
+      }
+      CheckingNextDestination {
+        upRequest -> PrepareUp;
+        downRequest -> PrepareDown;
+        noRequest -> Idle;
+      }
+    } 
   }
 }
