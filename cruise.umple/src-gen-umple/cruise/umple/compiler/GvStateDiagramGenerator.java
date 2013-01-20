@@ -195,7 +195,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
 
     String smName, clSmName, sLabel, sName;
     Event event;
-    String transitionLabel, guardString;
+    Action action;
+    String transitionLabel, guardString, actionCode, transitionAction;
     Guard guard;
     List<StateMachine> allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
@@ -272,11 +273,27 @@ public class GvStateDiagramGenerator implements CodeGenerator
       // Output all the other transitions
       for (Transition t : s.getNextTransition()) {
         event = t.getEvent();
+        action = t.getAction();
+        
         if(event.isAutoTransition()) {
           transitionLabel = "";
         } 
         else {
-          transitionLabel = event.getName();
+          if (event.getIsTimer()) {
+            transitionLabel = "after("+event.getTimerInSeconds()+")";
+          }
+          else {
+            transitionLabel = event.getName();
+          }
+        }
+        
+        if (action == null || action.getActionCode() == "") {
+          transitionAction = "";
+        }
+        else {
+          actionCode = action.getActionCode();
+          if (actionCode.length() > 15) transitionAction = " / {...}";
+          else transitionAction = " / "+actionCode;
         }
       
         guard = t.getGuard();
@@ -295,7 +312,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
         
         transitions.append(orig 
           + " -> "+ dest
-          + " ["+origlh+destlt+" label = \""+transitionLabel+guardString+"\" ];\n");
+          + " ["+origlh+destlt+" label = \""
+          + transitionLabel + guardString + transitionAction + "\" ];\n");
       }  // End iteration through the transitions
 
       // Process nested state machines of this state
