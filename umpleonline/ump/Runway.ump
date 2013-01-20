@@ -31,7 +31,7 @@ class Runway {
       Restoration {
         Restoration_1 {
           Repair {
-            repairCompleted -> Inspecttion;
+            repairCompleted -> Inspection;
           }
           Inspection { 
             check [success] -> Ready;
