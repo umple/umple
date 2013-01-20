@@ -7,8 +7,8 @@ import cruise.umple.util.*;
 /**
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
  */
-// line 436 "../../../../src/Umple.ump"
-// line 1337 "../../../../src/Umple_Code.ump"
+// line 444 "../../../../src/Umple.ump"
+// line 1380 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
 
@@ -175,7 +175,7 @@ public class Multiplicity
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1340 ../../../../src/Umple_Code.ump
+  // line 1383 ../../../../src/Umple_Code.ump
   public void setRange(String lowerBound, String upperBound)
   {
     minimum = lowerBound;

@@ -7,8 +7,8 @@ package cruise.umple.compiler;
  * TODO: Code smell referenceToClassName is a duplication, can access via the association
  * Create a derived attribute otherend (the other AssociationEnd)
  */
-// line 398 "../../../../src/Umple.ump"
-// line 1044 "../../../../src/Umple_Code.ump"
+// line 406 "../../../../src/Umple.ump"
+// line 1087 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
 
@@ -124,21 +124,21 @@ public class AssociationEnd
 
   public String getRoleName()
   {
-    // line 411 "../../../../src/Umple.ump"
+    // line 419 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
   public String getClassName()
   {
-    // line 412 "../../../../src/Umple.ump"
+    // line 420 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
 
   public String getModifier()
   {
-    // line 413 "../../../../src/Umple.ump"
+    // line 421 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
@@ -148,7 +148,7 @@ public class AssociationEnd
    */
   public String getReferenceToClassName()
   {
-    // line 414 "../../../../src/Umple.ump"
+    // line 422 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }
@@ -305,7 +305,7 @@ public class AssociationEnd
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1047 ../../../../src/Umple_Code.ump
+  // line 1090 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()

@@ -1,28 +1,26 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-package cruise.umple.compiler;
+package cruise.patterns.test;
 
-// line 52 "../../../../src/UmpleInternalParser.ump"
-public class Pair
+// line 66 "../../../../src/TestHarnessPatterns.ump"
+public class LanguageSpecificCodeBlock
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Pair Attributes
+  //LanguageSpecificCodeBlock Attributes
   private String name;
-  private String value;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Pair(String aName, String aValue)
+  public LanguageSpecificCodeBlock(String aName)
   {
     name = aName;
-    value = aValue;
   }
 
   //------------------------
@@ -34,25 +32,14 @@ public class Pair
     boolean wasSet = false;
     name = aName;
     wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setValue(String aValue)
-  {
-    boolean wasSet = false;
-    value = aValue;
-    wasSet = true;
+    // line 69 "../../../../src/TestHarnessPatterns.ump"
+    name = "java";
     return wasSet;
   }
 
   public String getName()
   {
     return name;
-  }
-
-  public String getValue()
-  {
-    return value;
   }
 
   public void delete()

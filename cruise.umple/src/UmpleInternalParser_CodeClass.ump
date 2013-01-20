@@ -170,6 +170,7 @@ class UmpleInternalParser
     } 
     else if (token.is("beforeCode") || token.is("afterCode"))
     {
+    	
       analyzeInjectionCode(token,aClass);
     }
     else if (token.is("key") || token.is("defaultKey")) 
@@ -1203,11 +1204,34 @@ class UmpleInternalParser
     }  
   }
 
-
   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";
-    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass);
+    makeCodeInject(injectToken,type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass); 
+    
+  }
+  
+  private void makeCodeInject(Token injectToken, String type, String operation, String code, UmpleClass aClass)
+  {
+  	CodeInjection injection = new CodeInjection(type,operation,code,aClass);
+  	for(Token sub: injectToken.getSubTokens())
+    {
+    	if(sub.is("codelang"))
+    	{
+    		if("Java".equals(sub.getValue()))
+    			injection.addLanguage(java);
+    		if("Cpp".equals(sub.getValue()))
+    			injection.addLanguage(cpp);
+    		if("Php".equals(sub.getValue()))
+    			injection.addLanguage(php);
+    		if("Ruby".equals(sub.getValue()))
+    			injection.addLanguage(ruby);	
+    	}
+    	if(sub.is("moreCode"))
+    	{
+    		makeCodeInject(sub,type, operation, sub.getValue("code"), aClass);
+    	}
+    }
     injection.setPosition(injectToken.getPosition());
     aClass.addCodeInjection(injection);
   }
@@ -1493,7 +1517,7 @@ class UmpleInternalParser
 	{
 		setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
 	}
-	
+
     for(Attribute aAttribute : aClass.getAttributes()){
       if (aAttribute.getName().equals(name)){
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);

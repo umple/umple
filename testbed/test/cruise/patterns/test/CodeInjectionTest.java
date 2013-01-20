@@ -103,4 +103,11 @@ public class CodeInjectionTest
     Assert.assertEquals("after numberOfIds",widget.getLog(1));
   }
     
+  @Test
+  public void MultiLanguagedCodeBlocks()
+  {
+  	LanguageSpecificCodeBlock cb = new LanguageSpecificCodeBlock("Hello");
+  	cb.setName("World");
+    Assert.assertEquals("java",cb.getName());
+  }  
 }

@@ -40,6 +40,10 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   //------------------------
 
   //UmpleInternalParser Attributes
+  private CodeLanguage java;
+  private CodeLanguage cpp;
+  private CodeLanguage ruby;
+  private CodeLanguage php;
   private String currentPackageName;
   private boolean packageNameUsed;
   private UmpleModel model;
@@ -74,6 +78,10 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   public UmpleInternalParser(String aName, UmpleModel aModel)
   {
     super(aName);
+    java = new CodeLanguage("Java");
+    cpp = new CodeLanguage("Cpp");
+    ruby = new CodeLanguage("Ruby");
+    php = new CodeLanguage("Php");
     currentPackageName = "";
     packageNameUsed = true;
     model = aModel;
@@ -103,6 +111,38 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   // INTERFACE
   //------------------------
 
+  public boolean setJava(CodeLanguage aJava)
+  {
+    boolean wasSet = false;
+    java = aJava;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCpp(CodeLanguage aCpp)
+  {
+    boolean wasSet = false;
+    cpp = aCpp;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setRuby(CodeLanguage aRuby)
+  {
+    boolean wasSet = false;
+    ruby = aRuby;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setPhp(CodeLanguage aPhp)
+  {
+    boolean wasSet = false;
+    php = aPhp;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setCurrentPackageName(String aCurrentPackageName)
   {
     boolean wasSet = false;
@@ -124,9 +164,29 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
-    // line 45 "../../../../src/UmpleInternalParser.ump"
+    // line 49 "../../../../src/UmpleInternalParser.ump"
     if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}
     return wasSet;
+  }
+
+  public CodeLanguage getJava()
+  {
+    return java;
+  }
+
+  public CodeLanguage getCpp()
+  {
+    return cpp;
+  }
+
+  public CodeLanguage getRuby()
+  {
+    return ruby;
+  }
+
+  public CodeLanguage getPhp()
+  {
+    return php;
   }
 
   public String getCurrentPackageName()
@@ -841,6 +901,7 @@ this("UmpleInternalParser", aModel);
     } 
     else if (token.is("beforeCode") || token.is("afterCode"))
     {
+    	
       analyzeInjectionCode(token,aClass);
     }
     else if (token.is("key") || token.is("defaultKey")) 
@@ -1874,11 +1935,34 @@ this("UmpleInternalParser", aModel);
     }  
   }
 
-
   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";
-    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass);
+    makeCodeInject(injectToken,type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass); 
+    
+  }
+  
+  private void makeCodeInject(Token injectToken, String type, String operation, String code, UmpleClass aClass)
+  {
+  	CodeInjection injection = new CodeInjection(type,operation,code,aClass);
+  	for(Token sub: injectToken.getSubTokens())
+    {
+    	if(sub.is("codelang"))
+    	{
+    		if("Java".equals(sub.getValue()))
+    			injection.addLanguage(java);
+    		if("Cpp".equals(sub.getValue()))
+    			injection.addLanguage(cpp);
+    		if("Php".equals(sub.getValue()))
+    			injection.addLanguage(php);
+    		if("Ruby".equals(sub.getValue()))
+    			injection.addLanguage(ruby);	
+    	}
+    	if(sub.is("moreCode"))
+    	{
+    		makeCodeInject(sub,type, operation, sub.getValue("code"), aClass);
+    	}
+    }
     injection.setPosition(injectToken.getPosition());
     aClass.addCodeInjection(injection);
   }
@@ -2164,7 +2248,7 @@ this("UmpleInternalParser", aModel);
 	{
 		setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
 	}
-	
+
     for(Attribute aAttribute : aClass.getAttributes()){
       if (aAttribute.getName().equals(name)){
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);

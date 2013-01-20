@@ -7,8 +7,8 @@ import java.util.*;
 /**
  * Represents a comment, such as those found around classes, methods, attributes and associations.
  */
-// line 510 "../../../../src/Umple.ump"
-// line 1666 "../../../../src/Umple_Code.ump"
+// line 518 "../../../../src/Umple.ump"
+// line 1709 "../../../../src/Umple_Code.ump"
 public class Comment
 {
 
@@ -55,7 +55,7 @@ public class Comment
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1668 ../../../../src/Umple_Code.ump
+  // line 1711 ../../../../src/Umple_Code.ump
   public Boolean isInline = true;
 
   /**

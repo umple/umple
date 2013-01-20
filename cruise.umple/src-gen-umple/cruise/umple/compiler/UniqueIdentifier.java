@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 
 // line 162 "../../../../src/Umple.ump"
-// line 351 "../../../../src/Umple.ump"
+// line 359 "../../../../src/Umple.ump"
 public class UniqueIdentifier extends UmpleVariable
 {
 

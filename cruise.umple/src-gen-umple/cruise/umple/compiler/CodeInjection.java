@@ -3,8 +3,9 @@
 
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
+import java.util.*;
 
-// line 210 "../../../../src/Umple.ump"
+// line 217 "../../../../src/Umple.ump"
 public class CodeInjection
 {
 
@@ -21,6 +22,7 @@ public class CodeInjection
 
   //CodeInjection Associations
   private UmpleClass umpleClass;
+  private List<CodeLanguage> language;
 
   //------------------------
   // CONSTRUCTOR
@@ -36,6 +38,7 @@ public class CodeInjection
     {
       throw new RuntimeException("Unable to create CodeInjection due to aUmpleClass");
     }
+    language = new ArrayList<CodeLanguage>();
   }
 
   //------------------------
@@ -117,6 +120,36 @@ public class CodeInjection
     return umpleClass;
   }
 
+  public CodeLanguage getLanguage(int index)
+  {
+    CodeLanguage aLanguage = language.get(index);
+    return aLanguage;
+  }
+
+  public List<CodeLanguage> getLanguage()
+  {
+    List<CodeLanguage> newLanguage = Collections.unmodifiableList(language);
+    return newLanguage;
+  }
+
+  public int numberOfLanguage()
+  {
+    int number = language.size();
+    return number;
+  }
+
+  public boolean hasLanguage()
+  {
+    boolean has = language.size() > 0;
+    return has;
+  }
+
+  public int indexOfLanguage(CodeLanguage aLanguage)
+  {
+    int index = language.indexOf(aLanguage);
+    return index;
+  }
+
   public boolean setUmpleClass(UmpleClass newUmpleClass)
   {
     boolean wasSet = false;
@@ -128,9 +161,67 @@ public class CodeInjection
     return wasSet;
   }
 
+  public static int minimumNumberOfLanguage()
+  {
+    return 0;
+  }
+
+  public boolean addLanguage(CodeLanguage aLanguage)
+  {
+    boolean wasAdded = false;
+    if (language.contains(aLanguage)) { return false; }
+    language.add(aLanguage);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeLanguage(CodeLanguage aLanguage)
+  {
+    boolean wasRemoved = false;
+    if (language.contains(aLanguage))
+    {
+      language.remove(aLanguage);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addLanguageAt(CodeLanguage aLanguage, int index)
+  {  
+    boolean wasAdded = false;
+    if(addLanguage(aLanguage))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfLanguage()) { index = numberOfLanguage() - 1; }
+      language.remove(aLanguage);
+      language.add(index, aLanguage);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveLanguageAt(CodeLanguage aLanguage, int index)
+  {
+    boolean wasAdded = false;
+    if(language.contains(aLanguage))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfLanguage()) { index = numberOfLanguage() - 1; }
+      language.remove(aLanguage);
+      language.add(index, aLanguage);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addLanguageAt(aLanguage, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     umpleClass = null;
+    language.clear();
   }
 
 }

@@ -12,8 +12,8 @@ package cruise.umple.compiler;
  * 0..1 -> 1 UmpleInterface uInterface;
  * }
  */
-// line 482 "../../../../src/Umple.ump"
-// line 1549 "../../../../src/Umple_Code.ump"
+// line 490 "../../../../src/Umple.ump"
+// line 1592 "../../../../src/Umple_Code.ump"
 public class Point
 {
 
@@ -118,7 +118,7 @@ public class Point
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1552 ../../../../src/Umple_Code.ump
+  // line 1595 ../../../../src/Umple_Code.ump
   public static Point create(int n)
   {
     int p = (int)Math.sqrt(n) + 1;
