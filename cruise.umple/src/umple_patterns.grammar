@@ -24,5 +24,8 @@ keyDefinition- : [[defaultKey]] | [[key]]
 // Aspect oriented code injection: [*BeforeandAfterStatements*]
 codeInjection- : [[beforeCode]] | [[afterCode]]
 
-beforeCode : before [operationName] { [**code] }
-afterCode : after [operationName] { [**code] }
+beforeCode : before [operationName] ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+afterCode : after [operationName] ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+moreCode : ([[codeLang]] [[codeLangs]])? { [**code] }
+codeLangs- : ( , [[codeLang]] )*
+codeLang- : [=codelang:Java|Cpp|Php|Ruby]

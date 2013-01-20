@@ -206,7 +206,14 @@ class Constraint{
   String[] expression;
   String[] type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
 }
-
+class CodeLanguage
+{
+	name;
+	public boolean equals(Object O)
+	{
+		return name.equals(((CodeLanguage)O).getName());
+	}
+}
 class CodeInjection
 {
   depend cruise.umple.compiler.Position;
@@ -215,6 +222,7 @@ class CodeInjection
   operation;
   code;
   * -> 1 UmpleClass;
+  1 -> * CodeLanguage language;
   lazy Position position;
   Boolean isInternal = false;
 }

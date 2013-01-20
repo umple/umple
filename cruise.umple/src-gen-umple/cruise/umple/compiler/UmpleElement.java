@@ -9,7 +9,7 @@ import java.util.*;
  * An element partaining to an entity with Umple.
  */
 // line 70 "../../../../src/Umple.ump"
-// line 464 "../../../../src/Umple_Code.ump"
+// line 507 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
 
@@ -293,7 +293,7 @@ public class UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 466 ../../../../src/Umple_Code.ump
+  // line 509 ../../../../src/Umple_Code.ump
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);

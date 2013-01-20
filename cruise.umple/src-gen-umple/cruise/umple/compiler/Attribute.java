@@ -7,8 +7,8 @@ import java.util.*;
 /**
  * Represents an attribute.
  */
-// line 357 "../../../../src/Umple.ump"
-// line 911 "../../../../src/Umple_Code.ump"
+// line 365 "../../../../src/Umple.ump"
+// line 954 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
 
@@ -501,7 +501,7 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 913 ../../../../src/Umple_Code.ump
+  // line 956 ../../../../src/Umple_Code.ump
   public boolean isConstant()
   {
     return "const".equals(getModifier());

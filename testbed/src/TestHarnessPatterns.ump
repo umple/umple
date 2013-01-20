@@ -62,3 +62,9 @@ class WidgetF
   before numberOfIds { addLog("before numberOfIds"); } 
   after numberOfIds { addLog("after numberOfIds"); }
 }
+
+class LanguageSpecificCodeBlock
+{
+	name;
+	after setName Java {name = "java";} Php {name = "php";}
+}

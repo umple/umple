@@ -372,6 +372,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="types" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/constraints"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeLanguage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjection" lowerBound="1" upperBound="1" eType="#//CodeInjection" eOpposite="#//CodeInjection/language"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeInjection">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -379,6 +383,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" lowerBound="0" upperBound="-1" eType="#//CodeLanguage" eOpposite="#//CodeLanguage/codeInjection"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Key">
@@ -599,6 +604,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="UmpleParserFactory">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInternalParser" eSuperTypes="#//Parser">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="java" eType="#//CodeLanguage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cpp" eType="#//CodeLanguage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ruby" eType="#//CodeLanguage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="php" eType="#//CodeLanguage"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPackageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageNameUsed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>

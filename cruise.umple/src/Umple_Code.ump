@@ -186,16 +186,59 @@ class UmpleModel
         generator.setModel(this);
 
         generator.setOutput(target.getPath());
+        Hashtable<UmpleClass,List<CodeInjection>> removedCodeInjects = this.weedCodeInjectionBy(target.getLanguage());
         generator.generate();
-      }
-    }
-    catch (Exception ex)
-    {
-      System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
-      cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
-      System.exit(-1);    
-    }
-  }
+        
+        for(UmpleClass uClass:getUmpleClasses())
+        {
+        	
+        		for(CodeInjection in : removedCodeInjects.get(uClass))
+        		{
+        		
+        			uClass.addCodeInjection(in);
+    			}    		
+    		
+		}
+		
+		}}
+		catch (Exception ex)
+		{
+		  System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
+		  cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
+		  System.exit(-1);    
+		}
+	 }
+	 
+	 /**
+	  * Removes all CodeInjections in existence within the model that are not classified by the passed language name
+	  * @param languageName the language name to weed by (Java|Cpp|Ruby|Php)
+	  * @return the hashtable for all the code injections that were weeded out
+	  */
+	 public Hashtable<UmpleClass,List<CodeInjection>> weedCodeInjectionBy(String languageName)
+	 {
+		 CodeLanguage java = new CodeLanguage(languageName);
+		 Hashtable<UmpleClass,List<CodeInjection>> removedCodeInjects = new Hashtable<UmpleClass,List<CodeInjection>>();
+		 for(UmpleClass uClass:getUmpleClasses())
+		 {
+		 	removedCodeInjects.put(uClass, new ArrayList<CodeInjection>());
+		 	
+		 	if(uClass.getCodeInjections()!=null && uClass.getCodeInjections().size()>0)
+			{
+				for(int m=0;m<uClass.getCodeInjections().size();)
+				{
+					if(uClass.getCodeInjections().get(m).getLanguage().size()>0 && !uClass.getCodeInjections().get(m).getLanguage().contains(java))
+					{
+						removedCodeInjects.get(uClass).add(uClass.getCodeInjection(m));
+						uClass.removeCodeInjection(uClass.getCodeInjection(m));
+					} else
+				    {
+				    	m++;					 
+					}
+ 				 }
+			 }
+		 } 
+		 return removedCodeInjects;
+	 }
 
   public Coordinate getDefaultClassPosition(int numDefaults)
   {

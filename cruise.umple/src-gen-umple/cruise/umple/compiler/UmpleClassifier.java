@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents an Umple classifier.
  */
-// line 231 "../../../../src/Umple.ump"
+// line 239 "../../../../src/Umple.ump"
 public class UmpleClassifier extends UmpleElement
 {
 
