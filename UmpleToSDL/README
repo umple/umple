@@ -1,0 +1,43 @@
+This project contains the JET for generating java code using the cruise.umple 
+tool. The only package within the /src directory which should compile is the 
+cruise.umple.compiler.java which contains the working top level generating files.
+the rest of the folders are simply there because JET requires that each template
+be given a name and a package to put it into. Therefore, in essence, some of the
+files in cruise.umple.compiler.java contain all the files in the other folders.
+
+Contents of the cruise.umple.compiler.java folder need to be copied over the old 
+contents in the same package name of cruise.umple. This is not done automatically.
+
+Notice: In case this is not done automatically by your Eclipse version on your 
+system, include the project cruise.umple in UmpleJetProject's build path. 
+
+Umple to SDL Notes
+
+- Umple namespaces correspond to packages in SDL;
+
+- Umple models represent SDL specifications, each consisting of a set of packages and a system.
+
+- Umple classes represent SDL types, with the followinf stereotypes representing the different kinds
+of entity types in SDL. The members of an Umple Class represent different SDL type properties,
+depending on the stereotype:
+
+    - "system";
+    - "block";
+    - "process";
+    - "procedure";
+    - "interface";
+    - "object";
+    - "value";
+    - "state";
+    - "signal";
+    
+- Umple State Machines represent state machines of agents;
+
+- An Umple association represents the corresponding concept in SDL.
+
+- Generalization (isA construct) represents the corresponding specialisation in SDL;
+
+- The 'use' construct represents an SDL dependency indicating a package using another package
+
+
+
