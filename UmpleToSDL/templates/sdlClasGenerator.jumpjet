@@ -1,0 +1,10 @@
+<%@ jet package="cruise.umple.compiler.sdl" class="SDLClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ include file="UmpleNotice.jet" %>
+<%
+  UmpleClass uClass = (UmpleClass) uElement;
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  SDLGenerator gen = new SDLGenerator();
+  gen.setModel(model);
+  
+%>
+
