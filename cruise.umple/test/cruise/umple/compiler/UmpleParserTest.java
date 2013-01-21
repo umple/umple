@@ -1815,7 +1815,7 @@ public class UmpleParserTest
 	  assertParse("213_mixin_namespaces_1.ump");
 	  Assert.assertEquals("A",parser.getModel().getUmpleClass("X").getPackageName());
 	  Assert.assertEquals("B",parser.getModel().getUmpleClass("Y").getPackageName());
-	  /*
+	  
 	  assertParse("213_mixin_namespaces_2.ump");
 	  Assert.assertEquals("B",parser.getModel().getUmpleClass("X").getPackageName());
 	  Assert.assertEquals("B",parser.getModel().getUmpleClass("Y").getPackageName());
@@ -1823,7 +1823,7 @@ public class UmpleParserTest
 	  assertHasWarningsParse("213_mixin_namespaces_3.ump",30);
 	  Assert.assertEquals("C",parser.getModel().getUmpleClass("X").getPackageName());
 	  Assert.assertEquals("B",parser.getModel().getUmpleClass("Y").getPackageName());
-	  */
+	  
   }
   
   public boolean parse(String filename)
