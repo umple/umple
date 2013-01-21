@@ -283,7 +283,12 @@ public class GvStateDiagramGenerator implements CodeGenerator
             transitionLabel = "after("+event.getTimerInSeconds()+")";
           }
           else {
-            transitionLabel = event.getName();
+            if(event.getArgs() == null || event.getArgs() == "") {
+              transitionLabel = event.getName();
+            }
+            else {
+              transitionLabel = event.getName()+"("+event.getArgs()+")";
+            }
           }
         }
         
