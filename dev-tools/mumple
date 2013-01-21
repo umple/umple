@@ -1,0 +1,19 @@
+#!/bin/csh -fb
+if ! $?UMPLEROOT then
+  setenv UMPLEROOT ~/umple
+endif
+echo Building Umple User manual at $UMPLEROOT
+cd $UMPLEROOT/build
+ant -Dmyenv=local -f build.umple.xml packageDocs
+cd $UMPLEROOT/dist/cruise.umple/reference
+echo Ensuring syntaxhighlighter is present - it sometimes gets deleted
+ln -s ../../../umplewww/syntaxhighlighter .
+echo Ensuring example images are present - they sometimes get deleted
+ln -s ../../../umplewww/examples .
+if (! -e ~/umple/umplewww/examples/airline.png) then
+ echo need to restore examples in cd ~/umple
+ echo first yes pipe rm -r umplewww
+ echo either svn update
+ echo or unzip umplewww.zip
+endif
+echo To open user manual open $UMPLEROOT/dist/cruise.umple/reference/ClassDefinition.html

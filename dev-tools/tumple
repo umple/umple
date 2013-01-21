@@ -1,0 +1,7 @@
+#!/bin/csh -fb
+if ! $?UMPLEROOT then
+  setenv UMPLEROOT ~/umple
+endif
+echo Running basic tests in $UMPLEROOT using template.test
+cd $UMPLEROOT/build
+ant -Dmyenv=local -f build.umple.xml template.test

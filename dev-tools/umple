@@ -1,0 +1,7 @@
+#!/bin/csh -f
+if ! $?UMPLEROOT then
+  setenv UMPLEROOT ~/umple
+endif
+echo Compiling using $UMPLEROOT/dist/umple.jar
+java -jar $UMPLEROOT/dist/umple.jar $*
+exit $status

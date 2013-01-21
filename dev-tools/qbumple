@@ -1,0 +1,3 @@
+#!/bin/csh -fb
+cd ~/umple/build
+ant -Dmyenv=local -f build.umple.xml umpleSelf compile packageMainJar
