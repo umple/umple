@@ -50,6 +50,8 @@ public class CourseN
         setOne(One.On);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -66,6 +68,8 @@ public class CourseN
         setOne(One.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

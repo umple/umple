@@ -55,6 +55,8 @@ public class CourseD
         setStatus(Status.Closed);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

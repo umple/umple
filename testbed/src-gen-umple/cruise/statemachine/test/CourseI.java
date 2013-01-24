@@ -86,6 +86,8 @@ public class CourseI
         setStatus(Status.On);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOn)
@@ -95,6 +97,8 @@ public class CourseI
         setStatusOff(StatusOff.Idle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOnRunning)
@@ -104,6 +108,8 @@ public class CourseI
         setStatusOff(StatusOff.Full);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOff)
@@ -118,6 +124,8 @@ public class CourseI
         setStatusOnRunning(StatusOnRunning.Play);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -135,6 +143,8 @@ public class CourseI
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOnRunning)
@@ -143,6 +153,8 @@ public class CourseI
         setStatusOnRunning(StatusOnRunning.Play);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -160,6 +172,8 @@ public class CourseI
         setStatusOn(StatusOn.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOnRunning)
@@ -168,6 +182,8 @@ public class CourseI
         setStatusOnRunning(StatusOnRunning.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -184,6 +200,8 @@ public class CourseI
         setStatusOff(StatusOff.Idle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -204,6 +222,8 @@ public class CourseI
         setStatusOff(StatusOff.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

@@ -3826,6 +3826,8 @@ public class JavaClassGenerator implements ILang
         allCases.append(StringFormatter.format("        break;\n"));
       }
     } 
+    allCases.append(StringFormatter.format("      default:\n"));
+    allCases.append(StringFormatter.format("        // Other states do respond to this event\n"));
     allCases.append(StringFormatter.format("    }\n"));
   }
 

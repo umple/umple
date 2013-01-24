@@ -83,6 +83,8 @@ public class CourseJ
         setStatus(Status.S2);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS2)
@@ -92,6 +94,8 @@ public class CourseJ
         setStatus(Status.S3);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -111,6 +115,8 @@ public class CourseJ
         setStatusS1(StatusS1.S1A);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS1)
@@ -120,6 +126,8 @@ public class CourseJ
         setStatus(Status.S2);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS1S1B)
@@ -129,6 +137,8 @@ public class CourseJ
         setStatus(Status.S3);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS2)
@@ -141,6 +151,8 @@ public class CourseJ
         setStatusS2(StatusS2.S2B);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -159,6 +171,8 @@ public class CourseJ
         setStatusS2(StatusS2.S2C);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS1S1B)
@@ -173,6 +187,8 @@ public class CourseJ
         setStatusS1(StatusS1.S1A);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS2)
@@ -182,6 +198,8 @@ public class CourseJ
         setStatusS1S1B(StatusS1S1B.S1B1);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -200,6 +218,8 @@ public class CourseJ
         setStatus(Status.S1);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS1)
@@ -209,6 +229,8 @@ public class CourseJ
         setStatusS1(StatusS1.S1A);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS2)
@@ -218,6 +240,8 @@ public class CourseJ
         setStatus(Status.S3);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -235,6 +259,8 @@ public class CourseJ
         setStatusS1(StatusS1.S1A);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS1S1B)
@@ -243,6 +269,8 @@ public class CourseJ
         setStatusS1S1B(StatusS1S1B.S1B1);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -264,6 +292,8 @@ public class CourseJ
         setStatusS1(StatusS1.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS1S1B)
@@ -276,6 +306,8 @@ public class CourseJ
         setStatusS1S1B(StatusS1S1B.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -297,6 +329,8 @@ public class CourseJ
         setStatusS1S1B(StatusS1S1B.S1B1);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusS2)
@@ -314,6 +348,8 @@ public class CourseJ
         setStatusS2(StatusS2.S2B);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -330,6 +366,8 @@ public class CourseJ
         setStatusS2(StatusS2.S2A);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -354,6 +392,8 @@ public class CourseJ
         setStatusS2(StatusS2.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

@@ -75,6 +75,8 @@ public class Garage
           break;
         }
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

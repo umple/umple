@@ -78,6 +78,8 @@ public class CourseH
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -95,6 +97,8 @@ public class CourseH
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOnRunning)
@@ -103,6 +107,8 @@ public class CourseH
         setStatusOnRunning(StatusOnRunning.Play);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -120,6 +126,8 @@ public class CourseH
         setStatusOn(StatusOn.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOnRunning)
@@ -128,6 +136,8 @@ public class CourseH
         setStatusOnRunning(StatusOnRunning.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -144,6 +154,8 @@ public class CourseH
         setStatusOff(StatusOff.Idle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -164,6 +176,8 @@ public class CourseH
         setStatusOff(StatusOff.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

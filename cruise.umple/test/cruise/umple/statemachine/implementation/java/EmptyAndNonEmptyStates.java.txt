@@ -49,6 +49,8 @@ public class Light
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

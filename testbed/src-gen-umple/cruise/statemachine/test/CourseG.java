@@ -60,6 +60,8 @@ public class CourseG
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -77,6 +79,8 @@ public class CourseG
         setStatusOn(StatusOn.Idle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusOn)
@@ -85,6 +89,8 @@ public class CourseG
         setStatusOn(StatusOn.Running);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -101,6 +107,8 @@ public class CourseG
         setStatusOn(StatusOn.Idle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -121,6 +129,8 @@ public class CourseG
         setStatusOn(StatusOn.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

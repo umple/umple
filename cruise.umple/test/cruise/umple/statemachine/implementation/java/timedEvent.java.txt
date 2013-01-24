@@ -72,6 +72,8 @@ public class Mentor
         setStatus(Status.NotOk);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -89,6 +91,8 @@ public class Mentor
         setStatus(Status.Ok);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

@@ -99,6 +99,8 @@ public class CourseK
         setStatus(Status.Final);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
