@@ -70,6 +70,8 @@ public class LightFixture
           break;
         }
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

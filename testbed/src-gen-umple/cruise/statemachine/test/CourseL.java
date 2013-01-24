@@ -118,6 +118,8 @@ public class CourseL
         setStatusMotorIdle(StatusMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusFanIdle)
@@ -126,6 +128,8 @@ public class CourseL
         setStatusFanIdle(StatusFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -147,6 +151,8 @@ public class CourseL
         setStatusMotorIdle(StatusMotorIdle.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusFanIdle)
@@ -159,6 +165,8 @@ public class CourseL
         setStatusFanIdle(StatusFanIdle.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -175,6 +183,8 @@ public class CourseL
         setStatusMotorIdle(StatusMotorIdle.Final);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -191,6 +201,8 @@ public class CourseL
         setStatusFanIdle(StatusFanIdle.Final);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

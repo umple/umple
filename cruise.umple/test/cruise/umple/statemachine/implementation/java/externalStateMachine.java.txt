@@ -49,6 +49,8 @@ public class Course
         setStatus(Status.Closed);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -65,6 +67,8 @@ public class Course
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

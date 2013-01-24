@@ -107,6 +107,8 @@ public class CourseC
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

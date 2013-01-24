@@ -72,6 +72,8 @@ public class PhoneLine
         setState(State.dialing);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -91,6 +93,8 @@ public class PhoneLine
         setState(State.ringing);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -111,6 +115,8 @@ public class PhoneLine
         setState(State.communicating);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -138,6 +144,8 @@ public class PhoneLine
         setState(State.waitForHook);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -178,6 +186,8 @@ public class PhoneLine
         setState(State.onHook);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -197,6 +207,8 @@ public class PhoneLine
         setState(State.onHold);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -216,6 +228,8 @@ public class PhoneLine
         setState(State.communicating);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -235,6 +249,8 @@ public class PhoneLine
         setState(State.waitingForConnection);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -254,6 +270,8 @@ public class PhoneLine
         setState(State.communicating);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);
@@ -273,6 +291,8 @@ public class PhoneLine
         setState(State.onHook);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     System.err.println("state@post="+state+",id="+id);

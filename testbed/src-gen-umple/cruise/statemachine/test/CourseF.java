@@ -68,6 +68,8 @@ public class CourseF
         setStatus(Status.On);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -85,6 +87,8 @@ public class CourseF
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -102,6 +106,8 @@ public class CourseF
         setStatusMotorIdle(StatusMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusFanIdle)
@@ -110,6 +116,8 @@ public class CourseF
         setStatusFanIdle(StatusFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -131,6 +139,8 @@ public class CourseF
         setStatusMotorIdle(StatusMotorIdle.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aStatusFanIdle)
@@ -143,6 +153,8 @@ public class CourseF
         setStatusFanIdle(StatusFanIdle.Null);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -163,6 +175,8 @@ public class CourseF
         setStatusMotorIdle(StatusMotorIdle.MotorIdle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -180,6 +194,8 @@ public class CourseF
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -200,6 +216,8 @@ public class CourseF
         setStatusFanIdle(StatusFanIdle.FanIdle);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

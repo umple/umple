@@ -71,6 +71,8 @@ public class CourseT
           break;
         }
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
@@ -91,6 +93,8 @@ public class CourseT
           break;
         }
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;

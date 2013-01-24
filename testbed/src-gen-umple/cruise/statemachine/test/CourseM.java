@@ -65,6 +65,8 @@ public class CourseM
         setOne(One.Off);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     switch (aTwo)
@@ -73,6 +75,8 @@ public class CourseM
         setTwo(Two.Fast);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
     return wasEventProcessed;
