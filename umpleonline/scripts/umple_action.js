@@ -51,6 +51,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("javadoc","javadoc");
   }
+  else if (action == "StateDiagram")
+  {
+    Action.generateCode("stateDiagram","stateDiagram");
+  }
   else if (action == "EcoreCode")
   {
     Action.generateCode("xml","Ecore");
