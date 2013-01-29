@@ -30,6 +30,11 @@ if (php_uname('s') == "Darwin") {
 
 function generateMenu($buttonSuffix)
 {
+  // Elements separated by colons become arguments to Action.generateCode
+  // First is style (how) to display using the html formatter
+  //   - becomes second argument to Page.showGeneratedCode
+  // Second is what generate argument to pass to the compiler
+  //   - may be modified in compiler.php if special output needed
   $generatemenu = "<ul class=\"second\">
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
         <li>
@@ -41,7 +46,8 @@ function generateMenu($buttonSuffix)
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
-            <option value=\"java:Yuml\">Yuml</option>
+            <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
+            <option value=\"stateDiagram:stateDiagram\">State Diagram</option>                        
             <option value=\"java:Json\">Json</option>
             <option value=\"sql:Sql\">Sql</option>
             <option value=\"uigu:uigu\">JSF GUI (under development)</option>

@@ -51,6 +51,16 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "Java";
      $javadoc = True;
   }
+  else if ($language == "stateDiagram")
+  {
+     $language = "GvStateDiagram";
+     $stateDiagram = True;
+  }
+  else if ($language == "yumlDiagram")
+  {
+     $language = "Yuml";
+     $yumlDiagram = True;
+  }    
   else if ($language == "uigu")
   {
      $language = "Uigu";
@@ -59,6 +69,8 @@ else if (isset($_REQUEST["umpleCode"]))
   else
   {
     $javadoc = False;
+    $stateDiagram = False;
+    $yumlDiagram = False;
     $uigu = False;
   }
   
@@ -84,8 +96,8 @@ else if (isset($_REQUEST["umpleCode"]))
     copy("$filename", "JSFProvider/model.ump");
 	executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
   }
-  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql")))
-  {  
+  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql","GvStateDiagram","Yuml")))
+  {  // If NOT one of the basic languages, then use umplesync.jar
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";
     
@@ -110,7 +122,7 @@ else if (isset($_REQUEST["umpleCode"]))
   }
 
   if (!$uigu)
-  {
+  { // NOTuigu
   // Generate the Java, PHP, Ruby, Cpp or Sql and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   
@@ -127,7 +139,13 @@ else if (isset($_REQUEST["umpleCode"]))
   }    
   if($toRemove) { exec($rmcommand); }
   
-  $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";    
+  // The following is a hack. The arguments to umplesync need fixing
+  if (!$stateDiagram && !$yumlDiagram) {  
+    $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";
+  }
+  else {
+    $command = "java -jar umplesync.jar -generate " . $language . " {$filename} 1> {$outputFilename} 2> {$errorFilename}";
+  }
   exec($command);
   
   // Restore file so it doesn't have the 'generate' command in front
@@ -193,7 +211,33 @@ else if (isset($_REQUEST["umpleCode"]))
       support iframes, so the javadoc cannot be displayed</iframe> 
      ";
        echo $html;
-    }
+    }  // end javadoc
+    
+    else if ($stateDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/stateDiagram.svg");
+      $command = "/usr/local/bin/dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
+      exec($command);
+      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;{$errhtml}
+      <iframe width=100% src=\"umpleonline/$thedir/stateDiagram.svg\">This browser does not
+      support iframes, so the state machine cannot be displayed</iframe> ";
+      echo $html;
+    } // end state diagram
+    
+    else if ($yumlDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/yuml.txt");
+      $command = "cp " . $thedir . "/model.ump.output " . $thedir .  "/yuml.txt";
+      exec($command);
+      $html = "<a href=\"umpleonline/$thedir/yuml.txt\">Download the Yuml text for the following</a>&nbsp;{$errhtml}";
+      if ($sourceCode != "null") {
+        $html = $html . "
+          <iframe width=100% height=500 src=\"http://yuml.me/diagram/class/" . $sourceCode . "\">This browser does not
+          support iframes, so the diagram cannot be displayed</iframe> ";
+      }
+      echo $html;
+    } // end yuml diagram  
+      
     else // This is where the Java, PHP and other output is placed on the screen
     {
 	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
@@ -201,9 +245,9 @@ else if (isset($_REQUEST["umpleCode"]))
        echo $sourceCode;
     }
   }
-  } // UIGU
+  } // end not UIGU
   else
-  {
+  {  // is UIGU
 	$thedir = dirname($filename);
 	$theurldir = "ump/" . basename($thedir);
 	$errorFilename = "{$filename}.erroroutput";
@@ -215,7 +259,7 @@ else if (isset($_REQUEST["umpleCode"]))
 	 ";
 	 echo $html;
   }
-}
+}  // end request has umpleCode
 else if (isset($_REQUEST["exampleCode"]))
 {
   $filename = "../ump/" . $_REQUEST["exampleCode"];
