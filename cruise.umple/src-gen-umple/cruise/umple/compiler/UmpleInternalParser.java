@@ -1003,6 +1003,7 @@ this("UmpleInternalParser", aModel);
       checkDuplicateAssociationNames();
       checkExtendsForCycles();
       checkSortedAssociations();
+      checkClassInterfaceAssocations();
     }
   }
 
@@ -1429,12 +1430,15 @@ this("UmpleInternalParser", aModel);
     unlinkedAssociations.add(leftAssociation);
     unlinkedAssociations.add(rightAssociation);
   }
-
-  private boolean verifyClassesInUse()
+  
+   private boolean verifyClassesInUse()
   {
     for(Map.Entry<Position, String> e : positionToClassNameReference.entrySet())
     {
-      if (model.getUmpleClass(e.getValue()) == null)
+      boolean isAClass = model.getUmpleClass(e.getValue()) != null;
+      boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
+
+      if (!isAClass && !isAInterface) //item referenced not a class or interface
       {
         UmpleClass aClass = model.addUmpleClass(e.getValue());
         aClass.setPackageName(model.getDefaultNamespace());
@@ -1442,15 +1446,38 @@ this("UmpleInternalParser", aModel);
         return false;
       }
     }
+    
     return true;
   }
+  
+    private boolean associationIsBetweenClassAndInterface (Association a){
+	   AssociationEnd myEnd = a.getEnd(0);
+       AssociationEnd yourEnd = a.getEnd(1);
+       
+       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+       UmpleInterface yourClass = model.getUmpleInterface(yourEnd.getClassName());
+       
+       if (myClass != null && yourClass != null ){ //association is between class and interface
+    	   return true;
+       }
+       
+       return false;
+      
+   }
+  
+
 
   private void addUnlinkedAssociationVariables()
   {
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
+       
       UmpleClass aClass = model.getUmpleClass(av.getType());
-      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());       
+      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());   
+      
+      if (aClass == null || bClass == null){ //Association is between Class and Interface
+    	  continue;
+      }   
 
       Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
 
@@ -1653,7 +1680,9 @@ this("UmpleInternalParser", aModel);
   private void checkSingletonAssociations() 
   {
     for (Association association : model.getAssociations()) 
-    {
+    {  
+      if (associationIsBetweenClassAndInterface (association)){continue;}	
+      
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
 
@@ -1689,13 +1718,15 @@ this("UmpleInternalParser", aModel);
   private void addUnlinkedAssociations()
   {
     for (Association association : unlinkedAssociations)
-    {      	
+    {      	 
+      if (associationIsBetweenClassAndInterface (association)){continue;}	
+      
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-
+      
       AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
       AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
       myAs.setRelatedAssociation(yourAs);
@@ -1749,11 +1780,13 @@ this("UmpleInternalParser", aModel);
   {
     for (Association association : model.getAssociations()) 
     {
+      if (associationIsBetweenClassAndInterface (association)){continue;}
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+      
       String value;
       
       if(!"".equals(yourEnd.getPriority())){
@@ -1782,6 +1815,17 @@ this("UmpleInternalParser", aModel);
 		  setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), myEnd.getPriority());
       }
     }
+  }
+  
+   private void checkClassInterfaceAssocations(){
+	  for (Association a : model.getAssociations()){
+		  if (associationIsBetweenClassAndInterface(a)){
+			  boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
+			  if (!hasCorrectArrow){
+				  setFailedPosition(a.getTokenPosition(), 20, a.getEnd(0).getClassName());
+			  }
+		  }
+	  }
   }
   
   /*
@@ -3253,6 +3297,9 @@ this("UmpleInternalParser", aModel);
     for (int i=0; i<model.numberOfAssociations(); i++)
     {
       Association a = model.getAssociation(i);
+      
+      if (associationIsBetweenClassAndInterface (a)){continue;}
+      
       int numberOfPositions = a.numberOfPositions();
 
       if (numberOfPositions < 2)
