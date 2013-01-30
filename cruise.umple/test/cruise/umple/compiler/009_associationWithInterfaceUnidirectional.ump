@@ -1,0 +1,19 @@
+class C {}
+
+interface Y {}
+
+//Testing Class-Interface Association with -> arrow
+class X {
+  1 -> 0..1 Y;
+}
+
+//Testing Class-Interface Association with -> arrow
+class A {
+  1 -> * Y;
+}
+
+//Testing Class-Interface Association with -> arrow
+association {
+  1 C -> * Y;
+}
+

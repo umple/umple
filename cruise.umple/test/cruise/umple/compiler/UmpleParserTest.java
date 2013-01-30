@@ -926,6 +926,13 @@ public class UmpleParserTest
   }
   
   @Test
+  public void associationWithClassAndInterface(){
+	  assertSimpleParse("009_associationWithInterfaceUnidirectional.ump");
+	  assertFailedParse("009_associationWithInterfaceBidirectional.ump", 20);
+	  assertFailedParse("009_associationNonExistentInterface.ump",5);
+  }
+  
+  @Test
   public void externalAssociationWithUnknownClass()
   {
     assertFailedParse("009_externalAssociationWithUnknownClass.ump", new Position("009_externalAssociationWithUnknownClass.ump",6,7,42));
