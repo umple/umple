@@ -20,6 +20,8 @@ document.write('<link href="scripts/jquery/jquery-ui-1.8.17.custom.css" rel="sty
 document.write('<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.17.custom.min.js"></script>');
 
 document.write('<script type="text/javascript" src="scripts/jquery/caretRange/caretRange.js"></script>');
+document.write('<script type="text/javascript" src="scripts/jquery.ui.touch-punch.min.js"></script>');
+
 
 //General helpers
 document.write('<script type="text/javascript" src="scripts/dom.js"><\/script>');

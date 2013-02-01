@@ -115,7 +115,9 @@ UmpleSystem.addClass = function(umpleClass)
     classObj.mouseover(function(event) { Action.classHover(event,true);} );
     classObj.mouseout(function(event) { Action.classHover(event,false);} );
     classObj.mousedown(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
+   // classObj.touchstart(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
     classObj.mouseup(function(event){ Action.classMouseUp(event); });
+   // classObj.touchend(function(event){ Action.classMouseUp(event); });
      if (!Page.readOnly) {classObj.draggable
       ({
           containment:'parent', 
