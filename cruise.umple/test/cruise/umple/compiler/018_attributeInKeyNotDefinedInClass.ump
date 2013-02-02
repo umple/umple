@@ -1,0 +1,10 @@
+class Student
+{
+  key { name }
+}
+
+class Teacher
+{
+  name;
+  key { faculty }
+}

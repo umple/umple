@@ -1511,10 +1511,16 @@ public class UmpleParserTest
     assertHasWarningsParse("018_cannotHaveKeyAndDefaultKey.ump",new Position("018_cannotHaveKeyAndDefaultKey.ump",8,2,55));
   }
   
-   @Test
+  @Test
   public void keyCannotHaveDuplicateAttributes()
   {
-    assertHasWarningsParse("018_keyCannotHaveDuplicateAttributes.ump", 26);
+    assertFailedParse("018_keyCannotHaveDuplicateAttributes.ump", 26);
+  }  
+  
+  @Test 
+  public void attributeInKeyNotDefinedInClass()
+  {
+    assertHasWarningsParse("018_attributeInKeyNotDefinedInClass.ump", 27);
   }  
   
   @Test

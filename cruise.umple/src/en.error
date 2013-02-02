@@ -30,8 +30,8 @@
 # [TODO - issue 272] 23: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
 24: 2, http://umple.org/E024SortKeyNotofUmpleType.html, Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
 25: 2, http://umple.org/E025SortKeyNotFound.html, Class '{0}' does not contain attribute {1} that is used as sort key ;
-26: 3, http://umple.org/PageBeingDeveloped.html, Duplicate attribute '{0}' in key statement(s) in class '{1}' ;
-#27: 3, http://umple.org/PageBeingDeveloped.html, Attribute is not defined in class but used in key statement(s) '{0}' ;
+26: 2, http://umple.org/PageBeingDeveloped.html, Duplicate attribute '{0}' in key statement(s) in class '{1}' ;
+27: 3, http://umple.org/PageBeingDeveloped.html, Attribute '{0}'in key statement is not defined in class '{1}';
 
 30: 4, http://umple.org/PageBeingDeveloped.html, Redefining the namespace of class {0} to {1};
 31: 4, http://umple.org/PageBeingDeveloped.html, Declared namespace {0} was not used before declaring {1};
