@@ -2025,6 +2025,7 @@ this("UmpleInternalParser", aModel);
     }
 
     List<String> attributesAdded = new ArrayList<String>();
+    Boolean match = false; 
     for(Token token : keyToken.getSubTokens())
     {
       if (!token.is("keyId"))
@@ -2036,7 +2037,29 @@ this("UmpleInternalParser", aModel);
       {
         setFailedPosition(keyToken.getPosition(), 26, token.getValue(), keyToken.getParentToken().getValue("name"));
       }
-      
+ 
+ 	 	
+	  if(aClass.getAttributes().size() == 0)
+      {
+            setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+      }
+      else
+      {
+        for(Attribute aAttribute : aClass.getAttributes())
+        {
+          if(aAttribute.getName().equals(token.getValue()))
+          {
+            match = true;
+          	break;
+          }
+	    }
+	    
+	    if(!match)
+	    {
+	      setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+	    }
+      }
+ 
       aClass.getKey().addMember(token.getValue());
       attributesAdded.add(token.getValue()); 
     }
