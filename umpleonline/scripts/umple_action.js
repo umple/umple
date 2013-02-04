@@ -547,6 +547,8 @@ Action.classClicked = function(event)
   Action.unselectAll();
   Action.elementClicked = true;
   var obj = event.currentTarget;
+
+  Action.selectClass(obj.id);
   
   if (Page.selectedItem == "DeleteEntity")
   {
@@ -1284,7 +1286,9 @@ Action.setCaretPosition = function(line){
     }
     else
     {
-      Page.setFeedbackMessage("Invalid line number entered");
+      if(!Action.selectMatchingText(line)) {
+        Page.setFeedbackMessage("Line number or word \""+line+"\" not located");
+        setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},3000);      }
       return;
     }
   }
@@ -1333,6 +1337,61 @@ Action.setCaretPosition = function(line){
     range.moveEnd('character', endPos);
     range.moveStart('character', startPos);
     range.select();
+  }
+}
+
+// Searches for the matching text in the code mirror editor
+// Does not span lines
+Action.selectMatchingText = function(text) {
+  // Does nothing if CodeMirror is off
+  if(Page.codeMirrorOn) {
+    var scursor = Page.codeMirrorEditor.getSearchCursor(text);
+    if(!scursor.findNext()) {
+      return false;
+    }
+    Page.codeMirrorEditor.setSelection(scursor.from(),scursor.to());
+    Page.codeMirrorEditor.focus();
+    return true;
+  }
+  return false;
+}
+
+// Will select a class. Needs improving so does not match certain comments
+Action.selectClass = function(className) {
+  if(Page.codeMirrorOn) {
+    var scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class "+
+       className+"($|\\\s|[{])"));
+
+    if(!scursor.findNext()) {
+      return false;
+    }
+
+    // Have found declaration of class. Now have to search for the next class or end
+    var start = scursor.from();
+
+    var theEnd=new Object();
+
+    theEnd.line = Page.codeMirrorEditor.lineCount();
+    theEnd.ch = 9999;
+    
+    scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class [A-Z]"),scursor.to());
+    if(scursor.findNext()) {
+      // Found a subsequent class - back up one line from it
+      var endObject = scursor.from();
+      theEnd.line = endObject.line -1;
+      theEnd.ch = 0;
+    }
+
+    Page.codeMirrorEditor.setSelection(start,theEnd);
+    Page.codeMirrorEditor.focus();
+    return true;
+  }
+  return false;
+}
+
+Action.selectStateInClass = function(stateName, classname) {
+  // TODO
+  if(Page.codeMirrorOn) {
   }
 }
 
