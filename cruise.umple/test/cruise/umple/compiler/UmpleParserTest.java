@@ -1839,6 +1839,60 @@ public class UmpleParserTest
 	  
   }
   
+  // Test for issue #272
+  // Author: Blake Quebec Desloges
+  @Test
+  public void attributeAndAssociationNameClashingBidirectional(){
+  	  
+	  assertFailedParse("024_bidirectional_many_to_one.ump",23);
+	  assertFailedParse("024_bidirectional_many_to_some.ump",23);
+	  assertFailedParse("024_bidirectional_many_to_many.ump",23);
+	  assertFailedParse("024_bidirectional_some_to_one.ump",23);
+	  assertFailedParse("024_bidirectional_some_to_some.ump",23);
+	  assertFailedParse("024_bidirectional_some_to_many.ump",23);
+	  assertFailedParse("024_bidirectional_one_to_one.ump",23);
+	  assertFailedParse("024_bidirectional_one_to_some.ump",23);
+	  assertFailedParse("024_bidirectional_one_to_many.ump",23);
+	  
+  }
+  @Test
+  public void attributeAndAssociationNameClashingUnidirectional(){
+  	  
+	  assertFailedParse("024_unidirectional_many_to_one.ump",23);
+	  assertFailedParse("024_unidirectional_many_to_some.ump",23);
+	  assertFailedParse("024_unidirectional_many_to_many.ump",23);
+	  assertFailedParse("024_unidirectional_some_to_one.ump",23);
+	  assertFailedParse("024_unidirectional_some_to_some.ump",23);
+	  assertFailedParse("024_unidirectional_some_to_many.ump",23);
+	  assertFailedParse("024_unidirectional_one_to_one.ump",23);
+	  assertFailedParse("024_unidirectional_one_to_some.ump",23);
+	  assertFailedParse("024_unidirectional_one_to_many.ump",23);
+	  
+  }
+  @Test
+  public void attributeAndAssociationNameClashingBackwardsUnidirectional(){
+  	  
+	  assertFailedParse("024_back_unidirectional_many_to_one.ump",23);
+	  assertFailedParse("024_back_unidirectional_many_to_some.ump",23);
+	  assertFailedParse("024_back_unidirectional_many_to_many.ump",23);
+	  assertFailedParse("024_back_unidirectional_some_to_one.ump",23);
+	  assertFailedParse("024_back_unidirectional_some_to_some.ump",23);
+	  assertFailedParse("024_back_unidirectional_some_to_many.ump",23);
+	  assertFailedParse("024_back_unidirectional_one_to_one.ump",23);
+	  assertFailedParse("024_back_unidirectional_one_to_some.ump",23);
+	  assertFailedParse("024_back_unidirectional_one_to_many.ump",23);
+	  
+  }
+  @Test
+  public void attributeAndAssociationNameClashingSeparate(){
+  	  
+  	  assertFailedParse("024_separate_back_unidirectional.ump",23);
+	  assertFailedParse("024_separate_bidirectional.ump",23);
+	  assertFailedParse("024_separate_unidirectional.ump",23);
+	  
+  }
+  
+  
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));

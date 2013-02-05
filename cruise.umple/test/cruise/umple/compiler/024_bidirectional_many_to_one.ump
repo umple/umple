@@ -1,0 +1,5 @@
+class X{
+  a;
+  * -- 1 Y a;
+}
+class Y {}
