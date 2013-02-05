@@ -1,0 +1,10 @@
+class X{
+  a;
+}
+class Y {
+  a;
+}
+
+association{
+  1 X a <- 1 Y;
+}

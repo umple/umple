@@ -1,0 +1,6 @@
+class X{
+  1..10 <- 1 Y;
+}
+class Y {
+  xs;
+}

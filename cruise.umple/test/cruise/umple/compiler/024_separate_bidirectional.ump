@@ -1,0 +1,7 @@
+class X{
+  a;
+}
+class Y {}
+association{
+  1 X -- 1 Y a;
+}

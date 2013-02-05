@@ -1,0 +1,6 @@
+class X{
+  1 <- * Y;
+}
+class Y {
+  x;
+}

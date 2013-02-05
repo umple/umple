@@ -27,7 +27,7 @@
 
 21: 2, http://umple.org/E021InvalidReflexiveAssociation.html, Reflexive association to class '{0}' must use a role name or else self ;
 22: 2, http://umple.org/E022DuplicateAttribute.html, Class '{0}' has duplicate attribute name {1} ;
-# [TODO - issue 272] 23: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
+23: 2, http://umple.org/PageBeingDeveloped.html, Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
 24: 2, http://umple.org/E024SortKeyNotofUmpleType.html, Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
 25: 2, http://umple.org/E025SortKeyNotFound.html, Class '{0}' does not contain attribute {1} that is used as sort key ;
 26: 2, http://umple.org/PageBeingDeveloped.html, Duplicate attribute '{0}' in key statement(s) in class '{1}' ;

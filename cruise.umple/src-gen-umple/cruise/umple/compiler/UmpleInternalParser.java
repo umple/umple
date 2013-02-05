@@ -1628,6 +1628,13 @@ this("UmpleInternalParser", aModel);
   {
     for(UmpleClass C : model.getUmpleClasses())
     {
+      // Create the list of attribute names (for issue 272)
+      List<String> existingAttributeNames = new ArrayList<String>();
+      for (Attribute attr : C.getAttributes())
+      {
+      	      existingAttributeNames.add(attr.getName());
+      }
+      
       List<String> existingNames = new ArrayList<String>();
       List<Association> visitedAssociations = new ArrayList<Association>();
       for(Association assoc : C.getAssociations())
@@ -1651,6 +1658,10 @@ this("UmpleInternalParser", aModel);
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
           }
+          else if (existingAttributeNames.contains(firstEnd.getRoleName()))
+          {  // Check if the association name is the same as an attribute name
+             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+          }
           else
           {
             existingNames.add(firstEnd.getRoleName());
@@ -1661,6 +1672,10 @@ this("UmpleInternalParser", aModel);
           if (existingNames.contains(secondEnd.getRoleName()))
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+          }
+          else if (existingAttributeNames.contains(secondEnd.getRoleName()))
+          {  // Check if the association name is the same as an attribute name
+             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
           }
           else
           {
