@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 import java.util.*;
 
-// line 217 "../../../../src/Umple.ump"
+// line 222 "../../../../src/Umple.ump"
 public class CodeInjection
 {
 

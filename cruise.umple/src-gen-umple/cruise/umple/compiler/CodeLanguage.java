@@ -3,7 +3,7 @@
 
 package cruise.umple.compiler;
 
-// line 209 "../../../../src/Umple.ump"
+// line 214 "../../../../src/Umple.ump"
 public class CodeLanguage
 {
 
@@ -47,7 +47,7 @@ public class CodeLanguage
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 212 ../../../../src/Umple.ump
+  // line 217 ../../../../src/Umple.ump
   public boolean equals(Object O)
 	{
 		return name.equals(((CodeLanguage)O).getName());

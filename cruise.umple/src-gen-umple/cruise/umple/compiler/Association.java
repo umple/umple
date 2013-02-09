@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
  */
-// line 388 "../../../../src/Umple.ump"
+// line 393 "../../../../src/Umple.ump"
 // line 977 "../../../../src/Umple_Code.ump"
 public class Association
 {
@@ -45,7 +45,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
-    // line 400 "../../../../src/Umple.ump"
+    // line 405 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -104,7 +104,7 @@ public class Association
    */
   public String getName()
   {
-    // line 399 "../../../../src/Umple.ump"
+    // line 404 "../../../../src/Umple.ump"
     if (name == null || "".equals(name)) { return this.deriveName(); }
     return name;
   }

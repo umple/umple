@@ -139,5 +139,15 @@ public class Constraint
 
   public void delete()
   {}
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 208 ../../../../src/Umple.ump
+  public boolean verifyConstrainedVariable(UmpleClass aClass){
+	 Attribute correspondingAttribute = aClass.getAttribute(this.getConstrainedVariable());
+	 if (correspondingAttribute == null){return false;}
+	  return true;
+ }
 }
