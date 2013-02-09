@@ -1,0 +1,5 @@
+//expect this to throw an error 
+class Client {
+  Integer age;
+  [agedfd > 12]
+}

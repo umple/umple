@@ -12,7 +12,7 @@ package cruise.umple.compiler;
  * 0..1 -> 1 UmpleInterface uInterface;
  * }
  */
-// line 490 "../../../../src/Umple.ump"
+// line 495 "../../../../src/Umple.ump"
 // line 1592 "../../../../src/Umple_Code.ump"
 public class Point
 {

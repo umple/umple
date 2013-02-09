@@ -205,6 +205,11 @@ class Constraint{
   constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
   String[] expression;
   String[] type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+  public boolean verifyConstrainedVariable(UmpleClass aClass){
+	 Attribute correspondingAttribute = aClass.getAttribute(this.getConstrainedVariable());
+	 if (correspondingAttribute == null){return false;}
+	  return true;
+ }
 }
 class CodeLanguage
 {

@@ -3,7 +3,7 @@
 
 package cruise.umple.compiler;
 
-// line 498 "../../../../src/Umple.ump"
+// line 503 "../../../../src/Umple.ump"
 // line 1614 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
@@ -45,7 +45,7 @@ public class Coordinate
     width = aWidth;
     height = aHeight;
     setStatus(Status.Explicit);
-    // line 506 "../../../../src/Umple.ump"
+    // line 511 "../../../../src/Umple.ump"
     updateStatus();
   }
 
@@ -59,7 +59,7 @@ public class Coordinate
     if (!canSetX) { return false; }
     x = aX;
     wasSet = true;
-    // line 507 "../../../../src/Umple.ump"
+    // line 512 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -70,7 +70,7 @@ public class Coordinate
     if (!canSetY) { return false; }
     y = aY;
     wasSet = true;
-    // line 508 "../../../../src/Umple.ump"
+    // line 513 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -81,7 +81,7 @@ public class Coordinate
     if (!canSetWidth) { return false; }
     width = aWidth;
     wasSet = true;
-    // line 509 "../../../../src/Umple.ump"
+    // line 514 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -92,7 +92,7 @@ public class Coordinate
     if (!canSetHeight) { return false; }
     height = aHeight;
     wasSet = true;
-    // line 510 "../../../../src/Umple.ump"
+    // line 515 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }

@@ -2420,7 +2420,12 @@ this("UmpleInternalParser", aModel);
 } 
       else if( isFirst == true && aConstraint.getConstrainedVariable().equals(""))
       {
+      	
         aConstraint.setConstrainedVariable(expr);
+        
+        if (!aConstraint.verifyConstrainedVariable(aClass)){ //make sure constraint Variable exists as an attribute in the class
+    		  setFailedPosition(invariantToken.getPosition(), 28, expr, aClass.getName());
+    	  }
       }
       aConstraint.addExpression(expr);
       

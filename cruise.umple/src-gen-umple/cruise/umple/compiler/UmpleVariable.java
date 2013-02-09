@@ -8,7 +8,7 @@ package cruise.umple.compiler;
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
  */
-// line 341 "../../../../src/Umple.ump"
+// line 346 "../../../../src/Umple.ump"
 // line 929 "../../../../src/Umple_Code.ump"
 public class UmpleVariable
 {
@@ -42,7 +42,7 @@ public class UmpleVariable
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 355 "../../../../src/Umple.ump"
+    // line 360 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -94,7 +94,7 @@ public class UmpleVariable
    */
   public String getModifier()
   {
-    // line 357 "../../../../src/Umple.ump"
+    // line 362 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }
