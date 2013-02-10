@@ -40,4 +40,13 @@ public class DoActivityTest
     Assert.assertEquals(1, course.getCount());
     Assert.assertEquals(CourseV.Status.On, course.getStatus());
   }
+  
+  @Test
+  public void doActivityInNestedStateMachine() throws InterruptedException
+  {
+    CourseW course = new CourseW();
+    Thread.sleep(5000);
+    
+    Assert.assertEquals("DoActivity in nested state", course.getLog(0));
+  }
 }

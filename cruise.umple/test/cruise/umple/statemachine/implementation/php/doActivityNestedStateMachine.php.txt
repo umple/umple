@@ -1,0 +1,122 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Course
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Course State Machines
+  private static $StatusOpen = 1;
+  private static $StatusOpenNull = 2;
+  private static $StatusOpenStatusOpen = 3;
+  private $status;
+  private $statusOpen;
+
+  //Course Do Activity Threads
+  private $doActivityOpenStatusOpenThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatusOpen(self::$StatusOpenNull);
+    $this->setStatus(self::$StatusOpen);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    if ($this->statusOpen != self::$StatusOpenNull) { $answer .= "." . $this->getStatusOpen(); }
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
+    return null;
+  }
+
+  public function getStatusOpen()
+  {
+    if ($this->statusOpen == self::$StatusOpenNull) { return "StatusOpenNull"; }
+    elseif ($this->statusOpen == self::$StatusOpenStatusOpen) { return "StatusOpenStatusOpen"; }
+    return null;
+  }
+
+  private function enterOpen()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatusOpen = $this->statusOpen;
+    if ($aStatusOpen == self::$StatusOpenNull)
+    {
+      $this->setStatusOpen(self::$StatusOpenStatusOpen);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitOpen()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatusOpen = $this->statusOpen;
+    if ($aStatusOpen == self::$StatusOpenStatusOpen)
+    {
+      $this->setStatusOpen(self::$StatusOpenNull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitStatus()
+  {
+    if ($this->status == self::$StatusOpen)
+    {
+      $this->exitOpen();
+    }
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusOpen)
+    {
+      if ($this->statusOpen == self::$StatusOpenNull) { $this->setStatusOpen(self::$StatusOpenStatusOpen); }
+    }
+  }
+
+  private function setStatusOpen($aStatusOpen)
+  {
+    $this->statusOpen = $aStatusOpen;
+    if ($this->status != self::$StatusOpen && $aStatusOpen != self::$StatusOpenNull) { $this->setStatus(self::$StatusOpen); }
+
+    // entry actions and do activities
+    if ($this->statusOpen == self::$StatusOpenStatusOpen)
+    {
+      keepGoing();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

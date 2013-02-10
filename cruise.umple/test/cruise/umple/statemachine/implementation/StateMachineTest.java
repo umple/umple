@@ -110,6 +110,12 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("doActivity.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
   }
   
+  @Test
+  public void doActivityNestedStateMachine()
+  {
+	  assertUmpleTemplateFor("doActivityNestedStateMachine.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
+  }
+  
   @Test 
   public void exitAction()
   {

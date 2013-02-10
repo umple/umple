@@ -1,0 +1,173 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+
+public class Course
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Course State Machines
+  enum Status { Open }
+  enum StatusOpen { Null, statusOpen }
+  private Status status;
+  private StatusOpen statusOpen;
+
+  //Course Do Activity Threads
+  Thread doActivityOpenStatusOpenThread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Course()
+  {
+    setStatusOpen(StatusOpen.Null);
+    setStatus(Status.Open);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    if (statusOpen != StatusOpen.Null) { answer += "." + statusOpen.toString(); }
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public StatusOpen getStatusOpen()
+  {
+    return statusOpen;
+  }
+
+  private boolean enterOpen()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusOpen aStatusOpen = statusOpen;
+    switch (aStatusOpen)
+    {
+      case Null:
+        setStatusOpen(StatusOpen.statusOpen);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitOpen()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusOpen aStatusOpen = statusOpen;
+    switch (aStatusOpen)
+    {
+      case statusOpen:
+        setStatusOpen(StatusOpen.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case Open:
+        exitOpen();
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case Open:
+        if (statusOpen == StatusOpen.Null) { setStatusOpen(StatusOpen.statusOpen); }
+        break;
+    }
+  }
+
+  private void exitStatusOpen()
+  {
+    switch(statusOpen)
+    {
+      case statusOpen:
+        if (doActivityOpenStatusOpenThread != null) { doActivityOpenStatusOpenThread.interrupt(); }
+        break;
+    }
+  }
+
+  private void setStatusOpen(StatusOpen aStatusOpen)
+  {
+    statusOpen = aStatusOpen;
+    if (status != Status.Open && aStatusOpen != StatusOpen.Null) { setStatus(Status.Open); }
+
+    // entry actions and do activities
+    switch(statusOpen)
+    {
+      case statusOpen:
+        doActivityOpenStatusOpenThread = new DoActivityThread(this,"doActivityOpenStatusOpen");
+        break;
+    }
+  }
+
+  private void doActivityOpenStatusOpen()
+  {
+    try
+    {
+      keepGoing();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    Course controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(Course aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivityOpenStatusOpen".equals(doActivityMethodName))
+      {
+        controller.doActivityOpenStatusOpen();
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+}

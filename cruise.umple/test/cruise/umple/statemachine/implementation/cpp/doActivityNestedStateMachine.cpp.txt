@@ -1,0 +1,145 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+
+#include "Course.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Course::Course()
+  {
+    if (statusOpen == Null) { setStatusOpen(Null); }
+    setStatus(Open);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Course::Course(const Course & course)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Course Course::operator=(const Course & course)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string Course::getStatusFullName()
+  {
+    string answer = getStatusStringName(status);
+    if (statusOpen != Null) { answer += "." + getStatusOpenStringName(statusOpen); }
+    return answer;
+  }
+  
+  Course::Status Course::getStatus()
+  {
+    return status;
+  }
+
+  string Course::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Open"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  Course::StatusOpen Course::getStatusOpen()
+  {
+    return statusOpen;
+  }
+
+  string Course::getStatusOpenStringName (StatusOpen statusOpen)
+  {
+    switch (statusOpen)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "statusOpen"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Course::enterOpen()
+  {
+    bool wasEventProcessed = false;
+
+    switch (statusOpen)
+    {
+      case Null:
+        setStatusOpen(statusOpen);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool Course::exitOpen()
+  {
+    bool wasEventProcessed = false;
+
+    switch (statusOpen)
+    {
+      case statusOpen:
+        setStatusOpen(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void Course::exitStatus()
+  {
+    switch(status)
+    {
+      case Open:
+        exitOpen();
+        break;
+    }
+  }
+
+  void Course::setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case Open:
+        if (statusOpen == Null) { setStatusOpen(statusOpen); }
+        break;
+    }
+  }
+  
+
+  void Course::setStatusOpen(StatusOpen aStatusOpen)
+  {
+    statusOpen = aStatusOpen;
+    if (status != Open && aStatusOpen != Null) { setStatus(Open); }
+
+    // entry actions and do activities
+    switch(statusOpen)
+    {
+      case statusOpen:
+        doActivityOpenStatusOpenThread = new DoActivityThread(this,"doActivityOpenStatusOpen");
+        break;
+    }
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Course::~Course()
+  {}

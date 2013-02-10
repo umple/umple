@@ -1,0 +1,13 @@
+namespace example;
+
+class Course {
+  status {
+    Open {
+      statusOpen {
+        do {
+          keepGoing();
+        }
+      }  
+    }
+  }
+}
