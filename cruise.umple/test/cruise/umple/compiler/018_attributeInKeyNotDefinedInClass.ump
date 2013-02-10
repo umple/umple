@@ -8,3 +8,10 @@ class Teacher
   name;
   key { faculty }
 }
+
+class Test
+{
+	name;
+	1 -- 0..1 Y stuff;
+	key{name, stuff}
+}

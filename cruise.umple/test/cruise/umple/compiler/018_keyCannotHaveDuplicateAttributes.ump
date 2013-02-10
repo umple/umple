@@ -3,3 +3,10 @@ class Student
   name;
   key { name, name }
 }
+
+class Test
+{
+	name;
+	1 -- 0..1 Y stuff;
+	key{stuff, stuff}
+}
