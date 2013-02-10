@@ -4,6 +4,20 @@
   boolean hasActivities = false;
   for(StateMachine sm : uClass.getStateMachines())
   {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+    
+    for (StateMachine nestedSm : allNested)
+    {
+      for (State state : nestedSm.getStates())
+      {
+        if (state.getActivity() != null)
+        {
+          hasActivities = true;
+          %><%@ include file="state_machine_doActivity.jet" %><%
+        }
+      }
+    }
+    
     for (State state : sm.getStates())
     {
       if (state.getActivity() != null)

@@ -5,6 +5,31 @@
   isFirst = true;
   for(StateMachine sm : uClass.getStateMachines())
   {
+    List<StateMachine> allNested = sm.getNestedStateMachines();
+    
+    for (StateMachine nestedSm : allNested)
+    {
+      for (State state : nestedSm.getStates())
+      {
+        if (state.getActivity() != null)
+        {
+          if (isFirst)
+          {
+            output.append(StringFormatter.format("if"));
+            isFirst = false;
+          }
+          else
+          {
+            output.append(StringFormatter.format("\n        else if"));
+          }
+          output.append(StringFormatter.format(" (\"{0}\".equals(doActivityMethodName))\n",gen.translate("doActivityMethod",state)));
+          output.append(StringFormatter.format("      {\n"));
+          output.append(StringFormatter.format("        controller.{0}();\n",gen.translate("doActivityMethod",state)));
+          output.append(StringFormatter.format("      }"));
+        }
+      }
+    }
+    
     for (State state : sm.getStates())
     {
       if (state.getActivity() != null)

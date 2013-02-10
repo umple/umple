@@ -212,3 +212,16 @@ class CourseV {
 
 }
 
+class CourseW {
+  String[] logs;
+  
+  status {
+    Open {
+      statusOpen {
+        do {
+          addLog("DoActivity in nested state");
+        }
+      }  
+    }
+  }
+}
