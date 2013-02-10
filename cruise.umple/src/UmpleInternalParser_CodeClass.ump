@@ -377,7 +377,7 @@ class UmpleInternalParser
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
-
+    
     // Go through every token that is a child of the current token (all associations part of this association).
     for(Token token : associationToken.getSubTokens())
     {
@@ -1308,45 +1308,71 @@ class UmpleInternalParser
       return;
     }
 
-    List<String> attributesAdded = new ArrayList<String>();
-    Boolean match = false; 
+    List<String> tokensAdded = new ArrayList<String>();
+    Boolean attributeMatch = false; 
+    Boolean associationMatch = false;
     for(Token token : keyToken.getSubTokens())
     {
       if (!token.is("keyId"))
       {
         continue;
       }
-      
-      if(attributesAdded.contains(token.getValue()))
+ 
+      //Checks for duplicate attributes/associations
+      if(tokensAdded.contains(token.getValue()))
       {
         setFailedPosition(keyToken.getPosition(), 26, token.getValue(), keyToken.getParentToken().getValue("name"));
       }
- 
- 	 	
-	  if(aClass.getAttributes().size() == 0)
+ 	
+	  if((aClass.getAttributes().size() == 0) && !aClass.hasAssociations())
       {
-            setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
       }
       else
       {
+        attributeMatch = false; 	//reset flag
         for(Attribute aAttribute : aClass.getAttributes())
         {
           if(aAttribute.getName().equals(token.getValue()))
           {
-            match = true;
-          	break;
+            attributeMatch = true;
+          }
+	    }
+      }
+      
+      if(aClass.hasAssociations())
+	  {
+	    AssociationEnd firstEnd, secondEnd;
+	    String firstEndName, secondEndName;
+	   
+	    associationMatch = false; 	//reset flag
+	    for(Association aAssociation : aClass.getAssociations())
+        { 
+          firstEnd = aAssociation.getEnd(0);
+      	  secondEnd = aAssociation.getEnd(1);
+          firstEndName =  firstEnd.getRoleName();
+      	  secondEndName = secondEnd.getRoleName();
+          
+          if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
+          {
+            associationMatch = true;
           }
 	    }
 	    
-	    if(!match)
-	    {
+	    if(!attributeMatch && !associationMatch)
+	    {   
 	      setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
 	    }
-      }
- 
+	  }
+	  else if(!attributeMatch)
+	       {
+	         setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+	       }
+
       aClass.getKey().addMember(token.getValue());
-      attributesAdded.add(token.getValue()); 
+      tokensAdded.add(token.getValue()); 
     }
+ 
   }
 
   private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleClass aClass)
@@ -1378,6 +1404,7 @@ class UmpleInternalParser
 
   private Association analyzeAssociation(Token associationToken, String defaultMyType)
   {
+  
     int myMultOffset = 0;
     int yourMultOffset = 2;
     Token associationModifier = associationToken.getSubToken("modifier");
