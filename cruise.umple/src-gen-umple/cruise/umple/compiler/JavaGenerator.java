@@ -9,7 +9,7 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.java.*;
 import cruise.umple.util.StringFormatter;
 
-// line 148 "../../../../src/Generator.ump"
+// line 162 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeJava.ump"
 public class JavaGenerator implements CodeGenerator,CodeTranslator
 {

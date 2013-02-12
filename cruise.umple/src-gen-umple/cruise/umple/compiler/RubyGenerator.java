@@ -8,7 +8,7 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
-// line 200 "../../../../src/Generator.ump"
+// line 214 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeRuby.ump"
 public class RubyGenerator implements CodeGenerator,CodeTranslator
 {

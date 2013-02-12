@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 import cruise.umple.util.*;
 
-// line 137 "../../../../src/Generator.ump"
+// line 151 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeJson.ump"
 public class JsonGenerator implements CodeGenerator
 {

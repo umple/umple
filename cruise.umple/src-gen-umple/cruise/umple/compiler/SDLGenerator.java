@@ -8,7 +8,7 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sdl.*;
 
-// line 234 "../../../../src/Generator.ump"
+// line 248 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {
