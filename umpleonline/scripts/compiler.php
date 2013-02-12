@@ -56,6 +56,11 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "GvStateDiagram";
      $stateDiagram = True;
   }
+  else if ($language == "classDiagram")
+  {
+     $language = "GvClassDiagram";
+     $classDiagram = True;
+  }
   else if ($language == "yumlDiagram")
   {
      $language = "Yuml";
@@ -70,6 +75,7 @@ else if (isset($_REQUEST["umpleCode"]))
   {
     $javadoc = False;
     $stateDiagram = False;
+    $classDiagram = False;
     $yumlDiagram = False;
     $uigu = False;
   }
@@ -96,7 +102,7 @@ else if (isset($_REQUEST["umpleCode"]))
     copy("$filename", "JSFProvider/model.ump");
 	executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
   }
-  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql","GvStateDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql","GvStateDiagram","GvClassDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";
@@ -140,7 +146,7 @@ else if (isset($_REQUEST["umpleCode"]))
   if($toRemove) { exec($rmcommand); }
   
   // The following is a hack. The arguments to umplesync need fixing
-  if (!$stateDiagram && !$yumlDiagram) {  
+  if (!$stateDiagram && !$classDiagram && !$yumlDiagram) {  
     $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";
   }
   else {
@@ -218,11 +224,26 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
       $command = "/usr/local/bin/dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
       exec($command);
+      $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
       $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;{$errhtml}
-      <iframe width=100% src=\"umpleonline/$thedir/stateDiagram.svg\">This browser does not
-      support iframes, so the state machine cannot be displayed</iframe> ";
-      echo $html;
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">";
+      echo $html;      
+      echo $svgcode;
+      echo "</svg>"; 
     } // end state diagram
+
+    else if ($classDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/classDiagram.svg");
+      $command = "/usr/local/bin/dot -Tsvg " . $thedir . "/modelcd.gv -o " . $thedir .  "/classDiagram.svg";
+      exec($command);
+      $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
+      $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<br/>{$errhtml}
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">";
+      echo $html;
+      echo $svgcode;
+      echo "</svg>";      
+    } // end graphViz class diagram
     
     else if ($yumlDiagram) {
       $thedir = dirname($outputFilename);

@@ -75,7 +75,6 @@ public class GvClassDiagramGenerator implements CodeGenerator
   public void generate()
   {
     StringBuilder code = new StringBuilder();
-    StringBuilder generalizations = new StringBuilder();
     StringBuilder associations = new StringBuilder();
     String className;
 
@@ -84,6 +83,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     code.append("digraph \""+model.getUmpleFile().getSimpleFileName()+"\" {\n");
     code.append("  size=\"80,10\"\n");
     code.append("  rankdir=\"BT\"\n");
+    code.append("  node [shape=record; href=\"javascript:Action.selectClass(\\\"\\N\\\");\"];\n");
 
     // Set of classes we are visiting
     // We always visit from the top of the hierarchy first
@@ -96,7 +96,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
       visitClass(uClass, visitedClasses, code, associations);
     } // End iteration through classes
     
-    terminateCode(code, generalizations, associations);
+    terminateCode(code, associations);
   }
 
   // Actually output the class contents  
@@ -113,25 +113,45 @@ public class GvClassDiagramGenerator implements CodeGenerator
       visitClass(parent, visitedClasses, code, associations);
     }
     visitedClasses.add(uClass);
-    
-    // TODO if isAbstract() mark it as such
-      
+          
     String className = uClass.getName();
     code.append("\n  // Class: "+className+"\n");
 
     code.append("  "+className+" [shape=record, label=\"{"+className);
+
+    if(uClass.getIsAbstract()) {  // add abstract tag
+      code.append("\n&laquo;abstract&raquo;");
+    }
       
     // Iterate through attributes of the class
     boolean isFirst = true;
     for (Attribute uAttribute : uClass.getAttributes()) {
       if(isFirst) code.append("|"); // attribute block starter
-      else code.append("\n"); // separator between attributes
-      code.append(""+uAttribute.getName()+"\\ :\\ "+uAttribute.getType());
+      else code.append("\\\n"); // separator between attributes
+      code.append(""+uAttribute.getName()+"\\ :\\ "+uAttribute.getType()+"\\l");
       isFirst = false;
     }
 
-    // Terminate outputting the class
-    code.append("}\"];\n");
+    // Terminate outputting the class attributes
+    code.append("}\"");
+    
+    // Output the tooltip : Class name followed by any comment
+    code.append(",\n   tooltip=\"class "+className+"\n");
+    for (Comment uComment : uClass.getComments()) {
+      String text= uComment.getText();
+      if(text.startsWith(" *")) {
+        code.append(text.substring(2)+"\n");
+      }
+      else
+      {
+        code.append(text+"\n");
+      }
+    }
+    code.append("\"");
+
+    // Terminate the class as a whole
+    code.append("];\n");
+
 
     // Add any generalization now to parents
     // We know that parents have been output first
@@ -142,13 +162,19 @@ public class GvClassDiagramGenerator implements CodeGenerator
     }
 
     // Add any interface implementations so they are output at the end
-    for(UmpleInterface implementedInterface : uClass.getParentInterface()) {
-      // TO DO
+    for(UmpleInterface uInterface : uClass.getParentInterface()) {
+      code.append("  "+className+" -> "+uInterface.getName());
+      code.append(" [arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
     }
 
     // Add any associations so they are output at the end
-    // TO DO eliminate double counting of role names
+    Set processedAssociations = new HashSet(); // needed to prevent reflexive double count
     for(Association uAssoc : uClass.getAssociations()) {
+    
+      // Prevent double-counting of reflexive associations
+      if(processedAssociations.contains(uAssoc)) continue;
+      processedAssociations.add(uAssoc);
+      
       AssociationEnd leftEnd = uAssoc.getEnd(0);
       AssociationEnd rightEnd = uAssoc.getEnd(1);
       String arrows;
@@ -177,9 +203,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     }
   }
   
-  private void terminateCode(StringBuilder code, StringBuilder generalizations, StringBuilder associations) {
-    code.append("\n  // All generalizations\n");
-    code.append(generalizations);
+  private void terminateCode(StringBuilder code, StringBuilder associations) {
 
     code.append("\n  // All associations\n");
     code.append(associations);
