@@ -7,7 +7,7 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
-// line 110 "../../../../src/Generator.ump"
+// line 124 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSimulate.ump"
 public class SimulateGenerator implements CodeGenerator
 {
