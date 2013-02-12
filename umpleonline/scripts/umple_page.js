@@ -642,7 +642,7 @@ Page.showGeneratedCode = function(code,language)
 {
   jQuery("#generatedCodeRow").show();
 
-  if(language!="javadoc" && language !="stateDiagram" & language !="diagramUpdate" && language != "uigu" && language != "yumlDiagram") {
+  if(language!="javadoc" && language !="stateDiagram" && language !="classDiagram" && language !="diagramUpdate" && language != "uigu" && language != "yumlDiagram") {
     var codeparts = code.split('URL_SPLIT');
     var zipurl = "";
     var bodycode = "";

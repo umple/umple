@@ -55,6 +55,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("stateDiagram","stateDiagram");
   }
+  else if (action == "classDiagram")
+  {
+    Action.generateCode("classDiagram","classDiagram");
+  }
   else if (action == "EcoreCode")
   {
     Action.generateCode("xml","Ecore");
@@ -1377,13 +1381,13 @@ Action.selectClass = function(className) {
     scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class [A-Z]"),scursor.to());
     if(scursor.findNext()) {
       // Found a subsequent class - back up one line from it
+      // TODO: This is weak since it can select a comment before the next class
       var endObject = scursor.from();
       theEnd.line = endObject.line -1;
-      theEnd.ch = 0;
+      theEnd.ch = 999;
     }
 
     Page.codeMirrorEditor.setSelection(start,theEnd);
-    Page.codeMirrorEditor.focus();
     return true;
   }
   return false;

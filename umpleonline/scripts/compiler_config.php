@@ -47,6 +47,7 @@ function generateMenu($buttonSuffix)
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
+            <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram</option>
             <option value=\"stateDiagram:stateDiagram\">State Diagram</option>                        
             <option value=\"java:Json\">Json</option>
             <option value=\"sql:Sql\">Sql</option>
