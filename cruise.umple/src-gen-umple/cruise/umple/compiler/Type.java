@@ -7,7 +7,7 @@ package cruise.umple.compiler;
  * NOT used right now
  * Type is a simple string
  */
-// line 187 "../../../../src/Umple.ump"
+// line 188 "../../../../src/Umple.ump"
 public class Type
 {
 

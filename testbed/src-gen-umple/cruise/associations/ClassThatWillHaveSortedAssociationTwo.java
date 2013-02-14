@@ -13,7 +13,7 @@ public class ClassThatWillHaveSortedAssociationTwo
   //------------------------
 
   //ClassThatWillHaveSortedAssociationTwo Attributes
-  private String massPriority;
+  private Comparator<ClassThatWillHaveSortedAssociationOne> massPriority;
 
   //ClassThatWillHaveSortedAssociationTwo Associations
   private List<ClassThatWillHaveSortedAssociationOne> mass;
@@ -24,7 +24,15 @@ public class ClassThatWillHaveSortedAssociationTwo
 
   public ClassThatWillHaveSortedAssociationTwo()
   {
-    massPriority = "name";
+    massPriority = 
+      new Comparator<ClassThatWillHaveSortedAssociationOne>(){
+        @Override
+        public int compare(ClassThatWillHaveSortedAssociationOne arg0, ClassThatWillHaveSortedAssociationOne arg1)
+        {
+          return ((String)arg0.getName()).compareTo(
+                 ((String)arg1.getName()));
+        }
+      };
     mass = new ArrayList<ClassThatWillHaveSortedAssociationOne>();
   }
 
@@ -32,7 +40,7 @@ public class ClassThatWillHaveSortedAssociationTwo
   // INTERFACE
   //------------------------
 
-  public boolean setMassPriority(String aMassPriority)
+  public boolean setMassPriority(Comparator<ClassThatWillHaveSortedAssociationOne> aMassPriority)
   {
     boolean wasSet = false;
     massPriority = aMassPriority;
@@ -40,7 +48,7 @@ public class ClassThatWillHaveSortedAssociationTwo
     return wasSet;
   }
 
-  public String getMassPriority()
+  public Comparator<ClassThatWillHaveSortedAssociationOne> getMassPriority()
   {
     return massPriority;
   }
@@ -86,7 +94,8 @@ public class ClassThatWillHaveSortedAssociationTwo
     if (mass.contains(aMass)) { return false; }
     mass.add(aMass);
     wasAdded = true;
-    sort(mass, massPriority);
+    if(wasAdded)
+        Collections.sort(mass, massPriority);
     
     return wasAdded;
   }
@@ -99,36 +108,10 @@ public class ClassThatWillHaveSortedAssociationTwo
       mass.remove(aMass);
       wasRemoved = true;
     }
-    sort(mass, massPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     mass.clear();

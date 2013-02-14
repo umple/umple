@@ -617,7 +617,6 @@ class JavaGenerator
         aClass.addCodeInjection(inject);
       }
     }
-    
     for(AssociationVariable av : aClass.getAssociationVariables())
     {
       if (aClass.getKey().isMember(av))
@@ -647,11 +646,22 @@ class JavaGenerator
       }
       
       if(av.isSorted())
-      {
-        String code = StringFormatter.format("sort({0}, {0}Priority);\n",translate("attributeMany",av));
-        String methods = StringFormatter.format("{0},{1}",translate("removeMethod",av),translate("addMethod",av));
-        CodeInjection set = new CodeInjection("after", methods, code, aClass);
-        set.setIsInternal(true);
+      { 
+      	String codeblock = 
+		      "{ |x, y| "+
+                "x.get_"+av.getPriority() +"() <=> "+ 
+                "y.get_"+ av.getPriority() +"()"+
+                "}";
+      	String java_code = StringFormatter.format("if(wasAdded)\n    Collections.sort({0}, {0}Priority);\n",translate("attributeMany",av));
+      	String php_code = StringFormatter.format("if(wasAdded)\n    usort($this->{0}, $this->{0}Priority);\n",translate("attributeMany",av));
+        String ruby_code = StringFormatter.format("@{0}.sort! "+codeblock+" if wasAdded\n",translate("attributeMany",av));
+        String methods = translate("addMethod",av);
+        CodeInjection set = new CodeInjection("after", methods,"", aClass);
+        CodeBlock cb = new CodeBlock();
+        cb.setCode("Java",java_code);
+        cb.setCode("Php",php_code);
+        cb.setCode("Ruby",ruby_code);
+        set.setSnippet(cb);
         aClass.addCodeInjection(set);
       }
     }

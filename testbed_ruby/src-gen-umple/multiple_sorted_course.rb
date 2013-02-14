@@ -26,7 +26,7 @@ class MultipleSortedCourse
     @initialized = false
     @deleted = false
     @code = a_code
-    @multipleSortedRegistrationsPriority = "name"
+    @multipleSortedRegistrationsPriority = ""
     @multipleSortedAcademy = nil
     did_add_multipleSortedAcademy = set_multipleSortedAcademy(a_multipleSortedAcademy)
     raise "Unable to create multipleSortedCourse due to @multipleSortedAcademy" unless did_add_multipleSortedAcademy
@@ -121,7 +121,7 @@ class MultipleSortedCourse
       @multipleSortedRegistrations << a_multipleSortedRegistration
     end
     was_added = true
-    sort(@multipleSortedRegistrations, @multipleSortedRegistrationsPriority)
+    @multipleSortedRegistrations.sort! { |x, y| x.get_name() <=> y.get_name()} if wasAdded
     
     was_added
   end
@@ -133,17 +133,9 @@ class MultipleSortedCourse
       @multipleSortedRegistrations.delete(a_multipleSortedRegistration)
       was_removed = true
     end
-    sort(@multipleSortedRegistrations, @multipleSortedRegistrationsPriority)
-    
     was_removed
   end
 
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
-  end
 
   def delete
     @deleted = true

@@ -1,26 +1,2 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  

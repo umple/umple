@@ -23,8 +23,18 @@ class ClassWithManySortedAssociations
 
   public function __construct()
   {
-    $this->studentCsPriority = "id";
-    $this->studentALsPriority = "number";
+    $this->studentCsPriority = 
+      function($x, $y)
+      {
+        return $x->getId() -
+               $y->getId();
+      };
+    $this->studentALsPriority = 
+      function($x, $y)
+      {
+        return $x->getNumber() -
+               $y->getNumber();
+      };
     $this->studentCs = array();
     $this->studentALs = array();
   }
@@ -152,7 +162,8 @@ class ClassWithManySortedAssociations
     if ($this->indexOfStudentC($aStudentC) !== -1) { return false; }
     $this->studentCs[] = $aStudentC;
     $wasAdded = true;
-    $this->sort($this->studentCs, $this->studentCsPriority);
+    if(wasAdded)
+        usort($this->studentCs, $this->studentCsPriority);
     
     return $wasAdded;
   }
@@ -166,23 +177,7 @@ class ClassWithManySortedAssociations
       $this->studentCs = array_values($this->studentCs);
       $wasRemoved = true;
     }
-    $this->sort($this->studentCs, $this->studentCsPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public static function minimumNumberOfStudentALs()
@@ -196,7 +191,8 @@ class ClassWithManySortedAssociations
     if ($this->indexOfStudentAL($aStudentAL) !== -1) { return false; }
     $this->studentALs[] = $aStudentAL;
     $wasAdded = true;
-    $this->sort($this->studentALs, $this->studentALsPriority);
+    if(wasAdded)
+        usort($this->studentALs, $this->studentALsPriority);
     
     return $wasAdded;
   }
@@ -210,23 +206,7 @@ class ClassWithManySortedAssociations
       $this->studentALs = array_values($this->studentALs);
       $wasRemoved = true;
     }
-    $this->sort($this->studentALs, $this->studentALsPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public function equals($compareTo)

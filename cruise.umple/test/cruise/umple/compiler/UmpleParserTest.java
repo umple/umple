@@ -1890,8 +1890,7 @@ public class UmpleParserTest
 	  assertFailedParse("024_separate_bidirectional.ump",23);
 	  assertFailedParse("024_separate_unidirectional.ump",23);
 	  
-  }
-  
+  }  
   
   public boolean parse(String filename)
   {

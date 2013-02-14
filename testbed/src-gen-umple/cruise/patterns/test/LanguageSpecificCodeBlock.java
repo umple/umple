@@ -30,10 +30,12 @@ public class LanguageSpecificCodeBlock
   public boolean setName(String aName)
   {
     boolean wasSet = false;
+    // line 70 "../../../../src/TestHarnessPatterns.ump"
+    String lang = "My lang is ";
     name = aName;
     wasSet = true;
-    // line 69 "../../../../src/TestHarnessPatterns.ump"
-    name = "java";
+    // line 71 "../../../../src/TestHarnessPatterns.ump"
+    name = lang + "java";
     return wasSet;
   }
 
@@ -44,5 +46,10 @@ public class LanguageSpecificCodeBlock
 
   public void delete()
   {}
+
+  // line 72 "../../../../src/TestHarnessPatterns.ump"
+  public boolean isJava(){
+    return true;
+  }
 
 }

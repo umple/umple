@@ -25,7 +25,7 @@ class MultipleSortedAcademy
   def initialize()
     @initialized = false
     @deleted = false
-    @registrantsPriority = "id"
+    @registrantsPriority = ""
     @multipleSortedCourses = []
     @registrants = []
     @initialized = true
@@ -175,7 +175,7 @@ class MultipleSortedAcademy
       @registrants << a_registrant
     end
     was_added = true
-    sort(@registrants, @registrantsPriority)
+    @registrants.sort! { |x, y| x.get_id() <=> y.get_id()} if wasAdded
     
     was_added
   end
@@ -187,17 +187,9 @@ class MultipleSortedAcademy
       @registrants.delete(a_registrant)
       was_removed = true
     end
-    sort(@registrants, @registrantsPriority)
-    
     was_removed
   end
 
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
-  end
 
   def delete
     @deleted = true

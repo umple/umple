@@ -3,9 +3,9 @@
 
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
-import java.util.*;
 
 // line 222 "../../../../src/Umple.ump"
+// line 511 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
 
@@ -16,29 +16,27 @@ public class CodeInjection
   //CodeInjection Attributes
   private String type;
   private String operation;
-  private String code;
+  private CodeBlock snippet;
   private Position position;
   private boolean isInternal;
 
   //CodeInjection Associations
   private UmpleClass umpleClass;
-  private List<CodeLanguage> language;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public CodeInjection(String aType, String aOperation, String aCode, UmpleClass aUmpleClass)
+  public CodeInjection(String aType, String aOperation, UmpleClass aUmpleClass)
   {
     type = aType;
     operation = aOperation;
-    code = aCode;
+    snippet = new CodeBlock();
     isInternal = false;
     if (!setUmpleClass(aUmpleClass))
     {
       throw new RuntimeException("Unable to create CodeInjection due to aUmpleClass");
     }
-    language = new ArrayList<CodeLanguage>();
   }
 
   //------------------------
@@ -61,10 +59,10 @@ public class CodeInjection
     return wasSet;
   }
 
-  public boolean setCode(String aCode)
+  public boolean setSnippet(CodeBlock aSnippet)
   {
     boolean wasSet = false;
-    code = aCode;
+    snippet = aSnippet;
     wasSet = true;
     return wasSet;
   }
@@ -95,9 +93,9 @@ public class CodeInjection
     return operation;
   }
 
-  public String getCode()
+  public CodeBlock getSnippet()
   {
-    return code;
+    return snippet;
   }
 
   public Position getPosition()
@@ -120,36 +118,6 @@ public class CodeInjection
     return umpleClass;
   }
 
-  public CodeLanguage getLanguage(int index)
-  {
-    CodeLanguage aLanguage = language.get(index);
-    return aLanguage;
-  }
-
-  public List<CodeLanguage> getLanguage()
-  {
-    List<CodeLanguage> newLanguage = Collections.unmodifiableList(language);
-    return newLanguage;
-  }
-
-  public int numberOfLanguage()
-  {
-    int number = language.size();
-    return number;
-  }
-
-  public boolean hasLanguage()
-  {
-    boolean has = language.size() > 0;
-    return has;
-  }
-
-  public int indexOfLanguage(CodeLanguage aLanguage)
-  {
-    int index = language.indexOf(aLanguage);
-    return index;
-  }
-
   public boolean setUmpleClass(UmpleClass newUmpleClass)
   {
     boolean wasSet = false;
@@ -161,67 +129,34 @@ public class CodeInjection
     return wasSet;
   }
 
-  public static int minimumNumberOfLanguage()
-  {
-    return 0;
-  }
-
-  public boolean addLanguage(CodeLanguage aLanguage)
-  {
-    boolean wasAdded = false;
-    if (language.contains(aLanguage)) { return false; }
-    language.add(aLanguage);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeLanguage(CodeLanguage aLanguage)
-  {
-    boolean wasRemoved = false;
-    if (language.contains(aLanguage))
-    {
-      language.remove(aLanguage);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
-  public boolean addLanguageAt(CodeLanguage aLanguage, int index)
-  {  
-    boolean wasAdded = false;
-    if(addLanguage(aLanguage))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLanguage()) { index = numberOfLanguage() - 1; }
-      language.remove(aLanguage);
-      language.add(index, aLanguage);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveLanguageAt(CodeLanguage aLanguage, int index)
-  {
-    boolean wasAdded = false;
-    if(language.contains(aLanguage))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLanguage()) { index = numberOfLanguage() - 1; }
-      language.remove(aLanguage);
-      language.add(index, aLanguage);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addLanguageAt(aLanguage, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     umpleClass = null;
-    language.clear();
   }
-
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+   public CodeInjection(String a,String b,String c,UmpleClass d)  {
+this(a,b, d);
+		setCode(c);
+  }
+// line 518 ../../../../src/Umple_Code.ump
+  public void setCode(String str)
+	{
+		snippet.setCode(str);
+	}
+	public String getCode()
+	{
+		return snippet.getCode();
+	}	
+	public void setCode(String lang, String code)
+	{
+		snippet.setCode(lang, code);
+	}
+	public String getCode(String lang)
+	{
+		return snippet.getCode(lang);
+	}
 }

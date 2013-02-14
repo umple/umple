@@ -4,6 +4,8 @@
     {
     	for (Method aMethod : uClass.getMethods()) 
     	{
+    	    if(!aMethod.getExistsInLanguage("Php"))
+    		  continue;
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = "function";

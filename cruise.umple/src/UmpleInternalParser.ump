@@ -25,10 +25,6 @@ class UmpleInternalParser
   isA Parser;
   depend java.io.*;
   depend cruise.umple.util.*;
-  CodeLanguage java = new CodeLanguage("Java");
-  CodeLanguage cpp =  new CodeLanguage("Cpp");
-  CodeLanguage ruby = new CodeLanguage("Ruby");
-  CodeLanguage php =  new CodeLanguage("Php");
   currentPackageName = "";
   Boolean packageNameUsed = true;
 

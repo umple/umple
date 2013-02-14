@@ -8,7 +8,7 @@ import java.util.*;
  * Under Development
  * The Constraint object related to Umple Classes
  */
-// line 204 "../../../../src/Umple.ump"
+// line 205 "../../../../src/Umple.ump"
 public class Constraint
 {
 
@@ -144,7 +144,7 @@ public class Constraint
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 208 ../../../../src/Umple.ump
+  // line 209 ../../../../src/Umple.ump
   public boolean verifyConstrainedVariable(UmpleClass aClass){
 	 Attribute correspondingAttribute = aClass.getAttribute(this.getConstrainedVariable());
 	 if (correspondingAttribute == null){return false;}

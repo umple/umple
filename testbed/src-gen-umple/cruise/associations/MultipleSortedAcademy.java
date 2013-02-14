@@ -13,7 +13,7 @@ public class MultipleSortedAcademy
   //------------------------
 
   //MultipleSortedAcademy Attributes
-  private String registrantsPriority;
+  private Comparator<MultipleSortedStudent> registrantsPriority;
 
   //MultipleSortedAcademy Associations
   private List<MultipleSortedCourse> multipleSortedCourses;
@@ -25,7 +25,15 @@ public class MultipleSortedAcademy
 
   public MultipleSortedAcademy()
   {
-    registrantsPriority = "id";
+    registrantsPriority = 
+      new Comparator<MultipleSortedStudent>(){
+        @Override
+        public int compare(MultipleSortedStudent arg0, MultipleSortedStudent arg1)
+        {
+          return ((Integer)arg0.getId()).compareTo(
+                 ((Integer)arg1.getId()));
+        }
+      };
     multipleSortedCourses = new ArrayList<MultipleSortedCourse>();
     registrants = new ArrayList<MultipleSortedStudent>();
   }
@@ -34,7 +42,7 @@ public class MultipleSortedAcademy
   // INTERFACE
   //------------------------
 
-  public boolean setRegistrantsPriority(String aRegistrantsPriority)
+  public boolean setRegistrantsPriority(Comparator<MultipleSortedStudent> aRegistrantsPriority)
   {
     boolean wasSet = false;
     registrantsPriority = aRegistrantsPriority;
@@ -42,7 +50,7 @@ public class MultipleSortedAcademy
     return wasSet;
   }
 
-  public String getRegistrantsPriority()
+  public Comparator<MultipleSortedStudent> getRegistrantsPriority()
   {
     return registrantsPriority;
   }
@@ -204,7 +212,8 @@ public class MultipleSortedAcademy
       registrants.add(aRegistrant);
     }
     wasAdded = true;
-    sort(registrants, registrantsPriority);
+    if(wasAdded)
+        Collections.sort(registrants, registrantsPriority);
     
     return wasAdded;
   }
@@ -218,36 +227,10 @@ public class MultipleSortedAcademy
       registrants.remove(aRegistrant);
       wasRemoved = true;
     }
-    sort(registrants, registrantsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     for(int i=multipleSortedCourses.size(); i > 0; i--)

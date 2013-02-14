@@ -3,8 +3,8 @@
 
 package cruise.umple.compiler;
 
-// line 329 "../../../../src/Umple.ump"
-// line 430 "../../../../src/Umple_Code.ump"
+// line 328 "../../../../src/Umple.ump"
+// line 389 "../../../../src/Umple_Code.ump"
 public class Depend
 {
 
@@ -114,7 +114,7 @@ public class Depend
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 432 ../../../../src/Umple_Code.ump
+  // line 391 ../../../../src/Umple_Code.ump
   public String getPackageName()
   {
     if (name == null || "".equals(name))

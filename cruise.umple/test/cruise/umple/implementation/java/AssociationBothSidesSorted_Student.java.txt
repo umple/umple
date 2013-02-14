@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 
 import java.util.*;
@@ -13,7 +13,7 @@ public class Student
 
   //Student Attributes
   private int id;
-  private String mentorsPriority;
+  private Comparator<Mentor> mentorsPriority;
 
   //Student Associations
   private List<Mentor> mentors;
@@ -25,7 +25,15 @@ public class Student
   public Student(int aId)
   {
     id = aId;
-    mentorsPriority = "name";
+    mentorsPriority = 
+      new Comparator<Mentor>(){
+        @Override
+        public int compare(Mentor arg0, Mentor arg1)
+        {
+          return ((String)arg0.getName()).compareTo(
+                 ((String)arg1.getName()));
+        }
+      };
     mentors = new ArrayList<Mentor>();
   }
 
@@ -41,7 +49,7 @@ public class Student
     return wasSet;
   }
 
-  public boolean setMentorsPriority(String aMentorsPriority)
+  public boolean setMentorsPriority(Comparator<Mentor> aMentorsPriority)
   {
     boolean wasSet = false;
     mentorsPriority = aMentorsPriority;
@@ -54,7 +62,7 @@ public class Student
     return id;
   }
 
-  public String getMentorsPriority()
+  public Comparator<Mentor> getMentorsPriority()
   {
     return mentorsPriority;
   }
@@ -111,7 +119,8 @@ public class Student
         mentors.remove(aMentor);
       }
     }
-    sort(mentors, mentorsPriority);
+    if(wasAdded)
+        Collections.sort(mentors, mentorsPriority);
     
     return wasAdded;
   }
@@ -121,8 +130,6 @@ public class Student
     boolean wasRemoved = false;
     if (!mentors.contains(aMentor))
     {
-      sort(mentors, mentorsPriority);
-      
       return wasRemoved;
     }
 
@@ -140,36 +147,10 @@ public class Student
         mentors.add(oldIndex,aMentor);
       }
     }
-    sort(mentors, mentorsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     ArrayList<Mentor> copyOfMentors = new ArrayList<Mentor>(mentors);

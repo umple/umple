@@ -25,8 +25,8 @@ class ClassWithManySortedAssociations
   def initialize()
     @initialized = false
     @deleted = false
-    @studentCsPriority = "id"
-    @studentALsPriority = "number"
+    @studentCsPriority = ""
+    @studentALsPriority = ""
     @studentCs = []
     @studentALs = []
     @initialized = true
@@ -119,7 +119,7 @@ class ClassWithManySortedAssociations
     return false if index_of_studentC(a_studentC) != -1
     @studentCs << a_studentC
     was_added = true
-    sort(@studentCs, @studentCsPriority)
+    @studentCs.sort! { |x, y| x.get_id() <=> y.get_id()} if wasAdded
     
     was_added
   end
@@ -130,17 +130,9 @@ class ClassWithManySortedAssociations
       @studentCs.delete(a_studentC)
       was_removed = true
     end
-    sort(@studentCs, @studentCsPriority)
-    
     was_removed
   end
 
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
-  end
 
   def self.minimum_number_of_studentALs
     0
@@ -151,7 +143,7 @@ class ClassWithManySortedAssociations
     return false if index_of_studentAL(a_studentAL) != -1
     @studentALs << a_studentAL
     was_added = true
-    sort(@studentALs, @studentALsPriority)
+    @studentALs.sort! { |x, y| x.get_number() <=> y.get_number()} if wasAdded
     
     was_added
   end
@@ -162,16 +154,7 @@ class ClassWithManySortedAssociations
       @studentALs.delete(a_studentAL)
       was_removed = true
     end
-    sort(@studentALs, @studentALsPriority)
-    
     was_removed
-  end
-
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
   end
 
   def delete

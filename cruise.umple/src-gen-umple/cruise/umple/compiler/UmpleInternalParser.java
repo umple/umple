@@ -40,10 +40,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   //------------------------
 
   //UmpleInternalParser Attributes
-  private CodeLanguage java;
-  private CodeLanguage cpp;
-  private CodeLanguage ruby;
-  private CodeLanguage php;
   private String currentPackageName;
   private boolean packageNameUsed;
   private UmpleModel model;
@@ -78,10 +74,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   public UmpleInternalParser(String aName, UmpleModel aModel)
   {
     super(aName);
-    java = new CodeLanguage("Java");
-    cpp = new CodeLanguage("Cpp");
-    ruby = new CodeLanguage("Ruby");
-    php = new CodeLanguage("Php");
     currentPackageName = "";
     packageNameUsed = true;
     model = aModel;
@@ -111,38 +103,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   // INTERFACE
   //------------------------
 
-  public boolean setJava(CodeLanguage aJava)
-  {
-    boolean wasSet = false;
-    java = aJava;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setCpp(CodeLanguage aCpp)
-  {
-    boolean wasSet = false;
-    cpp = aCpp;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setRuby(CodeLanguage aRuby)
-  {
-    boolean wasSet = false;
-    ruby = aRuby;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setPhp(CodeLanguage aPhp)
-  {
-    boolean wasSet = false;
-    php = aPhp;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setCurrentPackageName(String aCurrentPackageName)
   {
     boolean wasSet = false;
@@ -164,29 +124,9 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
-    // line 49 "../../../../src/UmpleInternalParser.ump"
+    // line 45 "../../../../src/UmpleInternalParser.ump"
     if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}
     return wasSet;
-  }
-
-  public CodeLanguage getJava()
-  {
-    return java;
-  }
-
-  public CodeLanguage getCpp()
-  {
-    return cpp;
-  }
-
-  public CodeLanguage getRuby()
-  {
-    return ruby;
-  }
-
-  public CodeLanguage getPhp()
-  {
-    return php;
   }
 
   public String getCurrentPackageName()
@@ -1809,7 +1749,35 @@ this("UmpleInternalParser", aModel);
       	if(temp != null)
 		{
       	  if(Pattern.matches("Integer|Short|Float|Double|String", temp.getType())) 
-		    myClass.addAttribute(yourEnd.getRoleName()+"Priority", "String", "", "\""+yourEnd.getPriority()+"\"", false);
+		  {
+		  	String attributeType = yourClass.getName();
+		  	String priorityType = temp.getType();
+		  	String sortedName = yourEnd.getPriority().substring(0,1).toUpperCase() + yourEnd.getPriority().substring(1);
+      		String php_codeblock = 
+      	     "\n      function($x, $y)\n"+
+                "      {\n"+
+                "        return $x->get"+ sortedName +"() -\n"+ 
+                "               $y->get"+ sortedName +"();\n"+
+                "      }";  
+             String java_codeblock = 
+		      "\n      new Comparator<" + attributeType +">(){\n"+
+		         "        @Override\n"+
+                 "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
+                 "        {\n"+
+                 "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
+                 "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                 "        }\n"+
+                 "      }";    
+             
+             Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
+             CodeBlock cb = new CodeBlock();
+             cb.setCode("Php", php_codeblock);
+             cb.setCode("Java", java_codeblock);
+             cb.setCode("Ruby", "\"\"");
+             priority.setCodeblock(cb); 
+      		 myClass.addAttribute(priority);
+      		 
+		  } 
       	  else
       		setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
       	}
@@ -1822,7 +1790,34 @@ this("UmpleInternalParser", aModel);
       	if(temp != null)
 		{
       	  if(Pattern.matches("Integer|Short|Float|Double|String", temp.getType()))
-		    yourClass.addAttribute(myEnd.getRoleName()+"Priority", "String", "", "\""+myEnd.getPriority()+"\"", false);
+      	  {
+      	  	String attributeType = myClass.getName() ;
+      	  	String priorityType = temp.getType();
+      	  	String sortedName = myEnd.getPriority().substring(0,1).toUpperCase() + myEnd.getPriority().substring(1);
+      		String php_codeblock = 
+      	     "\n      function($x, $y)\n"+
+                "      {\n"+
+                "        return $x->get"+ sortedName +"() -\n"+ 
+                "               $y->get"+ sortedName +"();\n"+
+                "      }";  
+             String java_codeblock = 
+		      "\n      new Comparator<" + attributeType +">(){\n"+
+		         "        @Override\n"+
+                 "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
+                 "        {\n"+
+                 "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
+                 "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                 "        }\n"+
+                 "      }";    
+             
+             Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
+             CodeBlock cb = new CodeBlock();
+             cb.setCode("Php", php_codeblock);
+             cb.setCode("Java", java_codeblock);
+             cb.setCode("Ruby", "\"\"");
+             priority.setCodeblock(cb); 
+      		 yourClass.addAttribute(priority);
+		  }  
       	  else
       		setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
 		}
@@ -1865,6 +1860,8 @@ this("UmpleInternalParser", aModel);
     }
 
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
+    List<String> langs = new ArrayList();
+    CodeBlock cb = new CodeBlock();
     for(Token token : method.getSubTokens())
     {
       if (token.is("modifier"))
@@ -1882,9 +1879,26 @@ this("UmpleInternalParser", aModel);
       }
       else if (token.is("code"))
       {
-        aMethod.setMethodBody(new MethodBody(token.getValue()));
+      	if(langs.isEmpty())
+        {
+        	cb.setCode(token.getValue());
+        }	
+        else
+        {
+        	for(String str: langs)
+        	{
+        		cb.setCode(str,token.getValue());
+        	}
+        	langs.clear();
+        }
       }
-    }  
+      else if (token.is("codeLang"))
+      {
+        langs.add(token.getValue());
+      }
+    }
+    MethodBody meth = new MethodBody(cb);
+    aMethod.setMethodBody(meth);  
 
     // Add method to Class or Interface
     if (uElement instanceof UmpleClass)
@@ -1996,34 +2010,45 @@ this("UmpleInternalParser", aModel);
 
   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
   {
-    String type = injectToken.is("beforeCode") ? "before" : "after";
-    makeCodeInject(injectToken,type,injectToken.getValue("operationName"),injectToken.getValue("code"),aClass); 
-    
+    String type = injectToken.is("beforeCode") ? "before" : "after";    
+  	CodeBlock cb = new CodeBlock();
+  	CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",aClass);
+    makeCodeInject(injectToken,injection,cb,aClass);
+    injection.setSnippet(cb);
+    aClass.addCodeInjection(injection);    
   }
   
-  private void makeCodeInject(Token injectToken, String type, String operation, String code, UmpleClass aClass)
+  private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb, UmpleClass aClass)
   {
-  	CodeInjection injection = new CodeInjection(type,operation,code,aClass);
+  	List<String> langs = new ArrayList<String>();
   	for(Token sub: injectToken.getSubTokens())
     {
-    	if(sub.is("codelang"))
+    	if(sub.is("codeLang"))
     	{
-    		if("Java".equals(sub.getValue()))
-    			injection.addLanguage(java);
-    		if("Cpp".equals(sub.getValue()))
-    			injection.addLanguage(cpp);
-    		if("Php".equals(sub.getValue()))
-    			injection.addLanguage(php);
-    		if("Ruby".equals(sub.getValue()))
-    			injection.addLanguage(ruby);	
+    		langs.add(sub.getValue());
     	}
-    	if(sub.is("moreCode"))
+    	if(sub.is("code"))
+    	{    		  
+    		if(langs.size()==0)
+    		{
+    		  cb.setCode(sub.getValue());
+    		}
+    		else
+    		{
+    			for(String lang:langs)
+    		    {
+    			  cb.setCode(lang,sub.getValue());
+    		    }
+    		}
+    		langs.clear();  		
+    	}
+    	if(sub.is("codeInject"))
     	{
-    		makeCodeInject(sub,type, operation, sub.getValue("code"), aClass);
+    		makeCodeInject(sub,injection, cb , aClass);
     	}
-    }
+    }    
     injection.setPosition(injectToken.getPosition());
-    aClass.addCodeInjection(injection);
+    
   }
 
   private void analyzeKey(Token keyToken, UmpleClass aClass)

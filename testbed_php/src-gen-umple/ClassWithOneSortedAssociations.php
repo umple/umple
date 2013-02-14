@@ -21,7 +21,12 @@ class ClassWithOneSortedAssociations
 
   public function __construct()
   {
-    $this->studentCsPriority = "id";
+    $this->studentCsPriority = 
+      function($x, $y)
+      {
+        return $x->getId() -
+               $y->getId();
+      };
     $this->studentCs = array();
   }
 
@@ -94,7 +99,8 @@ class ClassWithOneSortedAssociations
     if ($this->indexOfStudentC($aStudentC) !== -1) { return false; }
     $this->studentCs[] = $aStudentC;
     $wasAdded = true;
-    $this->sort($this->studentCs, $this->studentCsPriority);
+    if(wasAdded)
+        usort($this->studentCs, $this->studentCsPriority);
     
     return $wasAdded;
   }
@@ -108,23 +114,7 @@ class ClassWithOneSortedAssociations
       $this->studentCs = array_values($this->studentCs);
       $wasRemoved = true;
     }
-    $this->sort($this->studentCs, $this->studentCsPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public function equals($compareTo)

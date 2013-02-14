@@ -1392,7 +1392,7 @@ public class RubyClassGenerator implements ILang
   protected final String TEXT_1372 = " << ";
   protected final String TEXT_1373 = NL + "    end" + NL + "" + NL + "    was_set = true";
   protected final String TEXT_1374 = NL + "    was_set" + NL + "  end" + NL;
-  protected final String TEXT_1375 = NL + "  def sort(toSort, thePriority)" + NL + "    if(toSort.size > 0)" + NL + "      methodName = \"get_\" + thePriority;" + NL + "        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }" + NL + "    end" + NL + "  end" + NL;
+  protected final String TEXT_1375 = NL;
   protected final String TEXT_1376 = NL + "  def ";
   protected final String TEXT_1377 = "(";
   protected final String TEXT_1378 = ", index)" + NL + "    was_added = false" + NL + "    if ";
@@ -3121,6 +3121,8 @@ public class RubyClassGenerator implements ILang
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  
+  boolean sortMethodAdded = false; //To ensure that only one sort method is created per class
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
@@ -5732,11 +5734,12 @@ public class RubyClassGenerator implements ILang
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
     
-    if(includeFile3 == "association_Sort.jet")
+    if(includeFile3 == "association_Sort.jet" && !sortMethodAdded)
     {
       
     stringBuffer.append(TEXT_1375);
     
+      sortMethodAdded = true; //after the sort method has been added, this boolean stops it from being added again
     }
     else if(includeFile3 == "association_AddIndexControlFunctions.jet")
     {

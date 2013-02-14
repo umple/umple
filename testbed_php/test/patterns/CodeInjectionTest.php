@@ -6,7 +6,8 @@ class CodeInjectionTest extends UnitTestCase
   {
   	$cb = new LanguageSpecificCodeBlock("Hello");
   	$cb->setName("World");
-    $this->assertEqual("php",$cb->getName());
+    $this->assertEqual("I am php",$cb->getName());
+    $this->assertTrue(!$cb->isJava());
   }  
 }
 

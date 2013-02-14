@@ -9,7 +9,7 @@ import java.util.*;
  * A method which recides inside an Umple Class.
  */
 // line 103 "../../../../src/Umple.ump"
-// line 443 "../../../../src/Umple_Code.ump"
+// line 402 "../../../../src/Umple_Code.ump"
 public class Method
 {
 
@@ -333,9 +333,16 @@ public class Method
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 445 ../../../../src/Umple_Code.ump
-  public String toString()
+  // line 404 ../../../../src/Umple_Code.ump
+  public boolean getExistsInLanguage(String lang) 
   {
+  	if(getMethodBody().getExtraCode(lang)==null)
+  	  return isImplemented;
+  	else 
+  	  return true;
+  }
+  public String toString()
+  {  	
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());
     methodBuffer.append("(");
