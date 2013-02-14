@@ -22,7 +22,12 @@ class MultipleSortedAcademy
 
   public function __construct()
   {
-    $this->registrantsPriority = "id";
+    $this->registrantsPriority = 
+      function($x, $y)
+      {
+        return $x->getId() -
+               $y->getId();
+      };
     $this->multipleSortedCourses = array();
     $this->registrants = array();
   }
@@ -224,7 +229,8 @@ class MultipleSortedAcademy
       $this->registrants[] = $aRegistrant;
     }
     $wasAdded = true;
-    $this->sort($this->registrants, $this->registrantsPriority);
+    if(wasAdded)
+        usort($this->registrants, $this->registrantsPriority);
     
     return $wasAdded;
   }
@@ -239,23 +245,7 @@ class MultipleSortedAcademy
       $this->registrants = array_values($this->registrants);
       $wasRemoved = true;
     }
-    $this->sort($this->registrants, $this->registrantsPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public function equals($compareTo)

@@ -4084,6 +4084,8 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
+  
+  boolean sortMethodAdded = false; //To ensure that only one sort method is created per class
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
@@ -7384,10 +7386,11 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       appendln(stringBuffer,"You forgot to include {0}",includeFile2);
     }
     
-    if(includeFile3 == "association_Sort.jet")
+    if(includeFile3 == "association_Sort.jet" && !sortMethodAdded)
     {
       
     
+      sortMethodAdded = true; //after the sort method has been added, this boolean stops it from being added again
     }
     else if(includeFile3 == "association_AddIndexControlFunctions.jet")
     {

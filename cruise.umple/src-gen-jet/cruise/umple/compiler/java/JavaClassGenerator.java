@@ -1737,7 +1737,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1717 = ".addAll(";
   protected final String TEXT_1718 = ");" + NL + "    wasSet = true;";
   protected final String TEXT_1719 = NL + "    return wasSet;" + NL + "  }" + NL;
-  protected final String TEXT_1720 = NL + "  @SuppressWarnings({ \"unchecked\", \"rawtypes\" })" + NL + "  public void sort(List toSort, final String thePriority)" + NL + "  {" + NL + "    if(toSort.size() > 0)" + NL + "    {" + NL + "      Collections.sort(toSort, new Comparator<Object>()" + NL + "      {" + NL + "        @Override" + NL + "        public int compare(Object arg0, Object arg1)" + NL + "        {" + NL + "          try" + NL + "          {" + NL + "            String methodName = \"get\" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);" + NL + "            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));" + NL + "          }" + NL + "          catch (Exception e)" + NL + "          {" + NL + "            e.printStackTrace();" + NL + "          }" + NL + "          return 0;" + NL + "        }" + NL + "      });" + NL + "    }" + NL + "  }" + NL;
+  protected final String TEXT_1720 = NL + "  ";
   protected final String TEXT_1721 = NL + "  public boolean ";
   protected final String TEXT_1722 = "(";
   protected final String TEXT_1723 = " ";
@@ -8040,6 +8040,8 @@ if (p != null) {
     {
     	for (Method aMethod : uClass.getMethods()) 
     	{
+    	    if(!aMethod.getExistsInLanguage("Java"))
+    		  continue;
     	    Position p = aMethod.getPosition();
     	    String positionHeader = "";
     	    if (p != null) {

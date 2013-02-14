@@ -42,9 +42,13 @@ constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [
 //TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
 
+moreCode- : ([[codeLang]] [[codeLangs]])? { [**code] }
+codeLangs- : ( , [[codeLang]] )*
+codeLang- : [=codeLang:Java|Cpp|Php|Ruby]
+
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-concreteMethodDeclaration :  [type] [[methodDeclarator]] { [**code] } 
+concreteMethodDeclaration :  [type] [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
 methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
 parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
@@ -66,6 +70,7 @@ simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [name] ;
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+
 
 // Keys are used to define quality and hash codes, plus Sql keys.
 // See user manual page [*KeysforEqualityandHashing*]

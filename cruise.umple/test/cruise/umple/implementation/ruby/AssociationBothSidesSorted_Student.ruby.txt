@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# This code was generated using the UMPLE 1.16.0.2388 modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -26,7 +26,7 @@ class Student
     @initialized = false
     @deleted = false
     @id = a_id
-    @mentorsPriority = "name"
+    @mentorsPriority = ""
     @mentors = []
     @initialized = true
   end
@@ -99,7 +99,7 @@ class Student
         @mentors.delete(a_mentor)
       end
     end
-    sort(@mentors, @mentorsPriority)
+    @mentors.sort! { |x, y| x.get_name() <=> y.get_name()} if wasAdded
     
     was_added
   end
@@ -107,8 +107,6 @@ class Student
   def remove_mentor(a_mentor)
     was_removed = false
     unless @mentors.include?(a_mentor)
-      sort(@mentors, @mentorsPriority)
-      
       return was_removed
     end
 
@@ -120,17 +118,9 @@ class Student
       was_removed = a_mentor.remove_student(self)
       @mentors.insert(oldIndex,a_mentor) unless was_removed
     end
-    sort(@mentors, @mentorsPriority)
-    
     was_removed
   end
 
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
-  end
 
   def delete
     @deleted = true

@@ -815,7 +815,7 @@ public class UmpleModel
       {
         // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
-
+		
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
 
@@ -823,19 +823,8 @@ public class UmpleModel
         generator.setModel(this);
 
         generator.setOutput(target.getPath());
-        Hashtable<UmpleClass,List<CodeInjection>> removedCodeInjects = this.weedCodeInjectionBy(target.getLanguage());
+		CodeBlock.languageUsed = target.getLanguage();
         generator.generate();
-        
-        for(UmpleClass uClass:getUmpleClasses())
-        {
-        	
-        		for(CodeInjection in : removedCodeInjects.get(uClass))
-        		{
-        		
-        			uClass.addCodeInjection(in);
-    			}    		
-    		
-		}
 		
 		}}
 		catch (Exception ex)
@@ -846,36 +835,6 @@ public class UmpleModel
 		}
 	 }
 	 
-	 /**
-	  * Removes all CodeInjections in existence within the model that are not classified by the passed language name
-	  * @param languageName the language name to weed by (Java|Cpp|Ruby|Php)
-	  * @return the hashtable for all the code injections that were weeded out
-	  */
-	 public Hashtable<UmpleClass,List<CodeInjection>> weedCodeInjectionBy(String languageName)
-	 {
-		 CodeLanguage java = new CodeLanguage(languageName);
-		 Hashtable<UmpleClass,List<CodeInjection>> removedCodeInjects = new Hashtable<UmpleClass,List<CodeInjection>>();
-		 for(UmpleClass uClass:getUmpleClasses())
-		 {
-		 	removedCodeInjects.put(uClass, new ArrayList<CodeInjection>());
-		 	
-		 	if(uClass.getCodeInjections()!=null && uClass.getCodeInjections().size()>0)
-			{
-				for(int m=0;m<uClass.getCodeInjections().size();)
-				{
-					if(uClass.getCodeInjections().get(m).getLanguage().size()>0 && !uClass.getCodeInjections().get(m).getLanguage().contains(java))
-					{
-						removedCodeInjects.get(uClass).add(uClass.getCodeInjection(m));
-						uClass.removeCodeInjection(uClass.getCodeInjection(m));
-					} else
-				    {
-				    	m++;					 
-					}
- 				 }
-			 }
-		 } 
-		 return removedCodeInjects;
-	 }
 
   public Coordinate getDefaultClassPosition(int numDefaults)
   {

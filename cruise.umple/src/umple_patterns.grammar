@@ -26,6 +26,4 @@ codeInjection- : [[beforeCode]] | [[afterCode]]
 
 beforeCode : before [operationName] ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 afterCode : after [operationName] ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-moreCode : ([[codeLang]] [[codeLangs]])? { [**code] }
-codeLangs- : ( , [[codeLang]] )*
-codeLang- : [=codelang:Java|Cpp|Php|Ruby]
+

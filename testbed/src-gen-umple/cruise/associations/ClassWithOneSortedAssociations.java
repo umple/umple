@@ -13,7 +13,7 @@ public class ClassWithOneSortedAssociations
   //------------------------
 
   //ClassWithOneSortedAssociations Attributes
-  private String studentCsPriority;
+  private Comparator<StudentC> studentCsPriority;
 
   //ClassWithOneSortedAssociations Associations
   private List<StudentC> studentCs;
@@ -24,7 +24,15 @@ public class ClassWithOneSortedAssociations
 
   public ClassWithOneSortedAssociations()
   {
-    studentCsPriority = "id";
+    studentCsPriority = 
+      new Comparator<StudentC>(){
+        @Override
+        public int compare(StudentC arg0, StudentC arg1)
+        {
+          return ((Integer)arg0.getId()).compareTo(
+                 ((Integer)arg1.getId()));
+        }
+      };
     studentCs = new ArrayList<StudentC>();
   }
 
@@ -32,7 +40,7 @@ public class ClassWithOneSortedAssociations
   // INTERFACE
   //------------------------
 
-  public boolean setStudentCsPriority(String aStudentCsPriority)
+  public boolean setStudentCsPriority(Comparator<StudentC> aStudentCsPriority)
   {
     boolean wasSet = false;
     studentCsPriority = aStudentCsPriority;
@@ -40,7 +48,7 @@ public class ClassWithOneSortedAssociations
     return wasSet;
   }
 
-  public String getStudentCsPriority()
+  public Comparator<StudentC> getStudentCsPriority()
   {
     return studentCsPriority;
   }
@@ -86,7 +94,8 @@ public class ClassWithOneSortedAssociations
     if (studentCs.contains(aStudentC)) { return false; }
     studentCs.add(aStudentC);
     wasAdded = true;
-    sort(studentCs, studentCsPriority);
+    if(wasAdded)
+        Collections.sort(studentCs, studentCsPriority);
     
     return wasAdded;
   }
@@ -99,36 +108,10 @@ public class ClassWithOneSortedAssociations
       studentCs.remove(aStudentC);
       wasRemoved = true;
     }
-    sort(studentCs, studentCsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     studentCs.clear();

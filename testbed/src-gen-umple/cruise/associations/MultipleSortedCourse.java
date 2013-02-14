@@ -14,7 +14,7 @@ public class MultipleSortedCourse
 
   //MultipleSortedCourse Attributes
   private String code;
-  private String multipleSortedRegistrationsPriority;
+  private Comparator<MultipleSortedRegistration> multipleSortedRegistrationsPriority;
 
   //MultipleSortedCourse Associations
   private MultipleSortedAcademy multipleSortedAcademy;
@@ -27,7 +27,15 @@ public class MultipleSortedCourse
   public MultipleSortedCourse(String aCode, MultipleSortedAcademy aMultipleSortedAcademy)
   {
     code = aCode;
-    multipleSortedRegistrationsPriority = "name";
+    multipleSortedRegistrationsPriority = 
+      new Comparator<MultipleSortedRegistration>(){
+        @Override
+        public int compare(MultipleSortedRegistration arg0, MultipleSortedRegistration arg1)
+        {
+          return ((String)arg0.getName()).compareTo(
+                 ((String)arg1.getName()));
+        }
+      };
     boolean didAddMultipleSortedAcademy = setMultipleSortedAcademy(aMultipleSortedAcademy);
     if (!didAddMultipleSortedAcademy)
     {
@@ -48,7 +56,7 @@ public class MultipleSortedCourse
     return wasSet;
   }
 
-  public boolean setMultipleSortedRegistrationsPriority(String aMultipleSortedRegistrationsPriority)
+  public boolean setMultipleSortedRegistrationsPriority(Comparator<MultipleSortedRegistration> aMultipleSortedRegistrationsPriority)
   {
     boolean wasSet = false;
     multipleSortedRegistrationsPriority = aMultipleSortedRegistrationsPriority;
@@ -61,7 +69,7 @@ public class MultipleSortedCourse
     return code;
   }
 
-  public String getMultipleSortedRegistrationsPriority()
+  public Comparator<MultipleSortedRegistration> getMultipleSortedRegistrationsPriority()
   {
     return multipleSortedRegistrationsPriority;
   }
@@ -145,7 +153,8 @@ public class MultipleSortedCourse
       multipleSortedRegistrations.add(aMultipleSortedRegistration);
     }
     wasAdded = true;
-    sort(multipleSortedRegistrations, multipleSortedRegistrationsPriority);
+    if(wasAdded)
+        Collections.sort(multipleSortedRegistrations, multipleSortedRegistrationsPriority);
     
     return wasAdded;
   }
@@ -159,36 +168,10 @@ public class MultipleSortedCourse
       multipleSortedRegistrations.remove(aMultipleSortedRegistration);
       wasRemoved = true;
     }
-    sort(multipleSortedRegistrations, multipleSortedRegistrationsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     MultipleSortedAcademy placeholderMultipleSortedAcademy = multipleSortedAcademy;

@@ -7,8 +7,8 @@ import java.util.*;
 /**
  * Represents an Umple interface.
  */
-// line 260 "../../../../src/Umple.ump"
-// line 478 "../../../../src/Umple_Code.ump"
+// line 259 "../../../../src/Umple.ump"
+// line 536 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
 
@@ -130,7 +130,7 @@ public class UmpleInterface extends UmpleClassifier
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 480 ../../../../src/Umple_Code.ump
+  // line 538 ../../../../src/Umple_Code.ump
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();

@@ -25,7 +25,7 @@ class ClassThatWillHaveSortedAssociationTwo
   def initialize()
     @initialized = false
     @deleted = false
-    @massPriority = "name"
+    @massPriority = ""
     @mass = []
     @initialized = true
   end
@@ -80,7 +80,7 @@ class ClassThatWillHaveSortedAssociationTwo
     return false if index_of_mass(a_mass) != -1
     @mass << a_mass
     was_added = true
-    sort(@mass, @massPriority)
+    @mass.sort! { |x, y| x.get_name() <=> y.get_name()} if wasAdded
     
     was_added
   end
@@ -91,17 +91,9 @@ class ClassThatWillHaveSortedAssociationTwo
       @mass.delete(a_mass)
       was_removed = true
     end
-    sort(@mass, @massPriority)
-    
     was_removed
   end
 
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
-  end
 
   def delete
     @deleted = true

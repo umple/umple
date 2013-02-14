@@ -13,8 +13,8 @@ public class ClassWithManySortedAssociations
   //------------------------
 
   //ClassWithManySortedAssociations Attributes
-  private String studentCsPriority;
-  private String studentALsPriority;
+  private Comparator<StudentC> studentCsPriority;
+  private Comparator<StudentAL> studentALsPriority;
 
   //ClassWithManySortedAssociations Associations
   private List<StudentC> studentCs;
@@ -26,8 +26,24 @@ public class ClassWithManySortedAssociations
 
   public ClassWithManySortedAssociations()
   {
-    studentCsPriority = "id";
-    studentALsPriority = "number";
+    studentCsPriority = 
+      new Comparator<StudentC>(){
+        @Override
+        public int compare(StudentC arg0, StudentC arg1)
+        {
+          return ((Integer)arg0.getId()).compareTo(
+                 ((Integer)arg1.getId()));
+        }
+      };
+    studentALsPriority = 
+      new Comparator<StudentAL>(){
+        @Override
+        public int compare(StudentAL arg0, StudentAL arg1)
+        {
+          return ((Integer)arg0.getNumber()).compareTo(
+                 ((Integer)arg1.getNumber()));
+        }
+      };
     studentCs = new ArrayList<StudentC>();
     studentALs = new ArrayList<StudentAL>();
   }
@@ -36,7 +52,7 @@ public class ClassWithManySortedAssociations
   // INTERFACE
   //------------------------
 
-  public boolean setStudentCsPriority(String aStudentCsPriority)
+  public boolean setStudentCsPriority(Comparator<StudentC> aStudentCsPriority)
   {
     boolean wasSet = false;
     studentCsPriority = aStudentCsPriority;
@@ -44,7 +60,7 @@ public class ClassWithManySortedAssociations
     return wasSet;
   }
 
-  public boolean setStudentALsPriority(String aStudentALsPriority)
+  public boolean setStudentALsPriority(Comparator<StudentAL> aStudentALsPriority)
   {
     boolean wasSet = false;
     studentALsPriority = aStudentALsPriority;
@@ -52,12 +68,12 @@ public class ClassWithManySortedAssociations
     return wasSet;
   }
 
-  public String getStudentCsPriority()
+  public Comparator<StudentC> getStudentCsPriority()
   {
     return studentCsPriority;
   }
 
-  public String getStudentALsPriority()
+  public Comparator<StudentAL> getStudentALsPriority()
   {
     return studentALsPriority;
   }
@@ -133,7 +149,8 @@ public class ClassWithManySortedAssociations
     if (studentCs.contains(aStudentC)) { return false; }
     studentCs.add(aStudentC);
     wasAdded = true;
-    sort(studentCs, studentCsPriority);
+    if(wasAdded)
+        Collections.sort(studentCs, studentCsPriority);
     
     return wasAdded;
   }
@@ -146,36 +163,10 @@ public class ClassWithManySortedAssociations
       studentCs.remove(aStudentC);
       wasRemoved = true;
     }
-    sort(studentCs, studentCsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public static int minimumNumberOfStudentALs()
   {
     return 0;
@@ -187,7 +178,8 @@ public class ClassWithManySortedAssociations
     if (studentALs.contains(aStudentAL)) { return false; }
     studentALs.add(aStudentAL);
     wasAdded = true;
-    sort(studentALs, studentALsPriority);
+    if(wasAdded)
+        Collections.sort(studentALs, studentALsPriority);
     
     return wasAdded;
   }
@@ -200,8 +192,6 @@ public class ClassWithManySortedAssociations
       studentALs.remove(aStudentAL);
       wasRemoved = true;
     }
-    sort(studentALs, studentALsPriority);
-    
     return wasRemoved;
   }
 

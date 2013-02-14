@@ -66,5 +66,8 @@ class WidgetF
 class LanguageSpecificCodeBlock
 {
 	name;
-	after setName Java {name = "java";} Php {name = "php";}
+	
+	before setName Java {String lang = "My lang is ";} Php {String lang = "I am ";}
+	after setName Java {name = lang + "java";} Php {name = lang + "php";}
+	boolean isJava() Java {return true;} Php {return false;}
 }

@@ -28,10 +28,12 @@ class LanguageSpecificCodeBlock
   public function setName($aName)
   {
     $wasSet = false;
+    // line 70 "../../../../src/TestHarnessPatterns.ump"
+    String lang = "I am ";
     $this->name = $aName;
     $wasSet = true;
-    // line 69 "../../../../src/TestHarnessPatterns.ump"
-    name = "php";
+    // line 71 "../../../../src/TestHarnessPatterns.ump"
+    name = lang + "php";
     return $wasSet;
   }
 
@@ -47,6 +49,11 @@ class LanguageSpecificCodeBlock
 
   public function delete()
   {}
+
+  public function isJava()
+  {
+    return false;
+  }
 
 }
 ?>

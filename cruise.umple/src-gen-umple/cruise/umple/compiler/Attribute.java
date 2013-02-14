@@ -7,8 +7,8 @@ import java.util.*;
 /**
  * Represents an attribute.
  */
-// line 370 "../../../../src/Umple.ump"
-// line 954 "../../../../src/Umple_Code.ump"
+// line 369 "../../../../src/Umple.ump"
+// line 1012 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
 
@@ -20,6 +20,7 @@ public class Attribute extends UmpleVariable
   private boolean isAutounique;
   private boolean isList;
   private boolean isDerived;
+  private CodeBlock codeblock;
   private boolean isLazy;
 
   //Attribute Associations
@@ -38,6 +39,7 @@ public class Attribute extends UmpleVariable
     isAutounique = aIsAutounique;
     isList = false;
     isDerived = false;
+    codeblock = null;
     isLazy = false;
     comments = new ArrayList<Comment>();
     boolean didAddUmpleClass = setUmpleClass(aUmpleClass);
@@ -47,6 +49,8 @@ public class Attribute extends UmpleVariable
     }
     traceRecords = new ArrayList<TraceRecord>();
     attributeTraceItems = new ArrayList<Attribute_TraceItem>();
+    // line 383 "../../../../src/Umple.ump"
+    codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
   //------------------------
@@ -73,6 +77,14 @@ public class Attribute extends UmpleVariable
   {
     boolean wasSet = false;
     isDerived = aIsDerived;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCodeblock(CodeBlock aCodeblock)
+  {
+    boolean wasSet = false;
+    codeblock = aCodeblock;
     wasSet = true;
     return wasSet;
   }
@@ -108,6 +120,11 @@ public class Attribute extends UmpleVariable
   public boolean getIsDerived()
   {
     return isDerived;
+  }
+
+  public CodeBlock getCodeblock()
+  {
+    return codeblock;
   }
 
   /**
@@ -501,7 +518,7 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 956 ../../../../src/Umple_Code.ump
+  // line 1014 ../../../../src/Umple_Code.ump
   public boolean isConstant()
   {
     return "const".equals(getModifier());
@@ -519,5 +536,14 @@ public class Attribute extends UmpleVariable
     boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
 
     return (varIsImmutable || classIsImmutable);
+  }
+  
+  public String getValue()
+  {
+  	return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
+  }
+  public void setValue(String lang, String code)
+  {
+  	codeblock.setCode(lang,code);
   }
 }

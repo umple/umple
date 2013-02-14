@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 
 import java.util.*;
@@ -12,7 +12,7 @@ public class Mentor
   //------------------------
 
   //Mentor Attributes
-  private String studentsPriority;
+  private Comparator<Student> studentsPriority;
 
   //Mentor Associations
   private List<Student> students;
@@ -23,7 +23,15 @@ public class Mentor
 
   public Mentor()
   {
-    studentsPriority = "id";
+    studentsPriority = 
+      new Comparator<Student>(){
+        @Override
+        public int compare(Student arg0, Student arg1)
+        {
+          return ((Integer)arg0.getId()).compareTo(
+                 ((Integer)arg1.getId()));
+        }
+      };
     students = new ArrayList<Student>();
   }
 
@@ -31,7 +39,7 @@ public class Mentor
   // INTERFACE
   //------------------------
 
-  public boolean setStudentsPriority(String aStudentsPriority)
+  public boolean setStudentsPriority(Comparator<Student> aStudentsPriority)
   {
     boolean wasSet = false;
     studentsPriority = aStudentsPriority;
@@ -39,7 +47,7 @@ public class Mentor
     return wasSet;
   }
 
-  public String getStudentsPriority()
+  public Comparator<Student> getStudentsPriority()
   {
     return studentsPriority;
   }
@@ -96,7 +104,8 @@ public class Mentor
         students.remove(aStudent);
       }
     }
-    sort(students, studentsPriority);
+    if(wasAdded)
+        Collections.sort(students, studentsPriority);
     
     return wasAdded;
   }
@@ -106,8 +115,6 @@ public class Mentor
     boolean wasRemoved = false;
     if (!students.contains(aStudent))
     {
-      sort(students, studentsPriority);
-      
       return wasRemoved;
     }
 
@@ -125,36 +132,10 @@ public class Mentor
         students.add(oldIndex,aStudent);
       }
     }
-    sort(students, studentsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     ArrayList<Student> copyOfStudents = new ArrayList<Student>(students);

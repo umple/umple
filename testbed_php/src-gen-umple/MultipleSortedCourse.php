@@ -24,7 +24,12 @@ class MultipleSortedCourse
   public function __construct($aCode, $aMultipleSortedAcademy)
   {
     $this->code = $aCode;
-    $this->multipleSortedRegistrationsPriority = "name";
+    $this->multipleSortedRegistrationsPriority = 
+      function($x, $y)
+      {
+        return $x->getName() -
+               $y->getName();
+      };
     $didAddMultipleSortedAcademy = $this->setMultipleSortedAcademy($aMultipleSortedAcademy);
     if (!$didAddMultipleSortedAcademy)
     {
@@ -153,7 +158,8 @@ class MultipleSortedCourse
       $this->multipleSortedRegistrations[] = $aMultipleSortedRegistration;
     }
     $wasAdded = true;
-    $this->sort($this->multipleSortedRegistrations, $this->multipleSortedRegistrationsPriority);
+    if(wasAdded)
+        usort($this->multipleSortedRegistrations, $this->multipleSortedRegistrationsPriority);
     
     return $wasAdded;
   }
@@ -168,23 +174,7 @@ class MultipleSortedCourse
       $this->multipleSortedRegistrations = array_values($this->multipleSortedRegistrations);
       $wasRemoved = true;
     }
-    $this->sort($this->multipleSortedRegistrations, $this->multipleSortedRegistrationsPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public function equals($compareTo)

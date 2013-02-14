@@ -108,6 +108,7 @@ public class CodeInjectionTest
   {
   	LanguageSpecificCodeBlock cb = new LanguageSpecificCodeBlock("Hello");
   	cb.setName("World");
-    Assert.assertEquals("java",cb.getName());
+    Assert.assertEquals("My lang is java",cb.getName());
+    Assert.assertTrue(cb.isJava());
   }  
 }

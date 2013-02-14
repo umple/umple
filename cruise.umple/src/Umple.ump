@@ -139,7 +139,8 @@ class Modifier
 class MethodBody
 {
   // The code within the method body.
-  extraCode;
+  extraCode = {codeblock.getCode() != null ? codeblock.getCode() : ""}
+  CodeBlock codeblock;
 }
 
 /*
@@ -211,13 +212,12 @@ class Constraint{
 	  return true;
  }
 }
-class CodeLanguage
+class CodeBlock
 {
-	name;
-	public boolean equals(Object O)
-	{
-		return name.equals(((CodeLanguage)O).getName());
-	}
+	depend java.util.*;
+	
+	public static String languageUsed = "";
+	Hashtable<String,String> code;
 }
 class CodeInjection
 {
@@ -225,9 +225,8 @@ class CodeInjection
   
   type;
   operation;
-  code;
+  CodeBlock snippet = new CodeBlock();
   * -> 1 UmpleClass;
-  1 -> * CodeLanguage language;
   lazy Position position;
   Boolean isInternal = false;
 }
@@ -379,6 +378,10 @@ class Attribute
 
   // Specifies whether or not the method parameter is derived.
   Boolean isDerived = false;
+  
+  CodeBlock codeblock = null;
+  after constructor {codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();}
+  before setValue {codeblock.setCode(aValue);}
 
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;

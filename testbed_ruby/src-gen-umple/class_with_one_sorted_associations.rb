@@ -25,7 +25,7 @@ class ClassWithOneSortedAssociations
   def initialize()
     @initialized = false
     @deleted = false
-    @studentCsPriority = "id"
+    @studentCsPriority = ""
     @studentCs = []
     @initialized = true
   end
@@ -80,7 +80,7 @@ class ClassWithOneSortedAssociations
     return false if index_of_studentC(a_studentC) != -1
     @studentCs << a_studentC
     was_added = true
-    sort(@studentCs, @studentCsPriority)
+    @studentCs.sort! { |x, y| x.get_id() <=> y.get_id()} if wasAdded
     
     was_added
   end
@@ -91,17 +91,9 @@ class ClassWithOneSortedAssociations
       @studentCs.delete(a_studentC)
       was_removed = true
     end
-    sort(@studentCs, @studentCsPriority)
-    
     was_removed
   end
 
-  def sort(toSort, thePriority)
-    if(toSort.size > 0)
-      methodName = "get_" + thePriority;
-        toSort.sort! { |x, y| x.method(methodName).call() <=> y.method(methodName).call() }
-    end
-  end
 
   def delete
     @deleted = true

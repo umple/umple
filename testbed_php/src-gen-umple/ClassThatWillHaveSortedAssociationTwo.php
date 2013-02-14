@@ -21,7 +21,12 @@ class ClassThatWillHaveSortedAssociationTwo
 
   public function __construct()
   {
-    $this->massPriority = "name";
+    $this->massPriority = 
+      function($x, $y)
+      {
+        return $x->getName() -
+               $y->getName();
+      };
     $this->mass = array();
   }
 
@@ -94,7 +99,8 @@ class ClassThatWillHaveSortedAssociationTwo
     if ($this->indexOfMass($aMass) !== -1) { return false; }
     $this->mass[] = $aMass;
     $wasAdded = true;
-    $this->sort($this->mass, $this->massPriority);
+    if(wasAdded)
+        usort($this->mass, $this->massPriority);
     
     return $wasAdded;
   }
@@ -108,23 +114,7 @@ class ClassThatWillHaveSortedAssociationTwo
       $this->mass = array_values($this->mass);
       $wasRemoved = true;
     }
-    $this->sort($this->mass, $this->massPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public function equals($compareTo)
