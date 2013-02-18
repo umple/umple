@@ -41,6 +41,8 @@
 # State-Machine related messages
 50: 4, http://umple.org/W050TargetStateNotFound.html, State '{0}' has not been declared, it is being treated as an end state ;
 51: 2, http://umple.org/E051EventParametersMustMatch.html, Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
+52: 2, http://umple.org/PageBeingDeveloped.html, Association or attribute can not have same name as state machine '{0}' ;
+
 
 # Messages relating to format of identifiers.
 100: 2, http://umple.org/WE1xxIdentifierInvalid.html, Class name '{0}' must be alphanumeric, starting with an alpha character, or _  ;
