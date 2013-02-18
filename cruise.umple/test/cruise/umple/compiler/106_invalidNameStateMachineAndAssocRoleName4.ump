@@ -1,0 +1,14 @@
+class X {
+  a {
+    s1 {
+      e1 -> s2;
+    }
+    s2 {}
+  }
+}
+
+class A {}
+
+association{
+  1 X -> 1 A a;
+}

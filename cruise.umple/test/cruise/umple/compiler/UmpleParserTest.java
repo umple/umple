@@ -1892,6 +1892,22 @@ public class UmpleParserTest
 	  
   }  
   
+  
+  // Test for issue #354
+  // Author: Blake Quebec Desloges
+  @Test
+  public void stateMachineandAttributeNameClashing(){
+  	  assertFailedParse("106_invalidNameStateMachineAndAttribute.ump",52); 
+  }
+  @Test
+  public void stateMachineandAssociationNameClashing(){
+  	  assertFailedParse("106_invalidNameStateMachineAndAssocRoleName1.ump",52);
+  	  assertFailedParse("106_invalidNameStateMachineAndAssocRoleName2.ump",52);
+  	  assertFailedParse("106_invalidNameStateMachineAndAssocRoleName3.ump",52);
+  	  assertFailedParse("106_invalidNameStateMachineAndAssocRoleName4.ump",52);
+  }
+  
+  
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));

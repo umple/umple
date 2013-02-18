@@ -74,6 +74,10 @@ class UmpleInternalParser
   
   private void postTokenStateMachineAnalysis()
   {
+    // Generate error message for issue 354. Check for conflicting names between
+    // state machines and attributes as well as state machines and association names
+    checkStateMachineNameConflict();
+
     for(Iterator i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
     	Map.Entry entry = (Map.Entry)i.next();
     	List<Token> tokens = (List<Token>)entry.getValue();
@@ -83,6 +87,88 @@ class UmpleInternalParser
     }
     possiblyUnknownStates = new HashMap<State,List<Token>>();
   }
+  
+  /*
+  	Check for name conflicts between state machines and attributes/association names
+  	Author: Blake Quebec Desloges
+  */
+  private void checkStateMachineNameConflict()
+  {
+    for(UmpleClass C : model.getUmpleClasses())
+    {    
+      // Create the list of attribute names 
+      List<String> existingAttributeNames = new ArrayList<String>();
+      for (Attribute attr : C.getAttributes())
+      {
+      	existingAttributeNames.add(attr.getName());
+      }
+      
+      //Create the list of state machine names while checking for conflicts with attributes
+      List<String> existingStateMachineNames = new ArrayList<String>();
+      for (StateMachine sm : C.getStateMachines())
+      {
+      	// Check if the current state machine conflicts with an attribute name
+      	if (existingAttributeNames.contains(sm.getName()))
+      	{
+      	   Token stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          setFailedPosition(stateMachineToken.getPosition(), 52, sm.getName());
+       }
+       else
+          existingStateMachineNames.add(sm.getName());
+      }
+      
+      List<String> existingAssociationNames = new ArrayList<String>();
+      List<Association> visitedAssociations = new ArrayList<Association>();
+      for(Association assoc : C.getAssociations())
+      {
+        if (visitedAssociations.contains(assoc))
+        {
+          continue;
+        }
+        
+      	AssociationEnd firstEnd = assoc.getEnd(0);
+      	AssociationEnd secondEnd = assoc.getEnd(1);
+      	
+      	Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
+      	Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
+      	Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
+      	
+      	// check names on other-class end of associations to other classes
+        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
+        {
+          // Check if the association name is the same as a state machine name
+          if (existingStateMachineNames.contains(firstEnd.getRoleName()))
+          {
+             setFailedPosition(assoc.getTokenPosition(), 52, firstEnd.getRoleName());
+          }
+          else
+          {
+            existingAssociationNames.add(firstEnd.getRoleName());
+          }
+          
+        }
+        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
+        {
+          // Check if the association name is the same as a state machine name
+          if (existingStateMachineNames.contains(secondEnd.getRoleName()))
+          {
+             setFailedPosition(assoc.getTokenPosition(), 52, secondEnd.getRoleName());
+          }
+          else
+          {
+            existingAssociationNames.add(secondEnd.getRoleName());
+          }
+        }
+         
+        if (associationIsReflexive)
+        { 
+          // The UmpleClass is only expected to have duplicate references to reflexive associations
+          visitedAssociations.add(assoc);
+        }
+      }
+    }
+  }
+  
   
   private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
   {
