@@ -128,7 +128,8 @@ public class GvClassDiagramGenerator implements CodeGenerator
     for (Attribute uAttribute : uClass.getAttributes()) {
       if(isFirst) code.append("|"); // attribute block starter
       else code.append("\\\n"); // separator between attributes
-      code.append(""+uAttribute.getName()+"\\ :\\ "+uAttribute.getType()+"\\l");
+      String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
+      code.append(""+uAttribute.getName()+"\\ :\\ "+type+"\\l");
       isFirst = false;
     }
 
@@ -138,7 +139,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     // Output the tooltip : Class name followed by any comment
     code.append(",\n   tooltip=\"class "+className+"\n");
     for (Comment uComment : uClass.getComments()) {
-      String text= uComment.getText();
+      String text= uComment.getText().replace("\"","\\\"");
       if(text.startsWith(" *")) {
         code.append(text.substring(2)+"\n");
       }
