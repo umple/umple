@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents a comment, such as those found around classes, methods, attributes and associations.
  */
-// line 526 "../../../../src/Umple.ump"
+// line 537 "../../../../src/Umple.ump"
 // line 1776 "../../../../src/Umple_Code.ump"
 public class Comment
 {

@@ -1,0 +1,6 @@
+// attributes on both sides of the constraint's boolean expression
+class Client {
+  Integer minAge;
+  Integer age;
+  [age > minAge]
+}
