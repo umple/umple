@@ -1780,6 +1780,35 @@ class UmpleInternalParser
     return (isLazy && value != null);
   }
   
+  private void verifyConstraints(List <Constraint> constraints, UmpleClass aClass, Token invariantToken, String expr){
+	  for (Constraint c:constraints){
+		  if (!c.verifyConstrainedVariable(aClass)){ //make sure constraint Variable exists as an attribute in the class
+    		  setFailedPosition(invariantToken.getPosition(), 28, expr, aClass.getName());
+    	  }
+	  }
+  }
+  
+  
+  private List<Constraint> populateConstraintsList(List <String> constraintExpr){
+	  List <Constraint> constraints = new ArrayList<Constraint>();
+	  Constraint c;
+	  boolean sawAttr = false;
+	  for (String expr : constraintExpr){
+		  if (expr.equals("attr"))
+		  {
+			  sawAttr = true;
+		  } 
+		  else if(sawAttr && Token.isValidIdentifier(expr, "[A-Za-z]"))
+		  {
+			  c = new Constraint("");
+			  c.setConstrainedVariable(expr);
+			  constraints.add(c);
+			  sawAttr = false;
+		  }
+	  }
+	  return constraints;
+  }
+  
   /*
    * Analyzes a token recognized as a constraint
    * 
@@ -1789,31 +1818,28 @@ class UmpleInternalParser
   private void analyzeInvariant (Token invariantToken, UmpleClass aClass)
   {
     List<String> constraintExpr = new ArrayList<String>();
-    String rawLine = "\n";
-    Boolean isFirst = false;
     constraintExpr = analyzeInvariant(invariantToken);
-    Constraint aConstraint = new Constraint("");
+    List <Constraint> constraints = populateConstraintsList(constraintExpr); //adds all identifiers to constraints
+    boolean sawAttr = false;
+    
     for (String expr : constraintExpr)
     {
-      if (expr.equals("attr"))
-      {
-        isFirst = true;
-} 
-      else if( isFirst == true && aConstraint.getConstrainedVariable().equals(""))
-      {
-      	
-        aConstraint.setConstrainedVariable(expr);
-        
-        if (!aConstraint.verifyConstrainedVariable(aClass)){ //make sure constraint Variable exists as an attribute in the class
-    		  setFailedPosition(invariantToken.getPosition(), 28, expr, aClass.getName());
-    	  }
-      }
-      aConstraint.addExpression(expr);
-      
-    }
-    //setFailedPosition(invariantToken.getPosition(), 9999, invariantToken.getName(), invariantToken.toString() + rawLine);    
-    aClass.addConstraint(aConstraint);     
+    	if (expr.equals("attr"))
+    	{
+    		sawAttr = true;
+    	} 
+    	else if(sawAttr)
+    	{         
+    		verifyConstraints(constraints, aClass, invariantToken, expr);
+    		sawAttr = false;
+    	}
+    	Constraint.addConstraintExpressions(constraints, expr);
+
+    }   
+    Constraint.addConstraints(constraints, aClass);
   }
+  
+  
   //This recursive function parses the expression. It's very broken down to allow new features to be added easily.
   private List<String> analyzeInvariant(Token invariantToken)
   {

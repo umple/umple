@@ -1,0 +1,6 @@
+//constant on the left side of the constraint
+class student
+{
+  Integer age;
+  [(18>age)]
+ }

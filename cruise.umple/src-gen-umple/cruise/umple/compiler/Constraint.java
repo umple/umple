@@ -150,4 +150,15 @@ public class Constraint
 	 if (correspondingAttribute == null){return false;}
 	  return true;
  }
+  public static void addConstraints(List <Constraint> constraints, UmpleClass aClass){
+	  for (Constraint c: constraints){
+		  aClass.addConstraint(c);
+	  }
+  }
+  
+  public static void addConstraintExpressions(List <Constraint> constraints, String expr){
+	  for (Constraint c: constraints){
+		  c.addExpression(expr);
+	  }
+  }
 }
