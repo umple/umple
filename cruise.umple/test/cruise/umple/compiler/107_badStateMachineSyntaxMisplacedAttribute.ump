@@ -1,4 +1,4 @@
-class badSM
+class BadSM
 {
   sm{
     boolean someValue = false;

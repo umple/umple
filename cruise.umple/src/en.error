@@ -46,10 +46,10 @@
 
 # Messages relating to format of identifiers.
 100: 2, http://umple.org/WE1xxIdentifierInvalid.html, Class name '{0}' must be alphanumeric, starting with an alpha character, or _  ;
-# [TODO - issue 337] 101: 4, http://umple.org/WE1xxIdentifierInvalid.html, Class name '{0}' should start with a capital letter ;
+101: 4, http://umple.org/WE1xxIdentifierInvalid.html, Class name '{0}' should start with a capital letter ;
 
-# [TODO - issue 337] 110: 2, http://umple.org/WE1xxIdentifierInvalid.html, Interface name '{0}' must be alphanumeric, starting with an alpha character or _ ;
-# [TODO - issue 337] 111: 4, http://umple.org/WE1xxIdentifierInvalid.html, Interface name '{0}' should start with a capital letter ;
+110: 2, http://umple.org/WE1xxIdentifierInvalid.html, Interface name '{0}' must be alphanumeric, starting with an alpha character or _ ;
+111: 4, http://umple.org/WE1xxIdentifierInvalid.html, Interface name '{0}' should start with a capital letter ;
 
 # [TODO - issue 337] 120: 2, http://umple.org/WE1xxIdentifierInvalid.html, Association role name '{0}' must be alphanumeric, starting with an alpha character ;
 # [TODO - issue 337] 121: 4, http://umple.org/WE1xxIdentifierInvalid.html, Association role name '{0}' should start with a lower-case letter ;
