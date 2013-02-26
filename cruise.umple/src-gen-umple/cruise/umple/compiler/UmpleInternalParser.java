@@ -1078,10 +1078,15 @@ this("UmpleInternalParser", aModel);
    */
   private UmpleClass analyzeClass(Token classToken)
   {
+    String className = classToken.getValue("name");
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
-    if (Token.isValidIdentifier(classToken.getValue("name"), "[A-Za-z]") != true) {
-      setFailedPosition(classToken.getPosition(), 100, classToken.getValue("name"));
+    if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
+      setFailedPosition(classToken.getPosition(), 100, className);
     }
+    else if ( className.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.
+      setFailedPosition(classToken.getPosition(), 101, className);
+    }
+    
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
 
 	// Set the original .ump file and line number
@@ -1182,6 +1187,15 @@ this("UmpleInternalParser", aModel);
 
   private UmpleInterface analyzeInterface(Token t)
   {
+    String interfaceName = t.getValue("name");   
+    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
+    if (Token.isValidIdentifier(interfaceName, "[A-Za-z]") != true) {
+      setFailedPosition(t.getPosition(), 110, interfaceName);
+    }
+    else if ( interfaceName.matches("[a-z].*") ){ // Warn when interface name doesn't start with a capital letter.
+       setFailedPosition(t.getPosition(), 111, interfaceName);
+    }
+  
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
     model.addUmpleInterface(newInterface);
     if(!"".equals(newInterface.getPackageName()) && !currentPackageName.equals(newInterface.getPackageName()) && !packageNameUsed){

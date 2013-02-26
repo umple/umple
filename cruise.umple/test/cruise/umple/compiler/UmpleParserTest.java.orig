@@ -570,60 +570,6 @@ public class UmpleParserTest
     assertFailedParse("042_invalidClassNamePartQuote.ump", 100);//name contains quotation marks
   }
   
-  
-  @Test
-  public void validInterfaceName()
-  {
-    //Test to ensure that the parser will compile Interfaces with valid names.
-
-    assertSimpleParse("043_validInterfaceNameLowerCase.ump");//all lower case name
-    assertSimpleParse("043_validInterfaceNameUpperCase.ump");//all upper case name
-    assertSimpleParse("043_validInterfaceNameMixedCase.ump");//mixed case name
-    assertSimpleParse("043_validInterfaceNameNumber.ump");//name with numbers
-    assertSimpleParse("043_validInterfaceNameUnderscore.ump");//name with underscore
-    assertSimpleParse("043_validInterfaceNameUnderNum.ump");//name with underscore and numbers
-  }
-  
-  @Test
-  public void invalidInterfaceNameStart()
-  {
-    //Test to ensure that the parser will not compile Interfaces with an invalid name.
-    //Specifically these tests target invalid starting characters.
-  
-    assertFailedParse("043_invalidInterfaceNameStartNum.ump", 110);//name starts with a number
-    assertFailedParse("043_invalidInterfaceNameStartUnder.ump", 110);//name starts with an underscore
-    assertFailedParse("043_invalidInterfaceNameStartExclaim.ump", 110);//name starts with an exclamation mark
-    assertFailedParse("043_invalidInterfaceNameStartAmper.ump", 110);//name starts with an ampersand
-    assertFailedParse("043_invalidInterfaceNameStartDollar.ump", 110);//name starts with a dollar sign
-    assertFailedParse("043_invalidInterfaceNameStartHash.ump", 110);//name starts with a hash sign
-  }
-  
-  @Test
-  public void invalidInterfaceNamePart()
-  {
-    //Test to ensure that the parser will not compile Interfaces with an invalid name.
-    //Specifically these tests target invalid characters in part of the name.
-  
-    assertFailedParse("043_invalidInterfaceNamePartQuest.ump", 110);//name contains a question mark
-    assertFailedParse("043_invalidInterfaceNamePartExclaim.ump", 110);//name contains an exclamation mark
-    assertFailedParse("043_invalidInterfaceNamePartAmper.ump", 110);//name contains an ampersand
-    assertFailedParse("043_invalidInterfaceNamePartDollar.ump", 110);//name contains a dollar sign
-    assertFailedParse("043_invalidInterfaceNamePartDot.ump", 110);//name contains a period
-    assertFailedParse("043_invalidInterfaceNamePartQuote.ump", 110);//name contains quotation marks
-  }
-  
-  @Test
-  public void warningClassNameCapitalLetter()
-  { // Test to make sure a warning is generated when a class name does not start with a capital letter
-    assertHasWarningsParse("043_warningClassNameNotCapital.ump", 101); 
-  }
-  
-  @Test
-  public void warningInterfaceNameCapitalLetter()
-  { // Test to make sure a warning is generated when an interface name does not start with a capital letter
-    assertHasWarningsParse("043_warningInterfaceNameNotCapital.ump", 111);
-  }
-  
   @Test
   public void referencedPackages()
   {
