@@ -113,7 +113,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void transitionAction()
   {
-    assertParse("100_transitionAction.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][action][actionCode:blabla][stateName:On]");
+    assertParse("100_transitionAction.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][action][code:blabla][stateName:On]");
     
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
@@ -130,7 +130,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void doActivity() 
   {
-    assertParse("100_doActivity.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][activity][activityCode:iAmaDoActivity]");
+    assertParse("100_doActivity.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][activity][code:iAmaDoActivity]");
     
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
@@ -143,7 +143,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void transitionAfterDo()
   {
-    assertParse("100_transition_after_do.ump","[classDefinition][name:Switch][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:press][stateName:Off][state][stateName:Off][autoTransition][activity][activityCode:keepDoing;][stateName:On]");
+    assertParse("100_transition_after_do.ump","[classDefinition][name:Switch][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:press][stateName:Off][state][stateName:Off][autoTransition][activity][code:keepDoing;][stateName:On]");
 	  
     UmpleClass c = model.getUmpleClass("Switch");
     Assert.assertEquals(1, c.numberOfStateMachines());
@@ -162,7 +162,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void oneStateOneEntry()
   {
-    assertParse("100_oneStateOneEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][actionCode:blahblah]");
+    assertParse("100_oneStateOneEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][code:blahblah]");
   
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
@@ -178,7 +178,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void oneStateManyEntry()
   {
-    assertParse("100_oneStateManyEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][actionCode:blahblah][entryOrExitAction][type:entry][actionCode:blahblah2][entryOrExitAction][type:exit][actionCode:blahblahexit]");
+    assertParse("100_oneStateManyEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][code:blahblah][entryOrExitAction][type:entry][code:blahblah2][entryOrExitAction][type:exit][code:blahblahexit]");
   
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
@@ -202,7 +202,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void oneStateOneExit()
   {
-    assertParse("100_oneStateOneExit.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:exit][actionCode:blahblah][transition][event:push][stateName:On]");
+    assertParse("100_oneStateOneExit.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:exit][code:blahblah][transition][event:push][stateName:On]");
     
     UmpleClass c = model.getUmpleClass("LightFixture");
     StateMachine sm = c.getStateMachine(0);
@@ -294,7 +294,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void oneStateOneGuardAfter()
   {
-    assertParse("100_oneGuardAfter.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][guard][guardCode:brightness < 1][event:push][stateName:Off][state][stateName:Off]");
+    assertParse("100_oneGuardAfter.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][guard][code:brightness < 1][event:push][stateName:Off][state][stateName:Off]");
     
     UmpleClass c = model.getUmpleClass("LightFixture");
  
@@ -313,7 +313,7 @@ public class UmpleParserStateMachineTest
   public void oneStateOneGuardBefore()
   {
                             
-    assertParse("100_oneGuardBefore.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][guard][guardCode:brightness < 1][stateName:Off][state][stateName:Off]");
+    assertParse("100_oneGuardBefore.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][guard][code:brightness < 1][stateName:Off][state][stateName:Off]");
     
     UmpleClass c = model.getUmpleClass("LightFixture");
     
@@ -697,7 +697,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void finalStateWithAction()
   {
-    assertParse("211_finalState_withAction.ump","[classDefinition][name:DVDplayer][stateMachine][inlineStateMachine][name:DVDplayerStatus][state][stateName:NormalOperation][state][stateName:On][state][stateName:Playing][transition][event:stop][stateName:Stopped][state][stateName:Stopped][transition][event:play][stateName:Playing][transition][event:pause][stateName:Paused][state][stateName:history][state][stateName:Off][transition][event:turnOn][action][actionCode:actionCode][stateName:Final]");
+    assertParse("211_finalState_withAction.ump","[classDefinition][name:DVDplayer][stateMachine][inlineStateMachine][name:DVDplayerStatus][state][stateName:NormalOperation][state][stateName:On][state][stateName:Playing][transition][event:stop][stateName:Stopped][state][stateName:Stopped][transition][event:play][stateName:Playing][transition][event:pause][stateName:Paused][state][stateName:history][state][stateName:Off][transition][event:turnOn][action][code:actionCode][stateName:Final]");
 
     UmpleClass uClass = model.getUmpleClass("DVDplayer");
     State final1 = uClass.getStateMachine(0).findState("NormalOperation").getNestedStateMachine(0).findState("Final");
@@ -762,7 +762,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void autoTransition_existingEntryAction()
   {
-    assertParse("104_autoTransitionWithExistingEntryAction.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][actionCode:doSomething();][autoTransition][stateName:Off][state][stateName:Off]");
+    assertParse("104_autoTransitionWithExistingEntryAction.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][code:doSomething();][autoTransition][stateName:Off][state][stateName:Off]");
     UmpleClass c = model.getUmpleClass("LightFixture");
     Assert.assertEquals(1, c.numberOfStateMachines());
     StateMachine sm = c.getStateMachine(0);
@@ -774,7 +774,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void autoTransition_guard()
   {
-    assertParse("104_autoTransitionWithGuard.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:count][stateMachine][inlineStateMachine][name:bulb][state][stateName:Off][autoTransition][guard][guardCode:count > 10][stateName:On][state][stateName:On]");
+    assertParse("104_autoTransitionWithGuard.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:count][stateMachine][inlineStateMachine][name:bulb][state][stateName:Off][autoTransition][guard][code:count > 10][stateName:On][state][stateName:On]");
     UmpleClass c = model.getUmpleClass("LightFixture");
     Assert.assertEquals(1, c.numberOfStateMachines());
     StateMachine sm = c.getStateMachine(0);
@@ -790,7 +790,7 @@ public class UmpleParserStateMachineTest
   public void transitionWithGuardAndAction()
   {
                             
-    assertParse("100_transitionWithGuardAndAction.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][guard][guardCode:brightness < 1][action][actionCode:blabla][stateName:Off][state][stateName:Off]");
+    assertParse("100_transitionWithGuardAndAction.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][transition][event:push][guard][code:brightness < 1][action][code:blabla][stateName:Off][state][stateName:Off]");
     
     UmpleClass c = model.getUmpleClass("LightFixture");
     
@@ -814,7 +814,7 @@ public class UmpleParserStateMachineTest
   @Test
   public void eventWithArgument()
   {
-	  assertParse("100_eventWithArgument.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][actionCode:setBrightness(lightval)][stateName:Off][transition][event:flipSwitch][stateName:Dimmed][state][stateName:Dimmed][transition][event:entry][guard][guardCode:dimmer > 99][stateName:On][transition][event:flipSwitch][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][actionCode:setBrightness(lightval)][stateName:Dimmed][state][stateName:On][transition][event:flipSwitch][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][actionCode:setBrightness(lightval)][stateName:Dimmed]");
+	  assertParse("100_eventWithArgument.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:brightness][value:0][stateMachine][inlineStateMachine][name:bulb][state][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][code:setBrightness(lightval)][stateName:Off][transition][event:flipSwitch][stateName:Dimmed][state][stateName:Dimmed][transition][event:entry][guard][code:dimmer > 99][stateName:On][transition][event:flipSwitch][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][code:setBrightness(lightval)][stateName:Dimmed][state][stateName:On][transition][event:flipSwitch][stateName:Off][transition][event:turnDimmer][eventArgs:Integer lightval][action][code:setBrightness(lightval)][stateName:Dimmed]");
 	  UmpleClass c = model.getUmpleClass("LightFixture");
 	    
 	  StateMachine sm = c.getStateMachine(0);

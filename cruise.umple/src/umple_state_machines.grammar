@@ -39,10 +39,11 @@ afterEvent- : after -( [timer] -)
 eventWithArgs- : [event] -( [**eventArgs] -)
 
 // An action can be executed on a transition, or on entry or exit
-action : / { [**actionCode] } 
-entryOrExitAction : [=type:entry|exit] / { [**actionCode] }
+action : / ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+entryOrExitAction : [=type:entry|exit] / ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 
 // A do activity is long-lasting and can be interrupted
-activity : do { [**activityCode] } 
+activity : do ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 
-guard : [ [**guardCode] ] 
+moreGuards- : ([[codeLang]] [[codeLangs]])? [ [**code] ]
+guard : ([[codeLang]] [[codeLangs]])? [ [**code] ] ( [[moreGuards]] )*

@@ -68,7 +68,7 @@ isSorted- : sorted { [priority] }
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
 simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [name] ;
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = { [**derivedValue] }
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
 
 

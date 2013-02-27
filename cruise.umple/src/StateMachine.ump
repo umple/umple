@@ -50,7 +50,35 @@ class Activity
 
   lazy Position position;
   activityCode;  // target language code
+  
+    
   * -> 0..1 Event onCompletionEvent;
+  
+  CodeBlock codeblock = null;
+  after constructor {codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();}
+  before setActivityCode {codeblock.setCode(aActivityCode);}
+  after getActivityCode{
+  	if (codeblock.getCode()!=null)
+  	  return codeblock.getCode();
+  	  else
+  	
+  	}
+  after setCodeblock {
+  	if(activityCode!=null){
+  	  activityCode+= aCodeblock.getCode();
+  	}
+  	else
+  	  activityCode = aCodeblock.getCode();
+  }
+  void setActivityCode(String lang, String code)
+  {
+  	if(activityCode!=null){
+  	  activityCode+= lang+code;
+  	}
+  	else
+  	  activityCode = lang+code;
+  	codeblock.setCode(lang,code);
+  }
 }
 
 class Transition
@@ -78,6 +106,32 @@ class Action
   actionCode;  // target language code
   Boolean isInternal = false;
   
+  CodeBlock codeblock = null;
+  after constructor {codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();}
+  before setActionCode {codeblock.setCode(aActionCode);}
+  after getActionCode{
+  	if (codeblock.getCode()!=null)
+  	  return codeblock.getCode();
+  	  else
+  	
+  	}
+  after setCodeblock {
+  	if(actionCode!=null){
+  	  actionCode+= aCodeblock.getCode();
+  	}
+  	else
+  	  actionCode = aCodeblock.getCode();
+  }
+  void setActionCode(String lang, String code)
+  {
+  	if(actionCode!=null){
+  	  actionCode+= lang+code;
+  	}
+  	else 
+  	  actionCode = lang+code;
+  	codeblock.setCode(lang,code);
+  }
+  
   key { actionType, actionCode } 
 }
 
@@ -100,6 +154,33 @@ class Guard
   
   lazy Position position;
   condition; // target language code
+  
+  CodeBlock codeblock = null;
+  after constructor {codeblock = aCondition!=null ? new CodeBlock(aCondition) : new CodeBlock();}
+  before setCondition {codeblock.setCode(aCondition);}
+  after getCondition{
+  	if (codeblock.getCode()!=null)
+  	  return codeblock.getCode();
+  	  else
+  	
+  }
+  after setCodeblock {
+  	if(condition!=null){
+  	  condition+= aCodeblock.getCode();
+  	}
+  	else
+  	  condition = aCodeblock.getCode();
+  }
+  void setCondition(String lang, String code)
+  {
+  	if(actionCode!=null){
+  	  condition+= lang+code;
+  	}
+  	else 
+  	  condition = lang+code;
+  	codeblock.setCode(lang,code);
+  }
+  
   key { condition }
 }
 
