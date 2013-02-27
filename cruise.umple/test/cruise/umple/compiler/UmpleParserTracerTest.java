@@ -1619,7 +1619,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceEntryOfState()
   {
-	  assertParse("376_traceEntryOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
+	  assertParse("376_traceEntryOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
@@ -1634,7 +1634,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceEntryOfState2()
   {
-	  assertParse("376_traceEntryOfState2.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:Off]");
+	  assertParse("376_traceEntryOfState2.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:Off]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
@@ -1649,7 +1649,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceExitOfState()
   {
-	  assertParse("377_traceExitOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
+	  assertParse("377_traceExitOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
@@ -1664,7 +1664,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceExitOfState2()
   {
-	  assertParse("377_traceExitOfState2.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:Off]");
+	  assertParse("377_traceExitOfState2.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:Off]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
@@ -1679,7 +1679,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceStateRecord()
   {
-	  assertParse("378_traceStateRecord.ump","[classDefinition][name:Light][attribute][type:Integer][name:v][value:0][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][action][actionCode:setV(2);][stateName:On][trace][trace_entity:On][trace_record:v]");
+	  assertParse("378_traceStateRecord.ump","[classDefinition][name:Light][attribute][type:Integer][name:v][value:0][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][action][code:setV(2);][stateName:On][trace][trace_entity:On][trace_record:v]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  TraceDirective tc = clazz.getTraceDirective(0);
@@ -1699,7 +1699,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceTransition()
   {
-	  assertParse("379_traceTransition.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][actionCode:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:flip]");
+	  assertParse("379_traceTransition.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:flip]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Light");
 	  StateMachine_TraceItem tracedState = clazz.getTraceDirective(0).getStateMachineTraceItem(0);
