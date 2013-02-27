@@ -2390,7 +2390,7 @@ this("UmpleInternalParser", aModel);
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
     String value = attributeToken.getValue("value");
-    String derivedValue = attributeToken.getValue("derivedValue");
+    String derivedValue = attributeToken.getValue("code");
 
 	if (isLazyRedundant(isLazy, value))
 	{
@@ -2402,10 +2402,29 @@ this("UmpleInternalParser", aModel);
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
       }
 	}
-
+    CodeBlock languageSpecificCode = new CodeBlock();
     if (derivedValue != null)
     {
-      value = derivedValue;
+      value = "";
+      List<String> codelangs = new ArrayList<String>();
+      for(Token tkn: attributeToken.getSubTokens())
+      {
+    	if(tkn.is("codeLang"))
+    	{
+    		codelangs.add(tkn.getValue());
+    	} else if(tkn.is("code")) {
+    		if(codelangs.isEmpty())
+    		{
+    			languageSpecificCode.setCode(tkn.getValue());
+    		} else {
+    			for(String lang: codelangs)
+    			{
+    				languageSpecificCode.setCode(lang, tkn.getValue());
+    			}
+    			codelangs.clear();
+    		}
+    	}    	
+      }
     }
 
     if ("defaulted".equals(modifier) && value == null)
@@ -2449,6 +2468,7 @@ this("UmpleInternalParser", aModel);
     if (derivedValue != null)
     {
       attribute.setIsDerived(true);
+      attribute.setCodeblock(languageSpecificCode);
     }
 
     attribute.setIsList(isList);
@@ -2909,10 +2929,7 @@ this("UmpleInternalParser", aModel);
       }
       else if (subToken.is("entryOrExitAction"))
       {
-        Action action = new Action(subToken.getValue("actionCode"));
-        action.setPosition(subToken.getPosition());
-        action.setActionType(subToken.getValue("type"));
-        fromState.addAction(action);
+      	fromState.addAction(analyzeAction(subToken, fromState));
       }
       else if (subToken.is("||"))
       {
@@ -2955,9 +2972,84 @@ this("UmpleInternalParser", aModel);
 
   private Activity analyzeActivity(Token activityToken, State fromState)
   {
-    Activity act = new Activity(activityToken.getValue("activityCode"),fromState);
+    Activity act= new Activity("", fromState);
+  	CodeBlock cb = new CodeBlock();
+  	
+  	List<String> codelangs = new ArrayList<String>();
+  	for(Token tkn: activityToken.getSubTokens()){
+  	  if(tkn.is("codeLang")){
+  		codelangs.add(tkn.getValue());
+  	  } else if(tkn.is("code")){
+  		if(codelangs.isEmpty())
+  		{
+  		  cb.setCode(tkn.getValue());
+  		} 
+  		else {
+  		  for(String lang: codelangs){
+  			cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+    	}
+      }
+    }
+    act.setCodeblock(cb);
+    
     act.setPosition(activityToken.getPosition());
     return act;
+  }
+  
+  private Action analyzeAction(Token actionToken, State fromState){
+  	Action action= new Action("");
+  	CodeBlock cb = new CodeBlock();
+  	List<String> codelangs = new ArrayList<String>();
+  	for(Token tkn: actionToken.getSubTokens()){
+  	  if(tkn.is("codeLang")){
+  		codelangs.add(tkn.getValue());
+  	  } else if(tkn.is("code")){
+  		if(codelangs.isEmpty())
+  		{
+  		  cb.setCode(tkn.getValue());
+  		} 
+  		else {
+  		  for(String lang: codelangs){
+  			cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+    	}
+      }
+    }
+    action.setCodeblock(cb);
+    	
+    action.setPosition(actionToken.getPosition());
+    action.setActionType(actionToken.getValue("type"));
+        
+    return action;
+  }
+  private Guard analyzeGuard(Token guardToken, State fromState){
+  	Guard guard= new Guard("true");
+  	CodeBlock cb = new CodeBlock();
+  	List<String> codelangs = new ArrayList<String>();
+  	for(Token tkn: guardToken.getSubTokens()){
+  	  if(tkn.is("codeLang")){
+  		codelangs.add(tkn.getValue());
+  	  } else if(tkn.is("code")){
+  		if(codelangs.isEmpty())
+  		{
+  		  cb.setCode(tkn.getValue());
+  		} 
+  		else {
+  		  for(String lang: codelangs){
+  			cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+    	}
+      }
+    }
+    guard.setCodeblock(cb);
+    
+    guard.setPosition(guardToken.getPosition());
+    
+    return guard;
   }
 
   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
@@ -2987,17 +3079,14 @@ this("UmpleInternalParser", aModel);
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      Guard g = new Guard(guardToken.getValue("guardCode"));
-      g.setPosition(guardToken.getPosition());
-      t.setGuard(g);
+      t.setGuard(analyzeGuard(guardToken, fromState));
     }
 
     Token actionToken = transitionToken.getSubToken("action");
     if (actionToken != null)
     {
-      Action act = new Action(actionToken.getValue("actionCode"));
-      act.setPosition(actionToken.getPosition());
-      t.setAction(act);
+      
+      t.setAction(analyzeAction(actionToken,fromState));
     }
 
     if (eventName != null || isAutoTransition)

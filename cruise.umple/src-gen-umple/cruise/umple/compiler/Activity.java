@@ -15,6 +15,7 @@ public class Activity
   //Activity Attributes
   private Position position;
   private String activityCode;
+  private CodeBlock codeblock;
 
   //Activity Associations
   private Event onCompletionEvent;
@@ -27,11 +28,14 @@ public class Activity
   public Activity(String aActivityCode, State aState)
   {
     activityCode = aActivityCode;
+    codeblock = null;
     boolean didAddState = setState(aState);
     if (!didAddState)
     {
       throw new RuntimeException("Unable to create activity due to state");
     }
+    // line 58 "../../../../src/StateMachine.ump"
+    codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();
   }
 
   //------------------------
@@ -49,8 +53,24 @@ public class Activity
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
+    // line 59 "../../../../src/StateMachine.ump"
+    codeblock.setCode(aActivityCode);
     activityCode = aActivityCode;
     wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCodeblock(CodeBlock aCodeblock)
+  {
+    boolean wasSet = false;
+    codeblock = aCodeblock;
+    wasSet = true;
+    // line 66 "../../../../src/StateMachine.ump"
+    if(activityCode!=null){
+      	  activityCode+= aCodeblock.getCode();
+      	}
+      	else
+      	  activityCode = aCodeblock.getCode();
     return wasSet;
   }
 
@@ -61,7 +81,17 @@ public class Activity
 
   public String getActivityCode()
   {
-    return activityCode;
+    String aActivityCode = activityCode;
+    // line 60 "../../../../src/StateMachine.ump"
+    if (codeblock.getCode()!=null)
+      	  return codeblock.getCode();
+      	  else
+    return aActivityCode;
+  }
+
+  public CodeBlock getCodeblock()
+  {
+    return codeblock;
   }
 
   public Event getOnCompletionEvent()
@@ -119,6 +149,16 @@ public class Activity
     {
       existingState.setActivity(null);
     }
+  }
+
+  // line 73 "../../../../src/StateMachine.ump"
+  public void setActivityCode(String lang, String code){
+    if(activityCode!=null){
+  	  activityCode+= lang+code;
+  	}
+  	else
+  	  activityCode = lang+code;
+  	codeblock.setCode(lang,code);
   }
 
 }

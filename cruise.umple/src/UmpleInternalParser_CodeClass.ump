@@ -1719,7 +1719,7 @@ class UmpleInternalParser
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
     String value = attributeToken.getValue("value");
-    String derivedValue = attributeToken.getValue("derivedValue");
+    String derivedValue = attributeToken.getValue("code");
 
 	if (isLazyRedundant(isLazy, value))
 	{
@@ -1731,10 +1731,29 @@ class UmpleInternalParser
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
       }
 	}
-
+    CodeBlock languageSpecificCode = new CodeBlock();
     if (derivedValue != null)
     {
-      value = derivedValue;
+      value = "";
+      List<String> codelangs = new ArrayList<String>();
+      for(Token tkn: attributeToken.getSubTokens())
+      {
+    	if(tkn.is("codeLang"))
+    	{
+    		codelangs.add(tkn.getValue());
+    	} else if(tkn.is("code")) {
+    		if(codelangs.isEmpty())
+    		{
+    			languageSpecificCode.setCode(tkn.getValue());
+    		} else {
+    			for(String lang: codelangs)
+    			{
+    				languageSpecificCode.setCode(lang, tkn.getValue());
+    			}
+    			codelangs.clear();
+    		}
+    	}    	
+      }
     }
 
     if ("defaulted".equals(modifier) && value == null)
@@ -1778,6 +1797,7 @@ class UmpleInternalParser
     if (derivedValue != null)
     {
       attribute.setIsDerived(true);
+      attribute.setCodeblock(languageSpecificCode);
     }
 
     attribute.setIsList(isList);

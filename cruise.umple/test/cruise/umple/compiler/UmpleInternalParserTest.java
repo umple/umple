@@ -154,7 +154,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("008_isABlahAttribute.ump", "[classDefinition][name:Student][attribute][type:Boolean][name:isActNow]");
     fileToOutputs.put("008_simpleAttribute.ump", "[classDefinition][name:Student][attribute][name:number]");
     fileToOutputs.put("008_listAttribute.ump", "[classDefinition][name:Token][attribute][list:[]][name:blah][attribute][type:String][list:[]][name:name][attribute][type:Position][list:[]][name:start][attribute][type:Integer][list:[]][name:number][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
-    fileToOutputs.put("008_derivedAttribute.ump", "[classDefinition][name:Position][attribute][type:Integer][name:perimeter][derivedValue:2*l + 2*w][attribute][type:Integer][name:w][attribute][type:Integer][name:l]");
+    fileToOutputs.put("008_derivedAttribute.ump", "[classDefinition][name:Position][attribute][type:Integer][name:perimeter][code:2*l + 2*w][attribute][type:Integer][name:w][attribute][type:Integer][name:l]");
     fileToOutputs.put("008_associationAttribute.ump", "[classDefinition][name:Token][attribute][name:number][attribute][type:Position][name:startPosition][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
     fileToOutputs.put("008_typeAttribute.ump", "[classDefinition][name:Student][attribute][type:Integer][name:name][attribute][type:String][name:name2][attribute][type:Time][name:name3][attribute][type:Date][name:name4][attribute][type:Double][name:name5]");
     fileToOutputs.put("008_uniqueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][name:number]");
@@ -226,7 +226,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("023_immutableExternalOtherWayAssociation.ump","[classDefinition][name:Student][immutable:immutable][classDefinition][name:Mentor][immutable:immutable][associationDefinition][association][modifier:immutable][associationEnd][lowerBound:6][upperBound:9][type:Mentor][roleName:myMentor][arrow:<-][associationEnd][bound:1][type:Student][association][modifier:immutable][associationEnd][bound:*][type:Student][roleName:them][arrow:<-][associationEnd][bound:*][type:Student][roleName:me]");
     fileToOutputs.put("024_multipleUnnamedOneWayAssociationsToSameClass.ump", "[classDefinition][name:TestClass][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][lowerBound:3][upperBound:5][type:OtherClass][roleName:othersOne][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][lowerBound:1][upperBound:3][type:OtherClass][roleName:othersTwo][classDefinition][name:OtherClass]");
     
-    fileToOutputs.put("030_mixingRegularAndDerivedAttributes_bug201.ump","[namespace:example][classDefinition][name:Student][attribute][name:one][attribute][name:two][attribute][name:three][derivedValue:one + \":\" + two]");
+    fileToOutputs.put("030_mixingRegularAndDerivedAttributes_bug201.ump","[namespace:example][classDefinition][name:Student][attribute][name:one][attribute][name:two][attribute][name:three][code:one + \":\" + two]");
     
     fileToOutputs.put("032_abstractClass.ump", "[classDefinition][name:Foo][abstract:abstract][classDefinition][name:Bar]");
     

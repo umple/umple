@@ -4,7 +4,7 @@
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
-// line 72 "../../../../src/StateMachine.ump"
+// line 100 "../../../../src/StateMachine.ump"
 public class Action
 {
 
@@ -17,6 +17,7 @@ public class Action
   private Position position;
   private String actionCode;
   private boolean isInternal;
+  private CodeBlock codeblock;
 
   //Helper Variables
   private int cachedHashCode;
@@ -35,6 +36,9 @@ public class Action
     actionType = null;
     actionCode = aActionCode;
     isInternal = false;
+    codeblock = null;
+    // line 110 "../../../../src/StateMachine.ump"
+    codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();
   }
 
   //------------------------
@@ -61,6 +65,8 @@ public class Action
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
+    // line 111 "../../../../src/StateMachine.ump"
+    codeblock.setCode(aActionCode);
     if (!canSetActionCode) { return false; }
     actionCode = aActionCode;
     wasSet = true;
@@ -72,6 +78,20 @@ public class Action
     boolean wasSet = false;
     isInternal = aIsInternal;
     wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCodeblock(CodeBlock aCodeblock)
+  {
+    boolean wasSet = false;
+    codeblock = aCodeblock;
+    wasSet = true;
+    // line 118 "../../../../src/StateMachine.ump"
+    if(actionCode!=null){
+      	  actionCode+= aCodeblock.getCode();
+      	}
+      	else
+      	  actionCode = aCodeblock.getCode();
     return wasSet;
   }
 
@@ -87,7 +107,12 @@ public class Action
 
   public String getActionCode()
   {
-    return actionCode;
+    String aActionCode = actionCode;
+    // line 112 "../../../../src/StateMachine.ump"
+    if (codeblock.getCode()!=null)
+      	  return codeblock.getCode();
+      	  else
+    return aActionCode;
   }
 
   /**
@@ -96,6 +121,11 @@ public class Action
   public boolean getIsInternal()
   {
     return isInternal;
+  }
+
+  public CodeBlock getCodeblock()
+  {
+    return codeblock;
   }
 
   public boolean isIsInternal()
@@ -163,5 +193,15 @@ public class Action
 
   public void delete()
   {}
+
+  // line 125 "../../../../src/StateMachine.ump"
+  public void setActionCode(String lang, String code){
+    if(actionCode!=null){
+  	  actionCode+= lang+code;
+  	}
+  	else 
+  	  actionCode = lang+code;
+  	codeblock.setCode(lang,code);
+  }
 
 }

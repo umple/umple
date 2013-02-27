@@ -12,6 +12,11 @@ class LanguageSpecificCodeBlock
   //LanguageSpecificCodeBlock Attributes
   private $name;
 
+  //LanguageSpecificCodeBlock State Machines
+  private static $StateAllLanguages = 1;
+  private static $StateTo = 2;
+  private $state;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -19,6 +24,7 @@ class LanguageSpecificCodeBlock
   public function __construct($aName)
   {
     $this->name = $aName;
+    $this->setState(self::$StateAllLanguages);
   }
 
   //------------------------
@@ -40,6 +46,46 @@ class LanguageSpecificCodeBlock
   public function getName()
   {
     return $this->name;
+  }
+
+  public function getLanguageImplementedIn()
+  {
+    return "Php";
+  }
+
+  public function getStateFullName()
+  {
+    $answer = $this->getState();
+    return $answer;
+  }
+
+  public function getState()
+  {
+    if ($this->state == self::$StateAllLanguages) { return "StateAllLanguages"; }
+    elseif ($this->state == self::$StateTo) { return "StateTo"; }
+    return null;
+  }
+
+  public function applySpecificAction()
+  {
+    $wasEventProcessed = false;
+    
+    $aState = $this->state;
+    if ($aState == self::$StateAllLanguages)
+    {
+      if ($this->isJava())
+      {
+        name = "action=php"
+        $this->setState(self::$StateTo);
+        $wasEventProcessed = true;
+      }
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setState($aState)
+  {
+    $this->state = $aState;
   }
 
   public function equals($compareTo)

@@ -110,5 +110,10 @@ public class CodeInjectionTest
   	cb.setName("World");
     Assert.assertEquals("My lang is java",cb.getName());
     Assert.assertTrue(cb.isJava());
+    
+    cb.applySpecificAction();
+    Assert.assertEquals("action=java",cb.getName());
+    
+    Assert.assertEquals("Java",cb.getLanguageImplementedIn());
   }  
 }

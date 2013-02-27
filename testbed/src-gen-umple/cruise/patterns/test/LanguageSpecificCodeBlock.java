@@ -14,6 +14,10 @@ public class LanguageSpecificCodeBlock
   //LanguageSpecificCodeBlock Attributes
   private String name;
 
+  //LanguageSpecificCodeBlock State Machines
+  enum State { allLanguages, to }
+  private State state;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -21,6 +25,7 @@ public class LanguageSpecificCodeBlock
   public LanguageSpecificCodeBlock(String aName)
   {
     name = aName;
+    setState(State.allLanguages);
   }
 
   //------------------------
@@ -42,6 +47,51 @@ public class LanguageSpecificCodeBlock
   public String getName()
   {
     return name;
+  }
+
+  public String getLanguageImplementedIn()
+  {
+    return "Java";
+  }
+
+  public String getStateFullName()
+  {
+    String answer = state.toString();
+    return answer;
+  }
+
+  public State getState()
+  {
+    return state;
+  }
+
+  public boolean applySpecificAction()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    switch (aState)
+    {
+      case allLanguages:
+        if (isJava())
+        {
+        // line 78 "../../../../src/TestHarnessPatterns.ump"
+          name = "action=java";
+          setState(State.to);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setState(State aState)
+  {
+    state = aState;
   }
 
   public void delete()
