@@ -3,16 +3,17 @@
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
-module CruiseAttributesTest
 
-class Student
+
+# constant on the left side of the constraint
+class student
 
 
   #------------------------
   # MEMBER VARIABLES
   #------------------------
 
-  #Student Attributes - for documentation purposes
+  #student Attributes - for documentation purposes
   #attr_reader :age
 
   #------------------------
@@ -22,7 +23,7 @@ class Student
   def initialize(a_age)
     @initialized = false
     @deleted = false
-    if ! ((a_age>18)) then
+    if ! (18>a_age) then
     raise RuntimeError, 'Please provide a valid age' 
      end 
     
@@ -36,7 +37,7 @@ class Student
 
   def set_age(a_age)
     was_set = false
-    if (a_age>18) then
+    if 18>a_age then
     
     @age = a_age
     was_set = true
@@ -52,5 +53,4 @@ class Student
     @deleted = true
   end
 
-end
 end

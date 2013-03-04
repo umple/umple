@@ -717,13 +717,20 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     for (Constraint ac : aClass.getConstraints())
     {
       boolean isAttr = false;
-      String code = "if ";
+      String setMethod_code = "if (";
+      String constructor_code = "if ( !(";
       for (String expr : ac.getExpression())
       {
         if( isAttr == true && aClass.getAttribute(expr) != null)
         {
-          if (expr.equals(ac.getConstrainedVariable())) { code += StringFormatter.format("${0}", translate("parameterOne",aClass.getAttribute(expr)));}
-          else { code += StringFormatter.format("${0}", translate("attributeOne",aClass.getAttribute(expr)));}
+          if (expr.equals(ac.getConstrainedVariable())) { 
+          setMethod_code += StringFormatter.format("${0}", translate("parameterOne",aClass.getAttribute(expr)));
+          constructor_code += StringFormatter.format("${0}", translate("parameterOne",aClass.getAttribute(expr)));
+          }
+          else { 
+          setMethod_code += StringFormatter.format("${0}", translate("attributeOne",aClass.getAttribute(expr)));
+          constructor_code += StringFormatter.format("${0}", translate("attributeOne",aClass.getAttribute(expr)));
+          }
           isAttr = false;
         }
         else if (expr.equals("attr")) 
@@ -732,19 +739,25 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
         } 
         else
         { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
-          code += expr;
+          setMethod_code += expr;
+          constructor_code += expr;
           isAttr = false;
         }
       }
 
-      code += "\n{";
+      setMethod_code += ")\n{";
       // This is will needed to ba changed with the type variable to allow constraints on assoications.
-      CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), code, aClass);         
+      CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), setMethod_code, aClass);         
       CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), "}", aClass);
       before.setIsInternal(true);
       after.setIsInternal(true);
       aClass.addCodeInjection(before);
       aClass.addCodeInjection(after);
+      
+      constructor_code += "))\n{ \n throw new RuntimeException(\"Please provide a valid "+ ac.getConstrainedVariable() +"\"); \n}";
+      before = new CodeInjection("before",  "constructor", constructor_code, aClass);  
+      before.setIsInternal(true);
+      aClass.addCodeInjection(before);
     }
 
     Map<String,String> lookups = new HashMap<String,String>();

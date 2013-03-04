@@ -2,14 +2,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-class Student
+// constant on the left side of the constraint
+class student
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Student Attributes
+  //student Attributes
   private $age;
 
   //------------------------
@@ -18,7 +19,7 @@ class Student
 
   public function __construct($aAge)
   {
-    if ( !(($aAge>18)))
+    if ( !(18>$aAge))
     { 
      throw new RuntimeException("Please provide a valid age"); 
     }
@@ -32,7 +33,7 @@ class Student
   public function setAge($aAge)
   {
     $wasSet = false;
-    if (($aAge>18))
+    if (18>$aAge)
     {
     $this->age = $aAge;
     $wasSet = true;

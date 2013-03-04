@@ -1,57 +1,55 @@
-<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-class Student
+
+
+/**
+ * constant on the left side of the constraint
+ */
+public class student
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Student Attributes
-  private $age;
+  //student Attributes
+  private int age;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aAge)
+  public student(int aAge)
   {
-    if ( !(($aAge>18)))
+    if ( !(18>aAge))
     { 
      throw new RuntimeException("Please provide a valid age"); 
     }
-    $this->age = $aAge;
+    age = aAge;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function setAge($aAge)
+  public boolean setAge(int aAge)
   {
-    $wasSet = false;
-    if (($aAge>18))
+    boolean wasSet = false;
+    if (18>aAge)
     {
-    $this->age = $aAge;
-    $wasSet = true;
+    age = aAge;
+    wasSet = true;
     }
-    return $wasSet;
+    return wasSet;
   }
 
-  public function getAge()
+  public int getAge()
   {
-    return $this->age;
+    return age;
   }
 
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
-
-  public function delete()
+  public void delete()
   {}
 
 }
-?>
