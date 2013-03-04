@@ -29,12 +29,12 @@ public class ConstraintExpressionsTest extends TemplateTest{
 	
 	@Test
 	public void BasicConstraint3(){ // [age > minAge]
-		upt.assertParse("BasicConstraint3.ump");
+		assertUmpleTemplateFor("BasicConstraint3.ump", languagePath + "/BasicConstraint3."+ languagePath +".txt", "Client");
 	}
 	
 	@Test
 	public void BasicConstraint4(){ // [(18>age)]
-		upt.assertParse("BasicConstraint4.ump");
+		assertUmpleTemplateFor("BasicConstraint4.ump", languagePath + "/BasicConstraint4."+ languagePath +".txt", "student");
 	}
 	
 //	@Test
