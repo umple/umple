@@ -5,7 +5,7 @@ package cruise.umple.compiler;
 import java.util.*;
 
 // line 84 "../../../../src/StateMachine.ump"
-// line 421 "../../../../src/StateMachine_Code.ump"
+// line 433 "../../../../src/StateMachine_Code.ump"
 public class Transition
 {
 
@@ -404,7 +404,7 @@ public class Transition
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 423 ../../../../src/StateMachine_Code.ump
+  // line 435 ../../../../src/StateMachine_Code.ump
   public static Transition createPlaceholder(State nextState)
   {
     StateMachine nullSm = new StateMachine("null");
