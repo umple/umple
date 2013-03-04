@@ -738,11 +738,9 @@ public class StateMachine
   {
   
     StateMachine root = this;
-    State parent = getParentState();
-    if (!didFindRoot && searchNestedStateMachines && parent != null)
+    if (!didFindRoot && searchNestedStateMachines)
     {
-      root = parent.getStateMachine();
-      parent = root.getParentState();
+      root = getRootStateMachine();
     }
     
     for (State aState : root.states)
@@ -765,6 +763,20 @@ public class StateMachine
       }
     }
     return null;
+  }
+  
+  private StateMachine getRootStateMachine()
+  {
+    StateMachine root = this;
+    
+    State parent = getParentState();
+    while (parent != null)
+    {
+      root = parent.getStateMachine();
+      parent = root.getParentState();
+    }
+    
+    return root;
   }
   
   public String getFullName()

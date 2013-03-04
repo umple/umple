@@ -249,3 +249,26 @@ class CourseQ
     On { }  
   }
 }
+
+class CourseX {
+  String[] logs;
+  
+  status {
+    Open {
+      white {
+        entry / { addLog("White entry"); }
+        e -> green;
+      }
+      green {
+        greenStatus {
+          greenStatusOn { 
+            entry / { addLog("GreenStatusOn Entry"); }
+            check -> white;
+          }
+          e2 -> Open;
+        }  
+      }
+      black {}
+    }
+  }
+}

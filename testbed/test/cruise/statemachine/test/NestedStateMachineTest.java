@@ -148,4 +148,21 @@ public class NestedStateMachineTest
     Assert.assertEquals("S3",course.getStatusFullName());
   }
   
+  @Test
+  public void TransistionFromInnerState()
+  {
+	  CourseX course = new CourseX();
+	  
+	  Assert.assertEquals("White entry", course.getLog(0));
+	  
+	  course.e();
+	  Assert.assertEquals("GreenStatusOn Entry", course.getLog(1));
+
+	  course.check();
+	  Assert.assertEquals("White entry", course.getLog(2));  
+	  
+	  course.e();
+	  course.e2();
+	  Assert.assertEquals("White entry", course.getLog(4)); 
+  }
 }
