@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -13,7 +13,7 @@ public class Student
 
   //Student Attributes
   private int id;
-  private String ProfsPriority;
+  private Comparator<Mentor> ProfsPriority;
 
   //Student Associations
   private List<Mentor> Profs;
@@ -25,7 +25,15 @@ public class Student
   public Student(int aId)
   {
     id = aId;
-    ProfsPriority = "name";
+    ProfsPriority = 
+      new Comparator<Mentor>(){
+        @Override
+        public int compare(Mentor arg0, Mentor arg1)
+        {
+          return ((String)arg0.getName()).compareTo(
+                 ((String)arg1.getName()));
+        }
+      };
     Profs = new ArrayList<Mentor>();
   }
 
@@ -41,7 +49,7 @@ public class Student
     return wasSet;
   }
 
-  public boolean setProfsPriority(String aProfsPriority)
+  public boolean setProfsPriority(Comparator<Mentor> aProfsPriority)
   {
     boolean wasSet = false;
     ProfsPriority = aProfsPriority;
@@ -54,7 +62,7 @@ public class Student
     return id;
   }
 
-  public String getProfsPriority()
+  public Comparator<Mentor> getProfsPriority()
   {
     return ProfsPriority;
   }
@@ -111,7 +119,8 @@ public class Student
         Profs.remove(aProf);
       }
     }
-    sort(Profs, ProfsPriority);
+    if(wasAdded)
+        Collections.sort(Profs, ProfsPriority);
     
     return wasAdded;
   }
@@ -121,8 +130,6 @@ public class Student
     boolean wasRemoved = false;
     if (!Profs.contains(aProf))
     {
-      sort(Profs, ProfsPriority);
-      
       return wasRemoved;
     }
 
@@ -140,36 +147,10 @@ public class Student
         Profs.add(oldIndex,aProf);
       }
     }
-    sort(Profs, ProfsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     ArrayList<Mentor> copyOfProfs = new ArrayList<Mentor>(Profs);
@@ -180,4 +161,14 @@ public class Student
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "ProfsPriority" + "=" + getProfsPriority() != null ? !getProfsPriority() .equals(this)  ? getProfsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

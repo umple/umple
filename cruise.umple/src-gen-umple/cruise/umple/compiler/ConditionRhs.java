@@ -58,4 +58,14 @@ public class ConditionRhs
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "rhs" + ":" + getRhs()+ "," +
+            "comparisonOperator" + ":" + getComparisonOperator()+ "]"
+     + outputString;
+  }
 }

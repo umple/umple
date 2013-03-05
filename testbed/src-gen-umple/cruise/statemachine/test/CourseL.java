@@ -266,4 +266,12 @@ public class CourseL
     addLog("deleted");
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

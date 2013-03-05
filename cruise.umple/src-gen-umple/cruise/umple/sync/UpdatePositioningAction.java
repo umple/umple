@@ -44,7 +44,15 @@ public class UpdatePositioningAction extends SynchronizationAction
   {
     super.delete();
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

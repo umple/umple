@@ -58,4 +58,14 @@ public class Pair
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "value" + ":" + getValue()+ "]"
+     + outputString;
+  }
 }

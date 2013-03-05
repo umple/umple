@@ -139,7 +139,16 @@ public class Constraint
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "constrainedVariable" + ":" + getConstrainedVariable()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

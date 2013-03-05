@@ -109,7 +109,17 @@ public class Depend
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

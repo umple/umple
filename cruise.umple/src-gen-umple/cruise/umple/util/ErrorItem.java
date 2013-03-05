@@ -89,7 +89,16 @@ public class ErrorItem
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

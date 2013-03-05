@@ -269,7 +269,19 @@ public class Association
     }
     ends.clear();
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "isLeftNavigable" + ":" + getIsLeftNavigable()+ "," +
+            "isRightNavigable" + ":" + getIsRightNavigable()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "tokenPosition" + "=" + getTokenPosition() != null ? !getTokenPosition() .equals(this)  ? getTokenPosition().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

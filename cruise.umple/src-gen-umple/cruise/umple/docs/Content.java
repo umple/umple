@@ -140,7 +140,19 @@ public class Content
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "title" + ":" + getTitle()+ "," +
+            "shouldIncludeReferences" + ":" + getShouldIncludeReferences()+ "," +
+            "description" + ":" + getDescription()+ "," +
+            "syntax" + ":" + getSyntax()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

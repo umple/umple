@@ -103,4 +103,15 @@ public class Registration
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "grade" + ":" + getGrade()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "courseSection" + "=" + getStudent() != null ? !getStudent() .equals(this)  ? getStudent().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "student" + "=" + getCourseSection() != null ? !getCourseSection() .equals(this)  ? getCourseSection().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

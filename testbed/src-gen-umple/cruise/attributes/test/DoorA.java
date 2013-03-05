@@ -101,4 +101,19 @@ public class DoorA
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "intId" + ":" + getIntId()+ "," +
+            "doubleId" + ":" + getDoubleId()+ "," +
+            "booleanId" + ":" + getBooleanId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "doorId" + "=" + getDoorId() != null ? !getDoorId() .equals(this)  ? getDoorId().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "dateId" + "=" + getDateId() != null ? !getDateId() .equals(this)  ? getDateId().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "timeId" + "=" + getTimeId() != null ? !getTimeId() .equals(this)  ? getTimeId().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

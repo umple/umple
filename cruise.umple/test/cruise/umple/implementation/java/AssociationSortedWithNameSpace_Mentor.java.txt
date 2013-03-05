@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.15.0.1751 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 import java.util.*;
@@ -13,7 +13,7 @@ public class Mentor
 
   //Mentor Attributes
   private String name;
-  private String myStudentsPriority;
+  private Comparator<Student> myStudentsPriority;
 
   //Mentor Associations
   private List<Student> myStudents;
@@ -25,7 +25,15 @@ public class Mentor
   public Mentor(String aName)
   {
     name = aName;
-    myStudentsPriority = "id";
+    myStudentsPriority = 
+      new Comparator<Student>(){
+        @Override
+        public int compare(Student arg0, Student arg1)
+        {
+          return ((Integer)arg0.getId()).compareTo(
+                 ((Integer)arg1.getId()));
+        }
+      };
     myStudents = new ArrayList<Student>();
   }
 
@@ -41,7 +49,7 @@ public class Mentor
     return wasSet;
   }
 
-  public boolean setMyStudentsPriority(String aMyStudentsPriority)
+  public boolean setMyStudentsPriority(Comparator<Student> aMyStudentsPriority)
   {
     boolean wasSet = false;
     myStudentsPriority = aMyStudentsPriority;
@@ -54,7 +62,7 @@ public class Mentor
     return name;
   }
 
-  public String getMyStudentsPriority()
+  public Comparator<Student> getMyStudentsPriority()
   {
     return myStudentsPriority;
   }
@@ -111,7 +119,8 @@ public class Mentor
         myStudents.remove(aMyStudent);
       }
     }
-    sort(myStudents, myStudentsPriority);
+    if(wasAdded)
+        Collections.sort(myStudents, myStudentsPriority);
     
     return wasAdded;
   }
@@ -121,8 +130,6 @@ public class Mentor
     boolean wasRemoved = false;
     if (!myStudents.contains(aMyStudent))
     {
-      sort(myStudents, myStudentsPriority);
-      
       return wasRemoved;
     }
 
@@ -140,36 +147,10 @@ public class Mentor
         myStudents.add(oldIndex,aMyStudent);
       }
     }
-    sort(myStudents, myStudentsPriority);
-    
     return wasRemoved;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public void sort(List toSort, final String thePriority)
-  {
-    if(toSort.size() > 0)
-    {
-      Collections.sort(toSort, new Comparator<Object>()
-      {
-        @Override
-        public int compare(Object arg0, Object arg1)
-        {
-          try
-          {
-            String methodName = "get" + thePriority.substring(0, 1).toUpperCase() + thePriority.substring(1);
-            return ((Comparable)arg0.getClass().getMethod(methodName).invoke(arg0)).compareTo((Comparable)arg1.getClass().getMethod(methodName).invoke(arg1));
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-          return 0;
-        }
-      });
-    }
-  }
-
+  
   public void delete()
   {
     ArrayList<Student> copyOfMyStudents = new ArrayList<Student>(myStudents);
@@ -180,4 +161,14 @@ public class Mentor
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "myStudentsPriority" + "=" + getMyStudentsPriority() != null ? !getMyStudentsPriority() .equals(this)  ? getMyStudentsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

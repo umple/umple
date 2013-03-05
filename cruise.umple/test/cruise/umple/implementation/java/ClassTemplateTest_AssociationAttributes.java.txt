@@ -42,4 +42,13 @@ public class Token
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "p" + "=" + getP() != null ? !getP() .equals(this)  ? getP().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

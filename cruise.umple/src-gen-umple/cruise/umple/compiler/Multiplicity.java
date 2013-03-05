@@ -170,7 +170,18 @@ public class Multiplicity
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "maximum" + ":" + getMaximum()+ "," +
+            "minimum" + ":" + getMinimum()+ "," +
+            "bound" + ":" + getBound()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

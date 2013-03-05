@@ -18,6 +18,10 @@ class student
 
   public function __construct($aAge)
   {
+    if ( !($aAge>18))
+    { 
+     throw new RuntimeException("Please provide a valid age"); 
+    }
     $this->age = $aAge;
   }
 

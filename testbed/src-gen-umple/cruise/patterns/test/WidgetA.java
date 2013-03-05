@@ -262,4 +262,19 @@ public class WidgetA
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "boolId" + ":" + getBoolId()+ "," +
+            "doubleId" + ":" + getDoubleId()+ "," +
+            "intId" + ":" + getIntId()+ "," +
+            "id" + ":" + getId()+ "," +
+            "ignore" + ":" + getIgnore()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "widgetId" + "=" + getWidgetId() != null ? !getWidgetId() .equals(this)  ? getWidgetId().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "dateId" + "=" + getDateId() != null ? !getDateId() .equals(this)  ? getDateId().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

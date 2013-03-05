@@ -39,4 +39,13 @@ public class Otherclass
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]"
+     + outputString;
+  }
 }

@@ -76,4 +76,15 @@ public class RulePartValue
     position = null;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "value" + ":" + getValue()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

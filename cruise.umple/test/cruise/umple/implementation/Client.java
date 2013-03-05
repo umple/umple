@@ -75,4 +75,14 @@ public class Client
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "minAge" + ":" + getMinAge()+ "," +
+            "age" + ":" + getAge()+ "]"
+     + outputString;
+  }
 }

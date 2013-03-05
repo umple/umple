@@ -49,4 +49,13 @@ public class PrimitiveType extends Type
     super.delete();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "typeName" + ":" + getTypeName()+ "]"
+     + outputString;
+  }
 }

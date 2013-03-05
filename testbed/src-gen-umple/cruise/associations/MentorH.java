@@ -89,4 +89,14 @@ public class MentorH
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "superMentor" + "=" + getSuperMentor() != null ? !getSuperMentor() .equals(this)  ? getSuperMentor().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

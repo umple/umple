@@ -101,4 +101,16 @@ public class Foo
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "testAttribute1" + ":" + getTestAttribute1()+ "," +
+            "testAttribute2" + ":" + getTestAttribute2()+ "," +
+            "testAttribute3" + ":" + getTestAttribute3()+ "," +
+            "testAttribute4" + ":" + getTestAttribute4()+ "]"
+     + outputString;
+  }
 }

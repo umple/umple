@@ -184,4 +184,15 @@ public class MultipleSortedCourse
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "code" + ":" + getCode()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "multipleSortedAcademy" + "=" + getMultipleSortedRegistrationsPriority() != null ? !getMultipleSortedRegistrationsPriority() .equals(this)  ? getMultipleSortedRegistrationsPriority().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "multipleSortedRegistrationsPriority" + "=" + getMultipleSortedAcademy() != null ? !getMultipleSortedAcademy() .equals(this)  ? getMultipleSortedAcademy().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

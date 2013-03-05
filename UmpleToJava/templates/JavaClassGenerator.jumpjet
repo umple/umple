@@ -69,6 +69,38 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
 <% if (uClass.hasMethods()) { %>
   <%@ include file="class_MethodDeclaration.jet" %>
 <% } %>
+<% 
+   boolean matchFound = false;
+   UmpleClass parent = uClass.getExtendsClass(); 
+   if(uClass.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(uClass.getExtraCode()).matches();
+   }
+   if(parent!=null && parent.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(parent.getExtraCode()).matches();
+   }
+   if(!matchFound)
+   for(Method meth: uClass.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if(!matchFound && parent!=null)
+   for(Method meth: parent.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if (uClass.getAttributes().size()>0 && !matchFound){ %>
+   <%@ include file="toString_declare.jet" %>
+<% } %>
 <% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

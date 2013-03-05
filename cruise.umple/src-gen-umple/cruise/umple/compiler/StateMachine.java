@@ -511,7 +511,18 @@ public class StateMachine
       aStateMachineTraceItem.setStateMachine(null);
     }
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "parentState" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + getParentState() != null ? !getParentState() .equals(this)  ? getParentState().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

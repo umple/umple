@@ -118,4 +118,14 @@ public class Rule
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "shouldHide" + ":" + getShouldHide()+ "]"
+     + outputString;
+  }
 }

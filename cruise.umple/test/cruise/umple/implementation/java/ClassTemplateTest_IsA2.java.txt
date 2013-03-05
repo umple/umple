@@ -45,4 +45,13 @@ public class SubMentor2 extends Mentor
     super.delete();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "subName" + ":" + getSubName()+ "]"
+     + outputString;
+  }
 }

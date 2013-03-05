@@ -275,4 +275,14 @@ public class MentorE
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "y" + ":" + getY()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "program" + "=" + getProgram() != null ? !getProgram() .equals(this)  ? getProgram().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

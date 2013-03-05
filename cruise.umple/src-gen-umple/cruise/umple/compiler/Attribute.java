@@ -513,7 +513,21 @@ public class Attribute extends UmpleVariable
     }
     super.delete();
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "isAutounique" + ":" + getIsAutounique()+ "," +
+            "isList" + ":" + getIsList()+ "," +
+            "isDerived" + ":" + getIsDerived()+ "," +
+            "isLazy" + ":" + getIsLazy()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + getCodeblock() != null ? !getCodeblock() .equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "codeblock" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

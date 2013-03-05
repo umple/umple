@@ -120,4 +120,13 @@ public class WidgetSubclass extends WidgetImmutableB
     super.delete();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "type" + ":" + getType()+ "]"
+     + outputString;
+  }
 }

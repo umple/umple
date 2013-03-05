@@ -81,6 +81,16 @@ public class Tracer
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "x" + ":" + getX()+ "," +
+            "y" + ":" + getY()+ "]"
+     + outputString;
+  }
   //------------------------
   // FILE TRACER METHOD
   //------------------------

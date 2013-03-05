@@ -157,4 +157,13 @@ public class Teacher extends Person
     super.delete();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "position" + ":" + getPosition()+ "]"
+     + outputString;
+  }
 }

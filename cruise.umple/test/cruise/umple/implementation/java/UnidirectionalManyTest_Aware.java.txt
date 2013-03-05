@@ -136,4 +136,13 @@ public class Mentor
     students.clear();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]"
+     + outputString;
+  }
 }

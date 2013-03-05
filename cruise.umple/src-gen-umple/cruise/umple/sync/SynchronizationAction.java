@@ -58,7 +58,17 @@ public class SynchronizationAction
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "deltaCode" + ":" + getDeltaCode()+ "," +
+            "umpleCode" + ":" + getUmpleCode()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

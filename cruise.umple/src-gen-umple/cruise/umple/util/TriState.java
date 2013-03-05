@@ -69,7 +69,17 @@ public class TriState
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "isSet" + ":" + getIsSet()+ "," +
+            "status" + ":" + getStatus()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

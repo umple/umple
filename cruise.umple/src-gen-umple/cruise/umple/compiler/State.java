@@ -649,7 +649,24 @@ public class State
       aNextTransition.delete();
     }
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "isConcurrent" + ":" + getIsConcurrent()+ "," +
+            "isStartState" + ":" + getIsStartState()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "," +
+            "isHistoryState" + ":" + getIsHistoryState()+ "," +
+            "isDeepHistoryState" + ":" + getIsDeepHistoryState()+ "," +
+            "finalState" + ":" + getFinalState()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "stateMachine" + "=" + getActivity() != null ? !getActivity() .equals(this)  ? getActivity().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "activity" + "=" + getStateMachine() != null ? !getStateMachine() .equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

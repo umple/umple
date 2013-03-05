@@ -152,4 +152,16 @@ public class GenerateTarget
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "language" + ":" + getLanguage()+ "," +
+            "path" + ":" + getPath()+ "," +
+            "override" + ":" + getOverride()+ "," +
+            "overrideAll" + ":" + getOverrideAll()+ "]"
+     + outputString;
+  }
 }

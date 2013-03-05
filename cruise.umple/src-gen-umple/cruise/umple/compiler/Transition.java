@@ -399,7 +399,22 @@ public class Transition
       aStateMachineTraceItem.setTransition(null);
     }
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "isInternal" + ":" + getIsInternal()+ "," +
+            "autoTransition" + ":" + getAutoTransition()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "action" + "=" + getEvent() != null ? !getEvent() .equals(this)  ? getEvent().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "guard" + "=" + getFromState() != null ? !getFromState() .equals(this)  ? getFromState().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "nextState" + "=" + getNextState() != null ? !getNextState() .equals(this)  ? getNextState().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "fromState" + "=" + getGuard() != null ? !getGuard() .equals(this)  ? getGuard().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "event" + "=" + getAction() != null ? !getAction() .equals(this)  ? getAction().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

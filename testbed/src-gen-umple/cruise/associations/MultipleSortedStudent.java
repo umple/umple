@@ -199,4 +199,16 @@ public class MultipleSortedStudent
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "multipleSortedAcademy" + "=" + getMultipleSortedRegistrationsPriority() != null ? !getMultipleSortedRegistrationsPriority() .equals(this)  ? getMultipleSortedRegistrationsPriority().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "multipleSortedRegistrationsPriority" + "=" + getMultipleSortedAcademy() != null ? !getMultipleSortedAcademy() .equals(this)  ? getMultipleSortedAcademy().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

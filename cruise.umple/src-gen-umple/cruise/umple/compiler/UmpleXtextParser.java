@@ -50,7 +50,16 @@ public class UmpleXtextParser implements UmpleParser
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "temp" + "=" + getTemp() != null ? !getTemp() .equals(this)  ? getTemp().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
