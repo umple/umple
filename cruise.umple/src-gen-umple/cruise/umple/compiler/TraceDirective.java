@@ -717,4 +717,16 @@ public class TraceDirective
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + getAssociationVariable() != null ? !getAssociationVariable() .equals(this)  ? getAssociationVariable().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "traceRecord" + "=" + getTraceRecord() != null ? !getTraceRecord() .equals(this)  ? getTraceRecord().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "associationVariable" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

@@ -252,7 +252,16 @@ public class VmlSystem
       aConcern.setVmlSystem(null);
     }
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "code" + ":" + getCode()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

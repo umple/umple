@@ -134,7 +134,19 @@ public class ErrorType
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "errorCode" + ":" + getErrorCode()+ "," +
+            "severity" + ":" + getSeverity()+ "," +
+            "errorFormat" + ":" + getErrorFormat()+ "," +
+            "errorUrl" + ":" + getErrorUrl()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

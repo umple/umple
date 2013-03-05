@@ -127,4 +127,16 @@ public class MethodParameter extends UmpleVariable
     super.delete();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "isAutounique" + ":" + getIsAutounique()+ "," +
+            "isList" + ":" + getIsList()+ "," +
+            "isDerived" + ":" + getIsDerived()+ "," +
+            "isLazy" + ":" + getIsLazy()+ "]"
+     + outputString;
+  }
 }

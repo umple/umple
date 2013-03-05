@@ -196,4 +196,14 @@ public class VioletAssociation
     violetClasses.clear();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "startLabel" + ":" + getStartLabel()+ "," +
+            "endLabel" + ":" + getEndLabel()+ "]"
+     + outputString;
+  }
 }

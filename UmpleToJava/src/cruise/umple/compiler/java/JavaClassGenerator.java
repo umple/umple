@@ -1946,9 +1946,11 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1926 = NL + "      ";
   protected final String TEXT_1927 = ".";
   protected final String TEXT_1928 = "(null);" + NL + "    }";
-  protected final String TEXT_1929 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_1930 = NL + "  ";
-  protected final String TEXT_1931 = NL + "}";
+  protected final String TEXT_1929 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
+  protected final String TEXT_1930 = NL + "  }";
+  protected final String TEXT_1931 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_1932 = NL + "  ";
+  protected final String TEXT_1933 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -8104,9 +8106,125 @@ if (p != null) {
     }
 
      } 
-     if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
+     
+   boolean matchFound = false;
+   UmpleClass parent = uClass.getExtendsClass(); 
+   if(uClass.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(uClass.getExtraCode()).matches();
+   }
+   if(parent!=null && parent.getExtraCode() != null)
+   {
+     matchFound = java.util.regex.Pattern.compile(".*((public)|(protected)|(private))\\s+(String)\\s+(toString)\\s*\\(\\s*\\).*", java.util.regex.Pattern.DOTALL).matcher(parent.getExtraCode()).matches();
+   }
+   if(!matchFound)
+   for(Method meth: uClass.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if(!matchFound && parent!=null)
+   for(Method meth: parent.getMethods())
+   {
+     if("toString".equals(meth.getName()))
+     {
+       matchFound = true;
+       break;
+     }
+   }
+   if (uClass.getAttributes().size()>0 && !matchFound){ 
     stringBuffer.append(TEXT_1929);
+    
+	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
+	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
+	  if (customToStringPrefixCode != null) 
+	  {
+		  append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customToStringPrefixCode, "    "));
+	  }
+	  if (customToStringPostfixCode != null) 
+	  {
+		  append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customToStringPostfixCode, "    "));
+	  }
+	  String ret = "";
+
+	  LinkedList<String> displayedAttributes = new LinkedList<String>();
+	  LinkedList<String> nameOfAttributes = new LinkedList<String>();
+	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
+	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
+	  List<String> keys = new ArrayList<String>();
+	  for(String k: uClass.getKey().getMembers())
+		  keys.add(k);
+	  for(Attribute av: uClass.getAttributes())
+	  {
+	      
+		  if(!av.getIsList()&&!"internal".equals(av.getModifier())&&!"const".equals(av.getModifier())&&("String".equals(av.getType())||"int".equals(av.getType())||"Integer".equals(av.getType())||"boolean".equals(av.getType().toLowerCase())||"float".equals(av.getType())||"Float".equals(av.getType())||"double".equals(av.getType())||"Double".equals(av.getType())||"byte".equals(av.getType())||"Byte".equals(av.getType())||"char".equals(av.getType())||"Character".equals(av.getType())||"long".equals(av.getType())||"Long".equals(av.getType())||"short".equals(av.getType())||"Short".equals(av.getType())))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfPrimitives.addFirst(av.getName());
+				  displayedPrimitives.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfPrimitives.addLast(av.getName());
+				  displayedPrimitives.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+		  else if(!av.getIsList()&&!"const".equals(av.getModifier())&&!"internal".equals(av.getModifier()))
+		  {
+			  if(av.getIsAutounique() || keys.contains(av.getName())){
+				  nameOfAttributes.addFirst(av.getName());
+				  displayedAttributes.addFirst(gen.translate("getMethod",av)+"()");
+			  }
+			  else {
+				  nameOfAttributes.addLast(av.getName());
+				  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
+			  }
+		  }
+	  }
+	  for(AssociationVariable av: uClass.getAssociationVariables())
+	  {
+	    if(av.isIsNavigable()){
+		  
+			  if("1".equals(av.getMultiplicity().getMinimum())||"0".equals(av.getMultiplicity().getMinimum())||"1".equals(av.getMultiplicity().getBound()))
+				  if("1".equals(av.getMultiplicity().getMaximum())||"1".equals(av.getMultiplicity().getBound()))
+					  if(keys.contains(av.getName())){
+						  nameOfAttributes.addFirst(av.getName());
+						  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
+					  }
+					  else{
+						  nameOfAttributes.addFirst(av.getName());
+						  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
+					  }
+					  }
+		  
+	  }
+	  ret += "super.toString() + \"[\"";
+	  boolean firstStr = true;
+	  for(int m=0;m<displayedPrimitives.size();m++)
+	  {
+		  if(firstStr)
+			  firstStr = false;
+		  else
+			  ret += "+ \",\" ";
+		  ret += "+\n            \"" + nameOfPrimitives.get(m) + "\" + \":\" + " + displayedPrimitives.get(m); 
+	  }
+	  ret += "+ \"]\"";
+	  for(int m=0;m<displayedAttributes.size();m++)
+	  {          
+		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
+		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + " + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + " .equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\"";
+
+	  }
+	  ret += "\n     + outputString";
+	  append(stringBuffer,"\n    return {0};", ret);
+	  
     stringBuffer.append(TEXT_1930);
+     } 
+     if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
+    stringBuffer.append(TEXT_1931);
+    stringBuffer.append(TEXT_1932);
     stringBuffer.append(uClass.getExtraCode());
      } 
     
@@ -8190,7 +8308,7 @@ if (p != null) {
   }
 }
 
-    stringBuffer.append(TEXT_1931);
+    stringBuffer.append(TEXT_1933);
     return stringBuffer.toString();
   }
 }

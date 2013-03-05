@@ -278,4 +278,19 @@ public class Attribute_TraceItem
     placeholderTraceDirective.removeAttributeTraceItem(this);
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "traceSet" + ":" + getTraceSet()+ "," +
+            "traceGet" + ":" + getTraceGet()+ "," +
+            "forClause" + ":" + getForClause()+ "," +
+            "periodClause" + ":" + getPeriodClause()+ "," +
+            "duringClause" + ":" + getDuringClause()+ "," +
+            "executeClause" + ":" + getExecuteClause()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "traceDirective" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

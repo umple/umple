@@ -347,4 +347,15 @@ public class TraceRecord
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "recordOnly" + ":" + getRecordOnly()+ "," +
+            "record" + ":" + getRecord()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "traceDirective" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

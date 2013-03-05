@@ -20,6 +20,10 @@ public class student
 
   public student(int aAge)
   {
+    if ( !(aAge>18))
+    { 
+     throw new RuntimeException("Please provide a valid age"); 
+    }
     age = aAge;
   }
 
@@ -30,7 +34,7 @@ public class student
   public boolean setAge(int aAge)
   {
     boolean wasSet = false;
-    if ((aAge>18))
+    if (aAge>18)
     {
     age = aAge;
     wasSet = true;
@@ -46,4 +50,13 @@ public class student
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "age" + ":" + getAge()+ "]"
+     + outputString;
+  }
 }

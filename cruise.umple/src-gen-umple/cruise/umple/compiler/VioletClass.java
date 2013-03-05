@@ -91,4 +91,16 @@ public class VioletClass
     parentClass = null;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "x" + ":" + getX()+ "," +
+            "y" + ":" + getY()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "parentClass" + "=" + getParentClass() != null ? !getParentClass() .equals(this)  ? getParentClass().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

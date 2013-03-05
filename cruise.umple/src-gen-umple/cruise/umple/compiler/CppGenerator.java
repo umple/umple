@@ -97,7 +97,19 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "," +
+            "callHeader" + ":" + getCallHeader()+ "," +
+            "callLttng" + ":" + getCallLttng()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + getModel() != null ? !getModel() .equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

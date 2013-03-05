@@ -255,4 +255,17 @@ public class StateMachine_TraceItem
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "entry" + ":" + getEntry()+ "," +
+            "exit" + ":" + getExit()+ "," +
+            "traceStateMachineFlag" + ":" + getTraceStateMachineFlag()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "transition" + "=" + getStateMachine() != null ? !getStateMachine() .equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "stateMachine" + "=" + getTransition() != null ? !getTransition() .equals(this)  ? getTransition().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

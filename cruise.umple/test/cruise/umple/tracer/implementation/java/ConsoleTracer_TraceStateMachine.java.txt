@@ -41,9 +41,11 @@ public class GarageDoor
   public boolean buttonOrObstacle()
   {
     boolean wasEventProcessed = false;
-
-    System.err.println("Event: buttonOrObstacle");
-    switch (status)
+    
+    Status aStatus = status;
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=buttonOrObstacle,");
+    switch (aStatus)
     {
       case Open:
         setStatus(Status.Closing);
@@ -65,48 +67,59 @@ public class GarageDoor
         setStatus(Status.Opening);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
+    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
   public boolean reachBottom()
   {
     boolean wasEventProcessed = false;
-
-    System.err.println("Event: reachBottom");
-    switch (status)
+    
+    Status aStatus = status;
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=reachBottom,");
+    switch (aStatus)
     {
       case Closing:
         setStatus(Status.Closed);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
+    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
   public boolean reachTop()
   {
     boolean wasEventProcessed = false;
-
-    System.err.println("Event: reachTop");
-    switch (status)
+    
+    Status aStatus = status;
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=reachTop,");
+    switch (aStatus)
     {
       case Opening:
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
+    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
   private void setStatus(Status aStatus)
   {
-    System.err.println("Previous state =" + status);
     status = aStatus;
-    System.err.println("Current state =" + status);
   }
 
   public void delete()

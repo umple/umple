@@ -50,4 +50,13 @@ public class Student
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "age" + ":" + getAge()+ "]"
+     + outputString;
+  }
 }

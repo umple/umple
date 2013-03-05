@@ -90,4 +90,13 @@ public class Garage
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "entranceClear" + ":" + getEntranceClear()+ "]"
+     + outputString;
+  }
 }

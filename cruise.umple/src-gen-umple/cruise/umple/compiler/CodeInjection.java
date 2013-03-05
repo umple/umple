@@ -133,7 +133,21 @@ public class CodeInjection
   {
     umpleClass = null;
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "type" + ":" + getType()+ "," +
+            "operation" + ":" + getOperation()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + getSnippet() != null ? !getSnippet() .equals(this)  ? getSnippet().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "snippet" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

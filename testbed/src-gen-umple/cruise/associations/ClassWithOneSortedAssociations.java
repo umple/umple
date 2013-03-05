@@ -117,4 +117,13 @@ public class ClassWithOneSortedAssociations
     studentCs.clear();
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "studentCsPriority" + "=" + getStudentCsPriority() != null ? !getStudentCsPriority() .equals(this)  ? getStudentCsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

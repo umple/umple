@@ -45,7 +45,16 @@ public class Input
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "stream" + "=" + getStream() != null ? !getStream() .equals(this)  ? getStream().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

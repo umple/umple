@@ -198,7 +198,18 @@ public class Couple
       placeholderCouple.removeIgnore(this);
     }
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "open" + ":" + getOpen()+ "," +
+            "close" + ":" + getClose()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "couple" + "=" + getCouple() != null ? !getCouple() .equals(this)  ? getCouple().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

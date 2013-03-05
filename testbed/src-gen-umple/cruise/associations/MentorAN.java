@@ -180,4 +180,14 @@ public class MentorAN
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "gradStudent" + "=" + getGradStudent() != null ? !getGradStudent() .equals(this)  ? getGradStudent().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

@@ -110,7 +110,19 @@ public class UmpleVariable
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "type" + ":" + getType()+ "," +
+            "modifier" + ":" + getModifier()+ "," +
+            "value" + ":" + getValue()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

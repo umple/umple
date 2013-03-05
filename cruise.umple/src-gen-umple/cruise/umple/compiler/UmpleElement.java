@@ -288,7 +288,21 @@ public class UmpleElement
   {
     positions.clear();
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "modifier" + ":" + getModifier()+ "," +
+            "packageName" + ":" + getPackageName()+ "," +
+            "extraCode" + ":" + getExtraCode()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "coordinates" + "=" + getCoordinates() != null ? !getCoordinates() .equals(this)  ? getCoordinates().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

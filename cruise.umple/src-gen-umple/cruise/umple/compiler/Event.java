@@ -182,7 +182,21 @@ public class Event
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "args" + ":" + getArgs()+ "," +
+            "isTimer" + ":" + getIsTimer()+ "," +
+            "autoTransition" + ":" + getAutoTransition()+ "," +
+            "timerInSeconds" + ":" + getTimerInSeconds()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

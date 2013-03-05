@@ -125,4 +125,12 @@ public class CourseK
     addLog("deleted");
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

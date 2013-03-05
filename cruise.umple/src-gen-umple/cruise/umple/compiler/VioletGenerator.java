@@ -255,7 +255,17 @@ public class VioletGenerator implements CodeGenerator
   public boolean setOutput(String aString){
           return false;
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "filename" + ":" + getFilename()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + getModel() != null ? !getModel() .equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

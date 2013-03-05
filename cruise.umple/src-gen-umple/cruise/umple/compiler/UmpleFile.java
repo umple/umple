@@ -67,7 +67,17 @@ public class UmpleFile
 
   public void delete()
   {}
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "fileName" + ":" + getFileName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "file" + "=" + getFile() != null ? !getFile() .equals(this)  ? getFile().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

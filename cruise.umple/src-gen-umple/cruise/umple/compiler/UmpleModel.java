@@ -645,7 +645,25 @@ public class UmpleModel
     stateMachineDefinitions.clear();
     umpleInterfaces.clear();
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "defaultPackage" + ":" + getDefaultPackage()+ "," +
+            "shouldGenerate" + ":" + getShouldGenerate()+ "," +
+            "defaultNamespace" + ":" + getDefaultNamespace()+ "," +
+            "code" + ":" + getCode()+ "," +
+            "debugMode" + ":" + getDebugMode()+ "," +
+            "traceType" + ":" + getTraceType()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleFile" + "=" + getUmpleFile() != null ? !getUmpleFile() .equals(this)  ? getUmpleFile().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "glossary" + "=" + getGlossary() != null ? !getGlossary() .equals(this)  ? getGlossary().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "lastResult" + "=" + getLastResult() != null ? !getLastResult() .equals(this)  ? getLastResult().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "generatedCode" + "=" + getGeneratedCode() != null ? !getGeneratedCode() .equals(this)  ? getGeneratedCode().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

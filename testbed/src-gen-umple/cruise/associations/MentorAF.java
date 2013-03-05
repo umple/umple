@@ -69,4 +69,14 @@ public class MentorAF
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "friend" + "=" + getFriend() != null ? !getFriend() .equals(this)  ? getFriend().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

@@ -127,7 +127,18 @@ public class Documenter
   {
     parser = null;
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "inputPath" + ":" + getInputPath()+ "," +
+            "outputPath" + ":" + getOutputPath()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "parser" + "=" + getParser() != null ? !getParser() .equals(this)  ? getParser().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

@@ -86,4 +86,15 @@ public class Application
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "version" + ":" + getVersion()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "id" + "=" + getId() != null ? !getId() .equals(this)  ? getId().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

@@ -194,7 +194,16 @@ public class RuleInstance
     ruleParts.clear();
     parser = null;
   }
-  
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "parser" + "=" + getParser() != null ? !getParser() .equals(this)  ? getParser().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------

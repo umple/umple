@@ -117,4 +117,13 @@ public class CourseT
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "count" + ":" + getCount()+ "]"
+     + outputString;
+  }
 }

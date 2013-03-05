@@ -90,4 +90,14 @@ public class MySubordinate
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "myDriver" + "=" + getMyDriver() != null ? !getMyDriver() .equals(this)  ? getMyDriver().toString().replaceAll("  ","    ") : "this" : "null"
+     + outputString;
+  }
 }

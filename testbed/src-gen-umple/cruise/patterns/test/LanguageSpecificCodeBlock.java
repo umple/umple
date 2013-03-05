@@ -102,4 +102,14 @@ public class LanguageSpecificCodeBlock
     return true;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "languageImplementedIn" + ":" + getLanguageImplementedIn()+ "]"
+     + outputString;
+  }
 }

@@ -56,4 +56,14 @@ public class Student
   public void delete()
   {}
 
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "studentNumber" + ":" + getStudentNumber()+ "]"
+     + outputString;
+  }
 }

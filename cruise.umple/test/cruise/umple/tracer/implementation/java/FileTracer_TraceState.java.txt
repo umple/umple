@@ -48,7 +48,8 @@ public class GarageDoor
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    fileTracer("Event=buttonOrObstacle");
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=buttonOrObstacle,");
     switch (aStatus)
     {
       case Open:
@@ -71,8 +72,11 @@ public class GarageDoor
         setStatus(Status.Opening);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
+    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
@@ -81,15 +85,19 @@ public class GarageDoor
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    fileTracer("Event=reachBottom");
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=reachBottom,");
     switch (aStatus)
     {
       case Closing:
         setStatus(Status.Closed);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
+    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
@@ -98,23 +106,25 @@ public class GarageDoor
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
-    fileTracer("Event=reachTop");
+    System.err.print("state@pre="+status+",");
+    System.err.print("event=reachTop,");
     switch (aStatus)
     {
       case Opening:
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
+      default:
+        // Other states do respond to this event
     }
 
+    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
   private void setStatus(Status aStatus)
   {
-    fileTracer("status"+status);
     status = aStatus;
-    fileTracer("status"+status);
   }
 
   public void delete()
@@ -125,31 +135,6 @@ public class GarageDoor
   //------------------------
 
   static void fileTracer(Object obj)
-  {
-    FileOutputStream fout = null;
-    Date date = new Date();
-    try
-    {
-      // Open an output stream
-      fout = new FileOutputStream ("TraceLog.txt",true);
-    }
-    catch (IOException e)
-    {
-      System.err.println ("Unable to write to file");
-      System.exit(-1);
-    }
-    // Write traced Item information
-    new PrintStream(fout).println(obj);
-    try
-    {
-      // Close output stream
-      fout.close();
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-  }  static void fileTracer(Object obj)
   {
     FileOutputStream fout = null;
     Date date = new Date();
