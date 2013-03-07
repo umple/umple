@@ -7,6 +7,7 @@
 #include <string>
 using namespace std;
 
+// constant on the left side of the constraint
 class student
 {
    //------------------------

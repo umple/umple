@@ -254,6 +254,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     {
       String expectedResult = fileToOutputs.get(filename);
       assertParse(filename, expectedResult);
+      System.out.println("Result: " + expectedResult);
     }
     else
     {

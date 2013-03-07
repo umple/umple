@@ -15,6 +15,7 @@ import java.util.*;
 import org.junit.*;
 
 import cruise.umple.util.*;
+import java.io.*;
 
 public class UmpleParserTest
 {
@@ -1793,6 +1794,8 @@ public class UmpleParserTest
   {
     assertFailedParse("024_multipleUnnamedAssociationsToSameClass.ump", new Position("024_multipleUnnamedAssociationsToSameClass.ump",7,0,97), 19);
     assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",9,0,104), 19);
+    assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19); 
+    assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);  
     
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
   }
@@ -2024,7 +2027,7 @@ public class UmpleParserTest
     assertFailedParse(filename, expectedPosition);
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
-
+  
   // Assertion for case where we expect parse to fail care about the error number but not the position
   public void assertFailedParse(String filename, int expectedError)
   {

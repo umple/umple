@@ -1,0 +1,7 @@
+class B{
+}
+
+class A{
+  1 first -- * B b;
+  1 second -- * B;
+}

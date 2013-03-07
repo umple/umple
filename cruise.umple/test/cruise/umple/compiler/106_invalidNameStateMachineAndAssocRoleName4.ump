@@ -10,5 +10,5 @@ class X {
 class A {}
 
 association{
-  1 X -> 1 A a;
+  1 X -> 1 A;
 }
