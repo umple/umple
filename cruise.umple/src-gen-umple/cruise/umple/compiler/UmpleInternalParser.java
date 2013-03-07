@@ -1589,26 +1589,70 @@ this("UmpleInternalParser", aModel);
       	      existingAttributeNames.add(attr.getName());
       }
       
+      Boolean roleMatchesClassName, hasMultipleAssocToSameClass;
+      List<String> classesWithAssociationsToCurrClass = new ArrayList<String>();
+      List<String> roleNameSameAsClassName = new ArrayList<String>();
       List<String> existingNames = new ArrayList<String>();
       List<Association> visitedAssociations = new ArrayList<Association>();
       for(Association assoc : C.getAssociations())
-      {
+      {  
+   		roleMatchesClassName = false;
+   		hasMultipleAssocToSameClass = false;
+   		
         if (visitedAssociations.contains(assoc))
         {
           continue;
         }
         
       	AssociationEnd firstEnd = assoc.getEnd(0);
-      	AssociationEnd secondEnd = assoc.getEnd(1);
+      	AssociationEnd secondEnd = assoc.getEnd(1);	
       	
       	Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
       	Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
       	Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
       	
+      	//issue 288: firstEnd of association does not indicate current (this) class being analyzed.
+      	//If association is NOT reflexive, must check the differing class.  Check if role name
+      	//matches class name, but only if it is a user entered role name.  Current class must
+      	//also have multiple associations to the same class to cause java compile errors.  
+      	if(!associationIsReflexive && C.numberOfAssociations() > 1)
+      	{ 
+      	  //check the differing class
+      	  if(checkFirstEnd)
+      	  {
+      	    if(roleNameSameAsClassName.contains(firstEnd.getClassName().toLowerCase()))
+      	    {
+      	      hasMultipleAssocToSameClass = true; 	//flag error 19
+      	    }
+      	    //is a user-defined role name and rolename matches class name
+      	    else if(firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName())
+      	    {    
+      	      roleNameSameAsClassName.add(firstEnd.getRoleName().toLowerCase());
+      	    }
+      	    
+      	    classesWithAssociationsToCurrClass.add(firstEnd.getClassName());
+      	  }
+      	  //check the differing class
+      	  if(checkSecondEnd)
+      	  {
+      	    if(roleNameSameAsClassName.contains(secondEnd.getClassName().toLowerCase()))
+      	    {
+      	      hasMultipleAssocToSameClass = true;	//flag error 19
+      	    }
+      	    //is a user-defined role name and rolename matches class name
+      	    else if(secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName())
+      	    {    
+      	      roleNameSameAsClassName.add(secondEnd.getRoleName().toLowerCase());
+      	    }
+      	    
+      	    classesWithAssociationsToCurrClass.add(secondEnd.getClassName());    	    
+      	  }
+      	}
+
       	// check names on other-class end of associations to other classes
         if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
-        {
-          if (existingNames.contains(firstEnd.getRoleName()))
+        { 
+          if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
           }
@@ -1623,7 +1667,7 @@ this("UmpleInternalParser", aModel);
         }
         if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
         {
-          if (existingNames.contains(secondEnd.getRoleName()))
+          if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
           }
