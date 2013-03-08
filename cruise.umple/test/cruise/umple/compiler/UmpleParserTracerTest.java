@@ -124,7 +124,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributeWithCondition()
   {
-	  assertParse("311_traceSingleAttributeWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhere][LHS:id][comparison_operator:==][RHS:30][trace][trace_entity:id][traceWhere][LHS:id][comparison_operator:>][RHS:500]");
+	  assertParse("311_traceSingleAttributeWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:30][trace][trace_entity:id][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:500]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -153,7 +153,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributeUntilCondition()
   {
-	  assertParse("313_traceSingleAttributeUntilCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceUntil][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceUntil][LHS:id][comparison_operator:==][RHS:6]");
+	  assertParse("313_traceSingleAttributeUntilCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:6]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -182,7 +182,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributeAfterCondition()
   {
-	  assertParse("314_traceSingleAttributeAfterCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceAfter][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceAfter][LHS:id][comparison_operator:==][RHS:6]");
+	  assertParse("314_traceSingleAttributeAfterCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -217,7 +217,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributePreCondition2()
   {
-	  assertParse("312_traceSingleAttributePreCondition2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhere][LHS:a][comparison_operator:<][RHS:b]");
+	  assertParse("312_traceSingleAttributePreCondition2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:where][LHS:a][comparison_operator:<][RHS:b]");
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
@@ -235,7 +235,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributePreCondition3()
   {
-	  assertParse("312_traceSingleAttributePreCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhere][LHS:a][comparison_operator:<][RHS:b]");
+	  assertParse("312_traceSingleAttributePreCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:where][LHS:a][comparison_operator:<][RHS:b]");
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
@@ -255,7 +255,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributePostCondition1()
   {
-//	  assertParse("311_traceSingleAttributePostCondition1.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceAfter][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceAfter][LHS:id][comparison_operator:==][RHS:6]");
+//	  assertParse("311_traceSingleAttributePostCondition1.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
   }
   
   @Test
@@ -279,7 +279,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributePostCondition3()
   {
-	  assertParse("311_traceSingleAttributePostCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceGiving][LHS:a][comparison_operator:<][RHS:b]");
+	  assertParse("311_traceSingleAttributePostCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:giving][LHS:a][comparison_operator:<][RHS:b]");
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
@@ -378,7 +378,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleAttributeExecuteClause()
   {
-	  assertParse("318_traceSingleAttributeExecuteClause.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_execute:\"somthing\"][trace][trace_entity:id][trace_execute:record(\"objectBeingTraced\")][trace][trace_entity:name][trace_execute:record(\"x\",name)][trace_for:100][trace][trace_entity:id][trace_execute:record (\"objectBeingTraced\"), record(\"x\",name)][traceWhere][LHS:id][comparison_operator:>][RHS:500]");
+	  assertParse("318_traceSingleAttributeExecuteClause.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_execute:\"somthing\"][trace][trace_entity:id][trace_execute:record(\"objectBeingTraced\")][trace][trace_entity:name][trace_execute:record(\"x\",name)][trace_for:100][trace][trace_entity:id][trace_execute:record (\"objectBeingTraced\"), record(\"x\",name)][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:500]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -538,7 +538,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleAttributeWithCondition()
   {
-	  assertParse("320_traceMultipleAttributeWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhere][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][trace_entity:name][traceWhere][LHS:id][comparison_operator:==][RHS:234]");
+	  assertParse("320_traceMultipleAttributeWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][trace_entity:name][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -569,7 +569,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleAttributeUntilCondition()
   {
-	  assertParse("321_traceMultipleAttributeUntilCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceUntil][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:name][trace_entity:id][traceUntil][LHS:id][comparison_operator:==][RHS:234]");
+	  assertParse("321_traceMultipleAttributeUntilCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:234]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -600,7 +600,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleAttributeAfterCondition()
   {
-	  assertParse("322_traceMultipleAttributeAfterCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceAfter][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:name][trace_entity:id][traceAfter][LHS:id][comparison_operator:==][RHS:234]");
+	  assertParse("322_traceMultipleAttributeAfterCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:234]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -718,7 +718,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleAttributeExecuteClause()
   {
-	  assertParse("326_traceMultipleAttributeExecuteClause.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:name][trace_entity:id][trace_execute:record(\"x\")][traceWhere][LHS:id][comparison_operator:>][RHS:100]");
+	  assertParse("326_traceMultipleAttributeExecuteClause.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:name][trace_entity:id][trace_execute:record(\"x\")][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:100]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -960,7 +960,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleMethodWithCondition()
   {
-	  assertParse("353_traceSingleMethodWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhere][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhere][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
+	  assertParse("353_traceSingleMethodWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -989,7 +989,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleMethodEntryWithCondition()
   {
-	  assertParse("353_traceSingleMethodEntryWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhere][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhere][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
+	  assertParse("353_traceSingleMethodEntryWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1018,7 +1018,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleMethodExitWithCondition()
   {
-	  assertParse("353_traceSingleMethodExitWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhere][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhere][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
+	  assertParse("353_traceSingleMethodExitWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1047,7 +1047,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleMethodUntilCondition()
   {
-	  assertParse("354_traceSingleMethodUntilCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceUntil][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method2()][traceUntil][LHS:id][comparison_operator:==][RHS:6]");
+	  assertParse("354_traceSingleMethodUntilCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method2()][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:6]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1076,7 +1076,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceSingleMethodAfterCondition()
   {
-	  assertParse("355_traceSingleMethodAfterCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceAfter][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method2()][traceAfter][LHS:id][comparison_operator:==][RHS:6]");
+	  assertParse("355_traceSingleMethodAfterCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method2()][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1234,7 +1234,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleMethodWithCondition()
   {
-	  assertParse("361_traceMultipleMethodWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][traceWhere][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method4()][trace_entity:method3()][traceWhere][LHS:id][comparison_operator:==][RHS:234]");
+	  assertParse("361_traceMultipleMethodWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method4()][trace_entity:method3()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1269,7 +1269,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleMethodUntilCondition()
   {
-	  assertParse("362_traceMultipleMethodUntilCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][traceUntil][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method4()][trace_entity:method3()][traceUntil][LHS:id][comparison_operator:==][RHS:234]");
+	  assertParse("362_traceMultipleMethodUntilCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method4()][trace_entity:method3()][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:234]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1304,7 +1304,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleMethodAfterCondition()
   {
-	  assertParse("363_traceMultipleMethodAfterCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:m1()][trace_entity:m2()][traceAfter][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:m()][trace_entity:n()][traceAfter][LHS:id][comparison_operator:==][RHS:444]");
+	  assertParse("363_traceMultipleMethodAfterCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:m1()][trace_entity:m2()][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:m()][trace_entity:n()][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:444]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1438,7 +1438,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceMultipleMethodExecuteClause()
   {
-	  assertParse("367_traceMultipleMethodExecuteClause.ump","[classDefinition][name:LightFixture][trace][trace_entity:method()][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:m1()][trace_entity:m2()][trace_execute:record(\"x\")][traceWhere][LHS:id][comparison_operator:>][RHS:100]");
+	  assertParse("367_traceMultipleMethodExecuteClause.ump","[classDefinition][name:LightFixture][trace][trace_entity:method()][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:m1()][trace_entity:m2()][trace_execute:record(\"x\")][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:100]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -1508,7 +1508,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceCaseMultipleTD()
   {
-	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhere][LHS:name][comparison_operator:==][RHS:\"tim\"]");
+	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"]");
 	  UmpleClass clazz = model.getUmpleClass("LightFixture");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());

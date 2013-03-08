@@ -3212,20 +3212,17 @@ this("UmpleInternalParser", aModel);
       
       for( Token traceToken : token.getSubTokens() )
       {
-
     	  if( traceToken.is("trace_entity") || traceToken.getName().equals("entry") || traceToken.getName().equals("exit"))
     	  {
     		  analyzeTraceItem( traceToken , traceDirective , mte, traceAttr);
     	  }
-    	  else if( traceToken.is("traceWhere") )
+    	  
+    	  else if( traceToken.is("traceWhen") ) //for where/giving/after/until
     	  {
-    		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
-    		  traceDirective.addCondition(tc);
-    	  }
-    	  else if( traceToken.is("traceGiving") )
-    	  {
-    		  TraceCondition tc = analyzeTraceCondition( traceToken, "giving");
-    		  traceDirective.addCondition(tc);
+    	  	//gets the string containing the condition's type
+    	    String conditionType = traceToken.getValue("conditionType");
+            TraceCondition tc = analyzeTraceCondition( traceToken, conditionType );
+    	    traceDirective.addCondition(tc);
     	  }
     	  else if ( traceToken.getName().equals("giving") )
     	  {
@@ -3233,17 +3230,7 @@ this("UmpleInternalParser", aModel);
     		  traceDirective.addCondition(tc);
     		  Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("LHS"));
     		  traceAttr.addAttribute(attr);
-    	  }
-    	  else if( traceToken.is("traceUntil") )
-    	  {
-    		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
-    		  traceDirective.addCondition(tc);
-    	  }
-    	  else if( traceToken.is("traceAfter") )
-    	  {
-    		  TraceCondition tc = analyzeTraceCondition( traceToken, "after");
-    		  traceDirective.addCondition(tc);
-    	  }  	  
+    	  } 	  
     	  else if( traceToken.is("trace_for") )
     	  {
     		  traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for")));
@@ -3458,7 +3445,7 @@ this("UmpleInternalParser", aModel);
   
   // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
   // Returns a trace condition filled with left and right hands operands, with comparison operator used
-  private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType )
+  private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType)
   {
 	  ConditionRhs rhs = new ConditionRhs();
 	  TraceCondition tc = new TraceCondition(rhs);
@@ -3523,21 +3510,13 @@ this("UmpleInternalParser", aModel);
       { 	
     	  mte.setExit(true);  	  
       }   	
-      else if( traceToken.is("traceWhere") )
-	  {
-		  TraceCondition tc = analyzeTraceCondition( traceToken, "where");
-		  traceDirective.addCondition(tc);
-	  }
-	  else if( traceToken.is("traceUntil") )
-	  {
-		  TraceCondition tc = analyzeTraceCondition( traceToken, "until");
-		  traceDirective.addCondition(tc);
-	  }
-	  else if( traceToken.is("traceAfter") )
-	  {
-		  TraceCondition tc = analyzeTraceCondition( traceToken, "after");
-		  traceDirective.addCondition(tc);
-	  }	    	
+      else if( traceToken.is("traceWhen") ) //for where/giving/after/until
+      {
+      	//gets the string containing the condition's type
+    	String conditionType = traceToken.getValue("conditionType");
+        TraceCondition tc = analyzeTraceCondition( traceToken, conditionType );
+    	traceDirective.addCondition(tc);
+      }    	
       else if( traceToken.is("trace_for") )  	
       {	
     	  traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for"))); 	  
