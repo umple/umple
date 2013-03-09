@@ -150,7 +150,9 @@ else if (isset($_REQUEST["umpleCode"]))
     $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";
   }
   else {
-    $command = "java -jar umplesync.jar -generate " . $language . " {$filename} 1> {$outputFilename} 2> {$errorFilename}";
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/modelsd.gv");
+      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} 1> {$outputFilename} 2> {$errorFilename}";
   }
   exec($command);
   
@@ -222,7 +224,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
-      $command = "/usr/local/bin/dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
+      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
       $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;{$errhtml}
@@ -235,7 +237,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "/usr/local/bin/dot -Tsvg " . $thedir . "/modelcd.gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/modelcd.gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
       $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<br/>{$errhtml}
