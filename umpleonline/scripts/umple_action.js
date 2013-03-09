@@ -120,6 +120,18 @@ Action.clicked = function(event)
   {
     Action.showHideCanvas();
   }
+  else if (action == "ShowEditableClassDiagram")
+  {
+    Action.changeDiagramType(1);
+  }
+  else if (action == "ShowGvClassDiagram")
+  {
+    Action.changeDiagramType(2);
+  }
+  else if (action == "ShowGvStateDiagram")
+  {
+    Action.changeDiagramType(3);
+  }
   else if (action == "ShowHideLayoutEditor")
   {
     Action.showHideLayoutEditor();
@@ -319,6 +331,39 @@ Action.showHideTextEditor = function(doShow)
     else {
       jQuery("#linetext").hide();
     }
+  }
+}
+
+Action.changeDiagramType = function(newDiagramType)
+{
+  var changedType = false;
+  if(newDiagramType == 1) { // Editable
+    if(Page.useEditableClassDiagram) return;
+    Page.useEditableClassDiagram = true;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    changedType = true;
+  }
+  else   if(newDiagramType == 2) { // GV class
+    if(Page.useGvClassDiagram) return;
+    Page.useEditableClassDiagram = false;
+    Page.useGvClassDiagram = true;
+    Page.useGvStateDiagram = false;
+    changedType = true;
+  }
+  else   if(newDiagramType == 3) { // GV state
+    if(Page.useGvStateDiagram) return;
+    Page.useEditableClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = true;
+    changedType = true;
+  }
+  if (changedType) {
+    Page.setFeedbackMessage("DEBUG New Diagram type "+newDiagramType);
+    UmpleSystem.merge(null);    // Clear the diagram
+    var canvas = jQuery("#umpleCanvas");
+    canvas.html("");
+    Action.showHideCanvas(true);
   }
 }
 
@@ -1571,16 +1616,39 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   }
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
-  Action.ajax(Action.updateUmpleDiagramCallback,"language=Json");
+  if(Page.useEditableClassDiagram) {language="language=Json"}
+  else if(Page.useGvClassDiagram) {language="language=classDiagram"}
+  else {language="language=stateDiagram"}
+  Action.ajax(Action.updateUmpleDiagramCallback,language);
 }
 
 Action.updateUmpleDiagramCallback = function(response)
 {
-  var codeparts = response.responseText.split('URL_SPLIT');
-  var errorMessage=codeparts[0];
-  var umpleJson=codeparts[1];
+  var toDisplay = response.responseText;
+  var umpleJson = "";
+  var errorMessage = "";
+  var isError = false;
   
-  if(umpleJson == "null" || umpleJson == "") {
+  if(Page.useEditableClassDiagram) {
+    var codeparts = toDisplay.split('URL_SPLIT');
+    errorMessage=codeparts[0];
+    umpleJson=codeparts[1];
+  }
+  else {  // GraphViz diagram to display
+    var codeparts = toDisplay.split('<svg xmlns=');
+    var miscStuffAndErrorMessages = codeparts[0];
+    var prelimparts = miscStuffAndErrorMessages.split('errorRow');
+    if(prelimparts.length > 1) {
+      errorMessage= "<div id='errorRow"+(prelimparts[1].split('<script'))[0];
+      isError = true;
+    }
+    
+    if(codeparts.length>1 && codeparts[1].length>100) {
+      umpleJson="<svg xmlns="+codeparts[1];
+    }
+  }
+  
+  if(umpleJson == "null" || umpleJson == "" || isError) {
     Page.enableDiagram(false);
     Action.diagramInSync = false;
     Page.setFeedbackMessage("The Umple model/code cannot be compiled; <a href=\"\#errorClick\">see explanation at the bottom.</a> To fix: edit the text or click undo");
@@ -1598,14 +1666,23 @@ Action.updateUmpleDiagramCallback = function(response)
       // Erase generated code if it was generated a long time ago
       Page.hideGeneratedCode();
     }
-    var newSystem = Json.toObject(umpleJson);
-    UmpleSystem.merge(newSystem);
+    if(Page.useEditableClassDiagram) {
+      var newSystem = Json.toObject(umpleJson);
+      UmpleSystem.merge(newSystem);
+    }
+
     if (Page.readOnly) {
   	  jQuery("span.editable").addClass("uneditable");
   	  // jQuery("div.umpleClass").addClass("unselectable");
     }
   }
   
+  if(!Page.useEditableClassDiagram) {
+    // GV diagram - always output
+    // JSON must actually be svg code
+    var canvas = jQuery("#umpleCanvas");
+    canvas.html(format('{0}',umpleJson));
+  }
   Page.hideLoading();
 }
 

@@ -25,6 +25,10 @@ Page.showDiagram = true; // initially show the diagram
 Page.showText = true; // initially show the text
 Page.showMenu = true; // initially show the menu
 Page.readOnly = false; // initially allow editing
+Page.useEditableClassDiagram = true;
+Page.useGvClassDiagram = false;
+Page.useGvStateDiagram = false;
+
 
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly)
 { 
@@ -90,6 +94,9 @@ Page.initPaletteArea = function()
   Page.initAction("buttonSimulateCode");
   Page.initAction("buttonShowHideTextEditor");
   Page.initAction("buttonShowHideCanvas");
+  Page.initAction("buttonShowEditableClassDiagram");
+  Page.initAction("buttonShowGvClassDiagram");
+  Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
@@ -142,6 +149,7 @@ Page.initOptions = function()
   jQuery("#buttonShowHideLayoutEditor").attr('checked', false);
   jQuery("#buttonShowHideTextEditor").attr('checked', Page.showText);
   jQuery("#buttonShowHideCanvas").attr('checked', Page.showDiagram);
+  jQuery("#buttonShowEditableClassDiagram").attr('checked', true); // TODO - make variable
   jQuery("#buttonPhotoReady").attr('checked', false);
   jQuery("#buttonManualSync").attr('checked', false);
   
@@ -660,7 +668,7 @@ Page.showGeneratedCode = function(code,language)
       SyntaxHighlighter.highlight("code");
     }
   }
-  else {
+  else { 
       jQuery("#generatedCodeRow").html(format('{0}',code));
   }
 }
