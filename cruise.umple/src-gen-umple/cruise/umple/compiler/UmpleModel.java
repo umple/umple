@@ -17,11 +17,15 @@ import java.util.*;
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  * 
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
+ * 
+ * @umplesource Umple_Code.ump 15
+ * In Umple_Code.ump: Methods for manipulating the Model
+ * 
  */
 // line 26 "../../../../src/Umple.ump"
 // line 17 "../../../../src/Trace.ump"
 // line 13 "../../../../src/UmpleVersion.ump"
-// line 15 "../../../../src/Umple_Code.ump"
+// line 20 "../../../../src/Umple_Code.ump"
 public class UmpleModel
 {
 
@@ -670,7 +674,7 @@ public class UmpleModel
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 17 ../../../../src/Umple_Code.ump
+  // line 22 ../../../../src/Umple_Code.ump
   public List<UmpleElement> getUmpleElements()
   {
     List<UmpleElement> all = new ArrayList<UmpleElement>();
@@ -802,6 +806,10 @@ public class UmpleModel
     return null;
   }
 
+/*
+ * @umplesource
+ * Creates a new parser, loads the input, parses, then analyses 
+ */
   public void run()
   {
     boolean failed = false;
@@ -825,8 +833,10 @@ public class UmpleModel
     if(failed || result.getHasWarnings())
       throw new UmpleCompilerException(result.toString(),null);
   }  
-
-  // Generates the actual code
+/*
+ * @umplesource
+ * Generates the actual code for each generation target
+ */
   public void generate()
   {
     try
@@ -835,7 +845,7 @@ public class UmpleModel
       {
         // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
-		
+    
         Class<?> classDefinition = Class.forName(className);
         CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
 
@@ -843,18 +853,18 @@ public class UmpleModel
         generator.setModel(this);
 
         generator.setOutput(target.getPath());
-		CodeBlock.languageUsed = target.getLanguage();
+    CodeBlock.languageUsed = target.getLanguage();
         generator.generate();
-		
-		}}
-		catch (Exception ex)
-		{
-		  System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
-		  cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
-		  System.exit(-1);    
-		}
-	 }
-	 
+    
+    }}
+    catch (Exception ex)
+    {
+      System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");
+      cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
+      System.exit(-1);    
+    }
+   }
+   
 
   public Coordinate getDefaultClassPosition(int numDefaults)
   {

@@ -7,9 +7,10 @@ import cruise.umple.compiler.Position;
 /**
  * @umplesource Umple.ump 283
  * A block of code that can be injected into one or more methods, constructor, etc.
+ * @umplesource Umple_Code.ump 539
  */
 // line 286 "../../../../src/Umple.ump"
-// line 511 "../../../../src/Umple_Code.ump"
+// line 541 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
 
@@ -158,23 +159,23 @@ public class CodeInjection
   
    public CodeInjection(String a,String b,String c,UmpleClass d)  {
 this(a,b, d);
-		setCode(c);
+    setCode(c);
   }
-// line 518 ../../../../src/Umple_Code.ump
+// line 548 ../../../../src/Umple_Code.ump
   public void setCode(String str)
-	{
-		snippet.setCode(str);
-	}
-	public String getCode()
-	{
-		return snippet.getCode();
-	}	
-	public void setCode(String lang, String code)
-	{
-		snippet.setCode(lang, code);
-	}
-	public String getCode(String lang)
-	{
-		return snippet.getCode(lang);
-	}
+  {
+    snippet.setCode(str);
+  }
+  public String getCode()
+  {
+    return snippet.getCode();
+  }  
+  public void setCode(String lang, String code)
+  {
+    snippet.setCode(lang, code);
+  }
+  public String getCode(String lang)
+  {
+    return snippet.getCode(lang);
+  }
 }

@@ -12,10 +12,12 @@ import java.util.*;
  * code to inject into generated code, and comments. It can be tagged with various
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
+ * @umplesource Umple_Code.ump 634
+ * In Umple_Code.ump: Methods for computing complex properties
  */
 // line 350 "../../../../src/Umple.ump"
 // line 90 "../../../../src/Trace.ump"
-// line 594 "../../../../src/Umple_Code.ump"
+// line 637 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
 {
 
@@ -1259,7 +1261,7 @@ public class UmpleClass extends UmpleClassifier
    public UmpleClass(String name)  {
 this(name, null);
   }
-// line 602 ../../../../src/Umple_Code.ump
+// line 645 ../../../../src/Umple_Code.ump
   public List<StateMachine> getAllStateMachines()
   {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();
@@ -1436,13 +1438,13 @@ this(name, null);
     int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
       // Compare method names
-      if (aMethod.getName().equals(methodName)){	
+      if (aMethod.getName().equals(methodName)){  
         // Now compare parameters
         if (numberOfParams == aMethod.getMethodParameters().size()){
           for (MethodParameter param: aMethod.getMethodParameters()){
             for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
               if (param.getType().equals(paramToCompare.getType())){
-                isMethod=true;			  
+                isMethod=true;        
               }
               else{
                 return false;

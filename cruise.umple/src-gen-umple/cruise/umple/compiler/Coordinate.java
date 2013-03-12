@@ -9,7 +9,7 @@ package cruise.umple.compiler;
  * It represents the shape of a class box in a diagram
  */
 // line 639 "../../../../src/Umple.ump"
-// line 1681 "../../../../src/Umple_Code.ump"
+// line 1743 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
 
@@ -198,7 +198,7 @@ public class Coordinate
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1684 ../../../../src/Umple_Code.ump
+  // line 1746 ../../../../src/Umple_Code.ump
   public Point getTopLeft()
   {
     return new Point(x,y);

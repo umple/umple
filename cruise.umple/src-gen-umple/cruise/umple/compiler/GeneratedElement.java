@@ -10,7 +10,7 @@ import java.util.*;
  * Should be abolished
  */
 // line 590 "../../../../src/Umple.ump"
-// line 1588 "../../../../src/Umple_Code.ump"
+// line 1650 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {
 
@@ -36,7 +36,7 @@ public class GeneratedElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1591 ../../../../src/Umple_Code.ump
+  // line 1653 ../../../../src/Umple_Code.ump
   private Map<String, String> lookups = new HashMap<String, String>();
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 

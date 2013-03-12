@@ -11,9 +11,10 @@ import java.util.*;
  * where instances of one class reference the other, and (if bidirectional) instance
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
+ * @umplesource Umple_Code.ump 1092
  */
 // line 499 "../../../../src/Umple.ump"
-// line 1044 "../../../../src/Umple_Code.ump"
+// line 1094 "../../../../src/Umple_Code.ump"
 public class Association
 {
 
@@ -291,7 +292,7 @@ public class Association
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1047 ../../../../src/Umple_Code.ump
+  // line 1097 ../../../../src/Umple_Code.ump
   public void setLeftAndRight()
   {
     String name = this.getName();

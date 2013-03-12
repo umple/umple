@@ -9,9 +9,10 @@ import java.util.*;
  * @umplesource Umple.ump 106
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
+ * @umplesource Umple_Code.ump 420
  */
 // line 110 "../../../../src/Umple.ump"
-// line 402 "../../../../src/Umple_Code.ump"
+// line 422 "../../../../src/Umple_Code.ump"
 public class Method
 {
 
@@ -335,16 +336,16 @@ public class Method
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 404 ../../../../src/Umple_Code.ump
+  // line 424 ../../../../src/Umple_Code.ump
   public boolean getExistsInLanguage(String lang) 
   {
-  	if(getMethodBody().getExtraCode(lang)==null)
-  	  return isImplemented;
-  	else 
-  	  return true;
+    if(getMethodBody().getExtraCode(lang)==null)
+      return isImplemented;
+    else 
+      return true;
   }
   public String toString()
-  {  	
+  {    
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());
     methodBuffer.append("(");
