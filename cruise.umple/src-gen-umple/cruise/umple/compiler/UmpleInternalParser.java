@@ -12,7 +12,6 @@ import java.util.*;
  * 
  * This file is made available subject to the open source license found at:
  * http://umple.org/license
- * 
  * This is our internal parser implementation for the Umple language.  It uses
  * a generic Parser that can read an external EBNF grammar file, and then populate
  * an abstract syntax tree.
@@ -24,8 +23,9 @@ import java.util.*;
  * c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
  * 
  * Please refer to UmpleInternalParser_Code.ump for implementation details.
+ * @umplesource UmpleInternalParser.ump 11
  */
-// line 22 "../../../../src/UmpleInternalParser.ump"
+// line 24 "../../../../src/UmpleInternalParser.ump"
 // line 33 "../../../../src/UmpleInternalParser_Code.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeCore.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeClass.ump"
@@ -125,7 +125,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
-    // line 45 "../../../../src/UmpleInternalParser.ump"
+    // line 47 "../../../../src/UmpleInternalParser.ump"
     if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}
     return wasSet;
   }
@@ -904,10 +904,20 @@ this("UmpleInternalParser", aModel);
    */
   private void analyzeComment(Token token)
   {
+    String theValue = "";
     if (!token.getValue().equals("$?[End_of_model]$?")) 
     {
-      lastComments.add(new Comment(token.getValue()));
+      theValue = injectUmpleSourceIfNeeded(token.getValue(),token);
+      lastComments.add(new Comment(theValue));
     }
+  }
+  
+  private static String injectUmpleSourceIfNeeded(String theComment, Token theToken) {
+    if(theComment.contains("@umplesource")) {
+      Position p = theToken.getPosition();
+      return theComment+" "+p.getRelativePath(null,"Java")+" "+p.getLineNumber();
+     }
+     return theComment;
   }
 
   /**
@@ -923,10 +933,12 @@ this("UmpleInternalParser", aModel);
   {
     String inlineComments[] = token.getValue().split("\n");
 
-    // Go through the inline comments and add them to the list of comments waiting to be applied.
+    // Go through the inline comments and add them to the list of comments waiting to be applied
+    String theComment = "";
     for (int i = 0; i < inlineComments.length; i++) 
     {
-      Comment comment = new Comment(inlineComments[i]);
+      theComment = injectUmpleSourceIfNeeded(inlineComments[i], token);   
+      Comment comment = new Comment(theComment);
       comment.isInline = false;
       lastComments.add(comment);
     }

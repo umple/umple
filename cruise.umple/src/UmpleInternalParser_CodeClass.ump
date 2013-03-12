@@ -232,10 +232,20 @@ class UmpleInternalParser
    */
   private void analyzeComment(Token token)
   {
+    String theValue = "";
     if (!token.getValue().equals("$?[End_of_model]$?")) 
     {
-      lastComments.add(new Comment(token.getValue()));
+      theValue = injectUmpleSourceIfNeeded(token.getValue(),token);
+      lastComments.add(new Comment(theValue));
     }
+  }
+  
+  private static String injectUmpleSourceIfNeeded(String theComment, Token theToken) {
+    if(theComment.contains("@umplesource")) {
+      Position p = theToken.getPosition();
+      return theComment+" "+p.getRelativePath(null,"Java")+" "+p.getLineNumber();
+     }
+     return theComment;
   }
 
   /**
@@ -251,10 +261,12 @@ class UmpleInternalParser
   {
     String inlineComments[] = token.getValue().split("\n");
 
-    // Go through the inline comments and add them to the list of comments waiting to be applied.
+    // Go through the inline comments and add them to the list of comments waiting to be applied
+    String theComment = "";
     for (int i = 0; i < inlineComments.length; i++) 
     {
-      Comment comment = new Comment(inlineComments[i]);
+      theComment = injectUmpleSourceIfNeeded(inlineComments[i], token);   
+      Comment comment = new Comment(theComment);
       comment.isInline = false;
       lastComments.add(comment);
     }

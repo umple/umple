@@ -1949,7 +1949,6 @@ Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
 http://umple.org/license
-
 This is our internal parser implementation for the Umple language. &#160;It uses
 a generic Parser that can read an external EBNF grammar file, and then populate
 an abstract syntax tree.
@@ -1961,6 +1960,7 @@ b) Analyzing the AST to populate an Umple meta model instance
 c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
 
 Please refer to UmpleInternalParser_Code.ump for implementation details.
+@umplesource /Users/tcl/Documents/7&#45;&#45;Research/2&#45;CRuiSE/codebase/googleumple/umple/cruise.umple/src/UmpleInternalParser.ump 11
 ">
 <polygon fill="none" stroke="black" points="1073.65,-1072.4 1073.65,-1407.6 1492.35,-1407.6 1492.35,-1072.4 1073.65,-1072.4"/>
 <text text-anchor="middle" x="1283" y="-1389.6" font-family="Times,serif" font-size="14.00">UmpleInternalParser</text>
@@ -2021,6 +2021,8 @@ Please refer to UmpleInternalParser_Code.ump for implementation details.
 <!-- Pair -->
 <g id="node97" class="node"><title>Pair</title>
 <g id="a_node97"><a xlink:href="javascript:Action.selectClass(&quot;Pair&quot;);" xlink:title="class Pair
+Simple name&#45;value pair used in the Umple Parser
+@umplesource /Users/tcl/Documents/7&#45;&#45;Research/2&#45;CRuiSE/codebase/googleumple/umple/cruise.umple/src/UmpleInternalParser.ump 52
 ">
 <polygon fill="none" stroke="black" points="8472.28,-50.8 8472.28,-117.2 8563.72,-117.2 8563.72,-50.8 8472.28,-50.8"/>
 <text text-anchor="middle" x="8518" y="-99.2" font-family="Times,serif" font-size="14.00">Pair</text>

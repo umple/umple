@@ -15,6 +15,6 @@ On the server Mastercd.sv needs to be placed in the umple.org directory
 mvalong with the user manual files
 
 */
-generate GvClassDiagram;
+generate GvClassDiagram "DiagramMaster.gv" --override-all;
 
 use Master.ump;
