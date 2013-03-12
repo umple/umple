@@ -3,7 +3,10 @@
 
 
 
-// line 1 "BasicConstraint1.ump"
+/**
+ * constant on the left side of the constraint
+ */
+// line 2 "BasicConstraint4.ump"
 public class student
 {
 
@@ -20,9 +23,9 @@ public class student
 
   public student(int aAge)
   {
-    if ( !(aAge>18))
-    { 
-     throw new RuntimeException("Please provide a valid age"); 
+    if ( !(18>aAge))
+    {
+      throw new RuntimeException("Please provide a valid age");
     }
     age = aAge;
   }
@@ -34,7 +37,7 @@ public class student
   public boolean setAge(int aAge)
   {
     boolean wasSet = false;
-    if (aAge>18)
+    if (18>aAge)
     {
     age = aAge;
     wasSet = true;

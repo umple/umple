@@ -13,8 +13,8 @@
  student::student(const int & aAge)
   {
     if ( !(18>aAge))
-    { 
-     throw "Please provide a valid age"; 
+    {
+      throw "Please provide a valid age";
     }
     age = aAge;
   }

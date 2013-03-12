@@ -201,27 +201,36 @@ class ReferenceType{
   * -> 0..1 UmpleInterface;
 }
 // Under Development
+class ConstraintVariable{
+	type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+	constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
+	value = {constrainedVariable};
+	
+	boolean isAttribute = {!"SYNTAX".equals(type)&&!"OPERATOR".equals(type)};
+	boolean isAssociation = false;
+	Integer index = -1;
+	boolean isPrimitive = false;
+	boolean isNumeric = {"integer".equals(type.toLowerCase())||
+	                        "float".equals(type.toLowerCase())||
+	                        "double".equals(type.toLowerCase())};
+	
+	UmpleVariable getAttribute(UmpleClass aClass){
+      if(!getIsAttribute())
+     	return null;
+      UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
+	  if(uv!=null){
+	  	isAssociation = ((Attribute)uv).getIsList();
+	    return uv;
+	  }  
+	  uv = aClass.getAssociationVariable(this.getConstrainedVariable());
+	  isAssociation = uv!=null;
+	  return uv;
+    }
+    key {constrainedVariable};
+}
 // The Constraint object related to Umple Classes
-class Constraint{
-  constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
-  String[] expression;
-  String[] type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
-  public boolean verifyConstrainedVariable(UmpleClass aClass){
-	 Attribute correspondingAttribute = aClass.getAttribute(this.getConstrainedVariable());
-	 if (correspondingAttribute == null){return false;}
-	  return true;
- }
-  public static void addConstraints(List <Constraint> constraints, UmpleClass aClass){
-	  for (Constraint c: constraints){
-		  aClass.addConstraint(c);
-	  }
-  }
-  
-  public static void addConstraintExpressions(List <Constraint> constraints, String expr){
-	  for (Constraint c: constraints){
-		  c.addExpression(expr);
-	  }
-  }
+class Constraint{  
+  ConstraintVariable[] expressions; 
 }
 class CodeBlock
 {

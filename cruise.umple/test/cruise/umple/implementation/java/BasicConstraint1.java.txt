@@ -20,8 +20,8 @@ public class student
   public student(int aAge)
   {
     if ( !(aAge>18))
-    { 
-     throw new RuntimeException("Please provide a valid age"); 
+    {
+      throw new RuntimeException("Please provide a valid age");
     }
     age = aAge;
   }

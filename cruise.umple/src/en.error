@@ -34,6 +34,7 @@
 26: 2, http://umple.org/PageBeingDeveloped.html, Duplicate item '{0}' in key statement(s) in class '{1}' ;
 27: 3, http://umple.org/PageBeingDeveloped.html, Item '{0}' in key statement is not defined in class '{1}';
 28: 2, http://umple.org/PageBeingDeveloped.html, Attribute '{0}' in constraint is not defined in class '{1}';
+29: 2, http://umple.org/PageBeingDeveloped.html, Attribute '{0}' must be of type '{1}';
 
 30: 4, http://umple.org/PageBeingDeveloped.html, Redefining the namespace of class {0} to {1};
 31: 4, http://umple.org/PageBeingDeveloped.html, Declared namespace {0} was not used before declaring {1};

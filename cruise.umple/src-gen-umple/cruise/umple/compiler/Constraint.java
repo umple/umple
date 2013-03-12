@@ -5,10 +5,9 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * Under Development
  * The Constraint object related to Umple Classes
  */
-// line 205 "../../../../src/Umple.ump"
+// line 232 "../../../../src/Umple.ump"
 public class Constraint
 {
 
@@ -17,123 +16,62 @@ public class Constraint
   //------------------------
 
   //Constraint Attributes
-  private String constrainedVariable;
-  private List<String> expression;
-  private List<String> type;
+  private List<ConstraintVariable> expressions;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Constraint(String aConstrainedVariable)
+  public Constraint()
   {
-    constrainedVariable = aConstrainedVariable;
-    expression = new ArrayList<String>();
-    type = new ArrayList<String>();
+    expressions = new ArrayList<ConstraintVariable>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setConstrainedVariable(String aConstrainedVariable)
-  {
-    boolean wasSet = false;
-    constrainedVariable = aConstrainedVariable;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean addExpression(String aExpression)
+  public boolean addExpression(ConstraintVariable aExpression)
   {
     boolean wasAdded = false;
-    wasAdded = expression.add(aExpression);
+    wasAdded = expressions.add(aExpression);
     return wasAdded;
   }
 
-  public boolean removeExpression(String aExpression)
+  public boolean removeExpression(ConstraintVariable aExpression)
   {
     boolean wasRemoved = false;
-    wasRemoved = expression.remove(aExpression);
+    wasRemoved = expressions.remove(aExpression);
     return wasRemoved;
   }
 
-  public boolean addType(String aType)
+  public ConstraintVariable getExpression(int index)
   {
-    boolean wasAdded = false;
-    wasAdded = type.add(aType);
-    return wasAdded;
-  }
-
-  public boolean removeType(String aType)
-  {
-    boolean wasRemoved = false;
-    wasRemoved = type.remove(aType);
-    return wasRemoved;
-  }
-
-  public String getConstrainedVariable()
-  {
-    return constrainedVariable;
-  }
-
-  public String getExpression(int index)
-  {
-    String aExpression = expression.get(index);
+    ConstraintVariable aExpression = expressions.get(index);
     return aExpression;
   }
 
-  public String[] getExpression()
+  public ConstraintVariable[] getExpressions()
   {
-    String[] newExpression = expression.toArray(new String[expression.size()]);
-    return newExpression;
+    ConstraintVariable[] newExpressions = expressions.toArray(new ConstraintVariable[expressions.size()]);
+    return newExpressions;
   }
 
-  public int numberOfExpression()
+  public int numberOfExpressions()
   {
-    int number = expression.size();
+    int number = expressions.size();
     return number;
   }
 
-  public boolean hasExpression()
+  public boolean hasExpressions()
   {
-    boolean has = expression.size() > 0;
+    boolean has = expressions.size() > 0;
     return has;
   }
 
-  public int indexOfExpression(String aExpression)
+  public int indexOfExpression(ConstraintVariable aExpression)
   {
-    int index = expression.indexOf(aExpression);
-    return index;
-  }
-
-  public String getType(int index)
-  {
-    String aType = type.get(index);
-    return aType;
-  }
-
-  public String[] getType()
-  {
-    String[] newType = type.toArray(new String[type.size()]);
-    return newType;
-  }
-
-  public int numberOfType()
-  {
-    int number = type.size();
-    return number;
-  }
-
-  public boolean hasType()
-  {
-    boolean has = type.size() > 0;
-    return has;
-  }
-
-  public int indexOfType(String aType)
-  {
-    int index = type.indexOf(aType);
+    int index = expressions.indexOf(aExpression);
     return index;
   }
 
@@ -145,29 +83,7 @@ public class Constraint
   {
 	  String outputString = "";
 	  
-    return super.toString() + "["+
-            "constrainedVariable" + ":" + getConstrainedVariable()+ "]"
+    return super.toString() + "["+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  // line 209 ../../../../src/Umple.ump
-  public boolean verifyConstrainedVariable(UmpleClass aClass){
-	 Attribute correspondingAttribute = aClass.getAttribute(this.getConstrainedVariable());
-	 if (correspondingAttribute == null){return false;}
-	  return true;
- }
-  public static void addConstraints(List <Constraint> constraints, UmpleClass aClass){
-	  for (Constraint c: constraints){
-		  aClass.addConstraint(c);
-	  }
-  }
-  
-  public static void addConstraintExpressions(List <Constraint> constraints, String expr){
-	  for (Constraint c: constraints){
-		  c.addExpression(expr);
-	  }
   }
 }

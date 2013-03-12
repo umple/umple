@@ -23,13 +23,13 @@ class Client
   def initialize(a_minAge, a_age)
     @initialized = false
     @deleted = false
-    if ! (a_age>@minAge) then
-    raise RuntimeError, 'Please provide a valid age' 
-     end 
+    if !(a_age>a_minAge) then
+      raise RuntimeError, 'Please provide a valid age' 
+    end 
     
-    if ! (@age>a_minAge) then
-    raise RuntimeError, 'Please provide a valid minAge' 
-     end 
+    if !(a_age>a_minAge) then
+      raise RuntimeError, 'Please provide a valid minAge' 
+    end 
     
     @minAge = a_minAge
     @age = a_age

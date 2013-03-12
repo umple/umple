@@ -2,5 +2,5 @@
 class student
 {
   Integer age;
-  [18>age]
+  [18 > age]
  }
