@@ -7,9 +7,10 @@ import java.util.*;
 /**
  * @umplesource Umple.ump 271
  * A block of code in an arbitrary language to be injected into generated code
+ * @umplesource Umple_Code.ump 488
  */
 // line 274 "../../../../src/Umple.ump"
-// line 464 "../../../../src/Umple_Code.ump"
+// line 490 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
 
@@ -23,7 +24,7 @@ public class CodeBlock
 
   public CodeBlock()
   {
-    // line 466 "../../../../src/Umple_Code.ump"
+    // line 492 "../../../../src/Umple_Code.ump"
     code = new Hashtable<String,String>();
   }
 
@@ -43,43 +44,43 @@ public class CodeBlock
   Hashtable<String,String> code;
  public CodeBlock(String add)  {
 this();
-		code.put("",add);
+    code.put("",add);
   }
  public CodeBlock(String lang,String add)  {
 this();
-		code.put(lang,add);
+    code.put(lang,add);
   }
-// line 478 ../../../../src/Umple_Code.ump
+// line 504 ../../../../src/Umple_Code.ump
   public void setCode(String add)
-	{
-		if(add!=null)
-		  code.put("",add);
-		else
-		  code.put("","");
-	}
-	public void setCode(String lang, String add)
-	{
-		if(add!=null)
-		  code.put(lang,add);
-		else
-		  code.put(lang,"");
-	}
-	public String getCode()
-	{
-		return !code.containsKey(languageUsed) ? "".equals(languageUsed) ? null : code.get("") : code.get(languageUsed);
-	}
-	public String getCode(String lang)
-	{
-		return code.containsKey(lang)? code.get(lang) : code.get("");
-	}
-	public String toString()
-	{
-		Enumeration<String> enumer = code.elements();
-		String out = "";
-		while(enumer.hasMoreElements())
-		{
-			out += enumer.nextElement();
-		}
-		return out;
-	}
+  {
+    if(add!=null)
+      code.put("",add);
+    else
+      code.put("","");
+  }
+  public void setCode(String lang, String add)
+  {
+    if(add!=null)
+      code.put(lang,add);
+    else
+      code.put(lang,"");
+  }
+  public String getCode()
+  {
+    return !code.containsKey(languageUsed) ? "".equals(languageUsed) ? null : code.get("") : code.get(languageUsed);
+  }
+  public String getCode(String lang)
+  {
+    return code.containsKey(lang)? code.get(lang) : code.get("");
+  }
+  public String toString()
+  {
+    Enumeration<String> enumer = code.elements();
+    String out = "";
+    while(enumer.hasMoreElements())
+    {
+      out += enumer.nextElement();
+    }
+    return out;
+  }
 }

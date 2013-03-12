@@ -11,9 +11,10 @@ import java.util.*;
  * it can be derived, and have various other modifiers such as being
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
+ * @umplesource Umple_Code.ump 1058
  */
 // line 467 "../../../../src/Umple.ump"
-// line 1012 "../../../../src/Umple_Code.ump"
+// line 1060 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
 
@@ -537,7 +538,7 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1014 ../../../../src/Umple_Code.ump
+  // line 1062 ../../../../src/Umple_Code.ump
   public boolean isConstant()
   {
     return "const".equals(getModifier());
@@ -559,10 +560,10 @@ public class Attribute extends UmpleVariable
   
   public String getValue()
   {
-  	return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
+    return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
   public void setValue(String lang, String code)
   {
-  	codeblock.setCode(lang,code);
+    codeblock.setCode(lang,code);
   }
 }

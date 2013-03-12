@@ -8,9 +8,10 @@ import java.util.*;
  * @umplesource Umple.ump 327
  * Represents a interface.
  * Like a class, but can't have any concrete methods, attributes or associations.
+ * @umplesource Umple_Code.ump 567
  */
 // line 331 "../../../../src/Umple.ump"
-// line 536 "../../../../src/Umple_Code.ump"
+// line 569 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
 
@@ -132,20 +133,20 @@ public class UmpleInterface extends UmpleClassifier
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 538 ../../../../src/Umple_Code.ump
+  // line 571 ../../../../src/Umple_Code.ump
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();
     int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
       // Compare method names
-      if (aMethod.getName().equals(methodName)){	
+      if (aMethod.getName().equals(methodName)){  
         // Now compare parameters
         if (numberOfParams == aMethod.getMethodParameters().size()){
           for (MethodParameter param: aMethod.getMethodParameters()){
             for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
               if (param.getType().equals(paramToCompare.getType())){
-                isMethod=true;			  
+                isMethod=true;        
               }
               else{
                 return false;

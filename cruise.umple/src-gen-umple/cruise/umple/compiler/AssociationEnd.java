@@ -10,9 +10,11 @@ package cruise.umple.compiler;
  * See also AssociationVariable
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
+ * @umplesource Umple_Code.ump 1205
+ * In Umple_Code.ump: Methods for computing compound properties
  */
 // line 522 "../../../../src/Umple.ump"
-// line 1154 "../../../../src/Umple_Code.ump"
+// line 1208 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
 
@@ -309,7 +311,7 @@ public class AssociationEnd
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1157 ../../../../src/Umple_Code.ump
+  // line 1211 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()

@@ -6,9 +6,10 @@ package cruise.umple.compiler;
 /**
  * @umplesource Umple.ump 148
  * The contents of a method, such as the code within it.
+ * @umplesource Umple_Code.ump 465
  */
 // line 151 "../../../../src/Umple.ump"
-// line 444 "../../../../src/Umple_Code.ump"
+// line 467 "../../../../src/Umple_Code.ump"
 public class MethodBody
 {
 
@@ -70,17 +71,17 @@ public class MethodBody
    public MethodBody(String aValue)  {
 this(new CodeBlock(aValue!=null ? aValue : ""));
   }
-// line 450 ../../../../src/Umple_Code.ump
+// line 473 ../../../../src/Umple_Code.ump
   public String getExtraCode(String lang)
   {
-	return codeblock.getCode(lang);
+  return codeblock.getCode(lang);
   }
   public void setExtraCode(String code)
   {
-  	codeblock.setCode(code);
+    codeblock.setCode(code);
   }
   public void setExtraCode(String lang, String code)
   {
-  	codeblock.setCode(lang,code);
+    codeblock.setCode(lang,code);
   }
 }

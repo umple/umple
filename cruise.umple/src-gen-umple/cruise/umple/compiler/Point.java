@@ -16,7 +16,7 @@ package cruise.umple.compiler;
  * diagram in Umple
  */
 // line 626 "../../../../src/Umple.ump"
-// line 1659 "../../../../src/Umple_Code.ump"
+// line 1721 "../../../../src/Umple_Code.ump"
 public class Point
 {
 
@@ -121,7 +121,7 @@ public class Point
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1662 ../../../../src/Umple_Code.ump
+  // line 1724 ../../../../src/Umple_Code.ump
   public static Point create(int n)
   {
     int p = (int)Math.sqrt(n) + 1;
