@@ -5,9 +5,14 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
+ * @umplesource Umple.ump 460
  * Represents an attribute.
+ * An attribute is more abstract than an instance variable / property in that
+ * it can be derived, and have various other modifiers such as being
+ * initialized, lazy (does not appear in constructor and must be initialized
+ * after construction), etc.
  */
-// line 389 "../../../../src/Umple.ump"
+// line 467 "../../../../src/Umple.ump"
 // line 1012 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
@@ -49,7 +54,7 @@ public class Attribute extends UmpleVariable
     }
     traceRecords = new ArrayList<TraceRecord>();
     attributeTraceItems = new ArrayList<Attribute_TraceItem>();
-    // line 403 "../../../../src/Umple.ump"
+    // line 481 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 

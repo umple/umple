@@ -11,8 +11,11 @@ package cruise.umple.compiler;
  * -> 1 UmpleModel model;
  * 0..1 -> 1 UmpleInterface uInterface;
  * }
+ * @umplesource Umple.ump 622
+ * A point in cartesian coordinates, used in representing the layout of a
+ * diagram in Umple
  */
-// line 518 "../../../../src/Umple.ump"
+// line 626 "../../../../src/Umple.ump"
 // line 1659 "../../../../src/Umple_Code.ump"
 public class Point
 {

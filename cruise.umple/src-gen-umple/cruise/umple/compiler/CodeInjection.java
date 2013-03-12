@@ -4,7 +4,11 @@
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
-// line 242 "../../../../src/Umple.ump"
+/**
+ * @umplesource Umple.ump 283
+ * A block of code that can be injected into one or more methods, constructor, etc.
+ */
+// line 286 "../../../../src/Umple.ump"
 // line 511 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {

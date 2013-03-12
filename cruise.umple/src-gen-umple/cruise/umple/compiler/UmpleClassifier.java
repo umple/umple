@@ -5,9 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * Represents an Umple classifier.
+ * @umplesource Umple.ump 310
+ * Represents an Umple classifier: a Class or Interface
  */
-// line 263 "../../../../src/Umple.ump"
+// line 313 "../../../../src/Umple.ump"
 public class UmpleClassifier extends UmpleElement
 {
 

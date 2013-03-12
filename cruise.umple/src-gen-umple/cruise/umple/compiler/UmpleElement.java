@@ -6,9 +6,12 @@ import cruise.umple.compiler.Position;
 import java.util.*;
 
 /**
- * An element partaining to an entity with Umple.
+ * umplesource
+ * 
+ * An UmpleElement is one of the top-level items found in an Umple model
+ * Currently it has one subclass, UmpleClassifier
  */
-// line 70 "../../../../src/Umple.ump"
+// line 75 "../../../../src/Umple.ump"
 // line 565 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
@@ -82,7 +85,7 @@ public class UmpleElement
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 97 "../../../../src/Umple.ump"
+    // line 102 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;

@@ -4,9 +4,10 @@
 package cruise.umple.compiler;
 
 /**
+ * @umplesource Umple.ump 148
  * The contents of a method, such as the code within it.
  */
-// line 139 "../../../../src/Umple.ump"
+// line 151 "../../../../src/Umple.ump"
 // line 444 "../../../../src/Umple_Code.ump"
 public class MethodBody
 {

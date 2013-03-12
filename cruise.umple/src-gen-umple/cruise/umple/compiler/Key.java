@@ -4,7 +4,12 @@
 package cruise.umple.compiler;
 import java.util.*;
 
-// line 254 "../../../../src/Umple.ump"
+/**
+ * @umplesource Umple.ump 299
+ * 
+ * A key in a class is a set of attributes associations used to uniquely identify an object
+ */
+// line 303 "../../../../src/Umple.ump"
 // line 372 "../../../../src/Umple_Code.ump"
 public class Key
 {

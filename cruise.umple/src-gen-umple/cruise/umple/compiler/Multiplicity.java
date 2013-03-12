@@ -5,9 +5,13 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 
 /**
+ * @umplesource Umple.ump 569
+ * A multplicity constrains the number of linked objects at one end of an
+ * association
+ * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
  */
-// line 472 "../../../../src/Umple.ump"
+// line 575 "../../../../src/Umple.ump"
 // line 1447 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {

@@ -5,9 +5,16 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
+ * @umplesource Umple.ump 542
+ * An association variable represents one of the variables used to represent
+ * an association. In a two-directional association (navigable) there would
+ * be one of these in each associated class.
+ * 
+ * See also AssociationEnd
+ * 
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  */
-// line 454 "../../../../src/Umple.ump"
+// line 551 "../../../../src/Umple.ump"
 // line 1276 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
@@ -135,7 +142,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setRelatedAssociation(AssociationVariable newRelatedAssociation)
   {
     boolean wasSet = false;
-    // line 468 "../../../../src/Umple.ump"
+    // line 565 "../../../../src/Umple.ump"
     if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }
     if (newRelatedAssociation == null)
     {
@@ -227,7 +234,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 466 "../../../../src/Umple.ump"
+    // line 563 "../../../../src/Umple.ump"
     if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;

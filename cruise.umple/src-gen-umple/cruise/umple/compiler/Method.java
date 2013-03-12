@@ -6,9 +6,11 @@ import cruise.umple.compiler.Position;
 import java.util.*;
 
 /**
- * A method which recides inside an Umple Class.
+ * @umplesource Umple.ump 106
+ * A method in an Umple class or interface
+ * Umple Methods are coded by the programmer in the language(s) of their choice
  */
-// line 103 "../../../../src/Umple.ump"
+// line 110 "../../../../src/Umple.ump"
 // line 402 "../../../../src/Umple_Code.ump"
 public class Method
 {

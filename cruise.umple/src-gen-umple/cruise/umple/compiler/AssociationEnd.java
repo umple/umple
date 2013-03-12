@@ -4,10 +4,14 @@
 package cruise.umple.compiler;
 
 /**
- * TODO: Code smell referenceToClassName is a duplication, can access via the association
+ * @umplesource Umple.ump 515
+ * An association end represents one logical end of an association
+ * 
+ * See also AssociationVariable
+ * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
  */
-// line 434 "../../../../src/Umple.ump"
+// line 522 "../../../../src/Umple.ump"
 // line 1154 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
@@ -124,21 +128,21 @@ public class AssociationEnd
 
   public String getRoleName()
   {
-    // line 447 "../../../../src/Umple.ump"
+    // line 535 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
   public String getClassName()
   {
-    // line 448 "../../../../src/Umple.ump"
+    // line 536 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
 
   public String getModifier()
   {
-    // line 449 "../../../../src/Umple.ump"
+    // line 537 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
@@ -148,7 +152,7 @@ public class AssociationEnd
    */
   public String getReferenceToClassName()
   {
-    // line 450 "../../../../src/Umple.ump"
+    // line 538 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }

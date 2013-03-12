@@ -4,9 +4,10 @@
 package cruise.umple.compiler;
 
 /**
+ * @umplesource Umple.ump 230
  * Under Development
  */
-// line 204 "../../../../src/Umple.ump"
+// line 233 "../../../../src/Umple.ump"
 public class ConstraintVariable
 {
 
@@ -126,8 +127,8 @@ public class ConstraintVariable
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
-	                        "float".equals(type.toLowerCase())||
-	                        "double".equals(type.toLowerCase());
+    "float".equals(type.toLowerCase())||
+     "double".equals(type.toLowerCase());
   }
 
   public boolean equals(Object obj)
@@ -172,18 +173,19 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  // line 217 "../../../../src/Umple.ump"
+  // line 246 "../../../../src/Umple.ump"
   public UmpleVariable getAttribute(UmpleClass aClass){
-    if(!getIsAttribute())
-     	return null;
-      UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
-	  if(uv!=null){
-	  	isAssociation = ((Attribute)uv).getIsList();
-	    return uv;
-	  }  
-	  uv = aClass.getAssociationVariable(this.getConstrainedVariable());
-	  isAssociation = uv!=null;
-	  return uv;
+    if(!getIsAttribute()) {
+      return null;
+    }
+    UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
+    if(uv!=null){
+      isAssociation = ((Attribute)uv).getIsList();
+      return uv;
+    }
+    uv = aClass.getAssociationVariable(this.getConstrainedVariable());
+    isAssociation = uv!=null;
+    return uv;
   }
 
 

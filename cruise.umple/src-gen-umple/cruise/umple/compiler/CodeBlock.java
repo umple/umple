@@ -4,7 +4,11 @@
 package cruise.umple.compiler;
 import java.util.*;
 
-// line 235 "../../../../src/Umple.ump"
+/**
+ * @umplesource Umple.ump 271
+ * A block of code in an arbitrary language to be injected into generated code
+ */
+// line 274 "../../../../src/Umple.ump"
 // line 464 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
@@ -34,9 +38,9 @@ public class CodeBlock
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 239 ../../../../src/Umple.ump
+  // line 278 ../../../../src/Umple.ump
   public static String languageUsed = "";
-	Hashtable<String,String> code;
+  Hashtable<String,String> code;
  public CodeBlock(String add)  {
 this();
 		code.put("",add);

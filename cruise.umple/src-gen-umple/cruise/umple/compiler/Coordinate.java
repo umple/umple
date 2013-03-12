@@ -3,7 +3,12 @@
 
 package cruise.umple.compiler;
 
-// line 526 "../../../../src/Umple.ump"
+/**
+ * @umplesource Umple.ump 635
+ * A Coordinate is used in  the layout of classes
+ * It represents the shape of a class box in a diagram
+ */
+// line 639 "../../../../src/Umple.ump"
 // line 1681 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
@@ -45,7 +50,7 @@ public class Coordinate
     width = aWidth;
     height = aHeight;
     setStatus(Status.Explicit);
-    // line 534 "../../../../src/Umple.ump"
+    // line 647 "../../../../src/Umple.ump"
     updateStatus();
   }
 
@@ -59,7 +64,7 @@ public class Coordinate
     if (!canSetX) { return false; }
     x = aX;
     wasSet = true;
-    // line 535 "../../../../src/Umple.ump"
+    // line 648 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -70,7 +75,7 @@ public class Coordinate
     if (!canSetY) { return false; }
     y = aY;
     wasSet = true;
-    // line 536 "../../../../src/Umple.ump"
+    // line 649 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -81,7 +86,7 @@ public class Coordinate
     if (!canSetWidth) { return false; }
     width = aWidth;
     wasSet = true;
-    // line 537 "../../../../src/Umple.ump"
+    // line 650 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -92,7 +97,7 @@ public class Coordinate
     if (!canSetHeight) { return false; }
     height = aHeight;
     wasSet = true;
-    // line 538 "../../../../src/Umple.ump"
+    // line 651 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -7,16 +7,18 @@ import cruise.umple.compiler.exceptions.*;
 import java.util.*;
 
 /**
- * The main meta-model of Umple.
+ * @umplesource Umple.ump 15
+ * 
+ * Class UmpleModel is the central class describing the system being compiled.
  * 
  * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
- * the classes, attributes, associations, methods, etc that were in it.
+ * the classes, attributes, associations, state machines, methods, etc that were in it.
  * 
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  * 
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  */
-// line 24 "../../../../src/Umple.ump"
+// line 26 "../../../../src/Umple.ump"
 // line 17 "../../../../src/Trace.ump"
 // line 13 "../../../../src/UmpleVersion.ump"
 // line 15 "../../../../src/Umple_Code.ump"

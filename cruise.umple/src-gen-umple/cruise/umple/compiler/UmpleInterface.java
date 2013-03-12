@@ -5,9 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * Represents an Umple interface.
+ * @umplesource Umple.ump 327
+ * Represents a interface.
+ * Like a class, but can't have any concrete methods, attributes or associations.
  */
-// line 279 "../../../../src/Umple.ump"
+// line 331 "../../../../src/Umple.ump"
 // line 536 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
