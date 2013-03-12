@@ -41,14 +41,17 @@ import com.sun.javadoc.*;
 import java.util.Map;
 
 /**
+ *
+ * This is documentation for the UmplesourceTaglet class that should appear
+ * More documentation that should appear
+ * <p> 
+ * It will process comments of the form
+ * Compile with javac -classpath /Library/Java/Home/lib/tools.jar UmplesourceTaglet.java
  * @umplesource Master.ump 4
  * @umplesource Umple.ump 20
- *
- *
- * @author Jamie Ho
- * @since 1.4
+ * @author Jamie Ho 
+ * @umplesource X.Y 3 
  */
-
 public class UmplesourceTaglet implements Taglet {
     
     private static final String NAME = "umplesource";
@@ -157,14 +160,16 @@ public class UmplesourceTaglet implements Taglet {
     }
 
     private static String umpleLine(String tagText) {
-      return tagText.replaceAll(".* ","").replaceAll(" .*","");
+      return tagText.replaceAll(umpleFile(tagText)+" ","").replaceAll(" .*","");
     }
     
     private static String umpleLinkText(String tagText) {
       return "<a href=\"http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/"
-      +umpleFile(tagText)+"#"+umpleLine(tagText)
-      +"\" target=\"googlecode\"> Line "+umpleLine(tagText)
-      +" of "+umpleFile(tagText)+"</a>";
+      + umpleFile(tagText)+"#"+umpleLine(tagText)
+      + "\" target=\"googlecode\">"
+      +  umpleFile(tagText)
+      + " (Line "+umpleLine(tagText)
+      +")</a>";
     }
 
 

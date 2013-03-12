@@ -4,11 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 201
  * NOT used right now
- * Type is a simple string
+ * Type is a simple string 
+ * @umplesource Umple.ump 199
  */
-// line 205 "../../../../src/Umple.ump"
+// line 203 "../../../../src/Umple.ump"
 public class Type
 {
 

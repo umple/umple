@@ -6,18 +6,18 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 343
  * An UmpleClass can contain attributes, associations, state machines and methods.
  * It can also have various other information such as a key (to identify uniqueness),
  * code to inject into generated code, and comments. It can be tagged with various
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
- * @umplesource Umple_Code.ump 634
+ * @umplesource Umple.ump 339
  * In Umple_Code.ump: Methods for computing complex properties
+ * @umplesource Umple_Code.ump 633
  */
-// line 350 "../../../../src/Umple.ump"
+// line 346 "../../../../src/Umple.ump"
 // line 90 "../../../../src/Trace.ump"
-// line 637 "../../../../src/Umple_Code.ump"
+// line 636 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
 {
 
@@ -630,7 +630,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 400 "../../../../src/Umple.ump"
+    // line 396 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -791,7 +791,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 398 "../../../../src/Umple.ump"
+    // line 394 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1063,7 +1063,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 402 "../../../../src/Umple.ump"
+    // line 398 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1261,7 +1261,7 @@ public class UmpleClass extends UmpleClassifier
    public UmpleClass(String name)  {
 this(name, null);
   }
-// line 645 ../../../../src/Umple_Code.ump
+// line 644 ../../../../src/Umple_Code.ump
   public List<StateMachine> getAllStateMachines()
   {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();

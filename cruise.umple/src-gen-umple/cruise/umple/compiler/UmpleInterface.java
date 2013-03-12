@@ -5,13 +5,13 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 327
  * Represents a interface.
  * Like a class, but can't have any concrete methods, attributes or associations.
- * @umplesource Umple_Code.ump 567
+ * @umplesource Umple.ump 323
+ * @umplesource Umple_Code.ump 566
  */
-// line 331 "../../../../src/Umple.ump"
-// line 569 "../../../../src/Umple_Code.ump"
+// line 327 "../../../../src/Umple.ump"
+// line 568 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
 
@@ -133,7 +133,7 @@ public class UmpleInterface extends UmpleClassifier
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 571 ../../../../src/Umple_Code.ump
+  // line 570 ../../../../src/Umple_Code.ump
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();

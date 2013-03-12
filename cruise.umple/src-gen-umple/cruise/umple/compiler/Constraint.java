@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 263
  * The Constraint object related to Umple Classes
+ * @umplesource Umple.ump 259
  */
-// line 266 "../../../../src/Umple.ump"
+// line 262 "../../../../src/Umple.ump"
 public class Constraint
 {
 

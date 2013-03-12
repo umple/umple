@@ -5,17 +5,16 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 418
- * 
  * A combination of Class and Association (as defined in UML)
  * An AssociationClass is a full-fledged class, but at the same time
  * It associates two other classes that would otherwise have a many-many
  * relationship. Instances of the AssociationClass represent data 
  * held by the links between those two classes.
- * @umplesource Umple_Code.ump 623
+ * @umplesource Umple.ump 414
+ * @umplesource Umple_Code.ump 622
  */
-// line 426 "../../../../src/Umple.ump"
-// line 625 "../../../../src/Umple_Code.ump"
+// line 421 "../../../../src/Umple.ump"
+// line 624 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
 

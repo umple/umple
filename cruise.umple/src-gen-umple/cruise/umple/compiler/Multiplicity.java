@@ -5,17 +5,16 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Umple.ump 569
  * A multplicity constrains the number of linked objects at one end of an
  * association
  * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
- * @umplesource Umple_Code.ump 1505
- * 
+ * @umplesource Umple.ump 564
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
+ * @umplesource Umple_Code.ump 1503
  */
-// line 575 "../../../../src/Umple.ump"
-// line 1509 "../../../../src/Umple_Code.ump"
+// line 570 "../../../../src/Umple.ump"
+// line 1506 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
 
@@ -193,7 +192,7 @@ public class Multiplicity
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1512 ../../../../src/Umple_Code.ump
+  // line 1509 ../../../../src/Umple_Code.ump
   public void setRange(String lowerBound, String upperBound)
   {
     minimum = lowerBound;

@@ -6,13 +6,13 @@ import cruise.umple.compiler.Position;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 106
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
- * @umplesource Umple_Code.ump 420
+ * @umplesource Umple.ump 104
+ * @umplesource Umple_Code.ump 419
  */
-// line 110 "../../../../src/Umple.ump"
-// line 422 "../../../../src/Umple_Code.ump"
+// line 108 "../../../../src/Umple.ump"
+// line 421 "../../../../src/Umple_Code.ump"
 public class Method
 {
 
@@ -336,7 +336,7 @@ public class Method
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 424 ../../../../src/Umple_Code.ump
+  // line 423 ../../../../src/Umple_Code.ump
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)

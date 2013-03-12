@@ -4,10 +4,10 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 669
  * Represents the generation target, such as what the generated output language will be.
+ * @umplesource Umple.ump 664
  */
-// line 672 "../../../../src/Umple.ump"
+// line 667 "../../../../src/Umple.ump"
 public class GenerateTarget
 {
 
@@ -86,7 +86,7 @@ public class GenerateTarget
 
   public String getPath()
   {
-    // line 682 "../../../../src/Umple.ump"
+    // line 677 "../../../../src/Umple.ump"
     if(path == null) path = "";
     return path;
   }

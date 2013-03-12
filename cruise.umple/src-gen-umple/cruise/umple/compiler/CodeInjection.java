@@ -5,12 +5,12 @@ package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
 /**
- * @umplesource Umple.ump 283
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource Umple_Code.ump 539
+ * @umplesource Umple.ump 279
+ * @umplesource Umple_Code.ump 538
  */
-// line 286 "../../../../src/Umple.ump"
-// line 541 "../../../../src/Umple_Code.ump"
+// line 282 "../../../../src/Umple.ump"
+// line 540 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
 
@@ -161,7 +161,7 @@ public class CodeInjection
 this(a,b, d);
     setCode(c);
   }
-// line 548 ../../../../src/Umple_Code.ump
+// line 547 ../../../../src/Umple_Code.ump
   public void setCode(String str)
   {
     snippet.setCode(str);
