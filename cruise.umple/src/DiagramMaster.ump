@@ -1,0 +1,20 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file is used to generate the diagram found at
+http://umple.org/umple-compiler-classDiagram.shtml
+
+To regenerate that diagram, compile this
+Then move DiagramMastercd.gv to ../../umplewww
+Then compile the result in umplewww with dot -Tsvg DiagramMastercd.gv -o Mastercd.svg
+On the server Mastercd.sv needs to be placed in the umple.org directory
+mvalong with the user manual files
+
+*/
+generate GvClassDiagram;
+
+use Master.ump;
