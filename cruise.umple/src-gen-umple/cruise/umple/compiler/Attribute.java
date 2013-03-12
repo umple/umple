@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents an attribute.
  */
-// line 380 "../../../../src/Umple.ump"
+// line 389 "../../../../src/Umple.ump"
 // line 1012 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
@@ -49,7 +49,7 @@ public class Attribute extends UmpleVariable
     }
     traceRecords = new ArrayList<TraceRecord>();
     attributeTraceItems = new ArrayList<Attribute_TraceItem>();
-    // line 394 "../../../../src/Umple.ump"
+    // line 403 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 

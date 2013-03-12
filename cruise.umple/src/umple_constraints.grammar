@@ -21,15 +21,41 @@ constraint- :  [[negativeConstraint]] | OPEN_ROUND_BRACKET ([[constraintBody]]) 
 negativeConstraint : ! OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET | ! [[constraintBody]]
 
 // A constraint body is a Boolean constraint value or a constraint expression.  
-constraintBody- : [[boolExpr]]
+constraintBody- :  [[stringExpr]] | [[boolExpr]] | [[genExpr]] | [[numExpr]] | [loneBoolean] ( [ [index] ] )?
 
-compoundExpr- : [[boolExpr]]
-boolExpr : ( [constraintVal] [[boolOp]] [constraintVal] ) | ( [constraintVal] )
-boolOp- : >= | > | == | != | <= | < 
+compoundExpr- : [[stringExpr]]  | [[boolExpr]] | [[numExpr]] | [[genExpr]] 
 
-//constraintVal : [name]
+//must be a boolean
+boolExpr : [=literal:true|false] | [~name] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]] [~name] | [~name] [ [~index] ] [[equalityOp]] [=literal:true|false]
 
-//constraintBody : [name]
+
+//must be string
+stringExpr : [~name] [[equalityOp]] [[stringLit]] | [[stringLit]] [[equalityOp]] [~name] | [~name] [ [~index] ] [[equalityOp]] [[stringLit]]
+stringLit- : " [**quote] " | ' [**quote] '
+
+//basically the "other" catagory, contains everything that can be equal to something else
+genExpr : [~name] ( [ [index] ] )? [[equalityOp]] [~name] ( [ [index] ] )?
+
+//for floats, doubles and ints
+numExpr : [~name] ( . [~tail]  )? ( [ [index] ] )? [[ordinalOp]] [~name] ( . [~tail]  )? ( [ [index] ] )?
+
+equalityOp- :  [[equalsOp]] | [[notequalsOp]] 
+
+equalsOp- : [=equalsOp:==|=|equals]
+notequalsOp- : [=notequalsOp:!=|/=|=!|=/=]
+
+ordinalOp- :  [[greaterOp]] | [[lessOp]] | [[moreOp]] | [[smallerOp]]
+
+greaterOp- : [=greaterOp:greater|>=|=>]
+lessOp- : [=lessOp:less|<=|=<]
+moreOp- : [=moreOp:larger|>]
+smallerOp- : [=smallerOp:smaller|<]
+
+// assOps- : [=associationOp : larger | smaller | exact | hasAll]
+
+//  constraintVal : [name]
+
+//  constraintBody : [name]
 
 
 // NOTE: Additional grammar parts deleted while testing is ongoing.

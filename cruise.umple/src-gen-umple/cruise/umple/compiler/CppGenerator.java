@@ -759,49 +759,52 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     }
     
     for (Constraint ac : aClass.getConstraints())
-    {
-      boolean isAttr = false;
-      String setMethod_code = "if (";
-      String constructor_code = "if ( !(";
-      for (String expr : ac.getExpression())
+    {      
+      List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
+      for (ConstraintVariable cur : ac.getExpressions())
       {
-        if( isAttr == true && aClass.getAttribute(expr) != null)
+      	if(!cur.getIsAttribute() || alreadyDone.contains(cur))
+      	  continue;
+      	alreadyDone.add(cur);
+      	String set_expression = "";
+      	String con_expression = "";
+      	String set_code = "if ({0})\n{";
+      	String con_code = "if ( !({0}))\n{\n" +
+      						     "  throw \"Please provide a valid "+ cur.getConstrainedVariable() +"\";\n"+
+                                 "}";
+      	for (ConstraintVariable  expr: ac.getExpressions())
         {
-          if (expr.equals(ac.getConstrainedVariable())) { 
-          setMethod_code += StringFormatter.format("{0}", translate("parameterOne",aClass.getAttribute(expr)));
-          constructor_code += StringFormatter.format("{0}", translate("parameterOne",aClass.getAttribute(expr)));
+          if( expr.getIsAttribute() )
+          {
+          	con_expression += translate("parameterOne",aClass.getAttribute(expr.getValue()));
+            if (cur == expr) { 
+        	  set_expression += translate("parameterOne",aClass.getAttribute(expr.getValue()));
+            }
+            else 
+            { 
+        	  set_expression += translate("attributeOne",aClass.getAttribute(expr.getValue()));
+            }
+          } 
+          else
+          { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
+            con_expression += expr.getValue();
+            set_expression += expr.getValue();
           }
-          else { 
-          setMethod_code += StringFormatter.format("{0}", translate("attributeOne",aClass.getAttribute(expr)));
-          constructor_code += StringFormatter.format("{0}", translate("attributeOne",aClass.getAttribute(expr)));
-          }
-          isAttr = false;
         }
-        else if (expr.equals("attr")) 
-        {
-          isAttr = true;
-        } 
-        else
-        { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
-          setMethod_code += expr;
-          constructor_code += expr;
-          isAttr = false;
-        }
+        String setMethod_code = StringFormatter.format(set_code, set_expression);
+        CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(cur.getValue())), setMethod_code, aClass);         
+        CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(cur.getValue())), "}", aClass);
+        before.setIsInternal(true);
+        after.setIsInternal(true);
+        aClass.addCodeInjection(before);
+        aClass.addCodeInjection(after);
+        
+        String constructor_code = StringFormatter.format(con_code, con_expression);
+        before = new CodeInjection("before",  "constructor", constructor_code, aClass);  
+        before.setIsInternal(true);
+        aClass.addCodeInjection(before);
+      
       }
-      
-      setMethod_code += ")\n{";
-      // This is will needed to ba changed with the type variable to allow constraints on assoications.
-      CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), setMethod_code, aClass);         
-      CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(ac.getConstrainedVariable())), "}", aClass);
-      before.setIsInternal(true);
-      after.setIsInternal(true);
-      aClass.addCodeInjection(before);
-      aClass.addCodeInjection(after);
-      
-      constructor_code += "))\n{ \n throw \"Please provide a valid "+ ac.getConstrainedVariable() +"\"; \n}";
-      before = new CodeInjection("before",  "constructor", constructor_code, aClass);  
-      before.setIsInternal(true);
-      aClass.addCodeInjection(before);
     }
     
     

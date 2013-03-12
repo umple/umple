@@ -12,13 +12,13 @@
   
  Client::Client(const int & aMinAge, const int & aAge)
   {
-    if ( !(aAge>minAge))
-    { 
-     throw "Please provide a valid age"; 
+    if ( !(aAge>aMinAge))
+    {
+      throw "Please provide a valid age";
     }
-    if ( !(age>aMinAge))
-    { 
-     throw "Please provide a valid minAge"; 
+    if ( !(aAge>aMinAge))
+    {
+      throw "Please provide a valid minAge";
     }
     minAge = aMinAge;
     age = aAge;

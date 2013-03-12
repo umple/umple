@@ -378,10 +378,18 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/referenceTypes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterface" lowerBound="0" upperBound="1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/referenceTypes"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintVariable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="constrainedVariable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="expressions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="types" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAttribute" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAssociation" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPrimitive" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNumeric" eType="#//boolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" eType="#//ConstraintVariable" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/constraints"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeBlock">

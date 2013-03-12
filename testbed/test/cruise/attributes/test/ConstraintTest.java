@@ -9,7 +9,7 @@ public class ConstraintTest
   public void defaulted()
   {
     Student studentA = new Student(20);
-	Assert.assertEquals(false, studentA.setAge(2));
-	Assert.assertEquals(true, studentA.setAge(20));
+    Assert.assertEquals(false, studentA.setAge(2));
+    Assert.assertEquals(true, studentA.setAge(20));
   }
 }

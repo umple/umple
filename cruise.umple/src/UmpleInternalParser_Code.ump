@@ -272,6 +272,7 @@ class UmpleInternalParser
 
 use UmpleInternalParser_CodeCore.ump;
 use UmpleInternalParser_CodeClass.ump;
+use UmpleInternalParser_CodeConstraints.ump;
 use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;

@@ -20,13 +20,13 @@ class Client
 
   public function __construct($aMinAge, $aAge)
   {
-    if ( !($aAge>$minAge))
-    { 
-     throw new RuntimeException("Please provide a valid age"); 
+    if ( !($aAge>$aMinAge))
+    {
+      throw new RuntimeException("Please provide a valid age");
     }
-    if ( !($age>$aMinAge))
-    { 
-     throw new RuntimeException("Please provide a valid minAge"); 
+    if ( !($aAge>$aMinAge))
+    {
+      throw new RuntimeException("Please provide a valid minAge");
     }
     $this->minAge = $aMinAge;
     $this->age = $aAge;

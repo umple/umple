@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Represents an Umple interface.
  */
-// line 270 "../../../../src/Umple.ump"
+// line 279 "../../../../src/Umple.ump"
 // line 536 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {

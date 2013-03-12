@@ -22,9 +22,9 @@ class student
   def initialize(a_age)
     @initialized = false
     @deleted = false
-    if ! (a_age>18) then
-    raise RuntimeError, 'Please provide a valid age' 
-     end 
+    if !(a_age>18) then
+      raise RuntimeError, 'Please provide a valid age' 
+    end 
     
     @age = a_age
     @initialized = true

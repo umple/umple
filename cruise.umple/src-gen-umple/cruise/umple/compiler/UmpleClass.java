@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Represents an Umple class which can contain attributes, associations and methods.
  */
-// line 284 "../../../../src/Umple.ump"
+// line 293 "../../../../src/Umple.ump"
 // line 90 "../../../../src/Trace.ump"
 // line 594 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
@@ -623,7 +623,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 334 "../../../../src/Umple.ump"
+    // line 343 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -784,7 +784,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 332 "../../../../src/Umple.ump"
+    // line 341 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1056,7 +1056,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 336 "../../../../src/Umple.ump"
+    // line 345 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();

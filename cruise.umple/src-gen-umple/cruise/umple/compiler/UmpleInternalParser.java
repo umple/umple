@@ -29,6 +29,7 @@ import java.util.*;
 // line 33 "../../../../src/UmpleInternalParser_Code.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeCore.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeClass.ump"
+// line 17 "../../../../src/UmpleInternalParser_CodeConstraints.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeStateMachine.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeTrace.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeLayout.ump"
@@ -2528,110 +2529,297 @@ this("UmpleInternalParser", aModel);
   {
     return (isLazy && value != null);
   }
-  
-  private void verifyConstraints(List <Constraint> constraints, UmpleClass aClass, Token invariantToken, String expr){
-	  for (Constraint c:constraints){
-		  if (!c.verifyConstrainedVariable(aClass)){ //make sure constraint Variable exists as an attribute in the class
-    		  setFailedPosition(invariantToken.getPosition(), 28, expr, aClass.getName());
-    	  }
-	  }
-  }
-  
-  
-  private List<Constraint> populateConstraintsList(List <String> constraintExpr){
-	  List <Constraint> constraints = new ArrayList<Constraint>();
-	  Constraint c;
-	  boolean sawAttr = false;
-	  for (String expr : constraintExpr){
-		  if (expr.equals("attr"))
-		  {
-			  sawAttr = true;
-		  } 
-		  else if(sawAttr && Token.isValidIdentifier(expr, "[A-Za-z]"))
-		  {
-			  c = new Constraint("");
-			  c.setConstrainedVariable(expr);
-			  constraints.add(c);
-			  sawAttr = false;
-		  }
-	  }
-	  return constraints;
-  }
-  
-  /*
-   * Analyzes a token recognized as a constraint
-   * 
-   * @param invariantToken The token containting the constraints.
-   * @param aClass The Umple class for which an attribute is being constrained.
-   */
+// line 26 ../../../../src/UmpleInternalParser_CodeConstraints.ump
   private void analyzeInvariant (Token invariantToken, UmpleClass aClass)
   {
-    List<String> constraintExpr = new ArrayList<String>();
-    constraintExpr = analyzeInvariant(invariantToken);
-    List <Constraint> constraints = populateConstraintsList(constraintExpr); //adds all identifiers to constraints
-    boolean sawAttr = false;
+    List <ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
+    Constraint constraint = new Constraint();
     
-    for (String expr : constraintExpr)
+    for(ConstraintVariable cv: cvs)
     {
-    	if (expr.equals("attr"))
-    	{
-    		sawAttr = true;
-    	} 
-    	else if(sawAttr)
-    	{         
-    		verifyConstraints(constraints, aClass, invariantToken, expr);
-    		sawAttr = false;
-    	}
-    	Constraint.addConstraintExpressions(constraints, expr);
-
-    }   
-    Constraint.addConstraints(constraints, aClass);
+    	constraint.addExpression(cv);
+    }  
+    aClass.addConstraint(constraint);
   }
   
   
   //This recursive function parses the expression. It's very broken down to allow new features to be added easily.
-  private List<String> analyzeInvariant(Token invariantToken)
+  private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClass aClass)
   {
-    List<String> rawLine = new ArrayList<String>();
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     List<Token> subs = invariantToken.getSubTokens();
     for (Token t : subs)
     {
-      if (t.getName().equals(")") || t.getName().equals("("))
+      if (t.is(")") || t.is("("))
       {
-        rawLine.add(t.getName());
+        rawLine.add(new ConstraintVariable("SYNTAX",t.getName()));
       }
       if (!t.getValue().equals("STATIC"))
       { 
-        if (t.getName().equals("boolExpr"))
+        if (t.is("genExpr"))
         {
-          List<Token> BoolExpSubs = t.getSubTokens();
-          for(Token s : BoolExpSubs)
-          {
-            if (s.getValue().equals("STATIC"))
-            {
-              rawLine.add(s.getName());
-            } 
-            else if(s.getName().equals("constraintVal"))
-            {
-              rawLine.add("attr");
-              rawLine.add(s.getValue());
-            }
-            else
-            {
-              rawLine.add(s.getValue());
-            }
-          }
+          rawLine.addAll(analyzeGeneralConstraintExpression(t,aClass));  
+        }        
+        else if (t.is("boolExpr"))
+        {
+          rawLine.addAll(analyzeBooleanConstraintExpression(t,aClass));
+        } 
+        else if (t.is("stringExpr"))
+        {
+          rawLine.addAll(analyzeStringConstraintExpression(t,aClass));
+        }
+        else if (t.is("numExpr"))
+        {
+          rawLine.addAll(analyzeNumberConstraintExpression(t,aClass));
+        }
+        else if(t.is("loneBoolean"))
+        {
+          rawLine.add(analyzeConstraintName(t,aClass,false,true,"boolean"));
         }
         else
         {
-          for (String addexp: analyzeInvariant(t))
-          {
-            rawLine.add(addexp);
-          }
+          rawLine.addAll(analyzeConstraint(t,aClass));
         }
       } 
     }
   return rawLine;
+  }
+  private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClass aClass)
+  {
+	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	List<Token> generalExpressionSubtokens = generalExpressionToken.getSubTokens();
+    for(Token sub : generalExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+        if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      } 
+      else if(sub.is("name"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,true));
+      } 
+      else if(sub.is("tail"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,false));
+      } 
+      else if(sub.is("index"))
+      {
+        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
+      }
+      else if(sub.is("equalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","=="));
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","!="));
+      }
+    }
+    return rawLine;
+  }
+  
+  private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken , UmpleClass aClass)
+  {
+  	List<Token> BooleanExpressionSubtokens = booleanExpressionToken.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  	for(Token sub : BooleanExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+        if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      }
+      else if (sub.getValue().equals("true"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","true"));
+      } 
+      else if (sub.getValue().equals("false"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","false"));
+      }
+      else if(sub.is("name"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,false,true,"boolean"));
+      }
+      else if(sub.is("index"))
+      {
+        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
+      }
+      else if(sub.is("equalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","=="));
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","!="));
+      }           
+    }
+    return rawLine;
+  }
+  
+  private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken , UmpleClass aClass)
+  {
+  	List<Token> stringExpressionSubtokens = stringExpressionToken.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  	for(Token sub : stringExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+        if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      }
+      else if (sub.is("quote"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
+      }
+      else if(sub.is("name"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,false,true,"string"));
+      }
+      else if(sub.is("index"))
+      {
+        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
+      }
+      else if(sub.is("equalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","=="));
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","!="));
+      }           
+    }
+    return rawLine;
+  }
+  
+  private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClass aClass)
+  {
+	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
+    for(Token sub : numberExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+      	if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      } 
+      else if(sub.is("name"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,true,"integer","float","double"));
+      } 
+      else if(sub.is("tail"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,false));
+      } 
+      else if(sub.is("index"))
+      {
+        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
+      }
+      else if(sub.is("moreOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR",">"));
+      }
+      else if(sub.is("smallerOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","<"));
+      }
+      else if(sub.is("greaterOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR",">="));
+      }
+      else if(sub.is("lessOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","<="));
+      }
+    }
+    return rawLine;
+  }
+  
+  private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean canBeInteger, boolean mustBeInClass, String... type)
+  {
+  	Token sub = nameToken;
+  	ConstraintVariable cv = new ConstraintVariable("",sub.getValue());
+  	UmpleVariable attribute;
+    if(mustBeInClass)
+    {
+      attribute = cv.getAttribute(aClass);
+      if(attribute!=null)
+      {
+      	if(type!=null&&type.length!=0)
+      	{
+      	  boolean isType = false;
+      	  String typesFailed = "";
+      	  for(String t: type)
+      	  {
+      	    if(attribute.getType().toLowerCase().equals(t))
+            {
+              isType = true;
+            }          
+            else
+            {
+            	typesFailed += t+",";
+            }
+          }
+          if(!isType)
+          {
+          	setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
+          }
+        }
+        cv.setType(attribute.getType());
+      }
+      else
+      {
+      	if(canBeInteger)
+        {
+          try {
+      	    Integer.parseInt(sub.getValue());
+              cv.setType("OPERATOR");
+            } catch (NumberFormatException e) {
+              setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
+            } 
+        }
+        else
+        {
+    	  setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
+    	}
+      }
+    }
+    else
+    {
+      if(canBeInteger)
+      {
+        try {
+      	  Integer.parseInt(sub.getValue());
+            cv.setType("OPERATOR");
+          } catch (NumberFormatException e) {
+            setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
+          } 
+      }
+      else
+      {
+      	cv.setType("OPERATOR");      
+      }      
+    }    
+    return cv;
+  } 
+  private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv)
+  {
+  	Token sub = indexToken;
+  	try {
+      int i = Integer.parseInt(sub.getValue());
+      if(cv.getIsAssociation())
+      {
+        cv.setIndex(i);
+      }
+      else
+      {
+        setFailedPosition(sub.getPosition(), 29, cv.getValue(), "association or list");
+      }
+    } catch (NumberFormatException e) {
+      setFailedPosition(sub.getPosition(), 29, sub.getValue(), "integer");
+    } 
+  	   
   }
 // line 24 ../../../../src/UmpleInternalParser_CodeStateMachine.ump
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
