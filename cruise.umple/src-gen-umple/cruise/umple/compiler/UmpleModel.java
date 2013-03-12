@@ -7,8 +7,6 @@ import cruise.umple.compiler.exceptions.*;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 15
- * 
  * Class UmpleModel is the central class describing the system being compiled.
  * 
  * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
@@ -17,15 +15,15 @@ import java.util.*;
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  * 
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
+ * @umplesource Umple.ump 15
  * 
- * @umplesource Umple_Code.ump 15
  * In Umple_Code.ump: Methods for manipulating the Model
- * 
+ * @umplesource Umple_Code.ump 15
  */
-// line 26 "../../../../src/Umple.ump"
+// line 25 "../../../../src/Umple.ump"
 // line 17 "../../../../src/Trace.ump"
 // line 13 "../../../../src/UmpleVersion.ump"
-// line 20 "../../../../src/Umple_Code.ump"
+// line 19 "../../../../src/Umple_Code.ump"
 public class UmpleModel
 {
 
@@ -674,7 +672,7 @@ public class UmpleModel
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 22 ../../../../src/Umple_Code.ump
+  // line 21 ../../../../src/Umple_Code.ump
   public List<UmpleElement> getUmpleElements()
   {
     List<UmpleElement> all = new ArrayList<UmpleElement>();
@@ -807,8 +805,8 @@ public class UmpleModel
   }
 
 /*
- * @umplesource
  * Creates a new parser, loads the input, parses, then analyses 
+ * @umplesource
  */
   public void run()
   {
@@ -834,8 +832,8 @@ public class UmpleModel
       throw new UmpleCompilerException(result.toString(),null);
   }  
 /*
- * @umplesource
  * Generates the actual code for each generation target
+ * @umplesource
  */
   public void generate()
   {

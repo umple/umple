@@ -13,10 +13,9 @@ Methods for the metamodel found in Umple.ump. Most of these are mixins.
 namespace cruise.umple.compiler;
 
 /**
-  * @umplesource
-  * In Umple_Code.ump: Methods for manipulating the Model
-  *
-  */
+ * In Umple_Code.ump: Methods for manipulating the Model
+ * @umplesource
+ */
 class UmpleModel
 {
   public List<UmpleElement> getUmpleElements()
@@ -151,8 +150,8 @@ class UmpleModel
   }
 
 /*
- * @umplesource
  * Creates a new parser, loads the input, parses, then analyses 
+ * @umplesource
  */
   public void run()
   {
@@ -178,8 +177,8 @@ class UmpleModel
       throw new UmpleCompilerException(result.toString(),null);
   }  
 /*
- * @umplesource
  * Generates the actual code for each generation target
+ * @umplesource
  */
   public void generate()
   {
@@ -631,8 +630,8 @@ class AssociationClass
 }
 
 /*
- * @umplesource
  * In Umple_Code.ump: Methods for computing complex properties
+ * @umplesource
  */
 class UmpleClass
 {
@@ -1202,8 +1201,8 @@ class Association
 }
 
 /*
- * @umplesource
  * In Umple_Code.ump: Methods for computing compound properties
+ * @umplesource
  */
 class AssociationEnd
 {
@@ -1327,7 +1326,6 @@ class AssociationEnd
 }
 
 /*
- * @umplesource
  * In Umple_Code.ump: Methods for testing various complex properties
  */
 class AssociationVariable
@@ -1502,9 +1500,8 @@ class AssociationVariable
 }
 
 /*
- * @umplesource
- *
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
+ * @umplesource
  */
 class Multiplicity
 {
@@ -1647,6 +1644,9 @@ class Multiplicity
   }
 }
 
+/*
+ * @umplesource
+ */
 class GeneratedElement
 {
 
@@ -1718,6 +1718,9 @@ class GeneratedElement
   }
 }
 
+/*
+ * @umplesource
+ */
 class Point
 {
 
@@ -1740,6 +1743,9 @@ class Point
   }
 }
 
+/*
+ * @umplesource
+ */
 class Coordinate
 {
 
@@ -1835,12 +1841,14 @@ class Coordinate
   }
 }
 
+/*
+ * @umplesource
+ */
 class Comment
 {
   public Boolean isInline = true;
 
   /**
-   * @umplesource
    * Used to take a comment and process it into a format appropriate for displaying in generated code.
    * 
    * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).

@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 139
  * TO DO: Determine if this can be deleted
+ * @umplesource Umple.ump 137
  */
-// line 142 "../../../../src/Umple.ump"
+// line 140 "../../../../src/Umple.ump"
 public class Modifier
 {
 

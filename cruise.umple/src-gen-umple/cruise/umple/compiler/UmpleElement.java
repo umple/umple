@@ -6,14 +6,13 @@ import cruise.umple.compiler.Position;
 import java.util.*;
 
 /**
- * umplesource
- * 
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
- * @umplesource Umple_Code.ump 599
+ * @umplesource Umple.ump 69
+ * @umplesource Umple_Code.ump 598
  */
-// line 75 "../../../../src/Umple.ump"
-// line 601 "../../../../src/Umple_Code.ump"
+// line 73 "../../../../src/Umple.ump"
+// line 600 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
 
@@ -86,7 +85,7 @@ public class UmpleElement
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 102 "../../../../src/Umple.ump"
+    // line 100 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -311,7 +310,7 @@ public class UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 603 ../../../../src/Umple_Code.ump
+  // line 602 ../../../../src/Umple_Code.ump
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);

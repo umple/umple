@@ -4,10 +4,10 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 159
  * Represents a constant.
+ * @umplesource Umple.ump 157
  */
-// line 162 "../../../../src/Umple.ump"
+// line 160 "../../../../src/Umple.ump"
 public class Constant
 {
 

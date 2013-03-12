@@ -4,14 +4,14 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 433
  * Superclass for tracking member variables in all target languages
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
- * @umplesource Umple_Code.ump 1030
+ * @umplesource Umple.ump 428
+ * @umplesource Umple_Code.ump 1029
  */
-// line 438 "../../../../src/Umple.ump"
-// line 1032 "../../../../src/Umple_Code.ump"
+// line 433 "../../../../src/Umple.ump"
+// line 1031 "../../../../src/Umple_Code.ump"
 public class UmpleVariable
 {
 
@@ -44,7 +44,7 @@ public class UmpleVariable
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 452 "../../../../src/Umple.ump"
+    // line 447 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -96,7 +96,7 @@ public class UmpleVariable
    */
   public String getModifier()
   {
-    // line 454 "../../../../src/Umple.ump"
+    // line 449 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }
@@ -129,7 +129,7 @@ public class UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1034 ../../../../src/Umple_Code.ump
+  // line 1033 ../../../../src/Umple_Code.ump
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)

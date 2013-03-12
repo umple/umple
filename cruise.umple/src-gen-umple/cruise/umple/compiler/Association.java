@@ -5,16 +5,16 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 492
  * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
  * An association in UML/Umple represents a relationship that exists at run time
  * where instances of one class reference the other, and (if bidirectional) instance
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
- * @umplesource Umple_Code.ump 1092
+ * @umplesource Umple.ump 487
+ * @umplesource Umple_Code.ump 1091
  */
-// line 499 "../../../../src/Umple.ump"
-// line 1094 "../../../../src/Umple_Code.ump"
+// line 494 "../../../../src/Umple.ump"
+// line 1093 "../../../../src/Umple_Code.ump"
 public class Association
 {
 
@@ -51,7 +51,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
-    // line 511 "../../../../src/Umple.ump"
+    // line 506 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -110,7 +110,7 @@ public class Association
    */
   public String getName()
   {
-    // line 510 "../../../../src/Umple.ump"
+    // line 505 "../../../../src/Umple.ump"
     if (name == null || "".equals(name)) { return this.deriveName(); }
     return name;
   }
@@ -292,7 +292,7 @@ public class Association
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1097 ../../../../src/Umple_Code.ump
+  // line 1096 ../../../../src/Umple_Code.ump
   public void setLeftAndRight()
   {
     String name = this.getName();

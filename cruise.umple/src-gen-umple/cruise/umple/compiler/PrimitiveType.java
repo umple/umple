@@ -4,11 +4,10 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 209
- * 
  * NOT used right now
+ * @umplesource Umple.ump 207
  */
-// line 213 "../../../../src/Umple.ump"
+// line 210 "../../../../src/Umple.ump"
 public class PrimitiveType extends Type
 {
 

@@ -4,17 +4,17 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 515
  * An association end represents one logical end of an association
  * 
  * See also AssociationVariable
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
- * @umplesource Umple_Code.ump 1205
+ * @umplesource Umple.ump 510
  * In Umple_Code.ump: Methods for computing compound properties
+ * @umplesource Umple_Code.ump 1204
  */
-// line 522 "../../../../src/Umple.ump"
-// line 1208 "../../../../src/Umple_Code.ump"
+// line 517 "../../../../src/Umple.ump"
+// line 1207 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
 
@@ -130,21 +130,21 @@ public class AssociationEnd
 
   public String getRoleName()
   {
-    // line 535 "../../../../src/Umple.ump"
+    // line 530 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
   public String getClassName()
   {
-    // line 536 "../../../../src/Umple.ump"
+    // line 531 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
 
   public String getModifier()
   {
-    // line 537 "../../../../src/Umple.ump"
+    // line 532 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
@@ -154,7 +154,7 @@ public class AssociationEnd
    */
   public String getReferenceToClassName()
   {
-    // line 538 "../../../../src/Umple.ump"
+    // line 533 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }
@@ -311,7 +311,7 @@ public class AssociationEnd
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1211 ../../../../src/Umple_Code.ump
+  // line 1210 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()

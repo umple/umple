@@ -5,11 +5,12 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 657
  * Represents a comment, such as those found around classes, methods, attributes and associations.
+ * @umplesource Umple.ump 652
+ * @umplesource Umple_Code.ump 1845
  */
-// line 660 "../../../../src/Umple.ump"
-// line 1838 "../../../../src/Umple_Code.ump"
+// line 655 "../../../../src/Umple.ump"
+// line 1847 "../../../../src/Umple_Code.ump"
 public class Comment
 {
 
@@ -65,11 +66,10 @@ public class Comment
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1840 ../../../../src/Umple_Code.ump
+  // line 1849 ../../../../src/Umple_Code.ump
   public Boolean isInline = true;
 
   /**
-   * @umplesource
    * Used to take a comment and process it into a format appropriate for displaying in generated code.
    * 
    * For example, you may want a bunch of inline comments put together and displayed as Javadoc.  This accomplishes that (among others).

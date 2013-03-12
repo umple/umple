@@ -4,11 +4,10 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Umple.ump 219
- * 
  * NOT used right now
+ * @umplesource Umple.ump 216
  */
-// line 223 "../../../../src/Umple.ump"
+// line 219 "../../../../src/Umple.ump"
 public class ReferenceType extends Type
 {
 
