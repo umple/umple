@@ -5,9 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
+ * @umplesource Umple.ump 657
  * Represents a comment, such as those found around classes, methods, attributes and associations.
  */
-// line 546 "../../../../src/Umple.ump"
+// line 660 "../../../../src/Umple.ump"
 // line 1776 "../../../../src/Umple_Code.ump"
 public class Comment
 {

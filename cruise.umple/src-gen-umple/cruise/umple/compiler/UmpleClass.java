@@ -6,9 +6,14 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * Represents an Umple class which can contain attributes, associations and methods.
+ * @umplesource Umple.ump 343
+ * An UmpleClass can contain attributes, associations, state machines and methods.
+ * It can also have various other information such as a key (to identify uniqueness),
+ * code to inject into generated code, and comments. It can be tagged with various
+ * patterns, such as 'singleton', meaning that there can only be one instance,
+ * and abstract, meaning it can't have any instances.
  */
-// line 293 "../../../../src/Umple.ump"
+// line 350 "../../../../src/Umple.ump"
 // line 90 "../../../../src/Trace.ump"
 // line 594 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
@@ -623,7 +628,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 343 "../../../../src/Umple.ump"
+    // line 400 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -784,7 +789,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 341 "../../../../src/Umple.ump"
+    // line 398 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1056,7 +1061,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 345 "../../../../src/Umple.ump"
+    // line 402 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();

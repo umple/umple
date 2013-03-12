@@ -4,11 +4,12 @@
 package cruise.umple.compiler;
 
 /**
+ * @umplesource Umple.ump 433
  * Superclass for tracking member variables in all target languages
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
  */
-// line 365 "../../../../src/Umple.ump"
+// line 438 "../../../../src/Umple.ump"
 // line 987 "../../../../src/Umple_Code.ump"
 public class UmpleVariable
 {
@@ -42,7 +43,7 @@ public class UmpleVariable
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 379 "../../../../src/Umple.ump"
+    // line 452 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -94,7 +95,7 @@ public class UmpleVariable
    */
   public String getModifier()
   {
-    // line 381 "../../../../src/Umple.ump"
+    // line 454 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }

@@ -12,10 +12,12 @@ The main Umple metamodel.
 namespace cruise.umple.compiler;
 
 /*
- * The main meta-model of Umple.
+ * @umplesource
+ *
+ * Class UmpleModel is the central class describing the system being compiled.
  * 
  * The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
- * the classes, attributes, associations, methods, etc that were in it.
+ * the classes, attributes, associations, state machines, methods, etc that were in it.
  * 
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  * 
@@ -65,7 +67,10 @@ class UmpleModel
 }
 
 /*
- * An element partaining to an entity with Umple.
+ * umplesource
+ *
+ * An UmpleElement is one of the top-level items found in an Umple model
+ * Currently it has one subclass, UmpleClassifier
  */
 class UmpleElement
 {
@@ -98,7 +103,9 @@ class UmpleElement
 }
 
 /*
- * A method which recides inside an Umple Class.
+ * @umplesource
+ * A method in an Umple class or interface
+ * Umple Methods are coded by the programmer in the language(s) of their choice
  */
 class Method
 {
@@ -128,12 +135,17 @@ class Method
   1 -> * Comment;
 }
 
+/*
+ * @umplesource
+ * TO DO: Determine if this can be deleted
+ */
 class Modifier
 {
   String [] name;
 }
 
 /*
+ * @umplesource
  * The contents of a method, such as the code within it.
  */
 class MethodBody
@@ -144,6 +156,7 @@ class MethodBody
 }
 
 /*
+ * @umplesource
  * Represents a constant.
  */
 class Constant
@@ -164,6 +177,7 @@ class Constant
 }
 
 /*
+ * @umplesource
  * Represents a parameter in a method and its various forms.
  */
 class MethodParameter
@@ -183,62 +197,92 @@ class MethodParameter
   Boolean isLazy = false;
 }
 
-// NOT used right now
-// Type is a simple string 
+/*
+ * @umplesource
+ * NOT used right now
+ * Type is a simple string 
+ */
 class Type{
 }
 
-// NOT used right now
+/*
+ * @umplesource
+ *
+ * NOT used right now
+ */
 class PrimitiveType{
   isA Type;
   typeName;
 }
 
-// NOT used right now
+/*
+ * @umplesource
+ *
+ * NOT used right now
+ */
 class ReferenceType{
   isA Type;
   * -> 0..1 UmpleClass;
   * -> 0..1 UmpleInterface;
 }
-// Under Development
+
+/*
+ * @umplesource
+ * Under Development
+ */
 class ConstraintVariable{
-	type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
-	constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
-	value = {constrainedVariable};
-	
-	boolean isAttribute = {!"SYNTAX".equals(type)&&!"OPERATOR".equals(type)};
-	boolean isAssociation = false;
-	Integer index = -1;
-	boolean isPrimitive = false;
-	boolean isNumeric = {"integer".equals(type.toLowerCase())||
-	                        "float".equals(type.toLowerCase())||
-	                        "double".equals(type.toLowerCase())};
-	
-	UmpleVariable getAttribute(UmpleClass aClass){
-      if(!getIsAttribute())
-     	return null;
-      UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
-	  if(uv!=null){
-	  	isAssociation = ((Attribute)uv).getIsList();
-	    return uv;
-	  }  
-	  uv = aClass.getAssociationVariable(this.getConstrainedVariable());
-	  isAssociation = uv!=null;
-	  return uv;
+  type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+  constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
+  value = {constrainedVariable};
+
+  boolean isAttribute = {!"SYNTAX".equals(type)&&!"OPERATOR".equals(type)};
+  boolean isAssociation = false;
+  Integer index = -1;
+  boolean isPrimitive = false;
+  boolean isNumeric = {"integer".equals(type.toLowerCase())||
+    "float".equals(type.toLowerCase())||
+     "double".equals(type.toLowerCase())};
+
+  UmpleVariable getAttribute(UmpleClass aClass){
+    if(!getIsAttribute()) {
+      return null;
     }
-    key {constrainedVariable};
+    UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
+    if(uv!=null){
+      isAssociation = ((Attribute)uv).getIsList();
+      return uv;
+    }
+    uv = aClass.getAssociationVariable(this.getConstrainedVariable());
+    isAssociation = uv!=null;
+    return uv;
+  }
+  key {constrainedVariable};
 }
-// The Constraint object related to Umple Classes
+
+/*
+ * @umplesource
+ * The Constraint object related to Umple Classes
+ */
 class Constraint{  
   ConstraintVariable[] expressions; 
 }
+
+/*
+ * @umplesource
+ * A block of code in an arbitrary language to be injected into generated code
+ */
 class CodeBlock
 {
-	depend java.util.*;
-	
-	public static String languageUsed = "";
-	Hashtable<String,String> code;
+  depend java.util.*;
+
+  public static String languageUsed = "";
+  Hashtable<String,String> code;
 }
+
+/*
+ * @umplesource
+ * A block of code that can be injected into one or more methods, constructor, etc.
+ */
 class CodeInjection
 {
   depend cruise.umple.compiler.Position;
@@ -251,6 +295,11 @@ class CodeInjection
   Boolean isInternal = false;
 }
 
+/*
+ * @umplesource
+ *
+ * A key in a class is a set of attributes associations used to uniquely identify an object
+ */
 class Key
 {
   Boolean isDefault = false;
@@ -258,7 +307,8 @@ class Key
 }
 
 /*
- * Represents an Umple classifier.
+ * @umplesource
+ * Represents an Umple classifier: a Class or Interface
  */
 class UmpleClassifier
 {
@@ -274,7 +324,9 @@ class UmpleClassifier
 }
 
 /*
- * Represents an Umple interface.
+ * @umplesource
+ * Represents a interface.
+ * Like a class, but can't have any concrete methods, attributes or associations.
  */
 class UmpleInterface
 {
@@ -288,7 +340,12 @@ class UmpleInterface
 }
 
 /*
- * Represents an Umple class which can contain attributes, associations and methods.
+ * @umplesource
+ * An UmpleClass can contain attributes, associations, state machines and methods.
+ * It can also have various other information such as a key (to identify uniqueness),
+ * code to inject into generated code, and comments. It can be tagged with various
+ * patterns, such as 'singleton', meaning that there can only be one instance,
+ * and abstract, meaning it can't have any instances.
  */
 class UmpleClass
 {
@@ -345,6 +402,10 @@ class UmpleClass
   before addStateMachine { if (isImmutable()) { return false; } }
 }
 
+/*
+ * @umplesource
+ * A depend relationship indicates a package on which this class depends
+ */
 class Depend
 {
   name;
@@ -353,15 +414,27 @@ class Depend
   key { name }
 }
 
+/* 
+ * @umplesource
+ *
+ * A combination of Class and Association (as defined in UML)
+ * An AssociationClass is a full-fledged class, but at the same time
+ * It associates two other classes that would otherwise have a many-many
+ * relationship. Instances of the AssociationClass represent data 
+ * held by the links between those two classes.
+ */
 class AssociationClass
 {
   isA UmpleClass;
   1 -> 0..2 Association associatedTo;
 }
 
-// Superclass for tracking member variables in all target languages
-// TODO: Code smell because we have both an association variable and also an association
-// This class should go and instead AssociationEnd should be the member variable
+/*
+ * @umplesource
+ * Superclass for tracking member variables in all target languages
+ * TODO: Code smell because we have both an association variable and also an association
+ * This class should go and instead AssociationEnd should be the member variable
+ */
 class UmpleVariable
 {
   // The name of the Umple variable.
@@ -384,7 +457,12 @@ class UmpleVariable
 }
 
 /*
+ * @umplesource
  * Represents an attribute.
+ * An attribute is more abstract than an instance variable / property in that
+ * it can be derived, and have various other modifiers such as being
+ * initialized, lazy (does not appear in constructor and must be initialized
+ * after construction), etc.
  */
 class Attribute
 {
@@ -411,7 +489,12 @@ class Attribute
 }
 
 /*
+ * @umplesource
  * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
+ * An association in UML/Umple represents a relationship that exists at run time
+ * where instances of one class reference the other, and (if bidirectional) instance
+ * of the other class reference the first cass.
+ * The number of references is governed by the Multiplicity at each AssociationEnd
  */
 class Association
 {
@@ -428,9 +511,14 @@ class Association
   after constructor { this.setLeftAndRight(); }
 }
 
-
-// TODO: Code smell referenceToClassName is a duplication, can access via the association 
-// Create a derived attribute otherend (the other AssociationEnd)
+/* 
+ * @umplesource
+ * An association end represents one logical end of an association
+ * 
+ * See also AssociationVariable
+ * TODO: Code smell referenceToClassName is a duplication, can access via the association 
+ * Create a derived attribute otherend (the other AssociationEnd)
+ */
 class AssociationEnd
 {
   roleName;
@@ -450,7 +538,16 @@ class AssociationEnd
   before getReferenceToClassName { if (referenceToClassName == null) { return ""; } }
 }
 
-// TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
+/*
+ * @umplesource
+ * An association variable represents one of the variables used to represent
+ * an association. In a two-directional association (navigable) there would
+ * be one of these in each associated class.
+ *
+ * See also AssociationEnd
+ *
+ * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
+ */
 class AssociationVariable
 {
   isA UmpleVariable;
@@ -468,7 +565,13 @@ class AssociationVariable
   before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
 }
 
-// TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+/*
+ * @umplesource
+ * A multplicity constrains the number of linked objects at one end of an
+ * association
+ *
+ * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+ */
 class Multiplicity
 {
   depend cruise.umple.util.*;
@@ -490,6 +593,7 @@ class GeneratedElement
 }
 
 /*
+ * @umplesource
  * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
  */
 class GeneratedClass
@@ -514,7 +618,11 @@ class GeneratedClass
 //  0..1 -> 1 UmpleInterface uInterface;
 //}
 
-
+/*
+ * @umplesource
+ * A point in cartesian coordinates, used in representing the layout of a
+ * diagram in Umple
+ */
 class Point
 {
   Integer x;
@@ -523,6 +631,11 @@ class Point
   key { x, y }
 }
 
+/*
+ * @umplesource
+ * A Coordinate is used in  the layout of classes
+ * It represents the shape of a class box in a diagram
+ */
 class Coordinate
 {
   Integer x;
@@ -541,6 +654,7 @@ class Coordinate
 }
 
 /*
+ * @umplesource
  * Represents a comment, such as those found around classes, methods, attributes and associations.
  */
 class Comment
@@ -552,6 +666,7 @@ class Comment
 }
 
 /*
+ * @umplesource
  * Represents the generation target, such as what the generated output language will be.
  */
 class GenerateTarget
