@@ -5,6 +5,9 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
+*/
+
+/*
 This is our internal parser implementation for the Umple language.  It uses
 a generic Parser that can read an external EBNF grammar file, and then populate
 an abstract syntax tree.
@@ -16,9 +19,8 @@ b) Analyzing the AST to populate an Umple meta model instance
 c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
 
 Please refer to UmpleInternalParser_Code.ump for implementation details.
-
+@umplesource
  */
-
 class UmpleInternalParser
 {
   isA UmpleParser;
@@ -45,6 +47,11 @@ class UmpleInternalParser
   after setModel{if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}}
 }
 
+
+/*
+Simple name-value pair used in the Umple Parser
+@umplesource 
+ */
 class Pair
 {
   name;

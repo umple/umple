@@ -805,7 +805,6 @@ Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
 http://umple.org/license
-
 This is our internal parser implementation for the Umple language.  It uses
 a generic Parser that can read an external EBNF grammar file, and then populate
 an abstract syntax tree.
@@ -817,6 +816,7 @@ b) Analyzing the AST to populate an Umple meta model instance
 c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
 
 Please refer to UmpleInternalParser_Code.ump for implementation details.
+@umplesource /Users/tcl/Documents/7--Research/2-CRuiSE/codebase/googleumple/umple/cruise.umple/src/UmpleInternalParser.ump 11
 "];
   UmpleInternalParser -> Parser [arrowhead="empty"; samehead="gen"];
 
@@ -827,6 +827,8 @@ Please refer to UmpleInternalParser_Code.ump for implementation details.
   Pair [shape=record, label="{Pair|name\ :\ String\l\
 value\ :\ String\l}",
    tooltip="class Pair
+Simple name-value pair used in the Umple Parser
+@umplesource /Users/tcl/Documents/7--Research/2-CRuiSE/codebase/googleumple/umple/cruise.umple/src/UmpleInternalParser.ump 52
 "];
 
   // Class: UmpleXtextParser
