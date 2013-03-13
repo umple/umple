@@ -5,6 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 import cruise.umple.util.*;
 
+/**
+ * @umplesource Generator.ump 138
+ * @umplesource Generator_CodeYuml.ump 12
+ */
 // line 138 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeYuml.ump"
 public class YumlGenerator implements CodeGenerator

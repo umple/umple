@@ -7,6 +7,8 @@ import java.nio.file.*;
 /**
  * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
  * filename, the line number and the corresponding offset on that line number.
+ * @umplesource Parser.ump 111
+ * @umplesource Parser_Code.ump 322
  */
 // line 111 "../../../../src/Parser.ump"
 // line 322 "../../../../src/Parser_Code.ump"

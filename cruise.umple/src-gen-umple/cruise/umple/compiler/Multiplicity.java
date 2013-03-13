@@ -9,12 +9,12 @@ import cruise.umple.util.*;
  * association
  * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
- * @umplesource Umple.ump 564
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
- * @umplesource Umple_Code.ump 1503
+ * @umplesource Umple.ump 544
+ * @umplesource Umple_Code.ump 1488
  */
-// line 570 "../../../../src/Umple.ump"
-// line 1506 "../../../../src/Umple_Code.ump"
+// line 544 "../../../../src/Umple.ump"
+// line 1488 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
 
@@ -192,7 +192,7 @@ public class Multiplicity
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1509 ../../../../src/Umple_Code.ump
+  // line 1491 ../../../../src/Umple_Code.ump
   public void setRange(String lowerBound, String upperBound)
   {
     minimum = lowerBound;

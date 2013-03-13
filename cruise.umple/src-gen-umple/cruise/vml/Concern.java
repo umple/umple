@@ -6,6 +6,9 @@ import java.util.*;
 
 /**
  * POSITION INFORMATION
+ * @umplesource Vml.ump 33
+ * @umplesource Vml_Code.ump 87
+ * @umplesource Vml_Code.ump 369
  */
 // line 33 "../../../src/Vml.ump"
 // line 87 "../../../src/Vml_Code.ump"

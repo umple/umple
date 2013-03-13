@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler.exceptions;
 
+/**
+ * @umplesource UmpleExceptions.ump 25
+ */
 // line 25 "../../../../../src/UmpleExceptions.ump"
 public class SemanticException
 {

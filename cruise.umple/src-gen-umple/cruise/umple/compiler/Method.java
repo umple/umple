@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
- * @umplesource Umple.ump 104
- * @umplesource Umple_Code.ump 419
+ * @umplesource Umple.ump 105
+ * @umplesource Umple_Code.ump 415
  */
-// line 108 "../../../../src/Umple.ump"
-// line 421 "../../../../src/Umple_Code.ump"
+// line 105 "../../../../src/Umple.ump"
+// line 415 "../../../../src/Umple_Code.ump"
 public class Method
 {
 
@@ -336,7 +336,7 @@ public class Method
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 423 ../../../../src/Umple_Code.ump
+  // line 417 ../../../../src/Umple_Code.ump
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)

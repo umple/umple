@@ -11,6 +11,7 @@ import java.io.*;
 /**
  * TODO: Code smell - rename?
  * Text to diagram merging tool used by UmpleOnline
+ * @umplesource Main_Code.ump 286
  */
 // line 286 "../../../src/Main_Code.ump"
 public class PlaygroundMain

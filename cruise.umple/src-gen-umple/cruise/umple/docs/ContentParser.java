@@ -5,6 +5,10 @@ package cruise.umple.docs;
 import java.util.*;
 import cruise.umple.compiler.*;
 
+/**
+ * @umplesource Documenter.ump 43
+ * @umplesource Documenter_Code.ump 347
+ */
 // line 43 "../../../../src/Documenter.ump"
 // line 347 "../../../../src/Documenter_Code.ump"
 public class ContentParser extends Parser

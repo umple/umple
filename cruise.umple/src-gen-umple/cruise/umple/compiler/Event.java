@@ -3,6 +3,10 @@
 
 package cruise.umple.compiler;
 
+/**
+ * @umplesource StateMachine.ump 138
+ * @umplesource StateMachine_Code.ump 443
+ */
 // line 138 "../../../../src/StateMachine.ump"
 // line 443 "../../../../src/StateMachine_Code.ump"
 public class Event

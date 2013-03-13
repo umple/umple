@@ -7,6 +7,10 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
+/**
+ * @umplesource Generator.ump 96
+ * @umplesource Generator_CodeGvStateDiagram.ump 26
+ */
 // line 96 "../../../../src/Generator.ump"
 // line 26 "../../../../src/Generator_CodeGvStateDiagram.ump"
 public class GvStateDiagramGenerator implements CodeGenerator

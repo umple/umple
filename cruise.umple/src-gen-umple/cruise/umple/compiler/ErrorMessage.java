@@ -7,6 +7,8 @@ import java.util.*;
 
 /**
  * Represents an error message, typically used with parsing.
+ * @umplesource Parser.ump 46
+ * @umplesource Parser_Code.ump 1653
  */
 // line 46 "../../../../src/Parser.ump"
 // line 1653 "../../../../src/Parser_Code.ump"

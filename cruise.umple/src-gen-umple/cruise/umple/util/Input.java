@@ -4,6 +4,9 @@
 package cruise.umple.util;
 import java.io.*;
 
+/**
+ * @umplesource Util_Code.ump 77
+ */
 // line 77 "../../../../src/Util_Code.ump"
 public class Input
 {

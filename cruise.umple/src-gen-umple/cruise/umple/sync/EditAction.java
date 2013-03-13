@@ -5,6 +5,10 @@ package cruise.umple.sync;
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 
+/**
+ * @umplesource UmpleSync.ump 41
+ * @umplesource UmpleSync_Code.ump 337
+ */
 // line 41 "../../../../src/UmpleSync.ump"
 // line 337 "../../../../src/UmpleSync_Code.ump"
 public class EditAction extends SynchronizationAction

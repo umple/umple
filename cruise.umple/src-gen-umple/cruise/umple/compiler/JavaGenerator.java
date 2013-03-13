@@ -9,6 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.java.*;
 import cruise.umple.util.StringFormatter;
 
+/**
+ * @umplesource Generator.ump 162
+ * @umplesource Generator_CodeJava.ump 12
+ */
 // line 162 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeJava.ump"
 public class JavaGenerator implements CodeGenerator,CodeTranslator

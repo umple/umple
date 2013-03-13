@@ -15,15 +15,17 @@ import java.util.*;
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  * 
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
- * @umplesource Umple.ump 15
  * 
  * In Umple_Code.ump: Methods for manipulating the Model
- * @umplesource Umple_Code.ump 15
+ * @umplesource Umple.ump 24
+ * @umplesource Trace.ump 17
+ * @umplesource UmpleVersion.ump 13
+ * @umplesource Umple_Code.ump 18
  */
-// line 25 "../../../../src/Umple.ump"
+// line 24 "../../../../src/Umple.ump"
 // line 17 "../../../../src/Trace.ump"
 // line 13 "../../../../src/UmpleVersion.ump"
-// line 19 "../../../../src/Umple_Code.ump"
+// line 18 "../../../../src/Umple_Code.ump"
 public class UmpleModel
 {
 
@@ -672,7 +674,7 @@ public class UmpleModel
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 21 ../../../../src/Umple_Code.ump
+  // line 20 ../../../../src/Umple_Code.ump
   public List<UmpleElement> getUmpleElements()
   {
     List<UmpleElement> all = new ArrayList<UmpleElement>();
@@ -806,7 +808,6 @@ public class UmpleModel
 
 /*
  * Creates a new parser, loads the input, parses, then analyses 
- * @umplesource
  */
   public void run()
   {
@@ -833,7 +834,6 @@ public class UmpleModel
   }  
 /*
  * Generates the actual code for each generation target
- * @umplesource
  */
   public void generate()
   {

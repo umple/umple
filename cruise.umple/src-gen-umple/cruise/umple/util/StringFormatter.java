@@ -4,6 +4,9 @@
 package cruise.umple.util;
 import java.io.File;
 
+/**
+ * @umplesource Util_Code.ump 305
+ */
 // line 305 "../../../../src/Util_Code.ump"
 public class StringFormatter
 {

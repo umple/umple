@@ -7,6 +7,8 @@ import java.util.*;
 
 /**
  * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
+ * @umplesource Parser.ump 24
+ * @umplesource Parser_Code.ump 1586
  */
 // line 24 "../../../../src/Parser.ump"
 // line 1586 "../../../../src/Parser_Code.ump"

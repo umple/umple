@@ -3,6 +3,10 @@
 
 package cruise.umple.compiler;
 
+/**
+ * @umplesource UmpleXtextParser.ump 17
+ * @umplesource UmpleXtextParser_Code.ump 14
+ */
 // line 17 "../../../../src/UmpleXtextParser.ump"
 // line 14 "../../../../src/UmpleXtextParser_Code.ump"
 public class UmpleXtextParser implements UmpleParser

@@ -3,6 +3,9 @@
 
 package cruise.umple.util;
 
+/**
+ * @umplesource Util_Code.ump 12
+ */
 // line 12 "../../../../src/Util_Code.ump"
 public class TriState
 {

@@ -4,6 +4,10 @@
 package cruise.umple.docs;
 import java.util.*;
 
+/**
+ * @umplesource Documenter.ump 28
+ * @umplesource Documenter_Code.ump 330
+ */
 // line 28 "../../../../src/Documenter.ump"
 // line 330 "../../../../src/Documenter_Code.ump"
 public class Content

@@ -14,7 +14,6 @@ namespace cruise.umple.compiler;
 
 /**
  * In Umple_Code.ump: Methods for manipulating the Model
- * @umplesource
  */
 class UmpleModel
 {
@@ -151,7 +150,6 @@ class UmpleModel
 
 /*
  * Creates a new parser, loads the input, parses, then analyses 
- * @umplesource
  */
   public void run()
   {
@@ -178,7 +176,6 @@ class UmpleModel
   }  
 /*
  * Generates the actual code for each generation target
- * @umplesource
  */
   public void generate()
   {
@@ -380,7 +377,6 @@ class UmpleModel
 }
 
 /*
- * @umplesource
  */
 class Key
 {
@@ -400,7 +396,6 @@ class Key
 }
 
 /*
- * @umplesource
  */
 class Depend
 {
@@ -416,7 +411,6 @@ class Depend
 }
 
 /*
- * @umplesource
  */
 class Method
 {  
@@ -461,7 +455,6 @@ class Method
 }
 
 /*
- * @umplesource
  */
 class MethodBody
 {
@@ -484,7 +477,6 @@ class MethodBody
 }
 
 /*
- * @umplesource
  */
 class CodeBlock
 {
@@ -535,7 +527,6 @@ class CodeBlock
 }
 
 /*
- * @umplesource
  */
 class CodeInjection
 {
@@ -563,7 +554,6 @@ class CodeInjection
 }
 
 /*
- * @umplesource
  */
 class UmpleInterface
 {
@@ -595,7 +585,6 @@ class UmpleInterface
 }
 
 /*
- * @umplesource
  */
 class UmpleElement
 {
@@ -619,7 +608,6 @@ class UmpleElement
 }
 
 /*
- * @umplesource
  */
 class AssociationClass
 {
@@ -631,7 +619,6 @@ class AssociationClass
 
 /*
  * In Umple_Code.ump: Methods for computing complex properties
- * @umplesource
  */
 class UmpleClass
 {
@@ -1026,7 +1013,6 @@ class UmpleClass
 }
 
 /*
- * @umplesource
  */
 class UmpleVariable
 {
@@ -1054,7 +1040,6 @@ class UmpleVariable
 }
 
 /*
- * @umplesource
  */
 class Attribute
 {
@@ -1088,7 +1073,6 @@ class Attribute
 }
 
 /*
- * @umplesource
  */
 class Association
 {
@@ -1202,7 +1186,6 @@ class Association
 
 /*
  * In Umple_Code.ump: Methods for computing compound properties
- * @umplesource
  */
 class AssociationEnd
 {
@@ -1501,7 +1484,6 @@ class AssociationVariable
 
 /*
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
- * @umplesource
  */
 class Multiplicity
 {
@@ -1645,7 +1627,6 @@ class Multiplicity
 }
 
 /*
- * @umplesource
  */
 class GeneratedElement
 {
@@ -1719,7 +1700,6 @@ class GeneratedElement
 }
 
 /*
- * @umplesource
  */
 class Point
 {
@@ -1744,7 +1724,6 @@ class Point
 }
 
 /*
- * @umplesource
  */
 class Coordinate
 {
@@ -1842,7 +1821,6 @@ class Coordinate
 }
 
 /*
- * @umplesource
  */
 class Comment
 {

@@ -4,6 +4,9 @@
 package cruise.umple.util;
 import java.util.*;
 
+/**
+ * @umplesource Util_Code.ump 206
+ */
 // line 206 "../../../../src/Util_Code.ump"
 public class ActionResponse
 {

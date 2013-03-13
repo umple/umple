@@ -6,6 +6,10 @@ import java.io.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * @umplesource Umlet.ump 14
+ * @umplesource Umlet_Code.ump 12
+ */
 // line 14 "../../../../src/Umlet.ump"
 // line 12 "../../../../src/Umlet_Code.ump"
 public class UmletGenerator implements CodeGenerator

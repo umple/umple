@@ -20,7 +20,6 @@ namespace cruise.umple.compiler;
  * Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  * 
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
- * @umplesource
  */
 class UmpleModel
 {
@@ -68,7 +67,6 @@ class UmpleModel
 /*
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
- * @umplesource
  */
 class UmpleElement
 {
@@ -103,7 +101,6 @@ class UmpleElement
 /*
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
- * @umplesource
  */
 class Method
 {
@@ -135,7 +132,6 @@ class Method
 
 /*
  * TO DO: Determine if this can be deleted
- * @umplesource
  */
 class Modifier
 {
@@ -144,7 +140,6 @@ class Modifier
 
 /*
  * The contents of a method, such as the code within it.
- * @umplesource
  */
 class MethodBody
 {
@@ -155,7 +150,6 @@ class MethodBody
 
 /*
  * Represents a constant.
- * @umplesource
  */
 class Constant
 {
@@ -176,7 +170,6 @@ class Constant
 
 /*
  * Represents a parameter in a method and its various forms.
- * @umplesource
  */
 class MethodParameter
 {
@@ -198,14 +191,12 @@ class MethodParameter
 /*
  * NOT used right now
  * Type is a simple string 
- * @umplesource
  */
 class Type{
 }
 
 /*
  * NOT used right now
- * @umplesource
  */
 class PrimitiveType{
   isA Type;
@@ -214,7 +205,6 @@ class PrimitiveType{
 
 /*
  * NOT used right now
- * @umplesource
  */
 class ReferenceType{
   isA Type;
@@ -224,7 +214,6 @@ class ReferenceType{
 
 /*
  * Under Development
- * @umplesource
  */
 class ConstraintVariable{
   type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
@@ -257,7 +246,6 @@ class ConstraintVariable{
 
 /*
  * The Constraint object related to Umple Classes
- * @umplesource
  */
 class Constraint{  
   ConstraintVariable[] expressions; 
@@ -265,7 +253,6 @@ class Constraint{
 
 /*
  * A block of code in an arbitrary language to be injected into generated code
- * @umplesource
  */
 class CodeBlock
 {
@@ -277,7 +264,6 @@ class CodeBlock
 
 /*
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource
  */
 class CodeInjection
 {
@@ -294,7 +280,6 @@ class CodeInjection
 /*
  *
  * A key in a class is a set of attributes associations used to uniquely identify an object
- * @umplesource
  */
 class Key
 {
@@ -304,7 +289,6 @@ class Key
 
 /*
  * Represents an Umple classifier: a Class or Interface
- * @umplesource
  */
 class UmpleClassifier
 {
@@ -322,7 +306,6 @@ class UmpleClassifier
 /*
  * Represents a interface.
  * Like a class, but can't have any concrete methods, attributes or associations.
- * @umplesource
  */
 class UmpleInterface
 {
@@ -341,7 +324,6 @@ class UmpleInterface
  * code to inject into generated code, and comments. It can be tagged with various
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
- * @umplesource
  */
 class UmpleClass
 {
@@ -400,7 +382,6 @@ class UmpleClass
 
 /*
  * A depend relationship indicates a package on which this class depends
- * @umplesource
  */
 class Depend
 {
@@ -416,7 +397,6 @@ class Depend
  * It associates two other classes that would otherwise have a many-many
  * relationship. Instances of the AssociationClass represent data 
  * held by the links between those two classes.
- * @umplesource
  */
 class AssociationClass
 {
@@ -428,7 +408,6 @@ class AssociationClass
  * Superclass for tracking member variables in all target languages
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
- * @umplesource
  */
 class UmpleVariable
 {
@@ -457,7 +436,6 @@ class UmpleVariable
  * it can be derived, and have various other modifiers such as being
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
- * @umplesource
  */
 class Attribute
 {
@@ -489,7 +467,6 @@ class Attribute
  * where instances of one class reference the other, and (if bidirectional) instance
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
- * @umplesource
  */
 class Association
 {
@@ -512,7 +489,6 @@ class Association
  * See also AssociationVariable
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
- * @umplesource
  */
 class AssociationEnd
 {
@@ -541,7 +517,6 @@ class AssociationEnd
  * See also AssociationEnd
  *
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
- * @umplesource
  */
 class AssociationVariable
 {
@@ -565,7 +540,6 @@ class AssociationVariable
  * association
  *
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
- * @umplesource
  */
 class Multiplicity
 {
@@ -589,7 +563,6 @@ class GeneratedElement
 
 /*
  * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
- * @umplesource
  */
 class GeneratedClass
 {
@@ -616,7 +589,6 @@ class GeneratedClass
 /*
  * A point in cartesian coordinates, used in representing the layout of a
  * diagram in Umple
- * @umplesource
  */
 class Point
 {
@@ -629,7 +601,6 @@ class Point
 /*
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
- * @umplesource
  */
 class Coordinate
 {
@@ -650,7 +621,6 @@ class Coordinate
 
 /*
  * Represents a comment, such as those found around classes, methods, attributes and associations.
- * @umplesource
  */
 class Comment
 {
@@ -662,7 +632,6 @@ class Comment
 
 /*
  * Represents the generation target, such as what the generated output language will be.
- * @umplesource
  */
 class GenerateTarget
 {

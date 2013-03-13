@@ -5,6 +5,11 @@ package cruise.vml;
 import cruise.umple.compiler.*;
 import java.util.*;
 
+/**
+ * @umplesource Vml.ump 66
+ * @umplesource Vml_Code.ump 174
+ * @umplesource Vml_Code.ump 401
+ */
 // line 66 "../../../src/Vml.ump"
 // line 174 "../../../src/Vml_Code.ump"
 // line 401 "../../../src/Vml_Code.ump"

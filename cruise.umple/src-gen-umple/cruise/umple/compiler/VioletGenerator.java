@@ -6,6 +6,10 @@ import java.io.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * @umplesource Violet.ump 14
+ * @umplesource Violet_Code.ump 12
+ */
 // line 14 "../../../../src/Violet.ump"
 // line 12 "../../../../src/Violet_Code.ump"
 public class VioletGenerator implements CodeGenerator

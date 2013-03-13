@@ -8,6 +8,7 @@ import java.util.*;
  * Represents a rule, which has a name and contains definitions that describe it.
  * 
  * Examples of this are a class definition.
+ * @umplesource Parser.ump 133
  */
 // line 133 "../../../../src/Parser.ump"
 public class Rule

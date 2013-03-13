@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * A block of code in an arbitrary language to be injected into generated code
- * @umplesource Umple.ump 267
- * @umplesource Umple_Code.ump 487
+ * @umplesource Umple.ump 257
+ * @umplesource Umple_Code.ump 481
  */
-// line 270 "../../../../src/Umple.ump"
-// line 489 "../../../../src/Umple_Code.ump"
+// line 257 "../../../../src/Umple.ump"
+// line 481 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
 
@@ -24,7 +24,7 @@ public class CodeBlock
 
   public CodeBlock()
   {
-    // line 491 "../../../../src/Umple_Code.ump"
+    // line 483 "../../../../src/Umple_Code.ump"
     code = new Hashtable<String,String>();
   }
 
@@ -39,7 +39,7 @@ public class CodeBlock
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 274 ../../../../src/Umple.ump
+  // line 261 ../../../../src/Umple.ump
   public static String languageUsed = "";
   Hashtable<String,String> code;
  public CodeBlock(String add)  {
@@ -50,7 +50,7 @@ this();
 this();
     code.put(lang,add);
   }
-// line 503 ../../../../src/Umple_Code.ump
+// line 495 ../../../../src/Umple_Code.ump
   public void setCode(String add)
   {
     if(add!=null)

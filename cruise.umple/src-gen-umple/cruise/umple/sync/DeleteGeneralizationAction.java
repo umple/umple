@@ -5,6 +5,10 @@ package cruise.umple.sync;
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 
+/**
+ * @umplesource UmpleSync.ump 83
+ * @umplesource UmpleSync_Code.ump 1160
+ */
 // line 83 "../../../../src/UmpleSync.ump"
 // line 1160 "../../../../src/UmpleSync_Code.ump"
 public class DeleteGeneralizationAction extends SynchronizationAction

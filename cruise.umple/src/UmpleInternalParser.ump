@@ -19,7 +19,6 @@ b) Analyzing the AST to populate an Umple meta model instance
 c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
 
 Please refer to UmpleInternalParser_Code.ump for implementation details.
-@umplesource
  */
 class UmpleInternalParser
 {
@@ -29,6 +28,7 @@ class UmpleInternalParser
   depend cruise.umple.util.*;
   currentPackageName = "";
   Boolean packageNameUsed = true;
+  Boolean outputUmpleSource = false; 
 
   // The Umple meta model which will be populated based on what was parsed.
   UmpleModel model;
@@ -50,7 +50,6 @@ class UmpleInternalParser
 
 /*
 Simple name-value pair used in the Umple Parser
-@umplesource 
  */
 class Pair
 {

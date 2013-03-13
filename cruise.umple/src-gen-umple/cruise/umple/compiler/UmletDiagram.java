@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource Umlet.ump 26
+ * @umplesource Umlet_Code.ump 140
+ */
 // line 26 "../../../../src/Umlet.ump"
 // line 140 "../../../../src/Umlet_Code.ump"
 public class UmletDiagram

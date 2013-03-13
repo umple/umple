@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * @umplesource Violet.ump 34
+ */
 // line 34 "../../../../src/Violet.ump"
 public class VioletClass
 {

@@ -7,6 +7,8 @@ import cruise.umple.compiler.exceptions.*;
 
 /**
  * TODO: Users of this can most likely just use File, so this could be refactored out
+ * @umplesource UmpleHelper.ump 23
+ * @umplesource UmpleHelper_Code.ump 12
  */
 // line 23 "../../../../src/UmpleHelper.ump"
 // line 12 "../../../../src/UmpleHelper_Code.ump"

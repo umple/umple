@@ -3,6 +3,10 @@
 
 package cruise.umple.compiler;
 
+/**
+ * @umplesource UmpleHelper.ump 34
+ * @umplesource UmpleHelper_Code.ump 118
+ */
 // line 34 "../../../../src/UmpleHelper.ump"
 // line 118 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleParserFactory

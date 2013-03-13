@@ -3,8 +3,12 @@
 
 package cruise.umple.compiler;
 
-// line 174 "../../../../src/Umple.ump"
-// line 451 "../../../../src/Umple.ump"
+/**
+ * @umplesource Umple.ump 168
+ * @umplesource Umple.ump 430
+ */
+// line 168 "../../../../src/Umple.ump"
+// line 430 "../../../../src/Umple.ump"
 public class UniqueIdentifier extends UmpleVariable
 {
 

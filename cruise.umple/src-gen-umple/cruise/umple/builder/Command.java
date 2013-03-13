@@ -6,6 +6,9 @@ import java.util.regex.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * @umplesource Builder_Code.ump 6
+ */
 // line 6 "../../../../src/Builder_Code.ump"
 public class Command
 {

@@ -5,6 +5,10 @@ package cruise.umple.util;
 import cruise.umple.compiler.*;
 import java.util.*;
 
+/**
+ * @umplesource Json.ump 12
+ * @umplesource Json_Code.ump 12
+ */
 // line 12 "../../../../src/Json.ump"
 // line 12 "../../../../src/Json_Code.ump"
 public class JsonParser extends Parser

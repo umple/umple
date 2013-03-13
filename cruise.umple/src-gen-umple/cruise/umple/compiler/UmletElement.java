@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource Umlet.ump 31
+ */
 // line 31 "../../../../src/Umlet.ump"
 public class UmletElement
 {

@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource Parser.ump 14
+ * @umplesource Parser_Code.ump 12
+ */
 // line 14 "../../../../src/Parser.ump"
 // line 12 "../../../../src/Parser_Code.ump"
 public class Couple
