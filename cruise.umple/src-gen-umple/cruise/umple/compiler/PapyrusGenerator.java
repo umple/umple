@@ -7,6 +7,10 @@ import java.util.*;
 import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
+/**
+ * @umplesource Generator.ump 54
+ * @umplesource Generator_CodePapyrus.ump 12
+ */
 // line 54 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodePapyrus.ump"
 public class PapyrusGenerator implements CodeGenerator

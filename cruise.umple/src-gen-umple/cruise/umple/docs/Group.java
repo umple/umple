@@ -4,6 +4,10 @@
 package cruise.umple.docs;
 import java.util.*;
 
+/**
+ * @umplesource Documenter.ump 37
+ * @umplesource Documenter_Code.ump 339
+ */
 // line 37 "../../../../src/Documenter.ump"
 // line 339 "../../../../src/Documenter_Code.ump"
 public class Group

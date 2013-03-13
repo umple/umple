@@ -3,6 +3,11 @@
 
 package cruise.vml;
 
+/**
+ * @umplesource Vml.ump 59
+ * @umplesource Vml_Code.ump 112
+ * @umplesource Vml_Code.ump 408
+ */
 // line 59 "../../../src/Vml.ump"
 // line 112 "../../../src/Vml_Code.ump"
 // line 408 "../../../src/Vml_Code.ump"

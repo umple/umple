@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * @umplesource Trace_Code.ump 16
+ */
 // line 16 "../../../../src/Trace_Code.ump"
 public class TraceItem
 {

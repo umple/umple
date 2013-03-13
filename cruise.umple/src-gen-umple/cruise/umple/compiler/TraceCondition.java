@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler;
 
+/**
+ * @umplesource Trace.ump 22
+ */
 // line 22 "../../../../src/Trace.ump"
 public class TraceCondition
 {

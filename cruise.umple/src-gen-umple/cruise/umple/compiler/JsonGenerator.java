@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import cruise.umple.util.*;
 
+/**
+ * @umplesource Generator.ump 151
+ * @umplesource Generator_CodeJson.ump 12
+ */
 // line 151 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeJson.ump"
 public class JsonGenerator implements CodeGenerator

@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
+/**
+ * @umplesource StateMachine.ump 47
+ */
 // line 47 "../../../../src/StateMachine.ump"
 public class Activity
 {

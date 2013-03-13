@@ -3,6 +3,9 @@
 
 package cruise.umple.compiler.exceptions;
 
+/**
+ * @umplesource UmpleExceptions.ump 18
+ */
 // line 18 "../../../../../src/UmpleExceptions.ump"
 public class UmpleCompilerException extends RuntimeException
 {

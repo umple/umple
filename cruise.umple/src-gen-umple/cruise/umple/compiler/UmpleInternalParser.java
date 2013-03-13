@@ -23,9 +23,16 @@ import java.util.*;
  * c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
  * 
  * Please refer to UmpleInternalParser_Code.ump for implementation details.
- * @umplesource UmpleInternalParser.ump 11
+ * @umplesource UmpleInternalParser.ump 23
+ * @umplesource UmpleInternalParser_Code.ump 33
+ * @umplesource UmpleInternalParser_CodeCore.ump 17
+ * @umplesource UmpleInternalParser_CodeClass.ump 17
+ * @umplesource UmpleInternalParser_CodeConstraints.ump 17
+ * @umplesource UmpleInternalParser_CodeStateMachine.ump 17
+ * @umplesource UmpleInternalParser_CodeTrace.ump 17
+ * @umplesource UmpleInternalParser_CodeLayout.ump 17
  */
-// line 24 "../../../../src/UmpleInternalParser.ump"
+// line 23 "../../../../src/UmpleInternalParser.ump"
 // line 33 "../../../../src/UmpleInternalParser_Code.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeCore.ump"
 // line 17 "../../../../src/UmpleInternalParser_CodeClass.ump"
@@ -43,6 +50,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   //UmpleInternalParser Attributes
   private String currentPackageName;
   private boolean packageNameUsed;
+  private boolean outputUmpleSource;
   private UmpleModel model;
   private List<String> unparsedUmpleFiles;
   private List<String> parsedUmpleFiles;
@@ -77,6 +85,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     super(aName);
     currentPackageName = "";
     packageNameUsed = true;
+    outputUmpleSource = false;
     model = aModel;
     unparsedUmpleFiles = new ArrayList<String>();
     parsedUmpleFiles = new ArrayList<String>();
@@ -120,6 +129,14 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return wasSet;
   }
 
+  public boolean setOutputUmpleSource(boolean aOutputUmpleSource)
+  {
+    boolean wasSet = false;
+    outputUmpleSource = aOutputUmpleSource;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setModel(UmpleModel aModel)
   {
     boolean wasSet = false;
@@ -140,6 +157,11 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return packageNameUsed;
   }
 
+  public boolean getOutputUmpleSource()
+  {
+    return outputUmpleSource;
+  }
+
   /**
    * The Umple meta model which will be populated based on what was parsed.
    */
@@ -151,6 +173,11 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   public boolean isPackageNameUsed()
   {
     return packageNameUsed;
+  }
+
+  public boolean isOutputUmpleSource()
+  {
+    return outputUmpleSource;
   }
 
   public String getStrictnessFullName()
@@ -905,19 +932,17 @@ this("UmpleInternalParser", aModel);
   private void analyzeComment(Token token)
   {
     String theValue = "";
+    // Special comment directive to force umpleoutput directives to be added
+    // In every class
+    if (token.getValue().startsWith("@outputumplesource")) { 
+      outputUmpleSource = true;
+      return;
+    }
     if (!token.getValue().equals("$?[End_of_model]$?")) 
     {
-      theValue = injectUmpleSourceIfNeeded(token.getValue(),token);
+      theValue = token.getValue();
       lastComments.add(new Comment(theValue));
     }
-  }
-  
-  private static String injectUmpleSourceIfNeeded(String theComment, Token theToken) {
-    if(theComment.contains("@umplesource")) {
-      Position p = theToken.getPosition();
-      return theComment+" "+p.getRelativePath(null,"Java")+" "+p.getLineNumber();
-     }
-     return theComment;
   }
 
   /**
@@ -937,10 +962,15 @@ this("UmpleInternalParser", aModel);
     String theComment = "";
     for (int i = 0; i < inlineComments.length; i++) 
     {
-      theComment = injectUmpleSourceIfNeeded(inlineComments[i], token);   
-      Comment comment = new Comment(theComment);
-      comment.isInline = false;
-      lastComments.add(comment);
+      theComment = inlineComments[i];
+      if(theComment.startsWith("@outputumplesource")) {
+        outputUmpleSource = true;
+      }
+      else {
+        Comment comment = new Comment(theComment);
+        comment.isInline = false;
+        lastComments.add(comment);
+      }
     }
   }
 
@@ -1102,13 +1132,29 @@ this("UmpleInternalParser", aModel);
     
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
 
-	// Set the original .ump file and line number
-	aClass.addPosition(classToken.getPosition());
+    Position thePosition = classToken.getPosition();
+
+    // Set the original .ump file and line number
+    aClass.addPosition(thePosition);
 
     // Add all the comments in the comment list to the Umple class.
+    // But add them before any umplesource special comments
+    int regularCommentCountEnd = 0;
+    for (Comment c : aClass.getComments()) {
+      if(c.getText().startsWith("@umplesource")) break;
+      regularCommentCountEnd++;
+    }
+
     for (Comment c : lastComments)
     {
-      aClass.addComment(c);
+      aClass.addCommentAt(c,regularCommentCountEnd);
+      regularCommentCountEnd++;
+    }
+    
+    // Add special position comment at the end if @outputumplesource had been 
+    // detected earlier in a comment
+    if(outputUmpleSource == true) {  
+      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath(null,"Java")+" "+thePosition.getLineNumber()));
     }
 
 	// If the "abstract" keyword is parsed, make the Umple class an abstract class.

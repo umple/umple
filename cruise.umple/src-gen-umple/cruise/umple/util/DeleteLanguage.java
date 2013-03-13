@@ -3,6 +3,9 @@
 
 package cruise.umple.util;
 
+/**
+ * @umplesource Util_Code.ump 836
+ */
 // line 836 "../../../../src/Util_Code.ump"
 public class DeleteLanguage
 {

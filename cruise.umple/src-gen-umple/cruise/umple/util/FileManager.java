@@ -4,6 +4,9 @@
 package cruise.umple.util;
 import java.io.*;
 
+/**
+ * @umplesource Util_Code.ump 107
+ */
 // line 107 "../../../../src/Util_Code.ump"
 public class FileManager
 {

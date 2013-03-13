@@ -3,6 +3,10 @@
 
 package cruise.umple.sync;
 
+/**
+ * @umplesource UmpleSync.ump 14
+ * @umplesource UmpleSync_Code.ump 14
+ */
 // line 14 "../../../../src/UmpleSync.ump"
 // line 14 "../../../../src/UmpleSync_Code.ump"
 public class SynchronizationAction

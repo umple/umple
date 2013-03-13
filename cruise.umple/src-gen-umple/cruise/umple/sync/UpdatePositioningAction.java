@@ -6,6 +6,10 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * @umplesource UmpleSync.ump 20
+ * @umplesource UmpleSync_Code.ump 23
+ */
 // line 20 "../../../../src/UmpleSync.ump"
 // line 23 "../../../../src/UmpleSync_Code.ump"
 public class UpdatePositioningAction extends SynchronizationAction

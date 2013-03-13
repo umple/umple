@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource Parser.ump 151
+ * @umplesource Parser_Code.ump 426
+ */
 // line 151 "../../../../src/Parser.ump"
 // line 426 "../../../../src/Parser_Code.ump"
 public class RulePart

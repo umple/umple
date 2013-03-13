@@ -7,6 +7,10 @@ import cruise.umple.util.SampleFileWriter;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @umplesource Parser.ump 75
+ * @umplesource Parser_Code.ump 1685
+ */
 // line 75 "../../../../src/Parser.ump"
 // line 1685 "../../../../src/Parser_Code.ump"
 public class ErrorTypeSingleton

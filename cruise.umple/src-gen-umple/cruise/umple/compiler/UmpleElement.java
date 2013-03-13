@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
- * @umplesource Umple.ump 69
- * @umplesource Umple_Code.ump 598
+ * @umplesource Umple.ump 71
+ * @umplesource Umple_Code.ump 589
  */
-// line 73 "../../../../src/Umple.ump"
-// line 600 "../../../../src/Umple_Code.ump"
+// line 71 "../../../../src/Umple.ump"
+// line 589 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
 
@@ -85,7 +85,7 @@ public class UmpleElement
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 100 "../../../../src/Umple.ump"
+    // line 98 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -310,7 +310,7 @@ public class UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 602 ../../../../src/Umple_Code.ump
+  // line 591 ../../../../src/Umple_Code.ump
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);

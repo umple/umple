@@ -4,6 +4,9 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource Trace.ump 53
+ */
 // line 53 "../../../../src/Trace.ump"
 public class TraceDirective
 {

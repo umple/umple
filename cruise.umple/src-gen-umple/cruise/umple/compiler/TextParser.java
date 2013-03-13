@@ -7,6 +7,8 @@ import java.util.*;
 /**
  * Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
  * as an Umple file.
+ * @umplesource TextParser.ump 16
+ * @umplesource TextParser_Code.ump 12
  */
 // line 16 "../../../../src/TextParser.ump"
 // line 12 "../../../../src/TextParser_Code.ump"

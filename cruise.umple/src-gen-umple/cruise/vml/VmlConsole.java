@@ -5,6 +5,9 @@ package cruise.vml;
 import java.io.*;
 import cruise.umple.util.*;
 
+/**
+ * @umplesource Vml_Code.ump 15
+ */
 // line 15 "../../../src/Vml_Code.ump"
 public class VmlConsole
 {

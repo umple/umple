@@ -5,6 +5,10 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * @umplesource StateMachine.ump 14
+ * @umplesource StateMachine_Code.ump 14
+ */
 // line 14 "../../../../src/StateMachine.ump"
 // line 14 "../../../../src/StateMachine_Code.ump"
 public class StateMachine

@@ -4,6 +4,9 @@
 package cruise.umple.stats;
 import cruise.umple.util.*;
 
+/**
+ * @umplesource UmpleStats_Code.ump 14
+ */
 // line 14 "../../../../src/UmpleStats_Code.ump"
 public class StatsMain
 {

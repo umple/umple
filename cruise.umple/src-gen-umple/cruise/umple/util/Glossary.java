@@ -4,6 +4,9 @@
 package cruise.umple.util;
 import java.util.*;
 
+/**
+ * @umplesource Util_Code.ump 847
+ */
 // line 847 "../../../../src/Util_Code.ump"
 public class Glossary
 {

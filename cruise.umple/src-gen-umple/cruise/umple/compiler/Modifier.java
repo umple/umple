@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * TO DO: Determine if this can be deleted
- * @umplesource Umple.ump 137
+ * @umplesource Umple.ump 136
  */
-// line 140 "../../../../src/Umple.ump"
+// line 136 "../../../../src/Umple.ump"
 public class Modifier
 {
 

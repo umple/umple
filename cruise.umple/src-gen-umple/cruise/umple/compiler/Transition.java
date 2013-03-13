@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource StateMachine.ump 84
+ * @umplesource StateMachine_Code.ump 433
+ */
 // line 84 "../../../../src/StateMachine.ump"
 // line 433 "../../../../src/StateMachine_Code.ump"
 public class Transition

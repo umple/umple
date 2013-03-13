@@ -6,6 +6,9 @@ import java.util.*;
 import java.io.*;
 import org.junit.*;
 
+/**
+ * @umplesource Util_Code.ump 567
+ */
 // line 567 "../../../../src/Util_Code.ump"
 public class SampleFileWriter
 {

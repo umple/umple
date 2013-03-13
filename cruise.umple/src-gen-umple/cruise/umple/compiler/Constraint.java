@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * The Constraint object related to Umple Classes
- * @umplesource Umple.ump 259
+ * @umplesource Umple.ump 250
  */
-// line 262 "../../../../src/Umple.ump"
+// line 250 "../../../../src/Umple.ump"
 public class Constraint
 {
 

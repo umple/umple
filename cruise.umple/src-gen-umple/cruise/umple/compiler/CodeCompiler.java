@@ -8,6 +8,9 @@ import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
 import cruise.umple.util.StringFormatter;
 
+/**
+ * @umplesource Compiler.ump 14
+ */
 // line 14 "../../../../src/Compiler.ump"
 public class CodeCompiler
 {

@@ -4,6 +4,7 @@
 
 #include "student.h"
 
+// constant on the left side of the constraint
 	
   //------------------------
   // CONSTRUCTOR
@@ -11,7 +12,7 @@
   
  student::student(const int & aAge)
   {
-    if ( !(aAge>18))
+    if ( !(18>aAge))
     {
       throw "Please provide a valid age";
     }
@@ -43,7 +44,7 @@
   bool student::setAge(const int & aAge)
   {
     bool wasSet = false;
-    if (aAge>18)
+    if (18>aAge)
     {
     age = aAge;
     wasSet = true;

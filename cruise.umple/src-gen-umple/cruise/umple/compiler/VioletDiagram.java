@@ -4,6 +4,10 @@
 package cruise.umple.compiler;
 import java.util.*;
 
+/**
+ * @umplesource Violet.ump 28
+ * @umplesource Violet_Code.ump 110
+ */
 // line 28 "../../../../src/Violet.ump"
 // line 110 "../../../../src/Violet_Code.ump"
 public class VioletDiagram

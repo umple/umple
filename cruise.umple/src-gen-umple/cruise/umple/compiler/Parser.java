@@ -10,6 +10,8 @@ import java.util.*;
  * Parses an Umple file (.ump) based on grammar rules.
  * 
  * As parsing is going on "tokens" will be created and linked together in a hierarchy fashion based on what was parsed.
+ * @umplesource Parser.ump 172
+ * @umplesource Parser_Code.ump 675
  */
 // line 172 "../../../../src/Parser.ump"
 // line 675 "../../../../src/Parser_Code.ump"

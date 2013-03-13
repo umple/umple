@@ -12,8 +12,9 @@ To regenerate that diagram, compile this
 Then move DiagramMastercd.gv to ../../umplewww
 Then compile the result in umplewww with dot -Tsvg DiagramMastercd.gv -o Mastercd.svg
 On the server Mastercd.sv needs to be placed in the umple.org directory
-mvalong with the user manual files
+along with the user manual files
 
+@outputumplesource
 */
 generate GvClassDiagram "DiagramMaster.gv" --override-all;
 

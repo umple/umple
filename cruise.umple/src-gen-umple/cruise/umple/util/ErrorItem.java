@@ -4,6 +4,9 @@
 package cruise.umple.util;
 import java.util.*;
 
+/**
+ * @umplesource Util_Code.ump 289
+ */
 // line 289 "../../../../src/Util_Code.ump"
 public class ErrorItem
 {

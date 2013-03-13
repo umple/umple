@@ -6,6 +6,9 @@ import java.util.Scanner;
 import java.util.regex.*;
 import java.io.*;
 
+/**
+ * @umplesource Util_Code.ump 997
+ */
 // line 997 "../../../../src/Util_Code.ump"
 public class ExceptionDumper
 {

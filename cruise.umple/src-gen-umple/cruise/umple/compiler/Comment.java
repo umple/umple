@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Represents a comment, such as those found around classes, methods, attributes and associations.
- * @umplesource Umple.ump 652
- * @umplesource Umple_Code.ump 1845
+ * @umplesource Umple.ump 625
+ * @umplesource Umple_Code.ump 1825
  */
-// line 655 "../../../../src/Umple.ump"
-// line 1847 "../../../../src/Umple_Code.ump"
+// line 625 "../../../../src/Umple.ump"
+// line 1825 "../../../../src/Umple_Code.ump"
 public class Comment
 {
 
@@ -66,7 +66,7 @@ public class Comment
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1849 ../../../../src/Umple_Code.ump
+  // line 1827 ../../../../src/Umple_Code.ump
   public Boolean isInline = true;
 
   /**

@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * Represents a parameter in a method and its various forms.
- * @umplesource Umple.ump 178
+ * @umplesource Umple.ump 174
  */
-// line 181 "../../../../src/Umple.ump"
+// line 174 "../../../../src/Umple.ump"
 public class MethodParameter extends UmpleVariable
 {
 

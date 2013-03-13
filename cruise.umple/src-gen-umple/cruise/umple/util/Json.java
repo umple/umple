@@ -4,6 +4,10 @@
 package cruise.umple.util;
 import java.util.*;
 
+/**
+ * @umplesource Json.ump 17
+ * @umplesource Json_Code.ump 127
+ */
 // line 17 "../../../../src/Json.ump"
 // line 127 "../../../../src/Json_Code.ump"
 public class Json

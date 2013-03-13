@@ -3,6 +3,10 @@
 
 package cruise.umple.docs;
 
+/**
+ * @umplesource Documenter.ump 49
+ * @umplesource Documenter_Code.ump 412
+ */
 // line 49 "../../../../src/Documenter.ump"
 // line 412 "../../../../src/Documenter_Code.ump"
 public class Template

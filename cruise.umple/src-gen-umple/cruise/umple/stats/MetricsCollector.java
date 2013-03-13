@@ -6,6 +6,9 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
 
+/**
+ * @umplesource UmpleStats_Code.ump 60
+ */
 // line 60 "../../../../src/UmpleStats_Code.ump"
 public class MetricsCollector
 {
