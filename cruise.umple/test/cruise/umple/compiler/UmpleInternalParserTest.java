@@ -238,6 +238,10 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("213_mixin_namespaces_1.ump", "[namespace:A][classDefinition][name:X][namespace:B][classDefinition][name:Y][classDefinition][name:X]");
 
     fileToOutputs.put("213_mixin_namespaces_2.ump", "[classDefinition][name:X][namespace:B][classDefinition][name:Y][classDefinition][name:X]");
+    
+    fileToOutputs.put("026_externalDefinitionAndClassDefinition_first.ump", "[externalDefinition][name:X][classDefinition][name:X][attribute][name:abcd]");
+    fileToOutputs.put("026_externalDefinitionAndClassDefinition_last.ump", "[classDefinition][name:X][attribute][name:abcd][externalDefinition][name:X]");
+    fileToOutputs.put("026_externalDefinitionAndClassDefinition_middle.ump", "[classDefinition][name:X][attribute][name:abcd][externalDefinition][name:X][classDefinition][name:X][attribute][name:xyz]");
 
   }
 

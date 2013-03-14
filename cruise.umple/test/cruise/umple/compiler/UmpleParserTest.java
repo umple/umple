@@ -1964,7 +1964,33 @@ public class UmpleParserTest
   	  assertFailedParse("106_invalidNameStateMachineAndAssocRoleName4.ump",52);
   }
   
+  @Test
+  public void externalDefinitionAndClassDefinitionCodeGeneration_externalFirst()
+  {
+    assertParse("026_externalDefinitionAndClassDefinition_first.ump");
+    
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(1,x.numberOfAttributes());
+  }
+   
+   @Test
+  public void externalDefinitionAndClassDefinitionCodeGeneration_externalMiddle()
+  {
+    assertParse("026_externalDefinitionAndClassDefinition_middle.ump");
+    
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(2,x.numberOfAttributes());
+  }
   
+   @Test
+  public void externalDefinitionAndClassDefinitionCodeGeneration_externalLast()
+  {
+    assertParse("026_externalDefinitionAndClassDefinition_last.ump");
+    
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(1,x.numberOfAttributes());
+  }
+
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));

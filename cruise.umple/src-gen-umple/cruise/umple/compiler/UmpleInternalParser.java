@@ -1131,6 +1131,8 @@ this("UmpleInternalParser", aModel);
     }
     
     UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
+    if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) )
+      aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
 
     Position thePosition = classToken.getPosition();
 
@@ -1232,8 +1234,12 @@ this("UmpleInternalParser", aModel);
 
   private UmpleClass analyzeExternal(Token externalToken)
   {
+    // Check to see if there is an existing class
+    UmpleClass existingClass = model.getUmpleClass(externalToken.getValue("name"));
     UmpleClass aClass = analyzeClass(externalToken);
-    aClass.setModifier("external");
+    // Only set the modifier to external if there is not a class defined with the same name
+    if ( existingClass == null )
+      aClass.setModifier("external");
     return aClass;
   }
 
