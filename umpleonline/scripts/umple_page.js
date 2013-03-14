@@ -29,13 +29,23 @@ Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
 
-
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly)
+// The following is set called from umple.php
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramType)
 { 
   Page.showDiagram = doShowDiagram;  
   Page.showText = doShowText;  
   Page.showMenu = doShowMenu;  
-  Page.readOnly = doReadOnly;  
+  Page.readOnly = doReadOnly; 
+
+  // Set diagram type - anything else means use the default editable class diagram
+  if(diagramType == "GvState")   {
+    Page.useGvStateDiagram = true;
+    Page.useEditableClassDiagram = false;
+  }
+  else if(diagramType == "GvClass")   {
+    Page.useGvClassDiagram = true;
+    Page.useEditableClassDiagram = false;
+  }
 
   jQuery.noConflict();
   jQuery(document).keydown(function(event){Action.keyboardShortcut(event);});

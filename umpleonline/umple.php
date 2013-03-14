@@ -34,6 +34,14 @@ if (isset($_REQUEST["nochrome"])) {$showChrome=false;} else {$showChrome=true;}
 // nodiagram means suppress creation of the diagram - passed to JavaScript
 if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true;}
 
+// diagramtype means choose some diagram other than the default which is class
+$diagramType = "class";
+if (isset($_REQUEST["diagramtype"])) {
+  $diagramType=$_REQUEST["diagramtype"];
+  if ($diagramType=="state") $diagramType = "GvState";
+  else if ($diagramType !="GvState" && $diagramType !="GvClass") $diagramType = "class";
+}
+
 // notext means suppress creation of the text pane - passed to JavaScript
 // ignored if nodiagram is also set
 if ($showDiagram && isset($_REQUEST["notext"])) {$showText=false;} else {$showText=true;}
@@ -271,7 +279,8 @@ $output = readTemporaryFile("ump/" . $filename);
     <?php if($showDiagram) { ?> true  <?php } else { ?> false <?php } ?>,
     <?php if($showText) { ?> true  <?php } else { ?> false <?php } ?>,
     <?php if($showMenu) { ?> true  <?php } else { ?> false <?php } ?>,
-    <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>);
+    <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>,
+    "<?php echo $diagramType ?>"); // 
 </script>
 
 
