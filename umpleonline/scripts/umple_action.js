@@ -359,7 +359,7 @@ Action.changeDiagramType = function(newDiagramType)
     changedType = true;
   }
   if (changedType) {
-    Page.setFeedbackMessage("DEBUG New Diagram type "+newDiagramType);
+    // Page.setFeedbackMessage("DEBUG New Diagram type "+newDiagramType);
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");

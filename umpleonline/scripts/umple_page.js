@@ -159,7 +159,14 @@ Page.initOptions = function()
   jQuery("#buttonShowHideLayoutEditor").attr('checked', false);
   jQuery("#buttonShowHideTextEditor").attr('checked', Page.showText);
   jQuery("#buttonShowHideCanvas").attr('checked', Page.showDiagram);
-  jQuery("#buttonShowEditableClassDiagram").attr('checked', true); // TODO - make variable
+
+if(Page.useEditableClassDiagram)
+ jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+if(Page.useGvClassDiagram)
+  jQuery("#buttonShowGvClassDiagram").attr('checked', true);
+if(Page.useGvStateDiagram)
+  jQuery("#buttonShowGvStateDiagram").attr('checked', true);     
+
   jQuery("#buttonPhotoReady").attr('checked', false);
   jQuery("#buttonManualSync").attr('checked', false);
   
