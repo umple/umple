@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sql.*;
 
 /**
- * @umplesource Generator.ump 231
+ * @umplesource Generator.ump 232
  * @umplesource Generator_CodeSql.ump 12
  */
-// line 231 "../../../../src/Generator.ump"
+// line 232 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSql.ump"
 public class SqlGenerator implements CodeGenerator,CodeTranslator
 {
@@ -379,6 +379,10 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
     return true;
   }
 
+  public String translate(String format, Constraint constraint)
+  {
+  	return "{0}";
+  }
   
   public String relatedTranslate(String name, AssociationVariable av)
   {

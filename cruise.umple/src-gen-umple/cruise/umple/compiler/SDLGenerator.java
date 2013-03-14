@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sdl.*;
 
 /**
- * @umplesource Generator.ump 248
+ * @umplesource Generator.ump 249
  * @umplesource Generator_CodeSDL.ump 12
  */
-// line 248 "../../../../src/Generator.ump"
+// line 249 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {
@@ -131,6 +131,11 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     else{
     	return null;    	
     }
+  }
+  
+  public String translate(String format, Constraint constraint)
+  {
+  	return "{0}";
   }
   
   public String translate(String name, UmpleInterface aInterface)

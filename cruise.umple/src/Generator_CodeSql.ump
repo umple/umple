@@ -304,6 +304,10 @@ class SqlGenerator
     return true;
   }
 
+  public String translate(String format, Constraint constraint)
+  {
+  	return "{0}";
+  }
   
   public String relatedTranslate(String name, AssociationVariable av)
   {

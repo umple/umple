@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
 /**
- * @umplesource Generator.ump 214
+ * @umplesource Generator.ump 215
  * @umplesource Generator_CodeRuby.ump 12
  */
-// line 214 "../../../../src/Generator.ump"
+// line 215 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeRuby.ump"
 public class RubyGenerator implements CodeGenerator,CodeTranslator
 {
@@ -205,7 +205,44 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   {
     return true;
   }
-
+  
+  public String translate(String format, Constraint constraint)
+  {
+  	if(constraint==null)
+  	  return "{0}";
+  	String expression = "";
+  	for(ConstraintVariable expr: constraint.getExpressions())
+  	{
+  		if( expr.getIsAttribute() )
+        {
+        	if(format.contains("allParameterOne"))
+        	{
+        		expression += "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+        	}
+            else if(format.contains(expr.getValue()))
+            {
+        	   expression += "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+            }
+            else 
+            { 
+        	  expression += "@"+expr.getValue();
+            }
+          } 
+          else
+          { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
+            expression += expr.getValue();
+          }
+  	}
+  	if(format.contains("Closed"))
+  	{
+  		return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
+  	}
+  	else if(format.contains("Open"))
+  	{
+  		return StringFormatter.format("  if({0})\n    {\n    {1}\n",expression, "{0}");
+  	}
+  	return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
+  }
   
   public String relatedTranslate(String name, AssociationVariable av)
   {

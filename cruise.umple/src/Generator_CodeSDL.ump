@@ -58,6 +58,11 @@ class SDLGenerator
     }
   }
   
+  public String translate(String format, Constraint constraint)
+  {
+  	return "{0}";
+  }
+  
   public String translate(String name, UmpleInterface aInterface)
   {
     String result = "";
