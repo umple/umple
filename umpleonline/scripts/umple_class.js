@@ -13,6 +13,7 @@ UmpleClassFactory.create = function(data)
   var umpleClass = new UmpleClass();
   umpleClass.id = data.id;
   umpleClass.name = data.name;
+  umpleClass.displayColor = data.displayColor;
   umpleClass.position.x = data.position.x;
   umpleClass.position.y = data.position.y;
   umpleClass.position.width = data.position.width;
@@ -72,6 +73,7 @@ function UmpleClass()
 {
   this.id;
   this.name;
+  this.displayColor = "";
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
   this.extendsClass;
@@ -218,7 +220,8 @@ function UmpleClass()
 	    
     classInnerHtml +=
       format(
-      '<table class="classTable" "border="0">', this.id) +
+      '<table bgcolor="'+ this.displayColor+
+      '" class="classTable" border="0">', this.id) +
       format(
       '  <tr class="height">' +
       '    <td rowspan="4"> <img id="{0}_height" src="scripts/_.gif" style="width:0px;height:{1}px;display:block;"  />' +
