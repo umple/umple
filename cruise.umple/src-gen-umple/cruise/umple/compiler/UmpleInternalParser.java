@@ -1293,8 +1293,12 @@ this("UmpleInternalParser", aModel);
         aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
       }
       else if (token.is("displayColor"))
-      {
-        aInterface.setDisplayColor(token.getValue("colorValue"));
+      {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
+        String theColor = token.getValue("colorValue");
+        if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
+        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
+        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
+        aInterface.setDisplayColor(theColor);
       }
     }
   }
@@ -3822,8 +3826,12 @@ this("UmpleInternalParser", aModel);
       aClass.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
     }
     else if (token.is("displayColor"))
-    {
-      aClass.setDisplayColor(token.getValue("colorValue"));
+    { // See near clone in UmpleInternalParser_CodeClass.ump
+      String theColor = token.getValue("colorValue");
+      if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
+      if(!theColor.startsWith("\"")) theColor= "\""+theColor;
+      if(!theColor.endsWith("\"")) theColor= theColor+"\"";
+      aClass.setDisplayColor(theColor);
     }
     else if (token.is("associationPosition"))
     {
