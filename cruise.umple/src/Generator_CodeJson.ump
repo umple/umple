@@ -26,6 +26,13 @@ class JsonGenerator
       String width = aClass.getCoordinates().getWidth() + "";
       String height = aClass.getCoordinates().getHeight() + "";
       String name = aClass.getName();
+      String displayColor = aClass.getDisplayColor();
+      
+      // Strip off leading and trailing quotes if they exist
+      if(displayColor.startsWith("\""))
+        displayColor=displayColor.substring(1,displayColor.length());
+      if(displayColor.endsWith("\""))
+        displayColor=displayColor.substring(0,displayColor.length()-1);
 
       String jsonForAttributes = "";
       for (Attribute attribute : aClass.getAttributes())
@@ -50,7 +57,7 @@ class JsonGenerator
         extendsJson = StringFormatter.format(", {0}extendsClass{0}: {0}{1}{0}","\"",extendsClassName);
       }
 
-      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}{8}}", "\"", x, y, width, height, name, name, jsonForAttributes,extendsJson);
+      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{9}{0} {8}}", "\"", x, y, width, height, name, name, jsonForAttributes,extendsJson, displayColor);
       isFirst = false;
     }
 

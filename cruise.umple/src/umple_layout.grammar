@@ -11,4 +11,4 @@ position- : [[associationPosition]] | [[elementPosition]]
 elementPosition : position [x] [y] [width] [height] ;
 associationPosition : position.association [name] [[coordinate]] [[coordinate]] ;
 coordinate : [x] , [y]
-displayColor : displayColor [**colorValue] ;
+displayColor : ( displayColor | displayColour ) [**colorValue] ;
