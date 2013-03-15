@@ -19,3 +19,74 @@ along with the user manual files
 generate GvClassDiagram "DiagramMaster.gv" --override-all;
 
 use Master.ump;
+
+// Pink for core Umple classes for parsing and the model
+
+class UmpleInternalParser {displayColor "#FFCCCC";}
+interface UmpleParser {displayColor "#FFCCCC";}
+class Parser {displayColor "#FFCCCC";}
+class Rule {displayColor "#FFCCCC";}
+class Position {displayColor "#FFCCCC";}
+class RulePartValue {displayColor "#FFCCCC";}
+class RulePart {displayColor "#FFCCCC";}
+class RuleInstance {displayColor "#FFCCCC";}
+class Token {displayColor "#FFCCCC";}
+class ErrorType {displayColor "#FFCCCC";}
+class ErrorMessage {displayColor "#FFCCCC";}
+class ParseResult {displayColor "#FFCCCC";}
+class UmpleConsoleMain {displayColor "#FFCCCC";}
+class PlaygroundMain {displayColor "#FFCCCC";}
+
+// Yellow for Classifiers, classes etc.
+class UmpleModel {displayColor "#FFEEAA";}
+class UmpleInterface {displayColor "#FFEEAA";}
+class UmpleClassifier {displayColor "#FFEEAA";}
+class UmpleElement {displayColor "#FFEEAA";}
+class AssociationClass {displayColor "#FFEEAA";}
+class UmpleClass {displayColor "#FFEEAA";}
+
+// Green for things to do with associations and attributes
+class Association {displayColor "#AAFFAA";}
+class AssociationEnd {displayColor "#AAFFAA";}
+class Multiplicity {displayColor "#AAFFAA";}
+
+class UmpleVariable {displayColor "#99EE99";}
+class AssociationVariable {displayColor "#99EE99";}
+class MethodParameter {displayColor "#99EE99";}
+class Attribute {displayColor "#99EE99";}
+class Constant {displayColor "#99EE99";}
+
+// Blue for things to do with state machines
+class State {displayColor "#BBDDFF";}
+class StateMachine {displayColor "#BBDDFF";}
+class Event {displayColor "#BBDDFF";}
+class Action {displayColor "#BBDDFF";}
+class Activity {displayColor "#BBDDFF";}
+class Transition {displayColor "#BBDDFF";}
+class Guard {displayColor "#BBDDFF";}
+
+// Purple for VML stuff
+class VmlParser {displayColor "#EECCFF";}
+class VmlSystem {displayColor "#EECCFF";}
+class Concern {displayColor "#EECCFF";}
+class VariationPoint {displayColor "#EECCFF";}
+class Variant {displayColor "#EECCFF";}
+class CodeSnippet {displayColor "#EECCFF";}
+
+// Orange for Trace stuff
+class TraceDirective {displayColor "#FFCC77";}
+class TraceCase {displayColor "#FFCC77";}
+class TraceRecord {displayColor "#FFCC77";}
+class TraceCondition {displayColor "#FFCC77";}
+class StateMachine_TraceItem {displayColor "#FFCC77";}
+class Attribute_TraceItem {displayColor "#FFCC77";}
+class MethodTraceEntity {displayColor "#FFCC77";}
+class TraceDirective {displayColor "#FFCC77";}
+class TraceItem {displayColor "#FFCC77";}
+class ConditionRhs {displayColor "#FFCC77";}
+
+// Grey for methods and code injections
+class Method {displayColor "#EEEEEE";}
+class MethodBody {displayColor "#EEEEEE";}
+class CodeInjection {displayColor "#EEEEEE";}
+class CodeBlock {displayColor "#EEEEEE";}

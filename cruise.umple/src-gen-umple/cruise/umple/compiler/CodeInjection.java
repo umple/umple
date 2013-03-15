@@ -6,10 +6,10 @@ import cruise.umple.compiler.Position;
 
 /**
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource Umple.ump 268
+ * @umplesource Umple.ump 270
  * @umplesource Umple_Code.ump 531
  */
-// line 268 "../../../../src/Umple.ump"
+// line 270 "../../../../src/Umple.ump"
 // line 531 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {

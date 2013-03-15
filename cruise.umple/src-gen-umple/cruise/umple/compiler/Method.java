@@ -8,10 +8,10 @@ import java.util.*;
 /**
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
- * @umplesource Umple.ump 105
+ * @umplesource Umple.ump 107
  * @umplesource Umple_Code.ump 415
  */
-// line 105 "../../../../src/Umple.ump"
+// line 107 "../../../../src/Umple.ump"
 // line 415 "../../../../src/Umple_Code.ump"
 public class Method
 {

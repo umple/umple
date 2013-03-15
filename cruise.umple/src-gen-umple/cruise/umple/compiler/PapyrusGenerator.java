@@ -255,7 +255,7 @@ public class PapyrusGenerator implements CodeGenerator
     
       noteCode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
       noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
-      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/4.0.0/UML\" xmi:id=\"_{0}Notation\"",model.getUmpleFile().getSimpleFileName()));
+      noteCode.append(StringFormatter.format(" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}Notation\"",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format(" type=\"PapyrusUMLClassDiagram\" name=\"{0}\" measurementUnit=\"Pixel\">\n",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}DiagramStyle\"/>\n",model.getUmpleFile().getSimpleFileName()));
       noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:Model\" href=\"model.uml#_{0}\"/>\n",model.getUmpleFile().getSimpleFileName()));

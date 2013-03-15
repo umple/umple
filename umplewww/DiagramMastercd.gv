@@ -5,29 +5,8 @@ digraph "DiagramMaster" {
   rankdir="BT"
   node [shape=record; href="javascript:Action.selectClass(\"\N\");"];
 
-  // Class: Documenter
-  Documenter [shape=record, label="{Documenter|inputPath\ :\ String\l\
-outputPath\ :\ String\l\
-messages\ :\ String\l}",
-   tooltip="class Documenter
-"];
-
-  // Class: Content
-  Content [shape=record, label="{Content|title\ :\ String\l\
-shouldIncludeReferences\ :\ Boolean\l\
-description\ :\ String\l\
-syntax\ :\ String\l\
-examples\ :\ String\l}",
-   tooltip="class Content
-"];
-
-  // Class: Group
-  Group [shape=record, label="{Group|name\ :\ String\l}",
-   tooltip="class Group
-"];
-
   // Class: Parser
-  Parser [shape=record, label="{Parser|filename\ :\ String\l\
+  Parser [ style=filled, fillcolor="#FFCCCC" shape=record, label="{Parser|filename\ :\ String\l\
 name\ :\ String\l\
 grammarRules\ :\ String\l\
 parseResult\ :\ ParseResult\l\
@@ -37,353 +16,179 @@ rootToken\ :\ Token\l}",
 * Parses an Umple file (.ump) based on grammar rules.
  
  As parsing is going on \"tokens\" will be created and linked together in a hierarchy fashion based on what was parsed.
+@umplesource DiagramMaster.ump 27
+@umplesource Parser.ump 172
+@umplesource Parser_Code.ump 675
 "];
 
-  // Class: ContentParser
-  ContentParser [shape=record, label="{ContentParser|init\ :\ Integer\l}",
-   tooltip="class ContentParser
+  // Class: UmpleInternalParser
+  UmpleInternalParser [ style=filled, fillcolor="#FFCCCC" shape=record, label="{UmpleInternalParser|currentPackageName\ :\ String\l\
+packageNameUsed\ :\ Boolean\l\
+outputUmpleSource\ :\ Boolean\l\
+model\ :\ UmpleModel\l\
+unparsedUmpleFiles\ :\ String\l\
+parsedUmpleFiles\ :\ String\l\
+shouldProcessAgain\ :\ Boolean\l\
+shouldProcessClassAgain\ :\ Boolean\l\
+unlinkedAssociationVariables\ :\ AssociationVariable\l\
+unlinkedAssociations\ :\ Association\l\
+positionToClassNameReference\ :\ Map&lt;Position,String&gt;\l\
+unlinkedExtends\ :\ Map&lt;UmpleClassifier,List&lt;String&gt;&gt;\l\
+unlinkedExtendsTokens\ :\ Map&lt;UmpleClassifier,List&lt;Token&gt;&gt;\l\
+unlinkedExtendsTokensInterface\ :\ Map&lt;UmpleClassifier,List&lt;Token&gt;&gt;\l\
+unlinkedInterfaceExtends\ :\ Map&lt;UmpleClassifier,List&lt;String&gt;&gt;\l\
+lastComments\ :\ List&lt;Comment&gt;\l\
+placeholderStateMachine\ :\ StateMachine\l\
+stateMachineNameToToken\ :\ Map&lt;String,Token&gt;\l\
+possiblyUnknownStates\ :\ Map&lt;State,List&lt;Token&gt;&gt;\l}",
+   tooltip="class UmpleInternalParser
+Pink for core Umple classes for parsing and the model
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+This is our internal parser implementation for the Umple language.  It uses
+a generic Parser that can read an external EBNF grammar file, and then populate
+an abstract syntax tree.
+
+The work of the UmpleInternalParser is 
+
+a) The grammar definition (defined externally in *.grammar files)
+b) Analyzing the AST to populate an Umple meta model instance
+c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
+
+Please refer to UmpleInternalParser_Code.ump for implementation details.
+@umplesource DiagramMaster.ump 25
+@umplesource UmpleInternalParser.ump 23
+@umplesource UmpleInternalParser_Code.ump 33
+@umplesource UmpleInternalParser_CodeCore.ump 17
+@umplesource UmpleInternalParser_CodeClass.ump 17
+@umplesource UmpleInternalParser_CodeConstraints.ump 17
+@umplesource UmpleInternalParser_CodeStateMachine.ump 17
+@umplesource UmpleInternalParser_CodeTrace.ump 17
+@umplesource UmpleInternalParser_CodeLayout.ump 17
 "];
-  ContentParser -> Parser [arrowhead="empty"; samehead="gen"];
+  UmpleInternalParser -> Parser [arrowhead="empty"; samehead="gen"];
 
+  UmpleInternalParser -> UmpleParser [  arrowhead="empty"; samehead="gen"; style=dashed];
 
-  // Class: Template
-  Template [shape=record, label="{Template|htmlTemplate\ :\ String\l\
-exampleTemplate\ :\ String\l\
-syntaxTemplate\ :\ String\l\
-navigationHeaderTemplate\ :\ String\l\
-navigationItemTemplate\ :\ String\l\
-navigationItemTemplateNoAnchor\ :\ String\l}",
-   tooltip="class Template
-"];
-
-  // Class: GeneratorHelper
-  GeneratorHelper [shape=record, label="{GeneratorHelper}",
-   tooltip="class GeneratorHelper
-"];
-
-  // Class: EcoreGenerator
-  EcoreGenerator [shape=record, label="{EcoreGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class EcoreGenerator
-"];
-  EcoreGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: PapyrusGenerator
-  PapyrusGenerator [shape=record, label="{PapyrusGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class PapyrusGenerator
-"];
-  PapyrusGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: XmiGenerator
-  XmiGenerator [shape=record, label="{XmiGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class XmiGenerator
-"];
-  XmiGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: TextUmlGenerator
-  TextUmlGenerator [shape=record, label="{TextUmlGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class TextUmlGenerator
-"];
-  TextUmlGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: GvStateDiagramGenerator
-  GvStateDiagramGenerator [shape=record, label="{GvStateDiagramGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class GvStateDiagramGenerator
-"];
-  GvStateDiagramGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: GvClassDiagramGenerator
-  GvClassDiagramGenerator [shape=record, label="{GvClassDiagramGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class GvClassDiagramGenerator
-"];
-  GvClassDiagramGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: SimulateGenerator
-  SimulateGenerator [shape=record, label="{SimulateGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class SimulateGenerator
-"];
-  SimulateGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: YumlGenerator
-  YumlGenerator [shape=record, label="{YumlGenerator|model\ :\ UmpleModel\l\
-outputPath\ :\ String\l}",
-   tooltip="class YumlGenerator
-"];
-  YumlGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: JsonGenerator
-  JsonGenerator [shape=record, label="{JsonGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class JsonGenerator
-"];
-  JsonGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: JavaGenerator
-  JavaGenerator [shape=record, label="{JavaGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class JavaGenerator
-"];
-  JavaGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-  JavaGenerator -> CodeTranslator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: CppGenerator
-  CppGenerator [shape=record, label="{CppGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l\
-callHeader\ :\ boolean\l\
-callLttng\ :\ boolean\l}",
-   tooltip="class CppGenerator
-"];
-  CppGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-  CppGenerator -> CodeTranslator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: PhpGenerator
-  PhpGenerator [shape=record, label="{PhpGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class PhpGenerator
-"];
-  PhpGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-  PhpGenerator -> CodeTranslator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: RubyGenerator
-  RubyGenerator [shape=record, label="{RubyGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class RubyGenerator
-"];
-  RubyGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-  RubyGenerator -> CodeTranslator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: SqlGenerator
-  SqlGenerator [shape=record, label="{SqlGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class SqlGenerator
-"];
-  SqlGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-  SqlGenerator -> CodeTranslator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: SDLGenerator
-  SDLGenerator [shape=record, label="{SDLGenerator|model\ :\ UmpleModel\l\
-output\ :\ String\l}",
-   tooltip="class SDLGenerator
-"];
-  SDLGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-  SDLGenerator -> CodeTranslator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: JsonParser
-  JsonParser [shape=record, label="{JsonParser}",
-   tooltip="class JsonParser
-"];
-  JsonParser -> Parser [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: Json
-  Json [shape=record, label="{Json|name\ :\ String\l\
-value\ :\ String\l\
-composites\ :\ Json\l\
-arrays\ :\ Json\l}",
-   tooltip="class Json
-"];
-
-  // Class: Couple
-  Couple [shape=record, label="{Couple|open\ :\ String\l\
-close\ :\ String\l}",
-   tooltip="class Couple
-"];
-
-  // Class: ParseResult
-  ParseResult [shape=record, label="{ParseResult|wasSuccess\ :\ Boolean\l\
-hasWarnings\ :\ Boolean\l\
-_acceptsErrors\ :\ Boolean\l}",
-   tooltip="class ParseResult
-* Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
-"];
-
-  // Class: ErrorMessage
-  ErrorMessage [shape=record, label="{ErrorMessage|parameters\ :\ String\l}",
-   tooltip="class ErrorMessage
-* Represents an error message, typically used with parsing.
-"];
-
-  // Class: ErrorType
-  ErrorType [shape=record, label="{ErrorType|errorCode\ :\ Integer\l\
-severity\ :\ Integer\l\
-errorFormat\ :\ String\l\
-errorUrl\ :\ String\l}",
-   tooltip="class ErrorType
-* Represents an error type, which contains an error code, the severity of the error, etc.
-"];
-
-  // Class: ErrorTypeSingleton
-  ErrorTypeSingleton [shape=record, label="{ErrorTypeSingleton}",
-   tooltip="class ErrorTypeSingleton
-"];
-
-  // Class: Token
-  Token [shape=record, label="{Token|name\ :\ String\l\
-value\ :\ String\l}",
-   tooltip="class Token
-* Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
- these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
- track of the positions that the input parser parsed things at.
-"];
-
-  // Class: Position
-  Position [shape=record, label="{Position|filename\ :\ String\l\
-lineNumber\ :\ Integer\l\
-characterOffset\ :\ Integer\l\
-offset\ :\ Integer\l}",
-   tooltip="class Position
-* Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
- filename, the line number and the corresponding offset on that line number.
-"];
 
   // Class: Rule
-  Rule [shape=record, label="{Rule|name\ :\ String\l\
+  Rule [ style=filled, fillcolor="#FFCCCC" shape=record, label="{Rule|name\ :\ String\l\
 shouldHide\ :\ Boolean\l\
 definitions\ :\ String\l}",
    tooltip="class Rule
 * Represents a rule, which has a name and contains definitions that describe it.
  
  Examples of this are a class definition.
+@umplesource DiagramMaster.ump 28
+@umplesource Parser.ump 133
+"];
+
+  // Class: Position
+  Position [ style=filled, fillcolor="#FFCCCC" shape=record, label="{Position|filename\ :\ String\l\
+lineNumber\ :\ Integer\l\
+characterOffset\ :\ Integer\l\
+offset\ :\ Integer\l}",
+   tooltip="class Position
+* Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
+ filename, the line number and the corresponding offset on that line number.
+@umplesource DiagramMaster.ump 29
+@umplesource Parser.ump 111
+@umplesource Parser_Code.ump 322
 "];
 
   // Class: RulePartValue
-  RulePartValue [shape=record, label="{RulePartValue|name\ :\ String\l\
+  RulePartValue [ style=filled, fillcolor="#FFCCCC" shape=record, label="{RulePartValue|name\ :\ String\l\
 value\ :\ String\l}",
    tooltip="class RulePartValue
+@umplesource DiagramMaster.ump 30
+@umplesource Parser.ump 144
 "];
 
   // Class: RulePart
-  RulePart [shape=record, label="{RulePart|name\ :\ String\l\
+  RulePart [ style=filled, fillcolor="#FFCCCC" shape=record, label="{RulePart|name\ :\ String\l\
 multiplicity\ :\ String\l\
 nextIdentifiers\ :\ String\l\
 maximumPartsFound\ :\ Integer\l}",
    tooltip="class RulePart
+@umplesource DiagramMaster.ump 31
+@umplesource Parser.ump 151
+@umplesource Parser_Code.ump 426
 "];
 
   // Class: RuleInstance
-  RuleInstance [shape=record, label="{RuleInstance|stopAts\ :\ String\l\
+  RuleInstance [ style=filled, fillcolor="#FFCCCC" shape=record, label="{RuleInstance|stopAts\ :\ String\l\
 updateIndex\ :\ Integer\l\
 rulePartsIndex\ :\ Integer\l}",
    tooltip="class RuleInstance
+@umplesource DiagramMaster.ump 32
+@umplesource Parser.ump 198
+@umplesource Parser_Code.ump 1359
 "];
 
-  // Class: StateMachine
-  StateMachine [shape=record, label="{StateMachine|name\ :\ String\l}",
-   tooltip="class StateMachine
+  // Class: Token
+  Token [ style=filled, fillcolor="#FFCCCC" shape=record, label="{Token|name\ :\ String\l\
+value\ :\ String\l}",
+   tooltip="class Token
+* Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
+ these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
+ track of the positions that the input parser parsed things at.
+@umplesource DiagramMaster.ump 33
+@umplesource Parser.ump 90
+@umplesource Parser_Code.ump 81
 "];
 
-  // Class: State
-  State [shape=record, label="{State|name\ :\ String\l\
-isConcurrent\ :\ Boolean\l\
-isStartState\ :\ Boolean\l\
-isInternal\ :\ Boolean\l\
-isHistoryState\ :\ Boolean\l\
-isDeepHistoryState\ :\ Boolean\l\
-finalState\ :\ Boolean\l}",
-   tooltip="class State
+  // Class: ErrorType
+  ErrorType [ style=filled, fillcolor="#FFCCCC" shape=record, label="{ErrorType|errorCode\ :\ Integer\l\
+severity\ :\ Integer\l\
+errorFormat\ :\ String\l\
+errorUrl\ :\ String\l}",
+   tooltip="class ErrorType
+* Represents an error type, which contains an error code, the severity of the error, etc.
+@umplesource DiagramMaster.ump 34
+@umplesource Parser.ump 61
+@umplesource Parser_Code.ump 1674
 "];
 
-  // Class: Activity
-  Activity [shape=record, label="{Activity|position\ :\ Position\l\
-activityCode\ :\ String\l\
-codeblock\ :\ CodeBlock\l}",
-   tooltip="class Activity
+  // Class: ErrorMessage
+  ErrorMessage [ style=filled, fillcolor="#FFCCCC" shape=record, label="{ErrorMessage|parameters\ :\ String\l}",
+   tooltip="class ErrorMessage
+* Represents an error message, typically used with parsing.
+@umplesource DiagramMaster.ump 35
+@umplesource Parser.ump 46
+@umplesource Parser_Code.ump 1653
 "];
 
-  // Class: Transition
-  Transition [shape=record, label="{Transition|isInternal\ :\ Boolean\l\
-autoTransition\ :\ Boolean\l}",
-   tooltip="class Transition
+  // Class: ParseResult
+  ParseResult [ style=filled, fillcolor="#FFCCCC" shape=record, label="{ParseResult|wasSuccess\ :\ Boolean\l\
+hasWarnings\ :\ Boolean\l\
+_acceptsErrors\ :\ Boolean\l}",
+   tooltip="class ParseResult
+* Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
+@umplesource DiagramMaster.ump 36
+@umplesource Parser.ump 24
+@umplesource Parser_Code.ump 1586
 "];
 
-  // Class: Action
-  Action [shape=record, label="{Action|actionType\ :\ String\l\
-position\ :\ Position\l\
-actionCode\ :\ String\l\
-isInternal\ :\ Boolean\l\
-codeblock\ :\ CodeBlock\l}",
-   tooltip="class Action
+  // Class: UmpleConsoleMain
+  UmpleConsoleMain [ style=filled, fillcolor="#FFCCCC" shape=record, label="{UmpleConsoleMain}",
+   tooltip="class UmpleConsoleMain
+@umplesource DiagramMaster.ump 37
+@umplesource Main_Code.ump 14
 "];
 
-  // Class: Event
-  Event [shape=record, label="{Event|name\ :\ String\l\
-args\ :\ String\l\
-isTimer\ :\ Boolean\l\
-autoTransition\ :\ Boolean\l\
-timerInSeconds\ :\ String\l\
-isInternal\ :\ Boolean\l}",
-   tooltip="class Event
-"];
-
-  // Class: Guard
-  Guard [shape=record, label="{Guard|position\ :\ Position\l\
-condition\ :\ String\l\
-codeblock\ :\ CodeBlock\l}",
-   tooltip="class Guard
-"];
-
-  // Class: TextParser
-  TextParser [shape=record, label="{TextParser|_currentName\ :\ String\l\
-_lastCharacterIndex\ :\ Integer\l\
-_currentCharacterIndex\ :\ Integer\l\
-_maxCharacterIndex\ :\ Integer\l\
-indexToReplacementOffsetMap\ :\ Hashtable&lt;Integer,Integer&gt;\l\
-_text\ :\ String\l\
-_filename\ :\ String\l}",
-   tooltip="class TextParser
-* Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
- as an Umple file.
-"];
-
-  // Class: UmletGenerator
-  UmletGenerator [shape=record, label="{UmletGenerator|filename\ :\ String\l\
-model\ :\ UmpleModel\l}",
-   tooltip="class UmletGenerator
-"];
-  UmletGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
-
-
-  // Class: UmletDiagram
-  UmletDiagram [shape=record, label="{UmletDiagram}",
-   tooltip="class UmletDiagram
-"];
-
-  // Class: UmletElement
-  UmletElement [shape=record, label="{UmletElement|type\ :\ String\l\
-panelAttributes\ :\ String\l\
-additionalAttributes\ :\ String\l}",
-   tooltip="class UmletElement
+  // Class: PlaygroundMain
+  PlaygroundMain [ style=filled, fillcolor="#FFCCCC" shape=record, label="{PlaygroundMain}",
+   tooltip="class PlaygroundMain
+TODO: Code smell - rename?
+Text to diagram merging tool used by UmpleOnline
+@umplesource DiagramMaster.ump 38
+@umplesource Main_Code.ump 286
 "];
 
   // Class: UmpleModel
-  UmpleModel [shape=record, label="{UmpleModel|umpleFile\ :\ UmpleFile\l\
+  UmpleModel [ style=filled, fillcolor="#FFEEAA" shape=record, label="{UmpleModel|umpleFile\ :\ UmpleFile\l\
 defaultPackage\ :\ String\l\
 generates\ :\ GenerateTarget\l\
 shouldGenerate\ :\ Boolean\l\
@@ -402,99 +207,816 @@ reflexiveSegmentLength\ :\ int\l\
 traceType\ :\ String\l\
 versionNumber\ :\ String\l}",
    tooltip="class UmpleModel
-* The main meta-model of Umple.
+Yellow for Classifiers, classes etc.
+* Class UmpleModel is the central class describing the system being compiled.
  
  The model contains everything that was derived from an Umple file (.ump) when it was parsed such as 
- the classes, attributes, associations, methods, etc that were in it.
+ the classes, attributes, associations, state machines, methods, etc that were in it.
  
  Put another way, when an Umple file (.ump) is parsed an Umple model is populated with everything that was parsed from that file.
  
  Because of this it is absolutely critical to understand the model since it is basically the \"root\" of everything.
+*
+ In Umple_Code.ump: Methods for manipulating the Model
+@umplesource DiagramMaster.ump 41
+@umplesource Umple.ump 24
+@umplesource Trace.ump 17
+@umplesource UmpleVersion.ump 13
+@umplesource Umple_Code.ump 18
 "];
 
   // Class: UmpleElement
-  UmpleElement [shape=record, label="{UmpleElement|name\ :\ String\l\
+  UmpleElement [ style=filled, fillcolor="#FFEEAA" shape=record, label="{UmpleElement|name\ :\ String\l\
 modifier\ :\ String\l\
 namespaces\ :\ String\l\
 packageName\ :\ String\l\
 extraCode\ :\ String\l\
 isInternal\ :\ Boolean\l\
-coordinates\ :\ Coordinate\l}",
+coordinates\ :\ Coordinate\l\
+displayColor\ :\ String\l}",
    tooltip="class UmpleElement
-* An element partaining to an entity with Umple.
+* An UmpleElement is one of the top-level items found in an Umple model
+ Currently it has one subclass, UmpleClassifier
+@umplesource DiagramMaster.ump 44
+@umplesource Umple.ump 71
+@umplesource Umple_Code.ump 589
 "];
 
-  // Class: Method
-  Method [shape=record, label="{Method|modifier\ :\ String\l\
-name\ :\ String\l\
-position\ :\ Position\l\
-type\ :\ String\l\
-isImplemented\ :\ Boolean\l}",
-   tooltip="class Method
-* A method which recides inside an Umple Class.
+  // Class: UmpleClassifier
+  UmpleClassifier [ style=filled, fillcolor="#FFEEAA" shape=record, label="{UmpleClassifier}",
+   tooltip="class UmpleClassifier
+* Represents an Umple classifier: a Class or Interface
+@umplesource DiagramMaster.ump 43
+@umplesource Umple.ump 295
+"];
+  UmpleClassifier -> UmpleElement [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: UmpleInterface
+  UmpleInterface [ style=filled, fillcolor="#FFEEAA" shape=record, label="{UmpleInterface}",
+   tooltip="class UmpleInterface
+* Represents a interface.
+ Like a class, but can't have any concrete methods, attributes or associations.
+@umplesource DiagramMaster.ump 42
+@umplesource Umple.ump 312
+@umplesource Umple_Code.ump 558
+"];
+  UmpleInterface -> UmpleClassifier [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: UmpleClass
+  UmpleClass [ style=filled, fillcolor="#FFEEAA" shape=record, label="{UmpleClass|isAbstract\ :\ Boolean\l\
+isSingleton\ :\ Boolean\l\
+associations\ :\ Association\l\
+key\ :\ Key\l\
+iAmImmutable\ :\ Boolean\l\
+ancestorIsImmutable\ :\ Boolean\l\
+sourceModel\ :\ UmpleModel\l}",
+   tooltip="class UmpleClass
+* An UmpleClass can contain attributes, associations, state machines and methods.
+ It can also have various other information such as a key (to identify uniqueness),
+ code to inject into generated code, and comments. It can be tagged with various
+ patterns, such as 'singleton', meaning that there can only be one instance,
+ and abstract, meaning it can't have any instances.
+* In Umple_Code.ump: Methods for computing complex properties
+@umplesource DiagramMaster.ump 46
+@umplesource Umple.ump 330
+@umplesource Trace.ump 90
+@umplesource Umple_Code.ump 623
+"];
+  UmpleClass -> UmpleClassifier [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: AssociationClass
+  AssociationClass [ style=filled, fillcolor="#FFEEAA" shape=record, label="{AssociationClass}",
+   tooltip="class AssociationClass
+* A combination of Class and Association (as defined in UML)
+ An AssociationClass is a full-fledged class, but at the same time
+ It associates two other classes that would otherwise have a many-many
+ relationship. Instances of the AssociationClass represent data 
+ held by the links between those two classes.
+@umplesource DiagramMaster.ump 45
+@umplesource Umple.ump 403
+@umplesource Umple_Code.ump 612
+"];
+  AssociationClass -> UmpleClass [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Association
+  Association [ style=filled, fillcolor="#AAFFAA" shape=record, label="{Association|name\ :\ String\l\
+isLeftNavigable\ :\ Boolean\l\
+isRightNavigable\ :\ Boolean\l\
+positions\ :\ Coordinate\l\
+tokenPosition\ :\ Position\l\
+immutable\ :\ Boolean\l}",
+   tooltip="class Association
+Green for things to do with associations and attributes
+* Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
+ An association in UML/Umple represents a relationship that exists at run time
+ where instances of one class reference the other, and (if bidirectional) instance
+ of the other class reference the first cass.
+ The number of references is governed by the Multiplicity at each AssociationEnd
+@umplesource DiagramMaster.ump 49
+@umplesource Umple.ump 473
+@umplesource Umple_Code.ump 1077
 "];
 
-  // Class: Modifier
-  Modifier [shape=record, label="{Modifier|name\ :\ String\l}",
-   tooltip="class Modifier
-"];
-
-  // Class: MethodBody
-  MethodBody [shape=record, label="{MethodBody|extraCode\ :\ String\l\
-codeblock\ :\ CodeBlock\l}",
-   tooltip="class MethodBody
-* The contents of a method, such as the code within it.
-"];
-
-  // Class: Constant
-  Constant [shape=record, label="{Constant|name\ :\ String\l\
-type\ :\ String\l\
+  // Class: AssociationEnd
+  AssociationEnd [ style=filled, fillcolor="#AAFFAA" shape=record, label="{AssociationEnd|roleName\ :\ String\l\
+className\ :\ String\l\
 modifier\ :\ String\l\
-value\ :\ String\l}",
-   tooltip="class Constant
-* Represents a constant.
+referenceToClassName\ :\ String\l\
+multiplicity\ :\ Multiplicity\l\
+isDefaultRoleName\ :\ Boolean\l\
+priority\ :\ String\l}",
+   tooltip="class AssociationEnd
+* An association end represents one logical end of an association
+ 
+ See also AssociationVariable
+ TODO: Code smell referenceToClassName is a duplication, can access via the association 
+ Create a derived attribute otherend (the other AssociationEnd)
+* In Umple_Code.ump: Methods for computing compound properties
+@umplesource DiagramMaster.ump 50
+@umplesource Umple.ump 495
+@umplesource Umple_Code.ump 1190
+"];
+
+  // Class: Multiplicity
+  Multiplicity [ style=filled, fillcolor="#AAFFAA" shape=record, label="{Multiplicity|bound\ :\ String\l\
+minimum\ :\ String\l\
+maximum\ :\ String\l}",
+   tooltip="class Multiplicity
+* A multplicity constrains the number of linked objects at one end of an
+ association
+
+ TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+* In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
+@umplesource DiagramMaster.ump 51
+@umplesource Umple.ump 546
+@umplesource Umple_Code.ump 1488
 "];
 
   // Class: UmpleVariable
-  UmpleVariable [shape=record, label="{UmpleVariable|name\ :\ String\l\
+  UmpleVariable [ style=filled, fillcolor="#99EE99" shape=record, label="{UmpleVariable|name\ :\ String\l\
 type\ :\ String\l\
 modifier\ :\ String\l\
 value\ :\ String\l}",
    tooltip="class UmpleVariable
-Superclass for tracking member variables in all target languages
-TODO: Code smell because we have both an association variable and also an association
-This class should go and instead AssociationEnd should be the member variable
+* Superclass for tracking member variables in all target languages
+ TODO: Code smell because we have both an association variable and also an association
+ This class should go and instead AssociationEnd should be the member variable
+@umplesource DiagramMaster.ump 53
+@umplesource Umple.ump 414
+@umplesource Umple_Code.ump 1017
 "];
 
-  // Class: UniqueIdentifier
-  UniqueIdentifier [shape=record, label="{UniqueIdentifier}",
-   tooltip="class UniqueIdentifier
+  // Class: AssociationVariable
+  AssociationVariable [ style=filled, fillcolor="#99EE99" shape=record, label="{AssociationVariable|multiplicity\ :\ Multiplicity\l\
+isNavigable\ :\ Boolean\l\
+priority\ :\ String\l}",
+   tooltip="class AssociationVariable
+* An association variable represents one of the variables used to represent
+ an association. In a two-directional association (navigable) there would
+ be one of these in each associated class.
+
+ See also AssociationEnd
+
+ TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
+* In Umple_Code.ump: Methods for testing various complex properties
+@umplesource DiagramMaster.ump 54
+@umplesource Umple.ump 523
+@umplesource Umple_Code.ump 1314
 "];
-  UniqueIdentifier -> UmpleVariable [arrowhead="empty"; samehead="gen"];
+  AssociationVariable -> UmpleVariable [arrowhead="empty"; samehead="gen"];
 
 
   // Class: MethodParameter
-  MethodParameter [shape=record, label="{MethodParameter|isAutounique\ :\ Boolean\l\
+  MethodParameter [ style=filled, fillcolor="#99EE99" shape=record, label="{MethodParameter|isAutounique\ :\ Boolean\l\
 isList\ :\ Boolean\l\
 isDerived\ :\ Boolean\l\
 isLazy\ :\ Boolean\l}",
    tooltip="class MethodParameter
 * Represents a parameter in a method and its various forms.
+@umplesource DiagramMaster.ump 55
+@umplesource Umple.ump 176
 "];
   MethodParameter -> UmpleVariable [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Attribute
+  Attribute [ style=filled, fillcolor="#99EE99" shape=record, label="{Attribute|isAutounique\ :\ Boolean\l\
+isList\ :\ Boolean\l\
+isDerived\ :\ Boolean\l\
+codeblock\ :\ CodeBlock\l\
+isLazy\ :\ Boolean\l}",
+   tooltip="class Attribute
+* Represents an attribute.
+ An attribute is more abstract than an instance variable / property in that
+ it can be derived, and have various other modifiers such as being
+ initialized, lazy (does not appear in constructor and must be initialized
+ after construction), etc.
+@umplesource DiagramMaster.ump 56
+@umplesource Umple.ump 442
+@umplesource Umple_Code.ump 1044
+"];
+  Attribute -> UmpleVariable [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Constant
+  Constant [ style=filled, fillcolor="#99EE99" shape=record, label="{Constant|name\ :\ String\l\
+type\ :\ String\l\
+modifier\ :\ String\l\
+value\ :\ String\l}",
+   tooltip="class Constant
+* Represents a constant.
+@umplesource DiagramMaster.ump 57
+@umplesource Umple.ump 156
+"];
+
+  // Class: State
+  State [ style=filled, fillcolor="#BBDDFF" shape=record, label="{State|name\ :\ String\l\
+isConcurrent\ :\ Boolean\l\
+isStartState\ :\ Boolean\l\
+isInternal\ :\ Boolean\l\
+isHistoryState\ :\ Boolean\l\
+isDeepHistoryState\ :\ Boolean\l\
+finalState\ :\ Boolean\l}",
+   tooltip="class State
+Blue for things to do with state machines
+@umplesource DiagramMaster.ump 60
+@umplesource StateMachine.ump 28
+@umplesource StateMachine_Code.ump 301
+"];
+
+  // Class: StateMachine
+  StateMachine [ style=filled, fillcolor="#BBDDFF" shape=record, label="{StateMachine|name\ :\ String\l}",
+   tooltip="class StateMachine
+@umplesource DiagramMaster.ump 61
+@umplesource StateMachine.ump 14
+@umplesource StateMachine_Code.ump 14
+"];
+
+  // Class: Event
+  Event [ style=filled, fillcolor="#BBDDFF" shape=record, label="{Event|name\ :\ String\l\
+args\ :\ String\l\
+isTimer\ :\ Boolean\l\
+autoTransition\ :\ Boolean\l\
+timerInSeconds\ :\ String\l\
+isInternal\ :\ Boolean\l}",
+   tooltip="class Event
+@umplesource DiagramMaster.ump 62
+@umplesource StateMachine.ump 138
+@umplesource StateMachine_Code.ump 443
+"];
+
+  // Class: Action
+  Action [ style=filled, fillcolor="#BBDDFF" shape=record, label="{Action|actionType\ :\ String\l\
+position\ :\ Position\l\
+actionCode\ :\ String\l\
+isInternal\ :\ Boolean\l\
+codeblock\ :\ CodeBlock\l}",
+   tooltip="class Action
+@umplesource DiagramMaster.ump 63
+@umplesource StateMachine.ump 100
+"];
+
+  // Class: Activity
+  Activity [ style=filled, fillcolor="#BBDDFF" shape=record, label="{Activity|position\ :\ Position\l\
+activityCode\ :\ String\l\
+codeblock\ :\ CodeBlock\l}",
+   tooltip="class Activity
+@umplesource DiagramMaster.ump 64
+@umplesource StateMachine.ump 47
+"];
+
+  // Class: Transition
+  Transition [ style=filled, fillcolor="#BBDDFF" shape=record, label="{Transition|isInternal\ :\ Boolean\l\
+autoTransition\ :\ Boolean\l}",
+   tooltip="class Transition
+@umplesource DiagramMaster.ump 65
+@umplesource StateMachine.ump 84
+@umplesource StateMachine_Code.ump 433
+"];
+
+  // Class: Guard
+  Guard [ style=filled, fillcolor="#BBDDFF" shape=record, label="{Guard|position\ :\ Position\l\
+condition\ :\ String\l\
+codeblock\ :\ CodeBlock\l}",
+   tooltip="class Guard
+@umplesource DiagramMaster.ump 66
+@umplesource StateMachine.ump 151
+"];
+
+  // Class: VmlParser
+  VmlParser [ style=filled, fillcolor="#EECCFF" shape=record, label="{VmlParser|variationPointToRequiresListMap\ :\ Map&lt;VariationPoint,List&lt;String&gt;&gt;\l\
+invokedVariations\ :\ List&lt;VariationPoint&gt;\l}",
+   tooltip="class VmlParser
+Purple for VML stuff
+@umplesource DiagramMaster.ump 69
+@umplesource Vml.ump 66
+@umplesource Vml_Code.ump 174
+@umplesource Vml_Code.ump 401
+"];
+  VmlParser -> Parser [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: VmlSystem
+  VmlSystem [ style=filled, fillcolor="#EECCFF" shape=record, label="{VmlSystem|code\ :\ String\l}",
+   tooltip="class VmlSystem
+@umplesource DiagramMaster.ump 70
+@umplesource Vml.ump 14
+@umplesource Vml_Code.ump 68
+@umplesource Vml_Code.ump 392
+"];
+
+  // Class: Concern
+  Concern [ style=filled, fillcolor="#EECCFF" shape=record, label="{Concern|name\ :\ String\l}",
+   tooltip="class Concern
+POSITION INFORMATION
+@umplesource DiagramMaster.ump 71
+@umplesource Vml.ump 33
+@umplesource Vml_Code.ump 87
+@umplesource Vml_Code.ump 369
+"];
+
+  // Class: VariationPoint
+  VariationPoint [ style=filled, fillcolor="#EECCFF" shape=record, label="{VariationPoint|name\ :\ String\l}",
+   tooltip="class VariationPoint
+@umplesource DiagramMaster.ump 72
+@umplesource Vml.ump 41
+@umplesource Vml_Code.ump 127
+@umplesource Vml_Code.ump 376
+"];
+
+  // Class: Variant
+  Variant [ style=filled, fillcolor="#EECCFF" shape=record, label="{Variant|name\ :\ String\l}",
+   tooltip="class Variant
+@umplesource DiagramMaster.ump 73
+@umplesource Vml.ump 52
+@umplesource Vml_Code.ump 159
+@umplesource Vml_Code.ump 385
+"];
+
+  // Class: CodeSnippet
+  CodeSnippet [ style=filled, fillcolor="#EECCFF" shape=record, label="{CodeSnippet|code\ :\ String\l}",
+   tooltip="class CodeSnippet
+@umplesource DiagramMaster.ump 74
+@umplesource Vml.ump 59
+@umplesource Vml_Code.ump 112
+@umplesource Vml_Code.ump 408
+"];
+
+  // Class: TraceDirective
+  TraceDirective [ style=filled, fillcolor="#FFCC77" shape=record, label="{TraceDirective|id\ :\ Integer\l}",
+   tooltip="class TraceDirective
+Orange for Trace stuff
+@umplesource DiagramMaster.ump 77
+@umplesource DiagramMaster.ump 84
+@umplesource Trace.ump 53
+"];
+
+  // Class: TraceCase
+  TraceCase [ style=filled, fillcolor="#FFCC77" shape=record, label="{TraceCase|name\ :\ String\l}",
+   tooltip="class TraceCase
+@umplesource DiagramMaster.ump 78
+@umplesource Trace.ump 84
+"];
+
+  // Class: TraceRecord
+  TraceRecord [ style=filled, fillcolor="#FFCC77" shape=record, label="{TraceRecord|recordOnly\ :\ boolean\l\
+record\ :\ String\l}",
+   tooltip="class TraceRecord
+@umplesource DiagramMaster.ump 79
+@umplesource Trace.ump 38
+"];
+
+  // Class: TraceCondition
+  TraceCondition [ style=filled, fillcolor="#FFCC77" shape=record, label="{TraceCondition|conditionType\ :\ String\l\
+preCondition\ :\ boolean\l\
+postCondition\ :\ boolean\l\
+lhs\ :\ String\l}",
+   tooltip="class TraceCondition
+@umplesource DiagramMaster.ump 80
+@umplesource Trace.ump 22
+"];
+
+  // Class: StateMachine_TraceItem
+  StateMachine_TraceItem [ style=filled, fillcolor="#FFCC77" shape=record, label="{StateMachine_TraceItem|entry\ :\ boolean\l\
+exit\ :\ boolean\l\
+traceStateMachineFlag\ :\ boolean\l}",
+   tooltip="class StateMachine_TraceItem
+@umplesource DiagramMaster.ump 81
+@umplesource Trace.ump 75
+"];
+
+  // Class: Attribute_TraceItem
+  Attribute_TraceItem [ style=filled, fillcolor="#FFCC77" shape=record, label="{Attribute_TraceItem|traceSet\ :\ boolean\l\
+traceGet\ :\ boolean\l\
+forClause\ :\ Integer\l\
+periodClause\ :\ String\l\
+duringClause\ :\ String\l\
+executeClause\ :\ String\l}",
+   tooltip="class Attribute_TraceItem
+@umplesource DiagramMaster.ump 82
+@umplesource Trace.ump 64
+"];
+
+  // Class: MethodTraceEntity
+  MethodTraceEntity [ style=filled, fillcolor="#FFCC77" shape=record, label="{MethodTraceEntity|name\ :\ String\l\
+entry\ :\ boolean\l\
+exit\ :\ boolean\l}",
+   tooltip="class MethodTraceEntity
+@umplesource DiagramMaster.ump 83
+@umplesource Trace.ump 46
+"];
+
+  // Class: TraceItem
+  TraceItem [ style=filled, fillcolor="#FFCC77" shape=record, label="{TraceItem}",
+   tooltip="class TraceItem
+@umplesource DiagramMaster.ump 85
+@umplesource Trace_Code.ump 16
+"];
+
+  // Class: ConditionRhs
+  ConditionRhs [ style=filled, fillcolor="#FFCC77" shape=record, label="{ConditionRhs|rhs\ :\ String\l\
+comparisonOperator\ :\ String\l}",
+   tooltip="class ConditionRhs
+@umplesource DiagramMaster.ump 86
+@umplesource Trace.ump 32
+"];
+
+  // Class: Method
+  Method [ style=filled, fillcolor="#EEEEEE" shape=record, label="{Method|modifier\ :\ String\l\
+name\ :\ String\l\
+position\ :\ Position\l\
+type\ :\ String\l\
+isImplemented\ :\ Boolean\l}",
+   tooltip="class Method
+Grey for methods and code injections
+* A method in an Umple class or interface
+ Umple Methods are coded by the programmer in the language(s) of their choice
+@umplesource DiagramMaster.ump 89
+@umplesource Umple.ump 107
+@umplesource Umple_Code.ump 415
+"];
+
+  // Class: MethodBody
+  MethodBody [ style=filled, fillcolor="#EEEEEE" shape=record, label="{MethodBody|extraCode\ :\ String\l\
+codeblock\ :\ CodeBlock\l}",
+   tooltip="class MethodBody
+* The contents of a method, such as the code within it.
+@umplesource DiagramMaster.ump 90
+@umplesource Umple.ump 146
+@umplesource Umple_Code.ump 459
+"];
+
+  // Class: CodeInjection
+  CodeInjection [ style=filled, fillcolor="#EEEEEE" shape=record, label="{CodeInjection|type\ :\ String\l\
+operation\ :\ String\l\
+snippet\ :\ CodeBlock\l\
+position\ :\ Position\l\
+isInternal\ :\ Boolean\l}",
+   tooltip="class CodeInjection
+* A block of code that can be injected into one or more methods, constructor, etc.
+@umplesource DiagramMaster.ump 91
+@umplesource Umple.ump 270
+@umplesource Umple_Code.ump 531
+"];
+
+  // Class: CodeBlock
+  CodeBlock [ style=filled, fillcolor="#EEEEEE" shape=record, label="{CodeBlock}",
+   tooltip="class CodeBlock
+* A block of code in an arbitrary language to be injected into generated code
+@umplesource DiagramMaster.ump 92
+@umplesource Umple.ump 259
+@umplesource Umple_Code.ump 481
+"];
+
+  // Class: Documenter
+  Documenter [shape=record, label="{Documenter|inputPath\ :\ String\l\
+outputPath\ :\ String\l\
+messages\ :\ String\l}",
+   tooltip="class Documenter
+@umplesource Documenter.ump 14
+@umplesource Documenter_Code.ump 50
+"];
+
+  // Class: Content
+  Content [shape=record, label="{Content|title\ :\ String\l\
+shouldIncludeReferences\ :\ Boolean\l\
+description\ :\ String\l\
+syntax\ :\ String\l\
+examples\ :\ String\l}",
+   tooltip="class Content
+@umplesource Documenter.ump 28
+@umplesource Documenter_Code.ump 330
+"];
+
+  // Class: Group
+  Group [shape=record, label="{Group|name\ :\ String\l}",
+   tooltip="class Group
+@umplesource Documenter.ump 37
+@umplesource Documenter_Code.ump 339
+"];
+
+  // Class: ContentParser
+  ContentParser [shape=record, label="{ContentParser|init\ :\ Integer\l}",
+   tooltip="class ContentParser
+@umplesource Documenter.ump 43
+@umplesource Documenter_Code.ump 347
+"];
+  ContentParser -> Parser [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Template
+  Template [shape=record, label="{Template|htmlTemplate\ :\ String\l\
+exampleTemplate\ :\ String\l\
+syntaxTemplate\ :\ String\l\
+navigationHeaderTemplate\ :\ String\l\
+navigationItemTemplate\ :\ String\l\
+navigationItemTemplateNoAnchor\ :\ String\l}",
+   tooltip="class Template
+@umplesource Documenter.ump 49
+@umplesource Documenter_Code.ump 412
+"];
+
+  // Class: GeneratorHelper
+  GeneratorHelper [shape=record, label="{GeneratorHelper}",
+   tooltip="class GeneratorHelper
+@umplesource Generator.ump 36
+@umplesource GeneratorHelper_Code.ump 20
+@umplesource GeneratorHelper_CodeClass.ump 16
+@umplesource GeneratorHelper_CodeStateMachine.ump 16
+@umplesource GeneratorHelper_CodeTrace.ump 16
+"];
+
+  // Class: EcoreGenerator
+  EcoreGenerator [shape=record, label="{EcoreGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class EcoreGenerator
+@umplesource Generator.ump 41
+@umplesource Generator_CodeEcore.ump 12
+"];
+  EcoreGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: PapyrusGenerator
+  PapyrusGenerator [shape=record, label="{PapyrusGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class PapyrusGenerator
+@umplesource Generator.ump 55
+@umplesource Generator_CodePapyrus.ump 12
+"];
+  PapyrusGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: XmiGenerator
+  XmiGenerator [shape=record, label="{XmiGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class XmiGenerator
+@umplesource Generator.ump 69
+@umplesource Generator_CodeXmi.ump 12
+"];
+  XmiGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: TextUmlGenerator
+  TextUmlGenerator [shape=record, label="{TextUmlGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class TextUmlGenerator
+@umplesource Generator.ump 83
+@umplesource Generator_CodeTextUml.ump 12
+"];
+  TextUmlGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: GvStateDiagramGenerator
+  GvStateDiagramGenerator [shape=record, label="{GvStateDiagramGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class GvStateDiagramGenerator
+@umplesource Generator.ump 97
+@umplesource Generator_CodeGvStateDiagram.ump 26
+"];
+  GvStateDiagramGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: GvClassDiagramGenerator
+  GvClassDiagramGenerator [shape=record, label="{GvClassDiagramGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class GvClassDiagramGenerator
+@umplesource Generator.ump 111
+@umplesource Generator_CodeGvClassDiagram.ump 18
+"];
+  GvClassDiagramGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: SimulateGenerator
+  SimulateGenerator [shape=record, label="{SimulateGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class SimulateGenerator
+@umplesource Generator.ump 125
+@umplesource Generator_CodeSimulate.ump 12
+"];
+  SimulateGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: YumlGenerator
+  YumlGenerator [shape=record, label="{YumlGenerator|model\ :\ UmpleModel\l\
+outputPath\ :\ String\l}",
+   tooltip="class YumlGenerator
+@umplesource Generator.ump 139
+@umplesource Generator_CodeYuml.ump 12
+"];
+  YumlGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: JsonGenerator
+  JsonGenerator [shape=record, label="{JsonGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class JsonGenerator
+@umplesource Generator.ump 152
+@umplesource Generator_CodeJson.ump 12
+"];
+  JsonGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: JavaGenerator
+  JavaGenerator [shape=record, label="{JavaGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class JavaGenerator
+@umplesource Generator.ump 163
+@umplesource Generator_CodeJava.ump 12
+"];
+  JavaGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+  JavaGenerator -> CodeTranslator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: CppGenerator
+  CppGenerator [shape=record, label="{CppGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l\
+callHeader\ :\ boolean\l\
+callLttng\ :\ boolean\l}",
+   tooltip="class CppGenerator
+@umplesource Generator.ump 180
+@umplesource Generator_CodeCpp.ump 12
+"];
+  CppGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+  CppGenerator -> CodeTranslator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: PhpGenerator
+  PhpGenerator [shape=record, label="{PhpGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class PhpGenerator
+@umplesource Generator.ump 198
+@umplesource Generator_CodePhp.ump 12
+"];
+  PhpGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+  PhpGenerator -> CodeTranslator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: RubyGenerator
+  RubyGenerator [shape=record, label="{RubyGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class RubyGenerator
+@umplesource Generator.ump 215
+@umplesource Generator_CodeRuby.ump 12
+"];
+  RubyGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+  RubyGenerator -> CodeTranslator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: SqlGenerator
+  SqlGenerator [shape=record, label="{SqlGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class SqlGenerator
+@umplesource Generator.ump 232
+@umplesource Generator_CodeSql.ump 12
+"];
+  SqlGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+  SqlGenerator -> CodeTranslator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: SDLGenerator
+  SDLGenerator [shape=record, label="{SDLGenerator|model\ :\ UmpleModel\l\
+output\ :\ String\l}",
+   tooltip="class SDLGenerator
+@umplesource Generator.ump 249
+@umplesource Generator_CodeSDL.ump 12
+"];
+  SDLGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+  SDLGenerator -> CodeTranslator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: JsonParser
+  JsonParser [shape=record, label="{JsonParser}",
+   tooltip="class JsonParser
+@umplesource Json.ump 12
+@umplesource Json_Code.ump 12
+"];
+  JsonParser -> Parser [arrowhead="empty"; samehead="gen"];
+
+
+  // Class: Json
+  Json [shape=record, label="{Json|name\ :\ String\l\
+value\ :\ String\l\
+composites\ :\ Json\l\
+arrays\ :\ Json\l}",
+   tooltip="class Json
+@umplesource Json.ump 17
+@umplesource Json_Code.ump 127
+"];
+
+  // Class: Couple
+  Couple [shape=record, label="{Couple|open\ :\ String\l\
+close\ :\ String\l}",
+   tooltip="class Couple
+@umplesource Parser.ump 14
+@umplesource Parser_Code.ump 12
+"];
+
+  // Class: ErrorTypeSingleton
+  ErrorTypeSingleton [shape=record, label="{ErrorTypeSingleton}",
+   tooltip="class ErrorTypeSingleton
+@umplesource Parser.ump 75
+@umplesource Parser_Code.ump 1685
+"];
+
+  // Class: TextParser
+  TextParser [shape=record, label="{TextParser|_currentName\ :\ String\l\
+_lastCharacterIndex\ :\ Integer\l\
+_currentCharacterIndex\ :\ Integer\l\
+_maxCharacterIndex\ :\ Integer\l\
+indexToReplacementOffsetMap\ :\ Hashtable&lt;Integer,Integer&gt;\l\
+_text\ :\ String\l\
+_filename\ :\ String\l}",
+   tooltip="class TextParser
+* Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
+ as an Umple file.
+@umplesource TextParser.ump 16
+@umplesource TextParser_Code.ump 12
+"];
+
+  // Class: UmletGenerator
+  UmletGenerator [shape=record, label="{UmletGenerator|filename\ :\ String\l\
+model\ :\ UmpleModel\l}",
+   tooltip="class UmletGenerator
+@umplesource Umlet.ump 14
+@umplesource Umlet_Code.ump 12
+"];
+  UmletGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
+
+
+  // Class: UmletDiagram
+  UmletDiagram [shape=record, label="{UmletDiagram}",
+   tooltip="class UmletDiagram
+@umplesource Umlet.ump 26
+@umplesource Umlet_Code.ump 140
+"];
+
+  // Class: UmletElement
+  UmletElement [shape=record, label="{UmletElement|type\ :\ String\l\
+panelAttributes\ :\ String\l\
+additionalAttributes\ :\ String\l}",
+   tooltip="class UmletElement
+@umplesource Umlet.ump 31
+"];
+
+  // Class: Modifier
+  Modifier [shape=record, label="{Modifier|name\ :\ String\l}",
+   tooltip="class Modifier
+* TO DO: Determine if this can be deleted
+@umplesource Umple.ump 138
+"];
+
+  // Class: UniqueIdentifier
+  UniqueIdentifier [shape=record, label="{UniqueIdentifier}",
+   tooltip="class UniqueIdentifier
+@umplesource Umple.ump 170
+@umplesource Umple.ump 432
+"];
+  UniqueIdentifier -> UmpleVariable [arrowhead="empty"; samehead="gen"];
 
 
   // Class: Type
   Type [shape=record, label="{Type}",
    tooltip="class Type
-NOT used right now
-Type is a simple string
+* NOT used right now
+ Type is a simple string
+@umplesource Umple.ump 197
 "];
 
   // Class: PrimitiveType
   PrimitiveType [shape=record, label="{PrimitiveType|typeName\ :\ String\l}",
    tooltip="class PrimitiveType
-NOT used right now
+* NOT used right now
+@umplesource Umple.ump 203
 "];
   PrimitiveType -> Type [arrowhead="empty"; samehead="gen"];
 
@@ -502,7 +1024,8 @@ NOT used right now
   // Class: ReferenceType
   ReferenceType [shape=record, label="{ReferenceType}",
    tooltip="class ReferenceType
-NOT used right now
+* NOT used right now
+@umplesource Umple.ump 211
 "];
   ReferenceType -> Type [arrowhead="empty"; samehead="gen"];
 
@@ -517,130 +1040,34 @@ index\ :\ Integer\l\
 isPrimitive\ :\ boolean\l\
 isNumeric\ :\ boolean\l}",
    tooltip="class ConstraintVariable
-Under Development
+* Under Development
+@umplesource Umple.ump 220
 "];
 
   // Class: Constraint
   Constraint [shape=record, label="{Constraint|expressions\ :\ ConstraintVariable\l}",
    tooltip="class Constraint
-The Constraint object related to Umple Classes
-"];
-
-  // Class: CodeBlock
-  CodeBlock [shape=record, label="{CodeBlock}",
-   tooltip="class CodeBlock
-"];
-
-  // Class: CodeInjection
-  CodeInjection [shape=record, label="{CodeInjection|type\ :\ String\l\
-operation\ :\ String\l\
-snippet\ :\ CodeBlock\l\
-position\ :\ Position\l\
-isInternal\ :\ Boolean\l}",
-   tooltip="class CodeInjection
+* The Constraint object related to Umple Classes
+@umplesource Umple.ump 252
 "];
 
   // Class: Key
   Key [shape=record, label="{Key|isDefault\ :\ Boolean\l\
 members\ :\ String\l}",
    tooltip="class Key
+*
+ A key in a class is a set of attributes associations used to uniquely identify an object
+@umplesource Umple.ump 286
+@umplesource Umple_Code.ump 381
 "];
-
-  // Class: UmpleClassifier
-  UmpleClassifier [shape=record, label="{UmpleClassifier}",
-   tooltip="class UmpleClassifier
-* Represents an Umple classifier.
-"];
-  UmpleClassifier -> UmpleElement [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: UmpleInterface
-  UmpleInterface [shape=record, label="{UmpleInterface}",
-   tooltip="class UmpleInterface
-* Represents an Umple interface.
-"];
-  UmpleInterface -> UmpleClassifier [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: UmpleClass
-  UmpleClass [shape=record, label="{UmpleClass|isAbstract\ :\ Boolean\l\
-isSingleton\ :\ Boolean\l\
-associations\ :\ Association\l\
-key\ :\ Key\l\
-iAmImmutable\ :\ Boolean\l\
-ancestorIsImmutable\ :\ Boolean\l\
-sourceModel\ :\ UmpleModel\l}",
-   tooltip="class UmpleClass
-* Represents an Umple class which can contain attributes, associations and methods.
-"];
-  UmpleClass -> UmpleClassifier [arrowhead="empty"; samehead="gen"];
-
 
   // Class: Depend
   Depend [shape=record, label="{Depend|name\ :\ String\l\
 isInternal\ :\ Boolean\l}",
    tooltip="class Depend
-"];
-
-  // Class: AssociationClass
-  AssociationClass [shape=record, label="{AssociationClass}",
-   tooltip="class AssociationClass
-"];
-  AssociationClass -> UmpleClass [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: Attribute
-  Attribute [shape=record, label="{Attribute|isAutounique\ :\ Boolean\l\
-isList\ :\ Boolean\l\
-isDerived\ :\ Boolean\l\
-codeblock\ :\ CodeBlock\l\
-isLazy\ :\ Boolean\l}",
-   tooltip="class Attribute
-* Represents an attribute.
-"];
-  Attribute -> UmpleVariable [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: Association
-  Association [shape=record, label="{Association|name\ :\ String\l\
-isLeftNavigable\ :\ Boolean\l\
-isRightNavigable\ :\ Boolean\l\
-positions\ :\ Coordinate\l\
-tokenPosition\ :\ Position\l\
-immutable\ :\ Boolean\l}",
-   tooltip="class Association
-* Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
-"];
-
-  // Class: AssociationEnd
-  AssociationEnd [shape=record, label="{AssociationEnd|roleName\ :\ String\l\
-className\ :\ String\l\
-modifier\ :\ String\l\
-referenceToClassName\ :\ String\l\
-multiplicity\ :\ Multiplicity\l\
-isDefaultRoleName\ :\ Boolean\l\
-priority\ :\ String\l}",
-   tooltip="class AssociationEnd
-TODO: Code smell referenceToClassName is a duplication, can access via the association
-Create a derived attribute otherend (the other AssociationEnd)
-"];
-
-  // Class: AssociationVariable
-  AssociationVariable [shape=record, label="{AssociationVariable|multiplicity\ :\ Multiplicity\l\
-isNavigable\ :\ Boolean\l\
-priority\ :\ String\l}",
-   tooltip="class AssociationVariable
-TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
-"];
-  AssociationVariable -> UmpleVariable [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: Multiplicity
-  Multiplicity [shape=record, label="{Multiplicity|bound\ :\ String\l\
-minimum\ :\ String\l\
-maximum\ :\ String\l}",
-   tooltip="class Multiplicity
-TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
+* A depend relationship indicates a package on which this class depends
+@umplesource Umple.ump 388
+@umplesource Umple_Code.ump 400
 "];
 
   // Class: GeneratedElement
@@ -649,12 +1076,15 @@ TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
 TODO: Code smell: This duplicates the structure of the class from UmpleClass
 This is a problem for model-to-model transformations
 Should be abolished
+@umplesource Umple.ump 561
+@umplesource Umple_Code.ump 1631
 "];
 
   // Class: GeneratedClass
   GeneratedClass [shape=record, label="{GeneratedClass}",
    tooltip="class GeneratedClass
 * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
+@umplesource Umple.ump 569
 "];
   GeneratedClass -> GeneratedElement [arrowhead="empty"; samehead="gen"];
 
@@ -670,6 +1100,10 @@ isA GeneratedElement;
 * -> 1 UmpleModel model;
 0..1 -> 1 UmpleInterface uInterface;
 }
+* A point in cartesian coordinates, used in representing the layout of a
+ diagram in Umple
+@umplesource Umple.ump 595
+@umplesource Umple_Code.ump 1704
 "];
 
   // Class: Coordinate
@@ -678,12 +1112,18 @@ y\ :\ Integer\l\
 width\ :\ Integer\l\
 height\ :\ Integer\l}",
    tooltip="class Coordinate
+* A Coordinate is used in  the layout of classes
+ It represents the shape of a class box in a diagram
+@umplesource Umple.ump 607
+@umplesource Umple_Code.ump 1728
 "];
 
   // Class: Comment
   Comment [shape=record, label="{Comment|text\ :\ String\l}",
    tooltip="class Comment
 * Represents a comment, such as those found around classes, methods, attributes and associations.
+@umplesource Umple.ump 627
+@umplesource Umple_Code.ump 1825
 "];
 
   // Class: GenerateTarget
@@ -693,71 +1133,20 @@ override\ :\ Boolean\l\
 overrideAll\ :\ Boolean\l}",
    tooltip="class GenerateTarget
 * Represents the generation target, such as what the generated output language will be.
-"];
-
-  // Class: TraceCondition
-  TraceCondition [shape=record, label="{TraceCondition|conditionType\ :\ String\l\
-preCondition\ :\ boolean\l\
-postCondition\ :\ boolean\l\
-lhs\ :\ String\l}",
-   tooltip="class TraceCondition
-"];
-
-  // Class: ConditionRhs
-  ConditionRhs [shape=record, label="{ConditionRhs|rhs\ :\ String\l\
-comparisonOperator\ :\ String\l}",
-   tooltip="class ConditionRhs
-"];
-
-  // Class: TraceRecord
-  TraceRecord [shape=record, label="{TraceRecord|recordOnly\ :\ boolean\l\
-record\ :\ String\l}",
-   tooltip="class TraceRecord
-"];
-
-  // Class: MethodTraceEntity
-  MethodTraceEntity [shape=record, label="{MethodTraceEntity|name\ :\ String\l\
-entry\ :\ boolean\l\
-exit\ :\ boolean\l}",
-   tooltip="class MethodTraceEntity
-"];
-
-  // Class: TraceDirective
-  TraceDirective [shape=record, label="{TraceDirective|id\ :\ Integer\l}",
-   tooltip="class TraceDirective
-"];
-
-  // Class: Attribute_TraceItem
-  Attribute_TraceItem [shape=record, label="{Attribute_TraceItem|traceSet\ :\ boolean\l\
-traceGet\ :\ boolean\l\
-forClause\ :\ Integer\l\
-periodClause\ :\ String\l\
-duringClause\ :\ String\l\
-executeClause\ :\ String\l}",
-   tooltip="class Attribute_TraceItem
-"];
-
-  // Class: StateMachine_TraceItem
-  StateMachine_TraceItem [shape=record, label="{StateMachine_TraceItem|entry\ :\ boolean\l\
-exit\ :\ boolean\l\
-traceStateMachineFlag\ :\ boolean\l}",
-   tooltip="class StateMachine_TraceItem
-"];
-
-  // Class: TraceCase
-  TraceCase [shape=record, label="{TraceCase|name\ :\ String\l}",
-   tooltip="class TraceCase
+@umplesource Umple.ump 638
 "];
 
   // Class: RuntimeException
   RuntimeException [shape=record, label="{RuntimeException|str\ :\ String\l\
 parent\ :\ Exception\l}",
    tooltip="class RuntimeException
+@umplesource UmpleExceptions.ump 12
 "];
 
   // Class: UmpleCompilerException
   UmpleCompilerException [shape=record, label="{UmpleCompilerException}",
    tooltip="class UmpleCompilerException
+@umplesource UmpleExceptions.ump 18
 "];
   UmpleCompilerException -> RuntimeException [arrowhead="empty"; samehead="gen"];
 
@@ -765,6 +1154,7 @@ parent\ :\ Exception\l}",
   // Class: SemanticException
   SemanticException [shape=record, label="{SemanticException}",
    tooltip="class SemanticException
+@umplesource UmpleExceptions.ump 25
 "];
 
   // Class: UmpleFile
@@ -774,74 +1164,40 @@ path\ :\ String\l\
 fileContent\ :\ StringBuilder\l}",
    tooltip="class UmpleFile
 TODO: Users of this can most likely just use File, so this could be refactored out
+@umplesource UmpleHelper.ump 23
+@umplesource UmpleHelper_Code.ump 12
 "];
 
   // Class: UmpleParserFactory
   UmpleParserFactory [shape=record, label="{UmpleParserFactory}",
    tooltip="class UmpleParserFactory
+@umplesource UmpleHelper.ump 34
+@umplesource UmpleHelper_Code.ump 118
 "];
-
-  // Class: UmpleInternalParser
-  UmpleInternalParser [shape=record, label="{UmpleInternalParser|currentPackageName\ :\ String\l\
-packageNameUsed\ :\ Boolean\l\
-model\ :\ UmpleModel\l\
-unparsedUmpleFiles\ :\ String\l\
-parsedUmpleFiles\ :\ String\l\
-shouldProcessAgain\ :\ Boolean\l\
-shouldProcessClassAgain\ :\ Boolean\l\
-unlinkedAssociationVariables\ :\ AssociationVariable\l\
-unlinkedAssociations\ :\ Association\l\
-positionToClassNameReference\ :\ Map&lt;Position,String&gt;\l\
-unlinkedExtends\ :\ Map&lt;UmpleClassifier,List&lt;String&gt;&gt;\l\
-unlinkedExtendsTokens\ :\ Map&lt;UmpleClassifier,List&lt;Token&gt;&gt;\l\
-unlinkedExtendsTokensInterface\ :\ Map&lt;UmpleClassifier,List&lt;Token&gt;&gt;\l\
-unlinkedInterfaceExtends\ :\ Map&lt;UmpleClassifier,List&lt;String&gt;&gt;\l\
-lastComments\ :\ List&lt;Comment&gt;\l\
-placeholderStateMachine\ :\ StateMachine\l\
-stateMachineNameToToken\ :\ Map&lt;String,Token&gt;\l\
-possiblyUnknownStates\ :\ Map&lt;State,List&lt;Token&gt;&gt;\l}",
-   tooltip="class UmpleInternalParser
-Copyright: All contributers to the Umple Project
-
-This file is made available subject to the open source license found at:
-http://umple.org/license
-This is our internal parser implementation for the Umple language.  It uses
-a generic Parser that can read an external EBNF grammar file, and then populate
-an abstract syntax tree.
-
-The work of the UmpleInternalParser is 
-
-a) The grammar definition (defined externally in *.grammar files)
-b) Analyzing the AST to populate an Umple meta model instance
-c) Delegating to our code generator to produce the necessary artifacts (i.e. Java / PHP / Ruby code)
-
-Please refer to UmpleInternalParser_Code.ump for implementation details.
-@umplesource /Users/tcl/Documents/7--Research/2-CRuiSE/codebase/googleumple/umple/cruise.umple/src/UmpleInternalParser.ump 11
-"];
-  UmpleInternalParser -> Parser [arrowhead="empty"; samehead="gen"];
-
-  UmpleInternalParser -> UmpleParser [arrowhead="empty"; samehead="gen"; style=dashed];
-
 
   // Class: Pair
   Pair [shape=record, label="{Pair|name\ :\ String\l\
 value\ :\ String\l}",
    tooltip="class Pair
 Simple name-value pair used in the Umple Parser
-@umplesource /Users/tcl/Documents/7--Research/2-CRuiSE/codebase/googleumple/umple/cruise.umple/src/UmpleInternalParser.ump 52
+@umplesource UmpleInternalParser.ump 54
 "];
 
   // Class: UmpleXtextParser
   UmpleXtextParser [shape=record, label="{UmpleXtextParser|temp\ :\ UmpleInternalParser\l}",
    tooltip="class UmpleXtextParser
+@umplesource UmpleXtextParser.ump 17
+@umplesource UmpleXtextParser_Code.ump 14
 "];
-  UmpleXtextParser -> UmpleParser [arrowhead="empty"; samehead="gen"; style=dashed];
+  UmpleXtextParser -> UmpleParser [  arrowhead="empty"; samehead="gen"; style=dashed];
 
 
   // Class: SynchronizationAction
   SynchronizationAction [shape=record, label="{SynchronizationAction|deltaCode\ :\ String\l\
 umpleCode\ :\ String\l}",
    tooltip="class SynchronizationAction
+@umplesource UmpleSync.ump 14
+@umplesource UmpleSync_Code.ump 14
 "];
 
   // Class: UpdatePositioningAction
@@ -851,6 +1207,8 @@ jsonParser\ :\ JsonParser\l\
 json\ :\ Json\l\
 addedPositions\ :\ String\l}",
    tooltip="class UpdatePositioningAction
+@umplesource UmpleSync.ump 20
+@umplesource UmpleSync_Code.ump 23
 "];
   UpdatePositioningAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -858,6 +1216,8 @@ addedPositions\ :\ String\l}",
   // Class: NewAction
   NewAction [shape=record, label="{NewAction}",
    tooltip="class NewAction
+@umplesource UmpleSync.ump 33
+@umplesource UmpleSync_Code.ump 230
 "];
   NewAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -865,6 +1225,8 @@ addedPositions\ :\ String\l}",
   // Class: EditAction
   EditAction [shape=record, label="{EditAction}",
    tooltip="class EditAction
+@umplesource UmpleSync.ump 41
+@umplesource UmpleSync_Code.ump 337
 "];
   EditAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -872,6 +1234,8 @@ addedPositions\ :\ String\l}",
   // Class: DeleteAction
   DeleteAction [shape=record, label="{DeleteAction}",
    tooltip="class DeleteAction
+@umplesource UmpleSync.ump 50
+@umplesource UmpleSync_Code.ump 596
 "];
   DeleteAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -879,6 +1243,8 @@ addedPositions\ :\ String\l}",
   // Class: NewAssociationAction
   NewAssociationAction [shape=record, label="{NewAssociationAction}",
    tooltip="class NewAssociationAction
+@umplesource UmpleSync.ump 59
+@umplesource UmpleSync_Code.ump 657
 "];
   NewAssociationAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -886,6 +1252,8 @@ addedPositions\ :\ String\l}",
   // Class: EditAssociationAction
   EditAssociationAction [shape=record, label="{EditAssociationAction}",
    tooltip="class EditAssociationAction
+@umplesource UmpleSync.ump 67
+@umplesource UmpleSync_Code.ump 836
 "];
   EditAssociationAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -893,6 +1261,8 @@ addedPositions\ :\ String\l}",
   // Class: DeleteAssociationAction
   DeleteAssociationAction [shape=record, label="{DeleteAssociationAction}",
    tooltip="class DeleteAssociationAction
+@umplesource UmpleSync.ump 75
+@umplesource UmpleSync_Code.ump 1025
 "];
   DeleteAssociationAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -900,6 +1270,8 @@ addedPositions\ :\ String\l}",
   // Class: DeleteGeneralizationAction
   DeleteGeneralizationAction [shape=record, label="{DeleteGeneralizationAction}",
    tooltip="class DeleteGeneralizationAction
+@umplesource UmpleSync.ump 83
+@umplesource UmpleSync_Code.ump 1160
 "];
   DeleteGeneralizationAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -907,6 +1279,8 @@ addedPositions\ :\ String\l}",
   // Class: NewGeneralizationAction
   NewGeneralizationAction [shape=record, label="{NewGeneralizationAction}",
    tooltip="class NewGeneralizationAction
+@umplesource UmpleSync.ump 91
+@umplesource UmpleSync_Code.ump 1242
 "];
   NewGeneralizationAction -> SynchronizationAction [arrowhead="empty"; samehead="gen"];
 
@@ -915,13 +1289,17 @@ addedPositions\ :\ String\l}",
   VioletGenerator [shape=record, label="{VioletGenerator|filename\ :\ String\l\
 model\ :\ UmpleModel\l}",
    tooltip="class VioletGenerator
+@umplesource Violet.ump 14
+@umplesource Violet_Code.ump 12
 "];
-  VioletGenerator -> CodeGenerator [arrowhead="empty"; samehead="gen"; style=dashed];
+  VioletGenerator -> CodeGenerator [  arrowhead="empty"; samehead="gen"; style=dashed];
 
 
   // Class: VioletDiagram
   VioletDiagram [shape=record, label="{VioletDiagram}",
    tooltip="class VioletDiagram
+@umplesource Violet.ump 28
+@umplesource Violet_Code.ump 110
 "];
 
   // Class: VioletClass
@@ -929,95 +1307,58 @@ model\ :\ UmpleModel\l}",
 x\ :\ Double\l\
 y\ :\ Double\l}",
    tooltip="class VioletClass
+@umplesource Violet.ump 34
 "];
 
   // Class: VioletAssociation
   VioletAssociation [shape=record, label="{VioletAssociation|startLabel\ :\ String\l\
 endLabel\ :\ String\l}",
    tooltip="class VioletAssociation
-"];
-
-  // Class: VmlSystem
-  VmlSystem [shape=record, label="{VmlSystem|code\ :\ String\l}",
-   tooltip="class VmlSystem
-"];
-
-  // Class: Concern
-  Concern [shape=record, label="{Concern|name\ :\ String\l}",
-   tooltip="class Concern
-POSITION INFORMATION
-"];
-
-  // Class: VariationPoint
-  VariationPoint [shape=record, label="{VariationPoint|name\ :\ String\l}",
-   tooltip="class VariationPoint
-"];
-
-  // Class: Variant
-  Variant [shape=record, label="{Variant|name\ :\ String\l}",
-   tooltip="class Variant
-"];
-
-  // Class: CodeSnippet
-  CodeSnippet [shape=record, label="{CodeSnippet|code\ :\ String\l}",
-   tooltip="class CodeSnippet
-"];
-
-  // Class: VmlParser
-  VmlParser [shape=record, label="{VmlParser|variationPointToRequiresListMap\ :\ Map&lt;VariationPoint,List&lt;String&gt;&gt;\l\
-invokedVariations\ :\ List&lt;VariationPoint&gt;\l}",
-   tooltip="class VmlParser
-"];
-  VmlParser -> Parser [arrowhead="empty"; samehead="gen"];
-
-
-  // Class: UmpleConsoleMain
-  UmpleConsoleMain [shape=record, label="{UmpleConsoleMain}",
-   tooltip="class UmpleConsoleMain
+@umplesource Violet.ump 42
 "];
 
   // Class: UmpleRunMain
   UmpleRunMain [shape=record, label="{UmpleRunMain}",
    tooltip="class UmpleRunMain
-"];
-
-  // Class: PlaygroundMain
-  PlaygroundMain [shape=record, label="{PlaygroundMain}",
-   tooltip="class PlaygroundMain
-TODO: Code smell - rename?
-Text to diagram merging tool used by UmpleOnline
+@umplesource Main_Code.ump 171
 "];
 
   // Class: StatsMain
   StatsMain [shape=record, label="{StatsMain}",
    tooltip="class StatsMain
+@umplesource UmpleStats_Code.ump 14
 "];
 
   // Class: MetricsCollector
   MetricsCollector [shape=record, label="{MetricsCollector|logs\ :\ String\l}",
    tooltip="class MetricsCollector
+@umplesource UmpleStats_Code.ump 60
 "];
 
   // Class: TriState
   TriState [shape=record, label="{TriState|isSet\ :\ Boolean\l\
 status\ :\ Boolean\l}",
    tooltip="class TriState
+@umplesource Util_Code.ump 12
 "];
 
   // Class: Language
   Language [shape=record, label="{Language}",
    tooltip="class Language
+@umplesource Util_Code.ump 24
 "];
 
   // Class: Input
   Input [shape=record, label="{Input|stream\ :\ InputStream\l\
 reader\ :\ BufferedReader\l}",
    tooltip="class Input
+@umplesource Util_Code.ump 77
 "];
 
   // Class: FileManager
   FileManager [shape=record, label="{FileManager}",
    tooltip="class FileManager
+@umplesource Util_Code.ump 107
 "];
 
   // Class: ActionResponse
@@ -1025,53 +1366,63 @@ reader\ :\ BufferedReader\l}",
 successMessage\ :\ String\l\
 errors\ :\ ErrorItem\l}",
    tooltip="class ActionResponse
+@umplesource Util_Code.ump 206
 "];
 
   // Class: ErrorItem
   ErrorItem [shape=record, label="{ErrorItem|id\ :\ String\l\
 parts\ :\ String\l}",
    tooltip="class ErrorItem
+@umplesource Util_Code.ump 289
 "];
 
   // Class: StringFormatter
   StringFormatter [shape=record, label="{StringFormatter}",
    tooltip="class StringFormatter
+@umplesource Util_Code.ump 305
 "];
 
   // Class: SampleFileWriter
   SampleFileWriter [shape=record, label="{SampleFileWriter}",
    tooltip="class SampleFileWriter
+@umplesource Util_Code.ump 567
 "];
 
   // Class: DeleteLanguage
   DeleteLanguage [shape=record, label="{DeleteLanguage}",
    tooltip="class DeleteLanguage
+@umplesource Util_Code.ump 836
 "];
 
   // Class: Word
   Word [shape=record, label="{Word|singular\ :\ String\l\
 plural\ :\ String\l}",
    tooltip="class Word
+@umplesource Util_Code.ump 841
 "];
 
   // Class: Glossary
   Glossary [shape=record, label="{Glossary|words\ :\ Word\l}",
    tooltip="class Glossary
+@umplesource Util_Code.ump 847
 "];
 
   // Class: ExceptionDumper
   ExceptionDumper [shape=record, label="{ExceptionDumper}",
    tooltip="class ExceptionDumper
+@umplesource Util_Code.ump 997
 "];
 
   // Class: Object
   Object [shape=record, label="{Object}",
    tooltip="class Object
+@umplesource Builder_Code.ump 3
 "];
 
   // Class: ClassLoader
   ClassLoader [shape=record, label="{ClassLoader}",
    tooltip="class ClassLoader
+@umplesource Builder_Code.ump 4
 "];
 
   // Class: Command
@@ -1081,81 +1432,58 @@ attributes\ :\ String\l\
 currentObject\ :\ Object\l\
 loader\ :\ ClassLoader\l}",
    tooltip="class Command
+@umplesource Builder_Code.ump 6
 "];
 
   // Class: Builder
   Builder [shape=record, label="{Builder}",
    tooltip="class Builder
+@umplesource Builder_Code.ump 188
 "];
 
   // Class: DynamicClassPathLoader
   DynamicClassPathLoader [shape=record, label="{DynamicClassPathLoader}",
    tooltip="class DynamicClassPathLoader
+@umplesource Builder_Code.ump 307
 "];
 
   // Class: DocumenterMain
   DocumenterMain [shape=record, label="{DocumenterMain}",
    tooltip="class DocumenterMain
-"];
-
-  // Class: TraceItem
-  TraceItem [shape=record, label="{TraceItem}",
-   tooltip="class TraceItem
+@umplesource Documenter_Code.ump 13
 "];
 
   // Class: VmlConsole
   VmlConsole [shape=record, label="{VmlConsole}",
    tooltip="class VmlConsole
+@umplesource Vml_Code.ump 15
 "];
 
   // Class: CodeCompiler
   CodeCompiler [shape=record, label="{CodeCompiler}",
    tooltip="class CodeCompiler
+@umplesource Compiler.ump 14
 "];
 
   // All associations
-  Documenter -> ContentParser [dir="forward", arrowhead="open", taillabel="1 ", headlabel="0..1 parser"];
-  Group -> Content [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
   Parser -> Rule [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
   Parser -> Couple [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
-  ContentParser -> Group [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  Couple -> Couple [dir="none", taillabel="0..1 ", headlabel="* ignores"];
-  ParseResult -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
-  ParseResult -> ErrorMessage [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
-  ErrorMessage -> ErrorType [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
-  ErrorMessage -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
-  ErrorTypeSingleton -> ErrorType [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  Token -> Token [dir="none", taillabel="0..1 parentToken", headlabel="* subTokens"];
-  Token -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  UmpleInternalParser -> ErrorType [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* messagesToExpect"];
+  UmpleInternalParser -> ErrorType [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* warningsToIgnore"];
   RulePartValue -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
   RuleInstance -> RulePart [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
   RuleInstance -> Parser [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
-  StateMachine -> UmpleClass [dir="none", taillabel="* ", headlabel="0..1 "];
-  StateMachine -> State [dir="none", taillabel="* nestedStateMachines", headlabel="0..1 parentState"];
-  State -> Activity [dir="none", taillabel="1 ", headlabel="0..1 "];
-  State -> Action [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="* "];
-  State -> StateMachine [dir="none", taillabel="* ", headlabel="1 "];
-  Activity -> Event [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 onCompletionEvent"];
-  Transition -> Event [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
-  Transition -> State [dir="none", taillabel="* ", headlabel="1 fromState"];
-  Transition -> State [dir="none", taillabel="* nextTransition", headlabel="1 nextState"];
-  Transition -> Guard [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
-  Transition -> Action [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 "];
-  UmletGenerator -> UmletElement [dir="forward", arrowhead="open", taillabel="* ", headlabel="* classElements"];
-  UmletGenerator -> UmletElement [dir="forward", arrowhead="open", taillabel="* ", headlabel="* associationElements"];
-  UmletDiagram -> UmletElement [dir="none", taillabel="* ", headlabel="* "];
-  UmletElement -> Coordinate [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
+  Token -> Token [dir="none", taillabel="0..1 parentToken", headlabel="* subTokens"];
+  Token -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  ErrorMessage -> ErrorType [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
+  ErrorMessage -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
+  ParseResult -> Position [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  ParseResult -> ErrorMessage [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
   UmpleModel -> Association [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
   UmpleModel -> UmpleClass [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
   UmpleModel -> StateMachine [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* stateMachineDefinitions"];
   UmpleModel -> UmpleInterface [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
   UmpleElement -> Position [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* positions"];
-  Method -> MethodParameter [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  Method -> MethodBody [dir="forward", arrowhead="open", taillabel="1 ", headlabel="0..1 "];
-  Method -> Comment [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  ReferenceType -> UmpleClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
-  ReferenceType -> UmpleInterface [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
-  CodeInjection -> UmpleClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
   UmpleClassifier -> Method [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
   UmpleClassifier -> Depend [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
   UmpleClassifier -> Constant [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
@@ -1172,33 +1500,21 @@ loader\ :\ ClassLoader\l}",
   UmpleClass -> TraceDirective [dir="none", taillabel="0..1 ", headlabel="* "];
   UmpleClass -> TraceCase [dir="none", taillabel="0..1 ", headlabel="* "];
   AssociationClass -> Association [dir="forward", arrowhead="open", taillabel="1 ", headlabel="0..2 associatedTo"];
-  Attribute -> Comment [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
   Association -> AssociationEnd [dir="none", taillabel="0..1 ", headlabel="2 ends"];
   AssociationVariable -> Comment [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  GeneratedClass -> UmpleModel [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 model"];
-  GeneratedClass -> UmpleClass [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="1 uClass"];
-  GeneratedClass -> GeneratedClass [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 parentClass"];
-  TraceCondition -> ConditionRhs [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="1 rhs"];
-  TraceRecord -> Attribute [dir="none", taillabel="* ", headlabel="* "];
-  TraceRecord -> StateMachine [dir="none", taillabel="* ", headlabel="* "];
-  TraceDirective -> Attribute_TraceItem [dir="none", taillabel="1 ", headlabel="* "];
-  TraceDirective -> StateMachine_TraceItem [dir="none", taillabel="* ", headlabel="* "];
-  TraceDirective -> MethodTraceEntity [dir="none", taillabel="* ", headlabel="* "];
-  TraceDirective -> AssociationVariable [dir="none", taillabel="0..1 ", headlabel="0..1 "];
-  TraceDirective -> TraceCondition [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* condition"];
-  TraceDirective -> TraceRecord [dir="none", taillabel="1 ", headlabel="0..1 "];
-  Attribute_TraceItem -> Attribute [dir="none", taillabel="* ", headlabel="* "];
-  StateMachine_TraceItem -> StateMachine [dir="none", taillabel="* ", headlabel="0..1 "];
-  StateMachine_TraceItem -> Transition [dir="none", taillabel="* ", headlabel="0..1 "];
-  TraceCase -> TraceDirective [dir="none", taillabel="* ", headlabel="* "];
-  UmpleInternalParser -> ErrorType [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* messagesToExpect"];
-  UmpleInternalParser -> ErrorType [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* warningsToIgnore"];
-  VioletGenerator -> VioletClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
-  VioletGenerator -> VioletAssociation [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
-  VioletDiagram -> VioletClass [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  VioletDiagram -> VioletAssociation [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
-  VioletClass -> VioletClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 parentClass"];
-  VioletAssociation -> VioletClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="1..2 "];
+  Attribute -> Comment [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  State -> Activity [dir="none", taillabel="1 ", headlabel="0..1 "];
+  State -> Action [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="* "];
+  State -> StateMachine [dir="none", taillabel="* ", headlabel="1 "];
+  StateMachine -> UmpleClass [dir="none", taillabel="* ", headlabel="0..1 "];
+  StateMachine -> State [dir="none", taillabel="* nestedStateMachines", headlabel="0..1 parentState"];
+  Activity -> Event [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 onCompletionEvent"];
+  Transition -> Event [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  Transition -> State [dir="none", taillabel="* ", headlabel="1 fromState"];
+  Transition -> State [dir="none", taillabel="* nextTransition", headlabel="1 nextState"];
+  Transition -> Guard [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  Transition -> Action [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 "];
+  VmlParser -> VmlSystem [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 system"];
   VmlSystem -> CodeSnippet [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="* "];
   VmlSystem -> Concern [dir="none", taillabel="0..1 ", headlabel="* "];
   Concern -> VariationPoint [dir="none", taillabel="0..1 ", headlabel="* "];
@@ -1206,5 +1522,41 @@ loader\ :\ ClassLoader\l}",
   VariationPoint -> Variant [dir="none", taillabel="0..1 ", headlabel="* "];
   VariationPoint -> VariationPoint [dir="forward", arrowhead="open", taillabel="* ", headlabel="* requires"];
   Variant -> CodeSnippet [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 "];
-  VmlParser -> VmlSystem [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 system"];
+  TraceDirective -> Attribute_TraceItem [dir="none", taillabel="1 ", headlabel="* "];
+  TraceDirective -> StateMachine_TraceItem [dir="none", taillabel="* ", headlabel="* "];
+  TraceDirective -> MethodTraceEntity [dir="none", taillabel="* ", headlabel="* "];
+  TraceDirective -> AssociationVariable [dir="none", taillabel="0..1 ", headlabel="0..1 "];
+  TraceDirective -> TraceCondition [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* condition"];
+  TraceDirective -> TraceRecord [dir="none", taillabel="1 ", headlabel="0..1 "];
+  TraceCase -> TraceDirective [dir="none", taillabel="* ", headlabel="* "];
+  TraceRecord -> Attribute [dir="none", taillabel="* ", headlabel="* "];
+  TraceRecord -> StateMachine [dir="none", taillabel="* ", headlabel="* "];
+  TraceCondition -> ConditionRhs [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="1 rhs"];
+  StateMachine_TraceItem -> StateMachine [dir="none", taillabel="* ", headlabel="0..1 "];
+  StateMachine_TraceItem -> Transition [dir="none", taillabel="* ", headlabel="0..1 "];
+  Attribute_TraceItem -> Attribute [dir="none", taillabel="* ", headlabel="* "];
+  Method -> MethodParameter [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  Method -> MethodBody [dir="forward", arrowhead="open", taillabel="1 ", headlabel="0..1 "];
+  Method -> Comment [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  CodeInjection -> UmpleClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
+  Documenter -> ContentParser [dir="forward", arrowhead="open", taillabel="1 ", headlabel="0..1 parser"];
+  Group -> Content [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  ContentParser -> Group [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  Couple -> Couple [dir="none", taillabel="0..1 ", headlabel="* ignores"];
+  ErrorTypeSingleton -> ErrorType [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  UmletGenerator -> UmletElement [dir="forward", arrowhead="open", taillabel="* ", headlabel="* classElements"];
+  UmletGenerator -> UmletElement [dir="forward", arrowhead="open", taillabel="* ", headlabel="* associationElements"];
+  UmletDiagram -> UmletElement [dir="none", taillabel="* ", headlabel="* "];
+  UmletElement -> Coordinate [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 "];
+  ReferenceType -> UmpleClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  ReferenceType -> UmpleInterface [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 "];
+  GeneratedClass -> UmpleModel [dir="forward", arrowhead="open", taillabel="* ", headlabel="1 model"];
+  GeneratedClass -> UmpleClass [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="1 uClass"];
+  GeneratedClass -> GeneratedClass [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="0..1 parentClass"];
+  VioletGenerator -> VioletClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
+  VioletGenerator -> VioletAssociation [dir="forward", arrowhead="open", taillabel="* ", headlabel="* "];
+  VioletDiagram -> VioletClass [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  VioletDiagram -> VioletAssociation [dir="forward", arrowhead="open", taillabel="1 ", headlabel="* "];
+  VioletClass -> VioletClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="0..1 parentClass"];
+  VioletAssociation -> VioletClass [dir="forward", arrowhead="open", taillabel="* ", headlabel="1..2 "];
 }

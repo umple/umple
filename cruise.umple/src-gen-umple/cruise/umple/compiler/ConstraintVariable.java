@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * Under Development
- * @umplesource Umple.ump 218
+ * @umplesource Umple.ump 220
  */
-// line 218 "../../../../src/Umple.ump"
+// line 220 "../../../../src/Umple.ump"
 public class ConstraintVariable
 {
 
@@ -173,7 +173,7 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  // line 231 "../../../../src/Umple.ump"
+  // line 233 "../../../../src/Umple.ump"
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
