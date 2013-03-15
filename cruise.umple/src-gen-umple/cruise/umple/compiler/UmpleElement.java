@@ -28,6 +28,7 @@ public class UmpleElement
   private String extraCode;
   private boolean isInternal;
   private Coordinate coordinates;
+  private String displayColor;
 
   //UmpleElement Associations
   private List<Position> positions;
@@ -45,6 +46,7 @@ public class UmpleElement
     extraCode = "";
     isInternal = false;
     coordinates = new Coordinate(-1,-1,-1,-1);
+    displayColor = "";
     positions = new ArrayList<Position>();
   }
 
@@ -85,7 +87,7 @@ public class UmpleElement
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 98 "../../../../src/Umple.ump"
+    // line 100 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -112,6 +114,14 @@ public class UmpleElement
   {
     boolean wasSet = false;
     coordinates = aCoordinates;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setDisplayColor(String aDisplayColor)
+  {
+    boolean wasSet = false;
+    displayColor = aDisplayColor;
     wasSet = true;
     return wasSet;
   }
@@ -189,6 +199,14 @@ public class UmpleElement
   public Coordinate getCoordinates()
   {
     return coordinates;
+  }
+
+  /**
+   * Specifies the display color of this element
+   */
+  public String getDisplayColor()
+  {
+    return displayColor;
   }
 
   public boolean isIsInternal()
@@ -302,7 +320,8 @@ public class UmpleElement
             "modifier" + ":" + getModifier()+ "," +
             "packageName" + ":" + getPackageName()+ "," +
             "extraCode" + ":" + getExtraCode()+ "," +
-            "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
+            "isInternal" + ":" + getIsInternal()+ "," +
+            "displayColor" + ":" + getDisplayColor()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "coordinates" + "=" + getCoordinates() != null ? !getCoordinates() .equals(this)  ? getCoordinates().toString().replaceAll("  ","    ") : "this" : "null"
      + outputString;
   }  

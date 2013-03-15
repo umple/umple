@@ -1292,7 +1292,10 @@ this("UmpleInternalParser", aModel);
       {
         aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
       }
-
+      else if (token.is("displayColor"))
+      {
+        aInterface.setDisplayColor(token.getValue("colorValue"));
+      }
     }
   }
 
@@ -3817,6 +3820,10 @@ this("UmpleInternalParser", aModel);
     if (token.is("elementPosition"))
     {
       aClass.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+    }
+    else if (token.is("displayColor"))
+    {
+      aClass.setDisplayColor(token.getValue("colorValue"));
     }
     else if (token.is("associationPosition"))
     {

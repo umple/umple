@@ -6,10 +6,10 @@ package cruise.umple.compiler;
 /**
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
- * @umplesource Umple.ump 605
+ * @umplesource Umple.ump 607
  * @umplesource Umple_Code.ump 1728
  */
-// line 605 "../../../../src/Umple.ump"
+// line 607 "../../../../src/Umple.ump"
 // line 1728 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
@@ -51,7 +51,7 @@ public class Coordinate
     width = aWidth;
     height = aHeight;
     setStatus(Status.Explicit);
-    // line 613 "../../../../src/Umple.ump"
+    // line 615 "../../../../src/Umple.ump"
     updateStatus();
   }
 
@@ -65,7 +65,7 @@ public class Coordinate
     if (!canSetX) { return false; }
     x = aX;
     wasSet = true;
-    // line 614 "../../../../src/Umple.ump"
+    // line 616 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -76,7 +76,7 @@ public class Coordinate
     if (!canSetY) { return false; }
     y = aY;
     wasSet = true;
-    // line 615 "../../../../src/Umple.ump"
+    // line 617 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -87,7 +87,7 @@ public class Coordinate
     if (!canSetWidth) { return false; }
     width = aWidth;
     wasSet = true;
-    // line 616 "../../../../src/Umple.ump"
+    // line 618 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -98,7 +98,7 @@ public class Coordinate
     if (!canSetHeight) { return false; }
     height = aHeight;
     wasSet = true;
-    // line 617 "../../../../src/Umple.ump"
+    // line 619 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }

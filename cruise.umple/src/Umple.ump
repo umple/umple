@@ -94,6 +94,8 @@ class UmpleElement
 
   // Specifies the position of this Umple element (ex. The UmpleOnline diagram).
   Coordinate coordinates = new Coordinate(-1,-1,-1,-1);
+  // Specifies the display color of this element
+  String displayColor = "";
 
   before setPackageName { if (aPackageName == null) { return false; } }  
 }

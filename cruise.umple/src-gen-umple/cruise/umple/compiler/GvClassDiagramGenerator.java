@@ -129,9 +129,11 @@ public class GvClassDiagramGenerator implements CodeGenerator
     visitedClasses.add(uClass);
           
     String className = uClass.getName();
+    String classColor = uClass.getDisplayColor();
+    if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
     code.append("\n  // Class: "+className+"\n");
 
-    code.append("  "+className+" [shape=record, label=\"{"+className);
+    code.append("  "+className+" ["+classColor+"shape=record, label=\"{"+className);
 
     if(uClass.getIsAbstract()) {  // add abstract tag
       code.append("\n&laquo;abstract&raquo;");
@@ -178,8 +180,14 @@ public class GvClassDiagramGenerator implements CodeGenerator
 
     // Add any interface implementations so they are output at the end
     for(UmpleInterface uInterface : uClass.getParentInterface()) {
+      String intColor = uInterface.getDisplayColor();
+      // TO DO needs fixing - interface colour does not appear
+      if (!intColor.equals("")) {
+        code.append("  "+uInterface.getName()
+          +" [style=filled, fillcolor="+intColor+"];\n\n ");
+      } 
       code.append("  "+className+" -> "+uInterface.getName());
-      code.append(" [arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
+      code.append(" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
     }
 
     // Add any associations so they are output at the end

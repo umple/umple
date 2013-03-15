@@ -593,7 +593,10 @@ class UmpleInternalParser
       {
         aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
       }
-
+      else if (token.is("displayColor"))
+      {
+        aInterface.setDisplayColor(token.getValue("colorValue"));
+      }
     }
   }
 

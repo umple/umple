@@ -26,15 +26,15 @@ associationDefinition : association [name]? { [[association]]* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[abstract]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | ; | [[extraCode]]
-associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | ; | [[extraCode]]
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | ; | [[extraCode]]
+associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[inlineAssociation]] | ; | [[extraCode]]
 
 
 // Interfaces: Note that if the format of an abstractMethodDeclaration is not
 // followed, then the body will extraCode and passed to the base language
 // See user manual page [*interfaceDefinition*]
 interfaceBody- : [[interfaceMemberDeclaration]]*
-interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[isA]] | [[extraCode]]
+interfaceMemberDeclaration : [[constantDeclaration]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[extraCode]]
 
 // Constants in interfaces (e.g. constant String ACONSTANT="aValue";)
 constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value]) ;
