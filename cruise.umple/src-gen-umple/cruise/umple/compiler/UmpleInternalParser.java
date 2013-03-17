@@ -2613,8 +2613,7 @@ this("UmpleInternalParser", aModel);
     aClass.addConstraint(constraint);
   }
   
-  
-  //This recursive function parses the expression. It's very broken down to allow new features to be added easily.
+   //This recursive function parses the expression. It's very broken down to allow new features to be added easily.
   private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClass aClass)
   {
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -2647,6 +2646,9 @@ this("UmpleInternalParser", aModel);
         {
           rawLine.add(analyzeConstraintName(t,aClass,false,true,"boolean"));
         }
+        else if (t.is("linkingOp")){
+        	rawLine.addAll(analyzeLinkingOpExpression(t,aClass));
+        }
         else
         {
           rawLine.addAll(analyzeConstraint(t,aClass));
@@ -2654,6 +2656,32 @@ this("UmpleInternalParser", aModel);
       } 
     }
   return rawLine;
+  }
+  
+  private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken , UmpleClass aClass)
+  {
+	  List<Token> LinkingOpExpressionSubtokens = linkingOpExpressionToken.getSubTokens();
+	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	  
+	  Token subOp = LinkingOpExpressionSubtokens.get(0); //the linking Expr (ie) &&, ||
+	  
+	
+	  if (subOp.is("||")||subOp.is("orOp"))
+	  {
+		  rawLine.add(new ConstraintVariable("OPERATOR","||"));
+	  } 
+	  else if (subOp.is("andOp"))
+	  {
+		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+	  }
+	  
+	  Token subExpr = LinkingOpExpressionSubtokens.get(1); //the constraintExpr token
+	  Token dummyToken = new Token ("dummyToken", null); //need to encapsulate constrainExpr in dummy token
+	  dummyToken.addSubToken(subExpr);
+	  rawLine.addAll(analyzeConstraint(dummyToken, aClass)); 
+
+	  return rawLine;
+
   }
   private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClass aClass)
   {
