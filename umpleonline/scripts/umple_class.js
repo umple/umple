@@ -14,6 +14,7 @@ UmpleClassFactory.create = function(data)
   umpleClass.id = data.id;
   umpleClass.name = data.name;
   umpleClass.displayColor = data.displayColor;
+  if(umpleClass.displayColor == "") umpleClass.displayColor="transparent";  
   umpleClass.position.x = data.position.x;
   umpleClass.position.y = data.position.y;
   umpleClass.position.width = data.position.width;
@@ -73,7 +74,7 @@ function UmpleClass()
 {
   this.id;
   this.name;
-  this.displayColor = "";
+  this.displayColor = "transparent";
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
   this.extendsClass;
