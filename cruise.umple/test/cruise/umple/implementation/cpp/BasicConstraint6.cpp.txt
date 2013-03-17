@@ -9,13 +9,18 @@
   // CONSTRUCTOR
   //------------------------
   
- student::student(const int & aAge)
+ student::student(const int & aAge, const int & aWeight)
   {
-    if ( !(aAge>18))
+    if ( !(18>aAge||3<aWeight))
     {
       throw "Please provide a valid age";
     }
+    if ( !(18>aAge||3<aWeight))
+    {
+      throw "Please provide a valid weight";
+    }
     age = aAge;
+    weight = aWeight;
   }
   
   //------------------------
@@ -25,6 +30,7 @@
  student::student(const student & student)
   {
     this->age = student.age;
+    this->weight = student.weight;
   }
   	
   //------------------------
@@ -34,6 +40,7 @@
  student student::operator=(const student & student)
   {
     this->age = student.age;
+    this->weight = student.weight;
   }
 
   //------------------------
@@ -43,9 +50,20 @@
   bool student::setAge(const int & aAge)
   {
     bool wasSet = false;
-    if (aAge>18)
+    if (18>aAge||3<weight)
     {
     age = aAge;
+    wasSet = true;
+    }
+    return wasSet;
+  }
+
+  bool student::setWeight(const int & aWeight)
+  {
+    bool wasSet = false;
+    if (18>age||3<aWeight)
+    {
+    weight = aWeight;
     wasSet = true;
     }
     return wasSet;
@@ -54,6 +72,11 @@
   int student::getAge() const
   {
     return age;
+  }
+
+  int student::getWeight() const
+  {
+    return weight;
   }
 
   
