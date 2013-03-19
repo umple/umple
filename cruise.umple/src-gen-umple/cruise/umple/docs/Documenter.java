@@ -9,10 +9,11 @@ import cruise.umple.compiler.*;
 import java.util.*;
 
 /**
- * @umplesource Documenter.ump 14
+ * The tool to create the html text of the Umple user manual
+ * @umplesource Documenter.ump 17
  * @umplesource Documenter_Code.ump 50
  */
-// line 14 "../../../../src/Documenter.ump"
+// line 17 "../../../../src/Documenter.ump"
 // line 50 "../../../../src/Documenter_Code.ump"
 public class Documenter
 {

@@ -11,9 +11,12 @@ import java.io.IOException;
 import java.io.*;
 
 /**
- * @umplesource Main_Code.ump 14
+ * Main program for the command line Umple compiler
+ * Run java -jar umple.jar --help for details
+ * Takes an umple file as an argument, which can in turn use (include) other
+ * @umplesource Main_Code.ump 19
  */
-// line 14 "../../../src/Main_Code.ump"
+// line 19 "../../../src/Main_Code.ump"
 public class UmpleConsoleMain
 {
 
@@ -39,7 +42,7 @@ public class UmpleConsoleMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 25 ../../../src/Main_Code.ump
+  // line 30 ../../../src/Main_Code.ump
   public static String console;
     private static OptionParser optparser;
 

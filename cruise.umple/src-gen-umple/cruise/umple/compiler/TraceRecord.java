@@ -5,9 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 38
+ * Data to record in a trace directive
+ * @umplesource Trace.ump 45
  */
-// line 38 "../../../../src/Trace.ump"
+// line 45 "../../../../src/Trace.ump"
 public class TraceRecord
 {
 

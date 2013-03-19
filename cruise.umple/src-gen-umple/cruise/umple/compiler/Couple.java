@@ -5,10 +5,12 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Parser.ump 14
+ * An open-close pair, such as open curly brackets and close curly brackets
+ * Used to identify block start and end while parsing
+ * @umplesource Parser.ump 18
  * @umplesource Parser_Code.ump 12
  */
-// line 14 "../../../../src/Parser.ump"
+// line 18 "../../../../src/Parser.ump"
 // line 12 "../../../../src/Parser_Code.ump"
 public class Couple
 {

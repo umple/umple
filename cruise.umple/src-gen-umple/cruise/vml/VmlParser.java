@@ -6,11 +6,12 @@ import cruise.umple.compiler.*;
 import java.util.*;
 
 /**
- * @umplesource Vml.ump 66
+ * Specialist parser for parsing VML
+ * @umplesource Vml.ump 95
  * @umplesource Vml_Code.ump 174
  * @umplesource Vml_Code.ump 401
  */
-// line 66 "../../../src/Vml.ump"
+// line 95 "../../../src/Vml.ump"
 // line 174 "../../../src/Vml_Code.ump"
 // line 401 "../../../src/Vml_Code.ump"
 public class VmlParser extends Parser

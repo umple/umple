@@ -5,10 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource StateMachine.ump 28
+ * One of the values in which a state machine can be at any given point in time
+ * @umplesource StateMachine.ump 35
  * @umplesource StateMachine_Code.ump 301
  */
-// line 28 "../../../../src/StateMachine.ump"
+// line 35 "../../../../src/StateMachine.ump"
 // line 301 "../../../../src/StateMachine_Code.ump"
 public class State
 {
@@ -173,7 +174,7 @@ public class State
 
   public boolean isFinalState()
   {
-    // line 43 "../../../../src/StateMachine.ump"
+    // line 50 "../../../../src/StateMachine.ump"
     if ("Final".equals(name)) { finalState = true; }
     return finalState;
   }

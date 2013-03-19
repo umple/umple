@@ -5,9 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 64
+ * An element of a trace directive that indicates to trace one or more attributes
+ * @umplesource Trace.ump 78
  */
-// line 64 "../../../../src/Trace.ump"
+// line 78 "../../../../src/Trace.ump"
 public class Attribute_TraceItem
 {
 

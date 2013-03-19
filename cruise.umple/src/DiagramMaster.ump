@@ -21,17 +21,18 @@ generate GvClassDiagram "DiagramMaster.gv" --override-all;
 use Master.ump;
 
 // Pink for core Umple classes for parsing and the model
-
 class UmpleInternalParser {displayColor "#FFCCCC";}
 interface UmpleParser {displayColor "#FFCCCC";}
 class Parser {displayColor "#FFCCCC";}
 class Rule {displayColor "#FFCCCC";}
+class Couple {displayColor "#FFCCCC";}
 class Position {displayColor "#FFCCCC";}
 class RulePartValue {displayColor "#FFCCCC";}
 class RulePart {displayColor "#FFCCCC";}
 class RuleInstance {displayColor "#FFCCCC";}
 class Token {displayColor "#FFCCCC";}
 class ErrorType {displayColor "#FFCCCC";}
+class ErrorTypeSingleton {displayColor "#FFCCCC";}
 class ErrorMessage {displayColor "#FFCCCC";}
 class ParseResult {displayColor "#FFCCCC";}
 class UmpleConsoleMain {displayColor "#FFCCCC";}
@@ -72,6 +73,13 @@ class Concern {displayColor "#EECCFF";}
 class VariationPoint {displayColor "#EECCFF";}
 class Variant {displayColor "#EECCFF";}
 class CodeSnippet {displayColor "#EECCFF";}
+
+// Violet for diagram stuff
+class Documenter {displayColor "#FFCCEE";}
+class ContentParser {displayColor "#FFCCEE";}
+class Group {displayColor "#FFCCEE";}
+class Content {displayColor "#FFCCEE";}
+
 
 // Orange for Trace stuff
 class TraceDirective {displayColor "#FFCC77";}

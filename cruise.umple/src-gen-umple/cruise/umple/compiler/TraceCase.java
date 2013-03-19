@@ -5,9 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 84
+ * To be done. A group of trace directives that can be switched on or off by other
+ * trace directives
+ * @umplesource Trace.ump 106
  */
-// line 84 "../../../../src/Trace.ump"
+// line 106 "../../../../src/Trace.ump"
 public class TraceCase
 {
 

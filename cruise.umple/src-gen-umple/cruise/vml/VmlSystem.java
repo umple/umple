@@ -5,11 +5,19 @@ package cruise.vml;
 import java.util.*;
 
 /**
- * @umplesource Vml.ump 14
+ * VML (Variability Modeling Language) is an Umple add-on that
+ * allows you co construct and Umple model from a variety of
+ * CodeSnippets that are put together to create different
+ * versions of a product line or product family, by invoking
+ * one or more Variants of a variationPoint within a concern
+ * An online tool is available at
+ * http://try.umple.org/vml.php
+ * It is the intention to integrate VML into the core Umple language
+ * @umplesource Vml.ump 24
  * @umplesource Vml_Code.ump 68
  * @umplesource Vml_Code.ump 392
  */
-// line 14 "../../../src/Vml.ump"
+// line 24 "../../../src/Vml.ump"
 // line 68 "../../../src/Vml_Code.ump"
 // line 392 "../../../src/Vml_Code.ump"
 public class VmlSystem
@@ -51,7 +59,7 @@ public class VmlSystem
 
   public String getCode()
   {
-    // line 21 "../../../src/Vml.ump"
+    // line 31 "../../../src/Vml.ump"
     code = "";
         for (CodeSnippet snippet : codeSnippets)
         {

@@ -5,9 +5,10 @@ package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
 /**
- * @umplesource StateMachine.ump 100
+ * A quickly-executed block of code that is run upon entry or exit from a state
+ * @umplesource StateMachine.ump 122
  */
-// line 100 "../../../../src/StateMachine.ump"
+// line 122 "../../../../src/StateMachine.ump"
 public class Action
 {
 
@@ -40,7 +41,7 @@ public class Action
     actionCode = aActionCode;
     isInternal = false;
     codeblock = null;
-    // line 110 "../../../../src/StateMachine.ump"
+    // line 132 "../../../../src/StateMachine.ump"
     codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();
   }
 
@@ -68,7 +69,7 @@ public class Action
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
-    // line 111 "../../../../src/StateMachine.ump"
+    // line 133 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActionCode);
     if (!canSetActionCode) { return false; }
     actionCode = aActionCode;
@@ -89,7 +90,7 @@ public class Action
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 118 "../../../../src/StateMachine.ump"
+    // line 140 "../../../../src/StateMachine.ump"
     if(actionCode!=null){
       	  actionCode+= aCodeblock.getCode();
       	}
@@ -111,7 +112,7 @@ public class Action
   public String getActionCode()
   {
     String aActionCode = actionCode;
-    // line 112 "../../../../src/StateMachine.ump"
+    // line 134 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -197,7 +198,7 @@ public class Action
   public void delete()
   {}
 
-  // line 125 "../../../../src/StateMachine.ump"
+  // line 147 "../../../../src/StateMachine.ump"
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;

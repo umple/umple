@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 46
+ * @umplesource Trace.ump 53
  */
-// line 46 "../../../../src/Trace.ump"
+// line 53 "../../../../src/Trace.ump"
 public class MethodTraceEntity
 {
 

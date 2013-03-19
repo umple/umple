@@ -5,10 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Parser.ump 151
+ * Part of a grammar rule
+ * @umplesource Parser.ump 164
  * @umplesource Parser_Code.ump 426
  */
-// line 151 "../../../../src/Parser.ump"
+// line 164 "../../../../src/Parser.ump"
 // line 426 "../../../../src/Parser_Code.ump"
 public class RulePart
 {
@@ -63,7 +64,7 @@ public class RulePart
   public boolean addNextIdentifier(String aNextIdentifier)
   {
     boolean wasAdded = false;
-    // line 163 "../../../../src/Parser.ump"
+    // line 176 "../../../../src/Parser.ump"
     if (aNextIdentifier == null) { return false; }
     wasAdded = nextIdentifiers.add(aNextIdentifier);
     return wasAdded;
@@ -94,7 +95,7 @@ public class RulePart
 
   public String getMultiplicity()
   {
-    // line 164 "../../../../src/Parser.ump"
+    // line 177 "../../../../src/Parser.ump"
     if (multiplicity == null) { return "1"; }
     return multiplicity;
   }

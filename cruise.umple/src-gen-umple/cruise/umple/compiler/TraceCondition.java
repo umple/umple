@@ -4,9 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Trace.ump 22
+ * An element of Boolean logic determining whether a trace directive
+ * when encountered, will result in trace output
+ * @umplesource Trace.ump 26
  */
-// line 22 "../../../../src/Trace.ump"
+// line 26 "../../../../src/Trace.ump"
 public class TraceCondition
 {
 

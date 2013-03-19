@@ -1,0 +1,22 @@
+UmpleOnline URL options
+UmpleOnline
+noreferences
+
+@@description
+<p>UmpleOnline allows you to append various options to its URL enabling
+startup in a certain state. These are preceded by a question mark, except the first
+in a list which would be preceded by an amersand.</p>
+
+<ul>
+
+<li>?nochrome: Hide the header of the UmpleOnline page
+<li>?nodiagram: Don't show any diagram
+<li>?diagramtype=GvClass: By default show graphviz class diagrams instead of editable diagrams
+<li>?diagramtype=state: By default show graphviz state diagrams instead of editable class diagrams
+<li>?notext: Don't show Umple text (doesn't have any effect if the diagram is also hidden)
+<li>?nomenu: Hide the middle menu. Either ?notext or ?nodiagram must also be present
+<li>?readonly: Turn off editing capability - use for display only.
+<li>?filename=xxxxx: Load the model xxxxx. xxxxx is a URL with the leading http:// left off
+
+<ul>
+

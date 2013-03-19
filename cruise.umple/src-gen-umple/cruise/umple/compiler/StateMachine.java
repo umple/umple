@@ -6,10 +6,12 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource StateMachine.ump 14
+ * An entity in a running program that can have a set of values (states) and which
+ * changes values by taking transitions in response to various events.
+ * @umplesource StateMachine.ump 18
  * @umplesource StateMachine_Code.ump 14
  */
-// line 14 "../../../../src/StateMachine.ump"
+// line 18 "../../../../src/StateMachine.ump"
 // line 14 "../../../../src/StateMachine_Code.ump"
 public class StateMachine
 {
@@ -169,7 +171,7 @@ public class StateMachine
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 25 "../../../../src/StateMachine.ump"
+    // line 29 "../../../../src/StateMachine.ump"
     if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;

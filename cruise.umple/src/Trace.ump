@@ -19,6 +19,10 @@ class UmpleModel
 	String traceType = "Console"; 
 }
 
+/*
+ * An element of Boolean logic determining whether a trace directive
+ * when encountered, will result in trace output
+ */
 class TraceCondition
 {
 	// condition may be where, until, after, or giving
@@ -35,6 +39,9 @@ class ConditionRhs
 	comparisonOperator = null;
 }
 
+/*
+ * Data to record in a trace directive
+ */
 class TraceRecord
 {
     boolean recordOnly = false;
@@ -50,6 +57,10 @@ class MethodTraceEntity
 	boolean exit = false;
 }
 
+/*
+ * A statement found in Umple that directs code to be generated
+ * to trace a model element and generate output using some tracing tool
+ */
 class TraceDirective
 {
 	Integer id = 0;
@@ -61,6 +72,9 @@ class TraceDirective
  	1 -- 0..1 TraceRecord;
 }
 
+/*
+ * An element of a trace directive that indicates to trace one or more attributes
+ */
 class Attribute_TraceItem
 {
 	boolean traceSet = true;   // defualt case is to trace setters
@@ -72,6 +86,10 @@ class Attribute_TraceItem
  	0..* -- 0..* Attribute;
 }
 
+/*
+ * An element of a trace directive that indicates to trace one or more state machines
+ * or transitions
+ */
 class StateMachine_TraceItem
 {
 	boolean entry = false;
@@ -81,6 +99,10 @@ class StateMachine_TraceItem
 	0..* -- 0..1 Transition;
 }
 
+/*
+ * To be done. A group of trace directives that can be switched on or off by other
+ * trace directives
+ */
 class TraceCase
 {
 	name = null;
