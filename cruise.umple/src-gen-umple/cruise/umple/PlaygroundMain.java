@@ -9,11 +9,14 @@ import cruise.umple.util.*;
 import java.io.*;
 
 /**
+ * Main program for umplesync.jar which is used by umpleonline
+ * when it wants to send changes to the diagram and have them applied to
+ * the text and vice versa
+ * 
  * TODO: Code smell - rename?
- * Text to diagram merging tool used by UmpleOnline
- * @umplesource Main_Code.ump 286
+ * @umplesource Main_Code.ump 297
  */
-// line 286 "../../../src/Main_Code.ump"
+// line 297 "../../../src/Main_Code.ump"
 public class PlaygroundMain
 {
 
@@ -39,7 +42,7 @@ public class PlaygroundMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 294 ../../../src/Main_Code.ump
+  // line 305 ../../../src/Main_Code.ump
   public static String console = "";
 
     public static void main(String[] args)

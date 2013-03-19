@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Parser.ump 144
+ * @umplesource Parser.ump 154
  */
-// line 144 "../../../../src/Parser.ump"
+// line 154 "../../../../src/Parser.ump"
 public class RulePartValue
 {
 

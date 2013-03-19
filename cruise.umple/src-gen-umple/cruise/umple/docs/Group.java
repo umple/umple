@@ -5,10 +5,12 @@ package cruise.umple.docs;
 import java.util.*;
 
 /**
- * @umplesource Documenter.ump 37
+ * A section of the Umple user manual
+ * Defined in the build/references/order.group
+ * @umplesource Documenter.ump 59
  * @umplesource Documenter_Code.ump 339
  */
-// line 37 "../../../../src/Documenter.ump"
+// line 59 "../../../../src/Documenter.ump"
 // line 339 "../../../../src/Documenter_Code.ump"
 public class Group
 {

@@ -5,9 +5,14 @@ package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
 /**
- * @umplesource StateMachine.ump 47
+ * Some code to execute for an extended period while in a state
+ * This code is found after they keyword 'do' in Umple
+ * The code is executed in a separate threat, and can be terminated by
+ * an outgoing transition. Upon completion of the activity, any
+ * autotransition will be taken
+ * @umplesource StateMachine.ump 61
  */
-// line 47 "../../../../src/StateMachine.ump"
+// line 61 "../../../../src/StateMachine.ump"
 public class Activity
 {
 
@@ -37,7 +42,7 @@ public class Activity
     {
       throw new RuntimeException("Unable to create activity due to state");
     }
-    // line 58 "../../../../src/StateMachine.ump"
+    // line 72 "../../../../src/StateMachine.ump"
     codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();
   }
 
@@ -56,7 +61,7 @@ public class Activity
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
-    // line 59 "../../../../src/StateMachine.ump"
+    // line 73 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActivityCode);
     activityCode = aActivityCode;
     wasSet = true;
@@ -68,7 +73,7 @@ public class Activity
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 66 "../../../../src/StateMachine.ump"
+    // line 80 "../../../../src/StateMachine.ump"
     if(activityCode!=null){
       	  activityCode+= aCodeblock.getCode();
       	}
@@ -85,7 +90,7 @@ public class Activity
   public String getActivityCode()
   {
     String aActivityCode = activityCode;
-    // line 60 "../../../../src/StateMachine.ump"
+    // line 74 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -154,7 +159,7 @@ public class Activity
     }
   }
 
-  // line 73 "../../../../src/StateMachine.ump"
+  // line 87 "../../../../src/StateMachine.ump"
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;

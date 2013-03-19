@@ -5,10 +5,14 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource StateMachine.ump 84
+ * Specifies, within a state, what happens with a certain event (method call) occurs
+ * Normally the state machine will go to a new state after executing various actions and
+ * activities.
+ * The guard is a boolean condition that may prevent triggering the transition
+ * @umplesource StateMachine.ump 103
  * @umplesource StateMachine_Code.ump 433
  */
-// line 84 "../../../../src/StateMachine.ump"
+// line 103 "../../../../src/StateMachine.ump"
 // line 433 "../../../../src/StateMachine_Code.ump"
 public class Transition
 {

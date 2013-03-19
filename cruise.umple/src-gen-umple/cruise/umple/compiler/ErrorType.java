@@ -7,10 +7,11 @@ import java.util.List;
 
 /**
  * Represents an error type, which contains an error code, the severity of the error, etc.
- * @umplesource Parser.ump 61
+ * Error data is read from the en.error file
+ * @umplesource Parser.ump 67
  * @umplesource Parser_Code.ump 1674
  */
-// line 61 "../../../../src/Parser.ump"
+// line 67 "../../../../src/Parser.ump"
 // line 1674 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {

@@ -1,0 +1,59 @@
+Basic Concurrency
+Concurrency
+noreferences
+
+@@description
+
+<p>Concurrency can currently be accomplished in Umple using a state machine with two states separated by the || symbol, each with a do activity. Both do activities will run concurrently</p>
+
+<p>Additional concurrency capabilities are under development.</p>
+
+@@example
+class X {
+ sm {
+   s1 {
+     do {
+        System.out.println("In S1");
+        Thread.sleep(1000);
+        System.out.println("Still in S1 after sleep");
+        Thread.sleep(2000);
+        System.out.println("About to leave S1");
+      }
+      -> s2;
+    }
+    s2 {
+     do {
+        System.out.println("In S2");
+        Thread.sleep(1000);
+        System.out.println("Still in S2 after sleep");
+        Thread.sleep(2000);
+        System.out.println("About to leave S2");
+      }
+      nesteds2a {
+        do {
+          System.out.println("In S2a");
+          Thread.sleep(1000);
+          System.out.println("Still in S2a after sleep");
+          Thread.sleep(2000);
+          System.out.println("About to leave S2a");
+        }
+      }
+      ||
+      nesteds2b {
+       do {
+          System.out.println("In S2b");
+          Thread.sleep(1000);
+          System.out.println("Still in S2b after sleep");
+          Thread.sleep(2000);
+          System.out.println("About to leave S2b");
+        }
+      }
+    }
+  }
+  public static void main(String argv[]) {
+    System.out.println("In Main");
+    X theX = new X();
+    System.out.println("End of Main");
+  }
+}
+@@endexample

@@ -21,13 +21,14 @@ class student
 
   //student Attributes
   int age;
+  int weight;
 
   //------------------------
   // Constructor
   //------------------------
   public:
 
-   student(const int & aAge);
+   student(const int & aAge, const int & aWeight);
 
   
  student(const student & student);
@@ -44,7 +45,10 @@ class student
   //------------------------
 
   bool setAge(const int & aAge);
+  bool setWeight(const int & aWeight);
   int getAge() const;
+
+  int getWeight() const;
 
   //------------------------
   // Destructor

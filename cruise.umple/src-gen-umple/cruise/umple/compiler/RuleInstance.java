@@ -5,10 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Parser.ump 198
+ * Data captured during parsing when a certain rule matches
+ * @umplesource Parser.ump 214
  * @umplesource Parser_Code.ump 1359
  */
-// line 198 "../../../../src/Parser.ump"
+// line 214 "../../../../src/Parser.ump"
 // line 1359 "../../../../src/Parser_Code.ump"
 public class RuleInstance
 {

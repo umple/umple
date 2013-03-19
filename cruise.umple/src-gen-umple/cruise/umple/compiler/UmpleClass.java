@@ -13,11 +13,11 @@ import java.util.*;
  * and abstract, meaning it can't have any instances.
  * In Umple_Code.ump: Methods for computing complex properties
  * @umplesource Umple.ump 330
- * @umplesource Trace.ump 90
+ * @umplesource Trace.ump 112
  * @umplesource Umple_Code.ump 623
  */
 // line 330 "../../../../src/Umple.ump"
-// line 90 "../../../../src/Trace.ump"
+// line 112 "../../../../src/Trace.ump"
 // line 623 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
 {

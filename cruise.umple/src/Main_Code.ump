@@ -11,6 +11,11 @@ Command line tools: To compile Umple files, or to do diffs
 
 namespace cruise.umple;
 
+/*
+ * Main program for the command line Umple compiler
+ * Run java -jar umple.jar --help for details
+ * Takes an umple file as an argument, which can in turn use (include) other
+ */
 class UmpleConsoleMain
 {
 
@@ -167,7 +172,9 @@ class UmpleConsoleMain
     }
 }
 
-
+/*
+ * Main program for a jar that can inject calls to Umple at runtime
+ */
 class UmpleRunMain
 {
 
@@ -280,9 +287,13 @@ class UmpleRunMain
     }
 }
 
-
-// TODO: Code smell - rename?
-// Text to diagram merging tool used by UmpleOnline
+/*
+ * Main program for umplesync.jar which is used by umpleonline
+ * when it wants to send changes to the diagram and have them applied to
+ * the text and vice versa
+ *
+ * TODO: Code smell - rename?
+ */
 class PlaygroundMain 
 {
     depend cruise.umple.sync.*;

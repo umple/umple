@@ -4,11 +4,12 @@
 package cruise.vml;
 
 /**
- * @umplesource Vml.ump 52
+ * A named code snippet within a variabt
+ * @umplesource Vml.ump 72
  * @umplesource Vml_Code.ump 159
  * @umplesource Vml_Code.ump 385
  */
-// line 52 "../../../src/Vml.ump"
+// line 72 "../../../src/Vml.ump"
 // line 159 "../../../src/Vml_Code.ump"
 // line 385 "../../../src/Vml_Code.ump"
 public class Variant

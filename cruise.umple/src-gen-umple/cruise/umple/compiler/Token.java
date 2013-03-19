@@ -6,13 +6,14 @@ import java.util.regex.*;
 import java.util.*;
 
 /**
- * Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
- * these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
+ * Fundamental to all parsing, used in conjunction with rules and their definitions.
+ * As parsing is taking place these will indicate what is currently being looked for
+ * (such as a class definition or attribute) and helps to keep
  * track of the positions that the input parser parsed things at.
- * @umplesource Parser.ump 90
+ * @umplesource Parser.ump 100
  * @umplesource Parser_Code.ump 81
  */
-// line 90 "../../../../src/Parser.ump"
+// line 100 "../../../../src/Parser.ump"
 // line 81 "../../../../src/Parser_Code.ump"
 public class Token
 {
@@ -66,7 +67,7 @@ public class Token
    */
   public String getName()
   {
-    // line 100 "../../../../src/Parser.ump"
+    // line 110 "../../../../src/Parser.ump"
     if (name == null) { return ""; }
     return name;
   }
@@ -76,7 +77,7 @@ public class Token
    */
   public String getValue()
   {
-    // line 101 "../../../../src/Parser.ump"
+    // line 111 "../../../../src/Parser.ump"
     if (value == null) { return ""; }
     return value;
   }
@@ -195,11 +196,11 @@ public class Token
   public boolean setPosition(Position newPosition)
   {
     boolean wasSet = false;
-    // line 103 "../../../../src/Parser.ump"
+    // line 113 "../../../../src/Parser.ump"
     String tFilename = position == null ? newPosition.getFilename() : position.getFilename();
     position = newPosition;
     wasSet = true;
-    // line 104 "../../../../src/Parser.ump"
+    // line 114 "../../../../src/Parser.ump"
     position.setFilename(tFilename);
     return wasSet;
   }

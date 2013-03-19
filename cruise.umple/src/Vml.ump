@@ -11,6 +11,16 @@ have various features. This is an add-on capability for Umple
 
 namespace cruise.vml;
 
+/*
+ * VML (Variability Modeling Language) is an Umple add-on that
+ * allows you co construct and Umple model from a variety of
+ * CodeSnippets that are put together to create different
+ * versions of a product line or product family, by invoking
+ * one or more Variants of a variationPoint within a concern
+ * An online tool is available at
+ * http://try.umple.org/vml.php
+ * It is the intention to integrate VML into the core Umple language
+ */
 class VmlSystem
 {
   code = null;
@@ -30,6 +40,9 @@ class VmlSystem
   
 }
 
+/*
+ * A named group of VariationPoints.
+ */
 class Concern
 {
   name;
@@ -38,6 +51,10 @@ class Concern
   key { name }
 }
 
+/*
+ * Identifies where one product line member may differ
+ * from another. 
+ */
 class VariationPoint
 {
   name;
@@ -49,6 +66,9 @@ class VariationPoint
   key { concern, name, kind, codeSnippet }
 }
 
+/* 
+ * A named code snippet within a variabt
+ */
 class Variant
 {
   name;
@@ -56,6 +76,12 @@ class Variant
   key { name, codeSnippet }
 }
 
+/*
+ * A piece of code (typically umple) that will be
+ * selected to be added to a product line if
+ * a certain variant within a variation point is
+ * selected.
+ */
 class CodeSnippet
 {
   code;
@@ -63,6 +89,9 @@ class CodeSnippet
   key {code}
 }
 
+/* 
+ * Specialist parser for parsing VML
+ */
 class VmlParser
 {
   isA Parser;

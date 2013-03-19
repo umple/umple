@@ -11,6 +11,10 @@ State machine meta-model
 
 namespace cruise.umple.compiler;
 
+/*
+ * An entity in a running program that can have a set of values (states) and which
+ * changes values by taking transitions in response to various events.
+ */
 class StateMachine
 {
   depend cruise.umple.util.*;
@@ -25,6 +29,9 @@ class StateMachine
   before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
 }
 
+/*
+ * One of the values in which a state machine can be at any given point in time
+ */
 class State
 {
   name;
@@ -44,6 +51,13 @@ class State
  
 }
 
+/* 
+ * Some code to execute for an extended period while in a state
+ * This code is found after they keyword 'do' in Umple
+ * The code is executed in a separate threat, and can be terminated by
+ * an outgoing transition. Upon completion of the activity, any
+ * autotransition will be taken 
+ */
 class Activity
 {
   depend cruise.umple.compiler.Position;
@@ -80,7 +94,12 @@ class Activity
   	codeblock.setCode(lang,code);
   }
 }
-
+/* 
+ * Specifies, within a state, what happens with a certain event (method call) occurs
+ * Normally the state machine will go to a new state after executing various actions and
+ * activities.
+ * The guard is a boolean condition that may prevent triggering the transition
+ */
 class Transition
 {
     
@@ -97,6 +116,9 @@ class Transition
   
 }
 
+/*
+ * A quickly-executed block of code that is run upon entry or exit from a state
+ */
 class Action
 {
   depend cruise.umple.compiler.Position;
@@ -148,6 +170,10 @@ class Event
   key { name }
 }
 
+/*
+ * A boolean condition that is checked when an event method is called
+ * If the result is true the transition may be taken
+ */
 class Guard
 {
   depend cruise.umple.compiler.Position;

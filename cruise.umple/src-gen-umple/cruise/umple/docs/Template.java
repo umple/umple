@@ -4,10 +4,12 @@
 package cruise.umple.docs;
 
 /**
- * @umplesource Documenter.ump 49
+ * Set of html templates used in the Umple User manual for certain
+ * kinds of page elements
+ * @umplesource Documenter.ump 79
  * @umplesource Documenter_Code.ump 412
  */
-// line 49 "../../../../src/Documenter.ump"
+// line 79 "../../../../src/Documenter.ump"
 // line 412 "../../../../src/Documenter_Code.ump"
 public class Template
 {

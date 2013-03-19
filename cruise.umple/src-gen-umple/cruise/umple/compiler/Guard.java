@@ -5,9 +5,11 @@ package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
 
 /**
- * @umplesource StateMachine.ump 151
+ * A boolean condition that is checked when an event method is called
+ * If the result is true the transition may be taken
+ * @umplesource StateMachine.ump 177
  */
-// line 151 "../../../../src/StateMachine.ump"
+// line 177 "../../../../src/StateMachine.ump"
 public class Guard
 {
 
@@ -34,7 +36,7 @@ public class Guard
     canSetCondition = true;
     condition = aCondition;
     codeblock = null;
-    // line 159 "../../../../src/StateMachine.ump"
+    // line 185 "../../../../src/StateMachine.ump"
     codeblock = aCondition!=null ? new CodeBlock(aCondition) : new CodeBlock();
   }
 
@@ -53,7 +55,7 @@ public class Guard
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
-    // line 160 "../../../../src/StateMachine.ump"
+    // line 186 "../../../../src/StateMachine.ump"
     codeblock.setCode(aCondition);
     if (!canSetCondition) { return false; }
     condition = aCondition;
@@ -66,7 +68,7 @@ public class Guard
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 167 "../../../../src/StateMachine.ump"
+    // line 193 "../../../../src/StateMachine.ump"
     if(condition!=null){
       	  condition+= aCodeblock.getCode();
       	}
@@ -83,7 +85,7 @@ public class Guard
   public String getCondition()
   {
     String aCondition = condition;
-    // line 161 "../../../../src/StateMachine.ump"
+    // line 187 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else

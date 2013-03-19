@@ -5,9 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 53
+ * A statement found in Umple that directs code to be generated
+ * to trace a model element and generate output using some tracing tool
+ * @umplesource Trace.ump 64
  */
-// line 53 "../../../../src/Trace.ump"
+// line 64 "../../../../src/Trace.ump"
 public class TraceDirective
 {
 

@@ -6,11 +6,12 @@ import cruise.umple.util.StringFormatter;
 import java.util.*;
 
 /**
- * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
- * @umplesource Parser.ump 24
+ * Represents the results of parsing, such as if it was successful,
+ * whether it had warnings, etc.
+ * @umplesource Parser.ump 29
  * @umplesource Parser_Code.ump 1586
  */
-// line 24 "../../../../src/Parser.ump"
+// line 29 "../../../../src/Parser.ump"
 // line 1586 "../../../../src/Parser_Code.ump"
 public class ParseResult
 {

@@ -5,12 +5,13 @@ package cruise.vml;
 import java.util.*;
 
 /**
+ * A named group of VariationPoints.
  * POSITION INFORMATION
- * @umplesource Vml.ump 33
+ * @umplesource Vml.ump 46
  * @umplesource Vml_Code.ump 87
  * @umplesource Vml_Code.ump 369
  */
-// line 33 "../../../src/Vml.ump"
+// line 46 "../../../src/Vml.ump"
 // line 87 "../../../src/Vml_Code.ump"
 // line 369 "../../../src/Vml_Code.ump"
 public class Concern

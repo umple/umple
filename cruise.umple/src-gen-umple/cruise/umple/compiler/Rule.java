@@ -5,12 +5,12 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * Represents a rule, which has a name and contains definitions that describe it.
+ * Represents a grammar rule, which has a name and contains definitions that describe it.
  * 
  * Examples of this are a class definition.
- * @umplesource Parser.ump 133
+ * @umplesource Parser.ump 143
  */
-// line 133 "../../../../src/Parser.ump"
+// line 143 "../../../../src/Parser.ump"
 public class Rule
 {
 

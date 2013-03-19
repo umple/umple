@@ -5,10 +5,12 @@ package cruise.umple.docs;
 import java.util.*;
 
 /**
- * @umplesource Documenter.ump 28
+ * Data for the user manual taken from one of the files in 
+ * build/reference
+ * @umplesource Documenter.ump 35
  * @umplesource Documenter_Code.ump 330
  */
-// line 28 "../../../../src/Documenter.ump"
+// line 35 "../../../../src/Documenter.ump"
 // line 330 "../../../../src/Documenter_Code.ump"
 public class Content
 {
@@ -87,21 +89,34 @@ public class Content
     return wasRemoved;
   }
 
+  /**
+   * Title of the user manual page
+   */
   public String getTitle()
   {
     return title;
   }
 
+  /**
+   * Legacy - to be deleted - used to represent whether cross-references should
+   * Be created
+   */
   public boolean getShouldIncludeReferences()
   {
     return shouldIncludeReferences;
   }
 
+  /**
+   * Html for the core of the manual page
+   */
   public String getDescription()
   {
     return description;
   }
 
+  /**
+   * Grammar rules associated with this user manual page
+   */
   public String getSyntax()
   {
     return syntax;

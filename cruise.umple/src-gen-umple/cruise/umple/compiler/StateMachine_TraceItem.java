@@ -5,9 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 75
+ * An element of a trace directive that indicates to trace one or more state machines
+ * or transitions
+ * @umplesource Trace.ump 93
  */
-// line 75 "../../../../src/Trace.ump"
+// line 93 "../../../../src/Trace.ump"
 public class StateMachine_TraceItem
 {
 

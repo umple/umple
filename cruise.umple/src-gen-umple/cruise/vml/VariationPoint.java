@@ -5,11 +5,13 @@ package cruise.vml;
 import java.util.*;
 
 /**
- * @umplesource Vml.ump 41
+ * Identifies where one product line member may differ
+ * from another.
+ * @umplesource Vml.ump 58
  * @umplesource Vml_Code.ump 127
  * @umplesource Vml_Code.ump 376
  */
-// line 41 "../../../src/Vml.ump"
+// line 58 "../../../src/Vml.ump"
 // line 127 "../../../src/Vml_Code.ump"
 // line 376 "../../../src/Vml_Code.ump"
 public class VariationPoint

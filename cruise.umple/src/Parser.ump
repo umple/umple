@@ -11,6 +11,10 @@ UmpleParser.ump is the key example
  */
 namespace cruise.umple.compiler;
 
+/* 
+ * An open-close pair, such as open curly brackets and close curly brackets
+ * Used to identify block start and end while parsing
+ */
 class Couple
 {
   open;
@@ -19,7 +23,8 @@ class Couple
 }
 
 /*
- * Represents the results of parsing, such as if it was successful, whether it had warnings, etc.
+ * Represents the results of parsing, such as if it was successful,
+ * whether it had warnings, etc.
  */
 class ParseResult
 {
@@ -57,6 +62,7 @@ class ErrorMessage
 
 /*
  * Represents an error type, which contains an error code, the severity of the error, etc.
+ * Error data is read from the en.error file
  */
 class ErrorType
 {
@@ -72,6 +78,9 @@ class ErrorType
   key {errorCode}
 }
 
+/*
+ * Lists all the errors in the system
+ */
 class ErrorTypeSingleton
 {
   singleton;
@@ -83,8 +92,9 @@ class ErrorTypeSingleton
 }
 
 /*
- * Fundamental to all parsing, used in conjunction with rules and their definitions.  As parsing is taking place
- * these will indicate what is currently being looked for (such as a class definition or attribute) and helps to keep
+ * Fundamental to all parsing, used in conjunction with rules and their definitions.
+ * As parsing is taking place these will indicate what is currently being looked for
+ * (such as a class definition or attribute) and helps to keep
  * track of the positions that the input parser parsed things at.
  */
 class Token
@@ -126,7 +136,7 @@ class Position
 }
 
 /*
- * Represents a rule, which has a name and contains definitions that describe it.
+ * Represents a grammar rule, which has a name and contains definitions that describe it.
  * 
  * Examples of this are a class definition.
  */
@@ -148,6 +158,9 @@ class RulePartValue
   * -> 0..1 Position;
 }
 
+/* 
+ * Part of a grammar rule
+ */
 class RulePart
 {
   // The name of the rule part.
@@ -195,6 +208,9 @@ class Parser
   Token rootToken = reset();
 }
 
+/*
+ * Data captured during parsing when a certain rule matches
+ */
 class RuleInstance
 {
   String[] stopAts;

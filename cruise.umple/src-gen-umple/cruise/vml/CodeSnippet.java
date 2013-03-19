@@ -4,11 +4,15 @@
 package cruise.vml;
 
 /**
- * @umplesource Vml.ump 59
+ * A piece of code (typically umple) that will be
+ * selected to be added to a product line if
+ * a certain variant within a variation point is
+ * selected.
+ * @umplesource Vml.ump 85
  * @umplesource Vml_Code.ump 112
  * @umplesource Vml_Code.ump 408
  */
-// line 59 "../../../src/Vml.ump"
+// line 85 "../../../src/Vml.ump"
 // line 112 "../../../src/Vml_Code.ump"
 // line 408 "../../../src/Vml_Code.ump"
 public class CodeSnippet

@@ -1,0 +1,8 @@
+Coloring model elements
+UmpleOnline
+noreferences
+
+@@description
+<p>Umple has a special directive that allows you to highlight certain elements (currently only classes) in UmpleOnline and GraphViz output. Simply write 'displayColor xxx;' in a class where xxx is any html colour such as "red" or "#BBCCFF". UK spelling displayColour also works.</p>
+
+
