@@ -6,17 +6,6 @@
   <packagedElement xmi:type="uml:Model" xmi:id="dataType" name="dataType">
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="dataType-Time" name="Time"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="Person" name="Person">
-    <ownedAttribute xmi:id="Person-status" name="status" visibility="private" type="Status">
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Person-status-_upperValue" value="1"/>
-      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Person-status-_lowerValue" value="1"/>
-    </ownedAttribute>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Enumeration" xmi:id="Status" name="Status">
-    <ownedLiteral xmi:id="Status-Registered" name="Registered"/>
-    <ownedLiteral xmi:id="Status-Active" name="Active"/>
-    <ownedLiteral xmi:id="Status-Inactive" name="Inactive"/>
-  </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="Product" name="Product">
     <ownedAttribute xmi:id="Product-description" name="description" visibility="private">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
@@ -68,7 +57,7 @@
   <packagedElement xmi:type="uml:Class" xmi:id="Cheque" name="Cheque">
     <generalization xmi:id="Cheque-_generalization.0" general="PaymentMethod"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Interface" xmi:id="ICart" name="ICart">
+  <packagedElement xmi:type="uml:Interface" xmi:id="ICart" name="ICart"/>
   <profileApplication xmi:id="_profileApplication.0">
     <eAnnotations xmi:id="_eAnnotations.0" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/schemas/Standard/1#/"/>

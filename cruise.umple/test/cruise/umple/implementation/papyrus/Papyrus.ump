@@ -1,9 +1,24 @@
 generate Papyrus;
 namespace example;
 
-class Person
-{
-  status { Registered, Active, Inactive }
+class Garage{
+ GarageDoor {
+      Closed {
+        exit/ {triggerNormalEnergyMode();}
+        pressButton -> Opening;
+      }
+     Opening {
+       entry/{runMotorForward();}
+       openingCompleted -> Open;
+     }
+     Open {
+       pressButton  -> Closing;
+     }
+     Closing {
+       entry/{runMotorInReverse();}
+       closingCompleted -> Closed;
+     }
+   }
 }
 
 class Product
@@ -33,7 +48,7 @@ class CartItem
 
 class PaymentMethod
 {
-} 
+}
 
 class Cheque
 {
