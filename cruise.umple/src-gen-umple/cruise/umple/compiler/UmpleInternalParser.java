@@ -3197,6 +3197,12 @@ this("UmpleInternalParser", aModel);
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
+      // Concurrency is only allowed between nested state-machines
+      if (stateToken.is("||"))
+      {
+        setFailedPosition(stateMachineToken.getPosition(), 53, sm.getName());
+      }
+      
       if(stateToken.is("trace"))
       {
     	analyzeTraceStatement(aClass,stateToken);
