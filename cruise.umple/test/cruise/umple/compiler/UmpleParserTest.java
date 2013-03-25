@@ -1965,6 +1965,12 @@ public class UmpleParserTest
   }
   
   @Test
+  public void stateMachineConcurrencyBetweenStates()
+  {
+	  assertFailedParse("103_Concurrent_FirstStateLevel.ump", 53);
+  }
+  
+  @Test
   public void externalDefinitionAndClassDefinitionCodeGeneration_externalFirst()
   {
     assertParse("026_externalDefinitionAndClassDefinition_first.ump");

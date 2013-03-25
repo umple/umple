@@ -9,7 +9,7 @@
 stateMachineDefinition : statemachine [name] { [[state]]* }
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]]  
 
-inlineStateMachine : [name] { ( [[comment]] | [[state]] | [[trace]] )* }
+inlineStateMachine : [name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }
 
 extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
