@@ -15,15 +15,15 @@ precondition : [ ([name]? pre:) ([[constraint]]) ]
 postcondition : [ ([name]? post:) ([[constraint]]) ]
 
 invariant : [ ([name] :)? ([[constraint]]) ]
-// A constraint is an expression optionally be surrounded in round brackets or negated
-constraint- :  [[negativeConstraint]] | OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[constraintBody]]
 
-negativeConstraint : ! OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET | ! [[constraintBody]]
+// A constraint is an expression optionally be surrounded in round brackets or negated
+constraint- : OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[constraintBody]]
+negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
 constraintBody- : [[constraintExpr]] ([[linkingOp]])*
 linkingOp : ( [=||] [[constraintExpr]]) | ( [=andOp:and|&&|&] [[constraintExpr]]) | ( [=orOp:or] [[constraintExpr]])  
-constraintExpr- :  [[stringExpr]] | [[boolExpr]] | [[genExpr]] | [[numExpr]] | [loneBoolean] ( [ [index] ] )? 
+constraintExpr- :  [[negativeConstraint]] | [[stringExpr]] | [[boolExpr]] | [[genExpr]] | [[numExpr]] | [loneBoolean] ( [ [index] ] )? 
 
 compoundExpr- : [[stringExpr]]  | [[boolExpr]] | [[numExpr]] | [[genExpr]] 
 
