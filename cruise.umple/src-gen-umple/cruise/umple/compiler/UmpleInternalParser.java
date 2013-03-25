@@ -2649,6 +2649,9 @@ this("UmpleInternalParser", aModel);
         else if (t.is("linkingOp")){
         	rawLine.addAll(analyzeLinkingOpExpression(t,aClass));
         }
+        else if (t.is("negativeConstraint")){
+        	rawLine.addAll(analyzeNegativeConstraint(t, aClass));
+        }
         else
         {
           rawLine.addAll(analyzeConstraint(t,aClass));
@@ -2656,6 +2659,30 @@ this("UmpleInternalParser", aModel);
       } 
     }
   return rawLine;
+  }
+  
+  private List <ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass){
+	  List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
+	  List <Token> subtokensCopy = new ArrayList <Token> ();
+	  subtokensCopy.addAll(negativeConstraintSubtokens);
+	  
+	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	 
+	  rawLine.add(new ConstraintVariable("OPERATOR","!"));
+	  rawLine.add(new ConstraintVariable("SYNTAX","("));
+	 
+	  for (Token s :subtokensCopy){
+		   String name = s.getName();
+	      	if (name.equals("!")|name.equals("not")|name.equals("~")){
+	      		negativeConstraintToken.removeSubToken(s);	
+	      	}
+	      }
+	  
+	  rawLine.addAll(analyzeConstraint(negativeConstraintToken, aClass)); 
+	  
+	  rawLine.add(new ConstraintVariable("SYNTAX",")"));
+
+	  return rawLine; //rawLine = !(constraintBodystuff)
   }
   
   private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken , UmpleClass aClass)
