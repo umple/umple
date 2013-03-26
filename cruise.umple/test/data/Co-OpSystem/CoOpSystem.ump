@@ -16,7 +16,7 @@ class Job
 {
   description;
   location;
-  Date StartDate;
+  Date startDate;
   Date endDate;
   * -- 1..* Program;
 }
