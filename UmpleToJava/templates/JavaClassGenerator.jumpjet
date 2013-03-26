@@ -35,18 +35,40 @@
 <% } %>
 public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract"); } %>class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 {
+  <%getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getEqualsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getStateMachine2Code(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getExtraMethodsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAllExtraCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  return stringBuffer.toString();
+    } 
+    private String getMemberCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
   <%@ include file="members_AllStatics.jet" %>
   <%@ include file="members_AllAttributes.jet" %>
   <%@ include file="members_AllStateMachines.jet" %>
   <%@ include file="members_AllDoActivities.jet" %>
   <%@ include file="members_AllAssociations.jet" %>
   <%@ include file="members_AllHelpers.jet" %>
+  <%return stringBuffer.toString();
+    } 
+    private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   <%@ include file="constructor_Declare_All.jet" %>
+  <%return stringBuffer.toString();
+    } 
+    private String getAttributeCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
 
   //------------------------
   // INTERFACE
@@ -55,17 +77,41 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%@ include file="attribute_Set_All.jet" %>
   <%@ include file="attribute_Get_All.jet" %>
   <%@ include file="attribute_IsBoolean_All.jet" %>
+  <%return stringBuffer.toString();
+    } 
+    private String getStateMachine1Code(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
   <%@ include file="state_machine_Get_All.jet" %>
   <%@ include file="state_machine_Events_All.jet" %>
-  <%@ include file="state_machine_Set_All.jet" %>
+  <%@ include file="state_machine_Set_All.jet" %><%
+  return stringBuffer.toString();
+    } 
+    private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
   <%@ include file="association_Get_All.jet" %>
   <%@ include file="association_Set_All.jet" %>
+  <%return stringBuffer.toString();
+    } 
+    private String getEqualsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
 <% if (uClass.getKey().isProvided()) { %>
   <%@ include file="equals.jet" %>
 <% } %>
+  <%return stringBuffer.toString();
+    } 
+    private String getStateMachine2Code(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
   <%@ include file="state_machine_doActivity_All.jet" %>
   <%@ include file="state_machine_timedEvent_All.jet" %>
+  <%return stringBuffer.toString();
+    } 
+    private String getDeleteCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
   <%@ include file="delete_All.jet" %>
+  <%return stringBuffer.toString();
+    } 
+    private String getExtraMethodsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
 <% if (uClass.hasMethods()) { %>
   <%@ include file="class_MethodDeclaration.jet" %>
 <% } %>
@@ -101,6 +147,10 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
    if (uClass.getAttributes().size()>0 && !matchFound){ %>
    <%@ include file="toString_declare.jet" %>
 <% } %>
+  <%return stringBuffer.toString();
+    } 
+    private String getAllExtraCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {%>
 <% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

@@ -2,7 +2,6 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-// constant on the left side of the constraint
 class student
 {
 
@@ -12,18 +11,20 @@ class student
 
   //student Attributes
   private $age;
+  private $weight;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aAge)
+  public function __construct($aAge, $aWeight)
   {
-    if ( !(18>$aAge))
+    if ( !(!(18>$aAge)))
     {
       throw new RuntimeException("Please provide a valid age");
     }
     $this->age = $aAge;
+    $this->weight = $aWeight;
   }
 
   //------------------------
@@ -33,7 +34,7 @@ class student
   public function setAge($aAge)
   {
     $wasSet = false;
-    if (18>$aAge)
+    if (!(18>$aAge))
     {
     $this->age = $aAge;
     $wasSet = true;
@@ -41,9 +42,22 @@ class student
     return $wasSet;
   }
 
+  public function setWeight($aWeight)
+  {
+    $wasSet = false;
+    $this->weight = $aWeight;
+    $wasSet = true;
+    return $wasSet;
+  }
+
   public function getAge()
   {
     return $this->age;
+  }
+
+  public function getWeight()
+  {
+    return $this->weight;
   }
 
   public function equals($compareTo)

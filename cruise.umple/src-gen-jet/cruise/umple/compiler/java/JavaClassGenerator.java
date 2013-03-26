@@ -2052,6 +2052,20 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(uClass.getName());
     stringBuffer.append( gen.translate("isA",uClass) );
     stringBuffer.append(TEXT_10);
+    getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getEqualsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getStateMachine2Code(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getExtraMethodsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAllExtraCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  return stringBuffer.toString();
+    } 
+    private String getMemberCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     
 {
   isFirst = true;
@@ -2406,6 +2420,10 @@ public class JavaClassGenerator implements ILang
   }
 }
 
+    return stringBuffer.toString();
+    } 
+    private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     stringBuffer.append(TEXT_11);
     
   boolean isOneToOne = false;
@@ -3194,6 +3212,10 @@ public class JavaClassGenerator implements ILang
   }
 
 
+    return stringBuffer.toString();
+    } 
+    private String getAttributeCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     stringBuffer.append(TEXT_158);
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -3682,6 +3704,10 @@ public class JavaClassGenerator implements ILang
   }
 
 
+    return stringBuffer.toString();
+    } 
+    private String getStateMachine1Code(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     
 {
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -4157,6 +4183,11 @@ public class JavaClassGenerator implements ILang
   }
 }
 
+    
+  return stringBuffer.toString();
+    } 
+    private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (AssociationVariable av : uClass.getAssociationVariables()) 
@@ -7319,6 +7350,10 @@ public class JavaClassGenerator implements ILang
     }
   }
 
+    return stringBuffer.toString();
+    } 
+    private String getEqualsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
      if (uClass.getKey().isProvided()) { 
     
 
@@ -7469,6 +7504,10 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append( canSet.toString().trim() );
     stringBuffer.append(TEXT_1759);
      } 
+    return stringBuffer.toString();
+    } 
+    private String getStateMachine2Code(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     
 { 
   boolean hasActivities = false;
@@ -7676,6 +7715,10 @@ if (p != null) {
   }
 }
 
+    return stringBuffer.toString();
+    } 
+    private String getDeleteCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
     
 
   appendln(stringBuffer,"");
@@ -8036,6 +8079,10 @@ if (p != null) {
   }
 
 
+    return stringBuffer.toString();
+    } 
+    private String getExtraMethodsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
      if (uClass.hasMethods()) { 
     
     if (uClass.hasMethods())
@@ -8222,6 +8269,10 @@ if (p != null) {
 	  
     stringBuffer.append(TEXT_1930);
      } 
+    return stringBuffer.toString();
+    } 
+    private String getAllExtraCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
     stringBuffer.append(TEXT_1931);
     stringBuffer.append(TEXT_1932);
