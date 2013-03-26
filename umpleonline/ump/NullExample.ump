@@ -38,9 +38,9 @@ class D{
   singleton;
   
   // The following demonstrates some datatypes
-  String id;
-  Date someDate;
-  Boolean whetherTrueOrFalse;
+  lazy String id;
+  lazy Date someDate;
+  lazy Boolean whetherTrueOrFalse;
 }
 
 // Associations can be defined in a class or separately as is done here

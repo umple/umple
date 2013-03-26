@@ -4,9 +4,9 @@ class Address
 {
   Integer numberOnStreet;
   Integer apartmentOrUnit;
-  String Street;
-  String City;
-  String PostalCode;
+  String street;
+  String city;
+  String postalCode;
 }
 
 class GPSCoord
@@ -36,7 +36,7 @@ class Neighbourhood
 class PropertySale
 {
 
-  Integer SalePrice;
+  Integer salePrice;
   String seller;
   String buyer;
 
