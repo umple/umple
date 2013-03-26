@@ -105,12 +105,12 @@ public class TraceCondition
     return rhs;
   }
 
-  public boolean setRhs(ConditionRhs newRhs)
+  public boolean setRhs(ConditionRhs aNewRhs)
   {
     boolean wasSet = false;
-    if (newRhs != null)
+    if (aNewRhs != null)
     {
-      rhs = newRhs;
+      rhs = aNewRhs;
       wasSet = true;
     }
     return wasSet;

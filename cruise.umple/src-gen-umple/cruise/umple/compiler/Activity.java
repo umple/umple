@@ -112,37 +112,37 @@ public class Activity
     return state;
   }
 
-  public boolean setOnCompletionEvent(Event newOnCompletionEvent)
+  public boolean setOnCompletionEvent(Event aNewOnCompletionEvent)
   {
     boolean wasSet = false;
-    onCompletionEvent = newOnCompletionEvent;
+    onCompletionEvent = aNewOnCompletionEvent;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setState(State newState)
+  public boolean setState(State aNewState)
   {
     boolean wasSet = false;
-    if (newState == null)
+    if (aNewState == null)
     {
       //Unable to setState to null, as activity must always be associated to a state
       return wasSet;
     }
     
-    Activity existingActivity = newState.getActivity();
+    Activity existingActivity = aNewState.getActivity();
     if (existingActivity != null && !equals(existingActivity))
     {
       //Unable to setState, the current state already has a activity, which would be orphaned if it were re-assigned
       return wasSet;
     }
     
-    State oldState = state;
-    state = newState;
+    State anOldState = state;
+    state = aNewState;
     state.setActivity(this);
 
-    if (oldState != null)
+    if (anOldState != null)
     {
-      oldState.setActivity(null);
+      anOldState.setActivity(null);
     }
     wasSet = true;
     return wasSet;

@@ -42,18 +42,18 @@ public class ReferenceType extends Type
     return umpleInterface;
   }
 
-  public boolean setUmpleClass(UmpleClass newUmpleClass)
+  public boolean setUmpleClass(UmpleClass aNewUmpleClass)
   {
     boolean wasSet = false;
-    umpleClass = newUmpleClass;
+    umpleClass = aNewUmpleClass;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setUmpleInterface(UmpleInterface newUmpleInterface)
+  public boolean setUmpleInterface(UmpleInterface aNewUmpleInterface)
   {
     boolean wasSet = false;
-    umpleInterface = newUmpleInterface;
+    umpleInterface = aNewUmpleInterface;
     wasSet = true;
     return wasSet;
   }

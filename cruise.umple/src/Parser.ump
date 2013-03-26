@@ -110,7 +110,7 @@ class Token
   before getName { if (name == null) { return ""; } }
   before getValue { if (value == null) { return ""; } }
 
-  before setPosition {String tFilename = position == null ? newPosition.getFilename() : position.getFilename();}
+  before setPosition {String tFilename = position == null ? aNewPosition.getFilename() : position.getFilename();}
   after setPosition {position.setFilename(tFilename);}
 }
 

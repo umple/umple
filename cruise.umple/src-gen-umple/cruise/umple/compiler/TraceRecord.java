@@ -301,29 +301,29 @@ public class TraceRecord
     return wasAdded;
   }
 
-  public boolean setTraceDirective(TraceDirective newTraceDirective)
+  public boolean setTraceDirective(TraceDirective aNewTraceDirective)
   {
     boolean wasSet = false;
-    if (newTraceDirective == null)
+    if (aNewTraceDirective == null)
     {
       //Unable to setTraceDirective to null, as traceRecord must always be associated to a traceDirective
       return wasSet;
     }
     
-    TraceRecord existingTraceRecord = newTraceDirective.getTraceRecord();
+    TraceRecord existingTraceRecord = aNewTraceDirective.getTraceRecord();
     if (existingTraceRecord != null && !equals(existingTraceRecord))
     {
       //Unable to setTraceDirective, the current traceDirective already has a traceRecord, which would be orphaned if it were re-assigned
       return wasSet;
     }
     
-    TraceDirective oldTraceDirective = traceDirective;
-    traceDirective = newTraceDirective;
+    TraceDirective anOldTraceDirective = traceDirective;
+    traceDirective = aNewTraceDirective;
     traceDirective.setTraceRecord(this);
 
-    if (oldTraceDirective != null)
+    if (anOldTraceDirective != null)
     {
-      oldTraceDirective.setTraceRecord(null);
+      anOldTraceDirective.setTraceRecord(null);
     }
     wasSet = true;
     return wasSet;

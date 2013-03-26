@@ -49,14 +49,14 @@ public class Student
     return mentor;
   }
 
-  private boolean setMentor(Mentor newMentor)
+  private boolean setMentor(Mentor aNewMentor)
   {
     boolean wasSet = false;
     if (!canSetMentor) { return false; }
     canSetMentor = false;
-    if (newMentor != null)
+    if (aNewMentor != null)
     {
-      mentor = newMentor;
+      mentor = aNewMentor;
       wasSet = true;
     }
     return wasSet;

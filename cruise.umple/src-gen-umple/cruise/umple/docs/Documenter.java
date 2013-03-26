@@ -120,10 +120,10 @@ public class Documenter
     return parser;
   }
 
-  public boolean setParser(ContentParser newParser)
+  public boolean setParser(ContentParser aNewParser)
   {
     boolean wasSet = false;
-    parser = newParser;
+    parser = aNewParser;
     wasSet = true;
     return wasSet;
   }

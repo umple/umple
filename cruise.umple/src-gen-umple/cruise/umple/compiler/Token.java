@@ -193,12 +193,12 @@ public class Token
     return wasAdded;
   }
 
-  public boolean setPosition(Position newPosition)
+  public boolean setPosition(Position aNewPosition)
   {
     boolean wasSet = false;
     // line 113 "../../../../src/Parser.ump"
-    String tFilename = position == null ? newPosition.getFilename() : position.getFilename();
-    position = newPosition;
+    String tFilename = position == null ? aNewPosition.getFilename() : position.getFilename();
+    position = aNewPosition;
     wasSet = true;
     // line 114 "../../../../src/Parser.ump"
     position.setFilename(tFilename);

@@ -36,10 +36,10 @@ public class ProgramL
     return student;
   }
 
-  public boolean setMentor(MentorL newMentor)
+  public boolean setMentor(MentorL aNewMentor)
   {
     boolean wasSet = false;
-    if (newMentor == null)
+    if (aNewMentor == null)
     {
       MentorL existingMentor = mentor;
       mentor = null;
@@ -53,26 +53,26 @@ public class ProgramL
     }
 
     MentorL currentMentor = getMentor();
-    if (currentMentor != null && !currentMentor.equals(newMentor))
+    if (currentMentor != null && !currentMentor.equals(aNewMentor))
     {
       currentMentor.setProgram(null);
     }
 
-    mentor = newMentor;
-    ProgramL existingProgram = newMentor.getProgram();
+    mentor = aNewMentor;
+    ProgramL existingProgram = aNewMentor.getProgram();
 
     if (!equals(existingProgram))
     {
-      newMentor.setProgram(this);
+      aNewMentor.setProgram(this);
     }
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setStudent(StudentL newStudent)
+  public boolean setStudent(StudentL aNewStudent)
   {
     boolean wasSet = false;
-    if (newStudent == null)
+    if (aNewStudent == null)
     {
       StudentL existingStudent = student;
       student = null;
@@ -86,17 +86,17 @@ public class ProgramL
     }
 
     StudentL currentStudent = getStudent();
-    if (currentStudent != null && !currentStudent.equals(newStudent))
+    if (currentStudent != null && !currentStudent.equals(aNewStudent))
     {
       currentStudent.setProgram(null);
     }
 
-    student = newStudent;
-    ProgramL existingProgram = newStudent.getProgram();
+    student = aNewStudent;
+    ProgramL existingProgram = aNewStudent.getProgram();
 
     if (!equals(existingProgram))
     {
-      newStudent.setProgram(this);
+      aNewStudent.setProgram(this);
     }
     wasSet = true;
     return wasSet;

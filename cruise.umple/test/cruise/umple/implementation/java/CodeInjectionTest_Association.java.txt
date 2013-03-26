@@ -380,22 +380,22 @@ public class Student
 
     ArrayList<Mentor> oldM3s = new ArrayList<Mentor>(m3s);
     m3s.clear();
-    for (Mentor newM3 : verifiedM3s)
+    for (Mentor aNewM3 : verifiedM3s)
     {
-      m3s.add(newM3);
-      if (oldM3s.contains(newM3))
+      m3s.add(aNewM3);
+      if (oldM3s.contains(aNewM3))
       {
-        oldM3s.remove(newM3);
+        oldM3s.remove(aNewM3);
       }
       else
       {
-        newM3.addThree(this);
+        aNewM3.addThree(this);
       }
     }
 
-    for (Mentor oldM3 : oldM3s)
+    for (Mentor anOldM3 : oldM3s)
     {
-      oldM3.removeThree(this);
+      anOldM3.removeThree(this);
     }
     wasSet = true;
     print "after setM3s";
@@ -542,22 +542,22 @@ public class Student
 
     ArrayList<Mentor> oldM4s = new ArrayList<Mentor>(m4s);
     m4s.clear();
-    for (Mentor newM4 : verifiedM4s)
+    for (Mentor aNewM4 : verifiedM4s)
     {
-      m4s.add(newM4);
-      if (oldM4s.contains(newM4))
+      m4s.add(aNewM4);
+      if (oldM4s.contains(aNewM4))
       {
-        oldM4s.remove(newM4);
+        oldM4s.remove(aNewM4);
       }
       else
       {
-        newM4.addFour(this);
+        aNewM4.addFour(this);
       }
     }
 
-    for (Mentor oldM4 : oldM4s)
+    for (Mentor anOldM4 : oldM4s)
     {
-      oldM4.removeFour(this);
+      anOldM4.removeFour(this);
     }
     wasSet = true;
     print "after setM4s";
@@ -690,22 +690,22 @@ public class Student
 
     ArrayList<Mentor> oldM5s = new ArrayList<Mentor>(m5s);
     m5s.clear();
-    for (Mentor newM5 : verifiedM5s)
+    for (Mentor aNewM5 : verifiedM5s)
     {
-      m5s.add(newM5);
-      if (oldM5s.contains(newM5))
+      m5s.add(aNewM5);
+      if (oldM5s.contains(aNewM5))
       {
-        oldM5s.remove(newM5);
+        oldM5s.remove(aNewM5);
       }
       else
       {
-        newM5.addFive(this);
+        aNewM5.addFive(this);
       }
     }
 
-    for (Mentor oldM5 : oldM5s)
+    for (Mentor anOldM5 : oldM5s)
     {
-      oldM5.removeFive(this);
+      anOldM5.removeFive(this);
     }
     wasSet = true;
     print "after setM5s";

@@ -50,14 +50,14 @@ public class WidgetImmutableA
     return widgetImmutableB;
   }
 
-  private boolean setWidgetImmutableB(WidgetImmutableB newWidgetImmutableB)
+  private boolean setWidgetImmutableB(WidgetImmutableB aNewWidgetImmutableB)
   {
     boolean wasSet = false;
     if (!canSetWidgetImmutableB) { return false; }
     canSetWidgetImmutableB = false;
-    if (newWidgetImmutableB != null)
+    if (aNewWidgetImmutableB != null)
     {
-      widgetImmutableB = newWidgetImmutableB;
+      widgetImmutableB = aNewWidgetImmutableB;
       wasSet = true;
     }
     return wasSet;

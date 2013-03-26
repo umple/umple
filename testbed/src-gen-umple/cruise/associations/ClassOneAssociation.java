@@ -39,14 +39,14 @@ public class ClassOneAssociation
     return otherclass;
   }
 
-  private boolean setOtherclass(Otherclass newOtherclass)
+  private boolean setOtherclass(Otherclass aNewOtherclass)
   {
     boolean wasSet = false;
     if (!canSetOtherclass) { return false; }
     canSetOtherclass = false;
-    if (newOtherclass != null)
+    if (aNewOtherclass != null)
     {
-      otherclass = newOtherclass;
+      otherclass = aNewOtherclass;
       wasSet = true;
     }
     return wasSet;

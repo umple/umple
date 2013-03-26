@@ -30,10 +30,10 @@ public class MentorA
     return student;
   }
 
-  public boolean setStudent(StudentA newStudent)
+  public boolean setStudent(StudentA aNewStudent)
   {
     boolean wasSet = false;
-    if (newStudent == null)
+    if (aNewStudent == null)
     {
       StudentA existingStudent = student;
       student = null;
@@ -47,17 +47,17 @@ public class MentorA
     }
 
     StudentA currentStudent = getStudent();
-    if (currentStudent != null && !currentStudent.equals(newStudent))
+    if (currentStudent != null && !currentStudent.equals(aNewStudent))
     {
       currentStudent.setMentor(null);
     }
 
-    student = newStudent;
-    MentorA existingMentor = newStudent.getMentor();
+    student = aNewStudent;
+    MentorA existingMentor = aNewStudent.getMentor();
 
     if (!equals(existingMentor))
     {
-      newStudent.setMentor(this);
+      aNewStudent.setMentor(this);
     }
     wasSet = true;
     return wasSet;

@@ -71,11 +71,11 @@ public class Mentor
     return index;
   }
 
-  public boolean setMain(Course newMain)
+  public boolean setMain(Course aNewMain)
   {
     boolean wasSet = false;
     if (!canSetMain) { return false; }
-    if (newMain == null)
+    if (aNewMain == null)
     {
       Course existingMain = main;
       main = null;
@@ -89,17 +89,17 @@ public class Mentor
     }
 
     Course currentMain = getMain();
-    if (currentMain != null && !currentMain.equals(newMain))
+    if (currentMain != null && !currentMain.equals(aNewMain))
     {
       currentMain.setMentorMain(null);
     }
 
-    main = newMain;
-    Mentor existingMentorMain = newMain.getMentorMain();
+    main = aNewMain;
+    Mentor existingMentorMain = aNewMain.getMentorMain();
 
     if (!equals(existingMentorMain))
     {
-      newMain.setMentorMain(this);
+      aNewMain.setMentorMain(this);
     }
     wasSet = true;
     return wasSet;

@@ -12,10 +12,12 @@ package cruise.umple.implementation;
 import org.junit.*;
 
 public class ManyToMNTest extends TemplateTest
+
 {
 
   @Test
   public void Many()
+
   {
     assertUmpleTemplateFor("ManyToMNTest.ump",languagePath + "/ManyToMNTest_Many."+ languagePath +".txt","Mentor");
   }
@@ -25,5 +27,14 @@ public class ManyToMNTest extends TemplateTest
   {
     assertUmpleTemplateFor("ManyToMNTest.ump",languagePath + "/ManyToMNTest_MN."+ languagePath +".txt","Student");
   }    
-  
+
+/*
+  @Test
+  public void WithRoleName()
+  {
+    assertUmpleTemplateFor("ManyToMNTest.ump",languagePath + "/ManyToMNTest_WithRoleName."+ languagePath +".txt","Course");
+  }
+*/
 }
+
+

@@ -81,10 +81,10 @@ public class VioletClass
     return parentClass;
   }
 
-  public boolean setParentClass(VioletClass newParentClass)
+  public boolean setParentClass(VioletClass aNewParentClass)
   {
     boolean wasSet = false;
-    parentClass = newParentClass;
+    parentClass = aNewParentClass;
     wasSet = true;
     return wasSet;
   }

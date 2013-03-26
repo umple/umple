@@ -47,10 +47,10 @@ public class Mentor
     return superMentor;
   }
 
-  public boolean setSuperMentor(Mentor newSuperMentor)
+  public boolean setSuperMentor(Mentor aNewSuperMentor)
   {
     boolean wasSet = false;
-    if (newSuperMentor == null)
+    if (aNewSuperMentor == null)
     {
       Mentor existingSuperMentor = superMentor;
       superMentor = null;
@@ -64,17 +64,17 @@ public class Mentor
     }
 
     Mentor currentSuperMentor = getSuperMentor();
-    if (currentSuperMentor != null && !currentSuperMentor.equals(newSuperMentor))
+    if (currentSuperMentor != null && !currentSuperMentor.equals(aNewSuperMentor))
     {
       currentSuperMentor.setSuperMentor(null);
     }
 
-    superMentor = newSuperMentor;
-    Mentor existingSuperMentor = newSuperMentor.getSuperMentor();
+    superMentor = aNewSuperMentor;
+    Mentor existingSuperMentor = aNewSuperMentor.getSuperMentor();
 
     if (!equals(existingSuperMentor))
     {
-      newSuperMentor.setSuperMentor(this);
+      aNewSuperMentor.setSuperMentor(this);
     }
     wasSet = true;
     return wasSet;

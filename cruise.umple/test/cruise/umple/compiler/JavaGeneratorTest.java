@@ -859,7 +859,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("doExitName",generator.translate("doExitMethod",attr));
     Assert.assertEquals("getName",generator.translate("getMethod",attr));
     Assert.assertEquals("newNames",generator.translate("parameterMany",attr));
-    Assert.assertEquals("newName",generator.translate("parameterNew",attr));
+    Assert.assertEquals("aNewName",generator.translate("parameterNew",attr));
     Assert.assertEquals("allNames",generator.translate("parameterAll",attr));
     Assert.assertEquals("nextName",generator.translate("parameterNext",attr));
     Assert.assertEquals("setNames",generator.translate("setManyMethod",attr));
@@ -870,7 +870,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("isNumberOfNamesValid",generator.translate("isNumberOfValidMethod",attr));
     Assert.assertEquals("verifiedNames",generator.translate("parameterVerifiedMany",attr));
     Assert.assertEquals("oldNames",generator.translate("parameterOldMany",attr));
-    Assert.assertEquals("oldName",generator.translate("parameterOld",attr));
+    Assert.assertEquals("anOldName",generator.translate("parameterOld",attr));
     Assert.assertEquals("existingName",generator.translate("parameterExisting",attr));
     Assert.assertEquals("checkNewNames",generator.translate("parameterCheckNewMany",attr));
     Assert.assertEquals("isNewName",generator.translate("parameterIsNew",attr));
@@ -1299,7 +1299,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("getStudent",generator.relatedTranslate("getMethod",av));
     Assert.assertEquals("getDefaultStudent",generator.relatedTranslate("getDefaultMethod",av));
     Assert.assertEquals("newStudents",generator.relatedTranslate("parameterMany",av));
-    Assert.assertEquals("newStudent",generator.relatedTranslate("parameterNew",av));
+    Assert.assertEquals("aNewStudent",generator.relatedTranslate("parameterNew",av));
     Assert.assertEquals("allStudents",generator.relatedTranslate("parameterAll",av));
     Assert.assertEquals("nextStudent",generator.relatedTranslate("parameterNext",av));
     Assert.assertEquals("setStudents",generator.relatedTranslate("setManyMethod",av));
@@ -1312,7 +1312,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("maximumNumberOfStudents",generator.relatedTranslate("maximumNumberOfMethod",av));
     Assert.assertEquals("verifiedStudents",generator.relatedTranslate("parameterVerifiedMany",av));
     Assert.assertEquals("oldStudents",generator.relatedTranslate("parameterOldMany",av));
-    Assert.assertEquals("oldStudent",generator.relatedTranslate("parameterOld",av));
+    Assert.assertEquals("anOldStudent",generator.relatedTranslate("parameterOld",av));
     Assert.assertEquals("existingStudent",generator.relatedTranslate("parameterExisting",av));
     Assert.assertEquals("checkNewStudents",generator.relatedTranslate("parameterCheckNewMany",av));
     Assert.assertEquals("isNewStudent",generator.relatedTranslate("parameterIsNew",av));
@@ -1346,7 +1346,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("doExitMentor",generator.translate("doExitMethod",av));
     Assert.assertEquals("getMentor",generator.translate("getMethod",av));
     Assert.assertEquals("newMentors",generator.translate("parameterMany",av));
-    Assert.assertEquals("newMentor",generator.translate("parameterNew",av));
+    Assert.assertEquals("aNewMentor",generator.translate("parameterNew",av));
     Assert.assertEquals("allMentors",generator.translate("parameterAll",av));
     Assert.assertEquals("nextMentor",generator.translate("parameterNext",av));
     Assert.assertEquals("setMentors",generator.translate("setManyMethod",av));
@@ -1357,7 +1357,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("isNumberOfMentorsValid",generator.translate("isNumberOfValidMethod",av));
     Assert.assertEquals("verifiedMentors",generator.translate("parameterVerifiedMany",av));
     Assert.assertEquals("oldMentors",generator.translate("parameterOldMany",av));
-    Assert.assertEquals("oldMentor",generator.translate("parameterOld",av));
+    Assert.assertEquals("anOldMentor",generator.translate("parameterOld",av));
     Assert.assertEquals("existingMentor",generator.translate("parameterExisting",av));
     Assert.assertEquals("checkNewMentors",generator.translate("parameterCheckNewMany",av));
     Assert.assertEquals("isNewMentor",generator.translate("parameterIsNew",av));
@@ -1387,7 +1387,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("doExitStudent",generator.translate("doExitMethod",relatedAv));    
     Assert.assertEquals("resetStudent",generator.translate("resetMethod",relatedAv));
     Assert.assertEquals("newStudents",generator.translate("parameterMany",relatedAv));
-    Assert.assertEquals("newStudent",generator.translate("parameterNew",relatedAv));
+    Assert.assertEquals("aNewStudent",generator.translate("parameterNew",relatedAv));
     Assert.assertEquals("allStudents",generator.translate("parameterAll",relatedAv));
     Assert.assertEquals("nextStudent",generator.translate("parameterNext",relatedAv));
     Assert.assertEquals("setStudents",generator.translate("setManyMethod",relatedAv));
@@ -1400,7 +1400,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("maximumNumberOfStudents",generator.translate("maximumNumberOfMethod",relatedAv));
     Assert.assertEquals("verifiedStudents",generator.translate("parameterVerifiedMany",relatedAv));
     Assert.assertEquals("oldStudents",generator.translate("parameterOldMany",relatedAv));
-    Assert.assertEquals("oldStudent",generator.translate("parameterOld",relatedAv));
+    Assert.assertEquals("anOldStudent",generator.translate("parameterOld",relatedAv));
     Assert.assertEquals("existingStudent",generator.translate("parameterExisting",relatedAv));
     Assert.assertEquals("checkNewStudents",generator.translate("parameterCheckNewMany",relatedAv));
     Assert.assertEquals("isNewStudent",generator.translate("parameterIsNew",relatedAv));
@@ -1431,7 +1431,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("doExitMentor",generator.translate("doExitMethod",av));
     Assert.assertEquals("getMentor",generator.translate("getMethod",av));
     Assert.assertEquals("newMentors",generator.translate("parameterMany",av));
-    Assert.assertEquals("newMentor",generator.translate("parameterNew",av));
+    Assert.assertEquals("aNewMentor",generator.translate("parameterNew",av));
     Assert.assertEquals("allMentors",generator.translate("parameterAll",av));
     Assert.assertEquals("nextMentor",generator.translate("parameterNext",av));
     Assert.assertEquals("setMentors",generator.translate("setManyMethod",av));
@@ -1442,7 +1442,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("isNumberOfMentorsValid",generator.translate("isNumberOfValidMethod",av));
     Assert.assertEquals("verifiedMentors",generator.translate("parameterVerifiedMany",av));
     Assert.assertEquals("oldMentors",generator.translate("parameterOldMany",av));
-    Assert.assertEquals("oldMentor",generator.translate("parameterOld",av));
+    Assert.assertEquals("anOldMentor",generator.translate("parameterOld",av));
     Assert.assertEquals("existingMentor",generator.translate("parameterExisting",av));
     Assert.assertEquals("checkNewMentors",generator.translate("parameterCheckNewMany",av));
     Assert.assertEquals("isNewMentor",generator.translate("parameterIsNew",av));
@@ -1472,7 +1472,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("doExitStudent",generator.translate("doExitMethod",relatedAv));    
     Assert.assertEquals("resetStudent",generator.translate("resetMethod",relatedAv));
     Assert.assertEquals("newStudents",generator.translate("parameterMany",relatedAv));
-    Assert.assertEquals("newStudent",generator.translate("parameterNew",relatedAv));
+    Assert.assertEquals("aNewStudent",generator.translate("parameterNew",relatedAv));
     Assert.assertEquals("allStudents",generator.translate("parameterAll",relatedAv));
     Assert.assertEquals("nextStudent",generator.translate("parameterNext",relatedAv));
     Assert.assertEquals("setStudents",generator.translate("setManyMethod",relatedAv));
@@ -1485,7 +1485,7 @@ public class JavaGeneratorTest
     Assert.assertEquals("maximumNumberOfStudents",generator.translate("maximumNumberOfMethod",relatedAv));
     Assert.assertEquals("verifiedStudents",generator.translate("parameterVerifiedMany",relatedAv));
     Assert.assertEquals("oldStudents",generator.translate("parameterOldMany",relatedAv));
-    Assert.assertEquals("oldStudent",generator.translate("parameterOld",relatedAv));
+    Assert.assertEquals("anOldStudent",generator.translate("parameterOld",relatedAv));
     Assert.assertEquals("existingStudent",generator.translate("parameterExisting",relatedAv));
     Assert.assertEquals("checkNewStudents",generator.translate("parameterCheckNewMany",relatedAv));
     Assert.assertEquals("isNewStudent",generator.translate("parameterIsNew",relatedAv));

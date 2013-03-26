@@ -66,10 +66,10 @@ public class RulePartValue
     return position;
   }
 
-  public boolean setPosition(Position newPosition)
+  public boolean setPosition(Position aNewPosition)
   {
     boolean wasSet = false;
-    position = newPosition;
+    position = aNewPosition;
     wasSet = true;
     return wasSet;
   }

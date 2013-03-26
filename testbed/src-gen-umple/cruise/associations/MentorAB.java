@@ -173,10 +173,10 @@ public class MentorAB
     return wasAdded;
   }
 
-  public boolean setProgram(ProgramAB newProgram)
+  public boolean setProgram(ProgramAB aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramAB existingProgram = program;
       program = null;
@@ -190,17 +190,17 @@ public class MentorAB
     }
 
     ProgramAB currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setMentor(null);
     }
 
-    program = newProgram;
-    MentorAB existingMentor = newProgram.getMentor();
+    program = aNewProgram;
+    MentorAB existingMentor = aNewProgram.getMentor();
 
     if (!equals(existingMentor))
     {
-      newProgram.setMentor(this);
+      aNewProgram.setMentor(this);
     }
     wasSet = true;
     return wasSet;

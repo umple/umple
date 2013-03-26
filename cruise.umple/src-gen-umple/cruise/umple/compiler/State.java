@@ -309,23 +309,23 @@ public class State
     return index;
   }
 
-  public boolean setActivity(Activity newActivity)
+  public boolean setActivity(Activity aNewActivity)
   {
     boolean wasSet = false;
-    if (activity != null && !activity.equals(newActivity) && equals(activity.getState()))
+    if (activity != null && !activity.equals(aNewActivity) && equals(activity.getState()))
     {
       //Unable to setActivity, as existing activity would become an orphan
       return wasSet;
     }
 
-    activity = newActivity;
-    State oldState = newActivity != null ? newActivity.getState() : null;
+    activity = aNewActivity;
+    State anOldState = aNewActivity != null ? aNewActivity.getState() : null;
 
-    if (!this.equals(oldState))
+    if (!this.equals(anOldState))
     {
-      if (oldState != null)
+      if (anOldState != null)
       {
-        oldState.activity = null;
+        anOldState.activity = null;
       }
       if (activity != null)
       {

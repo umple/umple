@@ -50,10 +50,10 @@ public class VmlParser extends Parser
     return system;
   }
 
-  public boolean setSystem(VmlSystem newSystem)
+  public boolean setSystem(VmlSystem aNewSystem)
   {
     boolean wasSet = false;
-    system = newSystem;
+    system = aNewSystem;
     wasSet = true;
     return wasSet;
   }

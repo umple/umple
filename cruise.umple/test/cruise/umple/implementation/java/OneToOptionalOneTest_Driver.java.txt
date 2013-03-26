@@ -47,23 +47,23 @@ public class MyDriver
     return mySubordinate;
   }
 
-  public boolean setMySubordinate(MySubordinate newMySubordinate)
+  public boolean setMySubordinate(MySubordinate aNewMySubordinate)
   {
     boolean wasSet = false;
-    if (mySubordinate != null && !mySubordinate.equals(newMySubordinate) && equals(mySubordinate.getMyDriver()))
+    if (mySubordinate != null && !mySubordinate.equals(aNewMySubordinate) && equals(mySubordinate.getMyDriver()))
     {
       //Unable to setMySubordinate, as existing mySubordinate would become an orphan
       return wasSet;
     }
 
-    mySubordinate = newMySubordinate;
-    MyDriver oldMyDriver = newMySubordinate != null ? newMySubordinate.getMyDriver() : null;
+    mySubordinate = aNewMySubordinate;
+    MyDriver anOldMyDriver = aNewMySubordinate != null ? aNewMySubordinate.getMyDriver() : null;
 
-    if (!this.equals(oldMyDriver))
+    if (!this.equals(anOldMyDriver))
     {
-      if (oldMyDriver != null)
+      if (anOldMyDriver != null)
       {
-        oldMyDriver.mySubordinate = null;
+        anOldMyDriver.mySubordinate = null;
       }
       if (mySubordinate != null)
       {

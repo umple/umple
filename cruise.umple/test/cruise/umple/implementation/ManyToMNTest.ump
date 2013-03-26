@@ -10,3 +10,12 @@ class Student
 {
   number;
 }
+
+class Course
+{
+  * -- 1..* Person student;
+}
+
+class Person
+{
+}

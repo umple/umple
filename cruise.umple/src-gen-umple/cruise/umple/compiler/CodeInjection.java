@@ -123,12 +123,12 @@ public class CodeInjection
     return umpleClass;
   }
 
-  public boolean setUmpleClass(UmpleClass newUmpleClass)
+  public boolean setUmpleClass(UmpleClass aNewUmpleClass)
   {
     boolean wasSet = false;
-    if (newUmpleClass != null)
+    if (aNewUmpleClass != null)
     {
-      umpleClass = newUmpleClass;
+      umpleClass = aNewUmpleClass;
       wasSet = true;
     }
     return wasSet;
