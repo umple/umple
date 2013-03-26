@@ -227,7 +227,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
-      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;{$errhtml}
+      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/stateDiagram.svg\">Download the SVG file for the following</a>&nbsp;{$errhtml}
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">";
       echo $html;      
       echo $svgcode;
@@ -240,7 +240,7 @@ else if (isset($_REQUEST["umpleCode"]))
       $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/modelcd.gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
-      $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<br/>{$errhtml}
+      $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/classDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">";
       echo $html;
       echo $svgcode;
