@@ -118,12 +118,12 @@ public class UmletElement
     return index;
   }
 
-  public boolean setCoordinate(Coordinate newCoordinate)
+  public boolean setCoordinate(Coordinate aNewCoordinate)
   {
     boolean wasSet = false;
-    if (newCoordinate != null)
+    if (aNewCoordinate != null)
     {
-      coordinate = newCoordinate;
+      coordinate = aNewCoordinate;
       wasSet = true;
     }
     return wasSet;

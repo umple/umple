@@ -81,10 +81,10 @@ public class StudentT
     return index;
   }
 
-  public boolean setProgram(ProgramT newProgram)
+  public boolean setProgram(ProgramT aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramT existingProgram = program;
       program = null;
@@ -98,17 +98,17 @@ public class StudentT
     }
 
     ProgramT currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setStudent(null);
     }
 
-    program = newProgram;
-    StudentT existingStudent = newProgram.getStudent();
+    program = aNewProgram;
+    StudentT existingStudent = aNewProgram.getStudent();
 
     if (!equals(existingStudent))
     {
-      newProgram.setStudent(this);
+      aNewProgram.setStudent(this);
     }
     wasSet = true;
     return wasSet;
@@ -205,22 +205,22 @@ public class StudentT
 
     ArrayList<MentorT> oldMentors = new ArrayList<MentorT>(mentors);
     mentors.clear();
-    for (MentorT newMentor : verifiedMentors)
+    for (MentorT aNewMentor : verifiedMentors)
     {
-      mentors.add(newMentor);
-      if (oldMentors.contains(newMentor))
+      mentors.add(aNewMentor);
+      if (oldMentors.contains(aNewMentor))
       {
-        oldMentors.remove(newMentor);
+        oldMentors.remove(aNewMentor);
       }
       else
       {
-        newMentor.addStudent(this);
+        aNewMentor.addStudent(this);
       }
     }
 
-    for (MentorT oldMentor : oldMentors)
+    for (MentorT anOldMentor : oldMentors)
     {
-      oldMentor.removeStudent(this);
+      anOldMentor.removeStudent(this);
     }
     wasSet = true;
     return wasSet;

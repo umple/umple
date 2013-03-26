@@ -57,38 +57,38 @@ public class MentorB
     return program;
   }
 
-  public boolean setStudent(StudentB newStudent)
+  public boolean setStudent(StudentB aNewStudent)
   {
     boolean wasSet = false;
-    if (newStudent == null)
+    if (aNewStudent == null)
     {
       //Unable to setStudent to null, as mentor must always be associated to a student
       return wasSet;
     }
     
-    MentorB existingMentor = newStudent.getMentor();
+    MentorB existingMentor = aNewStudent.getMentor();
     if (existingMentor != null && !equals(existingMentor))
     {
       //Unable to setStudent, the current student already has a mentor, which would be orphaned if it were re-assigned
       return wasSet;
     }
     
-    StudentB oldStudent = student;
-    student = newStudent;
+    StudentB anOldStudent = student;
+    student = aNewStudent;
     student.setMentor(this);
 
-    if (oldStudent != null)
+    if (anOldStudent != null)
     {
-      oldStudent.setMentor(null);
+      anOldStudent.setMentor(null);
     }
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setProgram(ProgramB newProgram)
+  public boolean setProgram(ProgramB aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramB existingProgram = program;
       program = null;
@@ -102,17 +102,17 @@ public class MentorB
     }
 
     ProgramB currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setMentor(null);
     }
 
-    program = newProgram;
-    MentorB existingMentor = newProgram.getMentor();
+    program = aNewProgram;
+    MentorB existingMentor = aNewProgram.getMentor();
 
     if (!equals(existingMentor))
     {
-      newProgram.setMentor(this);
+      aNewProgram.setMentor(this);
     }
     wasSet = true;
     return wasSet;

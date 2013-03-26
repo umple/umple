@@ -36,12 +36,12 @@ public class ClassOptionalOne
     return classOtherclass;
   }
 
-  private boolean setClassOtherclass(ClassOtherclass newClassOtherclass)
+  private boolean setClassOtherclass(ClassOtherclass aNewClassOtherclass)
   {
     boolean wasSet = false;
     if (!canSetClassOtherclass) { return false; }
     canSetClassOtherclass = false;
-    classOtherclass = newClassOtherclass;
+    classOtherclass = aNewClassOtherclass;
     wasSet = true;
     return wasSet;
   }

@@ -161,11 +161,11 @@ public class Transition
     return index;
   }
 
-  public boolean setEvent(Event newEvent)
+  public boolean setEvent(Event aNewEvent)
   {
     boolean wasSet = false;
     if (!canSetEvent) { return false; }
-    event = newEvent;
+    event = aNewEvent;
     wasSet = true;
     return wasSet;
   }
@@ -209,20 +209,20 @@ public class Transition
     return wasSet;
   }
 
-  public boolean setGuard(Guard newGuard)
+  public boolean setGuard(Guard aNewGuard)
   {
     boolean wasSet = false;
     if (!canSetGuard) { return false; }
-    guard = newGuard;
+    guard = aNewGuard;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setAction(Action newAction)
+  public boolean setAction(Action aNewAction)
   {
     boolean wasSet = false;
     if (!canSetAction) { return false; }
-    action = newAction;
+    action = aNewAction;
     wasSet = true;
     return wasSet;
   }

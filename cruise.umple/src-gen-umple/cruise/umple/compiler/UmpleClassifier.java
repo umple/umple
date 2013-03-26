@@ -310,10 +310,10 @@ public class UmpleClassifier extends UmpleElement
     return wasAdded;
   }
 
-  public boolean setExtendsToken(Token newExtendsToken)
+  public boolean setExtendsToken(Token aNewExtendsToken)
   {
     boolean wasSet = false;
-    extendsToken = newExtendsToken;
+    extendsToken = aNewExtendsToken;
     wasSet = true;
     return wasSet;
   }

@@ -65,10 +65,10 @@ public class MentorG
     return program;
   }
 
-  public boolean setProgram(ProgramG newProgram)
+  public boolean setProgram(ProgramG aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramG existingProgram = program;
       program = null;
@@ -82,17 +82,17 @@ public class MentorG
     }
 
     ProgramG currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setMentor(null);
     }
 
-    program = newProgram;
-    MentorG existingMentor = newProgram.getMentor();
+    program = aNewProgram;
+    MentorG existingMentor = aNewProgram.getMentor();
 
     if (!equals(existingMentor))
     {
-      newProgram.setMentor(this);
+      aNewProgram.setMentor(this);
     }
     wasSet = true;
     return wasSet;

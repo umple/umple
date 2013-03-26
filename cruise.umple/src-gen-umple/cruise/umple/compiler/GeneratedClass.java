@@ -56,32 +56,32 @@ public class GeneratedClass extends GeneratedElement
     return parentClass;
   }
 
-  public boolean setModel(UmpleModel newModel)
+  public boolean setModel(UmpleModel aNewModel)
   {
     boolean wasSet = false;
-    if (newModel != null)
+    if (aNewModel != null)
     {
-      model = newModel;
+      model = aNewModel;
       wasSet = true;
     }
     return wasSet;
   }
 
-  public boolean setUClass(UmpleClass newUClass)
+  public boolean setUClass(UmpleClass aNewUClass)
   {
     boolean wasSet = false;
-    if (newUClass != null)
+    if (aNewUClass != null)
     {
-      uClass = newUClass;
+      uClass = aNewUClass;
       wasSet = true;
     }
     return wasSet;
   }
 
-  public boolean setParentClass(GeneratedClass newParentClass)
+  public boolean setParentClass(GeneratedClass aNewParentClass)
   {
     boolean wasSet = false;
-    parentClass = newParentClass;
+    parentClass = aNewParentClass;
     wasSet = true;
     return wasSet;
   }

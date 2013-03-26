@@ -161,11 +161,11 @@ public class VariationPoint
     return concern;
   }
 
-  public boolean setCodeSnippet(CodeSnippet newCodeSnippet)
+  public boolean setCodeSnippet(CodeSnippet aNewCodeSnippet)
   {
     boolean wasSet = false;
     if (!canSetCodeSnippet) { return false; }
-    codeSnippet = newCodeSnippet;
+    codeSnippet = aNewCodeSnippet;
     wasSet = true;
     return wasSet;
   }

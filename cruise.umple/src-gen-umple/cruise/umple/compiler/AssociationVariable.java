@@ -141,12 +141,12 @@ public class AssociationVariable extends UmpleVariable
     return traceDirective;
   }
 
-  public boolean setRelatedAssociation(AssociationVariable newRelatedAssociation)
+  public boolean setRelatedAssociation(AssociationVariable aNewRelatedAssociation)
   {
     boolean wasSet = false;
     // line 537 "../../../../src/Umple.ump"
-    if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }
-    if (newRelatedAssociation == null)
+    if(!canBeRelatedAssociation(aNewRelatedAssociation)) { return false; }
+    if (aNewRelatedAssociation == null)
     {
       AssociationVariable existingRelatedAssociation = relatedAssociation;
       relatedAssociation = null;
@@ -160,17 +160,17 @@ public class AssociationVariable extends UmpleVariable
     }
 
     AssociationVariable currentRelatedAssociation = getRelatedAssociation();
-    if (currentRelatedAssociation != null && !currentRelatedAssociation.equals(newRelatedAssociation))
+    if (currentRelatedAssociation != null && !currentRelatedAssociation.equals(aNewRelatedAssociation))
     {
       currentRelatedAssociation.setRelatedAssociation(null);
     }
 
-    relatedAssociation = newRelatedAssociation;
-    AssociationVariable existingRelatedAssociation = newRelatedAssociation.getRelatedAssociation();
+    relatedAssociation = aNewRelatedAssociation;
+    AssociationVariable existingRelatedAssociation = aNewRelatedAssociation.getRelatedAssociation();
 
     if (!equals(existingRelatedAssociation))
     {
-      newRelatedAssociation.setRelatedAssociation(this);
+      aNewRelatedAssociation.setRelatedAssociation(this);
     }
     wasSet = true;
     return wasSet;
@@ -252,10 +252,10 @@ public class AssociationVariable extends UmpleVariable
     return wasSet;
   }
 
-  public boolean setTraceDirective(TraceDirective newTraceDirective)
+  public boolean setTraceDirective(TraceDirective aNewTraceDirective)
   {
     boolean wasSet = false;
-    if (newTraceDirective == null)
+    if (aNewTraceDirective == null)
     {
       TraceDirective existingTraceDirective = traceDirective;
       traceDirective = null;
@@ -269,17 +269,17 @@ public class AssociationVariable extends UmpleVariable
     }
 
     TraceDirective currentTraceDirective = getTraceDirective();
-    if (currentTraceDirective != null && !currentTraceDirective.equals(newTraceDirective))
+    if (currentTraceDirective != null && !currentTraceDirective.equals(aNewTraceDirective))
     {
       currentTraceDirective.setAssociationVariable(null);
     }
 
-    traceDirective = newTraceDirective;
-    AssociationVariable existingAssociationVariable = newTraceDirective.getAssociationVariable();
+    traceDirective = aNewTraceDirective;
+    AssociationVariable existingAssociationVariable = aNewTraceDirective.getAssociationVariable();
 
     if (!equals(existingAssociationVariable))
     {
-      newTraceDirective.setAssociationVariable(this);
+      aNewTraceDirective.setAssociationVariable(this);
     }
     wasSet = true;
     return wasSet;

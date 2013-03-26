@@ -101,23 +101,23 @@ public class ErrorMessage
     return position;
   }
 
-  public boolean setErrorType(ErrorType newErrorType)
+  public boolean setErrorType(ErrorType aNewErrorType)
   {
     boolean wasSet = false;
-    if (newErrorType != null)
+    if (aNewErrorType != null)
     {
-      errorType = newErrorType;
+      errorType = aNewErrorType;
       wasSet = true;
     }
     return wasSet;
   }
 
-  public boolean setPosition(Position newPosition)
+  public boolean setPosition(Position aNewPosition)
   {
     boolean wasSet = false;
-    if (newPosition != null)
+    if (aNewPosition != null)
     {
-      position = newPosition;
+      position = aNewPosition;
       wasSet = true;
     }
     return wasSet;

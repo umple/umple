@@ -162,22 +162,22 @@ public class MentorX
 
     ArrayList<StudentX> oldStudents = new ArrayList<StudentX>(students);
     students.clear();
-    for (StudentX newStudent : verifiedStudents)
+    for (StudentX aNewStudent : verifiedStudents)
     {
-      students.add(newStudent);
-      if (oldStudents.contains(newStudent))
+      students.add(aNewStudent);
+      if (oldStudents.contains(aNewStudent))
       {
-        oldStudents.remove(newStudent);
+        oldStudents.remove(aNewStudent);
       }
       else
       {
-        newStudent.addMentor(this);
+        aNewStudent.addMentor(this);
       }
     }
 
-    for (StudentX oldStudent : oldStudents)
+    for (StudentX anOldStudent : oldStudents)
     {
-      oldStudent.removeMentor(this);
+      anOldStudent.removeMentor(this);
     }
     wasSet = true;
     return wasSet;
@@ -215,10 +215,10 @@ public class MentorX
     return wasAdded;
   }
 
-  public boolean setProgram(ProgramX newProgram)
+  public boolean setProgram(ProgramX aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramX existingProgram = program;
       program = null;
@@ -232,17 +232,17 @@ public class MentorX
     }
 
     ProgramX currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setMentor(null);
     }
 
-    program = newProgram;
-    MentorX existingMentor = newProgram.getMentor();
+    program = aNewProgram;
+    MentorX existingMentor = aNewProgram.getMentor();
 
     if (!equals(existingMentor))
     {
-      newProgram.setMentor(this);
+      aNewProgram.setMentor(this);
     }
     wasSet = true;
     return wasSet;

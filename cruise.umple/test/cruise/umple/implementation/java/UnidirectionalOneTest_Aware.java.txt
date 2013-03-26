@@ -51,12 +51,12 @@ public class Mentor
     return student;
   }
 
-  public boolean setStudent(Student newStudent)
+  public boolean setStudent(Student aNewStudent)
   {
     boolean wasSet = false;
-    if (newStudent != null)
+    if (aNewStudent != null)
     {
-      student = newStudent;
+      student = aNewStudent;
       wasSet = true;
     }
     return wasSet;

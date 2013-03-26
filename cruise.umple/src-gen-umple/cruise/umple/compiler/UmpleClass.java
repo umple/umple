@@ -704,10 +704,10 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  public boolean setUniqueIdentifier(UniqueIdentifier newUniqueIdentifier)
+  public boolean setUniqueIdentifier(UniqueIdentifier aNewUniqueIdentifier)
   {
     boolean wasSet = false;
-    uniqueIdentifier = newUniqueIdentifier;
+    uniqueIdentifier = aNewUniqueIdentifier;
     wasSet = true;
     return wasSet;
   }

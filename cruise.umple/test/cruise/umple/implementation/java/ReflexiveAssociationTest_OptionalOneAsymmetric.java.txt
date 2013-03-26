@@ -53,10 +53,10 @@ public class Student
     return ta;
   }
 
-  public boolean setPupil(Student newPupil)
+  public boolean setPupil(Student aNewPupil)
   {
     boolean wasSet = false;
-    if (newPupil == null)
+    if (aNewPupil == null)
     {
       Student existingPupil = pupil;
       pupil = null;
@@ -70,26 +70,26 @@ public class Student
     }
 
     Student currentPupil = getPupil();
-    if (currentPupil != null && !currentPupil.equals(newPupil))
+    if (currentPupil != null && !currentPupil.equals(aNewPupil))
     {
       currentPupil.setTa(null);
     }
 
-    pupil = newPupil;
-    Student existingTa = newPupil.getTa();
+    pupil = aNewPupil;
+    Student existingTa = aNewPupil.getTa();
 
     if (!equals(existingTa))
     {
-      newPupil.setTa(this);
+      aNewPupil.setTa(this);
     }
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setTa(Student newTa)
+  public boolean setTa(Student aNewTa)
   {
     boolean wasSet = false;
-    if (newTa == null)
+    if (aNewTa == null)
     {
       Student existingTa = ta;
       ta = null;
@@ -103,17 +103,17 @@ public class Student
     }
 
     Student currentTa = getTa();
-    if (currentTa != null && !currentTa.equals(newTa))
+    if (currentTa != null && !currentTa.equals(aNewTa))
     {
       currentTa.setPupil(null);
     }
 
-    ta = newTa;
-    Student existingPupil = newTa.getPupil();
+    ta = aNewTa;
+    Student existingPupil = aNewTa.getPupil();
 
     if (!equals(existingPupil))
     {
-      newTa.setPupil(this);
+      aNewTa.setPupil(this);
     }
     wasSet = true;
     return wasSet;

@@ -54,18 +54,18 @@ public class MentorAI
     return program;
   }
 
-  public boolean setStudent(StudentAI newStudent)
+  public boolean setStudent(StudentAI aNewStudent)
   {
     boolean wasSet = false;
-    student = newStudent;
+    student = aNewStudent;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setProgram(ProgramAI newProgram)
+  public boolean setProgram(ProgramAI aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramAI existingProgram = program;
       program = null;
@@ -79,17 +79,17 @@ public class MentorAI
     }
 
     ProgramAI currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setMentor(null);
     }
 
-    program = newProgram;
-    MentorAI existingMentor = newProgram.getMentor();
+    program = aNewProgram;
+    MentorAI existingMentor = aNewProgram.getMentor();
 
     if (!equals(existingMentor))
     {
-      newProgram.setMentor(this);
+      aNewProgram.setMentor(this);
     }
     wasSet = true;
     return wasSet;

@@ -165,22 +165,22 @@ public class Mentor
 
     ArrayList<Student> oldStudents = new ArrayList<Student>(students);
     students.clear();
-    for (Student newStudent : verifiedStudents)
+    for (Student aNewStudent : verifiedStudents)
     {
-      students.add(newStudent);
-      if (oldStudents.contains(newStudent))
+      students.add(aNewStudent);
+      if (oldStudents.contains(aNewStudent))
       {
-        oldStudents.remove(newStudent);
+        oldStudents.remove(aNewStudent);
       }
       else
       {
-        newStudent.addMentor(this);
+        aNewStudent.addMentor(this);
       }
     }
 
-    for (Student oldStudent : oldStudents)
+    for (Student anOldStudent : oldStudents)
     {
-      oldStudent.removeMentor(this);
+      anOldStudent.removeMentor(this);
     }
     wasSet = true;
     return wasSet;

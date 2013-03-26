@@ -335,10 +335,10 @@ public class PhoneLine
     return otherParty;
   }
 
-  public boolean setOtherParty(PhoneLine newOtherParty)
+  public boolean setOtherParty(PhoneLine aNewOtherParty)
   {
     boolean wasSet = false;
-    if (newOtherParty == null)
+    if (aNewOtherParty == null)
     {
       PhoneLine existingOtherParty = otherParty;
       otherParty = null;
@@ -352,17 +352,17 @@ public class PhoneLine
     }
 
     PhoneLine currentOtherParty = getOtherParty();
-    if (currentOtherParty != null && !currentOtherParty.equals(newOtherParty))
+    if (currentOtherParty != null && !currentOtherParty.equals(aNewOtherParty))
     {
       currentOtherParty.setOtherParty(null);
     }
 
-    otherParty = newOtherParty;
-    PhoneLine existingOtherParty = newOtherParty.getOtherParty();
+    otherParty = aNewOtherParty;
+    PhoneLine existingOtherParty = aNewOtherParty.getOtherParty();
 
     if (!equals(existingOtherParty))
     {
-      newOtherParty.setOtherParty(this);
+      aNewOtherParty.setOtherParty(this);
     }
     wasSet = true;
     return wasSet;

@@ -34,12 +34,12 @@ public class OneToMany
     return oneToMany;
   }
 
-  public boolean setOneToMany(OneToMany newOneToMany)
+  public boolean setOneToMany(OneToMany aNewOneToMany)
   {
     boolean wasSet = false;
-    if (newOneToMany != null)
+    if (aNewOneToMany != null)
     {
-      oneToMany = newOneToMany;
+      oneToMany = aNewOneToMany;
       wasSet = true;
     }
     return wasSet;

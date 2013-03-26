@@ -260,10 +260,10 @@ public class Method
     return wasAdded;
   }
 
-  public boolean setMethodBody(MethodBody newMethodBody)
+  public boolean setMethodBody(MethodBody aNewMethodBody)
   {
     boolean wasSet = false;
-    methodBody = newMethodBody;
+    methodBody = aNewMethodBody;
     wasSet = true;
     return wasSet;
   }

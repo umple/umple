@@ -462,10 +462,10 @@ public class TraceDirective
     return wasAdded;
   }
 
-  public boolean setAssociationVariable(AssociationVariable newAssociationVariable)
+  public boolean setAssociationVariable(AssociationVariable aNewAssociationVariable)
   {
     boolean wasSet = false;
-    if (newAssociationVariable == null)
+    if (aNewAssociationVariable == null)
     {
       AssociationVariable existingAssociationVariable = associationVariable;
       associationVariable = null;
@@ -479,17 +479,17 @@ public class TraceDirective
     }
 
     AssociationVariable currentAssociationVariable = getAssociationVariable();
-    if (currentAssociationVariable != null && !currentAssociationVariable.equals(newAssociationVariable))
+    if (currentAssociationVariable != null && !currentAssociationVariable.equals(aNewAssociationVariable))
     {
       currentAssociationVariable.setTraceDirective(null);
     }
 
-    associationVariable = newAssociationVariable;
-    TraceDirective existingTraceDirective = newAssociationVariable.getTraceDirective();
+    associationVariable = aNewAssociationVariable;
+    TraceDirective existingTraceDirective = aNewAssociationVariable.getTraceDirective();
 
     if (!equals(existingTraceDirective))
     {
-      newAssociationVariable.setTraceDirective(this);
+      aNewAssociationVariable.setTraceDirective(this);
     }
     wasSet = true;
     return wasSet;
@@ -552,23 +552,23 @@ public class TraceDirective
     return wasAdded;
   }
 
-  public boolean setTraceRecord(TraceRecord newTraceRecord)
+  public boolean setTraceRecord(TraceRecord aNewTraceRecord)
   {
     boolean wasSet = false;
-    if (traceRecord != null && !traceRecord.equals(newTraceRecord) && equals(traceRecord.getTraceDirective()))
+    if (traceRecord != null && !traceRecord.equals(aNewTraceRecord) && equals(traceRecord.getTraceDirective()))
     {
       //Unable to setTraceRecord, as existing traceRecord would become an orphan
       return wasSet;
     }
 
-    traceRecord = newTraceRecord;
-    TraceDirective oldTraceDirective = newTraceRecord != null ? newTraceRecord.getTraceDirective() : null;
+    traceRecord = aNewTraceRecord;
+    TraceDirective anOldTraceDirective = aNewTraceRecord != null ? aNewTraceRecord.getTraceDirective() : null;
 
-    if (!this.equals(oldTraceDirective))
+    if (!this.equals(anOldTraceDirective))
     {
-      if (oldTraceDirective != null)
+      if (anOldTraceDirective != null)
       {
-        oldTraceDirective.traceRecord = null;
+        anOldTraceDirective.traceRecord = null;
       }
       if (traceRecord != null)
       {

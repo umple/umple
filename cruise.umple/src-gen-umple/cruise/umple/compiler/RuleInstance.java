@@ -183,12 +183,12 @@ public class RuleInstance
     return wasAdded;
   }
 
-  public boolean setParser(Parser newParser)
+  public boolean setParser(Parser aNewParser)
   {
     boolean wasSet = false;
-    if (newParser != null)
+    if (aNewParser != null)
     {
-      parser = newParser;
+      parser = aNewParser;
       wasSet = true;
     }
     return wasSet;

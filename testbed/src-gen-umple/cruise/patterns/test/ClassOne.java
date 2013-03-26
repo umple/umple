@@ -39,14 +39,14 @@ public class ClassOne
     return classOtherclass;
   }
 
-  private boolean setClassOtherclass(ClassOtherclass newClassOtherclass)
+  private boolean setClassOtherclass(ClassOtherclass aNewClassOtherclass)
   {
     boolean wasSet = false;
     if (!canSetClassOtherclass) { return false; }
     canSetClassOtherclass = false;
-    if (newClassOtherclass != null)
+    if (aNewClassOtherclass != null)
     {
-      classOtherclass = newClassOtherclass;
+      classOtherclass = aNewClassOtherclass;
       wasSet = true;
     }
     return wasSet;

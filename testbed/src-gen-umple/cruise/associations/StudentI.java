@@ -48,10 +48,10 @@ public class StudentI
     return program;
   }
 
-  public boolean setProgram(ProgramI newProgram)
+  public boolean setProgram(ProgramI aNewProgram)
   {
     boolean wasSet = false;
-    if (newProgram == null)
+    if (aNewProgram == null)
     {
       ProgramI existingProgram = program;
       program = null;
@@ -65,17 +65,17 @@ public class StudentI
     }
 
     ProgramI currentProgram = getProgram();
-    if (currentProgram != null && !currentProgram.equals(newProgram))
+    if (currentProgram != null && !currentProgram.equals(aNewProgram))
     {
       currentProgram.setStudentI(null);
     }
 
-    program = newProgram;
-    StudentI existingStudentI = newProgram.getStudentI();
+    program = aNewProgram;
+    StudentI existingStudentI = aNewProgram.getStudentI();
 
     if (!equals(existingStudentI))
     {
-      newProgram.setStudentI(this);
+      aNewProgram.setStudentI(this);
     }
     wasSet = true;
     return wasSet;
