@@ -48,7 +48,7 @@ class ScoringTeam {
    
    // The score that each team has accumulated so far
    // based on tricks taken or difference between tricks and bid
-   Integer Score;
+   Integer score;
 }
 
 class Match {
