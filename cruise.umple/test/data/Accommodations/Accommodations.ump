@@ -4,7 +4,7 @@ class UnitFacility
 {
   unit_attribute_code;
   unit_attribute_description;
-  key {attribute_code}
+  key {unit_attribute_code}
 }
 
 class Location
