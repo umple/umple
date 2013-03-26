@@ -3,10 +3,7 @@
 
 
 
-/**
- * constant on the left side of the constraint
- */
-// line 2 "BasicConstraint4.ump"
+// line 1 "BasicConstraint7.ump"
 public class student
 {
 
@@ -16,18 +13,20 @@ public class student
 
   //student Attributes
   private int age;
+  private int weight;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public student(int aAge)
+  public student(int aAge, int aWeight)
   {
-    if ( !(18>aAge))
+    if ( !(!(18>aAge)))
     {
       throw new RuntimeException("Please provide a valid age");
     }
     age = aAge;
+    weight = aWeight;
   }
 
   //------------------------
@@ -37,7 +36,7 @@ public class student
   public boolean setAge(int aAge)
   {
     boolean wasSet = false;
-    if (18>aAge)
+    if (!(18>aAge))
     {
     age = aAge;
     wasSet = true;
@@ -45,9 +44,22 @@ public class student
     return wasSet;
   }
 
+  public boolean setWeight(int aWeight)
+  {
+    boolean wasSet = false;
+    weight = aWeight;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getAge()
   {
     return age;
+  }
+
+  public int getWeight()
+  {
+    return weight;
   }
 
   public void delete()
@@ -59,7 +71,8 @@ public class student
 	  String outputString = "";
 	  
     return super.toString() + "["+
-            "age" + ":" + getAge()+ "]"
+            "age" + ":" + getAge()+ "," +
+            "weight" + ":" + getWeight()+ "]"
      + outputString;
   }
 }
