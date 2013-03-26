@@ -1412,7 +1412,7 @@ Action.selectClass = function(className) {
        className+"($|\\\s|[{])"));
 
     if(!scursor.findNext()) {
-      return false;
+      return; // false
     }
 
     // Have found declaration of class. Now have to search for the next class or end
@@ -1433,9 +1433,9 @@ Action.selectClass = function(className) {
     }
 
     Page.codeMirrorEditor.setSelection(start,theEnd);
-    return true;
+    return;    //true 
   }
-  return false;
+  return;  // false - important do not return a value or it won't work in Firefox/Opera
 }
 
 Action.selectStateInClass = function(stateName, classname) {
