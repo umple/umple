@@ -67,15 +67,15 @@ class LanguageSpecificCodeBlock
 {
 	name;
 	
-	before setName Java {String lang = "My lang is ";} Php {String lang = "I am ";}
-	after setName Java {name = lang + "java";} Php {name = lang + "php";}
+	before setName Java {String lang = "My lang is ";} Php {$lang = "I am ";}
+	after setName Java {name = lang + "java";} Php {$this->name = $lang + "php";}
 	boolean isJava() Java {return true;} Php {return false;}
 	
 	String languageImplementedIn = Java {"Java"} Php {"Php"}
 	
 	state{
 	  allLanguages{
-	    applySpecificAction Java [isJava()] Php [$this->isJava()]   / Java {name = "action=java";} Php {name = "action=php"} -> to;
+	    applySpecificAction Java [isJava()] Php [!$this->isJava()]   / Java {name = "action=java";} Php {$this->name = "actionphp";} -> to;
     }
     to{
     }

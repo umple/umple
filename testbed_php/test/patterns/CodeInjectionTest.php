@@ -10,9 +10,9 @@ class CodeInjectionTest extends UnitTestCase
     $this->assertTrue(!$cb->isJava());
     
     $cb->applySpecificAction();
-    $this->assertEquals("action=php",$cb->getName());
+    $this->assertEqual("actionphp",$cb->getName());
     
-    $this->assertEquals("Php",$cb->getLanguageImplementedIn());
+    $this->assertEqual("Php",$cb->getLanguageImplementedIn());
   }  
 }
 
