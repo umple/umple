@@ -35,11 +35,11 @@ class LanguageSpecificCodeBlock
   {
     $wasSet = false;
     // line 70 "../../../../src/TestHarnessPatterns.ump"
-    String lang = "I am ";
+    $lang = "I am ";
     $this->name = $aName;
     $wasSet = true;
     // line 71 "../../../../src/TestHarnessPatterns.ump"
-    name = lang + "php";
+    $this->name = $lang + "php";
     return $wasSet;
   }
 
@@ -73,9 +73,9 @@ class LanguageSpecificCodeBlock
     $aState = $this->state;
     if ($aState == self::$StateAllLanguages)
     {
-      if ($this->isJava())
+      if (!$this->isJava())
       {
-        name = "action=php"
+        $this->name = "actionphp";
         $this->setState(self::$StateTo);
         $wasEventProcessed = true;
       }
