@@ -2195,33 +2195,34 @@ this("UmpleInternalParser", aModel);
     }
 
     List<String> tokensAdded = new ArrayList<String>();
-    Boolean attributeMatch = false; 
-    Boolean associationMatch = false;
+    Boolean tokenMatch;
     for(Token token : keyToken.getSubTokens())
     {
+      tokenMatch = false;
+      
       if (!token.is("keyId"))
       {
         continue;
       }
  
-      //Checks for duplicate attributes/associations
+      //Checks for duplicate attributes/associations/stateMachines
       if(tokensAdded.contains(token.getValue()))
       {
         setFailedPosition(keyToken.getPosition(), 26, token.getValue(), keyToken.getParentToken().getValue("name"));
       }
  	
-	  if((aClass.getAttributes().size() == 0) && !aClass.hasAssociations())
+	  if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines())
       {
         setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
       }
-      else
+      
+      if(aClass.hasAttributes())
       {
-        attributeMatch = false; 	//reset flag
         for(Attribute aAttribute : aClass.getAttributes())
         {
           if(aAttribute.getName().equals(token.getValue()))
           {
-            attributeMatch = true;
+            tokenMatch = true;
           }
 	    }
       }
@@ -2230,8 +2231,7 @@ this("UmpleInternalParser", aModel);
 	  {
 	    AssociationEnd firstEnd, secondEnd;
 	    String firstEndName, secondEndName;
-	   
-	    associationMatch = false; 	//reset flag
+
 	    for(Association aAssociation : aClass.getAssociations())
         { 
           firstEnd = aAssociation.getEnd(0);
@@ -2241,20 +2241,27 @@ this("UmpleInternalParser", aModel);
           
           if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
           {
-            associationMatch = true;
+            tokenMatch = true;
           }
 	    }
-	    
-	    if(!attributeMatch && !associationMatch)
-	    {   
-	      setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
-	    }
-	  }
-	  else if(!attributeMatch)
-	       {
-	         setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
-	       }
+	  }  
 
+      if(aClass.hasStateMachines())  
+      {
+	    for(StateMachine aStateMachine : aClass.getStateMachines())
+	    {
+          if(aStateMachine.getName().equals(token.getValue()))
+          {
+             tokenMatch = true;
+          }	    
+	    }
+	  }  	  
+
+	  if(!tokenMatch)
+	  {
+	    setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+	  }
+	
       aClass.getKey().addMember(token.getValue());
       tokensAdded.add(token.getValue()); 
     }
