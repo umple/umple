@@ -53,6 +53,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Position.php");
     SampleFileWriter.destroy(pathToInput + "/Something.php");
     SampleFileWriter.destroy(pathToInput + "/Student.php");
+    SampleFileWriter.destroy(pathToInput + "/student.php");
+    SampleFileWriter.destroy(pathToInput + "/Person.php");
     SampleFileWriter.destroy(pathToInput + "/php/Student.php");
     SampleFileWriter.destroy(pathToInput + "/Garage.php");
     SampleFileWriter.destroy(pathToInput + "/SubMentor.php");
@@ -86,6 +88,9 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/example.rb");
     SampleFileWriter.destroy(pathToInput + "/Example.java");
     SampleFileWriter.destroy(pathToInput + "/GarageDoor.php");
+    
+    SampleFileWriter.destroy(pathToInput + "/student.cpp");
+    SampleFileWriter.destroy(pathToInput + "/student.h");   
 
     SampleFileWriter.destroy(pathToInput + "/ICodeTranslator.php");
     SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
@@ -109,6 +114,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/position.rb");
     SampleFileWriter.destroy(pathToInput + "/something.rb");
     SampleFileWriter.destroy(pathToInput + "/student.rb");
+    SampleFileWriter.destroy(pathToInput + "/person.rb");
     SampleFileWriter.destroy(pathToInput + "/sub_entor.rb");
     SampleFileWriter.destroy(pathToInput + "/sub_mentor2.rb");
     SampleFileWriter.destroy(pathToInput + "/bank.rb");
@@ -191,6 +197,7 @@ public class TemplateTest
     
     SampleFileWriter.destroy(pathToInput + "/Person.java");
     SampleFileWriter.destroy(pathToInput + "/Student.java");
+    SampleFileWriter.destroy(pathToInput + "/student.java");
     SampleFileWriter.destroy(pathToInput + "/Teacher.java");
     SampleFileWriter.destroy(pathToInput + "/Mentor.java");
   }
