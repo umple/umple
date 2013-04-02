@@ -176,10 +176,10 @@ class Mentor
 
     $oldStudents = $this->students;
     $this->students = array();
-    foreach ($verifiedStudents as $newStudent)
+    foreach ($verifiedStudents as $aNewStudent)
     {
-      $this->students[] = $newStudent;
-      $removeIndex = array_search($newStudent,$oldStudents);
+      $this->students[] = $aNewStudent;
+      $removeIndex = array_search($aNewStudent,$oldStudents);
       if ($removeIndex !== false)
       {
         unset($oldStudents[$removeIndex]);
@@ -187,13 +187,13 @@ class Mentor
       }
       else
       {
-        $newStudent->addMentor($this);
+        $aNewStudent->addMentor($this);
       }
     }
 
-    foreach ($oldStudents as $oldStudent)
+    foreach ($oldStudents as $anOldStudent)
     {
-      $oldStudent->removeMentor($this);
+      $anOldStudent->removeMentor($this);
     }
     $wasSet = true;
     return $wasSet;

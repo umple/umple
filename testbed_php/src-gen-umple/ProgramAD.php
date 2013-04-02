@@ -34,10 +34,10 @@ class ProgramAD
     return $this->student;
   }
 
-  public function setMentor($newMentor)
+  public function setMentor($aNewMentor)
   {
     $wasSet = false;
-    if ($newMentor == null)
+    if ($aNewMentor == null)
     {
       $existingMentor = $this->mentor;
       $this->mentor = null;
@@ -51,26 +51,26 @@ class ProgramAD
     }
     
     $currentMentor = $this->getMentor();
-    if ($currentMentor != null && $currentMentor != $newMentor)
+    if ($currentMentor != null && $currentMentor != $aNewMentor)
     {
       $currentMentor->setProgram(null);
     }
     
-    $this->mentor = $newMentor;
-    $existingProgram = $newMentor->getProgram();
+    $this->mentor = $aNewMentor;
+    $existingProgram = $aNewMentor->getProgram();
     
     if ($this != $existingProgram)
     {
-      $newMentor->setProgram($this);
+      $aNewMentor->setProgram($this);
     }
     $wasSet = true;
     return $wasSet;
   }
 
-  public function setStudent($newStudent)
+  public function setStudent($aNewStudent)
   {
     $wasSet = false;
-    if ($newStudent == null)
+    if ($aNewStudent == null)
     {
       $existingStudent = $this->student;
       $this->student = null;
@@ -84,17 +84,17 @@ class ProgramAD
     }
     
     $currentStudent = $this->getStudent();
-    if ($currentStudent != null && $currentStudent != $newStudent)
+    if ($currentStudent != null && $currentStudent != $aNewStudent)
     {
       $currentStudent->setProgram(null);
     }
     
-    $this->student = $newStudent;
-    $existingProgram = $newStudent->getProgram();
+    $this->student = $aNewStudent;
+    $existingProgram = $aNewStudent->getProgram();
     
     if ($this != $existingProgram)
     {
-      $newStudent->setProgram($this);
+      $aNewStudent->setProgram($this);
     }
     $wasSet = true;
     return $wasSet;

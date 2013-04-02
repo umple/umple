@@ -34,12 +34,12 @@ class ClassOptionalOneAssociation
     return $this->otherclass;
   }
 
-  private function setOtherclass($newOtherclass)
+  private function setOtherclass($aNewOtherclass)
   {
     $wasSet = false;
     if (!$this->canSetOtherclass) { return false; }
     $this->canSetOtherclass = false;
-    $this->otherclass = $newOtherclass;
+    $this->otherclass = $aNewOtherclass;
     $wasSet = true;
     return $wasSet;
   }

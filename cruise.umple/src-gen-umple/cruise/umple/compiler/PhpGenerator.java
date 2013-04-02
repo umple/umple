@@ -97,7 +97,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap = new HashMap<String, String>();
     UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
     UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");
-    UpperCaseSingularLookupMap.put("parameterNew", "new{0}");
+    UpperCaseSingularLookupMap.put("parameterNew", "aNew{0}");
     UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
     UpperCaseSingularLookupMap.put("addMethod", "add{0}");
     UpperCaseSingularLookupMap.put("addViaMethod", "add{0}Via");
@@ -105,7 +105,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     UpperCaseSingularLookupMap.put("addOrMoveAtMethod", "addOrMove{0}At");
     UpperCaseSingularLookupMap.put("removeMethod", "remove{0}");
     UpperCaseSingularLookupMap.put("indexOfMethod", "indexOf{0}");
-    UpperCaseSingularLookupMap.put("parameterOld", "old{0}");
+    UpperCaseSingularLookupMap.put("parameterOld", "anOld{0}");
     UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
     UpperCaseSingularLookupMap.put("parameterExistingSerialized", "existingSerialized{0}");
     UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");

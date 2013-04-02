@@ -296,10 +296,10 @@ class PhoneLine
     return $this->otherParty;
   }
 
-  public function setOtherParty($newOtherParty)
+  public function setOtherParty($aNewOtherParty)
   {
     $wasSet = false;
-    if ($newOtherParty == null)
+    if ($aNewOtherParty == null)
     {
       $existingOtherParty = $this->otherParty;
       $this->otherParty = null;
@@ -313,17 +313,17 @@ class PhoneLine
     }
     
     $currentOtherParty = $this->getOtherParty();
-    if ($currentOtherParty != null && $currentOtherParty != $newOtherParty)
+    if ($currentOtherParty != null && $currentOtherParty != $aNewOtherParty)
     {
       $currentOtherParty->setOtherParty(null);
     }
     
-    $this->otherParty = $newOtherParty;
-    $existingOtherParty = $newOtherParty->getOtherParty();
+    $this->otherParty = $aNewOtherParty;
+    $existingOtherParty = $aNewOtherParty->getOtherParty();
     
     if ($this != $existingOtherParty)
     {
-      $newOtherParty->setOtherParty($this);
+      $aNewOtherParty->setOtherParty($this);
     }
     $wasSet = true;
     return $wasSet;

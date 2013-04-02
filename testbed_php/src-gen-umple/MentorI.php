@@ -190,10 +190,10 @@ class MentorI
     return $wasAdded;
   }
 
-  public function setProgram($newProgram)
+  public function setProgram($aNewProgram)
   {
     $wasSet = false;
-    if ($newProgram == null)
+    if ($aNewProgram == null)
     {
       $existingProgram = $this->program;
       $this->program = null;
@@ -207,17 +207,17 @@ class MentorI
     }
     
     $currentProgram = $this->getProgram();
-    if ($currentProgram != null && $currentProgram != $newProgram)
+    if ($currentProgram != null && $currentProgram != $aNewProgram)
     {
       $currentProgram->setMentorI(null);
     }
     
-    $this->program = $newProgram;
-    $existingMentorI = $newProgram->getMentorI();
+    $this->program = $aNewProgram;
+    $existingMentorI = $aNewProgram->getMentorI();
     
     if ($this != $existingMentorI)
     {
-      $newProgram->setMentorI($this);
+      $aNewProgram->setMentorI($this);
     }
     $wasSet = true;
     return $wasSet;

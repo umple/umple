@@ -46,23 +46,23 @@ class MyDriver
     return $this->mySubordinate;
   }
 
-  public function setMySubordinate($newMySubordinate)
+  public function setMySubordinate($aNewMySubordinate)
   {
     $wasSet = false;
-    if ($this->mySubordinate != null && $this->mySubordinate != $newMySubordinate && $this == $this->mySubordinate->getMyDriver())
+    if ($this->mySubordinate != null && $this->mySubordinate != $aNewMySubordinate && $this == $this->mySubordinate->getMyDriver())
     {
       //Unable to setMySubordinate, as existing mySubordinate would become an orphan
       return $wasSet;
     }
     
-    $this->mySubordinate = $newMySubordinate;
-    $oldMyDriver = $newMySubordinate != null ? $newMySubordinate->getMyDriver() : null;
+    $this->mySubordinate = $aNewMySubordinate;
+    $anOldMyDriver = $aNewMySubordinate != null ? $aNewMySubordinate->getMyDriver() : null;
     
-    if ($this != $oldMyDriver)
+    if ($this != $anOldMyDriver)
     {
-      if ($oldMyDriver != null)
+      if ($anOldMyDriver != null)
       {
-        $oldMyDriver->mySubordinate = null;
+        $anOldMyDriver->mySubordinate = null;
       }
       if ($this->mySubordinate != null)
       {
