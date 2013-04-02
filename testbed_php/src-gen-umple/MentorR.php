@@ -177,10 +177,10 @@ class MentorR
 
     $oldStudents = $this->students;
     $this->students = array();
-    foreach ($verifiedStudents as $newStudent)
+    foreach ($verifiedStudents as $aNewStudent)
     {
-      $this->students[] = $newStudent;
-      $removeIndex = array_search($newStudent,$oldStudents);
+      $this->students[] = $aNewStudent;
+      $removeIndex = array_search($aNewStudent,$oldStudents);
       if ($removeIndex !== false)
       {
         unset($oldStudents[$removeIndex]);
@@ -188,13 +188,13 @@ class MentorR
       }
       else
       {
-        $newStudent->addMentor($this);
+        $aNewStudent->addMentor($this);
       }
     }
 
-    foreach ($oldStudents as $oldStudent)
+    foreach ($oldStudents as $anOldStudent)
     {
-      $oldStudent->removeMentor($this);
+      $anOldStudent->removeMentor($this);
     }
     $wasSet = true;
     return $wasSet;
@@ -232,10 +232,10 @@ class MentorR
     return $wasAdded;
   }
 
-  public function setProgram($newProgram)
+  public function setProgram($aNewProgram)
   {
     $wasSet = false;
-    if ($newProgram == null)
+    if ($aNewProgram == null)
     {
       $existingProgram = $this->program;
       $this->program = null;
@@ -249,17 +249,17 @@ class MentorR
     }
     
     $currentProgram = $this->getProgram();
-    if ($currentProgram != null && $currentProgram != $newProgram)
+    if ($currentProgram != null && $currentProgram != $aNewProgram)
     {
       $currentProgram->setMentor(null);
     }
     
-    $this->program = $newProgram;
-    $existingMentor = $newProgram->getMentor();
+    $this->program = $aNewProgram;
+    $existingMentor = $aNewProgram->getMentor();
     
     if ($this != $existingMentor)
     {
-      $newProgram->setMentor($this);
+      $aNewProgram->setMentor($this);
     }
     $wasSet = true;
     return $wasSet;

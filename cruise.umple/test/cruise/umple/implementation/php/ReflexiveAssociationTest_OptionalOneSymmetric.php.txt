@@ -46,10 +46,10 @@ class Mentor
     return $this->superMentor;
   }
 
-  public function setSuperMentor($newSuperMentor)
+  public function setSuperMentor($aNewSuperMentor)
   {
     $wasSet = false;
-    if ($newSuperMentor == null)
+    if ($aNewSuperMentor == null)
     {
       $existingSuperMentor = $this->superMentor;
       $this->superMentor = null;
@@ -63,17 +63,17 @@ class Mentor
     }
     
     $currentSuperMentor = $this->getSuperMentor();
-    if ($currentSuperMentor != null && $currentSuperMentor != $newSuperMentor)
+    if ($currentSuperMentor != null && $currentSuperMentor != $aNewSuperMentor)
     {
       $currentSuperMentor->setSuperMentor(null);
     }
     
-    $this->superMentor = $newSuperMentor;
-    $existingSuperMentor = $newSuperMentor->getSuperMentor();
+    $this->superMentor = $aNewSuperMentor;
+    $existingSuperMentor = $aNewSuperMentor->getSuperMentor();
     
     if ($this != $existingSuperMentor)
     {
-      $newSuperMentor->setSuperMentor($this);
+      $aNewSuperMentor->setSuperMentor($this);
     }
     $wasSet = true;
     return $wasSet;

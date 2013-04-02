@@ -56,21 +56,21 @@ class MentorAH
     return $this->program;
   }
 
-  public function setStudent($newStudent)
+  public function setStudent($aNewStudent)
   {
     $wasSet = false;
-    if ($newStudent != null)
+    if ($aNewStudent != null)
     {
-      $this->student = $newStudent;
+      $this->student = $aNewStudent;
       $wasSet = true;
     }
     return $wasSet;
   }
 
-  public function setProgram($newProgram)
+  public function setProgram($aNewProgram)
   {
     $wasSet = false;
-    if ($newProgram == null)
+    if ($aNewProgram == null)
     {
       $existingProgram = $this->program;
       $this->program = null;
@@ -84,17 +84,17 @@ class MentorAH
     }
     
     $currentProgram = $this->getProgram();
-    if ($currentProgram != null && $currentProgram != $newProgram)
+    if ($currentProgram != null && $currentProgram != $aNewProgram)
     {
       $currentProgram->setMentor(null);
     }
     
-    $this->program = $newProgram;
-    $existingMentor = $newProgram->getMentor();
+    $this->program = $aNewProgram;
+    $existingMentor = $aNewProgram->getMentor();
     
     if ($this != $existingMentor)
     {
-      $newProgram->setMentor($this);
+      $aNewProgram->setMentor($this);
     }
     $wasSet = true;
     return $wasSet;

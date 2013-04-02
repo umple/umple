@@ -2215,57 +2215,56 @@ this("UmpleInternalParser", aModel);
       {
         setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
       }
-      
-      if(aClass.hasAttributes())
-      {
-        for(Attribute aAttribute : aClass.getAttributes())
+      else{
+        if(aClass.hasAttributes())
         {
-          if(aAttribute.getName().equals(token.getValue()))
+          for(Attribute aAttribute : aClass.getAttributes())
           {
-            tokenMatch = true;
-          }
-	    }
-      }
+            if(aAttribute.getName().equals(token.getValue()))
+            {
+              tokenMatch = true;
+            }
+	      }
+        }
       
-      if(aClass.hasAssociations())
-	  {
-	    AssociationEnd firstEnd, secondEnd;
-	    String firstEndName, secondEndName;
-
-	    for(Association aAssociation : aClass.getAssociations())
-        { 
-          firstEnd = aAssociation.getEnd(0);
-      	  secondEnd = aAssociation.getEnd(1);
-          firstEndName =  firstEnd.getRoleName();
-      	  secondEndName = secondEnd.getRoleName();
-          
-          if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
-          {
-            tokenMatch = true;
-          }
-	    }
-	  }  
-
-      if(aClass.hasStateMachines())  
-      {
-	    for(StateMachine aStateMachine : aClass.getStateMachines())
+        if(aClass.hasAssociations())
 	    {
-          if(aStateMachine.getName().equals(token.getValue()))
-          {
-             tokenMatch = true;
-          }	    
-	    }
-	  }  	  
+	      AssociationEnd firstEnd, secondEnd;
+	      String firstEndName, secondEndName;
+  
+	      for(Association aAssociation : aClass.getAssociations())
+          { 
+            firstEnd = aAssociation.getEnd(0);
+      	    secondEnd = aAssociation.getEnd(1);
+            firstEndName =  firstEnd.getRoleName();
+      	    secondEndName = secondEnd.getRoleName();        
+                      
+            if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
+            {
+              tokenMatch = true;
+            }
+	      }
+	    }  
 
-	  if(!tokenMatch)
-	  {
-	    setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+        if(aClass.hasStateMachines())  
+        {
+	      for(StateMachine aStateMachine : aClass.getStateMachines())
+	      {
+            if(aStateMachine.getName().equals(token.getValue()))
+            {
+              tokenMatch = true;
+            }	    
+	      }
+	    }  	  
+
+	    if(!tokenMatch)
+	    {
+	      setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+	    }
 	  }
-	
       aClass.getKey().addMember(token.getValue());
       tokensAdded.add(token.getValue()); 
     }
- 
   }
 
   private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleClass aClass)

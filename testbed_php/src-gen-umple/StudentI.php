@@ -46,10 +46,10 @@ class StudentI
     return $this->program;
   }
 
-  public function setProgram($newProgram)
+  public function setProgram($aNewProgram)
   {
     $wasSet = false;
-    if ($newProgram == null)
+    if ($aNewProgram == null)
     {
       $existingProgram = $this->program;
       $this->program = null;
@@ -63,17 +63,17 @@ class StudentI
     }
     
     $currentProgram = $this->getProgram();
-    if ($currentProgram != null && $currentProgram != $newProgram)
+    if ($currentProgram != null && $currentProgram != $aNewProgram)
     {
       $currentProgram->setStudentI(null);
     }
     
-    $this->program = $newProgram;
-    $existingStudentI = $newProgram->getStudentI();
+    $this->program = $aNewProgram;
+    $existingStudentI = $aNewProgram->getStudentI();
     
     if ($this != $existingStudentI)
     {
-      $newProgram->setStudentI($this);
+      $aNewProgram->setStudentI($this);
     }
     $wasSet = true;
     return $wasSet;

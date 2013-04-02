@@ -51,29 +51,29 @@ class MySubordinate
     return $this->myDriver;
   }
 
-  public function setMyDriver($newMyDriver)
+  public function setMyDriver($aNewMyDriver)
   {
     $wasSet = false;
-    if ($newMyDriver == null)
+    if ($aNewMyDriver == null)
     {
       //Unable to setMyDriver to null, as mySubordinate must always be associated to a myDriver
       return $wasSet;
     }
     
-    $existingMySubordinate = $newMyDriver->getMySubordinate();
+    $existingMySubordinate = $aNewMyDriver->getMySubordinate();
     if ($existingMySubordinate != null && $this != $existingMySubordinate)
     {
       //Unable to setMyDriver, the current myDriver already has a mySubordinate, which would be orphaned if it were re-assigned
       return $wasSet;
     }
     
-    $oldMyDriver = $this->myDriver;
-    $this->myDriver = $newMyDriver;
+    $anOldMyDriver = $this->myDriver;
+    $this->myDriver = $aNewMyDriver;
     $this->myDriver->setMySubordinate($this);
     
-    if ($oldMyDriver != null)
+    if ($anOldMyDriver != null)
     {
-      $oldMyDriver->setMySubordinate(null);
+      $anOldMyDriver->setMySubordinate(null);
     }
     $wasSet = true;
     return $wasSet;

@@ -424,10 +424,10 @@ class Student
 
     $oldM3s = $this->m3s;
     $this->m3s = array();
-    foreach ($verifiedM3s as $newM3)
+    foreach ($verifiedM3s as $aNewM3)
     {
-      $this->m3s[] = $newM3;
-      $removeIndex = array_search($newM3,$oldM3s);
+      $this->m3s[] = $aNewM3;
+      $removeIndex = array_search($aNewM3,$oldM3s);
       if ($removeIndex !== false)
       {
         unset($oldM3s[$removeIndex]);
@@ -435,13 +435,13 @@ class Student
       }
       else
       {
-        $newM3->addThree($this);
+        $aNewM3->addThree($this);
       }
     }
 
-    foreach ($oldM3s as $oldM3)
+    foreach ($oldM3s as $anOldM3)
     {
-      $oldM3->removeThree($this);
+      $anOldM3->removeThree($this);
     }
     $wasSet = true;
     print "after setM3s";
@@ -590,10 +590,10 @@ class Student
 
     $oldM4s = $this->m4s;
     $this->m4s = array();
-    foreach ($verifiedM4s as $newM4)
+    foreach ($verifiedM4s as $aNewM4)
     {
-      $this->m4s[] = $newM4;
-      $removeIndex = array_search($newM4,$oldM4s);
+      $this->m4s[] = $aNewM4;
+      $removeIndex = array_search($aNewM4,$oldM4s);
       if ($removeIndex !== false)
       {
         unset($oldM4s[$removeIndex]);
@@ -601,13 +601,13 @@ class Student
       }
       else
       {
-        $newM4->addFour($this);
+        $aNewM4->addFour($this);
       }
     }
 
-    foreach ($oldM4s as $oldM4)
+    foreach ($oldM4s as $anOldM4)
     {
-      $oldM4->removeFour($this);
+      $anOldM4->removeFour($this);
     }
     $wasSet = true;
     print "after setM4s";
@@ -742,10 +742,10 @@ class Student
 
     $oldM5s = $this->m5s;
     $this->m5s = array();
-    foreach ($verifiedM5s as $newM5)
+    foreach ($verifiedM5s as $aNewM5)
     {
-      $this->m5s[] = $newM5;
-      $removeIndex = array_search($newM5,$oldM5s);
+      $this->m5s[] = $aNewM5;
+      $removeIndex = array_search($aNewM5,$oldM5s);
       if ($removeIndex !== false)
       {
         unset($oldM5s[$removeIndex]);
@@ -753,13 +753,13 @@ class Student
       }
       else
       {
-        $newM5->addFive($this);
+        $aNewM5->addFive($this);
       }
     }
 
-    foreach ($oldM5s as $oldM5)
+    foreach ($oldM5s as $anOldM5)
     {
-      $oldM5->removeFive($this);
+      $anOldM5->removeFive($this);
     }
     $wasSet = true;
     print "after setM5s";

@@ -50,12 +50,12 @@ class Mentor
     return $this->student;
   }
 
-  public function setStudent($newStudent)
+  public function setStudent($aNewStudent)
   {
     $wasSet = false;
-    if ($newStudent != null)
+    if ($aNewStudent != null)
     {
-      $this->student = $newStudent;
+      $this->student = $aNewStudent;
       $wasSet = true;
     }
     return $wasSet;

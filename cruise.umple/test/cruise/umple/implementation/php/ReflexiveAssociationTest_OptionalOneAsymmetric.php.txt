@@ -52,10 +52,10 @@ class Student
     return $this->ta;
   }
 
-  public function setPupil($newPupil)
+  public function setPupil($aNewPupil)
   {
     $wasSet = false;
-    if ($newPupil == null)
+    if ($aNewPupil == null)
     {
       $existingPupil = $this->pupil;
       $this->pupil = null;
@@ -69,26 +69,26 @@ class Student
     }
     
     $currentPupil = $this->getPupil();
-    if ($currentPupil != null && $currentPupil != $newPupil)
+    if ($currentPupil != null && $currentPupil != $aNewPupil)
     {
       $currentPupil->setTa(null);
     }
     
-    $this->pupil = $newPupil;
-    $existingTa = $newPupil->getTa();
+    $this->pupil = $aNewPupil;
+    $existingTa = $aNewPupil->getTa();
     
     if ($this != $existingTa)
     {
-      $newPupil->setTa($this);
+      $aNewPupil->setTa($this);
     }
     $wasSet = true;
     return $wasSet;
   }
 
-  public function setTa($newTa)
+  public function setTa($aNewTa)
   {
     $wasSet = false;
-    if ($newTa == null)
+    if ($aNewTa == null)
     {
       $existingTa = $this->ta;
       $this->ta = null;
@@ -102,17 +102,17 @@ class Student
     }
     
     $currentTa = $this->getTa();
-    if ($currentTa != null && $currentTa != $newTa)
+    if ($currentTa != null && $currentTa != $aNewTa)
     {
       $currentTa->setPupil(null);
     }
     
-    $this->ta = $newTa;
-    $existingPupil = $newTa->getPupil();
+    $this->ta = $aNewTa;
+    $existingPupil = $aNewTa->getPupil();
     
     if ($this != $existingPupil)
     {
-      $newTa->setPupil($this);
+      $aNewTa->setPupil($this);
     }
     $wasSet = true;
     return $wasSet;

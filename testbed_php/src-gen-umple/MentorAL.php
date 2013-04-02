@@ -182,10 +182,10 @@ class MentorAL
     return $wasAdded;
   }
 
-  public function setProgram($newProgram)
+  public function setProgram($aNewProgram)
   {
     $wasSet = false;
-    if ($newProgram == null)
+    if ($aNewProgram == null)
     {
       $existingProgram = $this->program;
       $this->program = null;
@@ -199,17 +199,17 @@ class MentorAL
     }
     
     $currentProgram = $this->getProgram();
-    if ($currentProgram != null && $currentProgram != $newProgram)
+    if ($currentProgram != null && $currentProgram != $aNewProgram)
     {
       $currentProgram->setMentor(null);
     }
     
-    $this->program = $newProgram;
-    $existingMentor = $newProgram->getMentor();
+    $this->program = $aNewProgram;
+    $existingMentor = $aNewProgram->getMentor();
     
     if ($this != $existingMentor)
     {
-      $newProgram->setMentor($this);
+      $aNewProgram->setMentor($this);
     }
     $wasSet = true;
     return $wasSet;

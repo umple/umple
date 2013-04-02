@@ -34,10 +34,10 @@ class ProgramI
     return $this->studentI;
   }
 
-  public function setMentorI($newMentorI)
+  public function setMentorI($aNewMentorI)
   {
     $wasSet = false;
-    if ($newMentorI == null)
+    if ($aNewMentorI == null)
     {
       $existingMentorI = $this->mentorI;
       $this->mentorI = null;
@@ -51,26 +51,26 @@ class ProgramI
     }
     
     $currentMentorI = $this->getMentorI();
-    if ($currentMentorI != null && $currentMentorI != $newMentorI)
+    if ($currentMentorI != null && $currentMentorI != $aNewMentorI)
     {
       $currentMentorI->setProgram(null);
     }
     
-    $this->mentorI = $newMentorI;
-    $existingProgram = $newMentorI->getProgram();
+    $this->mentorI = $aNewMentorI;
+    $existingProgram = $aNewMentorI->getProgram();
     
     if ($this != $existingProgram)
     {
-      $newMentorI->setProgram($this);
+      $aNewMentorI->setProgram($this);
     }
     $wasSet = true;
     return $wasSet;
   }
 
-  public function setStudentI($newStudentI)
+  public function setStudentI($aNewStudentI)
   {
     $wasSet = false;
-    if ($newStudentI == null)
+    if ($aNewStudentI == null)
     {
       $existingStudentI = $this->studentI;
       $this->studentI = null;
@@ -84,17 +84,17 @@ class ProgramI
     }
     
     $currentStudentI = $this->getStudentI();
-    if ($currentStudentI != null && $currentStudentI != $newStudentI)
+    if ($currentStudentI != null && $currentStudentI != $aNewStudentI)
     {
       $currentStudentI->setProgram(null);
     }
     
-    $this->studentI = $newStudentI;
-    $existingProgram = $newStudentI->getProgram();
+    $this->studentI = $aNewStudentI;
+    $existingProgram = $aNewStudentI->getProgram();
     
     if ($this != $existingProgram)
     {
-      $newStudentI->setProgram($this);
+      $aNewStudentI->setProgram($this);
     }
     $wasSet = true;
     return $wasSet;

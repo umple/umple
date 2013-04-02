@@ -28,10 +28,10 @@ class MentorA
     return $this->student;
   }
 
-  public function setStudent($newStudent)
+  public function setStudent($aNewStudent)
   {
     $wasSet = false;
-    if ($newStudent == null)
+    if ($aNewStudent == null)
     {
       $existingStudent = $this->student;
       $this->student = null;
@@ -45,17 +45,17 @@ class MentorA
     }
     
     $currentStudent = $this->getStudent();
-    if ($currentStudent != null && $currentStudent != $newStudent)
+    if ($currentStudent != null && $currentStudent != $aNewStudent)
     {
       $currentStudent->setMentor(null);
     }
     
-    $this->student = $newStudent;
-    $existingMentor = $newStudent->getMentor();
+    $this->student = $aNewStudent;
+    $existingMentor = $aNewStudent->getMentor();
     
     if ($this != $existingMentor)
     {
-      $newStudent->setMentor($this);
+      $aNewStudent->setMentor($this);
     }
     $wasSet = true;
     return $wasSet;

@@ -48,14 +48,14 @@ class WidgetImmutableA
     return $this->widgetImmutableB;
   }
 
-  private function setWidgetImmutableB($newWidgetImmutableB)
+  private function setWidgetImmutableB($aNewWidgetImmutableB)
   {
     $wasSet = false;
     if (!$this->canSetWidgetImmutableB) { return false; }
     $this->canSetWidgetImmutableB = false;
-    if ($newWidgetImmutableB != null)
+    if ($aNewWidgetImmutableB != null)
     {
-      $this->widgetImmutableB = $newWidgetImmutableB;
+      $this->widgetImmutableB = $aNewWidgetImmutableB;
       $wasSet = true;
     }
     return $wasSet;

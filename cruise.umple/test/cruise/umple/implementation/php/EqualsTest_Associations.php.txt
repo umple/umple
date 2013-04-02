@@ -80,11 +80,11 @@ class Mentor
     return $index;
   }
 
-  public function setMain($newMain)
+  public function setMain($aNewMain)
   {
     $wasSet = false;
     if (!$this->canSetMain) { return false; }
-    if ($newMain == null)
+    if ($aNewMain == null)
     {
       $existingMain = $this->main;
       $this->main = null;
@@ -98,17 +98,17 @@ class Mentor
     }
     
     $currentMain = $this->getMain();
-    if ($currentMain != null && $currentMain != $newMain)
+    if ($currentMain != null && $currentMain != $aNewMain)
     {
       $currentMain->setMentorMain(null);
     }
     
-    $this->main = $newMain;
-    $existingMentorMain = $newMain->getMentorMain();
+    $this->main = $aNewMain;
+    $existingMentorMain = $aNewMain->getMentorMain();
     
     if ($this != $existingMentorMain)
     {
-      $newMain->setMentorMain($this);
+      $aNewMain->setMentorMain($this);
     }
     $wasSet = true;
     return $wasSet;

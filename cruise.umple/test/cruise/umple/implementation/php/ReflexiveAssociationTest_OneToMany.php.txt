@@ -33,12 +33,12 @@ class OneToMany
     return $this->oneToMany;
   }
 
-  public function setOneToMany($newOneToMany)
+  public function setOneToMany($aNewOneToMany)
   {
     $wasSet = false;
-    if ($newOneToMany != null)
+    if ($aNewOneToMany != null)
     {
-      $this->oneToMany = $newOneToMany;
+      $this->oneToMany = $aNewOneToMany;
       $wasSet = true;
     }
     return $wasSet;

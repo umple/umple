@@ -50,10 +50,10 @@ class StudentB
     return $this->mentor;
   }
 
-  public function setProgram($newProgram)
+  public function setProgram($aNewProgram)
   {
     $wasSet = false;
-    if ($newProgram == null)
+    if ($aNewProgram == null)
     {
       $existingProgram = $this->program;
       $this->program = null;
@@ -67,39 +67,39 @@ class StudentB
     }
     
     $currentProgram = $this->getProgram();
-    if ($currentProgram != null && $currentProgram != $newProgram)
+    if ($currentProgram != null && $currentProgram != $aNewProgram)
     {
       $currentProgram->setStudent(null);
     }
     
-    $this->program = $newProgram;
-    $existingStudent = $newProgram->getStudent();
+    $this->program = $aNewProgram;
+    $existingStudent = $aNewProgram->getStudent();
     
     if ($this != $existingStudent)
     {
-      $newProgram->setStudent($this);
+      $aNewProgram->setStudent($this);
     }
     $wasSet = true;
     return $wasSet;
   }
 
-  public function setMentor($newMentor)
+  public function setMentor($aNewMentor)
   {
     $wasSet = false;
-    if ($this->mentor != null && $this->mentor != $newMentor && $this == $this->mentor->getStudent())
+    if ($this->mentor != null && $this->mentor != $aNewMentor && $this == $this->mentor->getStudent())
     {
       //Unable to setMentor, as existing mentor would become an orphan
       return $wasSet;
     }
     
-    $this->mentor = $newMentor;
-    $oldStudent = $newMentor != null ? $newMentor->getStudent() : null;
+    $this->mentor = $aNewMentor;
+    $anOldStudent = $aNewMentor != null ? $aNewMentor->getStudent() : null;
     
-    if ($this != $oldStudent)
+    if ($this != $anOldStudent)
     {
-      if ($oldStudent != null)
+      if ($anOldStudent != null)
       {
-        $oldStudent->mentor = null;
+        $anOldStudent->mentor = null;
       }
       if ($this->mentor != null)
       {
