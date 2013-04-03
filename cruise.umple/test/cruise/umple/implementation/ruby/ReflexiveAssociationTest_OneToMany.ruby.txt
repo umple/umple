@@ -36,10 +36,10 @@ class OneToMany
     @oneToMany
   end
 
-  def set_oneToMany(new_oneToMany)
+  def set_oneToMany(a_new_oneToMany)
     was_set = false
-    unless new_oneToMany.nil?
-      @oneToMany = new_oneToMany
+    unless a_new_oneToMany.nil?
+      @oneToMany = a_new_oneToMany
       was_set = true
     end
     was_set

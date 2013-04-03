@@ -60,20 +60,20 @@ class MentorAH
     @program
   end
 
-  def set_student(new_student)
+  def set_student(a_new_student)
     was_set = false
     raise "Mandatory relationship with student not satisfied" if (@initialized and !@deleted and @student.nil?)
-    unless new_student.nil?
-      @student = new_student
+    unless a_new_student.nil?
+      @student = a_new_student
       was_set = true
     end
     was_set
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
     raise "Mandatory relationship with student not satisfied" if (@initialized and !@deleted and @student.nil?)
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -85,15 +85,15 @@ class MentorAH
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_mentor(nil)
     end
 
-    @program = new_program
-    existing_mentor = new_program.get_mentor
+    @program = a_new_program
+    existing_mentor = a_new_program.get_mentor
 
     unless self.eql?(existing_mentor)
-      new_program.set_mentor(self)
+      a_new_program.set_mentor(self)
     end
     was_set = true
     was_set

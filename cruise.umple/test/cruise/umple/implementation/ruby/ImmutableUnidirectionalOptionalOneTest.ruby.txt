@@ -44,11 +44,11 @@ class Student
     @mentor
   end
 
-  def set_mentor(new_mentor)
+  def set_mentor(a_new_mentor)
     was_set = false
     return false unless @can_set_mentor
     @can_set_mentor = false
-    @mentor = new_mentor
+    @mentor = a_new_mentor
     was_set = true
     was_set
   end

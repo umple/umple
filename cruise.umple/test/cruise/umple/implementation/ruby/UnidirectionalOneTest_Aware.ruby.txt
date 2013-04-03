@@ -54,11 +54,11 @@ class Mentor
     @student
   end
 
-  def set_student(new_student)
+  def set_student(a_new_student)
     was_set = false
     raise "Mandatory relationship with student not satisfied" if (@initialized and !@deleted and @student.nil?)
-    unless new_student.nil?
-      @student = new_student
+    unless a_new_student.nil?
+      @student = a_new_student
       was_set = true
     end
     was_set

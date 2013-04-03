@@ -322,17 +322,17 @@ class Student
 
     old_m3s = @m3s.dup
     @m3s.clear
-    verified_m3s.each do |new_m3|
-      @m3s << new_m3
-      if old_m3s.include?(new_m3)
-        old_m3s.delete(new_m3)
+    verified_m3s.each do |a_new_m3|
+      @m3s << a_new_m3
+      if old_m3s.include?(a_new_m3)
+        old_m3s.delete(a_new_m3)
       else
-        new_m3.add_three(self)
+        a_new_m3.add_three(self)
       end
     end
 
-    old_m3s.each do |old_m3|
-      old_m3.remove_three(self)
+    old_m3s.each do |an_old_m3|
+      an_old_m3.remove_three(self)
     end
     was_set = true
     print "after setM3s";
@@ -457,17 +457,17 @@ class Student
 
     old_m4s = @m4s.dup
     @m4s.clear
-    verified_m4s.each do |new_m4|
-      @m4s << new_m4
-      if old_m4s.include?(new_m4)
-        old_m4s.delete(new_m4)
+    verified_m4s.each do |a_new_m4|
+      @m4s << a_new_m4
+      if old_m4s.include?(a_new_m4)
+        old_m4s.delete(a_new_m4)
       else
-        new_m4.add_four(self)
+        a_new_m4.add_four(self)
       end
     end
 
-    old_m4s.each do |old_m4|
-      old_m4.remove_four(self)
+    old_m4s.each do |an_old_m4|
+      an_old_m4.remove_four(self)
     end
     was_set = true
     print "after setM4s";
@@ -580,17 +580,17 @@ class Student
 
     old_m5s = @m5s.dup
     @m5s.clear
-    verified_m5s.each do |new_m5|
-      @m5s << new_m5
-      if old_m5s.include?(new_m5)
-        old_m5s.delete(new_m5)
+    verified_m5s.each do |a_new_m5|
+      @m5s << a_new_m5
+      if old_m5s.include?(a_new_m5)
+        old_m5s.delete(a_new_m5)
       else
-        new_m5.add_five(self)
+        a_new_m5.add_five(self)
       end
     end
 
-    old_m5s.each do |old_m5|
-      old_m5.remove_five(self)
+    old_m5s.each do |an_old_m5|
+      an_old_m5.remove_five(self)
     end
     was_set = true
     print "after setM5s";

@@ -39,9 +39,9 @@ class ProgramR
     @student
   end
 
-  def set_mentor(new_mentor)
+  def set_mentor(a_new_mentor)
     was_set = false
-    if new_mentor.nil?
+    if a_new_mentor.nil?
       existing_mentor = @mentor
       @mentor = nil
       
@@ -53,23 +53,23 @@ class ProgramR
     end
 
     current_mentor = self.get_mentor
-    if !current_mentor.nil? and !current_mentor.eql?(new_mentor)
+    if !current_mentor.nil? and !current_mentor.eql?(a_new_mentor)
       current_mentor.set_program(nil)
     end
 
-    @mentor = new_mentor
-    existing_program = new_mentor.get_program
+    @mentor = a_new_mentor
+    existing_program = a_new_mentor.get_program
 
     unless self.eql?(existing_program)
-      new_mentor.set_program(self)
+      a_new_mentor.set_program(self)
     end
     was_set = true
     was_set
   end
 
-  def set_student(new_student)
+  def set_student(a_new_student)
     was_set = false
-    if new_student.nil?
+    if a_new_student.nil?
       existing_student = @student
       @student = nil
       
@@ -81,15 +81,15 @@ class ProgramR
     end
 
     current_student = self.get_student
-    if !current_student.nil? and !current_student.eql?(new_student)
+    if !current_student.nil? and !current_student.eql?(a_new_student)
       current_student.set_program(nil)
     end
 
-    @student = new_student
-    existing_program = new_student.get_program
+    @student = a_new_student
+    existing_program = a_new_student.get_program
 
     unless self.eql?(existing_program)
-      new_student.set_program(self)
+      a_new_student.set_program(self)
     end
     was_set = true
     was_set

@@ -37,12 +37,12 @@ class ClassOne
     @classOtherclass
   end
 
-  def set_classOtherclass(new_classOtherclass)
+  def set_classOtherclass(a_new_classOtherclass)
     was_set = false
     return false unless @can_set_classOtherclass
     @can_set_classOtherclass = false
-    unless new_classOtherclass.nil?
-      @classOtherclass = new_classOtherclass
+    unless a_new_classOtherclass.nil?
+      @classOtherclass = a_new_classOtherclass
       was_set = true
     end
     was_set

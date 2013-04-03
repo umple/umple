@@ -49,19 +49,19 @@ class MyDriver
     @mySubordinate
   end
 
-  def set_mySubordinate(new_mySubordinate)
+  def set_mySubordinate(a_new_mySubordinate)
     was_set = false
-    if !@mySubordinate.nil? and !@mySubordinate.eql?(new_mySubordinate) and self.eql?(@mySubordinate.get_myDriver)
+    if !@mySubordinate.nil? and !@mySubordinate.eql?(a_new_mySubordinate) and self.eql?(@mySubordinate.get_myDriver)
       #Unable to set_mySubordinate, as existing @mySubordinate would become an orphan
       return was_set
     end
 
-    @mySubordinate = new_mySubordinate
-    old_myDriver = !new_mySubordinate.nil? ? new_mySubordinate.get_myDriver : nil
+    @mySubordinate = a_new_mySubordinate
+    an_old_myDriver = !a_new_mySubordinate.nil? ? a_new_mySubordinate.get_myDriver : nil
 
-    unless self.eql?(old_myDriver)
-      unless old_myDriver.nil?
-        old_myDriver.instance_variable_set("@mySubordinate",nil)
+    unless self.eql?(an_old_myDriver)
+      unless an_old_myDriver.nil?
+        an_old_myDriver.instance_variable_set("@mySubordinate",nil)
       end
       unless @mySubordinate.nil?
         @mySubordinate.set_myDriver(self)

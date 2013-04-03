@@ -35,11 +35,11 @@ class ClassOptionalOneAssociation
     @otherclass
   end
 
-  def set_otherclass(new_otherclass)
+  def set_otherclass(a_new_otherclass)
     was_set = false
     return false unless @can_set_otherclass
     @can_set_otherclass = false
-    @otherclass = new_otherclass
+    @otherclass = a_new_otherclass
     was_set = true
     was_set
   end

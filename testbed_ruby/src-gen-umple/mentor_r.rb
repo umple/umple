@@ -137,17 +137,17 @@ class MentorR
 
     old_students = @students.dup
     @students.clear
-    verified_students.each do |new_student|
-      @students << new_student
-      if old_students.include?(new_student)
-        old_students.delete(new_student)
+    verified_students.each do |a_new_student|
+      @students << a_new_student
+      if old_students.include?(a_new_student)
+        old_students.delete(a_new_student)
       else
-        new_student.add_mentor(self)
+        a_new_student.add_mentor(self)
       end
     end
 
-    old_students.each do |old_student|
-      old_student.remove_mentor(self)
+    old_students.each do |an_old_student|
+      an_old_student.remove_mentor(self)
     end
     was_set = true
     was_set
@@ -187,9 +187,9 @@ class MentorR
     was_added
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -201,15 +201,15 @@ class MentorR
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_mentor(nil)
     end
 
-    @program = new_program
-    existing_mentor = new_program.get_mentor
+    @program = a_new_program
+    existing_mentor = a_new_program.get_mentor
 
     unless self.eql?(existing_mentor)
-      new_program.set_mentor(self)
+      a_new_program.set_mentor(self)
     end
     was_set = true
     was_set

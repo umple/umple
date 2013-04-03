@@ -76,9 +76,9 @@ class StudentAD
     index
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -90,15 +90,15 @@ class StudentAD
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_student(nil)
     end
 
-    @program = new_program
-    existing_student = new_program.get_student
+    @program = a_new_program
+    existing_student = a_new_program.get_student
 
     unless self.eql?(existing_student)
-      new_program.set_student(self)
+      a_new_program.set_student(self)
     end
     was_set = true
     was_set
@@ -163,17 +163,17 @@ class StudentAD
 
     old_mentors = @mentors.dup
     @mentors.clear
-    verified_mentors.each do |new_mentor|
-      @mentors << new_mentor
-      if old_mentors.include?(new_mentor)
-        old_mentors.delete(new_mentor)
+    verified_mentors.each do |a_new_mentor|
+      @mentors << a_new_mentor
+      if old_mentors.include?(a_new_mentor)
+        old_mentors.delete(a_new_mentor)
       else
-        new_mentor.add_student(self)
+        a_new_mentor.add_student(self)
       end
     end
 
-    old_mentors.each do |old_mentor|
-      old_mentor.remove_student(self)
+    old_mentors.each do |an_old_mentor|
+      an_old_mentor.remove_student(self)
     end
     was_set = true
     was_set

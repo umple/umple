@@ -138,17 +138,17 @@ class Student
 
     old_mentors = @mentors.dup
     @mentors.clear
-    verified_mentors.each do |new_mentor|
-      @mentors << new_mentor
-      if old_mentors.include?(new_mentor)
-        old_mentors.delete(new_mentor)
+    verified_mentors.each do |a_new_mentor|
+      @mentors << a_new_mentor
+      if old_mentors.include?(a_new_mentor)
+        old_mentors.delete(a_new_mentor)
       else
-        new_mentor.add_student(self)
+        a_new_mentor.add_student(self)
       end
     end
 
-    old_mentors.each do |old_mentor|
-      old_mentor.remove_student(self)
+    old_mentors.each do |an_old_mentor|
+      an_old_mentor.remove_student(self)
     end
     was_set = true
     was_set
