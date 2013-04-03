@@ -54,9 +54,9 @@ class Student
     @ta
   end
 
-  def set_pupil(new_pupil)
+  def set_pupil(a_new_pupil)
     was_set = false
-    if new_pupil.nil?
+    if a_new_pupil.nil?
       existing_pupil = @pupil
       @pupil = nil
       
@@ -68,23 +68,23 @@ class Student
     end
 
     current_pupil = self.get_pupil
-    if !current_pupil.nil? and !current_pupil.eql?(new_pupil)
+    if !current_pupil.nil? and !current_pupil.eql?(a_new_pupil)
       current_pupil.set_ta(nil)
     end
 
-    @pupil = new_pupil
-    existing_ta = new_pupil.get_ta
+    @pupil = a_new_pupil
+    existing_ta = a_new_pupil.get_ta
 
     unless self.eql?(existing_ta)
-      new_pupil.set_ta(self)
+      a_new_pupil.set_ta(self)
     end
     was_set = true
     was_set
   end
 
-  def set_ta(new_ta)
+  def set_ta(a_new_ta)
     was_set = false
-    if new_ta.nil?
+    if a_new_ta.nil?
       existing_ta = @ta
       @ta = nil
       
@@ -96,15 +96,15 @@ class Student
     end
 
     current_ta = self.get_ta
-    if !current_ta.nil? and !current_ta.eql?(new_ta)
+    if !current_ta.nil? and !current_ta.eql?(a_new_ta)
       current_ta.set_pupil(nil)
     end
 
-    @ta = new_ta
-    existing_pupil = new_ta.get_pupil
+    @ta = a_new_ta
+    existing_pupil = a_new_ta.get_pupil
 
     unless self.eql?(existing_pupil)
-      new_ta.set_pupil(self)
+      a_new_ta.set_pupil(self)
     end
     was_set = true
     was_set

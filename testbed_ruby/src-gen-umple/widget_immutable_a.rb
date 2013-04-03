@@ -48,13 +48,13 @@ class WidgetImmutableA
     @widgetImmutableB
   end
 
-  def set_widgetImmutableB(new_widgetImmutableB)
+  def set_widgetImmutableB(a_new_widgetImmutableB)
     was_set = false
     return false unless @can_set_widgetImmutableB
     @can_set_widgetImmutableB = false
     raise "Mandatory relationship with widgetImmutableB not satisfied" if (@initialized and !@deleted and @widgetImmutableB.nil?)
-    unless new_widgetImmutableB.nil?
-      @widgetImmutableB = new_widgetImmutableB
+    unless a_new_widgetImmutableB.nil?
+      @widgetImmutableB = a_new_widgetImmutableB
       was_set = true
     end
     was_set

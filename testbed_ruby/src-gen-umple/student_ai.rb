@@ -49,9 +49,9 @@ class StudentAI
     @program
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -63,15 +63,15 @@ class StudentAI
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_student(nil)
     end
 
-    @program = new_program
-    existing_student = new_program.get_student
+    @program = a_new_program
+    existing_student = a_new_program.get_student
 
     unless self.eql?(existing_student)
-      new_program.set_student(self)
+      a_new_program.set_student(self)
     end
     was_set = true
     was_set

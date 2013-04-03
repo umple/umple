@@ -49,9 +49,9 @@ class Mentor
     @student
   end
 
-  def set_student(new_student)
+  def set_student(a_new_student)
     was_set = false
-    @student = new_student
+    @student = a_new_student
     was_set = true
     was_set
   end

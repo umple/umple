@@ -37,12 +37,12 @@ class ClassOneAssociation
     @otherclass
   end
 
-  def set_otherclass(new_otherclass)
+  def set_otherclass(a_new_otherclass)
     was_set = false
     return false unless @can_set_otherclass
     @can_set_otherclass = false
-    unless new_otherclass.nil?
-      @otherclass = new_otherclass
+    unless a_new_otherclass.nil?
+      @otherclass = a_new_otherclass
       was_set = true
     end
     was_set

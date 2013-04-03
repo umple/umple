@@ -58,33 +58,33 @@ class MentorB
     @program
   end
 
-  def set_student(new_student)
+  def set_student(a_new_student)
     was_set = false
-    if new_student.nil?
+    if a_new_student.nil?
       #Unable to set_student to nil, as mentor must always be associated to a @student
       return was_set
     end
     
-    existing_mentor = new_student.get_mentor
+    existing_mentor = a_new_student.get_mentor
     if !existing_mentor.nil? and !self.eql?(existing_mentor)
       #Unable to set_student, the current @student already has a mentor, which would be orphaned if it were re-assigned
       return was_set
     end
     
-    old_student = @student
-    @student = new_student
+    an_old_student = @student
+    @student = a_new_student
     @student.set_mentor(self)
 
-    unless old_student.nil?
-      old_student.set_mentor(nil)
+    unless an_old_student.nil?
+      an_old_student.set_mentor(nil)
     end
     was_set = true
     was_set
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -96,15 +96,15 @@ class MentorB
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_mentor(nil)
     end
 
-    @program = new_program
-    existing_mentor = new_program.get_mentor
+    @program = a_new_program
+    existing_mentor = a_new_program.get_mentor
 
     unless self.eql?(existing_mentor)
-      new_program.set_mentor(self)
+      a_new_program.set_mentor(self)
     end
     was_set = true
     was_set

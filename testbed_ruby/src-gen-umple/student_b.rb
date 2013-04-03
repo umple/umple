@@ -56,9 +56,9 @@ class StudentB
     @mentor
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -70,33 +70,33 @@ class StudentB
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_student(nil)
     end
 
-    @program = new_program
-    existing_student = new_program.get_student
+    @program = a_new_program
+    existing_student = a_new_program.get_student
 
     unless self.eql?(existing_student)
-      new_program.set_student(self)
+      a_new_program.set_student(self)
     end
     was_set = true
     was_set
   end
 
-  def set_mentor(new_mentor)
+  def set_mentor(a_new_mentor)
     was_set = false
-    if !@mentor.nil? and !@mentor.eql?(new_mentor) and self.eql?(@mentor.get_student)
+    if !@mentor.nil? and !@mentor.eql?(a_new_mentor) and self.eql?(@mentor.get_student)
       #Unable to set_mentor, as existing @mentor would become an orphan
       return was_set
     end
 
-    @mentor = new_mentor
-    old_student = !new_mentor.nil? ? new_mentor.get_student : nil
+    @mentor = a_new_mentor
+    an_old_student = !a_new_mentor.nil? ? a_new_mentor.get_student : nil
 
-    unless self.eql?(old_student)
-      unless old_student.nil?
-        old_student.instance_variable_set("@mentor",nil)
+    unless self.eql?(an_old_student)
+      unless an_old_student.nil?
+        an_old_student.instance_variable_set("@mentor",nil)
       end
       unless @mentor.nil?
         @mentor.set_student(self)

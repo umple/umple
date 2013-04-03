@@ -48,13 +48,13 @@ class Student
     @mentor
   end
 
-  def set_mentor(new_mentor)
+  def set_mentor(a_new_mentor)
     was_set = false
     return false unless @can_set_mentor
     @can_set_mentor = false
     raise "Mandatory relationship with mentor not satisfied" if (@initialized and !@deleted and @mentor.nil?)
-    unless new_mentor.nil?
-      @mentor = new_mentor
+    unless a_new_mentor.nil?
+      @mentor = a_new_mentor
       was_set = true
     end
     was_set

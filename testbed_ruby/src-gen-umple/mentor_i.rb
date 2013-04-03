@@ -165,9 +165,9 @@ class MentorI
     was_added
   end
 
-  def set_program(new_program)
+  def set_program(a_new_program)
     was_set = false
-    if new_program.nil?
+    if a_new_program.nil?
       existing_program = @program
       @program = nil
       
@@ -179,15 +179,15 @@ class MentorI
     end
 
     current_program = self.get_program
-    if !current_program.nil? and !current_program.eql?(new_program)
+    if !current_program.nil? and !current_program.eql?(a_new_program)
       current_program.set_mentorI(nil)
     end
 
-    @program = new_program
-    existing_mentorI = new_program.get_mentorI
+    @program = a_new_program
+    existing_mentorI = a_new_program.get_mentorI
 
     unless self.eql?(existing_mentorI)
-      new_program.set_mentorI(self)
+      a_new_program.set_mentorI(self)
     end
     was_set = true
     was_set

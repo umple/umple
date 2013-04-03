@@ -105,7 +105,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     AsIsSingularLookupMap = new HashMap<String, String>();
     AsIsSingularLookupMap.put("parameterOne", "a_{0}");
     AsIsSingularLookupMap.put("removeParameterOne", "placeholder_{0}");
-    AsIsSingularLookupMap.put("parameterNew", "new_{0}");
+    AsIsSingularLookupMap.put("parameterNew", "a_new_{0}");
     AsIsSingularLookupMap.put("parameterNext", "next_{0}");
     AsIsSingularLookupMap.put("addMethod", "add_{0}");
     AsIsSingularLookupMap.put("addAtMethod", "add_{0}_at");
@@ -113,7 +113,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     AsIsSingularLookupMap.put("addViaMethod", "add_{0}_via");
     AsIsSingularLookupMap.put("removeMethod", "remove_{0}");
     AsIsSingularLookupMap.put("indexOfMethod", "index_of_{0}");
-    AsIsSingularLookupMap.put("parameterOld", "old_{0}");
+    AsIsSingularLookupMap.put("parameterOld", "an_old_{0}");
     AsIsSingularLookupMap.put("parameterExisting", "existing_{0}");
     AsIsSingularLookupMap.put("parameterExistingSerialized", "existing_serialized_{0}");
     AsIsSingularLookupMap.put("parameterIsNew", "is_new_{0}");

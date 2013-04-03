@@ -64,10 +64,10 @@ class Mentor
     index
   end
 
-  def set_main(new_main)
+  def set_main(a_new_main)
     was_set = false
     return false unless @can_set_main
-    if new_main.nil?
+    if a_new_main.nil?
       existing_main = @main
       @main = nil
       
@@ -79,15 +79,15 @@ class Mentor
     end
 
     current_main = self.get_main
-    if !current_main.nil? and !current_main.eql?(new_main)
+    if !current_main.nil? and !current_main.eql?(a_new_main)
       current_main.set_mentorMain(nil)
     end
 
-    @main = new_main
-    existing_mentorMain = new_main.get_mentorMain
+    @main = a_new_main
+    existing_mentorMain = a_new_main.get_mentorMain
 
     unless self.eql?(existing_mentorMain)
-      new_main.set_mentorMain(self)
+      a_new_main.set_mentorMain(self)
     end
     was_set = true
     was_set

@@ -49,9 +49,9 @@ class MentorH
     @superMentor
   end
 
-  def set_superMentor(new_superMentor)
+  def set_superMentor(a_new_superMentor)
     was_set = false
-    if new_superMentor.nil?
+    if a_new_superMentor.nil?
       existing_superMentor = @superMentor
       @superMentor = nil
       
@@ -63,15 +63,15 @@ class MentorH
     end
 
     current_superMentor = self.get_superMentor
-    if !current_superMentor.nil? and !current_superMentor.eql?(new_superMentor)
+    if !current_superMentor.nil? and !current_superMentor.eql?(a_new_superMentor)
       current_superMentor.set_superMentor(nil)
     end
 
-    @superMentor = new_superMentor
-    existing_superMentor = new_superMentor.get_superMentor
+    @superMentor = a_new_superMentor
+    existing_superMentor = a_new_superMentor.get_superMentor
 
     unless self.eql?(existing_superMentor)
-      new_superMentor.set_superMentor(self)
+      a_new_superMentor.set_superMentor(self)
     end
     was_set = true
     was_set

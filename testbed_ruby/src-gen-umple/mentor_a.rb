@@ -34,9 +34,9 @@ class MentorA
     @student
   end
 
-  def set_student(new_student)
+  def set_student(a_new_student)
     was_set = false
-    if new_student.nil?
+    if a_new_student.nil?
       existing_student = @student
       @student = nil
       
@@ -48,15 +48,15 @@ class MentorA
     end
 
     current_student = self.get_student
-    if !current_student.nil? and !current_student.eql?(new_student)
+    if !current_student.nil? and !current_student.eql?(a_new_student)
       current_student.set_mentor(nil)
     end
 
-    @student = new_student
-    existing_mentor = new_student.get_mentor
+    @student = a_new_student
+    existing_mentor = a_new_student.get_mentor
 
     unless self.eql?(existing_mentor)
-      new_student.set_mentor(self)
+      a_new_student.set_mentor(self)
     end
     was_set = true
     was_set
