@@ -272,3 +272,11 @@ class CourseX {
     }
   }
 }
+
+class CourseY {
+  String[] logs;
+  
+  active {
+    addLog("Active entry");
+  }
+}

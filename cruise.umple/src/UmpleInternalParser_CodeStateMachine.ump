@@ -43,6 +43,76 @@ class UmpleInternalParser
     }
   }  
   
+  private String getThreadName(Token activeToken)
+  {
+    Token name = activeToken.getSubToken("name");
+    
+    if (name == null)
+    {
+      return "thread1";
+    }
+    return name.getValue();
+  }
+  
+  private String getActiveCode(Token activeToken)
+  {
+    Token code = activeToken.getSubToken("code");
+    
+    return code.getValue();
+  }
+  
+  private void analyzeActiveObject(Token activeToken, UmpleClass aClass)
+  {
+    analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
+  }
+  
+  private Token generateActiveStateMachineToken(Token stateMachineToken)
+  {
+    Token token = new Token("name", "activeStateMachine");
+    
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(generateActiveTopLevelStateToken(stateMachineToken));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+  
+  private Token generateActiveTopLevelStateToken(Token stateMachineToken)
+  {
+    Token token = new Token("state", "START_TOKEN");
+    
+    token.addSubToken(new Token("stateName", "activeTopLevelState"));
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(generateActiveStateToken(stateMachineToken));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+  
+  private Token generateActiveStateToken(Token stateMachineToken)
+  {
+    Token token = new Token("state", "START_TOKEN");
+    
+    token.addSubToken(new Token("stateName", getThreadName(stateMachineToken)));
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(generateActivityToken(stateMachineToken));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+  
+  private Token generateActivityToken(Token stateMachineToken)
+  {
+    Token token = new Token("activity", "START_TOKEN");
+    
+    token.addSubToken(new Token("do", "STATIC"));
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(new Token("code", getActiveCode(stateMachineToken)));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+  
   // Analyze state machine related tokens within the context of an Umple class
   private void analyzeStateMachineToken(Token token, UmpleClass aClass, int analysisStep)
   {
@@ -60,11 +130,17 @@ class UmpleInternalParser
       }
       
       Token subToken = token.getSubToken(0);
+      if (subToken.is("activeDefinition"))
+      {
+        analyzeActiveObject(subToken, aClass);
+      }
+      
       if (subToken.is("enum") || subToken.is("inlineStateMachine"))
       {
         analyzeStateMachine(subToken,aClass);
       }
-      else if (subToken.is("referencedStateMachine"))
+      
+      if (subToken.is("referencedStateMachine"))
       {
         analyzedReferencedStateMachine(subToken,aClass);
       }
