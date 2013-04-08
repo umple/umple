@@ -6317,7 +6317,7 @@ public class RubyClassGenerator implements ILang
     	for (Method aMethod : uClass.getMethods()) 
     	{
     		String methodName = aMethod.getName();
-    		
+    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
     		String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
     		String properMethodBody = "    " + methodBody;
     		
@@ -6364,6 +6364,8 @@ public class RubyClassGenerator implements ILang
     			
     			append(stringBuffer, "  def {0} ({1})\n", methodName, finalParams);	
     			
+    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+    			
     			appendln(stringBuffer, properMethodBody);
     			
 				appendln(stringBuffer, "  end");
@@ -6375,6 +6377,8 @@ public class RubyClassGenerator implements ILang
     			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
     			
     			append(stringBuffer, "  def {0}()\n", methodName);
+    			
+    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
     			
     			appendln(stringBuffer, properMethodBody);
     			

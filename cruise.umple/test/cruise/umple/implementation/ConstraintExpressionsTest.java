@@ -52,10 +52,10 @@ public class ConstraintExpressionsTest extends TemplateTest{
 		assertUmpleTemplateFor("BasicConstraint7.ump", languagePath + "/BasicConstraint7."+ languagePath +".txt", "student");
 	}
 	
-	/*@Test
+	@Test
 	public void BasicPrecondition1(){ // [pre: arg > 5] , [pre: minAge < 8]
 		assertUmpleTemplateFor("BasicPrecondition1.ump", languagePath + "/BasicPrecondition1."+ languagePath +".txt", "Client");
-	}*/
+	}
 	
 //	@Test
 //	public void BasicConstraint2()

@@ -3,7 +3,6 @@
 
 
 
-// line 1 "BasicPrecondition1.ump"
 public class Client
 {
 
@@ -43,7 +42,6 @@ public class Client
   public void delete()
   {}
 
-  // line 4 "BasicPrecondition1.ump"
   public int someMethod(Integer arg){
 
     if ( !(arg>5))
