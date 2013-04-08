@@ -24,6 +24,7 @@ public class PapyrusGenerator implements CodeGenerator
   private UmpleModel model;
   private String output;
   private String smName;
+  private String className;
   private String diagramID;
   private String smID;
   private String regionID;
@@ -37,6 +38,7 @@ public class PapyrusGenerator implements CodeGenerator
     model = null;
     output = "";
     smName = null;
+    className = null;
     diagramID = generatePapyrusID();
     smID = generatePapyrusID();
     regionID = generatePapyrusID();
@@ -66,6 +68,14 @@ public class PapyrusGenerator implements CodeGenerator
   {
     boolean wasSet = false;
     smName = aSmName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setClassName(String aClassName)
+  {
+    boolean wasSet = false;
+    className = aClassName;
     wasSet = true;
     return wasSet;
   }
@@ -113,6 +123,11 @@ public class PapyrusGenerator implements CodeGenerator
     return smName;
   }
 
+  public String getClassName()
+  {
+    return className;
+  }
+
   public String getDiagramID()
   {
     return diagramID;
@@ -139,6 +154,7 @@ public class PapyrusGenerator implements CodeGenerator
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "," +
             "smName" + ":" + getSmName()+ "," +
+            "className" + ":" + getClassName()+ "," +
             "diagramID" + ":" + getDiagramID()+ "," +
             "smID" + ":" + getSmID()+ "," +
             "regionID" + ":" + getRegionID()+ "]" + System.getProperties().getProperty("line.separator") +
@@ -149,16 +165,15 @@ public class PapyrusGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 21 ../../../../src/Generator_CodePapyrus.ump
+  // line 22 ../../../../src/Generator_CodePapyrus.ump
   public void generate()
   {
-    boolean hasStateMachine = false; //true if the umple file has one or more state machines in it.
     boolean hasClassDiagram = false; //true if the umple file has one or more class diagrams in it.
     StringBuilder code = new StringBuilder();
-    StringBuilder smcode = new StringBuilder(); //Holds the xml for state machines in the umple file
-    StringBuilder smSubCode = new StringBuilder();
+    StringBuilder smcode; //Holds the xml for state machines in the umple file
+    StringBuilder smSubCode;
     StringBuilder subCode;
-    ArrayList<StateMachine> allStateMachines = new ArrayList<StateMachine>();
+    List<StateMachine> allNestedStateMachines = new ArrayList<StateMachine>();
     ArrayList<Association> allAssociations = new ArrayList<Association>();
 
     code.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -259,42 +274,112 @@ public class PapyrusGenerator implements CodeGenerator
         code.append("  </packagedElement>\n");
         code.append(subCode.toString());
       }
-      for (StateMachine sm : uClass.getStateMachines())
-      {
-        hasStateMachine = true;
-        smName = sm.getName();
-        smcode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        smcode.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\" name=\"model\">\n",model.getUmpleFile().getSimpleFileName()));
-        smcode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:StateMachine\" xmi:id=\"_{0}\" name=\"{1}\">\n",smID, sm.getName()));
-        smcode.append(StringFormatter.format("    <region xmi:id=\"_{0}\" name=\"Region0\">\n",regionID));
-
-        for (State s : sm.getStates())
+      else{
+        for (StateMachine sm : uClass.getStateMachines())
         {
-          int numActions = s.numberOfActions();
+          smcode = new StringBuilder();
+          smSubCode = new StringBuilder();
+          smName = sm.getName();
+          className = uClass.getName();
+          allNestedStateMachines = sm.getImmediateNestedStateMachines();
 
-          if(numActions > 0){
-          smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\">\n",s.getName()));
-          }
-          else{
-          smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
-          }
-          for (Action a : s.getActions()){
-            smcode.append(StringFormatter.format("        <connectionPoint xmi:id=\"_{0}\" name=\"{1}\" kind=\"{2}Point\"/>\n",generatePapyrusID(), a.getActionCode(), a.getActionType() ));
-            smcode.append(StringFormatter.format("        <region xmi:id=\"_{0}\" name=\"Region0\"/>\n",generatePapyrusID() ));
-          }
-          if(numActions > 0){
-            smcode.append("      </subvertex>\n");
-          }
+          smcode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+          smcode.append(StringFormatter.format("<uml:Model xmi:version=\"2.1\" xmlns:xmi=\"http://schema.omg.org/spec/XMI/2.1\" xmlns:uml=\"http://www.eclipse.org/uml2/3.0.0/UML\" xmi:id=\"_{0}\" name=\"model\">\n",model.getUmpleFile().getSimpleFileName()));
+          smcode.append(StringFormatter.format("  <packagedElement xmi:type=\"uml:StateMachine\" xmi:id=\"_{0}\" name=\"{1}\">\n",smID, sm.getName()));
+          smcode.append(StringFormatter.format("    <region xmi:id=\"_{0}\" name=\"Region0\">\n",regionID));
 
-          for (Transition t : s.getTransitions())
+          for (State s : sm.getStates())
           {
-            smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{0}\" source=\"_{1}\" target=\"_{2}\"/>\n",t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
+            int numActions = s.numberOfActions();
+            boolean isStartState = s.getIsStartState();
+            boolean isFinalState = s.getFinalState();
+            boolean isHistoryState = s.getIsHistoryState();
+            boolean isDeepHistoryState = s.getIsDeepHistoryState();
+            boolean isInternal = s.getIsInternal();
+
+            //Handle special states
+            if( (isStartState == true || isFinalState == true || isHistoryState == true || isDeepHistoryState == true) && numActions == 0) {
+              if(isStartState == true){
+                smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:Pseudostate\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
+              }
+              else if(isHistoryState == true){
+                smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:Pseudostate\" xmi:id=\"_{0}\" name=\"{0}\" kind=\"shallowHistory\"/>\n",s.getName()));
+              }
+              else if(isDeepHistoryState == true){
+                smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:Pseudostate\" xmi:id=\"_{0}\" name=\"{0}\" kind=\"deepHistory\"/>\n",s.getName()));
+              }
+              else if(isFinalState == true){
+                smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:FinalState\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
+              }
+            }
+
+            else{
+
+              //check if the subvertex needs a closing tag or not
+              if(numActions > 0 || s.getActivity() != null){
+                smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\">\n",s.getName()));
+              }
+              else{
+                smcode.append(StringFormatter.format("      <subvertex xmi:type=\"uml:State\" xmi:id=\"_{0}\" name=\"{0}\"/>\n",s.getName()));
+              }
+
+              if(s.getActivity() != null){
+                smcode.append(StringFormatter.format("        <doActivity xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), s.getActivity().getCodeblock() ));
+              }
+
+              for (Action a : s.getActions()){
+                if(a.getActionType().equals("entry")){
+                  smcode.append(StringFormatter.format("        <entry xmi:type=\"uml:FunctionBehavior\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), a.getActionCode() ));
+                }
+                else if(a.getActionType().equals("exit")){
+                  smcode.append(StringFormatter.format("        <exit xmi:type=\"uml:FunctionBehavior\" xmi:id=\"_{0}\" name=\"{1}\"/>\n",generatePapyrusID(), a.getActionCode() ));
+                }
+              }
+
+              if(numActions > 0 || s.getActivity() != null){
+                smcode.append("      </subvertex>\n");
+              }
+
+            }
+
+
+            for (Transition t : s.getTransitions())
+            {
+              //check if transition has a guard condition
+              if(t.getGuard()!= null){
+                smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" guard=\"_{2}\" source=\"_{3}\" target=\"_{4}\">\n",generatePapyrusID(), t.getEvent().getName(), t.getGuard().getCondition(), t.getFromState().getName(), t.getNextState().getName() ));
+                smSubCode.append(StringFormatter.format("        <ownedRule xmi:id=\"_{0}\" name=\"{0}\"/>\n", t.getGuard().getCondition() ));
+                //check if transition also has an action
+                if(t.getAction() != null){
+                  smSubCode.append(StringFormatter.format("        <effect xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n", generatePapyrusID(), t.getAction().getActionCode() ));
+                }
+                smSubCode.append("      </transition>\n");
+              }
+              else{
+                if(t.getAction() != null){
+                  smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" source=\"_{2}\" target=\"_{3}\">\n", generatePapyrusID() ,t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
+                  smSubCode.append(StringFormatter.format("        <effect xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n", generatePapyrusID(), t.getAction().getActionCode() ));
+                  smSubCode.append("      </transition>\n");
+                }
+                else{
+                  smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" source=\"_{2}\" target=\"_{3}\"/>\n",generatePapyrusID(), t.getEvent().getName(), t.getFromState().getName(), t.getNextState().getName() ));
+                }
+              }
+            }
+
           }
+          smcode.append(smSubCode.toString());
+          smcode.append("    </region>\n");
+          smcode.append("  </packagedElement>\n");
+          smcode.append("</uml:Model>");
+
+        //At this point the papyrus model for the state machine is created
+        model.setCode(smcode.toString());
+        writeModel(false);
+        writeModNotation(false);
+        writeModDI(false);
+        writeModProject();
         }
-        smcode.append(smSubCode.toString());
-        smcode.append("    </region>\n");
-        smcode.append("  </packagedElement>\n");
-        smcode.append("</uml:Model>");
       }
     }
 
@@ -326,15 +411,6 @@ public class PapyrusGenerator implements CodeGenerator
    //to facilitate loading into Papyrus, it creates a directory with the name of the umple file
    //and calls the uml file generated model.uml
 
-    if(hasStateMachine)
-    {
-      model.setCode(smcode.toString());
-      writeModel(false);
-      writeModNotation(false); // model.notation
-      writeModDI(false); // model.di
-      writeModProject(); //.project
-    }
-
     if(hasClassDiagram){
     model.setCode(code.toString());
     writeModel(true);
@@ -357,8 +433,11 @@ public class PapyrusGenerator implements CodeGenerator
     return id;
   }
 
+  /*
   // Creates a "model.notation" file. This file specifies the visual layout and style of the diagram.
   // As currently created, it is very bare bones. To increase Papyrus functionality, you will need to improve this function.
+  // @param isClassDiagram determines if the file will contain the notation for a class diagram or a state machine
+  */
   private void writeModNotation(boolean isClassDiagram)
   {
     try {
@@ -396,19 +475,19 @@ public class PapyrusGenerator implements CodeGenerator
       noteCode.append(StringFormatter.format("        <children xmi:type=\"notation:DecorationNode\" xmi:id=\"_{0}\" type=\"3002\">\n",generatePapyrusID()));
       noteCode.append(StringFormatter.format("          <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\"/>\n",generatePapyrusID()));
       noteCode.append                       ("        </children>\n");
-      noteCode.append(StringFormatter.format("        <element xmi:type=\"uml:Region\" href=\"{0}.uml#_{1}\"/>\n",smName, regionID));
+      noteCode.append(StringFormatter.format("        <element xmi:type=\"uml:Region\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, regionID));
       noteCode.append(StringFormatter.format("        <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" width=\"700\" height=\"287\"/>\n",generatePapyrusID()));
       noteCode.append                       ("      </children>\n");
       noteCode.append(StringFormatter.format("      <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" y=\"13\" width=\"700\" height=\"287\"/>\n",generatePapyrusID()));
       noteCode.append                       ("    </children>\n");
-      noteCode.append(StringFormatter.format("    <element xmi:type=\"uml:StateMachine\" href=\"{0}.uml#_{1}\"/>\n",smName, smID));
+      noteCode.append(StringFormatter.format("    <element xmi:type=\"uml:StateMachine\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, smID));
       noteCode.append(StringFormatter.format("    <layoutConstraint xmi:type=\"notation:Bounds\" xmi:id=\"_{0}\" x=\"30\" y=\"30\" width=\"700\" height=\"300\"/>\n",generatePapyrusID()));
       noteCode.append                       ("  </children>\n");
       noteCode.append(StringFormatter.format("  <styles xmi:type=\"notation:DiagramStyle\" xmi:id=\"_{0}\"/>\n",generatePapyrusID()));
-      noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:StateMachine\" href=\"{0}.uml#_{1}\"/>\n",smName, smID));
+      noteCode.append(StringFormatter.format("  <element xmi:type=\"uml:StateMachine\" href=\"{0}_{1}.uml#_{2}\"/>\n",className, smName, smID));
       noteCode.append                       ("</notation:Diagram>\n");
 
-      modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + smName + ".notation";
+      modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + className + '_' + smName + ".notation";
       }
       BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
       bw.write(noteCode.toString());
@@ -422,7 +501,10 @@ public class PapyrusGenerator implements CodeGenerator
     }
   }
 
+  /*
   // Creates a "model.di" file. This file specifies what types of models are part of the Papyrus project.
+  // @param isClassDiagram determines if the file's name will be model.di or the name of the state machine
+  */
   private void writeModDI(boolean isClassDiagram)
   {
     try {
@@ -447,15 +529,15 @@ public class PapyrusGenerator implements CodeGenerator
         diCode.append("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n");
         diCode.append("<di:SashWindowsMngr xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:di=\"http://www.eclipse.org/papyrus/0.7.0/sashdi\">\n");
         diCode.append("  <pageList>\n    <availablePage>\n");
-        diCode.append(StringFormatter.format("      <emfPageIdentifier href=\"{0}.notation#_{1}\"/>\n",smName, diagramID));
+        diCode.append(StringFormatter.format("      <emfPageIdentifier href=\"{0}_{1}.notation#_{2}\"/>\n",className, smName, diagramID));
         diCode.append("    </availablePage>\n  </pageList>\n");
         diCode.append("  <sashModel currentSelection=\"//@sashModel/@windows.0/@children.0\">\n");
         diCode.append("    <windows>\n      <children xsi:type=\"di:TabFolder\">\n        <children>\n");
-        diCode.append(StringFormatter.format("          <emfPageIdentifier href=\"{0}.notation#_{1}\"/>\n",smName, diagramID));
+        diCode.append(StringFormatter.format("          <emfPageIdentifier href=\"{0}_{1}.notation#_{2}\"/>\n",className, smName, diagramID));
         diCode.append("        </children>\n      </children>\n    </windows>\n");
         diCode.append("  </sashModel>\n</di:SashWindowsMngr>\n");
 
-        modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + smName + ".di";
+        modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + className + '_' + smName + ".di";
       }
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
@@ -496,8 +578,11 @@ public class PapyrusGenerator implements CodeGenerator
 
   }
 
+  /*
   // Creates a "model.uml" file. This specifies the mechanical attributes and relationships of the classes and associations in the diagram.
   // The code generation for this file is done above, in the 'generate()' function.
+  // @param isClassDiagram determines if the file will be named model.uml or the name of the state machine.
+  */
   private void writeModel(boolean isClassDiagram)
   {
     try
@@ -515,7 +600,7 @@ public class PapyrusGenerator implements CodeGenerator
       modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + "model.uml";
       }
       else{
-      modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + smName+ ".uml";
+      modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + File.separator + className + '_' + smName + ".uml";
       }
 
       BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));

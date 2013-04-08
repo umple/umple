@@ -29,9 +29,9 @@ public class PapyrusGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/model.uml");
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/model.di");
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/model.notation");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/GarageDoor.uml");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/GarageDoor.di");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/GarageDoor.notation");    
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.uml");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.di");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.notation");    
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/.project");
     File destroyDirPap = new File(pathToInput + "/papyrus/Papyrus");
     destroyDirPap.delete();
@@ -55,9 +55,9 @@ public class PapyrusGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/model.uml")).exists());
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/model.di")).exists());
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/model.notation")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/GarageDoor.uml")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/GarageDoor.di")).exists());
-    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/GarageDoor.notation")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.uml")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.di")).exists());
+    Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.notation")).exists());
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Papyrus/.project")).exists());
     
   }  
