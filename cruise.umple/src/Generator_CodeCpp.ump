@@ -184,6 +184,52 @@ class CppGenerator
   {
   	if(constraint==null)
   	  return "{0}";
+  	
+  	if(format.contains("Values")) 
+    {
+      String out = "";
+      if(constraint.numberOfExpressions()==1)
+      {
+        return constraint.getExpression(0).getValue();
+      }
+      else
+      {
+      	List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
+      	for(int m = 0; m < constraint.numberOfExpressions()-1; m++)
+      	{
+      	  if(constraint.getExpression(m).getIsAttribute()&&!alreadyDone.contains(constraint.getExpression(m)))
+      	  {
+      	  	alreadyDone.add(constraint.getExpression(m));
+      	    out += constraint.getExpression(m).getValue()+", ";
+      	  }
+      	}
+      	boolean onlyOne = false;
+      	if(constraint.getExpression(constraint.numberOfExpressions()-1).getIsAttribute()&&!alreadyDone.contains(constraint.getExpression(constraint.numberOfExpressions()-1)))
+      	{
+          if(alreadyDone.size()==1)
+      	  {
+      	    out = out.substring(0,out.length()-2);
+      	  } 
+      	  if(alreadyDone.size()>0)
+      	  {
+      		out += " and " ;
+      	  }	
+      	  else
+      	  {
+      	  	onlyOne = true;
+      	  }
+       	  out += constraint.getExpression(constraint.numberOfExpressions()-1).getValue();
+       	  alreadyDone.add(constraint.getExpression(constraint.numberOfExpressions()-1));
+      	}  
+      	if(alreadyDone.size()==1 && !onlyOne)
+      	{
+      	  out = out.substring(0,out.length()-2);
+      	} 
+      	   	
+      }      
+      return out;
+    }  
+  	  
   	String expression = "";
   	for(ConstraintVariable expr: constraint.getExpressions())
   	{
@@ -207,6 +253,10 @@ class CppGenerator
             expression += expr.getValue();
           }
   	}
+  	if(format.contains("Not")) 
+    {
+      expression = " !("+expression+")";
+    }
   	if(format.contains("Closed"))
   	{
   		return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
@@ -739,6 +789,14 @@ class CppGenerator
         aClass.addCodeInjection(before);
       
       }
+    }
+    
+     for (Precondition pc : aClass.getPreconditions()){ 
+    	String methodName = pc.getMethod().getName();
+    	String precondition_code = StringFormatter.format(translate("NotClosed",pc),"throw \"Please provide a valid "+ translate("allAttributesValues",pc) +"\";");
+    	CodeInjection before = new CodeInjection("before", methodName+"Precondition", precondition_code, aClass);         
+    	before.setIsInternal(true);
+    	aClass.addCodeInjection(before);    
     }
     
     Map<String,String> lookups = new HashMap<String,String>();
