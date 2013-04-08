@@ -6832,6 +6832,7 @@ public class PhpClassGenerator implements ILang
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = "function";
+    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
     		String methodBody = aMethod.getIsImplemented() ? "      return \"\";" : aMethod.getMethodBody().getExtraCode();    		
     		
     		/*String methodBody = "";
@@ -6867,6 +6868,7 @@ public class PhpClassGenerator implements ILang
     			//appendln(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
     			appendln(stringBuffer, "\n  {");
+    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
     			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
     			
@@ -6880,6 +6882,7 @@ public class PhpClassGenerator implements ILang
     			//appendln(stringBuffer,override);    			
     			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
     		    appendln(stringBuffer, "\n  {");
+    		    if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
     			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
     		}

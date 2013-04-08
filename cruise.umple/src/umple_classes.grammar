@@ -48,7 +48,8 @@ codeLang- : [=codeLang:Java|Cpp|Php|Ruby]
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-concreteMethodDeclaration :  [type] [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+methodBody- : ( [[precondition]] )* [**code] ( [[postcondition]] )*
+concreteMethodDeclaration :  [type] [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )*
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
 methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
 parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 

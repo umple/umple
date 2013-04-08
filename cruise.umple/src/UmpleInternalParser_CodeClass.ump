@@ -1327,6 +1327,11 @@ class UmpleInternalParser
       {
         langs.add(token.getValue());
       }
+      else if (token.is("precondition")){ 
+    	  if (uElement instanceof UmpleClass){
+    		  analyzePrecondition(token, (UmpleClass) uElement, aMethod);
+    	  }  
+      }
     }
     MethodBody meth = new MethodBody(cb);
     aMethod.setMethodBody(meth);  

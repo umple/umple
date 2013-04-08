@@ -847,7 +847,6 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       }
     }
     
-    
     Map<String,String> lookups = new HashMap<String,String>();
     String executeMethods = "public static void execute(String message) { getInstance().addTrace(message); }\n";
     executeMethods += "public void reset() { getInstance().traces.clear(); }";

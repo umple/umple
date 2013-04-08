@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * Represents an Umple classifier: a Class or Interface
- * @umplesource Umple.ump 295
+ * @umplesource Umple.ump 305
  */
-// line 295 "../../../../src/Umple.ump"
+// line 305 "../../../../src/Umple.ump"
 public class UmpleClassifier extends UmpleElement
 {
 
