@@ -1,25 +1,30 @@
 generate Papyrus;
 namespace example;
 
-class Garage{
- GarageDoor {
+ class Garage {
+    Boolean entranceClear;
+    GarageDoor {
       Closed {
+        entry/{stopMotor(); triggerEnergySaveMode();}
         exit/ {triggerNormalEnergyMode();}
-        pressButton -> Opening;
+        pressButton -> /{turnLightOn();} Opening;
       }
      Opening {
        entry/{runMotorForward();}
        openingCompleted -> Open;
      }
      Open {
-       pressButton  -> Closing;
+       entry/{stopMotor();}
+       do {wait(60000); turnLightOff();}
+       pressButton [getEntranceClear()] -> Closing;
      }
      Closing {
        entry/{runMotorInReverse();}
        closingCompleted -> Closed;
+       pressButton -> /{flashLightOn();} Opening;
      }
    }
-}
+ }
 
 class Product
 {
