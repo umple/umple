@@ -1640,11 +1640,11 @@ Action.updateUmpleDiagramCallback = function(response)
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
     if(prelimparts.length > 1) {
       errorMessage= "<div id='errorRow"+(prelimparts[1].split('<script'))[0];
-      isError = true;
+      isError = true;    
     }
     
     if(codeparts.length>1 && codeparts[1].length>100) {
-      umpleJson="<svg xmlns="+codeparts[1];
+      umpleJson="<svg xmlns="+codeparts[1];     
     }
   }
   

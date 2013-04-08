@@ -151,7 +151,7 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   else {
       $thedir = dirname($outputFilename);
-      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/modelsd.gv");
+      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv");
       $command = "java -jar umplesync.jar -generate " . $language . " {$filename} 1> {$outputFilename} 2> {$errorFilename}";
   }
   exec($command);
@@ -227,7 +227,8 @@ else if (isset($_REQUEST["umpleCode"]))
       $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
-      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/stateDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;<svg  xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"1000\">";
+      $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/stateDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"1000\">";
       echo $html;      
       echo $svgcode;
       echo "</svg>"; 
