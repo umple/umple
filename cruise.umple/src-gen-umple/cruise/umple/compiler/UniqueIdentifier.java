@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 
 /**
  * @umplesource Umple.ump 170
- * @umplesource Umple.ump 432
+ * @umplesource Umple.ump 445
  */
 // line 170 "../../../../src/Umple.ump"
-// line 432 "../../../../src/Umple.ump"
+// line 445 "../../../../src/Umple.ump"
 public class UniqueIdentifier extends UmpleVariable
 {
 

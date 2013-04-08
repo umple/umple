@@ -2026,6 +2026,11 @@ this("UmpleInternalParser", aModel);
       {
         langs.add(token.getValue());
       }
+      else if (token.is("precondition")){ 
+    	  if (uElement instanceof UmpleClass){
+    		  analyzePrecondition(token, (UmpleClass) uElement, aMethod);
+    	  }  
+      }
     }
     MethodBody meth = new MethodBody(cb);
     aMethod.setMethodBody(meth);  
@@ -2606,7 +2611,25 @@ this("UmpleInternalParser", aModel);
   {
     return (isLazy && value != null);
   }
-// line 26 ../../../../src/UmpleInternalParser_CodeConstraints.ump
+// line 20 ../../../../src/UmpleInternalParser_CodeConstraints.ump
+  private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method) 
+  {
+    List <ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
+    Precondition precondition = new Precondition(method);
+    
+    for(ConstraintVariable cv: cvs)
+    {
+    	precondition.addExpression(cv);
+    }  
+    aClass.addPrecondition(precondition);
+  }
+    
+  /*
+   * Analyzes a token recognized as a constraint
+   * 
+   * @param invariantToken The token containting the constraintsub.
+   * @param aClass The Umple class for which an attribute is being constrained.
+   */
   private void analyzeInvariant (Token invariantToken, UmpleClass aClass)
   {
     List <ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
@@ -2868,9 +2891,10 @@ this("UmpleInternalParser", aModel);
     return rawLine;
   }
   
-  private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean canBeInteger, boolean mustBeInClass, String... type)
+   private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean canBeInteger, boolean mustBeInClass, String... type)
   {
   	Token sub = nameToken;
+  	Token grandparentToken = sub.getParentToken().getParentToken();
   	ConstraintVariable cv = new ConstraintVariable("",sub.getValue());
   	UmpleVariable attribute;
     if(mustBeInClass)
@@ -2900,21 +2924,50 @@ this("UmpleInternalParser", aModel);
         }
         cv.setType(attribute.getType());
       }
+      
+      else if (grandparentToken.getName().equals("precondition")){ //if it was a precondition, check if it matches any of the method arguments
+    	  Token concreteMethod = grandparentToken.getParentToken();
+    	  ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
+    	  for (Token t : concreteMethod.getSubTokens()){
+    		  if (t.getName().equals("methodDeclarator")){
+    			  for (Token st : t.getSubTokens()){
+    				  if (st.getName().equals("parameterList")){
+    					  for (Token sst : st.getSubTokens()){
+    						   if(sst.getName().equals("parameter")){
+    							   String paramName = null;
+    							   String paramType = null;
+    							   for (Token ssst: sst.getSubTokens()){
+    								   if (ssst.getName().equals("type")){
+    									   paramType = ssst.getValue();
+    								   }
+    								   if (ssst.getName().equals("name")){
+    									   paramName = ssst.getValue();
+    								   }
+    							   }
+    							   MethodParameter mp = new MethodParameter(paramName, paramType, null, null, false);
+    							   methodparams.add(mp);
+    						   }
+    					  }
+    				  }
+    			  }
+    		  }
+    	  }
+    	  boolean matchesAnyMethodParams = false;
+    	  for (MethodParameter mp : methodparams){ 
+    		  if (mp.getName().equals(sub.getValue())){
+    			  matchesAnyMethodParams = true; 
+    			  cv.setType(mp.getType());
+    		  }
+    	  }
+
+    	  if (!matchesAnyMethodParams){
+    		  analyzeConstraintName_CanBeInteger(canBeInteger, sub, cv);
+    	  } 
+      }
+      
       else
       {
-      	if(canBeInteger)
-        {
-          try {
-      	    Integer.parseInt(sub.getValue());
-              cv.setType("OPERATOR");
-            } catch (NumberFormatException e) {
-              setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
-            } 
-        }
-        else
-        {
-    	  setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
-    	}
+    	analyzeConstraintName_CanBeInteger(canBeInteger, sub, cv);
       }
     }
     else
@@ -2934,7 +2987,23 @@ this("UmpleInternalParser", aModel);
       }      
     }    
     return cv;
-  } 
+  }
+  private void analyzeConstraintName_CanBeInteger(boolean canBeInteger, Token sub, ConstraintVariable cv){
+	  if(canBeInteger)
+      {
+        try {
+    	    Integer.parseInt(sub.getValue());
+            cv.setType("OPERATOR");
+          } catch (NumberFormatException e) {
+            System.out.println("sfds");	
+            setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
+          } 
+      }
+      else
+      {
+  	  setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
+  	}
+  }
   private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv)
   {
   	Token sub = indexToken;

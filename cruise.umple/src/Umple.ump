@@ -254,6 +254,16 @@ class Constraint{
 }
 
 /*
+ * The Precondition object (special Constraint) related to Umple Classes
+ */
+class Precondition{  
+  isA Constraint;
+   * -> 1 Method ; // The method precondition belongs to
+   
+}
+
+
+/*
  * A block of code in an arbitrary language to be injected into generated code
  */
 class CodeBlock
@@ -348,6 +358,9 @@ class UmpleClass
   internal Boolean ancestorIsImmutable = false;
 
   1 -> * CodeInjection;
+  
+  //The possible Preconditions related to the Umple Class
+  1 -> 0..* Precondition;
 
   // The possible Constraints related to the Umple Class
   1 -> 0..* Constraint;

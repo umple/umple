@@ -13,10 +13,10 @@ import java.util.*;
  * 
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  * In Umple_Code.ump: Methods for testing various complex properties
- * @umplesource Umple.ump 523
+ * @umplesource Umple.ump 536
  * @umplesource Umple_Code.ump 1314
  */
-// line 523 "../../../../src/Umple.ump"
+// line 536 "../../../../src/Umple.ump"
 // line 1314 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
@@ -144,7 +144,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setRelatedAssociation(AssociationVariable aNewRelatedAssociation)
   {
     boolean wasSet = false;
-    // line 537 "../../../../src/Umple.ump"
+    // line 550 "../../../../src/Umple.ump"
     if(!canBeRelatedAssociation(aNewRelatedAssociation)) { return false; }
     if (aNewRelatedAssociation == null)
     {
@@ -236,7 +236,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 535 "../../../../src/Umple.ump"
+    // line 548 "../../../../src/Umple.ump"
     if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;

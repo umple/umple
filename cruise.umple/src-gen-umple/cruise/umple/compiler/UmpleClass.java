@@ -12,11 +12,11 @@ import java.util.*;
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
  * In Umple_Code.ump: Methods for computing complex properties
- * @umplesource Umple.ump 330
+ * @umplesource Umple.ump 340
  * @umplesource Trace.ump 112
  * @umplesource Umple_Code.ump 623
  */
-// line 330 "../../../../src/Umple.ump"
+// line 340 "../../../../src/Umple.ump"
 // line 112 "../../../../src/Trace.ump"
 // line 623 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
@@ -37,6 +37,7 @@ public class UmpleClass extends UmpleClassifier
 
   //UmpleClass Associations
   private List<CodeInjection> codeInjections;
+  private List<Precondition> preconditions;
   private List<Constraint> constraints;
   private UmpleClass extendsClass;
   private List<UmpleInterface> parentInterface;
@@ -64,6 +65,7 @@ public class UmpleClass extends UmpleClassifier
     ancestorIsImmutable = false;
     sourceModel = aSourceModel;
     codeInjections = new ArrayList<CodeInjection>();
+    preconditions = new ArrayList<Precondition>();
     constraints = new ArrayList<Constraint>();
     parentInterface = new ArrayList<UmpleInterface>();
     attributes = new ArrayList<Attribute>();
@@ -218,6 +220,39 @@ public class UmpleClass extends UmpleClassifier
   public int indexOfCodeInjection(CodeInjection aCodeInjection)
   {
     int index = codeInjections.indexOf(aCodeInjection);
+    return index;
+  }
+
+  public Precondition getPrecondition(int index)
+  {
+    Precondition aPrecondition = preconditions.get(index);
+    return aPrecondition;
+  }
+
+  /**
+   * The possible Preconditions related to the Umple Class
+   */
+  public List<Precondition> getPreconditions()
+  {
+    List<Precondition> newPreconditions = Collections.unmodifiableList(preconditions);
+    return newPreconditions;
+  }
+
+  public int numberOfPreconditions()
+  {
+    int number = preconditions.size();
+    return number;
+  }
+
+  public boolean hasPreconditions()
+  {
+    boolean has = preconditions.size() > 0;
+    return has;
+  }
+
+  public int indexOfPrecondition(Precondition aPrecondition)
+  {
+    int index = preconditions.indexOf(aPrecondition);
     return index;
   }
 
@@ -571,6 +606,63 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
+  public static int minimumNumberOfPreconditions()
+  {
+    return 0;
+  }
+
+  public boolean addPrecondition(Precondition aPrecondition)
+  {
+    boolean wasAdded = false;
+    if (preconditions.contains(aPrecondition)) { return false; }
+    preconditions.add(aPrecondition);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removePrecondition(Precondition aPrecondition)
+  {
+    boolean wasRemoved = false;
+    if (preconditions.contains(aPrecondition))
+    {
+      preconditions.remove(aPrecondition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addPreconditionAt(Precondition aPrecondition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addPrecondition(aPrecondition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfPreconditions()) { index = numberOfPreconditions() - 1; }
+      preconditions.remove(aPrecondition);
+      preconditions.add(index, aPrecondition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMovePreconditionAt(Precondition aPrecondition, int index)
+  {
+    boolean wasAdded = false;
+    if(preconditions.contains(aPrecondition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfPreconditions()) { index = numberOfPreconditions() - 1; }
+      preconditions.remove(aPrecondition);
+      preconditions.add(index, aPrecondition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addPreconditionAt(aPrecondition, index);
+    }
+    return wasAdded;
+  }
+
   public static int minimumNumberOfConstraints()
   {
     return 0;
@@ -631,7 +723,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 380 "../../../../src/Umple.ump"
+    // line 393 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -792,7 +884,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 378 "../../../../src/Umple.ump"
+    // line 391 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1064,7 +1156,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 382 "../../../../src/Umple.ump"
+    // line 395 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1203,6 +1295,7 @@ public class UmpleClass extends UmpleClassifier
   public void delete()
   {
     codeInjections.clear();
+    preconditions.clear();
     constraints.clear();
     if (extendsClass != null)
     {

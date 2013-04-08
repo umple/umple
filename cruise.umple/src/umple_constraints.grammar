@@ -11,8 +11,8 @@
 // allows limiting the values of attributes. Code generation is not currently enabled.
 // Constraints may appear in classes (including association classes) 
 // as well as in states.
-precondition : [ ([name]? pre:) ([[constraint]]) ]
-postcondition : [ ([name]? post:) ([[constraint]]) ]
+precondition : [ [name]? pre: [[constraint]] ]
+postcondition : [ [name]? post: [[constraint]] ]
 
 invariant : [ ([name] :)? ([[constraint]]) ]
 

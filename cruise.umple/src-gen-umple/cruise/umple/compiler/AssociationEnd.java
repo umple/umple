@@ -10,10 +10,10 @@ package cruise.umple.compiler;
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
  * In Umple_Code.ump: Methods for computing compound properties
- * @umplesource Umple.ump 495
+ * @umplesource Umple.ump 508
  * @umplesource Umple_Code.ump 1190
  */
-// line 495 "../../../../src/Umple.ump"
+// line 508 "../../../../src/Umple.ump"
 // line 1190 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
@@ -130,21 +130,21 @@ public class AssociationEnd
 
   public String getRoleName()
   {
-    // line 508 "../../../../src/Umple.ump"
+    // line 521 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
   public String getClassName()
   {
-    // line 509 "../../../../src/Umple.ump"
+    // line 522 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
 
   public String getModifier()
   {
-    // line 510 "../../../../src/Umple.ump"
+    // line 523 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
@@ -154,7 +154,7 @@ public class AssociationEnd
    */
   public String getReferenceToClassName()
   {
-    // line 511 "../../../../src/Umple.ump"
+    // line 524 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }
