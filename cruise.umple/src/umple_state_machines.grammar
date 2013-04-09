@@ -8,7 +8,7 @@
 // State machine elements in Umple. See user manual page: [*BasicStateMachines*]
 stateMachineDefinition : statemachine [name] { [[state]]* }
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | [[activeDefinition]]
-activeDefinition : active [name]? { [**code] }
+activeDefinition : [=active] [name]? { [**code] }
 
 inlineStateMachine : [name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }
