@@ -55,7 +55,9 @@ Details of each state can include:
 // buttonOrObstacle, reachBottom and reachTop are events. These
 // become generated methods that can be called to cause a state
 // change.
-
+//
+// To make the state diagram appear in UmpleOnline, select 'Options'
+// then choose 'GraphViz State Diagram'
 class GarageDoor
 {
    status {

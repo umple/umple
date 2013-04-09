@@ -30,7 +30,7 @@ class Lock
     UpperGateOpen {
       entry / {boatGoingUp = false;}
       boatInLockRequestingToGoDown -> / {boatGoingDown = true;} ClosingUpperGate;
-      after3minutes [!BoatBlockingGate] -> CLosingUpperGate;
+      after3minutes [!BoatBlockingGate] -> ClosingUpperGate;
     }
 
     ClosingUpperGate {
@@ -56,7 +56,7 @@ class Lock
     LowerGateOpen {
       entry / {boatGoingDown = false;}
       boatInLockRequestingToGoUp -> / {boatGoingUp = true;} ClosingLowerGate;
-      after3minutes [!BoatBlockingGate] -> CLosingLowerGate;
+      after3minutes [!BoatBlockingGate] -> ClosingLowerGate;
     }
 
     ClosingLowerGate {

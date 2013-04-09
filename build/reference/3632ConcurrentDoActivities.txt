@@ -1,14 +1,40 @@
-Basic Concurrency
+Concurrency Using Do Activities
 Concurrency
 noreferences
 
 @@description
 
-<p>Concurrency can currently be accomplished in Umple using a state machine with two states separated by the || symbol, each with a do activity. Both do activities will run concurrently</p>
-
-<p>Additional concurrency capabilities are under development.</p>
+<p>Multiple concurrent blocks that become active when in a particular state can accomplished in Umple using a state machine with two substates separated by the || symbol, each with a do activity. Both do activities will run concurrently</p>
 
 @@example
+class X {
+  activesm {
+    topstate {
+      thread1 {
+        do {
+          System.out.println("Doing the activity - Normally this would last a long time");
+          Thread.sleep(1000);
+          System.out.println("Done thread 1");
+        }
+      }
+      ||
+      thread2 {
+        do {
+          System.out.println("Doing the other activity - Again normally this would last a long time");
+          Thread.sleep(3000);
+          System.out.println("Done thread 2");
+        }
+      }
+    }
+  }
+  public static void main(String argv[]) {
+    new X();
+  }
+}
+@@endexample
+
+@@example
+// This is a more sophisticated example
 class X {
  sm {
    s1 {

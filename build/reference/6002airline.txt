@@ -9,7 +9,6 @@ noreferences
 
 
 @@example
-namespace Airline;
 
 //Classes which deal with flights and the airline
 namespace Airline.flights;

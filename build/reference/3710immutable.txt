@@ -34,7 +34,7 @@ class Point2D
 class Path
 {
   immutable;
-  1 -- * Point2D pathElements;
+  1 -> * Point2D pathElements;
 }
 
 class Point2D

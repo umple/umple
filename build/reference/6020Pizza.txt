@@ -17,7 +17,7 @@ class Account
   name;
   address;
   preferredCredCard;
-  ExpiryDate;
+  expiryDate;
   0..1 -- * Order;
 }
 
@@ -65,7 +65,7 @@ size;
 class Delivery
 {
   Time timePickedUp;
-  Time TimeDelivered;
+  Time timeDelivered;
   * -- 0..1 Driver;
   0..1 -- 1..* Order;
 }

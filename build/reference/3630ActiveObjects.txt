@@ -1,0 +1,31 @@
+Active Objects
+Concurrency
+noreferences
+
+@@description
+
+<p>An active object is an object that, when constructed runs its own thread. This is indicated in Umple by the 'active' keyword followed by a block of code. A collection of active objects, working together, constitute a concurrent system.</p>
+
+<p>Additional Umple features are under development to allow for sending signals to and from concurrent objects</p>
+
+@@syntax
+[[activeDefinition]]
+
+@@example
+class A {
+  name;
+ 
+  active {
+    System.out.println("Object "+getName()+ is now active);
+    for (int i = 1; i < 10; i++) {
+      System.out.println(" "+name+" was here";
+      Thread.sleep(1000);
+    }
+  }
+
+  public static void main(String argv[]) {
+    new A("1");
+    new A("2");
+  }
+}
+@@endexample

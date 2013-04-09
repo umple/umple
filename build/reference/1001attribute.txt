@@ -40,7 +40,7 @@ class Group
   Integer i;
 
   // const: Declares a constant (static final in Java)
-  const Integer MAX = 100;
+  const Integer max = 100;
 
   // immutable: A constructor argument is required so it can be set at
   // construction time; cannot be changed after that since no set method
@@ -61,7 +61,7 @@ class Group
   // internal: No getter and setter methods created. Only for private
   // use in internal methods. However in this case it is initalized using =
   // The code following = is in the 'base' language, here Java.
-  internal Time t = new Time();
+  internal Time t2 = new Time();
 
   // autounique: Every new object created will have a new integer assigned
   // You can get the value (an integer) but not set it.  

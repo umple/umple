@@ -23,6 +23,7 @@ The first two are 'modelOnly' or 'noExtraCode'. These are used when the programm
 [[strictness]]
 
 @@example
+// UNDER DEVELOPMENT: This is not operational yet
 // Tell the compiler that  base language code should not appear
 strictness modelOnly;
 
