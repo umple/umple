@@ -80,7 +80,7 @@ public class Template
       "@@EXAMPLE_CODE@@" + "\n" +
       "      </pre>" + "\n" +
       "<p class=\"description\">" +
-      "<a href=\"http://try.umple.org?text=@@EXAMPLE_CODE_URL@@\">" +
+      "<a target=\"uol\" href=\"http://try.umple.org?text=@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
       "&nbsp; <br/>" + "\n";
     return template;

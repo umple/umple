@@ -30,8 +30,8 @@ class League {
   id;
   geographicalArea;
   * -- 1 Sport;
-  Date SeasonStart;
-  Date SeasonEnd;
+  Date seasonStart;
+  Date seasonEnd;
   key { id }
 }
 

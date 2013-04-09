@@ -1,5 +1,5 @@
 Using UmpleOnline
-User Manual Basics
+UmpleOnline
 noreferences
 
 @@description

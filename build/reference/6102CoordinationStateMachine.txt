@@ -10,28 +10,10 @@ noreferences
 
 @@example
 // CoordinationStateMachine.ump
-//
-// Author: Timothy C. Lethbridge
-
-/* 
- * State machine for co-ordination of the
- * crisis, as seen from one SC. If  
- * communication is operating properly the
- * other coordinators' state machines will
- * generally be in the same states and
- * substates.
- *
- * Modelled given Section 4 of the requirements
- * This is a mixin to class crisis.
- */
 class Crisis {
 
-  // Number of ms allowed to negotiate routes,  
-  // establish credentials
   Integer timeoutInMs = 20000;
   
-  // True if we are the initiator of the crisis 
-  // request, false otherwise
   Boolean thisSideInitiator;
   Boolean thisSideInitiatorOfTermination;
   
@@ -44,15 +26,9 @@ class Crisis {
   // Top level state machine
   crisisCoordinationStage {
   
-    // 0. When initiated the crisis is in 
-    // noCrisis state
-    // It has been created but not yet 
-    // populated, awaiting initiation
-    // of coordination and data..
     noCrisis {
       entry / {setThisSideInitiator(false);}
-      // We are initiating and requesting the 
-      // other side to respond
+      // We are initiating and requesting 
       initiateCrisis / {
         setThisSideInitiator(true);
         sendInitiateCrisisRequestToOtherSC(); 
@@ -64,38 +40,21 @@ class Crisis {
         establishingCommunication;
     }
     
-    // 1. Establish communication and 
-    // identification when a crisis begins
+    // 1. Establish communication 
     establishingCommunication {
       entry / {sendSecureCredentials();}
       secureCredentialsConfirmed -> 
         managingCrisis;
       
-      // Return to idle after some delay if 
-      // other side initiated and did not
-      // respond. It might have been a 
-      // hacker. Alternatively if there is a
-      // real crisis, normal manual processes 
-      // would happen.
+      // Return to idle after some delay
       after (timeoutInMs) 
         [!isThisSideInitiator()] -> noCrisis;
     }
 
-    // Managing crisis involves continually 
-    // exchanging information
-    // Negotiating or renegotiating routes and 
-    // other crisis details
-    // These are handled concurrently.
     managingCrisis {
-      // A crisis is underway. We initially 
-      // start with empty data
-      // which will be populated over time
+      // A crisis is underway. 
       entry / {initiateEmptyCrisis(); }
-    
-      // 2,4,5,6. Exchanging details about what 
-      // each knows about the crisis
-      // So the information each coordinator 
-     // has is the same.
+
       exchangingDetails {
         // Requirement Scenario 2
         ourUpdateToCrisisData
@@ -132,15 +91,6 @@ class Crisis {
         // Requirement 5.a - breakdown
         breakdown / {dispatchAndUpdateOther();} 
           -> exchangingDetails;
-        
-        // Requirement 5.b - 
-        // congestion/blockage
-        // TO DO
-        
-        // Requirement 5.c escalate crisis - 
-        // renegotiate routes
-        // TO DO
-        
         
       } // End of exchangingDetails
         //concurrent substate
@@ -256,8 +206,7 @@ class Crisis {
           noRouteAgreement {
              // requirement 3.3.a2.a1
           }
-        } // End of Negotiation concurrent 
-          // substate of negotiatingRoutePlan
+        } 
         ||
         managingTimeliness {
           timeAcceptable {
@@ -268,21 +217,13 @@ class Crisis {
               -> timeUnacceptable;
           }
           timeUnacceptable {
-            // Although negotiations may yet 
-            // complete, we are going to send
-            // out our own vehicles because too 
-            // much time has passed
+
             do {
               promptAndLogReasonForTimeout(); }
           }
-        } // End of managingTimeiness 
-          //concurrent substate of 
-          // negotiatingRoutePlan
-      } // End of NegotiatingRoutePlan 
-        //concurrent substate
-    } // End of Managing Crisis top level state
-  } // End of crisisCoordinationStage state 
-    // machine
-} // End of state machine mixin for 
-  //StationCoordinator
+        } 
+      } 
+    } 
+  } 
+} 
 @@endexample

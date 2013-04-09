@@ -1,0 +1,14 @@
+Umple in Presentations and Documents
+UmpleOnline
+noreferences
+
+@@description
+
+<h2>Embedding a pure diagram in a web page</h2>
+
+<p>Using <b>&amp;nochrome&amp;notext&amp;nomenu&amp;readOnly</b> allows you to embed a pure diagram  in a web page. Using <b>&amp;nochrome&amp;nodiagram&amp;nomenu&amp;readOnly</b> allows textual listings in any other web page. Using <b>&amp;nochrome&amp;notext</b> allows a UML diagram editor to be embedded.</p>
+
+<p>For example, <a href="http://try.umple.org/iframeexample.html">Click here to see a document with an embedded iFrame containing an editor opening on the RoutesAndLocations example</a>. The chrome and text is hidden.</p>
+
+<p>For a read-only version, with ability to generate code, use
+<a href="http://try.umple.org/?example=RoutesAndLocations&notext&nochrome&readOnly">http://try.umple.org/?example=RoutesAndLocations&amp;notext&amp;nochrome&amp;readOnly</a></p>

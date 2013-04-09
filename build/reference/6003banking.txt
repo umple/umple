@@ -7,8 +7,6 @@ noreferences
 
 
 @@example
-namespace BankingSystem;
-
 //Namespace for core of the system.
 namespace BankingSystem.core.humanResources;
 class PersonRole{}

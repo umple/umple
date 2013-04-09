@@ -49,3 +49,19 @@ class LightFixture
 }
 
 @@endexample
+
+@@example
+// This demonstrates that actions can be different in different target languages
+class DemoSM
+{
+  id;
+  sm {
+    s1 {
+      e1 / Java {id=5;} Php {$id=5;} -> s2;
+    }
+    s2 {
+    }
+  }
+}
+
+@@endexample
