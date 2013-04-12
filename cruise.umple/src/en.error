@@ -5,7 +5,7 @@
 0: 1, http://umple.org/PageBeingDeveloped.html, Generic Umple Error '{0}' ; 
 1: 4, http://umple.org/W001SingletonWithNon-LazyAttribute.html, Lazy keyword missing from singleton class attribute '{0}' ; 
 2: 4, http://umple.org/W002SingletonWithRequiredObject.html, Association is referencing a singleton class with multiplicity 1 '{0}' ; 
-3: 3, http://umple.org/PageBeingDeveloped.html, The lazy keyword is redundant '{0}' ;
+3: 3, http://umple.org/PageBeingDeveloped.html, The lazy keyword is redundant when the attribute is being initialized - in class '{0}' ;
 4: 1, http://umple.org/E004InvalidMultiplicity.html, Invalid multiplicity '{0}' ; 
 5: 1, http://umple.org/E005UndefinedClassinAssociation.html, Association end '{0}' is not a class or interface; 
 6: 2, http://umple.org/E006MissingDefault.html, No default value is specified for a defaulted attribute '{0}' ; 
@@ -34,7 +34,7 @@
 26: 2, http://umple.org/PageBeingDeveloped.html, Duplicate item '{0}' in key statement(s) in class '{1}' ;
 27: 3, http://umple.org/PageBeingDeveloped.html, Item '{0}' in key statement is not defined in class '{1}';
 28: 2, http://umple.org/PageBeingDeveloped.html, Attribute '{0}' in constraint is not defined in class '{1}';
-29: 2, http://umple.org/PageBeingDeveloped.html, Attribute '{0}' must be of type '{1}';
+29: 2, http://umple.org/PageBeingDeveloped.html, Attribute '{0}' in constraint must be of type '{1}';
 
 30: 4, http://umple.org/PageBeingDeveloped.html, Redefining the namespace of class {0} to {1};
 31: 4, http://umple.org/PageBeingDeveloped.html, Declared namespace {0} was not used before declaring {1};
