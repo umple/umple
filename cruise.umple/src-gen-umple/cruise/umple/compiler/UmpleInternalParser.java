@@ -2995,7 +2995,6 @@ this("UmpleInternalParser", aModel);
     	    Integer.parseInt(sub.getValue());
             cv.setType("OPERATOR");
           } catch (NumberFormatException e) {
-            System.out.println("sfds");	
             setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
           } 
       }
