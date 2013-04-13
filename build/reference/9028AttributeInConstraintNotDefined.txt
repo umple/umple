@@ -1,0 +1,20 @@
+E028 Constraint Identifier Incorrect
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when am identifier (attribute, etc.) in a constraint cannot be found</h2>
+
+<p>Constraints can refer to attributes in the current class currently; in the future they will be able to refer to other model elements. This message indicates that an identifier referenced in the constraint was not found. This is often just due to a typographical error, but it might be due to the current limitations of constraints.</p>
+
+
+@@example
+// This example generates the message
+class X28attrconsrnotdef {
+  Integer a;
+  [b > 5]
+}
+@@endexample
+
+

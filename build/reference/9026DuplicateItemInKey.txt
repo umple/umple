@@ -1,0 +1,23 @@
+E026 Duplicate Key Item
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a key has a duplicate item</h2>
+
+<p>If an item (attribute, association, state machine) appears twice in a key it is an error since Umple cannot tell the preferred order of items.
+
+</p>
+
+
+@@example
+// The following example has error 26 since they key has 'a' twice
+class X26dupiteminkey {
+  a;
+  b;
+  key {a, b, a} 
+}
+@@endexample
+
+

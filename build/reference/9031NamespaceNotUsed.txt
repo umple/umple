@@ -1,0 +1,22 @@
+W031 Namespace Not Used
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic  warning reported when a namespace is never applied to any class</h2>
+
+<p>If you declare a namespace and then declare another before using the first namespace, this warning is issued. The reason for the warning is that this can happen accidentally, for example if you add a namespace declaration before a comment and then add a different one after a comment but before the class is declared.
+</p>
+
+
+@@example
+// This example generates the message because 
+// namespace n is never used
+namespace n;
+namespace m;
+
+class X21namespacenotused {}
+@@endexample
+
+

@@ -1,0 +1,28 @@
+W003 Redundant Lazy With Initialization
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple syntactic warning reported when the lazy keyword in specified when there is also an initializer</h2>
+
+<p>The function of the 'lazy' keyword is to indicate that an attribute is not to appear in the constructor. However an initializer for the attribute has the same effect, so specifying bot 'lazy' and an initializer is redundant, and hints that there may be a mistake. The solution is just to remove the extraneous 'lazy'.
+
+</p>
+
+
+@@example
+// This example generates the warning
+class X3lazy {
+  lazy Integer a = 1;
+}
+@@endexample
+
+@@example
+This shows how the warning can be removed.
+class X3lazy {
+  Integer a = 1;
+}
+@@endexample
+
+

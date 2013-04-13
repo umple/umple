@@ -1,0 +1,24 @@
+W0XX XXX
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple SEMSYN WANRNERRreported when XXX</h2>
+
+<p>XXX
+
+</p>
+
+
+@@example
+// This example generates the message
+
+@@endexample
+
+@@example
+// The following shows how to avoid the message
+
+@@endexample
+
+

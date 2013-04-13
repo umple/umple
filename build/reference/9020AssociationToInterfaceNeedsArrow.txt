@@ -1,0 +1,32 @@
+E020 Interface Association Not One Way
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an association to an interface is declared to be bidirectional or pointing from the interface.</h2>
+
+<p>An association can be declared from a class to an interface, but if this is done, it must be one way using the '->' notation. The reason for this is that no concrete methods can be generated in an interface.
+
+</p>
+
+
+@@example
+// This example generates the message
+class X20classintfarrow {
+  1 -- * IA;
+}
+
+interface IA {}
+@@endexample
+
+@@example
+// This example generates the message
+class X20classintfarrow {
+  1 -> * IA;
+}
+
+interface IA {}
+@@endexample
+
+
