@@ -1,0 +1,37 @@
+E052 State Machine Name Clash
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when a state machine name matches the name of another element such as an association or attribute</h2>
+
+<p>Since, in effect, a state machine defines a special kind of attribute (whose value is enumerated as one of the states and is controlled by events) it is not allowed to have an attribute or association with the same name as a state machine.
+
+</p>
+
+@@example
+// This example generates the message because the state machine a
+// clashes with the attribute a
+class X52assattnamestatemachine1 {
+  a;
+  a {
+    s1 {}
+    s2 {}
+  }
+}
+@@endexample
+
+@@example
+// The sample generates the message because the state machine a
+// clashes with the association role name a
+class X52assattnamestatemachine2 {
+  1 - 0.1 B a;
+  a {
+    s1 {}
+    s2 {}
+  }
+}
+class B {}
+@@endexample
+

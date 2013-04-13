@@ -1,0 +1,37 @@
+E023 Attribute Association Name Clash
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an association has the same name as an attribute r vice versa,</h2>
+
+<p>An association generates a variable and methods that would clash with an attributes of the same name. If a role name is used, then it must be distinct from all attributes. If no role name is used then the class name (with first character converted to lower case) at the 'other end' of the association must be distinct from all attributes. </p>
+
+<p>Ths problem can sometimes be hard to notice if an association is declared 'backwards' in the 'other' class, or independently of either class. It is especially tricky if the clashing association or attribute is in a separate mixin.
+
+</p>
+
+@@example
+// This example generates error 23 because an attribute and role name share a name
+class X23atdupassoc1 {
+   a;
+   1 -- 0..1 Another a;
+}
+
+class Another {}
+
+@@endexample
+
+@@example
+// This generates error 23 because attribute b clashes with
+// class name B in the association
+class X23atdupassoc2 {
+   b;
+   1 -- 0..1 B;
+}
+
+class B {}
+@@endexample
+
+

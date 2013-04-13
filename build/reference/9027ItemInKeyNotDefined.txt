@@ -1,0 +1,23 @@
+W027 Key Identifier Incorrect
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when an identifier in a key statement was not found</h2>
+
+<p>The list of identifiers in a key statement can include attributes, associations (role name for example) or state machines. This message indicates that the referenced identifier could not be found. This is usually the result of a typographical error. The extraneous identifier is ignored, which is likely to result in incorrect code.
+
+</p>
+
+
+@@example
+// This example generates the message
+class X27itemkeynotdef {
+  a;
+  key {b}; 
+}
+
+@@endexample
+
+

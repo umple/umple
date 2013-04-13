@@ -1,0 +1,30 @@
+E014 Immutable Subclass of Mutable
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an attempt is made to create an immutable subclass of a mutable superclass</h2>
+
+<p>Immutability means that no aspect of the state (attribute, association, state machine) can change in a class once constructed. However if a superclass has mutable elements, they are inherited as mutable. As a result it is not allowed for an immutable class to be a subclass of a mutable class.</p>
+
+<p>
+Note that this will occur if the entire subclass is being declared as immutable and if any element of the superclass is not immutable. It is possible to have mixes of immutable elements and mutable elements in any given class. In the example below, one solution would be to declare attribute b as immutable and remove the class-level immutable status. Class X14immut would be mutable because it would inherit mutable attribute a.
+</p>
+
+
+@@example
+// This example generates message 14
+class B {
+  a;
+}
+
+class X14immut {
+  isA B;
+  immutable;
+  b;
+}
+
+@@endexample
+
+

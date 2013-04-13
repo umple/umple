@@ -1,0 +1,28 @@
+W030 Redefined Namespace
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a class is declared in separate places to be in two namespaces</h2>
+
+<p>Since a class can only be in one namespace, the last namespace declaration overides earlier ones. This can sometimes be useful, e.g. when creating a mixin to change the default location of a class. However it is normally a sign of a mistake, hence the warning.
+
+</p>
+
+
+@@example
+// This example generates the message
+// Namespace b, encountered later, will be the namespace of the class
+namespace a;
+
+class X30redefnamespace {
+}
+
+namespace b;
+
+class X30redefnamespace {
+}
+@@endexample
+
+
