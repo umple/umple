@@ -381,7 +381,7 @@
     <antcall target="template.clean" />
     <antcall target="template.init" />
     <antcall target="codegen" />
-  	<antcall target="rtcpp" />
+    <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="compile" />
   </target>
