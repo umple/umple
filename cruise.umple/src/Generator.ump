@@ -177,6 +177,23 @@ class JavaGenerator
   String output = "";
 }
 
+class RTCppGenerator
+{
+  isA CodeGenerator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.cpp.generator.UmpleCppPoliciesProcessor;
+  depend cruise.umple.cpp.core.ContentsDescriptor; 
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
 class CppGenerator
 {
   isA CodeGenerator;
@@ -270,6 +287,7 @@ use GeneratorHelper_Code.ump;
 use Generator_Code.ump;
 use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
+use Generator_CodeRTCpp.ump;
 use Generator_CodePhp.ump;
 use Generator_CodeCpp.ump;
 use Generator_CodeSql.ump;
