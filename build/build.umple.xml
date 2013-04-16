@@ -79,6 +79,16 @@
     </copy>
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
       <fileset dir="UmpleToSql/src/cruise/umple/compiler/sql" excludes="*.svn" />
+    </copy> 	
+  </target>
+
+  <!-- Move RTCpp cpde to cruise.umple -->
+  <target name="rtcpp">
+    <copy todir="cruise.umple/src-gen-umple" overwrite="true">
+      <fileset dir="cruise.umple.nebula/src" excludes="*.svn" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-umple" overwrite="true">
+      <fileset dir="UmpleToRTCpp/src" excludes="*.svn" />
     </copy>
   </target>
   
@@ -338,6 +348,7 @@
     <antcall target="template.clean" />
     <antcall target="template.init" />
     <antcall target="codegen" />
+    <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="compile" />
     <antcall target="package" />
@@ -370,6 +381,7 @@
     <antcall target="template.clean" />
     <antcall target="template.init" />
     <antcall target="codegen" />
+  	<antcall target="rtcpp" />
     <antcall target="template.setVersion" />
     <antcall target="compile" />
   </target>
