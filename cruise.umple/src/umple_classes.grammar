@@ -44,7 +44,7 @@ constantDeclaration : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [
 
 moreCode- : ([[codeLang]] [[codeLangs]])? { [**code] }
 codeLangs- : ( , [[codeLang]] )*
-codeLang- : [=codeLang:Java|Cpp|Php|Ruby]
+codeLang- : [=codeLang:Java|RTCpp|Cpp|Php|Ruby]
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
