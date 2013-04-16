@@ -39,7 +39,11 @@ Action.clicked = function(event)
   {
     Action.generateCode("java","Java");
   }
-    else if (action == "CppCode")
+  else if (action == "RTCppCode")
+  {
+    Action.generateCode("rtcpp","RTCpp");
+  }
+  else if (action == "CppCode")
   {
     Action.generateCode("cpp","Cpp");
   }

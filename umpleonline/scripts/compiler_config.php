@@ -41,6 +41,7 @@ function generateMenu($buttonSuffix)
           <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
             <option value=\"java:Java\">Java Code</option>
             <option value=\"javadoc:javadoc\">Java API Doc</option>
+	    <option value=\"cpp:Cpp\">C++ Code</option>
             <option value=\"php:Php\">PHP Code</option>
             <option value=\"ruby:Ruby\">Ruby Code</option>
             <option value=\"xml:Ecore\">Ecore</option>
