@@ -20,7 +20,7 @@ code)</li>
 <br />
 
 <li><b>Add UML modeling constructs directly into your programs, when you 
-are programming in Java, PHP or Ruby</b>. For example, when programming in 
+are programming in Java, PHP, C++ or  Ruby</b>. For example, when programming in 
 Java, you can directly add a UML <a href="BasicStateMachines.html">state machine</a> into your code. This can 
 save you a lot of coding. The Umple compiler acts as a pre-processor, 
 first compiling the state machine to Java, and then compiling the Java 
@@ -30,7 +30,7 @@ into an executable program.</li>
 
 
 <li><b>Generate high quality code from UML models</b>. The Umple 
-compiler creates code in languages like Java and PHP that is of top 
+compiler creates code in languages like Java, C++ and PHP that is of top 
 quality. It is a goal of the Umple team to create the best open-source 
 code-generation tool available. The generated code never needs to be 
 edited and never should be edited, since if the generator doesn't create 
