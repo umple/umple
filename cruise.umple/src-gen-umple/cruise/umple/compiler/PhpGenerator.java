@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.*;
 
 /**
- * @umplesource Generator.ump 198
+ * @umplesource Generator.ump 215
  * @umplesource Generator_CodePhp.ump 12
  */
-// line 198 "../../../../src/Generator.ump"
+// line 215 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodePhp.ump"
 public class PhpGenerator implements CodeGenerator,CodeTranslator
 {
