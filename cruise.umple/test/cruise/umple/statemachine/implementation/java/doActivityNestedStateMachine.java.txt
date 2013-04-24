@@ -17,7 +17,7 @@ public class Course
   private StatusOpen statusOpen;
 
   //Course Do Activity Threads
-  Thread doActivityOpenStatusOpenThread = null;
+  Thread doActivityStatusOpenStatusOpenThread = null;
 
   //------------------------
   // CONSTRUCTOR
@@ -114,7 +114,7 @@ public class Course
     switch(statusOpen)
     {
       case statusOpen:
-        if (doActivityOpenStatusOpenThread != null) { doActivityOpenStatusOpenThread.interrupt(); }
+        if (doActivityStatusOpenStatusOpenThread != null) { doActivityStatusOpenStatusOpenThread.interrupt(); }
         break;
     }
   }
@@ -128,12 +128,12 @@ public class Course
     switch(statusOpen)
     {
       case statusOpen:
-        doActivityOpenStatusOpenThread = new DoActivityThread(this,"doActivityOpenStatusOpen");
+        doActivityStatusOpenStatusOpenThread = new DoActivityThread(this,"doActivityStatusOpenStatusOpen");
         break;
     }
   }
 
-  private void doActivityOpenStatusOpen()
+  private void doActivityStatusOpenStatusOpen()
   {
     try
     {
@@ -160,9 +160,9 @@ public class Course
     
     public void run()
     {
-      if ("doActivityOpenStatusOpen".equals(doActivityMethodName))
+      if ("doActivityStatusOpenStatusOpen".equals(doActivityMethodName))
       {
-        controller.doActivityOpenStatusOpen();
+        controller.doActivityStatusOpenStatusOpen();
       }
     }
   }

@@ -362,11 +362,11 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
     }
     else if ("doActivityMethod".equals(keyName))
     {
-      return StringFormatter.format("doActivity{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
+      return StringFormatter.format("doActivity{0}", GeneratorHelper.getFullActivityName(state)); 
     }
     else if ("doActivityThread".equals(keyName))
     {
-      return StringFormatter.format("doActivity{0}{1}Thread",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(state.getName())); 
+      return StringFormatter.format("doActivity{0}Thread", GeneratorHelper.getFullActivityName(state)); 
     }
     else if ("type".equals(keyName))
     {
