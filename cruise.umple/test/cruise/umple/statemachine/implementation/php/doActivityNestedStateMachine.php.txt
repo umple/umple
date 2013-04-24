@@ -17,7 +17,7 @@ class Course
   private $statusOpen;
 
   //Course Do Activity Threads
-  private $doActivityOpenStatusOpenThread = null;
+  private $doActivityStatusOpenStatusOpenThread = null;
 
   //------------------------
   // CONSTRUCTOR
