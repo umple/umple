@@ -22,7 +22,7 @@ public class CourseY
   private ActiveStateMachineActiveTopLevelState activeStateMachineActiveTopLevelState;
 
   //CourseY Do Activity Threads
-  Thread doActivityActiveTopLevelStateThread1Thread = null;
+  Thread doActivityActiveStateMachineActiveTopLevelStateThread1Thread = null;
 
   //------------------------
   // CONSTRUCTOR
@@ -164,7 +164,7 @@ public class CourseY
     switch(activeStateMachineActiveTopLevelState)
     {
       case thread1:
-        if (doActivityActiveTopLevelStateThread1Thread != null) { doActivityActiveTopLevelStateThread1Thread.interrupt(); }
+        if (doActivityActiveStateMachineActiveTopLevelStateThread1Thread != null) { doActivityActiveStateMachineActiveTopLevelStateThread1Thread.interrupt(); }
         break;
     }
   }
@@ -178,12 +178,12 @@ public class CourseY
     switch(activeStateMachineActiveTopLevelState)
     {
       case thread1:
-        doActivityActiveTopLevelStateThread1Thread = new DoActivityThread(this,"doActivityActiveTopLevelStateThread1");
+        doActivityActiveStateMachineActiveTopLevelStateThread1Thread = new DoActivityThread(this,"doActivityActiveStateMachineActiveTopLevelStateThread1");
         break;
     }
   }
 
-  private void doActivityActiveTopLevelStateThread1()
+  private void doActivityActiveStateMachineActiveTopLevelStateThread1()
   {
     try
     {
@@ -210,9 +210,9 @@ public class CourseY
     
     public void run()
     {
-      if ("doActivityActiveTopLevelStateThread1".equals(doActivityMethodName))
+      if ("doActivityActiveStateMachineActiveTopLevelStateThread1".equals(doActivityMethodName))
       {
-        controller.doActivityActiveTopLevelStateThread1();
+        controller.doActivityActiveStateMachineActiveTopLevelStateThread1();
       }
     }
   }

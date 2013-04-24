@@ -22,7 +22,7 @@ public class CourseW
   private StatusOpen statusOpen;
 
   //CourseW Do Activity Threads
-  Thread doActivityOpenStatusOpenThread = null;
+  Thread doActivityStatusOpenStatusOpenThread = null;
 
   //------------------------
   // CONSTRUCTOR
@@ -164,7 +164,7 @@ public class CourseW
     switch(statusOpen)
     {
       case statusOpen:
-        if (doActivityOpenStatusOpenThread != null) { doActivityOpenStatusOpenThread.interrupt(); }
+        if (doActivityStatusOpenStatusOpenThread != null) { doActivityStatusOpenStatusOpenThread.interrupt(); }
         break;
     }
   }
@@ -178,13 +178,13 @@ public class CourseW
     switch(statusOpen)
     {
       case statusOpen:
-        doActivityOpenStatusOpenThread = new DoActivityThread(this,"doActivityOpenStatusOpen");
+        doActivityStatusOpenStatusOpenThread = new DoActivityThread(this,"doActivityStatusOpenStatusOpen");
         break;
     }
   }
 
   // line 221 "../../../../src/TestHarnessStateMachineJava.ump"
-  private void doActivityOpenStatusOpen()
+  private void doActivityStatusOpenStatusOpen()
   {
     try
     {
@@ -211,9 +211,9 @@ public class CourseW
     
     public void run()
     {
-      if ("doActivityOpenStatusOpen".equals(doActivityMethodName))
+      if ("doActivityStatusOpenStatusOpen".equals(doActivityMethodName))
       {
-        controller.doActivityOpenStatusOpen();
+        controller.doActivityStatusOpenStatusOpen();
       }
     }
   }

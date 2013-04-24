@@ -144,6 +144,28 @@ class GeneratorHelper
     }  
   }
 
+  public static String getFullActivityName(State currentState)
+  {
+    String name = getNameWithCapital(currentState.getName());
+    State parent = null;
+     
+    name = getNameWithCapital(currentState.getStateMachine().getName()) + name;
+    
+    parent = currentState.getStateMachine().getParentState();
+    while (parent != null)
+    {
+      name = getNameWithCapital(parent.getStateMachine().getName()) + name;
+      parent = parent.getStateMachine().getParentState();
+    }
+    
+    return name;
+  }
+  
+  private static String getNameWithCapital(String name)
+  {
+    return name.substring(0, 1).toUpperCase() + name.substring(1);
+  }
+  
   // Mark all internal states are ready for deletion
   private static void postpareInternalStates(StateMachine sm, List<State> shouldDelete)
   {
