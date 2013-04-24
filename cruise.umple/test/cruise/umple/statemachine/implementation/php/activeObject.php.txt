@@ -20,7 +20,7 @@ class Lamp
   private $activeStateMachineActiveTopLevelState;
 
   //Lamp Do Activity Threads
-  private $doActivityActiveTopLevelStateThread1Thread = null;
+  private $doActivityActiveStateMachineActiveTopLevelStateThread1Thread = null;
 
   //------------------------
   // CONSTRUCTOR

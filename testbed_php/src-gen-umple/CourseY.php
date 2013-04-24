@@ -20,7 +20,7 @@ class CourseY
   private $activeStateMachineActiveTopLevelState;
 
   //CourseY Do Activity Threads
-  private $doActivityActiveTopLevelStateThread1Thread = null;
+  private $doActivityActiveStateMachineActiveTopLevelStateThread1Thread = null;
 
   //------------------------
   // CONSTRUCTOR
