@@ -12,8 +12,10 @@
  Lamp::Lamp(const String & aLog)
   {
     log = aLog;
-    if (activeStateMachineActiveTopLevelState == Null) { setActiveStateMachineActiveTopLevelState(Null); }
-    setActiveStateMachine(activeTopLevelState);
+    if (stateMachine1TopLevel == Null) { setStateMachine1TopLevel(Null); }
+    setStateMachine1(topLevel);
+    if (stateMachine2TopLevel == Null) { setStateMachine2TopLevel(Null); }
+    setStateMachine2(topLevel);
   }
   
   //------------------------
@@ -51,48 +53,90 @@
     return log;
   }
 
-  string Lamp::getActiveStateMachineFullName()
+  string Lamp::getStateMachine1FullName()
   {
-    string answer = getActiveStateMachineStringName(activeStateMachine);
-    if (activeStateMachineActiveTopLevelState != Null) { answer += "." + getActiveStateMachineActiveTopLevelStateStringName(activeStateMachineActiveTopLevelState); }
+    string answer = getStateMachine1StringName(stateMachine1);
+    if (stateMachine1TopLevel != Null) { answer += "." + getStateMachine1TopLevelStringName(stateMachine1TopLevel); }
     return answer;
   }
   
-  Lamp::ActiveStateMachine Lamp::getActiveStateMachine()
+  string Lamp::getStateMachine2FullName()
   {
-    return activeStateMachine;
+    string answer = getStateMachine2StringName(stateMachine2);
+    if (stateMachine2TopLevel != Null) { answer += "." + getStateMachine2TopLevelStringName(stateMachine2TopLevel); }
+    return answer;
+  }
+  
+  Lamp::StateMachine1 Lamp::getStateMachine1()
+  {
+    return stateMachine1;
   }
 
-  string Lamp::getActiveStateMachineStringName (ActiveStateMachine activeStateMachine)
+  string Lamp::getStateMachine1StringName (StateMachine1 stateMachine1)
   {
-    switch (activeStateMachine)  {
-      case 0 : {return "activeTopLevelState"; break;}
+    switch (stateMachine1)  {
+      case 0 : {return "topLevel"; break;}
       default: {return ""; break;}
     }
   }
 
-  Lamp::ActiveStateMachineActiveTopLevelState Lamp::getActiveStateMachineActiveTopLevelState()
+  Lamp::StateMachine2 Lamp::getStateMachine2()
   {
-    return activeStateMachineActiveTopLevelState;
+    return stateMachine2;
   }
 
-  string Lamp::getActiveStateMachineActiveTopLevelStateStringName (ActiveStateMachineActiveTopLevelState activeStateMachineActiveTopLevelState)
+  string Lamp::getStateMachine2StringName (StateMachine2 stateMachine2)
   {
-    switch (activeStateMachineActiveTopLevelState)  {
+    switch (stateMachine2)  {
+      case 0 : {return "topLevel"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  Lamp::StateMachine1TopLevel Lamp::getStateMachine1TopLevel()
+  {
+    return stateMachine1TopLevel;
+  }
+
+  string Lamp::getStateMachine1TopLevelStringName (StateMachine1TopLevel stateMachine1TopLevel)
+  {
+    switch (stateMachine1TopLevel)  {
       case 0 : {return "Null"; break;}
       case 1 : {return "thread1"; break;}
       default: {return ""; break;}
     }
   }
 
-  bool Lamp::enterActiveTopLevelState()
+  Lamp::StateMachine2TopLevel Lamp::getStateMachine2TopLevel()
+  {
+    return stateMachine2TopLevel;
+  }
+
+  string Lamp::getStateMachine2TopLevelStringName (StateMachine2TopLevel stateMachine2TopLevel)
+  {
+    switch (stateMachine2TopLevel)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "thread1"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Lamp::enterTopLevel()
   {
     bool wasEventProcessed = false;
 
-    switch (activeStateMachineActiveTopLevelState)
+    switch (stateMachine1TopLevel)
     {
       case Null:
-        setActiveStateMachineActiveTopLevelState(thread1);
+        setStateMachine1TopLevel(thread1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (stateMachine2TopLevel)
+    {
+      case Null:
+        setStateMachine2TopLevel(thread1);
         wasEventProcessed = true;
         break;
     }
@@ -100,14 +144,22 @@
     return wasEventProcessed;
   }
 
-  bool Lamp::exitActiveTopLevelState()
+  bool Lamp::exitTopLevel()
   {
     bool wasEventProcessed = false;
 
-    switch (activeStateMachineActiveTopLevelState)
+    switch (stateMachine1TopLevel)
     {
       case thread1:
-        setActiveStateMachineActiveTopLevelState(Null);
+        setStateMachine1TopLevel(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (stateMachine2TopLevel)
+    {
+      case thread1:
+        setStateMachine2TopLevel(Null);
         wasEventProcessed = true;
         break;
     }
@@ -115,40 +167,79 @@
     return wasEventProcessed;
   }
 
-  void Lamp::exitActiveStateMachine()
+  void Lamp::exitStateMachine1()
   {
-    switch(activeStateMachine)
+    switch(stateMachine1)
     {
-      case activeTopLevelState:
-        exitActiveTopLevelState();
+      case topLevel:
+        exitTopLevel();
         break;
     }
   }
 
-  void Lamp::setActiveStateMachine(ActiveStateMachine aActiveStateMachine)
+  void Lamp::setStateMachine1(StateMachine1 aStateMachine1)
   {
-    activeStateMachine = aActiveStateMachine;
+    stateMachine1 = aStateMachine1;
 
     // entry actions and do activities
-    switch(activeStateMachine)
+    switch(stateMachine1)
     {
-      case activeTopLevelState:
-        if (activeStateMachineActiveTopLevelState == Null) { setActiveStateMachineActiveTopLevelState(thread1); }
+      case topLevel:
+        if (stateMachine1TopLevel == Null) { setStateMachine1TopLevel(thread1); }
         break;
     }
   }
   
 
-  void Lamp::setActiveStateMachineActiveTopLevelState(ActiveStateMachineActiveTopLevelState aActiveStateMachineActiveTopLevelState)
+  void Lamp::exitStateMachine2()
   {
-    activeStateMachineActiveTopLevelState = aActiveStateMachineActiveTopLevelState;
-    if (activeStateMachine != activeTopLevelState && aActiveStateMachineActiveTopLevelState != Null) { setActiveStateMachine(activeTopLevelState); }
+    switch(stateMachine2)
+    {
+      case topLevel:
+        exitTopLevel();
+        break;
+    }
+  }
+
+  void Lamp::setStateMachine2(StateMachine2 aStateMachine2)
+  {
+    stateMachine2 = aStateMachine2;
 
     // entry actions and do activities
-    switch(activeStateMachineActiveTopLevelState)
+    switch(stateMachine2)
+    {
+      case topLevel:
+        if (stateMachine2TopLevel == Null) { setStateMachine2TopLevel(thread1); }
+        break;
+    }
+  }
+  
+
+  void Lamp::setStateMachine1TopLevel(StateMachine1TopLevel aStateMachine1TopLevel)
+  {
+    stateMachine1TopLevel = aStateMachine1TopLevel;
+    if (stateMachine1 != topLevel && aStateMachine1TopLevel != Null) { setStateMachine1(topLevel); }
+
+    // entry actions and do activities
+    switch(stateMachine1TopLevel)
     {
       case thread1:
-        doActivityActiveTopLevelStateThread1Thread = new DoActivityThread(this,"doActivityActiveTopLevelStateThread1");
+        doActivityTopLevelThread1Thread = new DoActivityThread(this,"doActivityTopLevelThread1");
+        break;
+    }
+  }
+  
+
+  void Lamp::setStateMachine2TopLevel(StateMachine2TopLevel aStateMachine2TopLevel)
+  {
+    stateMachine2TopLevel = aStateMachine2TopLevel;
+    if (stateMachine2 != topLevel && aStateMachine2TopLevel != Null) { setStateMachine2(topLevel); }
+
+    // entry actions and do activities
+    switch(stateMachine2TopLevel)
+    {
+      case thread1:
+        doActivityTopLevelThread1Thread = new DoActivityThread(this,"doActivityTopLevelThread1");
         break;
     }
   }

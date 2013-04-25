@@ -16,13 +16,13 @@ public class CourseY
   private List<String> logs;
 
   //CourseY State Machines
-  enum ActiveStateMachine { activeTopLevelState }
-  enum ActiveStateMachineActiveTopLevelState { Null, thread1 }
-  private ActiveStateMachine activeStateMachine;
-  private ActiveStateMachineActiveTopLevelState activeStateMachineActiveTopLevelState;
+  enum StateMachine1 { topLevel }
+  enum StateMachine1TopLevel { Null, thread1 }
+  private StateMachine1 stateMachine1;
+  private StateMachine1TopLevel stateMachine1TopLevel;
 
   //CourseY Do Activity Threads
-  Thread doActivityActiveStateMachineActiveTopLevelStateThread1Thread = null;
+  Thread doActivityStateMachine1TopLevelThread1Thread = null;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,8 +31,8 @@ public class CourseY
   public CourseY()
   {
     logs = new ArrayList<String>();
-    setActiveStateMachineActiveTopLevelState(ActiveStateMachineActiveTopLevelState.Null);
-    setActiveStateMachine(ActiveStateMachine.activeTopLevelState);
+    setStateMachine1TopLevel(StateMachine1TopLevel.Null);
+    setStateMachine1(StateMachine1.topLevel);
   }
 
   //------------------------
@@ -83,32 +83,32 @@ public class CourseY
     return index;
   }
 
-  public String getActiveStateMachineFullName()
+  public String getStateMachine1FullName()
   {
-    String answer = activeStateMachine.toString();
-    if (activeStateMachineActiveTopLevelState != ActiveStateMachineActiveTopLevelState.Null) { answer += "." + activeStateMachineActiveTopLevelState.toString(); }
+    String answer = stateMachine1.toString();
+    if (stateMachine1TopLevel != StateMachine1TopLevel.Null) { answer += "." + stateMachine1TopLevel.toString(); }
     return answer;
   }
 
-  public ActiveStateMachine getActiveStateMachine()
+  public StateMachine1 getStateMachine1()
   {
-    return activeStateMachine;
+    return stateMachine1;
   }
 
-  public ActiveStateMachineActiveTopLevelState getActiveStateMachineActiveTopLevelState()
+  public StateMachine1TopLevel getStateMachine1TopLevel()
   {
-    return activeStateMachineActiveTopLevelState;
+    return stateMachine1TopLevel;
   }
 
-  private boolean enterActiveTopLevelState()
+  private boolean enterTopLevel()
   {
     boolean wasEventProcessed = false;
     
-    ActiveStateMachineActiveTopLevelState aActiveStateMachineActiveTopLevelState = activeStateMachineActiveTopLevelState;
-    switch (aActiveStateMachineActiveTopLevelState)
+    StateMachine1TopLevel aStateMachine1TopLevel = stateMachine1TopLevel;
+    switch (aStateMachine1TopLevel)
     {
       case Null:
-        setActiveStateMachineActiveTopLevelState(ActiveStateMachineActiveTopLevelState.thread1);
+        setStateMachine1TopLevel(StateMachine1TopLevel.thread1);
         wasEventProcessed = true;
         break;
       default:
@@ -118,15 +118,15 @@ public class CourseY
     return wasEventProcessed;
   }
 
-  private boolean exitActiveTopLevelState()
+  private boolean exitTopLevel()
   {
     boolean wasEventProcessed = false;
     
-    ActiveStateMachineActiveTopLevelState aActiveStateMachineActiveTopLevelState = activeStateMachineActiveTopLevelState;
-    switch (aActiveStateMachineActiveTopLevelState)
+    StateMachine1TopLevel aStateMachine1TopLevel = stateMachine1TopLevel;
+    switch (aStateMachine1TopLevel)
     {
       case thread1:
-        setActiveStateMachineActiveTopLevelState(ActiveStateMachineActiveTopLevelState.Null);
+        setStateMachine1TopLevel(StateMachine1TopLevel.Null);
         wasEventProcessed = true;
         break;
       default:
@@ -136,54 +136,54 @@ public class CourseY
     return wasEventProcessed;
   }
 
-  private void exitActiveStateMachine()
+  private void exitStateMachine1()
   {
-    switch(activeStateMachine)
+    switch(stateMachine1)
     {
-      case activeTopLevelState:
-        exitActiveTopLevelState();
+      case topLevel:
+        exitTopLevel();
         break;
     }
   }
 
-  private void setActiveStateMachine(ActiveStateMachine aActiveStateMachine)
+  private void setStateMachine1(StateMachine1 aStateMachine1)
   {
-    activeStateMachine = aActiveStateMachine;
+    stateMachine1 = aStateMachine1;
 
     // entry actions and do activities
-    switch(activeStateMachine)
+    switch(stateMachine1)
     {
-      case activeTopLevelState:
-        if (activeStateMachineActiveTopLevelState == ActiveStateMachineActiveTopLevelState.Null) { setActiveStateMachineActiveTopLevelState(ActiveStateMachineActiveTopLevelState.thread1); }
+      case topLevel:
+        if (stateMachine1TopLevel == StateMachine1TopLevel.Null) { setStateMachine1TopLevel(StateMachine1TopLevel.thread1); }
         break;
     }
   }
 
-  private void exitActiveStateMachineActiveTopLevelState()
+  private void exitStateMachine1TopLevel()
   {
-    switch(activeStateMachineActiveTopLevelState)
+    switch(stateMachine1TopLevel)
     {
       case thread1:
-        if (doActivityActiveStateMachineActiveTopLevelStateThread1Thread != null) { doActivityActiveStateMachineActiveTopLevelStateThread1Thread.interrupt(); }
+        if (doActivityStateMachine1TopLevelThread1Thread != null) { doActivityStateMachine1TopLevelThread1Thread.interrupt(); }
         break;
     }
   }
 
-  private void setActiveStateMachineActiveTopLevelState(ActiveStateMachineActiveTopLevelState aActiveStateMachineActiveTopLevelState)
+  private void setStateMachine1TopLevel(StateMachine1TopLevel aStateMachine1TopLevel)
   {
-    activeStateMachineActiveTopLevelState = aActiveStateMachineActiveTopLevelState;
-    if (activeStateMachine != ActiveStateMachine.activeTopLevelState && aActiveStateMachineActiveTopLevelState != ActiveStateMachineActiveTopLevelState.Null) { setActiveStateMachine(ActiveStateMachine.activeTopLevelState); }
+    stateMachine1TopLevel = aStateMachine1TopLevel;
+    if (stateMachine1 != StateMachine1.topLevel && aStateMachine1TopLevel != StateMachine1TopLevel.Null) { setStateMachine1(StateMachine1.topLevel); }
 
     // entry actions and do activities
-    switch(activeStateMachineActiveTopLevelState)
+    switch(stateMachine1TopLevel)
     {
       case thread1:
-        doActivityActiveStateMachineActiveTopLevelStateThread1Thread = new DoActivityThread(this,"doActivityActiveStateMachineActiveTopLevelStateThread1");
+        doActivityStateMachine1TopLevelThread1Thread = new DoActivityThread(this,"doActivityStateMachine1TopLevelThread1");
         break;
     }
   }
 
-  private void doActivityActiveStateMachineActiveTopLevelStateThread1()
+  private void doActivityStateMachine1TopLevelThread1()
   {
     try
     {
@@ -210,9 +210,9 @@ public class CourseY
     
     public void run()
     {
-      if ("doActivityActiveStateMachineActiveTopLevelStateThread1".equals(doActivityMethodName))
+      if ("doActivityStateMachine1TopLevelThread1".equals(doActivityMethodName))
       {
-        controller.doActivityActiveStateMachineActiveTopLevelStateThread1();
+        controller.doActivityStateMachine1TopLevelThread1();
       }
     }
   }

@@ -3021,7 +3021,10 @@ this("UmpleInternalParser", aModel);
     } 
   	   
   }
-// line 24 ../../../../src/UmpleInternalParser_CodeStateMachine.ump
+// line 25 ../../../../src/UmpleInternalParser_CodeStateMachine.ump
+  private static int numberOfActiveObjects = 1;
+  
+  //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
     String[] parts = code.split("\\{");
@@ -3065,11 +3068,19 @@ this("UmpleInternalParser", aModel);
   private void analyzeActiveObject(Token activeToken, UmpleClass aClass)
   {
     analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
+    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
+    {
+      numberOfActiveObjects++;
+    }
+    else
+    {
+      numberOfActiveObjects = 1;
+    }
   }
   
   private Token generateActiveStateMachineToken(Token stateMachineToken)
   {
-    Token token = new Token("name", "activeStateMachine");
+    Token token = new Token("name", "stateMachine" + numberOfActiveObjects);
     
     token.addSubToken(new Token("{", "STATIC"));
     token.addSubToken(generateActiveTopLevelStateToken(stateMachineToken));
@@ -3082,7 +3093,7 @@ this("UmpleInternalParser", aModel);
   {
     Token token = new Token("state", "START_TOKEN");
     
-    token.addSubToken(new Token("stateName", "activeTopLevelState"));
+    token.addSubToken(new Token("stateName", "topLevel"));
     token.addSubToken(new Token("{", "STATIC"));
     token.addSubToken(generateActiveStateToken(stateMachineToken));
     token.addSubToken(new Token("}", "STATIC"));
@@ -3148,6 +3159,27 @@ this("UmpleInternalParser", aModel);
     }
   }
 
+  private int numberOfActiveObjectsInClass(Token token, UmpleClass aClass)
+  {
+    int activeObjects = 0;
+    
+    Token parent = token.getParentToken();
+    if (parent != null)
+    {
+      for (Token sub : parent.getSubTokens())
+      {
+        if (sub.is("stateMachine"))
+        {
+          if (sub.getSubToken(0).is("activeDefinition"))
+          {
+            activeObjects++;
+          }
+        }
+      }
+    }
+    
+    return activeObjects;
+  }
   
   private void postTokenStateMachineAnalysis()
   {

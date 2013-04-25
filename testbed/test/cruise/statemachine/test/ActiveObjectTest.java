@@ -12,4 +12,14 @@ public class ActiveObjectTest {
     Thread.sleep(5000);
     Assert.assertEquals("Active entry", course.getLog(0));
   }
+  
+  @Test
+  public void TwoActiveObject() throws InterruptedException
+  {
+    CourseZ course = new CourseZ();
+    
+    Thread.sleep(5000);
+    Assert.assertEquals("First active", course.getLogFirstActive());
+    Assert.assertEquals("Second active", course.getLogSecondActive());
+  }
 }

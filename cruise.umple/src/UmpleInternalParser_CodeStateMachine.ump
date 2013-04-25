@@ -20,6 +20,10 @@ class UmpleInternalParser
   internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
   internal Map<State,List<Token>> possiblyUnknownStates = new HashMap<State,List<Token>>();
   
+  // Allow to declare several active objects within the same class, the name of the generated state-machine
+  // will be "stateMachine<numberOfActiveObjects>"
+  private static int numberOfActiveObjects = 1;
+  
   //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
@@ -64,11 +68,19 @@ class UmpleInternalParser
   private void analyzeActiveObject(Token activeToken, UmpleClass aClass)
   {
     analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
+    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
+    {
+      numberOfActiveObjects++;
+    }
+    else
+    {
+      numberOfActiveObjects = 1;
+    }
   }
   
   private Token generateActiveStateMachineToken(Token stateMachineToken)
   {
-    Token token = new Token("name", "activeStateMachine");
+    Token token = new Token("name", "stateMachine" + numberOfActiveObjects);
     
     token.addSubToken(new Token("{", "STATIC"));
     token.addSubToken(generateActiveTopLevelStateToken(stateMachineToken));
@@ -81,7 +93,7 @@ class UmpleInternalParser
   {
     Token token = new Token("state", "START_TOKEN");
     
-    token.addSubToken(new Token("stateName", "activeTopLevelState"));
+    token.addSubToken(new Token("stateName", "topLevel"));
     token.addSubToken(new Token("{", "STATIC"));
     token.addSubToken(generateActiveStateToken(stateMachineToken));
     token.addSubToken(new Token("}", "STATIC"));
@@ -147,6 +159,27 @@ class UmpleInternalParser
     }
   }
 
+  private int numberOfActiveObjectsInClass(Token token, UmpleClass aClass)
+  {
+    int activeObjects = 0;
+    
+    Token parent = token.getParentToken();
+    if (parent != null)
+    {
+      for (Token sub : parent.getSubTokens())
+      {
+        if (sub.is("stateMachine"))
+        {
+          if (sub.getSubToken(0).is("activeDefinition"))
+          {
+            activeObjects++;
+          }
+        }
+      }
+    }
+    
+    return activeObjects;
+  }
   
   private void postTokenStateMachineAnalysis()
   {

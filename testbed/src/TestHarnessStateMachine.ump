@@ -280,3 +280,16 @@ class CourseY {
     addLog("Active entry");
   }
 }
+
+class CourseZ {
+  String logFirstActive = "";
+  String logSecondActive = "";
+  
+  active {
+    logFirstActive = "First active";
+  }
+  
+  active {
+    logSecondActive = "Second active";
+  }
+}

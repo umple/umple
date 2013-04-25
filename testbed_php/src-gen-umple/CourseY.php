@@ -13,14 +13,14 @@ class CourseY
   private $logs;
 
   //CourseY State Machines
-  private static $ActiveStateMachineActiveTopLevelState = 1;
-  private static $ActiveStateMachineActiveTopLevelStateNull = 2;
-  private static $ActiveStateMachineActiveTopLevelStateThread1 = 3;
-  private $activeStateMachine;
-  private $activeStateMachineActiveTopLevelState;
+  private static $StateMachine1TopLevel = 1;
+  private static $StateMachine1TopLevelNull = 2;
+  private static $StateMachine1TopLevelThread1 = 3;
+  private $stateMachine1;
+  private $stateMachine1TopLevel;
 
   //CourseY Do Activity Threads
-  private $doActivityActiveStateMachineActiveTopLevelStateThread1Thread = null;
+  private $doActivityStateMachine1TopLevelThread1Thread = null;
 
   //------------------------
   // CONSTRUCTOR
@@ -29,8 +29,8 @@ class CourseY
   public function __construct()
   {
     $this->logs = array();
-    $this->setActiveStateMachineActiveTopLevelState(self::$ActiveStateMachineActiveTopLevelStateNull);
-    $this->setActiveStateMachine(self::$ActiveStateMachineActiveTopLevelState);
+    $this->setStateMachine1TopLevel(self::$StateMachine1TopLevelNull);
+    $this->setStateMachine1(self::$StateMachine1TopLevel);
   }
 
   //------------------------
@@ -85,78 +85,78 @@ class CourseY
     return $index;
   }
 
-  public function getActiveStateMachineFullName()
+  public function getStateMachine1FullName()
   {
-    $answer = $this->getActiveStateMachine();
-    if ($this->activeStateMachineActiveTopLevelState != self::$ActiveStateMachineActiveTopLevelStateNull) { $answer .= "." . $this->getActiveStateMachineActiveTopLevelState(); }
+    $answer = $this->getStateMachine1();
+    if ($this->stateMachine1TopLevel != self::$StateMachine1TopLevelNull) { $answer .= "." . $this->getStateMachine1TopLevel(); }
     return $answer;
   }
 
-  public function getActiveStateMachine()
+  public function getStateMachine1()
   {
-    if ($this->activeStateMachine == self::$ActiveStateMachineActiveTopLevelState) { return "ActiveStateMachineActiveTopLevelState"; }
+    if ($this->stateMachine1 == self::$StateMachine1TopLevel) { return "StateMachine1TopLevel"; }
     return null;
   }
 
-  public function getActiveStateMachineActiveTopLevelState()
+  public function getStateMachine1TopLevel()
   {
-    if ($this->activeStateMachineActiveTopLevelState == self::$ActiveStateMachineActiveTopLevelStateNull) { return "ActiveStateMachineActiveTopLevelStateNull"; }
-    elseif ($this->activeStateMachineActiveTopLevelState == self::$ActiveStateMachineActiveTopLevelStateThread1) { return "ActiveStateMachineActiveTopLevelStateThread1"; }
+    if ($this->stateMachine1TopLevel == self::$StateMachine1TopLevelNull) { return "StateMachine1TopLevelNull"; }
+    elseif ($this->stateMachine1TopLevel == self::$StateMachine1TopLevelThread1) { return "StateMachine1TopLevelThread1"; }
     return null;
   }
 
-  private function enterActiveTopLevelState()
+  private function enterTopLevel()
   {
     $wasEventProcessed = false;
     
-    $aActiveStateMachineActiveTopLevelState = $this->activeStateMachineActiveTopLevelState;
-    if ($aActiveStateMachineActiveTopLevelState == self::$ActiveStateMachineActiveTopLevelStateNull)
+    $aStateMachine1TopLevel = $this->stateMachine1TopLevel;
+    if ($aStateMachine1TopLevel == self::$StateMachine1TopLevelNull)
     {
-      $this->setActiveStateMachineActiveTopLevelState(self::$ActiveStateMachineActiveTopLevelStateThread1);
+      $this->setStateMachine1TopLevel(self::$StateMachine1TopLevelThread1);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
   }
 
-  private function exitActiveTopLevelState()
+  private function exitTopLevel()
   {
     $wasEventProcessed = false;
     
-    $aActiveStateMachineActiveTopLevelState = $this->activeStateMachineActiveTopLevelState;
-    if ($aActiveStateMachineActiveTopLevelState == self::$ActiveStateMachineActiveTopLevelStateThread1)
+    $aStateMachine1TopLevel = $this->stateMachine1TopLevel;
+    if ($aStateMachine1TopLevel == self::$StateMachine1TopLevelThread1)
     {
-      $this->setActiveStateMachineActiveTopLevelState(self::$ActiveStateMachineActiveTopLevelStateNull);
+      $this->setStateMachine1TopLevel(self::$StateMachine1TopLevelNull);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;
   }
 
-  private function exitActiveStateMachine()
+  private function exitStateMachine1()
   {
-    if ($this->activeStateMachine == self::$ActiveStateMachineActiveTopLevelState)
+    if ($this->stateMachine1 == self::$StateMachine1TopLevel)
     {
-      $this->exitActiveTopLevelState();
+      $this->exitTopLevel();
     }
   }
 
-  private function setActiveStateMachine($aActiveStateMachine)
+  private function setStateMachine1($aStateMachine1)
   {
-    $this->activeStateMachine = $aActiveStateMachine;
+    $this->stateMachine1 = $aStateMachine1;
 
     // entry actions and do activities
-    if ($this->activeStateMachine == self::$ActiveStateMachineActiveTopLevelState)
+    if ($this->stateMachine1 == self::$StateMachine1TopLevel)
     {
-      if ($this->activeStateMachineActiveTopLevelState == self::$ActiveStateMachineActiveTopLevelStateNull) { $this->setActiveStateMachineActiveTopLevelState(self::$ActiveStateMachineActiveTopLevelStateThread1); }
+      if ($this->stateMachine1TopLevel == self::$StateMachine1TopLevelNull) { $this->setStateMachine1TopLevel(self::$StateMachine1TopLevelThread1); }
     }
   }
 
-  private function setActiveStateMachineActiveTopLevelState($aActiveStateMachineActiveTopLevelState)
+  private function setStateMachine1TopLevel($aStateMachine1TopLevel)
   {
-    $this->activeStateMachineActiveTopLevelState = $aActiveStateMachineActiveTopLevelState;
-    if ($this->activeStateMachine != self::$ActiveStateMachineActiveTopLevelState && $aActiveStateMachineActiveTopLevelState != self::$ActiveStateMachineActiveTopLevelStateNull) { $this->setActiveStateMachine(self::$ActiveStateMachineActiveTopLevelState); }
+    $this->stateMachine1TopLevel = $aStateMachine1TopLevel;
+    if ($this->stateMachine1 != self::$StateMachine1TopLevel && $aStateMachine1TopLevel != self::$StateMachine1TopLevelNull) { $this->setStateMachine1(self::$StateMachine1TopLevel); }
 
     // entry actions and do activities
-    if ($this->activeStateMachineActiveTopLevelState == self::$ActiveStateMachineActiveTopLevelStateThread1)
+    if ($this->stateMachine1TopLevel == self::$StateMachine1TopLevelThread1)
     {
       addLog("Active entry");
     }

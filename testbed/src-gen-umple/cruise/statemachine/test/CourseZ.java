@@ -1,19 +1,21 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-package example;
+package cruise.statemachine.test;
 
-public class Lamp
+// line 284 "../../../../src/TestHarnessStateMachine.ump"
+public class CourseZ
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Lamp Attributes
-  private String log;
+  //CourseZ Attributes
+  private String logFirstActive;
+  private String logSecondActive;
 
-  //Lamp State Machines
+  //CourseZ State Machines
   enum StateMachine1 { topLevel }
   enum StateMachine1TopLevel { Null, thread1 }
   private StateMachine1 stateMachine1;
@@ -23,7 +25,7 @@ public class Lamp
   private StateMachine2 stateMachine2;
   private StateMachine2TopLevel stateMachine2TopLevel;
 
-  //Lamp Do Activity Threads
+  //CourseZ Do Activity Threads
   Thread doActivityStateMachine1TopLevelThread1Thread = null;
   Thread doActivityStateMachine2TopLevelThread1Thread = null;
 
@@ -31,9 +33,10 @@ public class Lamp
   // CONSTRUCTOR
   //------------------------
 
-  public Lamp(String aLog)
+  public CourseZ()
   {
-    log = aLog;
+    logFirstActive = "";
+    logSecondActive = "";
     setStateMachine1TopLevel(StateMachine1TopLevel.Null);
     setStateMachine1(StateMachine1.topLevel);
     setStateMachine2TopLevel(StateMachine2TopLevel.Null);
@@ -44,17 +47,30 @@ public class Lamp
   // INTERFACE
   //------------------------
 
-  public boolean setLog(String aLog)
+  public boolean setLogFirstActive(String aLogFirstActive)
   {
     boolean wasSet = false;
-    log = aLog;
+    logFirstActive = aLogFirstActive;
     wasSet = true;
     return wasSet;
   }
 
-  public String getLog()
+  public boolean setLogSecondActive(String aLogSecondActive)
   {
-    return log;
+    boolean wasSet = false;
+    logSecondActive = aLogSecondActive;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getLogFirstActive()
+  {
+    return logFirstActive;
+  }
+
+  public String getLogSecondActive()
+  {
+    return logSecondActive;
   }
 
   public String getStateMachine1FullName()
@@ -247,7 +263,7 @@ public class Lamp
   {
     try
     {
-      log = "Active entry";
+      logFirstActive = "First active";
       Thread.sleep(1);
     }
     catch (InterruptedException e)
@@ -260,7 +276,7 @@ public class Lamp
   {
     try
     {
-      log = "Active entry";
+      logSecondActive = "Second active";
       Thread.sleep(1);
     }
     catch (InterruptedException e)
@@ -271,10 +287,10 @@ public class Lamp
 
   private static class DoActivityThread extends Thread
   {
-    Lamp controller;
+    CourseZ controller;
     String doActivityMethodName;
     
-    public DoActivityThread(Lamp aController,String aDoActivityMethodName)
+    public DoActivityThread(CourseZ aController,String aDoActivityMethodName)
     {
       controller = aController;
       doActivityMethodName = aDoActivityMethodName;
@@ -303,7 +319,8 @@ public class Lamp
 	  String outputString = "";
 	  
     return super.toString() + "["+
-            "log" + ":" + getLog()+ "]"
+            "logFirstActive" + ":" + getLogFirstActive()+ "," +
+            "logSecondActive" + ":" + getLogSecondActive()+ "]"
      + outputString;
   }
 }

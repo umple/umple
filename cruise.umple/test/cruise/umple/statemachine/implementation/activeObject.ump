@@ -6,4 +6,8 @@ class Lamp {
   active {
     log = "Active entry";
   }
+  
+  active {
+    log = "Active entry";
+  }
 }
