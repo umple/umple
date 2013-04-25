@@ -1,18 +1,19 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-class Lamp
+class CourseZ
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Lamp Attributes
-  private $log;
+  //CourseZ Attributes
+  private $logFirstActive;
+  private $logSecondActive;
 
-  //Lamp State Machines
+  //CourseZ State Machines
   private static $StateMachine1TopLevel = 1;
   private static $StateMachine1TopLevelNull = 2;
   private static $StateMachine1TopLevelThread1 = 3;
@@ -25,7 +26,7 @@ class Lamp
   private $stateMachine2;
   private $stateMachine2TopLevel;
 
-  //Lamp Do Activity Threads
+  //CourseZ Do Activity Threads
   private $doActivityStateMachine1TopLevelThread1Thread = null;
   private $doActivityStateMachine2TopLevelThread1Thread = null;
 
@@ -33,9 +34,10 @@ class Lamp
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aLog)
+  public function __construct()
   {
-    $this->log = $aLog;
+    $this->logFirstActive = "";
+    $this->logSecondActive = "";
     $this->setStateMachine1TopLevel(self::$StateMachine1TopLevelNull);
     $this->setStateMachine1(self::$StateMachine1TopLevel);
     $this->setStateMachine2TopLevel(self::$StateMachine2TopLevelNull);
@@ -46,17 +48,30 @@ class Lamp
   // INTERFACE
   //------------------------
 
-  public function setLog($aLog)
+  public function setLogFirstActive($aLogFirstActive)
   {
     $wasSet = false;
-    $this->log = $aLog;
+    $this->logFirstActive = $aLogFirstActive;
     $wasSet = true;
     return $wasSet;
   }
 
-  public function getLog()
+  public function setLogSecondActive($aLogSecondActive)
   {
-    return $this->log;
+    $wasSet = false;
+    $this->logSecondActive = $aLogSecondActive;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getLogFirstActive()
+  {
+    return $this->logFirstActive;
+  }
+
+  public function getLogSecondActive()
+  {
+    return $this->logSecondActive;
   }
 
   public function getStateMachine1FullName()
@@ -187,7 +202,7 @@ class Lamp
     // entry actions and do activities
     if ($this->stateMachine1TopLevel == self::$StateMachine1TopLevelThread1)
     {
-      log = "Active entry";
+      logFirstActive = "First active";
     }
   }
 
@@ -199,7 +214,7 @@ class Lamp
     // entry actions and do activities
     if ($this->stateMachine2TopLevel == self::$StateMachine2TopLevelThread1)
     {
-      log = "Active entry";
+      logSecondActive = "Second active";
     }
   }
 
