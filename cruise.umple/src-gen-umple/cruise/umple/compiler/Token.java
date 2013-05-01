@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package cruise.umple.compiler;
 import java.util.regex.*;
