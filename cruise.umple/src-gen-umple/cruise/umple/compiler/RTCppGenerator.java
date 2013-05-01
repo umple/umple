@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 import java.util.*;
@@ -97,7 +97,7 @@ public class RTCppGenerator implements CodeGenerator
 			public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor) {
 				try {
 					for(ContentsDescriptor descriptor:contentsDescriptor){
-						generateContents(code, descriptor.getFileName(), descriptor.getContents(), descriptor.getPath());
+						generateContents(model, code, descriptor.getFileName(), descriptor.getContents(), descriptor.getPath());
 					}
 				} catch (IOException e) {
 					throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
@@ -111,7 +111,7 @@ public class RTCppGenerator implements CodeGenerator
 	}
   }
   
-  protected void generateContents(StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
+  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
 		 String path = model.getUmpleFile().getPath() + "/";
 		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
 		 String qualifiedPath = path+ owingFolder;
@@ -125,6 +125,9 @@ public class RTCppGenerator implements CodeGenerator
 		 if (!folderFile.exists()) {
 		 	folderFile.createNewFile();
 		 }
+		 
+		 model.getGeneratedCode().put(filename,content);
+		 
 		 model_code.append(content);
 		 model_code.append("\n\n");
 		 
