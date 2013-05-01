@@ -1,36 +1,22 @@
-/*******************************************************************************
-* Copyright (c) 2013 Ahmed M.Orabi, Mahmoud M.Orabi.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*     Ahmed M.Orabi
-*     Mahmoud M.Orabi
-*
-* Please refer to the code authors before making any changes. 
-* For any code reuse or copy, contact the authors and it is a MUST 
-* to refer author names.
-*
-* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
-* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
-*******************************************************************************/
+/*
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Model for generating documentation such as the Umple user manual
+See Documenter_Code.ump for the methods injected into these classes
+*/
 
 package cruise.umple.cpp.jet.util;
 
-import cruise.umple.core.*;
-import cruise.umple.core.GenerationCallback.GenerationArgument;
-import cruise.umple.core.GenerationCallback.GenerationElementParameter;
-import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.cpp.CppGenerationTemplate;
-import cruise.umple.cpp.utils.StringUtil;
-import cruise.umple.modeling.handlers.IModelingConstants;
-import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppHandlerDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppMethods;
-import cruise.umple.modeling.handlers.cpp.ICppNameConstants;
 
+import cruise.umple.core.*;
+import cruise.umple.modeling.handlers.*;
+import cruise.umple.modeling.handlers.cpp.*;
+import cruise.umple.cpp.utils.*;
+import cruise.umple.core.GenerationCallback.*;
 
 @SuppressWarnings({ "nls", "unqualified-field-access" })
 public class CppTemplateHelper extends CppGenerationTemplate{
@@ -46,12 +32,12 @@ public class CppTemplateHelper extends CppGenerationTemplate{
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "hashCode";
-  protected final String TEXT_2 = "return reinterpret_cast<size_t>(this);";
-  protected final String TEXT_3 = "class ";
-  protected final String TEXT_4 = ";";
-  protected final String TEXT_5 = "vector<";
-  protected final String TEXT_6 = ">";
-  protected final String TEXT_7 = "*";
+  protected final String TEXT_2 = "//No Implementation in this context";
+  protected final String TEXT_3 = "return reinterpret_cast<size_t>(this);";
+  protected final String TEXT_4 = "class ";
+  protected final String TEXT_5 = ";";
+  protected final String TEXT_6 = "struct ";
+  protected final String TEXT_7 = ";";
   protected final String TEXT_8 = "using namespace ";
   protected final String TEXT_9 = ";";
   protected final String TEXT_10 = "namespace ";
@@ -72,7 +58,7 @@ public class CppTemplateHelper extends CppGenerationTemplate{
   protected final String TEXT_25 = " : ";
   protected final String TEXT_26 = NL + "//------------------------" + NL + "// FILE INCLUDES" + NL + "//------------------------";
   protected final String TEXT_27 = NL;
-  protected final String TEXT_28 = NL + NL + "//------------------------" + NL + "// LIBRARIES INCLUDES" + NL + "//------------------------";
+  protected final String TEXT_28 = NL + "//------------------------" + NL + "// LIBRARIES INCLUDES" + NL + "//------------------------";
   protected final String TEXT_29 = NL;
   protected final String TEXT_30 = NL + NL + "//------------------------" + NL + "// USED LIBRARIES" + NL + "//------------------------";
   protected final String TEXT_31 = NL;
@@ -144,67 +130,82 @@ public class CppTemplateHelper extends CppGenerationTemplate{
   protected final String TEXT_97 = ")";
   protected final String TEXT_98 = ";";
   protected final String TEXT_99 = " const";
-  protected final String TEXT_100 = "(";
-  protected final String TEXT_101 = ")";
-  protected final String TEXT_102 = ";";
-  protected final String TEXT_103 = "//TODO Add code body to ";
-  protected final String TEXT_104 = NL;
-  protected final String TEXT_105 = ":" + NL;
+  protected final String TEXT_100 = "virtual ";
+  protected final String TEXT_101 = " = 0";
+  protected final String TEXT_102 = "(";
+  protected final String TEXT_103 = ")";
+  protected final String TEXT_104 = ";";
+  protected final String TEXT_105 = "//TODO Add code body to ";
   protected final String TEXT_106 = NL;
-  protected final String TEXT_107 = "//";
-  protected final String TEXT_108 = " Attributes";
+  protected final String TEXT_107 = ":" + NL;
+  protected final String TEXT_108 = NL;
   protected final String TEXT_109 = "//";
-  protected final String TEXT_110 = " Associations";
-  protected final String TEXT_111 = "//------------------------" + NL + "// STATIC VARIABLES" + NL + "//------------------------";
-  protected final String TEXT_112 = "//Helper Variables";
-  protected final String TEXT_113 = NL + "\tif(!compare(Right.";
-  protected final String TEXT_114 = ", Left.";
-  protected final String TEXT_115 = ", sizeof Right.";
-  protected final String TEXT_116 = ")){" + NL + "\t\t return false;" + NL + "\t}";
-  protected final String TEXT_117 = NL + "\tif(!std::equal(Right.";
-  protected final String TEXT_118 = "->begin(), Right.";
-  protected final String TEXT_119 = "->end(), Left.";
-  protected final String TEXT_120 = "->begin())){" + NL + "\t\t return false;" + NL + "\t}";
-  protected final String TEXT_121 = NL + "\tif(Right.";
-  protected final String TEXT_122 = ".compare(Left.";
-  protected final String TEXT_123 = ") != 0){" + NL + "\t\t return false;" + NL + "\t}";
-  protected final String TEXT_124 = NL + "\tif(Right.";
-  protected final String TEXT_125 = "!= Left.";
-  protected final String TEXT_126 = "){" + NL + "\t\t return false;" + NL + "\t}";
-  protected final String TEXT_127 = "const ";
-  protected final String TEXT_128 = "&";
-  protected final String TEXT_129 = "//-------------------------------------" + NL + "// PREDEFINED OPERATORS IMPLEMENTATION" + NL + "//-------------------------------------" + NL + "bool operator== (";
-  protected final String TEXT_130 = " &Right, ";
-  protected final String TEXT_131 = " &Left){" + NL + "\t//if (typeid(Right) != typeid(Left)) {" + NL + "\t//\treturn false;" + NL + "\t//}" + NL + "\t";
-  protected final String TEXT_132 = NL + "\treturn true;" + NL + "}";
-  protected final String TEXT_133 = NL + "//------------------------" + NL + "// INLINE FUNCTIONS" + NL + "//------------------------";
-  protected final String TEXT_134 = NL;
-  protected final String TEXT_135 = NL + "//#define ";
-  protected final String TEXT_136 = " ";
-  protected final String TEXT_137 = NL + "//------------------------" + NL + "// PACKAGE/EXTERNAL DECLARATIONS" + NL + "//------------------------" + NL + "/* External declarations (package visibility)*/";
-  protected final String TEXT_138 = NL;
-  protected final String TEXT_139 = NL + "//A template function to get the index of an item for a given vector. It returns -1 if the" + NL + "//item was not found" + NL + "template < typename InputIterator, typename EqualityComparable >" + NL + "\tint IndexOf(const InputIterator& begin," + NL + "\tconst InputIterator& end, const EqualityComparable& item) {" + NL + "\t\tInputIterator fnd = std::find(begin, end, item);" + NL + "\t\tunsigned int index = std::distance(begin, fnd);" + NL + "\t\treturn fnd != end ? index : -1;" + NL + "}" + NL + "" + NL + "//Used as a function pointer to safely destroy elements or collections of elements" + NL + "//Example: " + NL + "//\tstd::for_each( arr->begin(), arr->end(), delete_pointer_element());" + NL + "//\tdelete arr;" + NL + "struct deleteElement{" + NL + " template< typename T >" + NL + " void operator()( T element ) const{" + NL + "\tdelete element;" + NL + "\t}" + NL + "};" + NL + "" + NL + "template<typename T>" + NL + "unsigned int compare(T c1, T c2, unsigned int sz ) {" + NL + "\tif(!is_ptr<T>::value) {" + NL + "\t\treturn memcmp(&c1,&c2, sz);" + NL + "\t}" + NL + "\treturn memcmp((void*)c1, (void*)c2, sz);" + NL + "} " + NL + "" + NL + "template<typename T>" + NL + "void copyObject(T* object1, T* object2, unsigned int sz ) {" + NL + "\tif(!is_ptr<T>::value) {" + NL + "\t\tmemcpy(&object2,&object1, sz);" + NL + "\t}" + NL + " \tmemcpy((void*)object2, (void*)object1, sz);" + NL + "}";
-  protected final String TEXT_140 = "::";
-  protected final String TEXT_141 = "friend void ";
-  protected final String TEXT_142 = "(";
-  protected final String TEXT_143 = "* ";
-  protected final String TEXT_144 = ", ";
-  protected final String TEXT_145 = "*);";
-  protected final String TEXT_146 = "\t" + NL + "void ";
-  protected final String TEXT_147 = "(";
-  protected final String TEXT_148 = "* _";
-  protected final String TEXT_149 = ", ";
-  protected final String TEXT_150 = "* ";
-  protected final String TEXT_151 = "){" + NL + "\t_";
-  protected final String TEXT_152 = "->";
-  protected final String TEXT_153 = "= ";
-  protected final String TEXT_154 = ";" + NL + "}";
+  protected final String TEXT_110 = " Attributes";
+  protected final String TEXT_111 = "//";
+  protected final String TEXT_112 = " Associations";
+  protected final String TEXT_113 = "//------------------------" + NL + "// STATIC VARIABLES" + NL + "//------------------------";
+  protected final String TEXT_114 = "//Helper Variables";
+  protected final String TEXT_115 = NL + "\tif(!compare(Right.";
+  protected final String TEXT_116 = ", Left.";
+  protected final String TEXT_117 = ", sizeof Right.";
+  protected final String TEXT_118 = ")){" + NL + "\t\t return false;" + NL + "\t}";
+  protected final String TEXT_119 = NL + "\tif(!std::equal(Right.";
+  protected final String TEXT_120 = "->begin(), Right.";
+  protected final String TEXT_121 = "->end(), Left.";
+  protected final String TEXT_122 = "->begin())){" + NL + "\t\t return false;" + NL + "\t}";
+  protected final String TEXT_123 = NL + "\tif(Right.";
+  protected final String TEXT_124 = ".compare(Left.";
+  protected final String TEXT_125 = ") != 0){" + NL + "\t\t return false;" + NL + "\t}";
+  protected final String TEXT_126 = "//------------------------" + NL + "// IMPLEMENTED COMPARATORS" + NL + "//------------------------";
+  protected final String TEXT_127 = NL;
+  protected final String TEXT_128 = "struct ";
+  protected final String TEXT_129 = " : public std::binary_function<";
+  protected final String TEXT_130 = "*, ";
+  protected final String TEXT_131 = "*, bool>{" + NL + "\tbool operator()(";
+  protected final String TEXT_132 = "* Right, ";
+  protected final String TEXT_133 = "* Left) const{  " + NL + "\t\treturn Right->";
+  protected final String TEXT_134 = " < Left->";
+  protected final String TEXT_135 = ";" + NL + "\t}" + NL + "};";
+  protected final String TEXT_136 = "_";
+  protected final String TEXT_137 = "_Comparator";
+  protected final String TEXT_138 = NL + "\tif(Right.";
+  protected final String TEXT_139 = "!= Left.";
+  protected final String TEXT_140 = "){" + NL + "\t\t return false;" + NL + "\t}";
+  protected final String TEXT_141 = "const ";
+  protected final String TEXT_142 = "&";
+  protected final String TEXT_143 = "//-------------------------------------" + NL + "// PREDEFINED OPERATORS IMPLEMENTATION" + NL + "//-------------------------------------" + NL + "bool operator== (";
+  protected final String TEXT_144 = " &Right, ";
+  protected final String TEXT_145 = " &Left){" + NL + "\t//if (typeid(Right) != typeid(Left)) {" + NL + "\t//\treturn false;" + NL + "\t//}" + NL + "\t" + NL + "\tif(Right.hashCode() != Left.hashCode()) {" + NL + "\t\treturn false;" + NL + "\t}" + NL + "\t";
+  protected final String TEXT_146 = NL + "\treturn true;" + NL + "}";
+  protected final String TEXT_147 = NL + "//------------------------" + NL + "// INLINE FUNCTIONS" + NL + "//------------------------";
+  protected final String TEXT_148 = NL;
+  protected final String TEXT_149 = NL + "//#define ";
+  protected final String TEXT_150 = " ";
+  protected final String TEXT_151 = NL + "//------------------------" + NL + "// PACKAGE/EXTERNAL DECLARATIONS" + NL + "//------------------------" + NL + "/* External declarations (package visibility)*/";
+  protected final String TEXT_152 = NL;
+  protected final String TEXT_153 = NL + "//A template function to get the index of an item for a given vector. It returns -1 if the" + NL + "//item was not found" + NL + "template < typename InputIterator, typename EqualityComparable >" + NL + "\tint IndexOf(const InputIterator& begin," + NL + "\tconst InputIterator& end, const EqualityComparable& item) {" + NL + "\t\tInputIterator fnd = std::find(begin, end, item);" + NL + "\t\tunsigned int index = std::distance(begin, fnd);" + NL + "\t\treturn fnd != end ? index : -1;" + NL + "};" + NL + "" + NL + "//Used as a function pointer to safely destroy elements or collections of elements" + NL + "//Example: " + NL + "//\tstd::for_each( arr->begin(), arr->end(), delete_pointer_element());" + NL + "//\tdelete arr;" + NL + "struct deleteElement{" + NL + " template< typename T >" + NL + " void operator()( T element ) const{" + NL + "\tdelete element;" + NL + "\t}" + NL + "};" + NL + "" + NL + "template<typename T>" + NL + "unsigned int compare(T c1, T c2, unsigned int sz ) {" + NL + "\tif(!is_ptr<T>::value) {" + NL + "\t\treturn memcmp(&c1,&c2, sz);" + NL + "\t}" + NL + "\treturn memcmp((void*)c1, (void*)c2, sz);" + NL + "};" + NL + "" + NL + "template<typename T>" + NL + "void copyObject(T* object1, T* object2, unsigned int sz ) {" + NL + "\tif(!is_ptr<T>::value) {" + NL + "\t\tmemcpy(&object2,&object1, sz);" + NL + "\t}" + NL + " \tmemcpy((void*)object2, (void*)object1, sz);" + NL + "};" + NL + NL + NL;
+  protected final String TEXT_154 = "::";
+  protected final String TEXT_155 = "friend void ";
+  protected final String TEXT_156 = "(";
+  protected final String TEXT_157 = "* ";
+  protected final String TEXT_158 = ", ";
+  protected final String TEXT_159 = "*);";
+  protected final String TEXT_160 = "\t" + NL + "void ";
+  protected final String TEXT_161 = "(";
+  protected final String TEXT_162 = "* _";
+  protected final String TEXT_163 = ", ";
+  protected final String TEXT_164 = "* ";
+  protected final String TEXT_165 = "){" + NL + "\t_";
+  protected final String TEXT_166 = "->";
+  protected final String TEXT_167 = "= ";
+  protected final String TEXT_168 = ";" + NL + "}";
 
   /**
   * @param argument
   * @param arguments
   * @return
   */
+  @Override
   public String define()
   {
     final StringBuffer stringBuffer = new StringBuffer();
@@ -228,7 +229,7 @@ public void execute() {
 
 }});
 
-getRegistry().define(ICppDefinitions.HASH_CDOE_IMPLEMENTATION, new GenerationProcdure(this){
+getRegistry().define(IModelingConstants.NO_IMPLEMENTATION, new GenerationProcdure(this){
 	
 @Override
 public StringBuffer execute(Object element, Object... arguments) {
@@ -246,58 +247,65 @@ public void execute() {
 
 }});
 
-getRegistry().define(ICppMethods.CLASS_INLINE_DECLARATION, new GenerationProcdure(this){
+getRegistry().define(ICppDefinitions.HASH_CDOE_IMPLEMENTATION, new GenerationProcdure(this){
 	
 @Override
 public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationArgument String type;
-	
 @Override
 public void execute() {
 
 
     stringBuffer.append(TEXT_3);
-    stringBuffer.append(type);
-    stringBuffer.append(TEXT_4);
     
 
 }});
 
 }});
 
-getRegistry().define(ICppDefinitions.TYPE_AS_VECTOR, new GenerationProcdure(this){
+getRegistry().define(ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, new GenerationProcdure(this){
 	
 @Override
 public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
-	
+
 	@GenerationArgument String type;
-	@GenerationArgument boolean isPointer;
-			
+	
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append(type);
-    stringBuffer.append(TEXT_6);
-    setPointer();
-    
-}
 
-private void setPointer(){
-	if(!isPointer){
-		return;
-	}
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_5);
+    
+
+}});
+
+}});
+
+getRegistry().define(ICppDefinitions.STRUCT_INCOMPLETE_DECLARATION, new GenerationProcdure(this){
 	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationArgument String type;
+	
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(type);
     stringBuffer.append(TEXT_7);
     
-}
 
-});
+}});
 
 }});
 
@@ -1168,7 +1176,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	@GenerationArgument boolean isInline;
 	@GenerationArgument boolean isStatic;
 	@GenerationArgument String init;
-	@GenerationArgument(id= IModelingConstants.METHOD_CONST) boolean isConstant;
+	@GenerationArgument(id= ICppDefinitions.METHOD_CONST) boolean isConstant;
 			
 @Override
 public void execute() {
@@ -1236,13 +1244,15 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	@GenerationArgument String returnType;
 	@GenerationArgument String qualifiedMethodName;
 	@GenerationArgument String parameters;
-	@GenerationArgument String init;
-	@GenerationArgument(id= IModelingConstants.METHOD_CONST) boolean isConstant;
-			
+	@GenerationArgument(id= ICppDefinitions.METHOD_CONST) boolean isConstant;
+	@GenerationArgument(id= ICppDefinitions.METHOD_VIRTUAL) boolean isVirtual;
+	@GenerationArgument(id= ICppDefinitions.METHOD_PURE) boolean isPure;
+	
 @Override
 public void execute() {
 
 
+    setVirtual();
     stringBuffer.append(returnType);
     stringBuffer.append(TEXT_95);
     stringBuffer.append(qualifiedMethodName);
@@ -1250,7 +1260,7 @@ public void execute() {
     stringBuffer.append(parameters);
     stringBuffer.append(TEXT_97);
     setConstant();
-    stringBuffer.append( init );
+    setPure();
     stringBuffer.append(TEXT_98);
     
 
@@ -1262,6 +1272,24 @@ private void setConstant(){
 	}
 	
     stringBuffer.append(TEXT_99);
+    
+}
+
+private void setVirtual(){
+	if(!isVirtual){
+		return;
+	}
+	
+    stringBuffer.append(TEXT_100);
+    
+}
+
+private void setPure(){
+	if(!isPure){
+		return;
+	}
+	
+    stringBuffer.append(TEXT_101);
     
 }
 
@@ -1285,9 +1313,9 @@ public void execute() {
 
 
     stringBuffer.append(methodName);
-    stringBuffer.append(TEXT_100);
+    stringBuffer.append(TEXT_102);
     stringBuffer.append(parameters);
-    stringBuffer.append(TEXT_101);
+    stringBuffer.append(TEXT_103);
     statement();
     
 
@@ -1299,7 +1327,7 @@ public void statement(){
 	}
 	
 	
-    stringBuffer.append(TEXT_102);
+    stringBuffer.append(TEXT_104);
     
 }
 
@@ -1319,7 +1347,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_103);
+    stringBuffer.append(TEXT_105);
     stringBuffer.append(name);
     
 }});
@@ -1345,10 +1373,10 @@ if(contents.isEmpty() && !optimistic){
 }
 
 
-    stringBuffer.append(TEXT_104);
-    stringBuffer.append(visibility);
-    stringBuffer.append(TEXT_105);
     stringBuffer.append(TEXT_106);
+    stringBuffer.append(visibility);
+    stringBuffer.append(TEXT_107);
+    stringBuffer.append(TEXT_108);
     stringBuffer.append(indent(contents, 1));
     	
 	
@@ -1370,9 +1398,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_107);
+    stringBuffer.append(TEXT_109);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_108);
+    stringBuffer.append(TEXT_110);
     
 }});
 
@@ -1390,9 +1418,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_109);
+    stringBuffer.append(TEXT_111);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_110);
+    stringBuffer.append(TEXT_112);
     
 }});
 
@@ -1409,7 +1437,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_111);
+    stringBuffer.append(TEXT_113);
     
 
 }});
@@ -1426,7 +1454,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_112);
+    stringBuffer.append(TEXT_114);
     
 }});
 
@@ -1455,25 +1483,25 @@ public void execute() {
 
 protected void single() {
 
-    stringBuffer.append(TEXT_113);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_114);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_115);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_116);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_117);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_118);
     
 }
 
 protected void many() {
 
-    stringBuffer.append(TEXT_117);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_118);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_119);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_120);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_121);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_122);
     
 }
 
@@ -1494,11 +1522,96 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_121);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_122);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_123);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_124);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_125);
+    	
+}
+
+});
+
+}});
+
+getRegistry().define(ICppDefinitions.COMPARATORS_DETAILS, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationArgument String contents;
+	
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_126);
+    stringBuffer.append(TEXT_127);
+    stringBuffer.append(contents);
+    	
+}
+
+});
+
+}});
+
+getRegistry().define(ICppDefinitions.BASE_COMPARATOR, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	
+	@GenerationArgument String comparatorName;
+	@GenerationArgument String type;
+	@GenerationArgument String keyField;
+	
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_128);
+    stringBuffer.append(comparatorName);
+    stringBuffer.append(TEXT_129);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_130);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_131);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_132);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_133);
+    stringBuffer.append(keyField);
+    stringBuffer.append(TEXT_134);
+    stringBuffer.append(keyField);
+    stringBuffer.append(TEXT_135);
+    	
+}
+
+});
+
+}});
+
+getRegistry().define(ICppDefinitions.BASE_COMPARATOR_DEFAULT_NAME, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	
+	@GenerationArgument String owenr;
+	@GenerationArgument String key;
+			
+@Override
+public void execute() {
+
+
+    stringBuffer.append(owenr);
+    stringBuffer.append(TEXT_136);
+    stringBuffer.append(key);
+    stringBuffer.append(TEXT_137);
     	
 }
 
@@ -1519,11 +1632,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_124);
+    stringBuffer.append(TEXT_138);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_125);
+    stringBuffer.append(TEXT_139);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_126);
+    stringBuffer.append(TEXT_140);
     	
 }
 
@@ -1544,9 +1657,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_127);
+    stringBuffer.append(TEXT_141);
     stringBuffer.append(type);
-    stringBuffer.append(TEXT_128);
+    stringBuffer.append(TEXT_142);
     	
 }
 
@@ -1567,13 +1680,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_129);
+    stringBuffer.append(TEXT_143);
     stringBuffer.append(type);
-    stringBuffer.append(TEXT_130);
+    stringBuffer.append(TEXT_144);
     stringBuffer.append(type);
-    stringBuffer.append(TEXT_131);
+    stringBuffer.append(TEXT_145);
     stringBuffer.append(operators);
-    stringBuffer.append(TEXT_132);
+    stringBuffer.append(TEXT_146);
     
 }});
 
@@ -1592,8 +1705,8 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_133);
-    stringBuffer.append(TEXT_134);
+    stringBuffer.append(TEXT_147);
+    stringBuffer.append(TEXT_148);
     stringBuffer.append(inlineFunctionContents);
     
 
@@ -1613,9 +1726,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_135);
+    stringBuffer.append(TEXT_149);
     stringBuffer.append(definition);
-    stringBuffer.append(TEXT_136);
+    stringBuffer.append(TEXT_150);
     stringBuffer.append(index);
     
 
@@ -1640,8 +1753,8 @@ if(packageContents== null|| packageContents.isEmpty()){
 }
 
 
-    stringBuffer.append(TEXT_137);
-    stringBuffer.append(TEXT_138);
+    stringBuffer.append(TEXT_151);
+    stringBuffer.append(TEXT_152);
     stringBuffer.append( packageContents );
     
 
@@ -1660,7 +1773,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_139);
+    stringBuffer.append(TEXT_153);
     
 
 }});
@@ -1681,7 +1794,7 @@ public void execute() {
 
 
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_140);
+    stringBuffer.append(TEXT_154);
     
 
 }});
@@ -1706,15 +1819,15 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_141);
+    stringBuffer.append(TEXT_155);
     stringBuffer.append( existingMethodName );
-    stringBuffer.append(TEXT_142);
+    stringBuffer.append(TEXT_156);
     stringBuffer.append(typeName );
-    stringBuffer.append(TEXT_143);
+    stringBuffer.append(TEXT_157);
     stringBuffer.append(parameter);
-    stringBuffer.append(TEXT_144);
+    stringBuffer.append(TEXT_158);
     stringBuffer.append(otherEndTypeName);
-    stringBuffer.append(TEXT_145);
+    stringBuffer.append(TEXT_159);
     
 
 }
@@ -1746,23 +1859,23 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_146);
+    stringBuffer.append(TEXT_160);
     stringBuffer.append( existingMethodName );
-    stringBuffer.append(TEXT_147);
+    stringBuffer.append(TEXT_161);
     stringBuffer.append(typeName );
-    stringBuffer.append(TEXT_148);
+    stringBuffer.append(TEXT_162);
     stringBuffer.append(typeName);
-    stringBuffer.append(TEXT_149);
+    stringBuffer.append(TEXT_163);
     stringBuffer.append(otherEndTypeName);
-    stringBuffer.append(TEXT_150);
+    stringBuffer.append(TEXT_164);
     stringBuffer.append(parameter);
-    stringBuffer.append(TEXT_151);
+    stringBuffer.append(TEXT_165);
     stringBuffer.append(typeName);
-    stringBuffer.append(TEXT_152);
+    stringBuffer.append(TEXT_166);
     stringBuffer.append( otherEndName );
-    stringBuffer.append(TEXT_153);
+    stringBuffer.append(TEXT_167);
     stringBuffer.append(parameter);
-    stringBuffer.append(TEXT_154);
+    stringBuffer.append(TEXT_168);
     
 
 }

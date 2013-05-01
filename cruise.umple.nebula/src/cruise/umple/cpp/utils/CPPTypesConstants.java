@@ -37,4 +37,7 @@ public interface CPPTypesConstants {
 	public static final String FLOAT= "float"; //$NON-NLS-1$
 	public static final String BOOL= "bool"; //$NON-NLS-1$
 	public static final String CHAR= "char"; //$NON-NLS-1$
+	
+	public static final String FALSE= "false"; //$NON-NLS-1$
+	public static final String TRUE= "true"; //$NON-NLS-1$
 }

@@ -58,6 +58,8 @@ public interface IModelingConstructorDefinitionsConstants {
 	public static String COPY_CONSTRUCTOR_DECLARATION	="cpp.copy.constructor.declaration";  //$NON-NLS-1$
 	public static String COPY_CONSTRUCTOR_IMPLEMENTATION="cpp.copy.constructor.implementation";  //$NON-NLS-1$
 	
+	public static String CONSTRUCTOR_NO_IMPLEMENTATION="cpp.constructor.no.implementation";  //$NON-NLS-1$
+	
 	public static String CONSTRUCTOR_PARAMETERS= "class.header.public.constructor.parameters"; //$NON-NLS-1$
 	
 	public static String COPY_ATTRIBUTE="cpp.constructor.copy.attribute";  //$NON-NLS-1$

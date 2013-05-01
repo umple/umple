@@ -36,6 +36,7 @@ import java.util.TreeMap;
 import java.util.WeakHashMap;
 
 import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.core.GenerationCallback.GenerationArguments;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
@@ -61,7 +62,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private static List<Class<?>> parsedClasses= new ArrayList<Class<?>>();
 	private static Map<String, List<GenerationPointObject>> _pointsInvocations= new HashMap<String, List<GenerationPointObject>>();
 	private static Map<String, List<Object>> _parsedDecisionClasses= new HashMap<String, List<Object>>();
-	private static Map<String, Map<String, List<LoopObject>>> _loopInvocations= new HashMap<String, Map<String,List<LoopObject>>>();
+	private static Map<String, Map<String, List<LoopObject>>> _loopInvocations= new HashMap<String, Map<String, List<LoopObject>>>();
 	protected static Map<String, GenerationGroupDefinition> groupDefnitions= new HashMap<String, GenerationGroupDefinition>();
 	private static Map<String, List<Object>> _parsedClasses= new WeakHashMap<String, List<Object>>();
 	
@@ -71,13 +72,17 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private static Map<String, List<DecisionObject>> _decisionInvocations= new HashMap<String, List<DecisionObject>>();
 	private static boolean processed= false;
 
-	private Map<Object, TreeMap<String, Object>> objectsPathMap= new HashMap<Object, TreeMap<String,Object>>();
+	private Map<Object, TreeMap<String, Object>> objectsPathMap= new HashMap<Object, TreeMap<String, Object>>();
 	protected ArgumentsRetrieval generationObjectsRetriever= new ArgumentsRetrieval();
 	protected ArgumentsRetrieval decisionObjectsRetriever= new ArgumentsRetrieval();
 	private ArgumentsRetrieval interceptedObjectsRetriever= new ArgumentsRetrieval();
 	
+	protected GenerationLogger generationLogger;
+	
 	public GenerationPolicyRegistry() {
 		super();
+		
+		this.generationLogger= new GenerationLogger();
 		
 		this.generationValueGetter= new GenerationValueGetterDelegator(this);
 		this.generationTemplateDelegator= new GenerationTemplateDelegator(this);
@@ -133,8 +138,8 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				try {
 					List<LoopProcessorObject> processors = this._loopProcessorsInocations.get(newPath.toString());
 					
-					List<LoopProcessorObject> currentLoop= new ArrayList<GenerationPolicyRegistry.LoopProcessorObject>();
-					List<LoopProcessorObject> defaultLoop= new ArrayList<GenerationPolicyRegistry.LoopProcessorObject>();
+					List<LoopProcessorObject> currentLoop= new ArrayList<LoopProcessorObject>();
+					List<LoopProcessorObject> defaultLoop= new ArrayList<LoopProcessorObject>();
 					
 					if(processors!= null){
 						for(LoopProcessorObject loopProcessorObject: processors){
@@ -194,7 +199,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 						}
 					}
 				} catch (Exception e) {
-					// TODO: handle exception
+					this.generationLogger.addError(e);
 				}
 			}
 		}
@@ -229,7 +234,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			try {
 				process(obj, list);
 			} catch (Exception e) {
-				// TODO: handle exception
+				this.generationLogger.addError(e);
 			}
 		}
 		
@@ -311,8 +316,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					return all;
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.generationLogger.addError(e);
 			}
 		}
 		this.interceptedObjectsRetriever.setValue(generationPoint, all, true, element, arguments);
@@ -361,8 +365,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				}
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.generationLogger.addError(e);
 			}
 		}
 		this.interceptedObjectsRetriever.setValue(generationPoint, all, true, element, arguments);
@@ -412,8 +415,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					}
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.generationLogger.addError(e);
 			}
 		}
 		this.interceptedObjectsRetriever.setValue(generationPoint, returnValue, true, element, arguments);
@@ -421,6 +423,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	}
 
 	
+	@Override
 	public synchronized void register(Object handler) {
 		if(handler instanceof Class<?>){
 			if(this.parsedClasses.contains(handler)){
@@ -466,7 +469,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					
 					List<LoopObject> list = map.get(id);
 					if(list== null){
-						list= new ArrayList<GenerationPolicyRegistry.LoopObject>();
+						list= new ArrayList<LoopObject>();
 						map.put(id, list);
 					}
 					list.add(new LoopObject(method, handler, generationLoopAnnotation));
@@ -604,8 +607,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					
 					this.groupDefnitions.put((String) object, annotation);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					this.generationLogger.addError(e);
 				}
 			}
 		}
@@ -690,7 +692,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		for(String watch: watches){
 			List<GenerationPointObject> watchList = this._watchingPointsInvocations.get(watch);
 			if(watchList== null){
-				watchList= new ArrayList<GenerationPolicyRegistry.GenerationPointObject>();
+				watchList= new ArrayList<GenerationPointObject>();
 				this._watchingPointsInvocations.put(watch, watchList);
 			}
 			watchList.add(generationPointObject);
@@ -736,6 +738,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				registry.generationObjectsRetriever.setValue(generationPoint, (Object)Boolean.valueOf(!inverse), true, element, arguments);
 				//why this condition? This is required when we have empty decision point that is intended to be extended by other places,
 				//and it will be null unless it is used
+				//FIXME: Reconsider this logic. It should be false, and provide a return false decision point instead
 				return !inverse;
 			}
 			//Try on the attribute only in that case
@@ -749,6 +752,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				String[] ifConditionIds = decisionObject.fDecisionPoint.ifConditionIds();
 				for(int index=0; index<ifConditionIds.length; index++){
 					if (!decisionPoint(element, this, ifConditionIds[index], arguments)) {
+						decision= /*decision&&*/false;
 						break deceision;
 					}
 				}
@@ -756,24 +760,18 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				String[] ifNotConditionIds = decisionObject.fDecisionPoint.ifNotConditionIds();
 				for(int index=0; index<ifNotConditionIds.length; index++){
 					if (processDecisionPointsMethods(element, this, ifNotConditionIds[index], true, arguments)) {
+						decision= /*decision&&*/false;
 						break deceision;
 					}
 				}
 				
 				Method method= decisionObject.fMethod;
 				try {
-					Boolean invoke= null;
-					Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-					if(parameterAnnotations.length==0){
-						//FIXME
-						invoke = (Boolean) method.invoke(decisionObject.fInstance, element, arguments);
-					}else{
-						Object[] parameters = getParameters(element,registry, method, arguments);
-						//TODO: caching
-						invoke = (Boolean) method.invoke(decisionObject.fInstance, parameters);
-					}
+					Object[] parameters = getParameters(element,registry, method, arguments);
+					Object result = method.invoke(decisionObject.fInstance, parameters);
 					
-					if(invoke!=null){
+					if(result instanceof Boolean){
+						Boolean invoke = (Boolean) result;
 						decision= decision&&invoke.booleanValue();
 						if(decisionObject.fDecisionPoint.optimistic()){
 							if(invoke.booleanValue()){
@@ -790,8 +788,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 						}
 					}
 				} catch (Exception e) {
-					//Logger
-					e.printStackTrace();
+					this.generationLogger.addError(e);
 				}
 			}
 			
@@ -809,12 +806,11 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	public void setFieldsParameters(Object instance, Object element, Field[] fields, boolean typeCheck, Object... args){
 		List<FieldDescriptor> fieldsDescriptors = getFieldsParameters(element, fields, typeCheck, args);
 		for(FieldDescriptor fieldDescriptor: fieldsDescriptors){
-			fieldDescriptor.field.setAccessible(true);
+			fieldDescriptor.fField.setAccessible(true);
 			try {
-				fieldDescriptor.field.set(instance, fieldDescriptor.value);
+				fieldDescriptor.fField.set(instance, fieldDescriptor.fValue);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.generationLogger.addError(e);
 			}
 		}
 	}
@@ -826,7 +822,8 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	public List<FieldDescriptor> getFieldsParameters(Object element, Field[] fields, boolean typeCheck, Object... args) {
 		Map<String, Object> descriptorMap= new HashMap<String, Object>();
 		List<Object> arguments= new ArrayList<Object>();
-		prepareArguments(descriptorMap, arguments, args);
+		Map<String, GenerationArgumentDescriptor> descriptors= new HashMap<String, GenerationArgumentDescriptor>();
+		prepareArguments(descriptorMap, descriptors, arguments, args);
 		
 		List<Annotation> annotationsList= new ArrayList<Annotation>();
 		List<Class<?>> parameterTypesList = new ArrayList<Class<?>>();
@@ -852,7 +849,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		
 		List<FieldDescriptor> fieldsDescriptors= new ArrayList<FieldDescriptor>();
 		
-		Object[] parameters = getParameters(element, null, typeCheck, annotations, parameterTypes, descriptorMap, arguments, null, args);
+		Object[] parameters = getParameters(element, null, typeCheck, annotations, parameterTypes, descriptorMap, descriptors, arguments, null, args);
 		for(int index=0; index<parameters.length; index++){
 			fieldsDescriptors.add(new FieldDescriptor(retrievedFields.get(index), parameters[index]));
 		}
@@ -860,11 +857,13 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	}
 
 	protected static void prepareArguments(Map<String, Object> descriptorMap,
-			List<Object> arguments, Object... args) {
+			Map<String, GenerationArgumentDescriptor> descriptors, List<Object> arguments, Object... args) {
 		for(Object object: args){
 			if(object instanceof GenerationArgumentDescriptor){
 				GenerationArgumentDescriptor descriptor= (GenerationArgumentDescriptor) object;
-				descriptorMap.put(descriptor.id(), descriptor.value());
+				String id = descriptor.id();
+				descriptorMap.put(id, descriptor.value());
+				descriptors.put(id, descriptor);
 			}else{
 				arguments.add(object);
 			}
@@ -872,12 +871,12 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	}
 	
 	public class FieldDescriptor{
-		public Field field;
-		public Object value;
+		public Field fField;
+		public Object fValue;
 		
 		public FieldDescriptor(Field field, Object value) {
-			this.field= field;
-			this.value= value;
+			this.fField= field;
+			this.fValue= value;
 		}
 	}
 	
@@ -887,8 +886,9 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	
 	public static Object[] getParametersValues(Object element, GenerationPolicyRegistry registry, String currentString, Method method, boolean typeCheck, Object watchingObject, Object... args) {
 		Map<String, Object> descriptorMap= new HashMap<String, Object>();
+		Map<String, GenerationArgumentDescriptor> descriptors= new HashMap<String, GenerationArgumentDescriptor>();
 		List<Object> arguments= new ArrayList<Object>();
-		GenerationPolicyRegistry.prepareArguments(descriptorMap, arguments, args);
+		GenerationPolicyRegistry.prepareArguments(descriptorMap, descriptors, arguments, args);
 		
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 		
@@ -900,11 +900,12 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		
-		return registry.getParameters(element, currentString, typeCheck, annotations, parameterTypes, descriptorMap, arguments,watchingObject, args);
+		return registry.getParameters(element, currentString, typeCheck, annotations, parameterTypes, descriptorMap, descriptors, arguments,watchingObject, args);
 	}
 
-	public Object[] getParameters(Object element, String currentString, boolean typeCheck, Annotation[] annotations,
-			Class<?>[] parameterTypes, Map<String, Object> descriptorMap, List<Object> arguments, Object watchingObject, Object... args) {
+	private Object[] getParameters(Object element, String currentString, boolean typeCheck, Annotation[] annotations,
+			Class<?>[] parameterTypes, Map<String, Object> descriptorMap, Map<String, GenerationArgumentDescriptor> descriptors, 
+			List<Object> arguments, Object watchingObject, Object... args) {
 		TreeMap<String, Object> values = getPathMap(element);
 		
 		int length = annotations.length;
@@ -921,7 +922,34 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			Class<?> classType = parameterTypes[index];
 			
 			if(annotation==null){
-				parameters[index]= arguments.get(argsIndex);
+				Object object = arguments.get(argsIndex);
+				
+				if(typeCheck){
+					if(object== null){
+						if(isTheSamePrimitiveType(classType, "boolean", Boolean.class.getCanonicalName())){
+							object= Boolean.FALSE;
+						}else if(isTheSamePrimitiveType(classType, "int", Integer.class.getCanonicalName())){
+							object= Integer.valueOf(0);
+						}else if(isTheSamePrimitiveType(classType, "float", Float.class.getCanonicalName())){
+							object= Float.valueOf(0);
+						}else if(isTheSamePrimitiveType(classType, "double", Double.class.getCanonicalName())){
+							object= Double.valueOf(0);
+						}
+						parameters[index]= object;
+					}else{
+						Class<?> objectType = object.getClass();
+						if(classType.isInstance(object)|| isTheSamePrimitiveType(objectType, "boolean", Boolean.class.getCanonicalName())||
+								isTheSamePrimitiveType(objectType, "int", Integer.class.getCanonicalName())||
+								isTheSamePrimitiveType(objectType, "float", Float.class.getCanonicalName())||
+								isTheSamePrimitiveType(objectType, "double", Double.class.getCanonicalName())){
+							parameters[index]= object;
+						}else{
+							return null;
+						}
+					}
+					
+				}
+				
 				argsIndex++;
 				continue;
 			}
@@ -968,6 +996,8 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				}else{
 					parameters[index]= values;
 				}
+			}else if(annotation instanceof GenerationArguments){
+				parameters[index]= args;
 			}else if(annotation instanceof GenerationElementParameter){
 				GenerationElementParameter generationElementParameter = (GenerationElementParameter)annotation;
 				
@@ -987,7 +1017,20 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				GenerationArgument generationArgument= (GenerationArgument) annotation;
 				String id = generationArgument.id();
 				if(!id.isEmpty()){
-					parameters[index]= descriptorMap.get(id);
+					Object object = generationArgument.wrapped()? descriptors.get(id): descriptorMap.get(id);
+					Object intercepted = processWatchPoints(element, id, object, arguments);
+					Object reply = intercepted!=null? intercepted: object;
+					
+					String canonicalName = classType.getCanonicalName();
+					if("boolean".equals(canonicalName)|| Boolean.class.getClass().equals(canonicalName)){
+						parameters[index]= reply instanceof Boolean? reply: Boolean.FALSE;
+					}else if("int".equals(canonicalName)|| Integer.class.getClass().equals(canonicalName)){
+						parameters[index]= reply instanceof Boolean? reply: Integer.valueOf(0);
+					}else if(canonicalName.equals(String.class.getCanonicalName())){
+						parameters[index]= reply!=null? String.valueOf(reply): null;
+					}else{
+						parameters[index]= reply;
+					}
 				}else{
 					Object object = arguments.size()>objectsSetArguments?arguments.get(objectsSetArguments): null;
 					if(object!= null){
@@ -996,7 +1039,9 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 								isTheSamePrimitiveType(objectType, "int", Integer.class.getCanonicalName())||
 								isTheSamePrimitiveType(objectType, "float", Float.class.getCanonicalName())||
 								isTheSamePrimitiveType(objectType, "double", Double.class.getCanonicalName())){
-							parameters[index]= object;
+							
+							Object intercepted = processWatchPoints(element, id, object, arguments);
+							parameters[index]= intercepted!=null? intercepted: object;
 							objectsSetArguments++;
 						}
 					}
@@ -1076,47 +1121,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 	}
 	
-	private class ArgumentsWrapperObject{
-		protected List<String> fPath;
-		
-		public ArgumentsWrapperObject(List<String> path) {
-			this.fPath= path;
-		}
-		
-		@Override
-		public int hashCode() {
-			int hashCode = 0;
-			int length = this.fPath.size();
-			for(int index=0; index<length; index++){
-				String string = this.fPath.get(index);
-				hashCode= hashCode+ (string.hashCode()/length);
-			}
-			return hashCode;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(obj instanceof ArgumentsWrapperObject== false){
-				return false;
-			}
-			ArgumentsWrapperObject target= (ArgumentsWrapperObject) obj;
-			List<String> strings = target.fPath;
-			if(strings.size()!= this.fPath.size()){
-				return false;
-			}
-			
-			for(int index=0; index<strings.size(); index++){
-				if(!this.fPath.get(index).equals(strings.get(index))){
-					return false;
-				}
-			}
-			return true;
-		}
-	}
-	
-	
-
-
 	public void addUniqueValue(String id, Object values, Object... element){
 		addValue(id, values, true, element);
 	}
@@ -1144,16 +1148,22 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		return this.argumentRetriever.getValue(id, element);
 	}
 	
-	public List<Object> getAllValues(String id){
-		return this.argumentRetriever.getValues(id);
+	public List<Object> getAllValues(String id, Object... element){
+		return this.argumentRetriever.getAllValues(id, element);
+	}
+	
+	public List<Object> getById(String id){
+		return this.argumentRetriever.getById(id);
 	}
 	
 	/******************Delegations****************************************/
 	
+	@Override
 	public void define(IGenerationTemplateRegistry generationTemplateRegistry, String id, GenerationCallback callback){
 		this.generationTemplateDelegator.define(generationTemplateRegistry, id, callback);
 	}
 	
+	@Override
 	public void define(String id, GenerationCallback callback){
 		this.generationTemplateDelegator.define(this, id, callback);
 	}
@@ -1230,7 +1240,11 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 
 	@Override
 	public String getString(Object classObject, String fieldName, Object... arguments) {
-		List<Object> value = this.interceptedObjectsRetriever.getValue(fieldName, classObject, arguments);
+		return getString(classObject, false, fieldName, arguments);
+	}
+	
+	public String getString(Object classObject, boolean ignoreInterception, String fieldName, Object... arguments) {
+		List<Object> value = this.interceptedObjectsRetriever.getValue(fieldName, classObject, Boolean.valueOf(ignoreInterception), arguments);
 		if(!value.isEmpty()){
 			Object object = value.get(0);
 			if(object instanceof String){
@@ -1240,24 +1254,27 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 		
 		String stringValue = this.generationValueGetter.getString(classObject, fieldName, arguments);
-		Object processWatchPoints = processWatchPoints(classObject, fieldName, stringValue,  arguments);
-		if(processWatchPoints instanceof String){
-			this.interceptedObjectsRetriever.setValue(fieldName, processWatchPoints, true, classObject, arguments);
-			return (String) processWatchPoints;
+		
+		if(!ignoreInterception){
+			Object processWatchPoints = processWatchPoints(classObject, fieldName, stringValue,  arguments);
+			if(processWatchPoints instanceof String){
+				this.interceptedObjectsRetriever.setValue(fieldName, processWatchPoints, true, classObject, Boolean.valueOf(ignoreInterception), arguments);
+				return (String) processWatchPoints;
+			}
 		}
 		
-		this.interceptedObjectsRetriever.setValue(fieldName, stringValue, true, classObject, arguments);
+		this.interceptedObjectsRetriever.setValue(fieldName, stringValue, true, classObject, Boolean.valueOf(ignoreInterception), arguments);
 		return stringValue;
 	}
 
-	private Object processWatchPoints(Object classObject, String fieldName, Object watchingValue, Object... arguments) {
-		List<GenerationPointObject> list = this._watchingPointsInvocations.get(fieldName);
+	private Object processWatchPoints(Object classObject, String interceptId, Object watchingValue, Object... arguments) {
+		List<GenerationPointObject> list = this._watchingPointsInvocations.get(interceptId);
 		if(list== null){
 			return null;
 		}
 		
 		for(GenerationPointObject generationPointObject: list){
-			Object invoke = generationPointObject.invoke(classObject, this, fieldName, watchingValue, arguments);
+			Object invoke = generationPointObject.invoke(classObject, this, interceptId, watchingValue, arguments);
 			if(invoke instanceof InterceptorResponse){
 				return ((InterceptorResponse)invoke).getValue();
 			}
@@ -1275,8 +1292,8 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private class GenerationPointObject{
 		protected Method fMethod;
 		protected GenerationPoint fGenerationPoint;
-		protected Set<DecisionObject> whenDecisions= new HashSet<GenerationPolicyRegistry.DecisionObject>();
-		protected Set<DecisionObject> whenNotDecisions= new HashSet<GenerationPolicyRegistry.DecisionObject>();
+		protected Set<DecisionObject> whenDecisions= new HashSet<DecisionObject>();
+		protected Set<DecisionObject> whenNotDecisions= new HashSet<DecisionObject>();
 		protected Object fInstance;
 		
 		public GenerationPointObject(Method method, GenerationPoint generationPoint, Object instance) {
@@ -1294,7 +1311,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					return value.get(0);
 				}
 				for(int index=0; index<this.fGenerationPoint.ifConditionIds().length; index++){
-					if (!decisionPoint(element, registry, this.fGenerationPoint.ifConditionIds()[index], arguments)) {
+					if (!processDecisionPointsMethods(element, registry, this.fGenerationPoint.ifConditionIds()[index], true, arguments)) {
 						registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments);
 						return null;
 					}
@@ -1345,6 +1362,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				registry.generationObjectsRetriever.setValue(generationPoint, invoke, true, element, arguments);
 				return invoke;
 			} catch (Exception e) {
+				registry.generationLogger.addError(e);
 				return null;
 			}
 		}
@@ -1367,6 +1385,11 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		public boolean unique(){
 			return this.fGenerationPoint.unique();
 		}
+	}
+
+	@Override
+	public GenerationLogger getGenerationLogger() {
+		return this.generationLogger;
 	}
 	
 }

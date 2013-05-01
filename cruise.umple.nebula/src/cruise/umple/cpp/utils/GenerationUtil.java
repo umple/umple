@@ -119,14 +119,15 @@ public class GenerationUtil {
 					}
 				}
 			}
-		}
-		if(!results.isEmpty()){
-			if(seaprate>0){
-				results= CommonConstants.NEW_LINE+ results;
-			}
 			
-			if(indent>0){
-				results= StringUtil.indent(results, indent);
+			if(!results.isEmpty()){
+				if(values.size()>1&& seaprate>0){
+					results= CommonConstants.NEW_LINE+ results;
+				}
+				
+				if(indent>0){
+					results= StringUtil.indent(results, indent);
+				}
 			}
 		}
 		

@@ -27,9 +27,9 @@ import java.util.Map;
 
 public class ArgumentsRetrieval{
 		
-		private Map<String, Map<String, List<Object>>> data= new HashMap<String, Map<String,List<Object>>>();
+		private Map<String, Map<String, List<Object>>> data= new HashMap<String, Map<String, List<Object>>>();
 		
-		public List<Object> getValues(String id){
+		public List<Object> getById(String id){
 			Map<String, List<Object>> map = this.data.get(id);
 			if(map== null){
 				return new ArrayList<Object>();
@@ -41,17 +41,32 @@ public class ArgumentsRetrieval{
 			return all;
 		}
 		
-		public List<Object> getValue(String id, Object... elements){
-			return getValue(id, asListArguments(elements));
+		public List<Object> getAllValues(String id, Object... elements){
+			return getValue(id, true, asListArguments(elements));
 		}
 		
-		private List<Object> getValue(String id, List<Object> elements) {
+		public List<Object> getValue(String id, Object... elements){
+			return getValue(id, false, asListArguments(elements));
+		}
+		
+		private List<Object> getValue(String id, boolean all, List<Object> elements) {
 			Map<String, List<Object>> map = this.data.get(id);
 			if(map== null){
 				return new ArrayList<Object>();
 			}
 			String identifier= identifier(elements);
-			List<Object> list = map.get(identifier);
+			List<Object> list;
+			if(all){
+				list= new ArrayList<Object>();
+				for(String key: map.keySet()){
+					if(identifier.startsWith(key)){
+						list.addAll(map.get(key));
+					}
+				}
+			}else{
+				list = map.get(identifier);
+			}
+			
 			if(list== null){
 				return new ArrayList<Object>();
 			}

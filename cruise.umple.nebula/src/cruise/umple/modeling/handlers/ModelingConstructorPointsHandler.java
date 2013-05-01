@@ -18,21 +18,19 @@
 *******************************************************************************/
 package cruise.umple.modeling.handlers;
 
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationPoint;
-import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
-import cruise.umple.modeling.handlers.cpp.ICppDecisions;
+import cruise.umple.core.GenerationPoint;
+import cruise.umple.core.GenerationPolicyRegistry;
 
 
 public class ModelingConstructorPointsHandler{
@@ -44,8 +42,8 @@ public class ModelingConstructorPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationArgument boolean isAttribute,
 			@GenerationArgument String typeParameterName) {
-		SimpleEntry<String, String> simpleEntry = new AbstractMap.SimpleEntry<String, String>(normalizedType, typeParameterName);
-		SimpleEntry<String, SimpleEntry<String, String>> entry= new SimpleEntry<String, AbstractMap.SimpleEntry<String,String>>(typeName, simpleEntry);
+		SimpleEntry<String, String> simpleEntry = new SimpleEntry<String, String>(normalizedType, typeParameterName);
+		SimpleEntry<String, SimpleEntry<String, String>> entry= new SimpleEntry<String, SimpleEntry<String, String>>(typeName, simpleEntry);
 		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, entry, parent, Boolean.valueOf(isAttribute));
 	}
 	
@@ -57,7 +55,7 @@ public class ModelingConstructorPointsHandler{
 			@GenerationProcedureParameter(id = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER_BODY_DECISION_POINT) boolean bodyFiltered,
 			@GenerationProcedureParameter(id = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER_DEFAULT_ASSIGN) boolean filterDefaultAssign,
 			@GenerationProcedureParameter(id = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER_PARAMETER_DECISION_POINT) boolean parameterFiltered,
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_SETTABLE) boolean isSettable,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_SETTABLE) boolean isSettable,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationArgument boolean isAttribute,
 			@GenerationArgument String constructId,
@@ -98,13 +96,17 @@ public class ModelingConstructorPointsHandler{
 	}
 	
 	@DecisionPoint(decisionPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER_PARAMETER_DECISION_POINT)
-	public static boolean hasConstructorParameter(@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue) {
+	public static boolean hasConstructorParameter(
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE 
+			/*Must not be IModelingConstants.NORMALIZED_DEFAULT_VALUE */) String defaultValue) {
 		//When there is a default value, then we do not put the attribute in the constructor
 		return defaultValue!= null&& !defaultValue.isEmpty();
 	}
 	
 	@DecisionPoint(decisionPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER_BODY_DECISION_POINT)
-	public static boolean hasConstructorBody(@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue) {
+	public static boolean hasConstructorBody(
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue
+			/*Must not be IModelingConstants.NORMALIZED_DEFAULT_VALUE */) {
 		//When there is a default value, then we have to use that value, so, no body means that we will use the default id that will assign the default value
 		return defaultValue!= null&& !defaultValue.isEmpty();
 	}

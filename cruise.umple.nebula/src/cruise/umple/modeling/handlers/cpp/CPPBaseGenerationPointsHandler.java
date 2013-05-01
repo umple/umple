@@ -33,11 +33,6 @@ import java.util.TreeMap;
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationLoopAnnotation;
-import cruise.umple.core.GenerationPoint;
-import cruise.umple.core.GenerationPolicyRegistry;
-import cruise.umple.core.IGenerationPointPriorityConstants;
-import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
@@ -46,7 +41,12 @@ import cruise.umple.core.GenerationCallback.GenerationLoopPath;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
+import cruise.umple.core.GenerationLoopAnnotation;
+import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
+import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.IGenerationPointPriorityConstants;
+import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.cpp.core.ContentsDescriptor;
@@ -278,13 +278,13 @@ public class CPPBaseGenerationPointsHandler{
 	@GenerationPoint(generationPoint = ICppDefinitions.ATTRIBUTE_EQUALITY, priority= IGenerationPointPriorityConstants.LOWEST,  unique= true)
 	public static String attributeEquality(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
 		return generationValueGetter.use(ICppDefinitions.ATTRIBUTE_EQUALITY_DECLARATION, 
 				name, Boolean.valueOf(isMany));
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.ATTRIBUTE_EQUALITY,ifConditionIds=IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE, ifNotConditionIds=
-			ICppDecisions.ATTRIBUTE_IS_MANY, unique= true)
+			IModelingDecisions.ATTRIBUTE_IS_MANY, unique= true)
 	public static String primitiveattributeEquality(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
 		return generationValueGetter.use(ICppDefinitions.PRIMITIVE_ATTRIBUTE_EQUALITY, name);
@@ -323,7 +323,12 @@ public class CPPBaseGenerationPointsHandler{
 		}
 		
 		generationValueGetter.generationPointString(element, ICppHandlerDefinitions.CLASS_DECLARATIONS_EXTENSION, all);
-		String parametersString= GenerationUtil.asStringParameters(all);
+		
+		List<String> asPublic= new ArrayList<String>();
+		for(Object current: all){
+			asPublic.add(generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, VisibilityConstants.PUBLIC, current));
+		}
+		String parametersString= GenerationUtil.asStringParameters(asPublic);
 		
 		return generationValueGetter.use(ICppDefinitions.CLASS_DEFINITION, name, parametersString);
 	}
@@ -334,12 +339,49 @@ public class CPPBaseGenerationPointsHandler{
 				replace(CommonConstants.FORWARD_SLASH, CommonConstants.UNDERSCORE).toUpperCase();
 	}
 	
-	@GenerationPoint(generationPoint = IModelingElementDefinitions.TYPE_PARAMETER_NAME)
-	public static String typeParameterName(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
-		return isMany? generationValueGetter.use(ICppNameConstants.VARIABLE_PARAMETER,name, Boolean.TRUE):
-			generationValueGetter.use(ICppNameConstants.VARIABLE_PARAMETER, name);
+	@LoopProcessorAnnotation
+	public static void modelCodeIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationBaseElement Object modelPackage){
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.ALGORITHM), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.IO_STREAM), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STRING), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.EXCEPTION), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STD_EXCEPTION), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.ASSERT_LIBRARY), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STUDIO), 
+				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 	}
 	
 	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE)
@@ -369,7 +411,10 @@ public class CPPBaseGenerationPointsHandler{
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
 	}
 	
-	@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}, aspect= LoopAspectConstants.FINALIZE)
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
+	}, aspect= LoopAspectConstants.FINALIZE)
 	public static void classAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationProcedureParameter(id = IModelingDecisions.MODEL_PATH) String path){
@@ -385,22 +430,6 @@ public class CPPBaseGenerationPointsHandler{
 		
 		ContentsDescriptor headerContentsDescriptor = new ContentsDescriptor(headerContents, headerFileName, path);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, headerContentsDescriptor);
-	}
-	
-	
-	@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR}, aspect= LoopAspectConstants.FINALIZE)
-	public static void interfacesAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationLoopElement Object modelPackage){
-		String modelPath = generationValueGetter.generationPointString(modelPackage, IModelingDecisions.MODEL_PATH);
-		String path= modelPath;
-		
-		String headerContents = generationValueGetter.generate(ICppDefinitions.HEADER, element);
-		String headerFileName= name + CommonConstants.DOT +CPPCommonConstants.HEADER_FILE_EXTENSION;
-		
-		ContentsDescriptor headerContentsDescriptor = new ContentsDescriptor(headerContents, headerFileName, path);
-		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, headerContentsDescriptor);
-	
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -477,9 +506,11 @@ public class CPPBaseGenerationPointsHandler{
 		}
 		
 		
-		Iterator<List<String>> iterator = namespaces.iterator();
-		while(iterator.hasNext()){
-			List<String> next = iterator.next();
+		for(int index=0; index<namespaces.size(); index++){
+			List<String> next = namespaces.get(index);
+			
+			Object object= objects.get(index);
+			
 			String definitionString= CommonConstants.BLANK;
 			
 			Iterator<String> nestedIterator = next.iterator();
@@ -495,7 +526,7 @@ public class CPPBaseGenerationPointsHandler{
 					String beginDefinition = definitionString+CommonConstants.UNDERSCORE+ CPPCommonConstants.BEGIN.toUpperCase();
 					String endDefinition = definitionString+CommonConstants.UNDERSCORE+ CPPCommonConstants.END.toUpperCase();
 					
-					if(compareNamespace!= null&& !compareNamespace.isEmpty()){
+					if(compareNamespace!= null&& !compareNamespace.isEmpty()&& object== element){
 						beginDefinition= CommonConstants.UNDERSCORE+ compareNamespace+ CommonConstants.UNDERSCORE+ beginDefinition;
 						endDefinition= CommonConstants.UNDERSCORE+ compareNamespace+ CommonConstants.UNDERSCORE+ endDefinition;
 					}
@@ -667,7 +698,7 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
 		String normalizedNamespace= CommonConstants.BLANK;
 		if(!namespace.isEmpty()){
-			normalizedNamespace= namespace.replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+			normalizedNamespace= namespace.replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX).replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
 			normalizedNamespace= normalizedNamespace+ CPPCommonConstants.DECLARATION_COMMON_PREFIX+ name;
 		}else{
 			normalizedNamespace= name;
@@ -681,7 +712,7 @@ public class CPPBaseGenerationPointsHandler{
 	}
 
 	private static String setPredefinedTypes(GenerationPolicyRegistry generationValueGetter, Object element) {
-		List<Object> values = generationValueGetter.getAllValues(ICppDefinitions.INCOMPLETE_NAMESPACES_DEFNITION);
+		List<Object> values = generationValueGetter.getById(ICppDefinitions.INCOMPLETE_NAMESPACES_DEFNITION);
 		
 		Map<Object, List<Object>> groups= new HashMap<Object, List<Object>>();
 		Set<Object> keys= new LinkedHashSet<Object>();	//Preserve order
@@ -717,7 +748,7 @@ public class CPPBaseGenerationPointsHandler{
 			
 			LinkedHashSet<SimpleEntry<?, ?>> namespaceEntries = entries.get(namespace);
 			if(namespaceEntries== null){
-				namespaceEntries= new LinkedHashSet<SimpleEntry<?,?>>();
+				namespaceEntries= new LinkedHashSet<SimpleEntry<?, ?>>();
 				entries.put(namespace, namespaceEntries);
 			}
 			
@@ -779,7 +810,8 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationBaseElement Object element,
 			@GenerationArgument boolean root){
 		String namespace = namespace(generationValueGetter, path, modelPackage, element, root, CPPCommonConstants.BEGIN);
-		if(namespace.isEmpty()){
+		
+		if(namespace== null|| namespace.isEmpty()){
 			return namespace;
 		}
 		return namespace+ CommonConstants.NEW_LINE;
@@ -799,6 +831,11 @@ public class CPPBaseGenerationPointsHandler{
 		if(root){
 			String elementNamespace = generationValueGetter.getString(modelPackage, IModelingElementDefinitions.NAMESPACE);
 			String modelNamespace = generationValueGetter.getString(element, IModelingElementDefinitions.NAMESPACE);
+			
+			if(elementNamespace== null){
+				elementNamespace= CommonConstants.BLANK;
+			}
+			
 			Object retrieeObject= elementNamespace.equals(modelNamespace)? modelPackage: element;
 			
 			List<Object> values = generationValueGetter.getValues(ICppDefinitions.NAMESPACE_OPENING, retrieeObject);
@@ -812,6 +849,9 @@ public class CPPBaseGenerationPointsHandler{
 		List<String> segments= new ArrayList<String>();
 		for(String key: path.keySet()){
 			Object object = path.get(key);
+			if(modelPackage== object){
+				continue;
+			}
 			List<Object> values = generationValueGetter.getValues(ICppDefinitions.NAMESPACE_OPENING, object);
 			if(values.isEmpty()){
 				continue;
@@ -877,7 +917,7 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.DEFAULT_LANGUAGE_TYPE_VALUE, priority=IGenerationPointPriorityConstants.LOWEST, unique= true)
 	public static String defaultCPPParameterValue(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue){
+			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_DEFAULT_VALUE) String defaultValue){
 		if(defaultValue== null|| defaultValue.isEmpty()){
 			if(CPPTypesConstants.BOOL.equals(typeName)){
 				return Boolean.FALSE.toString();
@@ -889,11 +929,32 @@ public class CPPBaseGenerationPointsHandler{
 		return defaultValue;
 	}
 	
-	@GenerationPoint(generationPoint = IModelingElementDefinitions.DEFAULT_VALUE)
-	public static String setterFilters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+	@GenerationPoint(generationPoint= IModelingConstants.DEFAULT_VALUE_INTERCEPTOR, 
+			intercept = {IModelingElementDefinitions.DEFAULT_VALUE}, priority=IGenerationPointPriorityConstants.LOWEST)
+	public static InterceptorResponse normalizedDateDefaultValue(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@WatchedObjectValue String defaultValue){
+		if(defaultValue!= null&& !defaultValue.isEmpty()){
+			return null;
+		}
+		if(CPPTypesConstants.BOOL.equals(typeName)){
+			return new InterceptorResponse(CPPTypesConstants.FALSE);
+		}else if(CPPTypesConstants.INTEGER.equals(typeName)){
+			return new InterceptorResponse(String.valueOf(0));
+		}
+		return new InterceptorResponse(CPPCommonConstants.NULL);
+	}
+	
+	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_DEFAULT_VALUE)
+	public static String normalizedDefaultValue(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element) {
 		return generationValueGetter.getString(element,IModelingElementDefinitions.DEFAULT_VALUE, CPPCommonConstants.CPP_LANGUAGE);
-		
+	}
+	
+	@GenerationPoint(generationPoint = IModelingElementDefinitions.DEFAULT_VALUE)
+	public static String defaultValue(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationBaseElement Object element) {
+		return generationValueGetter.getString(element,true, IModelingElementDefinitions.DEFAULT_VALUE, 
+				CPPCommonConstants.CPP_LANGUAGE);
 	}
 	
 	@GenerationPoint(generationPoint = CPPCommonConstants.PACKAGE_SUFFIX)
@@ -943,20 +1004,22 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_TYPE_NAME)
 	public static String typeName(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationProcedureParameter(id = ICppDefinitions.IS_POINTER_TYPE) boolean isPointer,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = ICppDefinitions.IS_POINTER_TYPE) boolean isPointer,
+			@GenerationBaseElement Object element,
+			@GenerationArgument(id = ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
 			@GenerationArgument boolean asType){
 		
 		String normalizedType= typeName;
-		if(isPointer){
-			normalizedType= normalizedType+ CommonConstants.ASTERISK;
-		}
 		
 		//For primitive types (string, int, etc), we do not have pointer, but if they are many, we wrap the type in a vector and this vector must be a pointer
 		//Therefore, enable pointer for the isMany case as well in order to handle that condition
 		if(isMany&& !asType){
-			normalizedType = generationValueGetter.use(ICppDefinitions.TYPE_AS_VECTOR, normalizedType, Boolean.TRUE);
+			//If type is for construction (i.e. new Type()), then, avoid pointer in the type string
+			normalizedType = generationValueGetter.generate(ISTLConstants.TYPE_AS_LIST, element, Boolean.valueOf(!isConstruction));
+		}else if(isPointer){
+			normalizedType= normalizedType+ CommonConstants.ASTERISK;
 		}
 		
 		return normalizedType;
@@ -1007,11 +1070,22 @@ public class CPPBaseGenerationPointsHandler{
 		return null;
 	}
 	
+	@GenerationPoint(generationPoint = IModelingDecisions.DEPENDS_GENERATION_POINT, unique= true)
+	public static boolean filterVoidAsIncludeStatement(@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object type) {
+		if(CPPTypesConstants.VOID.equals(type)){
+			//Filter "void" as it is a keyword in C++, and we should not have types defined by that keyword
+			return true;
+		}
+		return false;
+	}
+	
 	
 	@GenerationPoint(generationPoint = IModelingConstants.METHOD_CONTENTS_REGISTER, unique= true)
 	public static void setMethodsDeclaraionDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element,
+			@GenerationElementParameter(id = IModelingElementDefinitions.IS_ABSTRACT) boolean isAbstract,
 			@GenerationArgument(id= IModelingConstants.METHOD_ID_ARGUMENT) String id, 
+			@GenerationLoopElement(id= {IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object interfaceObject,
 			@GenerationArgument(id= IModelingConstants.METHOD_VISIBILITY_ARGUMENT) String visibility) {
 		List<Object> values = generationValueGetter.getValues(id, element, visibility);
 		for(Object entry: values){
@@ -1021,71 +1095,243 @@ public class CPPBaseGenerationPointsHandler{
 			
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map= (Map<String, Object>) entry;
-			Object returnType = map.get(IModelingConstants.RETURN_TYPE);
-			Object parametersString = map.get(IModelingConstants.PARAMETERS_STRING);
-			Object name = map.get(IModelingConstants.METHOD_NAME);
-			Object codeBody = map.get(IModelingConstants.CODY_BODY);
-			Object comments = map.get(IModelingConstants.METHOD_COMMENT);
-			Object object = map.get(IModelingConstants.METHOD_OBJECT);
-			Object isConstant = map.get(IModelingConstants.METHOD_CONST);
 			
-			if(object== null){
-				object= CommonConstants.BLANK;
-			}
+			Set<MethodDes> incomplete= new LinkedHashSet<MethodDes>();
+			Set<MethodDes> complete= new LinkedHashSet<MethodDes>();
+			boolean foundNonAbstract = inheritedCall(incomplete,complete, generationValueGetter, element, id, visibility);
+			
 			Object group = map.get(IModelingConstants.METHOD_GROUP);
 			if(group== null){
 				group= IModelingConstants.METHOD_DEFAUT_GROUP;
 			}
-			generationValueGetter.addUniqueValue(IModelingConstants.METHODS_GROUPS, group, element, visibility);
-			generationValueGetter.addUniqueValue(IModelingConstants.METHODS_OBJECTS, object, element, visibility);
 			
-			generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION_BEFORE, element,
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, id),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONST, isConstant),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name));
+			setOperation(id, map, generationValueGetter, complete, element, visibility, false);
 			
+			if(interfaceObject== null&& !isAbstract&& !foundNonAbstract){
+				for(MethodDes descriptor: incomplete){
+					setOperation(id, descriptor.map, generationValueGetter, complete, element, visibility, true);
+				}
+			}
+		}
+	}
+	
+	private static void setOperation(String id, Map<String, Object> map, GenerationPolicyRegistry generationValueGetter, Set<MethodDes> complete, Object element,
+			String visibility, boolean isConcluded){
+		Object returnType = map.get(IModelingConstants.RETURN_TYPE);
+		Object parametersString = map.get(IModelingConstants.PARAMETERS_STRING);
+		Object name = map.get(IModelingConstants.METHOD_NAME);
+		
+		Object codeBody = map.get(IModelingConstants.CODY_BODY);
+		Object comments = map.get(IModelingConstants.METHOD_COMMENT);
+		Object object = map.get(IModelingConstants.METHOD_OBJECT);
+		Object isConstant = map.get(ICppDefinitions.METHOD_CONST);
+		Object isVirtual = map.get(ICppDefinitions.METHOD_VIRTUAL);
+		Object isPure = map.get(ICppDefinitions.METHOD_PURE);
+		
+		
+		if(complete.contains(new MethodDes((String)returnType, (String)parametersString, (String)name, map))|| isConcluded){
+			isVirtual= Boolean.TRUE;
+		}
+		
+		if(object== null){
+			object= CommonConstants.BLANK;
+		}
+		Object group = map.get(IModelingConstants.METHOD_GROUP);
+		if(group== null){
+			group= IModelingConstants.METHOD_DEFAUT_GROUP;
+		}
+		
+		generationValueGetter.addUniqueValue(IModelingConstants.METHODS_GROUPS, group, element, visibility);
+		generationValueGetter.addUniqueValue(IModelingConstants.METHODS_OBJECTS, object, element, visibility);
+		
+		String contents= CommonConstants.BLANK;
+		if(!isConcluded){
 			String before= generationValueGetter.generationPointString(object, ICppDefinitions.METHOD_IMPLEMENTATION_BEFORE,
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, id),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONST, isConstant),
+					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant),
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name));
 			
 			String after= generationValueGetter.generationPointString(object, ICppDefinitions.METHOD_IMPLEMENTATION_AFTER,
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, id),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONST, isConstant),
+					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant),
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name));
-			
-			if(after.contains("numberOfIds());")){
-				System.out.println();
-			}
-			
-			String contents= before;
-			contents= contents+ codeBody;
-			contents= contents+ after;
-			
+						
 			if(!after.isEmpty()|| !before.isEmpty()){
 				isConstant=Boolean.FALSE;
 			}
 			
-			String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
-			
-			String qualifiedMethodName = generationValueGetter.use(ICppDefinitions.QUALIFIED_METHOD_NAME, parentName, name);
-			String implementation = generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, object, returnType, 
-					qualifiedMethodName, parametersString, contents,
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, id),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONST, isConstant),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name));
-			if(comments instanceof String&& !((String)comments).isEmpty()){
-				implementation= comments+ CommonConstants.NEW_LINE+ implementation;
-			}
-			generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, implementation, element, group, object, visibility);
-			
-			String declaration = generationValueGetter.use(ICppDefinitions.METHOD_DECLARATION, returnType, name, parametersString,
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONST, isConstant));
-			generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
+			contents= before;
+			contents= contents+ codeBody;
+			contents= contents+ after;
+		}else{
+			isPure= Boolean.FALSE;
+			contents= contents+ codeBody;
 		}
+		
+		String declaration = generationValueGetter.use(ICppDefinitions.METHOD_DECLARATION, returnType, name, parametersString,
+				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_PURE, isPure),
+				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_VIRTUAL, isVirtual),
+				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant));
+		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
+		
+		if(isPure instanceof Boolean&& ((Boolean)isPure).booleanValue()){
+			//Pure does not have implementation
+			return;
+		}
+		
+		String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
+		
+		String qualifiedMethodName = generationValueGetter.use(ICppDefinitions.QUALIFIED_METHOD_NAME, parentName, name);
+		String implementation = generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, object, returnType, 
+				qualifiedMethodName, parametersString, contents,
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, id),
+				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name));
+		if(comments instanceof String&& !((String)comments).isEmpty()){
+			implementation= comments+ CommonConstants.NEW_LINE+ implementation;
+		}
+		generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, implementation, element, group, object, visibility);
 	}
 	
 	
+	private static boolean inheritedCall(Set<MethodDes> incomplete, Set<MethodDes> complete, 
+			GenerationPolicyRegistry generationValueGetter,
+			Object element, String id, String visibility) {
+		
+		boolean foundNonAbstract= false;
+		
+		Set<Object> all= new LinkedHashSet<Object>();
+		findAllParents(generationValueGetter, element, all);
+		
+		
+		List<?> parentInterfaces= generationValueGetter.getList(element, IModelingConstants.PARENT_INTERFACES);
+		
+		for(Object parentObject: parentInterfaces){
+			foundNonAbstract= foundNonAbstract| searchUnimplementedMethods(incomplete, complete, generationValueGetter, id, visibility, parentObject);
+		}
+		
+		Object parentClass= generationValueGetter.getObject(element, IModelingConstants.PARENT_CLASS);
+		boolean isAbstract = generationValueGetter.getBoolean(parentClass, IModelingElementDefinitions.IS_ABSTRACT);
+		if(isAbstract){
+			foundNonAbstract= foundNonAbstract|searchUnimplementedMethods(incomplete,complete, generationValueGetter, id, visibility, parentClass);
+		}
+		
+		for(MethodDes des: complete){
+			if(incomplete.contains(des)){
+				incomplete.remove(des);
+			}
+		}
+		
+		return foundNonAbstract;
+	}
+
+	private static boolean searchUnimplementedMethods(Set<MethodDes> incomplete, Set<MethodDes> complete,
+			GenerationPolicyRegistry generationValueGetter, String id,
+			String visibility, Object current) {
+		
+		Set<Object> all= new LinkedHashSet<Object>();
+		all.add(current);
+		findAllParents(generationValueGetter, current, all);
+		
+		boolean foundNonAbstract= false;
+		
+		for(Object parentObject: all){
+			List<Object> values = generationValueGetter.getValues(id, parentObject, visibility);
+			for(Object entry: values){
+				if(entry instanceof Map== false){
+					continue;
+				}
+				
+				@SuppressWarnings("unchecked")
+				Map<String, Object> parentMap= (Map<String, Object>) entry;
+				Object parentReturnType = parentMap.get(IModelingConstants.RETURN_TYPE);
+				Object parentParametersString = parentMap.get(IModelingConstants.PARAMETERS_STRING);
+				Object parentName = parentMap.get(IModelingConstants.METHOD_NAME);
+				
+				
+				TreeMap<String, Object> pathMap = generationValueGetter.getPathMap(parentObject);
+				boolean isClass= pathMap!= null&& pathMap.get(IModelingElementDefinitions.CLASSES_PROCESSOR)!= null;
+				boolean isAbstract = generationValueGetter.getBoolean(parentObject, IModelingElementDefinitions.IS_ABSTRACT);
+				
+				if(isClass){
+					if(!isAbstract){
+						foundNonAbstract= true;
+					}
+				}
+				
+				
+				MethodDes currentMethodDestricptor= new MethodDes((String)parentReturnType, 
+						(String)parentParametersString, (String)parentName, parentMap);
+				
+				Object object = parentMap.get(IModelingConstants.METHOD_DEFAULTED_IMPLEMENTATION);
+				if(object instanceof Boolean&& ((Boolean)object).booleanValue()){
+					incomplete.add(currentMethodDestricptor);
+				}else{
+					complete.add(currentMethodDestricptor);
+					
+					if(incomplete.contains(currentMethodDestricptor)){
+						incomplete.remove(currentMethodDestricptor);
+					}
+				}
+			}
+		}
+		
+		for(MethodDes des: complete){
+			if(incomplete.contains(des)){
+				incomplete.remove(des);
+			}
+		}
+		return foundNonAbstract;
+	}
+	
+	private static void findAllParents(GenerationPolicyRegistry generationValueGetter, Object element, Set<Object> all) {
+		Object parentClass= generationValueGetter.getObject(element, IModelingConstants.PARENT_CLASS);
+		List<?> parentInterfaces= generationValueGetter.getList(element, IModelingConstants.PARENT_INTERFACES);
+		
+		if(parentClass!= null){
+			all.add(parentClass);
+			findAllParents(generationValueGetter, parentClass, all);
+		}
+		
+		if(!parentInterfaces.isEmpty()){
+			all.addAll(parentInterfaces);
+			for(Object parentInterface: parentInterfaces){
+				findAllParents(generationValueGetter, parentInterface, all);
+			}
+		}
+	}
+	
+	private static class MethodDes{
+		String returnType;
+		String parametersString;
+		String methodName;
+		
+		Map<String, Object> map;
+		public MethodDes(String returnType, String parametersString, String methodName, Map<String, Object> map) {
+			this.returnType= returnType;
+			this.parametersString= parametersString;
+			this.methodName= methodName;
+			
+			this.map= map;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if(obj instanceof MethodDes== false){
+				return false;
+			}
+			
+			MethodDes target= (MethodDes) obj;
+			return returnType.equals(target.returnType)&& this.parametersString.equals(target.parametersString)&& methodName.equals(target.methodName);
+		}
+		
+		@Override
+		public int hashCode() {
+			String all= returnType+ parametersString+ methodName;
+			return all.hashCode();
+		}
+	}
+
 	@GenerationPoint(generationPoint = IModelingConstants.METHOD_DETAILS, unique= true)
 	public static String methodDetails(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element,
@@ -1182,7 +1428,7 @@ public class CPPBaseGenerationPointsHandler{
 			Object codeBody = map.get(IModelingConstants.CODY_BODY);
 			Object name = map.get(IModelingConstants.METHOD_NAME);
 			Object comment = map.get(IModelingConstants.METHOD_COMMENT);
-			Object isConstant = map.get(IModelingConstants.METHOD_CONST);
+			Object isConstant = map.get(ICppDefinitions.METHOD_CONST);
 			
 			String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
 			
@@ -1190,7 +1436,7 @@ public class CPPBaseGenerationPointsHandler{
 			contents = contents+ generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element, returnType, 
 					qualifiedMethodName, parametersString, codeBody,
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONST, isConstant))+ CommonConstants.NEW_LINE;
+					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant))+ CommonConstants.NEW_LINE;
 			
 			if(comment instanceof String&& !((String)comment).isEmpty()){
 				contents= comment+ CommonConstants.NEW_LINE+ contents;
