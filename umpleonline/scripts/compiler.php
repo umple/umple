@@ -102,7 +102,7 @@ else if (isset($_REQUEST["umpleCode"]))
     copy("$filename", "JSFProvider/model.ump");
 	executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
   }
-  elseif (!in_array($language,array("Php","Java","Ruby","Cpp","Sql","GvStateDiagram","GvClassDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     $filename = saveFile($input);
     $errorFilename = "{$filename}.erroroutput";
@@ -129,13 +129,13 @@ else if (isset($_REQUEST["umpleCode"]))
 
   if (!$uigu)
   { // NOTuigu
-  // Generate the Java, PHP, Ruby, Cpp or Sql and put it into the right directory
+  // Generate the Java, PHP, RTCpp, Ruby, Cpp or Sql and put it into the right directory
   $filename = saveFile("generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   
   $outputFilename = "{$filename}.output";
   $errorFilename = "{$filename}.erroroutput";
   
-  // Clean up any pre-existing java. php, ruby or cpp files
+  // Clean up any pre-existing java. php, RTCpp, ruby or cpp files
   $thedir = dirname($outputFilename);
   $toRemove = False;
   $rmcommand = "rm -rf ";
