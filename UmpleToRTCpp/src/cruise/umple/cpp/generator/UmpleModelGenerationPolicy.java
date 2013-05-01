@@ -329,6 +329,11 @@ public class UmpleModelGenerationPolicy{
 		return sortedTypeHack(associationVariable.getType());
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.TYPE_NAME)
+	public static String getOperationName(@GenerationBaseElement Method method){
+		return sortedTypeHack(method.getType());
+	}
+	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_SORTED)
 	public static boolean isSorted(@GenerationBaseElement UmpleVariable associationVariable){
 		return isSorted(associationVariable.getType());
@@ -338,6 +343,11 @@ public class UmpleModelGenerationPolicy{
 	public static String getOtherEndTypeName(@GenerationBaseElement AssociationVariable associationVariable){
 		AssociationVariable relatedAssociation = associationVariable.getRelatedAssociation();
 		return sortedTypeHack(relatedAssociation.getType());
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.PRIORITY)
+	public static String priority(@GenerationBaseElement AssociationVariable associationVariable){
+		return associationVariable.getPriority();
 	}
 
 	//FIXME: We have to apply this hack. The sorted association generator is Java dependent, and assumes that Comparator will work for all languages which is wrong
@@ -469,6 +479,11 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_DERIVED)
 	public static boolean isDerived(@GenerationBaseElement Attribute attribute){
 		return attribute.isIsDerived(); 
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_ABSTRACT)
+	public static boolean isAbstract(@GenerationBaseElement UmpleClass element){
+		return element.getIsAbstract();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ASSOCIATION_VARIABLES)

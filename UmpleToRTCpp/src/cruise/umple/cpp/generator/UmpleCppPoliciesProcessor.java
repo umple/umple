@@ -26,6 +26,7 @@ import cruise.umple.modeling.handlers.IUmpleModelingPriorities;
 
 public abstract class UmpleCppPoliciesProcessor extends CppPoliciesProcessor{
 
+	@Override
 	public void registerTypesPolicies(){
 		GenerationPolicyRegistry generationPolicyRegistry = this.getGenerationPolicyRegistry();
 		generationPolicyRegistry.registerGenerationPolicy(new UmpleModelGenerationPolicy());
@@ -33,6 +34,7 @@ public abstract class UmpleCppPoliciesProcessor extends CppPoliciesProcessor{
 		
 	}
 	
+	@Override
 	public void registerGenerationPoints(){
 		GenerationPolicyRegistry generationPolicyRegistry = this.getGenerationPolicyRegistry();
 		generationPolicyRegistry.register(IUmpleModelingPriorities.class);
@@ -40,6 +42,7 @@ public abstract class UmpleCppPoliciesProcessor extends CppPoliciesProcessor{
 		generationPolicyRegistry.register(new UmpleBaseGenerationPointsHandler());
 	}
 	
+	@Override
 	public void registerHelperTemplates(){
 		new UmpleCppTemplateHelper().init(this.getGenerationPolicyRegistry());
 		super.registerHelperTemplates();

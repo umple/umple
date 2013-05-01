@@ -53,6 +53,9 @@ public class UmpleCPPGenerationUtil {
 		String otherEndType= associationVariable.getRelatedAssociation().getType();
 		
 		UmpleClass umpleClass = associationVariable.getUmpleClass();
+		if(umpleClass== null){
+			return null;
+		}
 		for(Association association: umpleClass.getAssociations()){
 			List<AssociationEnd> ends = association.getEnds();
 			AssociationEnd end1 = ends.get(0);
