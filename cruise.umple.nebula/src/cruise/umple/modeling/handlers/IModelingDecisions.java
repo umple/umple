@@ -20,6 +20,34 @@ package cruise.umple.modeling.handlers;
 
 public interface IModelingDecisions {
 
+	public static String ATTRIBUTE_IS_DIRECTED= "class.associations.attributes.isDirected"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_SETTABLE= "class.associations.attributes.isSettable"; //$NON-NLS-1$
+	
+	public static String ATTRIBUTE_IS_MANY= "class.associations.attributes.isMany"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_ONE= "class.associations.attributes.isOne"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OPTIONAL= "class.associations.attributes.isOptional"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_FIXED= "class.associations.attributes.isFixed"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_UNBOUND= "class.associations.attributes.isUnbound"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_RANGED_MANDATORY= "class.associations.attributes.isRangedMandatory"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_RANGED_UNBOUND= "class.associations.attributes.isRangedUnbound"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_RANGED_OPTIONAL= "class.associations.attributes.isRangedOptional"; //$NON-NLS-1$
+	
+	public static String ATTRIBUTE_IS_OTHER_END_OPTIONAL= "class.associations.attributes.isOtherEndOptional"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_ONE= "class.associations.attributes.isOtherEndOne"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL= "class.associations.attributes.isOtherEndRangedOptional"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND= "class.associations.attributes.isOtherEndRangedUnbound"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_UNBOUND= "class.associations.attributes.isOtherEndUnbound"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY= "class.associations.attributes.isOtherEndRangedMandatory"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_FIXED= "class.associations.attributes.isOtherEndFixed"; //$NON-NLS-1$
+	public static String ATTRIBUTE_IS_OTHER_END_MANY= "class.associations.attributes.isOtherEndMany"; //$NON-NLS-1$
+	
+	public static String CAN_CONSTRUCT=	"class.associations.attributes.canConstruct";  //$NON-NLS-1$
+	
+	public static String HAS_MINIMUM_GETTER= "class.associations.attributes.hasMinimumFunction"; //$NON-NLS-1$
+	public static String HAS_MAXIMUM_GETTER= "class.associations.attributes.hasMaximumFunction"; //$NON-NLS-1$
+	public static String HAS_OTHER_MINIMUM_GETTER= "class.associations.attributes.other.hasMinimumFunction"; //$NON-NLS-1$
+	public static String HAS_OTHER_MAXIMUM_GETTER= "class.associations.attributes.other.hasMaximumFunction"; //$NON-NLS-1$
+	
 	public final static String PARENT_CLASS_EXTENDS= "modeling.class.extends";  //$NON-NLS-1$
 	public final static String INTERFACES_IMPLEMENTS= "modeling.interfaces.implements";  //$NON-NLS-1$
 	
@@ -34,8 +62,6 @@ public interface IModelingDecisions {
 	public final static String NUMBER_OF_GENERATION_POINT= "number.of.index.generation.point";  //$NON-NLS-1$
 	public final static String CONTAINS_GENERATION_POINT= "contains.index.generation.point";  //$NON-NLS-1$
 	public final static String INDEX_OF_GENERATION_POINT= "index.of.generation.point";  //$NON-NLS-1$
-	public final static String REMOVE_AT_GENERATION_POINT= "remove.at.generation.point";  //$NON-NLS-1$
-	public final static String REMOVE_GENERATION_POINT= "remove.generation.point";  //$NON-NLS-1$
 	public final static String MINIMUM_NUMBER_GENERATION_POINT= "minimum.number.generation.point";  //$NON-NLS-1$
 	public final static String MAXIMUM_NUMBER_GENERATION_POINT= "maximum.number.generation.point";  //$NON-NLS-1$
 	
@@ -43,9 +69,17 @@ public interface IModelingDecisions {
 	public final static String OPERATION_PARAMETERS_ARGUMENT= "modeling.operation.parameters.argument";  //$NON-NLS-1$
 	public final static String OPERATION_PARAMETER_ARGUMENT= "modeling.operation.parameter.argument";  //$NON-NLS-1$
 	
+	public final static String REMOVE_GENERATION_POINT= "remove.generation.point";  //$NON-NLS-1$
+	public final static String REMOVE_AT_GENERATION_POINT= "remove.at.generation.point";  //$NON-NLS-1$
+	public static final String REMOVE_AT_FILTER_DECISION= "remove.at.filter.decision"; //$NON-NLS-1$
+	
+	public static final String ADD_AT_FILTER_DECISION= "add.filter.decision"; //$NON-NLS-1$
+	public final static String ADD_GENERATION_POINT= "add.generation.point";  //$NON-NLS-1$
+	public final static String ADD_AT_GENERATION_POINT= "add.at.generation.point";  //$NON-NLS-1$
+	public final static String ADD_OR_MOVE_GENERATION_POINT= "add.or.move.generation.point";  //$NON-NLS-1$
+	
 	public final static String IS_BOOLEAN= "is.boolean.generation.point";  //$NON-NLS-1$
 	public final static String DEPENDS_GENERATION_POINT= "depends.generation.point";  //$NON-NLS-1$
-	public final static String ADD_GENERATION_POINT= "add.generation.point";  //$NON-NLS-1$
 	public final static String DELETE_GENERATION_POINT= "delete.generation.point";  //$NON-NLS-1$
 	public final static String DELETE_DECISION_ID_ARGUMENT= "delete.decision.id.argument";  //$NON-NLS-1$
 	public final static String SETTER_GENERATION_POINT_FILTER= "setter.generation.point.filter";  //$NON-NLS-1$

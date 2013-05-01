@@ -34,6 +34,8 @@ public interface CommonConstants {
 	public static final String TILDE= "~"; 				//$NON-NLS-1$
 	public static final String UNDERSCORE= "_";			//$NON-NLS-1$
 	public static final String DOT= "."; 				//$NON-NLS-1$
+	public static final String STRICT_DOT= "\\."; 				//$NON-NLS-1$
+	
 	public static final String SPACE= " "; 				//$NON-NLS-1$
 	public static final String SEMI_COLON= ";";			//$NON-NLS-1$
 	public static final String FORWARD_SLASH= "/"; 		//$NON-NLS-1$

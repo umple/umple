@@ -31,16 +31,16 @@ import java.util.Map;
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationPoint;
-import cruise.umple.core.GenerationPolicyRegistry;
-import cruise.umple.core.IGenerationPointPriorityConstants;
-import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
+import cruise.umple.core.GenerationPoint;
+import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.IGenerationPointPriorityConstants;
+import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.cpp.utils.CPPCommonConstants;
@@ -55,8 +55,48 @@ import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 public class CPPDependsPointsHandler{
 	
 	public final static String ALL_MODEL_INCLUDES_TRACKER= "cpp.model.all.includes.tracker"; //$NON-NLS-1$
-	
 	private final static String PARENT_OBJECTS_TRACKER= "cpp.object.parent.objects.tracker.internal"; //$NON-NLS-1$
+	
+	private final static String DEPEND_TYPES_TRACKER= "cpp.types.tracker"; //$NON-NLS-1$
+	
+	
+	/**
+	 * This is an important usability feature to have in our CPP transformation. Asking the user to add "depend" statement for their code in each used
+	 * parameter is some extra work. However, it is not that much, but the issue that in a language when the user forgets about adding the required depend,
+	 * they can find a massive number of errors in the generated code due to that missing depends, and finding out that the missing depends is the reason can 
+	 * take sometime. In a language such as Java, this is not a problem to realize that missing depend, but in CPP it can be even a nightmare in many cases. 
+	 *  
+	 */
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			/*Operations path*/
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.OPERATIONS_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.OPERATIONS_PROCESSOR})
+	}, aspect= LoopAspectConstants.AFTER)
+	public static void operationsProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element,
+			@GenerationLoopElement Object modelPackage,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
+		
+		List<Object> userAddedDependTypes = generationValueGetter.getValues(DEPEND_TYPES_TRACKER, parent);
+		List<Object> parametersArgument = generationValueGetter.getValues(IModelingDecisions.OPERATION_PARAMETER_ARGUMENT, element, parent);
+		
+		for(Object item: parametersArgument){
+			if(item instanceof SimpleEntry== false){
+				continue;
+			}
+			
+			SimpleEntry<?, ?> simpleEntry= (SimpleEntry<?, ?>) item;
+			Object type = simpleEntry.getKey();
+			if(!userAddedDependTypes.contains(type)){
+				List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, type);
+				if(types.isEmpty()){
+					continue;
+				}
+				
+				addDepend(generationValueGetter, parent, type);
+			}
+		}
+	}
 	
 	@GenerationPoint(generationPoint = ICppHandlerDefinitions.INCLUDES)
 	public static String getHeaderIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
@@ -93,7 +133,7 @@ public class CPPDependsPointsHandler{
 		List<Object> declarations= new ArrayList<Object>();
 		List<Object> incompleteDeclaration= new ArrayList<Object>();
 		
-		List<SimpleEntry<?, ?>> sortedValues= new ArrayList<SimpleEntry<?,?>>();
+		List<SimpleEntry<?, ?>> sortedValues= new ArrayList<SimpleEntry<?, ?>>();
 		for(Object object: values){
 			if(object instanceof SimpleEntry){
 				sortedValues.add((SimpleEntry<?, ?>) object);
@@ -196,12 +236,12 @@ public class CPPDependsPointsHandler{
 		return generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, out?CommonConstants.BLANK:includes, librariesUses, librariesIncludes);
 	}
 	
-	@GenerationPoint(generationPoint = ICppMethods.CLASS_INLINE_DECLARATIONS)
+	@GenerationPoint(generationPoint = ICppDefinitions.INCOMPLETE_DECLARATIONS)
 	public static String inlineDeclarations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationLoopElement Object modelPackage, @GenerationBaseElement Object element){
 		
 		List<Object> incompleteDEfinitions = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_NAMESPACES_DEFNITION, element, modelPackage);
-		HashMap<Object, SimpleEntry<?, ?>> map= new HashMap<Object, SimpleEntry<?,?>>();
+		HashMap<Object, SimpleEntry<?, ?>> map= new HashMap<Object, SimpleEntry<?, ?>>();
 		for(Object object: incompleteDEfinitions){
 			SimpleEntry<?, ?> simple= (SimpleEntry<?, ?>) object;
 			Object key = simple.getKey();
@@ -210,15 +250,15 @@ public class CPPDependsPointsHandler{
 		
 		SimpleEntry<?, ?> simpleEntry = map.get(element);
 		
-		Map<SimpleEntry<?, ?>, HashSet<String>> outsideDeclarations= new HashMap<SimpleEntry<?,?>, HashSet<String>>();
+		Map<SimpleEntry<?, ?>, HashSet<String>> outsideDeclarations= new HashMap<SimpleEntry<?, ?>, HashSet<String>>();
 		
-		List<Object> values = generationValueGetter.getValues(ICppMethods.CLASS_INLINE_DECLARATIONS, element);
+		List<Object> values = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
 		for(Object object: values){
 			if(object instanceof SimpleEntry){
 				SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
 				Object key = entry.getKey();
 				
-				List<Object> types = generationValueGetter.getValues(ICppDefinitions.TYPES_TRACKER, modelPackage, key);
+				List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, key);
 				
 				Object value= entry.getValue();
 				if(value instanceof String== false){
@@ -236,7 +276,7 @@ public class CPPDependsPointsHandler{
 				}
 				
 				SimpleEntry<?, ?> currentEntry = map.get(type);
-				if(simpleEntry.equals(currentEntry)){
+				if(simpleEntry== null? currentEntry== null: simpleEntry.equals(currentEntry)){
 					continue;
 				}
 				
@@ -281,14 +321,17 @@ public class CPPDependsPointsHandler{
 			implementationDetails= generationValueGetter.use(ICppDefinitions.EXTERNAL_NAMESPACES, implementationDetails);
 		}
 		
-		return implementationDetails;
+		if(implementationDetails.isEmpty()){
+			return implementationDetails;
+		}
+		return CommonConstants.NEW_LINE+ implementationDetails;
 	}
 
 	private static String getExtenrnalIncompleteDefinitions(GenerationPolicyRegistry generationValueGetter,
 			Object modelPackage, Object element) {
 		List<Object> extenralDefinitions = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_EXTERNAL_NAMESPACES_DEFNITION, element, modelPackage);
 		
-		Map<SimpleEntry<?,?>, List<String>> map= new HashMap<SimpleEntry<?,?>, List<String>>();
+		Map<SimpleEntry<?,?>, List<String>> map= new HashMap<SimpleEntry<?, ?>, List<String>>();
 		for(Object object: extenralDefinitions){
 			if(object instanceof SimpleEntry== false){
 				continue;
@@ -346,14 +389,14 @@ public class CPPDependsPointsHandler{
 	public static String incompleteTypeDefinition(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationLoopElement Object modelPackage, @GenerationBaseElement Object element) {
 		
-		List<Object> values = generationValueGetter.getValues(ICppMethods.CLASS_INLINE_DECLARATIONS, element);
+		List<Object> values = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
 		List<Object> declarations= new ArrayList<Object>();
 		for(Object object: values){
 			if(object instanceof SimpleEntry){
 				SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
 				Object key = entry.getKey();
 				
-				List<Object> types = generationValueGetter.getValues(ICppDefinitions.TYPES_TRACKER, modelPackage, key);
+				List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, key);
 				
 				Object value= entry.getValue();
 				if(value instanceof String== false){
@@ -388,13 +431,13 @@ public class CPPDependsPointsHandler{
 	}
 	
 	private static List<Object> getIncompleteDelcarations(GenerationPolicyRegistry generationValueGetter,Object modelPackage, Object element) {
-		List<Object> incompleteDeclarations = generationValueGetter.getValues(ICppMethods.CLASS_INLINE_DECLARATIONS, element);
+		List<Object> incompleteDeclarations = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
 		List<Object> incompleteObjects= new ArrayList<Object>();
 		for(Object object: incompleteDeclarations){
 			if(object instanceof SimpleEntry){
 				SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
 				Object key= entry.getKey();
-				List<Object> types = generationValueGetter.getValues(ICppDefinitions.TYPES_TRACKER, modelPackage, key);
+				List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, key);
 				
 				if(types.isEmpty()){
 					continue;
@@ -418,7 +461,7 @@ public class CPPDependsPointsHandler{
 			@GenerationLoopElement Object model,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		
-		List<Object> values = generationValueGetter.getValues(ICppDefinitions.TYPES_TRACKER, model, type);
+		List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, model, type);
 		if(values== null|| values.isEmpty()){
 			//ERROR: Means that the type is undefined
 			return;
@@ -436,7 +479,7 @@ public class CPPDependsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, parameterTypeName), 
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		
-		generationValueGetter.generationPointString(parent, ICppMethods.CLASS_INLINE_DECLARATION, 
+		generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, parameterTypeName));
 	}
 	
@@ -451,23 +494,13 @@ public class CPPDependsPointsHandler{
 		
 		if(returnType!= null){
 			//Will be required for the for both delcaration/implementation return type include
-			generationValueGetter.generationPointString(parent, ICppMethods.CLASS_INLINE_DECLARATION, 
+			generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, returnType));
 			
 			generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, returnType), 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}
-	}
-	
-	@LoopProcessorAnnotations(aspect= LoopAspectConstants.BEFORE, loopProcessorAnnotations ={ 
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	})
-	public static void trackAllTypes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationLoopElement Object modelPackage){
-		generationValueGetter.addValue(ICppDefinitions.TYPES_TRACKER, element, modelPackage, name);	//Enable Retrieving by name
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -511,18 +544,19 @@ public class CPPDependsPointsHandler{
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.ATTRIBUTES_PROCESSOR})
 	})
 	public static void attributesAndAssociationsDeclarationProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		
 		if(isMany){
 			//If isMany, then this means we are going to use vector, so include it to the includes list of the header
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR),
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
 			
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR),
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}
@@ -532,7 +566,7 @@ public class CPPDependsPointsHandler{
 			ifNotConditionIds= {ICppDefinitions.ATTRIBUTE_DISABLE_DELETE})
 	public static void setDestructorDetails(
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		if(isMany){
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
@@ -558,7 +592,7 @@ public class CPPDependsPointsHandler{
 		
 		if(parentClass!= null){
 			//Make sure to include the parent class to the header incomplete type definitions
-			generationValueGetter.generationPointString(element, ICppMethods.CLASS_INLINE_DECLARATION, 
+			generationValueGetter.generationPointString(element, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, parentClass));
 			
 			generationValueGetter.generationPointString(element, IModelingDecisions.DEPENDS_GENERATION_POINT, 
@@ -571,7 +605,7 @@ public class CPPDependsPointsHandler{
 		
 		if(parentInterfaces!= null){
 			for(Object obj: parentInterfaces){
-				generationValueGetter.generationPointString(element, ICppMethods.CLASS_INLINE_DECLARATION, 
+				generationValueGetter.generationPointString(element, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
 						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, obj));
 				
 				generationValueGetter.generationPointString(element, IModelingDecisions.DEPENDS_GENERATION_POINT, 
@@ -579,19 +613,20 @@ public class CPPDependsPointsHandler{
 						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.HIGH)),
 						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
 				
-				generationValueGetter.addUniqueValue(PARENT_OBJECTS_TRACKER, parentClass, obj);
+				generationValueGetter.addUniqueValue(PARENT_OBJECTS_TRACKER, obj, element);
 			}
 		}
 	}
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.DELETE_GENERATION_POINT)
 	public static void deleteIncludeDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
 			@GenerationArgument String id, @GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
 		if(ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE.equals(id)||
 				ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE.equals(id)){
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR),
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}
@@ -599,6 +634,7 @@ public class CPPDependsPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.SETTER_GENERATION_POINT)
 	public static void setterIncludeDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,@GenerationArgument String id,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
 		if(ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HASH_MAP_DECLARATION.equals(id)){
@@ -607,12 +643,12 @@ public class CPPDependsPointsHandler{
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR),
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}else if(ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MINIMUM_FIXED_DECLARATION.equals(id)){
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR),
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}
@@ -621,10 +657,11 @@ public class CPPDependsPointsHandler{
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT)
 	public static void constructorIncludeDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationArgument boolean isAttribute, @GenerationArgument String id,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		if(IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY.equals(id)){
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR),
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}
@@ -645,7 +682,7 @@ public class CPPDependsPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		
 		if(!isPrimitiveType){
-			generationValueGetter.generationPointString(parent, ICppMethods.CLASS_INLINE_DECLARATION, 
+			generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, type));
 			
 			generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 
@@ -661,32 +698,94 @@ public class CPPDependsPointsHandler{
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.DEPENDS_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.DEPENDS})
-	})
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.DEPENDS_PROCESSOR})
+	}, aspect= LoopAspectConstants.PRE)
 	public static void dependsProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationElementParameter(id = IModelingElementDefinitions.USE) String name,
+			@GenerationElementParameter(id = IModelingElementDefinitions.USE) String use,
+			@GenerationLoopElement Object modelPackage,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		
-		if(CommonConstants.ASTERISK.equals(name.substring(name.length()-1, name.length()))){
-			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-			GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, name), 
-			GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		}else{
-			generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, name),
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_IS_CUSTOM_ARGUMENT, Boolean.TRUE),
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		String headerExtension = CommonConstants.DOT+ CPPCommonConstants.HEADER_FILE_EXTENSION;
+		
+		String normalized = use.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH).replace(CommonConstants.STRICT_DOT, CommonConstants.FORWARD_SLASH);
+		
+		String namespace= normalized.substring(0, normalized.lastIndexOf(CommonConstants.FORWARD_SLASH)).replace(CommonConstants.FORWARD_SLASH, CommonConstants.DOT);
+		List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, modelPackage, 
+				namespace);
+		if(values.isEmpty() /*external library */){
+			String library= namespace.replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+			
+			String[] trackers = new String[]{ICppDefinitions.BODY_INCLUDES_TRACKER, ICppDefinitions.HEADER_INCLUDES_TRACKER};
+			
+			for(String trackerId: trackers){
+				generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+						GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, library), 
+						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, trackerId));
+			}
+			
+			String include= normalized.substring(normalized.lastIndexOf(CommonConstants.FORWARD_SLASH)+1, use.length());
+			
+			if(CommonConstants.ASTERISK.equals(include)){
+				//Means that the user decided to go with using qualified names. i.e "using std", and then std::string
+				//instead of "using std", "include <string>, and then use string directly
+				return;
+			}
+			
+			for(String trackerId: trackers){
+				generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, include),
+						GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, library),
+						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, trackerId));
+			}
+			
+			return;
 		}
 		
+		if(CommonConstants.ASTERISK.equals(use.substring(use.length()-1, use.length()))){
+			namespace= use.substring(0, use.lastIndexOf(CommonConstants.ASTERISK)-1);
+			values = generationValueGetter.getValues(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, modelPackage, namespace);
+			
+			String modelPath = generationValueGetter.generationPointString(modelPackage, IModelingDecisions.MODEL_PATH);
+			for(Object value: values){
+				String typeName= generationValueGetter.getString(value, IModelingElementDefinitions.NAME);
+				String typeString= modelPath+ CommonConstants.FORWARD_SLASH+ typeName;
+				typeString= typeString.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH);
+				
+				normalized = typeString+ headerExtension;
+				
+				addDepend(generationValueGetter, parent, typeName);
+			}
+		}else{
+			if(!normalized.endsWith(headerExtension)){
+				normalized= normalized+ headerExtension;
+			}
+			
+			String typeString = normalized.substring(normalized.lastIndexOf(CommonConstants.FORWARD_SLASH)+1, normalized.lastIndexOf(headerExtension));
+			addDepend(generationValueGetter, parent, typeString);
+		}
+		
+	}
+
+	private static void addDepend(GenerationPolicyRegistry generationValueGetter, Object parent, Object typeString) {
+		//Add the type of the header to the incomplete types, so it will compile in the header, and add the actual include in the body
+		generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, typeString));
+		
+		generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+			GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, typeString),
+			GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
+		generationValueGetter.addUniqueValue(DEPEND_TYPES_TRACKER, typeString, parent);
 	}
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.GETTER_GENERATION_POINT)
 	public static void setGetterDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = ICppDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		if(isMany){
 			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR), 
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName), 
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		}
@@ -749,7 +848,7 @@ public class CPPDependsPointsHandler{
 			generationValueGetter.addUniqueValue(ICppModelingDecisions.CPP_USED_LIBRARIES, qualifiedLibrary, container, Boolean.TRUE);
 		}else{
 			String typeNamespace= generationValueGetter.getString(container, IModelingElementDefinitions.NAMESPACE);
-			if(typeNamespace.startsWith(qualifiedLibrary.replace(CPPCommonConstants.DECLARATION_COMMON_PREFIX, CommonConstants.DOT))){
+			if(typeNamespace!= null&& typeNamespace.startsWith(qualifiedLibrary.replace(CPPCommonConstants.DECLARATION_COMMON_PREFIX, CommonConstants.DOT))){
 				return;
 			}
 			
@@ -775,7 +874,7 @@ public class CPPDependsPointsHandler{
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, value), 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 			
-			generationValueGetter.generationPointString(parent, ICppMethods.CLASS_INLINE_DECLARATION, 
+			generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, value));
 		}
 	}
@@ -830,7 +929,7 @@ public class CPPDependsPointsHandler{
 			}else{	
 				//Allow including by string type
 				typeName= (String) type;
-				List<Object> values = generationValueGetter.getValues(ICppDefinitions.TYPES_TRACKER, modelPackage, typeName);
+				List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
 				
 				if(!values.isEmpty()){
 					rootType= values.get(0);
@@ -851,6 +950,9 @@ public class CPPDependsPointsHandler{
 		generationValueGetter.addUniqueValue(includeId, entry, container);
 		
 		String typeNamespace= generationValueGetter.getString(rootType, IModelingElementDefinitions.NAMESPACE);
+		if(typeNamespace== null){
+			typeNamespace= CommonConstants.BLANK;
+		}
 		
 		String alias = generationValueGetter.use(ICppDefinitions.ALIAS, typeName,typeNamespace.replace(CommonConstants.DOT, 
 				CommonConstants.BACK_SLASH), typeNamespace.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH));
@@ -882,7 +984,7 @@ public class CPPDependsPointsHandler{
 		return implementationDetails+ CommonConstants.NEW_LINE;
 	}
 	
-	@GenerationPoint(generationPoint = ICppMethods.CLASS_INLINE_DECLARATION)
+	@GenerationPoint(generationPoint = ICppDefinitions.CLASS_INCOMPLETE_DECLARATION)
 	public static void classInlineDeclaration(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object type, 
 			@GenerationBaseElement Object container,
@@ -903,7 +1005,7 @@ public class CPPDependsPointsHandler{
 			typeName= (String) type;
 		}
 		
-		List<Object> types = generationValueGetter.getValues(ICppDefinitions.TYPES_TRACKER, modelPackage, typeName);
+		List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
 		
 		if(types.isEmpty()){
 			return;
@@ -919,9 +1021,9 @@ public class CPPDependsPointsHandler{
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
 			addNamespace(generationValueGetter, typeNamespace, typeName, container, modelPackage);
 		}else{
-			String inlineClassDelcaration = generationValueGetter.use(ICppMethods.CLASS_INLINE_DECLARATION, typeName);
+			String inlineClassDelcaration = generationValueGetter.use(ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, typeName);
 			SimpleEntry<String, String> incompleteDeclaration= new SimpleEntry<String, String>(typeName, inlineClassDelcaration);
-			generationValueGetter.addUniqueValue(ICppMethods.CLASS_INLINE_DECLARATIONS, incompleteDeclaration, container);
+			generationValueGetter.addUniqueValue(ICppDefinitions.INCOMPLETE_DECLARATIONS, incompleteDeclaration, container);
 		}
 		
 	}
@@ -946,8 +1048,8 @@ public class CPPDependsPointsHandler{
 		
 		String begin = defineBaseString+ CommonConstants.UNDERSCORE+ CPPCommonConstants.BEGIN.toUpperCase();
 		String end = defineBaseString+ CommonConstants.UNDERSCORE+ CPPCommonConstants.END.toUpperCase();
-				
-		String inlineClassDelcaration = generationValueGetter.use(ICppMethods.CLASS_INLINE_DECLARATION, typeName);
+		
+		String inlineClassDelcaration = generationValueGetter.use(ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, typeName);
 		SimpleEntry<Object, SimpleEntry<String, String>> entry = 
 				new SimpleEntry<Object, SimpleEntry<String, String>>(inlineClassDelcaration, new SimpleEntry<String, String>(begin, end));
 		generationValueGetter.addUniqueValue(ICppDefinitions.INCOMPLETE_EXTERNAL_NAMESPACES_DEFNITION, entry, container, model);

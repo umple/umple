@@ -20,10 +20,16 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppStatemachinesDefinitions {
 	
+	public final static String STATEMACHINE_FULL_PATH= "statemachine.full.path"; //$NON-NLS-1$
+	public final static String STATEMACHINE_FULL_PATH_IMPLEMENTATION= "statemachine.full.path.implementation"; //$NON-NLS-1$
+	public final static String STATEMACHINE_FULL_PATH_SEGMENT= "statemachine.full.path.segment"; //$NON-NLS-1$
+	
 	public final static String THREAD= "Thread"; //$NON-NLS-1$
 	public final static String THREAD_INSTANCE= "statemachine.thread.instance"; //$NON-NLS-1$
+	public final static String VOID_POINTER_NAME= "statemachine.void.pointer.name"; //$NON-NLS-1$
 	public final static String DO_ACTIVITY_METHOD_INSTANCE= "statemachine.do.activity.method"; //$NON-NLS-1$
 	public final static String DO_ACTIVITY_IMPLEMENTATION= "cpp.do.activity.implementation";  //$NON-NLS-1$
+	public final static String DO_ACTIVITY_MEDIATOR_IMPLEMENTATION= "cpp.do.activity.mediator.implementation";  //$NON-NLS-1$
 	public final static String DO_ACTIVITY_FUNCTION_POINTER_IMPLEMENTATION= "cpp.do.activity.function.pointer.implementation";  //$NON-NLS-1$
 	
 	public final static String STATEMACHINE_METHOD_IMPLEMENTATION= "cpp.statemachine.events.implementation"; //$NON-NLS-1$
@@ -89,6 +95,7 @@ public interface ICppStatemachinesDefinitions {
 	public final static String EVENT_IS_INTERNAL= "isInternalEvent"; //$NON-NLS-1$
 	public final static String TRANSITION_IS_AUTO= "isAutoTransition"; //$NON-NLS-1$
 	public final static String EVENT_IS_AUTO= "isAutoEvent"; //$NON-NLS-1$
+	public final static String EVENT_IS_TIMER= "isTimerEvent"; //$NON-NLS-1$
 	
 	public final static String STATE_ENTRY_CODE_BODY= "stateEntry"; //$NON-NLS-1$
 	public final static String STATE_EXIT_CODE_BODY= "stateExit"; //$NON-NLS-1$

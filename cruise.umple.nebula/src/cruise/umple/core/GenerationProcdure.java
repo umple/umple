@@ -39,6 +39,7 @@ public abstract class GenerationProcdure implements IGenerationProcdure{
 	/* (non-Javadoc)
 	 * @see umple.core.IGenerationProcdure#getGenerationTemplate()
 	 */
+	@Override
 	public CppGenerationTemplate getGenerationTemplate() {
 		return this.fGenerationTemplate;
 	}
