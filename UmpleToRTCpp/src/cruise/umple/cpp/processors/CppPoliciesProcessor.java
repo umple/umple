@@ -53,9 +53,11 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	
 	private GenerationPolicyRegistry generationPolicyRegistry = new GenerationPolicyRegistry();
 	
-	public void generateRootElement(Object rootElement) throws Exception {
+	public void generateRootElement(Object rootElement) {
 		this.getGenerationPolicyRegistry().process(rootElement);
 		this.handleGeneratedContents(getContentDescriptors());
+		
+		//this.generationPolicyRegistry.getGenerationLogger().showLogDetails();
 	}
 	
 	abstract public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor);
@@ -66,6 +68,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		registerHelperTemplates();
 	}
 
+	@Override
 	public void registerHelperTemplates(){
 		new CppTemplateHelper().init(this.getGenerationPolicyRegistry());
 		new CppAttributeGetterImpl().init(this.getGenerationPolicyRegistry());
@@ -78,6 +81,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		new CppStlTemplateHelper().init(this.getGenerationPolicyRegistry());
 	}
 	
+	@Override
 	public void registerGenerationPoints(){
 		this.getGenerationPolicyRegistry().register(IModelingPriorityHandler.class);
 		this.getGenerationPolicyRegistry().register(ICppModelingPriorityHandler.class);
