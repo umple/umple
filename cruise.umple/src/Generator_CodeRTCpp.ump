@@ -21,7 +21,7 @@ class RTCppGenerator
 			public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor) {
 				try {
 					for(ContentsDescriptor descriptor:contentsDescriptor){
-						generateContents(code, descriptor.getFileName(), descriptor.getContents(), descriptor.getPath());
+						generateContents(model, code, descriptor.getFileName(), descriptor.getContents(), descriptor.getPath());
 					}
 				} catch (IOException e) {
 					throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
@@ -35,7 +35,7 @@ class RTCppGenerator
 	}
   }
   
-  protected void generateContents(StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
+  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
 		 String path = model.getUmpleFile().getPath() + "/";
 		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
 		 String qualifiedPath = path+ owingFolder;
@@ -49,6 +49,9 @@ class RTCppGenerator
 		 if (!folderFile.exists()) {
 		 	folderFile.createNewFile();
 		 }
+		 
+		 model.getGeneratedCode().put(filename,content);
+		 
 		 model_code.append(content);
 		 model_code.append("\n\n");
 		 
