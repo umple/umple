@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import cruise.umple.core.ArgumentsRetrieval;
+import cruise.umple.core.GenerationLogger;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationValueAnnotation;
 
@@ -44,6 +45,7 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 		this.fRegistry= registry;
 	}
 	
+	@Override
 	public boolean getBoolean(Object classObject, String fieldName, Object... arguments){
 		Boolean value = (Boolean) getValue(classObject, fieldName,  arguments);
 		if(value== null){
@@ -52,10 +54,12 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 		return value.booleanValue();
 	}
 	
+	@Override
 	public Object getObject(Object classObject, String fieldName, Object... arguments){
 		return getValue(classObject, fieldName,  arguments);
 	}
 	
+	@Override
 	public int getInt(Object classObject, String fieldName, Object... arguments){
 		Integer value = (Integer) getValue(classObject, fieldName,  arguments);
 		if(value== null){
@@ -64,6 +68,7 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 		return value.intValue();
 	}
 	
+	@Override
 	public String getString(Object classObject, String fieldName, Object... arguments){
 		Object value = getValue(classObject, fieldName,  arguments);
 		if(value instanceof String){
@@ -72,6 +77,7 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 		return null;
 	}
 	
+	@Override
 	public List<?> getList(Object classObject, String fieldName, Object... arguments){
 		List<?> value = (List<?>) getValue(classObject, fieldName,  arguments);
 		return value!=null? value: Collections.emptyList();
@@ -205,6 +211,11 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 		lock.unlock();
 		
 		parsedClasses.add(clazz);
+	}
+
+	@Override
+	public GenerationLogger getGenerationLogger() {
+		return this.fRegistry.getGenerationLogger();
 	}
 	
 }

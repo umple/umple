@@ -40,7 +40,7 @@ public class MethodDescriptor{
 		try {
 			return this.fMethod.invoke(this.fInstance, parameters);
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
+			generationValueGetter.getGenerationLogger().addError(e);
 			return null;
 		}
 	}

@@ -19,7 +19,15 @@
 package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppAssociationsDefinitionsConstants {
-
+	
+	//Remove associations value decisions and handlers
+	public static final String REMOVE_FILTER_DECISION= "remove.filter.decision"; //$NON-NLS-1$
+	public static final String REMOVE_CHECK_OTHER_END_DECISION= "remove.check.other.end.decision"; //$NON-NLS-1$
+	public static final String REMOVE_MINIMUM_CHECK_DECISION= "remove.check.minimum.decision"; //$NON-NLS-1$
+	public static final String REMOVE_NULLIFY_INTERNALLY_DECISION= "remove.nullify.internally.decision"; //$NON-NLS-1$
+	public static final String REMOVE_NULLIFY_DECISION= "remove.default.decision"; //$NON-NLS-1$
+	public static final String REMOVE_SELF_CHECK_DECISION= "remove.self.check.decision"; //$NON-NLS-1$
+	
 	public static final String DELETE_ASSIGN_REMOVE_DEFINITION= "cpp.delete.assign.remove.definition";  //$NON-NLS-1$
 	public static final String DELETE_CHECK_NULLIFY_BY_SETTER_DEFINITION= "cpp.delete.check.nullify.setter.definition";  //$NON-NLS-1$
 	public static final String DELETE_USE_DELETE_DEFINITION= "cpp.delete.use.delete";  //$NON-NLS-1$
@@ -36,6 +44,7 @@ public interface ICppAssociationsDefinitionsConstants {
 	
 	public String ADD_IMPLEMENTATION= "cpp.associations.add.function"; //$NON-NLS-1$
 	public String GETTER_IMPLEMENTATION=	"cpp.associations.getter.implementation";  //$NON-NLS-1$
+	public String GETTER_MANY_IMPLEMENTATION=	"cpp.associations.getter.many.implementation";  //$NON-NLS-1$
 	public String IS_A_GETTER_IMPLEMENTATION=	"cpp.associations.is.a.getter.implementation";  //$NON-NLS-1$
 	public String GETTER_BY_INDEX_IMPLEMENTATION=	"cpp.associations.getter.by.index.implementation";  //$NON-NLS-1$
 	public String NUMBER_OF_IMPLEMENTATION=	"cpp.associations.getter.number.of.implementation";  //$NON-NLS-1$
@@ -74,4 +83,6 @@ public interface ICppAssociationsDefinitionsConstants {
 	public String ATTRIBUTE_SETTER_HASH_MAP_DECLARATION= "cpp.attribute.setter.hash.map.declaration";  //$NON-NLS-1$
 	public String ATTRIBUTE_SETTER_USE_EXISTING_SETTER_DECLARATION= "cpp.attribute.setter.use.existing.setter";  //$NON-NLS-1$
 	public String ATTRIBUTE_SETTER_USE_EXISTING_REMOVE_DECLARATION= "cpp.attribute.setter.use.existing.remove";  //$NON-NLS-1$
+	
+	public String IMPLEMENTATION_RETURN_TRACKER= "cpp.implementation.return.tracker";  //$NON-NLS-1$
 }

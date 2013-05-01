@@ -254,6 +254,11 @@ public class UmpleStatemachineGenerationPolicy{
 		return element.isAutoTransition();
 	}
 	
+	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.EVENT_IS_TIMER)
+	public static boolean isTimer(@GenerationBaseElement Event element){
+		return element.getIsTimer();
+	}
+	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.EVENT_PARAMETERS)
 	public static List<String> getEventParameters(@GenerationBaseElement Event element){
 		String args = element.getArgs();

@@ -25,13 +25,12 @@ import cruise.umple.cpp.utils.StringUtil;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
 import cruise.umple.modeling.handlers.cpp.ICppHandlerDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppMethods;
 import cruise.umple.templates.GenerationTemplateDelegator;
 import cruise.umple.templates.IGenerationTemplate;
 import cruise.umple.templates.IGenerationTemplateRegistry;
 
 public abstract class CppGenerationTemplate implements IGenerationTemplate, IGenerationTemplateRegistry, 
-						ICppHandlerDefinitions, IModelingElementDefinitions, ICppMethods, ICppDefinitions{
+						ICppHandlerDefinitions, IModelingElementDefinitions, ICppDefinitions{
 	
 	private GenerationPolicyRegistry instance;
 	private GenerationTemplateDelegator generationTemplateDelegator;
@@ -47,10 +46,12 @@ public abstract class CppGenerationTemplate implements IGenerationTemplate, IGen
 		return this.instance;
 	}
 	
+	@Override
 	public void define(String id, GenerationCallback callback){
 		this.generationTemplateDelegator.define(this, id, callback);
 	}
 	
+	@Override
 	public void define(IGenerationTemplateRegistry generationTemplateRegistry, String id, GenerationCallback callback){
 		this.generationTemplateDelegator.define(generationTemplateRegistry, id, callback);
 	}

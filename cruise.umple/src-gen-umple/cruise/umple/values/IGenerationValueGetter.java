@@ -20,6 +20,8 @@ package cruise.umple.values;
 
 import java.util.List;
 
+import cruise.umple.core.GenerationLogger;
+
 public interface IGenerationValueGetter {
 
 	public boolean getBoolean(Object classObject, String fieldName, Object... arguments);
@@ -33,5 +35,7 @@ public interface IGenerationValueGetter {
 	public List<?> getList(Object classObject, String fieldName, Object... arguments);
 	
 	public void register(Object handler);
+	
+	public GenerationLogger getGenerationLogger();
 	
 }
