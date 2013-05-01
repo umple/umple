@@ -27,6 +27,14 @@ public interface IModelingConstants {
 	public final static String PARENT_INTERFACES= "parentInterfaces"; //$NON-NLS-1$
 	public final static String PARENT_CLASS= "parentClass"; //$NON-NLS-1$
 	
+	public final static String NORMALIZED_DEFAULT_VALUE= "normalized.defaultValue"; //$NON-NLS-1$
+	
+	public final static String TYPES_TRACKER= "cpp.types.tracker"; //$NON-NLS-1$
+	public final static String TYPES_BY_NAMESPACES_TRACKER= "cpp.types.by.namespaces.tracker"; //$NON-NLS-1$
+
+	
+	public static String DEFAULT_VALUE_INTERCEPTOR= "default.value.interceptor"; //$NON-NLS-1$
+	
 	public final static String SET_ATTRIBUTE_PREFIXES= "modeling.set.attribute.prefix";  //$NON-NLS-1$
 	public final static String ATTRIBUTE_PREFIXES_ARGUMENT= "modeling.attribute.prefixes.argument";  //$NON-NLS-1$
 	public final static String ATTRIBUTE_VALUE_ARGUMENT= "modeling.attribute.value.argument";  //$NON-NLS-1$
@@ -78,9 +86,9 @@ public interface IModelingConstants {
 	public final static String METHOD_SEPARATOR_ARGUMENT= "method.separator.argument"; //$NON-NLS-1$
 	public final static String METHOD_OBJECT= "method.object"; //$NON-NLS-1$
 	public final static String METHOD_COMMENT= "method.comment"; //$NON-NLS-1$
-	public final static String METHOD_CONST= "method.const"; //$NON-NLS-1$
 	public final static String METHOD_ID= "method.id"; //$NON-NLS-1$
 	public final static String METHOD_NAME= "method.name"; //$NON-NLS-1$
+	public final static String METHOD_DEFAULTED_IMPLEMENTATION= "method.defaulted.implementation"; //$NON-NLS-1$
 	public final static String METHOD_GROUP= "method.group"; //$NON-NLS-1$
 	public final static String METHODS_GROUPS= "method.groups"; //$NON-NLS-1$
 	public final static String METHODS_OBJECTS= "method.objects"; //$NON-NLS-1$
@@ -105,6 +113,9 @@ public interface IModelingConstants {
 	
 	public final static String MULTILINE_COMMENTS_STRING= "modeling.multitline.comments.string"; //$NON-NLS-1$
 	
+	public final static String NO_IMPLEMENTATION= "no.implementation";  //$NON-NLS-1$
+	
 	public final static String WAS_ADDED= "wasAdded"; //$NON-NLS-1$
 	public final static String WAS_SET= "wasSet"; //$NON-NLS-1$
+	public final static String WAS_REMOVED= "wasRemoved"; //$NON-NLS-1$
 }

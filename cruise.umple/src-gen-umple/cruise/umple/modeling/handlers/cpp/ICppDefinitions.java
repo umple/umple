@@ -20,6 +20,10 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppDefinitions {
 	
+	public final static String METHOD_CONST= "method.const"; //$NON-NLS-1$
+	public final static String METHOD_VIRTUAL= "method.virtual"; //$NON-NLS-1$
+	public final static String METHOD_PURE= "method.pure"; //$NON-NLS-1$
+	
 	public final static String FULL_QUALIFIED_NAME="cpp.full.qualified.name";  //$NON-NLS-1$
 	
 	public final static String COPY_STRING_ATTRIBUTE="cpp.constructor.copy.string.attribute";  //$NON-NLS-1$
@@ -91,7 +95,6 @@ public interface ICppDefinitions {
 	public final static String CLASS_PREFIX= "method.method.caller.prefix"; //$NON-NLS-1$
 	public final static String INCLUDE_STATEMENT= "class.include"; //$NON-NLS-1$
 	public final static String BUILTIN_INCLUDE_STATEMENT= "class.builtin.include"; //$NON-NLS-1$
-	public final static String TYPE_AS_VECTOR= "type.as.vector"; //$NON-NLS-1$
 	
 	public final static String INCLUDES_DECLARATIONS= "cpp.includes.declartions"; //$NON-NLS-1$
 	
@@ -164,13 +167,46 @@ public interface ICppDefinitions {
 	
 	public final static String OWING_NAMESPACE_OBJECT= "cpp.owing.namespace.object"; //$NON-NLS-1$
 	
-	public final static String TYPES_TRACKER= "cpp.types.tracker.internal"; //$NON-NLS-1$
-	
 	public final static String HELPER_CODES= "cpp.helper.codes"; //$NON-NLS-1$
 	public final static String HELPER_INCLUDES= "cpp.helper.includes"; //$NON-NLS-1$
 	public final static String TIME_HELPER_CODE= "cpp.time.helper.code"; //$NON-NLS-1$
 	
-	//FIXME: shall by assigned dynamically
-	public final static String TIME_HELPER_CODE_INCLUDES= "cpp.time.helper.code.includes"; //$NON-NLS-1$
+	public final static String GETTER_BY_INDEX_INVOCATION= "cpp.getter.by.index.invocation"; //$NON-NLS-1$
+	public final static String GETTER_BY_INDEX_ASSIGNEE_ARGUMENT= "cpp.getter.by.index.assignee.argument"; //$NON-NLS-1$
+	public final static String GETTER_BY_INDEX_VARIABLE_ARGUMENT= "cpp.getter.by.index.variable.argument"; //$NON-NLS-1$
+	public final static String GETTER_BY_INDEX_TYPE_ARGUMENT= "cpp.getter.by.index.type.argument"; //$NON-NLS-1$
+	public final static String GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT= "cpp.getter.by.index.index.argument"; //$NON-NLS-1$
 	
+	public final static String REMOVE_INVOCATION= "cpp.remove.invocation"; //$NON-NLS-1$
+	public final static String REMOVE_INDEX_ARGUMENT= "cpp.remove.index.argument"; //$NON-NLS-1$
+	public final static String REMOVE_VARIABLE_ARGUMENT= "cpp.remove.variable.argument"; //$NON-NLS-1$
+	
+	public final static String REMOVE_ALL_INVOCATION= "cpp.remove.all.invocation"; //$NON-NLS-1$
+	public final static String REMOVE_ALL_TYPE_ARGUMENT= "cpp.remove.all.type.argument"; //$NON-NLS-1$
+	public final static String REMOVE_ALL_VARIABLE_ARGUMENT= "cpp.remove.all.variable.argument"; //$NON-NLS-1$
+	public final static String REMOVE_ALL_REMOVE_LIST_ARGUMENT= "cpp.remove.all.remove.listvariable.argument"; //$NON-NLS-1$
+	
+	public final static String ADD_INVOCATION= "cpp.add.invocation"; //$NON-NLS-1$
+	public final static String ADD_PARAMETER_ARGUMENT= "cpp.add.parameter.argument"; //$NON-NLS-1$
+	public final static String ADD_INDEX_ARGUMENT= "cpp.add.index.argument"; //$NON-NLS-1$
+	public final static String ADD_VARIABLE_ARGUMENT= "cpp.add.variable.argument"; //$NON-NLS-1$
+	
+	public final static String COPY_INVOCATION= "cpp.copy.invocation"; //$NON-NLS-1$
+	public final static String COPY_SOURCE_ARGUMENT= "cpp.copy.source.argument"; //$NON-NLS-1$
+	public final static String COPY_TARGET_ARGUMENT= "cpp.copy.target.argument"; //$NON-NLS-1$
+	public final static String COPY_IS_INITIALIZED_ARGUMENT= "cpp.copy.initiliazed.argument"; //$NON-NLS-1$
+	
+	public final static String BASE_COMPARATOR= "cpp.base.comparator"; //$NON-NLS-1$
+	public final static String BASE_COMPARATOR_DEFAULT_NAME= "cpp.base.comparator.default.name"; //$NON-NLS-1$
+	public final static String COMPARATORS_DETAILS= "cpp.comparators.details"; //$NON-NLS-1$
+	
+	public final static String FUNCTION_OPERATORS= "cpp.function.operators"; //$NON-NLS-1$
+	
+	public final static String NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT= "cpp.modeling.normalizedTypeName.is.construction.argument"; //$NON-NLS-1$
+	
+	public final static String CLASS_INCOMPLETE_DECLARATION= "cpp.class.incomplete.declaration"; //$NON-NLS-1$
+	public final static String STRUCT_INCOMPLETE_DECLARATION= "cpp.struct.incomplete.declaration"; //$NON-NLS-1$
+	public final static String INCOMPLETE_DECLARATIONS= "cpp.class.inline.declarations"; //$NON-NLS-1$
+	
+	public final static String THREAD_IMPLEMENTATION= "cpp.thread.implementation"; //$NON-NLS-1$
 }

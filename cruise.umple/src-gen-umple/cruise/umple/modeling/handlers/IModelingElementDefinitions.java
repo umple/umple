@@ -36,8 +36,11 @@ public interface IModelingElementDefinitions {
 	public String CONSTRAINTS= "constraints"; //$NON-NLS-1$
 	public String CODE= "code"; //$NON-NLS-1$
 	public String CODE_INJECTION= "codeInjection"; //$NON-NLS-1$
+	public String PRIORITY= "priority"; //$NON-NLS-1$
 	
 	public String TYPE_NAME= "typeName"; //$NON-NLS-1$
+	public String IS_ABSTRACT= "isAbstract"; //$NON-NLS-1$
+	public String MANY_TYPE_NAME= "manyTypeName"; //$NON-NLS-1$
 	
 	public String DEFAULT_VALUE= "defaultValue"; //$NON-NLS-1$
 	public String NAME= "name"; //$NON-NLS-1$

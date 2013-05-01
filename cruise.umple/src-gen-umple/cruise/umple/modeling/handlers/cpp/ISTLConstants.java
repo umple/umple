@@ -30,11 +30,20 @@ public interface ISTLConstants {
 	public static final String LIST= "list"; //$NON-NLS-1$
 	public static final String ALGORITHM= "algorithm"; //$NON-NLS-1$
 	public static final String MEMORY= "memory"; //$NON-NLS-1$
+	public static final String BINARY_FUNCTION= "binary_function"; //$NON-NLS-1$
+	public static final String IO_STREAM= "iostream"; //$NON-NLS-1$
+	public static final String TIME_INCLUDE= "time.h"; //$NON-NLS-1$
+	public static final String C_TYPE= "ctype.h"; //$NON-NLS-1$
+	public static final String STUDIO= "stdio.h"; //$NON-NLS-1$
 	
 	public static final String VECTOR= "vector"; //$NON-NLS-1$
+	public static final String SET= "set"; //$NON-NLS-1$
 	public static final String OSTREAM= "ostream"; //$NON-NLS-1$
 	public static final String HASH_MAP= "hash_map"; //$NON-NLS-1$
 	public static final String STRING= "string"; //$NON-NLS-1$
+	public static final String EXCEPTION= "exception"; //$NON-NLS-1$
+	public static final String STD_EXCEPTION= "stdexcept"; //$NON-NLS-1$
+	
 	
 	public static final String DATE= "tm"; //$NON-NLS-1$
 	public static final String TIME= "time_t"; //$NON-NLS-1$
@@ -45,7 +54,32 @@ public interface ISTLConstants {
 	public static final String TIME_ASSIGN= "time.assign"; //$NON-NLS-1$
 	public static final String CURRENT_TIME_REFERENCE= "current.time.reference"; //$NON-NLS-1$
 	
-	public final static String NEW_VECTOR_DEFINITION= "cpp.new.vector.definition"; //$NON-NLS-1$
+	public final static String NEW_LIST_DEFINITION= "cpp.new.list.definition"; //$NON-NLS-1$
+	public final static String TYPE_AS_LIST= "type.as.list"; //$NON-NLS-1$
+	
+	public final static String TYPE_AS_SET= "type.as.set"; //$NON-NLS-1$
+	public final static String TYPE_AS_SET_COMPARATOR_ARGUMENT= "type.as.set.comparator.argument"; //$NON-NLS-1$
 	
 	public final static String DESTRUCT_VECTOR_DEFINITION= "cpp.desctruct.vector.definition"; //$NON-NLS-1$
+	
+	public final static String REMOVE_VECTOR_ELEMENT= "cpp.remove.vector.element"; //$NON-NLS-1$
+	public final static String REMOVE_SET_ELEMENT= "cpp.remove.set.element"; //$NON-NLS-1$
+	
+	public final static String REMOVE_ALL_VECTOR_ELEMENTS= "cpp.remove.all.vector.elements"; //$NON-NLS-1$
+	public final static String REMOVE_ALL_SET_ELEMENTS= "cpp.remove.all.set.elements"; //$NON-NLS-1$
+	
+	public final static String ADD_VECTOR_ELEMENT= "cpp.add.vector.element"; //$NON-NLS-1$
+	public final static String ADD_SET_ELEMENT= "cpp.add.set.element"; //$NON-NLS-1$
+	
+	public final static String GET_VECTOR_ELEMENT= "cpp.get.vector.element"; //$NON-NLS-1$
+	public final static String GET_SET_ELEMENT= "cpp.get.set.element"; //$NON-NLS-1$
+	public final static String GET_SET_ELEMENT_TEMPLATE_IMPLEMENTATION= "cpp.get.set.element.template.implementation"; //$NON-NLS-1$
+	
+	public final static String GET_VECTOR_ELEMENT_RETURN= "cpp.get.vector.element.return"; //$NON-NLS-1$
+	public final static String GET_SET_ELEMENT_RETURN= "cpp.get.set.element.return"; //$NON-NLS-1$
+	
+	public final static String COPY_SET_ELEMENT_TEMPLATE_IMPLEMENTATION= "cpp.copy.set.element.template.implementation"; //$NON-NLS-1$
+	
+	public final static String COPY_VECTOR_ELEMENT= "cpp.copy.vector.element"; //$NON-NLS-1$
+	public final static String COPY_SET_ELEMENT= "cpp.copy.set.element"; //$NON-NLS-1$
 }

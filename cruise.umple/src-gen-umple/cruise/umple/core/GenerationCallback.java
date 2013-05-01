@@ -114,7 +114,14 @@ public interface GenerationCallback {
 	@Target({ ElementType.PARAMETER, ElementType.FIELD, ElementType.LOCAL_VARIABLE })
 	public @interface GenerationArgument {
 		boolean adjust() default true;
+		boolean wrapped() default false;
 		String id() default CommonConstants.BLANK;
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.PARAMETER, ElementType.FIELD, ElementType.LOCAL_VARIABLE })
+	public @interface GenerationArguments {
+		/*Empty */
 	}
 	
 	@Retention(RetentionPolicy.RUNTIME)

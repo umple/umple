@@ -26,16 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import cruise.umple.cpp.utils.CPPCommonConstants;
-import cruise.umple.cpp.utils.CPPTypesConstants;
-import cruise.umple.cpp.utils.GenerationUtil;
-import cruise.umple.cpp.utils.StringUtil;
-import cruise.umple.modeling.handlers.cpp.ICppAssociationsDefinitionsConstants;
-import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppHandlerDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppNameConstants;
-import cruise.umple.modeling.handlers.cpp.ICppUmpleDefinitions;
-
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
@@ -49,6 +39,10 @@ import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.LoopProcessorAnnotation;
+import cruise.umple.cpp.utils.CPPCommonConstants;
+import cruise.umple.cpp.utils.CPPTypesConstants;
+import cruise.umple.cpp.utils.GenerationUtil;
+import cruise.umple.cpp.utils.StringUtil;
 import cruise.umple.modeling.handlers.IModelingConstants;
 import cruise.umple.modeling.handlers.IModelingConstructorDefinitionsConstants;
 import cruise.umple.modeling.handlers.IModelingDecisions;
@@ -65,7 +59,7 @@ public class UmpleBaseGenerationPointsHandler{
 		StringBuffer buffer= new StringBuffer();
 		buffer.append("//PLEASE DO NOT EDIT THIS CODE"); //$NON-NLS-1$
 		buffer.append(CommonConstants.NEW_LINE);
-		buffer.append("//This code was generated using the UMPLE 1.16.0.2388 modeling language"); //$NON-NLS-1$
+		buffer.append("//This code was generated using the UMPLE 1.16.0.2709 modeling language"); //$NON-NLS-1$
 		buffer.append(CommonConstants.NEW_LINE);
 		return buffer.toString();
 	}
@@ -79,10 +73,18 @@ public class UmpleBaseGenerationPointsHandler{
 		return !isDerived;
 	}
 	
+	@DecisionPoint(watchIf= {IModelingDecisions.ATTRIBUTE_GENERATION_POINT,
+			IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, IModelingDecisions.DELETE_GENERATION_POINT,
+			IModelingDecisions.ADD_GENERATION_POINT, IModelingDecisions.SETTER_GENERATION_POINT, IModelingDecisions.GETTER_GENERATION_POINT_FILTER,
+			IModelingDecisions.GETTER_SINGLE_GENERATION_POINT})
+	public static boolean filterSortedAttributes(@GenerationElementParameter(id = IModelingElementDefinitions.IS_SORTED) boolean isSorted) {
+		return !isSorted;
+	}
+	
 	@GenerationPoint(generationPoint = IModelingDecisions.GETTER_GENERATION_POINT, unique= true, ifConditionIds= {IModelingElementDefinitions.IS_DERIVED}, 
 			priority= IGenerationPointPriorityConstants.HIGHEST)
 	public static boolean getter(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue,
+			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_DEFAULT_VALUE) String defaultValue,
 			@GenerationProcedureParameter(id = IModelingConstants.GETTER_METHOD_NAME) String getterMethodName,
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
@@ -103,9 +105,11 @@ public class UmpleBaseGenerationPointsHandler{
 		map.put(IModelingConstants.METHOD_NAME, getterMethodName);
 		map.put(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_INCOMING_GROUP);
 		map.put(IModelingConstants.METHOD_OBJECT, element);
-		map.put(IModelingConstants.METHOD_CONST, Boolean.FALSE);
+		map.put(ICppDefinitions.METHOD_CONST, Boolean.FALSE);
 		generationValueGetter.addValue(ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION, map, parent, VisibilityConstants.PUBLIC);
 		
+		//Getter identifing information
+		generationValueGetter.addValue(ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION, map, name, parent, VisibilityConstants.PUBLIC);
 		
 		String stream = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.STREAM_CONST_GETTER, element, name, getterMethodName);
 		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION, stream, parent, Boolean.TRUE);
@@ -117,7 +121,7 @@ public class UmpleBaseGenerationPointsHandler{
 		return true;
 	}
 	
-	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_HELPER_IMPLEMENTATION_BEFORE, unique= true, ifConditionIds= {IModelingElementDefinitions.IS_DERIVED}, 
+	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_HELPER_IMPLEMENTATION_BEFORE, 
 			priority= IGenerationPointPriorityConstants.HIGHEST)
 	public static String thisPointerCopyConstructor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element) {
@@ -297,7 +301,7 @@ public class UmpleBaseGenerationPointsHandler{
 	public static String constructorDefaulted(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue,
+			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_DEFAULT_VALUE) String defaultValue,
 			@GenerationProcedureParameter(id = ICppUmpleDefinitions.RESET_NAME) String resetCall,
 			@GenerationProcedureParameter(id = ICppUmpleDefinitions.DEFAULT_NAME) String defaultGetterMethod,
 			@GenerationElementParameter(id = IModelingElementDefinitions.IS_DEFAULTED) boolean isDefaulted,
