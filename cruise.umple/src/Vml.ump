@@ -63,7 +63,7 @@ class VariationPoint
   0..1 -- * Variant;
   * -> * VariationPoint requires;
   
-  key { name, kind, codeSnippet }
+  key { concern, name, kind, codeSnippet }
 }
 
 /* 

@@ -36,6 +36,7 @@ public class VariationPoint
 
   //Helper Variables
   private int cachedHashCode;
+  private boolean canSetConcern;
   private boolean canSetName;
   private boolean canSetCodeSnippet;
 
@@ -46,6 +47,7 @@ public class VariationPoint
   public VariationPoint(String aName)
   {
     cachedHashCode = -1;
+    canSetConcern = true;
     canSetName = true;
     canSetCodeSnippet = true;
     name = aName;
@@ -299,6 +301,7 @@ public class VariationPoint
   public boolean setConcern(Concern aConcern)
   {
     boolean wasSet = false;
+    if (!canSetConcern) { return false; }
     Concern existingConcern = concern;
     concern = aConcern;
     if (existingConcern != null && !existingConcern.equals(aConcern))
@@ -320,6 +323,15 @@ public class VariationPoint
 
     VariationPoint compareTo = (VariationPoint)obj;
   
+    if (concern == null && compareTo.concern != null)
+    {
+      return false;
+    }
+    else if (concern != null && !concern.equals(compareTo.concern))
+    {
+      return false;
+    }
+
     if (name == null && compareTo.name != null)
     {
       return false;
@@ -348,6 +360,14 @@ public class VariationPoint
       return cachedHashCode;
     }
     cachedHashCode = 17;
+    if (concern != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + concern.hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
     if (name != null)
     {
       cachedHashCode = cachedHashCode * 23 + name.hashCode();
@@ -366,6 +386,7 @@ public class VariationPoint
       cachedHashCode = cachedHashCode * 23;
     }
 
+    canSetConcern = false;
     canSetName = false;
     canSetCodeSnippet = false;
     return cachedHashCode;
