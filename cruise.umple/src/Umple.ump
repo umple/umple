@@ -547,7 +547,7 @@ class AssociationVariable
 
   before setUmpleClass { if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; } }
 
-  before setRelatedAssociation { if(!canBeRelatedAssociation(aNewRelatedAssociation)) { return false; }}
+  before setRelatedAssociation { if(!canBeRelatedAssociation(newRelatedAssociation)) { return false; }}
 }
 
 /*
