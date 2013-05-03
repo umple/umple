@@ -667,15 +667,7 @@ public class CPPDependsPointsHandler{
 		}
 	}
 	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			
-			/*Association paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.ATTRIBUTES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.ATTRIBUTES_PROCESSOR})
-	})
+	@GenerationPoint(generationPoint = IModelingDecisions.ATTRIBUTE_GENERATION_POINT)
 	public static void attributesAndAssociationsProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String type,
 			@GenerationProcedureParameter(id= IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,

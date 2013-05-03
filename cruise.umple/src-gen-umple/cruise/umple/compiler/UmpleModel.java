@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -33,7 +33,7 @@ public class UmpleModel
   // STATIC VARIABLES
   //------------------------
 
-  public static final String versionNumber = "@UMPLE_VERSION@";
+  public static final String versionNumber = "1.16.0.2388";
 
   //------------------------
   // MEMBER VARIABLES

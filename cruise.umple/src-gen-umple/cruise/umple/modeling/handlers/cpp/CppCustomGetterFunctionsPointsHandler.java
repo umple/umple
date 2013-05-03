@@ -178,6 +178,11 @@ public class CppCustomGetterFunctionsPointsHandler{
 		
 		List<Object> parametersArgument = generationValueGetter.getValues(IModelingDecisions.OPERATION_PARAMETER_ARGUMENT, element, parent);
 		
+		
+		
+//		String type= generationValueGetter.generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME, 
+//		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT, Boolean.TRUE), Boolean.TRUE);
+		
 		List<String> parameterStrings= new ArrayList<String>();
 		for(Object item: parametersArgument){
 			if(item instanceof SimpleEntry== false){
@@ -185,7 +190,13 @@ public class CppCustomGetterFunctionsPointsHandler{
 			}
 			
 			SimpleEntry<?, ?> simpleEntry= (SimpleEntry<?, ?>) item;
-			parameterStrings.add(generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, simpleEntry.getKey(), simpleEntry.getValue()));			
+			Object type = simpleEntry.getKey();
+			
+			type= generationValueGetter.generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME, 
+					GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT, type),
+					GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT, Boolean.TRUE), Boolean.TRUE);
+					
+			parameterStrings.add(generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, type, simpleEntry.getValue()));			
 		}
 		
 		String parametersString= GenerationUtil.asStringParameters(parameterStrings);

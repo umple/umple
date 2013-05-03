@@ -55,11 +55,11 @@ import cruise.umple.modeling.handlers.VisibilityConstants;
 public class UmpleBaseGenerationPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingConstants.COPY_RIGHT)
-	public static String getClassComment(){
+	public static String getClassComment(@GenerationElementParameter(id = IModelingElementDefinitions.VERSION_NUMBER) String version){
 		StringBuffer buffer= new StringBuffer();
 		buffer.append("//PLEASE DO NOT EDIT THIS CODE"); //$NON-NLS-1$
 		buffer.append(CommonConstants.NEW_LINE);
-		buffer.append("//This code was generated using the UMPLE 1.16.0.2709 modeling language"); //$NON-NLS-1$
+		buffer.append("//This code was generated using the UMPLE "+version +" modeling language"); //$NON-NLS-1$ //$NON-NLS-2$
 		buffer.append(CommonConstants.NEW_LINE);
 		return buffer.toString();
 	}
@@ -132,6 +132,18 @@ public class UmpleBaseGenerationPointsHandler{
 			return implementationDetails;
 		}
 		return implementationDetails+ CommonConstants.NEW_LINE;
+	}
+	
+	@GenerationPoint(generationPoint = IModelingConstants.GENERATION_DIRECTORY)
+	public static String generationDirectory(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationArgument(id= IModelingConstants.GENERATION_LANGUAGE) String generationLanguage,
+			@GenerationBaseElement Object element) {
+		
+		if(CPPCommonConstants.CPP_LANGUAGE.equals(generationLanguage)){
+			return generationValueGetter.getString(element, IModelingElementDefinitions.GENERATES, ICppUmpleDefinitions.CPP_GENERATION_ID);
+		}
+		
+		return null;
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, priority= IGenerationPointPriorityConstants.HIGHEST,

@@ -36,8 +36,8 @@ public class CppStatemachine extends CppGenerationTemplate{
   protected final String TEXT_4 = "FullName";
   protected final String TEXT_5 = "string answer = ";
   protected final String TEXT_6 = ";";
-  protected final String TEXT_7 = NL;
-  protected final String TEXT_8 = NL + "return answer;";
+  protected final String TEXT_7 = NL + "return answer;";
+  protected final String TEXT_8 = NL;
   protected final String TEXT_9 = NL + "if (";
   protected final String TEXT_10 = " != ";
   protected final String TEXT_11 = "::NIL) { " + NL + "\tanswer += \".\" + ";
@@ -203,12 +203,25 @@ public void execute() {
     stringBuffer.append(TEXT_5);
     stringBuffer.append(statemachine);
     stringBuffer.append(TEXT_6);
+    setBody();
     stringBuffer.append(TEXT_7);
-    stringBuffer.append(body);
-    stringBuffer.append(TEXT_8);
     
 
-}});
+}
+
+private void setBody(){
+	if(body.isEmpty()){
+		return;
+	}
+
+
+    stringBuffer.append(TEXT_8);
+    stringBuffer.append(body);
+    
+
+}
+
+});
 
 }});
 

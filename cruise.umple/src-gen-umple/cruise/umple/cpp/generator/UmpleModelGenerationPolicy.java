@@ -37,6 +37,7 @@ import cruise.umple.compiler.CodeInjection;
 import cruise.umple.compiler.Constraint;
 import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Depend;
+import cruise.umple.compiler.GenerateTarget;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.MethodParameter;
@@ -54,6 +55,26 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.NAMESPACE)
 	public static String getNamespace(@GenerationBaseElement UmpleModel model) {
 		return model.getDefaultNamespace();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.VERSION_NUMBER)
+	public static String getVersionNumber() {
+		return UmpleModel.versionNumber;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.GENERATES)
+	public static String getGeneratePath(@GenerationLoopElement UmpleModel model, String langaugeId) {
+		String normalizedLanguageId= langaugeId== null? CommonConstants.BLANK: langaugeId;
+		for(GenerateTarget generateTarget:  model.getGenerates()){
+			if(normalizedLanguageId.equals(generateTarget.getLanguage())){
+				String path = generateTarget.getPath();
+				if(CommonConstants.BLANK.equals(path)){
+					continue;
+				}
+				return path;
+			}
+		}
+		return CommonConstants.BLANK;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.FILE)
