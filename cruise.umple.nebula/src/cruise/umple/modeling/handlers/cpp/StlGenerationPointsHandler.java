@@ -60,9 +60,20 @@ public class StlGenerationPointsHandler{
 		return false;
 	}
 	
+	@DecisionPoint(decisionPoint = ICppDefinitions.IS_CONST_TYPE_PARAMETER)
+	public static boolean isConstParameter(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object type){
+		List<String> list = Arrays.asList(new String[]{ISTLConstants.STRING});
+		if((type!= null&& list.contains(type))|| list.contains(typeName)){
+			return true;
+		}
+		return false;
+	}
+	
 	@DecisionPoint(decisionPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER_DEFAULT_ASSIGN)
-	public static boolean avoidStringNullify(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName){
-		return ISTLConstants.STRING.equals(typeName);
+	public static boolean avoidStringNullify(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.DEFAULT_VALUE) String defaultValue){
+		return ISTLConstants.STRING.equals(typeName)&& (defaultValue== null|| defaultValue.isEmpty());
 	}
 	
 	@DecisionPoint(decisionPoint = ICppDefinitions.IS_POINTER_TYPE, optimistic= true)
@@ -409,7 +420,7 @@ public class StlGenerationPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationBaseElement Object element,
 			@GenerationLoopElement Object modelPackage,
-			@GenerationArgument(id = ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
+			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
 			@GenerationArgument boolean asType){
 		
 		if(key== null|| key.isEmpty()|| !isMany|| asType){

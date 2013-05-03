@@ -52,6 +52,8 @@ public interface CPPCommonConstants {
 	public static final String INLINE_MODIFIER= "inline"; //$NON-NLS-1$
 	public static final String VIRTUAL_MODIFIER= "virtual"; //$NON-NLS-1$
 	
+	public static final String REFERENCE_OPERATOR= "&"; //$NON-NLS-1$
+	
 	public static final String NIL= "NIL"; //$NON-NLS-1$
 	public static final String NULL= "NULL"; //$NON-NLS-1$
 	public static final String THIS= "this"; //$NON-NLS-1$

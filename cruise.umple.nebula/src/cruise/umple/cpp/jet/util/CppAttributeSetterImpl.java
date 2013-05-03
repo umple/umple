@@ -1129,7 +1129,7 @@ public void preExecute(){
 	this.friendSetterMethod= getRegistry().use(ICppNameConstants.FRIEND_SETTER, typeName, otherEndTypeName);
 	
 	this.listType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));	
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));	
 	this.listDefinition= getRegistry().generate(ISTLConstants.NEW_LIST_DEFINITION, element);
 }
 
@@ -1361,7 +1361,7 @@ public void preExecute(){
 	this.verifiedList= getRegistry().use(ICppNameConstants.VERIFIED, name);
 	
 	this.listType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));	
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));	
 	this.listDefinition= getRegistry().generate(ISTLConstants.NEW_LIST_DEFINITION, element);
 }
 
@@ -1545,7 +1545,7 @@ public void preExecute(){
 		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
 	
 	this.listType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));	
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));	
 		
 	this.listDefinition= getRegistry().generate(ISTLConstants.NEW_LIST_DEFINITION, element);
 }

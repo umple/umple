@@ -20,6 +20,12 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppDefinitions {
 	
+	public final static String DEEP_COPY_METHOD_NAME= "deepCopy"; //$NON-NLS-1$
+	public final static String DEEP_COPY_METHOD_DECLARATION= "cpp.deepCopy.method.declaration"; //$NON-NLS-1$
+	public final static String DEEP_COPY_METHOD_IMPLEMENTATION= "cpp.deepCopy.method.implementation"; //$NON-NLS-1$
+	
+	public final static String ASSIGNMENT_OPERATOR_IMPLEMENTATION= "cpp.assignment.operator.implementation"; //$NON-NLS-1$
+	
 	public final static String METHOD_CONST= "method.const"; //$NON-NLS-1$
 	public final static String METHOD_VIRTUAL= "method.virtual"; //$NON-NLS-1$
 	public final static String METHOD_PURE= "method.pure"; //$NON-NLS-1$
@@ -37,6 +43,7 @@ public interface ICppDefinitions {
 	public String GNUC_DEFINITION="cpp.gnuc.definition";  //$NON-NLS-1$
 	
 	public final static String IS_POINTER_TYPE= "is.pointer.type.decision.point";  //$NON-NLS-1$
+	public final static String IS_CONST_TYPE_PARAMETER= "is.const.parameter";  //$NON-NLS-1$
 	public final static String GENERIC_TYPE= "cpp.generic.point";  //$NON-NLS-1$
 	
 	public final static String ATTRIBUTE_DECLARATIONS= "cpp.attribute.declarations"; //$NON-NLS-1$
@@ -201,8 +208,6 @@ public interface ICppDefinitions {
 	public final static String COMPARATORS_DETAILS= "cpp.comparators.details"; //$NON-NLS-1$
 	
 	public final static String FUNCTION_OPERATORS= "cpp.function.operators"; //$NON-NLS-1$
-	
-	public final static String NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT= "cpp.modeling.normalizedTypeName.is.construction.argument"; //$NON-NLS-1$
 	
 	public final static String CLASS_INCOMPLETE_DECLARATION= "cpp.class.incomplete.declaration"; //$NON-NLS-1$
 	public final static String STRUCT_INCOMPLETE_DECLARATION= "cpp.struct.incomplete.declaration"; //$NON-NLS-1$
