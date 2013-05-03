@@ -18,7 +18,7 @@ public class JavaClassGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/";
+  protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL;
@@ -8099,6 +8099,7 @@ if (p != null) {
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
+    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
     		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
     		String properMethodBody = "    " + methodBody; 
     		String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
@@ -8130,6 +8131,7 @@ if (p != null) {
     			append(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
     			appendln(stringBuffer, "{");
+    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
     			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
     			
@@ -8146,6 +8148,7 @@ if (p != null) {
     			append(stringBuffer,override);    			
     			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
     		    appendln(stringBuffer, "{");
+    		    if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
     			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
     		}
