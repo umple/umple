@@ -109,7 +109,13 @@ public interface IModelingConstants {
 	public final static String NORMALIZED_NAME= "modeling.normalized.name"; //$NON-NLS-1$
 	public final static String NORMALIZED_TYPE_NAME= "modeling.normalizedTypeName"; //$NON-NLS-1$
 	public final static String NORMALIZED_VISIBILITY= "modeling.normalized.visibility"; //$NON-NLS-1$
+	public final static String NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT= "modeling.normalizedTypeName.is.construction.argument"; //$NON-NLS-1$
+	public final static String NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT= "modeling.normalizedTypeName.crud.type.argument"; //$NON-NLS-1$
+	public final static String NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT= "modeling.normalizedTypeName.as.parameter.argument"; //$NON-NLS-1$
 	public final static String NORMALIZED_RETURN_TYPE= "modeling.normalized.return.type"; //$NON-NLS-1$
+	
+	public final static String GENERATION_DIRECTORY= "modeling.generation.directory"; //$NON-NLS-1$
+	public final static String GENERATION_LANGUAGE= "modeling.generation.language"; //$NON-NLS-1$
 	
 	public final static String MULTILINE_COMMENTS_STRING= "modeling.multitline.comments.string"; //$NON-NLS-1$
 	

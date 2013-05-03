@@ -48,6 +48,7 @@ import cruise.umple.core.GenerationCallback.WatchedObjectValue;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
+import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
 import cruise.umple.templates.GenerationTemplateDelegator;
 import cruise.umple.templates.IGenerationTemplateRegistry;
 import cruise.umple.values.GenerationValueGetterDelegator;

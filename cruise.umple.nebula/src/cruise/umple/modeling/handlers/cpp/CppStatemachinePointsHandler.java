@@ -280,13 +280,13 @@ public class CppStatemachinePointsHandler{
 					}
 				}
 				
-				if(!body.isEmpty()){
-					body= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_FULL_PATH_IMPLEMENTATION,statemachineQualifiedName, body);
-					
-					addMethodDetails(generationValueGetter, FULL_NAME_IMPLEMENTATION, 
-							ISTLConstants.STRING, CPPTypesConstants.VOID, StringUtil.indent(body, 1), uClass, null, getSMFullName, 
-							VisibilityConstants.PUBLIC, IModelingConstants.METHOD_OUTGOING_GROUP);
-				}
+				//if(!body.isEmpty()){
+				body= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_FULL_PATH_IMPLEMENTATION,statemachineQualifiedName, body);
+				
+				addMethodDetails(generationValueGetter, FULL_NAME_IMPLEMENTATION, 
+						ISTLConstants.STRING, CPPTypesConstants.VOID, StringUtil.indent(body, 1), uClass, null, getSMFullName, 
+						VisibilityConstants.PUBLIC, IModelingConstants.METHOD_OUTGOING_GROUP);
+				//}
 			}
 			
 			List<String> values= new ArrayList<String>();

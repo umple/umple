@@ -252,7 +252,7 @@ public void execute() {
 @Override
 public void preExecute(){
 	this.listType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.TRUE));	
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.TRUE));	
 }
 
 });
@@ -577,10 +577,10 @@ private void initialize(){
 public void preExecute(){
 	this.listDefinition = getRegistry().generate(ISTLConstants.NEW_LIST_DEFINITION, element);
 	this.listType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.FALSE));
 		
 	this.listIterativeType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.TRUE));
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.TRUE));
 	
 	this.beginIterator= name+ "Begin"+ "Iterator";
 	this.endIterator= name+ "End"+ "Iterator";
@@ -688,7 +688,7 @@ private void setAssigneeOrReturn(){
 @Override
 public void preExecute(){
 	this.listIterativeType= getRegistry().generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME,
-		GenerationArgumentDescriptor.arg(ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.TRUE));
+		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT, Boolean.TRUE));
 	
 	this.beginIterator= name+ "Begin"+ "Iterator";	
 }

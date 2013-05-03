@@ -31,6 +31,7 @@ import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
 
 
 public class ModelingConstructorPointsHandler{
@@ -85,7 +86,9 @@ public class ModelingConstructorPointsHandler{
 			}
 			
 			if(typeParameterName!= null&&!typeParameterName.isEmpty()&& !parameterFiltered){
-				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_GENERATION_POINT, Boolean.valueOf(isAttribute),
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT, Boolean.TRUE),
+						Boolean.valueOf(isAttribute),
 						typeParameterName);
 			}
 		}
