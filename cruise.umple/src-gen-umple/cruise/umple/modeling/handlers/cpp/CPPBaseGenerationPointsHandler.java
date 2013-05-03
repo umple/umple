@@ -389,7 +389,8 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationBaseElement Object model){
 		String contents = generationValueGetter.generate(ICppDefinitions.PACKAGE_HEADER, model);
 		
-		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH);
+		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
+				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
 		String modelName= generationValueGetter.generationPointString(model, CPPCommonConstants.PACKAGE_SUFFIX);
 		
 		String fileName= modelName+	CommonConstants.DOT +CPPCommonConstants.HEADER_FILE_EXTENSION;
@@ -402,7 +403,8 @@ public class CPPBaseGenerationPointsHandler{
 	public static void modelPathsAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object model){
 		
-		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH);
+		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
+				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
 		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
 		String generate = generationValueGetter.generate(ICppDefinitions.MAIN, model, implementationDetails);
 		
@@ -419,16 +421,20 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationProcedureParameter(id = IModelingDecisions.MODEL_PATH) String path){
 		
+		String fullPath = generationValueGetter.generationPointString(element, IModelingConstants.ROOT_PATH,
+				GenerationArgumentDescriptor.arg(IModelingDecisions.MODEL_PATH, path),
+				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
+				
 		String implementationContents = generationValueGetter.generate(ICppDefinitions.CLASS_BODY, element, Boolean.TRUE);
 		String implementationFileName= name + CommonConstants.DOT +CPPCommonConstants.BODY_FILE_EXTENSION;
 		
-		ContentsDescriptor implementationContentsDescriptor = new ContentsDescriptor(implementationContents, implementationFileName, path);
+		ContentsDescriptor implementationContentsDescriptor = new ContentsDescriptor(implementationContents, implementationFileName, fullPath);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, implementationContentsDescriptor);
 		
 		String headerContents = generationValueGetter.generate(ICppDefinitions.HEADER, element, Boolean.TRUE);
 		String headerFileName= name + CommonConstants.DOT +CPPCommonConstants.HEADER_FILE_EXTENSION;
 		
-		ContentsDescriptor headerContentsDescriptor = new ContentsDescriptor(headerContents, headerFileName, path);
+		ContentsDescriptor headerContentsDescriptor = new ContentsDescriptor(headerContents, headerFileName, fullPath);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, headerContentsDescriptor);
 	}
 	
@@ -966,9 +972,26 @@ public class CPPBaseGenerationPointsHandler{
 	@SuppressWarnings("unused")
 	@GenerationPoint(generationPoint = IModelingConstants.ROOT_PATH)
 	public static String rootPath(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationProcedureParameter(id = IModelingConstants.GENERATION_DIRECTORY) String generaionDirectory,
+			@GenerationArgument(id= IModelingDecisions.MODEL_PATH) Object modelPath,
 			@GenerationLoopElement Object modelPackage){
-		return CommonConstants.BLANK;
-//		return generationValueGetter.generationPointString(modelPackage, IModelingConstants.ROOT_NAME);
+		
+		String root= CommonConstants.BLANK;	//generationValueGetter.generationPointString(modelPackage, IModelingConstants.ROOT_NAME)
+		if(generaionDirectory!= null&& !generaionDirectory.isEmpty()){
+			if(!root.isEmpty()){
+				root= root+ CommonConstants.FORWARD_SLASH;
+			}
+			root= root+ generaionDirectory;
+		}
+		
+		if(modelPath!= null){
+			if(!root.isEmpty()){
+				root= root+ CommonConstants.FORWARD_SLASH;
+			}
+			root= root+ modelPath;
+		}
+		
+		return root;
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstants.ROOT_NAME)
@@ -996,6 +1019,12 @@ public class CPPBaseGenerationPointsHandler{
 		return false;
 	}
 	
+	@DecisionPoint(decisionPoint = ICppDefinitions.IS_CONST_TYPE_PARAMETER)
+	public static boolean isConstParameter(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object type){
+		return isPrimitiveType(typeName, type);
+	}
+	
 	@DecisionPoint(decisionPoint = ICppDefinitions.IS_POINTER_TYPE)
 	public static boolean isPointer(@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType){
 		//To be extended by clients for more cases
@@ -1008,10 +1037,13 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationProcedureParameter(id = ICppDefinitions.IS_POINTER_TYPE) boolean isPointer,
 			@GenerationBaseElement Object element,
-			@GenerationArgument(id = ICppDefinitions.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
+			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT) String crudType,
+			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
+			@GenerationProcedureParameter(id = ICppDefinitions.IS_CONST_TYPE_PARAMETER) boolean isConstParameter,
+			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT) boolean asParameter,
 			@GenerationArgument boolean asType){
 		
-		String normalizedType= typeName;
+		String normalizedType= crudType!=null && !crudType.isEmpty()? crudType: typeName;
 		
 		//For primitive types (string, int, etc), we do not have pointer, but if they are many, we wrap the type in a vector and this vector must be a pointer
 		//Therefore, enable pointer for the isMany case as well in order to handle that condition
@@ -1020,6 +1052,10 @@ public class CPPBaseGenerationPointsHandler{
 			normalizedType = generationValueGetter.generate(ISTLConstants.TYPE_AS_LIST, element, Boolean.valueOf(!isConstruction));
 		}else if(isPointer){
 			normalizedType= normalizedType+ CommonConstants.ASTERISK;
+		}
+		
+		if(asParameter&& isConstParameter){
+			normalizedType= CPPCommonConstants.CONST_MODIFIER+ CommonConstants.SPACE+ normalizedType+ CPPCommonConstants.REFERENCE_OPERATOR;
 		}
 		
 		return normalizedType;

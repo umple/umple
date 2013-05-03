@@ -215,11 +215,22 @@ public class CPPContentsPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object interfaceObject,
 			@GenerationBaseElement Object element){
 		
+		String assignmentImplementation= generationValueGetter.generate(ICppDefinitions.ASSIGNMENT_OPERATOR_IMPLEMENTATION, element);
+		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC, 
+				CommonConstants.BLANK, assignmentImplementation);
+		
+		String deepCopyDeclaration = generationValueGetter.generate(ICppDefinitions.DEEP_COPY_METHOD_DECLARATION, element);
+		String deepCopyImplementation= generationValueGetter.generate(ICppDefinitions.DEEP_COPY_METHOD_IMPLEMENTATION, element);
+		
 		if(interfaceObject!= null){
 			String declaration= generationValueGetter.use(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_NO_IMPLEMENTATION); 
 
 			generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, 
 					IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC);
+			
+			addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PRIVATE, 
+					deepCopyDeclaration, deepCopyImplementation);
+			
 			return;
 		}
 		
@@ -234,7 +245,12 @@ public class CPPContentsPointsHandler{
 		}
 		
 		String copyConstructor = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_IMPLEMENTATION, element,
-				name, contents, parentClassName);
+				name, parentClassName);
+		
+		deepCopyImplementation= generationValueGetter.generate(ICppDefinitions.DEEP_COPY_METHOD_IMPLEMENTATION, element, contents);
+		
+		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PRIVATE, 
+				deepCopyDeclaration, deepCopyImplementation);
 		
 		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC, 
 				copy, copyConstructor);

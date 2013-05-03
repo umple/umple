@@ -20,6 +20,8 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppUmpleDefinitions {
 	
+	public final String CPP_GENERATION_ID= "RTCpp"; //$NON-NLS-1$
+	
 	public final String RESET_NAME= "reset.method.name"; //$NON-NLS-1$
 	public final String SINGLETON_CALL= "singleton.call"; //$NON-NLS-1$
 	public final String DEFAULT_NAME= "default.method.name"; //$NON-NLS-1$
