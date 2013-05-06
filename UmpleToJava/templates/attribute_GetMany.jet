@@ -1,16 +1,16 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>(int index)
+  public <%=gen.translate("typeMany",av)%> <%=gen.translate("getMethod",av)%>(int index)
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
-    <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("attributeMany",av)%>.get(index);
+    <%=gen.translate("typeMany",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("attributeMany",av)%>.get(index);
     <% if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } %>
     return <%=gen.translate("parameterOne",av)%>;
   }
 
-  public <%=gen.translate("type",av)%>[] <%=gen.translate("getManyMethod",av)%>()
+  public <%=gen.translate("typeMany",av)%>[] <%=gen.translate("getManyMethod",av)%>()
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } %>
-    <%=gen.translate("type",av)%>[] <%=gen.translate("parameterMany",av)%> = <%=gen.translate("attributeMany",av)%>.toArray(new <%=gen.translate("type",av)%>[<%=gen.translate("attributeMany",av)%>.size()]);
+    <%=gen.translate("typeMany",av)%>[] <%=gen.translate("parameterMany",av)%> = <%=gen.translate("attributeMany",av)%>.toArray(new <%=gen.translate("typeMany",av)%>[<%=gen.translate("attributeMany",av)%>.size()]);
     <% if (customGetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } %>
     return <%=gen.translate("parameterMany",av)%>;
   }
