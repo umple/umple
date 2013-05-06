@@ -47,3 +47,8 @@ class DoorF
   immutable Time d2 = "12:52:52";
   defaulted Time d3 = "12:53:53";
 }
+
+class ManyAttribute
+{
+  Integer[] works;
+}

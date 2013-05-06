@@ -2506,7 +2506,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_12);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_13);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_14);
     
     }
@@ -3022,7 +3022,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_118);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_119);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_120);
     
     }
@@ -3315,7 +3315,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_189);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_190);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_191);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_192);
@@ -3382,13 +3382,13 @@ public class JavaClassGenerator implements ILang
     {
       
     stringBuffer.append(TEXT_205);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_206);
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_207);
      if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_208);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_209);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_210);
@@ -3398,19 +3398,19 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_212);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_213);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_214);
     stringBuffer.append(gen.translate("getManyMethod",av));
     stringBuffer.append(TEXT_215);
      if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } 
     stringBuffer.append(TEXT_216);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_217);
     stringBuffer.append(gen.translate("parameterMany",av));
     stringBuffer.append(TEXT_218);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_219);
-    stringBuffer.append(gen.translate("type",av));
+    stringBuffer.append(gen.translate("typeMany",av));
     stringBuffer.append(TEXT_220);
     stringBuffer.append(gen.translate("attributeMany",av));
     stringBuffer.append(TEXT_221);
