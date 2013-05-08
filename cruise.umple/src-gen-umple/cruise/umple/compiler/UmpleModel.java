@@ -816,6 +816,8 @@ public class UmpleModel
     UmpleParser parser = new UmpleInternalParser(this);
     try {
       input = SampleFileWriter.readContent(getUmpleFile().getFile());
+      // this adds command-based linked umple files to the content of file.
+	  input = input+getUmpleFile().getLinkedFiles();
     }
     catch (RuntimeException e){
       input = "use "+getUmpleFile().getFileName()+";\n";

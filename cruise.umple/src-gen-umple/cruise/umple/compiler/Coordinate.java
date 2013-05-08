@@ -7,10 +7,10 @@ package cruise.umple.compiler;
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
  * @umplesource Umple.ump 620
- * @umplesource Umple_Code.ump 1728
+ * @umplesource Umple_Code.ump 1730
  */
 // line 620 "../../../../src/Umple.ump"
-// line 1728 "../../../../src/Umple_Code.ump"
+// line 1730 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
 
@@ -199,7 +199,7 @@ public class Coordinate
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1731 ../../../../src/Umple_Code.ump
+  // line 1733 ../../../../src/Umple_Code.ump
   public Point getTopLeft()
   {
     return new Point(x,y);

@@ -9,7 +9,6 @@
 
 package cruise.umple.compiler;
 
-
 import java.io.File;
 
 import org.junit.After;
@@ -57,6 +56,7 @@ public class UmpleFileTest {
 
   @Test
   public void constructorFileOnlyMakeSureThePathIsProperlyResolved()
+
   {
     File f = new File("aha.txt");
     String fullName = f.getAbsolutePath();
@@ -125,6 +125,12 @@ public class UmpleFileTest {
     UmpleFile file = new UmpleFile("blah.txt");
     Assert.assertEquals("blah", file.getSimpleFileName());
   }     
- 
+
+  @Test
+  public void AddLinkedFiles() {
+   UmpleFile file = new UmpleFile("blah.txt");
+   file.addLinkedFiles("test1.ump");
+   Assert.assertEquals("\nuse test1.ump;\n", file.getLinkedFiles());
+  }  
    
 }

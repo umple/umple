@@ -11,10 +11,10 @@ import java.util.*;
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
  * @umplesource Umple.ump 486
- * @umplesource Umple_Code.ump 1077
+ * @umplesource Umple_Code.ump 1079
  */
 // line 486 "../../../../src/Umple.ump"
-// line 1077 "../../../../src/Umple_Code.ump"
+// line 1079 "../../../../src/Umple_Code.ump"
 public class Association
 {
 
@@ -292,7 +292,7 @@ public class Association
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1080 ../../../../src/Umple_Code.ump
+  // line 1082 ../../../../src/Umple_Code.ump
   public void setLeftAndRight()
   {
     String name = this.getName();

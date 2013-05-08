@@ -67,6 +67,12 @@ public class UmpleConsoleMain
         String filename = nonOpt.get(0);
         println(filename);
         UmpleFile umpleFile = new UmpleFile(filename);
+		//this loop is used to add command-based linked umple files and to show names of them.
+		for (int i=1;i<nonOpt.size(); i++) {
+			umpleFile.addLinkedFiles(nonOpt.get(i));
+			println(nonOpt.get(i));
+		}
+		
         UmpleModel model = new UmpleModel(umpleFile);
 
         if (postModelOptionProcess(optset, model)) {
@@ -96,7 +102,13 @@ public class UmpleConsoleMain
           }
 
           String successWord = compileSuccess ? "Success! " : "";
-          println(successWord + "Processed "+ filename +".");
+          for (int i=0;i<nonOpt.size(); i++) {
+			println(successWord + "Processed "+ nonOpt.get(i) +".");
+		  }
+		  if(compileSuccess)
+		  {
+		    return;
+		  }
           System.exit(compileSuccess ? 0 : 1); 
         }
         catch(Exception ex) {

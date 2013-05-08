@@ -14,10 +14,10 @@ import java.util.*;
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  * In Umple_Code.ump: Methods for testing various complex properties
  * @umplesource Umple.ump 536
- * @umplesource Umple_Code.ump 1314
+ * @umplesource Umple_Code.ump 1316
  */
 // line 536 "../../../../src/Umple.ump"
-// line 1314 "../../../../src/Umple_Code.ump"
+// line 1316 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
 
@@ -323,7 +323,7 @@ public class AssociationVariable extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1316 ../../../../src/Umple_Code.ump
+  // line 1318 ../../../../src/Umple_Code.ump
   public boolean isReflexive()
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());

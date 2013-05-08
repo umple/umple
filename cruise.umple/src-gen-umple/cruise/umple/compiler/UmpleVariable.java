@@ -8,10 +8,10 @@ package cruise.umple.compiler;
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
  * @umplesource Umple.ump 427
- * @umplesource Umple_Code.ump 1017
+ * @umplesource Umple_Code.ump 1019
  */
 // line 427 "../../../../src/Umple.ump"
-// line 1017 "../../../../src/Umple_Code.ump"
+// line 1019 "../../../../src/Umple_Code.ump"
 public class UmpleVariable
 {
 
@@ -129,7 +129,7 @@ public class UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1019 ../../../../src/Umple_Code.ump
+  // line 1021 ../../../../src/Umple_Code.ump
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)
