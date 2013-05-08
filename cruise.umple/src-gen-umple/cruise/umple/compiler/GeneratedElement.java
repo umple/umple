@@ -9,10 +9,10 @@ import java.util.*;
  * This is a problem for model-to-model transformations
  * Should be abolished
  * @umplesource Umple.ump 574
- * @umplesource Umple_Code.ump 1631
+ * @umplesource Umple_Code.ump 1633
  */
 // line 574 "../../../../src/Umple.ump"
-// line 1631 "../../../../src/Umple_Code.ump"
+// line 1633 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {
 
@@ -38,7 +38,7 @@ public class GeneratedElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1634 ../../../../src/Umple_Code.ump
+  // line 1636 ../../../../src/Umple_Code.ump
   private Map<String, String> lookups = new HashMap<String, String>();
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 

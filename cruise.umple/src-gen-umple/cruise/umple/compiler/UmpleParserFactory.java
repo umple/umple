@@ -4,11 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleHelper.ump 34
- * @umplesource UmpleHelper_Code.ump 118
+ * @umplesource UmpleHelper.ump 36
+ * @umplesource UmpleHelper_Code.ump 129
  */
-// line 34 "../../../../src/UmpleHelper.ump"
-// line 118 "../../../../src/UmpleHelper_Code.ump"
+// line 36 "../../../../src/UmpleHelper.ump"
+// line 129 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleParserFactory
 {
 
@@ -34,7 +34,7 @@ public class UmpleParserFactory
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 121 ../../../../src/UmpleHelper_Code.ump
+  // line 132 ../../../../src/UmpleHelper_Code.ump
   public static UmpleParser create(String className) 
   {
     

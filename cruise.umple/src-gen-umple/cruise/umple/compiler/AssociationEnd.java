@@ -11,10 +11,10 @@ package cruise.umple.compiler;
  * Create a derived attribute otherend (the other AssociationEnd)
  * In Umple_Code.ump: Methods for computing compound properties
  * @umplesource Umple.ump 508
- * @umplesource Umple_Code.ump 1190
+ * @umplesource Umple_Code.ump 1192
  */
 // line 508 "../../../../src/Umple.ump"
-// line 1190 "../../../../src/Umple_Code.ump"
+// line 1192 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
 
@@ -311,7 +311,7 @@ public class AssociationEnd
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1193 ../../../../src/Umple_Code.ump
+  // line 1195 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()

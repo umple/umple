@@ -155,4 +155,26 @@ UmpleConsoleMain.console);
 		Assert.fail();
 	}
   }
+   @Test 
+   public void MultiUmpleFile() {
+	   String[] args = new String[] { "testclass1.ump", "testclass2.ump"};
+	   try {
+			BufferedWriter out1 = new BufferedWriter(new FileWriter("testclass1.ump"));
+			BufferedWriter out2 = new BufferedWriter(new FileWriter("testclass2.ump"));
+		    out1.write("class Testclass1 {}");
+		    out1.close();
+		    out2.write("class Testclass1 {}");	    
+		    out2.close();
+		    UmpleConsoleMain.main(args);
+		    File fileOut = new File("Testclass1.java");
+		    Assert.assertEquals(true, fileOut.exists());
+			fileOut.delete();
+		    Assert.assertEquals("testclass1.ump\ntestclass2.ump\nSuccess! Processed testclass1.ump.\nSuccess! Processed testclass2.ump.\n", UmpleConsoleMain.console);
+		    new File("testclass1.ump").delete();
+		    new File("testclass2.ump").delete();
+		} catch (IOException e) {
+			Assert.fail();
+		}   
+   }
+   
 }

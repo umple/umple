@@ -11,10 +11,10 @@ import java.util.*;
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
  * @umplesource Umple.ump 455
- * @umplesource Umple_Code.ump 1044
+ * @umplesource Umple_Code.ump 1046
  */
 // line 455 "../../../../src/Umple.ump"
-// line 1044 "../../../../src/Umple_Code.ump"
+// line 1046 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
 
@@ -538,7 +538,7 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1046 ../../../../src/Umple_Code.ump
+  // line 1048 ../../../../src/Umple_Code.ump
   public boolean isConstant()
   {
     return "const".equals(getModifier());

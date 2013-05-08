@@ -14,11 +14,11 @@ import java.util.*;
  * In Umple_Code.ump: Methods for computing complex properties
  * @umplesource Umple.ump 340
  * @umplesource Trace.ump 112
- * @umplesource Umple_Code.ump 623
+ * @umplesource Umple_Code.ump 625
  */
 // line 340 "../../../../src/Umple.ump"
 // line 112 "../../../../src/Trace.ump"
-// line 623 "../../../../src/Umple_Code.ump"
+// line 625 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
 {
 
@@ -1355,7 +1355,7 @@ public class UmpleClass extends UmpleClassifier
    public UmpleClass(String name)  {
 this(name, null);
   }
-// line 631 ../../../../src/Umple_Code.ump
+// line 633 ../../../../src/Umple_Code.ump
   public List<StateMachine> getAllStateMachines()
   {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();

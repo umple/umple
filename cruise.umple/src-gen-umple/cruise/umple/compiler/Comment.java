@@ -7,10 +7,10 @@ import java.util.*;
 /**
  * Represents a comment, such as those found around classes, methods, attributes and associations.
  * @umplesource Umple.ump 640
- * @umplesource Umple_Code.ump 1825
+ * @umplesource Umple_Code.ump 1827
  */
 // line 640 "../../../../src/Umple.ump"
-// line 1825 "../../../../src/Umple_Code.ump"
+// line 1827 "../../../../src/Umple_Code.ump"
 public class Comment
 {
 
@@ -66,7 +66,7 @@ public class Comment
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1827 ../../../../src/Umple_Code.ump
+  // line 1829 ../../../../src/Umple_Code.ump
   public Boolean isInline = true;
 
   /**

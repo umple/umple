@@ -11,9 +11,9 @@ import java.io.*;
 
 /**
  * Main program for a jar that can inject calls to Umple at runtime
- * @umplesource Main_Code.ump 178
+ * @umplesource Main_Code.ump 190
  */
-// line 178 "../../../src/Main_Code.ump"
+// line 190 "../../../src/Main_Code.ump"
 public class UmpleRunMain
 {
 
@@ -39,7 +39,7 @@ public class UmpleRunMain
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 188 ../../../src/Main_Code.ump
+  // line 200 ../../../src/Main_Code.ump
   public static String console;
     public static boolean displayOutput = true;
 

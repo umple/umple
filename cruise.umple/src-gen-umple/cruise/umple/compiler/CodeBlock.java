@@ -7,10 +7,10 @@ import java.util.*;
 /**
  * A block of code in an arbitrary language to be injected into generated code
  * @umplesource Umple.ump 269
- * @umplesource Umple_Code.ump 481
+ * @umplesource Umple_Code.ump 483
  */
 // line 269 "../../../../src/Umple.ump"
-// line 481 "../../../../src/Umple_Code.ump"
+// line 483 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
 
@@ -24,7 +24,7 @@ public class CodeBlock
 
   public CodeBlock()
   {
-    // line 483 "../../../../src/Umple_Code.ump"
+    // line 485 "../../../../src/Umple_Code.ump"
     code = new Hashtable<String,String>();
   }
 
@@ -50,7 +50,7 @@ this();
 this();
     code.put(lang,add);
   }
-// line 495 ../../../../src/Umple_Code.ump
+// line 497 ../../../../src/Umple_Code.ump
   public void setCode(String add)
   {
     if(add!=null)
