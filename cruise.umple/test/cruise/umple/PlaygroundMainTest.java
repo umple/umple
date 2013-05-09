@@ -40,6 +40,8 @@ public class PlaygroundMainTest
     SampleFileWriter.destroy("myfile.ecore");
     SampleFileWriter.destroy("myfile.tuml");
     SampleFileWriter.destroy("myfile.zip");
+    SampleFileWriter.destroy("myfile/model.notation");
+    SampleFileWriter.destroy("myfile/model.di");
     SampleFileWriter.destroy("One.java");
     SampleFileWriter.destroy("Two.java");
   }

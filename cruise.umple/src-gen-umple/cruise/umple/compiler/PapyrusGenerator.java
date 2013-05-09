@@ -445,8 +445,8 @@ public class PapyrusGenerator implements CodeGenerator
       StringBuilder noteCode = new StringBuilder();
       String modelFilename = null;
 
-      noteCode.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-
+      noteCode.append(model+"\n"+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+      
       if(isClassDiagram)
       {
       noteCode.append("<notation:Diagram xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:notation=\"http://www.eclipse.org/gmf/runtime/1.0.2/notation\"");
