@@ -43,6 +43,8 @@ public class PapyrusGeneratorTest extends TemplateTest
     File destroyDirAss = new File(pathToInput + "/papyrus/Associations");
     destroyDirAss.delete();
     
+    SampleFileWriter.destroy("/myfile/model.di");
+    SampleFileWriter.destroy("/myfile/model.notation");
   }
 
   @Test
