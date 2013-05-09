@@ -24,7 +24,7 @@ public class UmpleFile
   private String fileName;
   private String path;
   private StringBuilder fileContent;
-  private String LinkedFiles;
+  private String linkedFiles;
 
   //------------------------
   // CONSTRUCTOR
@@ -36,7 +36,7 @@ public class UmpleFile
     fileName = null;
     path = null;
     fileContent = init();
-    LinkedFiles = "";
+    linkedFiles = "";
   }
 
   //------------------------
@@ -186,11 +186,11 @@ this(new File(aFullFilename));
   
   // this is used to add command-based linked Umple files to the proper list.
   public void addLinkedFiles(String filename) {
-  	LinkedFiles = LinkedFiles+"use "+filename+";\n";
+  	linkedFiles = linkedFiles+"use "+filename+";\n";
   }
   
   // this is used to get list of command-based linked Umple files.
   public String getLinkedFiles() {
- 	 return "\n"+LinkedFiles;
+ 	 return "\n"+linkedFiles;
   }
 }
