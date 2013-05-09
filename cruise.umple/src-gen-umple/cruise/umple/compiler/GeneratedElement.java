@@ -8,11 +8,11 @@ import java.util.*;
  * TODO: Code smell: This duplicates the structure of the class from UmpleClass
  * This is a problem for model-to-model transformations
  * Should be abolished
- * @umplesource Umple.ump 574
- * @umplesource Umple_Code.ump 1633
+ * @umplesource Umple.ump 576
+ * @umplesource Umple_Code.ump 1664
  */
-// line 574 "../../../../src/Umple.ump"
-// line 1633 "../../../../src/Umple_Code.ump"
+// line 576 "../../../../src/Umple.ump"
+// line 1664 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {
 
@@ -38,7 +38,7 @@ public class GeneratedElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1636 ../../../../src/Umple_Code.ump
+  // line 1667 ../../../../src/Umple_Code.ump
   private Map<String, String> lookups = new HashMap<String, String>();
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 

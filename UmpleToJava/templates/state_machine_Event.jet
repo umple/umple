@@ -5,42 +5,13 @@
 
   for(StateMachine sm : uClass.getStateMachines(e))
   {
-	  for( TraceDirective tc : uClass.getTraceDirectives() )
-	  {
-		  for( StateMachine_TraceItem tracedStm : tc .getStateMachineTraceItems() )
-		  {
-			  if( tracedStm.getTransition() != null || tracedStm.getTraceStateMachineFlag()  )
-			  {
-				  allCases.append(StringFormatter.format("\n    System.err.print(\"state@pre=\"+{0}+\",\");",tracedStm.getStateMachine().getName()));
-				  allCases.append(StringFormatter.format("\n    System.err.print(\"event={0},\");",gen.translate("eventMethod",e)));
-			  }
-			
-		  }
-	  }
-//  	for( TraceDirective tc : uClass.getTraceDirectives() )
-//	  {
-//		  for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
-//		  {
-//			  if( tc.getStateMachineTraceItem(i).getStateMachine() == sm )
-//			  {
-//				  if( model.getTraceType().equals("Console"))
-//				  {
-//				    allCases.append(StringFormatter.format("\n    System.out.println(\"Event={0}\");",gen.translate("eventMethod",e)));
-//					}
-//				  else if( model.getTraceType().equals("File"))
-//				  {
-//				    allCases.append(StringFormatter.format("\n    fileTracer(\"Event={0}\");",gen.translate("eventMethod",e)));
-//					}
-//				}
-//			}
-//	  }
-	  allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
+    allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
     allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
 
     for(State state : sm.getStates())
     {
-  
+  	  TraceItem traceItem = state.getTraced("normal",uClass);
       List<Transition> allT = state.getTransitionsFor(e);
   
       if (allT.size() == 0)
@@ -71,11 +42,20 @@
         {
           Action a1 = t.getAction();
           Position p = a1.getPosition();
-	      if (p != null) {
-	        allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
-	      }
+        if (p != null) {
+          allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
+        }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
         }
+        allCases.append((traceItem!=null?
+  GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,""),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, t, "changes state", uClass, "transition")))
+   ,"    ")+"\n":
+   ""));
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
 
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
@@ -101,22 +81,27 @@
     allCases.append(StringFormatter.format("      default:\n"));
     allCases.append(StringFormatter.format("        // Other states do respond to this event\n"));
     allCases.append(StringFormatter.format("    }\n"));
+    /*
+    if(traceItem!=null)
+    {
+      //allCases.append("\n  "+traceItem.trace(gen, e, "  {0}Tracer.handle({1});","post"));
+    }*/
   }
 
-  for( TraceDirective tc : uClass.getTraceDirectives() )
-  {
-	  for( StateMachine_TraceItem tracedStm : tc .getStateMachineTraceItems() )
-	  {
-		  if( tracedStm.getTransition() != null || tracedStm.getTraceStateMachineFlag() )
-		  {
-			  if( tc.getTraceRecord() != null )
-				  allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0}+\",{1}=\"+{2});",tracedStm.getStateMachine().getName(),tc.getTraceRecord().getAttribute(0).getName(),tc.getTraceRecord().getAttribute(0).getName()));
-			  else 
-				  allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0});",tracedStm.getStateMachine().getName()));
-		  }
-		
-	  }
-  }
+  //for( TraceDirective tc : uClass.getTraceDirectives() )
+  //{
+  //  for( StateMachineTraceItem tracedStm : tc .getStateMachineTraceItems() )
+  //  {
+  //      if( tracedStm.getTransition() != null || tracedStm.getTraceStateMachineFlag() )
+ //      {
+//        if( tc.getTraceRecord() != null )
+//          allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0}+\",{1}=\"+{2});",tracedStm.getStateMachine().getName(),tc.getTraceRecord().getAttribute(0).getName(),tc.getTraceRecord().getAttribute(0).getName()));
+//        else 
+//          allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0});",tracedStm.getStateMachine().getName()));
+//      }
+//    
+//    }
+  //}
   
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();

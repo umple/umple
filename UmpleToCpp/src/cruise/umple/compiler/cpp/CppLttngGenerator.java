@@ -84,9 +84,9 @@ public class CppLttngGenerator implements ILang
     stringBuffer.append(TEXT_3);
     for( TraceDirective td : uClass.getTraceDirectives() )
   {
-    for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
+    for( AttributeTraceItem traceAttr : td.getAttributeTraceItems() )
     {
-	for( Attribute att : traceAttr.getAttributes() )
+	for( UmpleVariable att : traceAttr.getUmpleVariables() )
 	{
 	tp_code = null;
 	appendln(tp_code,"TRACEPOINT_EVENT(");

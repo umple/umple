@@ -31,7 +31,7 @@
           	{
                 for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
                 {
-              	  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+              	  StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
           		  StateMachine stm = tracedState.getStateMachine();
           		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
           		  {
@@ -69,7 +69,7 @@
         	{
               for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
               {
-            	  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+            	  StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
         		  StateMachine stm = tracedState.getStateMachine();
         		  for( int j = 0 ; j < stm.numberOfStates() ; ++j )
         		  {

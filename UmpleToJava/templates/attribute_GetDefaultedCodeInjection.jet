@@ -3,7 +3,8 @@
   {
     <% if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } %>
     <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%= gen.translate("parameterValue",av) %>;
-    <% if (customGetDefaultPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } %>
-    return <%=gen.translate("parameterOne",av)%>;
+<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+%><% if (customGetDefaultPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetDefaultPostfixCode, "    ")); } 
+%>    return <%=gen.translate("parameterOne",av)%>;
   }
 

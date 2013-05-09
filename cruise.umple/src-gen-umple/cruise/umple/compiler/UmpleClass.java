@@ -12,13 +12,13 @@ import java.util.*;
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
  * In Umple_Code.ump: Methods for computing complex properties
- * @umplesource Umple.ump 340
- * @umplesource Trace.ump 112
- * @umplesource Umple_Code.ump 625
+ * @umplesource Umple.ump 342
+ * @umplesource Trace.ump 152
+ * @umplesource Umple_Code.ump 656
  */
-// line 340 "../../../../src/Umple.ump"
-// line 112 "../../../../src/Trace.ump"
-// line 625 "../../../../src/Umple_Code.ump"
+// line 342 "../../../../src/Umple.ump"
+// line 152 "../../../../src/Trace.ump"
+// line 656 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
 {
 
@@ -723,7 +723,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 393 "../../../../src/Umple.ump"
+    // line 395 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -884,7 +884,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 391 "../../../../src/Umple.ump"
+    // line 393 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1156,7 +1156,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 395 "../../../../src/Umple.ump"
+    // line 397 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1355,7 +1355,7 @@ public class UmpleClass extends UmpleClassifier
    public UmpleClass(String name)  {
 this(name, null);
   }
-// line 633 ../../../../src/Umple_Code.ump
+// line 664 ../../../../src/Umple_Code.ump
   public List<StateMachine> getAllStateMachines()
   {
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();

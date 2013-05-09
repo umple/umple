@@ -13,11 +13,11 @@ import java.util.*;
  * 
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  * In Umple_Code.ump: Methods for testing various complex properties
- * @umplesource Umple.ump 536
- * @umplesource Umple_Code.ump 1316
+ * @umplesource Umple.ump 538
+ * @umplesource Umple_Code.ump 1347
  */
-// line 536 "../../../../src/Umple.ump"
-// line 1316 "../../../../src/Umple_Code.ump"
+// line 538 "../../../../src/Umple.ump"
+// line 1347 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
 
@@ -144,7 +144,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setRelatedAssociation(AssociationVariable aNewRelatedAssociation)
   {
     boolean wasSet = false;
-    // line 550 "../../../../src/Umple.ump"
+    // line 552 "../../../../src/Umple.ump"
     if(!canBeRelatedAssociation(aNewRelatedAssociation)) { return false; }
     if (aNewRelatedAssociation == null)
     {
@@ -236,7 +236,7 @@ public class AssociationVariable extends UmpleVariable
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 548 "../../../../src/Umple.ump"
+    // line 550 "../../../../src/Umple.ump"
     if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;
@@ -323,7 +323,7 @@ public class AssociationVariable extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1318 ../../../../src/Umple_Code.ump
+  // line 1349 ../../../../src/Umple_Code.ump
   public boolean isReflexive()
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());

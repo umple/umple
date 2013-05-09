@@ -56,7 +56,7 @@ public class UmpleModel
   private int maxYLevels;
   private Coordinate offsetFromEdge;
   private int reflexiveSegmentLength;
-  private String traceType;
+  private Tracer tracer;
 
   //UmpleModel Associations
   private List<Association> associations;
@@ -86,7 +86,7 @@ public class UmpleModel
     maxYLevels = 5;
     offsetFromEdge = new Coordinate(10,30,0,0);
     reflexiveSegmentLength = 15;
-    traceType = "Console";
+    tracer = new Tracer("Console");
     associations = new ArrayList<Association>();
     umpleClasses = new ArrayList<UmpleClass>();
     stateMachineDefinitions = new ArrayList<StateMachine>();
@@ -183,10 +183,10 @@ public class UmpleModel
     return wasSet;
   }
 
-  public boolean setTraceType(String aTraceType)
+  public boolean setTracer(Tracer aTracer)
   {
     boolean wasSet = false;
-    traceType = aTraceType;
+    tracer = aTracer;
     wasSet = true;
     return wasSet;
   }
@@ -271,7 +271,12 @@ public class UmpleModel
 
   public String getTraceType()
   {
-    return traceType;
+    return getTracer().getName();
+  }
+
+  public Tracer getTracer()
+  {
+    return tracer;
   }
 
   public boolean isShouldGenerate()
@@ -667,7 +672,8 @@ public class UmpleModel
             "  " + "umpleFile" + "=" + getUmpleFile() != null ? !getUmpleFile() .equals(this)  ? getUmpleFile().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
             "  " + "glossary" + "=" + getGlossary() != null ? !getGlossary() .equals(this)  ? getGlossary().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
             "  " + "lastResult" + "=" + getLastResult() != null ? !getLastResult() .equals(this)  ? getLastResult().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "generatedCode" + "=" + getGeneratedCode() != null ? !getGeneratedCode() .equals(this)  ? getGeneratedCode().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "generatedCode" + "=" + getGeneratedCode() != null ? !getGeneratedCode() .equals(this)  ? getGeneratedCode().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "tracer" + "=" + getTracer() != null ? !getTracer() .equals(this)  ? getTracer().toString().replaceAll("  ","    ") : "this" : "null"
      + outputString;
   }  
   //------------------------

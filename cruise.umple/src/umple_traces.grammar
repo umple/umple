@@ -9,7 +9,7 @@
 // See user manual page: [*ModelOrientedTracingLanguage(MOTL)*]
 
 // The tool to output the trace: [*Tracers*]
-traceType- : tracer [traceType] ;
+traceType : tracer [tracerType] ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
 
 trace : [[traceDirective]] | [[traceCase]]
 
@@ -21,13 +21,13 @@ traceOptions- : set,get | set | get | entry | exit | cardinality | transition
 PreOrPostCondition- : (giving | where)? [[traceCondition]]
 
 executeClause- : execute { [**trace_execute] }
-traceWhen :  [=conditionType:where|until|after|giving]  [[traceCondition]]
+traceWhen :  [=conditionType:where|until|after|giving]? [ [[constraintToken]] ]
 
 traceFor- : for [trace_for]
 tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
 traceRecord- : record [[recordEntity]]
-recordEntity- : ( only )? [**trace_record] ( , [**trace_record] )*
+recordEntity- : ( only )? [trace_record] ( , [trace_record] )*
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]

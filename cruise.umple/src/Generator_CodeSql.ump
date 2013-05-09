@@ -436,6 +436,12 @@ class SqlGenerator
     return translate(keyName,av,isMany);
   }
   
+  public String translate(String keyName, TraceItem ti)
+  {
+  	return "";
+  }
+  
+  
   public String translate(String keyName, AssociationVariable av)
   {
     boolean isMany = av.isMany();

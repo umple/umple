@@ -1,7 +1,17 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public <%=gen.translate("type",av)%> <%=gen.translate("addMethod",av)%>(<%=gen.translate("methodArgumentsExcept",relatedAssociation)%>)
   {
-    return new <%=gen.translate("type",av)%>(<%=gen.translate("callerArgumentsExcept",relatedAssociation)%>);
+    <%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%> = new <%=gen.translate("type",av)%>(<%=gen.translate("callerArgumentsExcept",relatedAssociation)%>);<%= 
+    (traceItem!=null?
+  "\n"+GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterNew",av))))
+   ,"    "):
+   "")%>
+    return <%=gen.translate("parameterNew",av)%>;
   }
 
   public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
@@ -15,7 +25,16 @@
     {
       return wasAdded;
     }
-
+<%= 
+    (traceItem!=null?
+  "\n"+GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, av,"\" + "+gen.relatedTranslate("parameterIsNew",av)+"?\"set\":\"add\" + \"", uClass, gen.translate("parameterOne",av))))
+   ,"    "):
+   "")%>
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
     {
       <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
@@ -45,7 +64,16 @@
     {
       <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return wasRemoved;
-    }
+    }<%= 
+    (traceItem!=null?
+  "\n"+GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, av,"remove", uClass, gen.translate("parameterOne",av))))
+   ,"    "):
+   "")%>
 
     <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
     wasRemoved = true;

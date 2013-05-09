@@ -19,11 +19,11 @@
   {
     boolean hasThisEntry = false;
     boolean hasThisExit = false;
-    
     for(Action action : state.getActions())
     {
       if ("entry".equals(action.getActionType()))
       {
+        TraceItem traceItem = state.getTraced("entry",uClass);
         if (!hasThisEntry)
         {
           if (!isFirstEntry)
@@ -31,28 +31,13 @@
             entryActions.append("\n      ");
           }
           entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
-          for( TraceDirective tc : uClass.getTraceDirectives() )
-      	  {
-      		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
-      		{
-      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
-      		  StateMachine stm = tracedState.getStateMachine();
-      		  if( tracedState.getEntry() )
-      		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-      		    {
-      		  	  State stat = stm.getState(j);
-      			  //if( stat.getName().equals(gen.translate("stateOne",state)) )
-          			//if( model.getTraceType().equals("Console"))
-      					//entryActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state)));
-       				//else if( model.getTraceType().equals("File"))
-       					//entryActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} entry action(s)\");",gen.translate("stateOne",state))); 
-       		    }
-      		}
-      	  }
+          
         }
         hasEntry = true;
         hasThisEntry = true;
         isFirstEntry = false;
+        entryActions.append(
+        traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, state,"sm_e", uClass)+"\n":"");
         Position p = action.getPosition();
         if (p != null) {
           entryActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
@@ -61,6 +46,7 @@
       }
       else if ("exit".equals(action.getActionType()))
       {
+        TraceItem traceItem = state.getTraced("exit",uClass);
         if (!hasThisExit)
         {
           if (!isFirstExit)
@@ -69,28 +55,13 @@
           }
           isFirstExit = false;
           exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
-          for( TraceDirective tc : uClass.getTraceDirectives() )
-      	  {
-      		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
-      		{
-      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
-      		  StateMachine stm = tracedState.getStateMachine();
-      		  if( tracedState.getExit() )
-      		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-      		    {
-      		  	  State stat = stm.getState(j);
-      			  //if( stat.getName().equals(gen.translate("stateOne",state)) )
-          			//if( model.getTraceType().equals("Console"))
-          				//exitActions.append(StringFormatter.format( "\n        " + "System.out.println(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state)));
-       				//else if( model.getTraceType().equals("File"))
-       					//exitActions.append(StringFormatter.format( "\n        " + "fileTracer(\"Tracing state {0} exit action(s)\");",gen.translate("stateOne",state))); 
-       		    }
-      		 }
-      	   }
+          
         }
         hasExit = true;
         hasThisExit = true;
         isFirstExit = false;
+        exitActions.append(
+        traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, state,"sm_x", uClass)+"\n":"");        
         Position p = action.getPosition();
         if (p != null) {
           exitActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
@@ -100,36 +71,36 @@
     }
   
     for( TraceDirective tc : uClass.getTraceDirectives() )
-	  {
-  	  TraceRecord traceRecord = tc.getTraceRecord();
-	    for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
-	    {
-	      StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
-	      StateMachine stm = tracedState.getStateMachine();
-//		    if( traceRecord != null )
-//		    {
-//		      for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-//		      {
-//		  	    State stat = stm.getState(j);
+    {
+      TraceRecord traceRecord = tc.getTraceRecord();
+      for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
+      {
+        StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
+        StateMachine stm = tracedState.getStateMachine();
+//        if( traceRecord != null )
+//        {
+//          for( int j = 0 ; j < stm.numberOfStates() ; ++j )
+//          {
+//            State stat = stm.getState(j);
 //
-//		  	    if( stat == state )
-//		  	    {
-//		  	      traceRecords.append("\n    ");
-//  		        traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
-//  		        traceRecords.append("\n      ");
-//    		      if( model.getTraceType().equals("Console"))
-//    		      {
-//    		        traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
-// 			        }
-// 			        else if( model.getTraceType().equals("File"))
-//      		    {
-//      		      traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
-//      		    }
-//		  	    }
-// 		      }
-//		    }
-	    }
-    }	
+//            if( stat == state )
+//            {
+//              traceRecords.append("\n    ");
+//              traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
+//              traceRecords.append("\n      ");
+//              if( model.getTraceType().equals("Console"))
+//              {
+//                traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+//               }
+//               else if( model.getTraceType().equals("File"))
+//              {
+//                traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
+//              }
+//            }
+//           }
+//        }
+      }
+    }  
     if (state.getActivity() != null)
     {
       if (!hasThisEntry)

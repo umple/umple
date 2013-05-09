@@ -17,6 +17,7 @@ class StringTracer
 
   //StringTracer Attributes
   private $traces;
+  private $startTime;
 
   //------------------------
   // CONSTRUCTOR
@@ -25,6 +26,8 @@ class StringTracer
   private function __construct()
   {
     $this->traces = array();
+    $this->startTime = 0;
+    
   }
 
   public static function getInstance()
@@ -55,6 +58,14 @@ class StringTracer
     $this->traces = array_values($this->traces);
     $wasRemoved = true;
     return $wasRemoved;
+  }
+
+  public function setStartTime($aStartTime)
+  {
+    $wasSet = false;
+    $this->startTime = $aStartTime;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function getTrace($index)
@@ -88,6 +99,11 @@ class StringTracer
     return $index;
   }
 
+  public function getStartTime()
+  {
+    return $this->startTime;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;
@@ -100,7 +116,7 @@ class StringTracer
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public static function execute($message) { self::getInstance()->addTrace($message); }
+  public static function handle($message) { self::getInstance()->addTrace($message); }
 public function reset() { self::getInstance()->traces = array(); }
 }
 ?>

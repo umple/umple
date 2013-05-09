@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * Data to record in a trace directive
- * @umplesource Trace.ump 45
+ * @umplesource Trace.ump 52
  */
-// line 45 "../../../../src/Trace.ump"
+// line 52 "../../../../src/Trace.ump"
 public class TraceRecord
 {
 
@@ -18,7 +18,7 @@ public class TraceRecord
 
   //TraceRecord Attributes
   private boolean recordOnly;
-  private String record;
+  private List<String> record;
 
   //TraceRecord Associations
   private List<Attribute> attributes;
@@ -32,7 +32,7 @@ public class TraceRecord
   public TraceRecord(TraceDirective aTraceDirective)
   {
     recordOnly = false;
-    record = null;
+    record = new ArrayList<String>();
     attributes = new ArrayList<Attribute>();
     stateMachines = new ArrayList<StateMachine>();
     boolean didAddTraceDirective = setTraceDirective(aTraceDirective);
@@ -54,12 +54,18 @@ public class TraceRecord
     return wasSet;
   }
 
-  public boolean setRecord(String aRecord)
+  public boolean addRecord(String aRecord)
   {
-    boolean wasSet = false;
-    record = aRecord;
-    wasSet = true;
-    return wasSet;
+    boolean wasAdded = false;
+    wasAdded = record.add(aRecord);
+    return wasAdded;
+  }
+
+  public boolean removeRecord(String aRecord)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = record.remove(aRecord);
+    return wasRemoved;
   }
 
   public boolean getRecordOnly()
@@ -67,9 +73,34 @@ public class TraceRecord
     return recordOnly;
   }
 
-  public String getRecord()
+  public String getRecord(int index)
   {
-    return record;
+    String aRecord = record.get(index);
+    return aRecord;
+  }
+
+  public String[] getRecord()
+  {
+    String[] newRecord = record.toArray(new String[record.size()]);
+    return newRecord;
+  }
+
+  public int numberOfRecord()
+  {
+    int number = record.size();
+    return number;
+  }
+
+  public boolean hasRecord()
+  {
+    boolean has = record.size() > 0;
+    return has;
+  }
+
+  public int indexOfRecord(String aRecord)
+  {
+    int index = record.indexOf(aRecord);
+    return index;
   }
 
   public Attribute getAttribute(int index)
@@ -357,8 +388,7 @@ public class TraceRecord
 	  String outputString = "";
 	  
     return super.toString() + "["+
-            "recordOnly" + ":" + getRecordOnly()+ "," +
-            "record" + ":" + getRecord()+ "]" + System.getProperties().getProperty("line.separator") +
+            "recordOnly" + ":" + getRecordOnly()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "traceDirective" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
      + outputString;
   }

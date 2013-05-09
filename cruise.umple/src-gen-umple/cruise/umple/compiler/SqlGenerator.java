@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sql.*;
 
 /**
- * @umplesource Generator.ump 249
+ * @umplesource Generator.ump 250
  * @umplesource Generator_CodeSql.ump 12
  */
-// line 249 "../../../../src/Generator.ump"
+// line 250 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSql.ump"
 public class SqlGenerator implements CodeGenerator,CodeTranslator
 {
@@ -510,6 +510,12 @@ public class SqlGenerator implements CodeGenerator,CodeTranslator
     boolean isMany = av.getIsList();
     return translate(keyName,av,isMany);
   }
+  
+  public String translate(String keyName, TraceItem ti)
+  {
+  	return "";
+  }
+  
   
   public String translate(String keyName, AssociationVariable av)
   {

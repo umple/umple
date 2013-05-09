@@ -36,47 +36,6 @@
 	appendln(stringBuffer, "  }");
   }
   
-  isFirst = true;
-  for( TraceDirective td : uClass.getTraceDirectives() )
-  {
-    for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
-    {
-      if( traceAttr.getPeriodClause() != null )
-      {
-    	if( isFirst )
-    	{
-          appendln(stringBuffer, "");
-      	  appendln(stringBuffer, "  //------------------------");
-      	  appendln(stringBuffer, "  // TRACING METHOD(s)");
-      	  appendln(stringBuffer, "  //------------------------\n");
-      	  isFirst = false;
-    	}
-    	for( Attribute attr : traceAttr.getAttributes() )
-    	{
-    	  String attrName = attr.getName();
-    	  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
-          appendln(stringBuffer, "  private void trace{0}Period(final int period)",attrName); 	
-          appendln(stringBuffer, "  {");
-          appendln(stringBuffer, "    ( new Thread()");
-          appendln(stringBuffer, "    {");
-          appendln(stringBuffer, "      public void run()");
-          appendln(stringBuffer, "      {");
-          appendln(stringBuffer, "         while( true )");
-          appendln(stringBuffer, "         {");
-          appendln(stringBuffer, "           Date date = new Date();");
-          appendln(stringBuffer, "           System.err.println(\"{0}=\"+{1} +\", t =\"+date.toString());",attrName,attr.getName());
-          appendln(stringBuffer, "           try");
-          appendln(stringBuffer, "           {Thread.sleep(period);}");
-          appendln(stringBuffer, "           catch (InterruptedException e)");
-          appendln(stringBuffer, "           {e.printStackTrace();}");
-          appendln(stringBuffer, "         }");
-          appendln(stringBuffer, "      }");
-          appendln(stringBuffer, "    }");
-          appendln(stringBuffer, "    ).start();");
-          appendln(stringBuffer, "  }");
-    	}
-      }
-    }
-  }
+  
 }
 %>

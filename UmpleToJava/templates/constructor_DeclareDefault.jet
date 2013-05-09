@@ -61,6 +61,8 @@
       continue;
     }
     
+    TraceItem traceItem = av.getTraced("constructor",uClass);
+    
     if (av.getIsList())
     {
       hasBody = true;
@@ -91,6 +93,30 @@
       {
          %><%@ include file="constructor_AttributeAssignLazy.jet"%><%
       }
+    }
+    
+    if(traceItem!=null)
+    {
+%>
+    ( new Thread()
+    {
+      public void run()
+      {
+        while( true )
+        {
+          <%= traceItem.trace(gen,av,"at_p",uClass) %>
+          try
+          {
+            Thread.sleep(<%= traceItem.getPeriodClause() %>);
+          }
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    ).start();<%
     }
   }
 

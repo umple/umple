@@ -30,10 +30,10 @@ public class RubyGeneratorTraceTest
   {
     UmpleClass c = model.addUmpleClass("LightFixture");
     Attribute attr = new Attribute("name","String",null,null,false,c);
-    TraceDirective traceDirective = new TraceDirective();
+    TraceDirective traceDirective = new TraceDirective(model.getTracer());
     
     traceDirective.setUmpleClass(c);
-    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
     traceAttr.addAttribute(attr);
     traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
@@ -51,15 +51,15 @@ public class RubyGeneratorTraceTest
   @Test 
   public void prepare_traceItem_attribute_string_default_package()
   {
-    model.setTraceType("String");
+    model.setTracer(new Tracer("String"));
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
     Attribute attr = new Attribute("name","String",null,null,false,c);
-    TraceDirective traceDirective = new TraceDirective();
+    TraceDirective traceDirective = new TraceDirective(model.getTracer());
     
     traceDirective.setUmpleClass(c);
-    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
     traceAttr.addAttribute(attr);
     traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
@@ -74,16 +74,16 @@ public class RubyGeneratorTraceTest
   @Test
   public void prepare_postpare_traceItem_attribute_string()
   {
-    model.setTraceType("String");
+    model.setTracer(new Tracer("String"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("notblah");
     Attribute attr = new Attribute("name","String",null,null,false,c);
-    TraceDirective traceDirective = new TraceDirective();
+    TraceDirective traceDirective = new TraceDirective(model.getTracer());
     
     traceDirective.setUmpleClass(c);
-    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
     traceAttr.addAttribute(attr);
     traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();
@@ -108,16 +108,16 @@ public class RubyGeneratorTraceTest
   @Test
   public void prepare_postpare_traceItem_attribute_string_samePackage()
   {
-    model.setTraceType("String");
+    model.setTracer(new Tracer("String"));
     model.setDefaultPackage("blah");
     
     UmpleClass c = model.addUmpleClass("LightFixture");
     c.setPackageName("blah");
     Attribute attr = new Attribute("name","String",null,null,false,c);
-    TraceDirective traceDirective = new TraceDirective();
+    TraceDirective traceDirective = new TraceDirective(model.getTracer());
     
     traceDirective.setUmpleClass(c);
-    Attribute_TraceItem traceAttr = new Attribute_TraceItem(traceDirective);
+    AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
     traceAttr.addAttribute(attr);
     traceDirective.addAttributeTraceItem(traceAttr);
     generator.prepare();

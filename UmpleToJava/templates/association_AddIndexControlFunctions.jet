@@ -7,7 +7,16 @@
       if(index < 0 ) { index = 0; }
       if(index > <%=gen.translate("numberOfMethod",av)%>()) { index = <%=gen.translate("numberOfMethod",av)%>() - 1; }
       <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
-      <%=gen.translate("associationMany",av)%>.add(index, <%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("associationMany",av)%>.add(index, <%=gen.translate("parameterOne",av)%>);<%= 
+    (traceItem!=null?
+  "\n"+GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av), "index")))
+   ,"      "):
+   "")%>
       wasAdded = true;
     }
     return wasAdded;
@@ -21,12 +30,30 @@
       if(index < 0 ) { index = 0; }
       if(index > <%=gen.translate("numberOfMethod",av)%>()) { index = <%=gen.translate("numberOfMethod",av)%>() - 1; }
       <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
-      <%=gen.translate("associationMany",av)%>.add(index, <%=gen.translate("parameterOne",av)%>);
+      <%=gen.translate("associationMany",av)%>.add(index, <%=gen.translate("parameterOne",av)%>);<%= 
+    (traceItem!=null?
+  "\n"+GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av), "index")))
+   ,"      "):
+   "")%>
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = <%=gen.translate("addAtMethod",av)%>(<%=gen.translate("parameterOne",av)%>, index);
+      wasAdded = <%=gen.translate("addAtMethod",av)%>(<%=gen.translate("parameterOne",av)%>, index);<%= 
+    (traceItem!=null?
+  "\n"+GeneratorHelper.doIndent(
+    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
+      StringFormatter.format(
+        "{0}Tracer.handle( {1}  + new Date());", 
+        traceItem.getTracerType(), 
+        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av), "index")))
+   ,"      "):
+   "")%>
     }
     return wasAdded;
   }

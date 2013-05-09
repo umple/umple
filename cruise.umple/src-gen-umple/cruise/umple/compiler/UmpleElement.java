@@ -9,10 +9,10 @@ import java.util.*;
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
  * @umplesource Umple.ump 71
- * @umplesource Umple_Code.ump 591
+ * @umplesource Umple_Code.ump 622
  */
 // line 71 "../../../../src/Umple.ump"
-// line 591 "../../../../src/Umple_Code.ump"
+// line 622 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
 
@@ -329,7 +329,7 @@ public class UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 593 ../../../../src/Umple_Code.ump
+  // line 624 ../../../../src/Umple_Code.ump
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);

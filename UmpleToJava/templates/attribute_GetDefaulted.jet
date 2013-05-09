@@ -2,6 +2,7 @@
   public <%=gen.translate("type",av)%> <%=gen.translate("getDefaultMethod",av)%>()
   {
     <% if (customGetDefaultPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetDefaultPrefixCode, "    ")); } %>
-    return <%= gen.translate("parameterValue",av) %>;
+<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+%>    return <%= gen.translate("parameterValue",av) %>;
   }
 

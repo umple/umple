@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 111
+ * @umplesource Generator.ump 112
  * @umplesource Generator_CodeGvClassDiagram.ump 18
  */
-// line 111 "../../../../src/Generator.ump"
+// line 112 "../../../../src/Generator.ump"
 // line 18 "../../../../src/Generator_CodeGvClassDiagram.ump"
 public class GvClassDiagramGenerator implements CodeGenerator
 {

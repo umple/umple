@@ -218,7 +218,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="states" lowerBound="0" upperBound="-1" eType="#//State" eOpposite="#//State/stateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/stateMachineDefinitions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/stateMachines"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachine_TraceItem" eOpposite="#//StateMachine_TraceItem/stateMachine"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachineTraceItem" eOpposite="#//StateMachineTraceItem/stateMachine"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="State">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -250,7 +250,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="nextState" lowerBound="1" upperBound="1" eType="#//State" eOpposite="#//State/nextTransition"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="0" upperBound="1" eType="#//Guard" eOpposite="#//Guard/transitions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="0" upperBound="1" eType="#//Action" eOpposite="#//Action/transition"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachine_TraceItem" eOpposite="#//StateMachine_TraceItem/transition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachineTraceItem" eOpposite="#//StateMachineTraceItem/transition"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Action">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -323,6 +323,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="offsetFromEdge" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="reflexiveSegmentLength" eType="#//int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tracer" eType="#//Tracer"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="versionNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associations" lowerBound="0" upperBound="-1" eType="#//Association" eOpposite="#//Association/umpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/umpleModel"/>
@@ -401,6 +402,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Constraint">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" eType="#//ConstraintVariable" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjection" lowerBound="1" upperBound="1" eType="#//CodeInjection" eOpposite="#//CodeInjection/constraint"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/constraints"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Precondition" eSuperTypes="#//Constraint">
@@ -416,6 +418,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" lowerBound="0" upperBound="1" eType="#//Constraint" eOpposite="#//Constraint/codeInjection"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Key">
@@ -474,6 +477,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeTraceItems" lowerBound="0" upperBound="-1" eType="#//AttributeTraceItem" eOpposite="#//AttributeTraceItem/umpleVariables"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="#//UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAutounique" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -484,7 +488,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/attributes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/attributes"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeTraceItems" lowerBound="0" upperBound="-1" eType="#//Attribute_TraceItem" eOpposite="#//Attribute_TraceItem/attributes"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Association">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -558,6 +561,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="override" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="overrideAll" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Tracer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arguments" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="verbosity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="1" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/tracer"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraceCondition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="preCondition" eType="#//boolean"/>
@@ -573,7 +582,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraceRecord">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="recordOnly" eType="#//boolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="record" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="records" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/traceRecords"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/traceRecords"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="1" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/traceRecord"/>
@@ -586,8 +595,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraceDirective">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeTraceItems" lowerBound="0" upperBound="-1" eType="#//Attribute_TraceItem" eOpposite="#//Attribute_TraceItem/traceDirective"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachine_TraceItem" eOpposite="#//StateMachine_TraceItem/traceDirectives"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tracer" lowerBound="1" upperBound="1" eType="#//Tracer" eOpposite="#//Tracer/traceDirective"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeTraceItems" lowerBound="0" upperBound="-1" eType="#//AttributeTraceItem" eOpposite="#//AttributeTraceItem/traceDirective"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachineTraceItem" eOpposite="#//StateMachineTraceItem/traceDirective"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methodTraceEntities" lowerBound="0" upperBound="-1" eType="#//MethodTraceEntity" eOpposite="#//MethodTraceEntity/traceDirectives"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariable" lowerBound="0" upperBound="1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/traceDirective"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="0" upperBound="-1" eType="#//TraceCondition" eOpposite="#//TraceCondition/traceDirective"/>
@@ -595,23 +606,39 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceCases" lowerBound="0" upperBound="-1" eType="#//TraceCase" eOpposite="#//TraceCase/traceDirectives"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/traceDirectives"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Attribute_TraceItem">
+  <eClassifiers xsi:type="ecore:EClass" name="TraceItem" interface="true" abstract="true">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeTraceItem" eSuperTypes="#//TraceItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" eType="#//Constraint"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceSet" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceGet" eType="#//boolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceConstructor" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="periodClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duringClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="executeClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/attributeTraceItems"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionallyWhere" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleVariables" lowerBound="0" upperBound="-1" eType="#//UmpleVariable" eOpposite="#//UmpleVariable/attributeTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="1" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/attributeTraceItems"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StateMachine_TraceItem">
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineTraceItem" eSuperTypes="#//TraceItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" eType="#//Constraint"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entry" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exit" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceStateMachineFlag" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="periodClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionallyWhere" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="accessor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="concatinator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="0" upperBound="1" eType="#//StateMachine" eOpposite="#//StateMachine/stateMachineTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transition" lowerBound="0" upperBound="1" eType="#//Transition" eOpposite="#//Transition/stateMachineTraceItems"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirectives" lowerBound="0" upperBound="-1" eType="#//TraceDirective" eOpposite="#//TraceDirective/stateMachineTraceItems"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="1" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/stateMachineTraceItems"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TraceCase">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -658,6 +685,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="possiblyUnknownState" eType="#//Map%3CState%2CList%3CToken%3E%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceFlagId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EReference" name="messagesToExpect" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/umpleInternalParser"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="warningsToIgnore" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/umpleInternalParser"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="strictness" eType="#//Strictness" />
@@ -844,8 +872,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="DynamicClassPathLoader">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DocumenterMain">
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TraceItem">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>

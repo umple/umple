@@ -28,7 +28,7 @@ public class StateMachine
   private State parentState;
   private List<State> states;
   private List<TraceRecord> traceRecords;
-  private List<StateMachine_TraceItem> stateMachineTraceItems;
+  private List<StateMachineTraceItem> stateMachineTraceItems;
 
   //Helper Variables
   private int cachedHashCode;
@@ -47,7 +47,7 @@ public class StateMachine
     name = aName;
     states = new ArrayList<State>();
     traceRecords = new ArrayList<TraceRecord>();
-    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
+    stateMachineTraceItems = new ArrayList<StateMachineTraceItem>();
   }
 
   //------------------------
@@ -138,15 +138,15 @@ public class StateMachine
     return index;
   }
 
-  public StateMachine_TraceItem getStateMachineTraceItem(int index)
+  public StateMachineTraceItem getStateMachineTraceItem(int index)
   {
-    StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
+    StateMachineTraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
     return aStateMachineTraceItem;
   }
 
-  public List<StateMachine_TraceItem> getStateMachineTraceItems()
+  public List<StateMachineTraceItem> getStateMachineTraceItems()
   {
-    List<StateMachine_TraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
+    List<StateMachineTraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
     return newStateMachineTraceItems;
   }
 
@@ -162,7 +162,7 @@ public class StateMachine
     return has;
   }
 
-  public int indexOfStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public int indexOfStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     int index = stateMachineTraceItems.indexOf(aStateMachineTraceItem);
     return index;
@@ -364,7 +364,7 @@ public class StateMachine
     return 0;
   }
 
-  public boolean addStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public boolean addStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     boolean wasAdded = false;
     if (stateMachineTraceItems.contains(aStateMachineTraceItem)) { return false; }
@@ -386,7 +386,7 @@ public class StateMachine
     return wasAdded;
   }
 
-  public boolean removeStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public boolean removeStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     boolean wasRemoved = false;
     if (stateMachineTraceItems.contains(aStateMachineTraceItem))
@@ -398,7 +398,7 @@ public class StateMachine
     return wasRemoved;
   }
 
-  public boolean addStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  public boolean addStateMachineTraceItemAt(StateMachineTraceItem aStateMachineTraceItem, int index)
   {  
     boolean wasAdded = false;
     if(addStateMachineTraceItem(aStateMachineTraceItem))
@@ -412,7 +412,7 @@ public class StateMachine
     return wasAdded;
   }
 
-  public boolean addOrMoveStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  public boolean addOrMoveStateMachineTraceItemAt(StateMachineTraceItem aStateMachineTraceItem, int index)
   {
     boolean wasAdded = false;
     if(stateMachineTraceItems.contains(aStateMachineTraceItem))
@@ -512,7 +512,7 @@ public class StateMachine
     {
       aTraceRecord.removeStateMachine(this);
     }
-    for(StateMachine_TraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    for(StateMachineTraceItem aStateMachineTraceItem : stateMachineTraceItems)
     {
       aStateMachineTraceItem.setStateMachine(null);
     }

@@ -280,11 +280,13 @@ class CodeBlock
 class CodeInjection
 {
   depend cruise.umple.compiler.Position;
+  depend cruise.umple.util.*;
   
   type;
   operation;
   CodeBlock snippet = new CodeBlock();
   * -> 1 UmpleClass;
+  1 -> 0..1 Constraint;
   lazy Position position;
   Boolean isInternal = false;
 }

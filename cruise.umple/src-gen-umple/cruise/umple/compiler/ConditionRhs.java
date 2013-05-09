@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Trace.ump 36
+ * @umplesource Trace.ump 43
  */
-// line 36 "../../../../src/Trace.ump"
+// line 43 "../../../../src/Trace.ump"
 public class ConditionRhs
 {
 

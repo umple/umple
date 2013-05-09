@@ -1,31 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
-
 package cruise.umple.compiler;
+import java.util.*;
 
-/**
- * @umplesource Trace_Code.ump 16
- */
-// line 16 "../../../../src/Trace_Code.ump"
-public class TraceItem
+public interface TraceItem
 {
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public TraceItem()
-  {}
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public void delete()
-  {}
-
+  public String getTracerType();
+  public Boolean getIsPre();
+  public Boolean getIsPost();
+  public String trace(CodeTranslator gen, Object o, String template, UmpleClass uClass, String... args);//old
+  public String getPeriodClause();
+  public String getExtremities(CodeTranslator gen, String name);
 }

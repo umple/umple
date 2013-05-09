@@ -19,6 +19,7 @@ public class StringTracer
 
   //StringTracer Attributes
   private List<String> traces;
+  private int startTime;
 
   //------------------------
   // CONSTRUCTOR
@@ -27,6 +28,8 @@ public class StringTracer
   private StringTracer()
   {
     traces = new ArrayList<String>();
+    startTime = (int)System.currentTimeMillis();
+    handle("Time,Thread,UmpleFile,LineNumber,Class,Object,Operation,Name,Value");
   }
 
   public static StringTracer getInstance()
@@ -54,6 +57,14 @@ public class StringTracer
     boolean wasRemoved = false;
     wasRemoved = traces.remove(aTrace);
     return wasRemoved;
+  }
+
+  public boolean setStartTime(int aStartTime)
+  {
+    boolean wasSet = false;
+    startTime = aStartTime;
+    wasSet = true;
+    return wasSet;
   }
 
   public String getTrace(int index)
@@ -86,6 +97,11 @@ public class StringTracer
     return index;
   }
 
+  public int getStartTime()
+  {
+    return startTime;
+  }
+
   public void delete()
   {}
 
@@ -94,13 +110,15 @@ public class StringTracer
   {
 	  String outputString = "";
 	  
-    return super.toString() + "["+ "]"
+    return super.toString() + "["+
+            "startTime" + ":" + getStartTime()+ "]"
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  public static void execute(String message) { getInstance().addTrace(message); }
+  public static void handle(String message) { getInstance().addTrace(message); }
 public void reset() { getInstance().traces.clear(); }
+static{getInstance();}
 }

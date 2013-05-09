@@ -6,11 +6,11 @@ package cruise.umple.compiler;
 /**
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
- * @umplesource Umple.ump 620
- * @umplesource Umple_Code.ump 1730
+ * @umplesource Umple.ump 622
+ * @umplesource Umple_Code.ump 1761
  */
-// line 620 "../../../../src/Umple.ump"
-// line 1730 "../../../../src/Umple_Code.ump"
+// line 622 "../../../../src/Umple.ump"
+// line 1761 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
 
@@ -51,7 +51,7 @@ public class Coordinate
     width = aWidth;
     height = aHeight;
     setStatus(Status.Explicit);
-    // line 628 "../../../../src/Umple.ump"
+    // line 630 "../../../../src/Umple.ump"
     updateStatus();
   }
 
@@ -65,7 +65,7 @@ public class Coordinate
     if (!canSetX) { return false; }
     x = aX;
     wasSet = true;
-    // line 629 "../../../../src/Umple.ump"
+    // line 631 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -76,7 +76,7 @@ public class Coordinate
     if (!canSetY) { return false; }
     y = aY;
     wasSet = true;
-    // line 630 "../../../../src/Umple.ump"
+    // line 632 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -87,7 +87,7 @@ public class Coordinate
     if (!canSetWidth) { return false; }
     width = aWidth;
     wasSet = true;
-    // line 631 "../../../../src/Umple.ump"
+    // line 633 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -98,7 +98,7 @@ public class Coordinate
     if (!canSetHeight) { return false; }
     height = aHeight;
     wasSet = true;
-    // line 632 "../../../../src/Umple.ump"
+    // line 634 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -199,7 +199,7 @@ public class Coordinate
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1733 ../../../../src/Umple_Code.ump
+  // line 1764 ../../../../src/Umple_Code.ump
   public Point getTopLeft()
   {
     return new Point(x,y);

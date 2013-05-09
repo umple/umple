@@ -10,11 +10,11 @@ import java.util.*;
  * it can be derived, and have various other modifiers such as being
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
- * @umplesource Umple.ump 455
- * @umplesource Umple_Code.ump 1046
+ * @umplesource Umple.ump 457
+ * @umplesource Umple_Code.ump 1077
  */
-// line 455 "../../../../src/Umple.ump"
-// line 1046 "../../../../src/Umple_Code.ump"
+// line 457 "../../../../src/Umple.ump"
+// line 1077 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
 
@@ -33,7 +33,6 @@ public class Attribute extends UmpleVariable
   private List<Comment> comments;
   private UmpleClass umpleClass;
   private List<TraceRecord> traceRecords;
-  private List<Attribute_TraceItem> attributeTraceItems;
 
   //------------------------
   // CONSTRUCTOR
@@ -54,8 +53,7 @@ public class Attribute extends UmpleVariable
       throw new RuntimeException("Unable to create attribute due to umpleClass");
     }
     traceRecords = new ArrayList<TraceRecord>();
-    attributeTraceItems = new ArrayList<Attribute_TraceItem>();
-    // line 469 "../../../../src/Umple.ump"
+    // line 471 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
@@ -229,36 +227,6 @@ public class Attribute extends UmpleVariable
     return index;
   }
 
-  public Attribute_TraceItem getAttributeTraceItem(int index)
-  {
-    Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(index);
-    return aAttributeTraceItem;
-  }
-
-  public List<Attribute_TraceItem> getAttributeTraceItems()
-  {
-    List<Attribute_TraceItem> newAttributeTraceItems = Collections.unmodifiableList(attributeTraceItems);
-    return newAttributeTraceItems;
-  }
-
-  public int numberOfAttributeTraceItems()
-  {
-    int number = attributeTraceItems.size();
-    return number;
-  }
-
-  public boolean hasAttributeTraceItems()
-  {
-    boolean has = attributeTraceItems.size() > 0;
-    return has;
-  }
-
-  public int indexOfAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
-  {
-    int index = attributeTraceItems.indexOf(aAttributeTraceItem);
-    return index;
-  }
-
   public static int minimumNumberOfComments()
   {
     return 0;
@@ -417,88 +385,6 @@ public class Attribute extends UmpleVariable
     return wasAdded;
   }
 
-  public static int minimumNumberOfAttributeTraceItems()
-  {
-    return 0;
-  }
-
-  public boolean addAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
-  {
-    boolean wasAdded = false;
-    if (attributeTraceItems.contains(aAttributeTraceItem)) { return false; }
-    attributeTraceItems.add(aAttributeTraceItem);
-    if (aAttributeTraceItem.indexOfAttribute(this) != -1)
-    {
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = aAttributeTraceItem.addAttribute(this);
-      if (!wasAdded)
-      {
-        attributeTraceItems.remove(aAttributeTraceItem);
-      }
-    }
-    return wasAdded;
-  }
-
-  public boolean removeAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
-  {
-    boolean wasRemoved = false;
-    if (!attributeTraceItems.contains(aAttributeTraceItem))
-    {
-      return wasRemoved;
-    }
-
-    int oldIndex = attributeTraceItems.indexOf(aAttributeTraceItem);
-    attributeTraceItems.remove(oldIndex);
-    if (aAttributeTraceItem.indexOfAttribute(this) == -1)
-    {
-      wasRemoved = true;
-    }
-    else
-    {
-      wasRemoved = aAttributeTraceItem.removeAttribute(this);
-      if (!wasRemoved)
-      {
-        attributeTraceItems.add(oldIndex,aAttributeTraceItem);
-      }
-    }
-    return wasRemoved;
-  }
-
-  public boolean addAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
-  {  
-    boolean wasAdded = false;
-    if(addAttributeTraceItem(aAttributeTraceItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAttributeTraceItems()) { index = numberOfAttributeTraceItems() - 1; }
-      attributeTraceItems.remove(aAttributeTraceItem);
-      attributeTraceItems.add(index, aAttributeTraceItem);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
-  {
-    boolean wasAdded = false;
-    if(attributeTraceItems.contains(aAttributeTraceItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAttributeTraceItems()) { index = numberOfAttributeTraceItems() - 1; }
-      attributeTraceItems.remove(aAttributeTraceItem);
-      attributeTraceItems.add(index, aAttributeTraceItem);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addAttributeTraceItemAt(aAttributeTraceItem, index);
-    }
-    return wasAdded;
-  }
-
   public void delete()
   {
     comments.clear();
@@ -510,12 +396,6 @@ public class Attribute extends UmpleVariable
     for(TraceRecord aTraceRecord : copyOfTraceRecords)
     {
       aTraceRecord.removeAttribute(this);
-    }
-    ArrayList<Attribute_TraceItem> copyOfAttributeTraceItems = new ArrayList<Attribute_TraceItem>(attributeTraceItems);
-    attributeTraceItems.clear();
-    for(Attribute_TraceItem aAttributeTraceItem : copyOfAttributeTraceItems)
-    {
-      aAttributeTraceItem.removeAttribute(this);
     }
     super.delete();
   }
@@ -538,7 +418,7 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 1048 ../../../../src/Umple_Code.ump
+  // line 1079 ../../../../src/Umple_Code.ump
   public boolean isConstant()
   {
     return "const".equals(getModifier());

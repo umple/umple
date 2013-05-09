@@ -1,19 +1,23 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
+  public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("typeMany",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
-    wasAdded = <%=gen.translate("attributeMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
-    return wasAdded;
+<%= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_a", uClass,gen.translate("parameterOne",av))+"\n":"")
+%>    wasAdded = <%=gen.translate("attributeMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+<%= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_a", uClass)+"\n":"")
+%><% if (customAddPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
+%>    return wasAdded;
   }
 
   public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("typeMany",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
-    wasRemoved = <%=gen.translate("attributeMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
-    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
-    return wasRemoved;
+<%= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_r", uClass,gen.translate("parameterOne",av))+"\n":"")
+%>    wasRemoved = <%=gen.translate("attributeMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+<%= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_r", uClass)+"\n":"")
+%><% if (customRemovePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); }
+%>    return wasRemoved;
   }
 

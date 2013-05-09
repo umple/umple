@@ -4,8 +4,10 @@
     boolean wasSet = false;
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     <%= gen.translate("attributeCanSet",av) %> = false;
-    <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>;
-    wasSet = true;
+<%= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"at_s", uClass,gen.translate("parameterOne",av))+"\n":"")
+%>    <%= gen.translate("associationOne",av)%> = <%=gen.translate("parameterOne",av)%>;
+<%= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"at_s", uClass)+"\n":"")
+%>    wasSet = true;
     <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return wasSet;
   }

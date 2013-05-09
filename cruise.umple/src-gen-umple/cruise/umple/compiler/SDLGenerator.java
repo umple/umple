@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sdl.*;
 
 /**
- * @umplesource Generator.ump 266
+ * @umplesource Generator.ump 267
  * @umplesource Generator_CodeSDL.ump 12
  */
-// line 266 "../../../../src/Generator.ump"
+// line 267 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {
@@ -126,7 +126,7 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new SDLClassGenerator();
+      return (ILang) new SDLClassGenerator();
     } 
     else{
     	return null;    	
@@ -274,6 +274,12 @@ public String translate(String id, Attribute attribute) {
 
 	return null;
 }
+
+public String translate(String keyName, TraceItem ti)
+  {
+  	return null;
+  }
+  
 
 @Override
 public String translate(String id, AssociationVariable aVar) {
