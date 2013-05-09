@@ -30,7 +30,7 @@ class UmpleFile
   internal String path = null;
   internal StringBuilder fileContent = init();
   // list of command-based linked Umple files
-  internal String LinkedFiles="";
+  internal String linkedFiles="";
 }
 
 class UmpleParserFactory
