@@ -7,9 +7,9 @@ import java.util.*;
 /**
  * To be done. A group of trace directives that can be switched on or off by other
  * trace directives
- * @umplesource Trace.ump 106
+ * @umplesource Trace.ump 146
  */
-// line 106 "../../../../src/Trace.ump"
+// line 146 "../../../../src/Trace.ump"
 public class TraceCase
 {
 

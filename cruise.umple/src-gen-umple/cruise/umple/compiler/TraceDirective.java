@@ -7,9 +7,9 @@ import java.util.*;
 /**
  * A statement found in Umple that directs code to be generated
  * to trace a model element and generate output using some tracing tool
- * @umplesource Trace.ump 64
+ * @umplesource Trace.ump 71
  */
-// line 64 "../../../../src/Trace.ump"
+// line 71 "../../../../src/Trace.ump"
 public class TraceDirective
 {
 
@@ -21,8 +21,9 @@ public class TraceDirective
   private int id;
 
   //TraceDirective Associations
-  private List<Attribute_TraceItem> attributeTraceItems;
-  private List<StateMachine_TraceItem> stateMachineTraceItems;
+  private Tracer tracer;
+  private List<AttributeTraceItem> attributeTraceItems;
+  private List<StateMachineTraceItem> stateMachineTraceItems;
   private List<MethodTraceEntity> methodTraceEntities;
   private AssociationVariable associationVariable;
   private List<TraceCondition> condition;
@@ -34,11 +35,15 @@ public class TraceDirective
   // CONSTRUCTOR
   //------------------------
 
-  public TraceDirective()
+  public TraceDirective(Tracer aTracer)
   {
     id = 0;
-    attributeTraceItems = new ArrayList<Attribute_TraceItem>();
-    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
+    if (!setTracer(aTracer))
+    {
+      throw new RuntimeException("Unable to create TraceDirective due to aTracer");
+    }
+    attributeTraceItems = new ArrayList<AttributeTraceItem>();
+    stateMachineTraceItems = new ArrayList<StateMachineTraceItem>();
     methodTraceEntities = new ArrayList<MethodTraceEntity>();
     condition = new ArrayList<TraceCondition>();
     traceCases = new ArrayList<TraceCase>();
@@ -61,15 +66,25 @@ public class TraceDirective
     return id;
   }
 
-  public Attribute_TraceItem getAttributeTraceItem(int index)
+  public String getTracerType()
   {
-    Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(index);
+    return getTracer().getName();
+  }
+
+  public Tracer getTracer()
+  {
+    return tracer;
+  }
+
+  public AttributeTraceItem getAttributeTraceItem(int index)
+  {
+    AttributeTraceItem aAttributeTraceItem = attributeTraceItems.get(index);
     return aAttributeTraceItem;
   }
 
-  public List<Attribute_TraceItem> getAttributeTraceItems()
+  public List<AttributeTraceItem> getAttributeTraceItems()
   {
-    List<Attribute_TraceItem> newAttributeTraceItems = Collections.unmodifiableList(attributeTraceItems);
+    List<AttributeTraceItem> newAttributeTraceItems = Collections.unmodifiableList(attributeTraceItems);
     return newAttributeTraceItems;
   }
 
@@ -85,21 +100,21 @@ public class TraceDirective
     return has;
   }
 
-  public int indexOfAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
+  public int indexOfAttributeTraceItem(AttributeTraceItem aAttributeTraceItem)
   {
     int index = attributeTraceItems.indexOf(aAttributeTraceItem);
     return index;
   }
 
-  public StateMachine_TraceItem getStateMachineTraceItem(int index)
+  public StateMachineTraceItem getStateMachineTraceItem(int index)
   {
-    StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
+    StateMachineTraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
     return aStateMachineTraceItem;
   }
 
-  public List<StateMachine_TraceItem> getStateMachineTraceItems()
+  public List<StateMachineTraceItem> getStateMachineTraceItems()
   {
-    List<StateMachine_TraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
+    List<StateMachineTraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
     return newStateMachineTraceItems;
   }
 
@@ -115,7 +130,7 @@ public class TraceDirective
     return has;
   }
 
-  public int indexOfStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public int indexOfStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     int index = stateMachineTraceItems.indexOf(aStateMachineTraceItem);
     return index;
@@ -226,17 +241,28 @@ public class TraceDirective
     return umpleClass;
   }
 
+  public boolean setTracer(Tracer aNewTracer)
+  {
+    boolean wasSet = false;
+    if (aNewTracer != null)
+    {
+      tracer = aNewTracer;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+
   public static int minimumNumberOfAttributeTraceItems()
   {
     return 0;
   }
 
-  public Attribute_TraceItem addAttributeTraceItem()
+  public AttributeTraceItem addAttributeTraceItem()
   {
-    return new Attribute_TraceItem(this);
+    return new AttributeTraceItem(this);
   }
 
-  public boolean addAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
+  public boolean addAttributeTraceItem(AttributeTraceItem aAttributeTraceItem)
   {
     boolean wasAdded = false;
     if (attributeTraceItems.contains(aAttributeTraceItem)) { return false; }
@@ -254,7 +280,7 @@ public class TraceDirective
     return wasAdded;
   }
 
-  public boolean removeAttributeTraceItem(Attribute_TraceItem aAttributeTraceItem)
+  public boolean removeAttributeTraceItem(AttributeTraceItem aAttributeTraceItem)
   {
     boolean wasRemoved = false;
     //Unable to remove aAttributeTraceItem, as it must always have a traceDirective
@@ -266,7 +292,7 @@ public class TraceDirective
     return wasRemoved;
   }
 
-  public boolean addAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
+  public boolean addAttributeTraceItemAt(AttributeTraceItem aAttributeTraceItem, int index)
   {  
     boolean wasAdded = false;
     if(addAttributeTraceItem(aAttributeTraceItem))
@@ -280,7 +306,7 @@ public class TraceDirective
     return wasAdded;
   }
 
-  public boolean addOrMoveAttributeTraceItemAt(Attribute_TraceItem aAttributeTraceItem, int index)
+  public boolean addOrMoveAttributeTraceItemAt(AttributeTraceItem aAttributeTraceItem, int index)
   {
     boolean wasAdded = false;
     if(attributeTraceItems.contains(aAttributeTraceItem))
@@ -303,52 +329,42 @@ public class TraceDirective
     return 0;
   }
 
-  public boolean addStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public StateMachineTraceItem addStateMachineTraceItem()
+  {
+    return new StateMachineTraceItem(this);
+  }
+
+  public boolean addStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     boolean wasAdded = false;
     if (stateMachineTraceItems.contains(aStateMachineTraceItem)) { return false; }
-    stateMachineTraceItems.add(aStateMachineTraceItem);
-    if (aStateMachineTraceItem.indexOfTraceDirective(this) != -1)
+    TraceDirective existingTraceDirective = aStateMachineTraceItem.getTraceDirective();
+    boolean isNewTraceDirective = existingTraceDirective != null && !this.equals(existingTraceDirective);
+    if (isNewTraceDirective)
     {
-      wasAdded = true;
+      aStateMachineTraceItem.setTraceDirective(this);
     }
     else
     {
-      wasAdded = aStateMachineTraceItem.addTraceDirective(this);
-      if (!wasAdded)
-      {
-        stateMachineTraceItems.remove(aStateMachineTraceItem);
-      }
+      stateMachineTraceItems.add(aStateMachineTraceItem);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public boolean removeStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     boolean wasRemoved = false;
-    if (!stateMachineTraceItems.contains(aStateMachineTraceItem))
+    //Unable to remove aStateMachineTraceItem, as it must always have a traceDirective
+    if (!this.equals(aStateMachineTraceItem.getTraceDirective()))
     {
-      return wasRemoved;
-    }
-
-    int oldIndex = stateMachineTraceItems.indexOf(aStateMachineTraceItem);
-    stateMachineTraceItems.remove(oldIndex);
-    if (aStateMachineTraceItem.indexOfTraceDirective(this) == -1)
-    {
+      stateMachineTraceItems.remove(aStateMachineTraceItem);
       wasRemoved = true;
-    }
-    else
-    {
-      wasRemoved = aStateMachineTraceItem.removeTraceDirective(this);
-      if (!wasRemoved)
-      {
-        stateMachineTraceItems.add(oldIndex,aStateMachineTraceItem);
-      }
     }
     return wasRemoved;
   }
 
-  public boolean addStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  public boolean addStateMachineTraceItemAt(StateMachineTraceItem aStateMachineTraceItem, int index)
   {  
     boolean wasAdded = false;
     if(addStateMachineTraceItem(aStateMachineTraceItem))
@@ -362,7 +378,7 @@ public class TraceDirective
     return wasAdded;
   }
 
-  public boolean addOrMoveStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  public boolean addOrMoveStateMachineTraceItemAt(StateMachineTraceItem aStateMachineTraceItem, int index)
   {
     boolean wasAdded = false;
     if(stateMachineTraceItems.contains(aStateMachineTraceItem))
@@ -680,16 +696,16 @@ public class TraceDirective
 
   public void delete()
   {
+    tracer = null;
     for(int i=attributeTraceItems.size(); i > 0; i--)
     {
-      Attribute_TraceItem aAttributeTraceItem = attributeTraceItems.get(i - 1);
+      AttributeTraceItem aAttributeTraceItem = attributeTraceItems.get(i - 1);
       aAttributeTraceItem.delete();
     }
-    ArrayList<StateMachine_TraceItem> copyOfStateMachineTraceItems = new ArrayList<StateMachine_TraceItem>(stateMachineTraceItems);
-    stateMachineTraceItems.clear();
-    for(StateMachine_TraceItem aStateMachineTraceItem : copyOfStateMachineTraceItems)
+    for(int i=stateMachineTraceItems.size(); i > 0; i--)
     {
-      aStateMachineTraceItem.removeTraceDirective(this);
+      StateMachineTraceItem aStateMachineTraceItem = stateMachineTraceItems.get(i - 1);
+      aStateMachineTraceItem.delete();
     }
     ArrayList<MethodTraceEntity> copyOfMethodTraceEntities = new ArrayList<MethodTraceEntity>(methodTraceEntities);
     methodTraceEntities.clear();
@@ -728,10 +744,12 @@ public class TraceDirective
 	  String outputString = "";
 	  
     return super.toString() + "["+
-            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + getAssociationVariable() != null ? !getAssociationVariable() .equals(this)  ? getAssociationVariable().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceRecord" + "=" + getTraceRecord() != null ? !getTraceRecord() .equals(this)  ? getTraceRecord().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "associationVariable" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
+            "id" + ":" + getId()+ "," +
+            "tracerType" + ":" + getTracerType()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + getTracer() != null ? !getTracer() .equals(this)  ? getTracer().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "traceRecord" + "=" + getAssociationVariable() != null ? !getAssociationVariable() .equals(this)  ? getAssociationVariable().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "associationVariable" + "=" + getTraceRecord() != null ? !getTraceRecord() .equals(this)  ? getTraceRecord().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "tracer" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
      + outputString;
   }
 }

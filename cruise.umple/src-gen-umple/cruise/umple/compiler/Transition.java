@@ -31,7 +31,7 @@ public class Transition
   private State nextState;
   private Guard guard;
   private Action action;
-  private List<StateMachine_TraceItem> stateMachineTraceItems;
+  private List<StateMachineTraceItem> stateMachineTraceItems;
 
   //Helper Variables
   private int cachedHashCode;
@@ -63,7 +63,7 @@ public class Transition
     {
       throw new RuntimeException("Unable to create nextTransition due to nextState");
     }
-    stateMachineTraceItems = new ArrayList<StateMachine_TraceItem>();
+    stateMachineTraceItems = new ArrayList<StateMachineTraceItem>();
   }
 
   //------------------------
@@ -131,15 +131,15 @@ public class Transition
     return action;
   }
 
-  public StateMachine_TraceItem getStateMachineTraceItem(int index)
+  public StateMachineTraceItem getStateMachineTraceItem(int index)
   {
-    StateMachine_TraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
+    StateMachineTraceItem aStateMachineTraceItem = stateMachineTraceItems.get(index);
     return aStateMachineTraceItem;
   }
 
-  public List<StateMachine_TraceItem> getStateMachineTraceItems()
+  public List<StateMachineTraceItem> getStateMachineTraceItems()
   {
-    List<StateMachine_TraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
+    List<StateMachineTraceItem> newStateMachineTraceItems = Collections.unmodifiableList(stateMachineTraceItems);
     return newStateMachineTraceItems;
   }
 
@@ -155,7 +155,7 @@ public class Transition
     return has;
   }
 
-  public int indexOfStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public int indexOfStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     int index = stateMachineTraceItems.indexOf(aStateMachineTraceItem);
     return index;
@@ -232,7 +232,7 @@ public class Transition
     return 0;
   }
 
-  public boolean addStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public boolean addStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     boolean wasAdded = false;
     if (stateMachineTraceItems.contains(aStateMachineTraceItem)) { return false; }
@@ -254,7 +254,7 @@ public class Transition
     return wasAdded;
   }
 
-  public boolean removeStateMachineTraceItem(StateMachine_TraceItem aStateMachineTraceItem)
+  public boolean removeStateMachineTraceItem(StateMachineTraceItem aStateMachineTraceItem)
   {
     boolean wasRemoved = false;
     if (stateMachineTraceItems.contains(aStateMachineTraceItem))
@@ -266,7 +266,7 @@ public class Transition
     return wasRemoved;
   }
 
-  public boolean addStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  public boolean addStateMachineTraceItemAt(StateMachineTraceItem aStateMachineTraceItem, int index)
   {  
     boolean wasAdded = false;
     if(addStateMachineTraceItem(aStateMachineTraceItem))
@@ -280,7 +280,7 @@ public class Transition
     return wasAdded;
   }
 
-  public boolean addOrMoveStateMachineTraceItemAt(StateMachine_TraceItem aStateMachineTraceItem, int index)
+  public boolean addOrMoveStateMachineTraceItemAt(StateMachineTraceItem aStateMachineTraceItem, int index)
   {
     boolean wasAdded = false;
     if(stateMachineTraceItems.contains(aStateMachineTraceItem))
@@ -402,7 +402,7 @@ public class Transition
     placeholderNextState.removeNextTransition(this);
     guard = null;
     action = null;
-    for(StateMachine_TraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    for(StateMachineTraceItem aStateMachineTraceItem : stateMachineTraceItems)
     {
       aStateMachineTraceItem.setTransition(null);
     }

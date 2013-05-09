@@ -9,6 +9,8 @@
       continue;
     }
 
+    TraceItem traceItem = av.getTraced("setMethod", uClass);
+
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
 

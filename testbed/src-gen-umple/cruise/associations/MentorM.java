@@ -94,7 +94,8 @@ public class MentorM
 
   public StudentM addStudent(int aNumber)
   {
-    return new StudentM(aNumber, this);
+    StudentM aNewStudent = new StudentM(aNumber, this);
+    return aNewStudent;
   }
 
   public boolean addStudent(StudentM aStudent)

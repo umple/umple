@@ -8,9 +8,11 @@ import java.util.*;
  * One of the values in which a state machine can be at any given point in time
  * @umplesource StateMachine.ump 35
  * @umplesource StateMachine_Code.ump 301
+ * @umplesource Trace_Code.ump 62
  */
 // line 35 "../../../../src/StateMachine.ump"
 // line 301 "../../../../src/StateMachine_Code.ump"
+// line 62 "../../../../src/Trace_Code.ump"
 public class State
 {
 
@@ -653,6 +655,56 @@ public class State
       Transition aNextTransition = nextTransition.get(i - 1);
       aNextTransition.delete();
     }
+  }
+
+
+  /**
+   * Retrieve the StateMachineTraceItem associated with this State
+   * @params method: for example entry or entry or normal, each specifying the context to call the gotten trace item
+   * @params uClass: the umple class to look within for the trace item
+   * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute);
+   */
+  // line 70 "../../../../src/Trace_Code.ump"
+  public TraceItem getTraced(String method, UmpleClass uClass){
+    //go through all the trace directives of uClass
+    for(TraceDirective td: uClass.getTraceDirectives())
+    {
+      //for all the statemachine trace items
+      for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
+      {
+      	StateMachine sm = smti.getStateMachine();
+      	Transition  tsn = smti.getTransition();
+        if(tsn!=null)
+        {
+          //if the trace item is for a transition, just return it
+          return smti;
+        }
+        else if(sm==null)
+        {
+        	//if the trace item is not for a transition, and does not contain a state machine, return null
+        	return null;
+        }
+      	else if(smti.getTraceStateMachineFlag())
+      	{
+      	  //if the method matches the method specified for this statemachine return the state machine item
+      	  if((smti.getExit()==smti.getEntry())||("entry".equals(method)&&smti.getEntry())||("exit".equals(method)&&smti.getExit()))
+          {
+      	    return smti;
+      	  }
+      	}
+      	//for the case that you are tracing a specific state 
+      	else if(this.getName().equals(sm.getState(0).getName()))
+      	{
+      	  //refer to above
+          if((smti.getExit()==smti.getEntry())||("entry".equals(method)&&smti.getEntry())||("exit".equals(method)&&smti.getExit()))
+          {
+          	return smti;
+          }
+        }
+      }
+    }
+    
+    return null;
   }
 
 

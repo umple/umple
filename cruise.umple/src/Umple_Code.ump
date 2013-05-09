@@ -543,7 +543,38 @@ class CodeInjection
   }
   public String getCode()
   {
-    return snippet.getCode();
+  	if(constraint == null)
+  	{
+  	  return snippet.getCode();
+  	}
+  	else
+  	{
+  	  if("Java".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new JavaGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  else if("Php".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  else if("Ruby".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  else if("Cpp".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  return snippet.getCode();
+  	}
   }  
   public void setCode(String lang, String code)
   {

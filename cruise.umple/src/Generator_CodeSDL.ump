@@ -51,7 +51,7 @@ class SDLGenerator
     }
     else if (aElement instanceof UmpleClass)
     {
-      return new SDLClassGenerator();
+      return (ILang) new SDLClassGenerator();
     } 
     else{
     	return null;    	
@@ -199,6 +199,12 @@ public String translate(String id, Attribute attribute) {
 
 	return null;
 }
+
+public String translate(String keyName, TraceItem ti)
+  {
+  	return null;
+  }
+  
 
 @Override
 public String translate(String id, AssociationVariable aVar) {

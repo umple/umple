@@ -13,4 +13,5 @@ public interface CodeTranslator
  public String translate(String id, Event e);
  public String translate(String id, AssociationVariable aVar);
  public String translate(String id, Constraint constraint);
+ public String translate(String id, TraceItem traceItem);
 }

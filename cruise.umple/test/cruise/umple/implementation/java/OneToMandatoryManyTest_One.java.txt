@@ -87,7 +87,8 @@ public class Mentor
 
   public Student addStudent(String aNumber)
   {
-    return new Student(aNumber, this);
+    Student aNewStudent = new Student(aNumber, this);
+    return aNewStudent;
   }
 
   public boolean addStudent(Student aStudent)

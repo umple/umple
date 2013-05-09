@@ -86,8 +86,8 @@ class TraceDirective {displayColor "#FFCC77";}
 class TraceCase {displayColor "#FFCC77";}
 class TraceRecord {displayColor "#FFCC77";}
 class TraceCondition {displayColor "#FFCC77";}
-class StateMachine_TraceItem {displayColor "#FFCC77";}
-class Attribute_TraceItem {displayColor "#FFCC77";}
+class StateMachineTraceItem {displayColor "#FFCC77";}
+class AttributeTraceItem {displayColor "#FFCC77";}
 class MethodTraceEntity {displayColor "#FFCC77";}
 class TraceDirective {displayColor "#FFCC77";}
 class TraceItem {displayColor "#FFCC77";}

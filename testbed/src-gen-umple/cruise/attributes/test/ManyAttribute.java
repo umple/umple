@@ -28,7 +28,7 @@ public class ManyAttribute
   // INTERFACE
   //------------------------
 
-  public boolean addWork(int aWork)
+  public boolean addWork(Integer aWork)
   {
     boolean wasAdded = false;
     wasAdded = works.add(aWork);
@@ -66,7 +66,7 @@ public class ManyAttribute
     return has;
   }
 
-  public int indexOfWork(int aWork)
+  public int indexOfWork(Integer aWork)
   {
     int index = works.indexOf(aWork);
     return index;

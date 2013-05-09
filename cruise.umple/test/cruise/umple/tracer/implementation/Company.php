@@ -88,7 +88,6 @@ class Company
         array_pop($this->manager);
       }
     }
-      print(""cardinality=" + numberOfManager()={${1}}");
     return $wasAdded;
   }
 

@@ -3,5 +3,6 @@
   public <%=gen.translate("type",av)%> <%= gen.translate("getMethod",av) %>()
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
-    return <%=gen.translate("attributeOne",av)%>;
+<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+%>    return <%=gen.translate("attributeOne",av)%>;
   }

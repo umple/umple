@@ -15,6 +15,7 @@ precondition : [ [name]? pre: [[constraint]] ]
 postcondition : [ [name]? post: [[constraint]] ]
 
 invariant : [ ([name] :)? ([[constraint]]) ]
+constraintToken : [[constraint]]
 
 // A constraint is an expression optionally be surrounded in round brackets or negated
 constraint- : OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[constraintBody]]
@@ -25,7 +26,7 @@ constraintBody- : [[constraintExpr]] ([[linkingOp]])*
 linkingOp : ( [=||] [[constraintExpr]]) | ( [=andOp:and|&&|&] [[constraintExpr]]) | ( [=orOp:or] [[constraintExpr]])  
 constraintExpr- :  [[negativeConstraint]] | [[stringExpr]] | [[boolExpr]] | [[genExpr]] | [[numExpr]] | [loneBoolean] ( [ [index] ] )? 
 
-compoundExpr- : [[stringExpr]]  | [[boolExpr]] | [[numExpr]] | [[genExpr]] 
+compoundExpr- : [[stringExpr]]|[[boolExpr]]|[[numExpr]]|[[genExpr]] 
 
 //must be a boolean
 boolExpr : [=literal:true|false] | [~name] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]] [~name] | [~name] [ [~index] ] [[equalityOp]] [=literal:true|false]
@@ -38,19 +39,19 @@ stringLit- : " [**quote] " | ' [**quote] '
 genExpr : [~name] ( [ [index] ] )? [[equalityOp]] [~name] ( [ [index] ] )?
 
 //for floats, doubles and ints
-numExpr : [~name] ( . [~tail]  )? ( [ [index] ] )? [[ordinalOp]] [~name] ( . [~tail]  )? ( [ [index] ] )?
+numExpr :[~name] ( . [~tail] )? ( [ [index] ] )? [[ordinalOp]] [~name] ( . [~tail] )? ( [ [index] ] )?
 
 equalityOp- :  [[equalsOp]] | [[notequalsOp]] 
 
 equalsOp- : [=equalsOp:==|=|equals]
 notequalsOp- : [=notequalsOp:!=|/=|=!|=/=]
 
-ordinalOp- :  [[greaterOp]] | [[lessOp]] | [[moreOp]] | [[smallerOp]]
+ordinalOp- : [[greaterOp]]|[[lessOp]]|[[moreOp]]|[[smallerOp]]
 
-greaterOp- : [=greaterOp:greater|>=|=>]
-lessOp- : [=lessOp:less|<=|=<]
-moreOp- : [=moreOp:larger|>]
-smallerOp- : [=smallerOp:smaller|<]
+greaterOp- :[=greaterOp:greater|>=|=>]
+lessOp- :[=lessOp:less|<=|=<]
+moreOp- :[=moreOp:larger|>]
+smallerOp- :[=smallerOp:smaller|<]
 
 // assOps- : [=associationOp : larger | smaller | exact | hasAll]
 

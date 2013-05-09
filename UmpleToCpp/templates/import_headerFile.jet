@@ -16,9 +16,9 @@
   {
 	for (TraceDirective td : uClass.getTraceDirectives())
 	    	{
-	  for (Attribute_TraceItem ati: td.getAttributeTraceItems())
+	  for (AttributeTraceItem ati: td.getAttributeTraceItems())
 	  {
-		for (Attribute att : ati.getAttributes())
+		for (UmpleVariable att : ati.getUmpleVariables())
 		{
 		appendln(stringBuffer, "");
 		append(stringBuffer, "#include \"{0}_tracepoint.h\";",att.getName());	

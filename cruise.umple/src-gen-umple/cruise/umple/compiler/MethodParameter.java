@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 /**
  * Represents a parameter in a method and its various forms.

@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.*;
 
 /**
- * @umplesource Generator.ump 215
+ * @umplesource Generator.ump 216
  * @umplesource Generator_CodePhp.ump 12
  */
-// line 215 "../../../../src/Generator.ump"
+// line 216 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodePhp.ump"
 public class PhpGenerator implements CodeGenerator,CodeTranslator
 {
@@ -91,6 +91,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
+  private static Map<String,String> TraceLookupMap;
   private static List<String> OneOrManyLookup;
   static
   {
@@ -166,6 +167,17 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
+    
+    TraceLookupMap = new HashMap<String,String>();
+    TraceLookupMap.put("concatinator",".");
+    TraceLookupMap.put("accessor","$this->");
+    TraceLookupMap.put("indent","    ");
+    TraceLookupMap.put("template","{0}Tracer::handle( {1} );");
+    TraceLookupMap.put("timestamp","gettimeofday(true)");
+    TraceLookupMap.put("identifier","spl_object_hash( {0} )");
+    TraceLookupMap.put("thread","uniqid()");
+    TraceLookupMap.put("self","$this");
+    TraceLookupMap.put("increment","{0}++;");
     
   }
 
@@ -292,6 +304,16 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
   		return StringFormatter.format("  if({0})\n    {\n    {1}\n",expression, "{0}");
   	}
   	return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
+  }
+  
+  public String translate(String keyName, TraceItem ti)
+  {
+  	if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
+    	return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+    }
+    else {
+    	return "INVALID KEYNAME IN TRANSLATE";
+    }
   }
   
   public String relatedTranslate(String name, AssociationVariable av)
@@ -873,13 +895,13 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     }
 	
     Map<String,String> lookups = new HashMap<String,String>();
-    String executeMethods = "public static function execute($message) { self::getInstance()->addTrace($message); }\n";
+    String executeMethods = "public static function handle($message) { self::getInstance()->addTrace($message); }\n";
     executeMethods += "public function reset() { self::getInstance()->traces = array(); }";
-    lookups.put("consoleTemplate","print(\"{0}={${1}}\");");
-    lookups.put("stringTemplate","StringTracer::execute(\"{0}={${1}}\");");
+    lookups.put("consoleTracer","public static function handle($message) { print($message); }");
     lookups.put("fileTemplate","fileTracer(${0});");
-    lookups.put("extraCode",executeMethods);
-    GeneratorHelper.prepareAllTraces(this,model,aClass,lookups);
+    lookups.put("stringTracer",executeMethods);
+    lookups.put("startTime","0");
+    GeneratorHelper.prepareAllTracers(this,model,aClass,lookups);
 //    prepareAllTraces(this,model,aClass,lookups);
 	     
     for (StateMachine sm : aClass.getStateMachines())
@@ -889,195 +911,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
     
   }
   
-  //====================== Start of Tracing code  
   
-  // Process every attribute in an AttributeTraceItem
-  static void processAttribute( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr) 
-  {
-	  String attrCode = null, conditionType = null;
-	  
-	  // Process trace directive conditions if it has any 
-	  if( traceDirective.hasCondition() )
-	  {
-		  processTraceCondition(traceDirective,t,template,attr);		
-	  }  
-	  else
-	  {
-		  // simple trace directive that traces attributes without any extra fragments
-  		  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-  		  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttr,attr,attrCode,conditionType);   
-	  }
-  }
-  
-  // Process trace record in a trace directive
-  static void processTraceRecord(TraceDirective traceDirective,	CodeTranslator t, String template, String tracer) 
-  {
-	  String attrCode = null;
-	  
-	  for( Attribute_TraceItem traceAttrItem : traceDirective.getAttributeTraceItems() )
-	  {
-		  for( Attribute traceAttr : traceAttrItem.getAttributes() )
-		  {
-			  TraceRecord record = traceDirective.getTraceRecord();
-			  if( record.getRecord() != null )
-			  {  
-				  if( tracer.equals("file"))
-					  attrCode = StringFormatter.format(template,record.getRecord());
-				  else if( tracer.equals("console"))
-					  attrCode = StringFormatter.format(template,"RecordString",record.getRecord());
-				  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
-			  }
-			  for( Attribute attr : record.getAttributes() )
-			  {
-				  attrCode = StringFormatter.format(template,t.translate("attribute",attr),t.translate("attribute",attr));
-				  GeneratorHelper.prepareTraceDirectiveAttributeInject(traceDirective,t,traceAttrItem,traceAttr,attrCode,null);
-			  }  
-		  }	   
-	  } 
-  }
-  
-  // Process condition in a trace directive
-  static void processTraceCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr ) 
-  {
-	  TraceCondition tc = traceDirective.getCondition(0);
-	  
-	  if( tc.getConditionType().equals("where") )
-		  processWhereCondition(traceDirective, t, template, attr);	
-	  else if( tc.getConditionType().equals("giving") )  
-		  processGivingCondition(traceDirective, t, template, attr);	
-	  else if( tc.getConditionType().equals("until") )  
-		  processUntilCondition(traceDirective, t, template, attr);		 
-	  else if( tc.getConditionType().equals("after") )
-		  processAfterCondition(traceDirective, t, template, attr);	  
-  }
-  
-  //process "where" conditions and injects needed code where appropriate
-  public static void processWhereCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
-  {
-	 String attrCode = null, conditionType = "where";
-	 TraceCondition tc = traceDirective.getCondition(0);
-	 attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	 attrCode = "{";
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
-	 attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	 attrCode = "}";
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-  }
-  
-  //process "giving" conditions and injects needed code where appropriate
-  public static void processGivingCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
-  {
-	 String attrCode = null, conditionType = "giving";
-	 TraceCondition tc = traceDirective.getCondition(0);
-	 attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	 attrCode = "{";
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
-	 attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	 attrCode = "}";
-	 prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-  }
-  
-  //process "until" conditions and injects needed code where appropriate
-  public static void processUntilCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
-  {
-	  String attrCode = null, conditionType = "until";
-	  TraceCondition tc = traceDirective.getCondition(0);  
-	  attrCode = "if( " + "$" + tc.getLhs() + " " + getComparisonOperatorInverse(tc.getRhs().getComparisonOperator()) + " " + tc.getRhs().getRhs() + " )";  
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	  attrCode = "{";
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
-	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	  attrCode = "}";
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType); 
-  }
-  
-  //process "After" conditions and injects needed code where appropriate
-  public static void processAfterCondition( TraceDirective traceDirective, CodeTranslator t, String template, Attribute attr )
-  {
-	  String attrCode = null, conditionType = "after";
-	  TraceCondition tc = traceDirective.getCondition(0);
-	  attrCode = "if( " + "$" + tc.getLhs() + " " + tc.getRhs().getComparisonOperator() + " " + tc.getRhs().getRhs() + " )";
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	  attrCode = "{";
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);	  	  
-	  attrCode = "  " + StringFormatter.format(template,t.translate("attribute",attr),t.translate("parameter",attr));
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType);
-	  attrCode = "}";
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType); 
-  }
-  
-  // Assigns and prepares trace code injection before calling "injectTraceDirective"
-  //  + setMethod: What is the name of the setMethod we are attaching the trace to
-  //  + attrCode: What is the trace code that should be executed
-  private static void prepareTraceDirectiveInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType) 
-  {
-	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("attributeCode",attrCode);
-	  lookups.put("setMethod",t.translate("setMethod",attr));
-	  injectTraceDirective(traceDirective,lookups,conditionType);
-  }
-
-  // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
-  // expects the following action semantic lookups
-  //  + packageName: What package should this class belong to?
-  //  + extraCode: What is the code required to execute the trace 
-  public static void prepareStringTracer(UmpleModel model, Map<String,String> lookups)
-  {
-    UmpleClass aClass = model.addUmpleClass("StringTracer");
-    
-    if (aClass.numberOfAttributes() == 0)
-    {
-      aClass.setIsInternal(true);
-      aClass.setIsSingleton(true); 
-      aClass.setPackageName(lookups.get("packageName"));
-      Attribute traces = new Attribute("traces","String",null,null,false,aClass);
-      traces.setIsList(true);
-      aClass.appendExtraCode(lookups.get("extraCode"));
-    }
-    aClass.createGeneratedClass(model);
-  }
-
-  // Inject the necessary "before" and "after" hooks to call the trace, this method expects the following action semantic lookups
-  //  + setMethod: What is the name of the setMethod we are attaching the trace to
-  //  + attributeCode: What is the trace code that should be executed
-  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String conditionType)
-  {
-    UmpleClass aClass = traceDirective.getUmpleClass();
-    String setMethod = lookups.get("setMethod");
-    String code = lookups.get("attributeCode");
-    String injectionType = "after";
-    
-    if( "where".equals(conditionType) )
-    	injectionType = "before";
-    else if( "until".equals(conditionType) || "after".equals(conditionType) || "giving".equals(conditionType) )
-    	injectionType = "after";
-
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code, aClass);
-    set.setIsInternal(true);
-    aClass.addCodeInjection(set);  
-  }
-  
-  private static String getComparisonOperatorInverse(String co) {
-	  if( co.equals("==") ) return "!=";
-	  else if( co.equals("!=") ) return "==";
-	  else if( co.equals(">") ) return "<=";
-	  else if( co.equals("<") ) return ">=";
-	  else if( co.equals(">=") ) return "<";
-	  else if( co.equals("<=") ) return ">";
-	  
-	  return null;
-  }
-  
-  static void processStateMachine( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, StateMachine_TraceItem traceStm, StateMachine stm) 
-  {
-	  //ToBeDone
-  }
-  //====================== End of Tracing code
 
   private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)
   {

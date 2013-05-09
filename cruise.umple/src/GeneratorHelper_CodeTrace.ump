@@ -28,322 +28,59 @@ private static void postpareTrace(UmpleModel aModel)
   //*********************************************** 
   // Process traces based on tracer selected
   // Current Tracers supported ( Console / File / String ) to be added later ( LTTNG / Dtrace )
-  public static void prepareAllTraces(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
+  static private boolean generateConsole = true;
+  static private boolean generateFile = true;
+  static private boolean generateString = true;
+  public static boolean getWillGenerateString(){
+  	return generateString;
+  }
+  public static void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
   {    
-      if ("Console".equals(model.getTraceType()))
+    for(TraceDirective td: aClass.getTraceDirectives())
+    {
+      if(templateLookups.containsKey("dependTracer"))
       {
-    	  prepareConsoleTraces(model,aClass,t,templateLookups);
+        aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),td.getTracerType())));
       }
-      else if ("File".equals(model.getTraceType()))
+      if(templateLookups.containsKey("dependDate"))
       {
-    	  prepareFileTraces(model,aClass,t,templateLookups);
+      	Depend dep = new Depend(templateLookups.get("dependDate"));
+      	dep.setIsInternal(true);
+        aClass.addDepend(dep);
       }
-      else if ("String".equals(model.getTraceType()))
+      if ("Console".equals(td.getTracerType()))
       {
-    	  prepareStringTraces(model,aClass,t,templateLookups);
+        if(generateConsole)
+        {
+          generateConsole=false;
+          prepareConsoleTracer(model,templateLookups);
+        }
       }
-      else if ("Lttng".equals(model.getTraceType()))
+      else if ("File".equals(td.getTracerType()))
       {
-    	  prepareLttngTraces(model,aClass,t,templateLookups);
-      }
-  }
-  
-  // "Console Tracer" Look through all trace directives and inject the necessary code
-  private static void prepareConsoleTraces( UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
-  {
-	  String consoleTemplate = templateLookups.get("consoleTemplate");
-	  prepareTraceDirectives(model,aClass,t,consoleTemplate,"console");
-  }
-  
-  // "File Tracer" Look through all trace directives and inject the necessary code
-  private static void prepareFileTraces( UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
-  {
-	  String fileTemplate = templateLookups.get("fileTemplate");  	
-	  prepareTraceDirectives(model,aClass,t,fileTemplate,"file");
-  }
-  
-  private static void prepareLttngTraces( UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
-  {
-	  String lttngTemplate = templateLookups.get("lttngTemplate");  	
-	  prepareTraceDirectives(model,aClass,t,lttngTemplate,"lttng");
-  }
-
-  // "String Tracer" Look through all traces and inject the necessary code
-  private static void prepareStringTraces(UmpleModel model, UmpleClass aClass, CodeTranslator t, Map<String,String> templateLookups) 
-  {
-	  String stringTemplate = templateLookups.get("stringTemplate");
-	  String dependPackage = templateLookups.get("dependPackage");
-	  String extraCode = templateLookups.get("extraCode");
-	  
-	  // Go over each trace directive
-	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
-	  {
-		  Map<String,String> lookups = new HashMap<String,String>();
-		  String packageName = model.getDefaultPackage() == null ? "cruise.util" : model.getDefaultPackage();
-          lookups.put("packageName",packageName);
-          lookups.put("extraCode",extraCode);
-          GeneratorHelper.prepareStringTracer(model, lookups);
-
-          if (dependPackage != null && !packageName.equals(aClass.getPackageName()))
+        if(generateFile)
+        {
+          generateFile=false;          
+          if(model.getTracer().numberOfArgument()>0)
           {
-            Depend d = new Depend(packageName + ".*");
-            d.setIsInternal(true);
-            aClass.addDepend(d);
+      	    templateLookups.put("filename","\""+td.getTracer().getArgument(0)+"\"");
           }
-          // if the traceItem is an attribute
-          if (traceDirective.hasAttributeTraceItems())
+          else
           {
-        	  processTraceDirectiveAttributes(model,traceDirective,t,stringTemplate);	 
+          	templateLookups.put("filename","\"trace.txt\"");
           }
-	  }
-  }
-  
-  //*********************************************** 
-  //*******  Methods dealing with Trace Directives
-  //*********************************************** 
-  // Process all trace directives in an umple class
-  private static void prepareTraceDirectives( UmpleModel model, UmpleClass aClass, CodeTranslator t, String template, String tracer) 
-  {
-	  // Go over each trace directive
-	  for (TraceDirective traceDirective : aClass.getTraceDirectives())
-	  {  
-		  // process trace record if found
-		  if( traceDirective.getTraceRecord() != null )
-		  {
-			  processTraceRecord(model,traceDirective,t,template,tracer);        
-		  }
-		  // if the traceItem is an attribute
-		  else if (traceDirective.hasAttributeTraceItems())
-		  {
-			  processTraceDirectiveAttributes(model,traceDirective,t,template);		  
-		  }
-		  // if the traceItem is a state machine
-		  if( traceDirective.hasStateMachineTraceItems() )
-		  {
-			  processTraceDirectiveStateMachines(model,traceDirective,t,template,tracer);	
-		  }
-		  // if the traceItem is an association
-		  if( traceDirective.getAssociationVariable() != null )
-		  {
-			  processTraceDirectiveAssociation(model,traceDirective,t,template,tracer);	
-		  }
-	  }
-  }
-
-  //**************************************************** 
-  //*******  Methods dealing with Attribute Trace Items
-  //****************************************************
-  // Process every AttributeTraceItem in a trace directive
-  private static void processTraceDirectiveAssociation(UmpleModel model,TraceDirective traceDirective, CodeTranslator t, String template, String tracer) 
-  {
-	  JavaGenerator.processAssociation(model,traceDirective,t,template);
-  }
-
-  //**************************************************** 
-  //*******  Methods dealing with Attribute Trace Items
-  //****************************************************
-  // Process every AttributeTraceItem in a trace directive
-  private static void processTraceDirectiveAttributes( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template ) 
-  {	  
-	  for( Attribute_TraceItem traceAttr : traceDirective.getAttributeTraceItems() )
-	  {
-		  // Go over all attributes in attribute trace item
-		  for( Attribute attr : traceAttr.getAttributes() )
-		  {	  		
-			  processAttributeInAttributeTraceItem(model,traceDirective,t,template,traceAttr,attr);
-	  	  }
-	  }
-  }
-  
-  // Process every Attribute in a AttributeTraceItem based on output language
-  private static void processAttributeInAttributeTraceItem( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, Attribute_TraceItem traceAttr, Attribute attr) 
-  {	  
-	  if( model.getDefaultGenerate().equals("Java"))
-	  {
-		  JavaGenerator.processAttribute(model,traceDirective,t,template,traceAttr,attr);
-	  }
-	  if( model.getDefaultGenerate().equals("Php"))
-	  {
-		  PhpGenerator.processAttribute(model,traceDirective,t,template,traceAttr,attr);
-	  }
-	  
-	   if( model.getDefaultGenerate().equals("Cpp"))
-	  {
-		  CppGenerator.processAttribute(model,traceDirective,t,template,traceAttr,attr);
-	  }
-  }
-  
-  //********************************************************
-  //*******  Methods dealing with State Machines Trace Items
-  //********************************************************
-  // Process every state machine in a trace directive
-  private static void processTraceDirectiveStateMachines( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, String tracer) 
-  {
-	  for( StateMachine_TraceItem traceStm : traceDirective.getStateMachineTraceItems() )
-	  {
-		// Go over all attributes in attribute trace item
-		  StateMachine stm = traceStm.getStateMachine();
-		  {
-			  processStmInStateMachineTraceItem(model,traceDirective,t,template,traceStm,stm);
-		  }
-	  }
-  }
-  
-  // Process every Attribute in a AttributeTraceItem based on output language
-  private static void processStmInStateMachineTraceItem( UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, StateMachine_TraceItem traceStm, StateMachine stm) 
-  {	  
-	  if( model.getDefaultGenerate().equals("Java"))
-	  {
-		  JavaGenerator.processStateMachine(model,traceDirective,t,template,traceStm,stm);
-	  }
-	  if( model.getDefaultGenerate().equals("Php"))
-	  {
-		  PhpGenerator.processStateMachine(model,traceDirective,t,template,traceStm,stm);
-	  }
-	  
-	   if( model.getDefaultGenerate().equals("Cpp"))
-	  {
-		  CppGenerator.processStateMachine(model,traceDirective,t,template,traceStm,stm);
-	  }
-  }
-  
-  //*********************************************** 
-  //*******  Methods dealing with Trace Record
-  //*********************************************** 
-
-  private static void processTraceRecord(UmpleModel model, TraceDirective traceDirective, CodeTranslator t, String template, String tracer) 
-  {
-	  if( model.getDefaultGenerate().equals("Java"))
-	  {
-		  if( traceDirective.getTraceRecord().getRecordOnly() )
-			  JavaGenerator.processTraceRecord(traceDirective,t,template,tracer);
-		  else
-		  {
-			  processTraceDirectiveAttributes(model,traceDirective,t,template);
-			  JavaGenerator.processTraceRecord(traceDirective,t,template,tracer);	
-		  }
-	  }
-	  if( model.getDefaultGenerate().equals("Php"))
-	  {
-		  if( traceDirective.getTraceRecord().getRecordOnly() )
-			  PhpGenerator.processTraceRecord(traceDirective,t,template,tracer);
-		  else
-		  {
-			  processTraceDirectiveAttributes(model,traceDirective,t,template);
-			  PhpGenerator.processTraceRecord(traceDirective,t,template,tracer);	
-		  }
-	  }
-	  
-	  if( model.getDefaultGenerate().equals("Cpp"))
-	  {
-		  if( traceDirective.getTraceRecord().getRecordOnly() )
-			  CppGenerator.processTraceRecord(traceDirective,t,template,tracer);
-		  else
-		  {
-			  processTraceDirectiveAttributes(model,traceDirective,t,template);
-			  CppGenerator.processTraceRecord(traceDirective,t,template,tracer);	
-		  }
-	  }
-  }
-
-  //********************************************************
-  //*******  Methods dealing with Code Injections
-  //********************************************************
-  
-  public static void prepareTraceDirectiveAttributeInject( TraceDirective traceDirective, CodeTranslator t, Attribute_TraceItem traceAttr, Attribute attr, String attrCode, String conditionType) 
-  {
-	  if( traceAttr.getTraceSet() == true && traceAttr.getTraceGet() == false )
-		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
-	  else if( traceAttr.getTraceSet() == false && traceAttr.getTraceGet() == true )
-		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"getMethod");
-	  else if( traceAttr.getTraceSet() == true && traceAttr.getTraceGet() == true )
-	  {
-		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
-		  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"getMethod");
-	  }
-  }
-  
-  public static void prepareTraceRecordAttributeInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType) 
-  {
-	  prepareTraceDirectiveInject(traceDirective,t,attr,attrCode,conditionType,"setMethod");
-  }
-  
-  // Assigns and prepares trace code injection before calling "injectTraceDirective"
-  //  + setMethod: What is the name of the setMethod we are attaching the trace to
-  //  + attrCode: What is the trace code that should be executed
-  public static void prepareTraceDirectiveInject( TraceDirective traceDirective, CodeTranslator t, Attribute attr, String attrCode, String conditionType, String method) 
-  {
-	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("Code",attrCode);
-	  if( method.equals("setMethod") )
-		  lookups.put("setMethod",t.translate("setMethod",attr));
-	  if( method.equals("getMethod") )
-		  lookups.put("getMethod",t.translate("getMethod",attr));
-	  String injectionType = "after";
-	    
-	  if( "where".equals(conditionType) )
-		  injectionType = "before";  
-	  else if( "until".equals(conditionType) || "after".equals(conditionType) || "giving".equals(conditionType) )
-		  injectionType = "after";
-	  if( method.equals("setMethod") )
-		  injectTraceDirective(traceDirective,lookups,injectionType,"setMethod");
-	  if( method.equals("getMethod") )
-		  injectTraceDirective(traceDirective,lookups,injectionType,"getMethod");
-  }
-  
-  public static void prepareTraceDirectiveInjectStateMachine( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 
-  {
-	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("Code",stmCode);
-	  lookups.put("setMethod",t.translate("setMethod",stm));
-	  injectTraceDirective(traceDirective,lookups,injectionType,"setMethod");
-  }
-  
-
-  public static void prepareTraceDirectiveAssociationInject( TraceDirective traceDirective, CodeTranslator t, AssociationVariable aVar, String assCode, String injectionType) 
-  {
-	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("Code",assCode);
-	  lookups.put("addMethod",t.translate("addMethod",aVar));
-	  injectTraceDirective(traceDirective,lookups,injectionType,"addMethod");
-  }
-  
-  public static void tmp( TraceDirective traceDirective, CodeTranslator t, StateMachine stm, String stmCode, String injectionType) 
-  {
-	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("Code",stmCode);
-	  lookups.put("exitMethod",t.translate("exitMethod",stm));
-	  tmp2(traceDirective,lookups,injectionType);
-  }
-  public static void tmp2(TraceDirective traceDirective, Map<String,String> lookups, String injectionType)
-  {
-    UmpleClass aClass = traceDirective.getUmpleClass();
-    String setMethod = lookups.get("exitMethod");
-    String code = lookups.get("Code");
-
-    CodeInjection set = new CodeInjection(injectionType, setMethod, code, aClass);
-    set.setIsInternal(true);
-    aClass.addCodeInjection(set);  
-  }
-  public static void InjectTracedTransition(TraceDirective traceDirective, CodeTranslator t, String stmCode, String injectionType)
-  {
-	  Map<String,String> lookups = new HashMap<String,String>();
-	  lookups.put("Code",stmCode);
-	  lookups.put("eventMethod","flip");
-	  injectTraceDirective(traceDirective,lookups,injectionType,"eventMethod"); 
-  }
-  // Inject the necessary "before" and "after" hooks to call the trace, this method expects the following action semantic lookups
-  //  + setMethod: What is the name of the setMethod we are attaching the trace to
-  //  + attributeCode: What is the trace code that should be executed
-  public static void injectTraceDirective(TraceDirective traceDirective, Map<String,String> lookups, String injectionType, String method)
-  {
-    UmpleClass aClass = traceDirective.getUmpleClass();
-    String Method = lookups.get(method);
-    String code = lookups.get("Code");
-
-    CodeInjection set = new CodeInjection(injectionType, Method, code, aClass);
-    set.setIsInternal(true);
-    aClass.addCodeInjection(set);  
+          prepareFileTracer(model,templateLookups);
+        }
+      }
+      else if ("String".equals(td.getTracerType()))
+      {
+        if(generateString)
+        {
+          generateString=false;
+          prepareStringTracer(model,templateLookups);
+        }
+      }
+    }
   }
 
   // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
@@ -359,9 +96,51 @@ private static void postpareTrace(UmpleModel aModel)
       aClass.setIsInternal(true);
       aClass.setIsSingleton(true); 
       aClass.setPackageName(lookups.get("packageName"));
-      Attribute traces = new Attribute("traces","String",null,null,false,aClass);
+      Attribute traces = new Attribute("traces","String",null,"null",false,aClass);
+      Attribute startTime = new Attribute("startTime","int",null,lookups.get("startTime"),false,aClass);
       traces.setIsList(true);
-      aClass.appendExtraCode(lookups.get("extraCode"));
+      CodeInjection init = new CodeInjection("after","constructor", lookups.get("initial"), aClass);
+      init.setIsInternal(true);
+      aClass.addCodeInjection(init);
+      aClass.appendExtraCode(lookups.get("stringTracer"));
+      aClass.appendExtraCode(lookups.get("static"));
+    }
+    aClass.createGeneratedClass(model);
+  }
+  public static void prepareConsoleTracer(UmpleModel model, Map<String,String> lookups)
+  {
+    UmpleClass aClass = model.addUmpleClass("ConsoleTracer");
+    
+    if (aClass.getExtraCode().equals(""))
+    {
+      aClass.setIsInternal(true);
+      aClass.setIsSingleton(true); 
+      aClass.setPackageName(lookups.get("packageName"));
+      aClass.appendExtraCode(lookups.get("consoleTracer"));
+      aClass.appendExtraCode(lookups.get("static"));
+      CodeInjection init = new CodeInjection("after","constructor", lookups.get("initial"), aClass);
+      init.setIsInternal(true);
+      aClass.addCodeInjection(init);
+    }
+    aClass.createGeneratedClass(model);
+  }
+  public static void prepareFileTracer(UmpleModel model, Map<String,String> lookups)
+  {
+    UmpleClass aClass = model.addUmpleClass("FileTracer");
+    
+    if (aClass.getExtraCode()=="")
+    {
+      aClass.setIsInternal(true);
+      aClass.setIsSingleton(true); 
+      aClass.addDepend(new Depend("java.io.*"));
+      aClass.setPackageName(lookups.get("packageName"));
+      
+      Attribute filename = new Attribute("filename","String","const",lookups.get("filename"),false,aClass);
+      aClass.appendExtraCode(lookups.get("fileTracer"));
+      aClass.appendExtraCode(lookups.get("static"));
+      CodeInjection init = new CodeInjection("after","constructor", lookups.get("initial"), aClass);
+      init.setIsInternal(true);
+      aClass.addCodeInjection(init);
     }
     aClass.createGeneratedClass(model);
   }
@@ -370,42 +149,43 @@ private static void postpareTrace(UmpleModel aModel)
   // this method deals with what is inside the System.err.println();
   static String prepareConsistentOutput(String[] record, Object... params) 
   {
-	  String output = StringFormatter.format("\"{0}=\" + {1}",params[0],params[1]);
-	  int i;
-	  
-	  for( i = 2 ; i < params.length ; i += 2 )
-	  {
-		  if( ! outputRedundant( i, params[i] , params ) )
-			  output += StringFormatter.format(" + \",{0}=\" + {1}",params[i],params[i+1]);
-	  }
+    String output = StringFormatter.format("\"{0}=\" + {1}",params[0],params[1]);
+    int i;
+    
+    for( i = 2 ; i < params.length ; i += 2 )
+    {
+      if( ! outputRedundant( i, params[i] , params ) )
+        output += StringFormatter.format(" + \",{0}=\" + {1}",params[i],params[i+1]);
+    }
 
-	  if( record != null )
-		  for( i = 0 ; i < record.length ; ++i )
-		  {
-			  if( record[i] == null )
-			  {
-			
-			  }
-			  else
-				  output += StringFormatter.format(" + \",{0}=\" + {1}",record[i],record[i]);
-		  }
-	  	  
-	  return output;
+    if( record != null )
+      for( i = 0 ; i < record.length ; ++i )
+      {
+        if( record[i] == null )
+        {
+      
+        }
+        else
+          output += StringFormatter.format(" + \",{0}=\" + {1}",record[i],record[i]);
+      }
+        
+    return output;
   }
   
   // purpose of this method is make sure that output is not redundant
   static boolean outputRedundant( int index, Object target, Object... params)
   {
-	  boolean flag = false;
-	  
-	  for( int i =  0 ; i < index ; i += 2 )
-	  {
-		  if( target.equals(params[i]) )
-			  flag = true;
-	  }
-	  
-	  return flag;
+    boolean flag = false;
+    
+    for( int i =  0 ; i < index ; i += 2 )
+    {
+      if( target.equals(params[i]) )
+        flag = true;
+    }
+    
+    return flag;
   }
-
+  
+  
 }
 

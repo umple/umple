@@ -2137,9 +2137,9 @@ public class CppClassGenerator implements ILang
   {
 	for (TraceDirective td : uClass.getTraceDirectives())
 	    	{
-	  for (Attribute_TraceItem ati: td.getAttributeTraceItems())
+	  for (AttributeTraceItem ati: td.getAttributeTraceItems())
 	  {
-		for (Attribute att : ati.getAttributes())
+		for (UmpleVariable att : ati.getUmpleVariables())
 		{
 		appendln(stringBuffer, "");
 		append(stringBuffer, "#include \"{0}_tracepoint.h\";",att.getName());	
@@ -3755,7 +3755,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       	  {
       		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
       		{
-      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+      		  StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
       		  StateMachine stm = tracedState.getStateMachine();
       		  if( tracedState.getEntry() )
       		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
@@ -3789,7 +3789,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
       	  {
       		for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
       		{
-      		  StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+      		  StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
       		  StateMachine stm = tracedState.getStateMachine();
       		  if( tracedState.getExit() )
       		    for( int j = 0 ; j < stm.numberOfStates() ; ++j )
@@ -3816,7 +3816,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
   	  TraceRecord traceRecord = tc.getTraceRecord();
 	    for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
 	    {
-	      StateMachine_TraceItem tracedState = tc.getStateMachineTraceItem(i);
+	      StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
 	      StateMachine stm = tracedState.getStateMachine();
 //		    if( traceRecord != null )
 //		    {
@@ -8103,48 +8103,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
 	appendln(stringBuffer, "  }");
   }
   
-  isFirst = true;
-  for( TraceDirective td : uClass.getTraceDirectives() )
-  {
-    for( Attribute_TraceItem traceAttr : td.getAttributeTraceItems() )
-    {
-      if( traceAttr.getPeriodClause() != null )
-      {
-    	if( isFirst )
-    	{
-          appendln(stringBuffer, "");
-      	  appendln(stringBuffer, "  //------------------------");
-      	  appendln(stringBuffer, "  // TRACING METHOD(s)");
-      	  appendln(stringBuffer, "  //------------------------\n");
-      	  isFirst = false;
-    	}
-    	for( Attribute attr : traceAttr.getAttributes() )
-    	{
-    	  String attrName = attr.getName();
-    	  attrName = attrName.substring(0,1).toUpperCase()+attrName.substring(1).toLowerCase();
-          appendln(stringBuffer, "  private void trace{0}Period(final int period)",attrName); 	
-          appendln(stringBuffer, "  {");
-          appendln(stringBuffer, "    ( new Thread()");
-          appendln(stringBuffer, "    {");
-          appendln(stringBuffer, "      public void run()");
-          appendln(stringBuffer, "      {");
-          appendln(stringBuffer, "         while( true )");
-          appendln(stringBuffer, "         {");
-          appendln(stringBuffer, "           Date date = new Date();");
-          appendln(stringBuffer, "           System.err.println(\"{0}=\"+{1} +\", t =\"+date.toString());",attrName,attr.getName());
-          appendln(stringBuffer, "           try");
-          appendln(stringBuffer, "           {Thread.sleep(period);}");
-          appendln(stringBuffer, "           catch (InterruptedException e)");
-          appendln(stringBuffer, "           {e.printStackTrace();}");
-          appendln(stringBuffer, "         }");
-          appendln(stringBuffer, "      }");
-          appendln(stringBuffer, "    }");
-          appendln(stringBuffer, "    ).start();");
-          appendln(stringBuffer, "  }");
-    	}
-      }
-    }
-  }
+  
 }
 
     stringBuffer.append(TEXT_2052);

@@ -3,6 +3,8 @@
 
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
+import cruise.umple.util.*;
+import java.util.*;
 
 /**
  * A block of code that can be injected into one or more methods, constructor, etc.
@@ -27,6 +29,7 @@ public class CodeInjection
 
   //CodeInjection Associations
   private UmpleClass umpleClass;
+  private Constraint constraint;
 
   //------------------------
   // CONSTRUCTOR
@@ -123,6 +126,11 @@ public class CodeInjection
     return umpleClass;
   }
 
+  public Constraint getConstraint()
+  {
+    return constraint;
+  }
+
   public boolean setUmpleClass(UmpleClass aNewUmpleClass)
   {
     boolean wasSet = false;
@@ -134,9 +142,18 @@ public class CodeInjection
     return wasSet;
   }
 
+  public boolean setConstraint(Constraint aNewConstraint)
+  {
+    boolean wasSet = false;
+    constraint = aNewConstraint;
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete()
   {
     umpleClass = null;
+    constraint = null;
   }
 
 
@@ -148,9 +165,10 @@ public class CodeInjection
             "type" + ":" + getType()+ "," +
             "operation" + ":" + getOperation()+ "," +
             "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + getSnippet() != null ? !getSnippet() .equals(this)  ? getSnippet().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "snippet" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "constraint" + "=" + getSnippet() != null ? !getSnippet() .equals(this)  ? getSnippet().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "snippet" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + getConstraint() != null ? !getConstraint() .equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null"
      + outputString;
   }  
   //------------------------
@@ -168,7 +186,38 @@ this(a,b, d);
   }
   public String getCode()
   {
-    return snippet.getCode();
+  	if(constraint == null)
+  	{
+  	  return snippet.getCode();
+  	}
+  	else
+  	{
+  	  if("Java".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new JavaGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  else if("Php".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  else if("Ruby".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  else if("Cpp".equals(CodeBlock.languageUsed))
+  	  {
+  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  		snippet.getCode()
+  	  	);
+  	  }
+  	  return snippet.getCode();
+  	}
   }  
   public void setCode(String lang, String code)
   {

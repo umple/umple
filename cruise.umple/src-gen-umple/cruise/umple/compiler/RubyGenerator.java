@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
 /**
- * @umplesource Generator.ump 232
+ * @umplesource Generator.ump 233
  * @umplesource Generator_CodeRuby.ump 12
  */
-// line 232 "../../../../src/Generator.ump"
+// line 233 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeRuby.ump"
 public class RubyGenerator implements CodeGenerator,CodeTranslator
 {
@@ -91,6 +91,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
+  private static Map<String,String> TraceLookupMap;
   private static List<String> OneOrManyLookup;
 
   static
@@ -166,6 +167,14 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
+    
+    TraceLookupMap = new HashMap<String,String>();
+    TraceLookupMap.put("indent","    ");
+    TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
+    TraceLookupMap.put("timestamp","new Date()");
+    TraceLookupMap.put("identifier","System.identityHashCode({0})");
+    TraceLookupMap.put("thread","Thread.currentThread().getId()");
+    TraceLookupMap.put("self","this");
 
   }
   
@@ -293,6 +302,17 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   	}
   	return StringFormatter.format("  if({0}) then\n    \n    {1}\n     end",expression, "{0}");
   }
+  
+  public String translate(String keyName, TraceItem ti)
+  {
+  	if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
+    	return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+    }
+    else {
+    	return "INVALID KEYNAME IN TRANSLATE";
+    }
+  }
+  
   
   public String relatedTranslate(String name, AssociationVariable av)
   {
