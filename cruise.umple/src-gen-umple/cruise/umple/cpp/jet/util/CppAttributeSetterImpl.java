@@ -445,9 +445,9 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String otherGetterMethodName, getterMethodName, setterMethodName, existingOtherEndVariableName;
@@ -538,8 +538,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName;
 	
 	@GenerationArgument String nameAsVariable;
@@ -629,9 +629,9 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String getterMethodName, setterMethodName, oldVariable;
@@ -707,8 +707,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String removeMethodName, addMethodName, numberOfMethodName, minimumNumberMethodName;
@@ -792,9 +792,9 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String getterMethodName, setterMethodName, existingOtherEndVariableName;
@@ -877,8 +877,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String removeMethodName, addMethodName;
@@ -938,9 +938,9 @@ public StringBuffer execute(Object element, final Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String removeMethodName, addMethodName;
@@ -1010,9 +1010,9 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String getterMethodName, friendSetterMethod,listType, listDefinition;
@@ -1144,8 +1144,8 @@ public StringBuffer execute(final Object element, final Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	@GenerationArgument boolean copyDirectly;
@@ -1376,9 +1376,9 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument String nameAsVariable;
 	String getterMethodName, removeMethodName, numberOfMethodName, friendSetterMethod, listType, listDefinition;
@@ -1556,7 +1556,7 @@ public void preExecute(){
 
 getRegistry().define(ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, new GenerationProcdure(this) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	
 	@GenerationArgument String nameAsVariable;
 	@GenerationArgument boolean check;
@@ -1684,7 +1684,7 @@ return CodeProcedure.generate(new CodeProcedure(this,element, arguments) {
 public StringBuffer maximum(Object element, Object... arguments) {
 return CodeProcedure.generate(new CodeProcedure(this,element, arguments) {
 		
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	String maximumNumberMethodName;
 		
 	@Override
@@ -1729,7 +1729,7 @@ public StringBuffer execute(Object element, Object... arguments) {
 public StringBuffer minimum(Object element, Object... arguments) {
 return CodeProcedure.generate(new CodeProcedure(this,element, arguments) {
 
-		@GenerationElementParameter(id = NAME) String name;
+		@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 		
 		String numberOfMethodName, otherEndMinimumNumberMethodName;
 		

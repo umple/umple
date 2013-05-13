@@ -18,6 +18,9 @@
 *******************************************************************************/
 package cruise.umple.modeling.handlers.cpp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +48,7 @@ import cruise.umple.core.GenerationLoopAnnotation;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.GenerationPolicyRegistryPriorities;
 import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
@@ -60,8 +64,9 @@ import cruise.umple.modeling.handlers.IModelingDecisions;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.VisibilityConstants;
 
-
 public class CPPBaseGenerationPointsHandler{
+	
+	private static final int MAIN_ASPECT_GROUP_PRIORITY= 400;
 	
 	@LoopProcessorAnnotation
 	public static void modelProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
@@ -208,6 +213,8 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_VISIBILITY) String normalizedVisibility,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_PREFIXES_ARGUMENT) List<String> prefixes,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_VALUE_ARGUMENT) String attributeValue,
+			@GenerationProcedureParameter(id = IModelingConstants.MULTILINE_COMMENTS_STRING) String commentsString,
+			@GenerationElementParameter(id = IModelingElementDefinitions.IS_INTERNAL) boolean isInternal,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.ATTRIBUTES_PROCESSOR}) Object attribute,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
@@ -228,6 +235,10 @@ public class CPPBaseGenerationPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_NAME_ARGUMENT, attribute==null?roleName: name),
 				GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_PREFIXES_ARGUMENT, prefixes),
 				GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_VALUE_ARGUMENT, attributeValue));
+		
+		if(isInternal&& commentsString!= null && !commentsString.isEmpty()){
+			attributeDeclaration= CommonConstants.NEW_LINE+ commentsString+ CommonConstants.NEW_LINE+ attributeDeclaration;
+		}
 		
 		generationValueGetter.addValue(id, attributeDeclaration, normalizedVisibility, parent);
 		generationValueGetter.generationPointString(element, ICppDefinitions.ATTRIBUTE_EQUALITY_GENERATION_POINT);
@@ -258,7 +269,7 @@ public class CPPBaseGenerationPointsHandler{
 		//Equality
 		if(!isStatic){
 			String equalityDeclaration = generationValueGetter.generationPointString(element, ICppDefinitions.ATTRIBUTE_EQUALITY);
-			generationValueGetter.addValue(ICppDefinitions.ATTRIBUTE_EQUALITY_DECLARATION, equalityDeclaration, parent);
+			generationValueGetter.addValue(ICppDefinitions.ATTRIBUTE_EQUALITY_ENTRY, equalityDeclaration, parent);
 		}
 	}
 	
@@ -279,7 +290,7 @@ public class CPPBaseGenerationPointsHandler{
 	public static String attributeEquality(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
-		return generationValueGetter.use(ICppDefinitions.ATTRIBUTE_EQUALITY_DECLARATION, 
+		return generationValueGetter.use(ICppDefinitions.ATTRIBUTE_EQUALITY_ENTRY, 
 				name, Boolean.valueOf(isMany));
 	}
 	
@@ -311,7 +322,7 @@ public class CPPBaseGenerationPointsHandler{
 		return CommonConstants.NEW_LINE+ implementationDetails+ CommonConstants.NEW_LINE;
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.CLASS_DECLARATIONS)
+	@GenerationPoint(generationPoint = IModelingConstants.CLASS_DECLARATIONS)
 	public static String getClassDeclarations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationBaseElement Object element){
@@ -322,7 +333,7 @@ public class CPPBaseGenerationPointsHandler{
 			all.addAll(generationValueGetter.getValues(IModelingDecisions.INTERFACES_IMPLEMENTS, element));
 		}
 		
-		generationValueGetter.generationPointString(element, ICppHandlerDefinitions.CLASS_DECLARATIONS_EXTENSION, all);
+		generationValueGetter.generationPointString(element, IModelingConstants.CLASS_DECLARATIONS_EXTENSION, all);
 		
 		List<String> asPublic= new ArrayList<String>();
 		for(Object current: all){
@@ -333,9 +344,16 @@ public class CPPBaseGenerationPointsHandler{
 		return generationValueGetter.use(ICppDefinitions.CLASS_DEFINITION, name, parametersString);
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.PRE_PROCESSING_DEFINITION_NAME, priority=IGenerationPointPriorityConstants.LOWEST)
-	public static String getDefinitionName(@GenerationProcedureParameter(id = IModelingConstants.FULL_PATH) String fullPath){
-		return fullPath.replace(CommonConstants.DOT, CommonConstants.UNDERSCORE).
+	@GenerationPoint(generationPoint = ICppDefinitions.PRE_PROCESSING_DEFINITION_NAME, priority=IGenerationPointPriorityConstants.LOWEST)
+	public static String getDefinitionName(@GenerationProcedureParameter(id = IModelingConstants.FULL_PATH) String fullPath,
+			@GenerationArgument(id= ICppDefinitions.FULL_PATH_ARGUMENT) String fullPathAsArgument){
+		
+		String compareObject= fullPathAsArgument;
+		if(compareObject== null|| compareObject.isEmpty()){
+			compareObject= fullPath;
+		}
+		
+		return compareObject.replace(CommonConstants.DOT, CommonConstants.UNDERSCORE).
 				replace(CommonConstants.FORWARD_SLASH, CommonConstants.UNDERSCORE).toUpperCase();
 	}
 	
@@ -343,48 +361,16 @@ public class CPPBaseGenerationPointsHandler{
 	public static void modelCodeIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object modelPackage){
 		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.VECTOR), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.ALGORITHM), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.IO_STREAM), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STRING), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.EXCEPTION), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STD_EXCEPTION), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.ASSERT_LIBRARY), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		
-		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STUDIO), 
-				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
-				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		for(String include: new String[]{ISTLConstants.VECTOR, ISTLConstants.ALGORITHM, ISTLConstants.IO_STREAM, ISTLConstants.STRING,
+				ISTLConstants.EXCEPTION, ISTLConstants.STD_EXCEPTION, ISTLConstants.ASSERT_LIBRARY, ISTLConstants.STUDIO}){
+			generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, include), 
+					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
+					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		}
 	}
 	
-	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE)
+	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE, priority= GenerationPolicyRegistryPriorities.HIEGHEST)
 	public static void modelAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object model){
 		String contents = generationValueGetter.generate(ICppDefinitions.PACKAGE_HEADER, model);
@@ -399,24 +385,31 @@ public class CPPBaseGenerationPointsHandler{
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
 	}
 	
-	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE)
+	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE, priority= GenerationPolicyRegistryPriorities.LOWEST, aspectGroup= MAIN_ASPECT_GROUP_PRIORITY)
 	public static void modelPathsAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationElementParameter(id = IModelingElementDefinitions.FILE_PATH) String filePath,
 			@GenerationBaseElement Object model){
 		
 		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
 				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
-		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
-		String generate = generationValueGetter.generate(ICppDefinitions.MAIN, model, implementationDetails);
-		
 		String fileName= "Main" +CommonConstants.DOT +CPPCommonConstants.BODY_FILE_EXTENSION; //$NON-NLS-1$
+		
+		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
+		
+		implementationDetails = bundleMain(filePath, modelPath, fileName, implementationDetails);
+		
+		String mainContents = GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.MAIN_CONTENTS);
+		
+		String generate = generationValueGetter.generate(ICppDefinitions.MAIN, model, implementationDetails, mainContents);
+		
 		ContentsDescriptor contentsDescriptor = new ContentsDescriptor(generate, fileName, modelPath);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
 	}
-	
+
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	}, aspect= LoopAspectConstants.FINALIZE)
+	}, aspect= LoopAspectConstants.FINALIZE, priority= GenerationPolicyRegistryPriorities.MEDIUM)
 	public static void classAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationProcedureParameter(id = IModelingDecisions.MODEL_PATH) String path){
@@ -428,14 +421,22 @@ public class CPPBaseGenerationPointsHandler{
 		String implementationContents = generationValueGetter.generate(ICppDefinitions.CLASS_BODY, element, Boolean.TRUE);
 		String implementationFileName= name + CommonConstants.DOT +CPPCommonConstants.BODY_FILE_EXTENSION;
 		
-		ContentsDescriptor implementationContentsDescriptor = new ContentsDescriptor(implementationContents, implementationFileName, fullPath);
-		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, implementationContentsDescriptor);
-		
 		String headerContents = generationValueGetter.generate(ICppDefinitions.HEADER, element, Boolean.TRUE);
 		String headerFileName= name + CommonConstants.DOT +CPPCommonConstants.HEADER_FILE_EXTENSION;
 		
 		ContentsDescriptor headerContentsDescriptor = new ContentsDescriptor(headerContents, headerFileName, fullPath);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, headerContentsDescriptor);
+		
+		ContentsDescriptor implementationContentsDescriptor = new ContentsDescriptor(implementationContents, implementationFileName, fullPath);
+		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, implementationContentsDescriptor);
+	}
+	
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
+	}, aspect= LoopAspectConstants.PRE)
+	public static void registerPredefinedOperators(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element){
+		generationValueGetter.generationPointString(element, ICppDefinitions.PREDEFINED_OPERATORS_REGISTER);
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -1115,6 +1116,11 @@ public class CPPBaseGenerationPointsHandler{
 		return false;
 	}
 	
+	@GenerationPoint(generationPoint = ICppDefinitions.TEMPLATES_DEFINITIONS)
+	public static String threadImplementation(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationLoopElement Object model) {
+		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.TEMPLATES_DEFINITIONS, model);
+	}
 	
 	@GenerationPoint(generationPoint = IModelingConstants.METHOD_CONTENTS_REGISTER, unique= true)
 	public static void setMethodsDeclaraionDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
@@ -1145,7 +1151,7 @@ public class CPPBaseGenerationPointsHandler{
 			
 			if(interfaceObject== null&& !isAbstract&& !foundNonAbstract){
 				for(MethodDes descriptor: incomplete){
-					setOperation(id, descriptor.map, generationValueGetter, complete, element, visibility, true);
+					setOperation(id, descriptor.fMap, generationValueGetter, complete, element, visibility, true);
 				}
 			}
 		}
@@ -1153,8 +1159,8 @@ public class CPPBaseGenerationPointsHandler{
 	
 	private static void setOperation(String id, Map<String, Object> map, GenerationPolicyRegistry generationValueGetter, Set<MethodDes> complete, Object element,
 			String visibility, boolean isConcluded){
-		Object returnType = map.get(IModelingConstants.RETURN_TYPE);
-		Object parametersString = map.get(IModelingConstants.PARAMETERS_STRING);
+		Object returnType = map.get(IModelingConstants.METHOD_RETURN_TYPE);
+		Object parametersString = map.get(IModelingConstants.METHOD_PARAMETERS_STRING);
 		Object name = map.get(IModelingConstants.METHOD_NAME);
 		
 		Object codeBody = map.get(IModelingConstants.CODY_BODY);
@@ -1208,21 +1214,29 @@ public class CPPBaseGenerationPointsHandler{
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_PURE, isPure),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_VIRTUAL, isVirtual),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant));
-		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
 		
 		if(isPure instanceof Boolean&& ((Boolean)isPure).booleanValue()){
+			if(comments instanceof String&& !((String)comments).isEmpty()){
+				declaration= comments+ CommonConstants.NEW_LINE+ declaration;
+			}
+			
 			//Pure does not have implementation
+			generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
 			return;
 		}
+		
+		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
 		
 		String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
 		
 		String qualifiedMethodName = generationValueGetter.use(ICppDefinitions.QUALIFIED_METHOD_NAME, parentName, name);
-		String implementation = generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, object, returnType, 
-				qualifiedMethodName, parametersString, contents,
+		String implementation = generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, object,
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONTENTS, contents),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_PARAMETERS_STRING, parametersString),
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, id),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_RETURN_TYPE, returnType),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant),
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name));
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, qualifiedMethodName));
 		if(comments instanceof String&& !((String)comments).isEmpty()){
 			implementation= comments+ CommonConstants.NEW_LINE+ implementation;
 		}
@@ -1280,8 +1294,8 @@ public class CPPBaseGenerationPointsHandler{
 				
 				@SuppressWarnings("unchecked")
 				Map<String, Object> parentMap= (Map<String, Object>) entry;
-				Object parentReturnType = parentMap.get(IModelingConstants.RETURN_TYPE);
-				Object parentParametersString = parentMap.get(IModelingConstants.PARAMETERS_STRING);
+				Object parentReturnType = parentMap.get(IModelingConstants.METHOD_RETURN_TYPE);
+				Object parentParametersString = parentMap.get(IModelingConstants.METHOD_PARAMETERS_STRING);
 				Object parentName = parentMap.get(IModelingConstants.METHOD_NAME);
 				
 				
@@ -1338,17 +1352,17 @@ public class CPPBaseGenerationPointsHandler{
 	}
 	
 	private static class MethodDes{
-		String returnType;
-		String parametersString;
-		String methodName;
+		String fReturnType;
+		String fParametersString;
+		String fMethodName;
+		Map<String, Object> fMap;
 		
-		Map<String, Object> map;
 		public MethodDes(String returnType, String parametersString, String methodName, Map<String, Object> map) {
-			this.returnType= returnType;
-			this.parametersString= parametersString;
-			this.methodName= methodName;
+			this.fReturnType= returnType;
+			this.fParametersString= parametersString;
+			this.fMethodName= methodName;
 			
-			this.map= map;
+			this.fMap= map;
 		}
 		
 		@Override
@@ -1358,12 +1372,12 @@ public class CPPBaseGenerationPointsHandler{
 			}
 			
 			MethodDes target= (MethodDes) obj;
-			return returnType.equals(target.returnType)&& this.parametersString.equals(target.parametersString)&& methodName.equals(target.methodName);
+			return this.fReturnType.equals(target.fReturnType)&& this.fParametersString.equals(target.fParametersString)&& this.fMethodName.equals(target.fMethodName);
 		}
 		
 		@Override
 		public int hashCode() {
-			String all= returnType+ parametersString+ methodName;
+			String all= this.fReturnType+ this.fParametersString+ this.fMethodName;
 			return all.hashCode();
 		}
 	}
@@ -1459,8 +1473,8 @@ public class CPPBaseGenerationPointsHandler{
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map= (Map<String, Object>) entry;
 			
-			Object returnType = map.get(IModelingConstants.RETURN_TYPE);
-			Object parametersString = map.get(IModelingConstants.PARAMETERS_STRING);
+			Object returnType = map.get(IModelingConstants.METHOD_RETURN_TYPE);
+			Object parametersString = map.get(IModelingConstants.METHOD_PARAMETERS_STRING);
 			Object codeBody = map.get(IModelingConstants.CODY_BODY);
 			Object name = map.get(IModelingConstants.METHOD_NAME);
 			Object comment = map.get(IModelingConstants.METHOD_COMMENT);
@@ -1469,9 +1483,11 @@ public class CPPBaseGenerationPointsHandler{
 			String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
 			
 			String qualifiedMethodName = (String) (isinline? name: generationValueGetter.use(ICppDefinitions.QUALIFIED_METHOD_NAME, parentName, name));
-			contents = contents+ generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element, returnType, 
-					qualifiedMethodName, parametersString, codeBody,
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, name),
+			contents = contents+ generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element,
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_RETURN_TYPE, returnType),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONTENTS, codeBody),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_PARAMETERS_STRING, parametersString),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, qualifiedMethodName),
 					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant))+ CommonConstants.NEW_LINE;
 			
 			if(comment instanceof String&& !((String)comment).isEmpty()){
@@ -1482,4 +1498,102 @@ public class CPPBaseGenerationPointsHandler{
 		return contents;
 	}
 	
+	//////////////////////////////////////////////////////////////Experimental////////////////////////////////////////////////////////////////////////
+	@LoopProcessorAnnotation(aspect= LoopAspectConstants.AFTER)
+	public static void helperInclude(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationProcedureParameter(id = ICppDefinitions.PREDEFINED_TEMPLATES_FILE) String templateFile,
+			@GenerationBaseElement Object model){
+		if(templateFile== null|| templateFile.isEmpty()){
+			return;
+		}
+		
+		String fileName= templateFile +CommonConstants.DOT +CPPCommonConstants.HEADER_FILE_EXTENSION;
+		
+		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
+				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
+		
+		String fullPath= !modelPath.isEmpty()? modelPath+ CommonConstants.FORWARD_SLASH+ templateFile: templateFile;
+		
+		String predefinedTemplatesContents = generationValueGetter.generate(ICppDefinitions.PREDEFINED_TEMPLATES_DEFINITIONS, model,
+				GenerationArgumentDescriptor.arg(ICppDefinitions.FULL_PATH_ARGUMENT, fullPath));
+		ContentsDescriptor contentsDescriptor = new ContentsDescriptor(predefinedTemplatesContents, 
+				fileName, modelPath);
+		generationValueGetter.addUniqueValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
+		
+		generationValueGetter.generationPointString(model, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, templateFile),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.MODEL_PATH, modelPath),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+	}
+	
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
+	})
+	public static void classAndInterfaceProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
+			@GenerationProcedureParameter(id = ICppDefinitions.PREDEFINED_TEMPLATES_FILE) String templateFile,
+			@GenerationBaseElement Object model){
+		
+		if(templateFile.isEmpty()){
+			return;
+		}
+		
+		//Include template helper in both body and header files
+		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
+				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
+		
+		generationValueGetter.generationPointString(element, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, templateFile),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.MODEL_PATH, modelPath),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(element, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, templateFile),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.MODEL_PATH, modelPath),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+	}
+	
+	private static String bundleMain(String filePath, String modelPath, String fileName, String implementationDetailsNewContents) {
+		String implementationDetails= implementationDetailsNewContents;
+		if(GenerationUtil.SEPARATE_TEMPLATES_DEFINITIONS){
+			try {
+				String owingFolder= modelPath;
+				String path = filePath + "/"; //$NON-NLS-1$
+				 owingFolder= owingFolder.replace(".", "::").replace("::", "/"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				 String qualifiedPath = path+ owingFolder;
+				 File folder = new File(qualifiedPath);
+				 if (folder.exists()) {
+					 File folderFile = new File(qualifiedPath+ "/"+ fileName); 	 //$NON-NLS-1$
+					 if (folderFile.exists()) {
+						 BufferedReader in = new BufferedReader(new FileReader(qualifiedPath+ "/"+ fileName)); //$NON-NLS-1$
+						 String str;
+						 while ((str = in.readLine()) != null) {
+						     if (str.startsWith("#include")) {  //$NON-NLS-1$
+						    	 if(!implementationDetails.isEmpty()){
+						    		 implementationDetails= implementationDetails+ CommonConstants.NEW_LINE;
+						    	 }
+						    	 implementationDetails= implementationDetails+ str;
+						     }
+						 }
+						 in.close();
+					 }
+				 }
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		return implementationDetails;
+	}
+	
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_TEMPLATES_FILE)
+	public static String predefinedTemplateFile(){
+		if(!GenerationUtil.SEPARATE_TEMPLATES_DEFINITIONS){
+			return null;
+		}
+		
+		return "TemplatesDefinitions"; //$NON-NLS-1$
+	}
 }

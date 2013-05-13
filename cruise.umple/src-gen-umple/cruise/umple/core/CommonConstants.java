@@ -36,16 +36,22 @@ public interface CommonConstants {
 	public static final String DOT= "."; 				//$NON-NLS-1$
 	public static final String STRICT_DOT= "\\."; 				//$NON-NLS-1$
 	
+	public static final String PLUS= "+"; 				//$NON-NLS-1$
+	public static final String MINUS= "-"; 				//$NON-NLS-1$
+	public static final String PLUS_SEPARATOR= "\\+"; 				//$NON-NLS-1$
+	
 	public static final String SPACE= " "; 				//$NON-NLS-1$
 	public static final String SEMI_COLON= ";";			//$NON-NLS-1$
 	public static final String FORWARD_SLASH= "/"; 		//$NON-NLS-1$
 	public static final String BACK_SLASH= "\\"; 		//$NON-NLS-1$
 	public static final String COMMA_SEPARATOR= ", "; 	//$NON-NLS-1$
-	public static final String NEW_LINE= "\n"; 			//$NON-NLS-1$
+	public static final String NEW_LINE= System.getProperties().getProperty("line.separator"); 			//$NON-NLS-1$
 	public static final String OPEN_BRACE= "{"; 			//$NON-NLS-1$
 	public static final String CLOSE_BRACE= "}"; 			//$NON-NLS-1$
 	
 	public static final String OPEN_BRACKET= "["; 			//$NON-NLS-1$
 	public static final String CLOSE_BRACKET= "]"; 			//$NON-NLS-1$
+	
+	public static final String QUOTATION= "\"";			//$NON-NLS-1$
 	
 }

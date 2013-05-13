@@ -26,6 +26,7 @@ import cruise.umple.compiler.Association;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.Position;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleElement;
 import cruise.umple.compiler.UmpleModel;
@@ -46,6 +47,32 @@ public class UmpleCPPGenerationUtil {
 		
 		return packageName.replace(CommonConstants.DOT, CommonConstants.UNDERSCORE)+ 
 				CommonConstants.UNDERSCORE+ name.toUpperCase();
+	}
+	
+	//FIXME: Hack!. The method "getRelativePath" is designed for UmpleClass instances only which means that it won't be usable for UmpleElement even if they do have
+	//Line numbers
+	public static List<String> getPositions(List<Position> elementPositions,
+			String language, UmpleElement umpleElement, UmpleModel modelPackage) {
+		
+		UmpleClass umpleClass = new UmpleClass(umpleElement.getName());
+		umpleClass.setPackageName(umpleElement.getPackageName());
+		umpleClass.setSourceModel(modelPackage);
+		return getPositions(elementPositions, language, umpleClass);
+	}
+	
+	public static List<String> getPositions(List<Position> elementPositions,
+			String language, UmpleClass umpleClass) {
+		List<String> positions = new ArrayList<String>();
+		for (Position p : elementPositions) { 
+			StringBuffer stringBuffer= new StringBuffer();
+		    stringBuffer.append("// line "); //$NON-NLS-1$
+		    stringBuffer.append( p.getLineNumber() );
+		    stringBuffer.append(" \""); //$NON-NLS-1$
+		    stringBuffer.append( p.getRelativePath(umpleClass, language) );
+		    stringBuffer.append("\""); //$NON-NLS-1$
+		    positions.add(stringBuffer.toString());
+		}
+		return positions;
 	}
 	
 	public static AssociationEnd getAssociationEnd(AssociationVariable associationVariable) {

@@ -33,7 +33,10 @@ public interface IModelingConstants {
 	public final static String TYPES_BY_NAMESPACES_TRACKER= "cpp.types.by.namespaces.tracker"; //$NON-NLS-1$
 
 	
-	public static String DEFAULT_VALUE_INTERCEPTOR= "default.value.interceptor"; //$NON-NLS-1$
+	public final static String DEFAULT_VALUE_INTERCEPTOR= "default.value.interceptor"; //$NON-NLS-1$
+	
+	public final static String CLASS_DECLARATIONS= "class.declarations"; //$NON-NLS-1$
+	public final static String CLASS_DECLARATIONS_EXTENSION= "class.declarations.extension"; //$NON-NLS-1$
 	
 	public final static String SET_ATTRIBUTE_PREFIXES= "modeling.set.attribute.prefix";  //$NON-NLS-1$
 	public final static String ATTRIBUTE_PREFIXES_ARGUMENT= "modeling.attribute.prefixes.argument";  //$NON-NLS-1$
@@ -88,13 +91,15 @@ public interface IModelingConstants {
 	public final static String METHOD_COMMENT= "method.comment"; //$NON-NLS-1$
 	public final static String METHOD_ID= "method.id"; //$NON-NLS-1$
 	public final static String METHOD_NAME= "method.name"; //$NON-NLS-1$
+	public final static String METHOD_RETURN_TYPE= "method.return.type"; //$NON-NLS-1$
+	public final static String METHOD_PARAMETERS_STRING= "parameters.string"; //$NON-NLS-1$
 	public final static String METHOD_DEFAULTED_IMPLEMENTATION= "method.defaulted.implementation"; //$NON-NLS-1$
 	public final static String METHOD_GROUP= "method.group"; //$NON-NLS-1$
 	public final static String METHODS_GROUPS= "method.groups"; //$NON-NLS-1$
 	public final static String METHODS_OBJECTS= "method.objects"; //$NON-NLS-1$
-	public final static String RETURN_TYPE= "return.type"; //$NON-NLS-1$
-	public final static String PARAMETERS_STRING= "parameters.string"; //$NON-NLS-1$
 	public final static String CODY_BODY= "code.body"; //$NON-NLS-1$
+	
+	public final static String METHOD_IDS= "method.ids"; //$NON-NLS-1$
 	
 	public final static String METHODS_GROUP_PRIORITY= "modeling.methods.group.priority";  //$NON-NLS-1$
 	public final static String METHOD_DEFAUT_GROUP= "modeling.method.group.default";  //$NON-NLS-1$

@@ -24,12 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import cruise.umple.core.GenerationCallback.GenerationBaseElement;
-import cruise.umple.core.GenerationCallback.GenerationLoopElement;
-import cruise.umple.core.CommonConstants;
-import cruise.umple.core.GenerationValueAnnotation;
-import cruise.umple.modeling.handlers.IModelingElementDefinitions;
-import cruise.umple.modeling.handlers.VisibilityConstants;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Attribute;
@@ -41,16 +35,25 @@ import cruise.umple.compiler.GenerateTarget;
 import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.MethodParameter;
+import cruise.umple.compiler.Position;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleClassifier;
 import cruise.umple.compiler.UmpleElement;
 import cruise.umple.compiler.UmpleInterface;
 import cruise.umple.compiler.UmpleModel;
 import cruise.umple.compiler.UmpleVariable;
+import cruise.umple.core.CommonConstants;
+import cruise.umple.core.GenerationCallback.GenerationBaseElement;
+import cruise.umple.core.GenerationCallback.GenerationLoopElement;
+import cruise.umple.core.GenerationValueAnnotation;
 import cruise.umple.cpp.util.UmpleCPPGenerationUtil;
 import cruise.umple.cpp.utils.StringUtil;
+import cruise.umple.modeling.handlers.IModelingElementDefinitions;
+import cruise.umple.modeling.handlers.VisibilityConstants;
 
 public class UmpleModelGenerationPolicy{
+	
+	private static boolean IS_BUNDLEED= false;
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.NAMESPACE)
 	public static String getNamespace(@GenerationBaseElement UmpleModel model) {
@@ -64,6 +67,10 @@ public class UmpleModelGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.GENERATES)
 	public static String getGeneratePath(@GenerationLoopElement UmpleModel model, String langaugeId) {
+		if(IS_BUNDLEED){
+			return getFileName(model);
+		}
+		
 		String normalizedLanguageId= langaugeId== null? CommonConstants.BLANK: langaugeId;
 		for(GenerateTarget generateTarget:  model.getGenerates()){
 			if(normalizedLanguageId.equals(generateTarget.getLanguage())){
@@ -78,9 +85,14 @@ public class UmpleModelGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.FILE)
-	public static String getModel(@GenerationBaseElement UmpleModel model) {
+	public static String getFileName(@GenerationBaseElement UmpleModel model) {
 		String fileName = model.getUmpleFile().getFileName();
 		return fileName.substring(0, fileName.lastIndexOf(CommonConstants.DOT));
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.FILE_PATH)
+	public static String getFilePath(@GenerationBaseElement UmpleModel model) {
+		return model.getUmpleFile().getPath();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.NAMESPACE)
@@ -104,7 +116,8 @@ public class UmpleModelGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE_INJECTION)
-	public static List<String> getInjectedCode(@GenerationBaseElement UmpleClass element, String operationName, boolean after, String langauge){
+	public static List<String> getInjectedCode(@GenerationBaseElement UmpleClass element, @GenerationLoopElement UmpleModel modelPackage,
+			String operationName, boolean after, String langauge){
 		
 		List<String> codes= new ArrayList<String>();
 		for(CodeInjection codeInjection: element.getCodeInjections()){
@@ -131,12 +144,24 @@ public class UmpleModelGenerationPolicy{
 			}
 
 			if(matched){
+				List<String> positions = UmpleCPPGenerationUtil.getPositions(Arrays.asList(new Position[]{codeInjection.getPosition()}), langauge, element, modelPackage);
+				String positionsString= null;
+				if(!positions.isEmpty()){
+					positionsString= positions.get(0);
+				}
+				
 				String code = codeInjection.getCode();
 				String languageSpecificCode = codeInjection.getSnippet().getCode(langauge);
 				if(languageSpecificCode!= null){
+					if(positionsString!= null){
+						languageSpecificCode= positionsString+ CommonConstants.NEW_LINE+ languageSpecificCode;
+					}
 					codes.add(languageSpecificCode);
 				}else{
 					if(code!= null){
+						if(positionsString!= null){
+							code= code+ CommonConstants.NEW_LINE+ code;
+						}
 						codes.add(code);
 					}
 				}
@@ -154,6 +179,30 @@ public class UmpleModelGenerationPolicy{
 	public static List<?> getOwnedAttributes(@GenerationBaseElement UmpleClass element){
 		//Interface does not have attributes
 		return element.getAttributes();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)
+	public static List<String> getLineNumbers(@GenerationBaseElement UmpleElement element, @GenerationLoopElement UmpleModel modelPackage,
+			String language) {
+		return UmpleCPPGenerationUtil.getPositions(element.getPositions(), language, element, modelPackage);
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)
+	public static List<String> getLineNumbers(@GenerationBaseElement Method method, @GenerationLoopElement UmpleModel modelPackage,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) UmpleElement parent,
+			String language) {
+		return UmpleCPPGenerationUtil.getPositions(Arrays.asList(new Position[]{method.getPosition()}), language, parent, modelPackage);
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)
+	public static List<String> getLineNumbers(@GenerationBaseElement AssociationVariable associationVariable, @GenerationLoopElement UmpleModel modelPackage,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) UmpleElement parent,
+			String language) {
+		AssociationEnd associationEnd = UmpleCPPGenerationUtil.getAssociationEnd(associationVariable);
+		if(associationEnd== null){
+			return null;
+		}
+		return UmpleCPPGenerationUtil.getPositions(Arrays.asList(new Position[]{associationEnd.getAssociation().getTokenPosition()}), language, parent, modelPackage);
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.OPERATION_PARAMETERS)
@@ -457,6 +506,8 @@ public class UmpleModelGenerationPolicy{
 			return UmpleCPPGenerationUtil.getCommentStrings(((UmpleClass)element).getComments());
 		}else if(element instanceof Method){
 			return UmpleCPPGenerationUtil.getCommentStrings(((Method)element).getComments());
+		}else if(element instanceof Attribute){
+			return UmpleCPPGenerationUtil.getCommentStrings(((Attribute)element).getComments());
 		}
 		//TODO: Umple interface does not have comments? Even, we better have a common interface instead of checking for each element
 		return null;
